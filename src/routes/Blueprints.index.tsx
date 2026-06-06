@@ -114,7 +114,7 @@ export default function BlueprintsRoute() {
   const isViewingOther = selectedUserId !== 'all' && selectedUserId !== user?.id
   const acquiredBlueprints = isViewingOther ? viewedUserBlueprints : myAcquiredBlueprints
 
-  // Base filtered blueprints (applies global filters: search, rewards)
+  // Base filtered blueprints (applies global filters: search, rewards, and user filter)
   const baseFilteredBlueprints = React.useMemo(() => {
     if (!blueprints) return []
     
@@ -124,9 +124,12 @@ export default function BlueprintsRoute() {
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesReward = !showOnlyRewards || bp.isReward === true
       
-      return matchesSearch && matchesReward
+      // When viewing a specific user (not "all"), only show their acquired blueprints
+      const matchesUserFilter = selectedUserId === 'all' || acquiredBlueprints[bp.file]
+      
+      return matchesSearch && matchesReward && matchesUserFilter
     })
-  }, [blueprints, searchTerm, showOnlyRewards])
+  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, acquiredBlueprints])
 
   // Category data with counts based on current global filters
   const categoryData = React.useMemo(() => {
