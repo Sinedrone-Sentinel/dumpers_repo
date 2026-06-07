@@ -40,16 +40,34 @@ const getSubType = (bp) => {
     }
     
     // FPS armour: fpsgear\armour\[type] or fpsgear\armour\combat\[weight] or fpsgear\armour\$templates\[type]
+    // Combat armor gets "standard" as type, template armor gets its specific type
     if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
       let sub = parts[i + 1]?.replace('$', '')
       if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
-      if (sub === 'combat' && parts[i + 2]) sub = parts[i + 2]
+      // For combat armor, return 'standard' as the type - weight is a separate filter
+      if (sub === 'combat') return 'standard'
       return sub
     }
     
     // Vehicle components: vehiclegear\[type]
     if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
       return parts[i + 1]?.replace('$', '')
+    }
+  }
+  return null
+}
+
+const getArmorWeight = (bp) => {
+  const parts = bp.file.split('\\')
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
+      const sub = parts[i + 1]?.replace('$', '')
+      if (sub === 'combat' && parts[i + 2]) {
+        const weight = parts[i + 2].toLowerCase()
+        if (['light', 'medium', 'heavy', 'superheavy'].includes(weight)) {
+          return weight
+        }
+      }
     }
   }
   return null
@@ -83,6 +101,7 @@ export default function BlueprintsRoute() {
   const [selectedMainCategory, setSelectedMainCategory] = React.useState(null)
   const [selectedSubCategory, setSelectedSubCategory] = React.useState(null)
   const [selectedSize, setSelectedSize] = React.useState(null)
+  const [selectedArmorWeight, setSelectedArmorWeight] = React.useState(null)
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   
@@ -135,10 +154,11 @@ export default function BlueprintsRoute() {
 
   // Category data with counts based on current global filters
   const categoryData = React.useMemo(() => {
-    if (!baseFilteredBlueprints.length) return { subTypes: {}, sizes: {}, mainCounts: {} }
+    if (!baseFilteredBlueprints.length) return { subTypes: {}, sizes: {}, armorWeights: {}, mainCounts: {} }
     
     const subTypes = {}
     const sizes = {}
+    const armorWeights = {}
     const mainCounts = {}
     
     baseFilteredBlueprints.forEach(bp => {
@@ -168,9 +188,17 @@ export default function BlueprintsRoute() {
           sizes[mainCat][size] = (sizes[mainCat][size] || 0) + 1
         }
       }
+      
+      // Count for armor weights (FPS Armour)
+      if (mainCat === 'FPS Armour') {
+        const weight = getArmorWeight(bp)
+        if (weight) {
+          armorWeights[weight] = (armorWeights[weight] || 0) + 1
+        }
+      }
     })
     
-    return { subTypes, sizes, mainCounts }
+    return { subTypes, sizes, armorWeights, mainCounts }
   }, [baseFilteredBlueprints])
 
   // Subcategory counts filtered by selected size (for Vehicle categories)
@@ -205,6 +233,12 @@ export default function BlueprintsRoute() {
         
         if (selectedSize && !bp.categoryName.includes(selectedSize)) return false
         
+        // Filter by armor weight for FPS Armour
+        if (selectedArmorWeight && selectedMainCategory === 'FPS Armour') {
+          const weight = getArmorWeight(bp)
+          if (weight !== selectedArmorWeight) return false
+        }
+        
         if (selectedSubCategory) {
           const bpSubType = getSubType(bp)
           if (bpSubType !== selectedSubCategory) return false
@@ -217,17 +251,19 @@ export default function BlueprintsRoute() {
     return results.sort((a, b) => 
       (a.blueprintName || '').localeCompare(b.blueprintName || '')
     )
-  }, [baseFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize])
+  }, [baseFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedArmorWeight])
 
   const handleMainCategoryClick = (cat) => {
     if (selectedMainCategory === cat) {
       setSelectedMainCategory(null)
       setSelectedSubCategory(null)
       setSelectedSize(null)
+      setSelectedArmorWeight(null)
     } else {
       setSelectedMainCategory(cat)
       setSelectedSubCategory(null)
       setSelectedSize(null)
+      setSelectedArmorWeight(null)
     }
   }
 
@@ -251,8 +287,9 @@ export default function BlueprintsRoute() {
   }
 
   const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
+  const currentArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
   const currentSubTypes = selectedSize ? filteredSubTypeCounts : (selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {})
-  const hasSubFilters = Object.keys(currentSubTypes).length > 0 || Object.keys(currentSizes).length > 0
+  const hasSubFilters = Object.keys(currentSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-2 sm:p-4 overflow-x-hidden">
@@ -378,6 +415,36 @@ export default function BlueprintsRoute() {
                 </>
               )}
               
+              {/* Weight filters for FPS Armour */}
+              {Object.keys(currentArmorWeights).length > 0 && (
+                <>
+                  {['light', 'medium', 'heavy', 'superheavy'].filter(w => currentArmorWeights[w]).map(weight => {
+                    const count = currentArmorWeights[weight] || 0
+                    const displayName = weight === 'superheavy' ? 'Super Heavy' : weight.charAt(0).toUpperCase() + weight.slice(1)
+                    return (
+                      <button
+                        key={weight}
+                        onClick={() => {
+                          setSelectedArmorWeight(selectedArmorWeight === weight ? null : weight)
+                          setSelectedSubCategory(null)
+                        }}
+                        disabled={count === 0}
+                        className={`px-2 py-0.5 lg:px-2.5 lg:py-1 xl:px-3 rounded text-[11px] lg:text-xs xl:text-sm font-medium transition-all ${
+                          selectedArmorWeight === weight
+                            ? 'bg-blue-600 text-white'
+                            : count === 0
+                              ? 'bg-slate-800/30 text-slate-600 border border-slate-700 cursor-not-allowed'
+                              : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
+                        }`}
+                      >
+                        {displayName}<span className="opacity-70 ml-0.5">({count})</span>
+                      </button>
+                    )
+                  })}
+                  <span className="text-slate-600 self-center text-xs hidden lg:inline">|</span>
+                </>
+              )}
+              
               {/* Type filters */}
               {Object.keys(currentSubTypes).sort().map(sub => {
                 const count = currentSubTypes[sub] || 0
@@ -422,6 +489,7 @@ export default function BlueprintsRoute() {
                 setSelectedMainCategory(null)
                 setSelectedSubCategory(null)
                 setSelectedSize(null)
+                setSelectedArmorWeight(null)
                 setShowOnlyRewards(false)
                 setSearchTerm('')
                 setSelectedUserId('all')

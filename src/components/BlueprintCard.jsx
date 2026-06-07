@@ -30,7 +30,8 @@ const getSubType = (bp) => {
     if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
       let sub = parts[i + 1]?.replace('$', '')
       if (sub === 'templates' && parts[i + 2]) sub = parts[i + 2]
-      if (sub === 'combat' && parts[i + 2]) sub = parts[i + 2]
+      // Combat armor shows as "standard" type - weight is shown separately
+      if (sub === 'combat') return 'standard'
       return sub
     }
     if (parts[i] === 'vehiclegear' && parts[i + 1] !== 'weapons') {
@@ -45,11 +46,28 @@ const formatSubType = (sub) => {
   return sub.charAt(0).toUpperCase() + sub.slice(1)
 }
 
+const getArmorWeight = (bp) => {
+  const parts = bp.file.split('\\')
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (parts[i] === 'armour' && parts[i - 1] === 'fpsgear') {
+      const sub = parts[i + 1]?.replace('$', '')
+      if (sub === 'combat' && parts[i + 2]) {
+        const weight = parts[i + 2].toLowerCase()
+        if (['light', 'medium', 'heavy', 'superheavy'].includes(weight)) {
+          return weight
+        }
+      }
+    }
+  }
+  return null
+}
+
 export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggleAcquired, canModify = true }) {
   if (!blueprint.file || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
   const subType = getSubType(blueprint)
+  const armorWeight = getArmorWeight(blueprint)
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
@@ -131,11 +149,16 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
           ) : null}
 
           <div className="mt-3 pt-2.5 border-t border-slate-700 space-y-1.5">
-            {(blueprint.categoryName || subType) && (
+            {(blueprint.categoryName || subType || armorWeight) && (
               <div className="flex flex-wrap gap-1">
                 {blueprint.categoryName && (
                   <span className="px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px] border border-slate-700">
                     {blueprint.categoryName}
+                  </span>
+                )}
+                {armorWeight && (
+                  <span className="px-1.5 py-0.5 bg-blue-950/50 text-blue-400 rounded text-[10px] border border-blue-500/30">
+                    {armorWeight === 'superheavy' ? 'Super Heavy' : formatSubType(armorWeight)}
                   </span>
                 )}
                 {subType && (
