@@ -82,8 +82,7 @@ export function buildMissionList(
 
     if (entry.unacquiredBlueprintIds.length === 0) continue
 
-    const pref = missionPrefs[entry.missionKey]
-    if (pref === false) continue
+    if (missionPrefs[entry.missionKey] !== true) continue
 
     activeMissions.push(entry)
   }
@@ -101,4 +100,37 @@ export function buildMissionList(
       giver,
       missions: missions.sort((a, b) => a.mission.localeCompare(b.mission)),
     }))
+}
+
+export interface TargetBlueprintMissionOption {
+  missionKey: string
+  mission: string
+  giver: string
+}
+
+export function getMissionsForBlueprint(
+  blueprint: BlueprintMissionSource,
+  acquiredBlueprintIds: Set<string>
+): TargetBlueprintMissionOption[] {
+  if (acquiredBlueprintIds.has(blueprint.blueprintId)) return []
+
+  const seen = new Set<string>()
+  const options: TargetBlueprintMissionOption[] = []
+
+  for (const reward of blueprint.rewardMissions ?? []) {
+    const mission = reward.mission?.trim()
+    if (!mission) continue
+
+    const key = missionKey(mission)
+    if (seen.has(key)) continue
+    seen.add(key)
+
+    options.push({
+      missionKey: key,
+      mission,
+      giver: parseMissionGiver(mission),
+    })
+  }
+
+  return options.sort((a, b) => a.mission.localeCompare(b.mission))
 }

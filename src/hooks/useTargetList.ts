@@ -113,11 +113,11 @@ export function useTargetList() {
     [user, isApproved, targetIds, profile?.org_id, acquiredBlueprints]
   )
 
-  const toggleMissionPref = useCallback(
-    async (missionLabel: string, included: boolean) => {
+  const setMissionOnChecklist = useCallback(
+    async (missionLabel: string, onChecklist: boolean) => {
       if (!user || !isApproved) return false
 
-      const result = await setMissionIncluded(user.id, missionLabel, included)
+      const result = await setMissionIncluded(user.id, missionLabel, onChecklist)
       if (result.error) {
         setError(result.error)
         return false
@@ -125,12 +125,56 @@ export function useTargetList() {
 
       setMissionPrefs((prev) => ({
         ...prev,
-        [missionKey(missionLabel)]: included,
+        [missionKey(missionLabel)]: onChecklist,
       }))
 
       return true
     },
     [user, isApproved]
+  )
+
+  const addMissionToChecklist = useCallback(
+    async (missionLabel: string) => setMissionOnChecklist(missionLabel, true),
+    [setMissionOnChecklist]
+  )
+
+  const removeMissionFromChecklist = useCallback(
+    async (missionLabel: string) => setMissionOnChecklist(missionLabel, false),
+    [setMissionOnChecklist]
+  )
+
+  const addAllMissionsToChecklist = useCallback(
+    async (missionLabels: string[]) => {
+      if (!user || !isApproved) return false
+
+      const toAdd = missionLabels.filter((label) => missionPrefs[missionKey(label)] !== true)
+      if (toAdd.length === 0) return true
+
+      const results = await Promise.all(
+        toAdd.map((label) => setMissionIncluded(user.id, label, true))
+      )
+      const failed = results.find((r) => r.error)
+      if (failed?.error) {
+        setError(failed.error)
+        return false
+      }
+
+      setMissionPrefs((prev) => {
+        const next = { ...prev }
+        for (const label of toAdd) {
+          next[missionKey(label)] = true
+        }
+        return next
+      })
+
+      return true
+    },
+    [user, isApproved, missionPrefs]
+  )
+
+  const isMissionOnChecklist = useCallback(
+    (key: string) => missionPrefs[key] === true,
+    [missionPrefs]
   )
 
   return {
@@ -140,7 +184,10 @@ export function useTargetList() {
     error,
     refresh,
     toggleTarget,
-    toggleMissionPref,
+    addMissionToChecklist,
+    removeMissionFromChecklist,
+    addAllMissionsToChecklist,
+    isMissionOnChecklist,
     isOnTargetList: (blueprintId: string) => !!targetIds[blueprintId],
     targetCount: Object.keys(targetIds).length,
   }
