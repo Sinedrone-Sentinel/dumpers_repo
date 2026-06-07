@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute } from '@tanstack/react-router'
 import Layout from '../components/Layout'
+import { RouteErrorPage, RouteNotFoundPage } from '../components/RouteErrorPage'
 import BlueprintsRoute from './Blueprints.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
@@ -9,6 +10,8 @@ import { requireFeature } from '../lib/routeGuards'
 
 const rootRoute = createRootRoute({
   component: Layout,
+  notFoundComponent: RouteNotFoundPage,
+  errorComponent: RouteErrorPage,
 })
 
 const indexRoute = createRoute({
