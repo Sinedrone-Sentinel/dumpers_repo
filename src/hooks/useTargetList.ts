@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { missionKey } from '../lib/missions'
 import {
@@ -15,9 +15,11 @@ export function useTargetList() {
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const acquiredRef = useRef(acquiredBlueprints)
+  acquiredRef.current = acquiredBlueprints
 
   const refresh = useCallback(async () => {
-    if (!user || !isApproved) {
+    if (!user?.id || !isApproved) {
       setTargetIds({})
       setMissionPrefs({})
       setLoading(false)
@@ -27,13 +29,15 @@ export function useTargetList() {
     setLoading(true)
     setError(null)
 
+    const acquired = acquiredRef.current
+
     try {
       const [ids, prefs] = await Promise.all([
         fetchTargetBlueprintIds(user.id),
         fetchMissionPrefs(user.id),
       ])
 
-      const staleAcquired = ids.filter((id) => acquiredBlueprints[id])
+      const staleAcquired = ids.filter((id) => acquired[id])
       if (staleAcquired.length > 0) {
         await Promise.all(
           staleAcquired.map((id) => removeTargetBlueprint(user.id, id))
@@ -42,7 +46,7 @@ export function useTargetList() {
 
       const map: Record<string, boolean> = {}
       ids
-        .filter((id) => !acquiredBlueprints[id])
+        .filter((id) => !acquired[id])
         .forEach((id) => {
           map[id] = true
         })
@@ -53,14 +57,14 @@ export function useTargetList() {
     } finally {
       setLoading(false)
     }
-  }, [user, isApproved, acquiredBlueprints])
+  }, [user?.id, isApproved])
 
   useEffect(() => {
     void refresh()
   }, [refresh])
 
   useEffect(() => {
-    if (!user || !isApproved) return
+    if (!user?.id || !isApproved) return
 
     const acquiredOnTarget = Object.keys(targetIds).filter((id) => acquiredBlueprints[id])
     if (acquiredOnTarget.length === 0) return
@@ -75,7 +79,7 @@ export function useTargetList() {
         return next
       })
     })()
-  }, [acquiredBlueprints, targetIds, user, isApproved])
+  }, [acquiredBlueprints, targetIds, user?.id, isApproved])
 
   const toggleTarget = useCallback(
     async (blueprintId: string) => {

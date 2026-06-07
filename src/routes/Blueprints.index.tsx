@@ -202,10 +202,6 @@ export default function BlueprintsRoute() {
 
   const { data: blueprints, isLoading } = useBlueprintData()
 
-  const refreshUsersList = React.useCallback(() => {
-    fetchUsersWithBlueprints(memberScope).then(setUsersWithBlueprints)
-  }, [fetchUsersWithBlueprints, memberScope])
-
   const handleMemberScopeChange = (scope: MemberScope) => {
     setMemberScope(scope)
     writeMemberScope(scope)
@@ -213,13 +209,21 @@ export default function BlueprintsRoute() {
   }
 
   React.useEffect(() => {
-    if (showMemberCollections) {
-      refreshUsersList()
-    } else {
+    if (!showMemberCollections) {
       setUsersWithBlueprints([])
       setSelectedUserId('all')
+      return
     }
-  }, [refreshUsersList, myAcquiredBlueprints, showMemberCollections])
+
+    let cancelled = false
+    fetchUsersWithBlueprints(memberScope).then((users) => {
+      if (!cancelled) setUsersWithBlueprints(users)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [fetchUsersWithBlueprints, memberScope, showMemberCollections])
 
   React.useEffect(() => {
     if (selectedUserId !== 'all' && !usersWithBlueprints.some((u) => u.id === selectedUserId)) {
@@ -230,14 +234,23 @@ export default function BlueprintsRoute() {
   React.useEffect(() => {
     if (selectedUserId === 'all' || selectedUserId === user?.id) {
       setViewedUserBlueprints({})
-    } else {
-      setLoadingUserBlueprints(true)
-      fetchUserBlueprints(selectedUserId).then(blueprints => {
+      setLoadingUserBlueprints(false)
+      return
+    }
+
+    let cancelled = false
+    setLoadingUserBlueprints(true)
+    fetchUserBlueprints(selectedUserId).then((blueprints) => {
+      if (!cancelled) {
         setViewedUserBlueprints(blueprints)
         setLoadingUserBlueprints(false)
-      })
+      }
+    })
+
+    return () => {
+      cancelled = true
     }
-  }, [selectedUserId, user?.id])
+  }, [selectedUserId, user?.id, fetchUserBlueprints])
 
   const isViewingOther = selectedUserId !== 'all' && selectedUserId !== user?.id
   const acquiredBlueprints = isViewingOther ? viewedUserBlueprints : myAcquiredBlueprints

@@ -439,7 +439,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }
 
-  const fetchUsersWithBlueprints = async (
+  const fetchUsersWithBlueprints = useCallback(async (
     scope: MemberScope = 'all'
   ): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
@@ -487,9 +487,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const nameB = b.rsi_handle || b.display_name || ''
       return nameA.localeCompare(nameB)
     })
-  }
+  }, [profile?.org_id])
 
-  const fetchUserBlueprints = async (userId: string): Promise<Record<string, boolean>> => {
+  const fetchUserBlueprints = useCallback(async (userId: string): Promise<Record<string, boolean>> => {
     const { data, error } = await supabase
       .from('acquired_blueprints')
       .select('blueprint_id')
@@ -505,7 +505,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       acquired[item.blueprint_id] = true
     })
     return acquired
-  }
+  }, [])
 
   const isOfficerOrAbove = profile?.role === 'officer' || profile?.role === 'super-admin'
   const isSuperAdmin = profile?.role === 'super-admin'

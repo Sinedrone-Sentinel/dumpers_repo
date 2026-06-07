@@ -100,7 +100,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.canAccessPreviewFeatures && !ctx.ghostMode
 
     case 'resource_tracker':
-      return ctx.isApproved && !ctx.ghostMode
+      return ctx.canAccessPreviewFeatures && !ctx.ghostMode
 
     case 'custom_orders':
       return ctx.canAccessPreviewFeatures && !ctx.ghostMode

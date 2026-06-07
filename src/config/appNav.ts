@@ -42,6 +42,8 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     label: 'Resource Tracker',
     path: '/resources',
     featureId: 'resource_tracker',
+    access: 'preview',
+    badge: 'preview',
     minRole: 'member',
     ghostAllowed: false,
   },

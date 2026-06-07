@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
 import { buildResourceLabelMap } from '../lib/blueprintResources'
 import {
@@ -27,17 +27,33 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
   } = options
   const { data: blueprints } = useBlueprintData()
 
+  const inventoryScope = inventoryContext?.scope
+  const inventoryUserId = inventoryContext?.userId
+  const inventoryOrgId = inventoryContext?.orgId ?? null
+
   const [catalog, setCatalog] = useState<BlueprintResourceRow[]>([])
   const [catalogWithInventory, setCatalogWithInventory] = useState<ResourceCatalogEntry[]>([])
   const [syncResult, setSyncResult] = useState<ResourceCatalogSyncResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const hasSyncedRef = useRef(false)
+
   const labelMap = useMemo(() => buildResourceLabelMap(catalog), [catalog])
 
-  const refresh = useCallback(async () => {
-    if (!blueprints) return
-    if (withInventory && !inventoryContext) {
+  const buildInventoryContext = useCallback((): InventoryContext | null => {
+    if (!withInventory || !inventoryUserId || !inventoryScope) return null
+    return {
+      scope: inventoryScope,
+      userId: inventoryUserId,
+      orgId: inventoryOrgId,
+    }
+  }, [withInventory, inventoryUserId, inventoryScope, inventoryOrgId])
+
+  const loadCatalog = useCallback(async () => {
+    const ctx = buildInventoryContext()
+
+    if (withInventory && !ctx) {
       setLoading(false)
       return
     }
@@ -45,21 +61,10 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     setLoading(true)
     setError(null)
 
-    if (syncOnLoad) {
-      const syncResponse = await syncBlueprintResourceCatalog(blueprints)
-      if (syncResponse.error) {
-        setError(syncResponse.error)
-        setLoading(false)
-        return
-      }
-      setSyncResult(syncResponse.result ?? null)
-    }
-
-    if (withInventory && inventoryContext) {
-      const { data, error: fetchError } = await fetchResourceCatalogWithInventory(
-        inventoryContext,
-        { includeInactive }
-      )
+    if (withInventory && ctx) {
+      const { data, error: fetchError } = await fetchResourceCatalogWithInventory(ctx, {
+        includeInactive,
+      })
       if (fetchError) setError(fetchError)
       setCatalogWithInventory(data)
       setCatalog(data.map(({ quantity: _q, ...resource }) => resource))
@@ -71,11 +76,51 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     }
 
     setLoading(false)
-  }, [blueprints, syncOnLoad, includeInactive, withInventory, inventoryContext])
+  }, [buildInventoryContext, withInventory, includeInactive])
+
+  const refresh = useCallback(async () => {
+    if (!blueprints) return
+
+    if (syncOnLoad) {
+      setError(null)
+      const syncResponse = await syncBlueprintResourceCatalog(blueprints)
+      if (syncResponse.error) {
+        setError(syncResponse.error)
+        return
+      }
+      setSyncResult(syncResponse.result ?? null)
+      hasSyncedRef.current = true
+    }
+
+    await loadCatalog()
+  }, [blueprints, syncOnLoad, loadCatalog])
 
   useEffect(() => {
-    if (blueprints) void refresh()
-  }, [blueprints, refresh])
+    if (!blueprints) return
+
+    let cancelled = false
+
+    void (async () => {
+      if (syncOnLoad && !hasSyncedRef.current) {
+        const syncResponse = await syncBlueprintResourceCatalog(blueprints)
+        if (cancelled) return
+        if (syncResponse.error) {
+          setError(syncResponse.error)
+          setLoading(false)
+          return
+        }
+        setSyncResult(syncResponse.result ?? null)
+        hasSyncedRef.current = true
+      }
+
+      if (cancelled) return
+      await loadCatalog()
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [blueprints, syncOnLoad, loadCatalog])
 
   return {
     catalog,

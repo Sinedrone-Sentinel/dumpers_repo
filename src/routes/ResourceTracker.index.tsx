@@ -20,13 +20,13 @@ export default function ResourceTrackerRoute() {
   const [editValue, setEditValue] = useState('')
 
   const inventoryContext = useMemo(() => {
-    if (!user) return null
+    if (!user?.id) return null
     return {
       scope: activeTab,
       userId: user.id,
       orgId: profile?.org_id ?? null,
     }
-  }, [user, profile?.org_id, activeTab])
+  }, [user?.id, profile?.org_id, activeTab])
 
   const readOnly = activeTab === 'org' && !canEditOrg
 
