@@ -34,3 +34,33 @@ export interface AcquiredBlueprint {
   blueprint_id: string
   acquired_at: string
 }
+
+export interface BannedUser {
+  id: string
+  email: string | null
+  display_name: string | null
+  rsi_handle: string | null
+  avatar_url: string | null
+  banned_at: string
+  banned_by: string | null
+  reason: string | null
+}
+
+export async function banUser(
+  userId: string,
+  reason?: string
+): Promise<{ success: boolean; error?: string }> {
+  const { data, error } = await supabase.functions.invoke('ban-user', {
+    body: { userId, reason: reason ?? null },
+  })
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  if (data?.error) {
+    return { success: false, error: data.error }
+  }
+
+  return { success: true }
+}

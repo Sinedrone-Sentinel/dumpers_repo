@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { supabase, Profile, UserRole, getDisplayName } from '../lib/supabase'
+import { supabase, Profile, UserRole, BannedUser, banUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 
-type TabType = 'pending' | 'members' | 'officers'
+type TabType = 'pending' | 'members' | 'officers' | 'banned'
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const { profile: currentUser, isOfficerOrAbove, isSuperAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<TabType>('pending')
   const [users, setUsers] = useState<Profile[]>([])
+  const [bannedUsers, setBannedUsers] = useState<BannedUser[]>([])
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [banTarget, setBanTarget] = useState<Profile | null>(null)
+  const [banReason, setBanReason] = useState('')
 
   useEffect(() => {
-    fetchUsers()
+    if (activeTab === 'banned') {
+      fetchBannedUsers()
+    } else {
+      fetchUsers()
+    }
   }, [activeTab])
 
   const fetchUsers = async () => {
@@ -37,13 +44,28 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     setLoading(false)
   }
 
+  const fetchBannedUsers = async () => {
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('banned_users')
+      .select('*')
+      .order('banned_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching banned users:', error)
+    } else {
+      setBannedUsers(data || [])
+    }
+    setLoading(false)
+  }
+
   const updateUserRole = async (userId: string, newRole: UserRole) => {
     if (!currentUser) return
 
     setActionLoading(userId)
-    
+
     const updateData: Partial<Profile> = { role: newRole }
-    
+
     if (newRole === 'member' || newRole === 'officer') {
       updateData.approved_at = new Date().toISOString()
       updateData.approved_by = currentUser.id
@@ -60,7 +82,24 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     } else {
       fetchUsers()
     }
-    
+
+    setActionLoading(null)
+  }
+
+  const handleBan = async () => {
+    if (!banTarget) return
+
+    setActionLoading(banTarget.id)
+    const result = await banUser(banTarget.id, banReason.trim() || undefined)
+
+    if (!result.success) {
+      alert(result.error || 'Failed to ban user')
+    } else {
+      setBanTarget(null)
+      setBanReason('')
+      fetchUsers()
+    }
+
     setActionLoading(null)
   }
 
@@ -76,10 +115,18 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     return targetUser.role === 'officer'
   }
 
+  const canBan = (targetUser: Profile) => {
+    if (!isOfficerOrAbove) return false
+    if (targetUser.id === currentUser?.id) return false
+    if (targetUser.role === 'super-admin') return false
+    return activeTab === 'members' || activeTab === 'officers'
+  }
+
   const tabs: { id: TabType; label: string }[] = [
     { id: 'pending', label: 'Pending' },
     { id: 'members', label: 'Members' },
     { id: 'officers', label: 'Officers' },
+    { id: 'banned', label: 'Banned' },
   ]
 
   return (
@@ -107,11 +154,6 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               }`}
             >
               {tab.label}
-              {!loading && (
-                <span className="ml-2 px-2 py-0.5 bg-slate-700 rounded-full text-xs">
-                  {activeTab === tab.id ? users.length : ''}
-                </span>
-              )}
             </button>
           ))}
         </div>
@@ -120,8 +162,49 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
           {loading ? (
             <div className="text-center py-8">
               <div className="w-8 h-8 border-t-2 border-red-500 rounded-full animate-spin mx-auto"></div>
-              <p className="text-slate-400 mt-2">Loading users...</p>
+              <p className="text-slate-400 mt-2">Loading...</p>
             </div>
+          ) : activeTab === 'banned' ? (
+            bannedUsers.length === 0 ? (
+              <div className="text-center py-8 text-slate-400">
+                No banned users
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {bannedUsers.map(banned => (
+                  <div
+                    key={banned.id}
+                    className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"
+                  >
+                    <div className="flex items-center gap-4">
+                      {banned.avatar_url ? (
+                        <img
+                          src={banned.avatar_url}
+                          alt={banned.display_name || 'User'}
+                          className="w-12 h-12 rounded-full"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-slate-400">
+                          {(banned.display_name || banned.email || '?')[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-medium truncate">
+                          {banned.rsi_handle || banned.display_name || banned.email || 'Unknown'}
+                        </p>
+                        <p className="text-slate-400 text-sm truncate">{banned.email}</p>
+                        <p className="text-slate-500 text-xs">
+                          Banned {new Date(banned.banned_at).toLocaleString()}
+                        </p>
+                        {banned.reason && (
+                          <p className="text-slate-500 text-xs mt-1">Reason: {banned.reason}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )
           ) : users.length === 0 ? (
             <div className="text-center py-8 text-slate-400">
               No users in this category
@@ -145,7 +228,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         {(user.display_name || user.email || '?')[0].toUpperCase()}
                       </div>
                     )}
-                    
+
                     <div className="flex-1 min-w-0">
                       <p className="text-white font-medium truncate">
                         {getDisplayName(user)}
@@ -174,15 +257,13 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
 
                     <div className="flex gap-2">
                       {activeTab === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => updateUserRole(user.id, 'member')}
-                            disabled={actionLoading === user.id}
-                            className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
-                          >
-                            {actionLoading === user.id ? '...' : 'Approve'}
-                          </button>
-                        </>
+                        <button
+                          onClick={() => updateUserRole(user.id, 'member')}
+                          disabled={actionLoading === user.id}
+                          className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          {actionLoading === user.id ? '...' : 'Approve'}
+                        </button>
                       )}
 
                       {activeTab === 'members' && canPromoteToOfficer(user) && (
@@ -204,6 +285,16 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                           {actionLoading === user.id ? '...' : 'Demote'}
                         </button>
                       )}
+
+                      {canBan(user) && (
+                        <button
+                          onClick={() => setBanTarget(user)}
+                          disabled={actionLoading === user.id}
+                          className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          Ban
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -212,6 +303,43 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
           )}
         </div>
       </div>
+
+      {banTarget && (
+        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-white mb-2">Ban User</h3>
+            <p className="text-slate-400 text-sm mb-4">
+              Permanently remove <span className="text-white">{getDisplayName(banTarget)}</span>'s blueprint data and block sign-in. This cannot be undone from the app.
+            </p>
+            <label className="block text-slate-400 text-sm mb-1">Reason (optional)</label>
+            <input
+              type="text"
+              value={banReason}
+              onChange={(e) => setBanReason(e.target.value)}
+              placeholder="Reason for ban..."
+              className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm mb-4"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setBanTarget(null)
+                  setBanReason('')
+                }}
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleBan}
+                disabled={actionLoading === banTarget.id}
+                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
+              >
+                {actionLoading === banTarget.id ? 'Banning...' : 'Confirm Ban'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

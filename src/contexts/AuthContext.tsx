@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
-import { supabase, Profile, UserRole, AcquiredBlueprint, getDisplayName } from '../lib/supabase'
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
+import { supabase, Profile, getDisplayName } from '../lib/supabase'
 import type { User, Session } from '@supabase/supabase-js'
 
 export interface UserWithBlueprints {
@@ -14,6 +14,7 @@ interface AuthContextType {
   profile: Profile | null
   session: Session | null
   loading: boolean
+  isBanned: boolean
   acquiredBlueprints: Record<string, boolean>
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
@@ -34,7 +35,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isBanned, setIsBanned] = useState(false)
+  const isBannedRef = useRef(false)
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    isBannedRef.current = isBanned
+  }, [isBanned])
+
+  const checkBanned = useCallback(async (userId: string, email?: string | null): Promise<boolean> => {
+    const { data: idBan, error: idError } = await supabase
+      .from('banned_users')
+      .select('id')
+      .eq('id', userId)
+      .maybeSingle()
+
+    if (idError) {
+      console.error('Error checking ban status:', idError)
+      return false
+    }
+
+    if (idBan) return true
+
+    if (email) {
+      const { data: emailBan, error: emailError } = await supabase
+        .from('banned_users')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle()
+
+      if (emailError) {
+        console.error('Error checking ban by email:', emailError)
+        return false
+      }
+
+      if (emailBan) return true
+    }
+
+    return false
+  }, [])
+
+  const handleBannedUser = useCallback(async () => {
+    setIsBanned(true)
+    setProfile(null)
+    setAcquiredBlueprints({})
+    await supabase.auth.signOut()
+    setUser(null)
+    setSession(null)
+  }, [])
 
   const fetchProfile = useCallback(async (userId: string) => {
     const { data, error } = await supabase
@@ -98,18 +146,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  const loadUserData = useCallback(async (sessionUser: User, isSignIn = false) => {
+    const banned = await checkBanned(sessionUser.id, sessionUser.email)
+    if (banned) {
+      await handleBannedUser()
+      return
+    }
+
+    setIsBanned(false)
+    const profileData = await fetchProfile(sessionUser.id)
+    setProfile(profileData)
+
+    if (!profileData) {
+      const stillBanned = await checkBanned(sessionUser.id, sessionUser.email)
+      if (stillBanned) {
+        await handleBannedUser()
+        return
+      }
+    }
+
+    if (isSignIn) {
+      await migrateLocalStorage(sessionUser.id)
+    }
+
+    const acquired = await fetchAcquiredBlueprints(sessionUser.id)
+    setAcquiredBlueprints(acquired)
+  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints])
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
 
       if (session?.user) {
-        const profileData = await fetchProfile(session.user.id)
-        setProfile(profileData)
-
-        await migrateLocalStorage(session.user.id)
-        const acquired = await fetchAcquiredBlueprints(session.user.id)
-        setAcquiredBlueprints(acquired)
+        await loadUserData(session.user, true)
       }
 
       setLoading(false)
@@ -120,23 +190,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null)
 
       if (session?.user) {
-        const profileData = await fetchProfile(session.user.id)
-        setProfile(profileData)
-
-        if (event === 'SIGNED_IN') {
-          await migrateLocalStorage(session.user.id)
-        }
-
-        const acquired = await fetchAcquiredBlueprints(session.user.id)
-        setAcquiredBlueprints(acquired)
-      } else {
+        await loadUserData(session.user, event === 'SIGNED_IN')
+      } else if (!isBannedRef.current) {
         setProfile(null)
         setAcquiredBlueprints({})
       }
     })
 
     return () => subscription.unsubscribe()
-  }, [fetchProfile, fetchAcquiredBlueprints, migrateLocalStorage])
+  }, [loadUserData])
+
+  useEffect(() => {
+    const onFocus = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        const banned = await checkBanned(session.user.id, session.user.email)
+        if (banned) {
+          await handleBannedUser()
+        }
+      }
+    }
+
+    window.addEventListener('focus', onFocus)
+    return () => window.removeEventListener('focus', onFocus)
+  }, [checkBanned, handleBannedUser])
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -157,6 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error signing out:', error)
       throw error
     }
+    setIsBanned(false)
   }
 
   const toggleAcquired = async (blueprintId: string) => {
@@ -284,6 +362,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profile,
         session,
         loading,
+        isBanned,
         acquiredBlueprints,
         signInWithGoogle,
         signOut,

@@ -3,11 +3,12 @@ import { Outlet } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import Login from './Login'
 import PendingApproval from './PendingApproval'
+import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
 
 export default function Layout() {
-  const { user, profile, loading, signOut, isOfficerOrAbove, displayName } = useAuth()
+  const { user, profile, loading, isBanned, signOut, isOfficerOrAbove, displayName } = useAuth()
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
@@ -21,6 +22,10 @@ export default function Layout() {
         </div>
       </div>
     )
+  }
+
+  if (isBanned) {
+    return <BannedAccount />
   }
 
   if (!user) {
