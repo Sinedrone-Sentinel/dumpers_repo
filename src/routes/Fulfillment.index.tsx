@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
 import { orderTotalDfp, resolveOrderBlueprintLines } from '../lib/orderPricing'
@@ -220,6 +222,13 @@ export default function FulfillmentRoute() {
                           </span>
                         )}
                       </p>
+                      {exceedsSingleTransferLimit(totalDfp) && (
+                        <AuecTransferLimitNotice
+                          totalAuec={totalDfp}
+                          context="fulfiller"
+                          compact
+                        />
+                      )}
                     </button>
                   )
                 })}
@@ -236,6 +245,13 @@ export default function FulfillmentRoute() {
                     </p>
                   )}
                 </div>
+
+                {exceedsSingleTransferLimit(orderTotalDfp(selectedOrder)) && (
+                  <AuecTransferLimitNotice
+                    totalAuec={orderTotalDfp(selectedOrder)}
+                    context="fulfiller"
+                  />
+                )}
 
                 {resolveOrderBlueprintLines(selectedOrder).length > 0 && (
                   <ul className="text-xs text-slate-400 space-y-1">

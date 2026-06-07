@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import {
   extractOrderLineItemsFromBlueprints,
   getResourceLabel,
@@ -528,6 +530,10 @@ export default function CustomOrdersRoute() {
             </div>
           )}
 
+          {cartLines.length > 0 && exceedsSingleTransferLimit(cartTotalDfp) && (
+            <AuecTransferLimitNotice totalAuec={cartTotalDfp} context="customer" />
+          )}
+
           <div>
             <label className="block text-slate-400 text-sm mb-1">Notes (optional)</label>
             <textarea
@@ -619,6 +625,15 @@ export default function CustomOrdersRoute() {
                       </p>
                     )}
                     {order.notes && <p className="text-slate-400 text-sm mt-2">{order.notes}</p>}
+
+                    {exceedsSingleTransferLimit(totalDfp) && (
+                      <div className="mt-3">
+                        <AuecTransferLimitNotice
+                          totalAuec={totalDfp}
+                          context={isOwn ? 'customer' : 'fulfiller'}
+                        />
+                      </div>
+                    )}
 
                     {blueprintLines.length > 0 && (
                       <ul className="mt-3 space-y-1">
