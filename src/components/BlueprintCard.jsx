@@ -152,7 +152,7 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
         <div className="flex items-start justify-between gap-2 mb-2">
           <span
             className="text-xs font-semibold text-amber-400/90 tabular-nums shrink-0"
-            title="Dumpers Fair-Value Price (500 quality assumed where unspecified)"
+            title="Dumpers Fair-Value Price at 500 quality"
           >
             {dfpLabel}
             <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
