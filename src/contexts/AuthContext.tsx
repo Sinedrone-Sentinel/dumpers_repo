@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
-import { supabase, Profile, getDisplayName } from '../lib/supabase'
+import { supabase, Profile, getDisplayName, type UserRole } from '../lib/supabase'
+import { roleAtLeast } from '../lib/roles'
 import type { User, Session } from '@supabase/supabase-js'
 
 export interface UserWithBlueprints {
@@ -21,6 +22,7 @@ interface AuthContextType {
   toggleAcquired: (blueprintId: string) => Promise<void>
   updateRsiHandle: (handle: string) => Promise<boolean>
   updateGhostMode: (enabled: boolean) => Promise<boolean>
+  updatePreviewFeatures: (enabled: boolean) => Promise<boolean>
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   displayName: string
@@ -30,6 +32,9 @@ interface AuthContextType {
   isGhostMode: boolean
   canModifyBlueprints: boolean
   showMemberCollections: boolean
+  isApproved: boolean
+  canAccess: (minRole: UserRole) => boolean
+  canAccessPreviewFeatures: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -318,6 +323,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }
 
+  const updatePreviewFeatures = async (enabled: boolean): Promise<boolean> => {
+    if (!user) return false
+    if (profile?.role !== 'officer') return false
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({ preview_features_enabled: enabled })
+      .eq('id', user.id)
+
+    if (error) {
+      console.error('Error updating preview features:', error)
+      return false
+    }
+
+    setProfile(prev => prev ? { ...prev, preview_features_enabled: enabled } : null)
+    return true
+  }
+
   const fetchUsersWithBlueprints = async (): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
       .from('acquired_blueprints')
@@ -384,6 +407,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isGhostMode = profile?.ghost_mode ?? false
   const canModifyBlueprints = !!profile && profile.role !== 'pending'
   const showMemberCollections = canModifyBlueprints && !isGhostMode
+  const isApproved = canModifyBlueprints
+  const canAccess = (minRole: UserRole) => roleAtLeast(profile?.role, minRole)
+  const canAccessPreviewFeatures =
+    isSuperAdmin ||
+    (profile?.role === 'officer' && (profile.preview_features_enabled ?? false))
   const displayName = getDisplayName(profile)
 
   return (
@@ -400,6 +428,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toggleAcquired,
         updateRsiHandle,
         updateGhostMode,
+        updatePreviewFeatures,
         fetchUsersWithBlueprints,
         fetchUserBlueprints,
         displayName,
@@ -409,6 +438,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isGhostMode,
         canModifyBlueprints,
         showMemberCollections,
+        isApproved,
+        canAccess,
+        canAccessPreviewFeatures,
       }}
     >
       {children}

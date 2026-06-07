@@ -1,3 +1,5 @@
+import { calculateBlueprintDfp, formatDfpLabel } from '../lib/dfp'
+
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
 const getFpsWeaponTypeFromFilename = (filename) => {
@@ -127,6 +129,8 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
   const subType = getSubType(blueprint)
   const armorWeight = getArmorWeight(blueprint)
   const armorSlot = getArmorSlot(blueprint)
+  const dfp = calculateBlueprintDfp(blueprint)
+  const dfpLabel = formatDfpLabel(dfp.total)
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
@@ -145,8 +149,14 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
       }`}
     >
       <div className="relative z-10">
-        <div className="flex items-start justify-between mb-4">
-          <h3 className="font-bold text-white line-clamp-2 flex-1 mr-2 min-w-0 truncate" title={blueprint.blueprintName}>{blueprint.blueprintName}</h3>
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <span
+            className="text-xs font-semibold text-amber-400/90 tabular-nums shrink-0"
+            title="Dumpers Fair-Value Price (500 quality assumed where unspecified)"
+          >
+            {dfpLabel}
+            <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
+          </span>
           <button
             onClick={handleCheckboxClick}
             disabled={!canModify}
@@ -167,22 +177,27 @@ export default function BlueprintCard({ blueprint, onClick, isAcquired, onToggle
           </button>
         </div>
 
-        <div className="space-y-2 text-sm">
-          <p className="text-slate-400 flex items-center gap-1.5">
-            ⏱️
-            <span className="font-mono">
-              <strong>{blueprint.craftTime?.hours || 0}h</strong>
-              {' '}
-              <strong>{blueprint.craftTime?.minutes || 0}m</strong>
-              {' '}
-              <strong>{blueprint.craftTime?.seconds || 0}s</strong>
-            </span>
-          </p>
+        <h3
+          className="font-bold text-white line-clamp-3 flex-1 min-w-0 mb-3 text-sm leading-snug"
+          title={blueprint.blueprintName}
+        >
+          {blueprint.blueprintName}
+        </h3>
 
+        <div className="space-y-2 text-sm">
           {hasRequirements ? (
             <div className="bg-slate-950/50 rounded-lg p-2.5 border border-slate-800/50">
-              <p className="text-slate-300 font-medium text-xs">{blueprint.slots.length} parts required</p>
-              <div className="flex flex-wrap gap-1 mt-2">
+              <p className="text-slate-400 flex items-center gap-1.5 text-xs mb-2">
+                <span>⏱️</span>
+                <span className="font-mono">
+                  <strong>{blueprint.craftTime?.hours || 0}h</strong>
+                  {' '}
+                  <strong>{blueprint.craftTime?.minutes || 0}m</strong>
+                  {' '}
+                  <strong>{blueprint.craftTime?.seconds || 0}s</strong>
+                </span>
+              </p>
+              <div className="flex flex-wrap gap-1">
                 {blueprint.slots.flatMap((slot, slotIdx) => 
                   (slot.options || []).map((opt, optIdx) => {
                     const name = opt.resourceName || opt.entityName

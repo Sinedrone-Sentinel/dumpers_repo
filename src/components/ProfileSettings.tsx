@@ -6,11 +6,13 @@ import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
-  const { profile, updateRsiHandle, updateGhostMode, signOut, isSuperAdmin } = useAuth()
+  const { profile, updateRsiHandle, updateGhostMode, updatePreviewFeatures, signOut, isSuperAdmin, isOfficerOrAbove } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
+  const [previewFeatures, setPreviewFeatures] = useState(profile?.preview_features_enabled ?? false)
   const [savingRsi, setSavingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
+  const [savingPreview, setSavingPreview] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -19,7 +21,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
     setGhostMode(profile?.ghost_mode ?? false)
-  }, [profile?.rsi_handle, profile?.ghost_mode])
+    setPreviewFeatures(profile?.preview_features_enabled ?? false)
+  }, [profile?.rsi_handle, profile?.ghost_mode, profile?.preview_features_enabled])
 
   const handleSaveRsi = async () => {
     setSavingRsi(true)
@@ -50,6 +53,22 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingGhost(false)
+  }
+
+  const handlePreviewFeaturesChange = async (enabled: boolean) => {
+    const previous = previewFeatures
+    setPreviewFeatures(enabled)
+    setSavingPreview(true)
+    setMessage(null)
+
+    const success = await updatePreviewFeatures(enabled)
+
+    if (!success) {
+      setPreviewFeatures(previous)
+      setMessage({ type: 'error', text: 'Failed to update Feature Preview.' })
+    }
+
+    setSavingPreview(false)
   }
 
   const handleDeleteAccount = async () => {
@@ -134,6 +153,27 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               saving={savingGhost}
             />
           </SettingsSection>
+
+          {isOfficerOrAbove && (
+            <SettingsSection
+              title="Officer Tools"
+              description="Access in-development features while testing"
+            >
+              {isSuperAdmin ? (
+                <p className="text-sm text-slate-400">
+                  Feature Preview is always enabled for super-admins.
+                </p>
+              ) : (
+                <SettingsToggle
+                  label="Feature Preview"
+                  description="Show preview navigation for Resource Tracker, Custom Orders, Fulfillment, and future tools."
+                  checked={previewFeatures}
+                  onChange={handlePreviewFeaturesChange}
+                  saving={savingPreview}
+                />
+              )}
+            </SettingsSection>
+          )}
 
           <SettingsSection
             title="Account"

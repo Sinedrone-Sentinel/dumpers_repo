@@ -1,19 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routes/root'
 import QueryClientProvider from './providers/QueryClientProvider'
 import { AuthProvider } from './contexts/AuthContext'
+import RouterApp from './components/RouterApp'
 import './index.css'
 import { setupCacheBusting, checkAppVersion } from './lib/appVersion'
-
-const router = createRouter({ routeTree })
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
 
 const appElement = document.getElementById('root')
 
@@ -27,7 +18,7 @@ if (appElement) {
       <React.StrictMode>
         <AuthProvider>
           <QueryClientProvider>
-            <RouterProvider router={router} />
+            <RouterApp />
           </QueryClientProvider>
         </AuthProvider>
       </React.StrictMode>

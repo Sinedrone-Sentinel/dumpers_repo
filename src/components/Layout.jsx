@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { Outlet } from '@tanstack/react-router'
+import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
+import { getVisibleNavItems } from '../config/appNav'
 import Login from './Login'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
 
 export default function Layout() {
-  const { user, profile, loading, isBanned, isPending, signOut, isOfficerOrAbove, displayName } = useAuth()
+  const { user, profile, loading, isBanned, isPending, signOut, isOfficerOrAbove, displayName, canAccess, canAccessPreviewFeatures } = useAuth()
   const [showUserMenu, setShowUserMenu] = useState(false)
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const navItems = getVisibleNavItems(canAccess, canAccessPreviewFeatures)
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
 
@@ -105,6 +108,34 @@ export default function Layout() {
                       </span>
                     </p>
                   </div>
+
+                  {navItems.length > 0 && (
+                    <>
+                      <div className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                        Navigation
+                      </div>
+                      {navItems.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={item.path}
+                          onClick={() => setShowUserMenu(false)}
+                          className={`w-full px-4 py-2 text-left transition-colors flex items-center justify-between gap-2 ${
+                            pathname === item.path
+                              ? 'bg-slate-700/80 text-white'
+                              : 'text-slate-300 hover:bg-slate-700'
+                          }`}
+                        >
+                          <span>{item.label}</span>
+                          {item.badge === 'preview' && (
+                            <span className="px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded bg-purple-900/50 text-purple-300 border border-purple-500/30">
+                              Preview
+                            </span>
+                          )}
+                        </Link>
+                      ))}
+                      <div className="border-t border-slate-700" />
+                    </>
+                  )}
 
                   <button
                     onClick={() => {
