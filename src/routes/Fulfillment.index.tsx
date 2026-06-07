@@ -4,7 +4,7 @@ import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
-import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
+import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
 import {
   orderTotalDfp,
   resolveOrderBlueprintLines,
@@ -263,14 +263,15 @@ export default function FulfillmentRoute() {
                   <ul className="text-xs text-slate-400 space-y-1">
                     {resolveOrderBlueprintLines(selectedOrder).map((line) => (
                       <li key={`${selectedOrder.id}-${line.blueprintId}-${line.quantity}`}>
-                        {line.blueprintTitle} × {line.quantity} (Q{line.minQuality})
+                        {line.blueprintTitle} × {line.quantity} (
+                        {formatOrderQualityLabel(line.minQuality)})
                         {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
                       </li>
                     ))}
                     {resolveOrderResourceLines(selectedOrder).map((line) => (
                       <li key={`${selectedOrder.id}-${line.resourceKey}-${line.quantityScu}`}>
-                        {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU (Q
-                        {line.minQuality})
+                        {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU (
+                        {formatOrderQualityLabel(line.minQuality)})
                         {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
                       </li>
                     ))}

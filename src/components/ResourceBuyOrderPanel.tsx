@@ -1,10 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
-import { DFP_QUALITY_TIERS } from '../config/dfp'
+import { ORDER_QUALITY_TIERS } from '../config/dfp'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
-import { formatDfpAuec, formatDfpLabel, formatDfpRequiredPrice } from '../lib/dfp'
+import {
+  formatDfpAuec,
+  formatDfpLabel,
+  formatDfpRequiredPrice,
+  formatOrderQualityLabel,
+  isAmmoBlueprint,
+} from '../lib/dfp'
 import {
   buildOrderFulfillmentItems,
   buildOrderTitle,
@@ -52,10 +58,10 @@ export default function ResourceBuyOrderPanel({
   const [mode, setMode] = useState<'blueprint' | 'resource'>('blueprint')
   const [bpSearch, setBpSearch] = useState('')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
-  const [bpQuality, setBpQuality] = useState(String(DFP_QUALITY_TIERS[0]))
+  const [bpQuality, setBpQuality] = useState(String(ORDER_QUALITY_TIERS[0]))
   const [bpQty, setBpQty] = useState('1')
   const [resourceKey, setResourceKey] = useState('')
-  const [resQuality, setResQuality] = useState(String(DFP_QUALITY_TIERS[0]))
+  const [resQuality, setResQuality] = useState(String(ORDER_QUALITY_TIERS[0]))
   const [resQty, setResQty] = useState('1')
   const [notes, setNotes] = useState('')
   const [bpCart, setBpCart] = useState<CartBlueprintLine[]>([])
@@ -89,6 +95,7 @@ export default function ResourceBuyOrderPanel({
   }, [blueprints, bpSearch])
 
   const selectedBlueprint = blueprintById.get(selectedBlueprintId)
+  const selectedIsAmmo = selectedBlueprint ? isAmmoBlueprint(selectedBlueprint) : false
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
 
   const cartTotalDfp = useMemo(
@@ -126,15 +133,15 @@ export default function ResourceBuyOrderPanel({
   const addBlueprint = () => {
     if (!selectedBlueprint?.file) return
     const qty = Math.max(1, Number(bpQty) || 1)
-    const quality = Math.min(1000, Math.max(0, Number(bpQuality) || 500))
-    const pricing = pricingForBlueprintLine(selectedBlueprint, quality, qty)
+    const selectedQuality = Number(bpQuality) || ORDER_QUALITY_TIERS[0]
+    const pricing = pricingForBlueprintLine(selectedBlueprint, selectedQuality, qty)
     setBpCart((prev) => [
       ...prev,
       {
         cartKey: nextCartKey(),
         blueprintId: selectedBlueprint.file,
         blueprintTitle: selectedBlueprint.blueprintName || selectedBlueprint.file,
-        minQuality: quality,
+        minQuality: pricing.orderMinQuality,
         quantity: qty,
         unitDfpAuec: pricing.unitDfpAuec,
         lineDfpAuec: pricing.lineDfpAuec,
@@ -274,16 +281,27 @@ export default function ResourceBuyOrderPanel({
                 </option>
               ))}
             </select>
-            <div className="grid grid-cols-3 gap-2">
-              <input
-                type="number"
-                min={0}
-                max={1000}
-                value={bpQuality}
-                onChange={(e) => setBpQuality(e.target.value)}
-                placeholder="Quality"
-                className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-              />
+            {selectedIsAmmo && (
+              <p className="text-slate-400 text-xs">
+                Ammo — no min quality on the order. Fulfiller may use lowest quality materials on
+                hand (in-game, ammo craft quality does not matter).
+              </p>
+            )}
+            <div className={`grid gap-2 ${selectedIsAmmo ? 'grid-cols-2' : 'grid-cols-3'}`}>
+              {!selectedIsAmmo && (
+                <select
+                  value={bpQuality}
+                  onChange={(e) => setBpQuality(e.target.value)}
+                  className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                  aria-label="Min quality tier"
+                >
+                  {ORDER_QUALITY_TIERS.map((tier) => (
+                    <option key={tier} value={tier}>
+                      Q{tier}
+                    </option>
+                  ))}
+                </select>
+              )}
               <input
                 type="number"
                 min={1}
@@ -321,7 +339,7 @@ export default function ResourceBuyOrderPanel({
                 onChange={(e) => setResQuality(e.target.value)}
                 className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
               >
-                {DFP_QUALITY_TIERS.map((tier) => (
+                {ORDER_QUALITY_TIERS.map((tier) => (
                   <option key={tier} value={tier}>
                     Q{tier}
                   </option>
@@ -369,7 +387,8 @@ export default function ResourceBuyOrderPanel({
                   className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
                 >
                   <span className="text-white">
-                    {line.blueprintTitle} × {line.quantity} · Q{line.minQuality}
+                    {line.blueprintTitle} × {line.quantity} ·{' '}
+                    {formatOrderQualityLabel(line.minQuality)}
                   </span>
                   <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
                   <button
@@ -387,8 +406,8 @@ export default function ResourceBuyOrderPanel({
                   className="px-3 py-2 flex justify-between gap-2 text-sm bg-slate-900/40"
                 >
                   <span className="text-white">
-                    {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU · Q
-                    {line.minQuality}
+                    {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU ·{' '}
+                    {formatOrderQualityLabel(line.minQuality)}
                   </span>
                   <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
                   <button

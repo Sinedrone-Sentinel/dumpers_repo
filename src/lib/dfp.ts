@@ -1,4 +1,5 @@
 import {
+  AMMO_ORDER_MIN_QUALITY,
   DFP_ASSUMED_QUALITY,
   DFP_BASE_PER_001_cSCU,
   DFP_CRAFT_PREMIUM,
@@ -104,6 +105,15 @@ export function resolveDfpProductType(blueprint: BlueprintDfpInput): DfpProductT
   if (category.startsWith('Veh. Comp.')) return 'ship_component'
   if (category.startsWith('Veh. Weapons')) return 'vehicle_weapon'
   return 'other'
+}
+
+export function isAmmoBlueprint(blueprint: BlueprintDfpInput): boolean {
+  return resolveDfpProductType(blueprint) === 'ammo'
+}
+
+export function formatOrderQualityLabel(minQuality: number): string {
+  if (minQuality === AMMO_ORDER_MIN_QUALITY) return 'Any (ammo)'
+  return `Q${minQuality}`
 }
 
 function resolveSubcategoryModifier(

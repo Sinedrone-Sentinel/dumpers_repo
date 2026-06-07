@@ -8,7 +8,14 @@ export const DFP_SCALE_FACTOR = 0.1
 
 export const DFP_ASSUMED_QUALITY = 500
 
+/** Internal DFP math tiers (50-point steps for base value lookup). */
 export const DFP_QUALITY_TIERS = [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000] as const
+
+/** Order UI: min quality picks in 100-point steps (org convention). */
+export const ORDER_QUALITY_TIERS = [500, 600, 700, 800, 900, 1000] as const
+
+/** Stored on ammo blueprint order lines — no customer min quality requirement. */
+export const AMMO_ORDER_MIN_QUALITY = 0
 
 /** aUEC per 0.001 cSCU at each quality tier */
 export const DFP_BASE_PER_001_cSCU: Record<number, number> = {

@@ -12,6 +12,8 @@ export interface BlueprintSlot {
 export interface BlueprintWithSlots {
   blueprintName?: string
   file?: string
+  categoryName?: string
+  subCategoryName?: string
   slots?: BlueprintSlot[]
 }
 
