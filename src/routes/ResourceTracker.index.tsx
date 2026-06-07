@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
@@ -6,11 +6,16 @@ import { canManageOrgInventory, canUseFeature } from '../lib/featureAccess'
 import { adjustInventoryQuantity, setInventoryQuantity, type InventoryScope } from '../lib/operations'
 
 export default function ResourceTrackerRoute() {
-  const { user, siteOrg, visibilityContext, isSuperAdmin } = useAuth()
-  const canViewShared = canUseFeature('org_resources', visibilityContext)
+  const { user, siteOrg, visibilityContext, isSuperAdmin, isGhostMode } = useAuth()
+  const canViewShared =
+    !isGhostMode && canUseFeature('org_resources', visibilityContext)
   const canEditShared = canManageOrgInventory(visibilityContext)
 
   const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
+
+  useEffect(() => {
+    if (isGhostMode && activeTab === 'org') setActiveTab('personal')
+  }, [isGhostMode, activeTab])
   const [search, setSearch] = useState('')
   const [showInactive, setShowInactive] = useState(false)
   const [editingKey, setEditingKey] = useState<string | null>(null)

@@ -71,20 +71,94 @@ export default function Layout() {
               Sign out
             </button>
           </>
+        ) : isGhostMode ? (
+          <div className="relative">
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center gap-1.5 px-2 py-1 bg-purple-950/80 backdrop-blur border border-purple-500/60 rounded-lg hover:bg-purple-900/80 transition-colors shadow-md"
+            >
+              <div className="w-6 h-6 rounded-full bg-purple-600/30 border border-purple-500/50 flex items-center justify-center">
+                <svg className="w-3.5 h-3.5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              </div>
+              <span className="text-purple-300 text-xs font-semibold uppercase tracking-wide">
+                Ghost
+              </span>
+              <svg className="w-3 h-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {showUserMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-[55]"
+                  onClick={() => setShowUserMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-2 w-56 bg-slate-800 border border-purple-500/30 rounded-xl shadow-xl z-[60] overflow-hidden">
+                  <div className="p-3 border-b border-slate-700">
+                    <p className="text-white font-medium truncate">{displayName}</p>
+                    <p className="text-purple-300/80 text-xs mt-1">
+                      Hidden from member lists. Personal tracking only.
+                    </p>
+                  </div>
+
+                  {navItems.length > 0 && (
+                    <>
+                      <div className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                        Navigation
+                      </div>
+                      {navItems.map((item) => (
+                        <Link
+                          key={item.id}
+                          to={item.path}
+                          onClick={() => setShowUserMenu(false)}
+                          className={`w-full px-4 py-2 text-left transition-colors flex items-center justify-between gap-2 ${
+                            pathname === item.path
+                              ? 'bg-slate-700/80 text-white'
+                              : 'text-slate-300 hover:bg-slate-700'
+                          }`}
+                        >
+                          <span>{item.label}</span>
+                          {item.badge === 'preview' && (
+                            <span className="px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide rounded bg-purple-900/50 text-purple-300 border border-purple-500/30">
+                              Preview
+                            </span>
+                          )}
+                        </Link>
+                      ))}
+                      <div className="border-t border-slate-700" />
+                    </>
+                  )}
+
+                  {showSettingsButton && (
+                    <button
+                      onClick={() => {
+                        setShowUserMenu(false)
+                        setShowProfileSettings(true)
+                      }}
+                      className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                    >
+                      Settings
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false)
+                      signOut()
+                    }}
+                    className="w-full px-4 py-2 text-left text-red-400 hover:bg-slate-700 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         ) : (
           <div className="relative flex items-center gap-2">
-            {isGhostMode && (
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-purple-950/80 backdrop-blur border border-purple-500/60 rounded-lg shadow-md">
-                <div className="w-6 h-6 rounded-full bg-purple-600/30 border border-purple-500/50 flex items-center justify-center">
-                  <svg className="w-3.5 h-3.5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                  </svg>
-                </div>
-                <span className="text-purple-300 text-xs font-semibold uppercase tracking-wide">
-                  Ghost
-                </span>
-              </div>
-            )}
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center gap-1.5 px-2 py-1 bg-slate-800 backdrop-blur border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors shadow-md"
