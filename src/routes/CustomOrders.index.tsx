@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
+import ReputationBadge from '../components/ReputationBadge'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
@@ -27,10 +28,16 @@ import {
   type OrderListTab,
 } from '../lib/orderArchive'
 import {
+  buyerReputationFromRow,
+  fulfillerReputationFromRow,
+  type MemberReputationRow,
+} from '../lib/reputation'
+import {
   archiveCustomOrderWithRating,
   confirmOrderPickup,
   fetchCustomOrders,
   fetchInventory,
+  fetchMemberReputations,
   fetchUserNotifications,
   markAllNotificationsRead,
   markNotificationRead,
@@ -105,6 +112,7 @@ export default function CustomOrdersRoute() {
     orderTitle: string
   } | null>(null)
   const [archiving, setArchiving] = useState(false)
+  const [myReputation, setMyReputation] = useState<MemberReputationRow | null>(null)
 
   const loadOrders = useCallback(async () => {
     setLoading(true)
@@ -129,6 +137,15 @@ export default function CustomOrdersRoute() {
       stock[row.resource_key] = Number(row.quantity)
     })
     setPersonalStock(stock)
+
+    if (user?.id) {
+      const repResult = await fetchMemberReputations([user.id])
+      if (repResult.error && !ordersResult.error) setError(repResult.error)
+      setMyReputation(repResult.data[user.id] ?? null)
+    } else {
+      setMyReputation(null)
+    }
+
     setLoading(false)
   }, [user?.id, siteOrg?.id])
 
@@ -207,6 +224,15 @@ export default function CustomOrdersRoute() {
   }
 
   const userId = user?.id
+  const myBuyerRep = useMemo(
+    () => buyerReputationFromRow(myReputation ?? undefined),
+    [myReputation]
+  )
+  const myFulfillerRep = useMemo(
+    () => fulfillerReputationFromRow(myReputation ?? undefined),
+    [myReputation]
+  )
+
   const visibleOrders = useMemo(
     () =>
       orders.filter(
@@ -311,6 +337,13 @@ export default function CustomOrdersRoute() {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {userId && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} />
+          <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} />
         </div>
       )}
 
