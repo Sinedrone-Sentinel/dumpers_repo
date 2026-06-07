@@ -8,7 +8,12 @@ import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { SITE_SLOGAN } from '../config/site'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
-import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
+import {
+  formatBlueprintOrderQualityLabel,
+  formatDfpAuec,
+  formatDfpRequiredPrice,
+  formatResourceOrderQualityLabel,
+} from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
@@ -464,14 +469,19 @@ export default function FulfillmentRoute() {
                     {resolveOrderBlueprintLines(selectedOrder).map((line) => (
                       <li key={`${selectedOrder.id}-${line.blueprintId}-${line.quantity}`}>
                         {line.blueprintTitle} × {line.quantity} (
-                        {formatOrderQualityLabel(line.minQuality)})
+                        {formatBlueprintOrderQualityLabel(line.minQuality)})
                         {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
                       </li>
                     ))}
                     {resolveOrderResourceLines(selectedOrder).map((line) => (
                       <li key={`${selectedOrder.id}-${line.resourceKey}-${line.quantityScu}`}>
                         {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU (
-                        {formatOrderQualityLabel(line.minQuality)})
+                        {formatResourceOrderQualityLabel(
+                          line.resourceKey,
+                          line.resourceLabel,
+                          line.minQuality
+                        )}
+                        )
                         {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
                       </li>
                     ))}

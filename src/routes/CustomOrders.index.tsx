@@ -7,7 +7,12 @@ import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
-import { formatDfpAuec, formatDfpRequiredPrice, formatOrderQualityLabel } from '../lib/dfp'
+import {
+  formatBlueprintOrderQualityLabel,
+  formatDfpAuec,
+  formatDfpRequiredPrice,
+  formatResourceOrderQualityLabel,
+} from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { SITE_SLOGAN } from '../config/site'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
@@ -490,7 +495,7 @@ export default function CustomOrdersRoute() {
                           >
                             <span className="text-slate-300">{line.blueprintTitle}</span>
                             <span>× {line.quantity}</span>
-                            <span>· {formatOrderQualityLabel(line.minQuality)}</span>
+                            <span>· {formatBlueprintOrderQualityLabel(line.minQuality)}</span>
                             {line.lineDfpAuec > 0 && (
                               <span className="text-amber-300/90">
                                 · {formatDfpAuec(line.lineDfpAuec)}
@@ -505,7 +510,14 @@ export default function CustomOrdersRoute() {
                           >
                             <span className="text-slate-300">{line.resourceLabel}</span>
                             <span>· {formatResourceQuantity(line.quantityScu)} SCU</span>
-                            <span>· {formatOrderQualityLabel(line.minQuality)}</span>
+                            <span>
+                              ·{' '}
+                              {formatResourceOrderQualityLabel(
+                                line.resourceKey,
+                                line.resourceLabel,
+                                line.minQuality
+                              )}
+                            </span>
                             {line.lineDfpAuec > 0 && (
                               <span className="text-amber-300/90">
                                 · {formatDfpAuec(line.lineDfpAuec)}

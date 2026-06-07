@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react'
-import { DEFAULT_STOCK_QUALITY, STOCK_QUALITY_TIERS } from '../config/dfp'
+import React, { useEffect, useMemo, useState } from 'react'
+import { SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
+import { DEFAULT_STOCK_QUALITY, stockQualityTiersForResource } from '../config/dfp'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
 import {
@@ -50,6 +51,17 @@ export default function PersonalStockAddPanel({
       .slice(0, 60)
   }, [activeCatalog, search])
 
+  const selectedLabel = resourceKey ? getResourceLabel(resourceKey, labelMap) : ''
+  const qualityTiers = useMemo(
+    () => stockQualityTiersForResource(resourceKey, selectedLabel),
+    [resourceKey, selectedLabel]
+  )
+  const selectedIsSalvage = qualityTiers.length === 1 && qualityTiers[0] === SALVAGE_ORDER_MIN_QUALITY
+
+  useEffect(() => {
+    if (selectedIsSalvage) setQuality(String(SALVAGE_ORDER_MIN_QUALITY))
+  }, [resourceKey, selectedIsSalvage])
+
   const lineKey = resourceKey && quality ? `${resourceKey}::${quality}` : ''
   const lineExists = lineKey ? existingKeys.has(lineKey) : false
 
@@ -87,8 +99,9 @@ export default function PersonalStockAddPanel({
       <div>
         <h2 className="text-white font-medium text-sm">Add material stock</h2>
         <p className="text-slate-500 text-xs mt-1">
-          Create a card per resource and quality tier — Q0 for store-bought, Q10–Q1000 for mined/refined
-          (e.g. Q0 copper, Q500 copper, Q700 copper). Use the buttons on each card to adjust in-game.
+          Create a card per resource and quality tier — Q0 for store-bought and salvage (RMC,
+          construction material), Q10–Q1000 for mined/refined ore. Use the buttons on each card to
+          adjust in-game.
         </p>
       </div>
 
@@ -114,18 +127,24 @@ export default function PersonalStockAddPanel({
           ))}
         </select>
 
-        <select
-          value={quality}
-          onChange={(e) => setQuality(e.target.value)}
-          className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-          aria-label="Quality tier"
-        >
-          {STOCK_QUALITY_TIERS.map((tier) => (
-            <option key={tier} value={tier}>
-              Q{tier}
-            </option>
-          ))}
-        </select>
+        {selectedIsSalvage ? (
+          <div className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-300 text-sm">
+            Q0 (salvage)
+          </div>
+        ) : (
+          <select
+            value={quality}
+            onChange={(e) => setQuality(e.target.value)}
+            className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+            aria-label="Quality tier"
+          >
+            {qualityTiers.map((tier) => (
+              <option key={tier} value={tier}>
+                Q{tier}
+              </option>
+            ))}
+          </select>
+        )}
 
         <input
           type="number"
@@ -140,7 +159,7 @@ export default function PersonalStockAddPanel({
 
       {resourceKey && (
         <p className="text-slate-400 text-xs">
-          {getResourceLabel(resourceKey, labelMap)} · Q{quality}
+          {selectedLabel} · {selectedIsSalvage ? 'Q0 (salvage)' : `Q${quality}`}
           {lineExists
             ? ' — adds to your existing card'
             : ' — creates a new card'}

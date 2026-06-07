@@ -1,3 +1,4 @@
+import { isSalvageResource } from '../config/extraResources'
 import {
   AMMO_ORDER_MIN_QUALITY,
   DFP_ASSUMED_QUALITY,
@@ -111,9 +112,25 @@ export function isAmmoBlueprint(blueprint: BlueprintDfpInput): boolean {
   return resolveDfpProductType(blueprint) === 'ammo'
 }
 
-export function formatOrderQualityLabel(minQuality: number): string {
+/** Blueprint order lines (ammo uses min quality 0). */
+export function formatBlueprintOrderQualityLabel(minQuality: number): string {
   if (minQuality === AMMO_ORDER_MIN_QUALITY) return 'Any (ammo)'
   return `Q${minQuality}`
+}
+
+/** Resource buy-order lines. */
+export function formatResourceOrderQualityLabel(
+  resourceKey: string,
+  label: string,
+  minQuality: number
+): string {
+  if (isSalvageResource(resourceKey)) return 'Q0 (salvage)'
+  return `Q${minQuality}`
+}
+
+/** @deprecated Use formatBlueprintOrderQualityLabel or formatResourceOrderQualityLabel */
+export function formatOrderQualityLabel(minQuality: number): string {
+  return formatBlueprintOrderQualityLabel(minQuality)
 }
 
 function resolveSubcategoryModifier(

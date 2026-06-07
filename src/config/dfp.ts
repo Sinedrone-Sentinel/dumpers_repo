@@ -1,3 +1,5 @@
+import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from './extraResources'
+
 export const DFP_VERSION = '1.1.0-type-modifiers'
 
 /** Applied after material total — keeps DFP at or above NPC shop for crafted goods. */
@@ -25,6 +27,23 @@ export const DEFAULT_STOCK_QUALITY = 500
 
 /** Stored on ammo blueprint order lines — no customer min quality requirement. */
 export const AMMO_ORDER_MIN_QUALITY = 0
+
+export function stockQualityTiersForResource(
+  resourceKey: string,
+  label?: string
+): readonly number[] {
+  if (isSalvageResource(resourceKey)) return [SALVAGE_ORDER_MIN_QUALITY]
+  return STOCK_QUALITY_TIERS
+}
+
+export function orderMinQualityForResource(
+  resourceKey: string,
+  label: string,
+  selectedQuality: number
+): number {
+  if (isSalvageResource(resourceKey)) return SALVAGE_ORDER_MIN_QUALITY
+  return selectedQuality
+}
 
 /** aUEC per 0.001 cSCU at each quality tier */
 export const DFP_BASE_PER_001_cSCU: Record<number, number> = {

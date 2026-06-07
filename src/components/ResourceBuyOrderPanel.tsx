@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
+import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY, ORDER_QUALITY_TIERS } from '../config/dfp'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
@@ -9,7 +10,8 @@ import {
   formatDfpAuec,
   formatDfpLabel,
   formatDfpRequiredPrice,
-  formatOrderQualityLabel,
+  formatBlueprintOrderQualityLabel,
+  formatResourceOrderQualityLabel,
   isAmmoBlueprint,
 } from '../lib/dfp'
 import {
@@ -99,6 +101,9 @@ export default function ResourceBuyOrderPanel({
   const selectedBlueprint = blueprintById.get(selectedBlueprintId)
   const selectedIsAmmo = selectedBlueprint ? isAmmoBlueprint(selectedBlueprint) : false
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
+  const selectedResIsSalvage = selectedResource
+    ? isSalvageResource(selectedResource.resource_key)
+    : false
 
   const cartTotalDfp = useMemo(
     () =>
@@ -132,6 +137,10 @@ export default function ResourceBuyOrderPanel({
     setResourceKey(activeCatalog[0].resource_key)
   }, [activeCatalog, resourceKey])
 
+  useEffect(() => {
+    if (selectedResIsSalvage) setResQuality(String(SALVAGE_ORDER_MIN_QUALITY))
+  }, [resourceKey, selectedResIsSalvage])
+
   const addBlueprint = () => {
     if (!selectedBlueprint?.file) return
     const qty = Math.max(1, Number(bpQty) || 1)
@@ -156,15 +165,19 @@ export default function ResourceBuyOrderPanel({
     if (!selectedResource) return
     const qty = parseResourceQuantity(resQty)
     if (qty == null || qty <= 0) return
-    const quality = Math.min(1000, Math.max(0, Number(resQuality) || 500))
-    const pricing = pricingForResourceLine(selectedResource.label, quality, qty)
+    const pricing = pricingForResourceLine(
+      selectedResource.resource_key,
+      selectedResource.label,
+      Number(resQuality) || DEFAULT_STOCK_QUALITY,
+      qty
+    )
     setResCart((prev) => [
       ...prev,
       {
         cartKey: nextCartKey(),
         resourceKey: selectedResource.resource_key,
         resourceLabel: selectedResource.label,
-        minQuality: quality,
+        minQuality: pricing.orderMinQuality,
         quantityScu: qty,
         unitDfpAuec: pricing.unitDfpAuec,
         lineDfpAuec: pricing.lineDfpAuec,
@@ -337,18 +350,26 @@ export default function ResourceBuyOrderPanel({
                 </option>
               ))}
             </select>
-            <div className="grid grid-cols-3 gap-2">
-              <select
-                value={resQuality}
-                onChange={(e) => setResQuality(e.target.value)}
-                className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-              >
-                {ORDER_QUALITY_TIERS.map((tier) => (
-                  <option key={tier} value={tier}>
-                    Q{tier}
-                  </option>
-                ))}
-              </select>
+            {selectedResIsSalvage && (
+              <p className="text-slate-400 text-xs">
+                Salvage — always Q0. No quality tier on RMC or construction material.
+              </p>
+            )}
+            <div className={`grid gap-2 ${selectedResIsSalvage ? 'grid-cols-2' : 'grid-cols-3'}`}>
+              {!selectedResIsSalvage && (
+                <select
+                  value={resQuality}
+                  onChange={(e) => setResQuality(e.target.value)}
+                  className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                  aria-label="Min quality tier"
+                >
+                  {ORDER_QUALITY_TIERS.map((tier) => (
+                    <option key={tier} value={tier}>
+                      Q{tier}
+                    </option>
+                  ))}
+                </select>
+              )}
               <input
                 type="number"
                 min={RESOURCE_QUANTITY_STEP}
@@ -372,8 +393,9 @@ export default function ResourceBuyOrderPanel({
                 Material DFP:{' '}
                 {formatDfpLabel(
                   pricingForResourceLine(
+                    selectedResource.resource_key,
                     selectedResource.label,
-                    Number(resQuality) || 500,
+                    Number(resQuality) || DEFAULT_STOCK_QUALITY,
                     parseResourceQuantity(resQty)!
                   ).lineDfpAuec
                 )}
@@ -392,7 +414,7 @@ export default function ResourceBuyOrderPanel({
                 >
                   <span className="text-white">
                     {line.blueprintTitle} × {line.quantity} ·{' '}
-                    {formatOrderQualityLabel(line.minQuality)}
+                    {formatBlueprintOrderQualityLabel(line.minQuality)}
                   </span>
                   <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
                   <button
@@ -411,7 +433,11 @@ export default function ResourceBuyOrderPanel({
                 >
                   <span className="text-white">
                     {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU ·{' '}
-                    {formatOrderQualityLabel(line.minQuality)}
+                    {formatResourceOrderQualityLabel(
+                      line.resourceKey,
+                      line.resourceLabel,
+                      line.minQuality
+                    )}
                   </span>
                   <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
                   <button

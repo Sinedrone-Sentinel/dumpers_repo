@@ -3,6 +3,7 @@ import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import { useBlueprintData } from './blueprints'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { isSalvageResource } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
@@ -299,6 +300,7 @@ export default function ResourceTrackerRoute() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
               {filteredCards.map((card) => {
                 const quality = card.quality ?? DEFAULT_STOCK_QUALITY
+                const isSalvage = isSalvageResource(card.resource_key)
                 const lineKey = inventoryLineKey(card.resource_key, quality)
                 const isEditing = editingKey === lineKey
 
@@ -323,7 +325,7 @@ export default function ResourceTrackerRoute() {
                       <div className="flex flex-col items-end gap-1">
                         {isPersonalTab && (
                           <span className="px-2 py-0.5 rounded text-xs border bg-amber-950/40 text-amber-200 border-amber-500/30 font-medium">
-                            Q{quality}
+                            {isSalvage ? 'Q0 (salvage)' : `Q${quality}`}
                           </span>
                         )}
                         <span
