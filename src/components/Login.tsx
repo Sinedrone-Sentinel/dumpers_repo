@@ -1,5 +1,5 @@
 import React from 'react'
-import { SITE_SLOGAN } from '../config/site'
+import { SITE_COPYRIGHT, SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function Login() {
@@ -87,7 +87,7 @@ export default function Login() {
 
         <div className="mt-6 text-center">
           <p className="text-slate-500 text-sm">
-            © 2024 Black Star Dumpers
+            {SITE_COPYRIGHT}
           </p>
         </div>
       </div>

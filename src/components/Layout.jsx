@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import { getVisibleNavItems } from '../config/appNav'
+import { SITE_COPYRIGHT } from '../config/site'
 import Login from './Login'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
@@ -299,7 +300,7 @@ export default function Layout() {
 
       {/* Footer */}
       <footer className="mt-12 py-6 text-center text-slate-500 border-t border-slate-800">
-        <p>© 2026 Black Star - All Blueprints Subject to Change Every Patch</p>
+        <p>{SITE_COPYRIGHT}</p>
       </footer>
     </div>
   )

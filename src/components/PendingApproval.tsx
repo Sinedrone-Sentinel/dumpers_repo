@@ -1,4 +1,5 @@
 import React from 'react'
+import { SITE_COPYRIGHT } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function PendingApproval() {
@@ -55,6 +56,10 @@ export default function PendingApproval() {
               Sign Out
             </button>
           </div>
+        </div>
+
+        <div className="mt-6 text-center">
+          <p className="text-slate-500 text-sm">{SITE_COPYRIGHT}</p>
         </div>
       </div>
     </div>
