@@ -298,8 +298,15 @@ export default function BlueprintsRoute() {
 
   const currentSizes = selectedMainCategory ? categoryData.sizes[selectedMainCategory] || {} : {}
   const currentArmorWeights = selectedMainCategory === 'FPS Armour' ? categoryData.armorWeights || {} : {}
-  const currentSubTypes = (selectedSize || selectedArmorWeight) ? filteredSubTypeCounts : (selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {})
-  const hasSubFilters = Object.keys(currentSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0
+  // Get all subtypes for the category, but use filtered counts when a size/weight filter is active
+  const allSubTypes = selectedMainCategory ? categoryData.subTypes[selectedMainCategory] || {} : {}
+  const currentSubTypeCounts = (selectedSize || selectedArmorWeight) ? filteredSubTypeCounts : allSubTypes
+  // Merge all subtypes with filtered counts (show all subtypes, some may have 0 count)
+  const currentSubTypes = Object.keys(allSubTypes).reduce((acc, key) => {
+    acc[key] = currentSubTypeCounts[key] || 0
+    return acc
+  }, {})
+  const hasSubFilters = Object.keys(allSubTypes).length > 0 || Object.keys(currentSizes).length > 0 || Object.keys(currentArmorWeights).length > 0
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-2 sm:p-4 overflow-x-hidden">
