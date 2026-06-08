@@ -2,26 +2,18 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderRatingModal from '../components/OrderRatingModal'
+import OrderRequestLines from '../components/OrderRequestLines'
 import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { SITE_SLOGAN } from '../config/site'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
-import {
-  formatBlueprintOrderQualityLabel,
-  formatDfpAuec,
-  formatDfpRequiredPrice,
-  formatResourceOrderQualityLabel,
-} from '../lib/dfp'
+import { formatDfpAuec, formatDfpRequiredPrice } from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import { getOrderAcceptBlockers } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
-import {
-  orderTotalDfp,
-  resolveOrderBlueprintLines,
-  resolveOrderResourceLines,
-} from '../lib/orderPricing'
+import { orderTotalDfp } from '../lib/orderPricing'
 import {
   buyerReputationFromRow,
   fulfillerMeetsOrderMinRep,
@@ -29,7 +21,6 @@ import {
   passesBuyerRepFilter,
   type MemberReputationRow,
 } from '../lib/reputation'
-import { formatResourceQuantity } from '../lib/resourceQuantity'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import {
@@ -379,6 +370,9 @@ export default function FulfillmentRoute() {
                                 </span>
                               )}
                             </div>
+                            <div className="mt-1">
+                              <OrderRequestLines order={order} />
+                            </div>
                             {!meetsMinRep && (
                               <p className="text-amber-400/90 text-xs">
                                 Your fulfiller reputation is below this order&apos;s minimum.
@@ -448,7 +442,7 @@ export default function FulfillmentRoute() {
                         </span>
                       </div>
                       <p className="text-slate-500 text-xs mt-1">
-                        {order.status.replace(/_/g, ' ')} · {(order.items ?? []).length} resources
+                        {order.status.replace(/_/g, ' ')}
                         {totalDfp > 0 && (
                           <span className="text-amber-300/90">
                             {' '}
@@ -456,6 +450,9 @@ export default function FulfillmentRoute() {
                           </span>
                         )}
                       </p>
+                      <div className="mt-2">
+                        <OrderRequestLines order={order} showDfp={false} />
+                      </div>
                       <div className="mt-2">
                         <ReputationBadge
                           label="Buyer rep"
@@ -494,30 +491,7 @@ export default function FulfillmentRoute() {
                   />
                 )}
 
-                {(resolveOrderBlueprintLines(selectedOrder).length > 0 ||
-                  resolveOrderResourceLines(selectedOrder).length > 0) && (
-                  <ul className="text-xs text-slate-400 space-y-1">
-                    {resolveOrderBlueprintLines(selectedOrder).map((line) => (
-                      <li key={`${selectedOrder.id}-${line.blueprintId}-${line.quantity}`}>
-                        {line.blueprintTitle} × {line.quantity} (
-                        {formatBlueprintOrderQualityLabel(line.minQuality)})
-                        {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
-                      </li>
-                    ))}
-                    {resolveOrderResourceLines(selectedOrder).map((line) => (
-                      <li key={`${selectedOrder.id}-${line.resourceKey}-${line.quantityScu}`}>
-                        {line.resourceLabel} · {formatResourceQuantity(line.quantityScu)} SCU (
-                        {formatResourceOrderQualityLabel(
-                          line.resourceKey,
-                          line.resourceLabel,
-                          line.minQuality
-                        )}
-                        )
-                        {line.lineDfpAuec > 0 && ` · ${formatDfpAuec(line.lineDfpAuec)}`}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <OrderRequestLines order={selectedOrder} />
 
                 <div className="space-y-2">
                   {(selectedOrder.items ?? []).map((item) => {
@@ -674,6 +648,9 @@ export default function FulfillmentRoute() {
                               Pickup confirmed — archive and rate the customer when you are done.
                             </p>
                           )}
+                          <div className="mt-2">
+                            <OrderRequestLines order={order} showDfp={false} />
+                          </div>
                         </div>
                         {canArchive && (
                           <button

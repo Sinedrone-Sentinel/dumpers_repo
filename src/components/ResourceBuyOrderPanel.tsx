@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import BlueprintTypeahead from './BlueprintTypeahead'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
 import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import { DEFAULT_STOCK_QUALITY, ORDER_QUALITY_TIERS } from '../config/dfp'
@@ -71,7 +72,6 @@ export default function ResourceBuyOrderPanel({
 }: ResourceBuyOrderPanelProps) {
   const isEditing = Boolean(editOrder?.id)
   const [mode, setMode] = useState<'blueprint' | 'resource'>('blueprint')
-  const [bpSearch, setBpSearch] = useState('')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
   const [bpQuality, setBpQuality] = useState(String(DEFAULT_STOCK_QUALITY))
   const [bpQty, setBpQty] = useState('1')
@@ -124,19 +124,7 @@ export default function ResourceBuyOrderPanel({
     [catalog]
   )
 
-  const filteredBlueprints = useMemo(() => {
-    const q = bpSearch.trim().toLowerCase()
-    if (!q) return blueprints.slice(0, 80)
-    return blueprints
-      .filter(
-        (bp) =>
-          (bp.blueprintName || '').toLowerCase().includes(q) ||
-          (bp.file || '').toLowerCase().includes(q)
-      )
-      .slice(0, 80)
-  }, [blueprints, bpSearch])
-
-  const selectedBlueprint = blueprintById.get(selectedBlueprintId)
+  const selectedBlueprint = blueprintById.get(selectedBlueprintId) ?? null
   const selectedIsAmmo = selectedBlueprint ? isAmmoBlueprint(selectedBlueprint) : false
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
   const selectedResIsSalvage = selectedResource
@@ -164,11 +152,6 @@ export default function ResourceBuyOrderPanel({
       }),
     [bpCart, resCart, blueprintById]
   )
-
-  useEffect(() => {
-    if (selectedBlueprintId || filteredBlueprints.length === 0) return
-    setSelectedBlueprintId(filteredBlueprints[0].file ?? '')
-  }, [filteredBlueprints, selectedBlueprintId])
 
   useEffect(() => {
     if (resourceKey || activeCatalog.length === 0) return
@@ -324,61 +307,53 @@ export default function ResourceBuyOrderPanel({
 
         {mode === 'blueprint' ? (
           <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">
-            <input
-              value={bpSearch}
-              onChange={(e) => setBpSearch(e.target.value)}
-              placeholder="Search blueprints..."
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+            <BlueprintTypeahead
+              blueprints={blueprints}
+              selectedBlueprint={selectedBlueprint}
+              onSelect={(bp) => setSelectedBlueprintId(bp.file ?? '')}
+              onClear={() => setSelectedBlueprintId('')}
             />
-            <select
-              value={selectedBlueprintId}
-              onChange={(e) => setSelectedBlueprintId(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-            >
-              {filteredBlueprints.map((bp) => (
-                <option key={bp.file} value={bp.file}>
-                  {bp.blueprintName || bp.file}
-                </option>
-              ))}
-            </select>
-            {selectedIsAmmo && (
-              <p className="text-slate-400 text-xs">
-                Ammo — no min quality on the order. Fulfiller may use lowest quality materials on
-                hand (in-game, ammo craft quality does not matter).
-              </p>
+            {selectedBlueprint && (
+              <>
+                {selectedIsAmmo && (
+                  <p className="text-slate-400 text-xs">
+                    Ammo — no min quality on the order. Fulfiller may use lowest quality materials on
+                    hand (in-game, ammo craft quality does not matter).
+                  </p>
+                )}
+                <div className={`grid gap-2 ${selectedIsAmmo ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  {!selectedIsAmmo && (
+                    <select
+                      value={bpQuality}
+                      onChange={(e) => setBpQuality(e.target.value)}
+                      className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                      aria-label="Min quality tier"
+                    >
+                      {ORDER_QUALITY_TIERS.map((tier) => (
+                        <option key={tier} value={tier}>
+                          Q{tier}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <input
+                    type="number"
+                    min={1}
+                    value={bpQty}
+                    onChange={(e) => setBpQty(e.target.value)}
+                    placeholder="Qty"
+                    className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={addBlueprint}
+                    className="py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+                  >
+                    Add
+                  </button>
+                </div>
+              </>
             )}
-            <div className={`grid gap-2 ${selectedIsAmmo ? 'grid-cols-2' : 'grid-cols-3'}`}>
-              {!selectedIsAmmo && (
-                <select
-                  value={bpQuality}
-                  onChange={(e) => setBpQuality(e.target.value)}
-                  className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-                  aria-label="Min quality tier"
-                >
-                  {ORDER_QUALITY_TIERS.map((tier) => (
-                    <option key={tier} value={tier}>
-                      Q{tier}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <input
-                type="number"
-                min={1}
-                value={bpQty}
-                onChange={(e) => setBpQty(e.target.value)}
-                placeholder="Qty"
-                className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-              />
-              <button
-                type="button"
-                onClick={addBlueprint}
-                disabled={!selectedBlueprint}
-                className="py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white rounded-lg text-sm"
-              >
-                Add
-              </button>
-            </div>
           </div>
         ) : (
           <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">

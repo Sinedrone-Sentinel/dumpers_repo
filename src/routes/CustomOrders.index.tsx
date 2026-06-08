@@ -2,25 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
+import OrderRequestLines from '../components/OrderRequestLines'
 import ReputationBadge from '../components/ReputationBadge'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
-import {
-  formatBlueprintOrderQualityLabel,
-  formatDfpAuec,
-  formatDfpRequiredPrice,
-  formatResourceOrderQualityLabel,
-} from '../lib/dfp'
+import { formatDfpRequiredPrice } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
 import { canRequesterModifyOrder } from '../lib/orderEdit'
-import {
-  orderTotalDfp,
-  resolveOrderBlueprintLines,
-  resolveOrderResourceLines,
-} from '../lib/orderPricing'
-import { formatResourceQuantity } from '../lib/resourceQuantity'
+import { orderTotalDfp } from '../lib/orderPricing'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
@@ -32,11 +23,7 @@ import {
   orderMatchesTab,
   type OrderListTab,
 } from '../lib/orderArchive'
-import {
-  buyerReputationFromRow,
-  fulfillerReputationFromRow,
-  type MemberReputationRow,
-} from '../lib/reputation'
+import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
 import {
   archiveCustomOrderWithRating,
   confirmOrderPickup,
@@ -230,11 +217,6 @@ export default function CustomOrdersRoute() {
     () => buyerReputationFromRow(myReputation ?? undefined),
     [myReputation]
   )
-  const myFulfillerRep = useMemo(
-    () => fulfillerReputationFromRow(myReputation ?? undefined),
-    [myReputation]
-  )
-
   const myOrders = useMemo(
     () => (userId ? orders.filter((o) => o.requester_id === userId) : []),
     [orders, userId]
@@ -355,7 +337,6 @@ export default function CustomOrdersRoute() {
       {userId && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} />
-          <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} />
         </div>
       )}
 
@@ -460,9 +441,6 @@ export default function CustomOrdersRoute() {
         <div className="space-y-3">
           {visibleOrders.map((order) => {
             const totalDfp = orderTotalDfp(order)
-            const blueprintLines = resolveOrderBlueprintLines(order)
-            const resourceLines = resolveOrderResourceLines(order)
-
             return (
               <div
                 key={order.id}
@@ -509,47 +487,9 @@ export default function CustomOrdersRoute() {
                       </div>
                     )}
 
-                    {(blueprintLines.length > 0 || resourceLines.length > 0) && (
-                      <ul className="mt-3 space-y-1">
-                        {blueprintLines.map((line) => (
-                          <li
-                            key={`${order.id}-bp-${line.blueprintId}-${line.minQuality}-${line.quantity}`}
-                            className="text-slate-400 text-xs flex flex-wrap gap-x-2"
-                          >
-                            <span className="text-slate-300">{line.blueprintTitle}</span>
-                            <span>× {line.quantity}</span>
-                            <span>· {formatBlueprintOrderQualityLabel(line.minQuality)}</span>
-                            {line.lineDfpAuec > 0 && (
-                              <span className="text-amber-300/90">
-                                · {formatDfpAuec(line.lineDfpAuec)}
-                              </span>
-                            )}
-                          </li>
-                        ))}
-                        {resourceLines.map((line) => (
-                          <li
-                            key={`${order.id}-res-${line.resourceKey}-${line.minQuality}-${line.quantityScu}`}
-                            className="text-slate-400 text-xs flex flex-wrap gap-x-2"
-                          >
-                            <span className="text-slate-300">{line.resourceLabel}</span>
-                            <span>· {formatResourceQuantity(line.quantityScu)} SCU</span>
-                            <span>
-                              ·{' '}
-                              {formatResourceOrderQualityLabel(
-                                line.resourceKey,
-                                line.resourceLabel,
-                                line.minQuality
-                              )}
-                            </span>
-                            {line.lineDfpAuec > 0 && (
-                              <span className="text-amber-300/90">
-                                · {formatDfpAuec(line.lineDfpAuec)}
-                              </span>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <div className="mt-3">
+                      <OrderRequestLines order={order} />
+                    </div>
                   </div>
 
                   <div className="flex flex-col items-end gap-1">

@@ -130,7 +130,8 @@ export default function ResourceTrackerRoute() {
         ) : undefined
       }
     >
-      <div className="flex flex-wrap gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit">
+      <div className="w-full min-w-0 overflow-x-hidden">
+      <div className="flex flex-wrap gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit max-w-full">
         <button
           type="button"
           onClick={() => setActiveTab('personal')}
@@ -157,12 +158,24 @@ export default function ResourceTrackerRoute() {
         )}
       </div>
 
-      {readOnly && (
-        <div className="mb-4 p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
-          Org Total is a read-only aggregate ledger — summed from every approved member&apos;s My
-          Resources. Update your own quantities under My Resources.
-        </div>
-      )}
+      <div className="mb-6 min-h-[11.5rem] w-full min-w-0">
+        {isPersonalTab && user?.id ? (
+          <PersonalStockAddPanel
+            userId={user.id}
+            orgId={siteOrg?.id ?? null}
+            catalog={catalog}
+            labelMap={labelMap}
+            existingKeys={existingLineKeys}
+            onAdded={() => void refresh()}
+            onError={setStockError}
+          />
+        ) : readOnly ? (
+          <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
+            Org Total is a read-only aggregate ledger — summed from every approved member&apos;s My
+            Resources. Update your own quantities under My Resources.
+          </div>
+        ) : null}
+      </div>
 
       {(error || stockError) && (
         <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
@@ -184,19 +197,7 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      {isPersonalTab && user?.id && (
-        <PersonalStockAddPanel
-          userId={user.id}
-          orgId={siteOrg?.id ?? null}
-          catalog={catalog}
-          labelMap={labelMap}
-          existingKeys={existingLineKeys}
-          onAdded={() => void refresh()}
-          onError={setStockError}
-        />
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 w-full min-w-0">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel}</p>
           <p className="text-2xl font-bold text-white mt-1">{cardCount}</p>
@@ -234,7 +235,8 @@ export default function ResourceTrackerRoute() {
         </label>
       </div>
 
-      {loading ? (
+      <div className="relative w-full min-w-0 min-h-[24rem]">
+      {loading && stockCards.length === 0 ? (
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
           <p className="text-slate-400 mt-4">Loading resources...</p>
@@ -248,7 +250,7 @@ export default function ResourceTrackerRoute() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 w-full min-w-0">
           {filteredCards.map((card) => {
             const quality = card.quality ?? DEFAULT_STOCK_QUALITY
             const isSalvage = isSalvageResource(card.resource_key)
@@ -258,13 +260,13 @@ export default function ResourceTrackerRoute() {
             return (
               <div
                 key={lineKey}
-                className={`bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
+                className={`min-w-0 bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
                   card.is_active ? 'border-slate-700' : 'border-slate-800 opacity-70'
                 }`}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="text-white font-medium">{card.label}</h3>
+                <div className="flex items-start justify-between gap-2 min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-white font-medium truncate">{card.label}</h3>
                     <p className="text-slate-500 text-xs mt-0.5">
                       {card.is_active
                         ? isPersonalTab
@@ -273,12 +275,17 @@ export default function ResourceTrackerRoute() {
                         : 'Retired — no longer in blueprints'}
                     </p>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    {isPersonalTab && (
-                      <span className="px-2 py-0.5 rounded text-xs border bg-amber-950/40 text-amber-200 border-amber-500/30 font-medium">
-                        {isSalvage ? 'Q0 (salvage)' : `Q${quality}`}
-                      </span>
-                    )}
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    <span
+                      className={`px-2 py-0.5 rounded text-xs border font-medium ${
+                        isPersonalTab
+                          ? 'bg-amber-950/40 text-amber-200 border-amber-500/30'
+                          : 'invisible border-transparent'
+                      }`}
+                      aria-hidden={!isPersonalTab}
+                    >
+                      {isSalvage ? 'Q0 (salvage)' : `Q${quality}`}
+                    </span>
                     <span
                       className={`px-2 py-0.5 rounded text-xs border ${
                         card.quantity > 0
@@ -340,35 +347,46 @@ export default function ResourceTrackerRoute() {
                   )}
                 </div>
 
-                {card.is_active && !readOnly && (
-                  <div className="mt-3 grid grid-cols-2 gap-1.5">
-                    {ADJUST_STEPS.map((step) => (
-                      <div key={step} className="flex gap-1">
-                        <button
-                          onClick={() =>
-                            void handleAdjust(card.resource_key, quality, -step)
-                          }
-                          className="flex-1 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded"
-                        >
-                          −{step}
-                        </button>
-                        <button
-                          onClick={() =>
-                            void handleAdjust(card.resource_key, quality, step)
-                          }
-                          className="flex-1 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded"
-                        >
-                          +{step}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className="mt-3 min-h-[6.75rem]">
+                  {card.is_active && !readOnly && (
+                    <div className="grid grid-cols-2 gap-1.5 min-w-0">
+                      {ADJUST_STEPS.map((step) => (
+                        <div key={step} className="flex gap-1 min-w-0">
+                          <button
+                            onClick={() =>
+                              void handleAdjust(card.resource_key, quality, -step)
+                            }
+                            className="flex-1 min-w-0 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded tabular-nums"
+                          >
+                            −{step}
+                          </button>
+                          <button
+                            onClick={() =>
+                              void handleAdjust(card.resource_key, quality, step)
+                            }
+                            className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
+                          >
+                            +{step}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })}
         </div>
       )}
+      {loading && stockCards.length > 0 && (
+        <div
+          className="absolute inset-0 flex items-center justify-center bg-slate-950/40 rounded-2xl"
+          aria-busy="true"
+        >
+          <div className="w-10 h-10 border-t-2 border-b-2 border-red-500 rounded-full animate-spin" />
+        </div>
+      )}
+      </div>
 
       {isSuperAdmin && (
         <p className="text-slate-500 text-xs mt-6">
@@ -377,6 +395,7 @@ export default function ResourceTrackerRoute() {
           blueprints</strong> after catalog updates.
         </p>
       )}
+      </div>
     </FeaturePageLayout>
   )
 }

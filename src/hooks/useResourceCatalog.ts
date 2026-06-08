@@ -62,7 +62,8 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
       return
     }
 
-    setLoading(true)
+    const isInitialLoad = catalog.length === 0 && catalogWithInventory.length === 0
+    if (isInitialLoad) setLoading(true)
     setError(null)
 
     if (withInventory && ctx) {
