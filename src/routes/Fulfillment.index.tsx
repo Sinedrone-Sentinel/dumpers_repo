@@ -34,6 +34,7 @@ import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import {
   acceptCustomOrder,
+  abandonCustomOrderFulfillment,
   archiveCustomOrderWithRating,
   completeOrderCraft,
   fetchCustomOrders,
@@ -210,6 +211,31 @@ export default function FulfillmentRoute() {
       return
     }
 
+    await loadData()
+  }
+
+  const handleAbandon = async (orderId: string) => {
+    if (
+      !window.confirm(
+        'Release this order back to the fulfillment pool? Another member can accept it.'
+      )
+    ) {
+      return
+    }
+
+    setSubmitting(true)
+    setError(null)
+
+    const result = await abandonCustomOrderFulfillment(orderId)
+
+    setSubmitting(false)
+
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+
+    if (selectedOrderId === orderId) setSelectedOrderId(null)
     await loadData()
   }
 
@@ -523,6 +549,15 @@ export default function FulfillmentRoute() {
                     .
                   </p>
                 )}
+
+                <button
+                  type="button"
+                  onClick={() => void handleAbandon(selectedOrder.id)}
+                  disabled={submitting}
+                  className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm font-medium"
+                >
+                  {submitting ? 'Releasing...' : 'Abandon job — return to pool'}
+                </button>
 
                 {selectedOrder.status === 'accepted' && (
                   <button

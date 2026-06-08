@@ -14,6 +14,7 @@ import {
   formatResourceOrderQualityLabel,
 } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
+import { canRequesterModifyOrder } from '../lib/orderEdit'
 import {
   orderTotalDfp,
   resolveOrderBlueprintLines,
@@ -39,6 +40,7 @@ import {
 import {
   archiveCustomOrderWithRating,
   confirmOrderPickup,
+  deleteCustomOrderRequester,
   fetchCustomOrders,
   fetchMemberReputations,
   fetchUserNotifications,
@@ -106,6 +108,7 @@ export default function CustomOrdersRoute() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [editingOrderId, setEditingOrderId] = useState<string | null>(null)
   const [listTab, setListTab] = useState<OrderListTab>('active')
   const [ratingModal, setRatingModal] = useState<{
     orderId: string
@@ -149,6 +152,23 @@ export default function CustomOrdersRoute() {
       setError(result.error)
       return
     }
+    await loadOrders()
+  }
+
+  const handleDeleteOrder = async (orderId: string) => {
+    if (
+      !window.confirm(
+        'Delete this order permanently? This cannot be undone.'
+      )
+    ) {
+      return
+    }
+    const result = await deleteCustomOrderRequester(orderId)
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+    if (editingOrderId === orderId) setEditingOrderId(null)
     await loadOrders()
   }
 
@@ -263,7 +283,10 @@ export default function CustomOrdersRoute() {
             Go to Fulfillment
           </Link>
           <button
-            onClick={() => setShowForm((v) => !v)}
+            onClick={() => {
+              setEditingOrderId(null)
+              setShowForm((v) => !v)
+            }}
             className="px-3 py-1.5 text-sm bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded-lg transition-colors"
           >
             {showForm ? 'Close form' : 'New order'}
@@ -378,7 +401,7 @@ export default function CustomOrdersRoute() {
         })}
       </div>
 
-      {showForm && user?.id && (
+      {showForm && user?.id && !editingOrderId && (
         <div className="mb-6 bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <h2 className="text-white font-medium mb-2">New buy order</h2>
           <p className="text-slate-500 text-xs mb-4">
@@ -392,6 +415,28 @@ export default function CustomOrdersRoute() {
             onError={setError}
             onSubmitted={() => {
               setShowForm(false)
+              void loadOrders()
+            }}
+          />
+        </div>
+      )}
+
+      {editingOrderId && user?.id && (
+        <div className="mb-6 bg-slate-900/60 border border-orange-500/30 rounded-xl p-4">
+          <h2 className="text-white font-medium mb-2">Edit order</h2>
+          <p className="text-slate-500 text-xs mb-4">
+            Only pending orders with no fulfiller yet can be changed.
+          </p>
+          <ResourceBuyOrderPanel
+            userId={user.id}
+            blueprints={blueprints}
+            catalog={catalog}
+            labelMap={labelMap}
+            editOrder={orders.find((o) => o.id === editingOrderId) ?? null}
+            onCancelEdit={() => setEditingOrderId(null)}
+            onError={setError}
+            onSubmitted={() => {
+              setEditingOrderId(null)
               void loadOrders()
             }}
           />
@@ -527,7 +572,28 @@ export default function CustomOrdersRoute() {
                           Archive
                         </button>
                       )}
-                      {OPEN_STATUSES.includes(order.status) && (
+                      {canRequesterModifyOrder(order) && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowForm(false)
+                              setEditingOrderId(order.id)
+                            }}
+                            className="px-2 py-1 text-xs bg-orange-950/50 text-orange-300 border border-orange-500/30 rounded"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleDeleteOrder(order.id)}
+                            className="px-2 py-1 text-xs bg-red-950/50 text-red-300 border border-red-500/30 rounded"
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+                      {OPEN_STATUSES.includes(order.status) && !canRequesterModifyOrder(order) && (
                         <button
                           onClick={() => void handleStatusChange(order.id, 'cancelled')}
                           className="px-2 py-1 text-xs bg-slate-800 text-slate-400 border border-slate-600 rounded"

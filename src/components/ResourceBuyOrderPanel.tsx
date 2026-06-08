@@ -19,10 +19,17 @@ import {
   buildOrderTitle,
   pricingForBlueprintLine,
   pricingForResourceLine,
+  resolveOrderBlueprintLines,
+  resolveOrderResourceLines,
   type OrderBlueprintLine,
   type OrderResourceLine,
 } from '../lib/orderPricing'
-import { createCustomOrder, type BlueprintResourceRow } from '../lib/operations'
+import {
+  createCustomOrder,
+  updateCustomOrderRequester,
+  type BlueprintResourceRow,
+  type CustomOrder,
+} from '../lib/operations'
 import {
   formatResourceQuantity,
   parseResourceQuantity,
@@ -42,6 +49,8 @@ interface ResourceBuyOrderPanelProps {
   blueprints: BlueprintWithSlots[]
   catalog: BlueprintResourceRow[]
   labelMap: Record<string, string>
+  editOrder?: CustomOrder | null
+  onCancelEdit?: () => void
   onSubmitted?: () => void
   onError?: (message: string) => void
 }
@@ -55,9 +64,12 @@ export default function ResourceBuyOrderPanel({
   blueprints,
   catalog,
   labelMap,
+  editOrder,
+  onCancelEdit,
   onSubmitted,
   onError,
 }: ResourceBuyOrderPanelProps) {
+  const isEditing = Boolean(editOrder?.id)
   const [mode, setMode] = useState<'blueprint' | 'resource'>('blueprint')
   const [bpSearch, setBpSearch] = useState('')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
@@ -72,6 +84,32 @@ export default function ResourceBuyOrderPanel({
   const [resCart, setResCart] = useState<CartResourceLine[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [showTransferModal, setShowTransferModal] = useState(false)
+
+  useEffect(() => {
+    if (!editOrder) return
+
+    setBpCart(
+      resolveOrderBlueprintLines(editOrder).map((line) => ({
+        ...line,
+        cartKey: nextCartKey(),
+      }))
+    )
+    setResCart(
+      resolveOrderResourceLines(editOrder).map((line) => ({
+        ...line,
+        cartKey: nextCartKey(),
+      }))
+    )
+    setNotes(editOrder.notes ?? '')
+    setMinFulfillerRep(
+      editOrder.min_fulfiller_reputation != null
+        ? String(editOrder.min_fulfiller_reputation)
+        : ''
+    )
+    setMode(
+      resolveOrderBlueprintLines(editOrder).length > 0 ? 'blueprint' : 'resource'
+    )
+  }, [editOrder])
 
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
@@ -192,8 +230,7 @@ export default function ResourceBuyOrderPanel({
     setSubmitting(true)
     onError?.('')
 
-    const result = await createCustomOrder({
-      requesterId: userId,
+    const payload = {
       title: buildOrderTitle(bpCart.length, resCart.length),
       notes,
       totalDfpAuec: cartTotalDfp,
@@ -218,7 +255,11 @@ export default function ResourceBuyOrderPanel({
         resourceKey: item.resourceKey,
         quantity: item.quantity,
       })),
-    })
+    }
+
+    const result = isEditing
+      ? await updateCustomOrderRequester({ orderId: editOrder!.id, ...payload })
+      : await createCustomOrder({ requesterId: userId, ...payload })
 
     setSubmitting(false)
     setShowTransferModal(false)
@@ -228,10 +269,12 @@ export default function ResourceBuyOrderPanel({
       return
     }
 
-    setBpCart([])
-    setResCart([])
-    setNotes('')
-    setMinFulfillerRep('')
+    if (!isEditing) {
+      setBpCart([])
+      setResCart([])
+      setNotes('')
+      setMinFulfillerRep('')
+    }
     onSubmitted?.()
   }
 
@@ -510,13 +553,28 @@ export default function ResourceBuyOrderPanel({
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={submitting || (bpCart.length === 0 && resCart.length === 0)}
-          className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
-        >
-          {submitting ? 'Submitting...' : `Submit buy order · ${formatDfpAuec(cartTotalDfp)}`}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="submit"
+            disabled={submitting || (bpCart.length === 0 && resCart.length === 0)}
+            className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+          >
+            {submitting
+              ? 'Saving...'
+              : isEditing
+                ? `Save changes · ${formatDfpAuec(cartTotalDfp)}`
+                : `Submit buy order · ${formatDfpAuec(cartTotalDfp)}`}
+          </button>
+          {isEditing && onCancelEdit && (
+            <button
+              type="button"
+              onClick={onCancelEdit}
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg text-sm"
+            >
+              Cancel edit
+            </button>
+          )}
+        </div>
       </form>
 
       {showTransferModal && (

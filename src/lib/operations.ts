@@ -629,6 +629,81 @@ export async function createCustomOrder(input: {
   return { data: order as CustomOrder }
 }
 
+export async function updateCustomOrderRequester(input: {
+  orderId: string
+  title: string
+  notes?: string
+  totalDfpAuec: number
+  minFulfillerReputation?: number | null
+  blueprints: CustomOrderBlueprintInput[]
+  resources: CustomOrderResourceInput[]
+  items: { resourceKey: string; quantity: number }[]
+}): Promise<{ error?: string }> {
+  if (input.blueprints.length === 0 && input.resources.length === 0) {
+    return { error: 'Add at least one blueprint or resource to the order' }
+  }
+
+  const firstBp = input.blueprints[0]
+  const legacyBlueprintId =
+    input.blueprints.length === 1 && input.resources.length === 0 ? firstBp.blueprintId : null
+
+  const { error } = await supabase.rpc('update_custom_order_requester', {
+    p_order_id: input.orderId,
+    p_title: input.title.trim(),
+    p_notes: input.notes?.trim() || null,
+    p_total_dfp_auec: Math.round(input.totalDfpAuec),
+    p_min_fulfiller_reputation: input.minFulfillerReputation ?? null,
+    p_blueprint_id: legacyBlueprintId,
+    p_min_quality: firstBp?.minQuality ?? input.resources[0]?.minQuality ?? 500,
+    p_quantity: firstBp?.quantity ?? 1,
+    p_blueprints: input.blueprints.map((bp, index) => ({
+      blueprint_id: bp.blueprintId,
+      blueprint_title: bp.blueprintTitle,
+      min_quality: bp.minQuality,
+      quantity: bp.quantity,
+      unit_dfp_auec: Math.round(bp.unitDfpAuec),
+      line_dfp_auec: Math.round(bp.lineDfpAuec),
+      sort_order: index,
+    })),
+    p_resources: input.resources.map((line, index) => ({
+      resource_key: line.resourceKey,
+      resource_label: line.resourceLabel,
+      min_quality: line.minQuality,
+      quantity_scu: roundResourceQuantity(line.quantityScu),
+      unit_dfp_auec: Math.round(line.unitDfpAuec),
+      line_dfp_auec: Math.round(line.lineDfpAuec),
+      sort_order: index,
+    })),
+    p_items: input.items.map((item) => ({
+      resource_key: item.resourceKey,
+      quantity: item.quantity,
+    })),
+  })
+
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function deleteCustomOrderRequester(
+  orderId: string
+): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('delete_custom_order_requester', {
+    p_order_id: orderId,
+  })
+  if (error) return { error: error.message }
+  return {}
+}
+
+export async function abandonCustomOrderFulfillment(
+  orderId: string
+): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('abandon_custom_order_fulfillment', {
+    p_order_id: orderId,
+  })
+  if (error) return { error: error.message }
+  return {}
+}
+
 export async function updateCustomOrderStatus(
   orderId: string,
   status: CustomOrderStatus
