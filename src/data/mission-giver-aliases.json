@@ -1,0 +1,56 @@
+{
+  "_comment": "Maps SCCrafters mission giver names to canonical faction slugs",
+  "_updated": "2026-06-09",
+  
+  "aliases": {
+    "northrock": "bountyhuntersguild",
+    "miles eckhart": "eckhartsecurity",
+    "constantine hurston": "hurstondynamics",
+    "ruto": "crusaderindustries",
+    "twitch": "citizensforprosperity",
+    "clovus darneely": "clovusdarneely",
+    "recco battaglia": "bountyhuntersguild",
+    "brock": "deadsaints",
+    "marco": "deadsaints"
+  },
+  
+  "factionDisplayNames": {
+    "bountyhuntersguild": "Bounty Hunters Guild",
+    "citizensforprosperity": "Citizens for Prosperity",
+    "eckhartsecurity": "Eckhart Security",
+    "foxwellenforcement": "Foxwell Enforcement",
+    "headhunters": "Headhunters",
+    "hurstondynamics": "Hurston Dynamics",
+    "crusaderindustries": "Crusader Industries",
+    "microtechcorp": "microTech",
+    "arccorp": "ArcCorp",
+    "shubininterstellar": "Shubin Interstellar",
+    "rayariinc": "Rayari Inc.",
+    "covalex": "Covalex Shipping",
+    "deadsaints": "Dead Saints",
+    "lingfamilyhauling": "Ling Family Hauling",
+    "adagioholdings": "Adagio Holdings",
+    "bitzeros": "Bit Zeros",
+    "hockrowagency": "Hockrow Agency",
+    "wikelo": "Wikelo"
+  },
+  
+  "nonReputationGivers": {
+    "_comment": "Mission givers that don't build faction rep (story/tutorial missions)",
+    "hockrowagency": {
+      "missions": ["jorrit dossier"],
+      "note": "Linear story mission chain, no rep required or gained"
+    },
+    "howtoplayguide": {
+      "missions": ["tutorial"],
+      "note": "New player tutorials"
+    }
+  },
+
+  "contractLevelPatterns": {
+    "_comment": "Inferred rep requirements based on contract level naming",
+    "yellow": { "minReputation": 0, "standingName": "Neutral" },
+    "orange": { "minReputation": 2200, "standingName": "Contractor" },
+    "red": { "minReputation": 5800, "standingName": "Sr. Contractor" }
+  }
+}

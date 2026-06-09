@@ -1,0 +1,1370 @@
+{
+  "aciedocommunications": {
+    "name": "Aciedo Communications",
+    "uuid": "4e429470-4d4e-4c2b-a4ac-4de42ada16e0",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "adagioholdings": {
+    "name": "Adagio Holdings",
+    "uuid": "569f1e53-a971-462b-abe3-969a8e096ff5",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "arccorp": {
+    "name": "ArcCorp",
+    "uuid": "d27efa13-7f10-4b3e-87aa-43759d9301da",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "bitzeros": {
+    "name": "Bit Zeros",
+    "uuid": "5fb3c365-cf83-48d0-89a8-1cc539113b35",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "bountyhuntersguild": {
+    "name": "Bounty Hunters Guild",
+    "uuid": "29e65591-d776-49a4-9a98-eb1fd7c51fcc",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "citizensforprosperity": {
+    "name": "Citizens For Prosperity",
+    "uuid": "cd2b32d1-0362-41fb-8cfd-d29781daf789",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "civiliandefenseforce": {
+    "name": "Civilian Defense Force",
+    "uuid": "c618bb17-61cb-462c-8b51-8d4dfcb527de",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "clovusdarneely": {
+    "name": "Clovus Darneely",
+    "uuid": "82ecc51d-7df1-41ba-b678-aab3b8fdfad0",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "covalex": {
+    "name": "Covalex",
+    "uuid": "2640e0b2-54f3-4c29-9d5d-6f8f4fc49dbe",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "crusaderindustries": {
+    "name": "Crusader Industries",
+    "uuid": "b89d388c-622c-4c8b-8887-46681eb193c1",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "deadsaints": {
+    "name": "Dead Saints",
+    "uuid": "2da0657d-62dc-4f6c-8b25-fd88480d0834",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "eckhartsecurity": {
+    "name": "Eckhart Security",
+    "uuid": "705c3888-7126-48d7-8a7e-e1f5c76e0c3c",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "foxwellenforcement": {
+    "name": "Foxwell Enforcement",
+    "uuid": "21c61135-e8ee-459c-8f61-4550b8c02c58",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "ftlcourier": {
+    "name": "FTL Courier",
+    "uuid": "66179ed2-c685-4df1-a3a4-e2a7a2da2df0",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "headhunters": {
+    "name": "Headhunters",
+    "uuid": "9f89edc0-441b-4f40-a502-df12ebf3f1eb",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "hockrowagency": {
+    "name": "Hockrow Agency",
+    "uuid": "88bac9c7-0986-4945-8b72-c83657a1c8b9",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "hurstondynamics": {
+    "name": "Hurston Dynamics",
+    "uuid": "ab3bd2c5-60c2-4763-8589-0b0a318cf9b8",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "intersecdefensesolutions": {
+    "name": "InterSec Defense Solutions",
+    "uuid": "a9ab3e4f-30a3-4816-a1dd-4df51fd6678c",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "klescherrehabilitationfacilities": {
+    "name": "Klescher Rehabilitation Facilities",
+    "uuid": "cfe06ba5-968d-4e27-b738-7cc7abfb511f",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "lingfamilyhauling": {
+    "name": "Ling Family Hauling",
+    "uuid": "5a27ef3a-55c4-4822-b3f1-6506097d21de",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "microtech": {
+    "name": "microTech",
+    "uuid": "a04f2ed1-9e2b-4a31-abd3-a963e09e021f",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "northrockservicegroup": {
+    "name": "Northrock Service Group",
+    "uuid": "d84f1767-e406-448a-a413-9a526350c83f",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "placeholder": {
+    "name": "<= PLACEHOLDER =>",
+    "uuid": "4cd28d63-24ba-4180-a881-86036c29cd64",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "rayariincorporated": {
+    "name": "Rayari Incorporated",
+    "uuid": "df6de824-9f7b-44d5-a98b-d6a099970b5f",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "redwindlinehaul": {
+    "name": "Red Wind Linehaul",
+    "uuid": "aa5f0bf8-f36f-423a-b9dd-73084139db23",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "ruto": {
+    "name": "Ruto",
+    "uuid": "d7e05124-92df-4929-804a-d7a1b0fbfd93",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "shubininterstellar": {
+    "name": "Shubin Interstellar",
+    "uuid": "04b1380a-c598-4e3d-8ebf-debde07cfe3d",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "tarpits": {
+    "name": "Tar Pits",
+    "uuid": "d1a42653-8c65-4d6b-9617-4049ca77d8d8",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "teciatwitchpacheco": {
+    "name": "Tecia \"Twitch\" Pacheco",
+    "uuid": "7e716658-9c65-4ebe-819e-8fffd8390e6a",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "unifieddistributionmanagement": {
+    "name": "Unified Distribution Management",
+    "uuid": "7b2fbef9-bf19-4308-ab07-3cbf4fbc4d97",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "unitedwayfarersclub": {
+    "name": "United Wayfarers Club",
+    "uuid": "8458379d-9b70-493e-9477-817bf87d56d9",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "vaughn": {
+    "name": "Vaughn",
+    "uuid": "95761a82-18f9-4e25-ba33-d4c47c689324",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "wallaceklim": {
+    "name": "Wallace Klim",
+    "uuid": "c088786f-db63-4598-9c1b-a71ff4831f79",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "wikeloemporium": {
+    "name": "Wikelo Emporium",
+    "uuid": "5f442fdd-15cc-4f62-bd10-fce2023f4d0c",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "wildstarracing": {
+    "name": "Wildstar Racing",
+    "uuid": "35b0d342-8d8a-4b0e-adda-fc85cae49afd",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  },
+  "xenothreat": {
+    "name": "XenoThreat",
+    "uuid": "919a672b-eb70-40a7-94ea-8c75f3ff67fc",
+    "standings": [
+      {
+        "name": "Hostile",
+        "minReputation": -1
+      },
+      {
+        "name": "Neutral",
+        "minReputation": 0
+      },
+      {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      {
+        "name": "Contractor",
+        "minReputation": 2200
+      },
+      {
+        "name": "Sr. Contractor",
+        "minReputation": 5800
+      },
+      {
+        "name": "Veteran Contractor",
+        "minReputation": 15000
+      },
+      {
+        "name": "Head Contractor",
+        "minReputation": 38000
+      },
+      {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      }
+    ]
+  }
+}
