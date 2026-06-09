@@ -1,10 +1,10 @@
 import React from 'react'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
+import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useTargetList } from '../hooks/useTargetList'
-import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -185,7 +185,6 @@ export default function BlueprintsRoute() {
   const [selectedArmorSlot, setSelectedArmorSlot] = React.useState(null)
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(true)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
-  useBodyScrollLock(!!selectedBlueprint)
 
   const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
   const [selectedUserId, setSelectedUserId] = React.useState('all')
@@ -723,112 +722,15 @@ export default function BlueprintsRoute() {
         )}
       </section>
 
-      {/* Blueprint Details Modal */}
       {selectedBlueprint && (
-        <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4 overflow-hidden"
-          onClick={() => setSelectedBlueprint(null)}
-        >
-          <div 
-            className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto overscroll-contain shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-white">{selectedBlueprint.blueprintName}</h2>
-                <button 
-                  onClick={() => setSelectedBlueprint(null)}
-                  className="text-slate-400 hover:text-white text-2xl leading-none"
-                >
-                  ×
-                </button>
-              </div>
-              
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-2 text-sm">
-                  <span className="px-3 py-1 bg-slate-800 rounded-lg text-slate-300">
-                    {selectedBlueprint.categoryName || 'Unknown'}
-                  </span>
-                  {getSubType(selectedBlueprint) && (
-                    <span className="px-3 py-1 bg-slate-800 rounded-lg text-slate-300">
-                      {formatSubType(getSubType(selectedBlueprint))}
-                    </span>
-                  )}
-                  {selectedBlueprint.isReward === true && (
-                    <span className="px-3 py-1 bg-amber-900/50 text-amber-400 rounded-lg">★ Reward</span>
-                  )}
-                </div>
-
-                <div className="bg-slate-800/50 rounded-xl p-4">
-                  <h3 className="text-slate-400 text-sm mb-2">Craft Time</h3>
-                  <p className="text-white text-lg font-mono">
-                    {selectedBlueprint.craftTime?.hours || 0}h {selectedBlueprint.craftTime?.minutes || 0}m {selectedBlueprint.craftTime?.seconds || 0}s
-                  </p>
-                </div>
-
-                {selectedBlueprint.slots && selectedBlueprint.slots.length > 0 && (
-                  <div className="bg-slate-800/50 rounded-xl p-4">
-                    <h3 className="text-slate-400 text-sm mb-3">Required Resources</h3>
-                    <div className="space-y-3">
-                      {selectedBlueprint.slots.map((slot, idx) => (
-                        <div key={idx} className="bg-slate-900/50 rounded-lg p-3 border border-slate-700">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-white font-medium">{slot.slotDisplayName}</span>
-                            <span className="text-slate-400 text-sm">×{slot.requiredCount || 1}</span>
-                          </div>
-                          {slot.options && slot.options.length > 0 && (
-                            <div className="space-y-1">
-                              {slot.options.map((opt, optIdx) => (
-                                <div key={optIdx} className="flex justify-between text-sm">
-                                  <span className={opt.type === 'item' ? 'text-purple-400' : 'text-red-400'}>
-                                    {opt.resourceName || opt.entityName || 'Unknown'}
-                                  </span>
-                                  {opt.standardCargoUnits > 0 ? (
-                                    <span className="text-slate-500">{opt.standardCargoUnits} SCU</span>
-                                  ) : opt.quantity > 0 ? (
-                                    <span className="text-slate-500">×{opt.quantity}</span>
-                                  ) : null}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedBlueprint.rewardMissions && selectedBlueprint.rewardMissions.length > 0 && (
-                  <div className="bg-amber-950/20 border border-amber-500/25 rounded-xl p-4">
-                    <h3 className="text-amber-300/90 text-sm font-semibold mb-2">
-                      Reward Missions ({selectedBlueprint.rewardMissions.length})
-                    </h3>
-                    {!isApproved ? (
-                      <p className="text-sm text-slate-400">
-                        After your account is approved, add this blueprint to your Target BP List to track which missions reward it.
-                      </p>
-                    ) : acquiredBlueprints[selectedBlueprint.file] ? (
-                      <p className="text-sm text-slate-400">
-                        This blueprint is already in your pool. Reward missions are only tracked on your Target BP List while you are still hunting a blueprint.
-                      </p>
-                    ) : isOnTargetList(selectedBlueprint.file) ? (
-                      <p className="text-sm text-slate-400">
-                        This blueprint is on your Target BP List. Open{' '}
-                        <strong className="text-amber-300/90">Target BP List</strong> from the menu to see grouped missions, toggle them on/off, and track progress.
-                      </p>
-                    ) : (
-                      <p className="text-sm text-slate-400">
-                        Use <strong className="text-amber-300/90">+ Target</strong> on the card to add this blueprint to your Target BP List.
-                        Missions that reward it will appear on the{' '}
-                        <strong className="text-amber-300/90">Target BP List</strong> page.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <BlueprintDetailsModal
+          blueprint={selectedBlueprint}
+          subTypeLabel={formatSubType(getSubType(selectedBlueprint))}
+          onClose={() => setSelectedBlueprint(null)}
+          isApproved={isApproved}
+          isAcquired={!!acquiredBlueprints[selectedBlueprint.file]}
+          isOnTarget={isOnTargetList(selectedBlueprint.file)}
+        />
       )}
     </FeaturePageLayout>
   )

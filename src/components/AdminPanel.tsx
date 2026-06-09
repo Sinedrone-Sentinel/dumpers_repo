@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import AppModal from './layout/AppModal'
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
-  useBodyScrollLock()
   const { profile: currentUser, isOfficerOrAbove, isSuperAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<TabType>('pending')
   const [users, setUsers] = useState<Profile[]>([])
@@ -148,35 +147,30 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
   ]
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4 overflow-hidden">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between p-4 border-b border-slate-700">
-          <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white text-2xl leading-none"
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="flex border-b border-slate-700">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-slate-800 text-white border-b-2 border-red-500'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="p-4 overflow-y-auto overscroll-contain max-h-[60vh]">
+    <>
+      <AppModal
+        title="Admin Panel"
+        onClose={onClose}
+        size="lg"
+        zIndex={70}
+        headerExtra={
+          <div className="flex border-b border-slate-700 shrink-0">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-slate-800 text-white border-b-2 border-red-500'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        }
+      >
           {loading ? (
             <div className="text-center py-8">
               <div className="w-8 h-8 border-t-2 border-red-500 rounded-full animate-spin mx-auto"></div>
@@ -329,71 +323,87 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               ))}
             </div>
           )}
-        </div>
-      </div>
+      </AppModal>
 
       {banTarget && (
-        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white mb-2">Ban User</h3>
-            <p className="text-slate-400 text-sm mb-4">
-              Permanently remove <span className="text-white">{getDisplayName(banTarget)}</span>'s blueprint data and block sign-in. A super-admin can unban from the Banned tab.
-            </p>
-            <label className="block text-slate-400 text-sm mb-1">Reason (optional)</label>
-            <input
-              type="text"
-              value={banReason}
-              onChange={(e) => setBanReason(e.target.value)}
-              placeholder="Reason for ban..."
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm mb-4"
-            />
+        <AppModal
+          title="Ban User"
+          onClose={() => {
+            setBanTarget(null)
+            setBanReason('')
+          }}
+          size="sm"
+          zIndex={80}
+          footer={
             <div className="flex gap-3">
               <button
                 onClick={() => {
                   setBanTarget(null)
                   setBanReason('')
                 }}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleBan}
                 disabled={actionLoading === banTarget.id}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50 text-sm"
               >
                 {actionLoading === banTarget.id ? 'Banning...' : 'Confirm Ban'}
               </button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p className="text-slate-400 text-sm mb-4">
+            Permanently remove <span className="text-white">{getDisplayName(banTarget)}</span>&apos;s
+            blueprint data and block sign-in. A super-admin can unban from the Banned tab.
+          </p>
+          <label className="block text-slate-400 text-sm mb-1">Reason (optional)</label>
+          <input
+            type="text"
+            value={banReason}
+            onChange={(e) => setBanReason(e.target.value)}
+            placeholder="Reason for ban..."
+            className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+          />
+        </AppModal>
       )}
 
       {unbanTarget && (
-        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-white mb-2">Unban User</h3>
-            <p className="text-slate-400 text-sm mb-4">
-              Restore <span className="text-white">{unbanTarget.rsi_handle || unbanTarget.display_name || unbanTarget.email || 'this user'}</span> with <span className="text-amber-400">pending</span> status so they can sign in and await officer approval. Their blueprint data will not be restored.
-            </p>
+        <AppModal
+          title="Unban User"
+          onClose={() => setUnbanTarget(null)}
+          size="sm"
+          zIndex={80}
+          footer={
             <div className="flex gap-3">
               <button
                 onClick={() => setUnbanTarget(null)}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUnban}
                 disabled={actionLoading === unbanTarget.id}
-                className="flex-1 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors disabled:opacity-50 text-sm"
               >
                 {actionLoading === unbanTarget.id ? 'Unbanning...' : 'Confirm Unban'}
               </button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p className="text-slate-400 text-sm">
+            Restore{' '}
+            <span className="text-white">
+              {unbanTarget.rsi_handle || unbanTarget.display_name || unbanTarget.email || 'this user'}
+            </span>{' '}
+            with <span className="text-amber-400">pending</span> status so they can sign in and await
+            officer approval. Their blueprint data will not be restored.
+          </p>
+        </AppModal>
       )}
-    </div>
+    </>
   )
 }

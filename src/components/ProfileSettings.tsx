@@ -4,10 +4,9 @@ import { deleteAccount } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
-import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import AppModal from './layout/AppModal'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
-  useBodyScrollLock()
   const {
     profile,
     updateRsiHandle,
@@ -143,22 +142,22 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4 overflow-hidden">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full shadow-2xl max-h-[90vh] overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-slate-700 shrink-0">
-          <div>
-            <h2 className="text-xl font-bold text-white">Settings</h2>
-            <p className="text-xs text-slate-500 mt-0.5">Profile, privacy, and account</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white text-2xl leading-none"
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="p-4 space-y-4 overflow-y-auto overscroll-contain flex-1">
+    <AppModal
+      title="Settings"
+      subtitle="Profile, privacy, and account"
+      onClose={onClose}
+      size="md"
+      zIndex={70}
+      footer={
+        <button
+          onClick={onClose}
+          className="w-full px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          Close
+        </button>
+      }
+    >
+      <div className="space-y-4">
           {message && (
             <div className={`p-3 rounded-lg text-sm ${
               message.type === 'success'
@@ -305,17 +304,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               </div>
             )}
           </SettingsSection>
-        </div>
-
-        <div className="p-4 border-t border-slate-700 shrink-0">
-          <button
-            onClick={onClose}
-            className="w-full px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
-          >
-            Close
-          </button>
-        </div>
       </div>
-    </div>
+    </AppModal>
   )
 }

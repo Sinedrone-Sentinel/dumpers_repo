@@ -50,15 +50,15 @@ export default function AppChrome({
   return (
     <div className="site-page-bg min-h-screen flex flex-col">
       <header className="site-app-header fixed top-0 inset-x-0 z-50 overflow-visible">
-        <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
-          <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+        <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-3">
+          <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden lg:flex-none lg:shrink-0">
             <SiteBrandMark size="md" />
             <div className="min-w-0 border-l border-slate-700/70 pl-2 sm:pl-3 overflow-hidden">
               <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
             </div>
           </div>
-          <AppNavTabs items={navItems} className="hidden lg:flex flex-1 justify-center px-2 min-h-9 items-center min-w-0" />
-          <div className="flex items-center gap-2 shrink-0">
+          <AppNavTabs items={navItems} className="hidden lg:flex justify-center min-w-0 px-2 min-h-9 items-center overflow-x-auto" />
+          <div className="flex items-center gap-2 shrink-0 lg:justify-end">
             <AppNotificationBell disabled={isPending} />
             <AppUserMenu
               displayName={displayName}
