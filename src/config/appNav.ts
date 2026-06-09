@@ -6,16 +6,12 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 
-export type NavBadge = 'preview'
-
 export interface AppNavItem {
   id: string
   label: string
   path: string
   featureId?: FeatureId
   minRole?: UserRole
-  access?: 'preview'
-  badge?: NavBadge
   /** Ghost Mode users only see items with ghostAllowed !== false */
   ghostAllowed?: boolean
 }
@@ -70,10 +66,6 @@ export function canSeeNavItem(
 
   if (item.featureId) {
     return canUseFeature(item.featureId, ctx)
-  }
-
-  if (item.access === 'preview') {
-    return ctx.canAccessPreviewFeatures && !ctx.ghostMode
   }
 
   return canAccess(item.minRole ?? 'member')

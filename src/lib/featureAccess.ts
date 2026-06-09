@@ -7,7 +7,6 @@ export type FeatureId =
   | 'member_directory'
   | 'admin_panel'
   | 'settings'
-  | 'preview_features'
   | 'resource_tracker'
   | 'custom_orders'
   | 'fulfillment'
@@ -17,42 +16,35 @@ export type FeatureId =
 export interface VisibilityContext {
   role: UserRole | null
   ghostMode: boolean
-  previewFeaturesEnabled: boolean
   isSuperAdmin: boolean
   isOfficerOrAbove: boolean
   isApproved: boolean
   isPending: boolean
   /** Pending or ghost — hidden from member directory / social surfaces */
   isSociallyHidden: boolean
-  canAccessPreviewFeatures: boolean
 }
 
 export interface BuildVisibilityContextInput {
   role?: UserRole | null
   ghostMode?: boolean
-  previewFeaturesEnabled?: boolean
 }
 
 export function buildVisibilityContext(input: BuildVisibilityContextInput): VisibilityContext {
   const role = input.role ?? null
   const ghostMode = input.ghostMode ?? false
-  const previewFeaturesEnabled = input.previewFeaturesEnabled ?? false
   const isSuperAdmin = role === 'super-admin'
   const isOfficerOrAbove = role === 'officer' || isSuperAdmin
   const isPending = role === 'pending'
   const isApproved = !!role && role !== 'pending'
-  const canAccessPreviewFeatures = isApproved && !ghostMode
 
   return {
     role,
     ghostMode,
-    previewFeaturesEnabled,
     isSuperAdmin,
     isOfficerOrAbove,
     isApproved,
     isPending,
     isSociallyHidden: isPending || ghostMode,
-    canAccessPreviewFeatures,
   }
 }
 
@@ -72,9 +64,6 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'settings':
       return !!ctx.role && ctx.role !== 'pending'
-
-    case 'preview_features':
-      return ctx.canAccessPreviewFeatures && !ctx.ghostMode
 
     case 'resource_tracker':
       return ctx.isApproved && !ctx.ghostMode

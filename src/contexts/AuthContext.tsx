@@ -29,7 +29,6 @@ interface AuthContextType {
   toggleAcquired: (blueprintId: string) => Promise<void>
   updateRsiHandle: (handle: string) => Promise<boolean>
   updateGhostMode: (enabled: boolean) => Promise<boolean>
-  updatePreviewFeatures: (enabled: boolean) => Promise<boolean>
   updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
   fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
   fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
@@ -43,7 +42,6 @@ interface AuthContextType {
   showMemberCollections: boolean
   isApproved: boolean
   canAccess: (minRole: UserRole) => boolean
-  canAccessPreviewFeatures: boolean
   visibilityContext: VisibilityContext
   canUseFeature: (featureId: FeatureId) => boolean
   dfpDisplayEnabled: boolean
@@ -374,26 +372,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
-  const updatePreviewFeatures = useCallback(async (enabled: boolean): Promise<boolean> => {
-    const activeUser = userRef.current
-    const activeProfile = profileRef.current
-    if (!activeUser) return false
-    if (activeProfile?.role !== 'officer') return false
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ preview_features_enabled: enabled })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating preview features:', error)
-      return false
-    }
-
-    setProfile(prev => prev ? { ...prev, preview_features_enabled: enabled } : null)
-    return true
-  }, [])
-
   const updateCraftDeductInventory = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) return false
@@ -515,12 +493,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       buildVisibilityContext({
         role: profile?.role ?? null,
         ghostMode: profile?.ghost_mode ?? false,
-        previewFeaturesEnabled: profile?.preview_features_enabled ?? false,
       }),
     [
       profile?.role,
       profile?.ghost_mode,
-      profile?.preview_features_enabled,
     ]
   )
   const showMemberCollections = canUseFeature('member_directory', visibilityContext)
@@ -529,7 +505,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     (minRole: UserRole) => roleAtLeast(profile?.role, minRole),
     [profile?.role]
   )
-  const canAccessPreviewFeatures = visibilityContext.canAccessPreviewFeatures
   const checkFeature = useCallback(
     (featureId: FeatureId) => canUseFeature(featureId, visibilityContext),
     [visibilityContext]
@@ -549,7 +524,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toggleAcquired,
       updateRsiHandle,
       updateGhostMode,
-      updatePreviewFeatures,
       updateCraftDeductInventory,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
@@ -563,7 +537,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       showMemberCollections,
       isApproved,
       canAccess,
-      canAccessPreviewFeatures,
       visibilityContext,
       canUseFeature: checkFeature,
       dfpDisplayEnabled,
@@ -583,7 +556,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toggleAcquired,
       updateRsiHandle,
       updateGhostMode,
-      updatePreviewFeatures,
       updateCraftDeductInventory,
       fetchUsersWithBlueprints,
       fetchUserBlueprints,
@@ -597,7 +569,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       showMemberCollections,
       isApproved,
       canAccess,
-      canAccessPreviewFeatures,
       visibilityContext,
       checkFeature,
       dfpDisplayEnabled,

@@ -16,7 +16,6 @@ const router = createRouter({
       loading: true,
       profile: null,
       canAccess: () => false,
-      canAccessPreviewFeatures: false,
       visibilityContext: buildVisibilityContext({}),
       canUseFeature: () => false,
     },
@@ -33,7 +32,6 @@ export default function RouterApp() {
   const {
     loading,
     profile,
-    canAccessPreviewFeatures,
     visibilityContext,
     canUseFeature,
   } = useAuth()
@@ -48,7 +46,6 @@ export default function RouterApp() {
           loading,
           profile,
           canAccess,
-          canAccessPreviewFeatures,
           visibilityContext,
           canUseFeature,
         },

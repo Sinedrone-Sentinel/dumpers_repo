@@ -22,7 +22,6 @@ export interface Profile {
   approved_at: string | null
   approved_by: string | null
   ghost_mode: boolean
-  preview_features_enabled: boolean
   craft_deduct_inventory: boolean
 }
 

@@ -11,7 +11,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile,
     updateRsiHandle,
     updateGhostMode,
-    updatePreviewFeatures,
     updateCraftDeductInventory,
     updateDfpDisplayEnabled,
     dfpDisplayEnabled,
@@ -19,14 +18,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateAutoApprove,
     signOut,
     isSuperAdmin,
-    isOfficerOrAbove,
   } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
-  const [previewFeatures, setPreviewFeatures] = useState(profile?.preview_features_enabled ?? false)
   const [savingRsi, setSavingRsi] = useState(false)
   const [savingGhost, setSavingGhost] = useState(false)
-  const [savingPreview, setSavingPreview] = useState(false)
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
   )
@@ -41,12 +37,10 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
     setGhostMode(profile?.ghost_mode ?? false)
-    setPreviewFeatures(profile?.preview_features_enabled ?? false)
     setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
   }, [
     profile?.rsi_handle,
     profile?.ghost_mode,
-    profile?.preview_features_enabled,
     profile?.craft_deduct_inventory,
   ])
 
@@ -105,22 +99,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingAutoApprove(false)
-  }
-
-  const handlePreviewFeaturesChange = async (enabled: boolean) => {
-    const previous = previewFeatures
-    setPreviewFeatures(enabled)
-    setSavingPreview(true)
-    setMessage(null)
-
-    const success = await updatePreviewFeatures(enabled)
-
-    if (!success) {
-      setPreviewFeatures(previous)
-      setMessage({ type: 'error', text: 'Failed to update Feature Preview.' })
-    }
-
-    setSavingPreview(false)
   }
 
   const handleCraftDeductInventoryChange = async (enabled: boolean) => {
@@ -253,21 +231,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 checked={autoApproveEnabled}
                 onChange={handleAutoApproveChange}
                 saving={savingAutoApprove}
-              />
-            </SettingsSection>
-          )}
-
-          {isOfficerOrAbove && (
-            <SettingsSection
-              title="Feature Preview"
-              description="Officer-only experimental toggles"
-            >
-              <SettingsToggle
-                label="Preview features"
-                description="Enable experimental UI and tools before they ship to all members."
-                checked={previewFeatures}
-                onChange={handlePreviewFeaturesChange}
-                saving={savingPreview}
               />
             </SettingsSection>
           )}

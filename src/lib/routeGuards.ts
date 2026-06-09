@@ -1,13 +1,12 @@
 import { redirect } from '@tanstack/react-router'
 import type { UserRole } from './supabase'
 import { roleAtLeast } from './roles'
-import { canUseFeature, type FeatureId, type VisibilityContext } from './featureAccess'
+import { type FeatureId, type VisibilityContext } from './featureAccess'
 
 export interface RouterAuthContext {
   loading: boolean
   profile: { role: UserRole } | null
   canAccess: (minRole: UserRole) => boolean
-  canAccessPreviewFeatures: boolean
   visibilityContext: VisibilityContext
   canUseFeature: (featureId: FeatureId) => boolean
 }
@@ -31,8 +30,4 @@ export function requireFeature(featureId: FeatureId) {
       throw redirect({ to: '/' })
     }
   }
-}
-
-export function requirePreviewAccess() {
-  return requireFeature('preview_features')
 }
