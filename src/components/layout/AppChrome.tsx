@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useRouterState } from '@tanstack/react-router'
 import SiteBrandMark from '../SiteBrandMark'
 import SiteBrandTitle from '../SiteBrandTitle'
-import { SITE_COPYRIGHT } from '../../config/site'
+import { DFP_OPT_OUT_NOTICE, SITE_COPYRIGHT } from '../../config/site'
 import type { AppNavItem } from '../../config/appNav'
 import type { Profile } from '../../lib/supabase'
 import AppNavTabs from './AppNavTabs'
@@ -23,6 +23,7 @@ interface AppChromeProps {
   onOpenDbActions: () => void
   onOpenAdmin: () => void
   onSignOut: () => void
+  dfpDisplayEnabled?: boolean
 }
 
 export default function AppChrome({
@@ -39,6 +40,7 @@ export default function AppChrome({
   onOpenDbActions,
   onOpenAdmin,
   onSignOut,
+  dfpDisplayEnabled = true,
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
 
@@ -80,8 +82,11 @@ export default function AppChrome({
 
       <div className="site-main-offset flex-1 flex flex-col">{children}</div>
 
-      <footer className="site-footer site-shell mt-8">
+      <footer className="site-footer site-shell mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
+        {!dfpDisplayEnabled && (
+          <p className="text-xs text-slate-500">{DFP_OPT_OUT_NOTICE}</p>
+        )}
       </footer>
     </div>
   )

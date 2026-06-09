@@ -1,0 +1,2 @@
+-- Bans and admin RPCs are included in 001_core_profiles_auth.sql (greenfield baseline).
+-- This file is a no-op placeholder to preserve numbered migration layout.

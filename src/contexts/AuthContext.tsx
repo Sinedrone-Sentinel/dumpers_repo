@@ -46,6 +46,8 @@ interface AuthContextType {
   canAccessPreviewFeatures: boolean
   visibilityContext: VisibilityContext
   canUseFeature: (featureId: FeatureId) => boolean
+  dfpDisplayEnabled: boolean
+  updateDfpDisplayEnabled: (enabled: boolean) => Promise<boolean>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -58,6 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isBanned, setIsBanned] = useState(false)
   const isBannedRef = useRef(false)
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
+  const [dfpDisplayEnabled, setDfpDisplayEnabled] = useState(true)
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -116,6 +119,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return null
     }
     return data as Profile
+  }, [])
+
+  const fetchSiteSettings = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('dfp_display_enabled')
+      .eq('id', 1)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error fetching site settings:', error)
+      return true
+    }
+
+    return data?.dfp_display_enabled ?? true
   }, [])
 
   const fetchAcquiredBlueprints = useCallback(async (userId: string) => {
@@ -195,7 +213,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const acquired = await fetchAcquiredBlueprints(sessionUser.id)
     setAcquiredBlueprints(acquired)
-  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints])
+
+    const dfpEnabled = await fetchSiteSettings()
+    setDfpDisplayEnabled(dfpEnabled)
+  }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, fetchSiteSettings])
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -384,6 +405,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
+  const updateDfpDisplayEnabled = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeProfile = profileRef.current
+    if (activeProfile?.role !== 'super-admin') return false
+
+    const { error } = await supabase.rpc('update_site_dfp_display', { p_enabled: enabled })
+
+    if (error) {
+      console.error('Error updating DFP display setting:', error)
+      return false
+    }
+
+    setDfpDisplayEnabled(enabled)
+    return true
+  }, [])
+
   const fetchUsersWithBlueprints = useCallback(async (): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
       .from('acquired_blueprints')
@@ -508,6 +544,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       canAccessPreviewFeatures,
       visibilityContext,
       canUseFeature: checkFeature,
+      dfpDisplayEnabled,
+      updateDfpDisplayEnabled,
     }),
     [
       user,
@@ -538,6 +576,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       canAccessPreviewFeatures,
       visibilityContext,
       checkFeature,
+      dfpDisplayEnabled,
+      updateDfpDisplayEnabled,
     ]
   )
 

@@ -83,7 +83,7 @@ function profileFromOrderFields(
 }
 
 export default function CustomOrdersRoute() {
-  const { user, profile } = useAuth()
+  const { user, profile, dfpDisplayEnabled } = useAuth()
   const { data: blueprints = [] } = useBlueprintData()
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
   const [orders, setOrders] = useState<CustomOrder[]>([])
@@ -386,7 +386,7 @@ export default function CustomOrdersRoute() {
                       >
                         {order.status.replace(/_/g, ' ')}
                       </span>
-                      {totalDfp > 0 && (
+                      {dfpDisplayEnabled && totalDfp > 0 && (
                         <span className="px-2 py-0.5 rounded text-xs border bg-amber-950/50 text-amber-200 border-amber-500/30 font-medium">
                           {formatDfpRequiredPrice(totalDfp)}
                         </span>
@@ -410,14 +410,14 @@ export default function CustomOrdersRoute() {
                     )}
                     {order.notes && <p className="text-slate-400 text-sm mt-2">{order.notes}</p>}
 
-                    {exceedsSingleTransferLimit(totalDfp) && (
+                    {dfpDisplayEnabled && exceedsSingleTransferLimit(totalDfp) && (
                       <div className="mt-3">
                         <AuecTransferLimitNotice totalAuec={totalDfp} context="customer" compact />
                       </div>
                     )}
 
                     <div className="mt-3">
-                      <OrderRequestLines order={order} />
+                      <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
                     </div>
                   </div>
 

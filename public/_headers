@@ -1,0 +1,5 @@
+/dfp-engine.js
+  Access-Control-Allow-Origin: *
+
+/dfp-version.json
+  Access-Control-Allow-Origin: *

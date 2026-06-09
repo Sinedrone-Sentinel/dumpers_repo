@@ -14,6 +14,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateGhostMode,
     updatePreviewFeatures,
     updateCraftDeductInventory,
+    updateDfpDisplayEnabled,
+    dfpDisplayEnabled,
     signOut,
     isSuperAdmin,
     isOfficerOrAbove,
@@ -28,6 +30,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile?.craft_deduct_inventory ?? false
   )
   const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
+  const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -74,6 +77,19 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingGhost(false)
+  }
+
+  const handleDfpDisplayChange = async (enabled: boolean) => {
+    setSavingDfpDisplay(true)
+    setMessage(null)
+
+    const success = await updateDfpDisplayEnabled(enabled)
+
+    if (!success) {
+      setMessage({ type: 'error', text: 'Failed to update DFP display setting.' })
+    }
+
+    setSavingDfpDisplay(false)
   }
 
   const handlePreviewFeaturesChange = async (enabled: boolean) => {
@@ -203,6 +219,21 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               saving={savingGhost}
             />
           </SettingsSection>
+
+          {isSuperAdmin && (
+            <SettingsSection
+              title="Site"
+              description="Franchise-wide instance settings"
+            >
+              <SettingsToggle
+                label="Disable DFP display"
+                description="Hide Dumpers Fair-Value Pricing in the UI. Requires the opt-out notice in the site footer on every page."
+                checked={!dfpDisplayEnabled}
+                onChange={(disabled) => handleDfpDisplayChange(!disabled)}
+                saving={savingDfpDisplay}
+              />
+            </SettingsSection>
+          )}
 
           {isOfficerOrAbove && (
             <SettingsSection

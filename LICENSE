@@ -1,0 +1,74 @@
+Dumper's Repo Franchise License
+
+Copyright (c) Michael Linzenmeyer
+
+Permission is hereby granted by Michael Linzenmeyer, the sole licensor of
+Dumper's Repo, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to use, copy, modify, and deploy the
+Software subject to the franchise conditions below. This permission does not
+transfer copyright and does not grant the right to sublicense on different
+terms.
+
+## Franchise conditions
+
+You may operate a Dumper's Repo franchise instance only if you comply with
+ALL of the following:
+
+1. **Branding** — The primary application header must continue to identify the
+   product as "Dumper's Repo" (including the Buy. Craft. Sell. slogan or
+   equivalent brand treatment required by the reference deployment).
+
+2. **No monetization** — You must not charge any fee for access to the
+   Software, for hosting the franchise, or for using Dumper's Repo features.
+   Membership approval and org privacy rules are allowed; paywalls for app
+   access are not.
+
+3. **Dumpers Fair-Value Pricing (DFP)** — DFP is a proprietary formula and
+   trade secret of Michael Linzenmeyer. You must use the official DFP engine
+   loaded from the canonical URL published by the licensor (currently
+   https://www.dumpers-repo.com/dfp-engine.js and dfp-version.json). You
+   may not tamper with, reverse-engineer for reuse, replace, circumvent, or
+   self-host an alternate DFP engine in production.
+
+   **Display opt-out (permitted):** A super-admin may disable DFP display for
+   their instance. If DFP values are hidden from the UI, every page must
+   display this notice in the site footer:
+
+   "This franchise has opted out of using/displaying Dumpers Fair-Value
+   Pricing (DFP)."
+
+   Hiding DFP without this notice is a license violation.
+
+4. **Distribution** — You must include unmodified copies of this LICENSE and
+   TRADEMARK.md with any fork or deployment, and identify the deployment as a
+   Dumper's Repo franchise instance (not the official dumpers-repo.com unless
+   authorized).
+
+## Prohibited conduct
+
+- Removing or replacing Dumper's Repo as the product identity
+- Implying official endorsement by dumpers-repo.com without permission
+- Charging fees for access or franchise hosting
+- Tampering with, modifying, or circumventing DFP
+- Using Dumper's Repo brand marks on unrelated software
+
+## Termination
+
+Any violation of these franchise conditions terminates your license to use
+and deploy the Software immediately. Upon termination you must cease deployment
+and destroy proprietary DFP materials in your possession except as required
+by law.
+
+## Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Community policy text, not formal legal advice.

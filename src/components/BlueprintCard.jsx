@@ -1,4 +1,5 @@
 import { calculateBlueprintDfp, formatDfpLabel } from '../lib/dfp'
+import { useAuth } from '../contexts/AuthContext'
 
 const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
@@ -133,6 +134,8 @@ export default function BlueprintCard({
   isOnTargetList = false,
   onToggleTarget,
 }) {
+  const { dfpDisplayEnabled } = useAuth()
+
   if (!blueprint.file || !blueprint.blueprintName) return null
 
   const hasRequirements = blueprint.slots && Array.isArray(blueprint.slots) && blueprint.slots.length > 0
@@ -171,13 +174,17 @@ export default function BlueprintCard({
     >
       <div className="relative z-10">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <span
-            className="text-xs font-semibold text-amber-400/90 tabular-nums shrink-0"
-            title="Dumpers Fair-Value Price at 500 quality"
-          >
-            {dfpLabel}
-            <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
-          </span>
+          {dfpDisplayEnabled ? (
+            <span
+              className="text-xs font-semibold text-amber-400/90 tabular-nums shrink-0"
+              title="Dumpers Fair-Value Price at 500 quality"
+            >
+              {dfpLabel}
+              <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
+            </span>
+          ) : (
+            <span className="shrink-0" />
+          )}
           <button
             onClick={handleCheckboxClick}
             disabled={!canModify}

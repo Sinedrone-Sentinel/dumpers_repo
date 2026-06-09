@@ -47,7 +47,7 @@ import {
 import { displayNameFromFields } from '../lib/supabase'
 
 export default function FulfillmentRoute() {
-  const { user, profile, acquiredBlueprints } = useAuth()
+  const { user, profile, acquiredBlueprints, dfpDisplayEnabled } = useAuth()
   const craftDeductInventory = profile?.craft_deduct_inventory ?? false
   const { data: blueprints = [] } = useBlueprintData()
   const { labelMap } = useResourceCatalog()
@@ -428,7 +428,7 @@ export default function FulfillmentRoute() {
                             <p className="text-white font-medium">{order.title}</p>
                             <p className="text-slate-500 text-xs">
                               Buyer: {displayNameFromFields(order.requester)}
-                              {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                              {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                             </p>
                             <div className="flex flex-wrap gap-2">
                               <ReputationBadge label="Buyer rep" reputation={buyerRep} />
@@ -516,7 +516,7 @@ export default function FulfillmentRoute() {
                       </div>
                       <p className="text-slate-500 text-xs mt-1">
                         {order.status.replace(/_/g, ' ')}
-                        {totalDfp > 0 && (
+                        {dfpDisplayEnabled && totalDfp > 0 && (
                           <span className="text-amber-300/90">
                             {' '}
                             · {formatDfpAuec(totalDfp)}
@@ -524,7 +524,7 @@ export default function FulfillmentRoute() {
                         )}
                       </p>
                       <div className="mt-2">
-                        <OrderRequestLines order={order} showDfp={false} />
+                        <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
                       </div>
                       <div className="mt-2">
                         <ReputationBadge
@@ -532,7 +532,7 @@ export default function FulfillmentRoute() {
                           reputation={buyerReputationFromRow(reputations[order.requester_id])}
                         />
                       </div>
-                      {exceedsSingleTransferLimit(totalDfp) && (
+                      {dfpDisplayEnabled && exceedsSingleTransferLimit(totalDfp) && (
                         <AuecTransferLimitNotice
                           totalAuec={totalDfp}
                           context="fulfiller"
@@ -549,14 +549,14 @@ export default function FulfillmentRoute() {
               <div className="mt-4 p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3">
                 <div>
                   <h3 className="text-white font-medium">{selectedOrder.title}</h3>
-                  {orderTotalDfp(selectedOrder) > 0 && (
+                  {dfpDisplayEnabled && orderTotalDfp(selectedOrder) > 0 && (
                     <p className="text-amber-200 text-sm font-medium mt-1">
                       Required price: {formatDfpRequiredPrice(orderTotalDfp(selectedOrder))}
                     </p>
                   )}
                 </div>
 
-                {exceedsSingleTransferLimit(orderTotalDfp(selectedOrder)) && (
+                {dfpDisplayEnabled && exceedsSingleTransferLimit(orderTotalDfp(selectedOrder)) && (
                   <AuecTransferLimitNotice
                     totalAuec={orderTotalDfp(selectedOrder)}
                     context="fulfiller"
@@ -564,7 +564,7 @@ export default function FulfillmentRoute() {
                   />
                 )}
 
-                <OrderRequestLines order={selectedOrder} />
+                <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} />
 
                 {selectedFulfillmentItems.length > 0 && (
                   <div className="space-y-2">
@@ -686,7 +686,7 @@ export default function FulfillmentRoute() {
                           {order.status.replace(/_/g, ' ')}
                           {order.assignee &&
                             ` · Fulfiller: ${displayNameFromFields(order.assignee)}`}
-                          {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                          {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                         </p>
                         {order.assignee_id && (
                           <div className="mt-2">
@@ -724,7 +724,7 @@ export default function FulfillmentRoute() {
                             {order.status.replace(/_/g, ' ')}
                             {order.requester &&
                               ` · Customer: ${displayNameFromFields(order.requester)}`}
-                            {totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                            {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                           </p>
                           <div className="mt-2">
                             <ReputationBadge
@@ -743,7 +743,7 @@ export default function FulfillmentRoute() {
                             </p>
                           )}
                           <div className="mt-2">
-                            <OrderRequestLines order={order} showDfp={false} />
+                            <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
                           </div>
                         </div>
                         {canArchive && (
@@ -783,7 +783,8 @@ export default function FulfillmentRoute() {
                     <p className="text-slate-500 text-xs mt-1">
                       {new Date(entry.created_at).toLocaleString()}
                       {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
-                      {entry.order?.total_dfp_auec != null &&
+                      {dfpDisplayEnabled &&
+                        entry.order?.total_dfp_auec != null &&
                         Number(entry.order.total_dfp_auec) > 0 &&
                         ` · ${formatDfpAuec(Number(entry.order.total_dfp_auec))}`}
                     </p>

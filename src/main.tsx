@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import QueryClientProvider from './providers/QueryClientProvider'
 import { AuthProvider } from './contexts/AuthContext'
 import RouterApp from './components/RouterApp'
+import DfpInitGate from './components/DfpInitGate'
 import './index.css'
 import { setupCacheBusting, checkAppVersion } from './lib/appVersion'
 
@@ -17,9 +18,11 @@ if (appElement) {
     root.render(
       <React.StrictMode>
         <AuthProvider>
-          <QueryClientProvider>
-            <RouterApp />
-          </QueryClientProvider>
+          <DfpInitGate>
+            <QueryClientProvider>
+              <RouterApp />
+            </QueryClientProvider>
+          </DfpInitGate>
         </AuthProvider>
       </React.StrictMode>
     )

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
 import { Link } from '@tanstack/react-router'
 import BlueprintTypeahead from './BlueprintTypeahead'
 import AuecTransferLimitModal from './AuecTransferLimitModal'
@@ -67,6 +68,7 @@ export default function ResourceBuyOrderPanel({
   onSubmitted,
   onError,
 }: ResourceBuyOrderPanelProps) {
+  const { dfpDisplayEnabled } = useAuth()
   const isEditing = Boolean(editOrder?.id)
   const [mode, setMode] = useState<'blueprint' | 'resource'>('blueprint')
   const [selectedBlueprintId, setSelectedBlueprintId] = useState('')
@@ -403,7 +405,7 @@ export default function ResourceBuyOrderPanel({
                 Add
               </button>
             </div>
-            {selectedResource && parseResourceQuantity(resQty) != null && (
+            {dfpDisplayEnabled && selectedResource && parseResourceQuantity(resQty) != null && (
               <p className="text-amber-200/90 text-xs">
                 Material DFP:{' '}
                 {formatDfpLabel(
@@ -431,7 +433,9 @@ export default function ResourceBuyOrderPanel({
                     {line.blueprintTitle} × {line.quantity} ·{' '}
                     {formatBlueprintOrderQualityLabel(line.minQuality)}
                   </span>
-                  <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
+                  {dfpDisplayEnabled && (
+                    <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
+                  )}
                   <button
                     type="button"
                     onClick={() => setBpCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
@@ -454,7 +458,9 @@ export default function ResourceBuyOrderPanel({
                       line.minQuality
                     )}
                   </span>
-                  <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
+                  {dfpDisplayEnabled && (
+                    <span className="text-amber-300 shrink-0">{formatDfpAuec(line.lineDfpAuec)}</span>
+                  )}
                   <button
                     type="button"
                     onClick={() => setResCart((p) => p.filter((l) => l.cartKey !== line.cartKey))}
@@ -465,16 +471,18 @@ export default function ResourceBuyOrderPanel({
                 </li>
               ))}
             </ul>
-            <div className="px-3 py-3 bg-amber-950/30 border-t border-amber-500/20 flex justify-between">
-              <span className="text-amber-200 text-sm font-medium">Required total (DFP)</span>
-              <span className="text-amber-100 font-bold">
-                {formatDfpRequiredPrice(cartTotalDfp)}
-              </span>
-            </div>
+            {dfpDisplayEnabled && (
+              <div className="px-3 py-3 bg-amber-950/30 border-t border-amber-500/20 flex justify-between">
+                <span className="text-amber-200 text-sm font-medium">Required total (DFP)</span>
+                <span className="text-amber-100 font-bold">
+                  {formatDfpRequiredPrice(cartTotalDfp)}
+                </span>
+              </div>
+            )}
           </div>
         )}
 
-        {exceedsSingleTransferLimit(cartTotalDfp) && (
+        {dfpDisplayEnabled && exceedsSingleTransferLimit(cartTotalDfp) && (
           <p className="text-orange-300/90 text-xs">
             Over 1M DFP — confirm in-game payment limits before submitting.
           </p>
@@ -534,8 +542,12 @@ export default function ResourceBuyOrderPanel({
             {submitting
               ? 'Saving...'
               : isEditing
-                ? `Save changes · ${formatDfpAuec(cartTotalDfp)}`
-                : `Submit buy order · ${formatDfpAuec(cartTotalDfp)}`}
+                ? dfpDisplayEnabled
+                  ? `Save changes · ${formatDfpAuec(cartTotalDfp)}`
+                  : 'Save changes'
+                : dfpDisplayEnabled
+                  ? `Submit buy order · ${formatDfpAuec(cartTotalDfp)}`
+                  : 'Submit buy order'}
           </button>
           {isEditing && onCancelEdit && (
             <button
