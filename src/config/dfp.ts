@@ -2,7 +2,7 @@ import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from './extraResources'
 import { isHarvestResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.2.0-uex-anchors'
+export const DFP_VERSION = '1.4.0-high-q-scaling'
 
 /** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
 export const STOCK_QUALITY_TIERS: readonly number[] = [

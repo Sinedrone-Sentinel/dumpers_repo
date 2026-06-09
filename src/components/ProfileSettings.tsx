@@ -15,6 +15,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateCraftDeductInventory,
     updateDfpDisplayEnabled,
     dfpDisplayEnabled,
+    autoApproveEnabled,
+    updateAutoApprove,
     signOut,
     isSuperAdmin,
     isOfficerOrAbove,
@@ -30,6 +32,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   )
   const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
   const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
+  const [savingAutoApprove, setSavingAutoApprove] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
@@ -89,6 +92,19 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingDfpDisplay(false)
+  }
+
+  const handleAutoApproveChange = async (enabled: boolean) => {
+    setSavingAutoApprove(true)
+    setMessage(null)
+
+    const success = await updateAutoApprove(enabled)
+
+    if (!success) {
+      setMessage({ type: 'error', text: 'Failed to update auto-approve setting.' })
+    }
+
+    setSavingAutoApprove(false)
   }
 
   const handlePreviewFeaturesChange = async (enabled: boolean) => {
@@ -230,6 +246,13 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 checked={!dfpDisplayEnabled}
                 onChange={(disabled) => handleDfpDisplayChange(!disabled)}
                 saving={savingDfpDisplay}
+              />
+              <SettingsToggle
+                label="Auto-approve new signups"
+                description="When enabled, new Google sign-ins are automatically approved as members instead of requiring officer approval."
+                checked={autoApproveEnabled}
+                onChange={handleAutoApproveChange}
+                saving={savingAutoApprove}
               />
             </SettingsSection>
           )}

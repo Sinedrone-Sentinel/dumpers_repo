@@ -48,6 +48,8 @@ interface AuthContextType {
   canUseFeature: (featureId: FeatureId) => boolean
   dfpDisplayEnabled: boolean
   updateDfpDisplayEnabled: (enabled: boolean) => Promise<boolean>
+  autoApproveEnabled: boolean
+  updateAutoApprove: (enabled: boolean) => Promise<boolean>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -61,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isBannedRef = useRef(false)
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
   const [dfpDisplayEnabled, setDfpDisplayEnabled] = useState(true)
+  const [autoApproveEnabled, setAutoApproveEnabled] = useState(false)
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -124,16 +127,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchSiteSettings = useCallback(async () => {
     const { data, error } = await supabase
       .from('site_settings')
-      .select('dfp_display_enabled')
+      .select('dfp_display_enabled, auto_approve_enabled')
       .eq('id', 1)
       .maybeSingle()
 
     if (error) {
       console.error('Error fetching site settings:', error)
-      return true
+      return { dfpDisplayEnabled: true, autoApproveEnabled: false }
     }
 
-    return data?.dfp_display_enabled ?? true
+    return {
+      dfpDisplayEnabled: data?.dfp_display_enabled ?? true,
+      autoApproveEnabled: data?.auto_approve_enabled ?? false,
+    }
   }, [])
 
   const fetchAcquiredBlueprints = useCallback(async (userId: string) => {
@@ -214,8 +220,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const acquired = await fetchAcquiredBlueprints(sessionUser.id)
     setAcquiredBlueprints(acquired)
 
-    const dfpEnabled = await fetchSiteSettings()
-    setDfpDisplayEnabled(dfpEnabled)
+    const siteSettings = await fetchSiteSettings()
+    setDfpDisplayEnabled(siteSettings.dfpDisplayEnabled)
+    setAutoApproveEnabled(siteSettings.autoApproveEnabled)
   }, [checkBanned, handleBannedUser, fetchProfile, migrateLocalStorage, fetchAcquiredBlueprints, fetchSiteSettings])
 
   useEffect(() => {
@@ -420,6 +427,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
+  const updateAutoApprove = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeProfile = profileRef.current
+    if (activeProfile?.role !== 'super-admin') return false
+
+    const { error } = await supabase.rpc('update_site_auto_approve', { p_enabled: enabled })
+
+    if (error) {
+      console.error('Error updating auto-approve setting:', error)
+      return false
+    }
+
+    setAutoApproveEnabled(enabled)
+    return true
+  }, [])
+
   const fetchUsersWithBlueprints = useCallback(async (): Promise<UserWithBlueprints[]> => {
     const { data: blueprintCounts, error: countError } = await supabase
       .from('acquired_blueprints')
@@ -546,6 +568,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       canUseFeature: checkFeature,
       dfpDisplayEnabled,
       updateDfpDisplayEnabled,
+      autoApproveEnabled,
+      updateAutoApprove,
     }),
     [
       user,
@@ -578,6 +602,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       checkFeature,
       dfpDisplayEnabled,
       updateDfpDisplayEnabled,
+      autoApproveEnabled,
+      updateAutoApprove,
     ]
   )
 

@@ -23,9 +23,18 @@ const DFP_QUALITY_TIERS = [500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 100
 const CARANITE_EFFORT_FACTOR = 1.35
 const CARANITE_BASE_Q500 = 280_000
 
+/**
+ * Quality scaling table (multiplier vs Q500 = value / 50).
+ * Q500-Q750: ~1.58x per 50Q (exponential).
+ * Q800+: steeper scaling for rare high-quality resources:
+ *   Q850: 1.5x bump (37.5x vs Q500)
+ *   Q900: 5x requested (100x vs Q500)
+ *   Q950: intermediate (500x vs Q500)
+ *   Q1000: 10x requested (1000x vs Q500)
+ */
 const DFP_BASE_PER_001_cSCU: Record<number, number> = {
   500: 50, 550: 80, 600: 126, 650: 200, 700: 314, 750: 500, 800: 800,
-  850: 1254, 900: 2000, 950: 4750, 1000: 5000,
+  850: 1875, 900: 5000, 950: 25000, 1000: 50000,
 }
 
 const DFP_RESOURCE_ALIASES: Record<string, string> = {

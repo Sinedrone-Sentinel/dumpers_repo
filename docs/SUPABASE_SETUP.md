@@ -4,31 +4,63 @@ Use this guide when standing up a **new** Dumper's Repo franchise database.
 
 ## If you already have a live database
 
-If you previously ran incremental migrations `001`–`041` from `supabase/migrations_legacy/`, **do not** run the squashed baseline. Apply only new incremental files (e.g. `042_site_settings.sql`) as documented in release notes.
+If you previously ran incremental migrations `001`–`041` from `supabase/migrations_legacy/`, **do not** run the squashed baseline. Apply only new incremental files (e.g. `042_site_settings.sql`, `043_blueprint_order_overrides.sql`) as documented in release notes.
 
 ## 1. Create a Supabase project
 
 1. [supabase.com](https://supabase.com) → New project
 2. Note **Project URL** and **anon public** key for `.env`
+3. Note **service_role** key (Settings → API) — needed for Edge Functions, keep secret
 
 ## 2. Enable Google OAuth
 
-Authentication → Providers → Google → enable and set redirect URLs for your app origin(s).
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials
+2. Create OAuth 2.0 Client ID (Web application)
+3. Add authorized redirect URIs:
+   - `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
+   - Your app origin(s) for local dev: `http://localhost:5173`
+4. Copy the **Client ID** and **Client Secret**
+5. In Supabase: Authentication → Providers → Google → Enable
+6. Paste Client ID and Client Secret
+7. Add your app origin(s) to Site URL and Redirect URLs
 
 ## 3. Run baseline SQL
 
 In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 
-1. `001_core_profiles_auth.sql`
-2. `002_bans_admin.sql` (no-op placeholder)
-3. `003_blueprints_catalog.sql`
-4. `004_resource_tracker.sql`
-5. `005_orders_schema.sql`
-6. `006_access_rls_functions.sql`
+1. `001_core_profiles_auth.sql` — profiles, auth trigger
+2. `002_bans_admin.sql` — ban infrastructure (placeholder)
+3. `003_blueprints_catalog.sql` — blueprint resources catalog
+4. `004_resource_tracker.sql` — personal inventory, site totals
+5. `005_orders_schema.sql` — custom orders system
+6. `006_access_rls_functions.sql` — RLS policies, access functions
+7. `042_site_settings.sql` — site-wide settings (DFP display toggle)
+8. `043_blueprint_order_overrides.sql` — blueprint orderable overrides
+9. `044_auto_approve_setting.sql` — auto-approve new signups toggle
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 
-## 4. Promote a super-admin
+## 4. Deploy Edge Functions
+
+The app requires three Edge Functions for admin operations:
+
+```bash
+# Install Supabase CLI if needed
+npm install -g supabase
+
+# Login and link to your project
+supabase login
+supabase link --project-ref YOUR_PROJECT_REF
+
+# Deploy functions
+supabase functions deploy ban-user
+supabase functions deploy unban-user
+supabase functions deploy delete-account
+```
+
+These functions use `SUPABASE_SERVICE_ROLE_KEY` which is automatically available in the Edge Functions environment. **Do not** expose this key in frontend code.
+
+## 5. Promote a super-admin
 
 After your first Google sign-in (creates a `pending` profile), run:
 
@@ -38,7 +70,9 @@ SET role = 'super-admin', approved_at = now()
 WHERE email = 'your-google-email@example.com';
 ```
 
-## 5. Configure the frontend
+## 6. Configure the frontend
+
+Copy `.env.example` to `.env` and fill in your values:
 
 ```env
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
@@ -52,16 +86,16 @@ Optional (production franchises must use the canonical DFP host per LICENSE):
 # VITE_DFP_ENGINE_BASE_URL=http://localhost:5173
 ```
 
-## 6. Build and host
+## 7. Build and host
 
 ```bash
 npm install
 npm run build
 ```
 
-Deploy the `dist/` folder to your static host. The app is **not** tied to GitHub Pages.
+Deploy the `dist/` folder to your static host. See `docs/SELF_HOSTING.md` for hosting examples.
 
-## 7. DFP canonical hosting
+## 8. DFP canonical hosting
 
 Franchise production apps load DFP from **https://www.dumpers-repo.com**. The reference deployment must publish:
 
