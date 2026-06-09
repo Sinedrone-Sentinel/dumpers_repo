@@ -1,4 +1,4 @@
--- Super-admin one-time wipe of all personal resource stock
+-- Supabase safe-update blocks DELETE without WHERE; use WHERE true for full wipe.
 
 CREATE OR REPLACE FUNCTION public.admin_wipe_resource_tracker()
 RETURNS bigint
@@ -20,8 +20,3 @@ BEGIN
   RETURN deleted_count;
 END;
 $$;
-
-GRANT EXECUTE ON FUNCTION public.admin_wipe_resource_tracker() TO authenticated;
-
-COMMENT ON FUNCTION public.admin_wipe_resource_tracker() IS
-  'Deletes all rows from personal_resource_inventory. Super-admin only.';
