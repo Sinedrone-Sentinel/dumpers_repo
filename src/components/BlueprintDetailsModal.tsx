@@ -32,6 +32,7 @@ interface BlueprintDetailsModalProps {
   isOnTarget: boolean
   effectiveIsOrderable?: boolean
   canAddToTargetList?: boolean
+  onToggleTarget?: () => void
 }
 
 export default function BlueprintDetailsModal({
@@ -43,6 +44,7 @@ export default function BlueprintDetailsModal({
   isOnTarget,
   effectiveIsOrderable = false,
   canAddToTargetList = false,
+  onToggleTarget,
 }: BlueprintDetailsModalProps) {
   return (
     <AppModal
@@ -138,11 +140,15 @@ export default function BlueprintDetailsModal({
                 This blueprint cannot be added to your Target BP List (no reward missions to track).
               </p>
             ) : (
-              <p className="text-sm text-slate-400">
-                Use <strong className="text-amber-300/90">+ Target</strong> on the card to add this blueprint
-                to your Target BP List. Missions that reward it will appear on the{' '}
-                <strong className="text-amber-300/90">Target BP List</strong> page.
-              </p>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={onToggleTarget}
+                  className="shrink-0 px-3 py-1.5 text-sm font-semibold rounded-lg bg-amber-600 hover:bg-amber-500 text-white transition-colors"
+                >
+                  + Target
+                </button>
+                <span className="text-sm text-slate-400">Click to add to Target BP List</span>
+              </div>
             )}
           </div>
         )}

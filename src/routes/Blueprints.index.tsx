@@ -755,6 +755,7 @@ export default function BlueprintsRoute() {
           isOnTarget={isOnTargetList(selectedBlueprint.file)}
           effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
+          onToggleTarget={() => toggleTarget(selectedBlueprint.file)}
         />
       )}
     </FeaturePageLayout>
