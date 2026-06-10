@@ -67,17 +67,17 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
         />
       )}
 
-      {/* Sidebar panel */}
+      {/* Sidebar panel - positioned below header, grows from top-left */}
       <div
         ref={sidebarRef}
         className={`
-          fixed top-0 left-0 h-full w-64 bg-slate-900 border-r border-slate-700 
-          shadow-2xl z-[80] transform transition-transform duration-200 ease-out
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          fixed top-14 left-4 w-64 max-h-[calc(100vh-4.5rem)] bg-slate-900 border border-slate-700 
+          rounded-xl shadow-2xl z-[80] origin-top-left transition-all duration-200 ease-out overflow-hidden
+          ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'}
         `}
       >
         {/* Sidebar header */}
-        <div className="h-14 flex items-center justify-between px-4 border-b border-slate-700">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700">
           <span className="text-sm font-semibold text-orange-400 uppercase tracking-wider">Navigation</span>
           <button
             onClick={() => setIsOpen(false)}
@@ -91,7 +91,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
         </div>
 
         {/* Navigation groups */}
-        <nav className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-3.5rem)]" aria-label="Main navigation">
+        <nav className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-8rem)]" aria-label="Main navigation">
           {groups.map((group) => (
             <div key={group.id}>
               <h3 className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
