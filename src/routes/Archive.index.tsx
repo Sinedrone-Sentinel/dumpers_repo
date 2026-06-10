@@ -111,10 +111,12 @@ export default function ArchivePage() {
           />
         )}
 
-        {/* Main content area - takes remaining space */}
-        <main className="min-w-0">
-          <div className="bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
-            {renderSection()}
+        {/* Main content area - takes remaining space, fixed width from grid */}
+        <main className="w-full min-w-0">
+          <div className="w-full bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 sm:p-6 min-h-[500px]">
+            <div className="w-full">
+              {renderSection()}
+            </div>
           </div>
         </main>
       </div>

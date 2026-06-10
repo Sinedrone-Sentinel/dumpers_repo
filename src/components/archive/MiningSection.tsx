@@ -490,7 +490,7 @@ function LocationModal({ location, ores, onClose }: { location: string; ores: Mi
 
 function LoadingState() {
   return (
-    <div className="flex items-center justify-center min-h-[400px]">
+    <div className="w-full flex items-center justify-center min-h-[400px]">
       <div className="text-center space-y-3">
         <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin mx-auto" />
         <p className="text-sm text-slate-400">Loading mining data...</p>
