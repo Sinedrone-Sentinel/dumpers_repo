@@ -41,6 +41,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 11. `046_starstrings_data.sql` — StarStrings data tables (mining, components, ordnance, blueprints)
 12. `047_public_auto_approve_read.sql` — public read access for auto-approve status (login page display)
 13. `048_blueprints_sync.sql` — Blueprint sync tables for sccrafter.com data
+14. `049_welcome_modal.sql` — Welcome modal onboarding (has_seen_welcome, always_show settings)
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 

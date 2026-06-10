@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { deleteAccount } from '../lib/supabase'
+import { deleteAccount, supabase } from '../lib/supabase'
 import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
@@ -29,10 +29,28 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
   const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
   const [savingAutoApprove, setSavingAutoApprove] = useState(false)
+  const [showWelcomeAlways, setShowWelcomeAlways] = useState(false)
+  const [savingWelcome, setSavingWelcome] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Load welcome modal setting for super-admin
+  useEffect(() => {
+    if (!isSuperAdmin) return
+    const loadWelcomeSetting = async () => {
+      try {
+        const { data } = await supabase.rpc('get_welcome_modal_status')
+        if (data) {
+          setShowWelcomeAlways(data.always_show ?? false)
+        }
+      } catch {
+        // Migration may not be run yet
+      }
+    }
+    loadWelcomeSetting()
+  }, [isSuperAdmin])
 
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
@@ -99,6 +117,24 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingAutoApprove(false)
+  }
+
+  const handleWelcomeAlwaysChange = async (enabled: boolean) => {
+    const previous = showWelcomeAlways
+    setShowWelcomeAlways(enabled)
+    setSavingWelcome(true)
+    setMessage(null)
+
+    try {
+      const { error } = await supabase.rpc('update_show_welcome_modal_always', { p_enabled: enabled })
+      if (error) throw error
+      setMessage({ type: 'success', text: enabled ? 'Welcome modal will show on next page load.' : 'Welcome modal testing disabled.' })
+    } catch {
+      setShowWelcomeAlways(previous)
+      setMessage({ type: 'error', text: 'Failed to update welcome modal setting.' })
+    }
+
+    setSavingWelcome(false)
   }
 
   const handleCraftDeductInventoryChange = async (enabled: boolean) => {
@@ -231,6 +267,13 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 checked={autoApproveEnabled}
                 onChange={handleAutoApproveChange}
                 saving={savingAutoApprove}
+              />
+              <SettingsToggle
+                label="Always show Welcome Modal (testing)"
+                description="When enabled, the welcome onboarding modal appears on every page load. Use this to preview/test the modal before rolling out to all users."
+                checked={showWelcomeAlways}
+                onChange={handleWelcomeAlwaysChange}
+                saving={savingWelcome}
               />
             </SettingsSection>
           )}

@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Outlet } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import { getVisibleNavGroups } from '../config/appNav'
+import { supabase } from '../lib/supabase'
 import Login from './Login'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
 import DbActionsModal from './DbActionsModal'
+import WelcomeModal from './WelcomeModal'
 import AppChrome from './layout/AppChrome'
 
 export default function Layout() {
@@ -31,6 +33,29 @@ export default function Layout() {
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
   const [showDbActions, setShowDbActions] = useState(false)
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false)
+  const [welcomeChecked, setWelcomeChecked] = useState(false)
+
+  // Check if welcome modal should be shown (super-admin only for now)
+  useEffect(() => {
+    if (!user || !isSuperAdmin || welcomeChecked) return
+
+    const checkWelcome = async () => {
+      try {
+        const { data } = await supabase.rpc('get_welcome_modal_status')
+        if (data) {
+          // Show if: always_show is true OR hasn't seen it yet
+          const shouldShow = data.always_show || !data.has_seen
+          setShowWelcomeModal(shouldShow)
+        }
+      } catch {
+        // If RPC doesn't exist yet (migration not run), skip
+      }
+      setWelcomeChecked(true)
+    }
+
+    checkWelcome()
+  }, [user, isSuperAdmin, welcomeChecked])
 
   if (loading) {
     return (
@@ -73,6 +98,12 @@ export default function Layout() {
       {showAdminPanel && <AdminPanel onClose={() => setShowAdminPanel(false)} />}
       {showProfileSettings && <ProfileSettings onClose={() => setShowProfileSettings(false)} />}
       {showDbActions && <DbActionsModal onClose={() => setShowDbActions(false)} />}
+      {showWelcomeModal && (
+        <WelcomeModal
+          onClose={() => setShowWelcomeModal(false)}
+          onOpenSettings={() => setShowProfileSettings(true)}
+        />
+      )}
     </>
   )
 }
