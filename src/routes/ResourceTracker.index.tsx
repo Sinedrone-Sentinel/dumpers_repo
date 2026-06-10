@@ -53,6 +53,7 @@ export default function ResourceTrackerRoute() {
   const isPersonalTab = activeTab === 'personal'
 
   const {
+    catalog,
     catalogWithInventory,
     personalLineKeys,
     labelMap,
