@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-const BLUEPRINTS_URL = 'https://api.star-citizen.wiki/api/blueprints/export'
+const BLUEPRINTS_URL = 'https://www.sccrafter.com/Blueprints.json'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const outputPath = join(root, 'src', 'data', 'Blueprints.json')
 const force = process.argv.includes('--force')

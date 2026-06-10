@@ -94,11 +94,38 @@ StarStrings is a community-curated localization pack for Star Citizen that adds 
 
 ---
 
+## Source: sccrafter.com
+
+**Data URL:** `https://www.sccrafter.com/Blueprints.json`
+
+The primary source for the complete crafting blueprint database, extracted from Star Citizen's game files.
+
+### Data Provided
+
+| Data | Description |
+|------|-------------|
+| Blueprint Catalog | Complete list of all craftable items |
+| Crafting Slots | Resource/component requirements per blueprint |
+| Mission Rewards | Which missions reward which blueprints |
+| Drop Chances | Probability of blueprint drops |
+| Locations | Where missions/blueprints are available |
+
+### Sync Method
+
+Super-admins can sync this data via the **DB Actions** modal in the app, which calls the `sync-blueprints` Edge Function.
+
+Alternatively, the data can be fetched locally via:
+```bash
+npm run fetch-blueprints
+```
+
+---
+
 ## Source: Star Citizen Wiki API
 
 **API:** `https://api.star-citizen.wiki/api/`
 
-Used for fetching real-time game data including blueprints and component metadata.
+Used for fetching supplementary game data including component metadata.
 
 ### Data Files
 

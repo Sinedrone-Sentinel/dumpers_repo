@@ -14,25 +14,90 @@ interface StarstringsSyncStatus {
   blueprint_pools_count: number
 }
 
+interface BlueprintsSyncStatus {
+  last_synced_at: string | null
+  source_version: string | null
+  sync_status: string
+  sync_error: string | null
+  blueprint_count: number
+}
+
 export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [confirmText, setConfirmText] = useState('')
   const [wiping, setWiping] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   
+  // Blueprints sync state
+  const [bpSyncStatus, setBpSyncStatus] = useState<BlueprintsSyncStatus | null>(null)
+  const [bpSyncing, setBpSyncing] = useState(false)
+
   // StarStrings sync state
   const [syncStatus, setSyncStatus] = useState<StarstringsSyncStatus | null>(null)
   const [syncing, setSyncing] = useState(false)
 
-  // Fetch StarStrings sync status on mount
+  // Fetch sync statuses on mount
   useEffect(() => {
-    const fetchSyncStatus = async () => {
+    const fetchSyncStatuses = async () => {
+      // Blueprints sync status
+      const { data: bpData, error: bpError } = await supabase.rpc('get_blueprints_sync_status')
+      if (!bpError && bpData && bpData.length > 0) {
+        setBpSyncStatus(bpData[0])
+      }
+
+      // StarStrings sync status
       const { data, error } = await supabase.rpc('get_starstrings_sync_status')
       if (!error && data && data.length > 0) {
         setSyncStatus(data[0])
       }
     }
-    fetchSyncStatus()
+    fetchSyncStatuses()
   }, [])
+
+  const handleBlueprintsSync = async () => {
+    setBpSyncing(true)
+    setMessage(null)
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setMessage({ type: 'error', text: 'Not authenticated' })
+        setBpSyncing(false)
+        return
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-blueprints`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        setMessage({ type: 'error', text: result.error || 'Blueprint sync failed' })
+      } else {
+        setMessage({ 
+          type: 'success', 
+          text: `Synced ${result.count} blueprints (v${result.version})` 
+        })
+        
+        // Refresh sync status
+        const { data } = await supabase.rpc('get_blueprints_sync_status')
+        if (data && data.length > 0) {
+          setBpSyncStatus(data[0])
+        }
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Network error during blueprint sync' })
+    }
+
+    setBpSyncing(false)
+  }
 
   const handleStarstringsSync = async () => {
     setSyncing(true)
@@ -132,6 +197,38 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
       )}
 
       <div className="space-y-4">
+        {/* Blueprints Sync */}
+        <div className="p-3 sm:p-4 rounded-xl border border-orange-500/30 bg-orange-950/20 space-y-3">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-white font-medium text-sm">Sync Blueprints Data</h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Fetch latest blueprint catalog from sccrafter.com including crafting recipes and mission rewards.
+              </p>
+              {bpSyncStatus && (
+                <div className="mt-2 text-xs text-slate-500 space-y-0.5">
+                  {bpSyncStatus.last_synced_at && (
+                    <p>Last synced: {new Date(bpSyncStatus.last_synced_at).toLocaleString()}</p>
+                  )}
+                  {bpSyncStatus.source_version && (
+                    <p>Version: {bpSyncStatus.source_version}</p>
+                  )}
+                  <p className="text-slate-600">
+                    {bpSyncStatus.blueprint_count} blueprints
+                  </p>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={handleBlueprintsSync}
+              disabled={bpSyncing}
+              className="shrink-0 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {bpSyncing ? 'Syncing...' : 'Sync Now'}
+            </button>
+          </div>
+        </div>
+
         {/* StarStrings Sync */}
         <div className="p-3 sm:p-4 rounded-xl border border-purple-500/30 bg-purple-950/20 space-y-3">
           <div className="flex items-start justify-between gap-4">
