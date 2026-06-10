@@ -8,16 +8,23 @@ import {
   fetchMissionPrefs,
   fetchTargetBlueprintIds,
   removeTargetBlueprint,
+  removeMissionPrefsByKeys,
   setMissionIncluded,
 } from '../lib/targetList'
 
-export function useTargetList(overridesMap: Record<string, boolean> = {}) {
+export type GetMissionKeysForBlueprint = (blueprintId: string) => string[]
+
+export function useTargetList(
+  overridesMap: Record<string, boolean> = {},
+  getMissionKeysForBlueprint?: GetMissionKeysForBlueprint
+) {
   const { user, isApproved, acquiredBlueprints } = useAuth()
   const [targetIds, setTargetIds] = useState<Record<string, boolean>>({})
   const [missionPrefs, setMissionPrefs] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const acquiredRef = useLatestRef(acquiredBlueprints)
+  const getMissionKeysRef = useLatestRef(getMissionKeysForBlueprint)
 
   const refresh = useCallback(async () => {
     if (!user?.id || !isApproved) {
@@ -73,15 +80,39 @@ export function useTargetList(overridesMap: Record<string, boolean> = {}) {
     if (acquiredOnTarget.length === 0) return
 
     void (async () => {
-      await Promise.all(
-        acquiredOnTarget.map((id) => removeTargetBlueprint(user.id, id))
-      )
+      // Collect all mission keys to remove for acquired blueprints
+      const getMissionKeys = getMissionKeysRef.current
+      const missionKeysToRemove: string[] = []
+      if (getMissionKeys) {
+        for (const bpId of acquiredOnTarget) {
+          missionKeysToRemove.push(...getMissionKeys(bpId))
+        }
+      }
+
+      await Promise.all([
+        ...acquiredOnTarget.map((id) => removeTargetBlueprint(user.id, id)),
+        missionKeysToRemove.length > 0
+          ? removeMissionPrefsByKeys(user.id, missionKeysToRemove)
+          : Promise.resolve(),
+      ])
+
       setTargetIds((prev) => {
         const next = { ...prev }
         for (const id of acquiredOnTarget) delete next[id]
         return next
       })
+
+      // Also update local mission prefs state
+      if (missionKeysToRemove.length > 0) {
+        setMissionPrefs((prev) => {
+          const next = { ...prev }
+          for (const key of missionKeysToRemove) delete next[key]
+          return next
+        })
+      }
     })()
+    // getMissionKeysRef is stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acquiredBlueprints, targetIds, user?.id, isApproved])
 
   const toggleTarget = useCallback(
@@ -96,7 +127,11 @@ export function useTargetList(overridesMap: Record<string, boolean> = {}) {
       const isOnList = !!targetIds[blueprintId]
 
       if (isOnList) {
-        const result = await removeTargetBlueprint(user.id, blueprintId)
+        // Get mission keys to remove along with the blueprint
+        const getMissionKeys = getMissionKeysRef.current
+        const missionKeysToRemove = getMissionKeys ? getMissionKeys(blueprintId) : []
+
+        const result = await removeTargetBlueprint(user.id, blueprintId, missionKeysToRemove)
         if (result.error) {
           setError(result.error)
           return false
@@ -106,6 +141,15 @@ export function useTargetList(overridesMap: Record<string, boolean> = {}) {
           delete next[blueprintId]
           return next
         })
+
+        // Also update local mission prefs state
+        if (missionKeysToRemove.length > 0) {
+          setMissionPrefs((prev) => {
+            const next = { ...prev }
+            for (const key of missionKeysToRemove) delete next[key]
+            return next
+          })
+        }
       } else {
         if (!canAddBlueprintToTargetListById(blueprintId, overridesMap)) {
           setError(
@@ -124,6 +168,8 @@ export function useTargetList(overridesMap: Record<string, boolean> = {}) {
 
       return true
     },
+    // getMissionKeysRef is stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [user, isApproved, targetIds, acquiredBlueprints, overridesMap]
   )
 

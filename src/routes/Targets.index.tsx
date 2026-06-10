@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { resolveIsOrderable } from '../lib/blueprintOrderable'
-import { buildMissionList, getMissionsForBlueprint } from '../lib/missions'
+import { buildMissionList, getMissionsForBlueprint, missionKey } from '../lib/missions'
 import {
   formatBlueprintUnlockBadge,
   formatRepReward,
@@ -156,6 +156,26 @@ export default function TargetsRoute() {
   const { acquiredBlueprints, isApproved } = useAuth()
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
+
+  // Build a map of blueprint ID to its mission keys for cleanup
+  const blueprintMissionKeysMap = useMemo(() => {
+    const map: Record<string, string[]> = {}
+    for (const bp of blueprints) {
+      const keys: string[] = []
+      for (const reward of bp.rewardMissions ?? []) {
+        const mission = reward.mission?.trim()
+        if (mission) keys.push(missionKey(mission))
+      }
+      map[bp.file] = keys
+    }
+    return map
+  }, [blueprints])
+
+  const getMissionKeysForBlueprint = useCallback(
+    (blueprintId: string) => blueprintMissionKeysMap[blueprintId] ?? [],
+    [blueprintMissionKeysMap]
+  )
+
   const {
     targetIds,
     missionPrefs,
@@ -168,7 +188,7 @@ export default function TargetsRoute() {
     isMissionOnChecklist,
     targetCount,
     refresh,
-  } = useTargetList(overridesMap)
+  } = useTargetList(overridesMap, getMissionKeysForBlueprint)
 
   const acquiredSet = useMemo(
     () => new Set(Object.keys(acquiredBlueprints).filter((k) => acquiredBlueprints[k])),

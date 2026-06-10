@@ -41,13 +41,40 @@ export async function addTargetBlueprint(
 
 export async function removeTargetBlueprint(
   userId: string,
-  blueprintId: string
+  blueprintId: string,
+  relatedMissionKeys?: string[]
 ): Promise<{ error?: string }> {
   const { error } = await supabase
     .from('target_list_blueprints')
     .delete()
     .eq('user_id', userId)
     .eq('blueprint_id', blueprintId)
+
+  if (error) return { error: error.message }
+
+  // Also remove any related mission prefs
+  if (relatedMissionKeys && relatedMissionKeys.length > 0) {
+    await supabase
+      .from('target_list_mission_prefs')
+      .delete()
+      .eq('user_id', userId)
+      .in('mission_key', relatedMissionKeys)
+  }
+
+  return {}
+}
+
+export async function removeMissionPrefsByKeys(
+  userId: string,
+  missionKeys: string[]
+): Promise<{ error?: string }> {
+  if (missionKeys.length === 0) return {}
+
+  const { error } = await supabase
+    .from('target_list_mission_prefs')
+    .delete()
+    .eq('user_id', userId)
+    .in('mission_key', missionKeys)
 
   if (error) return { error: error.message }
   return {}
