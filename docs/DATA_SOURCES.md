@@ -4,7 +4,7 @@ This document describes the structured game data files used by Dumper's Repo and
 
 ## Source: MrKraken's StarStrings
 
-**Repository:** [MrKraken/StarStrings](https://github.com/RealMrKraken/StarStrings-master)
+**Repository:** [MrKraken/StarStrings](https://github.com/MrKraken/StarStrings)
 
 StarStrings is a community-curated localization pack for Star Citizen that adds useful information to in-game text, including blueprint pools, rep requirements, and mission metadata.
 

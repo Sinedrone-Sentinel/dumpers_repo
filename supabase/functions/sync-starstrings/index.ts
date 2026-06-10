@@ -11,8 +11,8 @@ const corsHeaders = {
 }
 
 // GitHub repo info for StarStrings
-const GITHUB_OWNER = 'RealMrKraken'
-const GITHUB_REPO = 'StarStrings-master'
+const GITHUB_OWNER = 'MrKraken'
+const GITHUB_REPO = 'StarStrings'
 
 interface MiningOre {
   ore_name: string
