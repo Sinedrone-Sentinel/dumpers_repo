@@ -10,6 +10,7 @@ interface AppSidebarProps {
 export default function AppSidebar({ groups, className = '' }: AppSidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [userCollapsed, setUserCollapsed] = useState<Set<string>>(new Set())
   const routerState = useRouterState({ select: (s) => s.location })
   const pathname = routerState.pathname
   const search = routerState.searchStr
@@ -20,8 +21,14 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       const next = new Set(prev)
       if (next.has(id)) {
         next.delete(id)
+        setUserCollapsed(uc => new Set(uc).add(id))
       } else {
         next.add(id)
+        setUserCollapsed(uc => {
+          const newSet = new Set(uc)
+          newSet.delete(id)
+          return newSet
+        })
       }
       return next
     })
@@ -53,6 +60,16 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
       return () => document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen])
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = ''
+      }
     }
   }, [isOpen])
 
@@ -106,7 +123,11 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
         </div>
 
         {/* Navigation groups */}
-        <nav className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-8rem)]" aria-label="Main navigation">
+        <nav 
+          className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-8rem)]" 
+          style={{ overscrollBehavior: 'contain' }}
+          aria-label="Main navigation"
+        >
           {groups.map((group) => (
             <div key={group.id}>
               <h3 className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
@@ -120,6 +141,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
                     pathname={pathname}
                     search={search}
                     isExpanded={expandedItems.has(item.id)}
+                    isUserCollapsed={userCollapsed.has(item.id)}
                     onToggleExpand={() => toggleExpanded(item.id)}
                   />
                 ))}
@@ -137,10 +159,11 @@ interface SidebarNavItemProps {
   pathname: string
   search: string
   isExpanded: boolean
+  isUserCollapsed: boolean
   onToggleExpand: () => void
 }
 
-function SidebarNavItem({ item, pathname, search, isExpanded, onToggleExpand }: SidebarNavItemProps) {
+function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, onToggleExpand }: SidebarNavItemProps) {
   const hasChildren = item.children && item.children.length > 0
   const fullPath = pathname + search
   
@@ -155,7 +178,8 @@ function SidebarNavItem({ item, pathname, search, isExpanded, onToggleExpand }: 
     ? (pathname === '/archive' && !search.includes('section='))
     : pathname === item.path
   
-  const showExpanded = isExpanded || isChildActive
+  // Auto-expand if child is active, but respect user's explicit collapse
+  const showExpanded = isUserCollapsed ? false : (isExpanded || isChildActive)
 
   if (hasChildren) {
     return (
