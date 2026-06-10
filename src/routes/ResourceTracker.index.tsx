@@ -53,7 +53,6 @@ export default function ResourceTrackerRoute() {
   const isPersonalTab = activeTab === 'personal'
 
   const {
-    catalog,
     catalogWithInventory,
     personalLineKeys,
     labelMap,
@@ -61,7 +60,6 @@ export default function ResourceTrackerRoute() {
     loading,
     error,
     refresh,
-    syncFromBlueprints,
   } = useResourceCatalog({
     enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
@@ -124,16 +122,6 @@ export default function ResourceTrackerRoute() {
     <FeaturePageLayout
       title="Resource Tracker"
       subtitle={SITE_SLOGAN}
-      actions={
-        isSuperAdmin ? (
-          <button
-            onClick={() => void syncFromBlueprints()}
-            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
-          >
-            Sync from blueprints
-          </button>
-        ) : undefined
-      }
     >
       <div className="w-full min-w-0 overflow-x-hidden">
       <div className="flex flex-wrap gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit max-w-full">
