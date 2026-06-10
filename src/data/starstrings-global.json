@@ -1,0 +1,43 @@
+{
+  "_source": "MrKraken StarStrings global.ini",
+  "_extracted": "2026-06-10T02:16:24.911Z",
+  "standingLevels": {
+    "lawful": [
+      "Neutral",
+      "Friendly",
+      "Trusted",
+      "Advocate",
+      "Ally"
+    ],
+    "unlawful": [
+      "Neutral",
+      "Friendly",
+      "Trusted",
+      "Accomplice",
+      "Associate"
+    ]
+  },
+  "contractTypeCounts": {
+    "Adagio": 40,
+    "ArcCorp": 71,
+    "Bounty Hunter": 17,
+    "microTech": 95,
+    "Crusader": 192,
+    "Citizens Prosperity": 79,
+    "Xeno Threat": 31,
+    "Covalex": 48,
+    "Hurston": 131,
+    "Nine Tails": 8,
+    "Dusters": 2,
+    "Eckhart": 61,
+    "Headhunters": 77,
+    "Highpoint": 8,
+    "Rayari": 3,
+    "Red Wind": 37
+  },
+  "bpMissions": {
+    "totalBpTagged": 280,
+    "conditionalBp": 232,
+    "guaranteedBp": 48
+  }
+}

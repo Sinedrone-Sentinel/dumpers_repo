@@ -1,0 +1,2072 @@
+{
+  "_source": "MrKraken StarStrings mining.ini",
+  "_extracted": "2026-06-10T02:16:24.820Z",
+  "rarityTiers": {
+    "legendary": [
+      {
+        "name": "Quantainium",
+        "locations": [
+          "Found in All Stanton Deposits"
+        ]
+      },
+      {
+        "name": "Savrilium",
+        "locations": [
+          "Glaciem Ring",
+          "Keeger Belt",
+          "QV Breaker Stations (Nyx)"
+        ]
+      },
+      {
+        "name": "Stileron",
+        "locations": [
+          "All Pyro Planets",
+          "Akiro Cluster",
+          "Pyro Asteroid Clusters"
+        ]
+      }
+    ],
+    "epic": [
+      {
+        "name": "Lindinium",
+        "locations": [
+          "Glaciem Ring",
+          "Keeger Belt"
+        ]
+      },
+      {
+        "name": "Ouratite",
+        "locations": [
+          "Aberdeen",
+          "Arial",
+          "Hurston",
+          "Yela Ring"
+        ]
+      },
+      {
+        "name": "Riccite",
+        "locations": [
+          "Adir",
+          "Akiro Cluster",
+          "Bloom",
+          "Ignis",
+          "Pyro Asteroid Clusters",
+          "Terminus",
+          "Vatra"
+        ]
+      }
+    ],
+    "rare": [
+      {
+        "name": "Beryl",
+        "locations": [
+          "Aaron Halo",
+          "ARC-L3",
+          "CRU-L5",
+          "MIC-L4",
+          "Pyro Asteroid Clusters",
+          "Wala"
+        ]
+      },
+      {
+        "name": "Bexalite",
+        "locations": [
+          "CRU-L1",
+          "CRU-L2",
+          "Fairo",
+          "Fuego",
+          "Glaciem Ring",
+          "HUR-L3",
+          "Keeger Belt",
+          "Pyro Asteroid Clusters",
+          "Vuur"
+        ]
+      },
+      {
+        "name": "Borase",
+        "locations": [
+          "Adir",
+          "Bloom",
+          "Fuego",
+          "HUR-L1",
+          "HUR-L4",
+          "HUR-L5",
+          "Pyro Asteroid Clusters",
+          "Pyro IV"
+        ]
+      },
+      {
+        "name": "Gold",
+        "locations": [
+          "ARC-L5",
+          "CRU-L4",
+          "Fairo",
+          "Ignis",
+          "MIC-L3",
+          "Pyro Asteroid Clusters",
+          "Terminus",
+          "Vatra"
+        ]
+      },
+      {
+        "name": "Taranite",
+        "locations": [
+          "ARC-L1",
+          "ARC-L2",
+          "ARC-L4",
+          "Cellin",
+          "Clio",
+          "Euterpe",
+          "HUR-L2",
+          "Pyro Asteroid Clusters",
+          "Yela"
+        ]
+      }
+    ],
+    "uncommon": [
+      {
+        "name": "Agricium",
+        "locations": [
+          "ARC-L3",
+          "Cellin",
+          "CRU-L5",
+          "Daymar",
+          "MIC-L4",
+          "Pyro Asteroid Clusters",
+          "Terminus",
+          "Vuur",
+          "Yela"
+        ]
+      },
+      {
+        "name": "Aslarite",
+        "locations": [
+          "Aaron Halo",
+          "ARC-L5",
+          "CRU-L4",
+          "Fuego",
+          "Ita",
+          "Magda",
+          "MIC-L4",
+          "Pyro Asteroid Clusters",
+          "Vuur"
+        ]
+      },
+      {
+        "name": "Laranite",
+        "locations": [
+          "HUR-L1",
+          "HUR-L4",
+          "HUR-L5",
+          "Lyria",
+          "Pyro IV",
+          "Wala"
+        ]
+      },
+      {
+        "name": "Titanium",
+        "locations": [
+          "Aaron Halo",
+          "Aberdeen",
+          "CRU-L1",
+          "CRU-L2",
+          "HUR-L3",
+          "Magda",
+          "Pyro Asteroid Clusters",
+          "Terminus",
+          "Yela Ring"
+        ]
+      },
+      {
+        "name": "Torite",
+        "locations": [
+          "Akiro Cluster",
+          "CRU-L3",
+          "Glaciem Ring",
+          "Keeger Belt",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5",
+          "Pyro Asteroid Clusters",
+          "QV Breaker Stations (Nyx)"
+        ]
+      },
+      {
+        "name": "Tungsten",
+        "locations": [
+          "Adir",
+          "ARC-L1",
+          "ARC-L2",
+          "ARC-L4",
+          "Fairo",
+          "HUR-L2",
+          "Pyro Asteroid Clusters"
+        ]
+      }
+    ],
+    "common": [
+      {
+        "name": "Aluminium",
+        "locations": [
+          "Aaron Halo",
+          "Aberdeen",
+          "ARC-L1",
+          "ARC-L2",
+          "Arial",
+          "CRU-L3",
+          "Glaciem Ring",
+          "HUR-L1",
+          "HUR-L2",
+          "HUR-L4",
+          "HUR-L5",
+          "Ita",
+          "Keeger Belt",
+          "Magda",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5",
+          "Pyro Asteroid Clusters"
+        ]
+      },
+      {
+        "name": "Copper",
+        "locations": [
+          "Aaron Halo",
+          "Akiro Cluster",
+          "ARC-L3",
+          "ARC-L5",
+          "Clio",
+          "CRU-L1",
+          "CRU-L2",
+          "CRU-L4",
+          "CRU-L5",
+          "Euterpe",
+          "Lyria",
+          "MIC-L3",
+          "MIC-L4",
+          "Pyro Asteroid Clusters",
+          "Pyro I",
+          "Pyro IV",
+          "Terminus",
+          "Wala",
+          "Yela Ring"
+        ]
+      },
+      {
+        "name": "Corundum",
+        "locations": [
+          "Aberdeen",
+          "ARC-L1",
+          "ARC-L2",
+          "ARC-L4",
+          "Arial",
+          "CRU-L3",
+          "Hurston",
+          "HUR-L1",
+          "HUR-L2",
+          "HUR-L4",
+          "HUR-L5",
+          "MIC-L1",
+          "MIC-L2",
+          "MIC-L5",
+          "Pyro Asteroid Clusters"
+        ]
+      },
+      {
+        "name": "Hephaestanite",
+        "locations": [
+          "Arial",
+          "ARC-L1",
+          "ARC-L2",
+          "ARC-L4",
+          "Calliope",
+          "CRU-L3",
+          "Fuego",
+          "HUR-L1",
+          "HUR-L2",
+          "HUR-L4",
+          "HUR-L5",
+          "MIC-L1",
+          "microTech",
+          "MIC-L2",
+          "MIC-L5",
+          "Monox",
+          "Pyro Asteroid Clusters",
+          "Vuur"
+        ]
+      },
+      {
+        "name": "Ice",
+        "locations": [
+          "Aaron Halo",
+          "Akiro Cluster",
+          "ARC-L3",
+          "ARC-L5",
+          "Calliope",
+          "Clio",
+          "Euterpe",
+          "Glaciem Ring",
+          "HUR-L3",
+          "Keeger Belt",
+          "microTech",
+          "MIC-L3",
+          "MIC-L4",
+          "Pyro Asteroid Clusters",
+          "Yela Ring"
+        ]
+      },
+      {
+        "name": "Iron",
+        "locations": [
+          "Aaron Halo",
+          "Adir",
+          "Akiro Cluster",
+          "ARC-L3",
+          "ARC-L5",
+          "Bloom",
+          "Calliope",
+          "CRU-L1",
+          "CRU-L2",
+          "CRU-L4",
+          "CRU-L5",
+          "Fairo",
+          "Fuego",
+          "Glaciem Ring",
+          "HUR-L3",
+          "Keeger Belt",
+          "Lyria",
+          "Magda",
+          "microTech",
+          "MIC-L3",
+          "MIC-L4",
+          "Monox",
+          "Pyro Asteroid Clusters",
+          "Pyro I",
+          "Pyro IV",
+          "Vatra",
+          "Vuur",
+          "Wala",
+          "Yela Ring"
+        ]
+      },
+      {
+        "name": "Quartz",
+        "locations": [
+          "Bloom",
+          "Cellin",
+          "Daymar",
+          "Pyro Asteroid Clusters",
+          "Yela"
+        ]
+      },
+      {
+        "name": "Silicon",
+        "locations": [
+          "Aaron Halo",
+          "Akiro Cluster",
+          "Cellin",
+          "Daymar",
+          "Fairo",
+          "Ignis",
+          "Pyro Asteroid Clusters",
+          "Vatra",
+          "Yela"
+        ]
+      },
+      {
+        "name": "Tin",
+        "locations": [
+          "Arial",
+          "Hurston",
+          "Ignis",
+          "Ita",
+          "Monox",
+          "Pyro Asteroid Clusters",
+          "Pyro I"
+        ]
+      }
+    ],
+    "handMineable": [
+      {
+        "name": "Aphorite",
+        "locations": [
+          "All Moons/Planets/Caves"
+        ]
+      },
+      {
+        "name": "Beradon",
+        "locations": [
+          "Bloom",
+          "Pyro I"
+        ]
+      },
+      {
+        "name": "Caranite",
+        "locations": [
+          "Aberdeen",
+          "Daymar"
+        ]
+      },
+      {
+        "name": "Dolivine",
+        "locations": [
+          "All Moons/Planets/Caves"
+        ]
+      },
+      {
+        "name": "Feynmaline",
+        "locations": [
+          "Pyro IV"
+        ]
+      },
+      {
+        "name": "Glacosite",
+        "locations": [
+          "Monox"
+        ]
+      },
+      {
+        "name": "Hadanite",
+        "locations": [
+          "All Moons/Planets/Caves"
+        ]
+      },
+      {
+        "name": "Janalite",
+        "locations": [
+          "Daymar",
+          "Hurston",
+          "Ita",
+          "Magda Sand Caves",
+          "Wala"
+        ]
+      },
+      {
+        "name": "Sadaryx",
+        "locations": [
+          "QV Breaker Stations (Nyx)"
+        ]
+      },
+      {
+        "name": "Note from MrKraken",
+        "locations": [
+          "This just organises the ores by category",
+          "if CIG haven't updated the locations that's on them!"
+        ]
+      }
+    ]
+  },
+  "oreLocations": {
+    "Quantainium": {
+      "rarity": "legendary",
+      "locations": [
+        "Found in All Stanton Deposits"
+      ]
+    },
+    "Savrilium": {
+      "rarity": "legendary",
+      "locations": [
+        "Glaciem Ring",
+        "Keeger Belt",
+        "QV Breaker Stations (Nyx)"
+      ]
+    },
+    "Stileron": {
+      "rarity": "legendary",
+      "locations": [
+        "All Pyro Planets",
+        "Akiro Cluster",
+        "Pyro Asteroid Clusters"
+      ]
+    },
+    "Lindinium": {
+      "rarity": "epic",
+      "locations": [
+        "Glaciem Ring",
+        "Keeger Belt"
+      ]
+    },
+    "Ouratite": {
+      "rarity": "epic",
+      "locations": [
+        "Aberdeen",
+        "Arial",
+        "Hurston",
+        "Yela Ring"
+      ]
+    },
+    "Riccite": {
+      "rarity": "epic",
+      "locations": [
+        "Adir",
+        "Akiro Cluster",
+        "Bloom",
+        "Ignis",
+        "Pyro Asteroid Clusters",
+        "Terminus",
+        "Vatra"
+      ]
+    },
+    "Beryl": {
+      "rarity": "rare",
+      "locations": [
+        "Aaron Halo",
+        "ARC-L3",
+        "CRU-L5",
+        "MIC-L4",
+        "Pyro Asteroid Clusters",
+        "Wala"
+      ]
+    },
+    "Bexalite": {
+      "rarity": "rare",
+      "locations": [
+        "CRU-L1",
+        "CRU-L2",
+        "Fairo",
+        "Fuego",
+        "Glaciem Ring",
+        "HUR-L3",
+        "Keeger Belt",
+        "Pyro Asteroid Clusters",
+        "Vuur"
+      ]
+    },
+    "Borase": {
+      "rarity": "rare",
+      "locations": [
+        "Adir",
+        "Bloom",
+        "Fuego",
+        "HUR-L1",
+        "HUR-L4",
+        "HUR-L5",
+        "Pyro Asteroid Clusters",
+        "Pyro IV"
+      ]
+    },
+    "Gold": {
+      "rarity": "rare",
+      "locations": [
+        "ARC-L5",
+        "CRU-L4",
+        "Fairo",
+        "Ignis",
+        "MIC-L3",
+        "Pyro Asteroid Clusters",
+        "Terminus",
+        "Vatra"
+      ]
+    },
+    "Taranite": {
+      "rarity": "rare",
+      "locations": [
+        "ARC-L1",
+        "ARC-L2",
+        "ARC-L4",
+        "Cellin",
+        "Clio",
+        "Euterpe",
+        "HUR-L2",
+        "Pyro Asteroid Clusters",
+        "Yela"
+      ]
+    },
+    "Agricium": {
+      "rarity": "uncommon",
+      "locations": [
+        "ARC-L3",
+        "Cellin",
+        "CRU-L5",
+        "Daymar",
+        "MIC-L4",
+        "Pyro Asteroid Clusters",
+        "Terminus",
+        "Vuur",
+        "Yela"
+      ]
+    },
+    "Aslarite": {
+      "rarity": "uncommon",
+      "locations": [
+        "Aaron Halo",
+        "ARC-L5",
+        "CRU-L4",
+        "Fuego",
+        "Ita",
+        "Magda",
+        "MIC-L4",
+        "Pyro Asteroid Clusters",
+        "Vuur"
+      ]
+    },
+    "Laranite": {
+      "rarity": "uncommon",
+      "locations": [
+        "HUR-L1",
+        "HUR-L4",
+        "HUR-L5",
+        "Lyria",
+        "Pyro IV",
+        "Wala"
+      ]
+    },
+    "Titanium": {
+      "rarity": "uncommon",
+      "locations": [
+        "Aaron Halo",
+        "Aberdeen",
+        "CRU-L1",
+        "CRU-L2",
+        "HUR-L3",
+        "Magda",
+        "Pyro Asteroid Clusters",
+        "Terminus",
+        "Yela Ring"
+      ]
+    },
+    "Torite": {
+      "rarity": "uncommon",
+      "locations": [
+        "Akiro Cluster",
+        "CRU-L3",
+        "Glaciem Ring",
+        "Keeger Belt",
+        "MIC-L1",
+        "MIC-L2",
+        "MIC-L5",
+        "Pyro Asteroid Clusters",
+        "QV Breaker Stations (Nyx)"
+      ]
+    },
+    "Tungsten": {
+      "rarity": "uncommon",
+      "locations": [
+        "Adir",
+        "ARC-L1",
+        "ARC-L2",
+        "ARC-L4",
+        "Fairo",
+        "HUR-L2",
+        "Pyro Asteroid Clusters"
+      ]
+    },
+    "Aluminium": {
+      "rarity": "common",
+      "locations": [
+        "Aaron Halo",
+        "Aberdeen",
+        "ARC-L1",
+        "ARC-L2",
+        "Arial",
+        "CRU-L3",
+        "Glaciem Ring",
+        "HUR-L1",
+        "HUR-L2",
+        "HUR-L4",
+        "HUR-L5",
+        "Ita",
+        "Keeger Belt",
+        "Magda",
+        "MIC-L1",
+        "MIC-L2",
+        "MIC-L5",
+        "Pyro Asteroid Clusters"
+      ]
+    },
+    "Copper": {
+      "rarity": "common",
+      "locations": [
+        "Aaron Halo",
+        "Akiro Cluster",
+        "ARC-L3",
+        "ARC-L5",
+        "Clio",
+        "CRU-L1",
+        "CRU-L2",
+        "CRU-L4",
+        "CRU-L5",
+        "Euterpe",
+        "Lyria",
+        "MIC-L3",
+        "MIC-L4",
+        "Pyro Asteroid Clusters",
+        "Pyro I",
+        "Pyro IV",
+        "Terminus",
+        "Wala",
+        "Yela Ring"
+      ]
+    },
+    "Corundum": {
+      "rarity": "common",
+      "locations": [
+        "Aberdeen",
+        "ARC-L1",
+        "ARC-L2",
+        "ARC-L4",
+        "Arial",
+        "CRU-L3",
+        "Hurston",
+        "HUR-L1",
+        "HUR-L2",
+        "HUR-L4",
+        "HUR-L5",
+        "MIC-L1",
+        "MIC-L2",
+        "MIC-L5",
+        "Pyro Asteroid Clusters"
+      ]
+    },
+    "Hephaestanite": {
+      "rarity": "common",
+      "locations": [
+        "Arial",
+        "ARC-L1",
+        "ARC-L2",
+        "ARC-L4",
+        "Calliope",
+        "CRU-L3",
+        "Fuego",
+        "HUR-L1",
+        "HUR-L2",
+        "HUR-L4",
+        "HUR-L5",
+        "MIC-L1",
+        "microTech",
+        "MIC-L2",
+        "MIC-L5",
+        "Monox",
+        "Pyro Asteroid Clusters",
+        "Vuur"
+      ]
+    },
+    "Ice": {
+      "rarity": "common",
+      "locations": [
+        "Aaron Halo",
+        "Akiro Cluster",
+        "ARC-L3",
+        "ARC-L5",
+        "Calliope",
+        "Clio",
+        "Euterpe",
+        "Glaciem Ring",
+        "HUR-L3",
+        "Keeger Belt",
+        "microTech",
+        "MIC-L3",
+        "MIC-L4",
+        "Pyro Asteroid Clusters",
+        "Yela Ring"
+      ]
+    },
+    "Iron": {
+      "rarity": "common",
+      "locations": [
+        "Aaron Halo",
+        "Adir",
+        "Akiro Cluster",
+        "ARC-L3",
+        "ARC-L5",
+        "Bloom",
+        "Calliope",
+        "CRU-L1",
+        "CRU-L2",
+        "CRU-L4",
+        "CRU-L5",
+        "Fairo",
+        "Fuego",
+        "Glaciem Ring",
+        "HUR-L3",
+        "Keeger Belt",
+        "Lyria",
+        "Magda",
+        "microTech",
+        "MIC-L3",
+        "MIC-L4",
+        "Monox",
+        "Pyro Asteroid Clusters",
+        "Pyro I",
+        "Pyro IV",
+        "Vatra",
+        "Vuur",
+        "Wala",
+        "Yela Ring"
+      ]
+    },
+    "Quartz": {
+      "rarity": "common",
+      "locations": [
+        "Bloom",
+        "Cellin",
+        "Daymar",
+        "Pyro Asteroid Clusters",
+        "Yela"
+      ]
+    },
+    "Silicon": {
+      "rarity": "common",
+      "locations": [
+        "Aaron Halo",
+        "Akiro Cluster",
+        "Cellin",
+        "Daymar",
+        "Fairo",
+        "Ignis",
+        "Pyro Asteroid Clusters",
+        "Vatra",
+        "Yela"
+      ]
+    },
+    "Tin": {
+      "rarity": "common",
+      "locations": [
+        "Arial",
+        "Hurston",
+        "Ignis",
+        "Ita",
+        "Monox",
+        "Pyro Asteroid Clusters",
+        "Pyro I"
+      ]
+    },
+    "Aphorite": {
+      "rarity": "handMineable",
+      "locations": [
+        "All Moons/Planets/Caves"
+      ]
+    },
+    "Beradon": {
+      "rarity": "handMineable",
+      "locations": [
+        "Bloom",
+        "Pyro I"
+      ]
+    },
+    "Caranite": {
+      "rarity": "handMineable",
+      "locations": [
+        "Aberdeen",
+        "Daymar"
+      ]
+    },
+    "Dolivine": {
+      "rarity": "handMineable",
+      "locations": [
+        "All Moons/Planets/Caves"
+      ]
+    },
+    "Feynmaline": {
+      "rarity": "handMineable",
+      "locations": [
+        "Pyro IV"
+      ]
+    },
+    "Glacosite": {
+      "rarity": "handMineable",
+      "locations": [
+        "Monox"
+      ]
+    },
+    "Hadanite": {
+      "rarity": "handMineable",
+      "locations": [
+        "All Moons/Planets/Caves"
+      ]
+    },
+    "Janalite": {
+      "rarity": "handMineable",
+      "locations": [
+        "Daymar",
+        "Hurston",
+        "Ita",
+        "Magda Sand Caves",
+        "Wala"
+      ]
+    },
+    "Sadaryx": {
+      "rarity": "handMineable",
+      "locations": [
+        "QV Breaker Stations (Nyx)"
+      ]
+    },
+    "Note from MrKraken": {
+      "rarity": "handMineable",
+      "locations": [
+        "This just organises the ores by category",
+        "if CIG haven't updated the locations that's on them!"
+      ]
+    }
+  },
+  "locationOres": {
+    "Found in All Stanton Deposits": [
+      {
+        "name": "Quantainium",
+        "rarity": "legendary"
+      }
+    ],
+    "Glaciem Ring": [
+      {
+        "name": "Savrilium",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Lindinium",
+        "rarity": "epic"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Keeger Belt": [
+      {
+        "name": "Savrilium",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Lindinium",
+        "rarity": "epic"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "QV Breaker Stations (Nyx)": [
+      {
+        "name": "Savrilium",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Sadaryx",
+        "rarity": "handMineable"
+      }
+    ],
+    "All Pyro Planets": [
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
+      }
+    ],
+    "Akiro Cluster": [
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      }
+    ],
+    "Pyro Asteroid Clusters": [
+      {
+        "name": "Stileron",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Quartz",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      }
+    ],
+    "Aberdeen": [
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Caranite",
+        "rarity": "handMineable"
+      }
+    ],
+    "Arial": [
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      }
+    ],
+    "Hurston": [
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
+      }
+    ],
+    "Yela Ring": [
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Adir": [
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Bloom": [
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Quartz",
+        "rarity": "common"
+      },
+      {
+        "name": "Beradon",
+        "rarity": "handMineable"
+      }
+    ],
+    "Ignis": [
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      }
+    ],
+    "Terminus": [
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      }
+    ],
+    "Vatra": [
+      {
+        "name": "Riccite",
+        "rarity": "epic"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      }
+    ],
+    "Aaron Halo": [
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      }
+    ],
+    "ARC-L3": [
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "CRU-L5": [
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "MIC-L4": [
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Wala": [
+      {
+        "name": "Beryl",
+        "rarity": "rare"
+      },
+      {
+        "name": "Laranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
+      }
+    ],
+    "CRU-L1": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "CRU-L2": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Fairo": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      }
+    ],
+    "Fuego": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "HUR-L3": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Vuur": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "HUR-L1": [
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Laranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "HUR-L4": [
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Laranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "HUR-L5": [
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Laranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "Pyro IV": [
+      {
+        "name": "Borase",
+        "rarity": "rare"
+      },
+      {
+        "name": "Laranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Feynmaline",
+        "rarity": "handMineable"
+      }
+    ],
+    "ARC-L5": [
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "CRU-L4": [
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "MIC-L3": [
+      {
+        "name": "Gold",
+        "rarity": "rare"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "ARC-L1": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "ARC-L2": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "ARC-L4": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "Cellin": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Quartz",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      }
+    ],
+    "Clio": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      }
+    ],
+    "Euterpe": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      }
+    ],
+    "HUR-L2": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Tungsten",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "Yela": [
+      {
+        "name": "Taranite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Quartz",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      }
+    ],
+    "Daymar": [
+      {
+        "name": "Agricium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Quartz",
+        "rarity": "common"
+      },
+      {
+        "name": "Silicon",
+        "rarity": "common"
+      },
+      {
+        "name": "Caranite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
+      }
+    ],
+    "Ita": [
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      },
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
+      }
+    ],
+    "Magda": [
+      {
+        "name": "Aslarite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Titanium",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Lyria": [
+      {
+        "name": "Laranite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "CRU-L3": [
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "MIC-L1": [
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "MIC-L2": [
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "MIC-L5": [
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
+      },
+      {
+        "name": "Aluminium",
+        "rarity": "common"
+      },
+      {
+        "name": "Corundum",
+        "rarity": "common"
+      },
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      }
+    ],
+    "Pyro I": [
+      {
+        "name": "Copper",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      },
+      {
+        "name": "Beradon",
+        "rarity": "handMineable"
+      }
+    ],
+    "Calliope": [
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "microTech": [
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      }
+    ],
+    "Monox": [
+      {
+        "name": "Hephaestanite",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Tin",
+        "rarity": "common"
+      },
+      {
+        "name": "Glacosite",
+        "rarity": "handMineable"
+      }
+    ],
+    "All Moons/Planets/Caves": [
+      {
+        "name": "Aphorite",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Dolivine",
+        "rarity": "handMineable"
+      },
+      {
+        "name": "Hadanite",
+        "rarity": "handMineable"
+      }
+    ],
+    "Magda Sand Caves": [
+      {
+        "name": "Janalite",
+        "rarity": "handMineable"
+      }
+    ],
+    "This just organises the ores by category": [
+      {
+        "name": "Note from MrKraken",
+        "rarity": "handMineable"
+      }
+    ],
+    "if CIG haven't updated the locations that's on them!": [
+      {
+        "name": "Note from MrKraken",
+        "rarity": "handMineable"
+      }
+    ]
+  },
+  "rarityOrder": [
+    "legendary",
+    "epic",
+    "rare",
+    "uncommon",
+    "common",
+    "handMineable"
+  ]
+}
