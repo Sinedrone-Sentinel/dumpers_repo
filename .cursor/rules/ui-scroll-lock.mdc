@@ -36,10 +36,12 @@ function MyDropdown() {
 - `AppModal` - base modal component (has it built-in)
 - `AppSidebar` - hamburger menu
 - `WelcomeModal` - onboarding modal
-- `AppNotificationBell` - notification dropdown
-- `AppUserMenu` - user avatar dropdown
 - `LocationModal` in MiningSection
+
+## Header Dropdowns — Do NOT Lock Body Scroll
+
+Small header dropdowns (`AppUserMenu`, `AppNotificationBell`) use a click-away backdrop but **must not** call `useBodyScrollLock`. Locking body scroll adds `padding-right` to compensate for the hidden scrollbar, which shifts the fixed header and makes the right side jump. Use `overscroll-contain` on the dropdown panel instead.
 
 ## Don't Forget
 
-If you create ANY new component with `fixed inset-0` or similar overlay positioning, add scroll lock.
+If you create a **full-screen or centered modal** with `fixed inset-0`, add scroll lock. Lightweight header dropdowns are the exception above.
