@@ -34,10 +34,10 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
     })
   }
 
-  // Close sidebar when route changes (mobile)
+  // Close sidebar when route or archive section changes
   useEffect(() => {
     setIsOpen(false)
-  }, [pathname])
+  }, [pathname, search])
 
   // Close sidebar when clicking outside (mobile)
   useEffect(() => {
@@ -143,6 +143,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
                     isExpanded={expandedItems.has(item.id)}
                     isUserCollapsed={userCollapsed.has(item.id)}
                     onToggleExpand={() => toggleExpanded(item.id)}
+                    onNavigate={() => setIsOpen(false)}
                   />
                 ))}
               </ul>
@@ -161,9 +162,10 @@ interface SidebarNavItemProps {
   isExpanded: boolean
   isUserCollapsed: boolean
   onToggleExpand: () => void
+  onNavigate: () => void
 }
 
-function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, onToggleExpand }: SidebarNavItemProps) {
+function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, onToggleExpand, onNavigate }: SidebarNavItemProps) {
   const hasChildren = item.children && item.children.length > 0
   const fullPath = pathname + search
   
@@ -209,7 +211,7 @@ function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, o
         {showExpanded && (
           <ul className="mt-1 ml-4 pl-3 border-l border-slate-700 space-y-0.5">
             {item.children!.map(child => (
-              <ChildNavItem key={child.id} item={child} pathname={pathname} search={search} />
+              <ChildNavItem key={child.id} item={child} pathname={pathname} search={search} onNavigate={onNavigate} />
             ))}
           </ul>
         )}
@@ -221,6 +223,7 @@ function SidebarNavItem({ item, pathname, search, isExpanded, isUserCollapsed, o
     <li>
       <Link
         to={item.path}
+        onClick={onNavigate}
         className={`
           flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
           ${isActive
@@ -240,9 +243,10 @@ interface ChildNavItemProps {
   item: AppNavItem
   pathname: string
   search: string
+  onNavigate: () => void
 }
 
-function ChildNavItem({ item, pathname, search }: ChildNavItemProps) {
+function ChildNavItem({ item, pathname, search, onNavigate }: ChildNavItemProps) {
   const fullPath = pathname + search
   const isActive = item.path.includes('?') 
     ? fullPath === item.path || fullPath.startsWith(item.path)
@@ -252,6 +256,7 @@ function ChildNavItem({ item, pathname, search }: ChildNavItemProps) {
     <li>
       <Link
         to={item.path}
+        onClick={onNavigate}
         className={`
           flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all
           ${isActive

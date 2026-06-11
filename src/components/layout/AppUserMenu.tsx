@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useRouterState } from '@tanstack/react-router'
+import { useClickOutside } from '../../hooks/useClickOutside'
 import type { Profile } from '../../lib/supabase'
 import { supabase } from '../../lib/supabase'
 import RsiVerifiedBadge from '../RsiVerifiedBadge'
@@ -38,6 +39,8 @@ export default function AppUserMenu({
   onSignOut,
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const routerLocation = useRouterState({ select: (s) => s.location })
   const [showOfficerTools, setShowOfficerTools] = useState(false)
   const [rsiHandleToRevoke, setRsiHandleToRevoke] = useState('')
   const [alsoBanUser, setAlsoBanUser] = useState(false)
@@ -48,7 +51,7 @@ export default function AppUserMenu({
   const [repResetUserName, setRepResetUserName] = useState('')
   const [clearArchived, setClearArchived] = useState(false)
   const [searchingUser, setSearchingUser] = useState(false)
-  const close = () => {
+  const close = useCallback(() => {
     setOpen(false)
     setShowOfficerTools(false)
     setToolMessage(null)
@@ -56,7 +59,13 @@ export default function AppUserMenu({
     setRepResetUserId(null)
     setRepResetUserName('')
     setClearArchived(false)
-  }
+  }, [])
+
+  useClickOutside(containerRef, open, close)
+
+  useEffect(() => {
+    close()
+  }, [routerLocation.pathname, routerLocation.searchStr, close])
 
   const handleRevokeVerification = async () => {
     if (!rsiHandleToRevoke.trim()) return
@@ -180,7 +189,7 @@ export default function AppUserMenu({
     : 'bg-slate-800/90 border-slate-600 hover:bg-slate-700'
 
   return (
-    <div className="relative shrink-0">
+    <div ref={containerRef} className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -212,8 +221,6 @@ export default function AppUserMenu({
       </button>
 
       {open && (
-        <>
-          <div className="fixed inset-0 z-[55]" onClick={close} />
           <div
             className={`absolute right-0 top-full mt-2 w-56 bg-slate-800 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain ${
               isGhostMode ? 'border border-purple-500/30' : 'border border-slate-700'
@@ -456,7 +463,6 @@ export default function AppUserMenu({
               Sign Out
             </button>
           </div>
-        </>
       )}
     </div>
   )

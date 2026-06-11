@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useRouterState } from '@tanstack/react-router'
 import { deleteAllUserNotifications, deleteUserNotification } from '../../lib/operations'
+import { useClickOutside } from '../../hooks/useClickOutside'
 import { useNotificationInbox } from '../../hooks/useNotificationInbox'
 
 interface AppNotificationBellProps {
@@ -9,13 +11,21 @@ interface AppNotificationBellProps {
 export default function AppNotificationBell({ disabled = false }: AppNotificationBellProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
   const { notifications, unreadCount, refresh, clearAll, removeOne } = useNotificationInbox(disabled)
+  const routerLocation = useRouterState({ select: (s) => s.location })
+
+  const close = useCallback(() => setOpen(false), [])
+
+  useClickOutside(containerRef, open && !disabled, close)
+
+  useEffect(() => {
+    close()
+  }, [routerLocation.pathname, routerLocation.searchStr, close])
 
   useEffect(() => {
     if (open && !disabled) void refresh()
   }, [open, disabled, refresh])
-
-  const close = () => setOpen(false)
 
   const handleDismiss = async (notificationId: string) => {
     const result = await deleteUserNotification(notificationId)
@@ -34,7 +44,7 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
     : 'border-slate-600 bg-slate-800/90 hover:bg-slate-700 transition-colors'
 
   return (
-    <div className="relative shrink-0">
+    <div ref={containerRef} className="relative shrink-0">
       <button
         type="button"
         disabled={disabled}
@@ -74,8 +84,6 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
       </button>
 
       {open && !disabled && (
-        <>
-          <div className="fixed inset-0 z-[55]" onClick={close} />
           <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden border border-slate-700">
             <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-700">
               <p className="text-white font-medium text-sm">Notifications</p>
@@ -120,7 +128,6 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
               </ul>
             )}
           </div>
-        </>
       )}
     </div>
   )
