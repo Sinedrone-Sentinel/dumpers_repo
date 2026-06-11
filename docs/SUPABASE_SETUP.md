@@ -48,6 +48,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 18. `053_pending_rep_limits.sql` — Order limits for pending reputation users + RSI verification enforcement
 19. `054_order_abuse_prevention.sql` — Order abuse prevention (min value, duplicate detection, auto-reporting, rep reset, pg_cron cleanup)
 20. `055_order_timeouts.sql` — Fulfillment timeouts (72h fulfiller/buyer), rating deadlines, dispute reports, strike tracking
+21. `056_officer_rep_immunity.sql` — Officers and super-admins exempt from pending rep order limits
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 

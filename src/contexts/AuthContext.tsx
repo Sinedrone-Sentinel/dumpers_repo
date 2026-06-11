@@ -460,17 +460,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return []
     }
 
-    return (profiles || []).map(p => ({
-      id: p.id,
-      display_name: p.display_name,
-      rsi_handle: p.rsi_handle,
-      rsi_handle_verified: p.rsi_handle_verified ?? false,
-      blueprint_count: userCounts[p.id] || 0
-    })).sort((a, b) => {
-      const nameA = a.rsi_handle || a.display_name || ''
-      const nameB = b.rsi_handle || b.display_name || ''
-      return nameA.localeCompare(nameB)
-    })
+    const activeProfile = profileRef.current
+    const isOfficerOrAbove =
+      activeProfile?.role === 'officer' || activeProfile?.role === 'super-admin'
+
+    return (profiles || [])
+      .filter((p) => !(isOfficerOrAbove && p.id === activeProfile?.id))
+      .map((p) => ({
+        id: p.id,
+        display_name: p.display_name,
+        rsi_handle: p.rsi_handle,
+        rsi_handle_verified: p.rsi_handle_verified ?? false,
+        blueprint_count: userCounts[p.id] || 0,
+      }))
+      .sort((a, b) => {
+        const nameA = a.rsi_handle || a.display_name || ''
+        const nameB = b.rsi_handle || b.display_name || ''
+        return nameA.localeCompare(nameB)
+      })
   }, [])
 
   const fetchUserBlueprints = useCallback(async (userId: string): Promise<Record<string, boolean>> => {
