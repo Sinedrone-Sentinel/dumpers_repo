@@ -69,7 +69,9 @@ BEGIN
 END;
 $$;
 
--- Note: This function will be called by the Edge Function with service role key
+-- Grant execute to service role (Edge Function) - service_role has full access but explicit grant ensures compatibility
+GRANT EXECUTE ON FUNCTION public.mark_rsi_handle_verified(uuid, text) TO service_role;
+GRANT EXECUTE ON FUNCTION public.mark_rsi_handle_verified(uuid, text) TO authenticated;
 
 -- Function for super-admins to remove verification from a handle
 CREATE OR REPLACE FUNCTION public.remove_rsi_verification(p_handle text)

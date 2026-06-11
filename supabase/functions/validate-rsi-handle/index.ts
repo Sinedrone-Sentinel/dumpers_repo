@@ -158,18 +158,35 @@ serve(async (req) => {
     }
 
     // Handle is valid! Mark it as verified in the database
-    const { error: updateError } = await supabase.rpc('mark_rsi_handle_verified', {
+    console.log('Attempting to mark handle as verified:', { user_id: user.id, handle: cleanHandle })
+    
+    const { data: rpcData, error: updateError } = await supabase.rpc('mark_rsi_handle_verified', {
       p_user_id: user.id,
       p_handle: cleanHandle
     })
 
+    console.log('RPC result:', { data: rpcData, error: updateError })
+
     if (updateError) {
-      console.error('Error marking handle as verified:', updateError)
+      console.error('RPC Error marking handle as verified:', JSON.stringify(updateError))
       return new Response(
         JSON.stringify({ 
           valid: true, 
           verified: false,
-          error: 'Handle is valid but failed to save verification' 
+          error: `Handle is valid but failed to save: ${updateError.message || updateError.code || 'Unknown RPC error'}`
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Check if the RPC returned a success:false result
+    if (rpcData && rpcData.success === false) {
+      console.error('RPC returned failure:', rpcData.error)
+      return new Response(
+        JSON.stringify({ 
+          valid: true, 
+          verified: false,
+          error: rpcData.error || 'Verification rejected by database'
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
