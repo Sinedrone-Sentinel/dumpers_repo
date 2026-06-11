@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { fetchDisputeOrderId, resolveOrderDispute } from '../lib/operations'
 import { supabase } from '../lib/supabase'
 import AppModal from './layout/AppModal'
 
@@ -73,6 +74,8 @@ export default function SupportTicketThread({
   const [deleting, setDeleting] = useState(false)
   const [status, setStatus] = useState<TicketStatus | ''>('')
   const [updatingStatus, setUpdatingStatus] = useState(false)
+  const [disputeOrderId, setDisputeOrderId] = useState<string | null>(null)
+  const [resolvingDispute, setResolvingDispute] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const loadTicket = async () => {
@@ -96,6 +99,16 @@ export default function SupportTicketThread({
   useEffect(() => {
     loadTicket()
   }, [ticketId])
+
+  useEffect(() => {
+    if (!isOfficer || !ticket?.subject.startsWith('Order dispute:')) {
+      setDisputeOrderId(null)
+      return
+    }
+    void fetchDisputeOrderId(ticketId).then((result) => {
+      setDisputeOrderId(result.orderId ?? null)
+    })
+  }, [isOfficer, ticketId, ticket?.subject])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -149,6 +162,8 @@ export default function SupportTicketThread({
     setUpdatingStatus(false)
   }
 
+  const isSystemGenerated = ticket?.subject.startsWith('[System]') ?? false
+
   const handleDelete = async () => {
     if (!resolutionMessage.trim()) return
     
@@ -169,6 +184,42 @@ export default function SupportTicketThread({
     setDeleting(false)
     setShowDeleteConfirm(false)
     setResolutionMessage('')
+  }
+
+  const handleResolveDispute = async (outcome: 'cancel' | 'release') => {
+    if (!disputeOrderId) return
+    setResolvingDispute(true)
+    try {
+      const result = await resolveOrderDispute(disputeOrderId, outcome)
+      if (result.error) {
+        console.error(result.error)
+      } else {
+        setDisputeOrderId(null)
+        loadTicket()
+      }
+    } catch (err) {
+      console.error('Failed to resolve dispute:', err)
+    }
+    setResolvingDispute(false)
+  }
+
+  const handleDismiss = async () => {
+    setDeleting(true)
+    try {
+      const { data, error } = await supabase.rpc('resolve_and_delete_ticket', {
+        p_ticket_id: ticketId,
+        p_resolution_message: 'System-generated report reviewed and dismissed by staff.',
+      })
+      if (error) throw error
+      if (data?.success) {
+        onDeleted?.()
+        onBack()
+      }
+    } catch (err) {
+      console.error('Failed to dismiss ticket:', err)
+    }
+    setDeleting(false)
+    setShowDeleteConfirm(false)
   }
 
   const formatDate = (dateStr: string) => {
@@ -273,6 +324,24 @@ export default function SupportTicketThread({
             <option value="assigned">Assigned</option>
             <option value="pending_user">Awaiting Response</option>
           </select>
+          {disputeOrderId && (
+            <>
+              <button
+                onClick={() => void handleResolveDispute('release')}
+                disabled={resolvingDispute}
+                className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                Release to fulfiller
+              </button>
+              <button
+                onClick={() => void handleResolveDispute('cancel')}
+                disabled={resolvingDispute}
+                className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                Cancel order
+              </button>
+            </>
+          )}
           <button
             onClick={() => setShowDeleteConfirm(true)}
             className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
@@ -342,42 +411,78 @@ export default function SupportTicketThread({
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80]">
           <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-lg mx-4">
-            <h3 className="text-lg font-semibold text-white mb-2">
-              Resolve & Delete Ticket
-            </h3>
-            <p className="text-slate-400 text-sm mb-4">
-              Enter a resolution message for the member. This will be sent as a notification
-              so they can see the outcome even after the ticket is deleted.
-            </p>
-            <textarea
-              value={resolutionMessage}
-              onChange={(e) => setResolutionMessage(e.target.value)}
-              placeholder="e.g., Your issue has been resolved. The RSI Handle was cleared and is now available for re-verification."
-              rows={3}
-              className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none text-sm"
-            />
-            <p className="text-xs text-slate-500 mb-4">
-              This will <strong className="text-red-400">permanently delete</strong> the ticket
-              and all messages. This action cannot be undone.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => {
-                  setShowDeleteConfirm(false)
-                  setResolutionMessage('')
-                }}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleting || !resolutionMessage.trim()}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-              >
-                {deleting ? 'Resolving...' : 'Resolve & Delete'}
-              </button>
-            </div>
+            {isSystemGenerated ? (
+              <>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Dismiss System Report
+                </h3>
+                <p className="text-slate-400 text-sm mb-4">
+                  This is an automated system-generated report. You can dismiss it if no action
+                  is required, or resolve it with a custom message if you took action.
+                </p>
+                <p className="text-xs text-slate-500 mb-4">
+                  This will <strong className="text-red-400">permanently delete</strong> the ticket
+                  and all messages. This action cannot be undone.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={() => {
+                      setShowDeleteConfirm(false)
+                      setResolutionMessage('')
+                    }}
+                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDismiss}
+                    disabled={deleting}
+                    className="px-4 py-2 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+                  >
+                    {deleting ? 'Dismissing...' : 'Dismiss Report'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  Resolve & Delete Ticket
+                </h3>
+                <p className="text-slate-400 text-sm mb-4">
+                  Enter a resolution message for the member. This will be sent as a notification
+                  so they can see the outcome even after the ticket is deleted.
+                </p>
+                <textarea
+                  value={resolutionMessage}
+                  onChange={(e) => setResolutionMessage(e.target.value)}
+                  placeholder="e.g., Your issue has been resolved. The RSI Handle was cleared and is now available for re-verification."
+                  rows={3}
+                  className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none text-sm"
+                />
+                <p className="text-xs text-slate-500 mb-4">
+                  This will <strong className="text-red-400">permanently delete</strong> the ticket
+                  and all messages. This action cannot be undone.
+                </p>
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={() => {
+                      setShowDeleteConfirm(false)
+                      setResolutionMessage('')
+                    }}
+                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleting || !resolutionMessage.trim()}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+                  >
+                    {deleting ? 'Resolving...' : 'Resolve & Delete'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

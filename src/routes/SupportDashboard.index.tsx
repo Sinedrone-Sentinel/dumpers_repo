@@ -248,11 +248,24 @@ export default function SupportDashboardRoute() {
                             </span>
                             <span className="text-xs text-slate-500">{formatDate(ticket.created_at)}</span>
                           </div>
-                          <p className="text-white font-medium truncate">{ticket.subject}</p>
+                          <p className="text-white font-medium truncate flex items-center gap-2">
+                            {ticket.subject}
+                            {ticket.subject.startsWith('[System]') && (
+                              <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-950 text-red-400 border border-red-500/40 rounded uppercase">
+                                Auto
+                              </span>
+                            )}
+                          </p>
                           <p className="text-sm text-slate-500 mt-1">
-                            From: <span className="text-slate-300">{ticket.requester_name}</span>
-                            {ticket.reported_user_name && (
-                              <> · Reporting: <span className="text-amber-400">{ticket.reported_user_name}</span></>
+                            {ticket.subject.startsWith('[System]') ? (
+                              <>Reported user: <span className="text-amber-400">{ticket.requester_name}</span></>
+                            ) : (
+                              <>
+                                From: <span className="text-slate-300">{ticket.requester_name}</span>
+                                {ticket.reported_user_name && (
+                                  <> · Reporting: <span className="text-amber-400">{ticket.reported_user_name}</span></>
+                                )}
+                              </>
                             )}
                           </p>
                           <p className="text-xs text-slate-600 mt-1">

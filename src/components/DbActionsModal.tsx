@@ -40,6 +40,14 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [alsoBanUser, setAlsoBanUser] = useState(false)
   const [revoking, setRevoking] = useState(false)
 
+  // Rep reset state
+  const [repResetHandle, setRepResetHandle] = useState('')
+  const [repResetUserId, setRepResetUserId] = useState<string | null>(null)
+  const [repResetUserName, setRepResetUserName] = useState('')
+  const [clearArchived, setClearArchived] = useState(false)
+  const [searchingUser, setSearchingUser] = useState(false)
+  const [resettingRep, setResettingRep] = useState(false)
+
   // Fetch sync statuses on mount
   useEffect(() => {
     const fetchSyncStatuses = async () => {
@@ -207,6 +215,69 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
     setRevoking(false)
   }
 
+  const handleSearchRepUser = async () => {
+    if (!repResetHandle.trim()) return
+
+    setSearchingUser(true)
+    setMessage(null)
+    setRepResetUserId(null)
+    setRepResetUserName('')
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, display_name, rsi_handle, email')
+        .ilike('rsi_handle', repResetHandle.trim())
+        .single()
+
+      if (error || !data) {
+        setMessage({ type: 'error', text: 'User not found with that RSI Handle' })
+      } else {
+        setRepResetUserId(data.id)
+        setRepResetUserName(data.rsi_handle || data.display_name || data.email || 'Unknown')
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Error searching for user' })
+    }
+
+    setSearchingUser(false)
+  }
+
+  const handleResetRep = async (type: 'buyer' | 'fulfiller') => {
+    if (!repResetUserId) return
+
+    setResettingRep(true)
+    setMessage(null)
+
+    try {
+      const rpcName = type === 'buyer' ? 'reset_user_buyer_rep' : 'reset_user_fulfiller_rep'
+      const { data, error } = await supabase.rpc(rpcName, {
+        p_target_user_id: repResetUserId,
+        p_clear_archived: clearArchived,
+      })
+
+      if (error) {
+        setMessage({ type: 'error', text: error.message })
+      } else if (data?.success) {
+        const archiveMsg = clearArchived ? ` and ${data.deleted_orders} archived orders` : ''
+        setMessage({
+          type: 'success',
+          text: `Reset ${type} rep for ${repResetUserName}. Deleted ${data.deleted_ratings} ratings${archiveMsg}.`,
+        })
+        setRepResetHandle('')
+        setRepResetUserId(null)
+        setRepResetUserName('')
+        setClearArchived(false)
+      } else {
+        setMessage({ type: 'error', text: data?.error || 'Failed to reset reputation' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Error resetting reputation' })
+    }
+
+    setResettingRep(false)
+  }
+
   return (
     <AppModal
       title="DB Actions"
@@ -337,6 +408,66 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
           >
             {revoking ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
           </button>
+        </div>
+
+        {/* Rep Reset */}
+        <div className="p-3 sm:p-4 rounded-xl border border-blue-500/30 bg-blue-950/20 space-y-3">
+          <div>
+            <h3 className="text-white font-medium text-sm">Reset User Reputation</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Reset a user's buyer or fulfiller reputation. Optionally clear their archived orders.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={repResetHandle}
+              onChange={(e) => {
+                setRepResetHandle(e.target.value)
+                setRepResetUserId(null)
+                setRepResetUserName('')
+              }}
+              placeholder="RSI Handle..."
+              className="flex-1 px-3 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 text-sm"
+            />
+            <button
+              onClick={() => void handleSearchRepUser()}
+              disabled={searchingUser || !repResetHandle.trim()}
+              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+            >
+              {searchingUser ? '...' : 'Find'}
+            </button>
+          </div>
+          {repResetUserId && (
+            <div className="p-3 bg-slate-800/50 rounded-lg border border-blue-500/20">
+              <p className="text-sm text-white mb-2">Found: <strong>{repResetUserName}</strong></p>
+              <label className="flex items-center gap-2 cursor-pointer mb-3">
+                <input
+                  type="checkbox"
+                  checked={clearArchived}
+                  onChange={(e) => setClearArchived(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/20"
+                />
+                <span className="text-sm text-slate-400">Also clear archived orders/fulfillments</span>
+              </label>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => void handleResetRep('buyer')}
+                  disabled={resettingRep}
+                  className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+                >
+                  Reset Buyer Rep
+                </button>
+                <button
+                  onClick={() => void handleResetRep('fulfiller')}
+                  disabled={resettingRep}
+                  className="flex-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+                >
+                  Reset Fulfiller Rep
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Resource Tracker Wipe */}

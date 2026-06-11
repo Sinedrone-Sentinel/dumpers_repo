@@ -103,6 +103,10 @@ export interface CustomOrder {
   min_fulfiller_reputation: number | null
   assignee_id: string | null
   accepted_at: string | null
+  ready_at: string | null
+  completed_at: string | null
+  dispute_opened_at: string | null
+  dispute_ticket_id: string | null
   requester_archived_at: string | null
   fulfiller_archived_at: string | null
   created_at: string
@@ -546,9 +550,28 @@ export interface UserOrderLimits {
   has_pending_fulfiller_rep: boolean
   buyer_order_limit: number
   buyer_auec_limit: number
+  buyer_min_order_value?: number
   fulfiller_order_limit: number
   can_create_order: boolean
   can_accept_order: boolean
+}
+
+export type CreateOrderErrorType =
+  | 'unrated'
+  | 'min_value'
+  | 'duplicate_pending'
+  | 'duplicate_active'
+  | 'order_limit'
+  | 'auec_limit'
+  | 'generic'
+
+export interface CreateOrderResult {
+  data?: CustomOrder
+  error?: string
+  errorType?: CreateOrderErrorType
+  existingOrderId?: string
+  unratedCount?: number
+  attemptCount?: number
 }
 
 export async function fetchUserOrderLimits(
@@ -572,7 +595,7 @@ export async function createCustomOrder(input: {
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
   orderOverridesMap?: Record<string, boolean>
-}): Promise<{ data?: CustomOrder; error?: string; unratedCount?: number }> {
+}): Promise<CreateOrderResult> {
   if (input.blueprints.length === 0 && input.resources.length === 0) {
     return { error: 'Add at least one blueprint or resource to the order' }
   }
@@ -613,12 +636,27 @@ export async function createCustomOrder(input: {
   })
 
   if (error) {
-    return { error: error.message }
+    return { error: error.message, errorType: 'generic' }
   }
 
-  const result = data as { success: boolean; error?: string; order_id?: string; unrated_count?: number }
+  const result = data as {
+    success: boolean
+    error?: string
+    error_type?: string
+    order_id?: string
+    existing_order_id?: string
+    unrated_count?: number
+    attempt_count?: number
+  }
+
   if (!result.success) {
-    return { error: result.error ?? 'Failed to create order', unratedCount: result.unrated_count }
+    return {
+      error: result.error ?? 'Failed to create order',
+      errorType: (result.error_type as CreateOrderErrorType) ?? 'generic',
+      existingOrderId: result.existing_order_id,
+      unratedCount: result.unrated_count,
+      attemptCount: result.attempt_count,
+    }
   }
 
   // Fetch the created order to return full data
@@ -775,6 +813,49 @@ export async function completeOrderCraft(
 export async function confirmOrderPickup(orderId: string): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('confirm_order_pickup', { p_order_id: orderId })
   if (error) return { error: error.message }
+  return {}
+}
+
+export async function reportOrderDispute(
+  orderId: string,
+  description: string
+): Promise<{ error?: string; ticketId?: string }> {
+  const { data, error } = await supabase.rpc('report_order_dispute', {
+    p_order_id: orderId,
+    p_description: description.trim(),
+  })
+
+  if (error) return { error: error.message }
+
+  const result = data as { success: boolean; error?: string; ticket_id?: string }
+  if (!result.success) return { error: result.error ?? 'Failed to report problem' }
+  return { ticketId: result.ticket_id }
+}
+
+export async function fetchDisputeOrderId(
+  ticketId: string
+): Promise<{ orderId?: string; error?: string }> {
+  const { data, error } = await supabase.rpc('get_dispute_order_id', {
+    p_ticket_id: ticketId,
+  })
+
+  if (error) return { error: error.message }
+  return { orderId: (data as string | null) ?? undefined }
+}
+
+export async function resolveOrderDispute(
+  orderId: string,
+  outcome: 'cancel' | 'release'
+): Promise<{ error?: string }> {
+  const { data, error } = await supabase.rpc('resolve_order_dispute', {
+    p_order_id: orderId,
+    p_outcome: outcome,
+  })
+
+  if (error) return { error: error.message }
+
+  const result = data as { success: boolean; error?: string }
+  if (!result.success) return { error: result.error ?? 'Failed to resolve dispute' }
   return {}
 }
 

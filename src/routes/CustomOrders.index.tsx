@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
+import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
 import ReputationBadge from '../components/ReputationBadge'
@@ -32,6 +33,7 @@ import {
   archiveCustomOrderWithRating,
   confirmOrderPickup,
   deleteCustomOrderRequester,
+  reportOrderDispute,
   fetchCustomOrders,
   fetchMemberReputations,
   fetchUserOrderLimits,
@@ -102,6 +104,12 @@ export default function CustomOrdersRoute() {
   const [showForm, setShowForm] = useState(false)
   const [editingOrderId, setEditingOrderId] = useState<string | null>(null)
   const [listTab, setListTab] = useState<OrderListTab>('active')
+  const [disputeModal, setDisputeModal] = useState<{
+    orderId: string
+    orderTitle: string
+  } | null>(null)
+  const [disputeDescription, setDisputeDescription] = useState('')
+  const [disputeSubmitting, setDisputeSubmitting] = useState(false)
   const [ratingModal, setRatingModal] = useState<{
     orderId: string
     target: OrderRatingTarget
@@ -174,6 +182,20 @@ export default function CustomOrdersRoute() {
       return
     }
     setListTab('completed')
+    await loadOrders()
+  }
+
+  const handleReportProblem = async () => {
+    if (!disputeModal || !disputeDescription.trim()) return
+    setDisputeSubmitting(true)
+    const result = await reportOrderDispute(disputeModal.orderId, disputeDescription)
+    setDisputeSubmitting(false)
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+    setDisputeModal(null)
+    setDisputeDescription('')
     await loadOrders()
   }
 
@@ -343,7 +365,7 @@ export default function CustomOrdersRoute() {
 
       {userId && isRsiVerified && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} />
+          <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" />
           {orderLimits?.has_pending_buyer_rep && (
             <>
               <span className="text-slate-500">·</span>
@@ -413,9 +435,16 @@ export default function CustomOrdersRoute() {
             catalog={catalog}
             labelMap={labelMap}
             orderOverridesMap={overridesMap}
+            hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
+            minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
             onError={setError}
             onSubmitted={() => {
               setShowForm(false)
+              void loadOrders()
+            }}
+            onForceEditOrder={(orderId) => {
+              setShowForm(false)
+              setEditingOrderId(orderId)
               void loadOrders()
             }}
           />
@@ -435,6 +464,8 @@ export default function CustomOrdersRoute() {
             labelMap={labelMap}
             orderOverridesMap={overridesMap}
             editOrder={orders.find((o) => o.id === editingOrderId) ?? null}
+            hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
+            minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
             onCancelEdit={() => setEditingOrderId(null)}
             onError={setError}
             onSubmitted={() => {
@@ -511,17 +542,29 @@ export default function CustomOrdersRoute() {
                     <div className="mt-3">
                       <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} />
                     </div>
+                    <OrderDeadlineNotice order={order} role="buyer" />
                   </div>
 
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex gap-2 flex-wrap justify-end">
-                      {order.status === 'ready_for_pickup' && (
-                        <button
-                          onClick={() => void handleConfirmPickup(order.id)}
-                          className="px-2 py-1 text-xs bg-cyan-950/50 text-cyan-300 border border-cyan-500/30 rounded"
-                        >
-                          Confirm pickup
-                        </button>
+                      {order.status === 'ready_for_pickup' && !order.dispute_opened_at && (
+                        <>
+                          <button
+                            onClick={() => void handleConfirmPickup(order.id)}
+                            className="px-2 py-1 text-xs bg-cyan-950/50 text-cyan-300 border border-cyan-500/30 rounded"
+                          >
+                            Confirm pickup
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setDisputeModal({ orderId: order.id, orderTitle: order.title })
+                            }
+                            className="px-2 py-1 text-xs bg-amber-950/50 text-amber-300 border border-amber-500/30 rounded"
+                          >
+                            Report problem
+                          </button>
+                        </>
                       )}
                       {canCustomerArchive(order, userId) && (
                         <button
@@ -594,6 +637,46 @@ export default function CustomOrdersRoute() {
           onCancel={() => setRatingModal(null)}
           confirming={archiving}
         />
+      )}
+
+      {disputeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-amber-500/40 rounded-xl p-6 max-w-md mx-4 shadow-xl w-full">
+            <h3 className="text-lg font-semibold text-amber-400 mb-2">Report Problem</h3>
+            <p className="text-slate-400 text-sm mb-3">
+              {disputeModal.orderTitle} — describe the issue. This pauses the pickup timer and alerts
+              officers. Evidence is not uploaded here; officers may ask you to email screenshots or
+              share a cloud storage link.
+            </p>
+            <textarea
+              value={disputeDescription}
+              onChange={(e) => setDisputeDescription(e.target.value)}
+              placeholder="e.g. Items were not ready, wrong quality, fulfiller not at location..."
+              rows={4}
+              className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 resize-none text-sm"
+            />
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setDisputeModal(null)
+                  setDisputeDescription('')
+                }}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleReportProblem()}
+                disabled={disputeSubmitting || !disputeDescription.trim()}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              >
+                {disputeSubmitting ? 'Submitting...' : 'Submit Report'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </FeaturePageLayout>
   )

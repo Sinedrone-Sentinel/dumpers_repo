@@ -43,10 +43,19 @@ export default function AppUserMenu({
   const [alsoBanUser, setAlsoBanUser] = useState(false)
   const [processing, setProcessing] = useState(false)
   const [toolMessage, setToolMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [repResetHandle, setRepResetHandle] = useState('')
+  const [repResetUserId, setRepResetUserId] = useState<string | null>(null)
+  const [repResetUserName, setRepResetUserName] = useState('')
+  const [clearArchived, setClearArchived] = useState(false)
+  const [searchingUser, setSearchingUser] = useState(false)
   const close = () => {
     setOpen(false)
     setShowOfficerTools(false)
     setToolMessage(null)
+    setRepResetHandle('')
+    setRepResetUserId(null)
+    setRepResetUserName('')
+    setClearArchived(false)
   }
 
   const handleRevokeVerification = async () => {
@@ -76,6 +85,71 @@ export default function AppUserMenu({
       setToolMessage({ type: 'error', text: (err as Error).message })
     }
     
+    setProcessing(false)
+  }
+
+  const handleSearchRepUser = async () => {
+    if (!repResetHandle.trim()) return
+
+    setSearchingUser(true)
+    setToolMessage(null)
+    setRepResetUserId(null)
+    setRepResetUserName('')
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, display_name, rsi_handle, email, role')
+        .ilike('rsi_handle', repResetHandle.trim())
+        .single()
+
+      if (error || !data) {
+        setToolMessage({ type: 'error', text: 'User not found with that RSI Handle' })
+      } else if (data.role === 'officer' || data.role === 'super-admin') {
+        setToolMessage({ type: 'error', text: 'Cannot reset reputation of officers or admins' })
+      } else {
+        setRepResetUserId(data.id)
+        setRepResetUserName(data.rsi_handle || data.display_name || data.email || 'Unknown')
+      }
+    } catch (err) {
+      setToolMessage({ type: 'error', text: (err as Error).message })
+    }
+
+    setSearchingUser(false)
+  }
+
+  const handleResetRep = async (type: 'buyer' | 'fulfiller') => {
+    if (!repResetUserId) return
+
+    setProcessing(true)
+    setToolMessage(null)
+
+    try {
+      const rpcName = type === 'buyer' ? 'reset_user_buyer_rep' : 'reset_user_fulfiller_rep'
+      const { data, error } = await supabase.rpc(rpcName, {
+        p_target_user_id: repResetUserId,
+        p_clear_archived: clearArchived,
+      })
+
+      if (error) throw error
+
+      if (data?.success) {
+        const archiveMsg = clearArchived ? ` and ${data.deleted_orders} archived orders` : ''
+        setToolMessage({
+          type: 'success',
+          text: `Reset ${type} rep for ${repResetUserName}. Deleted ${data.deleted_ratings} ratings${archiveMsg}.`,
+        })
+        setRepResetHandle('')
+        setRepResetUserId(null)
+        setRepResetUserName('')
+        setClearArchived(false)
+      } else {
+        setToolMessage({ type: 'error', text: data?.error || 'Failed to reset reputation' })
+      }
+    } catch (err) {
+      setToolMessage({ type: 'error', text: (err as Error).message })
+    }
+
     setProcessing(false)
   }
 
@@ -251,7 +325,7 @@ export default function AppUserMenu({
                   </svg>
                 </button>
                 {showOfficerTools && (
-                  <div className="px-4 py-3 bg-slate-900/50 border-t border-slate-700 space-y-3">
+                  <div className="px-4 py-3 bg-slate-900/50 border-t border-slate-700 space-y-4">
                     {toolMessage && (
                       <div
                         className={`p-2 rounded text-xs ${
@@ -263,8 +337,10 @@ export default function AppUserMenu({
                         {toolMessage.text}
                       </div>
                     )}
-                    <div>
-                      <label className="block text-xs text-slate-400 mb-1">Revoke RSI Handle</label>
+
+                    {/* RSI Revoke Section */}
+                    <div className="space-y-2">
+                      <label className="block text-xs text-slate-400 font-medium">Revoke RSI Handle</label>
                       <input
                         type="text"
                         value={rsiHandleToRevoke}
@@ -272,27 +348,82 @@ export default function AppUserMenu({
                         placeholder="Enter RSI Handle..."
                         className="w-full px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
                       />
+                      <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={alsoBanUser}
+                          onChange={(e) => setAlsoBanUser(e.target.checked)}
+                          className="rounded border-slate-500 bg-slate-800 text-red-500 focus:ring-red-500/40"
+                        />
+                        <span className={alsoBanUser ? 'text-red-400' : ''}>Also ban this user</span>
+                      </label>
+                      <button
+                        onClick={handleRevokeVerification}
+                        disabled={processing || !rsiHandleToRevoke.trim()}
+                        className={`w-full px-3 py-1.5 text-sm font-medium rounded transition-colors disabled:opacity-50 ${
+                          alsoBanUser
+                            ? 'bg-red-600 hover:bg-red-700 text-white'
+                            : 'bg-amber-600 hover:bg-amber-700 text-white'
+                        }`}
+                      >
+                        {processing ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
+                      </button>
                     </div>
-                    <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={alsoBanUser}
-                        onChange={(e) => setAlsoBanUser(e.target.checked)}
-                        className="rounded border-slate-500 bg-slate-800 text-red-500 focus:ring-red-500/40"
-                      />
-                      <span className={alsoBanUser ? 'text-red-400' : ''}>Also ban this user</span>
-                    </label>
-                    <button
-                      onClick={handleRevokeVerification}
-                      disabled={processing || !rsiHandleToRevoke.trim()}
-                      className={`w-full px-3 py-1.5 text-sm font-medium rounded transition-colors disabled:opacity-50 ${
-                        alsoBanUser
-                          ? 'bg-red-600 hover:bg-red-700 text-white'
-                          : 'bg-amber-600 hover:bg-amber-700 text-white'
-                      }`}
-                    >
-                      {processing ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
-                    </button>
+
+                    {/* Rep Reset Section */}
+                    <div className="pt-3 border-t border-slate-700 space-y-2">
+                      <label className="block text-xs text-slate-400 font-medium">Reset User Reputation</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={repResetHandle}
+                          onChange={(e) => {
+                            setRepResetHandle(e.target.value)
+                            setRepResetUserId(null)
+                            setRepResetUserName('')
+                          }}
+                          placeholder="RSI Handle..."
+                          className="flex-1 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
+                        />
+                        <button
+                          onClick={handleSearchRepUser}
+                          disabled={searchingUser || !repResetHandle.trim()}
+                          className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded disabled:opacity-50"
+                        >
+                          {searchingUser ? '...' : 'Find'}
+                        </button>
+                      </div>
+                      {repResetUserId && (
+                        <div className="p-2 bg-slate-800 rounded border border-slate-600">
+                          <p className="text-sm text-white">Found: <strong>{repResetUserName}</strong></p>
+                          <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer mt-2">
+                            <input
+                              type="checkbox"
+                              checked={clearArchived}
+                              onChange={(e) => setClearArchived(e.target.checked)}
+                              className="rounded border-slate-500 bg-slate-800 text-amber-500 focus:ring-amber-500/40"
+                            />
+                            <span>Also clear archived orders</span>
+                          </label>
+                          <div className="flex gap-2 mt-2">
+                            <button
+                              onClick={() => handleResetRep('buyer')}
+                              disabled={processing}
+                              className="flex-1 px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded disabled:opacity-50"
+                            >
+                              Reset Buyer Rep
+                            </button>
+                            <button
+                              onClick={() => handleResetRep('fulfiller')}
+                              disabled={processing}
+                              className="flex-1 px-2 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded disabled:opacity-50"
+                            >
+                              Reset Fulfiller Rep
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </>

@@ -46,6 +46,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 16. `051_support_tickets.sql` — Support ticket system for member issue reporting (bug reports, member reports, RSI verification issues)
 17. `052_order_creation_notify.sql` — Notifies all members when a new custom order is created
 18. `053_pending_rep_limits.sql` — Order limits for pending reputation users + RSI verification enforcement
+19. `054_order_abuse_prevention.sql` — Order abuse prevention (min value, duplicate detection, auto-reporting, rep reset, pg_cron cleanup)
+20. `055_order_timeouts.sql` — Fulfillment timeouts (72h fulfiller/buyer), rating deadlines, dispute reports, strike tracking
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 

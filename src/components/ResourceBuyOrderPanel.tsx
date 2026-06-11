@@ -60,9 +60,12 @@ interface ResourceBuyOrderPanelProps {
   labelMap: Record<string, string>
   orderOverridesMap?: Record<string, boolean>
   editOrder?: CustomOrder | null
+  hasPendingBuyerRep?: boolean
+  minOrderValue?: number
   onCancelEdit?: () => void
   onSubmitted?: () => void
   onError?: (message: string) => void
+  onForceEditOrder?: (orderId: string) => void
 }
 
 function nextCartKey() {
@@ -76,9 +79,12 @@ export default function ResourceBuyOrderPanel({
   labelMap,
   orderOverridesMap = {},
   editOrder,
+  hasPendingBuyerRep = false,
+  minOrderValue = 10000,
   onCancelEdit,
   onSubmitted,
   onError,
+  onForceEditOrder,
 }: ResourceBuyOrderPanelProps) {
   const { dfpDisplayEnabled } = useAuth()
   const isEditing = Boolean(editOrder?.id)
@@ -95,6 +101,14 @@ export default function ResourceBuyOrderPanel({
   const [resCart, setResCart] = useState<CartResourceLine[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [showTransferModal, setShowTransferModal] = useState(false)
+  const [duplicatePendingModal, setDuplicatePendingModal] = useState<{
+    show: boolean
+    existingOrderId: string
+  }>({ show: false, existingOrderId: '' })
+  const [duplicateActiveModal, setDuplicateActiveModal] = useState<{
+    show: boolean
+    message: string
+  }>({ show: false, message: '' })
 
   useEffect(() => {
     if (!editOrder) return
@@ -284,6 +298,22 @@ export default function ResourceBuyOrderPanel({
     setShowTransferModal(false)
 
     if (result.error) {
+      if (result.errorType === 'duplicate_pending' && result.existingOrderId) {
+        setDuplicatePendingModal({
+          show: true,
+          existingOrderId: result.existingOrderId,
+        })
+        return
+      }
+
+      if (result.errorType === 'duplicate_active') {
+        setDuplicateActiveModal({
+          show: true,
+          message: result.error,
+        })
+        return
+      }
+
       onError?.(result.error)
       return
     }
@@ -580,10 +610,23 @@ export default function ResourceBuyOrderPanel({
           </div>
         )}
 
+        {hasPendingBuyerRep && !isEditing && cartTotalDfp > 0 && cartTotalDfp < minOrderValue && (
+          <div className="p-3 bg-yellow-900/30 border border-yellow-600/40 rounded-lg">
+            <p className="text-yellow-300 text-sm">
+              <strong>Minimum order value:</strong> While building your reputation, orders must be at
+              least {formatDfpAuec(minOrderValue)}. Current total: {formatDfpAuec(cartTotalDfp)}
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-wrap gap-2">
           <button
             type="submit"
-            disabled={submitting || (bpCart.length === 0 && resCart.length === 0)}
+            disabled={
+              submitting ||
+              (bpCart.length === 0 && resCart.length === 0) ||
+              (hasPendingBuyerRep && !isEditing && cartTotalDfp < minOrderValue)
+            }
             className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
           >
             {submitting
@@ -615,6 +658,41 @@ export default function ResourceBuyOrderPanel({
           onCancel={() => setShowTransferModal(false)}
           confirming={submitting}
         />
+      )}
+
+      {duplicatePendingModal.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-orange-500/40 rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-orange-400 mb-3">Existing Order Found</h3>
+            <p className="text-slate-300 mb-6">
+              Pending order found with same Blueprint. Pulling your existing order back for editing.
+            </p>
+            <button
+              onClick={() => {
+                setDuplicatePendingModal({ show: false, existingOrderId: '' })
+                onForceEditOrder?.(duplicatePendingModal.existingOrderId)
+              }}
+              className="w-full px-4 py-2.5 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-medium"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {duplicateActiveModal.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-red-500/40 rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-red-400 mb-3">Order Blocked</h3>
+            <p className="text-slate-300 mb-6">{duplicateActiveModal.message}</p>
+            <button
+              onClick={() => setDuplicateActiveModal({ show: false, message: '' })}
+              className="w-full px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium"
+            >
+              OK
+            </button>
+          </div>
+        </div>
       )}
     </>
   )

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
+import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderRatingModal from '../components/OrderRatingModal'
 import OrderRequestLines from '../components/OrderRequestLines'
 import ReputationBadge from '../components/ReputationBadge'
@@ -17,6 +18,7 @@ import {
 } from '../lib/orderAccept'
 import { canFulfillerArchive } from '../lib/orderArchive'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
+import { orderHasHighQualityBlueprint } from '../lib/orderDeadlines'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
 import { resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
@@ -405,7 +407,10 @@ export default function FulfillmentRoute() {
         <>
           <p className="mb-4 text-slate-500 text-sm">
             Browse pending orders here with buyer reputation before accepting. You need every required
-            blueprint to accept. Enable{' '}
+            blueprint to accept. Once accepted, you have <strong className="text-slate-300">72 hours</strong>{' '}
+            to mark the order ready or it releases back to the pool. Orders with blueprints at{' '}
+            <strong className="text-slate-300">800+ quality</strong> require materials on hand — only
+            accept if you can fulfill. Enable{' '}
             <span className="text-slate-300">Deduct inventory on craft complete</span> in Settings if
             you want My Resources checked and deducted when you finish a craft. Ratings show as{' '}
             <span className="text-slate-400 italic">Pending</span> until a member has 5 completed
@@ -413,7 +418,7 @@ export default function FulfillmentRoute() {
           </p>
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} />
+            <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} type="fulfiller" />
             {orderLimits?.has_pending_fulfiller_rep && (
               <>
                 <span className="text-slate-500">·</span>
@@ -522,6 +527,12 @@ export default function FulfillmentRoute() {
                                 ))}
                               </ul>
                             )}
+                            {orderHasHighQualityBlueprint(order) && (
+                              <p className="text-orange-300/90 text-xs">
+                                This order includes 800+ quality items — confirm you have materials
+                                before accepting.
+                              </p>
+                            )}
                           </div>
                           <button
                             type="button"
@@ -608,6 +619,7 @@ export default function FulfillmentRoute() {
                           compact
                         />
                       )}
+                      <OrderDeadlineNotice order={order} role="fulfiller" />
                     </button>
                   )
                 })}
@@ -634,6 +646,7 @@ export default function FulfillmentRoute() {
                 )}
 
                 <OrderRequestLines order={selectedOrder} showDfp={dfpDisplayEnabled} />
+                <OrderDeadlineNotice order={selectedOrder} role="fulfiller" />
 
                 {selectedFulfillmentItems.length > 0 && (
                   <div className="space-y-2">

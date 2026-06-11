@@ -117,6 +117,7 @@ const PAGE_GUIDES = [
       'Rate fulfillers when orders are completed (affects their reputation)',
       'Requires a verified RSI Handle to create orders',
       'New members: limited to 2 orders / 1M aUEC until 5 completed orders',
+      '72 hours to confirm pickup after fulfiller marks ready; use Report Problem if goods were not delivered',
     ],
     relatesTo: ['Resource Tracker', 'Fulfillment'],
   },
@@ -137,6 +138,8 @@ const PAGE_GUIDES = [
       'Build your fulfiller reputation through ratings from buyers',
       'Requires a verified RSI Handle to fulfill orders',
       'New members: can only work on 1 order at a time until 5 completed',
+      '72 hours to mark ready after accepting or the order releases back to the pool',
+      'Verify you have materials before accepting 800+ quality blueprint orders',
     ],
     relatesTo: ['Custom Orders', 'Resource Tracker'],
   },
@@ -384,6 +387,121 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </span>
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Order System Rules */}
+      <section id="order-rules" className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          Order System Rules &amp; Expectations
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+          <p className="text-sm text-slate-400 leading-relaxed">
+            The order system is built on <strong className="text-white">trust and fairness</strong>. To protect all members, 
+            we enforce the following rules — especially for users still building their reputation.
+          </p>
+
+          <div className="space-y-3">
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+              <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
+                <span className="text-emerald-400">✓</span>
+                What's Expected
+              </h4>
+              <ul className="text-xs text-slate-400 space-y-1.5">
+                <li>• Create orders for items/resources you genuinely need</li>
+                <li>• Complete transactions in good faith</li>
+                <li>• Rate orders promptly after completion</li>
+                <li>• Communicate clearly with your buyer/fulfiller</li>
+                <li>• Use your verified RSI Handle for all in-game trades</li>
+              </ul>
+            </div>
+
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-red-500/20">
+              <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
+                <span className="text-red-400">✗</span>
+                What's Not Allowed
+              </h4>
+              <ul className="text-xs text-slate-400 space-y-1.5">
+                <li>• Creating duplicate orders for the same item while one is being fulfilled</li>
+                <li>• Making artificially small orders to farm reputation quickly</li>
+                <li>• Repeatedly trading with the same person to inflate ratings</li>
+                <li>• Using multiple accounts to manipulate the order system</li>
+                <li>• Cancelling orders without good reason to waste fulfillers' time</li>
+                <li>• Refusing to rate completed orders</li>
+              </ul>
+            </div>
+
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
+              <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
+                <span className="text-amber-400">⚠</span>
+                Pending Rep Requirements
+              </h4>
+              <ul className="text-xs text-slate-400 space-y-1.5">
+                <li>• <strong className="text-slate-300">Minimum order value:</strong> 10,000 aUEC per order</li>
+                <li>• <strong className="text-slate-300">No duplicate orders:</strong> Cannot create another order for the same blueprint if one is pending or being fulfilled</li>
+                <li>• <strong className="text-slate-300">Order limits:</strong> Max 2 active orders / 1M aUEC total as buyer, 1 order at a time as fulfiller</li>
+              </ul>
+            </div>
+
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-blue-500/20">
+              <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
+                <span className="text-blue-400">⏱</span>
+                Time Limits
+              </h4>
+              <ul className="text-xs text-slate-400 space-y-1.5">
+                <li>• <strong className="text-slate-300">Fulfiller deadline:</strong> 72 hours to mark an accepted order ready, or it releases back to the pool</li>
+                <li>• <strong className="text-slate-300">Buyer pickup:</strong> 72 hours to confirm pickup after ready, or the order auto-completes (buyer may receive a strike)</li>
+                <li>• <strong className="text-slate-300">Rating deadline:</strong> 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf</li>
+                <li>• <strong className="text-slate-300">3 strikes in 30 days</strong> triggers an automatic report to officers</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+            <h4 className="text-sm font-medium text-red-400 mb-2 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              Consequences for Violations
+            </h4>
+            <ul className="text-xs text-slate-400 space-y-1.5">
+              <li>• <strong className="text-slate-300">Reputation reset:</strong> All ratings cleared, returning you to "Pending" status with limits</li>
+              <li>• <strong className="text-slate-300">Order history cleared:</strong> Archived orders may be removed along with your reputation</li>
+              <li>• <strong className="text-slate-300">Account ban:</strong> Severe or repeated violations may result in permanent removal from the platform</li>
+            </ul>
+            <p className="text-xs text-red-300/80 mt-2">
+              Suspicious activity is automatically detected and reported to site staff for review.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Protecting Yourself */}
+      <section id="trade-protection" className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          Protecting Yourself in Trades
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-3">
+          <p className="text-sm text-slate-400 leading-relaxed">
+            In-game trades happen outside the site. Keep your own records so disputes can be resolved fairly.
+          </p>
+          <ul className="text-xs text-slate-400 space-y-1.5">
+            <li>• Screenshot aUEC transfers before and after handoff</li>
+            <li>• Record video of the exchange when possible</li>
+            <li>• Note the other party&apos;s RSI Handle, location, and time</li>
+            <li>• Keep Spectrum or in-game chat logs</li>
+            <li>• If a fulfiller marked ready but you didn&apos;t receive goods, use <strong className="text-slate-300">Report Problem</strong> on the order — do not wait for the 72-hour auto-complete</li>
+          </ul>
+          <p className="text-xs text-slate-500">
+            Evidence is <strong className="text-slate-400">not uploaded on the site</strong>. If officers need proof,
+            they may ask you to email screenshots or share a cloud storage link (Google Drive, Imgur, etc.).
+          </p>
         </div>
       </section>
 
