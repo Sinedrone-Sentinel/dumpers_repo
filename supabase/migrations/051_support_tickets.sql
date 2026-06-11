@@ -506,9 +506,9 @@ BEGIN
     v_is_super_admin
     OR NOT (
       t.assignee_id IS NOT NULL 
-      AND EXISTS (SELECT 1 FROM public.profiles WHERE id = t.assignee_id AND role = 'super-admin')
+      AND EXISTS (SELECT 1 FROM public.profiles p2 WHERE p2.id = t.assignee_id AND p2.role = 'super-admin')
       AND t.category = 'member_report'
-      AND EXISTS (SELECT 1 FROM public.profiles WHERE id = t.reported_user_id AND role IN ('officer', 'super-admin'))
+      AND EXISTS (SELECT 1 FROM public.profiles p3 WHERE p3.id = t.reported_user_id AND p3.role IN ('officer', 'super-admin'))
     )
   )
   GROUP BY t.id, t.category, t.subject, t.status, t.requester_id, t.assignee_id, t.created_at, t.updated_at,
