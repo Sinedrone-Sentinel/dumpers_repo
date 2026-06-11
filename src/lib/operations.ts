@@ -537,6 +537,31 @@ export async function fetchCustomOrders(options?: {
   return { data: (data ?? []) as CustomOrder[] }
 }
 
+export interface UserOrderLimits {
+  unrated_count: number
+  buyer_order_count: number
+  buyer_order_total: number
+  fulfillment_count: number
+  has_pending_buyer_rep: boolean
+  has_pending_fulfiller_rep: boolean
+  buyer_order_limit: number
+  buyer_auec_limit: number
+  fulfiller_order_limit: number
+  can_create_order: boolean
+  can_accept_order: boolean
+}
+
+export async function fetchUserOrderLimits(
+  userId: string
+): Promise<{ data?: UserOrderLimits; error?: string }> {
+  const { data, error } = await supabase.rpc('get_user_order_limits', {
+    p_user_id: userId,
+  })
+
+  if (error) return { error: error.message }
+  return { data: data as UserOrderLimits }
+}
+
 export async function createCustomOrder(input: {
   requesterId: string
   title: string
@@ -547,7 +572,7 @@ export async function createCustomOrder(input: {
   resources: CustomOrderResourceInput[]
   items: { resourceKey: string; quantity: number }[]
   orderOverridesMap?: Record<string, boolean>
-}): Promise<{ data?: CustomOrder; error?: string }> {
+}): Promise<{ data?: CustomOrder; error?: string; unratedCount?: number }> {
   if (input.blueprints.length === 0 && input.resources.length === 0) {
     return { error: 'Add at least one blueprint or resource to the order' }
   }
@@ -560,83 +585,51 @@ export async function createCustomOrder(input: {
     return { error: 'This blueprint is not available for orders' }
   }
 
-  const firstBp = input.blueprints[0]
-  const legacyBlueprintId =
-    input.blueprints.length === 1 && input.resources.length === 0 ? firstBp.blueprintId : null
+  const { data, error } = await supabase.rpc('create_custom_order', {
+    p_title: input.title.trim(),
+    p_notes: input.notes?.trim() || null,
+    p_total_dfp_auec: Math.round(input.totalDfpAuec),
+    p_min_fulfiller_reputation: input.minFulfillerReputation ?? null,
+    p_blueprints: input.blueprints.map((bp) => ({
+      blueprint_id: bp.blueprintId,
+      blueprint_title: bp.blueprintTitle,
+      min_quality: bp.minQuality,
+      quantity: bp.quantity,
+      unit_dfp_auec: Math.round(bp.unitDfpAuec),
+      line_dfp_auec: Math.round(bp.lineDfpAuec),
+    })),
+    p_resources: input.resources.map((line) => ({
+      resource_key: line.resourceKey,
+      resource_label: line.resourceLabel,
+      min_quality: line.minQuality,
+      quantity_scu: normalizeResourceQuantity(line.quantityScu),
+      unit_dfp_auec: Math.round(line.unitDfpAuec),
+      line_dfp_auec: Math.round(line.lineDfpAuec),
+    })),
+    p_items: input.items.map((item) => ({
+      resource_key: item.resourceKey,
+      quantity: item.quantity,
+    })),
+  })
 
-  const { data: order, error: orderError } = await supabase
+  if (error) {
+    return { error: error.message }
+  }
+
+  const result = data as { success: boolean; error?: string; order_id?: string; unrated_count?: number }
+  if (!result.success) {
+    return { error: result.error ?? 'Failed to create order', unratedCount: result.unrated_count }
+  }
+
+  // Fetch the created order to return full data
+  const { data: order, error: fetchError } = await supabase
     .from('custom_orders')
-    .insert({
-      requester_id: input.requesterId,
-      title: input.title.trim(),
-      notes: input.notes?.trim() || null,
-      blueprint_id: legacyBlueprintId,
-      min_quality: firstBp?.minQuality ?? input.resources[0]?.minQuality ?? 500,
-      quantity: firstBp?.quantity ?? 1,
-      total_dfp_auec: Math.round(input.totalDfpAuec),
-      min_fulfiller_reputation: input.minFulfillerReputation ?? null,
-      status: 'pending',
-    })
     .select()
+    .eq('id', result.order_id)
     .single()
 
-  if (orderError || !order) {
-    return { error: orderError?.message ?? 'Failed to create order' }
-  }
-
-  if (input.blueprints.length > 0) {
-    const { error: blueprintsError } = await supabase.from('custom_order_blueprints').insert(
-      input.blueprints.map((bp, index) => ({
-        order_id: order.id,
-        blueprint_id: bp.blueprintId,
-        blueprint_title: bp.blueprintTitle,
-        min_quality: bp.minQuality,
-        quantity: bp.quantity,
-        unit_dfp_auec: Math.round(bp.unitDfpAuec),
-        line_dfp_auec: Math.round(bp.lineDfpAuec),
-        sort_order: index,
-      }))
-    )
-
-    if (blueprintsError) {
-      await supabase.from('custom_orders').delete().eq('id', order.id)
-      return { error: blueprintsError.message }
-    }
-  }
-
-  if (input.resources.length > 0) {
-    const { error: resourcesError } = await supabase.from('custom_order_resource_lines').insert(
-      input.resources.map((line, index) => ({
-        order_id: order.id,
-        resource_key: line.resourceKey,
-        resource_label: line.resourceLabel,
-        min_quality: line.minQuality,
-        quantity_scu: normalizeResourceQuantity(line.quantityScu),
-        unit_dfp_auec: Math.round(line.unitDfpAuec),
-        line_dfp_auec: Math.round(line.lineDfpAuec),
-        sort_order: index,
-      }))
-    )
-
-    if (resourcesError) {
-      await supabase.from('custom_orders').delete().eq('id', order.id)
-      return { error: resourcesError.message }
-    }
-  }
-
-  if (input.items.length > 0) {
-    const { error: itemsError } = await supabase.from('custom_order_items').insert(
-      input.items.map((item) => ({
-        order_id: order.id,
-        resource_key: item.resourceKey,
-        quantity: item.quantity,
-      }))
-    )
-
-    if (itemsError) {
-      await supabase.from('custom_orders').delete().eq('id', order.id)
-      return { error: itemsError.message }
-    }
+  if (fetchError || !order) {
+    return { error: fetchError?.message ?? 'Order created but failed to fetch' }
   }
 
   return { data: order as CustomOrder }

@@ -45,6 +45,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 15. `050_rsi_handle_verification.sql` — RSI Handle verification system (validated against RSI website)
 16. `051_support_tickets.sql` — Support ticket system for member issue reporting (bug reports, member reports, RSI verification issues)
 17. `052_order_creation_notify.sql` — Notifies all members when a new custom order is created
+18. `053_pending_rep_limits.sql` — Order limits for pending reputation users + RSI verification enforcement
 
 Each file is idempotent where practical. Errors about existing objects usually mean the step already ran.
 

@@ -40,10 +40,12 @@ import {
   fetchFulfillments,
   fetchInventory,
   fetchMemberReputations,
+  fetchUserOrderLimits,
   startCustomOrderWork,
   type CustomOrder,
   type OrderFulfillment,
   type ResourceInventoryRow,
+  type UserOrderLimits,
 } from '../lib/operations'
 import { displayNameFromFields } from '../lib/supabase'
 
@@ -67,6 +69,7 @@ export default function FulfillmentRoute() {
   const [onlyMyBlueprintOrders, setOnlyMyBlueprintOrders] = useState(false)
   const [archiveOrder, setArchiveOrder] = useState<CustomOrder | null>(null)
   const [archiving, setArchiving] = useState(false)
+  const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
 
   const userId = user?.id
 
@@ -101,9 +104,13 @@ export default function FulfillmentRoute() {
       if (order.assignee_id) repIds.add(order.assignee_id)
     })
 
-    const repResult = await fetchMemberReputations([...repIds])
+    const [repResult, limitsResult] = await Promise.all([
+      fetchMemberReputations([...repIds]),
+      fetchUserOrderLimits(userId),
+    ])
     if (repResult.error && !ordersResult.error) setError(repResult.error)
     setReputations(repResult.data)
+    setOrderLimits(limitsResult.data ?? null)
 
     setLoading(false)
   }, [userId])
@@ -369,6 +376,31 @@ export default function FulfillmentRoute() {
         </div>
       )}
 
+      {isRsiVerified && orderLimits && orderLimits.unrated_count > 0 && (
+        <div className="mb-4 p-4 rounded-xl bg-red-950/40 border border-red-500/40">
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 p-2 rounded-lg bg-red-600/20">
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-red-300 font-medium">Rate Your Completed Orders</h3>
+              <p className="text-red-200/70 text-sm mt-1">
+                You have <strong className="text-red-300">{orderLimits.unrated_count}</strong> completed {orderLimits.unrated_count === 1 ? 'order' : 'orders'} awaiting your rating.
+                You must archive and rate all completed orders before accepting new ones.
+              </p>
+              <Link
+                to="/orders"
+                className="mt-2 inline-block text-sm text-red-300 hover:text-red-200 underline"
+              >
+                Go to Orders page →
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {isRsiVerified && (
         <>
           <p className="mb-4 text-slate-500 text-sm">
@@ -382,6 +414,15 @@ export default function FulfillmentRoute() {
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} />
+            {orderLimits?.has_pending_fulfiller_rep && (
+              <>
+                <span className="text-slate-500">·</span>
+                <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
+                  {orderLimits.fulfillment_count}/{orderLimits.fulfiller_order_limit} active
+                </span>
+                <span className="text-[10px] text-slate-500">(pending rep limit)</span>
+              </>
+            )}
           </div>
         </>
       )}

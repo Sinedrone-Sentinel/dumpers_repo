@@ -34,9 +34,11 @@ import {
   deleteCustomOrderRequester,
   fetchCustomOrders,
   fetchMemberReputations,
+  fetchUserOrderLimits,
   updateCustomOrderStatus,
   type CustomOrder,
   type CustomOrderStatus,
+  type UserOrderLimits,
 } from '../lib/operations'
 import { getDisplayName } from '../lib/supabase'
 
@@ -108,6 +110,7 @@ export default function CustomOrdersRoute() {
   } | null>(null)
   const [archiving, setArchiving] = useState(false)
   const [myReputation, setMyReputation] = useState<MemberReputationRow | null>(null)
+  const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
 
   const loadOrders = useCallback(async () => {
     setLoading(true)
@@ -119,11 +122,16 @@ export default function CustomOrdersRoute() {
     setOrders(ordersResult.data)
 
     if (user?.id) {
-      const repResult = await fetchMemberReputations([user.id])
+      const [repResult, limitsResult] = await Promise.all([
+        fetchMemberReputations([user.id]),
+        fetchUserOrderLimits(user.id),
+      ])
       if (repResult.error && !ordersResult.error) setError(repResult.error)
       setMyReputation(repResult.data[user.id] ?? null)
+      setOrderLimits(limitsResult.data ?? null)
     } else {
       setMyReputation(null)
+      setOrderLimits(null)
     }
 
     setLoading(false)
@@ -258,13 +266,21 @@ export default function CustomOrdersRoute() {
               setEditingOrderId(null)
               setShowForm((v) => !v)
             }}
-            disabled={!isRsiVerified}
+            disabled={!isRsiVerified || (orderLimits && !orderLimits.can_create_order)}
             className={`px-3 py-1.5 text-sm border rounded-lg transition-colors ${
-              isRsiVerified
+              isRsiVerified && (!orderLimits || orderLimits.can_create_order)
                 ? 'bg-red-950/50 hover:bg-red-900/50 text-red-300 border-red-500/30'
                 : 'bg-slate-800/50 text-slate-500 border-slate-700 cursor-not-allowed'
             }`}
-            title={!isRsiVerified ? 'Verify your RSI Handle in Settings first' : undefined}
+            title={
+              !isRsiVerified
+                ? 'Verify your RSI Handle in Settings first'
+                : orderLimits && !orderLimits.can_create_order
+                  ? orderLimits.unrated_count > 0
+                    ? 'Rate your completed orders first'
+                    : 'Order limit reached while reputation is pending'
+                  : undefined
+            }
           >
             {showForm ? 'Close form' : 'New order'}
           </button>
@@ -299,9 +315,47 @@ export default function CustomOrdersRoute() {
         </div>
       )}
 
+      {isRsiVerified && orderLimits && orderLimits.unrated_count > 0 && (
+        <div className="mb-4 p-4 rounded-xl bg-red-950/40 border border-red-500/40">
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 p-2 rounded-lg bg-red-600/20">
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-red-300 font-medium">Rate Your Completed Orders</h3>
+              <p className="text-red-200/70 text-sm mt-1">
+                You have <strong className="text-red-300">{orderLimits.unrated_count}</strong> completed {orderLimits.unrated_count === 1 ? 'order' : 'orders'} awaiting your rating.
+                You must archive and rate all completed orders before creating new ones.
+              </p>
+              <button
+                type="button"
+                onClick={() => setListTab('completed')}
+                className="mt-2 text-sm text-red-300 hover:text-red-200 underline"
+              >
+                Go to Completed tab →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {userId && isRsiVerified && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} />
+          {orderLimits?.has_pending_buyer_rep && (
+            <>
+              <span className="text-slate-500">·</span>
+              <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
+                {orderLimits.buyer_order_count}/{orderLimits.buyer_order_limit} orders
+              </span>
+              <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
+                {(orderLimits.buyer_order_total / 1000).toFixed(0)}k / {(orderLimits.buyer_auec_limit / 1000000).toFixed(0)}M aUEC
+              </span>
+              <span className="text-[10px] text-slate-500">(pending rep limits)</span>
+            </>
+          )}
         </div>
       )}
 

@@ -233,7 +233,11 @@ export default function BlueprintsRoute() {
   }, [selectedUserId, user?.id])
 
   const isViewingOther = selectedUserId !== 'all' && selectedUserId !== user?.id
-  const acquiredBlueprints = isViewingOther ? viewedUserBlueprints : myAcquiredBlueprints
+  
+  // For FILTERING: use viewed user's blueprints when viewing another user
+  const filterAcquiredBlueprints = isViewingOther ? viewedUserBlueprints : myAcquiredBlueprints
+  // For DISPLAY (checkmarks): always show the viewer's own acquired status
+  const displayAcquiredBlueprints = myAcquiredBlueprints
 
   // Base filtered blueprints (applies global filters: search, rewards, and user filter)
   const baseFilteredBlueprints = React.useMemo(() => {
@@ -246,11 +250,11 @@ export default function BlueprintsRoute() {
       const matchesReward = !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
       
       // When viewing a specific user (not "all"), only show their acquired blueprints
-      const matchesUserFilter = selectedUserId === 'all' || acquiredBlueprints[bp.file]
+      const matchesUserFilter = selectedUserId === 'all' || filterAcquiredBlueprints[bp.file]
       
       return matchesSearch && matchesReward && matchesUserFilter
     })
-  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, acquiredBlueprints, overridesMap])
+  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, filterAcquiredBlueprints, overridesMap])
 
   // Category data with counts based on current global filters
   const categoryData = React.useMemo(() => {
@@ -493,7 +497,12 @@ export default function BlueprintsRoute() {
         <>
           <span>LIVE {blueprintDataVersion}</span>
           <span className="mx-2">•</span>
-          <span className="text-green-400">{Object.keys(acquiredBlueprints).length} acquired</span>
+          <span className="text-green-400">
+            {isViewingOther 
+              ? `${Object.keys(filterAcquiredBlueprints).length} in collection`
+              : `${Object.keys(displayAcquiredBlueprints).length} acquired`
+            }
+          </span>
         </>
       }
     >
@@ -535,10 +544,15 @@ export default function BlueprintsRoute() {
         {isViewingOther && (() => {
           const viewedUser = usersWithBlueprints.find(u => u.id === selectedUserId)
           return (
-            <div className="text-xs text-amber-400 bg-amber-900/20 border border-amber-500/30 rounded py-1 px-2 flex items-center gap-1.5">
-              <span>Viewing {viewedUser?.rsi_handle || viewedUser?.display_name || 'user'}&apos;s collection</span>
-              {viewedUser?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
-              {loadingUserBlueprints && <span>(loading...)</span>}
+            <div className="text-xs bg-amber-900/20 border border-amber-500/30 rounded py-2 px-3 space-y-1">
+              <div className="flex items-center gap-1.5 text-amber-400">
+                <span>Viewing {viewedUser?.rsi_handle || viewedUser?.display_name || 'user'}&apos;s collection</span>
+                {viewedUser?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+                {loadingUserBlueprints && <span>(loading...)</span>}
+              </div>
+              <p className="text-amber-300/70">
+                Checkmarks show your own acquired status. Mark blueprints as acquired or add to your Target list without affecting their collection.
+              </p>
             </div>
           )
         })()}
@@ -718,10 +732,10 @@ export default function BlueprintsRoute() {
             {filteredBlueprints.map(bp => {
               const effectiveIsOrderable = resolveIsOrderable(bp, overridesMap)
               const catalogReward = bp.isReward === true
+              // Use display (viewer's) acquired status for canTarget check
               const canTarget =
                 isApproved &&
-                !isViewingOther &&
-                !acquiredBlueprints[bp.file] &&
+                !displayAcquiredBlueprints[bp.file] &&
                 canAddBlueprintToTargetList(bp, overridesMap)
 
               return (
@@ -729,9 +743,9 @@ export default function BlueprintsRoute() {
                   key={bp.file}
                   blueprint={bp}
                   onClick={() => setSelectedBlueprint(bp)}
-                  isAcquired={!!acquiredBlueprints[bp.file]}
+                  isAcquired={!!displayAcquiredBlueprints[bp.file]}
                   onToggleAcquired={() => toggleAcquired(bp.file)}
-                  canModify={canModifyBlueprints && !isViewingOther}
+                  canModify={canModifyBlueprints}
                   isPending={isPending}
                   showTargetControl={canTarget}
                   isOnTargetList={isOnTargetList(bp.file)}
@@ -755,7 +769,7 @@ export default function BlueprintsRoute() {
           subTypeLabel={formatSubType(getSubType(selectedBlueprint))}
           onClose={() => setSelectedBlueprint(null)}
           isApproved={isApproved}
-          isAcquired={!!acquiredBlueprints[selectedBlueprint.file]}
+          isAcquired={!!displayAcquiredBlueprints[selectedBlueprint.file]}
           isOnTarget={isOnTargetList(selectedBlueprint.file)}
           effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}

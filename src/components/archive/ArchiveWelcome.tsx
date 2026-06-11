@@ -116,6 +116,7 @@ const PAGE_GUIDES = [
       'Track order status from creation to fulfillment',
       'Rate fulfillers when orders are completed (affects their reputation)',
       'Requires a verified RSI Handle to create orders',
+      'New members: limited to 2 orders / 1M aUEC until 5 completed orders',
     ],
     relatesTo: ['Resource Tracker', 'Fulfillment'],
   },
@@ -135,6 +136,7 @@ const PAGE_GUIDES = [
       'Earn aUEC at fair DFP rates for your contributions',
       'Build your fulfiller reputation through ratings from buyers',
       'Requires a verified RSI Handle to fulfill orders',
+      'New members: can only work on 1 order at a time until 5 completed',
     ],
     relatesTo: ['Custom Orders', 'Resource Tracker'],
   },
@@ -330,6 +332,55 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               <span>
                 <strong>Note:</strong> Both buyers and fulfillers must have a verified RSI Handle to participate 
                 in the order system. This ensures accountability and helps prevent scams.
+              </span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Pending Rep Limits */}
+      <section className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          Building Your Reputation
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+          <p className="text-sm text-slate-400 leading-relaxed">
+            New members start with <strong className="text-white">"Pending" reputation</strong> until they complete 
+            5 successful orders (as either buyer or fulfiller). During this time, there are some limits to help 
+            protect the community:
+          </p>
+          
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+              <h4 className="text-sm font-medium text-emerald-400 mb-2">Pending Buyer Limits</h4>
+              <ul className="text-xs text-slate-400 space-y-1">
+                <li>• Maximum of 2 active orders at a time</li>
+                <li>• Total order value capped at 1,000,000 aUEC</li>
+                <li>• Limits are lifted after 5 completed orders</li>
+              </ul>
+            </div>
+            
+            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+              <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Fulfiller Limits</h4>
+              <ul className="text-xs text-slate-400 space-y-1">
+                <li>• Can only accept 1 order at a time</li>
+                <li>• Complete it before accepting another</li>
+                <li>• Limits are lifted after 5 completed fulfillments</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+            <p className="text-xs text-blue-300 flex items-start gap-2">
+              <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>
+                <strong>Important:</strong> Everyone must rate their completed orders before creating or 
+                accepting new ones. This keeps the rating system fair and encourages timely feedback.
               </span>
             </p>
           </div>

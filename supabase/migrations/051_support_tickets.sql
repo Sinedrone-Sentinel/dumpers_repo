@@ -387,7 +387,11 @@ $$;
 GRANT EXECUTE ON FUNCTION public.update_ticket_status(uuid, support_ticket_status) TO authenticated;
 
 -- Function to resolve and DELETE ticket (permanent deletion)
-CREATE OR REPLACE FUNCTION public.resolve_and_delete_ticket(p_ticket_id uuid)
+-- Requires a resolution message that gets sent to the member
+CREATE OR REPLACE FUNCTION public.resolve_and_delete_ticket(
+  p_ticket_id uuid,
+  p_resolution_message text DEFAULT NULL
+)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -395,6 +399,7 @@ SET search_path = public
 AS $$
 DECLARE
   v_user_role text;
+  v_ticket record;
 BEGIN
   -- Check user is officer+
   SELECT role INTO v_user_role FROM public.profiles WHERE id = auth.uid();
@@ -402,14 +407,32 @@ BEGIN
     RETURN jsonb_build_object('success', false, 'error', 'Officer access required');
   END IF;
   
+  -- Get ticket details before deletion
+  SELECT requester_id, subject INTO v_ticket
+  FROM public.support_tickets
+  WHERE id = p_ticket_id;
+  
+  IF v_ticket IS NULL THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Ticket not found');
+  END IF;
+  
+  -- Notify the member with the resolution message
+  PERFORM public.create_user_notification(
+    v_ticket.requester_id,
+    'support_ticket_resolved',
+    'Support Ticket Resolved',
+    COALESCE(p_resolution_message, 'Your ticket "' || v_ticket.subject || '" has been resolved.'),
+    jsonb_build_object('ticket_subject', v_ticket.subject)
+  );
+  
   -- Delete the ticket (CASCADE will delete messages)
   DELETE FROM public.support_tickets WHERE id = p_ticket_id;
   
-  RETURN jsonb_build_object('success', true, 'message', 'Ticket and all messages permanently deleted');
+  RETURN jsonb_build_object('success', true, 'message', 'Ticket resolved and member notified');
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION public.resolve_and_delete_ticket(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.resolve_and_delete_ticket(uuid, text) TO authenticated;
 
 -- Function to get tickets for the current user (members see their own, officers see available)
 CREATE OR REPLACE FUNCTION public.get_my_tickets()
