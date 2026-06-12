@@ -12,6 +12,7 @@ import {
   type Shop,
   type ShopInventoryItem,
 } from '../hooks/useShopData'
+import { useBlueprintLookup } from '../hooks/useBlueprintLookup'
 import GuestPreviewBanner from '../components/layout/GuestPreviewBanner'
 
 function formatPrice(price: number | null): string {
@@ -52,9 +53,15 @@ function LocationTypeBadge({ type }: { type: string | null }) {
   )
 }
 
-function TransactionBadges({ item }: { item: ShopInventoryItem }) {
+interface TransactionBadgesProps {
+  item: ShopInventoryItem
+  blueprintInternalName?: string
+  isAcquired?: boolean
+}
+
+function TransactionBadges({ item, blueprintInternalName, isAcquired }: TransactionBadgesProps) {
   return (
-    <div className="flex gap-1">
+    <div className="flex flex-wrap gap-1 justify-center">
       {item.shop_sells && (
         <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-300 border border-green-500/30">
           Sells
@@ -70,13 +77,26 @@ function TransactionBadges({ item }: { item: ShopInventoryItem }) {
           Rents
         </span>
       )}
+      {blueprintInternalName && (
+        <span
+          className={`text-[10px] px-1.5 py-0.5 rounded border ${
+            isAcquired
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+              : 'bg-red-500/20 text-red-300 border-red-500/30'
+          }`}
+          title={isAcquired ? 'Blueprint acquired' : 'Blueprint not acquired'}
+        >
+          BP
+        </span>
+      )}
     </div>
   )
 }
 
 export default function ShopsRoute() {
-  const { isGuestPreview, exitGuestPreview } = useAuth()
+  const { isGuestPreview, exitGuestPreview, acquiredBlueprints } = useAuth()
   const search = useSearch({ from: '/shops' })
+  const { getBlueprintByItemName } = useBlueprintLookup()
 
   const [selectedSystem, setSelectedSystem] = useState<string | null>('Stanton')
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
@@ -343,43 +363,53 @@ export default function ShopsRoute() {
                         <div className="text-center">Trade</div>
                       </div>
                       <div className="max-h-[500px] overflow-y-auto">
-                        {inventory.map((item) => (
-                          <div
-                            key={item.id}
-                            className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-4 py-3 hover:bg-slate-700/20 items-center"
-                          >
-                            <div>
-                              <div className="text-sm text-white">
-                                {item.display_name || item.item_name}
-                              </div>
-                              {item.display_name && item.display_name !== item.item_name && (
-                                <div className="text-xs text-slate-600 truncate">
-                                  {item.item_name}
+                        {inventory.map((item) => {
+                          const itemName = item.display_name || item.item_name
+                          const blueprint = getBlueprintByItemName(itemName)
+                          const isAcquired = blueprint ? acquiredBlueprints[blueprint.internalName] : false
+
+                          return (
+                            <div
+                              key={item.id}
+                              className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-4 py-3 hover:bg-slate-700/20 items-center"
+                            >
+                              <div>
+                                <div className="text-sm text-white">
+                                  {itemName}
                                 </div>
-                              )}
-                            </div>
-                            <div className="text-right">
-                              <div className="text-sm text-amber-400 font-medium">
-                                {formatPrice(item.effective_price)}
+                                {item.display_name && item.display_name !== item.item_name && (
+                                  <div className="text-xs text-slate-600 truncate">
+                                    {item.item_name}
+                                  </div>
+                                )}
                               </div>
-                              {item.effective_price !== item.base_price && (
-                                <div className="text-xs text-slate-600">
-                                  Base: {formatPrice(item.base_price)}
+                              <div className="text-right">
+                                <div className="text-sm text-amber-400 font-medium">
+                                  {formatPrice(item.effective_price)}
                                 </div>
-                              )}
+                                {item.effective_price !== item.base_price && (
+                                  <div className="text-xs text-slate-600">
+                                    Base: {formatPrice(item.base_price)}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="text-center">
+                                {item.item_type && (
+                                  <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded">
+                                    {item.item_type}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-center">
+                                <TransactionBadges
+                                  item={item}
+                                  blueprintInternalName={blueprint?.internalName}
+                                  isAcquired={isAcquired}
+                                />
+                              </div>
                             </div>
-                            <div className="text-center">
-                              {item.item_type && (
-                                <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded">
-                                  {item.item_type}
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-center">
-                              <TransactionBadges item={item} />
-                            </div>
-                          </div>
-                        ))}
+                          )
+                        })}
                       </div>
                     </div>
                   )}
