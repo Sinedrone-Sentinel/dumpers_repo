@@ -14,9 +14,11 @@ import {
   clearGuestMissionPrefs,
   clearGuestResources,
   clearGuestTargetList,
+  clearMiningTrackerEntries,
   readGuestAcquiredBlueprints,
   readGuestResources,
   readGuestTargetList,
+  readMiningTrackerEntries,
   sanitizeBlueprintId,
   sanitizeMigrationBatch,
   sanitizeResourceEntry,
@@ -305,6 +307,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } catch (e) {
         console.error('Error migrating resources:', e)
+      }
+    }
+
+    // 5. Migrate mining tracker
+    const guestMiningEntries = readMiningTrackerEntries()
+    if (guestMiningEntries.length > 0) {
+      try {
+        const validEntries = guestMiningEntries.filter(e => 
+          typeof e.oreName === 'string' && e.oreName.length > 0 && e.oreName.length < 100 &&
+          typeof e.rarity === 'string' && e.rarity.length > 0 && e.rarity.length < 50
+        )
+
+        if (validEntries.length > 0) {
+          const { data, error } = await supabase.rpc('import_mining_tracker_entries', {
+            p_entries: validEntries,
+          })
+
+          if (!error && data?.success) {
+            clearMiningTrackerEntries()
+            console.log(`Migrated ${data.imported} mining tracker entries to server`)
+          }
+        }
+      } catch (e) {
+        console.error('Error migrating mining tracker:', e)
       }
     }
   }, [])

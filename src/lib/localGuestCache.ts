@@ -43,6 +43,11 @@ export function writeMiningTrackerEntries(entries: MiningTrackerEntry[]): void {
   localStorage.setItem(MINING_TRACKER_STORAGE_KEY, JSON.stringify(entries))
 }
 
+export function clearMiningTrackerEntries(): void {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(MINING_TRACKER_STORAGE_KEY)
+}
+
 export function miningTrackerEntryId(oreName: string): string {
   return oreName
 }
