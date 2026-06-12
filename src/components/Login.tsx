@@ -98,11 +98,8 @@ export default function Login() {
               onClick={enterGuestPreview}
               className="w-full px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/60 text-sm font-medium transition-all"
             >
-              Browse the site without signing in
+              Continue in Offline Mode
             </button>
-            <p className="text-center text-slate-500 text-xs">
-              Read-only preview of blueprints and the information archive. No account required.
-            </p>
           </div>
         </div>
 

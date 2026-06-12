@@ -252,8 +252,8 @@ export default function TargetsRoute() {
     >
       {isGuest && (
         <div className="mb-4 px-3 py-2 rounded-lg border border-amber-500/30 bg-amber-950/30 text-xs text-amber-200/90">
-          Guest mode: your target list saves in this browser only. Sign in with a free member account
-          to sync across devices and track acquired blueprints.
+          <strong className="text-amber-100">Offline Mode</strong> — Your tracked missions save in this browser only. 
+          Sign in to sync across devices.
         </div>
       )}
 

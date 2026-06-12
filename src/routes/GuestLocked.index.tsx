@@ -63,7 +63,7 @@ export default function GuestLockedRoute() {
         </div>
 
         <div className="p-4 bg-amber-950/40 rounded-xl border border-amber-500/30 text-sm text-amber-200/90">
-          You&apos;re browsing as a guest. Sign in with Google for a <strong className="text-amber-100 font-medium">free member account</strong> with{' '}
+          <strong className="text-amber-100">Offline Mode</strong> — Sign in with Google for a <strong className="text-amber-100 font-medium">free member account</strong> with{' '}
           <strong className="text-amber-100 font-medium">full access</strong> — no subscriptions, no
           paid tiers. New accounts may need a quick officer approval before community tools unlock.
         </div>

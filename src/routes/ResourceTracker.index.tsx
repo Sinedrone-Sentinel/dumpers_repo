@@ -72,7 +72,7 @@ function GuestStockAddPanel({ catalog, labelMap, existingKeys, onAdd }: GuestSto
 
   return (
     <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700">
-      <h3 className="text-sm font-medium text-slate-300 mb-3">Add Material Stock (Guest)</h3>
+      <h3 className="text-sm font-medium text-slate-300 mb-3">Add Material Stock</h3>
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 relative">
           {!selectedResource ? (
@@ -337,8 +337,8 @@ export default function ResourceTrackerRoute() {
     >
       {isGuest && (
         <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
-          <strong>Guest Preview</strong> – Your resource inventory is saved locally in this browser.
-          Sign in to sync it to your account and keep it permanently.
+          <strong className="text-amber-100">Offline Mode</strong> — Your resource inventory is saved locally in this browser.
+          Sign in to sync it to your account.
         </div>
       )}
 
