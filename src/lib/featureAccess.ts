@@ -16,6 +16,7 @@ export type FeatureId =
   | 'support_tickets'
   | 'support_dashboard'
   | 'mining_tracker'
+  | 'shops_browse'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -65,7 +66,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'mining_tracker' ||
       featureId === 'target_bp_list' ||
       featureId === 'resource_tracker' ||
-      featureId === 'fulfillment'
+      featureId === 'fulfillment' ||
+      featureId === 'shops_browse'
     )
   }
 
@@ -110,6 +112,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isOfficerOrAbove
 
     case 'mining_tracker':
+      return !!ctx.role
+
+    case 'shops_browse':
       return !!ctx.role
 
     default:

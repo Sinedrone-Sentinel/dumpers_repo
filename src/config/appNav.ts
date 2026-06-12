@@ -63,6 +63,15 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     ghostAllowed: true,
   },
   {
+    id: 'shops',
+    label: 'Shops',
+    path: '/shops',
+    icon: 'shop',
+    featureId: 'shops_browse',
+    minRole: 'member',
+    ghostAllowed: true,
+  },
+  {
     id: 'custom-orders',
     label: 'Custom Orders',
     path: '/orders',
@@ -106,7 +115,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['custom-orders', 'fulfillment'],
+    itemIds: ['shops', 'custom-orders', 'fulfillment'],
   },
   {
     id: 'reference',

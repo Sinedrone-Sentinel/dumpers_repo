@@ -26,15 +26,26 @@ Main game data extracted from Star Citizen files. Key files in `api/dist/json/`:
 Mining RS signature data:
 - `lookup.json` - 163 signature values for 26 minerals × 6 multipliers
 
+### 3. MrKraken/StarStrings
+**URL:** https://github.com/MrKraken/StarStrings
+
+Component and ordnance localization data for Star Citizen:
+- `components.ini` - Component types, grades, manufacturers, display names
+- `ordnance.ini` - Missiles and torpedoes
+- `mining.ini` - Mining ore locations and rarity
+- `contracts.ini` - Contract blueprint pools
+
 ## Usage Pattern
 
 1. Identify what data is needed
-2. Check if scunpacked has it (most game data)
-3. Check SC_Signature_Scanner for mining signatures
-4. Only web search if neither repo has the data
+2. Check if scunpacked has it (most game data - shops, items, ships)
+3. Check StarStrings for component/ordnance display names and categorization
+4. Check SC_Signature_Scanner for mining RS signatures
+5. Only web search if none of these repos have the data
 
 ## Notes
 
-- scunpacked data is extracted from game files, so it's authoritative
+- scunpacked data is extracted from game files, so it's authoritative for raw game data
+- StarStrings provides curated display names and categorization
 - Hand-mineable gems share base RS 620 (not useful for identification)
 - Ship-mineable ores each have unique signatures (3170-4300 range)

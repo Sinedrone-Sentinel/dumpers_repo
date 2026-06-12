@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useComponentsData, type ComponentData } from '../../hooks/useArchiveData'
+import { useComponentPriceSummaries, type ComponentPriceSummary } from '../../hooks/useShopData'
+import ComponentDetailModal from './ComponentDetailModal'
 
 const GRADE_COLORS: Record<string, string> = {
   A: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
@@ -18,11 +20,13 @@ const CLASS_COLORS: Record<string, string> = {
 
 export default function ComponentsSection() {
   const { data, loading, error, refetch } = useComponentsData()
+  const { data: priceSummaries } = useComponentPriceSummaries()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState<string | null>(null)
   const [selectedManufacturer, setSelectedManufacturer] = useState<string | null>(null)
   const [selectedSize, setSelectedSize] = useState<number | null>(null)
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null)
+  const [selectedComponent, setSelectedComponent] = useState<ComponentData | null>(null)
 
   const types = useMemo(() => {
     if (!data) return []
@@ -176,7 +180,12 @@ export default function ComponentsSection() {
           <p className="col-span-full text-center text-slate-500 py-8">No matching components found.</p>
         ) : (
           filteredData.slice(0, 100).map((item) => (
-            <ComponentCard key={item.id} item={item} />
+            <ComponentCard
+              key={item.id}
+              item={item}
+              priceData={priceSummaries.get(item.display_name)}
+              onSelect={() => setSelectedComponent(item)}
+            />
           ))
         )}
       </div>
@@ -186,18 +195,38 @@ export default function ComponentsSection() {
           Showing first 100 results. Use filters to narrow down.
         </p>
       )}
+
+      {/* Component Detail Modal */}
+      {selectedComponent && data && (
+        <ComponentDetailModal
+          component={selectedComponent}
+          allComponents={data}
+          onClose={() => setSelectedComponent(null)}
+        />
+      )}
     </div>
   )
 }
 
-function ComponentCard({ item }: { item: ComponentData }) {
+interface ComponentCardProps {
+  item: ComponentData
+  priceData?: ComponentPriceSummary
+  onSelect: () => void
+}
+
+function ComponentCard({ item, priceData, onSelect }: ComponentCardProps) {
   const gradeClass = GRADE_COLORS[item.grade] || GRADE_COLORS.D
   const classColor = CLASS_COLORS[item.class] || 'text-slate-300'
   
   return (
     <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 hover:border-slate-600 transition-colors">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-medium text-sm text-white leading-tight">{item.display_name}</h3>
+        <button
+          onClick={onSelect}
+          className="font-medium text-sm text-amber-400 hover:text-amber-300 hover:underline text-left leading-tight"
+        >
+          {item.display_name}
+        </button>
         <span className={`shrink-0 px-2 py-0.5 text-[10px] font-bold rounded border ${gradeClass}`}>
           {item.grade}
         </span>
@@ -212,12 +241,19 @@ function ComponentCard({ item }: { item: ComponentData }) {
           <span className="text-slate-500">Manufacturer:</span>
           <span className="text-slate-300">{item.manufacturer}</span>
         </div>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-500">Size:</span>
-          <span className="text-slate-300">{item.size}</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-slate-500">Class:</span>
-          <span className={classColor}>{item.class}</span>
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-500">Size:</span>
+            <span className="text-slate-300">{item.size}</span>
+            <span className="text-slate-600">|</span>
+            <span className="text-slate-500">Class:</span>
+            <span className={classColor}>{item.class}</span>
+          </div>
+          {priceData && priceData.avg_price && (
+            <span className="text-slate-500">
+              ~{priceData.avg_price.toLocaleString()} aUEC
+            </span>
+          )}
         </div>
       </div>
     </div>

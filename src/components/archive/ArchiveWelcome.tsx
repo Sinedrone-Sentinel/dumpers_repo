@@ -22,7 +22,7 @@ const QUICK_LINKS: QuickLink[] = [
   {
     id: 'components',
     label: 'Component Database',
-    description: 'Browse ship components by type, size, grade, and manufacturer. Find the perfect upgrade.',
+    description: 'Browse ship components by type, size, grade, and manufacturer. Click any component to see shop prices and similar upgrades.',
     section: 'components',
   },
   {
@@ -120,6 +120,25 @@ const PAGE_GUIDES = [
       'Logged-in users sync to their account; Offline Mode saves locally',
     ],
     relatesTo: ['Mining Guide', 'Resource Tracker'],
+  },
+  {
+    id: 'shops',
+    title: 'Shops',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    ),
+    description: 'Browse in-game shop inventories and prices across the Stanton system.',
+    details: [
+      'Filter by system, location, and shop to browse inventories',
+      'See effective prices including shop margins and offsets',
+      'Find where specific components are sold — or discover items are loot-only',
+      'View buy/sell/rent transaction types for each item',
+      'Accessible in Offline Mode — reference data only, no account required',
+      'Click component names in the Archive to jump directly to their shop listings',
+    ],
+    relatesTo: ['Components', 'Mining Guide'],
   },
   {
     id: 'orders',
