@@ -53,13 +53,7 @@ function LocationTypeBadge({ type }: { type: string | null }) {
   )
 }
 
-interface TransactionBadgesProps {
-  item: ShopInventoryItem
-  blueprintInternalName?: string
-  isAcquired?: boolean
-}
-
-function TransactionBadges({ item, blueprintInternalName, isAcquired }: TransactionBadgesProps) {
+function TransactionBadges({ item }: { item: ShopInventoryItem }) {
   return (
     <div className="flex flex-wrap gap-1 justify-center">
       {item.shop_sells && (
@@ -75,18 +69,6 @@ function TransactionBadges({ item, blueprintInternalName, isAcquired }: Transact
       {item.shop_rents && (
         <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
           Rents
-        </span>
-      )}
-      {blueprintInternalName && (
-        <span
-          className={`text-[10px] px-1.5 py-0.5 rounded border ${
-            isAcquired
-              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-              : 'bg-red-500/20 text-red-300 border-red-500/30'
-          }`}
-          title={isAcquired ? 'Blueprint acquired' : 'Blueprint not acquired'}
-        >
-          BP
         </span>
       )}
     </div>
@@ -356,7 +338,7 @@ export default function ShopsRoute() {
                     </div>
                   ) : (
                     <div className="divide-y divide-slate-700/30">
-                      <div className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-4 py-2 bg-slate-800/50 text-xs text-slate-500 font-medium uppercase tracking-wider">
+                      <div className="grid grid-cols-[1fr,120px,140px,100px] gap-4 px-4 py-2 bg-slate-800/50 text-xs text-slate-500 font-medium uppercase tracking-wider">
                         <div>Item</div>
                         <div className="text-right">Price</div>
                         <div className="text-center">Type</div>
@@ -371,16 +353,23 @@ export default function ShopsRoute() {
                           return (
                             <div
                               key={item.id}
-                              className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-4 py-3 hover:bg-slate-700/20 items-center"
+                              className="grid grid-cols-[1fr,120px,140px,100px] gap-4 px-4 py-3 hover:bg-slate-700/20 items-center"
                             >
                               <div>
                                 <div className="text-sm text-white">
                                   {itemName}
                                 </div>
-                                {item.display_name && item.display_name !== item.item_name && (
-                                  <div className="text-xs text-slate-600 truncate">
-                                    {item.item_name}
-                                  </div>
+                                {blueprint && (
+                                  <span
+                                    className={`inline-block mt-1 text-[10px] px-1.5 py-0.5 rounded border ${
+                                      isAcquired
+                                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                                        : 'bg-red-500/20 text-red-300 border-red-500/30'
+                                    }`}
+                                    title={isAcquired ? 'Blueprint acquired' : 'Blueprint not acquired'}
+                                  >
+                                    {isAcquired ? 'BP Acquired' : 'BP Not Acquired'}
+                                  </span>
                                 )}
                               </div>
                               <div className="text-right">
@@ -401,11 +390,7 @@ export default function ShopsRoute() {
                                 )}
                               </div>
                               <div className="text-center">
-                                <TransactionBadges
-                                  item={item}
-                                  blueprintInternalName={blueprint?.internalName}
-                                  isAcquired={isAcquired}
-                                />
+                                <TransactionBadges item={item} />
                               </div>
                             </div>
                           )
