@@ -267,7 +267,7 @@ export function getRockCalculatorLocationOptions(
   depositType: DepositType
 ): RockCalculatorLocationOption[] {
   const profiles = getLocationProfilesForOre(oreName).filter(
-    (loc) => loc.depositType === depositType
+    (loc) => loc.depositType === depositType && loc.compositionParts?.length
   )
 
   const seen = new Set<string>()
@@ -275,10 +275,10 @@ export function getRockCalculatorLocationOptions(
 
   for (const loc of profiles) {
     const label = loc.displayName ?? loc.guideName ?? loc.locationName
-    const value = loc.guideName ?? loc.locationName
-    const dedupeKey = `${value}|${label}`
-    if (seen.has(dedupeKey)) continue
-    seen.add(dedupeKey)
+    // Site-specific spawn key — never broad guide buckets (e.g. "Pyro Asteroid Clusters").
+    const value = loc.spawnKey ?? loc.locationName
+    if (seen.has(value)) continue
+    seen.add(value)
     options.push({ value, label })
   }
 
@@ -299,6 +299,10 @@ export function findRockCalculatorLocationOption(
 
   const loc = getLocationProfile(oreName, locationRef, depositType)
   if (loc) {
+    const siteKey = loc.spawnKey ?? loc.locationName
+    const bySiteKey = options.find((opt) => opt.value === siteKey)
+    if (bySiteKey) return bySiteKey
+
     const candidates = [loc.guideName, loc.locationName, loc.displayName, loc.spawnKey].filter(
       Boolean
     ) as string[]
