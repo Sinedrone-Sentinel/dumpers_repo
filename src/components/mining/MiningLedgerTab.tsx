@@ -54,7 +54,38 @@ interface MiningLedgerTabProps {
 
 /** Section title row — no sticky band; tables scroll naturally below. */
 const LEDGER_SECTION_HEAD =
-  'flex flex-wrap items-center justify-between gap-2 py-1 mb-2'
+  'flex flex-wrap items-start justify-between gap-2 mb-2'
+
+const LEDGER_SECTION =
+  'rounded-lg border border-slate-700/45 bg-slate-900/35 p-3 sm:p-4'
+
+const LEDGER_SECTION_TITLE =
+  'text-base font-semibold text-white tracking-tight flex items-center gap-2'
+
+const LEDGER_SECTION_ACCENT =
+  'w-1 h-4 rounded-full bg-orange-500/75 shrink-0'
+
+const LEDGER_INFO_TEXT =
+  'text-xs text-slate-400 leading-relaxed mb-3 pl-3 border-l-2 border-slate-600/60'
+
+const LEDGER_TABLE_HEAD =
+  'text-[10px] uppercase tracking-wider text-slate-400 font-semibold'
+
+const LEDGER_SUMMARY_CARD =
+  'p-3 rounded-lg border border-slate-700/50 bg-slate-800/40 min-w-[7.5rem]'
+
+const LEDGER_SUMMARY_LABEL =
+  'text-[10px] uppercase tracking-wider text-slate-400 font-medium block mb-1'
+
+const LEDGER_SUMMARY_VALUE =
+  'text-sm font-semibold font-mono tabular-nums text-slate-50 block'
+
+const LEDGER_SUMMARY_HINT =
+  'text-[10px] text-slate-500 italic block mt-1 leading-snug'
+
+const LEDGER_COMPUTED = 'font-mono text-slate-300 tabular-nums'
+const LEDGER_ESTIMATE = 'font-mono text-slate-400 tabular-nums'
+const LEDGER_MONEY = 'font-mono text-amber-300 tabular-nums font-medium'
 
 const LEDGER_ADD_BTN =
   'inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-md border border-orange-500/45 bg-orange-950/40 text-orange-200 hover:bg-orange-500/15 hover:border-orange-400/55 transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
@@ -110,11 +141,11 @@ function LedgerSortHeader({
   onClick: () => void
 }) {
   return (
-    <th className="py-1 pr-2">
+    <th className="py-1.5 pr-2">
       <button
         type="button"
         onClick={onClick}
-        className="inline-flex items-center gap-0.5 text-left hover:text-slate-300 transition-colors"
+        className={`inline-flex items-center gap-0.5 text-left ${LEDGER_TABLE_HEAD} hover:text-slate-200 transition-colors`}
         aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}
       >
         <span>{label}</span>
@@ -924,9 +955,9 @@ export default function MiningLedgerTab({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-end gap-3">
+      <div className="flex flex-wrap items-end gap-3 pb-3 border-b border-slate-700/40">
         <div className="min-w-[200px]">
-          <label className="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">
+          <label className={`${LEDGER_SUMMARY_LABEL} mb-1.5`}>
             Ledgers
           </label>
           <select
@@ -947,7 +978,7 @@ export default function MiningLedgerTab({
           </select>
         </div>
         <div className="flex-1 min-w-[160px] max-w-xs">
-          <label className="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">
+          <label className={`${LEDGER_SUMMARY_LABEL} mb-1.5`}>
             Display name
           </label>
           <input
@@ -1035,41 +1066,46 @@ export default function MiningLedgerTab({
         <>
           {/* Summary */}
           <div className={`${LEDGER_TABLE_SCROLL} grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs min-w-0`}>
-            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
-              <span className="text-slate-500 block">Pool (est.)</span>
-              <span className="text-white font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolEstimate)}</span>
+            <div className={LEDGER_SUMMARY_CARD}>
+              <span className={LEDGER_SUMMARY_LABEL}>Pool (est.)</span>
+              <span className={LEDGER_SUMMARY_VALUE}>{formatLedgerMoney(computed.poolEstimate)}</span>
+              <span className={LEDGER_SUMMARY_HINT}>From yield est. × Q0 prices</span>
             </div>
-            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
-              <span className="text-slate-500 block">Pool (actual)</span>
-              <span className="text-slate-400 font-mono tabular-nums whitespace-nowrap">{formatLedgerMoney(computed.poolActual)}</span>
-              <span className="text-[10px] text-slate-600 block">Ore profit act. only</span>
+            <div className={LEDGER_SUMMARY_CARD}>
+              <span className={LEDGER_SUMMARY_LABEL}>Pool (actual)</span>
+              <span className={LEDGER_SUMMARY_VALUE}>{formatLedgerMoney(computed.poolActual)}</span>
+              <span className={LEDGER_SUMMARY_HINT}>Ore profit act. only</span>
             </div>
-            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[8.5rem]">
-              <span className="text-slate-500 block">Total payout</span>
-              <span className="text-amber-300 font-mono tabular-nums whitespace-nowrap">
+            <div className={LEDGER_SUMMARY_CARD}>
+              <span className={LEDGER_SUMMARY_LABEL}>Total payout</span>
+              <span className={`${LEDGER_SUMMARY_VALUE} text-amber-300`}>
                 {formatLedgerMoney(computed.totalPayout)}
               </span>
-              <span className="text-[10px] text-slate-600 block">Ore − deductibles + extras</span>
+              <span className={LEDGER_SUMMARY_HINT}>Ore − deductibles + extras</span>
             </div>
-            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
-              <span className="text-slate-500 block">Splitting shares</span>
-              <span className="text-white font-mono tabular-nums">{computed.splittingShares}</span>
+            <div className={LEDGER_SUMMARY_CARD}>
+              <span className={LEDGER_SUMMARY_LABEL}>Splitting shares</span>
+              <span className={LEDGER_SUMMARY_VALUE}>{computed.splittingShares}</span>
               {computed.splittingShares !== computed.totalShares && (
-                <span className="text-[10px] text-slate-600 block">
+                <span className={LEDGER_SUMMARY_HINT}>
                   {computed.totalShares} incl. 0-share
                 </span>
               )}
             </div>
-            <div className="p-2 rounded-lg border border-slate-700/40 min-w-[7.5rem]">
-              <span className="text-slate-500 block">Ore pricing</span>
-              <span className="text-slate-300 text-[11px]">Purchased (Q0) DFP</span>
+            <div className={LEDGER_SUMMARY_CARD}>
+              <span className={LEDGER_SUMMARY_LABEL}>Ore pricing</span>
+              <span className="text-sm text-slate-200 font-medium">Purchased (Q0) DFP</span>
+              <span className={LEDGER_SUMMARY_HINT}>Catalog defaults unless overridden</span>
             </div>
           </div>
 
           {/* Mining runs */}
-          <section>
+          <section className={LEDGER_SECTION}>
             <div className={LEDGER_SECTION_HEAD}>
-              <h3 className="text-sm font-semibold text-white">Mining runs</h3>
+              <h3 className={LEDGER_SECTION_TITLE}>
+                <span className={LEDGER_SECTION_ACCENT} aria-hidden />
+                Mining runs
+              </h3>
               <button
                 type="button"
                 onClick={() =>
@@ -1099,7 +1135,7 @@ export default function MiningLedgerTab({
                 + Add row
               </button>
             </div>
-            <p className="text-[10px] text-slate-500 mb-1">
+            <p className={LEDGER_INFO_TEXT}>
               Ore: unrefined cSCU → yield est. (45% refine) → yield act. Gems are sold as-is — enter
               a whole gem count only; no yield columns.
             </p>
@@ -1116,7 +1152,7 @@ export default function MiningLedgerTab({
                 <col style={{ width: '2rem' }} />
               </colgroup>
               <thead>
-                <tr className="text-slate-500 text-left border-b border-slate-700/50">
+                <tr className="text-left border-b border-slate-600/50">
                   <LedgerSortHeader
                     label="Ore / Gem"
                     active={miningRunSort?.key === 'resource'}
@@ -1129,12 +1165,12 @@ export default function MiningLedgerTab({
                     dir={miningRunSort?.key === 'quality' ? miningRunSort.dir : 'asc'}
                     onClick={() => toggleMiningRunSort('quality')}
                   />
-                  <th className="py-1 pr-2">Unrefined / Count</th>
-                  <th className="py-1 pr-2">Yield est.</th>
-                  <th className="py-1 pr-2">Yield act.</th>
-                  <th className="py-1 pr-2">Profit est.</th>
-                  <th className="py-1 pr-2">Profit act.</th>
-                  <th className="py-1 w-8" />
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Unrefined / Count</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Yield est.</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Yield act.</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Profit est.</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Profit act.</th>
+                  <th className="py-1.5 w-8" />
                 </tr>
               </thead>
               <tbody>
@@ -1185,11 +1221,11 @@ export default function MiningLedgerTab({
                           min={0}
                           step={isGem ? 1 : 'any'}
                         />
-                        <span className="text-[10px] text-slate-400 ml-0.5">
+                        <span className="text-[10px] text-slate-500 ml-0.5 font-medium">
                           {isGem ? 'gems' : 'cSCU unref.'}
                         </span>
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
+                      <td className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}>
                         {isGem ? '—' : (calc?.yieldEstimate ?? '—')}
                       </td>
                       <td className="py-1 pr-2">
@@ -1214,10 +1250,10 @@ export default function MiningLedgerTab({
                           />
                         )}
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
+                      <td className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}>
                         {isGem ? '—' : calc ? formatLedgerMoney(calc.profitEstimate) : '—'}
                       </td>
-                      <td className="py-1 pr-2 font-mono text-amber-300/90 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
+                      <td className={`py-1 pr-2 ${LEDGER_MONEY} whitespace-nowrap overflow-hidden text-ellipsis`}>
                         {calc ? formatLedgerMoney(calc.profitActual) : '—'}
                       </td>
                       <td className="py-1">
@@ -1244,16 +1280,19 @@ export default function MiningLedgerTab({
           </section>
 
           {/* Crew */}
-          <section>
+          <section className={LEDGER_SECTION}>
             <div className={LEDGER_SECTION_HEAD}>
-              <div>
-                <h3 className="text-sm font-semibold text-white">Crew</h3>
-                <p className="text-[10px] text-slate-500">
+              <div className="min-w-0 flex-1">
+                <h3 className={LEDGER_SECTION_TITLE}>
+                  <span className={LEDGER_SECTION_ACCENT} aria-hidden />
+                  Crew
+                </h3>
+                <p className={`${LEDGER_INFO_TEXT} mb-0 mt-2`}>
                   Pool splits among members with shares &gt; 0 only. Record partial payments in{' '}
-                  <strong className="text-slate-400 font-normal">Paid so far</strong>;{' '}
-                  <strong className="text-slate-400 font-normal">Outstanding</strong> updates
-                  automatically. Check <strong className="text-slate-400 font-normal">Paid</strong>{' '}
-                  when fully settled. Members at 0 shares use alternate compensation instead of aUEC
+                  <span className="text-slate-300 font-medium">Paid so far</span>;{' '}
+                  <span className="text-slate-300 font-medium">Outstanding</span> updates
+                  automatically. Check <span className="text-slate-300 font-medium">Paid</span> when
+                  fully settled. Members at 0 shares use alternate compensation instead of aUEC
                   payout.
                 </p>
               </div>
@@ -1296,16 +1335,16 @@ export default function MiningLedgerTab({
                 <col style={{ width: '2rem' }} />
               </colgroup>
               <thead>
-                <tr className="text-slate-500 text-left border-b border-slate-700/50">
-                  <th className="py-1 pr-2">Member</th>
-                  <th className="py-1 pr-2">Shares</th>
-                  <th className="py-1 pr-2">Role</th>
-                  <th className="py-1 pr-2">Payout est.</th>
-                  <th className="py-1 pr-2">Payout act.</th>
-                  <th className="py-1 pr-2">Paid so far</th>
-                  <th className="py-1 pr-2">Outstanding</th>
-                  <th className="py-1 pr-2">Paid</th>
-                  <th className="py-1 w-8" />
+                <tr className="text-left border-b border-slate-600/50">
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Member</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Shares</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Role</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Payout est.</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Payout act.</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Paid so far</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Outstanding</th>
+                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Paid</th>
+                  <th className="py-1.5 w-8" />
                 </tr>
               </thead>
               <tbody>
@@ -1377,7 +1416,7 @@ export default function MiningLedgerTab({
                         </td>
                       ) : (
                         <>
-                          <td className="py-1 pr-2 font-mono text-slate-400 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
+                          <td className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}>
                             {formatLedgerMoney(member.payoutEstimate)}
                           </td>
                           <td className="py-1 pr-2 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -1390,7 +1429,7 @@ export default function MiningLedgerTab({
                                 )
                                 window.setTimeout(() => setCopyToast(null), 2000)
                               }}
-                              className="font-mono text-amber-300 tabular-nums hover:text-amber-200 cursor-copy whitespace-nowrap"
+                              className={`${LEDGER_MONEY} hover:text-amber-200 cursor-copy whitespace-nowrap`}
                               title="Click to copy payout amount"
                             >
                               {formatLedgerMoney(member.payoutActual)}
@@ -1430,7 +1469,7 @@ export default function MiningLedgerTab({
                           />
                         )}
                       </td>
-                      <td className="py-1 pr-2 font-mono text-slate-300 tabular-nums whitespace-nowrap overflow-hidden text-ellipsis">
+                      <td className={`py-1 pr-2 ${LEDGER_COMPUTED} whitespace-nowrap overflow-hidden text-ellipsis`}>
                         {member.noShareSplit ? (
                           '—'
                         ) : member.outstandingActual > 0 ? (
@@ -1521,9 +1560,12 @@ export default function MiningLedgerTab({
 
           {/* Deductibles + Other profits */}
           <div className="grid sm:grid-cols-2 gap-4">
-            <section>
+            <section className={LEDGER_SECTION}>
               <div className={LEDGER_SECTION_HEAD}>
-                <h3 className="text-sm font-semibold text-white">Deductibles</h3>
+                <h3 className={LEDGER_SECTION_TITLE}>
+                  <span className={LEDGER_SECTION_ACCENT} aria-hidden />
+                  Deductibles
+                </h3>
                 <button
                   type="button"
                   onClick={() =>
@@ -1585,9 +1627,12 @@ export default function MiningLedgerTab({
                 </div>
               ))}
             </section>
-            <section>
+            <section className={LEDGER_SECTION}>
               <div className={LEDGER_SECTION_HEAD}>
-                <h3 className="text-sm font-semibold text-white">Other profits</h3>
+                <h3 className={LEDGER_SECTION_TITLE}>
+                  <span className={LEDGER_SECTION_ACCENT} aria-hidden />
+                  Other profits
+                </h3>
                 <button
                   type="button"
                   onClick={() =>
@@ -1652,27 +1697,30 @@ export default function MiningLedgerTab({
           </div>
 
           {/* Price list */}
-          <section>
+          <section className={LEDGER_SECTION}>
             <div className={LEDGER_SECTION_HEAD}>
-              <h3 className="text-sm font-semibold text-white">Resource prices (Purchased Q0)</h3>
+              <h3 className={LEDGER_SECTION_TITLE}>
+                <span className={LEDGER_SECTION_ACCENT} aria-hidden />
+                Resource prices (Purchased Q0)
+              </h3>
               <button
                 type="button"
                 onClick={seedPriceTable}
-                className="text-xs text-slate-400 hover:text-white"
+                className="text-xs text-slate-400 hover:text-orange-300 transition-colors"
               >
                 Reset from catalog
               </button>
             </div>
-            <p className="text-[10px] text-slate-500 mb-2">
+            <p className={LEDGER_INFO_TEXT}>
               Ore defaults: Purchased (Q0) DFP per 100 cSCU yield — profit = (yield cSCU ÷ 100) ×
               price. Gems are sold as-is: whole gem count × per-gem DFP (no refine/yield step).
               Override any row manually, or Reset from catalog if values look 100× too high.
             </p>
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-slate-500 text-left border-b border-slate-700/50">
-                  <th className="py-1">Resource</th>
-                  <th className="py-1">Price</th>
+                <tr className="text-left border-b border-slate-600/50">
+                  <th className={`py-1.5 ${LEDGER_TABLE_HEAD}`}>Resource</th>
+                  <th className={`py-1.5 ${LEDGER_TABLE_HEAD}`}>Price</th>
                 </tr>
               </thead>
               <tbody>
@@ -1685,8 +1733,10 @@ export default function MiningLedgerTab({
                       : defaultPrice
                   return (
                     <tr key={row.resourceKey} className="border-b border-slate-800/40">
-                      <td className="py-1 pr-2 text-slate-300">{row.resourceLabel}</td>
-                      <td className="py-1">
+                      <td className={`py-1.5 pr-2 font-medium text-slate-200 ${resourceLabelClassName(row.resourceKey)}`}>
+                        {row.resourceLabel}
+                      </td>
+                      <td className="py-1.5">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                           <input
                             type="number"
@@ -1706,16 +1756,16 @@ export default function MiningLedgerTab({
                                 return { ...prev, priceOverrides: next }
                               })
                             }}
-                            className="site-input w-32 px-2 py-0.5 text-xs font-mono"
+                            className="site-input w-32 px-2 py-0.5 text-xs font-mono text-slate-100"
                             min={0}
                             step={isGem ? 1 : 'any'}
                           />
-                          <span className="text-slate-600 tabular-nums text-[10px]">
+                          <span className="text-slate-500 tabular-nums text-[10px] font-medium">
                             {isGem ? 'aUEC / gem' : 'aUEC / 100 cSCU'}
                           </span>
                           {row.pricePer100 == null && (
-                            <span className="text-slate-600 tabular-nums text-[10px]">
-                              ({Math.round(effective).toLocaleString()})
+                            <span className="text-slate-500 tabular-nums text-[10px] italic">
+                              default ({Math.round(effective).toLocaleString()})
                             </span>
                           )}
                         </div>
