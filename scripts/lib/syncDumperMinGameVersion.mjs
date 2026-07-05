@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
-import dotenv from 'dotenv'
 import { resolveGameBuildVersion, toMinGameVersionSecret } from './gameBuildVersion.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -9,11 +8,6 @@ const PROJECT_ROOT = join(__dirname, '..', '..')
 const GO_MAIN = join(PROJECT_ROOT, 'scripts', 'bp-dumper-go', 'main.go')
 const PY_MIN_VERSION = join(PROJECT_ROOT, 'scripts', 'bp-dumper-py', '_min_game_version.py')
 const GAME_BUILD_FILE = join(PROJECT_ROOT, 'src', 'data', 'game-build-version.json')
-
-export function loadProjectEnv() {
-  dotenv.config({ path: join(PROJECT_ROOT, '.env') })
-  dotenv.config({ path: join(PROJECT_ROOT, '.env.local') })
-}
 
 function readCommittedGameBuildVersion() {
   try {
@@ -58,8 +52,6 @@ export function syncDumperMinGameVersion(version, options = {}) {
 }
 
 async function runCli() {
-  loadProjectEnv()
-
   const extractedData = join(PROJECT_ROOT, 'extracted-data')
   const version =
     process.argv.find((arg) => /^\d+\.\d+(\.x)?$/.test(arg)) ??

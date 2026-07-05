@@ -28,11 +28,10 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Building BP Dumper v$VERSION"
 
-      - name: Sync min game version into dumper sources
+      - name: Read min game version
         id: mingame
         run: |
-          node scripts/lib/syncDumperMinGameVersion.mjs
-          MIN_VER=$(node -p "require('./src/data/game-build-version.json').version.replace(/\\.x$/,'').match(/^\\d+\\.\\d+/)[0]")
+          MIN_VER=$(node -p "(() => { const v = require('./src/data/game-build-version.json').version; const m = String(v).match(/^(\\d+\\.\\d+)/); if (!m) throw new Error('Invalid game version: ' + v); return m[1]; })()")
           echo "min_version=$MIN_VER" >> "$GITHUB_OUTPUT"
           echo "Min game version: $MIN_VER"
 

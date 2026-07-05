@@ -27,7 +27,8 @@ export default {
     [
       '@semantic-release/exec',
       {
-        prepareCmd: 'node scripts/sync-dumper-version.mjs ${nextRelease.version}',
+        prepareCmd:
+          'node scripts/sync-dumper-version.mjs ${nextRelease.version} && node scripts/lib/syncDumperMinGameVersion.mjs',
       },
     ],
     [
