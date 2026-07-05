@@ -32,13 +32,6 @@ export default {
       },
     ],
     [
-      '@semantic-release/npm',
-      {
-        pkgRoot: 'scripts/bp-dumper',
-        npmPublish: false,
-      },
-    ],
-    [
       '@semantic-release/git',
       {
         assets: [
