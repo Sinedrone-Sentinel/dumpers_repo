@@ -5,6 +5,7 @@ import {
   getDefaultBandQuality,
   getResourceBands,
   PURCHASED_STOCK_QUALITY,
+  resolveLedgerQuality,
 } from './qualityBands'
 
 export const INERT_ELEMENT_NAME = 'Inert'
@@ -146,7 +147,13 @@ export function buildDefaultQualitySlots(parts: CompositionPart[]): Record<strin
     const key = compositionSlotKey(index, part)
     initial[key] = isInertElement(part.elementName)
       ? String(PURCHASED_STOCK_QUALITY)
-      : String(getDefaultBandQuality(part.elementName))
+      : String(
+          resolveLedgerQuality(
+            oreResourceKeyFromElementName(part.elementName),
+            part.elementName,
+            getDefaultBandQuality(part.elementName)
+          )
+        )
   })
   return initial
 }
@@ -161,17 +168,8 @@ export function formatRockQualityOptionLabel(quality: number): string {
   return `Q${quality}`
 }
 
-export function formatRockQualitySelectTitle(
-  elementName: string,
-  quality: number,
-  bands?: number[]
-): string {
+export function formatRockQualitySelectTitle(quality: number): string {
   if (quality === PURCHASED_STOCK_QUALITY) return 'Purchased (Q0)'
-  const resolvedBands = bands ?? getResourceBands(elementName)
-  if (resolvedBands) {
-    const idx = resolvedBands.indexOf(quality)
-    if (idx >= 0) return `Band ${idx + 1}: Q${quality}`
-  }
   return `Q${quality}`
 }
 

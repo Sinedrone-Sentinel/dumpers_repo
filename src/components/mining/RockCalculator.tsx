@@ -26,6 +26,7 @@ import {
   formatScannerBandTooltip,
   isInertElement,
   isPercentOverLimit,
+  oreResourceKeyFromElementName,
   parsePercentInput,
   parseQualitySlotValue,
   parseTotalScuInput,
@@ -33,8 +34,11 @@ import {
   withInertCompositionPart,
 } from '../../lib/rockCalculator'
 import {
+  getDefaultBandQuality,
+  getLedgerQualityOptions,
   getResourceBands,
   PURCHASED_STOCK_QUALITY,
+  resolveLedgerQuality,
 } from '../../lib/qualityBands'
 import {
   appendCalculatorRowsToLedger,
@@ -63,7 +67,7 @@ interface RockCalculatorProps {
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
 const MATERIAL_PERCENT_W = 'w-[5rem]'
-const MATERIAL_QUALITY_W = 'w-[4.5rem]'
+const MATERIAL_QUALITY_W = 'w-[3.5rem] min-w-[3.5rem]'
 const MATERIAL_SCU_W = 'w-[3.25rem]'
 const MATERIAL_DFP_W = 'w-[4.75rem]'
 const MATERIAL_VALUES_ROW = 'flex items-end justify-end gap-1.5 shrink-0'
@@ -186,7 +190,14 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
       const slotKey = compositionSlotKey(index, part)
       const isInert = isInertElement(part.elementName)
       const percent = isInert ? 0 : parsePercentInput(percentBySlot[slotKey] ?? '0')
-      const quality = parseQualitySlotValue(qualityBySlot[slotKey] ?? '')
+      const resourceKey = oreResourceKeyFromElementName(part.elementName)
+      const quality = isInert
+        ? PURCHASED_STOCK_QUALITY
+        : resolveLedgerQuality(
+            resourceKey,
+            part.elementName,
+            parseQualitySlotValue(qualityBySlot[slotKey] ?? '')
+          )
       return {
         slotKey,
         part,
@@ -544,7 +555,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                       <div className={`${MATERIAL_QUALITY_W} shrink-0`}>
                         <MaterialQualitySelect
                           elementName={row.part.elementName}
-                          value={qualityBySlot[row.slotKey] ?? String(row.quality)}
+                          value={String(row.quality)}
                           onChange={(next) =>
                             setQualityBySlot((prev) => ({ ...prev, [row.slotKey]: next }))
                           }
@@ -631,7 +642,7 @@ function MaterialQualitySelect({
         disabled
         className={`${MATERIAL_QUALITY_SELECT_CLASS} opacity-60 cursor-not-allowed`}
         aria-label="Inert quality (not applicable)"
-        title="Inert has no quality band"
+        title="Purchased (Q0)"
       >
         <option value={PURCHASED_STOCK_QUALITY}>
           {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
@@ -640,25 +651,27 @@ function MaterialQualitySelect({
     )
   }
 
-  const bands = getResourceBands(elementName)
-  const qualityNum = Number.parseInt(value, 10)
-  const title = formatRockQualitySelectTitle(elementName, qualityNum, bands)
+  const resourceKey = oreResourceKeyFromElementName(elementName)
+  const qualityOptions = getLedgerQualityOptions(resourceKey, elementName)
+  const parsed = Number.parseInt(value, 10)
+  const resolvedQuality = Number.isFinite(parsed)
+    ? resolveLedgerQuality(resourceKey, elementName, parsed)
+    : getDefaultBandQuality(elementName)
+  const resolvedValue = String(resolvedQuality)
+  const title = formatRockQualitySelectTitle(resolvedQuality)
 
-  if (bands) {
+  if (qualityOptions.length > 0 && getResourceBands(elementName)) {
     return (
       <select
-        value={value}
+        value={resolvedValue}
         onChange={(e) => onChange(e.target.value)}
         className={MATERIAL_QUALITY_SELECT_CLASS}
         aria-label={`${elementName} quality`}
         title={title}
       >
-        <option value={PURCHASED_STOCK_QUALITY}>
-          {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
-        </option>
-        {bands.map((bandValue) => (
-          <option key={bandValue} value={bandValue}>
-            {formatRockQualityOptionLabel(bandValue)}
+        {qualityOptions.map((qualityOption) => (
+          <option key={qualityOption} value={qualityOption}>
+            {formatRockQualityOptionLabel(qualityOption)}
           </option>
         ))}
       </select>
@@ -671,20 +684,20 @@ function MaterialQualitySelect({
       min={0}
       max={1000}
       step={1}
-      value={value}
+      value={resolvedValue}
       onChange={(e) => {
         const raw = e.target.value
         if (raw === '') {
           onChange('0')
           return
         }
-        const parsed = Number.parseInt(raw, 10)
-        if (!Number.isFinite(parsed)) return
-        onChange(String(Math.min(1000, Math.max(0, parsed))))
+        const parsedInput = Number.parseInt(raw, 10)
+        if (!Number.isFinite(parsedInput)) return
+        onChange(String(Math.min(1000, Math.max(0, parsedInput))))
       }}
       className={MATERIAL_QUALITY_INPUT_CLASS}
       aria-label={`${elementName} quality (0–1000)`}
-      title="No game bands for this resource — enter Q0–Q1000"
+      title="No game Q bands for this resource — enter Q0–Q1000"
     />
   )
 }

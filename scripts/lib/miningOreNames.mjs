@@ -8,6 +8,58 @@ export const ORE_COMPENDIUM_ALIASES = {
   Beradon: 'Beradom',
 }
 
+/**
+ * Ship-mining preset slug → canonical ore name (RS Tracker / composition display).
+ * Shared by parseMiningSpawns and hppMineablePresets.
+ */
+export const SHIP_ORE_SLUG_TO_NAME = {
+  quantainium: 'Quantainium',
+  stileron: 'Stileron',
+  sileron: 'Stileron',
+  savrilium: 'Savrilium',
+  ouratite: 'Ouratite',
+  riccite: 'Riccite',
+  lindinium: 'Lindinium',
+  beryl: 'Beryl',
+  taranite: 'Taranite',
+  borase: 'Borase',
+  gold: 'Gold',
+  bexalite: 'Bexalite',
+  laranite: 'Laranite',
+  aslarite: 'Aslarite',
+  titanium: 'Titanium',
+  tungsten: 'Tungsten',
+  agricium: 'Agricium',
+  torite: 'Torite',
+  hephaestanite: 'Hephaestanite',
+  tin: 'Tin',
+  quartz: 'Quartz',
+  corundum: 'Corundum',
+  copper: 'Copper',
+  silicon: 'Silicon',
+  iron: 'Iron',
+  aluminium: 'Aluminium',
+  aluminum: 'Aluminium',
+  ice: 'Ice',
+}
+
+/** Composition element display names that differ from MineableElement record stems. */
+export const COMPOSITION_ELEMENT_ALIASES = {
+  Sileron: 'Stileron',
+}
+
+/**
+ * Normalize a composition part element name from game MineableElement records.
+ */
+export function normalizeCompositionElementName(rawName) {
+  const trimmed = String(rawName || '').trim()
+  if (!trimmed || trimmed === 'Unknown') return trimmed || 'Unknown'
+  if (COMPOSITION_ELEMENT_ALIASES[trimmed]) return COMPOSITION_ELEMENT_ALIASES[trimmed]
+  const fromSlug = SHIP_ORE_SLUG_TO_NAME[trimmed.toLowerCase()]
+  if (fromSlug) return fromSlug
+  return normalizeCompendiumOreName(trimmed)
+}
+
 /** Spawn keys → preferred compendium / guide location label. */
 export const SPAWN_KEY_PREFERRED_GUIDE_NAME = {
   Pyro2: 'Monox',

@@ -2,36 +2,7 @@
  * Parse ore names from HPP harvestable preset basenames (ship, FPS, ground-vehicle).
  */
 
-const SHIP_SLUG_TO_ORE = {
-  quantainium: 'Quantainium',
-  stileron: 'Stileron',
-  sileron: 'Stileron',
-  savrilium: 'Savrilium',
-  ouratite: 'Ouratite',
-  riccite: 'Riccite',
-  lindinium: 'Lindinium',
-  beryl: 'Beryl',
-  taranite: 'Taranite',
-  borase: 'Borase',
-  gold: 'Gold',
-  bexalite: 'Bexalite',
-  laranite: 'Laranite',
-  aslarite: 'Aslarite',
-  titanium: 'Titanium',
-  tungsten: 'Tungsten',
-  agricium: 'Agricium',
-  torite: 'Torite',
-  hephaestanite: 'Hephaestanite',
-  tin: 'Tin',
-  quartz: 'Quartz',
-  corundum: 'Corundum',
-  copper: 'Copper',
-  silicon: 'Silicon',
-  iron: 'Iron',
-  aluminium: 'Aluminium',
-  aluminum: 'Aluminium',
-  ice: 'Ice',
-}
+import { SHIP_ORE_SLUG_TO_NAME } from './miningOreNames.mjs'
 
 const FPS_SLUG_TO_ORE = {
   aphorite: 'Aphorite',
@@ -76,5 +47,5 @@ export function oreFromHppMineablePreset(presetBasename) {
   m = base.match(/^mining_(?:asteroid)?(?:legendary|epic|rare|uncommon|common|surface)?_?(.*)$/i)
   if (!m) return null
   const slug = m[1].replace(/_rcd$/i, '').toLowerCase()
-  return SHIP_SLUG_TO_ORE[slug] ?? null
+  return SHIP_ORE_SLUG_TO_NAME[slug] ?? null
 }

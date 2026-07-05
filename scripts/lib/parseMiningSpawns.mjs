@@ -9,6 +9,10 @@ import {
   hppRecordToSpawnKey,
   resolveAliasForSpawnKey,
 } from './miningLocationAliases.mjs'
+import {
+  normalizeCompositionElementName,
+  SHIP_ORE_SLUG_TO_NAME,
+} from './miningOreNames.mjs'
 
 /** Ship-mining RS signatures (must match src/lib/miningConstants.ts ORE_SIGNATURES). */
 export const ORE_SIGNATURES = {
@@ -38,37 +42,6 @@ export const ORE_SIGNATURES = {
   Iron: 4270,
   Aluminium: 4285,
   Ice: 4300,
-}
-
-const SLUG_TO_ORE = {
-  quantainium: 'Quantainium',
-  stileron: 'Stileron',
-  sileron: 'Stileron',
-  savrilium: 'Savrilium',
-  ouratite: 'Ouratite',
-  riccite: 'Riccite',
-  lindinium: 'Lindinium',
-  beryl: 'Beryl',
-  taranite: 'Taranite',
-  borase: 'Borase',
-  gold: 'Gold',
-  bexalite: 'Bexalite',
-  laranite: 'Laranite',
-  aslarite: 'Aslarite',
-  titanium: 'Titanium',
-  tungsten: 'Tungsten',
-  agricium: 'Agricium',
-  torite: 'Torite',
-  hephaestanite: 'Hephaestanite',
-  tin: 'Tin',
-  quartz: 'Quartz',
-  corundum: 'Corundum',
-  copper: 'Copper',
-  silicon: 'Silicon',
-  iron: 'Iron',
-  aluminium: 'Aluminium',
-  aluminum: 'Aluminium',
-  ice: 'Ice',
 }
 
 function readJson(path) {
@@ -127,7 +100,7 @@ function oreFromPresetBasename(presetBasename) {
   const m = presetBasename.match(/^mining_(?:asteroid)?(?:legendary|epic|rare|uncommon|common|surface)?_?(.*)$/i)
   if (!m) return null
   const slug = m[1].replace(/_rcd$/i, '').toLowerCase()
-  return SLUG_TO_ORE[slug] ?? null
+  return SHIP_ORE_SLUG_TO_NAME[slug] ?? null
 }
 
 function buildClusterRows(clusterPreset, baseSignature) {
@@ -227,7 +200,8 @@ function parseCompositionParts(compositionJson, extractedDataRoot) {
     if (elemFile) {
       const elem = readJson(elemFile)
       const rn = elem?._RecordName_ || basename(elemFile, '.json')
-      elementName = rn.replace(/^MineableElement\./i, '').replace(/_ore$|_raw$/i, '')
+      const rawElementName = rn.replace(/^MineableElement\./i, '').replace(/_ore$|_raw$/i, '')
+      elementName = normalizeCompositionElementName(rawElementName)
     }
     return {
       elementName,
