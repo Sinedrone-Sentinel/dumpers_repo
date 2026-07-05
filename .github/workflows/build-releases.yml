@@ -4,22 +4,43 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_run:
+    workflows: ['Release BP Dumper']
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Release Tag (e.g. v1.1.2)'
+        description: 'Release Tag (e.g. v1.2.0)'
         required: true
-        default: 'v1.1.2'
+        default: 'v1.2.0'
 
 jobs:
   build:
     name: Build Go and Python Dumpers
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     permissions:
       contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+
+      - name: Resolve release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.tag_name }}"
+          elif [[ "${{ github.ref_name }}" == v* ]]; then
+            TAG="${{ github.ref_name }}"
+          else
+            VERSION=$(node -p "require('./scripts/bp-dumper/version.json').version")
+            TAG="v${VERSION}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $TAG"
 
       - name: Read dumper version
         id: version
@@ -63,7 +84,7 @@ jobs:
       - name: Upload binaries to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
+          tag_name: ${{ steps.tag.outputs.tag }}
           files: |
             scripts/bp-dumper-go/dist/bp-dumper-windows.exe
             scripts/bp-dumper-go/dist/bp-dumper-mac-intel
