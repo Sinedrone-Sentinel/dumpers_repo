@@ -22,28 +22,63 @@ async function touchApiKey(supabase: SupabaseAdmin, apiKey: string) {
     .eq('api_key', apiKey)
 }
 
+type DumperGameStatus =
+  | 'tracking'
+  | 'exit_menu'
+  | 'quit_game'
+  | 'crash_waiting'
+  | 'reconnected'
+
+async function clearActiveMissions(supabase: SupabaseAdmin, userId: string) {
+  const { error: deleteError } = await supabase
+    .from('dumper_active_missions')
+    .delete()
+    .eq('user_id', userId)
+  if (deleteError) throw deleteError
+}
+
+async function setGameStatus(
+  supabase: SupabaseAdmin,
+  userId: string,
+  status: DumperGameStatus,
+  clearMissions: boolean
+) {
+  const now = new Date().toISOString()
+  if (clearMissions) {
+    await clearActiveMissions(supabase, userId)
+  }
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      dumper_watch_active: true,
+      dumper_last_ping_at: now,
+      dumper_game_status: status,
+      dumper_game_status_at: now,
+    })
+    .eq('id', userId)
+  if (error) throw error
+}
+
 async function setWatchSession(
   supabase: SupabaseAdmin,
   userId: string,
   active: boolean
 ) {
   const now = new Date().toISOString()
-  const { error } = await supabase
-    .from('profiles')
-    .update({
-      dumper_watch_active: active,
-      dumper_last_ping_at: now,
-    })
-    .eq('id', userId)
+  const update: Record<string, unknown> = {
+    dumper_watch_active: active,
+    dumper_last_ping_at: now,
+  }
+  if (!active) {
+    update.dumper_game_status = null
+    update.dumper_game_status_at = null
+  }
 
+  const { error } = await supabase.from('profiles').update(update).eq('id', userId)
   if (error) throw error
 
   if (!active) {
-    const { error: deleteError } = await supabase
-      .from('dumper_active_missions')
-      .delete()
-      .eq('user_id', userId)
-    if (deleteError) throw deleteError
+    await clearActiveMissions(supabase, userId)
   }
 }
 
@@ -319,15 +354,34 @@ serve(async (req) => {
     const eventType = typeof payload.type === 'string' ? payload.type.trim() : ''
 
     if (eventType === 'session_start') {
-      const { error: clearError } = await supabase
-        .from('dumper_active_missions')
-        .delete()
-        .eq('user_id', userId)
-      if (clearError) throw clearError
-      await setWatchSession(supabase, userId, true)
+      await setGameStatus(supabase, userId, 'tracking', true)
       await touchApiKey(supabase, apiKey)
       await cleanupStaleDumperSessions(supabase)
       return jsonResponse({ success: true, event: 'session_start' })
+    }
+
+    if (eventType === 'game_exit_menu') {
+      await setGameStatus(supabase, userId, 'exit_menu', true)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'game_exit_menu' })
+    }
+
+    if (eventType === 'game_quit') {
+      await setGameStatus(supabase, userId, 'quit_game', true)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'game_quit' })
+    }
+
+    if (eventType === 'game_crash') {
+      await setGameStatus(supabase, userId, 'crash_waiting', false)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'game_crash' })
+    }
+
+    if (eventType === 'game_reconnected') {
+      await setGameStatus(supabase, userId, 'reconnected', false)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'game_reconnected' })
     }
 
     if (eventType === 'session_end') {
@@ -378,6 +432,8 @@ serve(async (req) => {
         .update({
           dumper_watch_active: true,
           dumper_last_ping_at: new Date().toISOString(),
+          dumper_game_status: 'tracking',
+          dumper_game_status_at: new Date().toISOString(),
         })
         .eq('id', userId)
       await touchApiKey(supabase, apiKey)

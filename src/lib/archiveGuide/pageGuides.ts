@@ -66,6 +66,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Left column: missions you accepted in-game right now',
       'Right column: pool blueprints from those missions you have not acquired yet',
       'Updates instantly when you accept missions, finish them, or receive blueprints',
+      'Status bar shows whether you are in the PU, quit to menu, closed the game, or recovering from a crash',
       'Missions with no remaining pool blueprints show in red',
       'When BP Dumper stops or disconnects, lists clear and a not-connected message appears',
     ],

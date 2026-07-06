@@ -62,6 +62,9 @@ var (
 	patternAccepted    = regexp.MustCompile(`Added notification "Contract Accepted:.*?MissionId: \[([^\]]+)\]`)
 	patternEndMission  = regexp.MustCompile(`<EndMission>.*MissionId\[([^\]]+)\].*CompletionType\[(\w+)\].*Reason\[([^\]]+)\]`)
 	patternBlueprint   = regexp.MustCompile(`Added notification "Received Blueprint: ([^:]+):`)
+	patternExitMenu    = regexp.MustCompile(`Requesting game mode Frontend_Main/SC_Frontend`)
+	patternCrash       = regexp.MustCompile(`Cloud Imperium Games public crash handler taking over`)
+	patternLoadingPU   = regexp.MustCompile(`Loading screen for pu`)
 )
 
 type MissionEntry struct {
@@ -91,6 +94,89 @@ type WatcherState struct {
 	guidMap         map[string]MissionEntry
 	active          map[string]ActiveMission
 	recentLifecycle []MissionLifecycleEvent
+}
+
+const crashRecoveryWindow = time.Hour
+
+type SessionTracker struct {
+	mu            sync.Mutex
+	crashAt       time.Time
+	pausedReason  string
+	pendingStatus string
+}
+
+func NewSessionTracker() *SessionTracker {
+	return &SessionTracker{}
+}
+
+func (st *SessionTracker) Reset() {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	st.crashAt = time.Time{}
+	st.pausedReason = ""
+	st.pendingStatus = ""
+}
+
+func (st *SessionTracker) OnLogRotation(state *WatcherState) {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	state.ClearAllActive()
+	st.crashAt = time.Time{}
+	st.pausedReason = "quit_game"
+	st.pendingStatus = "quit_game"
+}
+
+func (st *SessionTracker) ProcessLine(line string, ts time.Time, state *WatcherState) string {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+
+	if patternExitMenu.MatchString(line) {
+		state.ClearAllActive()
+		st.pausedReason = "exit_menu"
+		st.crashAt = time.Time{}
+		st.pendingStatus = "exit_menu"
+		return "game_exit_menu"
+	}
+	if patternCrash.MatchString(line) {
+		st.crashAt = ts
+		st.pendingStatus = "crash_waiting"
+		return "game_crash"
+	}
+	if patternLoadingPU.MatchString(line) {
+		if st.pausedReason != "" || !st.crashAt.IsZero() {
+			if !st.crashAt.IsZero() && ts.Sub(st.crashAt) > crashRecoveryWindow {
+				state.ClearAllActive()
+			}
+			st.pausedReason = ""
+			st.crashAt = time.Time{}
+			st.pendingStatus = "tracking"
+			return "game_reconnected"
+		}
+	}
+	return ""
+}
+
+func (st *SessionTracker) PendingStatusEvent() string {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	switch st.pendingStatus {
+	case "exit_menu":
+		return "game_exit_menu"
+	case "quit_game":
+		return "game_quit"
+	case "crash_waiting":
+		return "game_crash"
+	case "tracking", "":
+		return ""
+	default:
+		return ""
+	}
+}
+
+func (st *SessionTracker) ClearPendingStatus() {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	st.pendingStatus = ""
 }
 
 func NewWatcherState() *WatcherState {
@@ -177,6 +263,12 @@ func (s *WatcherState) RecordEnd(guid, completion string, ts time.Time) (ActiveM
 	return active, exists
 }
 
+func (s *WatcherState) ClearAllActive() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.active = make(map[string]ActiveMission)
+}
+
 func (s *WatcherState) CorrelateBlueprint(ts time.Time) (MissionLifecycleEvent, bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -213,7 +305,10 @@ func parseLogTimestamp(line string) time.Time {
 	return time.Time{}
 }
 
-func applyWatchLineToState(line string, state *WatcherState, ts time.Time) {
+func applyWatchLineToState(line string, state *WatcherState, session *SessionTracker, ts time.Time) {
+	if session != nil {
+		session.ProcessLine(line, ts, state)
+	}
 	if m := patternMarker.FindStringSubmatch(line); len(m) >= 4 {
 		defID := ""
 		if dm := patternMarkerDefID.FindStringSubmatch(line); len(dm) >= 2 {
@@ -228,7 +323,7 @@ func applyWatchLineToState(line string, state *WatcherState, ts time.Time) {
 }
 
 // reconcileActiveMissionsFromLog replays Game.log to find missions still active (accepted, not ended).
-func reconcileActiveMissionsFromLog(path string, state *WatcherState) error {
+func reconcileActiveMissionsFromLog(path string, state *WatcherState, session *SessionTracker) error {
 	file, err := os.Open(path)
 	if err != nil {
 		return err
@@ -240,6 +335,12 @@ func reconcileActiveMissionsFromLog(path string, state *WatcherState) error {
 	state.guidMap = make(map[string]MissionEntry)
 	state.recentLifecycle = nil
 	state.mu.Unlock()
+
+	if session == nil {
+		session = NewSessionTracker()
+	} else {
+		session.Reset()
+	}
 
 	scanner := bufio.NewScanner(file)
 	buf := make([]byte, 0, 1024*1024)
@@ -254,9 +355,31 @@ func reconcileActiveMissionsFromLog(path string, state *WatcherState) error {
 		if ts.IsZero() {
 			ts = time.Now()
 		}
-		applyWatchLineToState(line, state, ts)
+		applyWatchLineToState(line, state, session, ts)
 	}
 	return scanner.Err()
+}
+
+func postGameSessionEvent(url, apiKey, eventType string) {
+	if eventType == "" {
+		return
+	}
+	label := eventType
+	switch eventType {
+	case "game_exit_menu":
+		label = "Quit to menu"
+	case "game_quit":
+		label = "Game closed"
+	case "game_crash":
+		label = "Game crash detected"
+	case "game_reconnected":
+		label = "Back online in PU"
+	}
+	if err := postDumperEvent(url, apiKey, eventType, nil); err != nil {
+		fmt.Printf("  [Live] %s✗ Game status sync failed (%s):%s %v\n", color.Red, label, color.Reset, err)
+	} else {
+		fmt.Printf("  [Live] %sGame status:%s %s\n", color.Cyan, color.Reset, label)
+	}
 }
 
 func syncActiveMissionsToServer(url, apiKey string, state *WatcherState) {
@@ -1586,6 +1709,7 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 
 	stopPing := make(chan struct{})
 	defer close(stopPing)
+	sessionTracker := NewSessionTracker()
 
 	if !dryRun && apiKey != "" {
 		if err := postDumperEvent(url, apiKey, "session_start", nil); err != nil {
@@ -1639,26 +1763,24 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 
 		if rotated {
 			if fh != nil {
-				fmt.Printf("%sLog rotation detected — resetting session state%s\n", color.Yellow, color.Reset)
+				fmt.Printf("%sLog rotation detected — game closed, resetting mission state%s\n", color.Yellow, color.Reset)
+				sessionTracker.OnLogRotation(state)
 				if !dryRun && apiKey != "" {
-					_ = postDumperEvent(url, apiKey, "session_end", nil)
+					postGameSessionEvent(url, apiKey, "game_quit")
 				}
 				fh.Close()
 				state.mu.Lock()
-				state.active = make(map[string]ActiveMission)
 				state.guidMap = make(map[string]MissionEntry)
 				state.recentLifecycle = nil
 				state.mu.Unlock()
-				if !dryRun && apiKey != "" {
-					if err := postDumperEvent(url, apiKey, "session_start", nil); err != nil {
-						fmt.Printf("%s⚠ Failed to notify session restart:%s %v\n", color.Yellow, color.Reset, err)
-					}
-				}
 			}
-			if err := reconcileActiveMissionsFromLog(path, state); err != nil {
+			if err := reconcileActiveMissionsFromLog(path, state, sessionTracker); err != nil {
 				fmt.Printf("%s⚠ Could not reconcile active missions:%s %v\n", color.Yellow, color.Reset, err)
 			} else if !dryRun && apiKey != "" {
 				syncActiveMissionsToServer(url, apiKey, state)
+				if sessionTracker.PendingStatusEvent() != "" {
+					postGameSessionEvent(url, apiKey, sessionTracker.PendingStatusEvent())
+				}
 			}
 			fh, err = os.Open(path)
 			if err != nil {
@@ -1700,6 +1822,12 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 					ts = time.Now()
 				}
 				tsStr := ts.Format("2006-01-02 15:04:05")
+
+				if gameEvent := sessionTracker.ProcessLine(line, ts, state); gameEvent != "" {
+					if !dryRun && apiKey != "" {
+						postGameSessionEvent(url, apiKey, gameEvent)
+					}
+				}
 
 				if m := patternMarker.FindStringSubmatch(line); len(m) >= 4 {
 					defID := ""

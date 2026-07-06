@@ -181,3 +181,84 @@ export function isDumperWatchConnected(
   if (Number.isNaN(pingMs)) return watchActive
   return Date.now() - pingMs <= 95_000
 }
+
+export type DumperGameStatus =
+  | 'tracking'
+  | 'exit_menu'
+  | 'quit_game'
+  | 'crash_waiting'
+  | 'reconnected'
+
+export interface LiveTrackerStatusBar {
+  status: DumperGameStatus
+  message: string
+  dotClass: string
+  barClass: string
+  textClass: string
+  subMessage?: string
+}
+
+const STATUS_BAR: Record<DumperGameStatus, Omit<LiveTrackerStatusBar, 'status'>> = {
+  tracking: {
+    message: 'BP Dumper connected — live updates enabled',
+    dotClass: 'bg-emerald-400',
+    barClass: 'border-emerald-500/30 bg-emerald-950/30',
+    textClass: 'text-emerald-100',
+  },
+  exit_menu: {
+    message: 'Quit to menu — active missions cleared',
+    subMessage: 'Mission lists resume when you load back into the PU.',
+    dotClass: 'bg-amber-400',
+    barClass: 'border-amber-500/30 bg-amber-950/30',
+    textClass: 'text-amber-100',
+  },
+  quit_game: {
+    message: 'Star Citizen closed — active missions cleared',
+    subMessage: 'Launch the game and enter the PU to resume live tracking.',
+    dotClass: 'bg-amber-400',
+    barClass: 'border-amber-500/30 bg-amber-950/30',
+    textClass: 'text-amber-100',
+  },
+  crash_waiting: {
+    message: 'Game crash detected — waiting for you to reconnect',
+    subMessage:
+      'BP Dumper is still watching your log. Missions may restore if you rejoin within about an hour.',
+    dotClass: 'bg-orange-400 animate-pulse',
+    barClass: 'border-orange-500/30 bg-orange-950/30',
+    textClass: 'text-orange-100',
+  },
+  reconnected: {
+    message: 'Back online — live mission tracking resumed',
+    dotClass: 'bg-emerald-400',
+    barClass: 'border-emerald-500/30 bg-emerald-950/30',
+    textClass: 'text-emerald-100',
+  },
+}
+
+/** Brief flash after reconnect before settling on the default tracking message. */
+export function resolveDisplayGameStatus(
+  status: string | null | undefined,
+  statusAt: string | null | undefined,
+  now = Date.now()
+): DumperGameStatus {
+  const raw = (status as DumperGameStatus | null) ?? 'tracking'
+  if (raw === 'reconnected' && statusAt) {
+    const at = Date.parse(statusAt)
+    if (!Number.isNaN(at) && now - at > 10_000) return 'tracking'
+  }
+  if (raw in STATUS_BAR) return raw
+  return 'tracking'
+}
+
+export function getLiveTrackerStatusBar(
+  status: string | null | undefined,
+  statusAt: string | null | undefined,
+  now = Date.now()
+): LiveTrackerStatusBar {
+  const resolved = resolveDisplayGameStatus(status, statusAt, now)
+  return { status: resolved, ...STATUS_BAR[resolved] }
+}
+
+export function shouldHideLiveMissionLists(status: DumperGameStatus): boolean {
+  return status === 'exit_menu' || status === 'quit_game'
+}

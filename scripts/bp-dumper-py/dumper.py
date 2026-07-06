@@ -388,6 +388,11 @@ PATTERN_END_MISSION = re.compile(
     r"<EndMission>.*MissionId\[([^\]]+)\].*CompletionType\[(\w+)\].*Reason\[([^\]]+)\]"
 )
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
+PATTERN_EXIT_MENU = re.compile(r"Requesting game mode Frontend_Main/SC_Frontend")
+PATTERN_CRASH = re.compile(r"Cloud Imperium Games public crash handler taking over")
+PATTERN_LOADING_PU = re.compile(r"Loading screen for pu")
+
+CRASH_RECOVERY_WINDOW_SEC = 3600.0
 
 BLUEPRINT_CORRELATION_WINDOW_SEC = 5.0
 
@@ -471,6 +476,9 @@ class WatcherState:
             )
         return active
 
+    def clear_all_active(self) -> None:
+        self.active.clear()
+
     def correlate_blueprint(self, ts: float) -> Optional[MissionLifecycleEvent]:
         best = None
         best_delta = BLUEPRINT_CORRELATION_WINDOW_SEC + 1.0
@@ -480,6 +488,52 @@ class WatcherState:
                 best = e
                 best_delta = delta
         return best
+
+class SessionTracker:
+    def __init__(self) -> None:
+        self.crash_at: float | None = None
+        self.paused_reason = ""
+        self.pending_status = ""
+
+    def reset(self) -> None:
+        self.crash_at = None
+        self.paused_reason = ""
+        self.pending_status = ""
+
+    def on_log_rotation(self, state: "WatcherState") -> None:
+        state.clear_all_active()
+        self.crash_at = None
+        self.paused_reason = "quit_game"
+        self.pending_status = "quit_game"
+
+    def process_line(self, line: str, ts: float, state: "WatcherState") -> str:
+        if PATTERN_EXIT_MENU.search(line):
+            state.clear_all_active()
+            self.paused_reason = "exit_menu"
+            self.crash_at = None
+            self.pending_status = "exit_menu"
+            return "game_exit_menu"
+        if PATTERN_CRASH.search(line):
+            self.crash_at = ts
+            self.pending_status = "crash_waiting"
+            return "game_crash"
+        if PATTERN_LOADING_PU.search(line):
+            if self.paused_reason or self.crash_at is not None:
+                if self.crash_at is not None and ts - self.crash_at > CRASH_RECOVERY_WINDOW_SEC:
+                    state.clear_all_active()
+                self.paused_reason = ""
+                self.crash_at = None
+                self.pending_status = "tracking"
+                return "game_reconnected"
+        return ""
+
+    def pending_status_event(self) -> str:
+        mapping = {
+            "exit_menu": "game_exit_menu",
+            "quit_game": "game_quit",
+            "crash_waiting": "game_crash",
+        }
+        return mapping.get(self.pending_status, "")
 
 def parse_log_timestamp(line: str) -> Optional[float]:
     m = PATTERN_TIMESTAMP.match(line)
@@ -599,7 +653,9 @@ def save_cache_file(cache_path: Path, cache_set: set):
     except Exception:
         pass
 
-def apply_watch_line_to_state(line: str, state: WatcherState, ts: float) -> None:
+def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTracker | None, ts: float) -> None:
+    if session is not None:
+        session.process_line(line, ts, state)
     if m := PATTERN_MARKER.search(line):
         def_id_match = PATTERN_MARKER_DEF_ID.search(line)
         def_id = def_id_match.group(1) if def_id_match else None
@@ -610,11 +666,16 @@ def apply_watch_line_to_state(line: str, state: WatcherState, ts: float) -> None
         state.record_end(m.group(1), m.group(2), ts)
 
 
-def reconcile_active_missions_from_log(path: Path, state: WatcherState) -> None:
+def reconcile_active_missions_from_log(path: Path, state: WatcherState, session: SessionTracker | None = None) -> None:
     """Replay Game.log to find missions still active (accepted, not ended)."""
     state.active.clear()
     state.guid_map.clear()
     state.recent_lifecycle.clear()
+
+    if session is None:
+        session = SessionTracker()
+    else:
+        session.reset()
 
     with open(path, "r", encoding="utf-8", errors="replace") as log_file:
         for line in log_file:
@@ -622,7 +683,24 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState) -> None:
             if not line:
                 continue
             ts = parse_log_timestamp(line) or time.time()
-            apply_watch_line_to_state(line, state, ts)
+            apply_watch_line_to_state(line, state, session, ts)
+
+
+def post_game_session_event(session, url: str, event_type: str) -> None:
+    if not event_type:
+        return
+    labels = {
+        "game_exit_menu": "Quit to menu",
+        "game_quit": "Game closed",
+        "game_crash": "Game crash detected",
+        "game_reconnected": "Back online in PU",
+    }
+    label = labels.get(event_type, event_type)
+    try:
+        post_dumper_event(session, url, event_type)
+        print(f"  [Live] {Colors.CYAN}Game status:{Colors.RESET} {label}")
+    except Exception as e:
+        print(f"  [Live] {Colors.RED}✗ Game status sync failed ({label}):{Colors.RESET} {e}")
 
 
 def sync_active_missions_to_server(session, url: str, state: WatcherState) -> None:
@@ -641,6 +719,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
     print(f"{Colors.CYAN}Watching {path.name} for live events... (Press Ctrl+C to stop){Colors.RESET}")
     ping_stop = threading.Event()
     ping_thread = None
+    session_tracker = SessionTracker()
 
     if session and not args.dry_run:
         try:
@@ -686,26 +765,24 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
 
             if rotated:
                 if fh:
-                    print(f"{Colors.YELLOW}Log rotation detected — resetting session state{Colors.RESET}")
+                    print(f"{Colors.YELLOW}Log rotation detected — game closed, resetting mission state{Colors.RESET}")
+                    session_tracker.on_log_rotation(state)
                     if session and not args.dry_run:
                         try:
-                            post_dumper_event(session, args.url, "session_end")
+                            post_game_session_event(session, args.url, "game_quit")
                         except Exception:
                             pass
                     fh.close()
-                    state.active.clear()
                     state.guid_map.clear()
                     state.recent_lifecycle.clear()
-                    if session and not args.dry_run:
-                        try:
-                            post_dumper_event(session, args.url, "session_start")
-                        except Exception as e:
-                            print(f"{Colors.YELLOW}⚠ Failed to notify session restart:{Colors.RESET} {e}")
                 try:
-                    reconcile_active_missions_from_log(path, state)
+                    reconcile_active_missions_from_log(path, state, session_tracker)
                     if session and not args.dry_run:
                         try:
                             sync_active_missions_to_server(session, args.url, state)
+                            pending = session_tracker.pending_status_event()
+                            if pending:
+                                post_game_session_event(session, args.url, pending)
                         except Exception as e:
                             print(f"{Colors.YELLOW}⚠ Could not sync active missions:{Colors.RESET} {e}")
                 except OSError as e:
@@ -744,6 +821,13 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         line = raw.decode("utf-8", errors="replace")
                         ts = parse_log_timestamp(line) or time.time()
                         ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
+
+                        game_event = session_tracker.process_line(line, ts, state)
+                        if game_event and session and not args.dry_run:
+                            try:
+                                post_game_session_event(session, args.url, game_event)
+                            except Exception as e:
+                                print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
 
                         if m := PATTERN_MARKER.search(line):
                             def_id_match = PATTERN_MARKER_DEF_ID.search(line)

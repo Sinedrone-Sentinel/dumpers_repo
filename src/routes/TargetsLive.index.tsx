@@ -7,7 +7,8 @@ import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
 
 export default function TargetsLiveRoute() {
   const { openBpDumperModal } = useBpDumperModal()
-  const { loading, error, isConnected, missions, remaining } = useLiveMissionTracker()
+  const { loading, error, isConnected, statusBar, hideMissionLists, missions, remaining } =
+    useLiveMissionTracker()
 
   return (
     <FeaturePageLayout
@@ -32,90 +33,112 @@ export default function TargetsLiveRoute() {
         <p className="text-sm text-slate-400">Loading live tracker…</p>
       ) : isConnected ? (
         <>
-          <div className="mb-6 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-950/30 px-4 py-3">
-            <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400" aria-hidden />
-            <p className="text-sm text-emerald-100">
-              BP Dumper connected — live updates enabled
-            </p>
+          <div
+            className={`mb-6 flex items-start gap-3 rounded-lg border px-4 py-3 ${statusBar.barClass}`}
+            role="status"
+            aria-live="polite"
+          >
+            <span
+              className={`mt-1.5 inline-block h-2.5 w-2.5 shrink-0 rounded-full ${statusBar.dotClass}`}
+              aria-hidden
+            />
+            <div className="min-w-0 flex-1">
+              <p className={`text-sm font-medium leading-snug ${statusBar.textClass}`}>
+                {statusBar.message}
+              </p>
+              {statusBar.subMessage && (
+                <p className={`mt-1 text-xs leading-relaxed opacity-90 ${statusBar.textClass}`}>
+                  {statusBar.subMessage}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[320px]">
-            <section className="rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col">
-              <header className="px-4 py-3 border-b border-slate-700/80 bg-slate-800/40">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  Active missions ({missions.length})
-                </h2>
-              </header>
-              <ul className="flex-1 divide-y divide-slate-800/80 overflow-y-auto max-h-[480px]">
-                {missions.length === 0 ? (
-                  <li className="px-4 py-8 text-sm text-slate-500 text-center">
-                    Accept a blueprint mission in-game to see it here.
-                  </li>
-                ) : (
-                  missions.map((mission) => (
-                    <li
-                      key={mission.missionGuid}
-                      className={`px-4 py-3 text-sm ${
-                        mission.hasZeroRemaining ? 'text-red-400' : 'text-slate-200'
-                      }`}
-                    >
-                      <p
-                        className={`font-medium leading-snug ${
-                          mission.isLawful ? 'text-green-300' : 'text-red-400'
-                        } ${mission.hasZeroRemaining ? '!text-red-400' : ''}`}
+          {hideMissionLists ? (
+            <div className="rounded-xl border border-slate-700/80 bg-slate-900/40 px-6 py-12 text-center">
+              <p className="text-sm text-slate-500">
+                Mission and blueprint lists are hidden until you are back in the Persistent Universe.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[320px]">
+              <section className="rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col">
+                <header className="px-4 py-3 border-b border-slate-700/80 bg-slate-800/40">
+                  <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Active missions ({missions.length})
+                  </h2>
+                </header>
+                <ul className="flex-1 divide-y divide-slate-800/80 overflow-y-auto max-h-[480px]">
+                  {missions.length === 0 ? (
+                    <li className="px-4 py-8 text-sm text-slate-500 text-center">
+                      Accept a blueprint mission in-game to see it here.
+                    </li>
+                  ) : (
+                    missions.map((mission) => (
+                      <li
+                        key={mission.missionGuid}
+                        className={`px-4 py-3 text-sm ${
+                          mission.hasZeroRemaining ? 'text-red-400' : 'text-slate-200'
+                        }`}
                       >
-                        {mission.displayLabel}
-                      </p>
-                      {(mission.category || mission.regions.length > 0 || mission.rewardText) && (
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
-                          {mission.category && (
-                            <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40">
-                              {mission.category}
-                            </span>
-                          )}
-                          <MissionLocationTags
-                            regions={mission.regions}
-                            subRegion={mission.subRegion}
-                            system={mission.system}
-                          />
-                        </div>
-                      )}
-                      <p className="text-xs mt-1.5 text-slate-500">
-                        {mission.remainingCount} blueprint{mission.remainingCount === 1 ? '' : 's'}{' '}
-                        remaining in pool
-                      </p>
-                    </li>
-                  ))
-                )}
-              </ul>
-            </section>
+                        <p
+                          className={`font-medium leading-snug ${
+                            mission.isLawful ? 'text-green-300' : 'text-red-400'
+                          } ${mission.hasZeroRemaining ? '!text-red-400' : ''}`}
+                        >
+                          {mission.displayLabel}
+                        </p>
+                        {(mission.category || mission.regions.length > 0 || mission.rewardText) && (
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
+                            {mission.category && (
+                              <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40">
+                                {mission.category}
+                              </span>
+                            )}
+                            <MissionLocationTags
+                              regions={mission.regions}
+                              subRegion={mission.subRegion}
+                              system={mission.system}
+                            />
+                          </div>
+                        )}
+                        <p className="text-xs mt-1.5 text-slate-500">
+                          {mission.remainingCount} blueprint{mission.remainingCount === 1 ? '' : 's'}{' '}
+                          remaining in pool
+                        </p>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </section>
 
-            <section className="rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col">
-              <header className="px-4 py-3 border-b border-slate-700/80 bg-slate-800/40">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  Remaining to acquire ({remaining.length})
-                </h2>
-              </header>
-              <ul className="flex-1 divide-y divide-slate-800/80 overflow-y-auto max-h-[480px]">
-                {remaining.length === 0 ? (
-                  <li className="px-4 py-8 text-sm text-slate-500 text-center">
-                    {missions.length === 0
-                      ? 'Pool blueprints from active missions appear here.'
-                      : 'All pool blueprints from active missions are already acquired.'}
-                  </li>
-                ) : (
-                  remaining.map((bp) => (
-                    <li key={bp.internalName} className="px-4 py-3 text-sm text-slate-200">
-                      <p className="font-medium">{bp.blueprintName}</p>
-                      {bp.categoryName && (
-                        <p className="text-xs mt-0.5 text-slate-500">{bp.categoryName}</p>
-                      )}
+              <section className="rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col">
+                <header className="px-4 py-3 border-b border-slate-700/80 bg-slate-800/40">
+                  <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Remaining to acquire ({remaining.length})
+                  </h2>
+                </header>
+                <ul className="flex-1 divide-y divide-slate-800/80 overflow-y-auto max-h-[480px]">
+                  {remaining.length === 0 ? (
+                    <li className="px-4 py-8 text-sm text-slate-500 text-center">
+                      {missions.length === 0
+                        ? 'Pool blueprints from active missions appear here.'
+                        : 'All pool blueprints from active missions are already acquired.'}
                     </li>
-                  ))
-                )}
-              </ul>
-            </section>
-          </div>
+                  ) : (
+                    remaining.map((bp) => (
+                      <li key={bp.internalName} className="px-4 py-3 text-sm text-slate-200">
+                        <p className="font-medium">{bp.blueprintName}</p>
+                        {bp.categoryName && (
+                          <p className="text-xs mt-0.5 text-slate-500">{bp.categoryName}</p>
+                        )}
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </section>
+            </div>
+          )}
         </>
       ) : (
         <div className="rounded-xl border border-slate-700 bg-slate-900/60 px-6 py-10 text-center max-w-lg mx-auto">

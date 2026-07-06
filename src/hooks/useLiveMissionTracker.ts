@@ -3,7 +3,9 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import {
   computeLiveTrackerView,
+  getLiveTrackerStatusBar,
   isDumperWatchConnected,
+  shouldHideLiveMissionLists,
   type DumperActiveMission,
 } from '../lib/liveMissionTracker'
 
@@ -12,6 +14,8 @@ export function useLiveMissionTracker() {
   const [activeMissions, setActiveMissions] = useState<DumperActiveMission[]>([])
   const [watchActive, setWatchActive] = useState(false)
   const [lastPingAt, setLastPingAt] = useState<string | null>(null)
+  const [gameStatus, setGameStatus] = useState<string | null>(null)
+  const [gameStatusAt, setGameStatusAt] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [connectionTick, setConnectionTick] = useState(0)
@@ -27,11 +31,18 @@ export function useLiveMissionTracker() {
     [watchActive, lastPingAt, connectionTick]
   )
 
+  const statusBar = useMemo(
+    () => getLiveTrackerStatusBar(gameStatus, gameStatusAt, Date.now()),
+    [gameStatus, gameStatusAt, connectionTick]
+  )
+
   const loadInitial = useCallback(async () => {
     if (!user?.id) {
       setActiveMissions([])
       setWatchActive(false)
       setLastPingAt(null)
+      setGameStatus(null)
+      setGameStatusAt(null)
       setLoading(false)
       return
     }
@@ -43,7 +54,7 @@ export function useLiveMissionTracker() {
       const [profileRes, missionsRes] = await Promise.all([
         supabase
           .from('profiles')
-          .select('dumper_watch_active, dumper_last_ping_at')
+          .select('dumper_watch_active, dumper_last_ping_at, dumper_game_status, dumper_game_status_at')
           .eq('id', user.id)
           .maybeSingle(),
         supabase
@@ -58,6 +69,8 @@ export function useLiveMissionTracker() {
 
       setWatchActive(profileRes.data?.dumper_watch_active ?? false)
       setLastPingAt(profileRes.data?.dumper_last_ping_at ?? null)
+      setGameStatus(profileRes.data?.dumper_game_status ?? null)
+      setGameStatusAt(profileRes.data?.dumper_game_status_at ?? null)
       setActiveMissions((missionsRes.data ?? []) as DumperActiveMission[])
     } catch (err) {
       console.error('Live tracker load failed:', err)
@@ -65,6 +78,8 @@ export function useLiveMissionTracker() {
       setActiveMissions([])
       setWatchActive(false)
       setLastPingAt(null)
+      setGameStatus(null)
+      setGameStatusAt(null)
     } finally {
       setLoading(false)
     }
@@ -123,15 +138,25 @@ export function useLiveMissionTracker() {
           const row = payload.new as {
             dumper_watch_active?: boolean
             dumper_last_ping_at?: string | null
+            dumper_game_status?: string | null
+            dumper_game_status_at?: string | null
           }
           if (typeof row.dumper_watch_active === 'boolean') {
             setWatchActive(row.dumper_watch_active)
             if (!row.dumper_watch_active) {
               setActiveMissions([])
+              setGameStatus(null)
+              setGameStatusAt(null)
             }
           }
           if (row.dumper_last_ping_at !== undefined) {
             setLastPingAt(row.dumper_last_ping_at ?? null)
+          }
+          if (row.dumper_game_status !== undefined) {
+            setGameStatus(row.dumper_game_status ?? null)
+          }
+          if (row.dumper_game_status_at !== undefined) {
+            setGameStatusAt(row.dumper_game_status_at ?? null)
           }
         }
       )
@@ -154,17 +179,21 @@ export function useLiveMissionTracker() {
     }
   }, [user?.id, refreshAcquiredBlueprints])
 
+  const hideMissionLists = shouldHideLiveMissionLists(statusBar.status)
+
   const view = useMemo(() => {
-    if (!isConnected) {
+    if (!isConnected || hideMissionLists) {
       return { missions: [], remaining: [] }
     }
     return computeLiveTrackerView(activeMissions, acquiredBlueprints)
-  }, [activeMissions, acquiredBlueprints, isConnected])
+  }, [activeMissions, acquiredBlueprints, isConnected, hideMissionLists])
 
   return {
     loading,
     error,
     isConnected,
+    statusBar,
+    hideMissionLists,
     missions: view.missions,
     remaining: view.remaining,
     refresh: loadInitial,
