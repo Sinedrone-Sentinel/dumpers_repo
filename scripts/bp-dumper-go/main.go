@@ -431,7 +431,7 @@ func saveCacheFile(path string, cache map[string]bool) {
 	}
 }
 
-var DumperVersion = "1.4.0"
+var DumperVersion = "1.4.1"
 var MinGameVersion = "4.8"
 
 const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
