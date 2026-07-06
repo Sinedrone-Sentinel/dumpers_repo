@@ -13,6 +13,62 @@ const corsHeaders = {
 
 const AMBIGUOUS_DEDUPE_HOURS = 24
 
+type SupabaseAdmin = ReturnType<typeof createClient>
+
+async function touchApiKey(supabase: SupabaseAdmin, apiKey: string) {
+  await supabase
+    .from('user_api_keys')
+    .update({ last_used_at: new Date().toISOString() })
+    .eq('api_key', apiKey)
+}
+
+async function setWatchSession(
+  supabase: SupabaseAdmin,
+  userId: string,
+  active: boolean
+) {
+  const now = new Date().toISOString()
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      dumper_watch_active: active,
+      dumper_last_ping_at: now,
+    })
+    .eq('id', userId)
+
+  if (error) throw error
+
+  if (!active) {
+    const { error: deleteError } = await supabase
+      .from('dumper_active_missions')
+      .delete()
+      .eq('user_id', userId)
+    if (deleteError) throw deleteError
+  }
+}
+
+async function touchWatchPing(supabase: SupabaseAdmin, userId: string) {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ dumper_last_ping_at: new Date().toISOString() })
+    .eq('id', userId)
+  if (error) throw error
+}
+
+async function cleanupStaleDumperSessions(supabase: SupabaseAdmin) {
+  const { error } = await supabase.rpc('cleanup_stale_dumper_sessions')
+  if (error) {
+    console.error('Stale dumper session cleanup failed:', error.message)
+  }
+}
+
+function jsonResponse(body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  })
+}
+
 async function hasRecentAmbiguousNotification(
   supabase: ReturnType<typeof createClient>,
   userId: string,
@@ -258,6 +314,87 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       )
+    }
+
+    const eventType = typeof payload.type === 'string' ? payload.type.trim() : ''
+
+    if (eventType === 'session_start') {
+      await setWatchSession(supabase, userId, true)
+      await touchApiKey(supabase, apiKey)
+      await cleanupStaleDumperSessions(supabase)
+      return jsonResponse({ success: true, event: 'session_start' })
+    }
+
+    if (eventType === 'session_end') {
+      await setWatchSession(supabase, userId, false)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'session_end' })
+    }
+
+    if (eventType === 'session_ping') {
+      await touchWatchPing(supabase, userId)
+      await supabase
+        .from('profiles')
+        .update({ dumper_watch_active: true })
+        .eq('id', userId)
+        .eq('dumper_watch_active', false)
+      await touchApiKey(supabase, apiKey)
+      await cleanupStaleDumperSessions(supabase)
+      return jsonResponse({ success: true, event: 'session_ping' })
+    }
+
+    if (eventType === 'mission_started') {
+      const missionGuid = payload.missionGuid ? String(payload.missionGuid).trim() : ''
+      if (!missionGuid || missionGuid.length > 128) {
+        return jsonResponse({ error: 'Invalid missionGuid' }, 400)
+      }
+
+      const contractDefinitionId = payload.contractDefinitionId
+        ? String(payload.contractDefinitionId).trim()
+        : null
+      const debugName = payload.debugName
+        ? String(payload.debugName).trim().slice(0, 500)
+        : 'Unknown'
+
+      const { error: upsertError } = await supabase.from('dumper_active_missions').upsert(
+        {
+          user_id: userId,
+          mission_guid: missionGuid,
+          contract_definition_id: contractDefinitionId,
+          debug_name: debugName || 'Unknown',
+          started_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id,mission_guid' }
+      )
+      if (upsertError) throw upsertError
+
+      await supabase
+        .from('profiles')
+        .update({
+          dumper_watch_active: true,
+          dumper_last_ping_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'mission_started', missionGuid })
+    }
+
+    if (eventType === 'mission_ended') {
+      const missionGuid = payload.missionGuid ? String(payload.missionGuid).trim() : ''
+      if (!missionGuid || missionGuid.length > 128) {
+        return jsonResponse({ error: 'Invalid missionGuid' }, 400)
+      }
+
+      const { error: deleteError } = await supabase
+        .from('dumper_active_missions')
+        .delete()
+        .eq('user_id', userId)
+        .eq('mission_guid', missionGuid)
+      if (deleteError) throw deleteError
+
+      await touchWatchPing(supabase, userId)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'mission_ended', missionGuid })
     }
 
     return new Response(JSON.stringify({ message: 'Event type not handled' }), {

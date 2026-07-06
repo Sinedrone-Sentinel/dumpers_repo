@@ -80,6 +80,22 @@ You can create or modify a `.env` file in the dumper directory to configure the 
 
 ---
 
+## Watch mode webhook events
+
+While tailing `Game.log`, BP Dumper POSTs these events to the log-watcher webhook (in addition to `blueprint_received`):
+
+| Event | When |
+| :--- | :--- |
+| `session_start` | Watch mode begins |
+| `session_end` | Watch mode exits (Ctrl+C, process exit, log rotation) |
+| `session_ping` | Every ~90s while watching (connection heartbeat) |
+| `mission_started` | Contract accepted in-game |
+| `mission_ended` | Mission complete, abandon, or fail |
+
+The website **Live Mission Tracker** (`/targets/live`) subscribes to these updates via Supabase Realtime.
+
+---
+
 ## 📊 Output Indicators
 
 * **`★ Would Import`**: (Dry run only) Blueprint parsed and matched canonical catalog.

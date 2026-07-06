@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -15,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -489,6 +491,49 @@ func postBlueprintEvent(url, apiKey, blueprintInput, contractDefID string) (http
 		}
 	}
 	return res.StatusCode, isDupe, internalName, nil
+}
+
+func postDumperEvent(url, apiKey, eventType string, fields map[string]string) error {
+	payload := map[string]string{"type": eventType}
+	for k, v := range fields {
+		if v != "" {
+			payload[k] = v
+		}
+	}
+	body, _ := json.Marshal(payload)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{Timeout: 15 * time.Second}
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode >= 400 {
+		return fmt.Errorf("HTTP %d", res.StatusCode)
+	}
+	return nil
+}
+
+func startSessionPingLoop(url, apiKey string, stop <-chan struct{}) {
+	ticker := time.NewTicker(90 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-stop:
+			return
+		case <-ticker.C:
+			if err := postDumperEvent(url, apiKey, "session_ping", nil); err != nil {
+				fmt.Printf("  [Live] %s⚠ Session ping failed:%s %v\n", color.Yellow, color.Reset, err)
+			}
+		}
+	}
 }
 
 func scanDirectoryConcurrently(dirPath string, minimumVersion string) ([]string, error) {
@@ -1468,6 +1513,26 @@ func isTTY() bool {
 
 func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool, dryRun bool, url, apiKey string) {
 	fmt.Printf("%sWatching %s for live events... (Press Ctrl+C to stop)%s\n", color.Cyan, filepath.Base(path), color.Reset)
+
+	stopPing := make(chan struct{})
+	defer close(stopPing)
+
+	if !dryRun && apiKey != "" {
+		if err := postDumperEvent(url, apiKey, "session_start", nil); err != nil {
+			fmt.Printf("%s⚠ Failed to notify session start:%s %v\n", color.Yellow, color.Reset, err)
+		}
+		go startSessionPingLoop(url, apiKey, stopPing)
+		defer func() {
+			if err := postDumperEvent(url, apiKey, "session_end", nil); err != nil {
+				fmt.Printf("%s⚠ Failed to notify session end:%s %v\n", color.Yellow, color.Reset, err)
+			}
+		}()
+	}
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
+	defer signal.Stop(sigCh)
+
 	var fh *os.File
 	var lastInode uint64
 	var lastSize int64
@@ -1479,6 +1544,13 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 	}
 
 	for {
+		select {
+		case <-sigCh:
+			fmt.Printf("\n%sStopped watching.%s\n", color.Cyan, color.Reset)
+			return
+		default:
+		}
+
 		st, err := os.Stat(path)
 		if err != nil {
 			if fh != nil {
@@ -1498,12 +1570,20 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 		if rotated {
 			if fh != nil {
 				fmt.Printf("%sLog rotation detected — resetting session state%s\n", color.Yellow, color.Reset)
+				if !dryRun && apiKey != "" {
+					_ = postDumperEvent(url, apiKey, "session_end", nil)
+				}
 				fh.Close()
 				state.mu.Lock()
 				state.active = make(map[string]ActiveMission)
 				state.guidMap = make(map[string]MissionEntry)
 				state.recentLifecycle = nil
 				state.mu.Unlock()
+				if !dryRun && apiKey != "" {
+					if err := postDumperEvent(url, apiKey, "session_start", nil); err != nil {
+						fmt.Printf("%s⚠ Failed to notify session restart:%s %v\n", color.Yellow, color.Reset, err)
+					}
+				}
 			}
 			fh, err = os.Open(path)
 			if err != nil {
@@ -1553,6 +1633,16 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 					active := state.RecordAccepted(m[1], ts)
 					fmt.Printf("  [%s] [%s] %sMission started: %s (%s)%s\n",
 						tsStr, filepath.Base(path), color.Green, active.DebugName, active.GUID, color.Reset)
+					if !dryRun && apiKey != "" {
+						fields := map[string]string{
+							"missionGuid":            active.GUID,
+							"contractDefinitionId": active.ContractDefinitionID,
+							"debugName":              active.DebugName,
+						}
+						if err := postDumperEvent(url, apiKey, "mission_started", fields); err != nil {
+							fmt.Printf("  [Live] %s✗ Mission sync failed:%s %v\n", color.Red, color.Reset, err)
+						}
+					}
 
 				} else if m := patternEndMission.FindStringSubmatch(line); len(m) >= 4 {
 					guid, completion, reason := m[1], m[2], m[3]
@@ -1577,6 +1667,16 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 					default:
 						fmt.Printf("  [%s] [%s] %sMission ended (%s): %s (%s) [%s]%s\n",
 							tsStr, filepath.Base(path), color.Yellow, completion, debugName, guid, reason, color.Reset)
+					}
+
+					if !dryRun && apiKey != "" {
+						fields := map[string]string{
+							"missionGuid": guid,
+							"completion":  completion,
+						}
+						if err := postDumperEvent(url, apiKey, "mission_ended", fields); err != nil {
+							fmt.Printf("  [Live] %s✗ Mission end sync failed:%s %v\n", color.Red, color.Reset, err)
+						}
 					}
 
 				} else if m := patternBlueprint.FindStringSubmatch(line); len(m) >= 2 {

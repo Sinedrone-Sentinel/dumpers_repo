@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import AppModal from '../layout/AppModal'
 import CopyFeedbackButton from '../CopyFeedbackButton'
 import BpDumperDownloadLinks from './BpDumperDownloadLinks'
@@ -82,6 +83,17 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
         <section className="space-y-3">
           <h3 className="text-sm font-semibold text-white">Downloads</h3>
           <BpDumperDownloadLinks />
+        </section>
+
+        <section className="space-y-2">
+          <h3 className="text-sm font-semibold text-white">Live Mission Tracker</h3>
+          <p className="text-sm text-slate-400 leading-relaxed">
+            While BP Dumper watches your game log, open the{' '}
+            <Link to="/targets/live" className="text-orange-300 hover:text-orange-200 underline">
+              Live Mission Tracker
+            </Link>{' '}
+            page to see active in-game missions and pool blueprints you still need to acquire.
+          </p>
         </section>
 
         <section className="space-y-2">

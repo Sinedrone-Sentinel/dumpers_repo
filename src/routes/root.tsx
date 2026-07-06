@@ -6,6 +6,7 @@ import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
 import FulfillmentRoute from './Fulfillment.index'
 import TargetsRoute from './Targets.index'
+import TargetsLiveRoute from './TargetsLive.index'
 import ArchiveRoute from './Archive.index'
 import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
@@ -51,6 +52,13 @@ const targetsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/targets',
   component: TargetsRoute,
+  beforeLoad: requireFeature('target_bp_list'),
+})
+
+const targetsLiveRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/targets/live',
+  component: TargetsLiveRoute,
   beforeLoad: requireFeature('target_bp_list'),
 })
 
@@ -121,6 +129,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   miningTrackerRoute,
   targetsRoute,
+  targetsLiveRoute,
   resourceTrackerRoute,
   customOrdersRoute,
   fulfillmentRoute,

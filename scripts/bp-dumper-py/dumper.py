@@ -11,6 +11,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from pathlib import Path
 from typing import Optional, Any
@@ -237,6 +238,21 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
     return res.status_code, body.get("duplicate", False), internal_name
 
 
+def post_dumper_event(session, url: str, event_type: str, fields: dict | None = None):
+    payload = {"type": event_type}
+    if fields:
+        payload.update({k: v for k, v in fields.items() if v})
+    res = session.post(url, json=payload, timeout=15)
+    if res.status_code >= 400:
+        raise RuntimeError(f"HTTP {res.status_code}")
+
+
+def start_session_ping_loop(session, url: str, stop_event: threading.Event):
+    while not stop_event.wait(90.0):
+        try:
+            post_dumper_event(session, url, "session_ping")
+        except Exception as e:
+            print(f"  [Live] {Colors.YELLOW}⚠ Session ping failed:{Colors.RESET} {e}")
 
 # Default Star Citizen path locations
 DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
@@ -585,6 +601,21 @@ def save_cache_file(cache_path: Path, cache_set: set):
 
 def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, args, session=None):
     print(f"{Colors.CYAN}Watching {path.name} for live events... (Press Ctrl+C to stop){Colors.RESET}")
+    ping_stop = threading.Event()
+    ping_thread = None
+
+    if session and not args.dry_run:
+        try:
+            post_dumper_event(session, args.url, "session_start")
+        except Exception as e:
+            print(f"{Colors.YELLOW}⚠ Failed to notify session start:{Colors.RESET} {e}")
+        ping_thread = threading.Thread(
+            target=start_session_ping_loop,
+            args=(session, args.url, ping_stop),
+            daemon=True,
+        )
+        ping_thread.start()
+
     fh = None
     last_inode = None
     last_size = 0
@@ -618,10 +649,20 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
             if rotated:
                 if fh:
                     print(f"{Colors.YELLOW}Log rotation detected — resetting session state{Colors.RESET}")
+                    if session and not args.dry_run:
+                        try:
+                            post_dumper_event(session, args.url, "session_end")
+                        except Exception:
+                            pass
                     fh.close()
                     state.active.clear()
                     state.guid_map.clear()
                     state.recent_lifecycle.clear()
+                    if session and not args.dry_run:
+                        try:
+                            post_dumper_event(session, args.url, "session_start")
+                        except Exception as e:
+                            print(f"{Colors.YELLOW}⚠ Failed to notify session restart:{Colors.RESET} {e}")
                 try:
                     fh = open(path, "rb")
                 except OSError:
@@ -664,6 +705,15 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         elif m := PATTERN_ACCEPTED.search(line):
                             active = state.record_accepted(m.group(1), ts)
                             print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
+                            if session and not args.dry_run:
+                                try:
+                                    post_dumper_event(session, args.url, "mission_started", {
+                                        "missionGuid": active.guid,
+                                        "contractDefinitionId": active.contract_definition_id or "",
+                                        "debugName": active.debug_name,
+                                    })
+                                except Exception as e:
+                                    print(f"  [Live] {Colors.RED}✗ Mission sync failed:{Colors.RESET} {e}")
 
                         elif m := PATTERN_END_MISSION.search(line):
                             guid, completion, reason = m.group(1), m.group(2), m.group(3)
@@ -679,6 +729,15 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                 print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
                             else:
                                 print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+
+                            if session and not args.dry_run:
+                                try:
+                                    post_dumper_event(session, args.url, "mission_ended", {
+                                        "missionGuid": guid,
+                                        "completion": completion,
+                                    })
+                                except Exception as e:
+                                    print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
 
                         elif m := PATTERN_BLUEPRINT.search(line):
                             product_name = m.group(1).strip()
@@ -722,6 +781,14 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
     except KeyboardInterrupt:
         print(f"\n{Colors.CYAN}Stopped watching.{Colors.RESET}")
     finally:
+        ping_stop.set()
+        if ping_thread:
+            ping_thread.join(timeout=1.0)
+        if session and not args.dry_run:
+            try:
+                post_dumper_event(session, args.url, "session_end")
+            except Exception as e:
+                print(f"{Colors.YELLOW}⚠ Failed to notify session end:{Colors.RESET} {e}")
         if fh:
             fh.close()
 
