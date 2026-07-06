@@ -103,11 +103,32 @@ function sortGroupMembers(members: BlueprintVariantInput[], categoryName: string
   })
 }
 
+function isArmorBaseMember(bp: BlueprintVariantInput): boolean {
+  const name = bp.blueprintName || ''
+  if (/\bBase$/i.test(name)) return true
+
+  const productLine = getArmorProductLine(name)
+  const slotMatch = name.match(ARMOR_SLOT_PATTERN)
+  if (!productLine || !slotMatch || slotMatch.index === undefined) return false
+
+  // Default skin: exactly "{ProductLine} {Slot}" with no color/variant suffix (e.g. "Aves Legs").
+  const afterProductLine = name.slice(productLine.length).trim()
+  const slotSuffix = name.slice(slotMatch.index).trim()
+  return afterProductLine === slotSuffix
+}
+
+function isWeaponBaseMember(bp: BlueprintVariantInput): boolean {
+  return !/"[^"]+"/.test(bp.blueprintName || '')
+}
+
 function countBaseMembers(members: BlueprintVariantInput[], categoryName: string): number {
   if (categoryName === 'FPSWeapons') {
-    return members.filter((m) => !/"[^"]+"/.test(m.blueprintName || '')).length
+    return members.filter(isWeaponBaseMember).length
   }
-  return members.filter((m) => /_01$/.test(m.internalName || '')).length
+  if (categoryName === 'FPSArmours') {
+    return members.filter(isArmorBaseMember).length
+  }
+  return 0
 }
 
 export function getVariantGroupSummary(
@@ -116,7 +137,7 @@ export function getVariantGroupSummary(
 ): string {
   const baseCount = countBaseMembers(members, categoryName)
   const variantCount = members.length - baseCount
-  if (baseCount >= 1 && variantCount >= 1) {
+  if (baseCount === 1 && variantCount >= 1) {
     return `Base + ${variantCount} variant${variantCount !== 1 ? 's' : ''}`
   }
   return `${members.length} variant${members.length !== 1 ? 's' : ''}`
