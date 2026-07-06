@@ -494,17 +494,29 @@ class SessionTracker:
         self.crash_at: float | None = None
         self.paused_reason = ""
         self.pending_status = ""
+        self.last_log_ts: float | None = None
 
     def reset(self) -> None:
         self.crash_at = None
         self.paused_reason = ""
         self.pending_status = ""
+        self.last_log_ts = None
+
+    def resolve_timestamp(self, line: str) -> float:
+        ts = parse_log_timestamp(line)
+        if ts is not None:
+            self.last_log_ts = ts
+            return ts
+        if self.last_log_ts is not None:
+            return self.last_log_ts
+        return time.time()
 
     def on_log_rotation(self, state: "WatcherState") -> None:
         state.clear_all_active()
         self.crash_at = None
         self.paused_reason = "quit_game"
         self.pending_status = "quit_game"
+        self.last_log_ts = None
 
     def process_line(self, line: str, ts: float, state: "WatcherState") -> str:
         if PATTERN_EXIT_MENU.search(line):
@@ -711,7 +723,7 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState, session:
             line = line.rstrip("\r\n")
             if not line:
                 continue
-            ts = parse_log_timestamp(line) or time.time()
+            ts = session.resolve_timestamp(line)
             apply_watch_line_to_state(line, state, session, ts)
 
     if session is not None:
@@ -860,7 +872,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         if not raw:
                             continue
                         line = raw.decode("utf-8", errors="replace")
-                        ts = parse_log_timestamp(line) or time.time()
+                        ts = session_tracker.resolve_timestamp(line)
                         ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
 
                         game_event = session_tracker.process_line(line, ts, state)

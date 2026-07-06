@@ -103,6 +103,7 @@ type SessionTracker struct {
 	crashAt       time.Time
 	pausedReason  string
 	pendingStatus string
+	lastLogTS     time.Time
 }
 
 func NewSessionTracker() *SessionTracker {
@@ -115,6 +116,22 @@ func (st *SessionTracker) Reset() {
 	st.crashAt = time.Time{}
 	st.pausedReason = ""
 	st.pendingStatus = ""
+	st.lastLogTS = time.Time{}
+}
+
+// ResolveTimestamp uses the line prefix when present; crash-handler blocks inherit the prior log timestamp.
+func (st *SessionTracker) ResolveTimestamp(line string) time.Time {
+	ts := parseLogTimestamp(line)
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	if !ts.IsZero() {
+		st.lastLogTS = ts
+		return ts
+	}
+	if !st.lastLogTS.IsZero() {
+		return st.lastLogTS
+	}
+	return time.Now()
 }
 
 func (st *SessionTracker) OnLogRotation(state *WatcherState) {
@@ -124,6 +141,7 @@ func (st *SessionTracker) OnLogRotation(state *WatcherState) {
 	st.crashAt = time.Time{}
 	st.pausedReason = "quit_game"
 	st.pendingStatus = "quit_game"
+	st.lastLogTS = time.Time{}
 }
 
 func (st *SessionTracker) ProcessLine(line string, ts time.Time, state *WatcherState) string {
@@ -391,10 +409,7 @@ func reconcileActiveMissionsFromLog(path string, state *WatcherState, session *S
 		if line == "" {
 			continue
 		}
-		ts := parseLogTimestamp(line)
-		if ts.IsZero() {
-			ts = time.Now()
-		}
+		ts := session.ResolveTimestamp(line)
 		applyWatchLineToState(line, state, session, ts)
 	}
 	if session != nil {
@@ -1868,10 +1883,7 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 				buffer = buffer[nlIdx+1:]
 
 				line = strings.TrimRight(line, "\r")
-				ts := parseLogTimestamp(line)
-				if ts.IsZero() {
-					ts = time.Now()
-				}
+				ts := sessionTracker.ResolveTimestamp(line)
 				tsStr := ts.Format("2006-01-02 15:04:05")
 
 				if gameEvent := sessionTracker.ProcessLine(line, ts, state); gameEvent != "" {
