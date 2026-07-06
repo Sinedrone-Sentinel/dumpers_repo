@@ -405,22 +405,29 @@ export default function TargetsRoute() {
       title="Mission Tracker"
       subtitle="Track blueprints and the missions that reward them"
       actions={
-        viewMode === 'tracker' && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <Link
-              to="/targets/live"
-              className="px-3 py-1.5 text-sm bg-orange-950/50 hover:bg-orange-900/50 text-orange-200 border border-orange-500/40 rounded-lg transition-colors"
-            >
-              Live Tracker
-            </Link>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onClick={openBpDumperModal}
+            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-600 rounded-lg transition-colors"
+          >
+            BP Dumper
+          </button>
+          <Link
+            to="/targets/live"
+            className="px-3 py-1.5 text-sm bg-orange-950/50 hover:bg-orange-900/50 text-orange-200 border border-orange-500/40 rounded-lg transition-colors"
+          >
+            Live Tracker
+          </Link>
+          {viewMode === 'tracker' && (
             <button
               onClick={() => void refresh()}
               className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
             >
               Refresh
             </button>
-          </div>
-        )
+          )}
+        </div>
       }
     >
       {/* View Mode Toggle */}

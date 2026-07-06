@@ -37,9 +37,10 @@ export default function BpDumperCallout({ onOpenModal, className = '' }: BpDumpe
       className={`mb-4 flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-100 text-sm ${className}`}
     >
       <div className="flex-1 min-w-0">
-        <strong className="text-amber-50">BP Dumper</strong>
+        <strong className="text-amber-50">BP Dumper + Live Tracker</strong>
         {' — '}
-        Automatically sync blueprint unlocks from your Star Citizen game logs.
+        Run BP Dumper while you play, then open Live Tracker to see active missions and pool
+        blueprints still to acquire.
       </div>
       <div className="flex items-center gap-2 shrink-0">
         <button

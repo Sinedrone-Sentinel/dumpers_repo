@@ -73,7 +73,8 @@ const EXTERNAL_LINKS: LinkItem[] = [
 const TIPS: { title: string; content: string }[] = [
   {
     title: 'Blueprint Rewards',
-    content: 'Blueprints are awarded from contracts at specific reputation levels. Check Mission Tracker to track which blueprints you\'re working towards and the missions that can award them.',
+    content:
+      "Blueprints are awarded from contracts at specific reputation levels. Use Mission Tracker to plan targets and browse missions; BP Dumper + Live Tracker on that page sync unlocks and show what is still dropping from active contracts.",
   },
   {
     title: 'Resource Tracking',

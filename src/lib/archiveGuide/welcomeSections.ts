@@ -31,6 +31,7 @@ export const OFFLINE_MODE_SECTION = {
   membersOnly: [
     'Custom Orders — post WTB buy requests and WTS sell listings (partial OK by default)',
     'Fulfillment — browse, accept full or partial WTS buys, and complete trades',
+    'BP Dumper + Live Mission Tracker — sync log unlocks and watch active missions',
     'Mining Ledger — crew payout tracking (requires verified RSI Handle on your account)',
     'View member directory / browse collections',
     'Cross-device data sync',
@@ -288,7 +289,7 @@ export const ARCHIVE_TIPS = [
   {
     title: 'Blueprint Rewards',
     content:
-      "Blueprints are awarded from contracts at specific reputation levels. Check Mission Tracker to track which blueprints you're working towards and the missions that can award them.",
+      "Blueprints are awarded from contracts at specific reputation levels. Use Mission Tracker to plan targets and browse missions; BP Dumper + Live Tracker on that page sync unlocks and show what is still dropping from active contracts.",
   },
   {
     title: 'Resource Tracking',
