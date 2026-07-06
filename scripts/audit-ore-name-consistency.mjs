@@ -6,7 +6,6 @@
 import mining from '../src/data/game-mining.json' with { type: 'json' }
 import spawns from '../src/data/game-mining-spawns.json' with { type: 'json' }
 import bands from '../src/data/game-quality-bands.json' with { type: 'json' }
-import { ORE_SIGNATURES } from './lib/parseMiningSpawns.mjs'
 import {
   COMPOSITION_ELEMENT_ALIASES,
   normalizeCompositionElementName,
@@ -35,7 +34,7 @@ function bandKeyForOre(oreName) {
   return QUALITY_BAND_ALIASES[normalized] ?? normalized
 }
 
-const canonicalOres = new Set(Object.keys(ORE_SIGNATURES))
+const canonicalOres = new Set(Object.keys(mining.oreSignatures ?? {}))
 const bandKeys = new Set(Object.keys(bands.bandThresholds ?? {}))
 
 const issues = []

@@ -25,7 +25,7 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 |------|-------------|--------|
 | `game-blueprint-missions.json` | Mission → blueprint reward mappings | `crafting/blueprintrewards/` |
 | `game-blueprints.json` | Blueprint definitions with crafting recipes (**app catalog**) | `crafting/blueprints/` |
-| `game-mining.json` | Mineable elements and mining lasers | `mining/`, `entities/scitem/ships/weapons/` |
+| `game-mining.json` | Mineable element stats, **RS base signatures** (`oreSignatures`), mining lasers | `mining/mineableelements/`, `entities/mineable/mineablerock_*`, `entities/scitem/ships/weapons/` |
 | `game-mining-locations.json` | Ore/location compendium, `locationAliases` (spawnKey → displayName/guideName), mineable details | Game localization (`*_desc` keys) + compendium + HPP audit |
 | `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles; each location includes `spawnKey`, `displayName`, `guideName` | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
@@ -63,11 +63,28 @@ Used for supplementary component metadata during DFP engine builds (`component-m
 
 ---
 
-## Source: seneca0815-rgb/SC_Signature_Scanner
+## Mining RS signatures (game extraction)
 
-**URL:** https://github.com/seneca0815-rgb/SC_Signature_Scanner
+Ship-mining scanner base values (3170 for Quantainium, etc.) are parsed from **mineable rock entity definitions**:
 
-Mining RS signature reference data (`lookup.json`) used by the Mining Tracker.
+- Path: `entities/mineable/mineablerock_{asteroid|surface}{tier}_{ore}.json`
+- Field: `SSCSignatureSystemParams` → `radarProperties.baseSignatureParams.signatures[4]`
+
+Stored in `game-mining.json` as `oreSignatures` and copied onto each ore in `game-mining-spawns.json` as `baseSignature`. Cluster RS readings in the UI are `baseSignature × node count`.
+
+Hand-mineable / FPS gems use generic entity templates (often RS 3000/4000) and are not included in the ship RS Tracker reference.
+
+---
+
+## Deprecated / reference-only sources
+
+### seneca0815-rgb/SC_Signature_Scanner (REFERENCE ONLY)
+
+Community OCR overlay with a pre-built lookup table. **Not used by this repo** — signatures are extracted from game files as described above. Useful for cross-checking in-game readings.
+
+### MrKraken/StarStrings (DEPRECATED)
+
+StarStrings has been replaced by direct game file extraction. Legacy scripts were removed from the repo.
 
 ---
 

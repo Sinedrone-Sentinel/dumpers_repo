@@ -18,6 +18,7 @@ import { extractAllGameLore } from './lib/gameLore.mjs'
 import { buildBlueprintNameLookup, saveBlueprintNameLookup } from './lib/blueprintNameLookup.mjs'
 import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
+import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
 import {
   buildGuideToSpawnKeys,
   buildLocationAliases,
@@ -4321,6 +4322,18 @@ async function main() {
   const { missionBlueprints, blueprintMissions } = parseBlueprintRewards()
   const blueprintDefs = parseBlueprintDefinitions(localization)
   const mineableElements = parseMineableElements()
+  const {
+    oreSignatures,
+    audit: oreSignatureAudit,
+  } = parseOreSignatures(EXTRACTED_DATA)
+  console.log(`\n  Parsed ${Object.keys(oreSignatures).length} ship-mining RS base signatures from mineable rock entities`)
+  if (oreSignatureAudit.conflicts.length) {
+    console.log(`  ⚠ ${oreSignatureAudit.conflicts.length} RS signature conflict(s) across entity templates`)
+    oreSignatureAudit.conflicts.slice(0, 5).forEach((c) => console.log(`      - ${c}`))
+  }
+  if (oreSignatureAudit.missingOres.length) {
+    console.log(`  ⚠ Missing RS signatures for: ${oreSignatureAudit.missingOres.join(', ')}`)
+  }
   const miningLasers = parseMiningLasers(localization)
   const components = parseShipComponents(localization)
   const reputationSystem = parseReputationSystem(localization)
@@ -4399,7 +4412,7 @@ async function main() {
     }
   })
 
-  const miningSpawns = parseMiningSpawns(EXTRACTED_DATA, miningLocations)
+  const miningSpawns = parseMiningSpawns(EXTRACTED_DATA, miningLocations, oreSignatures)
   saveJson('game-mining-spawns.json', {
     _source: 'Star Citizen Game Files (extracted harvestable/HPP data)',
     _extracted: new Date().toISOString(),
@@ -4507,11 +4520,13 @@ async function main() {
     _source: 'Star Citizen Game Files (extracted)',
     _extracted: new Date().toISOString(),
     mineableElements,
+    oreSignatures,
     miningLasers,
     summary: {
       elements: mineableElements.length,
-      lasers: miningLasers.length
-    }
+      signatureOres: Object.keys(oreSignatures).length,
+      lasers: miningLasers.length,
+    },
   })
   
   // Ship components

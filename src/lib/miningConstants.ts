@@ -1,3 +1,4 @@
+import gameMiningData from '../data/game-mining.json'
 import { GUIDE_LOCATION_SYSTEMS } from './miningLocationNames'
 
 export const MINING_RARITY_ORDER = [
@@ -9,34 +10,9 @@ export const MINING_RARITY_ORDER = [
   'handMineable',
 ] as const
 
+/** RS base signatures parsed from mineable rock entity defs (game-mining.json). */
 export const ORE_SIGNATURES: Record<string, number> = {
-  Quantainium: 3170,
-  Stileron: 3185,
-  Savrilium: 3200,
-  Ouratite: 3370,
-  Riccite: 3385,
-  Lindinium: 3400,
-  Beryl: 3540,
-  Taranite: 3555,
-  Borase: 3570,
-  Gold: 3585,
-  Bexalite: 3600,
-  Laranite: 3825,
-  Aslarite: 3840,
-  Titanium: 3855,
-  Tungsten: 3870,
-  Agricium: 3885,
-  Torite: 3900,
-  Hephaestanite: 4180,
-  Tin: 4195,
-  Quartz: 4210,
-  Corundum: 4225,
-  Copper: 4240,
-  Silicon: 4255,
-  Iron: 4270,
-  Aluminium: 4285,
-  Aluminum: 4285,
-  Ice: 4300,
+  ...(gameMiningData.oreSignatures ?? {}),
 }
 
 /** @deprecated Use getSystemForGuideLocation from miningLocationNames — kept for existing imports. */

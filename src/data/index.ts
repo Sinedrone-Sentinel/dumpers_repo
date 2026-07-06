@@ -313,9 +313,12 @@ export interface GameMiningData {
   _source: string
   _extracted: string
   mineableElements: MineableElement[]
+  /** RS scanner base value per ship-minable ore (from mineable rock entity defs). */
+  oreSignatures: Record<string, number>
   miningLasers: MiningLaser[]
   summary: {
     elements: number
+    signatureOres: number
     lasers: number
   }
 }

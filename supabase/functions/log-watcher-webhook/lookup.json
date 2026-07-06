@@ -1,6 +1,6 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-05T01:00:33.496Z",
+  "_extracted": "2026-07-06T05:01:29.537Z",
   "stats": {
     "internalNames": 1553,
     "displayNames": 1537,
@@ -5501,7 +5501,7 @@
       "categoryName": "Veh. Comp. S3"
     },
     "nozzle_fuelgiver_grin_nozzlefast": {
-      "blueprintName": "Norfield",
+      "blueprintName": "Greycat Fast Nozzle",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzlesecure": {
@@ -5513,11 +5513,11 @@
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzleverysecure": {
-      "blueprintName": "Harkin",
+      "blueprintName": "Greycat Very Secure Nozzle",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_misc_nozzlestandard": {
-      "blueprintName": "RN-7s",
+      "blueprintName": "MISC Standard Nozzle",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_shin_nozzleexpensivefast": {
@@ -11811,9 +11811,9 @@
       "internalName": "radr_wlop_s03_socoria",
       "blueprintName": "Socoria"
     },
-    "norfield": {
+    "greycat fast nozzle": {
       "internalName": "nozzle_fuelgiver_grin_nozzlefast",
-      "blueprintName": "Norfield"
+      "blueprintName": "Greycat Fast Nozzle"
     },
     "marlin": {
       "internalName": "nozzle_fuelgiver_grin_nozzlesecure",
@@ -11823,13 +11823,13 @@
       "internalName": "nozzle_fuelgiver_grin_nozzleveryfast",
       "blueprintName": "Lindstrom"
     },
-    "harkin": {
+    "greycat very secure nozzle": {
       "internalName": "nozzle_fuelgiver_grin_nozzleverysecure",
-      "blueprintName": "Harkin"
+      "blueprintName": "Greycat Very Secure Nozzle"
     },
-    "rn-7s": {
+    "misc standard nozzle": {
       "internalName": "nozzle_fuelgiver_misc_nozzlestandard",
-      "blueprintName": "RN-7s"
+      "blueprintName": "MISC Standard Nozzle"
     },
     "bendix": {
       "internalName": "nozzle_fuelgiver_shin_nozzleexpensivefast",

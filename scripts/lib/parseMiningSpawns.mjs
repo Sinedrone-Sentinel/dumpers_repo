@@ -14,36 +14,6 @@ import {
   SHIP_ORE_SLUG_TO_NAME,
 } from './miningOreNames.mjs'
 
-/** Ship-mining RS signatures (must match src/lib/miningConstants.ts ORE_SIGNATURES). */
-export const ORE_SIGNATURES = {
-  Quantainium: 3170,
-  Stileron: 3185,
-  Savrilium: 3200,
-  Ouratite: 3370,
-  Riccite: 3385,
-  Lindinium: 3400,
-  Beryl: 3540,
-  Taranite: 3555,
-  Borase: 3570,
-  Gold: 3585,
-  Bexalite: 3600,
-  Laranite: 3825,
-  Aslarite: 3840,
-  Titanium: 3855,
-  Tungsten: 3870,
-  Agricium: 3885,
-  Torite: 3900,
-  Hephaestanite: 4180,
-  Tin: 4195,
-  Quartz: 4210,
-  Corundum: 4225,
-  Copper: 4240,
-  Silicon: 4255,
-  Iron: 4270,
-  Aluminium: 4285,
-  Ice: 4300,
-}
-
 function readJson(path) {
   try {
     return JSON.parse(readFileSync(path, 'utf-8'))
@@ -138,7 +108,7 @@ function buildClusterRows(clusterPreset, baseSignature) {
   return { maxNodes, rows, clusterPresetKey: key, probabilityOfClustering }
 }
 
-function buildOverallProfile(locations, depositType, oreName, locationAliases) {
+function buildOverallProfile(locations, depositType, baseSignature, locationAliases) {
   const filtered = locations.filter((l) => l.depositType === depositType)
   if (filtered.length === 0) return null
 
@@ -154,7 +124,7 @@ function buildOverallProfile(locations, depositType, oreName, locationAliases) {
     }
   }
 
-  const baseSig = ORE_SIGNATURES[oreName]
+  const baseSig = baseSignature
   const clusterRows = []
   for (let n = 2; n <= maxNodes; n++) {
     let bestChance = 0
@@ -313,9 +283,15 @@ function matchGuideLocation(spawnKey, locationIndex, locationAliases) {
 /**
  * @param {string} extractedDataRoot
  * @param {object} miningLocations - parsed game-mining-locations shape (oreLocations, locationAliases)
+ * @param {Record<string, number>} oreSignatures - RS base signatures from parseOreSignatures()
  */
-export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
+export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSignatures = {}) {
   console.log('\n  Parsing mining spawn / cluster profiles...')
+
+  const signatureOres = Object.keys(oreSignatures)
+  if (signatureOres.length === 0) {
+    console.log('  ⚠ No oreSignatures provided — spawn profiles will be empty')
+  }
 
   const locationAliases = miningLocations.locationAliases ?? {}
 
@@ -365,12 +341,12 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
         const presetBasename = basename(harvestPath, '.json')
         const oreName = oreFromPresetBasename(presetBasename)
         const depositType = depositTypeFromPreset(presetBasename)
-        if (!oreName || !depositType || !ORE_SIGNATURES[oreName]) continue
+        if (!oreName || !depositType || oreSignatures[oreName] == null) continue
 
         const clusterFile = readJson(clusterPath)
         const clusterKey = clusterFile?._RecordName_
         const clusterPreset = clusterKey ? clusterPresets.get(clusterKey) || clusterFile : clusterFile
-        const baseSignature = ORE_SIGNATURES[oreName]
+        const baseSignature = oreSignatures[oreName]
         const { maxNodes, rows, clusterPresetKey, probabilityOfClustering } = buildClusterRows(
           clusterPreset,
           baseSignature
@@ -409,10 +385,10 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
   }
 
   const ores = {}
-  for (const oreName of Object.keys(ORE_SIGNATURES)) {
+  for (const oreName of signatureOres) {
     ores[oreName] = {
       oreName,
-      baseSignature: ORE_SIGNATURES[oreName],
+      baseSignature: oreSignatures[oreName],
       depositTypes: [],
       overallByType: {},
       locations: {},
@@ -468,10 +444,20 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
     ore.depositTypes.sort()
     const locList = Object.values(ore.locations)
     if (ore.depositTypes.includes('surface')) {
-      ore.overallByType.surface = buildOverallProfile(locList, 'surface', ore.oreName, locationAliases)
+      ore.overallByType.surface = buildOverallProfile(
+        locList,
+        'surface',
+        ore.baseSignature,
+        locationAliases
+      )
     }
     if (ore.depositTypes.includes('asteroid')) {
-      ore.overallByType.asteroid = buildOverallProfile(locList, 'asteroid', ore.oreName, locationAliases)
+      ore.overallByType.asteroid = buildOverallProfile(
+        locList,
+        'asteroid',
+        ore.baseSignature,
+        locationAliases
+      )
     }
     if (locList.length === 0) audit.oresMissingProfile.push(ore.oreName)
   }
@@ -507,7 +493,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}) {
     ores: Object.fromEntries(oreProfiles.map((o) => [o.oreName, o])),
     audit,
     summary: {
-      signatureOres: Object.keys(ORE_SIGNATURES).length,
+      signatureOres: signatureOres.length,
       oresWithProfiles: oreProfiles.length,
       totalSpawnLinks: rawLinks.length,
       totalLocationProfiles: oreProfiles.reduce((s, o) => s + Object.keys(o.locations).length, 0),

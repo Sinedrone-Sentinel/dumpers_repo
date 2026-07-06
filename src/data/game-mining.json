@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-04T18:04:04.823Z",
+  "_extracted": "2026-07-06T05:01:29.547Z",
   "mineableElements": [
     {
       "id": "d61d6c33-e428-4014-9326-0b06034de16a",
@@ -648,6 +648,35 @@
       "isShip": true
     }
   ],
+  "oreSignatures": {
+    "Aluminium": 4285,
+    "Copper": 4240,
+    "Corundum": 4225,
+    "Hephaestanite": 4180,
+    "Ice": 4300,
+    "Iron": 4270,
+    "Quartz": 4210,
+    "Silicon": 4255,
+    "Tin": 4195,
+    "Lindinium": 3400,
+    "Ouratite": 3370,
+    "Riccite": 3385,
+    "Quantainium": 3170,
+    "Savrilium": 3200,
+    "Stileron": 3185,
+    "Beryl": 3540,
+    "Bexalite": 3600,
+    "Borase": 3570,
+    "Gold": 3585,
+    "Taranite": 3555,
+    "Agricium": 3885,
+    "Aslarite": 3840,
+    "Laranite": 3825,
+    "Titanium": 3855,
+    "Torite": 3900,
+    "Tungsten": 3870,
+    "Aluminum": 4285
+  },
   "miningLasers": [
     {
       "id": "5a704f96-c339-43e7-b918-7fc9957673ed",
@@ -1009,6 +1038,7 @@
   ],
   "summary": {
     "elements": 43,
+    "signatureOres": 27,
     "lasers": 21
   }
 }

@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-04T18:04:04.799Z",
+  "_extracted": "2026-07-06T05:01:29.509Z",
   "version": "4.8.x",
   "blueprints": [
     {
@@ -195977,7 +195977,7 @@
       "file": "nozzle_fuelgiver_grin_nozzlefast",
       "name": "BP_CRAFT_Nozzle_FuelGiver_GRIN_NozzleFast",
       "internalName": "nozzle_fuelgiver_grin_nozzlefast",
-      "blueprintName": "Norfield",
+      "blueprintName": "Greycat Fast Nozzle",
       "entityClass": "fuel_nozzle_grin_nozzlefast",
       "category": "VehicleComponentS0",
       "categoryName": "Veh. Comp. S0",
@@ -196685,7 +196685,7 @@
       "file": "nozzle_fuelgiver_grin_nozzleverysecure",
       "name": "BP_CRAFT_Nozzle_FuelGiver_GRIN_NozzleVerySecure",
       "internalName": "nozzle_fuelgiver_grin_nozzleverysecure",
-      "blueprintName": "Harkin",
+      "blueprintName": "Greycat Very Secure Nozzle",
       "entityClass": "fuel_nozzle_grin_nozzleverysecure",
       "category": "VehicleComponentS0",
       "categoryName": "Veh. Comp. S0",
@@ -196921,7 +196921,7 @@
       "file": "nozzle_fuelgiver_misc_nozzlestandard",
       "name": "BP_CRAFT_Nozzle_FuelGiver_MISC_NozzleStandard",
       "internalName": "nozzle_fuelgiver_misc_nozzlestandard",
-      "blueprintName": "RN-7s",
+      "blueprintName": "MISC Standard Nozzle",
       "entityClass": "fuel_nozzle_misc_nozzlestandard",
       "category": "VehicleComponentS0",
       "categoryName": "Veh. Comp. S0",
@@ -228506,6 +228506,6 @@
     "defaultBlueprints": 8,
     "blueprintsWithRewards": 685,
     "rewardBlueprintsNeedingLocalization": 1,
-    "nonRewardBlueprintsWithFallback": 10
+    "nonRewardBlueprintsWithFallback": 3
   }
 }

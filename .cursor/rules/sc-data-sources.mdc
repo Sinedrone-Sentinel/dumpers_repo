@@ -17,6 +17,8 @@ Key paths in extracted data:
 - `crafting/blueprints/` - Blueprint definitions with crafting recipes
 - `crafting/blueprintrewards/` - Mission → blueprint mappings
 - `mining/mineableelements/` - Ore properties (instability, resistance, etc.)
+- `entities/mineable/mineablerock_*` - Ship-mining RS scanner base signatures (`SSCSignatureSystemParams.signatures[4]`)
+- `harvestable/providerpresets/` + `harvestable/clusteringpresets/` - Spawn weights and cluster odds
 - `entities/scitem/ships/weapons/` - Mining lasers, weapons
 - `entities/scitem/ships/{cooler,powerplant,shieldgenerator}/` - Ship components
 - `reputation/standings/` - Standing thresholds
@@ -45,20 +47,16 @@ Crowdsourced live commodity price data. **Use for:** Resource Tracker DFP Q0 bas
 
 Community wiki API for general reference. **Archive lore comes from game localization**, not this API.
 
-### 3. seneca0815-rgb/SC_Signature_Scanner
-**URL:** https://github.com/seneca0815-rgb/SC_Signature_Scanner
-
-Mining RS signature data:
-- `lookup.json` - 163 signature values for 26 minerals × 6 multipliers
-
 ## Deprecated Sources
 
 ### MrKraken/StarStrings (DEPRECATED)
 StarStrings has been replaced by direct game file extraction. Legacy scripts were removed from the repo.
 
+### seneca0815-rgb/SC_Signature_Scanner (REFERENCE ONLY)
+Community OCR overlay with a pre-built RS lookup table. **Not used by this repo** — ship-mining base RS values are extracted from `entities/mineable/` mineable rock entity defs (`SSCSignatureSystemParams.signatures[4]`). Useful for cross-checking in-game readings.
+
 ## Usage Pattern
 
-1. **Game data (blueprints, components, mining, Archive lore):** Use extracted data or run extraction
+1. **Game data (blueprints, components, mining, Archive lore, RS signatures):** Use extracted data or run extraction
 2. **Commodity DFP bases:** UEX Corp API (`fetch-commodity-dfp-bases.mjs`)
-3. **Mining signatures:** Check SC_Signature_Scanner
-4. Only web search if none of these sources have the data
+3. Only web search if none of these sources have the data
