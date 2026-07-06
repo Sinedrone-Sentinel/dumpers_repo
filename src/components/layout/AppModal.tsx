@@ -48,7 +48,7 @@ export default function AppModal({
 
   return (
     <div
-      className={`fixed inset-0 bg-black/80 backdrop-blur-sm ${zIndexClasses[zIndex]} flex items-start justify-center pt-[5vh] sm:pt-[10vh] p-4 overflow-hidden`}
+      className={`fixed inset-0 bg-black/85 ${zIndexClasses[zIndex]} flex items-start justify-center pt-[5vh] sm:pt-[10vh] p-4 overflow-hidden`}
       onClick={closeOnBackdrop ? onClose : undefined}
       role="dialog"
       aria-modal="true"

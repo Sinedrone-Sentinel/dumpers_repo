@@ -7,7 +7,6 @@ import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import { calculateBlueprintDfpWithParts, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
-import { useAuth } from '../contexts/AuthContext'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 
 const BLUEPRINT_PAPER_PANEL = 'blueprint-paper-panel p-2.5'
@@ -29,8 +28,8 @@ export default function BlueprintCard({
   isSuperAdmin = false,
   onToggleOrderable,
   ownerCount,
+  dfpDisplayEnabled = true,
 }) {
-  const { dfpDisplayEnabled } = useAuth()
   const dfpEngineReady = useDfpEngineReady()
   const isStarterBlueprint = isDefaultBlueprint(blueprint.internalName || blueprint.file)
 
@@ -88,7 +87,7 @@ export default function BlueprintCard({
   return (
     <div
       onClick={(e) => onClick(blueprint, e)}
-      className={`group relative flex flex-col h-full blueprint-card-fixed bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-all duration-200 overflow-hidden ${
+      className={`group relative flex flex-col h-full blueprint-card-fixed bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-colors transition-shadow duration-200 overflow-hidden ${
         acquiredLocked
           ? 'border-green-500/50 ring-1 ring-green-500/20'
           : 'border-slate-700 hover:border-red-500/30'

@@ -99,7 +99,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       {/* Backdrop overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] transition-opacity"
+          className="fixed inset-0 bg-black/85 z-[70] transition-opacity"
           aria-hidden="true"
         />
       )}

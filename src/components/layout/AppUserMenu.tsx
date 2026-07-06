@@ -197,7 +197,7 @@ export default function AppUserMenu({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-1.5 px-2 py-1 backdrop-blur border rounded-lg transition-colors shadow-md ${triggerClass}`}
+        className={`flex items-center gap-1.5 px-2 py-1 border rounded-lg transition-colors shadow-md ${triggerClass}`}
       >
         {isGhostMode ? (
           <div className="w-6 h-6 rounded-full bg-purple-600/30 border border-purple-500/50 flex items-center justify-center">

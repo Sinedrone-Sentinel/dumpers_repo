@@ -201,7 +201,7 @@ export default function ResourceLoreSection() {
               {!isCollapsed && (
                 <div className="divide-y divide-slate-700/30">
                   {entries.map((entry) => (
-                    <div key={entry.resourceKey} className="p-4 bg-slate-900/30">
+                    <div key={entry.resourceKey} className="lore-entry-row p-4 bg-slate-900/30">
                       <h4 className="text-sm font-medium text-orange-300 mb-2">{entry.label}</h4>
                       <p className="text-xs text-slate-400 leading-relaxed whitespace-pre-line">
                         {entry.description.replace(/\\n/g, '\n')}

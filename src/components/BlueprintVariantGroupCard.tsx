@@ -29,7 +29,7 @@ export default function BlueprintVariantGroupCard({
 
   return (
     <div
-      className={`min-w-0 max-w-full rounded-xl border overflow-hidden transition-all duration-200 ${
+      className={`min-w-0 max-w-full rounded-xl border overflow-hidden transition-colors transition-shadow duration-200 ${
         expanded
           ? 'col-span-full border-red-500/30 ring-1 ring-red-500/10'
           : 'border-slate-700 hover:border-red-500/30 hover:shadow-lg'

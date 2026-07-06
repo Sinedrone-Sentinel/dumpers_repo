@@ -250,7 +250,7 @@ function BrandRevealAnimatedModal({
       aria-labelledby={titleId}
     >
       <motion.div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/85"
         initial={{ opacity: 0 }}
         animate={{ opacity: closing ? 0 : 1 }}
         transition={{
@@ -310,7 +310,6 @@ function BrandRevealAnimatedModal({
                   scale: WORMHOLE_MIN_SCALE,
                   opacity: 0,
                   rotate: -540,
-                  filter: 'blur(10px)',
                   x: wormholeTarget.x,
                   y: wormholeTarget.y,
                 }
@@ -318,7 +317,6 @@ function BrandRevealAnimatedModal({
                   scale: 1,
                   opacity: 1,
                   rotate: 0,
-                  filter: 'blur(0px)',
                   x: 0,
                   y: 0,
                 }
@@ -330,11 +328,6 @@ function BrandRevealAnimatedModal({
                   x: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
                   y: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
                   rotate: { duration: TIMING.wormholeOut, ease: WORMHOLE_SHRINK_EASE },
-                  filter: {
-                    duration: TIMING.wormholeOut * 0.25,
-                    delay: TIMING.wormholeOut * 0.72,
-                    ease: 'easeIn',
-                  },
                   opacity: {
                     duration: 0.1,
                     delay: TIMING.wormholeOut * 0.88,

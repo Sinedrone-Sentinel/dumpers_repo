@@ -121,19 +121,31 @@ export default function SiteTooltip({
   useLayoutEffect(() => {
     if (!open) return
 
+    let rafId = 0
+    let pending = false
+
     const updatePosition = () => {
+      pending = false
       const anchor = anchorRef.current
       const panel = panelRef.current
       if (!anchor || !panel) return
       setPosition(computePanelPosition(anchor.getBoundingClientRect(), panel.getBoundingClientRect(), side))
     }
 
+    const scheduleUpdate = () => {
+      if (pending) return
+      pending = true
+      rafId = window.requestAnimationFrame(updatePosition)
+    }
+
     updatePosition()
-    window.addEventListener('scroll', updatePosition, true)
-    window.addEventListener('resize', updatePosition)
+    window.addEventListener('scroll', scheduleUpdate, true)
+    window.addEventListener('resize', scheduleUpdate)
     return () => {
-      window.removeEventListener('scroll', updatePosition, true)
-      window.removeEventListener('resize', updatePosition)
+      pending = false
+      window.cancelAnimationFrame(rafId)
+      window.removeEventListener('scroll', scheduleUpdate, true)
+      window.removeEventListener('resize', scheduleUpdate)
     }
   }, [open, side, content])
 
@@ -147,7 +159,7 @@ export default function SiteTooltip({
           ? { position: 'fixed', top: position.top, left: position.left, zIndex: 9999 }
           : { position: 'fixed', top: -9999, left: -9999, visibility: 'hidden', zIndex: 9999 }
       }
-      className={`site-tooltip-panel pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900/95 backdrop-blur border border-orange-500/30 rounded-lg shadow-xl ${panelClassName}`}
+      className={`site-tooltip-panel pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900 border border-orange-500/30 rounded-lg shadow-xl ${panelClassName}`}
     >
       {content}
     </span>

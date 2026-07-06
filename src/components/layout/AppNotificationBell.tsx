@@ -93,7 +93,7 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
               : 'Notifications'
         }
         aria-expanded={open}
-        className={`relative flex items-center justify-center px-2 py-1 rounded-lg border backdrop-blur shadow-md ${triggerClass}`}
+        className={`relative flex items-center justify-center px-2 py-1 rounded-lg border shadow-md ${triggerClass}`}
       >
         <svg
           className={`w-6 h-6 ${disabled ? 'text-slate-500' : 'text-slate-300'}`}

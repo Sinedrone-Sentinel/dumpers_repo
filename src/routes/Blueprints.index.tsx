@@ -5,6 +5,7 @@ import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
 import BlueprintRewardMissionsModal from '../components/BlueprintRewardMissionsModal'
 import BlueprintVariantGroupCard from '../components/BlueprintVariantGroupCard'
+import VirtualizedBlueprintGrid from '../components/VirtualizedBlueprintGrid'
 import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
@@ -38,7 +39,7 @@ import {
   blueprintUsesMaterial,
   extractBlueprintResources,
 } from '../lib/blueprintResources'
-import { buildBlueprintGridItems } from '../lib/blueprintVariantGroups'
+import { buildBlueprintGridItems, type BlueprintGridItem } from '../lib/blueprintVariantGroups'
 import {
   DEFAULT_BLUEPRINTS_CATEGORY,
   isBlueprintListable,
@@ -99,6 +100,7 @@ export default function BlueprintsRoute() {
     isGuestPreview,
     orgLogoUpdatedAt,
     groupBlueprintVariants,
+    dfpDisplayEnabled,
   } = useAuth()
   const { openBpDumperModal } = useBpDumperModal()
   const isGuest = !user && isGuestPreview
@@ -579,6 +581,7 @@ export default function BlueprintsRoute() {
             void setOrderable(bp.internalName, next, catalogReward)
           }
           ownerCount={blueprintOwnerCounts[bp.internalName]}
+          dfpDisplayEnabled={dfpDisplayEnabled}
         />
       )
     },
@@ -596,7 +599,37 @@ export default function BlueprintsRoute() {
       isViewingOther,
       setOrderable,
       blueprintOwnerCounts,
+      dfpDisplayEnabled,
     ]
+  )
+
+  const renderGridItem = React.useCallback(
+    (item: BlueprintGridItem) => {
+      if (item.kind === 'single') {
+        return renderBlueprintCard(item.blueprint)
+      }
+
+      const acquiredCount = item.members.filter(
+        (bp) => displayAcquiredBlueprints[bp.internalName]
+      ).length
+
+      return (
+        <BlueprintVariantGroupCard
+          familyLabel={item.familyLabel}
+          categoryName={item.categoryName}
+          members={item.members}
+          expanded={expandedGroupKey === item.familyKey}
+          onToggle={() =>
+            setExpandedGroupKey((current) =>
+              current === item.familyKey ? null : item.familyKey
+            )
+          }
+          acquiredCount={acquiredCount}
+          renderBlueprintCard={renderBlueprintCard}
+        />
+      )
+    },
+    [renderBlueprintCard, displayAcquiredBlueprints, expandedGroupKey]
   )
 
   const handleMainCategoryClick = (cat) => {
@@ -970,38 +1003,11 @@ export default function BlueprintsRoute() {
             </button>
           </div>
         ) : (
-          <div className="blueprint-card-grid items-stretch">
-            {blueprintGridItems.map((item) => {
-              if (item.kind === 'single') {
-                return (
-                  <div key={item.blueprint.internalName} className="h-full min-h-0">
-                    {renderBlueprintCard(item.blueprint)}
-                  </div>
-                )
-              }
-
-              const acquiredCount = item.members.filter(
-                (bp) => displayAcquiredBlueprints[bp.internalName]
-              ).length
-
-              return (
-                <BlueprintVariantGroupCard
-                  key={item.familyKey}
-                  familyLabel={item.familyLabel}
-                  categoryName={item.categoryName}
-                  members={item.members}
-                  expanded={expandedGroupKey === item.familyKey}
-                  onToggle={() =>
-                    setExpandedGroupKey((current) =>
-                      current === item.familyKey ? null : item.familyKey
-                    )
-                  }
-                  acquiredCount={acquiredCount}
-                  renderBlueprintCard={renderBlueprintCard}
-                />
-              )
-            })}
-          </div>
+          <VirtualizedBlueprintGrid
+            items={blueprintGridItems}
+            expandedGroupKey={expandedGroupKey}
+            renderGridItem={renderGridItem}
+          />
         )}
       </section>
 
