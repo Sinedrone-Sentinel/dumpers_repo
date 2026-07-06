@@ -1,6 +1,6 @@
 {
-  "_description": "Documented localization patterns for parsing Star Citizen game data. Patterns are grouped by item type and ordered from strongest (most reliable) to weakest (edge cases).",
-  "_usage": "The parse-extracted-data.mjs script uses these patterns to resolve internal names to human-readable display names from global.ini localization.",
+  "_description": "Maintainer documentation for localization naming patterns. NOT loaded at runtime — patterns live inline in parse-extracted-data.mjs.",
+  "_usage": "Reference when adding or debugging display-name resolution. Update this file when changing parser heuristics.",
   "_lastUpdated": "2026-06-18",
   
   "patterns": {

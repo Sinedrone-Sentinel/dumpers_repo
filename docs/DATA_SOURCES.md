@@ -9,8 +9,10 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 ### Extraction Process
 
 1. **Extract DataForge**: Run `.\scripts\extract-game-data.ps1`
-   - Uses StarBreaker CLI to extract the DCB database and localization from `Data.p4k`
-   - Outputs JSON files to `extracted-data/` (gitignored)
+   - Step 1: full DCB extract to JSON (`extracted-data/libs/foundry/records/`)
+   - Step 2: English localization from `Data.p4k`
+   - Step 3: shop socpaks + ShopInventories **only** with `-IncludeShopData` (skipped by default)
+   - Quality bands and mission broker data come from the DCB extract — no separate `dcb query` steps
 
 2. **Parse Extracted Data**: Run `node scripts/parse-extracted-data.mjs`
    - Parses extracted JSON files
@@ -29,7 +31,8 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 | `game-mining-locations.json` | Ore/location compendium, `locationAliases` (spawnKey → displayName/guideName), mineable details | Game localization (`*_desc` keys) + compendium + HPP audit |
 | `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles; each location includes `spawnKey`, `displayName`, `guideName` | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
-| `game-reputation.json` | Reputation standing thresholds | `reputation/standings/` |
+| `game-reputation.json` | Reputation standings, contracts, mission broker entries | `reputation/standings/`, `missionbroker/`, contract generators |
+| `game-quality-bands.json` | Crafting quality quantization + distribution curves | `crafting/qualityquantization/`, `crafting/qualitydistribution/` |
 | `game-lore.json` | Resource/item lore for Archive | Game localization (`global.ini`) |
 | `dfp-commodity-bases.json` | Q0 commodity/salvage DFP bases (UEX-backed) | `fetch-commodity-dfp-bases.mjs` |
 | `component-metadata.json` | Component wiki metadata (DFP engine build input) | Star Citizen Wiki API |
@@ -51,7 +54,7 @@ Crowdsourced live commodity prices. Used for Resource Tracker DFP Q0 base prices
 
 `npm run fetch-commodity-bases` (monthly refresh recommended).
 
-Shop socpaks and ShopInventories are extracted locally via `extract-game-data.ps1` into `extracted-data/` for a future separate project — not synced to this app.
+Shop socpaks and ShopInventories are extracted locally with `.\scripts\extract-game-data.ps1 -IncludeShopData` into `extracted-data/` for a future separate project — not synced to this app.
 
 ---
 
@@ -94,9 +97,12 @@ Located in `/scripts/`:
 
 | Script | Purpose |
 |--------|---------|
-| `extract-game-data.ps1` | Extract DataForge + localization from Data.p4k via StarBreaker |
+| `extract-game-data.ps1` | Extract full DCB + localization from Data.p4k; optional shop data with `-IncludeShopData` |
 | `parse-extracted-data.mjs` | Parse extracted JSON into `src/data/game-*.json` |
-| `audit-mining-aliases.mjs` | Verify all spawn keys in `game-mining-spawns.json` have `locationAliases` entries with member-facing `displayName` |
+| `generate-mission-broker-order.mjs` | Regenerate `lib/missionBrokerOrder.mjs` after a patch if mission broker records reorder (one-off `dcb query`) |
+| `audit-mining-aliases.mjs` | Verify all spawn keys have member-facing locationAliases |
+| `audit-ore-name-consistency.mjs` | Cross-check ore names across mining JSON outputs |
+| `audit-alias-tables.mjs` | Report which manual alias/rarity tables are still required |
 | `sync-game-data-to-db.mjs` | Optional: upsert mining/components/ordnance to Supabase `game_*` tables |
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |

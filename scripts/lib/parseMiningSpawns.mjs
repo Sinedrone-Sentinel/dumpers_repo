@@ -9,10 +9,14 @@ import {
   hppRecordToSpawnKey,
   resolveAliasForSpawnKey,
 } from './miningLocationAliases.mjs'
+import { oreFromHppMineablePreset } from './hppMineablePresets.mjs'
 import {
   normalizeCompositionElementName,
-  SHIP_ORE_SLUG_TO_NAME,
 } from './miningOreNames.mjs'
+import {
+  harvestablePresetBasename,
+  loadHppProviderPresets,
+} from './hppProviderPresets.mjs'
 
 function readJson(path) {
   try {
@@ -44,22 +48,6 @@ function normalizeLocationKey(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '')
 }
 
-function hppKeyToDisplayName(hppRecordName) {
-  const raw = hppRecordName.replace(/^HarvestableProviderPreset\.HPP_/i, '')
-  const parts = raw.split('_').filter(Boolean)
-  return parts
-    .map((p) => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
-    .join(' ')
-}
-
-function inferSystemFromPath(filePath) {
-  const lower = filePath.replace(/\\/g, '/').toLowerCase()
-  if (lower.includes('/nyx/')) return 'Nyx'
-  if (lower.includes('/pyro/')) return 'Pyro'
-  if (lower.includes('/stanton/')) return 'Stanton'
-  return 'Unknown'
-}
-
 function depositTypeFromPreset(presetBasename) {
   if (/^mining_asteroid/i.test(presetBasename)) return 'asteroid'
   if (/^mining_(common|uncommon|rare|epic|legendary|surface)/i.test(presetBasename)) return 'surface'
@@ -67,10 +55,7 @@ function depositTypeFromPreset(presetBasename) {
 }
 
 function oreFromPresetBasename(presetBasename) {
-  const m = presetBasename.match(/^mining_(?:asteroid)?(?:legendary|epic|rare|uncommon|common|surface)?_?(.*)$/i)
-  if (!m) return null
-  const slug = m[1].replace(/_rcd$/i, '').toLowerCase()
-  return SHIP_ORE_SLUG_TO_NAME[slug] ?? null
+  return oreFromHppMineablePreset(presetBasename)
 }
 
 function buildClusterRows(clusterPreset, baseSignature) {
@@ -236,25 +221,8 @@ function loadCompositions(extractedDataRoot) {
   return map
 }
 
-/** @deprecated Fuzzy fallback only — prefer presetCompositionMap from entity MineableParams. */
-function findCompositionForPresetLegacy(presetBasename, compositions) {
-  const slug = presetBasename.replace(/^mining_asteroid/i, 'mining_').replace(/^mining_/i, '')
-  for (const [key, comp] of compositions.entries()) {
-    if (key.toLowerCase().includes(slug.replace(/_/g, ''))) return comp
-  }
-  const ore = oreFromPresetBasename(presetBasename)
-  if (!ore) return null
-  const oreSlug = ore.toLowerCase()
-  for (const [key, comp] of compositions.entries()) {
-    if (key.toLowerCase().includes(oreSlug)) return comp
-  }
-  return null
-}
-
-function findCompositionForPreset(presetBasename, compositions, presetCompositionMap) {
-  const fromEntity = presetCompositionMap.get(presetBasename)
-  if (fromEntity) return fromEntity
-  return findCompositionForPresetLegacy(presetBasename, compositions)
+function findCompositionForPreset(presetBasename, presetCompositionMap) {
+  return presetCompositionMap.get(presetBasename) ?? null
 }
 
 function buildLocationIndex(miningLocations) {
@@ -284,8 +252,9 @@ function matchGuideLocation(spawnKey, locationIndex, locationAliases) {
  * @param {string} extractedDataRoot
  * @param {object} miningLocations - parsed game-mining-locations shape (oreLocations, locationAliases)
  * @param {Record<string, number>} oreSignatures - RS base signatures from parseOreSignatures()
+ * @param {import('./hppProviderPresets.mjs').HppProviderPreset[] | null} [hppPresets]
  */
-export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSignatures = {}) {
+export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSignatures = {}, hppPresets = null) {
   console.log('\n  Parsing mining spawn / cluster profiles...')
 
   const signatureOres = Object.keys(oreSignatures)
@@ -305,7 +274,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
   const compositions = loadCompositions(extractedDataRoot)
   const presetCompositionMap = buildPresetCompositionMap(extractedDataRoot, compositions)
   const locationIndex = buildLocationIndex(miningLocations)
-  const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
+  const loadedHppPresets = hppPresets ?? loadHppProviderPresets(extractedDataRoot)
   const rawLinks = []
   const audit = {
     unmappedHppLinks: [],
@@ -315,20 +284,14 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
   }
   const seenSpawnKeys = new Set()
 
-  for (const file of walkJsonFiles(hppDir)) {
-    if (!basename(file).startsWith('hpp_')) continue
-    const json = readJson(file)
-    if (!json?._RecordValue_) continue
-
-    const hppKey = json._RecordName_ || basename(file, '.json')
+  for (const preset of loadedHppPresets) {
+    const hppKey = preset.hppKey
     const spawnKey = hppRecordToSpawnKey(hppKey)
     seenSpawnKeys.add(spawnKey)
     const resolved = resolveAliasForSpawnKey(spawnKey, locationAliases)
-    const system = inferSystemFromPath(file) !== 'Unknown'
-      ? inferSystemFromPath(file)
-      : resolved.system
+    const system = preset.system !== 'Unknown' ? preset.system : resolved.system
 
-    for (const group of json._RecordValue_.harvestableGroups ?? []) {
+    for (const group of preset.recordValue.harvestableGroups ?? []) {
       if (group.groupName !== 'SpaceShip_Mineables') continue
       const groupProb = group.groupProbability ?? 0
       const poolSum = (group.harvestables ?? []).reduce((s, h) => s + (h.relativeProbability ?? 0), 0) || 1
@@ -356,7 +319,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
         const poolSharePercent = Math.round((relWeight / poolSum) * 10000) / 100
         const effectiveSpawnPercent = Math.round(((relWeight / poolSum) * groupProb) * 10000) / 10000
 
-        const comp = findCompositionForPreset(presetBasename, compositions, presetCompositionMap)
+        const comp = findCompositionForPreset(presetBasename, presetCompositionMap)
 
         rawLinks.push({
           oreName,

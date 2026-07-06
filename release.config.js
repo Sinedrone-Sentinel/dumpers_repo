@@ -7,6 +7,15 @@ export default {
       '@semantic-release/commit-analyzer',
       {
         preset: 'conventionalcommits',
+        releaseRules: [
+          { type: 'feat', scope: 'dumper', release: 'minor' },
+          { type: 'fix', scope: 'dumper', release: 'patch' },
+          { type: 'perf', scope: 'dumper', release: 'patch' },
+          { type: 'refactor', scope: 'dumper', release: 'patch' },
+          { breaking: true, scope: 'dumper', release: 'major' },
+          { scope: '!dumper', release: false },
+          { type: '*', scope: '!dumper', release: false },
+        ],
       },
     ],
     [
@@ -29,6 +38,8 @@ export default {
       {
         prepareCmd:
           'node scripts/sync-dumper-version.mjs ${nextRelease.version} && node scripts/lib/syncDumperMinGameVersion.mjs',
+        publishCmd:
+          'gh workflow run build-releases.yml -f tag_name=v${nextRelease.version}',
       },
     ],
     [

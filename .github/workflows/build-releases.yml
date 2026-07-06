@@ -4,10 +4,6 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_run:
-    workflows: ['Release BP Dumper']
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
     inputs:
       tag_name:
@@ -19,14 +15,11 @@ jobs:
   build:
     name: Build Go and Python Dumpers
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     permissions:
       contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
 
       - name: Resolve release tag
         id: tag

@@ -21,6 +21,8 @@ Key paths in extracted data:
 - `harvestable/providerpresets/` + `harvestable/clusteringpresets/` - Spawn weights and cluster odds
 - `entities/scitem/ships/weapons/` - Mining lasers, weapons
 - `entities/scitem/ships/{cooler,powerplant,shieldgenerator}/` - Ship components
+- `crafting/qualityquantization/` + `crafting/qualitydistribution/` - Crafting quality bands
+- `missionbroker/` - Mission broker entries (reputation missions)
 - `reputation/standings/` - Standing thresholds
 - `Data/ObjectContainers/PU/Shops/**/*.socpak` - Branded item shop layouts
 - `Data/ObjectContainers/PU/loc/mod/**/reststop_*` - Rest-stop / refinery embedded shops
@@ -28,12 +30,12 @@ Key paths in extracted data:
 - `Data/Localization/english/global.ini` - Game lore/flavor text (`items_commodities_*`, `item_desc*`, `Item_Desc_*`)
 
 **Extraction scripts:**
-- `scripts/extract-game-data.ps1` - Extract DataForge, localization, shop socpaks, ShopInventories JSON
+- `scripts/extract-game-data.ps1` - Full DCB extract + localization; shop socpaks/ShopInventories with `-IncludeShopData` only
 - `scripts/parse-extracted-data.mjs` - Parse extracted JSON into app data (includes `game-lore.json`)
 - `scripts/lib/commodityLocalization.mjs` - Commodity key normalization for lore extraction
 - `scripts/lib/gameLore.mjs` - Full lore extraction (commodities + item descriptions)
 
-**Shop socpaks + ShopInventories** are extracted by `extract-game-data.ps1` into `extracted-data/` for future use (separate project — not bundled in this app).
+**Shop socpaks + ShopInventories** are extracted with `-IncludeShopData` into `extracted-data/` for future use (separate project — not bundled in this app).
 
 ## Secondary Data Sources
 

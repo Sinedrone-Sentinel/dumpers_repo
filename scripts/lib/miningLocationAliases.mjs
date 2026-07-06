@@ -3,8 +3,7 @@
  * Used by parse-extracted-data.mjs and parseMiningSpawns.mjs.
  */
 
-import { existsSync, readdirSync, readFileSync } from 'fs'
-import { join, basename } from 'path'
+import { loadHppProviderPresets } from './hppProviderPresets.mjs'
 
 /** Spawn code → primary compendium / guide name (from localization + compendium). */
 export const SPAWN_CODE_GUIDE_NAMES = {
@@ -40,7 +39,7 @@ export const SPAWN_CODE_GUIDE_NAMES = {
   'Keeger Belt': 'Keeger Belt',
 }
 
-/** Compendium Lagrange station → internal belt template (ore-overlap verified). */
+/** Compendium Lagrange station → internal belt template (ore-overlap verified; not in game files). */
 export const GUIDE_TO_SPAWN_KEYS = {
   'ARC-L1': ['Lagrange F'],
   'ARC-L2': ['Lagrange F'],
@@ -133,27 +132,7 @@ const SPAWN_KEY_SKIP_DESC_SUFFIXES = new Set([
   'entrance',
 ])
 
-/** Explicit HPP slug → canonical spawnKey (matches legacy game-mining-spawns.json). */
-const HPP_CANONICAL_SPAWN_KEYS = {
-  AaronHalo: 'Aaron Halo',
-  Pyro_AkiroCluster: 'Akiro Cluster',
-  Nyx_GlaciemRing: 'Glaciem Ring',
-  Nyx_KeegerBelt: 'Keeger Belt',
-  Pyro_DeepSpaceAsteroids: 'Pyro Deepspaceasteroids',
-  Pyro_Warm01: 'Pyro Warm01',
-  Pyro_Warm02: 'Pyro Warm02',
-  Pyro_Cool01: 'Pyro Cool01',
-  Pyro_Cool02: 'Pyro Cool02',
-  Stanton2c_Belt: 'Stanton2c Belt',
-  Lagrange_A: 'Lagrange A',
-  Lagrange_B: 'Lagrange B',
-  Lagrange_C: 'Lagrange C',
-  Lagrange_D: 'Lagrange D',
-  Lagrange_E: 'Lagrange E',
-  Lagrange_F: 'Lagrange F',
-  Lagrange_G: 'Lagrange G',
-  Lagrange_Occupied: 'Lagrange Occupied',
-}
+/** Explicit slug overrides removed — see hppRecordToSpawnKey() heuristics. */
 
 function splitCamelCaseToken(token) {
   return token
@@ -167,10 +146,22 @@ function splitCamelCaseToken(token) {
 /** Normalize HPP record name to spawnKey (matches legacy game-mining-spawns.json). */
 export function hppRecordToSpawnKey(hppRecordName) {
   const raw = String(hppRecordName || '').replace(/^HarvestableProviderPreset\.HPP_/i, '')
-  if (HPP_CANONICAL_SPAWN_KEYS[raw]) return HPP_CANONICAL_SPAWN_KEYS[raw]
 
   if (/^(Stanton|Pyro)\d+[a-f]?$/i.test(raw)) {
     return raw.charAt(0).toUpperCase() + raw.slice(1)
+  }
+
+  const systemSiteMatch = raw.match(/^(Pyro|Nyx)_(.+)$/i)
+  if (systemSiteMatch) {
+    const [, system, sitePart] = systemSiteMatch
+    const systemLabel = `${system.charAt(0).toUpperCase()}${system.slice(1).toLowerCase()}`
+    if (/^(Warm|Cool)\d/i.test(sitePart)) {
+      return `${systemLabel} ${sitePart.charAt(0).toUpperCase()}${sitePart.slice(1)}`
+    }
+    if (/^DeepSpace/i.test(sitePart)) {
+      return `${systemLabel} ${sitePart.charAt(0).toUpperCase()}${sitePart.slice(1).toLowerCase()}`
+    }
+    return splitCamelCaseToken(sitePart).join(' ')
   }
 
   if (!raw.includes('_')) {
@@ -398,31 +389,10 @@ function applyVerifiedOverlays(aliases) {
   }
 }
 
-function walkJsonFiles(dir, acc = []) {
-  if (!existsSync(dir)) return acc
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const p = join(dir, entry.name)
-    if (entry.isDirectory()) walkJsonFiles(p, acc)
-    else if (entry.name.endsWith('.json')) acc.push(p)
-  }
-  return acc
-}
-
-/** Ensure every HPP preset has an alias entry; enrich system from file path. */
 function auditHppProviderPresets(extractedDataRoot, aliases) {
-  const hppDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/providerpresets')
-  for (const file of walkJsonFiles(hppDir)) {
-    if (!basename(file).startsWith('hpp_')) continue
-    const json = JSON.parse(readFileSync(file, 'utf-8'))
-    const spawnKey = hppRecordToSpawnKey(json._RecordName_ || basename(file, '.json'))
-    const pathLower = file.replace(/\\/g, '/').toLowerCase()
-    const system = pathLower.includes('/pyro/')
-      ? 'Pyro'
-      : pathLower.includes('/stanton/')
-        ? 'Stanton'
-        : pathLower.includes('/nyx/')
-          ? 'Nyx'
-          : inferSystemFromSpawnKey(spawnKey)
+  for (const preset of loadHppProviderPresets(extractedDataRoot)) {
+    const spawnKey = hppRecordToSpawnKey(preset.hppKey)
+    const system = preset.system !== 'Unknown' ? preset.system : inferSystemFromSpawnKey(spawnKey)
 
     if (!aliases.has(spawnKey)) {
       const guideName = SPAWN_CODE_GUIDE_NAMES[spawnKey]
