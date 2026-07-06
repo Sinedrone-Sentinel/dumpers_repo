@@ -139,6 +139,10 @@ func (st *SessionTracker) ProcessLine(line string, ts time.Time, state *WatcherS
 	}
 	if patternCrash.MatchString(line) {
 		st.crashAt = ts
+		if time.Since(ts) > crashRecoveryWindow {
+			st.crashAt = time.Time{}
+			return ""
+		}
 		st.pendingStatus = "crash_waiting"
 		return "game_crash"
 	}
@@ -156,9 +160,14 @@ func (st *SessionTracker) ProcessLine(line string, ts time.Time, state *WatcherS
 	return ""
 }
 
-func (st *SessionTracker) PendingStatusEvent() string {
+func (st *SessionTracker) PendingStatusEvent(now time.Time) string {
 	st.mu.Lock()
 	defer st.mu.Unlock()
+	if st.pendingStatus == "crash_waiting" && st.isCrashRecoveryExpired(now) {
+		st.pendingStatus = ""
+		st.crashAt = time.Time{}
+		return ""
+	}
 	switch st.pendingStatus {
 	case "exit_menu":
 		return "game_exit_menu"
@@ -171,6 +180,37 @@ func (st *SessionTracker) PendingStatusEvent() string {
 	default:
 		return ""
 	}
+}
+
+func (st *SessionTracker) isCrashRecoveryExpired(now time.Time) bool {
+	return !st.crashAt.IsZero() && now.Sub(st.crashAt) > crashRecoveryWindow
+}
+
+// FinalizeAfterReconcile clears stale crash recovery state from historical log replay.
+func (st *SessionTracker) FinalizeAfterReconcile(state *WatcherState, now time.Time) {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	if !st.isCrashRecoveryExpired(now) {
+		return
+	}
+	state.ClearAllActive()
+	st.crashAt = time.Time{}
+	if st.pendingStatus == "crash_waiting" {
+		st.pendingStatus = ""
+	}
+}
+
+// ExpireStaleCrashIfNeeded returns game_tracking when the crash recovery window has elapsed.
+func (st *SessionTracker) ExpireStaleCrashIfNeeded(state *WatcherState, now time.Time) string {
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	if st.pendingStatus != "crash_waiting" || !st.isCrashRecoveryExpired(now) {
+		return ""
+	}
+	state.ClearAllActive()
+	st.crashAt = time.Time{}
+	st.pendingStatus = ""
+	return "game_tracking"
 }
 
 func (st *SessionTracker) ClearPendingStatus() {
@@ -357,6 +397,9 @@ func reconcileActiveMissionsFromLog(path string, state *WatcherState, session *S
 		}
 		applyWatchLineToState(line, state, session, ts)
 	}
+	if session != nil {
+		session.FinalizeAfterReconcile(state, time.Now())
+	}
 	return scanner.Err()
 }
 
@@ -374,6 +417,8 @@ func postGameSessionEvent(url, apiKey, eventType string) {
 		label = "Game crash detected"
 	case "game_reconnected":
 		label = "Back online in PU"
+	case "game_tracking":
+		label = "Resumed normal tracking"
 	}
 	if err := postDumperEvent(url, apiKey, eventType, nil); err != nil {
 		fmt.Printf("  [Live] %s✗ Game status sync failed (%s):%s %v\n", color.Red, label, color.Reset, err)
@@ -1745,6 +1790,12 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 		default:
 		}
 
+		if fh != nil && !dryRun && apiKey != "" {
+			if event := sessionTracker.ExpireStaleCrashIfNeeded(state, time.Now()); event != "" {
+				postGameSessionEvent(url, apiKey, event)
+			}
+		}
+
 		st, err := os.Stat(path)
 		if err != nil {
 			if fh != nil {
@@ -1778,8 +1829,8 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 				fmt.Printf("%s⚠ Could not reconcile active missions:%s %v\n", color.Yellow, color.Reset, err)
 			} else if !dryRun && apiKey != "" {
 				syncActiveMissionsToServer(url, apiKey, state)
-				if sessionTracker.PendingStatusEvent() != "" {
-					postGameSessionEvent(url, apiKey, sessionTracker.PendingStatusEvent())
+				if event := sessionTracker.PendingStatusEvent(time.Now()); event != "" {
+					postGameSessionEvent(url, apiKey, event)
 				}
 			}
 			fh, err = os.Open(path)

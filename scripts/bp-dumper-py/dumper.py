@@ -515,6 +515,9 @@ class SessionTracker:
             return "game_exit_menu"
         if PATTERN_CRASH.search(line):
             self.crash_at = ts
+            if time.time() - ts > CRASH_RECOVERY_WINDOW_SEC:
+                self.crash_at = None
+                return ""
             self.pending_status = "crash_waiting"
             return "game_crash"
         if PATTERN_LOADING_PU.search(line):
@@ -527,13 +530,39 @@ class SessionTracker:
                 return "game_reconnected"
         return ""
 
-    def pending_status_event(self) -> str:
+    def pending_status_event(self, now: float | None = None) -> str:
+        now = now if now is not None else time.time()
+        if self.pending_status == "crash_waiting" and self._is_crash_recovery_expired(now):
+            self.pending_status = ""
+            self.crash_at = None
+            return ""
         mapping = {
             "exit_menu": "game_exit_menu",
             "quit_game": "game_quit",
             "crash_waiting": "game_crash",
         }
         return mapping.get(self.pending_status, "")
+
+    def _is_crash_recovery_expired(self, now: float) -> bool:
+        return self.crash_at is not None and now - self.crash_at > CRASH_RECOVERY_WINDOW_SEC
+
+    def finalize_after_reconcile(self, state: "WatcherState", now: float | None = None) -> None:
+        now = now if now is not None else time.time()
+        if not self._is_crash_recovery_expired(now):
+            return
+        state.clear_all_active()
+        self.crash_at = None
+        if self.pending_status == "crash_waiting":
+            self.pending_status = ""
+
+    def expire_stale_crash_if_needed(self, state: "WatcherState", now: float | None = None) -> str:
+        now = now if now is not None else time.time()
+        if self.pending_status != "crash_waiting" or not self._is_crash_recovery_expired(now):
+            return ""
+        state.clear_all_active()
+        self.crash_at = None
+        self.pending_status = ""
+        return "game_tracking"
 
 def parse_log_timestamp(line: str) -> Optional[float]:
     m = PATTERN_TIMESTAMP.match(line)
@@ -685,6 +714,9 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState, session:
             ts = parse_log_timestamp(line) or time.time()
             apply_watch_line_to_state(line, state, session, ts)
 
+    if session is not None:
+        session.finalize_after_reconcile(state)
+
 
 def post_game_session_event(session, url: str, event_type: str) -> None:
     if not event_type:
@@ -694,6 +726,7 @@ def post_game_session_event(session, url: str, event_type: str) -> None:
         "game_quit": "Game closed",
         "game_crash": "Game crash detected",
         "game_reconnected": "Back online in PU",
+        "game_tracking": "Resumed normal tracking",
     }
     label = labels.get(event_type, event_type)
     try:
@@ -802,6 +835,14 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                     first_open = False
                 else:
                     print("Opened new log session...")
+
+            if fh and session and not args.dry_run:
+                expired = session_tracker.expire_stale_crash_if_needed(state)
+                if expired:
+                    try:
+                        post_game_session_event(session, args.url, expired)
+                    except Exception:
+                        pass
 
             try:
                 chunk = fh.read()

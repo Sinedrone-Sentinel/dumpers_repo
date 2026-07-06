@@ -384,6 +384,12 @@ serve(async (req) => {
       return jsonResponse({ success: true, event: 'game_reconnected' })
     }
 
+    if (eventType === 'game_tracking') {
+      await setGameStatus(supabase, userId, 'tracking', true)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({ success: true, event: 'game_tracking' })
+    }
+
     if (eventType === 'session_end') {
       await setWatchSession(supabase, userId, false)
       await touchApiKey(supabase, apiKey)
