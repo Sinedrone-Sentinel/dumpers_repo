@@ -6,7 +6,8 @@ const MIN_COL_PX = 280
 const GRID_GAP_SM_PX = 16
 const GRID_GAP_DEFAULT_PX = 12
 const DEFAULT_ROW_HEIGHT = 340
-const EXPANDED_GROUP_ROW_HEIGHT = 520
+const GROUP_HEADER_HEIGHT = 120
+const GROUP_BODY_PADDING = 32
 
 function gridGapPx(): number {
   if (typeof window === 'undefined') return GRID_GAP_SM_PX
@@ -16,6 +17,57 @@ function gridGapPx(): number {
 function gridItemKey(item: BlueprintGridItem): string {
   if (item.kind === 'single') return item.blueprint.internalName || item.blueprint.file || 'single'
   return item.familyKey
+}
+
+function isExpandedGroup(item: BlueprintGridItem, expandedGroupKey: string | null): boolean {
+  return item.kind === 'group' && expandedGroupKey === item.familyKey
+}
+
+/** Pack flat grid items into virtual rows; expanded groups always occupy a full-width row. */
+function buildVirtualRows(
+  items: BlueprintGridItem[],
+  columnCount: number,
+  expandedGroupKey: string | null
+): BlueprintGridItem[][] {
+  const rows: BlueprintGridItem[][] = []
+  let currentRow: BlueprintGridItem[] = []
+
+  const flushRow = () => {
+    if (currentRow.length === 0) return
+    rows.push(currentRow)
+    currentRow = []
+  }
+
+  for (const item of items) {
+    if (isExpandedGroup(item, expandedGroupKey)) {
+      flushRow()
+      rows.push([item])
+      continue
+    }
+
+    currentRow.push(item)
+    if (currentRow.length >= columnCount) {
+      flushRow()
+    }
+  }
+
+  flushRow()
+  return rows
+}
+
+function estimateExpandedGroupHeight(
+  memberCount: number,
+  columnCount: number,
+  gridGap: number
+): number {
+  const innerColumns = Math.max(1, columnCount)
+  const memberRows = Math.ceil(memberCount / innerColumns)
+  return (
+    GROUP_HEADER_HEIGHT +
+    GROUP_BODY_PADDING +
+    memberRows * DEFAULT_ROW_HEIGHT +
+    Math.max(0, memberRows - 1) * gridGap
+  )
 }
 
 interface VirtualizedBlueprintGridProps {
@@ -56,32 +108,18 @@ export default function VirtualizedBlueprintGrid({
     }
   }, [items.length, expandedGroupKey])
 
-  const rows = useMemo(() => {
-    const result: BlueprintGridItem[][] = []
-    let index = 0
-    while (index < items.length) {
-      const item = items[index]
-      if (item.kind === 'group' && expandedGroupKey === item.familyKey) {
-        result.push([item])
-        index += 1
-        continue
-      }
-      result.push(items.slice(index, index + columnCount))
-      index += columnCount
-    }
-    return result
-  }, [items, columnCount, expandedGroupKey])
+  const rows = useMemo(
+    () => buildVirtualRows(items, columnCount, expandedGroupKey),
+    [items, columnCount, expandedGroupKey]
+  )
 
   const rowVirtualizer = useWindowVirtualizer({
     count: rows.length,
     estimateSize: (index) => {
       const row = rows[index]
-      if (
-        row.length === 1 &&
-        row[0].kind === 'group' &&
-        expandedGroupKey === row[0].familyKey
-      ) {
-        return EXPANDED_GROUP_ROW_HEIGHT
+      const lone = row.length === 1 ? row[0] : null
+      if (lone?.kind === 'group' && isExpandedGroup(lone, expandedGroupKey)) {
+        return estimateExpandedGroupHeight(lone.members.length, columnCount, gridGap)
       }
       return DEFAULT_ROW_HEIGHT
     },
@@ -99,9 +137,7 @@ export default function VirtualizedBlueprintGrid({
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const rowItems = rows[virtualRow.index]
           const isExpandedGroupRow =
-            rowItems.length === 1 &&
-            rowItems[0].kind === 'group' &&
-            expandedGroupKey === rowItems[0].familyKey
+            rowItems.length === 1 && isExpandedGroup(rowItems[0], expandedGroupKey)
 
           return (
             <div
