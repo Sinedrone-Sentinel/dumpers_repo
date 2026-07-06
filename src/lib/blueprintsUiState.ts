@@ -11,7 +11,6 @@ export interface BlueprintsUiState {
   selectedArmorWeight: string | null
   selectedArmorSlot: string | null
   showOnlyRewards: boolean
-  selectedUserId: string
   acquisitionFilter: BlueprintsAcquisitionFilter
 }
 
@@ -24,7 +23,6 @@ const DEFAULT_STATE: BlueprintsUiState = {
   selectedArmorWeight: null,
   selectedArmorSlot: null,
   showOnlyRewards: true,
-  selectedUserId: 'all',
   acquisitionFilter: 'all',
 }
 
@@ -77,7 +75,6 @@ export function readBlueprintsUiState(scope: string | null): BlueprintsUiState {
     selectedArmorWeight: nullableString(parsed.selectedArmorWeight),
     selectedArmorSlot: nullableString(parsed.selectedArmorSlot),
     showOnlyRewards: typeof parsed.showOnlyRewards === 'boolean' ? parsed.showOnlyRewards : true,
-    selectedUserId: typeof parsed.selectedUserId === 'string' ? parsed.selectedUserId : 'all',
     acquisitionFilter: parseAcquisitionFilter(parsed.acquisitionFilter),
   }
 }
@@ -102,7 +99,6 @@ export function writeBlueprintsUiState(scope: string | null, update: Partial<Blu
     selectedArmorSlot:
       update.selectedArmorSlot !== undefined ? update.selectedArmorSlot : current.selectedArmorSlot,
     showOnlyRewards: update.showOnlyRewards ?? current.showOnlyRewards,
-    selectedUserId: update.selectedUserId ?? current.selectedUserId,
     acquisitionFilter: update.acquisitionFilter ?? current.acquisitionFilter,
   }
 

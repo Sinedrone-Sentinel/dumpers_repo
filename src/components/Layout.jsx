@@ -22,7 +22,6 @@ function LayoutContent({
   profile,
   isPending,
   isGuestPreview,
-  isGhostMode,
   isOfficerOrAbove,
   isSuperAdmin,
   showSettingsButton,
@@ -54,7 +53,6 @@ function LayoutContent({
         profile={profile}
         isPending={isPending}
         isGuestPreview={isGuestPreview}
-        isGhostMode={isGhostMode}
         isOfficerOrAbove={isOfficerOrAbove}
         isSuperAdmin={isSuperAdmin}
         showSettingsButton={showSettingsButton}
@@ -98,7 +96,6 @@ export default function Layout() {
     bootstrapSteps,
     isBanned,
     isPending,
-    isGhostMode,
     isApproved,
     isOfficerOrAbove,
     signOut,
@@ -113,7 +110,7 @@ export default function Layout() {
   const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
-  const showDbActionsButton = isSuperAdmin && !isGhostMode
+  const showDbActionsButton = isSuperAdmin
   const [showAdminPanel, setShowAdminPanel] = useState(false)
   const [showProfileSettings, setShowProfileSettings] = useState(false)
   const [showDbActions, setShowDbActions] = useState(false)
@@ -161,7 +158,6 @@ export default function Layout() {
         profile={profile}
         isPending={isPending}
         isGuestPreview={isGuestPreview}
-        isGhostMode={isGhostMode}
         isOfficerOrAbove={isOfficerOrAbove}
         isSuperAdmin={isSuperAdmin}
         showSettingsButton={showSettingsButton}

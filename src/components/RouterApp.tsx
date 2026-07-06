@@ -42,7 +42,7 @@ export default function RouterApp() {
     if (!loading) {
       void router.invalidate()
     }
-  }, [loading, profile?.role, visibilityContext.isGuestPreview, visibilityContext.isGhostMode])
+  }, [loading, profile?.role, visibilityContext.isGuestPreview])
 
   return (
     <RouterProvider

@@ -9,7 +9,6 @@ import AppSidebar from './AppSidebar'
 import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
-import GhostModeBanner from './GhostModeBanner'
 import SignInMenu from '../auth/SignInMenu'
 
 interface AppChromeProps {
@@ -19,7 +18,6 @@ interface AppChromeProps {
   profile: Profile | null
   isPending: boolean
   isGuestPreview: boolean
-  isGhostMode: boolean
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
   showSettingsButton: boolean
@@ -42,7 +40,6 @@ export default function AppChrome({
   profile,
   isPending,
   isGuestPreview,
-  isGhostMode,
   isOfficerOrAbove,
   isSuperAdmin,
   showSettingsButton,
@@ -76,12 +73,11 @@ export default function AppChrome({
               <SignInMenu />
             ) : (
               <>
-                <AppNotificationBell disabled={isPending || isGhostMode} />
+                <AppNotificationBell disabled={isPending} />
                 <AppUserMenu
                   displayName={displayName}
                   profile={profile}
                   isPending={isPending}
-                  isGhostMode={isGhostMode}
                   isOfficerOrAbove={isOfficerOrAbove}
                   isSuperAdmin={isSuperAdmin}
                   showSettingsButton={showSettingsButton}
@@ -103,16 +99,13 @@ export default function AppChrome({
 
       <div className="site-header-offset flex-1 flex flex-col">
         {isGuestPreview && <GuestPreviewBanner />}
-        {!isGuestPreview && isGhostMode && (
-          <GhostModeBanner onOpenSettings={onOpenSettings} />
-        )}
         {children}
       </div>
 
       <footer className="site-footer site-shell mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
         <p className="text-xs text-slate-600">
-          Anonymous usage metrics (tool visits and active time) help improve the site. Ghost Mode sessions are not tracked.
+          Anonymous usage metrics (tool visits and active time) help improve the site.
         </p>
         <DfpOptOutFooter />
       </footer>

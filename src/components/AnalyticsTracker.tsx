@@ -5,24 +5,22 @@ import { initAnalytics, trackAnalyticsRoute, updateAnalyticsContext } from '../l
 
 export default function AnalyticsTracker() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const { user, isGuestPreview, isGhostMode } = useAuth()
-  const authRef = useRef({ user, isGuestPreview, isGhostMode })
+  const { user, isGuestPreview } = useAuth()
+  const authRef = useRef({ user, isGuestPreview })
 
-  authRef.current = { user, isGuestPreview, isGhostMode }
+  authRef.current = { user, isGuestPreview }
 
   useEffect(() => {
     return initAnalytics(() => ({
       isGuest: authRef.current.isGuestPreview && !authRef.current.user,
-      ghostMode: authRef.current.isGhostMode,
     }))
   }, [])
 
   useEffect(() => {
     updateAnalyticsContext({
       isGuest: isGuestPreview && !user,
-      ghostMode: isGhostMode,
     })
-  }, [isGuestPreview, user, isGhostMode])
+  }, [isGuestPreview, user])
 
   useEffect(() => {
     trackAnalyticsRoute(pathname)

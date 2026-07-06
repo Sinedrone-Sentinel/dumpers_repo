@@ -517,7 +517,7 @@ export default function AnalyticsRoute() {
             <div className="px-4 py-3 border-b border-slate-700">
               <h2 className="text-sm font-semibold text-slate-200">Tool usage & active time</h2>
               <p className="text-xs text-slate-500 mt-1">
-                Active time counts only while the tab is visible. Ghost Mode sessions are excluded.
+                Active time counts only while the tab is visible.
                 {audience !== 'all' && ' Showing the selected audience only.'}
               </p>
             </div>

@@ -9,7 +9,6 @@ interface AppUserMenuProps {
   displayName: string
   profile: Profile | null
   isPending: boolean
-  isGhostMode: boolean
   isOfficerOrAbove: boolean
   isSuperAdmin: boolean
   showSettingsButton: boolean
@@ -24,11 +23,22 @@ interface AppUserMenuProps {
   onSignOut: () => void
 }
 
+function MenuSectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="px-4 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+      {children}
+    </p>
+  )
+}
+
+function MenuDivider() {
+  return <div className="border-t border-slate-700 my-1" />
+}
+
 export default function AppUserMenu({
   displayName,
   profile,
   isPending,
-  isGhostMode,
   isOfficerOrAbove,
   isSuperAdmin,
   showSettingsButton,
@@ -55,6 +65,7 @@ export default function AppUserMenu({
   const [repResetUserName, setRepResetUserName] = useState('')
   const [clearArchived, setClearArchived] = useState(false)
   const [searchingUser, setSearchingUser] = useState(false)
+
   const close = useCallback(() => {
     setOpen(false)
     setShowOfficerTools(false)
@@ -73,22 +84,25 @@ export default function AppUserMenu({
 
   const handleRevokeVerification = async () => {
     if (!rsiHandleToRevoke.trim()) return
-    
+
     setProcessing(true)
     setToolMessage(null)
-    
+
     try {
       const rpcName = alsoBanUser ? 'remove_rsi_verification_and_ban' : 'officer_revoke_rsi_verification'
       const { data, error } = await supabase.rpc(rpcName, {
         p_handle: rsiHandleToRevoke.trim(),
         ...(alsoBanUser && { p_reason: 'Officer action via support tools' }),
       })
-      
+
       if (error) throw error
-      
+
       if (data?.success) {
         const action = alsoBanUser ? 'revoked and banned' : 'revoked'
-        setToolMessage({ type: 'success', text: `RSI Handle verification ${action} for ${data.display_name || rsiHandleToRevoke}` })
+        setToolMessage({
+          type: 'success',
+          text: `RSI Handle verification ${action} for ${data.display_name || rsiHandleToRevoke}`,
+        })
         setRsiHandleToRevoke('')
         setAlsoBanUser(false)
       } else {
@@ -97,7 +111,7 @@ export default function AppUserMenu({
     } catch (err) {
       setToolMessage({ type: 'error', text: (err as Error).message })
     }
-    
+
     setProcessing(false)
   }
 
@@ -188,129 +202,64 @@ export default function AppUserMenu({
     )
   }
 
-  const triggerClass = isGhostMode
-    ? 'bg-purple-950/80 border-purple-500/60 hover:bg-purple-900/80'
-    : 'bg-slate-800/90 border-slate-600 hover:bg-slate-700'
+  const roleLabel =
+    profile?.role === 'super-admin'
+      ? 'Super Admin'
+      : profile?.role === 'officer'
+        ? 'Officer'
+        : 'Member'
+
+  const roleClass =
+    profile?.role === 'super-admin'
+      ? 'bg-purple-900/50 text-purple-400'
+      : profile?.role === 'officer'
+        ? 'bg-blue-900/50 text-blue-400'
+        : 'bg-green-900/50 text-green-400'
+
+  const showAccountSection = showSettingsButton
+  const showOfficerSection = isOfficerOrAbove && !isSuperAdmin
+  const showAdminSection = isSuperAdmin
+  const showSupportLink = !isSuperAdmin
 
   return (
     <div ref={containerRef} className="relative shrink-0">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-1.5 px-2 py-1 border rounded-lg transition-colors shadow-md ${triggerClass}`}
+        className="flex items-center gap-1.5 px-2 py-1 border rounded-lg transition-colors shadow-md bg-slate-800/90 border-slate-600 hover:bg-slate-700"
       >
-        {isGhostMode ? (
-          <div className="w-6 h-6 rounded-full bg-purple-600/30 border border-purple-500/50 flex items-center justify-center">
-            <svg className="w-3.5 h-3.5 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-            </svg>
-          </div>
-        ) : profile?.avatar_url ? (
+        {profile?.avatar_url ? (
           <img src={profile.avatar_url} alt={displayName} className="w-6 h-6 rounded-full" />
         ) : (
           <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs">
             {displayName[0]?.toUpperCase()}
           </div>
         )}
-        <span
-          className={`text-xs hidden sm:inline max-w-[100px] truncate ${
-            isGhostMode ? 'text-purple-300 font-semibold uppercase tracking-wide' : 'text-white'
-          }`}
-        >
-          {isGhostMode ? 'Ghost' : displayName}
-        </span>
+        <span className="text-xs hidden sm:inline max-w-[100px] truncate text-white">{displayName}</span>
         <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {open && (
-          <div
-            className={`absolute right-0 top-full mt-2 w-56 bg-slate-800 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain ${
-              isGhostMode ? 'border border-purple-500/30' : 'border border-slate-700'
-            }`}
-          >
-            <div className="p-3 border-b border-slate-700">
-              <p className="text-white font-medium truncate flex items-center gap-1.5">
-                <span>{displayName}</span>
-                {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
-              </p>
-              {isGhostMode ? (
-                <p className="text-purple-300/80 text-xs mt-1">Hidden from member lists. Personal tracking only.</p>
-              ) : (
-                <>
-                  {profile?.rsi_handle && (
-                    <p className="text-slate-500 text-xs truncate">({profile.display_name})</p>
-                  )}
-                  <p className="text-slate-400 text-sm truncate">{profile?.email}</p>
-                  <p className="text-xs mt-1">
-                    <span
-                      className={`px-1.5 py-0.5 rounded ${
-                        profile?.role === 'super-admin'
-                          ? 'bg-purple-900/50 text-purple-400'
-                          : profile?.role === 'officer'
-                            ? 'bg-blue-900/50 text-blue-400'
-                            : 'bg-green-900/50 text-green-400'
-                      }`}
-                    >
-                      {profile?.role === 'super-admin'
-                        ? 'Super Admin'
-                        : profile?.role === 'officer'
-                          ? 'Officer'
-                          : 'Member'}
-                    </span>
-                  </p>
-                </>
-              )}
-            </div>
-
-            {isGhostMode && (
-              <div className="py-1">
-                <Link
-                  to="/"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-                >
-                  Blueprints
-                </Link>
-                <Link
-                  to="/targets"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-                >
-                  Mission Tracker
-                </Link>
-                <Link
-                  to="/resources"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-                >
-                  Resource Tracker
-                </Link>
-                <Link
-                  to="/archive"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-                >
-                  Info Archive
-                </Link>
-              </div>
+        <div className="absolute right-0 top-full mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain">
+          <div className="p-3 border-b border-slate-700">
+            <p className="text-white font-medium truncate flex items-center gap-1.5">
+              <span>{displayName}</span>
+              {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+            </p>
+            {profile?.rsi_handle && (
+              <p className="text-slate-500 text-xs truncate">({profile.display_name})</p>
             )}
+            <p className="text-slate-400 text-sm truncate">{profile?.email}</p>
+            <p className="text-xs mt-1">
+              <span className={`px-1.5 py-0.5 rounded ${roleClass}`}>{roleLabel}</span>
+            </p>
+          </div>
 
-            {showSettingsButton && (
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenBpDumper()
-                }}
-                className="w-full px-4 py-2 text-left text-amber-300 hover:bg-slate-700 transition-colors"
-              >
-                BP Dumper
-              </button>
-            )}
-
-            {showSettingsButton && (
+          {showAccountSection && (
+            <div className="py-1">
+              <MenuSectionLabel>Account</MenuSectionLabel>
               <button
                 type="button"
                 onClick={() => {
@@ -321,10 +270,16 @@ export default function AppUserMenu({
               >
                 Settings
               </button>
-            )}
-
-            {/* Webhooks - available to all authenticated users */}
-            {!isGhostMode && (
+              <button
+                type="button"
+                onClick={() => {
+                  close()
+                  onOpenBpDumper()
+                }}
+                className="w-full px-4 py-2 text-left text-amber-300 hover:bg-slate-700 transition-colors"
+              >
+                BP Dumper
+              </button>
               <Link
                 to="/discord-subscribe"
                 onClick={close}
@@ -332,51 +287,14 @@ export default function AppUserMenu({
               >
                 Webhooks
               </Link>
-            )}
+            </div>
+          )}
 
-            {!isGhostMode && showDbActionsButton && (
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenDbActions()
-                }}
-                className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-              >
-                DB Actions
-              </button>
-            )}
-
-            {!isGhostMode && isSuperAdmin && (
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenDiscord()
-                }}
-                className="w-full px-4 py-2 text-left text-indigo-400 hover:bg-slate-700 transition-colors"
-              >
-                Discord
-              </button>
-            )}
-
-            {!isGhostMode && showAdminPanelButton && (
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenAdmin()
-                }}
-                className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-              >
-                Admin Panel
-              </button>
-            )}
-
-            {/* Support Dashboard for all officers and super-admins */}
-            {!isGhostMode && isOfficerOrAbove && (
-              <>
-                <div className="border-t border-slate-700 my-1" />
+          {showOfficerSection && (
+            <>
+              <MenuDivider />
+              <div className="py-1">
+                <MenuSectionLabel>Officer</MenuSectionLabel>
                 <Link
                   to="/support-dashboard"
                   onClick={close}
@@ -384,22 +302,6 @@ export default function AppUserMenu({
                 >
                   Support Dashboard
                 </Link>
-              </>
-            )}
-
-            {isSuperAdmin && (
-              <Link
-                to="/analytics"
-                onClick={close}
-                className="block w-full px-4 py-2 text-left text-violet-400 hover:bg-slate-700 transition-colors"
-              >
-                Site Analytics
-              </Link>
-            )}
-
-            {/* Officer Tools (not for super-admins - they have DB Actions) */}
-            {!isGhostMode && isOfficerOrAbove && !isSuperAdmin && (
-              <>
                 <button
                   type="button"
                   onClick={() => setShowOfficerTools(!showOfficerTools)}
@@ -429,7 +331,6 @@ export default function AppUserMenu({
                       </div>
                     )}
 
-                    {/* RSI Revoke Section */}
                     <div className="space-y-2">
                       <label className="block text-xs text-slate-400 font-medium">Revoke RSI Handle</label>
                       <input
@@ -461,7 +362,6 @@ export default function AppUserMenu({
                       </button>
                     </div>
 
-                    {/* Rep Reset Section */}
                     <div className="pt-3 border-t border-slate-700 space-y-2">
                       <label className="block text-xs text-slate-400 font-medium">Reset User Reputation</label>
                       <div className="flex gap-2">
@@ -486,7 +386,9 @@ export default function AppUserMenu({
                       </div>
                       {repResetUserId && (
                         <div className="p-2 bg-slate-800 rounded border border-slate-600">
-                          <p className="text-sm text-white">Found: <strong>{repResetUserName}</strong></p>
+                          <p className="text-sm text-white">
+                            Found: <strong>{repResetUserName}</strong>
+                          </p>
                           <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer mt-2">
                             <input
                               type="checkbox"
@@ -517,13 +419,63 @@ export default function AppUserMenu({
                     </div>
                   </div>
                 )}
-              </>
-            )}
+              </div>
+            </>
+          )}
 
-            <div className="border-t border-slate-700 my-1" />
+          {showAdminSection && (
+            <>
+              <MenuDivider />
+              <div className="py-1">
+                <MenuSectionLabel>Administration</MenuSectionLabel>
+                <Link
+                  to="/analytics"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-violet-400 hover:bg-slate-700 transition-colors"
+                >
+                  Site Analytics
+                </Link>
+                {showAdminPanelButton && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenAdmin()
+                    }}
+                    className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                  >
+                    Admin Panel
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    close()
+                    onOpenDiscord()
+                  }}
+                  className="w-full px-4 py-2 text-left text-indigo-400 hover:bg-slate-700 transition-colors"
+                >
+                  Discord
+                </button>
+                {showDbActionsButton && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenDbActions()
+                    }}
+                    className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                  >
+                    DB Actions
+                  </button>
+                )}
+              </div>
+            </>
+          )}
 
-            {/* Support for members and officers (not super-admins) */}
-            {!isGhostMode && !isSuperAdmin && (
+          <MenuDivider />
+          <div className="py-1">
+            {showSupportLink && (
               <button
                 type="button"
                 onClick={() => {
@@ -535,7 +487,6 @@ export default function AppUserMenu({
                 Support
               </button>
             )}
-
             <button
               type="button"
               onClick={() => {
@@ -547,6 +498,7 @@ export default function AppUserMenu({
               Sign Out
             </button>
           </div>
+        </div>
       )}
     </div>
   )

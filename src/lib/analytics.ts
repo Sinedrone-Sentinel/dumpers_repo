@@ -9,7 +9,6 @@ const SKIP_PATH_PREFIXES = ['/analytics', '/support-dashboard', '/discord-subscr
 
 export type AnalyticsContext = {
   isGuest: boolean
-  ghostMode: boolean
 }
 
 type ToolSegment = {
@@ -17,7 +16,7 @@ type ToolSegment = {
   subToolId: string
 }
 
-let context: AnalyticsContext = { isGuest: false, ghostMode: false }
+let context: AnalyticsContext = { isGuest: false }
 let currentSegment: ToolSegment | null = null
 let segmentStartedAt: number | null = null
 let pendingMs = 0
@@ -32,7 +31,7 @@ function isEnabled(): boolean {
 }
 
 function shouldTrack(): boolean {
-  return isEnabled() && !context.ghostMode
+  return isEnabled()
 }
 
 export function getAnalyticsVisitorId(): string {

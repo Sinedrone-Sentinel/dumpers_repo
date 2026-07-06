@@ -5,7 +5,6 @@ export type FeatureId =
   | 'blueprints_browse'
   | 'archive_browse'
   | 'blueprints_acquire'
-  | 'member_directory'
   | 'admin_panel'
   | 'settings'
   | 'resource_tracker'
@@ -20,25 +19,20 @@ export type FeatureId =
 
 export interface VisibilityContext {
   role: UserRole | null
-  ghostMode: boolean
   isGuestPreview: boolean
   isSuperAdmin: boolean
   isOfficerOrAbove: boolean
   isApproved: boolean
   isPending: boolean
-  /** Pending or ghost — hidden from member directory / social surfaces */
-  isSociallyHidden: boolean
 }
 
 export interface BuildVisibilityContextInput {
   role?: UserRole | null
-  ghostMode?: boolean
   isGuestPreview?: boolean
 }
 
 export function buildVisibilityContext(input: BuildVisibilityContextInput): VisibilityContext {
   const role = input.role ?? null
-  const ghostMode = input.ghostMode ?? false
   const isGuestPreview = input.isGuestPreview ?? false
   const isSuperAdmin = role === 'super-admin'
   const isOfficerOrAbove = role === 'officer' || isSuperAdmin
@@ -47,13 +41,11 @@ export function buildVisibilityContext(input: BuildVisibilityContextInput): Visi
 
   return {
     role,
-    ghostMode,
     isGuestPreview,
     isSuperAdmin,
     isOfficerOrAbove,
     isApproved,
     isPending,
-    isSociallyHidden: isPending || ghostMode,
   }
 }
 
@@ -80,11 +72,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
     case 'blueprints_acquire':
       return ctx.isApproved
 
-    case 'member_directory':
-      return ctx.isApproved && !ctx.ghostMode
-
     case 'admin_panel':
-      return ctx.isOfficerOrAbove && !ctx.ghostMode
+      return ctx.isOfficerOrAbove
 
     case 'settings':
       return !!ctx.role && ctx.role !== 'pending'
@@ -93,19 +82,19 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isApproved
 
     case 'custom_orders':
-      return ctx.isApproved && !ctx.ghostMode
+      return ctx.isApproved
 
     case 'fulfillment':
-      return ctx.isApproved && !ctx.ghostMode
+      return ctx.isApproved
 
     case 'target_bp_list':
       return ctx.isApproved
 
     case 'site_total':
-      return ctx.isOfficerOrAbove && !ctx.ghostMode
+      return ctx.isOfficerOrAbove
 
     case 'support_tickets':
-      return ctx.isApproved && !ctx.ghostMode
+      return ctx.isApproved
 
     case 'support_dashboard':
       return ctx.isOfficerOrAbove
@@ -119,15 +108,6 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
     default:
       return false
   }
-}
-
-/** Ghost users skip nav items unless ghostAllowed is true (default true). */
-export function passesGhostNavGate(
-  ghostAllowed: boolean | undefined,
-  ctx: VisibilityContext
-): boolean {
-  if (!ctx.ghostMode) return true
-  return ghostAllowed !== false
 }
 
 export function roleMeetsMin(role: UserRole | null | undefined, minRole: UserRole): boolean {

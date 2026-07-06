@@ -15,7 +15,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile,
     refreshProfile,
     updateRsiHandle: _updateRsiHandle,
-    updateGhostMode,
     updateCraftDeductInventory,
     updateGroupBlueprintVariants,
     groupBlueprintVariants,
@@ -28,9 +27,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     refreshAcquiredBlueprints,
   } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
-  const [ghostMode, setGhostMode] = useState(profile?.ghost_mode ?? false)
   const [validatingRsi, setValidatingRsi] = useState(false)
-  const [savingGhost, setSavingGhost] = useState(false)
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
   )
@@ -106,12 +103,10 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     setRsiHandle(profile?.rsi_handle || '')
-    setGhostMode(profile?.ghost_mode ?? false)
     setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
     setGroupVariantsEnabled(groupBlueprintVariants)
   }, [
     profile?.rsi_handle,
-    profile?.ghost_mode,
     profile?.craft_deduct_inventory,
     groupBlueprintVariants,
   ])
@@ -167,22 +162,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setValidatingRsi(false)
-  }
-
-  const handleGhostModeChange = async (enabled: boolean) => {
-    const previous = ghostMode
-    setGhostMode(enabled)
-    setSavingGhost(true)
-    setMessage(null)
-
-    const success = await updateGhostMode(enabled)
-
-    if (!success) {
-      setGhostMode(previous)
-      setMessage({ type: 'error', text: 'Failed to update Ghost Mode.' })
-    }
-
-    setSavingGhost(false)
   }
 
   const handleDfpDisplayChange = async (enabled: boolean) => {
@@ -441,19 +420,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               checked={groupVariantsEnabled}
               onChange={handleGroupBlueprintVariantsChange}
               saving={savingGroupBlueprintVariants}
-            />
-          </SettingsSection>
-
-          <SettingsSection
-            title="Privacy"
-            description="Control visibility to other members"
-          >
-            <SettingsToggle
-              label="Ghost Mode"
-              description="Hide yourself from the member blueprint directory and community features. You keep personal tools — blueprints, Mission Tracker, Resource Tracker, Mining Tracker, and the Info Archive — but orders, fulfillment, webhooks, support, and admin tools stay hidden."
-              checked={ghostMode}
-              onChange={handleGhostModeChange}
-              saving={savingGhost}
             />
           </SettingsSection>
 

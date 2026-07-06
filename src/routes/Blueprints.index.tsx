@@ -9,7 +9,6 @@ import VirtualizedBlueprintGrid from '../components/VirtualizedBlueprintGrid'
 import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
-import RsiVerifiedBadge from '../components/RsiVerifiedBadge'
 import { useAuth } from '../contexts/AuthContext'
 import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
@@ -90,10 +89,7 @@ export default function BlueprintsRoute() {
     acquiredBlueprints: myAcquiredBlueprints, 
     toggleAcquired, 
     canModifyBlueprints,
-    showMemberCollections,
     isPending,
-    fetchUsersWithBlueprints,
-    fetchUserBlueprints,
     user,
     isApproved,
     isSuperAdmin,
@@ -135,9 +131,6 @@ export default function BlueprintsRoute() {
   const [showOnlyRewards, setShowOnlyRewards] = React.useState(
     () => readBlueprintsUiState(uiScope).showOnlyRewards
   )
-  const [selectedUserId, setSelectedUserId] = React.useState(
-    () => readBlueprintsUiState(uiScope).selectedUserId
-  )
   const [acquisitionFilter, setAcquisitionFilter] = React.useState<
     'all' | 'acquired' | 'not_acquired'
   >(() => readBlueprintsUiState(uiScope).acquisitionFilter)
@@ -163,7 +156,6 @@ export default function BlueprintsRoute() {
     setSelectedArmorWeight(saved.selectedArmorWeight)
     setSelectedArmorSlot(saved.selectedArmorSlot)
     setShowOnlyRewards(saved.showOnlyRewards)
-    setSelectedUserId(saved.selectedUserId)
     setAcquisitionFilter(saved.acquisitionFilter)
   }, [uiScope])
 
@@ -183,7 +175,6 @@ export default function BlueprintsRoute() {
       selectedArmorWeight,
       selectedArmorSlot,
       showOnlyRewards,
-      selectedUserId,
       acquisitionFilter,
     })
   }, [
@@ -196,13 +187,9 @@ export default function BlueprintsRoute() {
     selectedArmorWeight,
     selectedArmorSlot,
     showOnlyRewards,
-    selectedUserId,
     acquisitionFilter,
   ])
 
-  const [usersWithBlueprints, setUsersWithBlueprints] = React.useState([])
-  const [viewedUserBlueprints, setViewedUserBlueprints] = React.useState({})
-  const [loadingUserBlueprints, setLoadingUserBlueprints] = React.useState(false)
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
   const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
   const [rewardMissionsModal, setRewardMissionsModal] = React.useState<{
@@ -234,45 +221,9 @@ export default function BlueprintsRoute() {
     }
   }, [blueprints, isGuest])
 
-  useAsyncEffect(async ({ cancelled }) => {
-    if (!showMemberCollections) {
-      setUsersWithBlueprints([])
-      setSelectedUserId('all')
-      return
-    }
-
-    const users = await fetchUsersWithBlueprints()
-    if (!cancelled) setUsersWithBlueprints(users)
-  }, [showMemberCollections, fetchUsersWithBlueprints])
-
-  React.useEffect(() => {
-    if (selectedUserId !== 'all' && !usersWithBlueprints.some((u) => u.id === selectedUserId)) {
-      setSelectedUserId('all')
-    }
-  }, [usersWithBlueprints, selectedUserId])
-
-  useAsyncEffect(async ({ cancelled }) => {
-    if (selectedUserId === 'all' || selectedUserId === user?.id) {
-      setViewedUserBlueprints({})
-      setLoadingUserBlueprints(false)
-      return
-    }
-
-    setLoadingUserBlueprints(true)
-    const blueprints = await fetchUserBlueprints(selectedUserId)
-    if (cancelled) return
-    setViewedUserBlueprints(blueprints)
-    setLoadingUserBlueprints(false)
-  }, [selectedUserId, user?.id])
-
-  const isViewingOther = selectedUserId !== 'all' && selectedUserId !== user?.id
-  
-  // For FILTERING: use viewed user's blueprints when viewing another user
-  const filterAcquiredBlueprints = isViewingOther ? viewedUserBlueprints : myAcquiredBlueprints
-  // For DISPLAY (checkmarks): always show the viewer's own acquired status
   const displayAcquiredBlueprints = myAcquiredBlueprints
 
-  // Base filtered blueprints (applies global filters: search, rewards, user filter, and acquisition filter)
+  // Base filtered blueprints (applies global filters: search, rewards, and acquisition filter)
   const baseFilteredBlueprints = React.useMemo(() => {
     if (!blueprints) return []
     
@@ -285,15 +236,8 @@ export default function BlueprintsRoute() {
       const matchesSearch = searchTerm === '' || bp.blueprintName.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesReward =
         isDefault || !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
-      
-      // When viewing a specific user (not "all" and not self), only show their acquired blueprints
-      const isViewingSpecificOther = selectedUserId !== 'all' && selectedUserId !== user?.id
-      const matchesUserFilter = !isViewingSpecificOther || filterAcquiredBlueprints[bp.internalName]
-      
-      // Acquisition filter: based on the active acquired set
-      // When viewing self or "all", use myAcquiredBlueprints; when viewing other, use viewedUserBlueprints
-      const activeAcquiredSet = isViewingSpecificOther ? viewedUserBlueprints : myAcquiredBlueprints
-      const isAcquiredInActiveSet = !!activeAcquiredSet[bp.internalName]
+
+      const isAcquiredInActiveSet = !!myAcquiredBlueprints[bp.internalName]
       
       let matchesAcquisition = true
       if (acquisitionFilter === 'acquired') {
@@ -302,9 +246,9 @@ export default function BlueprintsRoute() {
         matchesAcquisition = !isAcquiredInActiveSet
       }
       
-      return matchesSearch && matchesReward && matchesUserFilter && matchesAcquisition
+      return matchesSearch && matchesReward && matchesAcquisition
     })
-  }, [blueprints, searchTerm, showOnlyRewards, selectedUserId, user?.id, filterAcquiredBlueprints, myAcquiredBlueprints, viewedUserBlueprints, overridesMap, acquisitionFilter])
+  }, [blueprints, searchTerm, showOnlyRewards, myAcquiredBlueprints, overridesMap, acquisitionFilter])
 
   const materialFilteredBlueprints = React.useMemo(() => {
     if (!selectedMaterial) return baseFilteredBlueprints
@@ -501,7 +445,6 @@ export default function BlueprintsRoute() {
         selectedArmorSlot,
         showOnlyRewards,
         acquisitionFilter,
-        selectedUserId,
         groupBlueprintVariants,
       ].join('\0'),
     [
@@ -514,7 +457,6 @@ export default function BlueprintsRoute() {
       selectedArmorSlot,
       showOnlyRewards,
       acquisitionFilter,
-      selectedUserId,
       groupBlueprintVariants,
     ]
   )
@@ -576,7 +518,7 @@ export default function BlueprintsRoute() {
           }
           effectiveIsOrderable={effectiveIsOrderable}
           catalogIsReward={catalogReward}
-          isSuperAdmin={isSuperAdmin && !isViewingOther}
+          isSuperAdmin={isSuperAdmin}
           onToggleOrderable={(next) =>
             void setOrderable(bp.internalName, next, catalogReward)
           }
@@ -596,7 +538,6 @@ export default function BlueprintsRoute() {
       isOnTargetList,
       toggleTarget,
       isSuperAdmin,
-      isViewingOther,
       setOrderable,
       blueprintOwnerCounts,
       dfpDisplayEnabled,
@@ -722,10 +663,7 @@ export default function BlueprintsRoute() {
           <span>LIVE {blueprintDataVersion}</span>
           <span className="mx-2">•</span>
           <span className="text-green-400">
-            {isViewingOther 
-              ? `${Object.keys(filterAcquiredBlueprints).length} in collection`
-              : `${Object.keys(displayAcquiredBlueprints).length} acquired`
-            }
+            {`${Object.keys(displayAcquiredBlueprints).length} acquired`}
           </span>
         </>
       }
@@ -770,42 +708,7 @@ export default function BlueprintsRoute() {
             <option value="acquired">✓ Acquired</option>
             <option value="not_acquired">✗ Not Acquired</option>
           </select>
-          {showMemberCollections && (
-            <select
-              value={selectedUserId}
-              onChange={(e) => setSelectedUserId(e.target.value)}
-              className="site-input w-full sm:w-auto sm:max-w-[10rem] px-2 py-1.5 text-sm min-w-0"
-            >
-              <option value="all">Everyone</option>
-              {user && (
-                <option value={user.id}>
-                  ★ Me ({Object.keys(myAcquiredBlueprints).length})
-                </option>
-              )}
-              {usersWithBlueprints.filter(u => u.id !== user?.id).map(u => (
-                <option key={u.id} value={u.id}>
-                  {u.rsi_handle_verified ? '✓ ' : ''}{u.rsi_handle || u.display_name || 'Unknown'} ({u.blueprint_count})
-                </option>
-              ))}
-            </select>
-          )}
         </div>
-
-        {isViewingOther && (() => {
-          const viewedUser = usersWithBlueprints.find(u => u.id === selectedUserId)
-          return (
-            <div className="text-xs bg-amber-900/20 border border-amber-500/30 rounded py-2 px-3 space-y-1">
-              <div className="flex items-center gap-1.5 text-amber-400">
-                <span>Viewing {viewedUser?.rsi_handle || viewedUser?.display_name || 'user'}&apos;s collection</span>
-                {viewedUser?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
-                {loadingUserBlueprints && <span>(loading...)</span>}
-              </div>
-              <p className="text-amber-300/70">
-                Checkmarks show your own acquired status. Mark blueprints as acquired or track them in your Mission Tracker without affecting their collection.
-              </p>
-            </div>
-          )
-        })()}
 
         {/* Main Category Tags */}
         <div className="flex flex-wrap gap-1.5 lg:gap-2 items-center">
@@ -994,7 +897,6 @@ export default function BlueprintsRoute() {
                 setSelectedArmorSlot(null)
                 setShowOnlyRewards(false)
                 setSearchTerm('')
-                setSelectedUserId('all')
                 setAcquisitionFilter('all')
               }}
               className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-blue-500/25"

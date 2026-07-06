@@ -59,14 +59,6 @@ function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Pro
   })
 }
 
-export interface UserWithBlueprints {
-  id: string
-  display_name: string | null
-  rsi_handle: string | null
-  rsi_handle_verified: boolean
-  blueprint_count: number
-}
-
 interface AuthContextType {
   user: User | null
   profile: Profile | null
@@ -84,12 +76,9 @@ interface AuthContextType {
   signOut: () => Promise<void>
   toggleAcquired: (blueprintId: string) => Promise<void>
   updateRsiHandle: (handle: string) => Promise<boolean>
-  updateGhostMode: (enabled: boolean) => Promise<boolean>
   updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
   updateGroupBlueprintVariants: (enabled: boolean) => Promise<boolean>
   groupBlueprintVariants: boolean
-  fetchUsersWithBlueprints: () => Promise<UserWithBlueprints[]>
-  fetchUserBlueprints: (userId: string) => Promise<Record<string, boolean>>
   refreshProfile: () => Promise<void>
   refreshAcquiredBlueprints: () => Promise<void>
   displayName: string
@@ -97,12 +86,9 @@ interface AuthContextType {
   isSuperAdmin: boolean
   isPending: boolean
   isGuestPreview: boolean
-  isGhostMode: boolean
-  isSociallyHidden: boolean
   enterGuestPreview: () => void
   exitGuestPreview: () => void
   canModifyBlueprints: boolean
-  showMemberCollections: boolean
   isApproved: boolean
   canAccess: (minRole: UserRole) => boolean
   visibilityContext: VisibilityContext
@@ -694,24 +680,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
-  const updateGhostMode = useCallback(async (enabled: boolean): Promise<boolean> => {
-    const activeUser = userRef.current
-    if (!activeUser) return false
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ ghost_mode: enabled })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating ghost mode:', error)
-      return false
-    }
-
-    setProfile(prev => prev ? { ...prev, ghost_mode: enabled } : null)
-    return true
-  }, [])
-
   const updateCraftDeductInventory = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) return false
@@ -785,80 +753,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
-  const fetchUsersWithBlueprints = useCallback(async (): Promise<UserWithBlueprints[]> => {
-    const { data: blueprintCounts, error: countError } = await supabase
-      .from('acquired_blueprints')
-      .select('user_id')
-    
-    if (countError) {
-      console.error('Error fetching blueprint counts:', countError)
-      return []
-    }
-
-    const userCounts: Record<string, number> = {}
-    blueprintCounts?.forEach(item => {
-      userCounts[item.user_id] = (userCounts[item.user_id] || 0) + 1
-    })
-
-    const userIdsWithBlueprints = Object.keys(userCounts)
-    if (userIdsWithBlueprints.length === 0) return []
-
-    const profileQuery = supabase
-      .from('profiles')
-      .select('id, display_name, rsi_handle, rsi_handle_verified, role')
-      .in('id', userIdsWithBlueprints)
-      .neq('role', 'pending')
-      .eq('ghost_mode', false)
-
-    const { data: profiles, error: profileError } = await profileQuery
-
-    if (profileError) {
-      console.error('Error fetching profiles:', profileError)
-      return []
-    }
-
-    const activeProfile = profileRef.current
-    const isOfficerOrAbove =
-      activeProfile?.role === 'officer' || activeProfile?.role === 'super-admin'
-
-    return (profiles || [])
-      .filter((p) => !(isOfficerOrAbove && p.id === activeProfile?.id))
-      .map((p) => ({
-        id: p.id,
-        display_name: p.display_name,
-        rsi_handle: p.rsi_handle,
-        rsi_handle_verified: p.rsi_handle_verified ?? false,
-        blueprint_count: userCounts[p.id] || 0,
-      }))
-      .sort((a, b) => {
-        const nameA = a.rsi_handle || a.display_name || ''
-        const nameB = b.rsi_handle || b.display_name || ''
-        return nameA.localeCompare(nameB)
-      })
-  }, [])
-
-  const fetchUserBlueprints = useCallback(async (userId: string): Promise<Record<string, boolean>> => {
-    const { data, error } = await supabase
-      .from('acquired_blueprints')
-      .select('blueprint_id')
-      .eq('user_id', userId)
-
-    if (error) {
-      console.error('Error fetching user blueprints:', error)
-      return {}
-    }
-
-    const acquired: Record<string, boolean> = {}
-    data?.forEach((item: { blueprint_id: string }) => {
-      acquired[item.blueprint_id] = true
-    })
-    return acquired
-  }, [])
-
   const isOfficerOrAbove = profile?.role === 'officer' || profile?.role === 'super-admin'
   const isSuperAdmin = profile?.role === 'super-admin'
   const isPending = profile?.role === 'pending'
-  const isGhostMode = profile?.ghost_mode ?? false
   const guestPreviewActive = !user && isGuestPreview
   const groupBlueprintVariants =
     profile?.group_blueprint_variants ?? (guestPreviewActive ? guestGroupBlueprintVariants : false)
@@ -868,14 +765,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () =>
       buildVisibilityContext({
         role: profile?.role ?? null,
-        ghostMode: profile?.ghost_mode ?? false,
         isGuestPreview: guestPreviewActive,
       }),
-    [
-      profile?.role,
-      profile?.ghost_mode,
-      guestPreviewActive,
-    ]
+    [profile?.role, guestPreviewActive]
   )
 
   useEffect(() => {
@@ -884,8 +776,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsGuestPreview(false)
     }
   }, [user])
-  const showMemberCollections = canUseFeature('member_directory', visibilityContext)
-  const isSociallyHidden = visibilityContext.isSociallyHidden
   const canAccess = useCallback(
     (minRole: UserRole) => roleAtLeast(profile?.role, minRole),
     [profile?.role]
@@ -914,12 +804,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       toggleAcquired,
       updateRsiHandle,
-      updateGhostMode,
       updateCraftDeductInventory,
       updateGroupBlueprintVariants,
       groupBlueprintVariants,
-      fetchUsersWithBlueprints,
-      fetchUserBlueprints,
       refreshProfile,
       refreshAcquiredBlueprints,
       displayName,
@@ -927,12 +814,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isSuperAdmin,
       isPending,
       isGuestPreview: guestPreviewActive,
-      isGhostMode,
-      isSociallyHidden,
       enterGuestPreview,
       exitGuestPreview,
       canModifyBlueprints,
-      showMemberCollections,
       isApproved,
       canAccess,
       visibilityContext,
@@ -963,12 +847,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       toggleAcquired,
       updateRsiHandle,
-      updateGhostMode,
       updateCraftDeductInventory,
       updateGroupBlueprintVariants,
       groupBlueprintVariants,
-      fetchUsersWithBlueprints,
-      fetchUserBlueprints,
       refreshProfile,
       refreshAcquiredBlueprints,
       displayName,
@@ -976,12 +857,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isSuperAdmin,
       isPending,
       guestPreviewActive,
-      isGhostMode,
-      isSociallyHidden,
       enterGuestPreview,
       exitGuestPreview,
       canModifyBlueprints,
-      showMemberCollections,
       isApproved,
       canAccess,
       visibilityContext,

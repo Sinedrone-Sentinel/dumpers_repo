@@ -1,7 +1,6 @@
 import type { UserRole } from '../lib/supabase'
 import {
   canUseFeature,
-  passesGhostNavGate,
   type FeatureId,
   type VisibilityContext,
 } from '../lib/featureAccess'
@@ -13,8 +12,6 @@ export interface AppNavItem {
   icon?: string
   featureId?: FeatureId
   minRole?: UserRole
-  /** Ghost Mode users only see items with ghostAllowed !== false */
-  ghostAllowed?: boolean
   /** Nested child items (for expandable menus) */
   children?: AppNavItem[]
 }
@@ -33,7 +30,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     icon: 'blueprints',
     featureId: 'blueprints_browse',
     minRole: 'member',
-    ghostAllowed: true,
   },
   {
     id: 'targets',
@@ -42,7 +38,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     icon: 'target',
     featureId: 'target_bp_list',
     minRole: 'member',
-    ghostAllowed: true,
   },
   {
     id: 'resource-tracker',
@@ -51,7 +46,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     icon: 'resources',
     featureId: 'resource_tracker',
     minRole: 'member',
-    ghostAllowed: true,
   },
   {
     id: 'mining-tracker',
@@ -60,7 +54,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     icon: 'mining',
     featureId: 'mining_tracker',
     minRole: 'member',
-    ghostAllowed: true,
   },
   {
     id: 'custom-orders',
@@ -68,7 +61,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     path: '/orders',
     icon: 'orders',
     featureId: 'custom_orders',
-    ghostAllowed: false,
   },
   {
     id: 'fulfillment',
@@ -76,7 +68,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     path: '/fulfillment',
     icon: 'fulfillment',
     featureId: 'fulfillment',
-    ghostAllowed: false,
   },
   {
     id: 'archive',
@@ -84,7 +75,6 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     path: '/archive',
     icon: 'archive',
     featureId: 'archive_browse',
-    ghostAllowed: true,
     children: [
       { id: 'archive-welcome', label: 'Overview', path: '/archive', icon: 'home' },
       { id: 'archive-components', label: 'Components', path: '/archive?section=components', icon: 'components' },
@@ -122,8 +112,6 @@ export function canSeeNavItem(
 ): boolean {
   // Guests see the full menu — locked items show a preview page when clicked
   if (ctx.isGuestPreview) return true
-
-  if (!passesGhostNavGate(item.ghostAllowed, ctx)) return false
 
   if (item.featureId) {
     return canUseFeature(item.featureId, ctx)

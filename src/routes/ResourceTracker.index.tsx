@@ -32,18 +32,17 @@ import {
 } from '../lib/resourceQuantity'
 
 export default function ResourceTrackerRoute() {
-  const { user, visibilityContext, isSuperAdmin, isGhostMode, isGuestPreview } = useAuth()
+  const { user, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
   const isGuest = !user && isGuestPreview
-  const canViewSiteTotal =
-    !isGhostMode && !isGuest && canUseFeature('site_total', visibilityContext)
+  const canViewSiteTotal = !isGuest && canUseFeature('site_total', visibilityContext)
 
   const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
   const [stockError, setStockError] = useState<string | null>(null)
   const [guestResources, setGuestResources] = useState<GuestResourceEntry[]>([])
 
   useEffect(() => {
-    if ((isGhostMode || isGuest) && activeTab === 'site') setActiveTab('personal')
-  }, [isGhostMode, isGuest, activeTab])
+    if (isGuest && activeTab === 'site') setActiveTab('personal')
+  }, [isGuest, activeTab])
 
   useEffect(() => {
     setAnalyticsSubTool(activeTab === 'site' ? 'site_total' : 'my_resources')
@@ -330,7 +329,7 @@ export default function ResourceTrackerRoute() {
         ) : readOnly ? (
           <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
             Site Total is a read-only rollup — summed from every approved member&apos;s My
-            Resources (excluding ghost and banned accounts). Update your own quantities under My
+            Resources (excluding banned accounts). Update your own quantities under My
             Resources.
           </div>
         ) : null}

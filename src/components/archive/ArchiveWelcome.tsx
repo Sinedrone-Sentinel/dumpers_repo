@@ -309,7 +309,6 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               <ul className="text-xs text-slate-400 space-y-1">
                 <li>• Custom Orders — post WTB buy requests and WTS sell listings (partial OK by default)</li>
                 <li>• Fulfillment — browse, accept full or partial WTS buys, and complete trades</li>
-                <li>• View member directory / browse collections</li>
                 <li>• Cross-device data sync</li>
               </ul>
             </div>

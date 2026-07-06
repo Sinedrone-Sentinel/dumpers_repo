@@ -3,9 +3,15 @@ import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import type { BlueprintGridItem } from '../lib/blueprintVariantGroups'
 
 const MIN_COL_PX = 280
-const ROW_GAP_PX = 16
+const GRID_GAP_SM_PX = 16
+const GRID_GAP_DEFAULT_PX = 12
 const DEFAULT_ROW_HEIGHT = 340
 const EXPANDED_GROUP_ROW_HEIGHT = 520
+
+function gridGapPx(): number {
+  if (typeof window === 'undefined') return GRID_GAP_SM_PX
+  return window.matchMedia('(min-width: 640px)').matches ? GRID_GAP_SM_PX : GRID_GAP_DEFAULT_PX
+}
 
 function gridItemKey(item: BlueprintGridItem): string {
   if (item.kind === 'single') return item.blueprint.internalName || item.blueprint.file || 'single'
@@ -26,15 +32,16 @@ export default function VirtualizedBlueprintGrid({
   const listRef = useRef<HTMLDivElement>(null)
   const [scrollMargin, setScrollMargin] = useState(0)
   const [columnCount, setColumnCount] = useState(1)
+  const [gridGap, setGridGap] = useState(GRID_GAP_SM_PX)
 
   useEffect(() => {
     const el = listRef.current
     if (!el) return
 
     const updateLayout = () => {
-      const styles = getComputedStyle(el)
-      const gap = parseFloat(styles.columnGap || styles.gap || String(ROW_GAP_PX)) || ROW_GAP_PX
+      const gap = gridGapPx()
       const width = el.clientWidth
+      setGridGap(gap)
       setColumnCount(Math.max(1, Math.floor((width + gap) / (MIN_COL_PX + gap))))
       setScrollMargin(el.offsetTop)
     }
@@ -78,6 +85,7 @@ export default function VirtualizedBlueprintGrid({
       }
       return DEFAULT_ROW_HEIGHT
     },
+    gap: gridGap,
     overscan: 4,
     scrollMargin,
   })
@@ -100,9 +108,10 @@ export default function VirtualizedBlueprintGrid({
               key={virtualRow.key}
               data-index={virtualRow.index}
               ref={rowVirtualizer.measureElement}
-              className="absolute left-0 top-0 w-full grid gap-3 sm:gap-4 items-stretch"
+              className="absolute left-0 top-0 w-full grid items-stretch"
               style={{
                 transform: `translateY(${virtualRow.start - scrollMargin}px)`,
+                columnGap: `${gridGap}px`,
                 gridTemplateColumns: isExpandedGroupRow
                   ? 'minmax(0, 1fr)'
                   : `repeat(${Math.min(columnCount, rowItems.length)}, minmax(0, 1fr))`,
