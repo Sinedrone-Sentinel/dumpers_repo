@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import MissionLocationTags from '../components/MissionLocationTags'
 import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
 
@@ -58,8 +59,28 @@ export default function TargetsLiveRoute() {
                         mission.hasZeroRemaining ? 'text-red-400' : 'text-slate-200'
                       }`}
                     >
-                      <p className="font-medium">{mission.debugName}</p>
-                      <p className="text-xs mt-1 text-slate-500">
+                      <p
+                        className={`font-medium leading-snug ${
+                          mission.isLawful ? 'text-green-300' : 'text-red-400'
+                        } ${mission.hasZeroRemaining ? '!text-red-400' : ''}`}
+                      >
+                        {mission.displayLabel}
+                      </p>
+                      {(mission.category || mission.regions.length > 0 || mission.rewardText) && (
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
+                          {mission.category && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40">
+                              {mission.category}
+                            </span>
+                          )}
+                          <MissionLocationTags
+                            regions={mission.regions}
+                            subRegion={mission.subRegion}
+                            system={mission.system}
+                          />
+                        </div>
+                      )}
+                      <p className="text-xs mt-1.5 text-slate-500">
                         {mission.remainingCount} blueprint{mission.remainingCount === 1 ? '' : 's'}{' '}
                         remaining in pool
                       </p>

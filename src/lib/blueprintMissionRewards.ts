@@ -273,6 +273,31 @@ export function getContractsForMissionLabel(missionLabel: string): ContractEntry
   return contracts.filter((contract) => contractMissionLabel(contract) === trimmed)
 }
 
+const contractsById = new Map<string, ContractEntry>()
+const contractsByDebugName = new Map<string, ContractEntry>()
+for (const contract of contracts) {
+  if (contract.id) contractsById.set(contract.id.toLowerCase(), contract)
+  if (contract.debugName) contractsByDebugName.set(contract.debugName.toLowerCase(), contract)
+}
+
+/** Resolve a live dumper mission to catalog contract data (UUID or debugName). */
+export function findContractForLiveMission(
+  contractDefinitionId: string | null | undefined,
+  debugName: string | null | undefined
+): ContractEntry | null {
+  const idKey = contractDefinitionId?.trim().toLowerCase()
+  if (idKey) {
+    return contractsById.get(idKey) ?? contractsByDebugName.get(idKey) ?? null
+  }
+  const debugKey = debugName?.trim().toLowerCase()
+  if (debugKey) return contractsByDebugName.get(debugKey) ?? null
+  return null
+}
+
+export function getContractMissionLabel(contract: ContractEntry): string {
+  return contractMissionLabel(contract)
+}
+
 export interface ContractBlueprintDrop {
   name: string
   dropChance: number

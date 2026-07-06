@@ -319,6 +319,11 @@ serve(async (req) => {
     const eventType = typeof payload.type === 'string' ? payload.type.trim() : ''
 
     if (eventType === 'session_start') {
+      const { error: clearError } = await supabase
+        .from('dumper_active_missions')
+        .delete()
+        .eq('user_id', userId)
+      if (clearError) throw clearError
       await setWatchSession(supabase, userId, true)
       await touchApiKey(supabase, apiKey)
       await cleanupStaleDumperSessions(supabase)

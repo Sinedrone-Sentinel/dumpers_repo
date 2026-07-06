@@ -86,7 +86,7 @@ While tailing `Game.log`, BP Dumper POSTs these events to the log-watcher webhoo
 
 | Event | When |
 | :--- | :--- |
-| `session_start` | Watch mode begins |
+| `session_start` | Watch mode begins (clears live tracker; syncs missions still active in Game.log) |
 | `session_end` | Watch mode exits (Ctrl+C, process exit, log rotation) |
 | `session_ping` | Every ~90s while watching (connection heartbeat) |
 | `mission_started` | Contract accepted in-game |

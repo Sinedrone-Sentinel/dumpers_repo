@@ -599,6 +599,44 @@ def save_cache_file(cache_path: Path, cache_set: set):
     except Exception:
         pass
 
+def apply_watch_line_to_state(line: str, state: WatcherState, ts: float) -> None:
+    if m := PATTERN_MARKER.search(line):
+        def_id_match = PATTERN_MARKER_DEF_ID.search(line)
+        def_id = def_id_match.group(1) if def_id_match else None
+        state.record_marker(m.group(1), m.group(2), m.group(3), def_id)
+    elif m := PATTERN_ACCEPTED.search(line):
+        state.record_accepted(m.group(1), ts)
+    elif m := PATTERN_END_MISSION.search(line):
+        state.record_end(m.group(1), m.group(2), ts)
+
+
+def reconcile_active_missions_from_log(path: Path, state: WatcherState) -> None:
+    """Replay Game.log to find missions still active (accepted, not ended)."""
+    state.active.clear()
+    state.guid_map.clear()
+    state.recent_lifecycle.clear()
+
+    with open(path, "r", encoding="utf-8", errors="replace") as log_file:
+        for line in log_file:
+            line = line.rstrip("\r\n")
+            if not line:
+                continue
+            ts = parse_log_timestamp(line) or time.time()
+            apply_watch_line_to_state(line, state, ts)
+
+
+def sync_active_missions_to_server(session, url: str, state: WatcherState) -> None:
+    snapshot = list(state.active.values())
+    for active in snapshot:
+        post_dumper_event(session, url, "mission_started", {
+            "missionGuid": active.guid,
+            "contractDefinitionId": active.contract_definition_id or "",
+            "debugName": active.debug_name,
+        })
+    if snapshot:
+        print(f"{Colors.CYAN}Synced {len(snapshot)} active mission(s) already in Game.log{Colors.RESET}")
+
+
 def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, args, session=None):
     print(f"{Colors.CYAN}Watching {path.name} for live events... (Press Ctrl+C to stop){Colors.RESET}")
     ping_stop = threading.Event()
@@ -664,19 +702,29 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         except Exception as e:
                             print(f"{Colors.YELLOW}⚠ Failed to notify session restart:{Colors.RESET} {e}")
                 try:
+                    reconcile_active_missions_from_log(path, state)
+                    if session and not args.dry_run:
+                        try:
+                            sync_active_missions_to_server(session, args.url, state)
+                        except Exception as e:
+                            print(f"{Colors.YELLOW}⚠ Could not sync active missions:{Colors.RESET} {e}")
+                except OSError as e:
+                    print(f"{Colors.YELLOW}⚠ Could not reconcile active missions:{Colors.RESET} {e}")
+                try:
                     fh = open(path, "rb")
                 except OSError:
                     fh = None
                     time.sleep(1.0)
                     continue
+                fh.seek(0, os.SEEK_END)
                 last_inode = st.st_ino or None
-                last_size = 0
+                last_size = st.st_size
                 buffer.clear()
                 if first_open:
-                    print(f"Reading active log from beginning...")
+                    print("Tailing Game.log for new events...")
                     first_open = False
                 else:
-                    print(f"Opened new log session...")
+                    print("Opened new log session...")
 
             try:
                 chunk = fh.read()

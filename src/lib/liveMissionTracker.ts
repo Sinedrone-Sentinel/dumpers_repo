@@ -1,4 +1,15 @@
 import lookupData from '../data/blueprint-name-lookup.json'
+import {
+  findContractForLiveMission,
+  getContractMissionLabel,
+} from './blueprintMissionRewards'
+import { formatMissionDisplayTitle } from './missionDisplay'
+import { resolveMissionIsLawful } from './missionLawfulStatus'
+import {
+  formatRepReward,
+  formatScenarioPointsRequirement,
+} from './missionAcquisition'
+import { categorizeRegions, type Region } from './missions'
 
 export interface DumperActiveMission {
   user_id: string
@@ -10,8 +21,15 @@ export interface DumperActiveMission {
 
 export interface LiveMissionRow {
   missionGuid: string
-  debugName: string
-  contractDefinitionId: string | null
+  displayLabel: string
+  title: string
+  faction: string | null
+  rewardText: string | null
+  isLawful: boolean
+  category: string | null
+  regions: Region[]
+  subRegion: string | null
+  system: string | null
   remainingCount: number
   hasZeroRemaining: boolean
 }
@@ -28,10 +46,86 @@ const byInternalName = lookupData.byInternalName as Record<
   { blueprintName: string; categoryName: string | null }
 >
 
-export function poolInternalNamesForContract(contractDefinitionId: string | null | undefined): string[] {
-  if (!contractDefinitionId) return []
-  const key = contractDefinitionId.trim().toLowerCase()
-  return byContractDefinitionId[key] ?? []
+function resolveBlueprintDisplayName(internalName: string): string {
+  const entry = byInternalName[internalName]
+  if (entry?.blueprintName) return entry.blueprintName
+  return internalName
+    .replace(/_/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+export function poolInternalNamesForContract(
+  contractDefinitionId: string | null | undefined,
+  debugName?: string | null
+): string[] {
+  const idKey = contractDefinitionId?.trim().toLowerCase()
+  if (idKey) {
+    const byId = byContractDefinitionId[idKey]
+    if (byId?.length) return byId
+  }
+  const debugKey = debugName?.trim().toLowerCase()
+  if (debugKey) return byContractDefinitionId[debugKey] ?? []
+  return []
+}
+
+function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
+  LiveMissionRow,
+  'missionGuid' | 'remainingCount' | 'hasZeroRemaining'
+> {
+  const contract = findContractForLiveMission(
+    mission.contract_definition_id,
+    mission.debug_name
+  )
+
+  if (contract) {
+    const missionLabel = getContractMissionLabel(contract)
+    const rewardText =
+      contract.scenarioPointsRequired != null
+        ? formatScenarioPointsRequirement(
+            contract.scenarioPointsRequired,
+            contract.scenarioProgressLabel
+          )
+        : formatRepReward(contract.repPoints, contract.repPoints)
+    const displayLabel = rewardText ? `${missionLabel} · ${rewardText}` : missionLabel
+
+    return {
+      displayLabel,
+      title: missionLabel.includes(': ')
+        ? missionLabel.slice(missionLabel.indexOf(': ') + 2)
+        : missionLabel,
+      faction: contract.faction,
+      rewardText,
+      isLawful: resolveMissionIsLawful({
+        factionKey: contract.factionKey,
+        factionName: contract.faction,
+        debugName: contract.debugName,
+      }),
+      category: contract.category,
+      regions: categorizeRegions(contract.system ? [contract.system] : []),
+      subRegion: contract.region,
+      system: contract.system || null,
+    }
+  }
+
+  const title = formatMissionDisplayTitle({
+    debugName: mission.debug_name,
+    title: mission.debug_name,
+  })
+
+  return {
+    displayLabel: title,
+    title,
+    faction: null,
+    rewardText: null,
+    isLawful: true,
+    category: null,
+    regions: [],
+    subRegion: null,
+    system: null,
+  }
 }
 
 export function computeLiveTrackerView(
@@ -42,23 +136,26 @@ export function computeLiveTrackerView(
   const remainingByInternal = new Map<string, RemainingBlueprintRow>()
 
   const missionRows: LiveMissionRow[] = missions.map((mission) => {
-    const pool = poolInternalNamesForContract(mission.contract_definition_id)
+    const pool = poolInternalNamesForContract(
+      mission.contract_definition_id,
+      mission.debug_name
+    )
     const unacquired = pool.filter((internalName) => !acquiredSet[internalName])
+    const display = resolveLiveMissionDisplay(mission)
 
     for (const internalName of unacquired) {
       if (remainingByInternal.has(internalName)) continue
       const entry = byInternalName[internalName]
       remainingByInternal.set(internalName, {
         internalName,
-        blueprintName: entry?.blueprintName ?? internalName,
+        blueprintName: entry?.blueprintName ?? resolveBlueprintDisplayName(internalName),
         categoryName: entry?.categoryName ?? null,
       })
     }
 
     return {
       missionGuid: mission.mission_guid,
-      debugName: mission.debug_name,
-      contractDefinitionId: mission.contract_definition_id,
+      ...display,
       remainingCount: unacquired.length,
       hasZeroRemaining: pool.length > 0 && unacquired.length === 0,
     }
@@ -68,7 +165,7 @@ export function computeLiveTrackerView(
     a.blueprintName.localeCompare(b.blueprintName)
   )
 
-  missionRows.sort((a, b) => a.debugName.localeCompare(b.debugName))
+  missionRows.sort((a, b) => a.displayLabel.localeCompare(b.displayLabel))
 
   return { missions: missionRows, remaining }
 }

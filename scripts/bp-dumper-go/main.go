@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -210,6 +211,75 @@ func parseLogTimestamp(line string) time.Time {
 		return t
 	}
 	return time.Time{}
+}
+
+func applyWatchLineToState(line string, state *WatcherState, ts time.Time) {
+	if m := patternMarker.FindStringSubmatch(line); len(m) >= 4 {
+		defID := ""
+		if dm := patternMarkerDefID.FindStringSubmatch(line); len(dm) >= 2 {
+			defID = dm[1]
+		}
+		state.RecordMarker(m[1], m[2], m[3], defID)
+	} else if m := patternAccepted.FindStringSubmatch(line); len(m) >= 2 {
+		state.RecordAccepted(m[1], ts)
+	} else if m := patternEndMission.FindStringSubmatch(line); len(m) >= 4 {
+		state.RecordEnd(m[1], m[2], ts)
+	}
+}
+
+// reconcileActiveMissionsFromLog replays Game.log to find missions still active (accepted, not ended).
+func reconcileActiveMissionsFromLog(path string, state *WatcherState) error {
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	state.mu.Lock()
+	state.active = make(map[string]ActiveMission)
+	state.guidMap = make(map[string]MissionEntry)
+	state.recentLifecycle = nil
+	state.mu.Unlock()
+
+	scanner := bufio.NewScanner(file)
+	buf := make([]byte, 0, 1024*1024)
+	scanner.Buffer(buf, 1024*1024)
+
+	for scanner.Scan() {
+		line := strings.TrimRight(scanner.Text(), "\r")
+		if line == "" {
+			continue
+		}
+		ts := parseLogTimestamp(line)
+		if ts.IsZero() {
+			ts = time.Now()
+		}
+		applyWatchLineToState(line, state, ts)
+	}
+	return scanner.Err()
+}
+
+func syncActiveMissionsToServer(url, apiKey string, state *WatcherState) {
+	state.mu.Lock()
+	snapshot := make([]ActiveMission, 0, len(state.active))
+	for _, mission := range state.active {
+		snapshot = append(snapshot, mission)
+	}
+	state.mu.Unlock()
+
+	for _, active := range snapshot {
+		fields := map[string]string{
+			"missionGuid":            active.GUID,
+			"contractDefinitionId": active.ContractDefinitionID,
+			"debugName":              active.DebugName,
+		}
+		if err := postDumperEvent(url, apiKey, "mission_started", fields); err != nil {
+			fmt.Printf("  [Live] %s✗ Mission sync failed:%s %v\n", color.Red, color.Reset, err)
+		}
+	}
+	if len(snapshot) > 0 {
+		fmt.Printf("%sSynced %d active mission(s) already in Game.log%s\n", color.Cyan, len(snapshot), color.Reset)
+	}
 }
 
 func parseBlueprintsFromLog(path string, state *WatcherState) ([]string, error) {
@@ -1585,17 +1655,26 @@ func watchLogFile(path string, state *WatcherState, acquiredBps map[string]bool,
 					}
 				}
 			}
+			if err := reconcileActiveMissionsFromLog(path, state); err != nil {
+				fmt.Printf("%s⚠ Could not reconcile active missions:%s %v\n", color.Yellow, color.Reset, err)
+			} else if !dryRun && apiKey != "" {
+				syncActiveMissionsToServer(url, apiKey, state)
+			}
 			fh, err = os.Open(path)
 			if err != nil {
 				fh = nil
 				time.Sleep(1 * time.Second)
 				continue
 			}
+			if _, err := fh.Seek(0, io.SeekEnd); err == nil {
+				lastSize = st.Size()
+			} else {
+				lastSize = 0
+			}
 			lastInode = currentInode
-			lastSize = 0
 			buffer = nil
 			if firstOpen {
-				fmt.Println("Reading active log from beginning...")
+				fmt.Println("Tailing Game.log for new events...")
 				firstOpen = false
 			} else {
 				fmt.Println("Opened new log session...")
