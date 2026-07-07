@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `113_dumper_game_status.sql` (BP Dumper in-game session status for the live tracker status bar). Apply through `113` in numeric order if catching up.
+**Latest migration:** `114_cleanup_legacy_db_objects.sql` (safe removal of unused legacy DB objects). Apply through `114` in numeric order if catching up.
 
 ---
 
@@ -111,7 +111,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 43 | `078_order_listing_type.sql` | WTB/WTS `listing_type`, semantic buyer/seller RPCs |
 | 44 | `079_drop_synced_blueprints.sql` | Drop legacy `synced_blueprints` (sccrafter era) |
 | 45 | `080_discord_personal_routing.sql` | Personal + marketplace Discord routing, server-side triggers |
-| 46 | `081_rsi_org_schema.sql` | RSI org affiliation tables (DB only; site code deferred) |
+| 46 | `081_rsi_org_schema.sql` | *(Historical)* RSI multi-org tables — dropped by `114` (not franchise org logo / Discord admin) |
 | 47 | `082_discord_market_coalesce.sql` | Marketplace listing churn coalesce + admin quiet-period setting |
 | 48 | `083_discord_per_event_webhooks.sql` | Remove webhook cap; per-event sync RPC; return URLs to owner |
 | 49 | `084_discord_rsi_personal_webhooks.sql` | Require RSI verification for `my_order_*` webhook registration |
@@ -142,6 +142,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 74 | `111_user_data_wipe.sql` | Settings → My Data: wipe acquired blueprints / tracked resources |
 | 75 | `112_dumper_live_tracker.sql` | BP Dumper live missions + watch session flags (Realtime) |
 | 76 | `113_dumper_game_status.sql` | BP Dumper in-game session status for live tracker status bar |
+| 77 | `114_cleanup_legacy_db_objects.sql` | Drop legacy RPCs, ghost_mode, RSI multi-org schema, game_components, shop remnants |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -314,8 +315,13 @@ SELECT to_regclass('public.synced_blueprints');  -- should be NULL
 SELECT column_name FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'discord_message_queue' AND column_name = 'target_user_id';
 
--- 081: org schema (optional until Phase 2 site code)
-SELECT to_regclass('public.user_rsi_org_affiliations');  -- should exist after 081
+-- 081 + 114: RSI multi-org schema removed (not franchise org logo / Discord admin)
+SELECT to_regclass('public.user_rsi_org_affiliations');  -- should be NULL after 114
+
+-- 114: ghost_mode and game_components retired
+SELECT column_name FROM information_schema.columns
+WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'ghost_mode';  -- NULL after 114
+SELECT to_regclass('public.game_components');  -- NULL after 114
 
 -- 082: marketplace Discord coalesce
 SELECT column_name FROM information_schema.columns

@@ -102,7 +102,6 @@ function profileFromOrderFields(
     created_at: '',
     approved_at: null,
     approved_by: null,
-    ghost_mode: false,
     craft_deduct_inventory: false,
     group_blueprint_variants: false,
   }

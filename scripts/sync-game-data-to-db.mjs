@@ -61,7 +61,7 @@ function isUnresolvedDisplayName(name) {
 }
 
 async function syncMining() {
-  console.log('\n[1/5] Syncing mining data...')
+  console.log('\n[1/4] Syncing mining data...')
   
   const data = readJsonFile('game-mining-locations.json')
   if (!data) return { synced: 0, errors: 0 }
@@ -109,68 +109,8 @@ async function syncMining() {
   return { synced: rows.length, errors: 0 }
 }
 
-async function syncComponents() {
-  console.log('\n[2/5] Syncing components data...')
-  
-  const data = readJsonFile('game-components.json')
-  if (!data?.components) return { synced: 0, errors: 0 }
-  
-  const rows = data.components
-    .filter((c) => !isUnresolvedDisplayName(c.displayName))
-    .map(c => ({
-    internal_id: c.name,
-    display_name: c.displayName || c.name,
-    component_type: c.type,
-    type_code: c.type?.substring(0, 4).toUpperCase() || 'UNKN',
-    manufacturer: c.manufacturer || 'Unknown',
-    manufacturer_code: c.manufacturerCode || 'UNKN',
-    size: c.size || 0,
-    class: 'Standard', // We don't have class info in new format
-    class_code: 'STD',
-    grade: String.fromCharCode(65 + (c.grade || 0)), // Convert 0-3 to A-D
-    grade_rank: (c.grade || 0) + 1,
-    full_label: c.displayName || c.name
-  }))
-  
-  if (rows.length === 0) {
-    console.log('  No component data to sync')
-    return { synced: 0, errors: 0 }
-  }
-  
-  // Delete existing and insert new
-  const { error: deleteError } = await supabase
-    .from('game_components')
-    .delete()
-    .neq('id', 0)
-  
-  if (deleteError) {
-    console.error('  Error clearing table:', deleteError.message)
-    return { synced: 0, errors: 1 }
-  }
-  
-  // Insert in batches of 500
-  const batchSize = 500
-  let synced = 0
-  
-  for (let i = 0; i < rows.length; i += batchSize) {
-    const batch = rows.slice(i, i + batchSize)
-    const { error: insertError } = await supabase
-      .from('game_components')
-      .insert(batch)
-    
-    if (insertError) {
-      console.error(`  Error inserting batch ${i / batchSize + 1}:`, insertError.message)
-      return { synced, errors: 1 }
-    }
-    synced += batch.length
-  }
-  
-  console.log(`  Synced ${synced} components`)
-  return { synced, errors: 0 }
-}
-
 async function syncOrdnance() {
-  console.log('\n[3/5] Syncing ordnance data...')
+  console.log('\n[2/4] Syncing ordnance data...')
   
   const data = readJsonFile('game-ordnance.json')
   if (!data?.ordnance) return { synced: 0, errors: 0 }
@@ -218,7 +158,7 @@ async function syncOrdnance() {
 }
 
 async function syncBlueprintPools() {
-  console.log('\n[4/5] Syncing blueprint pools...')
+  console.log('\n[3/4] Syncing blueprint pools...')
   
   const bpData = readJsonFile('game-blueprint-missions.json')
   const repData = readJsonFile('game-reputation.json')
@@ -286,7 +226,7 @@ async function syncBlueprintPools() {
 }
 
 async function syncBlueprintStandings() {
-  console.log('\n[5/5] Syncing blueprint standings...')
+  console.log('\n[4/4] Syncing blueprint standings...')
   
   const bpData = readJsonFile('game-blueprint-missions.json')
   const repData = readJsonFile('game-reputation.json')
@@ -404,7 +344,6 @@ async function main() {
   
   const results = {
     mining: await syncMining(),
-    components: await syncComponents(),
     ordnance: await syncOrdnance(),
     blueprintPools: await syncBlueprintPools(),
     blueprintStandings: await syncBlueprintStandings(),
@@ -421,7 +360,6 @@ async function main() {
   console.log('  Sync Summary')
   console.log('='.repeat(60))
   console.log(`  Mining:            ${results.mining.synced} rows`)
-  console.log(`  Components:        ${results.components.synced} rows`)
   console.log(`  Ordnance:          ${results.ordnance.synced} rows`)
   console.log(`  Blueprint Pools:   ${results.blueprintPools.synced} rows`)
   console.log(`  Blueprint Standings: ${results.blueprintStandings.synced} rows`)

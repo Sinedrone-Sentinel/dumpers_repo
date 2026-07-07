@@ -23,7 +23,6 @@ export interface Profile {
   created_at: string
   approved_at: string | null
   approved_by: string | null
-  ghost_mode: boolean
   craft_deduct_inventory: boolean
   group_blueprint_variants: boolean
 }

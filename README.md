@@ -269,7 +269,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`113_dumper_game_status.sql`**
+   Apply migrations in numeric order through **`114_cleanup_legacy_db_objects.sql`**
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
@@ -321,7 +321,7 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 ```powershell
 .\scripts\extract-game-data.ps1
 node scripts/parse-extracted-data.mjs
-node scripts/sync-game-data-to-db.mjs   # optional: push game_* tables to Supabase
+node scripts/sync-game-data-to-db.mjs   # optional: push game_mining, ordnance, blueprint pools to Supabase
 npm run sync-min-game-version           # optional: update dumper min game version in source
 ```
 
