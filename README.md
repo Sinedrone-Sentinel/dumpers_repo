@@ -339,7 +339,7 @@ npm run sync-min-game-version           # optional: update dumper min game versi
 | `game-quality-bands.json` | Crafting quality curves |
 | `game-lore.json` | Archive resource/item lore |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
-| `blueprint-name-lookup.json` | BP Dumper Game.log name resolution |
+| `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
 Super-admins can run extract → parse → deploy from **DB Actions** without a local toolchain on every machine.
 

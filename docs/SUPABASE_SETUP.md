@@ -168,6 +168,7 @@ npx supabase functions deploy unban-user
 npx supabase functions deploy delete-account
 npx supabase functions deploy validate-rsi-handle
 npx supabase functions deploy send-discord
+npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 ```
 

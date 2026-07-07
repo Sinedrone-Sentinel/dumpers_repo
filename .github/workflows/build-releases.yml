@@ -55,6 +55,9 @@ jobs:
           go-version: '1.21'
           cache: false
 
+      - name: Copy blueprint lookup for client builds
+        run: node scripts/copy-blueprint-lookup.mjs
+
       - name: Build Go binaries
         env:
           DUMPER_VERSION: ${{ steps.version.outputs.version }}

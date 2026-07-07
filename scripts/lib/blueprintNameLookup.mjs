@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync } from 'fs'
+import { writeFileSync, mkdirSync, copyFileSync, existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -78,21 +78,33 @@ export function buildBlueprintNameLookup(blueprints, contractData, missionBluepr
   }
 }
 
+const CANONICAL_LOOKUP = 'src/data/blueprint-name-lookup.json'
+
 const LOOKUP_COPY_TARGETS = [
-  'src/data/blueprint-name-lookup.json',
   'scripts/bp-dumper-go/lookup.json',
   'scripts/bp-dumper-py/lookup.json',
   'supabase/functions/log-watcher-webhook/lookup.json',
 ]
 
-export function saveBlueprintNameLookup(lookup, rootDir = repoRoot) {
-  const json = `${JSON.stringify(lookup, null, 2)}\n`
+export function copyBlueprintLookupTargets(rootDir = repoRoot) {
+  const source = join(rootDir, CANONICAL_LOOKUP)
+  if (!existsSync(source)) {
+    throw new Error(`Missing canonical lookup: ${source}`)
+  }
   for (const rel of LOOKUP_COPY_TARGETS) {
     const dest = join(rootDir, rel)
     mkdirSync(dirname(dest), { recursive: true })
-    writeFileSync(dest, json, 'utf8')
+    copyFileSync(source, dest)
   }
+}
+
+export function saveBlueprintNameLookup(lookup, rootDir = repoRoot) {
+  const json = `${JSON.stringify(lookup, null, 2)}\n`
+  const dest = join(rootDir, CANONICAL_LOOKUP)
+  mkdirSync(dirname(dest), { recursive: true })
+  writeFileSync(dest, json, 'utf8')
+  copyBlueprintLookupTargets(rootDir)
   console.log(
-    `  Saved blueprint-name-lookup (${lookup.stats.internalNames} internal, ${lookup.stats.ambiguousDisplayNames} ambiguous display names)`
+    `  Saved ${CANONICAL_LOOKUP} (${lookup.stats.internalNames} internal, ${lookup.stats.ambiguousDisplayNames} ambiguous display names)`
   )
 }

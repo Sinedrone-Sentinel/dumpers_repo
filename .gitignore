@@ -56,7 +56,11 @@ scripts/bp-dumper-py/dist/
 scripts/bp-dumper-py/build/
 scripts/bp-dumper-py/*.spec
 
-# Python Cache
+# Generated blueprint lookup copies (canonical: src/data/blueprint-name-lookup.json)
+scripts/bp-dumper-go/lookup.json
+scripts/bp-dumper-py/lookup.json
+supabase/functions/log-watcher-webhook/lookup.json
+
 __pycache__/
 *.pyc
 
