@@ -1,0 +1,41 @@
+---
+description: Before every commit, verify README.md reflects the change
+alwaysApply: true
+---
+
+# Pre-Commit README Check
+
+**Before creating any git commit** (when the user asks you to commit), review whether `README.md` needs updating for the changes being committed.
+
+## When to Update README
+
+Update `README.md` if the commit includes any of:
+
+- New or removed **user-facing features** or routes
+- Changes to **quick start**, env vars, Node/npm requirements, or hosting steps
+- New **npm scripts**, game-data pipeline steps, or BP Dumper workflow changes
+- New **Edge Functions**, Supabase migrations, or setup prerequisites
+- Renamed, moved, or deprecated tools/pages members would look for in the README
+
+Also check **`docs/SUPABASE_SETUP.md`** when the commit adds or changes migrations (`supabase/migrations/*.sql`) or Edge Function deploy steps.
+
+## When README Update Is Not Needed
+
+Skip README edits for:
+
+- Bug fixes that do not change user-visible behavior or setup
+- Internal refactors, styling-only changes, or data timestamp churn
+- Officer/super-admin-only tooling with no member-facing impact
+
+## Pre-Commit Checklist
+
+Before `git commit`:
+
+- [ ] Read `README.md` (and `docs/SUPABASE_SETUP.md` if migrations/setup changed)
+- [ ] Compare against the staged diff — does the README still describe the product accurately?
+- [ ] If updates are needed, include them **in the same commit** (or tell the user why you are splitting docs into a follow-up commit)
+- [ ] Do not commit stale README claims (wrong migration numbers, missing features, outdated commands)
+
+## README Focus
+
+Write for **developers and franchise hosts**, not in-app member help. Keep feature lists scannable; link to `docs/` for deep setup detail.

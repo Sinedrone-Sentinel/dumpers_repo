@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `110_user_api_keys.sql` (user API keys for Log Watcher webhook). Apply through `110` in numeric order if catching up.
+**Latest migration:** `113_dumper_game_status.sql` (BP Dumper in-game session status for the live tracker status bar). Apply through `113` in numeric order if catching up.
 
 ---
 
@@ -118,7 +118,30 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 50 | `087_drop_shop_data.sql` | Drop shop tables and RPCs (Shops feature removed from app) |
 | 51 | `088_mining_tracker_location.sql` | Mining tracker location field |
 | 52 | `089_org_logo.sql` | Supabase Storage bucket + super-admin org logo (`ORG_LOGO.png`) |
-| 53 | `110_user_api_keys.sql` | User API keys for external tool auth (Log Watcher webhook) |
+| 53 | `090_order_line_snapshot.sql` | Blueprint line display snapshot for fulfillment + Discord embeds |
+| 54 | `091_wts_partial_purchase.sql` | Partial WTS purchases; listing stays open across child orders |
+| 55 | `092_discord_embed_delivery_fix.sql` | Fix oversized Discord embeds + partial-abandon routing |
+| 56 | `093_discord_queue_held_status.sql` | Coalesce-held vs ready-to-send Discord queue status |
+| 57 | `094_format_dfp_auec_plain.sql` | Drop "(DFP required)" suffix from formatted prices |
+| 58 | `095_mining_ledger.sql` | Mining crew payout ledgers + collaborators |
+| 59 | `096_mining_ledger_rsi_lookup.sql` | Ledger RSI handle lookup; verified-member-only access |
+| 60 | `097_mining_ledger_notifications.sql` | In-app notifications for ledger access, close, payouts |
+| 61 | `098_mining_ledger_total_payout.sql` | Total payout RPC (ore profit − deductibles + other) |
+| 62 | `099_mining_ledger_gem_profit.sql` | Gem profit: whole-unit count × price per gem |
+| 63 | `100_mining_ledger_gem_sold_as_is.sql` | Gems sold as-is: unrefined cSCU only |
+| 64 | `101_mining_ledger_partial_payout_notifications.sql` | Notify crew when paid-so-far increases |
+| 65 | `102_site_analytics.sql` | Anonymous visitor + tool-time analytics (super-admin dashboard) |
+| 66 | `103_fix_wts_partial_deplete_line.sql` | Fix partial WTS when buyer depletes an entire line |
+| 67 | `104_group_blueprint_variants.sql` | Per-user FPS weapon/armor variant grouping on Blueprints |
+| 68 | `105_analytics_audience_split.sql` | Split analytics by guest vs signed-in audience |
+| 69 | `106_analytics_geo.sql` | Approximate visitor geography from IP (no raw IP stored) |
+| 70 | `107_member_avg_ttd.sql` | Average fulfiller/seller delivery time on reputation |
+| 71 | `108_wts_list_price_bounds.sql` | WTS list price bounds (±20% per line / ±10% full listing) |
+| 72 | `109_mining_ledger_site_stats.sql` | Lifetime stats for archived mining ledgers |
+| 73 | `110_user_api_keys.sql` | User API keys for external tool auth (Log Watcher webhook) |
+| 74 | `111_user_data_wipe.sql` | Settings → My Data: wipe acquired blueprints / tracked resources |
+| 75 | `112_dumper_live_tracker.sql` | BP Dumper live missions + watch session flags (Realtime) |
+| 76 | `113_dumper_game_status.sql` | BP Dumper in-game session status for live tracker status bar |
 
 ### pg_cron (migrations 054, 065–068)
 

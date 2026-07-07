@@ -1,0 +1,55 @@
+---
+description: Before every commit, verify Archive member docs reflect the change
+alwaysApply: true
+---
+
+# Pre-Commit Archive Check
+
+**Before creating any git commit** (when the user asks you to commit), review whether the **Information Archive** member documentation needs updating for the changes being committed.
+
+## Archive Files
+
+| File | Purpose |
+|------|---------|
+| `src/lib/archiveGuide/pageGuides.ts` | Page-by-page how-to entries (`PAGE_GUIDES`) |
+| `src/lib/archiveGuide/welcomeSections.ts` | Welcome sections (rules, tips, DFP, etc.) |
+| `src/components/archive/ArchiveWelcome.tsx` | Renders the guide; icons in `PAGE_GUIDE_ICONS` |
+| `public/archive-guide.html` | Printable offline guide (**generated** — do not edit by hand) |
+
+After changing archive content, run:
+
+```bash
+npm run generate-archive-guide
+```
+
+Include generated `public/archive-guide.html` in the commit when archive source files changed.
+
+## When to Update Archive
+
+Update when the commit changes **member-visible** behavior:
+
+- New pages, tabs, or workflows regular members can use
+- Changed labels, requirements (e.g. RSI verification), or step-by-step flows
+- New integrations between pages (update `relatesTo`)
+- Offline/guest vs signed-in capability changes
+
+See `.cursor/rules/archive-documentation.mdc` for entry format, examples, and what **not** to document (officer tools, backend internals).
+
+## When Archive Update Is Not Needed
+
+Skip Archive edits for:
+
+- Bug fixes that restore intended behavior already described in Archive
+- Super-admin/officer-only dashboards, DB Actions, analytics, moderation
+- Parser scripts, migrations, or game-data pipeline with no UI change
+- Copy or styling tweaks that do not change what members can do
+
+## Pre-Commit Checklist
+
+Before `git commit`:
+
+- [ ] Scan the staged diff for user-facing UI or workflow changes
+- [ ] If yes: update `pageGuides.ts` / `welcomeSections.ts` / icons as needed
+- [ ] Run `npm run generate-archive-guide` when archive sources changed
+- [ ] Verify entries describe **what members can do**, not implementation
+- [ ] Include archive updates **in the same commit** when possible
