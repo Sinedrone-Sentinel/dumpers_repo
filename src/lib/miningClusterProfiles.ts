@@ -107,7 +107,9 @@ export function getLocationProfile(
       (!depositType || loc.depositType === depositType)
   )
   if (matches.length === 0) return null
-  return matches.reduce((best, loc) =>
+  const exact = matches.filter((loc) => loc.guideName === locationName)
+  const pool = exact.length > 0 ? exact : matches
+  return pool.reduce((best, loc) =>
     loc.effectiveSpawnPercent > best.effectiveSpawnPercent ? loc : best
   )
 }
@@ -122,9 +124,13 @@ export function getGuideLocationProfiles(
   oreName: string,
   guideLocationName: string
 ): LocationSpawnProfile[] {
-  return getLocationProfilesForOre(oreName).filter((loc) =>
+  const matched = getLocationProfilesForOre(oreName).filter((loc) =>
     spawnKeyMatchesGuideLocation(loc.locationName, guideLocationName)
   )
+  // Compound guide keys (e.g. Hurston → Stanton1 + moons) must not fan out to
+  // child-body spawn profiles when the card already lists those moons separately.
+  const exact = matched.filter((loc) => loc.guideName === guideLocationName)
+  return exact.length > 0 ? exact : matched
 }
 
 export function getTrackerProfile(entry: MiningTrackerEntry): FormattedClusterDisplay | null {

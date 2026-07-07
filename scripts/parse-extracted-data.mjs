@@ -16,6 +16,7 @@ import { extractAllGameLore } from './lib/gameLore.mjs'
 import { buildBlueprintNameLookup, saveBlueprintNameLookup } from './lib/blueprintNameLookup.mjs'
 import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
+import { mergeSpawnOreLocations, rebuildRarityTiers } from './lib/mergeSpawnOreLocations.mjs'
 import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
 import {
   buildGuideToSpawnKeys,
@@ -3974,6 +3975,25 @@ async function main() {
   }
   
   // Mining locations (replaces legacy mining-locations.json)
+  const miningSpawns = parseMiningSpawns(EXTRACTED_DATA, miningLocations, oreSignatures, hppPresets)
+  const spawnMerge = mergeSpawnOreLocations({
+    oreLocations: miningLocations.oreLocations,
+    locationOres: miningLocations.locationOres,
+    locationMineables: miningLocations.locationMineables,
+    spawnOres: miningSpawns.ores,
+    rarityTiers: miningLocations.rarityTiers,
+    assignOreRarity,
+  })
+  miningLocations.rarityTiers = rebuildRarityTiers(
+    miningLocations.oreLocations,
+    miningLocations.rarityTiers,
+    miningLocations.rarityOrder,
+    assignOreRarity
+  )
+  console.log(
+    `  Reconciled ore locations with spawn profiles (+${spawnMerge.added} sites, -${spawnMerge.pruned} compendium-only)`
+  )
+
   saveJson('game-mining-locations.json', {
     _source: 'Star Citizen Game Files (extracted localization)',
     _extracted: new Date().toISOString(),
@@ -3999,7 +4019,6 @@ async function main() {
     }
   })
 
-  const miningSpawns = parseMiningSpawns(EXTRACTED_DATA, miningLocations, oreSignatures, hppPresets)
   saveJson('game-mining-spawns.json', {
     _source: 'Star Citizen Game Files (extracted harvestable/HPP data)',
     _extracted: new Date().toISOString(),

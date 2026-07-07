@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-06T13:54:12.175Z",
+  "_extracted": "2026-07-07T02:06:35.046Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -58,10 +58,10 @@
         "name": "Ouratite",
         "locations": [
           "Aberdeen",
-          "Arial",
           "Hurston",
           "Yela Ring",
-          "Ita"
+          "Ita",
+          "Terminus"
         ]
       },
       {
@@ -83,9 +83,7 @@
         "locations": [
           "ARC-L3",
           "Cellin",
-          "CRU-L5",
           "Daymar",
-          "MIC-L4",
           "Pyro Asteroid Clusters",
           "Terminus",
           "Vuur",
@@ -99,11 +97,8 @@
         "locations": [
           "Aaron Halo",
           "ARC-L5",
-          "CRU-L4",
           "Fuego",
-          "Ita",
           "Magda",
-          "MIC-L4",
           "Pyro Asteroid Clusters",
           "Vuur",
           "Arial"
@@ -114,8 +109,6 @@
         "locations": [
           "Aaron Halo",
           "ARC-L3",
-          "CRU-L5",
-          "MIC-L4",
           "Pyro Asteroid Clusters",
           "Wala",
           "Lagrange G",
@@ -126,11 +119,9 @@
         "name": "Bexalite",
         "locations": [
           "CRU-L1",
-          "CRU-L2",
           "Fairo",
           "Fuego",
           "Glaciem Ring",
-          "HUR-L3",
           "Keeger Belt",
           "Pyro Asteroid Clusters",
           "Vuur"
@@ -143,8 +134,6 @@
           "Bloom",
           "Fuego",
           "HUR-L1",
-          "HUR-L4",
-          "HUR-L5",
           "Pyro Asteroid Clusters",
           "Pyro IV"
         ]
@@ -153,10 +142,8 @@
         "name": "Gold",
         "locations": [
           "ARC-L5",
-          "CRU-L4",
           "Fairo",
           "Ignis",
-          "MIC-L3",
           "Pyro Asteroid Clusters",
           "Terminus",
           "Vatra"
@@ -165,21 +152,12 @@
       {
         "name": "Hephaestanite",
         "locations": [
-          "Arial",
           "ARC-L1",
-          "ARC-L2",
-          "ARC-L4",
           "Calliope",
           "CRU-L3",
           "Fuego",
           "HUR-L1",
-          "HUR-L2",
-          "HUR-L4",
-          "HUR-L5",
-          "MIC-L1",
           "microTech",
-          "MIC-L2",
-          "MIC-L5",
           "Monox",
           "Pyro Asteroid Clusters",
           "Vuur",
@@ -190,8 +168,6 @@
         "name": "Laranite",
         "locations": [
           "HUR-L1",
-          "HUR-L4",
-          "HUR-L5",
           "Lyria",
           "Pyro IV",
           "Wala"
@@ -204,18 +180,8 @@
         "locations": [
           "Aberdeen",
           "ARC-L1",
-          "ARC-L2",
-          "ARC-L4",
-          "Arial",
           "CRU-L3",
-          "Hurston",
           "HUR-L1",
-          "HUR-L2",
-          "HUR-L4",
-          "HUR-L5",
-          "MIC-L1",
-          "MIC-L2",
-          "MIC-L5",
           "Pyro Asteroid Clusters",
           "Ita"
         ]
@@ -234,12 +200,9 @@
         "name": "Taranite",
         "locations": [
           "ARC-L1",
-          "ARC-L2",
-          "ARC-L4",
           "Cellin",
           "Clio",
           "Euterpe",
-          "HUR-L2",
           "Pyro Asteroid Clusters",
           "Yela"
         ]
@@ -250,14 +213,10 @@
           "Aaron Halo",
           "Aberdeen",
           "CRU-L1",
-          "CRU-L2",
-          "HUR-L3",
-          "Magda",
           "Pyro Asteroid Clusters",
           "Terminus",
           "Yela Ring",
-          "Arial",
-          "Daymar"
+          "Arial"
         ]
       },
       {
@@ -265,10 +224,7 @@
         "locations": [
           "Adir",
           "ARC-L1",
-          "ARC-L2",
-          "ARC-L4",
           "Fairo",
-          "HUR-L2",
           "Pyro Asteroid Clusters"
         ]
       }
@@ -280,20 +236,13 @@
           "Aaron Halo",
           "Aberdeen",
           "ARC-L1",
-          "ARC-L2",
           "Arial",
           "CRU-L3",
           "Glaciem Ring",
           "HUR-L1",
-          "HUR-L2",
-          "HUR-L4",
-          "HUR-L5",
           "Ita",
           "Keeger Belt",
           "Magda",
-          "MIC-L1",
-          "MIC-L2",
-          "MIC-L5",
           "Pyro Asteroid Clusters",
           "Hurston"
         ]
@@ -337,13 +286,8 @@
           "ARC-L5",
           "Clio",
           "CRU-L1",
-          "CRU-L2",
-          "CRU-L4",
-          "CRU-L5",
           "Euterpe",
           "Lyria",
-          "MIC-L3",
-          "MIC-L4",
           "Pyro Asteroid Clusters",
           "Pyro I",
           "Pyro IV",
@@ -365,11 +309,8 @@
           "Clio",
           "Euterpe",
           "Glaciem Ring",
-          "HUR-L3",
           "Keeger Belt",
           "microTech",
-          "MIC-L3",
-          "MIC-L4",
           "Pyro Asteroid Clusters",
           "Yela Ring",
           "Terminus",
@@ -389,19 +330,12 @@
           "Bloom",
           "Calliope",
           "CRU-L1",
-          "CRU-L2",
-          "CRU-L4",
-          "CRU-L5",
           "Fairo",
           "Fuego",
           "Glaciem Ring",
-          "HUR-L3",
           "Keeger Belt",
           "Lyria",
-          "Magda",
           "microTech",
-          "MIC-L3",
-          "MIC-L4",
           "Monox",
           "Pyro Asteroid Clusters",
           "Pyro I",
@@ -432,7 +366,6 @@
       {
         "name": "Tin",
         "locations": [
-          "Arial",
           "Hurston",
           "Ignis",
           "Ita",
@@ -449,9 +382,6 @@
           "CRU-L3",
           "Glaciem Ring",
           "Keeger Belt",
-          "MIC-L1",
-          "MIC-L2",
-          "MIC-L5",
           "Pyro Asteroid Clusters",
           "QV Breaker Stations (Nyx)"
         ]
@@ -651,9 +581,7 @@
     "Agricium": [
       "ARC-L3",
       "Cellin",
-      "CRU-L5",
       "Daymar",
-      "MIC-L4",
       "Pyro Asteroid Clusters",
       "Terminus",
       "Vuur",
@@ -665,20 +593,13 @@
       "Aaron Halo",
       "Aberdeen",
       "ARC-L1",
-      "ARC-L2",
       "Arial",
       "CRU-L3",
       "Glaciem Ring",
       "HUR-L1",
-      "HUR-L2",
-      "HUR-L4",
-      "HUR-L5",
       "Ita",
       "Keeger Belt",
       "Magda",
-      "MIC-L1",
-      "MIC-L2",
-      "MIC-L5",
       "Pyro Asteroid Clusters",
       "Hurston"
     ],
@@ -713,11 +634,8 @@
     "Aslarite": [
       "Aaron Halo",
       "ARC-L5",
-      "CRU-L4",
       "Fuego",
-      "Ita",
       "Magda",
-      "MIC-L4",
       "Pyro Asteroid Clusters",
       "Vuur",
       "Arial"
@@ -745,8 +663,6 @@
     "Beryl": [
       "Aaron Halo",
       "ARC-L3",
-      "CRU-L5",
-      "MIC-L4",
       "Pyro Asteroid Clusters",
       "Wala",
       "Lagrange G",
@@ -754,11 +670,9 @@
     ],
     "Bexalite": [
       "CRU-L1",
-      "CRU-L2",
       "Fairo",
       "Fuego",
       "Glaciem Ring",
-      "HUR-L3",
       "Keeger Belt",
       "Pyro Asteroid Clusters",
       "Vuur"
@@ -768,8 +682,6 @@
       "Bloom",
       "Fuego",
       "HUR-L1",
-      "HUR-L4",
-      "HUR-L5",
       "Pyro Asteroid Clusters",
       "Pyro IV"
     ],
@@ -784,13 +696,8 @@
       "ARC-L5",
       "Clio",
       "CRU-L1",
-      "CRU-L2",
-      "CRU-L4",
-      "CRU-L5",
       "Euterpe",
       "Lyria",
-      "MIC-L3",
-      "MIC-L4",
       "Pyro Asteroid Clusters",
       "Pyro I",
       "Pyro IV",
@@ -803,18 +710,8 @@
     "Corundum": [
       "Aberdeen",
       "ARC-L1",
-      "ARC-L2",
-      "ARC-L4",
-      "Arial",
       "CRU-L3",
-      "Hurston",
       "HUR-L1",
-      "HUR-L2",
-      "HUR-L4",
-      "HUR-L5",
-      "MIC-L1",
-      "MIC-L2",
-      "MIC-L5",
       "Pyro Asteroid Clusters",
       "Ita"
     ],
@@ -888,10 +785,8 @@
     ],
     "Gold": [
       "ARC-L5",
-      "CRU-L4",
       "Fairo",
       "Ignis",
-      "MIC-L3",
       "Pyro Asteroid Clusters",
       "Terminus",
       "Vatra"
@@ -916,21 +811,12 @@
       "Yela"
     ],
     "Hephaestanite": [
-      "Arial",
       "ARC-L1",
-      "ARC-L2",
-      "ARC-L4",
       "Calliope",
       "CRU-L3",
       "Fuego",
       "HUR-L1",
-      "HUR-L2",
-      "HUR-L4",
-      "HUR-L5",
-      "MIC-L1",
       "microTech",
-      "MIC-L2",
-      "MIC-L5",
       "Monox",
       "Pyro Asteroid Clusters",
       "Vuur",
@@ -945,11 +831,8 @@
       "Clio",
       "Euterpe",
       "Glaciem Ring",
-      "HUR-L3",
       "Keeger Belt",
       "microTech",
-      "MIC-L3",
-      "MIC-L4",
       "Pyro Asteroid Clusters",
       "Yela Ring",
       "Terminus",
@@ -966,19 +849,12 @@
       "Bloom",
       "Calliope",
       "CRU-L1",
-      "CRU-L2",
-      "CRU-L4",
-      "CRU-L5",
       "Fairo",
       "Fuego",
       "Glaciem Ring",
-      "HUR-L3",
       "Keeger Belt",
       "Lyria",
-      "Magda",
       "microTech",
-      "MIC-L3",
-      "MIC-L4",
       "Monox",
       "Pyro Asteroid Clusters",
       "Pyro I",
@@ -1019,8 +895,6 @@
     ],
     "Laranite": [
       "HUR-L1",
-      "HUR-L4",
-      "HUR-L5",
       "Lyria",
       "Pyro IV",
       "Wala"
@@ -1031,10 +905,10 @@
     ],
     "Ouratite": [
       "Aberdeen",
-      "Arial",
       "Hurston",
       "Yela Ring",
-      "Ita"
+      "Ita",
+      "Terminus"
     ],
     "Quantainium": [
       "Found in All Stanton Deposits (Rare)",
@@ -1101,17 +975,13 @@
     ],
     "Taranite": [
       "ARC-L1",
-      "ARC-L2",
-      "ARC-L4",
       "Cellin",
       "Clio",
       "Euterpe",
-      "HUR-L2",
       "Pyro Asteroid Clusters",
       "Yela"
     ],
     "Tin": [
-      "Arial",
       "Hurston",
       "Ignis",
       "Ita",
@@ -1124,33 +994,23 @@
       "Aaron Halo",
       "Aberdeen",
       "CRU-L1",
-      "CRU-L2",
-      "HUR-L3",
-      "Magda",
       "Pyro Asteroid Clusters",
       "Terminus",
       "Yela Ring",
-      "Arial",
-      "Daymar"
+      "Arial"
     ],
     "Torite": [
       "Akiro Cluster",
       "CRU-L3",
       "Glaciem Ring",
       "Keeger Belt",
-      "MIC-L1",
-      "MIC-L2",
-      "MIC-L5",
       "Pyro Asteroid Clusters",
       "QV Breaker Stations (Nyx)"
     ],
     "Tungsten": [
       "Adir",
       "ARC-L1",
-      "ARC-L2",
-      "ARC-L4",
       "Fairo",
-      "HUR-L2",
       "Pyro Asteroid Clusters"
     ],
     "Aluminum": [
@@ -1244,24 +1104,7 @@
         "rarity": "handMineable"
       }
     ],
-    "CRU-L5": [
-      {
-        "name": "Agricium",
-        "rarity": "rare"
-      },
-      {
-        "name": "Beryl",
-        "rarity": "rare"
-      },
-      {
-        "name": "Copper",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      }
-    ],
+    "CRU-L5": [],
     "Daymar": [
       {
         "name": "Agricium",
@@ -1300,10 +1143,6 @@
         "rarity": "legendary"
       },
       {
-        "name": "Titanium",
-        "rarity": "uncommon"
-      },
-      {
         "name": "Beradom",
         "rarity": "common"
       },
@@ -1316,32 +1155,7 @@
         "rarity": "handMineable"
       }
     ],
-    "MIC-L4": [
-      {
-        "name": "Agricium",
-        "rarity": "rare"
-      },
-      {
-        "name": "Aslarite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Beryl",
-        "rarity": "rare"
-      },
-      {
-        "name": "Copper",
-        "rarity": "common"
-      },
-      {
-        "name": "Ice",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      }
-    ],
+    "MIC-L4": [],
     "Pyro Asteroid Clusters": [
       {
         "name": "Agricium",
@@ -1472,6 +1286,10 @@
       {
         "name": "Feynmaline",
         "rarity": "handMineable"
+      },
+      {
+        "name": "Ouratite",
+        "rarity": "epic"
       }
     ],
     "Vuur": [
@@ -1684,47 +1502,10 @@
         "rarity": "uncommon"
       }
     ],
-    "ARC-L2": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Taranite",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Tungsten",
-        "rarity": "uncommon"
-      }
-    ],
+    "ARC-L2": [],
     "Arial": [
       {
         "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Ouratite",
-        "rarity": "epic"
-      },
-      {
-        "name": "Tin",
         "rarity": "common"
       },
       {
@@ -1846,80 +1627,13 @@
         "rarity": "rare"
       }
     ],
-    "HUR-L2": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Taranite",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Tungsten",
-        "rarity": "uncommon"
-      }
-    ],
-    "HUR-L4": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Borase",
-        "rarity": "rare"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Laranite",
-        "rarity": "rare"
-      }
-    ],
-    "HUR-L5": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Borase",
-        "rarity": "rare"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Laranite",
-        "rarity": "rare"
-      }
-    ],
+    "HUR-L2": [],
+    "HUR-L4": [],
+    "HUR-L5": [],
     "Ita": [
       {
         "name": "Aluminium",
         "rarity": "common"
-      },
-      {
-        "name": "Aslarite",
-        "rarity": "rare"
       },
       {
         "name": "Janalite",
@@ -2014,14 +1728,6 @@
         "rarity": "rare"
       },
       {
-        "name": "Iron",
-        "rarity": "common"
-      },
-      {
-        "name": "Titanium",
-        "rarity": "uncommon"
-      },
-      {
         "name": "Aphorite",
         "rarity": "handMineable"
       },
@@ -2062,60 +1768,9 @@
         "rarity": "handMineable"
       }
     ],
-    "MIC-L1": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Torite",
-        "rarity": "common"
-      }
-    ],
-    "MIC-L2": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Torite",
-        "rarity": "common"
-      }
-    ],
-    "MIC-L5": [
-      {
-        "name": "Aluminium",
-        "rarity": "common"
-      },
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Torite",
-        "rarity": "common"
-      }
-    ],
+    "MIC-L1": [],
+    "MIC-L2": [],
+    "MIC-L5": [],
     "All Moons/Planets/Caves": [
       {
         "name": "Aphorite",
@@ -2152,24 +1807,7 @@
         "rarity": "common"
       }
     ],
-    "CRU-L4": [
-      {
-        "name": "Aslarite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Copper",
-        "rarity": "common"
-      },
-      {
-        "name": "Gold",
-        "rarity": "rare"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      }
-    ],
+    "CRU-L4": [],
     "Fuego": [
       {
         "name": "Aslarite",
@@ -2352,24 +1990,7 @@
         "rarity": "common"
       }
     ],
-    "CRU-L2": [
-      {
-        "name": "Bexalite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Copper",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      },
-      {
-        "name": "Titanium",
-        "rarity": "uncommon"
-      }
-    ],
+    "CRU-L2": [],
     "Fairo": [
       {
         "name": "Bexalite",
@@ -2412,24 +2033,7 @@
         "rarity": "common"
       }
     ],
-    "HUR-L3": [
-      {
-        "name": "Bexalite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Ice",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      },
-      {
-        "name": "Titanium",
-        "rarity": "uncommon"
-      }
-    ],
+    "HUR-L3": [],
     "Adir": [
       {
         "name": "Borase",
@@ -2666,24 +2270,7 @@
         "rarity": "handMineable"
       }
     ],
-    "MIC-L3": [
-      {
-        "name": "Copper",
-        "rarity": "common"
-      },
-      {
-        "name": "Gold",
-        "rarity": "rare"
-      },
-      {
-        "name": "Ice",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      }
-    ],
+    "MIC-L3": [],
     "Yela Ring": [
       {
         "name": "Copper",
@@ -2706,29 +2293,8 @@
         "rarity": "uncommon"
       }
     ],
-    "ARC-L4": [
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Hephaestanite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Taranite",
-        "rarity": "uncommon"
-      },
-      {
-        "name": "Tungsten",
-        "rarity": "uncommon"
-      }
-    ],
+    "ARC-L4": [],
     "Hurston": [
-      {
-        "name": "Corundum",
-        "rarity": "uncommon"
-      },
       {
         "name": "Janalite",
         "rarity": "handMineable"
@@ -3316,7 +2882,8 @@
         "Titanium",
         "Gold",
         "Riccite",
-        "Stileron"
+        "Stileron",
+        "Ouratite"
       ],
       "groundVehicleMineables": [
         "Feynmaline"

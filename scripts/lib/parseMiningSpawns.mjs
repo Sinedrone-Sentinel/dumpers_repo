@@ -17,6 +17,7 @@ import {
   harvestablePresetBasename,
   loadHppProviderPresets,
 } from './hppProviderPresets.mjs'
+import { applyVerifiedHppSpawnInheritance } from './verifiedHppSpawnInheritance.mjs'
 
 function readJson(path) {
   try {
@@ -345,6 +346,11 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
         })
       }
     }
+  }
+
+  const inheritedLinks = applyVerifiedHppSpawnInheritance(rawLinks)
+  if (inheritedLinks > 0) {
+    console.log(`  Applied ${inheritedLinks} verified cross-template HPP spawn inheritance link(s)`)
   }
 
   const ores = {}
