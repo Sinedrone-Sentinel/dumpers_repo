@@ -1,9 +1,18 @@
 name: Release BP Dumper
 
-# Runs semantic-release only when dumper source changes; only feat(dumper)/fix(dumper) commits cut a tag.
+# Semantic-release only when dumper source changes; feat(dumper)/fix(dumper) commits cut a tag.
 on:
   push:
     branches: [main]
+    paths:
+      - 'scripts/bp-dumper-go/**'
+      - 'scripts/bp-dumper-py/**'
+      - 'scripts/bp-dumper/**'
+      - 'scripts/sync-dumper-version.mjs'
+      - 'scripts/lib/syncDumperMinGameVersion.mjs'
+      - 'release.config.js'
+      - '.github/workflows/release-dumper.yml'
+      - '.github/workflows/build-releases.yml'
 
 permissions:
   contents: write
@@ -21,39 +30,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            dumper:
-              - 'scripts/bp-dumper-go/main.go'
-              - 'scripts/bp-dumper-go/lookup.go'
-              - 'scripts/bp-dumper-go/README.md'
-              - 'scripts/bp-dumper-py/dumper.py'
-              - 'scripts/bp-dumper-py/blueprint_lookup.py'
-              - 'scripts/bp-dumper-py/dumper.bat'
-              - 'scripts/bp-dumper-py/dumper.sh'
-              - 'scripts/bp-dumper-py/requirements.txt'
-              - 'scripts/bp-dumper-py/README.md'
-              - 'scripts/bp-dumper/**'
-              - 'scripts/sync-dumper-version.mjs'
-              - 'release.config.js'
-              - '.github/workflows/release-dumper.yml'
-              - '.github/workflows/build-releases.yml'
-
       - name: Setup Node
-        if: steps.changes.outputs.dumper == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
-        if: steps.changes.outputs.dumper == 'true'
         run: npm ci
 
       - name: Run semantic-release
-        if: steps.changes.outputs.dumper == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
