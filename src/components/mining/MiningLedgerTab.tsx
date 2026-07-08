@@ -7,7 +7,8 @@ import { useMiningLedger } from '../../hooks/useMiningLedger'
 import ResourceQualitySelect, {
   getDefaultQualityForResource,
 } from '../ResourceQualitySelect'
-import { getResourceType, isGemResource, resourceLabelClassName } from '../../config/resourceTypes'
+import { SALVAGE_ORDER_MIN_QUALITY } from '../../config/extraResources'
+import { isGemResource, resourceLabelClassName } from '../../config/resourceTypes'
 import type { BlueprintResourceRow } from '../../lib/operations'
 import {
   buildLedgerExportJson,
@@ -19,6 +20,13 @@ import {
   DEFAULT_CREW_SHARES,
   downloadLedgerJson,
   formatLedgerMoney,
+  isLedgerDirectSalvageRow,
+  isLedgerRefinableSalvageRow,
+  isLedgerSalvageRowKey,
+  ledgerOreGemCatalogEntries,
+  ledgerPriceOverrideCatalogEntries,
+  ledgerSalvageCatalogEntries,
+  ledgerRowShowsYield,
   newLedgerRowId,
   parseLedgerExportJson,
   seedCrewMemberOnce,
@@ -96,7 +104,10 @@ const LEDGER_TABLE_SCROLL = 'overflow-x-auto overflow-y-visible'
 type SortDir = 'asc' | 'desc'
 type MiningRunSortKey = 'resource' | 'quality'
 
-function searchOreGemCatalog(
+const LEDGER_SECTION_ACCENT_SALVAGE =
+  'w-1 h-4 rounded-full bg-emerald-500/75 shrink-0'
+
+function searchResourceCatalog(
   entries: BlueprintResourceRow[],
   query: string
 ): BlueprintResourceRow[] {
@@ -112,20 +123,71 @@ function searchOreGemCatalog(
     .slice(0, 30)
 }
 
+function ledgerAmountUnitLabel(resourceKey: string): string {
+  if (isGemResource(resourceKey)) return 'gems'
+  if (isLedgerDirectSalvageRow(resourceKey)) return 'SCU'
+  if (isLedgerRefinableSalvageRow(resourceKey)) return 'SCU unref.'
+  return 'cSCU unref.'
+}
+
+function defaultRowQuality(resourceKey: string, resourceLabel: string): number {
+  if (isLedgerSalvageRowKey(resourceKey)) return SALVAGE_ORDER_MIN_QUALITY
+  return Number(getDefaultQualityForResource(resourceKey, resourceLabel))
+}
+
+function createEmptyMiningRow(entry: BlueprintResourceRow | undefined): MiningLedgerMiningRow {
+  const resourceKey = entry?.resource_key ?? ''
+  const resourceLabel = entry?.label ?? ''
+  return {
+    id: newLedgerRowId(),
+    resourceKey,
+    resourceLabel,
+    quality: defaultRowQuality(resourceKey, resourceLabel),
+    unrefinedCscu: 0,
+    yieldActual: null,
+  }
+}
+
+function sortIndexedMiningRows(
+  miningRows: MiningLedgerMiningRow[],
+  sort: { key: MiningRunSortKey; dir: SortDir } | null
+): { row: MiningLedgerMiningRow; index: number }[] {
+  const indexed = miningRows.map((row, index) => ({ row, index }))
+  if (!sort) return indexed
+
+  const { key, dir } = sort
+  const mul = dir === 'asc' ? 1 : -1
+
+  return [...indexed].sort((a, b) => {
+    const cmp =
+      key === 'resource'
+        ? (() => {
+            const byLabel = a.row.resourceLabel.localeCompare(b.row.resourceLabel, undefined, {
+              sensitivity: 'base',
+            })
+            return byLabel !== 0 ? byLabel : a.row.resourceKey.localeCompare(b.row.resourceKey)
+          })()
+        : a.row.quality - b.row.quality
+    if (cmp !== 0) return cmp * mul
+    return a.index - b.index
+  })
+}
+
 function miningRowResourcePatch(
   prevRow: MiningLedgerMiningRow,
   resourceKey: string,
   resourceLabel: string
 ): Partial<MiningLedgerMiningRow> {
   const nextIsGem = isGemResource(resourceKey)
+  const nextDirectSalvage = isLedgerDirectSalvageRow(resourceKey)
   return {
     resourceKey,
     resourceLabel,
-    quality: Number(getDefaultQualityForResource(resourceKey, resourceLabel)),
+    quality: defaultRowQuality(resourceKey, resourceLabel),
     unrefinedCscu: nextIsGem
       ? Math.max(0, Math.trunc(prevRow.unrefinedCscu))
       : prevRow.unrefinedCscu,
-    yieldActual: nextIsGem ? null : prevRow.yieldActual,
+    yieldActual: nextIsGem || nextDirectSalvage ? null : prevRow.yieldActual,
   }
 }
 
@@ -160,12 +222,14 @@ function LedgerSortHeader({
 function MiningResourceField({
   resourceKey,
   resourceLabel,
-  oreEntries,
+  catalogEntries,
+  searchPlaceholder,
   onChange,
 }: {
   resourceKey: string
   resourceLabel: string
-  oreEntries: BlueprintResourceRow[]
+  catalogEntries: BlueprintResourceRow[]
+  searchPlaceholder: string
   onChange: (resourceKey: string, resourceLabel: string) => void
 }) {
   const [query, setQuery] = useState(resourceLabel)
@@ -180,8 +244,8 @@ function MiningResourceField({
   }, [resourceKey, resourceLabel])
 
   const options = useMemo(
-    () => searchOreGemCatalog(oreEntries, query),
-    [oreEntries, query]
+    () => searchResourceCatalog(catalogEntries, query),
+    [catalogEntries, query]
   )
 
   useEffect(() => {
@@ -210,7 +274,7 @@ function MiningResourceField({
         onChange={(e) => {
           const next = e.target.value
           setQuery(next)
-          const exact = oreEntries.find(
+          const exact = catalogEntries.find(
             (entry) => entry.label.toLowerCase() === next.trim().toLowerCase()
           )
           if (exact) {
@@ -228,7 +292,7 @@ function MiningResourceField({
           setFocused(true)
           if (e.isTrusted && options.length > 0) setOpen(true)
         }}
-        placeholder="Search ore / gem"
+        placeholder={searchPlaceholder}
         className={`site-input w-full px-1 py-0.5 text-xs truncate ${resourceLabelClassName(resourceKey)}`}
         spellCheck={false}
         autoComplete="off"
@@ -256,19 +320,193 @@ function MiningResourceField({
   )
 }
 
-function oreCatalogEntries(catalog: BlueprintResourceRow[]) {
-  return catalog.filter((row) => {
-    const type = getResourceType(row.resource_key)
-    return type === 'ore' || type === 'gem'
-  })
+function LedgerMiningRunsTable({
+  sortedRows,
+  catalogEntries,
+  searchPlaceholder,
+  computed,
+  miningRunSort,
+  showQualityColumn,
+  onToggleSort,
+  onPatchRow,
+  onRemoveRow,
+}: {
+  sortedRows: { row: MiningLedgerMiningRow; index: number }[]
+  catalogEntries: BlueprintResourceRow[]
+  searchPlaceholder: string
+  computed: MiningLedgerComputed
+  miningRunSort: { key: MiningRunSortKey; dir: SortDir } | null
+  showQualityColumn: boolean
+  onToggleSort: (key: MiningRunSortKey) => void
+  onPatchRow: (id: string, patch: Partial<MiningLedgerMiningRow>) => void
+  onRemoveRow: (id: string) => void
+}) {
+  const colSpan = showQualityColumn ? 8 : 7
+
+  return (
+    <div className={LEDGER_TABLE_SCROLL}>
+      <table
+        className={`w-full text-xs table-fixed ${showQualityColumn ? 'min-w-[52rem]' : 'min-w-[44rem]'}`}
+      >
+        <colgroup>
+          <col style={{ width: '9rem' }} />
+          {showQualityColumn ? <col style={{ width: '9rem' }} /> : null}
+          <col style={{ width: '6.5rem' }} />
+          <col style={{ width: '6.5rem' }} />
+          <col style={{ width: '6.5rem' }} />
+          <col style={{ width: '7.5rem' }} />
+          <col style={{ width: '7.5rem' }} />
+          <col style={{ width: '2rem' }} />
+        </colgroup>
+        <thead>
+          <tr className="text-left border-b border-slate-600/50">
+            <LedgerSortHeader
+              label="Resource"
+              active={miningRunSort?.key === 'resource'}
+              dir={miningRunSort?.key === 'resource' ? miningRunSort.dir : 'asc'}
+              onClick={() => onToggleSort('resource')}
+            />
+            {showQualityColumn ? (
+              <LedgerSortHeader
+                label="Q"
+                active={miningRunSort?.key === 'quality'}
+                dir={miningRunSort?.key === 'quality' ? miningRunSort.dir : 'asc'}
+                onClick={() => onToggleSort('quality')}
+              />
+            ) : null}
+            <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Unrefined / Count</th>
+            <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Yield est.</th>
+            <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Yield act.</th>
+            <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Profit est.</th>
+            <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Profit act.</th>
+            <th className="py-1.5 w-8" />
+          </tr>
+        </thead>
+        <tbody>
+          {sortedRows.length === 0 ? (
+            <tr>
+              <td colSpan={colSpan} className="py-4 text-center text-slate-500 text-xs">
+                No rows yet — use + Add row above.
+              </td>
+            </tr>
+          ) : (
+            sortedRows.map(({ row }) => {
+              const calc = computed.miningRows.find((r) => r.id === row.id)
+              const isGem = calc?.isGem ?? isGemResource(row.resourceKey)
+              const showYield = ledgerRowShowsYield(row.resourceKey)
+              const amountUnit = ledgerAmountUnitLabel(row.resourceKey)
+              return (
+                <tr key={row.id} className="border-b border-slate-800/60">
+                  <td className="py-1 pr-2">
+                    <MiningResourceField
+                      resourceKey={row.resourceKey}
+                      resourceLabel={row.resourceLabel}
+                      catalogEntries={catalogEntries}
+                      searchPlaceholder={searchPlaceholder}
+                      onChange={(resourceKey, resourceLabel) =>
+                        onPatchRow(row.id, miningRowResourcePatch(row, resourceKey, resourceLabel))
+                      }
+                    />
+                  </td>
+                  {showQualityColumn ? (
+                    <td className="py-1 pr-2">
+                      <ResourceQualitySelect
+                        resourceKey={row.resourceKey}
+                        resourceLabel={row.resourceLabel}
+                        quality={String(row.quality)}
+                        onQualityChange={(q) =>
+                          onPatchRow(row.id, {
+                            quality: resolveLedgerQuality(
+                              row.resourceKey,
+                              row.resourceLabel,
+                              Number(q)
+                            ),
+                          })
+                        }
+                      />
+                    </td>
+                  ) : null}
+                  <td className="py-1 pr-2">
+                    <input
+                      type="number"
+                      value={row.unrefinedCscu || ''}
+                      onChange={(e) =>
+                        onPatchRow(row.id, {
+                          unrefinedCscu: isGem
+                            ? Math.max(0, Math.trunc(Number(e.target.value) || 0))
+                            : Number(e.target.value) || 0,
+                          ...(isGem || !showYield ? { yieldActual: null } : {}),
+                        })
+                      }
+                      className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
+                      min={0}
+                      step={isGem ? 1 : 'any'}
+                    />
+                    <span className="text-[10px] text-slate-500 ml-0.5 font-medium">
+                      {amountUnit}
+                    </span>
+                  </td>
+                  <td
+                    className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}
+                  >
+                    {showYield ? (calc?.yieldEstimate ?? '—') : '—'}
+                  </td>
+                  <td className="py-1 pr-2">
+                    {showYield ? (
+                      <input
+                        type="number"
+                        value={row.yieldActual ?? ''}
+                        placeholder={String(calc?.yieldEstimate ?? '')}
+                        onChange={(e) =>
+                          onPatchRow(row.id, {
+                            yieldActual:
+                              e.target.value === '' ? null : Number(e.target.value) || 0,
+                          })
+                        }
+                        className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
+                        min={0}
+                        step="any"
+                      />
+                    ) : (
+                      <span className="text-slate-600">—</span>
+                    )}
+                  </td>
+                  <td
+                    className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}
+                  >
+                    {isGem ? '—' : calc ? formatLedgerMoney(calc.profitEstimate) : '—'}
+                  </td>
+                  <td
+                    className={`py-1 pr-2 ${LEDGER_MONEY} whitespace-nowrap overflow-hidden text-ellipsis`}
+                  >
+                    {calc ? formatLedgerMoney(calc.profitActual) : '—'}
+                  </td>
+                  <td className="py-1">
+                    <button
+                      type="button"
+                      onClick={() => onRemoveRow(row.id)}
+                      className="text-slate-500 hover:text-red-400"
+                      aria-label="Remove row"
+                    >
+                      ×
+                    </button>
+                  </td>
+                </tr>
+              )
+            })
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
 }
 
 function ensurePriceOverrides(
   data: MiningLedgerData,
-  oreEntries: BlueprintResourceRow[]
+  miningCatalogEntries: BlueprintResourceRow[]
 ): MiningLedgerPriceOverride[] {
   const byKey = new Map(data.priceOverrides.map((row) => [row.resourceKey, row]))
-  for (const entry of oreEntries) {
+  for (const entry of miningCatalogEntries) {
     if (!byKey.has(entry.resource_key)) {
       byKey.set(entry.resource_key, {
         resourceKey: entry.resource_key,
@@ -514,11 +752,15 @@ function CrewPlayerNameField({
 
 function formatImportedLedgerAmount(row: {
   isGem: boolean
+  resourceKey: string
   unrefinedCscu: number
 }): string {
   if (row.isGem) {
     const n = row.unrefinedCscu
     return `${n} ${n === 1 ? 'gem' : 'gems'}`
+  }
+  if (isLedgerDirectSalvageRow(row.resourceKey) || isLedgerRefinableSalvageRow(row.resourceKey)) {
+    return `${row.unrefinedCscu} SCU`
   }
   return `${row.unrefinedCscu} cSCU unrefined`
 }
@@ -577,9 +819,41 @@ function ImportedLedgerViewModal({
           </div>
         </div>
 
-        {computed.miningRows.length > 0 && (
+        {computed.miningRows.some((row) => isLedgerSalvageRowKey(row.resourceKey)) && (
           <section>
-            <h3 className="text-sm font-semibold text-white mb-1">Mining runs</h3>
+            <h3 className="text-sm font-semibold text-white mb-1">Salvage</h3>
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="text-slate-400 text-left border-b border-slate-700/50">
+                  <th className="py-1 pr-2 font-medium">Resource</th>
+                  <th className="py-1 pr-2 font-medium">Amount</th>
+                  <th className="py-1 pr-2 font-medium">Profit act.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {computed.miningRows
+                  .filter((row) => isLedgerSalvageRowKey(row.resourceKey))
+                  .map((row) => (
+                    <tr key={row.id} className="border-b border-slate-800/60">
+                      <td className={`py-1.5 pr-2 ${resourceLabelClassName(row.resourceKey)}`}>
+                        {row.resourceLabel}
+                      </td>
+                      <td className="py-1.5 pr-2 text-slate-200">
+                        {formatImportedLedgerAmount(row)}
+                      </td>
+                      <td className="py-1.5 pr-2 font-mono text-amber-300 tabular-nums">
+                        {formatLedgerMoney(row.profitActual)}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </section>
+        )}
+
+        {computed.miningRows.some((row) => !isLedgerSalvageRowKey(row.resourceKey)) && (
+          <section>
+            <h3 className="text-sm font-semibold text-white mb-1">Ore / gems</h3>
             <table className="w-full text-xs">
               <thead>
                 <tr className="text-slate-400 text-left border-b border-slate-700/50">
@@ -590,22 +864,24 @@ function ImportedLedgerViewModal({
                 </tr>
               </thead>
               <tbody>
-                {computed.miningRows.map((row) => (
-                  <tr key={row.id} className="border-b border-slate-800/60">
-                    <td className={`py-1.5 pr-2 ${resourceLabelClassName(row.resourceKey)}`}>
-                      {row.resourceLabel}
-                    </td>
-                    <td className="py-1.5 pr-2 font-mono tabular-nums text-slate-200">
-                      {row.quality}
-                    </td>
-                    <td className="py-1.5 pr-2 text-slate-200">
-                      {formatImportedLedgerAmount(row)}
-                    </td>
-                    <td className="py-1.5 pr-2 font-mono text-amber-300 tabular-nums">
-                      {formatLedgerMoney(row.profitActual)}
-                    </td>
-                  </tr>
-                ))}
+                {computed.miningRows
+                  .filter((row) => !isLedgerSalvageRowKey(row.resourceKey))
+                  .map((row) => (
+                    <tr key={row.id} className="border-b border-slate-800/60">
+                      <td className={`py-1.5 pr-2 ${resourceLabelClassName(row.resourceKey)}`}>
+                        {row.resourceLabel}
+                      </td>
+                      <td className="py-1.5 pr-2 font-mono tabular-nums text-slate-200">
+                        {row.quality}
+                      </td>
+                      <td className="py-1.5 pr-2 text-slate-200">
+                        {formatImportedLedgerAmount(row)}
+                      </td>
+                      <td className="py-1.5 pr-2 font-mono text-amber-300 tabular-nums">
+                        {formatLedgerMoney(row.profitActual)}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </section>
@@ -743,7 +1019,11 @@ export default function MiningLedgerTab({
   const [collabSearch, setCollabSearch] = useState('')
   const [collabOptions, setCollabOptions] = useState<VerifiedMemberSearchResult[]>([])
   const [copyToast, setCopyToast] = useState<string | null>(null)
-  const [miningRunSort, setMiningRunSort] = useState<{
+  const [salvageRunSort, setSalvageRunSort] = useState<{
+    key: MiningRunSortKey
+    dir: SortDir
+  } | null>(null)
+  const [oreGemRunSort, setOreGemRunSort] = useState<{
     key: MiningRunSortKey
     dir: SortDir
   } | null>(null)
@@ -754,31 +1034,32 @@ export default function MiningLedgerTab({
   } | null>(null)
   const importJsonInputRef = useRef<HTMLInputElement>(null)
 
-  const oreEntries = useMemo(() => oreCatalogEntries(catalog), [catalog])
+  const salvageCatalogEntries = useMemo(() => ledgerSalvageCatalogEntries(catalog), [catalog])
+  const oreGemCatalogEntries = useMemo(() => ledgerOreGemCatalogEntries(catalog), [catalog])
+  const priceOverrideCatalogEntries = useMemo(
+    () => ledgerPriceOverrideCatalogEntries(catalog),
+    [catalog]
+  )
   const computed = useMemo(() => computeMiningLedger(data), [data])
   const isLedgerCreator = Boolean(user && detail && detail.created_by === user.id)
 
-  const sortedMiningRows = useMemo(() => {
-    const indexed = data.miningRows.map((row, index) => ({ row, index }))
-    if (!miningRunSort) return indexed
+  const salvageRows = useMemo(
+    () => data.miningRows.filter((row) => isLedgerSalvageRowKey(row.resourceKey)),
+    [data.miningRows]
+  )
+  const oreGemRows = useMemo(
+    () => data.miningRows.filter((row) => !isLedgerSalvageRowKey(row.resourceKey)),
+    [data.miningRows]
+  )
 
-    const { key, dir } = miningRunSort
-    const mul = dir === 'asc' ? 1 : -1
-
-    return [...indexed].sort((a, b) => {
-      const cmp =
-        key === 'resource'
-          ? (() => {
-              const byLabel = a.row.resourceLabel.localeCompare(b.row.resourceLabel, undefined, {
-                sensitivity: 'base',
-              })
-              return byLabel !== 0 ? byLabel : a.row.resourceKey.localeCompare(b.row.resourceKey)
-            })()
-          : a.row.quality - b.row.quality
-      if (cmp !== 0) return cmp * mul
-      return a.index - b.index
-    })
-  }, [data.miningRows, miningRunSort])
+  const sortedSalvageRows = useMemo(
+    () => sortIndexedMiningRows(salvageRows, salvageRunSort),
+    [salvageRows, salvageRunSort]
+  )
+  const sortedOreGemRows = useMemo(
+    () => sortIndexedMiningRows(oreGemRows, oreGemRunSort),
+    [oreGemRows, oreGemRunSort]
+  )
 
   const sortedCrew = useMemo(
     () =>
@@ -792,8 +1073,17 @@ export default function MiningLedgerTab({
     [computed.crew]
   )
 
-  const toggleMiningRunSort = useCallback((key: MiningRunSortKey) => {
-    setMiningRunSort((prev) =>
+  const toggleSalvageRunSort = useCallback((key: MiningRunSortKey) => {
+    if (key === 'quality') return
+    setSalvageRunSort((prev) =>
+      prev?.key === key
+        ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
+        : { key, dir: 'asc' }
+    )
+  }, [])
+
+  const toggleOreGemRunSort = useCallback((key: MiningRunSortKey) => {
+    setOreGemRunSort((prev) =>
       prev?.key === key
         ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
         : { key, dir: 'asc' }
@@ -801,7 +1091,8 @@ export default function MiningLedgerTab({
   }, [])
 
   useEffect(() => {
-    setMiningRunSort(null)
+    setSalvageRunSort(null)
+    setOreGemRunSort(null)
     setCrewRsiById({})
   }, [activeId])
 
@@ -859,15 +1150,20 @@ export default function MiningLedgerTab({
   const seedPriceTable = useCallback(() => {
     updateData((prev) => ({
       ...prev,
-      priceOverrides: ensurePriceOverrides(prev, oreEntries),
+      priceOverrides: ensurePriceOverrides(prev, priceOverrideCatalogEntries),
     }))
-  }, [oreEntries, updateData])
+  }, [priceOverrideCatalogEntries, updateData])
 
   useEffect(() => {
-    if (oreEntries.length > 0 && data.priceOverrides.length === 0) {
-      seedPriceTable()
-    }
-  }, [oreEntries, data.priceOverrides.length, seedPriceTable])
+    if (!activeId || priceOverrideCatalogEntries.length === 0) return
+    updateData((prev) => {
+      const merged = ensurePriceOverrides(prev, priceOverrideCatalogEntries)
+      const prevKeys = new Set(prev.priceOverrides.map((row) => row.resourceKey))
+      const hasNew = priceOverrideCatalogEntries.some((entry) => !prevKeys.has(entry.resource_key))
+      if (!hasNew && prev.priceOverrides.length > 0) return prev
+      return { ...prev, priceOverrides: merged }
+    })
+  }, [activeId, priceOverrideCatalogEntries, updateData])
 
   const handleExport = useCallback(() => {
     if (!activeId) return
@@ -1099,184 +1395,91 @@ export default function MiningLedgerTab({
             </div>
           </div>
 
-          {/* Mining runs */}
+          {/* Salvage */}
           <section className={LEDGER_SECTION}>
             <div className={LEDGER_SECTION_HEAD}>
               <h3 className={LEDGER_SECTION_TITLE}>
-                <span className={LEDGER_SECTION_ACCENT} aria-hidden />
-                Mining runs
+                <span className={LEDGER_SECTION_ACCENT_SALVAGE} aria-hidden />
+                Salvage
               </h3>
               <button
                 type="button"
                 onClick={() =>
                   updateData((prev) => ({
                     ...prev,
-                    miningRows: [
-                      ...prev.miningRows,
-                      {
-                        id: newLedgerRowId(),
-                        resourceKey: oreEntries[0]?.resource_key ?? '',
-                        resourceLabel: oreEntries[0]?.label ?? '',
-                        quality: Number(
-                          getDefaultQualityForResource(
-                            oreEntries[0]?.resource_key ?? '',
-                            oreEntries[0]?.label ?? ''
-                          )
-                        ),
-                        unrefinedCscu: 0,
-                        yieldActual: null,
-                      },
-                    ],
+                    miningRows: [...prev.miningRows, createEmptyMiningRow(salvageCatalogEntries[0])],
                   }))
                 }
                 className={LEDGER_ADD_BTN}
-                disabled={oreEntries.length === 0}
+                disabled={salvageCatalogEntries.length === 0}
               >
                 + Add row
               </button>
             </div>
             <p className={LEDGER_INFO_TEXT}>
-              Ore: unrefined cSCU → yield est. (45% refine) → yield act. Gems are sold as-is — enter
-              a whole gem count only; no yield columns.
+              RMC is sold as collected (SCU, no yield step). Construction pebbles, rubble, and
+              salvage refine into Construction Material — unrefined SCU → yield est. (45%) → yield
+              act. Salvage has no quality tier (Q0 only).
             </p>
-            <div className={LEDGER_TABLE_SCROLL}>
-            <table className="w-full min-w-[52rem] text-xs table-fixed">
-              <colgroup>
-                <col style={{ width: '9rem' }} />
-                <col style={{ width: '9rem' }} />
-                <col style={{ width: '6.5rem' }} />
-                <col style={{ width: '6.5rem' }} />
-                <col style={{ width: '6.5rem' }} />
-                <col style={{ width: '7.5rem' }} />
-                <col style={{ width: '7.5rem' }} />
-                <col style={{ width: '2rem' }} />
-              </colgroup>
-              <thead>
-                <tr className="text-left border-b border-slate-600/50">
-                  <LedgerSortHeader
-                    label="Ore / Gem"
-                    active={miningRunSort?.key === 'resource'}
-                    dir={miningRunSort?.key === 'resource' ? miningRunSort.dir : 'asc'}
-                    onClick={() => toggleMiningRunSort('resource')}
-                  />
-                  <LedgerSortHeader
-                    label="Q"
-                    active={miningRunSort?.key === 'quality'}
-                    dir={miningRunSort?.key === 'quality' ? miningRunSort.dir : 'asc'}
-                    onClick={() => toggleMiningRunSort('quality')}
-                  />
-                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Unrefined / Count</th>
-                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Yield est.</th>
-                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Yield act.</th>
-                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Profit est.</th>
-                  <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Profit act.</th>
-                  <th className="py-1.5 w-8" />
-                </tr>
-              </thead>
-              <tbody>
-                {sortedMiningRows.map(({ row }) => {
-                  const calc = computed.miningRows.find((r) => r.id === row.id)
-                  const isGem = calc?.isGem ?? isGemResource(row.resourceKey)
-                  return (
-                    <tr key={row.id} className="border-b border-slate-800/60">
-                      <td className="py-1 pr-2">
-                        <MiningResourceField
-                          resourceKey={row.resourceKey}
-                          resourceLabel={row.resourceLabel}
-                          oreEntries={oreEntries}
-                          onChange={(resourceKey, resourceLabel) =>
-                            patchMiningRow(row.id, miningRowResourcePatch(row, resourceKey, resourceLabel))
-                          }
-                        />
-                      </td>
-                      <td className="py-1 pr-2">
-                        <ResourceQualitySelect
-                          resourceKey={row.resourceKey}
-                          resourceLabel={row.resourceLabel}
-                          quality={String(row.quality)}
-                          onQualityChange={(q) =>
-                            patchMiningRow(row.id, {
-                              quality: resolveLedgerQuality(
-                                row.resourceKey,
-                                row.resourceLabel,
-                                Number(q)
-                              ),
-                            })
-                          }
-                        />
-                      </td>
-                      <td className="py-1 pr-2">
-                        <input
-                          type="number"
-                          value={row.unrefinedCscu || ''}
-                          onChange={(e) =>
-                            patchMiningRow(row.id, {
-                              unrefinedCscu: isGem
-                                ? Math.max(0, Math.trunc(Number(e.target.value) || 0))
-                                : Number(e.target.value) || 0,
-                              ...(isGem ? { yieldActual: null } : {}),
-                            })
-                          }
-                          className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
-                          min={0}
-                          step={isGem ? 1 : 'any'}
-                        />
-                        <span className="text-[10px] text-slate-500 ml-0.5 font-medium">
-                          {isGem ? 'gems' : 'cSCU unref.'}
-                        </span>
-                      </td>
-                      <td className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}>
-                        {isGem ? '—' : (calc?.yieldEstimate ?? '—')}
-                      </td>
-                      <td className="py-1 pr-2">
-                        {isGem ? (
-                          <span className="text-slate-600">—</span>
-                        ) : (
-                          <input
-                            type="number"
-                            value={row.yieldActual ?? ''}
-                            placeholder={String(calc?.yieldEstimate ?? '')}
-                            onChange={(e) =>
-                              patchMiningRow(row.id, {
-                                yieldActual:
-                                  e.target.value === ''
-                                    ? null
-                                    : Number(e.target.value) || 0,
-                              })
-                            }
-                            className="site-input w-[6rem] max-w-[6rem] shrink-0 px-1 py-0.5 text-xs"
-                            min={0}
-                            step="any"
-                          />
-                        )}
-                      </td>
-                      <td className={`py-1 pr-2 ${LEDGER_ESTIMATE} whitespace-nowrap overflow-hidden text-ellipsis`}>
-                        {isGem ? '—' : calc ? formatLedgerMoney(calc.profitEstimate) : '—'}
-                      </td>
-                      <td className={`py-1 pr-2 ${LEDGER_MONEY} whitespace-nowrap overflow-hidden text-ellipsis`}>
-                        {calc ? formatLedgerMoney(calc.profitActual) : '—'}
-                      </td>
-                      <td className="py-1">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            updateData((prev) => ({
-                              ...prev,
-                              miningRows: prev.miningRows.filter((r) => r.id !== row.id),
-                            }))
-                          }
-                          className="text-slate-500 hover:text-red-400"
-                          aria-label="Remove row"
-                        >
-                          ×
-                        </button>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+            <LedgerMiningRunsTable
+              sortedRows={sortedSalvageRows}
+              catalogEntries={salvageCatalogEntries}
+              searchPlaceholder="Search salvage"
+              computed={computed}
+              miningRunSort={salvageRunSort}
+              showQualityColumn={false}
+              onToggleSort={toggleSalvageRunSort}
+              onPatchRow={patchMiningRow}
+              onRemoveRow={(id) =>
+                updateData((prev) => ({
+                  ...prev,
+                  miningRows: prev.miningRows.filter((r) => r.id !== id),
+                }))
+              }
+            />
+          </section>
+
+          {/* Ore / gems */}
+          <section className={LEDGER_SECTION}>
+            <div className={LEDGER_SECTION_HEAD}>
+              <h3 className={LEDGER_SECTION_TITLE}>
+                <span className={LEDGER_SECTION_ACCENT} aria-hidden />
+                Ore / gems
+              </h3>
+              <button
+                type="button"
+                onClick={() =>
+                  updateData((prev) => ({
+                    ...prev,
+                    miningRows: [...prev.miningRows, createEmptyMiningRow(oreGemCatalogEntries[0])],
+                  }))
+                }
+                className={LEDGER_ADD_BTN}
+                disabled={oreGemCatalogEntries.length === 0}
+              >
+                + Add row
+              </button>
             </div>
+            <p className={LEDGER_INFO_TEXT}>
+              Ore: unrefined cSCU → yield est. (45% refine) → yield act. Gems are sold as-is —
+              enter a whole gem count only; no yield columns.
+            </p>
+            <LedgerMiningRunsTable
+              sortedRows={sortedOreGemRows}
+              catalogEntries={oreGemCatalogEntries}
+              searchPlaceholder="Search ore / gem"
+              computed={computed}
+              miningRunSort={oreGemRunSort}
+              showQualityColumn
+              onToggleSort={toggleOreGemRunSort}
+              onPatchRow={patchMiningRow}
+              onRemoveRow={(id) =>
+                updateData((prev) => ({
+                  ...prev,
+                  miningRows: prev.miningRows.filter((r) => r.id !== id),
+                }))
+              }
+            />
           </section>
 
           {/* Crew */}
@@ -1712,9 +1915,11 @@ export default function MiningLedgerTab({
               </button>
             </div>
             <p className={LEDGER_INFO_TEXT}>
-              Ore defaults: Purchased (Q0) DFP per 100 cSCU yield — profit = (yield cSCU ÷ 100) ×
-              price. Gems are sold as-is: whole gem count × per-gem DFP (no refine/yield step).
-              Override any row manually, or Reset from catalog if values look 100× too high.
+              Ore and construction salvage defaults: Purchased (Q0) DFP per 100 cSCU yield — profit
+              = (yield cSCU ÷ 100) × price. Construction pebbles/rubble/salvage price against
+              refined Construction Material. RMC uses direct SCU × per-SCU DFP. Gems: whole gem count
+              × per-gem DFP. Override any row manually, or Reset from catalog if values look 100×
+              too high.
             </p>
             <table className="w-full text-xs">
               <thead>
@@ -1724,8 +1929,10 @@ export default function MiningLedgerTab({
                 </tr>
               </thead>
               <tbody>
-                {ensurePriceOverrides(data, oreEntries).map((row) => {
+                {ensurePriceOverrides(data, priceOverrideCatalogEntries).map((row) => {
                   const isGem = isGemResource(row.resourceKey)
+                  const isRefinableSalvage = isLedgerRefinableSalvageRow(row.resourceKey)
+                  const isDirectSalvage = isLedgerDirectSalvageRow(row.resourceKey)
                   const defaultPrice = defaultPricePer100(row.resourceKey, row.resourceLabel)
                   const effective =
                     row.pricePer100 != null && Number.isFinite(row.pricePer100)
@@ -1745,7 +1952,7 @@ export default function MiningLedgerTab({
                             onChange={(e) => {
                               const val = e.target.value
                               updateData((prev) => {
-                                const next = ensurePriceOverrides(prev, oreEntries).map((p) =>
+                                const next = ensurePriceOverrides(prev, priceOverrideCatalogEntries).map((p) =>
                                   p.resourceKey === row.resourceKey
                                     ? {
                                         ...p,
@@ -1761,11 +1968,16 @@ export default function MiningLedgerTab({
                             step={isGem ? 1 : 'any'}
                           />
                           <span className="text-slate-500 tabular-nums text-[10px] font-medium">
-                            {isGem ? 'aUEC / gem' : 'aUEC / 100 cSCU'}
+                            {isGem
+                              ? 'aUEC / gem'
+                              : isDirectSalvage
+                                ? 'aUEC / SCU'
+                                : 'aUEC / 100 cSCU'}
                           </span>
                           {row.pricePer100 == null && (
                             <span className="text-slate-500 tabular-nums text-[10px] italic">
-                              default ({Math.round(effective).toLocaleString()})
+                              default ({Math.round(effective).toLocaleString()}
+                              {isRefinableSalvage ? ', refined CM' : ''})
                             </span>
                           )}
                         </div>

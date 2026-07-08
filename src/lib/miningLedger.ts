@@ -1,8 +1,107 @@
+import { EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
+import { getResourceType, isGemResource } from '../config/resourceTypes'
 import { pricingForResourceLine } from './orderPricing'
-import { isGemResource } from '../config/resourceTypes'
+import type { BlueprintResourceRow } from './operations'
 
 export const MINING_LEDGER_SCHEMA_VERSION = 1 as const
 export const MINING_LEDGER_YIELD_FACTOR = 0.45
+
+/** Salvage rows manually addable inside Mining runs (not refined Construction Material). */
+export const LEDGER_SALVAGE_ROW_KEYS = [
+  'rmc',
+  'construction_material_pebbles',
+  'construction_material_rubble',
+  'construction_material_salvage',
+] as const
+
+const LEDGER_SALVAGE_ROW_KEY_SET = new Set<string>(LEDGER_SALVAGE_ROW_KEYS)
+
+export const LEDGER_SALVAGE_CATALOG_ENTRIES: BlueprintResourceRow[] = EXTRA_CATALOG_RESOURCES.filter(
+  (row) => LEDGER_SALVAGE_ROW_KEY_SET.has(row.resourceKey)
+).map((row) => ({
+  resource_key: row.resourceKey,
+  label: row.label,
+  is_active: true,
+  synced_at: '',
+}))
+
+const REFINED_CONSTRUCTION_MATERIAL = {
+  resourceKey: 'construction_material',
+  resourceLabel: 'Construction Material',
+} as const
+
+export function isLedgerSalvageRowKey(resourceKey: string): boolean {
+  return LEDGER_SALVAGE_ROW_KEY_SET.has(resourceKey)
+}
+
+/** RMC is collected and sold directly — no refine/yield step. */
+export function isLedgerDirectSalvageRow(resourceKey: string): boolean {
+  return resourceKey === 'rmc'
+}
+
+/** Pebbles / rubble / salvage refine into Construction Material. */
+export function isLedgerRefinableSalvageRow(resourceKey: string): boolean {
+  return (
+    resourceKey.startsWith('construction_material_') && resourceKey !== REFINED_CONSTRUCTION_MATERIAL.resourceKey
+  )
+}
+
+export function ledgerRowShowsYield(resourceKey: string): boolean {
+  if (isGemResource(resourceKey)) return false
+  if (isLedgerDirectSalvageRow(resourceKey)) return false
+  return true
+}
+
+export function ledgerPricingResource(
+  resourceKey: string,
+  resourceLabel: string
+): { resourceKey: string; resourceLabel: string } {
+  if (isLedgerRefinableSalvageRow(resourceKey)) {
+    return { ...REFINED_CONSTRUCTION_MATERIAL }
+  }
+  return { resourceKey, resourceLabel }
+}
+
+export function ledgerOreGemCatalogEntries(catalog: BlueprintResourceRow[]): BlueprintResourceRow[] {
+  return catalog
+    .filter((row) => {
+      const type = getResourceType(row.resource_key)
+      return type === 'ore' || type === 'gem'
+    })
+    .sort((a, b) => a.label.localeCompare(b.label))
+}
+
+export function ledgerSalvageCatalogEntries(catalog: BlueprintResourceRow[]): BlueprintResourceRow[] {
+  const byKey = new Map<string, BlueprintResourceRow>()
+  for (const row of catalog) {
+    if (isLedgerSalvageRowKey(row.resource_key)) {
+      byKey.set(row.resource_key, row)
+    }
+  }
+  for (const row of LEDGER_SALVAGE_CATALOG_ENTRIES) {
+    if (!byKey.has(row.resource_key)) byKey.set(row.resource_key, row)
+  }
+  return [...byKey.values()].sort((a, b) => a.label.localeCompare(b.label))
+}
+
+/** Full mining-runs catalog (ore/gem + salvage) for price overrides. */
+export function ledgerMiningCatalogEntries(catalog: BlueprintResourceRow[]): BlueprintResourceRow[] {
+  return ledgerPriceOverrideCatalogEntries(catalog)
+}
+
+export function ledgerPriceOverrideCatalogEntries(
+  catalog: BlueprintResourceRow[]
+): BlueprintResourceRow[] {
+  const byKey = new Map<string, BlueprintResourceRow>()
+  for (const row of ledgerOreGemCatalogEntries(catalog)) {
+    byKey.set(row.resource_key, row)
+  }
+  for (const row of ledgerSalvageCatalogEntries(catalog)) {
+    byKey.set(row.resource_key, row)
+  }
+  return [...byKey.values()].sort((a, b) => a.label.localeCompare(b.label))
+}
+
 /** Default crew share count when a member is added (explicit 0 = alternate compensation). */
 export const DEFAULT_CREW_SHARES = 1 as const
 /** Ledger DFP always uses store-purchased Q0; row quality tracks mined band for merge/sorting only. */
@@ -163,6 +262,9 @@ export function yieldEstimateFromUnrefined(
   if (isGemResource(resourceKey)) {
     return gemCountFromRow(unrefinedCscu)
   }
+  if (isLedgerDirectSalvageRow(resourceKey)) {
+    return roundLedgerCscu(unrefinedCscu)
+  }
   return Math.round(unrefinedCscu * MINING_LEDGER_YIELD_FACTOR)
 }
 
@@ -253,11 +355,12 @@ export function profitFromYieldCscu(yieldCscu: number, pricePer100Cscu: number):
   return (yieldCscu / 100) * pricePer100Cscu
 }
 
-/** Purchased Q0 DFP per 100 cSCU yield for ore, or per gem for gems (qty=1). */
+/** Purchased Q0 DFP per 100 cSCU yield for ore/salvage, or per gem for gems (qty=1). */
 export function defaultPricePer100(resourceKey: string, resourceLabel: string): number {
+  const pricing = ledgerPricingResource(resourceKey, resourceLabel)
   const { unitDfpAuec } = pricingForResourceLine(
-    resourceKey,
-    resourceLabel,
+    pricing.resourceKey,
+    pricing.resourceLabel,
     MINING_LEDGER_PRICE_QUALITY,
     1
   )
