@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted harvestable/HPP data)",
-  "_extracted": "2026-07-07T02:06:35.047Z",
+  "_extracted": "2026-07-08T23:51:55.519Z",
   "clusterPresets": {
     "HarvestableClusterPreset.Asteroid_Cluster_Pyro": {
       "probabilityOfClustering": 30,
@@ -411,6 +411,86 @@
     "Aluminum": {
       "oreName": "Aluminum",
       "baseSignature": 4285,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17140,
+              "chancePercent": 60,
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
+            },
+            {
+              "nodes": 5,
+              "rs": 21425,
+              "chancePercent": 30,
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
+            },
+            {
+              "nodes": 6,
+              "rs": 25710,
+              "chancePercent": 10,
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
+            }
+          ],
+          "bestLocation": "Stanton1",
+          "bestLocationDisplayName": "Hurston",
+          "bestLocationSpawnPercent": 2.64,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17140,
+              "chancePercent": 60,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 5,
+              "rs": 21425,
+              "chancePercent": 30,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 6,
+              "rs": 25710,
+              "chancePercent": 10,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
+          "bestLocationSpawnPercent": 0.031,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -472,7 +552,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -534,7 +622,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -596,7 +692,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -658,7 +762,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
@@ -720,7 +832,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
@@ -782,7 +902,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
@@ -844,7 +972,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
@@ -906,7 +1042,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
@@ -968,7 +1112,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
@@ -1030,7 +1182,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
@@ -1092,7 +1252,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
@@ -1154,7 +1322,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -1172,6 +1348,86 @@
     "Copper": {
       "oreName": "Copper",
       "baseSignature": 4240,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16960,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            },
+            {
+              "nodes": 5,
+              "rs": 21200,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            },
+            {
+              "nodes": 6,
+              "rs": 25440,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            }
+          ],
+          "bestLocation": "Pyro1",
+          "bestLocationDisplayName": "Pyro I",
+          "bestLocationSpawnPercent": 2.447,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16960,
+              "chancePercent": 60,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            },
+            {
+              "nodes": 5,
+              "rs": 21200,
+              "chancePercent": 30,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            },
+            {
+              "nodes": 6,
+              "rs": 25440,
+              "chancePercent": 10,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            }
+          ],
+          "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
+          "bestLocationSpawnPercent": 0.053,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -1233,7 +1489,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Warm01|asteroid": {
           "locationName": "Pyro Warm01",
@@ -1295,7 +1559,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
@@ -1357,7 +1629,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
@@ -1419,7 +1699,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
@@ -1481,7 +1769,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -1543,7 +1839,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -1605,7 +1909,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
@@ -1667,7 +1979,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
@@ -1729,7 +2049,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
@@ -1791,7 +2119,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
@@ -1853,7 +2189,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
@@ -1915,7 +2259,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
@@ -1977,7 +2329,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
@@ -2039,7 +2399,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
@@ -2101,7 +2469,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
@@ -2163,7 +2539,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
@@ -2225,7 +2609,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -2243,6 +2635,86 @@
     "Corundum": {
       "oreName": "Corundum",
       "baseSignature": 4225,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16900,
+              "chancePercent": 60,
+              "bestAtLocation": "Stanton1a",
+              "bestAtLocationDisplayName": "Ita"
+            },
+            {
+              "nodes": 5,
+              "rs": 21125,
+              "chancePercent": 30,
+              "bestAtLocation": "Stanton1a",
+              "bestAtLocationDisplayName": "Ita"
+            },
+            {
+              "nodes": 6,
+              "rs": 25350,
+              "chancePercent": 10,
+              "bestAtLocation": "Stanton1a",
+              "bestAtLocationDisplayName": "Ita"
+            }
+          ],
+          "bestLocation": "Stanton1b",
+          "bestLocationDisplayName": "Aberdeen",
+          "bestLocationSpawnPercent": 1.788,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16900,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            },
+            {
+              "nodes": 5,
+              "rs": 21125,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            },
+            {
+              "nodes": 6,
+              "rs": 25350,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            }
+          ],
+          "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
+          "bestLocationSpawnPercent": 0.027,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -2304,7 +2776,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
@@ -2366,7 +2846,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
@@ -2428,7 +2916,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
@@ -2490,7 +2986,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
@@ -2552,7 +3056,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
@@ -2614,7 +3126,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -2632,6 +3152,86 @@
     "Hephaestanite": {
       "oreName": "Hephaestanite",
       "baseSignature": 4180,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16720,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro2",
+              "bestAtLocationDisplayName": "Monox"
+            },
+            {
+              "nodes": 5,
+              "rs": 20900,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro2",
+              "bestAtLocationDisplayName": "Monox"
+            },
+            {
+              "nodes": 6,
+              "rs": 25080,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro2",
+              "bestAtLocationDisplayName": "Monox"
+            }
+          ],
+          "bestLocation": "Pyro2",
+          "bestLocationDisplayName": "Monox",
+          "bestLocationSpawnPercent": 2.455,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16720,
+              "chancePercent": 60,
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
+            },
+            {
+              "nodes": 5,
+              "rs": 20900,
+              "chancePercent": 30,
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
+            },
+            {
+              "nodes": 6,
+              "rs": 25080,
+              "chancePercent": 10,
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
+            }
+          ],
+          "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
+          "bestLocationSpawnPercent": 0.027,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro2|surface": {
           "locationName": "Pyro2",
@@ -2699,7 +3299,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
@@ -2767,7 +3375,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
@@ -2835,7 +3451,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
@@ -2903,7 +3527,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
@@ -2971,7 +3603,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
@@ -3039,7 +3679,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
@@ -3107,7 +3755,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
@@ -3175,7 +3831,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
@@ -3243,7 +3907,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -3261,6 +3933,86 @@
     "Ice": {
       "oreName": "Ice",
       "baseSignature": 4300,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17200,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
+            },
+            {
+              "nodes": 5,
+              "rs": 21500,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
+            },
+            {
+              "nodes": 6,
+              "rs": 25800,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
+            }
+          ],
+          "bestLocation": "Stanton4b",
+          "bestLocationDisplayName": "Clio",
+          "bestLocationSpawnPercent": 2.4,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17200,
+              "chancePercent": 60,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 5,
+              "rs": 21500,
+              "chancePercent": 30,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 6,
+              "rs": 25800,
+              "chancePercent": 10,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
+          "bestLocationSpawnPercent": 0.053,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -3316,7 +4068,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -3372,7 +4132,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -3428,7 +4196,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
@@ -3484,7 +4260,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
@@ -3540,7 +4324,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -3596,7 +4388,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -3652,7 +4452,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
@@ -3708,7 +4516,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
@@ -3764,7 +4580,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
@@ -3820,7 +4644,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
@@ -3876,7 +4708,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
@@ -3932,7 +4772,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
@@ -3988,7 +4836,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
@@ -4044,7 +4900,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
@@ -4100,7 +4964,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
@@ -4156,7 +5028,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
@@ -4212,7 +5092,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -4230,6 +5118,86 @@
     "Iron": {
       "oreName": "Iron",
       "baseSignature": 4270,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17080,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            },
+            {
+              "nodes": 5,
+              "rs": 21350,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            },
+            {
+              "nodes": 6,
+              "rs": 25620,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            }
+          ],
+          "bestLocation": "Pyro5c",
+          "bestLocationDisplayName": "Adir",
+          "bestLocationSpawnPercent": 3.263,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17080,
+              "chancePercent": 60,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 5,
+              "rs": 21350,
+              "chancePercent": 30,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 6,
+              "rs": 25620,
+              "chancePercent": 10,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
+          "bestLocationSpawnPercent": 0.054,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -4285,7 +5253,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -4341,7 +5317,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -4397,7 +5381,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Warm01|asteroid": {
           "locationName": "Pyro Warm01",
@@ -4453,7 +5445,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
@@ -4509,7 +5509,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
@@ -4565,7 +5573,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro2|surface": {
           "locationName": "Pyro2",
@@ -4621,7 +5637,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
@@ -4677,7 +5701,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
@@ -4733,7 +5765,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
@@ -4789,7 +5829,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
@@ -4845,7 +5893,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
@@ -4901,7 +5957,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
@@ -4957,7 +6021,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
@@ -5013,7 +6085,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -5069,7 +6149,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
@@ -5125,7 +6213,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
@@ -5181,7 +6277,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
@@ -5237,7 +6341,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
@@ -5293,7 +6405,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
@@ -5349,7 +6469,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
@@ -5405,7 +6533,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
@@ -5461,7 +6597,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
@@ -5517,7 +6661,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
@@ -5573,7 +6725,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
@@ -5629,7 +6789,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
@@ -5685,7 +6853,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -5703,6 +6879,86 @@
     "Quartz": {
       "oreName": "Quartz",
       "baseSignature": 4210,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16840,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            },
+            {
+              "nodes": 5,
+              "rs": 21050,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            },
+            {
+              "nodes": 6,
+              "rs": 25260,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            }
+          ],
+          "bestLocation": "Pyro3",
+          "bestLocationDisplayName": "Bloom",
+          "bestLocationSpawnPercent": 2.625,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16840,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            },
+            {
+              "nodes": 5,
+              "rs": 21050,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            },
+            {
+              "nodes": 6,
+              "rs": 25260,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            }
+          ],
+          "bestLocation": "Pyro Deepspaceasteroids",
+          "bestLocationDisplayName": "Pyro Asteroid Clusters",
+          "bestLocationSpawnPercent": 0.015,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -5770,7 +7026,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
@@ -5838,7 +7102,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
@@ -5906,7 +7178,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
@@ -5974,7 +7254,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
@@ -6042,7 +7330,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -6060,6 +7356,86 @@
     "Silicon": {
       "oreName": "Silicon",
       "baseSignature": 4255,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17020,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
+            },
+            {
+              "nodes": 5,
+              "rs": 21275,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
+            },
+            {
+              "nodes": 6,
+              "rs": 25530,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
+            }
+          ],
+          "bestLocation": "Pyro5a",
+          "bestLocationDisplayName": "Ignis",
+          "bestLocationSpawnPercent": 2.7,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 17020,
+              "chancePercent": 60,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            },
+            {
+              "nodes": 5,
+              "rs": 21275,
+              "chancePercent": 30,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            },
+            {
+              "nodes": 6,
+              "rs": 25530,
+              "chancePercent": 10,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            }
+          ],
+          "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
+          "bestLocationSpawnPercent": 0.031,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -6127,7 +7503,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
@@ -6195,7 +7579,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
@@ -6263,7 +7655,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
@@ -6331,7 +7731,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
@@ -6399,7 +7807,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
@@ -6467,7 +7883,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -6535,7 +7959,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
@@ -6603,7 +8035,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
@@ -6671,7 +8111,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
@@ -6739,7 +8187,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -6757,6 +8213,86 @@
     "Tin": {
       "oreName": "Tin",
       "baseSignature": 4195,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16780,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            },
+            {
+              "nodes": 5,
+              "rs": 20975,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            },
+            {
+              "nodes": 6,
+              "rs": 25170,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            }
+          ],
+          "bestLocation": "Pyro5a",
+          "bestLocationDisplayName": "Ignis",
+          "bestLocationSpawnPercent": 2.7,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 6,
+          "clusterRows": [
+            {
+              "nodes": 4,
+              "rs": 16780,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            },
+            {
+              "nodes": 5,
+              "rs": 20975,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            },
+            {
+              "nodes": 6,
+              "rs": 25170,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Deepspaceasteroids",
+              "bestAtLocationDisplayName": "Pyro Asteroid Clusters"
+            }
+          ],
+          "bestLocation": "Pyro Deepspaceasteroids",
+          "bestLocationDisplayName": "Pyro Asteroid Clusters",
+          "bestLocationSpawnPercent": 0.015,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -6818,7 +8354,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
@@ -6880,7 +8424,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro2|surface": {
           "locationName": "Pyro2",
@@ -6942,7 +8494,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
@@ -7004,7 +8564,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
@@ -7066,7 +8634,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
@@ -7128,7 +8704,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
@@ -7190,7 +8774,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -7208,6 +8800,41 @@
     "Lindinium": {
       "oreName": "Lindinium",
       "baseSignature": 3400,
+      "depositTypes": [
+        "asteroid"
+      ],
+      "overallByType": {
+        "asteroid": {
+          "maxNodes": 3,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6800,
+              "chancePercent": 30,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 3,
+              "rs": 10200,
+              "chancePercent": 10,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Glaciem Ring",
+          "bestLocationDisplayName": "Glaciem Ring",
+          "bestLocationSpawnPercent": 0.01,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -7262,7 +8889,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -7317,7 +8952,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -7333,6 +8976,72 @@
     "Ouratite": {
       "oreName": "Ouratite",
       "baseSignature": 3370,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 3,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6740,
+              "chancePercent": 30,
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
+            },
+            {
+              "nodes": 3,
+              "rs": 10110,
+              "chancePercent": 10,
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
+            }
+          ],
+          "bestLocation": "Stanton1",
+          "bestLocationDisplayName": "Hurston",
+          "bestLocationSpawnPercent": 0.6,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 3,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6740,
+              "chancePercent": 30,
+              "bestAtLocation": "Stanton2c Belt",
+              "bestAtLocationDisplayName": "Yela Ring"
+            },
+            {
+              "nodes": 3,
+              "rs": 10110,
+              "chancePercent": 10,
+              "bestAtLocation": "Stanton2c Belt",
+              "bestAtLocationDisplayName": "Yela Ring"
+            }
+          ],
+          "bestLocation": "Stanton2c Belt",
+          "bestLocationDisplayName": "Yela Ring",
+          "bestLocationSpawnPercent": 0.02,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
@@ -7387,7 +9096,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
@@ -7442,7 +9159,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
@@ -7497,7 +9222,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
@@ -7552,7 +9285,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
@@ -7607,7 +9348,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -7625,6 +9374,72 @@
     "Riccite": {
       "oreName": "Riccite",
       "baseSignature": 3385,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 3,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6770,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            },
+            {
+              "nodes": 3,
+              "rs": 10155,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            }
+          ],
+          "bestLocation": "Pyro3",
+          "bestLocationDisplayName": "Bloom",
+          "bestLocationSpawnPercent": 0.75,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 3,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6770,
+              "chancePercent": 30,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            },
+            {
+              "nodes": 3,
+              "rs": 10155,
+              "chancePercent": 10,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            }
+          ],
+          "bestLocation": "Akiro Cluster",
+          "bestLocationDisplayName": "Akiro Cluster",
+          "bestLocationSpawnPercent": 0.01,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -7679,7 +9494,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -7734,7 +9557,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
@@ -7789,7 +9620,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
@@ -7844,7 +9683,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
@@ -7899,7 +9746,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
@@ -7954,7 +9809,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -8009,7 +9872,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -8027,6 +9898,58 @@
     "Quantainium": {
       "oreName": "Quantainium",
       "baseSignature": 3170,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 2,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6340,
+              "chancePercent": 25,
+              "bestAtLocation": "Stanton1",
+              "bestAtLocationDisplayName": "Hurston"
+            }
+          ],
+          "bestLocation": "Stanton4a",
+          "bestLocationDisplayName": "Calliope",
+          "bestLocationSpawnPercent": 0.12,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 2,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6340,
+              "chancePercent": 25,
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
+            }
+          ],
+          "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
+          "bestLocationSpawnPercent": 0.006,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -8074,7 +9997,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1|surface": {
           "locationName": "Stanton1",
@@ -8122,7 +10053,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1a|surface": {
           "locationName": "Stanton1a",
@@ -8170,7 +10109,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
@@ -8218,7 +10165,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
@@ -8266,7 +10221,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
@@ -8314,7 +10277,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
@@ -8362,7 +10333,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
@@ -8410,7 +10389,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
@@ -8458,7 +10445,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
@@ -8506,7 +10501,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
@@ -8554,7 +10557,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4|surface": {
           "locationName": "Stanton4",
@@ -8602,7 +10613,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4a|surface": {
           "locationName": "Stanton4a",
@@ -8650,7 +10669,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
@@ -8698,7 +10725,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
@@ -8746,7 +10781,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -8764,6 +10807,34 @@
     "Savrilium": {
       "oreName": "Savrilium",
       "baseSignature": 3200,
+      "depositTypes": [
+        "asteroid"
+      ],
+      "overallByType": {
+        "asteroid": {
+          "maxNodes": 2,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6400,
+              "chancePercent": 25,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Glaciem Ring",
+          "bestLocationDisplayName": "Glaciem Ring",
+          "bestLocationSpawnPercent": 0.002,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -8811,7 +10882,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -8859,7 +10938,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -8875,6 +10962,58 @@
     "Stileron": {
       "oreName": "Stileron",
       "baseSignature": 3185,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 2,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6370,
+              "chancePercent": 25,
+              "bestAtLocation": "Pyro1",
+              "bestAtLocationDisplayName": "Pyro I"
+            }
+          ],
+          "bestLocation": "Pyro1",
+          "bestLocationDisplayName": "Pyro I",
+          "bestLocationSpawnPercent": 0.15,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 2,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 6370,
+              "chancePercent": 25,
+              "bestAtLocation": "Akiro Cluster",
+              "bestAtLocationDisplayName": "Akiro Cluster"
+            }
+          ],
+          "bestLocation": "Akiro Cluster",
+          "bestLocationDisplayName": "Akiro Cluster",
+          "bestLocationSpawnPercent": 0.002,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -8922,7 +11061,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -8970,7 +11117,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro1|surface": {
           "locationName": "Pyro1",
@@ -9018,7 +11173,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro2|surface": {
           "locationName": "Pyro2",
@@ -9066,7 +11229,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
@@ -9114,7 +11285,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
@@ -9162,7 +11341,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -9210,7 +11397,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -9228,6 +11423,86 @@
     "Beryl": {
       "oreName": "Beryl",
       "baseSignature": 3540,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7080,
+              "chancePercent": 60,
+              "bestAtLocation": "Stanton3b",
+              "bestAtLocationDisplayName": "Wala"
+            },
+            {
+              "nodes": 3,
+              "rs": 10620,
+              "chancePercent": 30,
+              "bestAtLocation": "Stanton3b",
+              "bestAtLocationDisplayName": "Wala"
+            },
+            {
+              "nodes": 4,
+              "rs": 14160,
+              "chancePercent": 10,
+              "bestAtLocation": "Stanton3b",
+              "bestAtLocationDisplayName": "Wala"
+            }
+          ],
+          "bestLocation": "Stanton3b",
+          "bestLocationDisplayName": "Wala",
+          "bestLocationSpawnPercent": 1.08,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7080,
+              "chancePercent": 60,
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
+            },
+            {
+              "nodes": 3,
+              "rs": 10620,
+              "chancePercent": 30,
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
+            },
+            {
+              "nodes": 4,
+              "rs": 14160,
+              "chancePercent": 10,
+              "bestAtLocation": "Aaron Halo",
+              "bestAtLocationDisplayName": "Aaron Halo"
+            }
+          ],
+          "bestLocation": "Aaron Halo",
+          "bestLocationDisplayName": "Aaron Halo",
+          "bestLocationSpawnPercent": 0.054,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -9283,7 +11558,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
@@ -9339,7 +11622,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
@@ -9388,7 +11679,15 @@
               "minProximity": 2,
               "maxProximity": 4
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
@@ -9444,7 +11743,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
@@ -9500,7 +11807,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -9519,6 +11834,86 @@
     "Bexalite": {
       "oreName": "Bexalite",
       "baseSignature": 3600,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7200,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro5d",
+              "bestAtLocationDisplayName": "Fairo"
+            },
+            {
+              "nodes": 3,
+              "rs": 10800,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro5d",
+              "bestAtLocationDisplayName": "Fairo"
+            },
+            {
+              "nodes": 4,
+              "rs": 14400,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro5d",
+              "bestAtLocationDisplayName": "Fairo"
+            }
+          ],
+          "bestLocation": "Pyro5f",
+          "bestLocationDisplayName": "Vuur",
+          "bestLocationSpawnPercent": 1.35,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7200,
+              "chancePercent": 60,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 3,
+              "rs": 10800,
+              "chancePercent": 30,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 4,
+              "rs": 14400,
+              "chancePercent": 10,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
+          "bestLocationSpawnPercent": 0.054,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -9586,7 +11981,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -9654,7 +12057,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Warm01|asteroid": {
           "locationName": "Pyro Warm01",
@@ -9722,7 +12133,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
@@ -9790,7 +12209,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
@@ -9858,7 +12285,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
@@ -9926,7 +12361,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
@@ -9994,7 +12437,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -10012,6 +12463,86 @@
     "Borase": {
       "oreName": "Borase",
       "baseSignature": 3570,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7140,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            },
+            {
+              "nodes": 3,
+              "rs": 10710,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            },
+            {
+              "nodes": 4,
+              "rs": 14280,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro3",
+              "bestAtLocationDisplayName": "Bloom"
+            }
+          ],
+          "bestLocation": "Pyro4",
+          "bestLocationDisplayName": "Pyro IV",
+          "bestLocationSpawnPercent": 1.351,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7140,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
+            },
+            {
+              "nodes": 3,
+              "rs": 10710,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 14280,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
+            }
+          ],
+          "bestLocation": "Pyro Cool01",
+          "bestLocationDisplayName": "Pyro V Lagrange belts",
+          "bestLocationSpawnPercent": 0.018,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
@@ -10079,7 +12610,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro3|surface": {
           "locationName": "Pyro3",
@@ -10147,7 +12686,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro4|surface": {
           "locationName": "Pyro4",
@@ -10215,7 +12762,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
@@ -10283,7 +12838,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
@@ -10351,7 +12914,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
@@ -10419,7 +12990,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -10437,6 +13016,86 @@
     "Gold": {
       "oreName": "Gold",
       "baseSignature": 3585,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7170,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
+            },
+            {
+              "nodes": 3,
+              "rs": 10755,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
+            },
+            {
+              "nodes": 4,
+              "rs": 14340,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro5a",
+              "bestAtLocationDisplayName": "Ignis"
+            }
+          ],
+          "bestLocation": "Pyro5a",
+          "bestLocationDisplayName": "Ignis",
+          "bestLocationSpawnPercent": 1.35,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7170,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
+            },
+            {
+              "nodes": 3,
+              "rs": 10755,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 14340,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
+            }
+          ],
+          "bestLocation": "Lagrange B",
+          "bestLocationDisplayName": "ARC-L5",
+          "bestLocationSpawnPercent": 0.027,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
@@ -10504,7 +13163,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro5a|surface": {
           "locationName": "Pyro5a",
@@ -10572,7 +13239,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5b|surface": {
           "locationName": "Pyro5b",
@@ -10640,7 +13315,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
@@ -10708,7 +13391,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -10776,7 +13467,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
@@ -10844,7 +13543,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -10862,6 +13569,86 @@
     "Taranite": {
       "oreName": "Taranite",
       "baseSignature": 3555,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7110,
+              "chancePercent": 60,
+              "bestAtLocation": "Stanton2a",
+              "bestAtLocationDisplayName": "Cellin"
+            },
+            {
+              "nodes": 3,
+              "rs": 10665,
+              "chancePercent": 30,
+              "bestAtLocation": "Stanton2a",
+              "bestAtLocationDisplayName": "Cellin"
+            },
+            {
+              "nodes": 4,
+              "rs": 14220,
+              "chancePercent": 10,
+              "bestAtLocation": "Stanton2a",
+              "bestAtLocationDisplayName": "Cellin"
+            }
+          ],
+          "bestLocation": "Stanton2a",
+          "bestLocationDisplayName": "Cellin",
+          "bestLocationSpawnPercent": 1.08,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 4,
+          "clusterRows": [
+            {
+              "nodes": 2,
+              "rs": 7110,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
+            },
+            {
+              "nodes": 3,
+              "rs": 10665,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 14220,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
+            }
+          ],
+          "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
+          "bestLocationSpawnPercent": 0.027,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
@@ -10917,7 +13704,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
@@ -10973,7 +13768,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
@@ -11029,7 +13832,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
@@ -11085,7 +13896,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4b|surface": {
           "locationName": "Stanton4b",
@@ -11141,7 +13960,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton4c|surface": {
           "locationName": "Stanton4c",
@@ -11197,7 +14024,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -11215,6 +14050,86 @@
     "Agricium": {
       "oreName": "Agricium",
       "baseSignature": 3885,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11655,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 15540,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
+            },
+            {
+              "nodes": 5,
+              "rs": 19425,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Warm01",
+              "bestAtLocationDisplayName": "Pyro I–II Lagrange belts"
+            }
+          ],
+          "bestLocation": "Stanton2a",
+          "bestLocationDisplayName": "Cellin",
+          "bestLocationSpawnPercent": 1.71,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11655,
+              "chancePercent": 60,
+              "bestAtLocation": "Lagrange D",
+              "bestAtLocationDisplayName": "ARC-L3"
+            },
+            {
+              "nodes": 4,
+              "rs": 15540,
+              "chancePercent": 30,
+              "bestAtLocation": "Lagrange D",
+              "bestAtLocationDisplayName": "ARC-L3"
+            },
+            {
+              "nodes": 5,
+              "rs": 19425,
+              "chancePercent": 10,
+              "bestAtLocation": "Lagrange D",
+              "bestAtLocationDisplayName": "ARC-L3"
+            }
+          ],
+          "bestLocation": "Lagrange D",
+          "bestLocationDisplayName": "ARC-L3",
+          "bestLocationSpawnPercent": 0.029,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Warm01|surface": {
           "locationName": "Pyro Warm01",
@@ -11282,7 +14197,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
@@ -11350,7 +14273,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -11418,7 +14349,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange D|asteroid": {
           "locationName": "Lagrange D",
@@ -11486,7 +14425,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange G|asteroid": {
           "locationName": "Lagrange G",
@@ -11554,7 +14501,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange Occupied|asteroid": {
           "locationName": "Lagrange Occupied",
@@ -11622,7 +14577,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2a|surface": {
           "locationName": "Stanton2a",
@@ -11690,7 +14653,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2b|surface": {
           "locationName": "Stanton2b",
@@ -11758,7 +14729,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton2c|surface": {
           "locationName": "Stanton2c",
@@ -11826,7 +14805,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -11844,6 +14831,86 @@
     "Aslarite": {
       "oreName": "Aslarite",
       "baseSignature": 3840,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11520,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro5e",
+              "bestAtLocationDisplayName": "Fuego"
+            },
+            {
+              "nodes": 4,
+              "rs": 15360,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro5e",
+              "bestAtLocationDisplayName": "Fuego"
+            },
+            {
+              "nodes": 5,
+              "rs": 19200,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro5e",
+              "bestAtLocationDisplayName": "Fuego"
+            }
+          ],
+          "bestLocation": "Pyro5e",
+          "bestLocationDisplayName": "Fuego",
+          "bestLocationSpawnPercent": 2.138,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11520,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 15360,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
+            },
+            {
+              "nodes": 5,
+              "rs": 19200,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Cool02",
+              "bestAtLocationDisplayName": "Pyro VI Lagrange belts"
+            }
+          ],
+          "bestLocation": "Lagrange B",
+          "bestLocationDisplayName": "ARC-L5",
+          "bestLocationSpawnPercent": 0.043,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Cool02|asteroid": {
           "locationName": "Pyro Cool02",
@@ -11911,7 +14978,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro5e|surface": {
           "locationName": "Pyro5e",
@@ -11979,7 +15054,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5f|surface": {
           "locationName": "Pyro5f",
@@ -12047,7 +15130,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -12115,7 +15206,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange B|asteroid": {
           "locationName": "Lagrange B",
@@ -12183,7 +15282,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
@@ -12251,7 +15358,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1d|surface": {
           "locationName": "Stanton1d",
@@ -12319,7 +15434,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -12337,6 +15460,86 @@
     "Laranite": {
       "oreName": "Laranite",
       "baseSignature": 3825,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11475,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro4",
+              "bestAtLocationDisplayName": "Pyro IV"
+            },
+            {
+              "nodes": 4,
+              "rs": 15300,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro4",
+              "bestAtLocationDisplayName": "Pyro IV"
+            },
+            {
+              "nodes": 5,
+              "rs": 19125,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro4",
+              "bestAtLocationDisplayName": "Pyro IV"
+            }
+          ],
+          "bestLocation": "Pyro4",
+          "bestLocationDisplayName": "Pyro IV",
+          "bestLocationSpawnPercent": 2.14,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11475,
+              "chancePercent": 60,
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
+            },
+            {
+              "nodes": 4,
+              "rs": 15300,
+              "chancePercent": 30,
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
+            },
+            {
+              "nodes": 5,
+              "rs": 19125,
+              "chancePercent": 10,
+              "bestAtLocation": "Lagrange A",
+              "bestAtLocationDisplayName": "HUR-L1"
+            }
+          ],
+          "bestLocation": "Lagrange A",
+          "bestLocationDisplayName": "HUR-L1",
+          "bestLocationSpawnPercent": 0.029,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro4|surface": {
           "locationName": "Pyro4",
@@ -12398,7 +15601,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange A|asteroid": {
           "locationName": "Lagrange A",
@@ -12460,7 +15671,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton3a|surface": {
           "locationName": "Stanton3a",
@@ -12522,7 +15741,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton3b|surface": {
           "locationName": "Stanton3b",
@@ -12584,7 +15811,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -12602,6 +15837,86 @@
     "Titanium": {
       "oreName": "Titanium",
       "baseSignature": 3855,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11565,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
+            },
+            {
+              "nodes": 4,
+              "rs": 15420,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
+            },
+            {
+              "nodes": 5,
+              "rs": 19275,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro6",
+              "bestAtLocationDisplayName": "Terminus"
+            }
+          ],
+          "bestLocation": "Stanton1b",
+          "bestLocationDisplayName": "Aberdeen",
+          "bestLocationSpawnPercent": 1.71,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11565,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 15420,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
+            },
+            {
+              "nodes": 5,
+              "rs": 19275,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Cool01",
+              "bestAtLocationDisplayName": "Pyro V Lagrange belts"
+            }
+          ],
+          "bestLocation": "Lagrange E",
+          "bestLocationDisplayName": "CRU-L1",
+          "bestLocationSpawnPercent": 0.086,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Cool01|asteroid": {
           "locationName": "Pyro Cool01",
@@ -12669,7 +15984,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro6|surface": {
           "locationName": "Pyro6",
@@ -12737,7 +16060,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Aaron Halo|asteroid": {
           "locationName": "Aaron Halo",
@@ -12805,7 +16136,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange E|asteroid": {
           "locationName": "Lagrange E",
@@ -12873,7 +16212,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton2c Belt|asteroid": {
           "locationName": "Stanton2c Belt",
@@ -12941,7 +16288,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Stanton1b|surface": {
           "locationName": "Stanton1b",
@@ -13009,7 +16364,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Stanton1c|surface": {
           "locationName": "Stanton1c",
@@ -13077,7 +16440,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -13095,6 +16466,48 @@
     "Torite": {
       "oreName": "Torite",
       "baseSignature": 3900,
+      "depositTypes": [
+        "asteroid"
+      ],
+      "overallByType": {
+        "asteroid": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11700,
+              "chancePercent": 60,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 4,
+              "rs": 15600,
+              "chancePercent": 30,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            },
+            {
+              "nodes": 5,
+              "rs": 19500,
+              "chancePercent": 10,
+              "bestAtLocation": "Glaciem Ring",
+              "bestAtLocationDisplayName": "Glaciem Ring"
+            }
+          ],
+          "bestLocation": "Glaciem Ring",
+          "bestLocationDisplayName": "Glaciem Ring",
+          "bestLocationSpawnPercent": 0.029,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Glaciem Ring|asteroid": {
           "locationName": "Glaciem Ring",
@@ -13150,7 +16563,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
@@ -13206,7 +16627,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Akiro Cluster|asteroid": {
           "locationName": "Akiro Cluster",
@@ -13262,7 +16691,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro Deepspaceasteroids|asteroid": {
           "locationName": "Pyro Deepspaceasteroids",
@@ -13318,7 +16755,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Lagrange C|asteroid": {
           "locationName": "Lagrange C",
@@ -13374,7 +16819,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -13390,6 +16843,86 @@
     "Tungsten": {
       "oreName": "Tungsten",
       "baseSignature": 3870,
+      "depositTypes": [
+        "asteroid",
+        "surface"
+      ],
+      "overallByType": {
+        "surface": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11610,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro5c",
+              "bestAtLocationDisplayName": "Adir"
+            },
+            {
+              "nodes": 4,
+              "rs": 15480,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro5c",
+              "bestAtLocationDisplayName": "Adir"
+            },
+            {
+              "nodes": 5,
+              "rs": 19350,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro5c",
+              "bestAtLocationDisplayName": "Adir"
+            }
+          ],
+          "bestLocation": "Pyro5c",
+          "bestLocationDisplayName": "Adir",
+          "bestLocationSpawnPercent": 2.138,
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
+        },
+        "asteroid": {
+          "maxNodes": 5,
+          "clusterRows": [
+            {
+              "nodes": 3,
+              "rs": 11610,
+              "chancePercent": 60,
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
+            },
+            {
+              "nodes": 4,
+              "rs": 15480,
+              "chancePercent": 30,
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
+            },
+            {
+              "nodes": 5,
+              "rs": 19350,
+              "chancePercent": 10,
+              "bestAtLocation": "Pyro Warm02",
+              "bestAtLocationDisplayName": "Pyro III Lagrange belts"
+            }
+          ],
+          "bestLocation": "Lagrange F",
+          "bestLocationDisplayName": "ARC-L1",
+          "bestLocationSpawnPercent": 0.043,
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
+        }
+      },
       "locations": {
         "Pyro Warm02|asteroid": {
           "locationName": "Pyro Warm02",
@@ -13451,7 +16984,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         },
         "Pyro5c|surface": {
           "locationName": "Pyro5c",
@@ -13513,7 +17054,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Pyro5d|surface": {
           "locationName": "Pyro5d",
@@ -13575,7 +17124,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.2,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 28.69,
+            "max": 3585.75
+          }
         },
         "Lagrange F|asteroid": {
           "locationName": "Lagrange F",
@@ -13637,7 +17194,15 @@
               "minProximity": 1,
               "maxProximity": 12
             }
-          ]
+          ],
+          "scaleRange": {
+            "min": 0.6,
+            "max": 1
+          },
+          "massRangeScu": {
+            "min": 774.52,
+            "max": 3585.75
+          }
         }
       },
       "harvestablePresets": [
@@ -13660,7 +17225,7 @@
     "rawDisplayNames": []
   },
   "summary": {
-    "signatureOres": 27,
+    "signatureOres": 26,
     "oresWithProfiles": 26,
     "totalSpawnLinks": 213,
     "totalLocationProfiles": 213

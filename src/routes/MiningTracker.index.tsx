@@ -41,6 +41,11 @@ import { fetchMiningLedgerSiteStats, type MiningLedgerSiteStats } from '../lib/m
 import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
 import RockCalculator from '../components/mining/RockCalculator'
 import {
+  computeBreakabilityForOre,
+  formatBreakabilityRange,
+  formatMassRangeScu,
+} from '../lib/miningBreakability'
+import {
   guideLocationChipTooltip,
   guideLocationOreTooltip,
   guideOreModalLocationTooltip,
@@ -427,6 +432,9 @@ export default function MiningTrackerRoute() {
                   const subtitle = getTrackerSubtitle(entry)
                   const missingMessage = getTrackerProfileMissingMessage(entry)
                   const isLocationEntry = isLocationTrackerEntry(entry)
+                  const breakability = computeBreakabilityForOre(entry.oreName, display?.profile)
+                  const powerLabel = formatBreakabilityRange(breakability.breakabilityRange)
+                  const massLabel = formatMassRangeScu(breakability.massRangeScu)
 
                   return (
                     <SiteTooltip
@@ -509,6 +517,16 @@ export default function MiningTrackerRoute() {
                                 </div>
                               </SiteTooltip>
                             ))}
+                            {(powerLabel || massLabel) && (
+                              <div className="pt-1.5 mt-1 border-t border-slate-700/40 text-[11px] text-slate-400 space-y-0.5">
+                                {massLabel && <div>Mass {massLabel}</div>}
+                                {powerLabel && (
+                                  <div className="text-cyan-300/90 font-medium tabular-nums">
+                                    Power {powerLabel}
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                         ) : isHandMineableType(entry.oreName) || !ORE_SIGNATURES[entry.oreName] ? (
                           <p className="text-xs text-slate-500">

@@ -136,12 +136,35 @@ function buildOverallProfile(locations, depositType, baseSignature, locationAlia
 
   const bestResolved = resolveAliasForSpawnKey(bestLocation, locationAliases)
 
+  let scaleRange = null
+  let massRangeScu = null
+  for (const loc of filtered) {
+    if (loc.scaleRange) {
+      if (!scaleRange) {
+        scaleRange = { ...loc.scaleRange }
+        massRangeScu = loc.massRangeScu ? { ...loc.massRangeScu } : null
+      } else {
+        scaleRange.min = Math.min(scaleRange.min, loc.scaleRange.min)
+        scaleRange.max = Math.max(scaleRange.max, loc.scaleRange.max)
+        if (loc.massRangeScu) {
+          if (!massRangeScu) massRangeScu = { ...loc.massRangeScu }
+          else {
+            massRangeScu.min = Math.min(massRangeScu.min, loc.massRangeScu.min)
+            massRangeScu.max = Math.max(massRangeScu.max, loc.massRangeScu.max)
+          }
+        }
+      }
+    }
+  }
+
   return {
     maxNodes,
     clusterRows,
     bestLocation,
     bestLocationDisplayName: bestResolved.displayName,
     bestLocationSpawnPercent: Math.round(bestLocationSpawnPercent * 1000) / 1000,
+    scaleRange,
+    massRangeScu,
   }
 }
 
@@ -205,6 +228,63 @@ function buildPresetCompositionMap(extractedDataRoot, compositions) {
     if (!entityPath) continue
     const comp = compositionFromEntityClass(entityPath, extractedDataRoot, compositions)
     if (comp) map.set(presetBasename, comp)
+  }
+  return map
+}
+
+function filledFactorFromEntity(entityPath) {
+  const entity = readJson(entityPath)
+  const components = entity?._RecordValue_?.Components ?? []
+  for (const component of components) {
+    if (component._Type_ !== 'MineableParams') continue
+    const factor = component.filledFactor
+    return typeof factor === 'number' && Number.isFinite(factor) ? factor : 1
+  }
+  return 1
+}
+
+function loadMiningGlobalShipMassBase(extractedDataRoot) {
+  const path = join(extractedDataRoot, 'libs/foundry/records/mining/miningglobalparamsship.json')
+  const json = readJson(path)
+  const val = json?._RecordValue_
+  const defaultVolume = val?.mineableExplosionParams?.defaultVolume ?? 0
+  const cSCUPerVolume = val?.cSCUPerVolume ?? 0
+  if (!defaultVolume || !cSCUPerVolume) return 0
+  return defaultVolume * cSCUPerVolume
+}
+
+function massScuFromScale(scale, baseMassScuAtFullScale, filledFactor = 1) {
+  if (!baseMassScuAtFullScale || !Number.isFinite(scale)) return null
+  const mass = baseMassScuAtFullScale * filledFactor * scale ** 3
+  return Math.round(mass * 100) / 100
+}
+
+function buildPresetSpawnMetaMap(extractedDataRoot) {
+  const map = new Map()
+  const baseMassScuAtFullScale = loadMiningGlobalShipMassBase(extractedDataRoot)
+  const presetDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/harvestablepresets')
+  for (const file of walkJsonFiles(presetDir)) {
+    const presetBasename = basename(file, '.json')
+    if (!/^mining_/i.test(presetBasename)) continue
+    const preset = readJson(file)
+    const transform = preset?._RecordValue_?.transformParams
+    const minScale = transform?.minScale
+    const maxScale = transform?.maxScale
+    if (typeof minScale !== 'number' || typeof maxScale !== 'number') continue
+
+    const entityPath = resolveRef(preset?._RecordValue_?.entityClass, extractedDataRoot)
+    const filledFactor = entityPath ? filledFactorFromEntity(entityPath) : 1
+    const minMassScu = massScuFromScale(minScale, baseMassScuAtFullScale, filledFactor)
+    const maxMassScu = massScuFromScale(maxScale, baseMassScuAtFullScale, filledFactor)
+
+    map.set(presetBasename, {
+      scaleRange: { min: minScale, max: maxScale },
+      massRangeScu:
+        minMassScu != null && maxMassScu != null
+          ? { min: minMassScu, max: maxMassScu }
+          : null,
+      filledFactor,
+    })
   }
   return map
 }
@@ -274,6 +354,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
 
   const compositions = loadCompositions(extractedDataRoot)
   const presetCompositionMap = buildPresetCompositionMap(extractedDataRoot, compositions)
+  const presetSpawnMetaMap = buildPresetSpawnMetaMap(extractedDataRoot)
   const locationIndex = buildLocationIndex(miningLocations)
   const loadedHppPresets = hppPresets ?? loadHppProviderPresets(extractedDataRoot)
   const rawLinks = []
@@ -321,6 +402,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
         const effectiveSpawnPercent = Math.round(((relWeight / poolSum) * groupProb) * 10000) / 10000
 
         const comp = findCompositionForPreset(presetBasename, presetCompositionMap)
+        const spawnMeta = presetSpawnMetaMap.get(presetBasename)
 
         rawLinks.push({
           oreName,
@@ -343,6 +425,8 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
           probabilityOfClustering,
           maxNodes,
           clusterRows: rows,
+          scaleRange: spawnMeta?.scaleRange ?? null,
+          massRangeScu: spawnMeta?.massRangeScu ?? null,
         })
       }
     }
@@ -405,6 +489,8 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
         probabilityOfClustering: link.probabilityOfClustering,
         maxNodes: link.maxNodes,
         clusterRows: link.clusterRows,
+        scaleRange: link.scaleRange ?? null,
+        massRangeScu: link.massRangeScu ?? null,
       }
     }
   }

@@ -23,6 +23,8 @@ export interface ClusterDisplayProfile {
   bestLocation?: string
   bestLocationDisplayName?: string
   bestLocationSpawnPercent?: number
+  scaleRange?: { min: number; max: number } | null
+  massRangeScu?: { min: number; max: number } | null
 }
 
 export interface CompositionPart {
@@ -52,6 +54,8 @@ export interface LocationSpawnProfile {
   probabilityOfClustering: number
   maxNodes: number
   clusterRows: ClusterRow[]
+  scaleRange?: { min: number; max: number } | null
+  massRangeScu?: { min: number; max: number } | null
 }
 
 export interface OreSpawnProfile {

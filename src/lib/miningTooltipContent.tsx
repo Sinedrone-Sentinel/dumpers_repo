@@ -34,6 +34,11 @@ import {
   formatMineableResistance,
   getMineableElementStats,
 } from './mineableElementStats'
+import {
+  computeBreakabilityForOre,
+  formatBreakabilityRange,
+  formatMassRangeScu,
+} from './miningBreakability'
 
 function pct(n: number | null | undefined, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—'
@@ -71,6 +76,23 @@ export function oreMineableStatsTooltipBlock(oreName: string): React.ReactNode |
   )
 }
 
+function depositMassAndPowerTooltipBlock(
+  oreName: string,
+  profile?: { massRangeScu?: { min: number; max: number } | null } | null
+): React.ReactNode | null {
+  const { massRangeScu, breakabilityRange } = computeBreakabilityForOre(oreName, profile)
+  const massLabel = formatMassRangeScu(massRangeScu)
+  const powerLabel = formatBreakabilityRange(breakabilityRange)
+  if (!massLabel && !powerLabel) return null
+  return (
+    <div className="text-slate-400">
+      {massLabel ? <>Deposit mass {massLabel}</> : null}
+      {massLabel && powerLabel ? ' · ' : null}
+      {powerLabel ? <>Power needed {powerLabel}</> : null}
+    </div>
+  )
+}
+
 export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
   const display = getTrackerProfile(entry)
   const locProfiles = getLocationProfilesForOre(entry.oreName).filter(
@@ -82,6 +104,7 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
       : locProfiles.sort((a, b) => b.effectiveSpawnPercent - a.effectiveSpawnPercent)[0]
 
   const missingMessage = getTrackerProfileMissingMessage(entry)
+  const massProfile = display?.profile ?? refProfile
 
   return (
     <div className="space-y-2">
@@ -105,6 +128,7 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
           <div className="text-slate-400">Composition: {compositionSummary(refProfile.compositionParts)}</div>
         </>
       )}
+      {depositMassAndPowerTooltipBlock(entry.oreName, massProfile)}
       {!isLocationTrackerEntry(entry) && (() => {
         const overall = getOverallProfile(entry.oreName, entry.depositType)
         const bestAtNote = formatOverallCompendiumDetail(overall?.bestLocation)
@@ -184,6 +208,7 @@ export function guideLocationChipTooltip(
         <div className="text-slate-400">{guideLocationName}</div>
         <div className="text-slate-400">{rsTrackerUnmappedDetail(oreName)}</div>
         {handMineableHabitatLine(oreName, guideLocationName)}
+        {oreMineableStatsTooltipBlock(oreName)}
       </div>
     )
   }
@@ -192,9 +217,10 @@ export function guideLocationChipTooltip(
     const overall = getOverallProfile(oreName, depositType)
     if (!overall) {
       return (
-        <div>
+        <div className="space-y-1">
           <div className="font-semibold">{guideLocationName}</div>
           <div className="text-slate-400">Broad compendium entry — uses overall spawn profile.</div>
+          {oreMineableStatsTooltipBlock(oreName)}
         </div>
       )
     }
@@ -211,6 +237,8 @@ export function guideLocationChipTooltip(
         <div className="text-slate-400 text-[11px]">
           Same data as Track Surface/Asteroid (overall) on the RS Tracker.
         </div>
+        {depositMassAndPowerTooltipBlock(oreName, overall)}
+        {oreMineableStatsTooltipBlock(oreName)}
       </div>
     )
   }
@@ -218,9 +246,10 @@ export function guideLocationChipTooltip(
   const profile = getLocationProfile(oreName, guideLocationName, depositType)
   if (!profile) {
     return (
-      <div>
+      <div className="space-y-1">
         <div className="font-semibold">{guideLocationName}</div>
         <div className="text-slate-400">Broad spawn — no detailed spawn profile for this compendium entry.</div>
+        {oreMineableStatsTooltipBlock(oreName)}
       </div>
     )
   }
@@ -238,6 +267,8 @@ export function guideLocationChipTooltip(
       </div>
       <div>Cluster: {clusterPreview(profile.clusterRows)}</div>
       <div className="text-slate-400">Composition: {compositionSummary(profile.compositionParts)}</div>
+      {depositMassAndPowerTooltipBlock(oreName, profile)}
+      {oreMineableStatsTooltipBlock(oreName)}
     </div>
   )
 }
