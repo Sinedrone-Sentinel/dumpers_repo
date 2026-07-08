@@ -3,10 +3,21 @@
  * Hand-mineables are excluded from the ship RS Tracker reference (FPS gems + select ground-vehicle gems).
  */
 
-/** Compendium / desc typos → canonical in-game name. */
-export const ORE_COMPENDIUM_ALIASES = {
-  Beradon: 'Beradom',
-}
+import {
+  buildOreMasterList,
+  parseCompendiumOreNames,
+  resolveCanonicalOreName,
+} from './miningOreCanonical.mjs'
+import {
+  GROUND_VEHICLE_GEMS,
+  HAND_MINEABLE_ORES,
+  stripMineableLabel,
+} from './miningOreConsts.mjs'
+
+export { HAND_MINEABLE_ORES, GROUND_VEHICLE_GEMS, stripMineableLabel }
+
+/** @deprecated Use ORE_SPELLING_ALIASES from miningOreCanonical — kept for imports. */
+export { ORE_SPELLING_ALIASES as ORE_COMPENDIUM_ALIASES } from './miningOreCanonical.mjs'
 
 /**
  * Ship-mining preset slug → canonical ore name (RS Tracker / composition display).
@@ -38,14 +49,15 @@ export const SHIP_ORE_SLUG_TO_NAME = {
   copper: 'Copper',
   silicon: 'Silicon',
   iron: 'Iron',
-  aluminium: 'Aluminium',
-  aluminum: 'Aluminium',
+  aluminium: 'Aluminum',
+  aluminum: 'Aluminum',
   ice: 'Ice',
 }
 
 /** Composition element display names that differ from MineableElement record stems. */
 export const COMPOSITION_ELEMENT_ALIASES = {
   Sileron: 'Stileron',
+  Aluminium: 'Aluminum',
 }
 
 /**
@@ -65,29 +77,8 @@ export const SPAWN_KEY_PREFERRED_GUIDE_NAME = {
   Pyro2: 'Monox',
 }
 
-export const HAND_MINEABLE_ORES = new Set([
-  'Aphorite',
-  'Dolivine',
-  'Hadanite',
-  'Janalite',
-  'Glacosite',
-  'Feynmaline',
-  'Sadaryx',
-])
-
-/** Ground-vehicle gems (manual mine type; Beradom is not an FPS cave gem). */
-export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline'])
-
-export function normalizeCompendiumOreName(name) {
-  const trimmed = String(name || '').trim()
-  return ORE_COMPENDIUM_ALIASES[trimmed] ?? trimmed
-}
-
-/** Strip trailing parenthetical from desc mineable lines, e.g. "Janalite (Caves only)". */
-export function stripMineableLabel(raw) {
-  return String(raw || '')
-    .replace(/\s*\([^)]*\)\s*$/, '')
-    .trim()
+export function normalizeCompendiumOreName(name, masterList = null) {
+  return resolveCanonicalOreName(name, masterList)
 }
 
 /**
@@ -105,8 +96,13 @@ export function parseHandMineableHabitatRaw(raw) {
   return 'both'
 }
 
-export function normalizeMineableLabel(raw) {
-  return normalizeCompendiumOreName(stripMineableLabel(raw))
+/**
+ * Normalize a raw desc / compendium ore label against the compendium master list.
+ * @param {string} raw
+ * @param {Set<string> | string[] | null} [masterList]
+ */
+export function normalizeMineableLabel(raw, masterList = null) {
+  return resolveCanonicalOreName(stripMineableLabel(raw), masterList)
 }
 
 export function isHandMineableOre(name) {
@@ -122,3 +118,5 @@ export function isHandMineableType(name) {
 export function preferredGuideNameForSpawnKey(spawnKey, fallback) {
   return SPAWN_KEY_PREFERRED_GUIDE_NAME[spawnKey] ?? fallback
 }
+
+export { buildOreMasterList, parseCompendiumOreNames }

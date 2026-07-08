@@ -1,5 +1,6 @@
 import gameMiningSpawnsData from '../data/game-mining-spawns.json'
 import type { MiningTrackerEntry } from './localGuestCache'
+import { normalizeMiningOreName } from './miningOreCanonical'
 import { getSpawnKeysForGuideLocation, isBroadGuideLocation, spawnKeyMatchesGuideLocation, formatOverallTagLabel } from './miningLocationAliases'
 import { getDisplayNameForSpawnKey, getPrimaryCompendiumGuideName } from './miningLocationNames'
 
@@ -75,7 +76,8 @@ const spawns = gameMiningSpawnsData as {
 }
 
 function getOreProfile(oreName: string): OreSpawnProfile | null {
-  return spawns.ores?.[oreName] ?? null
+  const canonical = normalizeMiningOreName(oreName)
+  return spawns.ores?.[canonical] ?? null
 }
 
 export function getDepositTypes(oreName: string): DepositType[] {

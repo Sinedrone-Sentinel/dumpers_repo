@@ -231,7 +231,7 @@
     ],
     "common": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "locations": [
           "Aaron Halo",
           "Aberdeen",
@@ -271,7 +271,7 @@
         ]
       },
       {
-        "name": "Caranite",
+        "name": "Carinite",
         "locations": [
           "Aberdeen",
           "Daymar"
@@ -384,28 +384,6 @@
           "Keeger Belt",
           "Pyro Asteroid Clusters",
           "QV Breaker Stations (Nyx)"
-        ]
-      },
-      {
-        "name": "Aluminum",
-        "locations": [
-          "Hurston",
-          "Ita",
-          "Aberdeen",
-          "Arial"
-        ]
-      },
-      {
-        "name": "Alumium",
-        "locations": [
-          "Magda"
-        ]
-      },
-      {
-        "name": "Tarantite",
-        "locations": [
-          "Cellin",
-          "Yela"
         ]
       }
     ],
@@ -589,7 +567,7 @@
       "Lagrange G",
       "Lagrange Occupied"
     ],
-    "Aluminium": [
+    "Aluminum": [
       "Aaron Halo",
       "Aberdeen",
       "ARC-L1",
@@ -685,7 +663,7 @@
       "Pyro Asteroid Clusters",
       "Pyro IV"
     ],
-    "Caranite": [
+    "Carinite": [
       "Aberdeen",
       "Daymar"
     ],
@@ -1012,19 +990,6 @@
       "ARC-L1",
       "Fairo",
       "Pyro Asteroid Clusters"
-    ],
-    "Aluminum": [
-      "Hurston",
-      "Ita",
-      "Aberdeen",
-      "Arial"
-    ],
-    "Alumium": [
-      "Magda"
-    ],
-    "Tarantite": [
-      "Cellin",
-      "Yela"
     ]
   },
   "locationOres": {
@@ -1084,10 +1049,6 @@
         "rarity": "handMineable"
       },
       {
-        "name": "Tarantite",
-        "rarity": "common"
-      },
-      {
         "name": "Quantainium",
         "rarity": "legendary"
       },
@@ -1111,7 +1072,7 @@
         "rarity": "rare"
       },
       {
-        "name": "Caranite",
+        "name": "Carinite",
         "rarity": "common"
       },
       {
@@ -1162,7 +1123,7 @@
         "rarity": "rare"
       },
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1364,10 +1325,6 @@
         "rarity": "handMineable"
       },
       {
-        "name": "Tarantite",
-        "rarity": "common"
-      },
-      {
         "name": "Quantainium",
         "rarity": "legendary"
       },
@@ -1386,7 +1343,7 @@
     ],
     "Aaron Halo": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1424,11 +1381,11 @@
     ],
     "Aberdeen": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
-        "name": "Caranite",
+        "name": "Carinite",
         "rarity": "common"
       },
       {
@@ -1460,10 +1417,6 @@
         "rarity": "handMineable"
       },
       {
-        "name": "Aluminum",
-        "rarity": "common"
-      },
-      {
         "name": "Quantainium",
         "rarity": "legendary"
       },
@@ -1482,7 +1435,7 @@
     ],
     "ARC-L1": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1505,7 +1458,7 @@
     "ARC-L2": [],
     "Arial": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1523,10 +1476,6 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
-      },
-      {
-        "name": "Aluminum",
-        "rarity": "common"
       },
       {
         "name": "Titanium",
@@ -1559,7 +1508,7 @@
     ],
     "CRU-L3": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1577,7 +1526,7 @@
     ],
     "Glaciem Ring": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1607,7 +1556,7 @@
     ],
     "HUR-L1": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1632,7 +1581,7 @@
     "HUR-L5": [],
     "Ita": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1654,10 +1603,6 @@
       {
         "name": "Hadanite",
         "rarity": "handMineable"
-      },
-      {
-        "name": "Aluminum",
-        "rarity": "common"
       },
       {
         "name": "Hephaestanite",
@@ -1690,7 +1635,7 @@
     ],
     "Keeger Belt": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1720,7 +1665,7 @@
     ],
     "Magda": [
       {
-        "name": "Aluminium",
+        "name": "Aluminum",
         "rarity": "common"
       },
       {
@@ -1742,10 +1687,6 @@
       {
         "name": "Janalite",
         "rarity": "handMineable"
-      },
-      {
-        "name": "Alumium",
-        "rarity": "common"
       },
       {
         "name": "Tin",
@@ -2338,10 +2279,6 @@
       {
         "name": "Feynmaline",
         "rarity": "handMineable"
-      },
-      {
-        "name": "Aluminium",
-        "rarity": "common"
       }
     ],
     "Monox": [
@@ -2906,8 +2843,7 @@
         "Aluminum",
         "Tin",
         "Ouratite",
-        "Quantainium",
-        "Aluminium"
+        "Quantainium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -2946,8 +2882,7 @@
         "Hephaestanite",
         "Corundum",
         "Ouratite",
-        "Quantainium",
-        "Aluminium"
+        "Quantainium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -2974,7 +2909,6 @@
         "Titanium",
         "Ouratite",
         "Quantainium",
-        "Aluminium",
         "Corundum"
       ],
       "groundVehicleMineables": [
@@ -3002,7 +2936,6 @@
         "Titanium",
         "Aslarite",
         "Quantainium",
-        "Aluminium",
         "Iron"
       ],
       "groundVehicleMineables": [
@@ -3026,11 +2959,10 @@
     },
     "Magda": {
       "shipMineables": [
-        "Alumium",
+        "Aluminum",
         "Tin",
         "Aslarite",
-        "Quantainium",
-        "Aluminium"
+        "Quantainium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3055,9 +2987,8 @@
       "shipMineables": [
         "Quartz",
         "Agricium",
-        "Tarantite",
-        "Quantainium",
         "Taranite",
+        "Quantainium",
         "Silicon"
       ],
       "groundVehicleMineables": [
@@ -3113,10 +3044,9 @@
       "shipMineables": [
         "Quartz",
         "Agricium",
-        "Tarantite",
+        "Taranite",
         "Silicon",
-        "Quantainium",
-        "Taranite"
+        "Quantainium"
       ],
       "groundVehicleMineables": [
         "Beradom",
@@ -3282,7 +3212,7 @@
     "Glaciem Ring": {
       "shipMineables": [
         "Ice",
-        "Aluminium",
+        "Aluminum",
         "Iron",
         "Lindinium",
         "Bexalite",
@@ -3298,7 +3228,7 @@
     "Keeger Belt": {
       "shipMineables": [
         "Ice",
-        "Aluminium",
+        "Aluminum",
         "Iron",
         "Lindinium",
         "Bexalite",
@@ -3335,7 +3265,7 @@
         "Borase",
         "Aslarite",
         "Taranite",
-        "Aluminium",
+        "Aluminum",
         "Corundum",
         "Quartz",
         "Tin",
@@ -3359,7 +3289,7 @@
       "shipMineables": [
         "Ice",
         "Silicon",
-        "Aluminium",
+        "Aluminum",
         "Quantainium",
         "Iron",
         "Copper",
@@ -3375,7 +3305,7 @@
     },
     "HUR-L1": {
       "shipMineables": [
-        "Aluminium",
+        "Aluminum",
         "Corundum",
         "Hephaestanite",
         "Laranite",
@@ -3403,7 +3333,7 @@
     },
     "CRU-L3": {
       "shipMineables": [
-        "Aluminium",
+        "Aluminum",
         "Corundum",
         "Hephaestanite",
         "Torite"
@@ -3445,7 +3375,7 @@
     "ARC-L1": {
       "shipMineables": [
         "Corundum",
-        "Aluminium",
+        "Aluminum",
         "Hephaestanite",
         "Tungsten",
         "Taranite"
@@ -4254,7 +4184,7 @@
     "handMineable"
   ],
   "summary": {
-    "totalOres": 38,
+    "totalOres": 35,
     "totalLocations": 57,
     "locationsWithDetails": 39,
     "handMineableHabitatEntries": 90,

@@ -1,0 +1,16 @@
+{
+  "_comment": "Known CIG localization / planet-desc typos → canonical ore spellings. Compendium (Journal_General_Mining_Compendium) is the master list; desc strings are matched here first, then fuzzy-matched to compendium names.",
+  "aliases": {
+    "Aluminium": "Aluminum",
+    "Alumium": "Aluminum",
+    "Tarantite": "Taranite",
+    "Tarntite": "Taranite",
+    "Beradon": "Beradom",
+    "Caranite": "Carinite",
+    "Titainum": "Titanium",
+    "Corundurm": "Corundum",
+    "Hephestanite": "Hephaestanite",
+    "Quantanium": "Quantainium",
+    "Sileron": "Stileron"
+  }
+}

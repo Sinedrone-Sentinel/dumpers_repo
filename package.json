@@ -21,6 +21,7 @@
     "audit-hpp-mining-locations": "node scripts/audit-hpp-mining-locations.mjs",
     "audit-mining-aliases": "node scripts/audit-mining-aliases.mjs",
     "audit-ore-name-consistency": "node scripts/audit-ore-name-consistency.mjs",
+    "normalize-mining-ore-data": "node scripts/normalize-mining-ore-data.mjs",
     "audit-alias-tables": "node scripts/audit-alias-tables.mjs",
     "rebuild-mission-rewards": "node scripts/rebuild-blueprint-reward-missions.mjs && node scripts/audit-blueprint-mission-rewards.mjs",
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs",

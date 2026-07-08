@@ -115,6 +115,7 @@ export function parseOreSignatures(extractedDataRoot) {
   if (oreSignatures.Aluminium != null && oreSignatures.Aluminum == null) {
     oreSignatures.Aluminum = oreSignatures.Aluminium
   }
+  delete oreSignatures.Aluminium
 
   const missingOres = CANONICAL_ORE_NAMES.filter((name) => oreSignatures[name] == null)
 

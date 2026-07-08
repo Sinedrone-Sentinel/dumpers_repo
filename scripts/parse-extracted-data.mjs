@@ -32,6 +32,11 @@ import {
   getPreferredDisplayScopeKey,
 } from './lib/reputationStandingResolver.mjs'
 import {
+  buildOreMasterList,
+  parseCompendiumOreNames,
+  consolidateMiningLocationData,
+} from './lib/miningOreCanonical.mjs'
+import {
   isHandMineableOre,
   isHandMineableType,
   normalizeCompendiumOreName,
@@ -569,6 +574,11 @@ function extractResourceLore(localization) {
 
 function parseMiningLocations(localization, hppPresets = null) {
   console.log('\n  Parsing mining locations from localization...')
+
+  const compendiumKey = 'Journal_General_Mining_Compendium_Content'
+  const compendiumText = localization[compendiumKey] ?? ''
+  const oreMasterList = buildOreMasterList(parseCompendiumOreNames(compendiumText))
+  console.log(`  Ore master list: ${oreMasterList.size} canonical names (compendium + tiers)`)
   
   const oreLocations = {}      // ore -> locations[]
   const locationOres = {}      // location -> ores[]
@@ -577,7 +587,7 @@ function parseMiningLocations(localization, hppPresets = null) {
   const handMineableHabitats = {}
 
   function recordHandMineableHabitat(rawItem, guideLoc) {
-    const ore = normalizeMineableLabel(rawItem)
+    const ore = normalizeMineableLabel(rawItem, oreMasterList)
     if (!isHandMineableOre(ore)) return
     if (!handMineableHabitats[ore]) handMineableHabitats[ore] = {}
     handMineableHabitats[ore][guideLoc] = parseHandMineableHabitatRaw(rawItem)
@@ -590,7 +600,7 @@ function parseMiningLocations(localization, hppPresets = null) {
         ...(mineables.groundVehicleMineables ?? []),
       ]
       for (const rawLabel of oreLabels) {
-        const ore = normalizeMineableLabel(rawLabel)
+        const ore = normalizeMineableLabel(rawLabel, oreMasterList)
         if (!isHandMineableType(ore)) continue
 
         if (!oreLocations[ore]) oreLocations[ore] = []
@@ -617,7 +627,7 @@ function parseMiningLocations(localization, hppPresets = null) {
     for (const [guideLoc, mineables] of Object.entries(locationMineables)) {
       const oreLabels = fieldNames.flatMap((field) => mineables[field] ?? [])
       for (const rawLabel of oreLabels) {
-        const ore = normalizeMineableLabel(rawLabel)
+        const ore = normalizeMineableLabel(rawLabel, oreMasterList)
         if (!oreLocations[ore]) oreLocations[ore] = []
         if (!oreLocations[ore].includes(guideLoc)) {
           oreLocations[ore].push(guideLoc)
@@ -636,16 +646,15 @@ function parseMiningLocations(localization, hppPresets = null) {
   }
   
   // Parse the Mining Compendium for comprehensive ore-location mappings
-  const compendiumKey = 'Journal_General_Mining_Compendium_Content'
-  if (localization[compendiumKey]) {
-    const compendium = localization[compendiumKey]
+  if (compendiumText) {
+    const compendium = compendiumText
     
     // Parse lines like: "Agricium - ARC-L3, Cellin, CRU-L5, Daymar..."
     const lines = compendium.split('\\n')
     for (const line of lines) {
       const match = line.match(/^([A-Za-z]+)\s*-\s*(.+)$/i)
       if (match) {
-        const ore = normalizeCompendiumOreName(match[1].trim())
+        const ore = normalizeCompendiumOreName(match[1].trim(), oreMasterList)
         const locations = match[2]
           .split(',')
           .map(l => l.trim())
@@ -727,7 +736,7 @@ function parseMiningLocations(localization, hppPresets = null) {
           if (currentSection === 'handMineables') {
             recordHandMineableHabitat(item, mineableKey)
           }
-          mineables[currentSection].push(normalizeMineableLabel(item))
+          mineables[currentSection].push(normalizeMineableLabel(item, oreMasterList))
         }
       }
     }
@@ -769,6 +778,21 @@ function parseMiningLocations(localization, hppPresets = null) {
   })
   console.log(`  Merged ${hppMineableMerges} HPP mineable site entries (ship, FPS, ground-vehicle)`)
 
+  const {
+    oreLocations: consolidatedOreLocations,
+    locationOres: consolidatedLocationOres,
+    locationMineables: consolidatedLocationMineables,
+    handMineableHabitats: consolidatedHandMineableHabitats,
+  } = consolidateMiningLocationData(
+    {
+      oreLocations,
+      locationOres,
+      locationMineables,
+      handMineableHabitats,
+    },
+    oreMasterList
+  )
+
   // Build rarity-organized structure
   const byRarity = {
     legendary: [],
@@ -779,10 +803,9 @@ function parseMiningLocations(localization, hppPresets = null) {
     handMineable: []
   }
   
-  for (const [ore, locations] of Object.entries(oreLocations)) {
+  for (const [ore, locations] of Object.entries(consolidatedOreLocations)) {
     const assignedRarity = assignOreRarity(ore)
     const cleaned = [...new Set(locations)].filter((loc) => !REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(loc))
-    oreLocations[ore] = cleaned
 
     byRarity[assignedRarity].push({
       name: ore,
@@ -791,14 +814,19 @@ function parseMiningLocations(localization, hppPresets = null) {
   }
 
   for (const loc of REDUNDANT_SUBSITE_GUIDE_LOCATIONS) {
-    delete locationOres[loc]
+    delete consolidatedLocationOres[loc]
   }
   
   return {
-    oreLocations,
-    locationOres,
-    locationMineables,
-    handMineableHabitats,
+    oreLocations: Object.fromEntries(
+      Object.entries(consolidatedOreLocations).map(([ore, locations]) => [
+        ore,
+        [...new Set(locations)].filter((loc) => !REDUNDANT_SUBSITE_GUIDE_LOCATIONS.has(loc)),
+      ])
+    ),
+    locationOres: consolidatedLocationOres,
+    locationMineables: consolidatedLocationMineables,
+    handMineableHabitats: consolidatedHandMineableHabitats,
     redundantSubsiteGuideLocations: [...REDUNDANT_SUBSITE_GUIDE_LOCATIONS],
     locationAliases,
     guideToSpawnKeys,
@@ -3984,6 +4012,17 @@ async function main() {
     rarityTiers: miningLocations.rarityTiers,
     assignOreRarity,
   })
+  miningLocations.rarityTiers = rebuildRarityTiers(
+    miningLocations.oreLocations,
+    miningLocations.rarityTiers,
+    miningLocations.rarityOrder,
+    assignOreRarity
+  )
+  const postSpawnConsolidated = consolidateMiningLocationData(miningLocations)
+  miningLocations.oreLocations = postSpawnConsolidated.oreLocations
+  miningLocations.locationOres = postSpawnConsolidated.locationOres
+  miningLocations.locationMineables = postSpawnConsolidated.locationMineables
+  miningLocations.handMineableHabitats = postSpawnConsolidated.handMineableHabitats
   miningLocations.rarityTiers = rebuildRarityTiers(
     miningLocations.oreLocations,
     miningLocations.rarityTiers,

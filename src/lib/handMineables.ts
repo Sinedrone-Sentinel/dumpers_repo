@@ -1,4 +1,5 @@
 import { ORE_SIGNATURES } from './miningConstants'
+import { normalizeMiningOreName } from './miningOreCanonical'
 
 /** FPS gems + ground-vehicle gems excluded from the ship RS Tracker reference. */
 export const HAND_MINEABLE_ORES = new Set([
@@ -14,14 +15,7 @@ export const HAND_MINEABLE_ORES = new Set([
 /** Ground-vehicle gems (not in RS Tracker reference; not FPS hand-mineable). */
 export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline'])
 
-const ORE_COMPENDIUM_ALIASES: Record<string, string> = {
-  Beradon: 'Beradom',
-}
-
-export function normalizeMiningOreName(name: string): string {
-  const trimmed = name.trim()
-  return ORE_COMPENDIUM_ALIASES[trimmed] ?? trimmed
-}
+export { normalizeMiningOreName }
 
 export function isHandMineableOre(name: string): boolean {
   return HAND_MINEABLE_ORES.has(normalizeMiningOreName(name))

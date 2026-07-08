@@ -1,4 +1,5 @@
 import { ORE_SIGNATURES } from './miningConstants'
+import { normalizeMiningOreName } from './miningOreCanonical'
 
 /** First N cluster RS readings for ship mining: base × 1 … base × N (includes base). */
 export function getSignatureMultiples(baseSignature: number, count = 6): number[] {
@@ -8,7 +9,8 @@ export function getSignatureMultiples(baseSignature: number, count = 6): number[
 }
 
 export function getOreBaseSignature(oreName: string): number | undefined {
-  return ORE_SIGNATURES[oreName]
+  const canonical = normalizeMiningOreName(oreName)
+  return ORE_SIGNATURES[canonical]
 }
 
 export function formatRsReading(value: number | null | undefined): string {

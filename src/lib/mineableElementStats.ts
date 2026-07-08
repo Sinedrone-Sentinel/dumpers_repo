@@ -5,12 +5,6 @@ import {
   normalizeMiningOreName,
 } from './handMineables'
 
-/** Guide compendium name → extracted mineable element base name. */
-const GUIDE_TO_ELEMENT_ALIASES: Record<string, string> = {
-  Aluminium: 'Aluminum',
-  Caranite: 'Carinite',
-}
-
 export interface MineableElementStats {
   instability: number
   resistance: number
@@ -21,9 +15,7 @@ function normalizeElementKey(name: string): string {
 }
 
 function guideOreLookupKey(oreName: string): string {
-  const canonical = normalizeMiningOreName(oreName)
-  const aliased = GUIDE_TO_ELEMENT_ALIASES[canonical] ?? canonical
-  return normalizeElementKey(aliased)
+  return normalizeElementKey(normalizeMiningOreName(oreName))
 }
 
 function elementLookupKeys(element: MineableElement): string[] {

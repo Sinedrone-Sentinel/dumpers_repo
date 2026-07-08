@@ -5,12 +5,15 @@
 
 import mining from '../src/data/game-mining.json' with { type: 'json' }
 import spawns from '../src/data/game-mining-spawns.json' with { type: 'json' }
+import locations from '../src/data/game-mining-locations.json' with { type: 'json' }
 import bands from '../src/data/game-quality-bands.json' with { type: 'json' }
+import aliasData from '../src/data/mining-ore-aliases.json' with { type: 'json' }
 import {
   COMPOSITION_ELEMENT_ALIASES,
   normalizeCompositionElementName,
   SHIP_ORE_SLUG_TO_NAME,
 } from './lib/miningOreNames.mjs'
+import { resolveCanonicalOreName } from './lib/miningOreCanonical.mjs'
 
 /** Mirrors src/lib/qualityBands.ts RESOURCE_ALIASES for audit-only band lookup. */
 const QUALITY_BAND_ALIASES = {
@@ -36,6 +39,7 @@ function bandKeyForOre(oreName) {
 
 const canonicalOres = new Set(Object.keys(mining.oreSignatures ?? {}))
 const bandKeys = new Set(Object.keys(bands.bandThresholds ?? {}))
+const aliasKeys = new Set(Object.keys(aliasData.aliases))
 
 const issues = []
 
@@ -48,6 +52,36 @@ for (const el of mining.mineableElements ?? []) {
   const fromName = el.name?.replace(/^(Ore_|Raw_)/i, '').replace(/_ore$|_raw$/i, '')
   if (fromRecord && fromName && fromRecord.toLowerCase() !== fromName.toLowerCase()) {
     recordStemMismatches.push({ recordStem: fromRecord, nameField: fromName })
+  }
+}
+
+// Location / guide data must not contain unresolved alias keys
+for (const ore of Object.keys(locations.oreLocations ?? {})) {
+  if (aliasKeys.has(ore)) {
+    issues.push(
+      `game-mining-locations oreLocations still has alias key "${ore}" (should be "${aliasData.aliases[ore]}")`
+    )
+  }
+  const resolved = resolveCanonicalOreName(ore)
+  if (resolved !== ore && !canonicalOres.has(resolved) && aliasKeys.has(ore)) {
+    issues.push(`unresolved location ore key "${ore}"`)
+  }
+}
+
+for (const tier of Object.values(locations.rarityTiers ?? {})) {
+  for (const row of tier) {
+    if (aliasKeys.has(row.name)) {
+      issues.push(
+        `rarityTiers entry "${row.name}" should be "${aliasData.aliases[row.name]}"`
+      )
+    }
+  }
+}
+
+// Spawn profile keys must be canonical
+for (const oreKey of Object.keys(spawns.ores ?? {})) {
+  if (aliasKeys.has(oreKey)) {
+    issues.push(`spawn profile key "${oreKey}" should be "${aliasData.aliases[oreKey]}"`)
   }
 }
 
@@ -64,7 +98,7 @@ for (const profile of Object.values(spawns.ores ?? {})) {
         )
       } else if (normalized !== part.elementName) {
         issues.push(
-          `composition element "${part.elementName}" should be "${normalized}" (run parse-extracted-data or patch spawns JSON)`
+          `composition element "${part.elementName}" should be "${normalized}" (run normalize-mining-ore-data.mjs)`
         )
       }
     }
@@ -94,6 +128,10 @@ const oresMissingBands = [...canonicalOres].filter((ore) => {
 })
 if (oresMissingBands.length) {
   issues.push(`canonical ores missing quality band keys after alias lookup: ${oresMissingBands.join(', ')}`)
+}
+
+if (mining.oreSignatures?.Aluminium != null) {
+  issues.push('game-mining.json oreSignatures still has duplicate Aluminium key')
 }
 
 console.log('Ore name consistency audit')
