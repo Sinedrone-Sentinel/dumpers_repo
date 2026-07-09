@@ -4,7 +4,6 @@ import { useAuth } from '../../contexts/AuthContext'
 import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
   DEFAULT_CROP_RECT,
-  cropPixelRect,
   loadImageFromFile,
   processRockScanCrop,
   terminateOcrWorker,
@@ -166,11 +165,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     [crop, displayRect]
   )
 
-  const ocrCropPixels = useMemo(() => {
-    if (!loaded) return null
-    return cropPixelRect(loaded.width, loaded.height, crop)
-  }, [loaded, crop])
-
   const handlePaste = useCallback(
     async (event: React.ClipboardEvent) => {
       const items = event.clipboardData?.items
@@ -274,7 +268,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         loaded.width,
         loaded.height,
         crop,
-        isSuperAdmin ? deskewDegrees : 0
+        deskewDegrees
       )
       if (!parsed.ok) {
         setError(parsed.error)
@@ -366,10 +360,10 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
           in-game screenshot (ALT+PrtSc the scan panel first).
         </div>
 
-        {isSuperAdmin && loaded && !showPreview ? (
-          <div className="rounded-lg border border-violet-900/40 bg-violet-950/20 px-3 py-2 space-y-1.5">
-            <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-violet-300/90">
-              Tilt scan inside crop (super-admin)
+        {loaded && !showPreview ? (
+          <div className="rounded-lg border border-slate-700 bg-slate-950/40 px-3 py-2 space-y-1.5">
+            <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-slate-300">
+              Tilt scan inside crop
             </label>
             <input
               id="ocr-deskew"
@@ -379,7 +373,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
               step={0.5}
               value={deskewDegrees}
               onChange={(e) => setDeskewDegrees(Number.parseFloat(e.target.value))}
-              className="w-full accent-violet-400"
+              className="w-full accent-orange-400"
             />
             <p className="text-[10px] text-slate-500 leading-snug">
               Drag the slider — the image inside the orange box tilts in real time. The crop box stays
@@ -464,13 +458,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
             </div>
           )}
         </div>
-
-        {isSuperAdmin && loaded && ocrCropPixels ? (
-          <p className="text-[10px] text-violet-300/80 font-mono">
-            OCR uses full-resolution crop: {ocrCropPixels.width}×{ocrCropPixels.height} px from original{' '}
-            {loaded.width}×{loaded.height} (not the on-screen preview size)
-          </p>
-        ) : null}
 
         {showPreview && previewResult ? (
           <div className="rounded-lg border border-violet-900/45 bg-violet-950/25 px-3 py-2.5 space-y-2">
