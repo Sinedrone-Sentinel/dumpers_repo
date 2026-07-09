@@ -1,9 +1,7 @@
 import { getMiningLaserByName } from './miningVessels'
+import { displayMinThrottlePercent } from './miningThrottleDisplay'
 
-/** Required MW at or above this fraction of min laser MW → feathering may work. */
-export const MIN_POWER_FEATHER_RATIO = 0.65
-
-export type MinPowerWarningLevel = 'feather' | 'danger'
+export type MinPowerWarningLevel = 'misconfigured' | 'danger'
 
 export interface MinPowerWarning {
   slotIndex: number
@@ -16,10 +14,6 @@ export interface MinPowerWarning {
 
 export function minLaserMw(laserPower: number, throttleMinimumFraction: number): number {
   return Math.round(laserPower * throttleMinimumFraction)
-}
-
-export function throttleMinimumPercent(throttleMinimumFraction: number): number {
-  return Math.round(throttleMinimumFraction * 1000) / 10
 }
 
 export function assessMinPowerWarning(
@@ -35,23 +29,24 @@ export function assessMinPowerWarning(
   const minMw = minLaserMw(laserPower, throttleMinimumFraction)
   if (requiredMw >= minMw) return null
 
-  const ratio = requiredMw / minMw
   return {
     slotIndex,
     label,
     requiredMw,
     minLaserMw: minMw,
-    throttleMinimumPercent: throttleMinimumPercent(throttleMinimumFraction),
-    level: ratio >= MIN_POWER_FEATHER_RATIO ? 'feather' : 'danger',
+    throttleMinimumPercent: displayMinThrottlePercent(throttleMinimumFraction),
+    level: 'danger',
   }
 }
 
 export function minPowerWarningMessage(warning: MinPowerWarning): string {
-  const minLabel = `${warning.minLaserMw.toLocaleString()} MW @ ${warning.throttleMinimumPercent}%`
-  if (warning.level === 'feather') {
-    return `Required ${warning.requiredMw.toLocaleString()} MW is below minimum output (${minLabel}) but close — try feathering the laser on/off to crack without overcharging.`
+  const minPercent = warning.throttleMinimumPercent
+
+  if (warning.level === 'misconfigured') {
+    return `Min throttle (${minPercent}%) does not land the driving laser in the 1–5% band below the resistance equalizer — swap heads or modules instead of feathering power on/off.`
   }
-  return `Required ${warning.requiredMw.toLocaleString()} MW is well below minimum output (${minLabel}) — may be impossible to crack without blowing up the rock.`
+
+  return `Minimum throttle (${minPercent}%) is still above the fracture band just under the resistance equalizer — try a different head, support laser, or gadget.`
 }
 
 export function assessMinPowerWarningForSlot(

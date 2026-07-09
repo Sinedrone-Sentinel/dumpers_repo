@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react'
 import SignInMenu from '../auth/SignInMenu'
-import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
 import { useMiningLoadouts } from '../../contexts/MiningLoadoutContext'
 import {
   compareLoadoutToRock,
@@ -13,26 +12,8 @@ import {
   buildSmartCracker,
   type SmartCrackerResult,
 } from '../../lib/miningGadgetRecommendations'
-import {
-  buildDefaultSlotQualities,
-  mergeSlotQualities,
-} from '../../lib/blueprintQuality'
-import {
-  computeEffectiveLaserStats,
-  describeLaserHead,
-  formatLaserPowerMw,
-  getBlueprintForLaser,
-  laserHasBlueprint,
-  type MiningLaserSlotConfig,
-} from '../../lib/miningLaserStats'
-import {
-  computeLaserLoadoutBreakdown,
-  type ModifierStatLine,
-} from '../../lib/miningLoadoutStats'
-import {
-  listMiningModules,
-  normalizeModuleSelection,
-} from '../../lib/miningModules'
+import type { MiningLaserSlotConfig } from '../../lib/miningLaserStats'
+import LoadoutHeadCardsGrid from './LoadoutHeadCards'
 import {
   canCreateMoreLoadouts,
   canDeleteLoadout,
@@ -40,12 +21,8 @@ import {
   listLoadoutsForVessel,
   type LoadoutKey,
 } from '../../lib/miningLoadoutStorage'
-import { calculateSlotModifiers } from '../../lib/qualityModifiers'
 import {
-  getMiningLaserByName,
   getMiningVessel,
-  isBespokeVessel,
-  listMiningLasersForVessel,
   MINING_VESSELS,
   type MiningVesselId,
 } from '../../lib/miningVessels'
@@ -76,66 +53,6 @@ function CheckIcon({ ok }: { ok: boolean }) {
     <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
     </svg>
-  )
-}
-
-function StatLineRow({ line }: { line: ModifierStatLine }) {
-  return (
-    <div className="flex items-baseline justify-between gap-2 text-[11px]">
-      <span className="text-slate-500 shrink-0">
-        {line.label}
-        {line.affectsCracking ? (
-          <span className="text-slate-600" title="Used in rock fracture comparison">
-            {' '}
-            · crack
-          </span>
-        ) : null}
-      </span>
-      <span className="font-mono tabular-nums text-slate-300 text-right">{line.value}</span>
-    </div>
-  )
-}
-
-function LaserStatsInfoPanel({ slot }: { slot: MiningLaserSlotConfig }) {
-  const breakdown = useMemo(() => computeLaserLoadoutBreakdown(slot), [slot])
-
-  if (!breakdown) return null
-
-  return (
-    <div className="rounded-md border border-slate-700/50 bg-slate-950/40 p-2 space-y-2">
-      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Head stats</p>
-      <div className="space-y-0.5">
-        {breakdown.stock.map((line) => (
-          <StatLineRow key={`stock-${line.key}`} line={line} />
-        ))}
-      </div>
-
-      {breakdown.equippedModules.length > 0 ? (
-        <div className="pt-1 border-t border-slate-700/40 space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Modules</p>
-          {breakdown.equippedModules.map((mod) => (
-            <div key={mod.name} className="space-y-0.5">
-              <p className="text-[11px] text-slate-400">
-                {mod.displayName}
-                {mod.kind === 'active' ? (
-                  <span className="text-slate-600"> (active)</span>
-                ) : null}
-              </p>
-              {mod.lines.map((line) => (
-                <StatLineRow key={`${mod.name}-${line.key}`} line={line} />
-              ))}
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      <div className="pt-1 border-t border-slate-700/40 space-y-0.5">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Effective</p>
-        {breakdown.effective.map((line) => (
-          <StatLineRow key={`eff-${line.key}`} line={line} />
-        ))}
-      </div>
-    </div>
   )
 }
 
@@ -236,7 +153,7 @@ function SmartCrackerPanel({
                 <div
                   key={`mole-min-${warning.slotIndex}`}
                   className={`rounded-md border px-2 py-1.5 text-[11px] leading-snug ${
-                    warning.level === 'feather'
+                    warning.level === 'misconfigured'
                       ? 'border-amber-900/50 bg-amber-950/20 text-amber-200/90'
                       : 'border-red-900/50 bg-red-950/20 text-red-300/90'
                   }`}
@@ -327,7 +244,7 @@ function ComparisonPanel({ comparison }: { comparison: LoadoutBreakabilityCompar
             <div
               key={warning.slotIndex}
               className={`rounded-md border px-2 py-1.5 text-[11px] leading-snug ${
-                warning.level === 'feather'
+                warning.level === 'misconfigured'
                   ? 'border-amber-900/50 bg-amber-950/20 text-amber-200/90'
                   : 'border-red-900/50 bg-red-950/20 text-red-300/90'
               }`}
@@ -365,241 +282,6 @@ function ComparisonPanel({ comparison }: { comparison: LoadoutBreakabilityCompar
             </div>
           ))}
         </div>
-      ) : null}
-    </div>
-  )
-}
-
-function LaserSlotEditor({
-  slotIndex,
-  slot,
-  vesselId,
-  editable,
-  onChange,
-}: {
-  slotIndex: number
-  slot: MiningLaserSlotConfig
-  vesselId: MiningVesselId
-  editable: boolean
-  onChange: (next: MiningLaserSlotConfig) => void
-}) {
-  const vessel = getMiningVessel(vesselId)
-  const isBespoke = isBespokeVessel(vesselId)
-  const laserOptions = useMemo(
-    () => (vessel ? listMiningLasersForVessel(vessel) : []),
-    [vessel]
-  )
-  const laser = getMiningLaserByName(slot.laserName)
-  const blueprint = getBlueprintForLaser(slot.laserName)
-  const hasBp = laserHasBlueprint(slot.laserName)
-  const effective = computeEffectiveLaserStats(slot)
-  const moduleOptions = useMemo(() => listMiningModules(), [])
-  const moduleSlots = laser?.moduleSlotCount ?? 0
-  const resolvedModules = useMemo(
-    () => normalizeModuleSelection(slot.laserName, slot.modules),
-    [slot.laserName, slot.modules]
-  )
-  const showCraftedHead = editable && hasBp && (isBespoke || slot.mode === 'custom')
-
-  const resolvedQualities = useMemo(
-    () => (blueprint ? mergeSlotQualities(blueprint, slot.slotQualities) : {}),
-    [blueprint, slot.slotQualities]
-  )
-
-  const handleModuleChange = (moduleIndex: number, moduleName: string) => {
-    const next = [...resolvedModules]
-    next[moduleIndex] = moduleName || null
-    onChange({ ...slot, modules: next })
-  }
-
-  const handleQualityChange = (bpSlotIndex: number, quality: number) => {
-    onChange({
-      ...slot,
-      mode: isBespoke ? 'custom' : slot.mode,
-      slotQualities: { ...(slot.slotQualities ?? {}), [bpSlotIndex]: quality },
-    })
-  }
-
-  const enableCustomHead = () => {
-    if (!blueprint) return
-    const seeded =
-      slot.slotQualities && Object.keys(slot.slotQualities).length > 0
-        ? slot.slotQualities
-        : buildDefaultSlotQualities(blueprint)
-    onChange({
-      ...slot,
-      mode: 'custom',
-      slotQualities: seeded,
-    })
-  }
-
-  return (
-    <div className="rounded-lg border border-slate-700/70 bg-slate-900/40 p-2.5 space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] uppercase tracking-wide text-slate-500">
-          Laser {slotIndex + 1}
-        </span>
-        {effective ? (
-          <span className="text-xs font-mono tabular-nums text-amber-300/90">
-            {formatLaserPowerMw(effective.laserPower)} MW
-          </span>
-        ) : null}
-      </div>
-
-      {editable && !isBespoke && laserOptions.length > 1 ? (
-        <select
-          value={slot.laserName}
-          onChange={(e) =>
-            onChange({
-              laserName: e.target.value,
-              mode: 'stock',
-              modules: undefined,
-            })
-          }
-          className="site-input w-full px-2 py-1.5 text-xs"
-        >
-          {laserOptions.map((opt) => (
-            <option key={opt.name} value={opt.name}>
-              {opt.displayName}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <p className="text-sm text-white">
-          {describeLaserHead(slot, laser)}
-          {isBespoke && editable ? (
-            <span className="block text-[11px] text-slate-500 mt-0.5">
-              Bespoke — Pitman head only (crafted)
-            </span>
-          ) : null}
-        </p>
-      )}
-
-      {editable && hasBp && !isBespoke ? (
-        <div className="space-y-2">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={slot.mode === 'custom'}
-              onChange={(e) =>
-                e.target.checked
-                  ? enableCustomHead()
-                  : onChange({
-                      ...slot,
-                      mode: 'stock',
-                      slotQualities: undefined,
-                    })
-              }
-              className="rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
-            />
-            <span className="text-xs text-slate-300">My crafted mining head</span>
-          </label>
-
-          {slot.mode === 'custom' ? (
-            <>
-              <input
-                type="text"
-                value={slot.customLabel ?? ''}
-                onChange={(e) => onChange({ ...slot, customLabel: e.target.value })}
-                placeholder="Optional label (e.g. Q847 Helix)"
-                className="site-input w-full px-2 py-1 text-xs"
-              />
-              {blueprint?.slots?.map((bpSlot, bpIdx) => {
-                const quality = resolvedQualities[bpIdx]
-                const modifiers = bpSlot.options?.[0]?.modifiers
-                const modifierResults = calculateSlotModifiers(quality, modifiers)
-                return (
-                  <BlueprintSlotQualityCard
-                    key={bpIdx}
-                    slot={bpSlot}
-                    slotIndex={bpIdx}
-                    quality={quality}
-                    onQualityChange={handleQualityChange}
-                    modifierResults={modifierResults}
-                    compact
-                  />
-                )
-              })}
-              {effective && effective.powerMultiplier !== 1 ? (
-                <p className="text-[11px] text-slate-500">
-                  Craft roll: {effective.powerMultiplier >= 1 ? '+' : ''}
-                  {Math.round((effective.powerMultiplier - 1) * 100)}% power vs stock
-                </p>
-              ) : null}
-            </>
-          ) : null}
-        </div>
-      ) : null}
-
-      {showCraftedHead && isBespoke ? (
-        <div className="space-y-2">
-          <p className="text-xs text-slate-400">Your crafted Pitman head</p>
-          <input
-            type="text"
-            value={slot.customLabel ?? ''}
-            onChange={(e) =>
-              onChange({ ...slot, mode: 'custom', customLabel: e.target.value })
-            }
-            placeholder="Optional label (e.g. Q720 Pitman)"
-            className="site-input w-full px-2 py-1 text-xs"
-          />
-          {blueprint?.slots?.map((bpSlot, bpIdx) => {
-            const quality = resolvedQualities[bpIdx]
-            const modifiers = bpSlot.options?.[0]?.modifiers
-            const modifierResults = calculateSlotModifiers(quality, modifiers)
-            return (
-              <BlueprintSlotQualityCard
-                key={bpIdx}
-                slot={bpSlot}
-                slotIndex={bpIdx}
-                quality={quality}
-                onQualityChange={handleQualityChange}
-                modifierResults={modifierResults}
-                compact
-              />
-            )
-          })}
-          {effective && effective.powerMultiplier !== 1 ? (
-            <p className="text-[11px] text-slate-500">
-              Craft roll: {effective.powerMultiplier >= 1 ? '+' : ''}
-              {Math.round((effective.powerMultiplier - 1) * 100)}% power vs stock
-            </p>
-          ) : null}
-        </div>
-      ) : null}
-
-      {moduleSlots > 0 ? (
-        <div className="space-y-1.5">
-          <p className="text-[10px] uppercase tracking-wide text-slate-500">
-            Modules {editable ? '' : '(factory — none)'}
-          </p>
-          {editable ? (
-            resolvedModules.map((selected, modIdx) => (
-              <select
-                key={modIdx}
-                value={selected ?? ''}
-                onChange={(e) => handleModuleChange(modIdx, e.target.value)}
-                className="site-input w-full px-2 py-1 text-xs"
-              >
-                <option value="">— Empty —</option>
-                {moduleOptions.map((mod) => (
-                  <option key={mod.name} value={mod.name}>
-                    {mod.displayName}
-                    {mod.kind === 'active' ? ' (active)' : ''}
-                  </option>
-                ))}
-              </select>
-            ))
-          ) : (
-            <p className="text-[11px] text-slate-500">No modules equipped</p>
-          )}
-        </div>
-      ) : null}
-
-      <LaserStatsInfoPanel slot={slot} />
-
-      {!editable && slot.mode === 'custom' && slot.customLabel ? (
-        <p className="text-[11px] text-slate-500">{slot.customLabel}</p>
       ) : null}
     </div>
   )
@@ -773,18 +455,14 @@ export default function MiningLoadoutPanel({
         </p>
       ) : null}
 
-      <div className="space-y-2">
-        {activeLoadout?.lasers.map((slot, index) => (
-          <LaserSlotEditor
-            key={`${activeLoadout.key}-${index}`}
-            slotIndex={index}
-            slot={slot}
-            vesselId={vesselId}
-            editable={editable}
-            onChange={(next) => handleLaserChange(index, next)}
-          />
-        ))}
-      </div>
+      {activeLoadout?.lasers.length ? (
+        <LoadoutHeadCardsGrid
+          vesselId={vesselId}
+          slots={activeLoadout.lasers}
+          editable={editable}
+          onSlotChange={handleLaserChange}
+        />
+      ) : null}
 
       {comparison ? <ComparisonPanel comparison={comparison} /> : null}
 
