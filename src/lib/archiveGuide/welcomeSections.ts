@@ -292,6 +292,11 @@ export const ARCHIVE_TIPS = [
       "Blueprints are awarded from contracts at specific reputation levels. Use Mission Tracker to plan targets and browse missions; BP Dumper + Live Tracker on that page sync unlocks and show what is still dropping from active contracts.",
   },
   {
+    title: 'Mining workflow',
+    content:
+      'On Mining Tracker: look up an ore in RS Tracker or the Mining Guide, click a card to seed the Rock Calculator, paste a SCAN RESULTS screenshot with OCR or type stats manually, then open Smart Cracker for breakability and gadget advice. RSI-verified members can push yields into Ledgers for crew splits.',
+  },
+  {
     title: 'Resource Tracking',
     content:
       "Use the Resource Tracker to keep inventory of your mined and refined materials. Dumper's Fair-Value Price (DFP) calculates fair market values based on quality tiers.",
@@ -312,7 +317,7 @@ export const DATA_SOURCES = [
   {
     title: 'Game catalog data',
     content:
-      'Blueprints, components, ordnance, mining spawns, factions, Archive lore, and RS signature references are extracted directly from Star Citizen game files, then parsed into bundled JSON shipped with the site.',
+      'Blueprints, components, ordnance, mining spawns, factions, Archive lore, and RS signature references are kept in sync with Star Citizen game data when the site is updated.',
   },
   {
     title: 'DFP pricing',

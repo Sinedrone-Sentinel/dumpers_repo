@@ -94,7 +94,7 @@ const DATA_SOURCES: { title: string; content: string }[] = [
   {
     title: 'Game catalog data',
     content:
-      'Blueprints, components, ordnance, mining spawns, factions, Archive lore, and RS signature references are extracted directly from Star Citizen game files, then parsed into bundled JSON shipped with the site.',
+      'Blueprints, components, ordnance, mining spawns, factions, Archive lore, and RS signature references are kept in sync with Star Citizen game data when the site is updated.',
   },
   {
     title: 'DFP pricing',

@@ -87,25 +87,27 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 
 ### Mining Tracker (`/mining-tracker`)
 
-Three tabs:
+Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 
 **RS Tracker**
 
-- Reference grid of base RS signatures and cluster spawn odds from extracted game data
-- Up to two tracked cards per ore (Surface / Asteroid); optional per-site location tracking
-- **Rock Calculator** and **Smart Cracker** side by side in the RS Tracker sidebar — enter scanner stats and rock SCU/material %; compare loadout breakability and gadget fit (signed-in members)
+- Reference grid of base RS signatures and cluster spawn odds; track up to two cards per ore (Surface / Asteroid) plus optional per-site location cards
+- Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
+- **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
+- **Scanner OCR** — paste SCAN RESULTS screenshot (Ctrl+V), crop, Process to auto-fill; tilt slider for skewed HUDs; screenshot never saved
+- **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship (sign-in; RSI verification not required)
 
 **Mining Guide**
 
 - **By Ore** — rarity filters, location chips, spawn/cluster/composition tooltips
-- **By Location** — all ores at each mineable site; compendium subsites folded into parent moons
+- **By Location** — all ores at each mineable site; Overall summaries for broad regions
 
 **Ledgers** (RSI-verified members)
 
-- Crew payout ledgers: mining runs, shares, deductibles, partial payments, JSON export/import
-- Lifetime **site totals** for closed crew ledgers; in-app notifications for access, close, and payouts
+- Crew payout books: mining runs, shares, deductibles, partial payments, JSON export/import, access sharing, in-app payout notifications
+- Lifetime **site totals** for closed crew ledgers
 
-Data is parsed from Star Citizen harvestable presets, cluster profiles, and rock compositions (see [Game data](#game-data)).
+Game mining data is bundled with the site (see [Game data](#game-data)).
 
 ### Custom Orders (`/orders`)
 
