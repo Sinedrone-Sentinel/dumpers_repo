@@ -165,6 +165,22 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     [crop, displayRect]
   )
 
+  const cropImageStyle = useMemo(() => {
+    if (!displayRect.width || !cropPx.width) return null
+
+    const imageLeft = displayRect.left - cropPx.x
+    const imageTop = displayRect.top - cropPx.y
+
+    return {
+      width: displayRect.width,
+      height: displayRect.height,
+      left: imageLeft,
+      top: imageTop,
+      transformOrigin: `${cropPx.width / 2 - imageLeft}px ${cropPx.height / 2 - imageTop}px`,
+      transform: `rotate(${deskewDegrees}deg)`,
+    }
+  }, [cropPx, deskewDegrees, displayRect])
+
   const handlePaste = useCallback(
     async (event: React.ClipboardEvent) => {
       const items = event.clipboardData?.items
@@ -372,6 +388,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
               max={4}
               step={0.5}
               value={deskewDegrees}
+              onInput={(e) => setDeskewDegrees(Number.parseFloat(e.currentTarget.value))}
               onChange={(e) => setDeskewDegrees(Number.parseFloat(e.target.value))}
               className="w-full accent-orange-400"
             />
@@ -394,9 +411,9 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
                 draggable={false}
               />
-              {displayRect.width > 0 && !showPreview ? (
+              {displayRect.width > 0 && cropImageStyle && !showPreview ? (
                 <div
-                  className="absolute"
+                  className="absolute z-10"
                   style={{
                     left: cropPx.x,
                     top: cropPx.y,
@@ -404,30 +421,14 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                     height: cropPx.height,
                   }}
                 >
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div
-                      className="absolute"
-                      style={{
-                        left: '50%',
-                        top: '50%',
-                        width: displayRect.width,
-                        height: displayRect.height,
-                        transform: `translate(-50%, -50%) rotate(${deskewDegrees}deg)`,
-                      }}
-                    >
-                      <img
-                        src={loaded.objectUrl}
-                        alt=""
-                        draggable={false}
-                        className="absolute select-none max-w-none"
-                        style={{
-                          width: displayRect.width,
-                          height: displayRect.height,
-                          left: displayRect.left - cropPx.x - cropPx.width / 2,
-                          top: displayRect.top - cropPx.y - cropPx.height / 2,
-                        }}
-                      />
-                    </div>
+                  <div className="absolute inset-0 overflow-hidden bg-black pointer-events-none">
+                    <img
+                      src={loaded.objectUrl}
+                      alt=""
+                      draggable={false}
+                      className="absolute select-none max-w-none"
+                      style={cropImageStyle}
+                    />
                   </div>
                   <div
                     className="absolute inset-0 border-2 border-orange-400/90 cursor-move"
@@ -437,7 +438,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                     }}
                   />
                   <div
-                    className="absolute w-3 h-3 rounded-sm bg-orange-400 border border-white cursor-se-resize"
+                    className="absolute w-3 h-3 rounded-sm bg-orange-400 border border-white cursor-se-resize z-20"
                     style={{
                       right: -6,
                       bottom: -6,
