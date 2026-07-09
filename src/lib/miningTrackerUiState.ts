@@ -1,11 +1,26 @@
+import type { LoadoutKey } from './miningLoadoutStorage'
+import type { MiningVesselId } from './miningVessels'
+
 const STORAGE_KEY = 'dumpers_repo_mining_tracker_ui_v1'
 
 export interface MiningTrackerUiState {
-  smartCrackerExpanded: boolean
+  vesselId: MiningVesselId
+  loadoutKey: LoadoutKey
 }
 
 const DEFAULT_STATE: MiningTrackerUiState = {
-  smartCrackerExpanded: false,
+  vesselId: 'prospector',
+  loadoutKey: 'default',
+}
+
+const VESSEL_IDS: MiningVesselId[] = ['prospector', 'mole', 'golem', 'roc', 'roc-ds']
+
+function isLoadoutKey(value: unknown): value is LoadoutKey {
+  return value === 'default' || value === 'custom-1' || value === 'custom-2' || value === 'custom-3'
+}
+
+function isVesselId(value: unknown): value is MiningVesselId {
+  return typeof value === 'string' && VESSEL_IDS.includes(value as MiningVesselId)
 }
 
 function safeParse<T>(raw: string | null, fallback: T): T {
@@ -26,7 +41,8 @@ export function readMiningTrackerUiState(): MiningTrackerUiState {
   )
 
   return {
-    smartCrackerExpanded: parsed.smartCrackerExpanded === true,
+    vesselId: isVesselId(parsed.vesselId) ? parsed.vesselId : DEFAULT_STATE.vesselId,
+    loadoutKey: isLoadoutKey(parsed.loadoutKey) ? parsed.loadoutKey : DEFAULT_STATE.loadoutKey,
   }
 }
 
@@ -35,7 +51,8 @@ export function writeMiningTrackerUiState(update: Partial<MiningTrackerUiState>)
 
   const current = readMiningTrackerUiState()
   const next: MiningTrackerUiState = {
-    smartCrackerExpanded: update.smartCrackerExpanded ?? current.smartCrackerExpanded,
+    vesselId: update.vesselId ?? current.vesselId,
+    loadoutKey: update.loadoutKey ?? current.loadoutKey,
   }
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next))

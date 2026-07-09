@@ -365,3 +365,20 @@ export function trackButtonTooltip(
     </div>
   )
 }
+
+export const SELECTED_LOADOUT_TOOLTIP =
+  'Open Smart Cracker to change your loadout. Your selection is saved to your member account.'
+
+export const SMART_CRACKER_BUTTON_TOOLTIP = (
+  <div className="space-y-1.5 text-xs leading-snug">
+    <p className="font-medium text-slate-200">Loadout planner &amp; crack advisor</p>
+    <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
+      <li>Pick ship and loadout (synced across devices)</li>
+      <li>Configure mining heads, modules, and crafted stats</li>
+      <li>Compare laser power vs the rock in the calculator</li>
+      <li>Breakability check and minimum-throttle warnings</li>
+      <li>Mole head plan — solo vs crew turrets</li>
+      <li>Gadget suggestions when a rock is tough to crack</li>
+    </ul>
+  </div>
+)

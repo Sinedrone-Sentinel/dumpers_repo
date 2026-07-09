@@ -53,6 +53,8 @@ import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { getMineableElementStatHints } from '../../lib/mineableElementStats'
 import { formatRequiredPower } from '../../lib/miningBreakability'
 import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
+import SiteTooltip from '../SiteTooltip'
+import { SMART_CRACKER_BUTTON_TOOLTIP } from '../../lib/miningTooltipContent'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -68,6 +70,7 @@ interface RockCalculatorProps {
   loadEntry: MiningTrackerEntry | null
   loadToken: number
   onRockTargetChange?: (target: RockBreakabilityTarget) => void
+  onOpenSmartCracker?: () => void
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
@@ -81,6 +84,7 @@ export default function RockCalculator({
   loadEntry,
   loadToken,
   onRockTargetChange,
+  onOpenSmartCracker,
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
@@ -339,26 +343,48 @@ export default function RockCalculator({
     <aside className="w-full shrink-0">
       <div className="rounded-xl border border-slate-700 bg-slate-900/70">
         <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 min-h-[3.25rem] rounded-t-xl">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-            Rock Calculator
-          </p>
-          {oreName ? (
-            <>
-              <div className="mt-1 flex items-center gap-2 flex-wrap">
-                <span className="text-base font-bold text-white leading-tight">{oreName}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-300 uppercase tracking-wide">
-                  {depositTypeLabel(depositType)}
-                </span>
-              </div>
-              {selectedLocationLabel ? (
-                <p className="text-[11px] text-slate-500 mt-0.5 truncate" title={selectedLocationLabel}>
-                  {selectedLocationLabel}
-                </p>
-              ) : null}
-            </>
-          ) : (
-            <p className="text-xs text-slate-500 mt-1">Search an ore or click a tracked card</p>
-          )}
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                Rock Calculator
+              </p>
+              {oreName ? (
+                <>
+                  <div className="mt-1 flex items-center gap-2 flex-wrap">
+                    <span className="text-base font-bold text-white leading-tight">{oreName}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-700/80 text-slate-300 uppercase tracking-wide">
+                      {depositTypeLabel(depositType)}
+                    </span>
+                  </div>
+                  {selectedLocationLabel ? (
+                    <p
+                      className="text-[11px] text-slate-500 mt-0.5 truncate"
+                      title={selectedLocationLabel}
+                    >
+                      {selectedLocationLabel}
+                    </p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="text-xs text-slate-500 mt-1">Search an ore or click a tracked card</p>
+              )}
+            </div>
+            {onOpenSmartCracker ? (
+              <SiteTooltip
+                content={SMART_CRACKER_BUTTON_TOOLTIP}
+                side="left"
+                panelClassName="max-w-[16rem]"
+              >
+                <button
+                  type="button"
+                  onClick={onOpenSmartCracker}
+                  className="shrink-0 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-orange-600/90 text-white hover:bg-orange-500 transition-colors"
+                >
+                  Smart Cracker
+                </button>
+              </SiteTooltip>
+            ) : null}
+          </div>
         </div>
 
         <div className="p-3 space-y-3">

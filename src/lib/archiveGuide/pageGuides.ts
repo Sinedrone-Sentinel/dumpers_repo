@@ -96,9 +96,9 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     title: 'Mining Tracker',
     description: 'Track ores by RS signature, browse the ore/location guide, and compare cluster readings.',
     details: [
-      'RS Tracker sidebar: Rock Calculator and Smart Cracker sit side by side (calculator toward tracked ores, Smart Cracker on the outside right)',
+      'RS Tracker sidebar: Rock Calculator on the right; Smart Cracker opens in a large modal from the button in the calculator header',
+      'Selected loadout label above the calculator shows your active loadout — open Smart Cracker to change it',
       'Smart Cracker (signed-in members): pick ship and loadout, compare laser power to a rock from the calculator — RSI verification not required',
-      'Smart Cracker collapses below loadout selection by default (heads, breakability, gadgets); expand/collapse state is saved in your browser',
       'Loadouts sync to your member account and are available on any device',
       'Create up to three custom loadouts per ship — each starts from that ship\'s Default heads; custom slots are editable including crafted mining heads',
       'Default shows factory stock heads (read-only); Golem is bespoke — custom loadouts use your crafted Pitman head only',

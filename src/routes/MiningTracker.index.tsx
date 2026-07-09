@@ -40,14 +40,24 @@ import MiningLedgerTab from '../components/mining/MiningLedgerTab'
 import { fetchMiningLedgerSiteStats, type MiningLedgerSiteStats } from '../lib/miningLedgerOps'
 import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
 import RockCalculator from '../components/mining/RockCalculator'
-import MiningLoadoutPanel from '../components/mining/MiningLoadoutPanel'
+import SmartCrackerModal from '../components/mining/SmartCrackerModal'
+import type { MiningLoadoutSelection } from '../components/mining/MiningLoadoutPanel'
 import type { RockBreakabilityTarget } from '../lib/miningLoadoutCompare'
+import { useMiningLoadouts } from '../contexts/MiningLoadoutContext'
+import { resolveActiveLoadoutLabel } from '../lib/miningLoadoutSelection'
+import type { LoadoutKey } from '../lib/miningLoadoutStorage'
+import type { MiningVesselId } from '../lib/miningVessels'
+import {
+  readMiningTrackerUiState,
+  writeMiningTrackerUiState,
+} from '../lib/miningTrackerUiState'
 import {
   guideLocationChipTooltip,
   guideLocationOreTooltip,
   guideOreModalLocationTooltip,
   guideOreTitleTooltip,
   oreMineableStatsTooltipBlock,
+  SELECTED_LOADOUT_TOOLTIP,
   trackerCardTooltip,
   trackerChanceTooltip,
 } from '../lib/miningTooltipContent'
@@ -67,6 +77,7 @@ const miningTrackerRoute = getRouteApi('/mining-tracker')
 
 export default function MiningTrackerRoute() {
   const { isGuestPreview } = useAuth()
+  const { canUse: canUseLoadouts, store: loadoutStore } = useMiningLoadouts()
   const { data, loading, error, refetch } = useMiningData()
   const { entries, addEntry, removeEntry, clearAll, isTracked } = useMiningTracker()
   const search = miningTrackerRoute.useSearch()
@@ -79,6 +90,8 @@ export default function MiningTrackerRoute() {
   const [calculatorLoadEntry, setCalculatorLoadEntry] = useState<MiningTrackerEntry | null>(null)
   const [calculatorLoadToken, setCalculatorLoadToken] = useState(0)
   const [rockTarget, setRockTarget] = useState<RockBreakabilityTarget | null>(null)
+  const [loadoutUi, setLoadoutUi] = useState(readMiningTrackerUiState)
+  const [smartCrackerOpen, setSmartCrackerOpen] = useState(false)
   
   // Guide view state
   const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
@@ -185,6 +198,37 @@ export default function MiningTrackerRoute() {
   const sortedEntries = useMemo(() => {
     return [...filteredEntries].sort((a, b) => b.addedAt - a.addedAt)
   }, [filteredEntries])
+
+  const handleVesselChange = useCallback((vesselId: MiningVesselId) => {
+    setLoadoutUi((prev) => {
+      const next = { vesselId, loadoutKey: 'default' as LoadoutKey }
+      writeMiningTrackerUiState(next)
+      return next
+    })
+  }, [])
+
+  const handleLoadoutChange = useCallback((loadoutKey: LoadoutKey) => {
+    setLoadoutUi((prev) => {
+      const next = { ...prev, loadoutKey }
+      writeMiningTrackerUiState(next)
+      return next
+    })
+  }, [])
+
+  const loadoutSelection = useMemo<MiningLoadoutSelection>(
+    () => ({
+      vesselId: loadoutUi.vesselId,
+      loadoutKey: loadoutUi.loadoutKey,
+      onVesselChange: handleVesselChange,
+      onLoadoutChange: handleLoadoutChange,
+    }),
+    [loadoutUi.vesselId, loadoutUi.loadoutKey, handleVesselChange, handleLoadoutChange]
+  )
+
+  const selectedLoadoutLabel = useMemo(
+    () => resolveActiveLoadoutLabel(loadoutStore, loadoutUi.vesselId, loadoutUi.loadoutKey),
+    [loadoutStore, loadoutUi.vesselId, loadoutUi.loadoutKey]
+  )
 
   // Guide view computed data
   const groupedByRarity = useMemo(() => {
@@ -336,7 +380,7 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="flex gap-6 items-start min-w-[1080px]">
+        <div className="flex gap-6 items-start min-w-[760px]">
           <div className="flex-1 min-w-0 space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
@@ -531,20 +575,33 @@ export default function MiningTrackerRoute() {
           </section>
           </div>
 
-          <div className="sticky top-14 self-start shrink-0 flex gap-4 items-start">
-            <div className="w-[300px]">
-              <RockCalculator
-                loadEntry={calculatorLoadEntry}
-                loadToken={calculatorLoadToken}
-                onRockTargetChange={setRockTarget}
-              />
-            </div>
-            <div className="w-[300px]">
-              <MiningLoadoutPanel rockTarget={rockTarget} />
-            </div>
+          <div className="sticky top-14 self-start w-[320px] shrink-0 flex flex-col gap-2">
+            {canUseLoadouts ? (
+              <SiteTooltip content={SELECTED_LOADOUT_TOOLTIP} side="bottom" className="block w-full">
+                <p className="text-xs text-center text-slate-400 w-full px-1">
+                  <span className="text-slate-200 font-medium">{selectedLoadoutLabel}</span>
+                  {' '}
+                  loadout is currently selected
+                </p>
+              </SiteTooltip>
+            ) : null}
+            <RockCalculator
+              loadEntry={calculatorLoadEntry}
+              loadToken={calculatorLoadToken}
+              onRockTargetChange={setRockTarget}
+              onOpenSmartCracker={() => setSmartCrackerOpen(true)}
+            />
           </div>
         </div>
       )}
+
+      {smartCrackerOpen ? (
+        <SmartCrackerModal
+          rockTarget={rockTarget}
+          selection={loadoutSelection}
+          onClose={() => setSmartCrackerOpen(false)}
+        />
+      ) : null}
 
       {viewMode === 'ledger' && (
         <MiningLedgerTab

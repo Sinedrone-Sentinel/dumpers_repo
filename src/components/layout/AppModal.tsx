@@ -1,13 +1,14 @@
 import React, { useId } from 'react'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
-export type AppModalSize = 'sm' | 'md' | 'lg'
+export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl'
 export type AppModalZIndex = 60 | 70 | 80
 
 const sizeClasses: Record<AppModalSize, string> = {
   sm: 'max-w-md max-h-[min(90dvh,36rem)]',
   md: 'max-w-lg max-h-[min(90dvh,36rem)]',
   lg: 'max-w-xl max-h-[90dvh]',
+  xl: 'max-w-5xl max-h-[92dvh]',
 }
 
 const zIndexClasses: Record<AppModalZIndex, string> = {

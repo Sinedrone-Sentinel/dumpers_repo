@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import SignInMenu from '../auth/SignInMenu'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
 import { useMiningLoadouts } from '../../contexts/MiningLoadoutContext'
@@ -49,13 +49,19 @@ import {
   MINING_VESSELS,
   type MiningVesselId,
 } from '../../lib/miningVessels'
-import {
-  readMiningTrackerUiState,
-  writeMiningTrackerUiState,
-} from '../../lib/miningTrackerUiState'
+
+export interface MiningLoadoutSelection {
+  vesselId: MiningVesselId
+  loadoutKey: LoadoutKey
+  onVesselChange: (id: MiningVesselId) => void
+  onLoadoutChange: (key: LoadoutKey) => void
+}
 
 interface MiningLoadoutPanelProps {
   rockTarget: RockBreakabilityTarget | null
+  selection: MiningLoadoutSelection
+  /** Modal body: no card chrome, details always visible */
+  embedded?: boolean
 }
 
 function CheckIcon({ ok }: { ok: boolean }) {
@@ -599,7 +605,24 @@ function LaserSlotEditor({
   )
 }
 
-function LoadoutSignInGate() {
+function LoadoutSignInGate({ embedded = false }: { embedded?: boolean }) {
+  const body = (
+    <div className="text-center space-y-3">
+      <p className="text-sm text-slate-400">
+        Sign in with a member account to plan mining loadouts and compare laser power against
+        rocks. RSI Handle verification is not required.
+      </p>
+      <p className="text-xs text-slate-500">
+        Saved loadouts sync to your account and are available on any device.
+      </p>
+      <div className="flex justify-center">
+        <SignInMenu />
+      </div>
+    </div>
+  )
+
+  if (embedded) return body
+
   return (
     <div className="w-full shrink-0">
       <div className="rounded-xl border border-slate-700 bg-slate-900/70">
@@ -608,38 +631,22 @@ function LoadoutSignInGate() {
             Smart Cracker
           </p>
         </div>
-        <div className="p-4 text-center space-y-3">
-          <p className="text-sm text-slate-400">
-            Sign in with a member account to plan mining loadouts and compare laser power against
-            rocks. RSI Handle verification is not required.
-          </p>
-          <p className="text-xs text-slate-500">
-            Saved loadouts sync to your account and are available on any device.
-          </p>
-          <div className="flex justify-center">
-            <SignInMenu />
-          </div>
-        </div>
+        <div className="p-4">{body}</div>
       </div>
     </div>
   )
 }
 
-export default function MiningLoadoutPanel({ rockTarget }: MiningLoadoutPanelProps) {
+export default function MiningLoadoutPanel({
+  rockTarget,
+  selection,
+  embedded = false,
+}: MiningLoadoutPanelProps) {
   const { canUse, store, loading, saving, saveError, createCustomLoadout, deleteCustomLoadout, updateLasers } =
     useMiningLoadouts()
 
-  const [vesselId, setVesselId] = useState<MiningVesselId>('prospector')
-  const [loadoutKey, setLoadoutKey] = useState<LoadoutKey>('default')
+  const { vesselId, loadoutKey, onVesselChange, onLoadoutChange } = selection
   const [moleSoloMining, setMoleSoloMining] = useState(true)
-  const [detailsExpanded, setDetailsExpanded] = useState(
-    () => readMiningTrackerUiState().smartCrackerExpanded
-  )
-
-  const setSmartCrackerExpanded = useCallback((expanded: boolean) => {
-    setDetailsExpanded(expanded)
-    writeMiningTrackerUiState({ smartCrackerExpanded: expanded })
-  }, [])
 
   const vessel = getMiningVessel(vesselId)
   const loadouts = useMemo(() => listLoadoutsForVessel(store, vesselId), [store, vesselId])
@@ -659,17 +666,17 @@ export default function MiningLoadoutPanel({ rockTarget }: MiningLoadoutPanelPro
   }, [activeLoadout, comparison, rockTarget, vesselId, moleSoloMining])
 
   if (!canUse) {
-    return <LoadoutSignInGate />
+    return <LoadoutSignInGate embedded={embedded} />
   }
 
   const handleVesselChange = (nextId: MiningVesselId) => {
-    setVesselId(nextId)
-    setLoadoutKey('default')
+    onVesselChange(nextId)
+    onLoadoutChange('default')
   }
 
   const handleCreateLoadout = () => {
     const created = createCustomLoadout(vesselId)
-    if (created) setLoadoutKey(`custom-${created}`)
+    if (created) onLoadoutChange(`custom-${created}`)
   }
 
   const handleDeleteLoadout = () => {
@@ -677,7 +684,7 @@ export default function MiningLoadoutPanel({ rockTarget }: MiningLoadoutPanelPro
     if (!isCustomLoadoutKey(loadoutKey)) return
     const slot = Number(loadoutKey.replace('custom-', '')) as 1 | 2 | 3
     deleteCustomLoadout(vesselId, slot)
-    setLoadoutKey('default')
+    onLoadoutChange('default')
   }
 
   const handleLaserChange = (index: number, next: MiningLaserSlotConfig) => {
@@ -689,11 +696,117 @@ export default function MiningLoadoutPanel({ rockTarget }: MiningLoadoutPanelPro
   if (!vessel) return null
 
   if (loading) {
-    return (
-      <div className="w-full shrink-0 rounded-xl border border-slate-700 bg-slate-900/70 p-6 flex justify-center">
+    const spinner = (
+      <div className="flex justify-center p-6">
         <div className="w-6 h-6 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
       </div>
     )
+    if (embedded) return spinner
+    return (
+      <div className="w-full shrink-0 rounded-xl border border-slate-700 bg-slate-900/70">
+        {spinner}
+      </div>
+    )
+  }
+
+  const panelBody = (
+    <>
+      {saveError ? (
+        <p className="text-xs text-red-400/90 bg-red-950/20 border border-red-900/40 rounded-lg px-2 py-1.5">
+          {saveError}
+        </p>
+      ) : null}
+      {saving ? (
+        <p className="text-[10px] text-slate-500 uppercase tracking-wide">Saving…</p>
+      ) : null}
+
+      <div className="flex gap-2">
+        <select
+          value={vesselId}
+          onChange={(e) => handleVesselChange(e.target.value as MiningVesselId)}
+          className="site-input flex-1 min-w-0 px-2 py-1.5 text-xs"
+        >
+          {MINING_VESSELS.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.displayName}
+            </option>
+          ))}
+        </select>
+        <select
+          value={loadoutKey}
+          onChange={(e) => onLoadoutChange(e.target.value as LoadoutKey)}
+          className="site-input flex-1 min-w-0 px-2 py-1.5 text-xs"
+        >
+          {loadouts.map((l) => (
+            <option key={l.key} value={l.key}>
+              {l.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex gap-2">
+        {canCreateMoreLoadouts(store, vesselId) ? (
+          <button
+            type="button"
+            onClick={handleCreateLoadout}
+            className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800/80 transition-colors"
+          >
+            Create loadout
+          </button>
+        ) : null}
+        {canDeleteLoadout(loadoutKey) && editable ? (
+          <button
+            type="button"
+            onClick={handleDeleteLoadout}
+            className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-red-900/60 text-red-400/90 hover:bg-red-950/40 transition-colors"
+          >
+            Delete
+          </button>
+        ) : null}
+      </div>
+
+      {!editable ? (
+        <p className="text-[11px] text-slate-500">
+          Default is factory stock and read-only. Create Mole 1 / 2 / 3 (etc.) to set your mining
+          heads and crafted stats.
+        </p>
+      ) : null}
+
+      <div className="space-y-2">
+        {activeLoadout?.lasers.map((slot, index) => (
+          <LaserSlotEditor
+            key={`${activeLoadout.key}-${index}`}
+            slotIndex={index}
+            slot={slot}
+            vesselId={vesselId}
+            editable={editable}
+            onChange={(next) => handleLaserChange(index, next)}
+          />
+        ))}
+      </div>
+
+      {comparison ? <ComparisonPanel comparison={comparison} /> : null}
+
+      {smartCracker ? (
+        <SmartCrackerPanel
+          result={smartCracker}
+          moleSoloMining={moleSoloMining}
+          onMoleSoloMiningChange={setMoleSoloMining}
+          showSoloToggle={vesselId === 'mole'}
+        />
+      ) : null}
+
+      {rockTarget && !isRockBreakabilityTargetReady(rockTarget) ? (
+        <p className="text-[11px] text-slate-500">
+          Enter scanner mass and resistance in the Rock Calculator to compare breakability.
+        </p>
+      ) : null}
+    </>
+  )
+
+  if (embedded) {
+    return <div className="space-y-3">{panelBody}</div>
   }
 
   return (
@@ -708,125 +821,7 @@ export default function MiningLoadoutPanel({ rockTarget }: MiningLoadoutPanelPro
           </p>
         </div>
 
-        <div className="p-3 space-y-3">
-          {saveError ? (
-            <p className="text-xs text-red-400/90 bg-red-950/20 border border-red-900/40 rounded-lg px-2 py-1.5">
-              {saveError}
-            </p>
-          ) : null}
-          {saving ? (
-            <p className="text-[10px] text-slate-500 uppercase tracking-wide">Saving…</p>
-          ) : null}
-
-          <div className="flex gap-2">
-            <select
-              value={vesselId}
-              onChange={(e) => handleVesselChange(e.target.value as MiningVesselId)}
-              className="site-input flex-1 min-w-0 px-2 py-1.5 text-xs"
-            >
-              {MINING_VESSELS.map((v) => (
-                <option key={v.id} value={v.id}>
-                  {v.displayName}
-                </option>
-              ))}
-            </select>
-            <select
-              value={loadoutKey}
-              onChange={(e) => setLoadoutKey(e.target.value as LoadoutKey)}
-              className="site-input flex-1 min-w-0 px-2 py-1.5 text-xs"
-            >
-              {loadouts.map((l) => (
-                <option key={l.key} value={l.key}>
-                  {l.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex gap-2">
-            {canCreateMoreLoadouts(store, vesselId) ? (
-              <button
-                type="button"
-                onClick={handleCreateLoadout}
-                className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800/80 transition-colors"
-              >
-                Create loadout
-              </button>
-            ) : null}
-            {canDeleteLoadout(loadoutKey) && editable ? (
-              <button
-                type="button"
-                onClick={handleDeleteLoadout}
-                className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-red-900/60 text-red-400/90 hover:bg-red-950/40 transition-colors"
-              >
-                Delete
-              </button>
-            ) : null}
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setSmartCrackerExpanded(!detailsExpanded)}
-            className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg border border-slate-700/80 text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
-            aria-expanded={detailsExpanded}
-          >
-            <svg
-              className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-                detailsExpanded ? 'rotate-90' : ''
-              }`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            {detailsExpanded
-              ? 'Hide heads, breakability & gadgets'
-              : 'Show heads, breakability & gadgets'}
-          </button>
-
-          {detailsExpanded ? (
-            <div className="space-y-3 pt-1 border-t border-slate-700/60">
-              {!editable ? (
-                <p className="text-[11px] text-slate-500">
-                  Default is factory stock and read-only. Create Mole 1 / 2 / 3 (etc.) to set your
-                  mining heads and crafted stats.
-                </p>
-              ) : null}
-
-              <div className="space-y-2">
-                {activeLoadout?.lasers.map((slot, index) => (
-                  <LaserSlotEditor
-                    key={`${activeLoadout.key}-${index}`}
-                    slotIndex={index}
-                    slot={slot}
-                    vesselId={vesselId}
-                    editable={editable}
-                    onChange={(next) => handleLaserChange(index, next)}
-                  />
-                ))}
-              </div>
-
-              {comparison ? <ComparisonPanel comparison={comparison} /> : null}
-
-              {smartCracker ? (
-                <SmartCrackerPanel
-                  result={smartCracker}
-                  moleSoloMining={moleSoloMining}
-                  onMoleSoloMiningChange={setMoleSoloMining}
-                  showSoloToggle={vesselId === 'mole'}
-                />
-              ) : null}
-
-              {rockTarget && !isRockBreakabilityTargetReady(rockTarget) ? (
-                <p className="text-[11px] text-slate-500">
-                  Enter scanner mass and resistance in the Rock Calculator to compare breakability.
-                </p>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+        <div className="p-3 space-y-3">{panelBody}</div>
       </div>
     </div>
   )
