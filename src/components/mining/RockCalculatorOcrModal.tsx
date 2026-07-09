@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppModal from '../layout/AppModal'
-import { getDepositTypes } from '../../lib/miningClusterProfiles'
+import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
   DEFAULT_CROP_RECT,
   loadImageFromFile,
@@ -225,9 +225,9 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         return
       }
 
-      if (!getDepositTypes(parsed.data.primaryOreName).length) {
+      if (!isRsTrackerOre(parsed.data.primaryOreName)) {
         setError(
-          `"${parsed.data.primaryOreName}" is not in the RS Tracker ore list — crop may be misaligned.`
+          `Could not match the scanned primary ore to an RS Tracker ore — check your crop or pick the ore manually after closing.`
         )
         return
       }

@@ -1,11 +1,12 @@
-import { resolveCanonicalOreName } from './miningOreCanonical'
+import { resolveOcrOreName } from './miningOreCanonical'
 import { stripMineableLabel } from './miningOreLabel'
 import { isInertElement } from './rockCalculator'
 
 export interface OcrCompositionLine {
   elementName: string
   percent: number
-  quality: number
+  quality: number | null
+  qualityMissing: boolean
   scanBandRank: number
 }
 
@@ -30,11 +31,22 @@ const COMPOSITION_LINE_RE =
 
 const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
 
-function normalizeElementName(raw: string): string {
+const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+)/i
+
+function hasTrailingQuality(line: string): boolean {
+  return /\s+Q?\d{1,4}\s*$/i.test(line.trim())
+}
+
+function normalizeElementName(raw: string, warnings: string[]): string {
   const stripped = stripMineableLabel(raw.replace(/\(ORE\)/gi, '').trim())
   if (!stripped) return stripped
   if (/^inert/i.test(stripped)) return 'Inert'
-  return resolveCanonicalOreName(stripped)
+
+  const resolved = resolveOcrOreName(stripped)
+  if (resolved.correctedFrom) {
+    warnings.push(`Read "${resolved.correctedFrom}" as ${resolved.name}.`)
+  }
+  return resolved.name
 }
 
 function cleanOcrText(text: string): string {
@@ -93,10 +105,40 @@ function extractTotalScu(lines: string[]): number | null {
   return null
 }
 
+function pushOreLine(
+  elementName: string,
+  percent: number,
+  quality: number | null,
+  qualityMissing: boolean,
+  elementRank: Map<string, number>,
+  compositionLines: OcrCompositionLine[],
+  warnings: string[]
+): void {
+  if (isInertElement(elementName)) return
+
+  if (qualityMissing) {
+    warnings.push(
+      `${elementName} quality was hidden on the scan (name too long) — set the Q band manually in the calculator.`
+    )
+  }
+
+  const rank = elementRank.get(elementName) ?? 0
+  elementRank.set(elementName, rank + 1)
+  compositionLines.push({
+    elementName,
+    percent,
+    quality,
+    qualityMissing,
+    scanBandRank: rank,
+  })
+}
+
 function parseCompositionLine(
   line: string,
-  elementRank: Map<string, number>
-): { kind: 'inert'; percent: number } | { kind: 'ore'; line: OcrCompositionLine } | null {
+  elementRank: Map<string, number>,
+  compositionLines: OcrCompositionLine[],
+  warnings: string[]
+): { kind: 'inert'; percent: number } | null {
   const inertMatch = line.match(INERT_LINE_RE)
   if (inertMatch) {
     return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
@@ -105,16 +147,25 @@ function parseCompositionLine(
   const strict = line.match(COMPOSITION_LINE_RE)
   if (strict) {
     const percent = Number.parseFloat(strict[1])
-    const elementName = normalizeElementName(strict[2])
+    const elementName = normalizeElementName(strict[2], warnings)
     const quality = Number.parseInt(strict[3], 10)
     if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-    const rank = elementRank.get(elementName) ?? 0
-    elementRank.set(elementName, rank + 1)
-    return {
-      kind: 'ore',
-      line: { elementName, percent, quality, scanBandRank: rank },
+    pushOreLine(elementName, percent, quality, false, elementRank, compositionLines, warnings)
+    return null
+  }
+
+  if (!hasTrailingQuality(line)) {
+    const percentOnly = line.match(COMPOSITION_PERCENT_LINE_RE)
+    if (percentOnly) {
+      const percent = Number.parseFloat(percentOnly[1])
+      const elementName = normalizeElementName(percentOnly[2], warnings)
+      if (!Number.isFinite(percent) || !elementName) return null
+      if (isInertElement(elementName)) return { kind: 'inert', percent }
+
+      pushOreLine(elementName, percent, null, true, elementRank, compositionLines, warnings)
+      return null
     }
   }
 
@@ -122,20 +173,19 @@ function parseCompositionLine(
   if (!loose) return null
 
   const percent = Number.parseFloat(loose[1])
-  const elementName = normalizeElementName(loose[2])
+  const elementName = normalizeElementName(loose[2], warnings)
   const quality = Number.parseInt(loose[3], 10)
   if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
   if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-  const rank = elementRank.get(elementName) ?? 0
-  elementRank.set(elementName, rank + 1)
-  return {
-    kind: 'ore',
-    line: { elementName, percent, quality, scanBandRank: rank },
-  }
+  pushOreLine(elementName, percent, quality, false, elementRank, compositionLines, warnings)
+  return null
 }
 
-function parseCompositionLines(lines: string[]): {
+function parseCompositionLines(
+  lines: string[],
+  warnings: string[]
+): {
   lines: OcrCompositionLine[]
   inertPercent: number | null
 } {
@@ -147,15 +197,10 @@ function parseCompositionLines(lines: string[]): {
     const line = rawLine.trim()
     if (!line || !/%/.test(line)) continue
 
-    const parsed = parseCompositionLine(line, elementRank)
-    if (!parsed) continue
-
-    if (parsed.kind === 'inert') {
+    const parsed = parseCompositionLine(line, elementRank, compositionLines, warnings)
+    if (parsed?.kind === 'inert') {
       inertPercent = parsed.percent
-      continue
     }
-
-    compositionLines.push(parsed.line)
   }
 
   return { lines: compositionLines, inertPercent }
@@ -169,16 +214,16 @@ function detectPrimaryOre(compositionLines: OcrCompositionLine[]): string | null
   return null
 }
 
-function detectHeaderOre(lines: string[]): string | null {
+function detectHeaderOre(lines: string[], warnings: string[]): string | null {
   for (const line of lines) {
     const trimmed = line.trim()
     if (!trimmed || /^(SCAN|MASS|RESISTANCE|INSTABILITY|COMPOSITION)/i.test(trimmed)) continue
 
     const oreHeader = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s*\(ORE\)/i)
-    if (oreHeader) return normalizeElementName(oreHeader[1])
+    if (oreHeader) return normalizeElementName(oreHeader[1], warnings)
 
     const rockHeader = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
-    if (rockHeader) return normalizeElementName(rockHeader[1])
+    if (rockHeader) return normalizeElementName(rockHeader[1], warnings)
   }
   return null
 }
@@ -194,12 +239,14 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' }
   }
 
+  const warnings: string[] = []
+
   const mass = extractLabeledValue(lines, ['MASS'])
   const resistancePercent = extractLabeledValue(lines, ['RESISTANCE'])
   const instability = extractLabeledValue(lines, ['INSTABILITY'])
   const totalScu = extractTotalScu(lines)
 
-  const { lines: compositionLines, inertPercent } = parseCompositionLines(lines)
+  const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
 
   if (mass == null) {
     return { ok: false, error: 'Could not read Mass from the crop — include the MASS line.' }
@@ -218,8 +265,16 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
   }
 
   const primaryFromLines = detectPrimaryOre(compositionLines)
-  const primaryFromHeader = detectHeaderOre(lines)
-  const primaryOreName = primaryFromLines ?? primaryFromHeader
+  const primaryFromHeader = detectHeaderOre(lines, warnings)
+  let primaryOreName = primaryFromLines ?? primaryFromHeader
+
+  if (primaryOreName) {
+    const resolvedPrimary = resolveOcrOreName(primaryOreName)
+    if (resolvedPrimary.correctedFrom) {
+      warnings.push(`Read "${resolvedPrimary.correctedFrom}" as ${resolvedPrimary.name} (primary ore).`)
+    }
+    primaryOreName = resolvedPrimary.name
+  }
 
   if (!primaryOreName) {
     return {
@@ -229,7 +284,6 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     }
   }
 
-  const warnings: string[] = []
   if (primaryFromLines && primaryFromHeader && primaryFromLines !== primaryFromHeader) {
     warnings.push(
       `Rock label shows ${primaryFromHeader} but composition High/Low bands are ${primaryFromLines} — using composition for calculator basis.`

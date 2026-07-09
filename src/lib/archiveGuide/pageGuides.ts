@@ -99,6 +99,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'RS Tracker sidebar: Rock Calculator on the right; Smart Cracker opens in a large modal from the button in the calculator header',
       'Scanner OCR: paste an in-game fracture HUD screenshot (Ctrl+V), crop SCAN RESULTS, and auto-fill mass, resistance, instability, SCU, composition %, and Q bands',
       'OCR scan fill hides deposit type and expected composition ranges until you pick an ore or click a tracked card; nothing from the screenshot is saved',
+      'If a long element name covers the quality readout (common with Star Strings — e.g. "Heph" instead of Hephaestanite), OCR warns you to set that material\'s Q band manually',
       'Selected loadout label above the calculator shows your active loadout — open Smart Cracker to change it',
       'Smart Cracker (signed-in members): pick ship and loadout, compare laser power to a rock from the calculator — RSI verification not required',
       'Loadouts sync to your member account and are available on any device',

@@ -143,7 +143,8 @@ export function mapOcrToCalculatorSlots(
     const slots = profileSlotsByElement(calculatorParts, elementName)
     if (!slots.length) {
       for (const line of lines) {
-        unmatchedLines.push(`${line.percent}% ${elementName} Q${line.quality}`)
+        const qLabel = line.qualityMissing || line.quality == null ? 'Q?' : `Q${line.quality}`
+        unmatchedLines.push(`${line.percent}% ${elementName} ${qLabel}`)
       }
       continue
     }
@@ -151,17 +152,20 @@ export function mapOcrToCalculatorSlots(
     lines.forEach((line, rank) => {
       const slot = slots[rank]
       if (!slot) {
-        unmatchedLines.push(`${line.percent}% ${elementName} Q${line.quality}`)
+        const qLabel = line.qualityMissing || line.quality == null ? 'Q?' : `Q${line.quality}`
+        unmatchedLines.push(`${line.percent}% ${elementName} ${qLabel}`)
         return
       }
       const key = compositionSlotKey(slot.index, slot.part)
       percentBySlot[key] = String(line.percent)
-      const resolvedQuality = resolveLedgerQuality(
-        oreResourceKeyFromElementName(elementName),
-        elementName,
-        line.quality
-      )
-      qualityBySlot[key] = String(resolvedQuality)
+      if (!line.qualityMissing && line.quality != null) {
+        const resolvedQuality = resolveLedgerQuality(
+          oreResourceKeyFromElementName(elementName),
+          elementName,
+          line.quality
+        )
+        qualityBySlot[key] = String(resolvedQuality)
+      }
     })
   }
 

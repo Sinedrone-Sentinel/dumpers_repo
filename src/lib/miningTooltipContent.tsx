@@ -390,6 +390,7 @@ export const ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP = (
       <li>ALT+PrtSc the SCAN RESULTS panel in-game</li>
       <li>Switch here and Ctrl+V into the OCR modal</li>
       <li>Crop the scan panel and Process to auto-fill</li>
+      <li>Long element names (e.g. Star Strings showing &quot;Heph&quot;) can hide Q on the HUD — you will be prompted to set that material&apos;s Q band manually</li>
       <li>Nothing is saved — image is discarded after processing</li>
     </ul>
   </div>
