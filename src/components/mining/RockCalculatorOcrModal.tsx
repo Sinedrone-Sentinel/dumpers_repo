@@ -300,7 +300,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         </div>
       }
     >
-      <div className="p-3 space-y-3" onPaste={(e) => void handlePaste(e)}>
+      <div className="space-y-3" onPaste={(e) => void handlePaste(e)}>
         <div
           tabIndex={0}
           className="rounded-lg border border-dashed border-slate-600 bg-slate-950/50 px-3 py-2 text-[11px] text-slate-400 outline-none focus:border-orange-500/60"
@@ -334,7 +334,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
         <div
           ref={containerRef}
-          className="relative w-full h-[min(62dvh,38rem)] rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
+          className="relative w-full h-[min(56dvh,34rem)] rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
         >
           {loaded ? (
             <>

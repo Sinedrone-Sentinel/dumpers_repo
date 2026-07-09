@@ -1,7 +1,7 @@
 import React, { useId } from 'react'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
-export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type AppModalZIndex = 60 | 70 | 80
 
 const sizeClasses: Record<AppModalSize, string> = {
@@ -10,9 +10,17 @@ const sizeClasses: Record<AppModalSize, string> = {
   lg: 'max-w-xl',
   xl: 'max-w-5xl',
   '2xl': 'max-w-4xl',
+  '3xl': 'max-w-[min(94vw,80rem)]',
 }
 
-const modalShellClass = 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden'
+const modalShellClasses: Record<AppModalSize, string> = {
+  sm: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
+  md: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
+  lg: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
+  xl: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
+  '2xl': 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
+  '3xl': 'max-h-[min(86dvh,calc(100dvh-3rem))] overflow-hidden',
+}
 
 const zIndexClasses: Record<AppModalZIndex, string> = {
   60: 'z-[60]',
@@ -59,7 +67,7 @@ export default function AppModal({
       aria-labelledby={titleId}
     >
       <div
-        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]} ${modalShellClass}`}
+        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]} ${modalShellClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">
