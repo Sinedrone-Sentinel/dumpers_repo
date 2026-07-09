@@ -7,6 +7,7 @@ import {
 } from './miningLaserStats'
 import { combineModuleModifiers, normalizeModuleSelection } from './miningModules'
 import type { RockBreakabilityTarget } from './miningLoadoutCompare'
+import { assessMinPowerWarningForSlot, type MinPowerWarning } from './miningMinPowerWarning'
 import { getMiningLaserByName } from './miningVessels'
 
 /** Supporter min MW must stay below this fraction of primary crack output. */
@@ -44,6 +45,7 @@ export interface MoleLoadoutStrategy {
   summary: string
   /** Solo = one laser (like Prospector). Crew = multiple heads active. */
   soloMining: boolean
+  minPowerWarnings: MinPowerWarning[]
 }
 
 interface CandidateStrategy {
@@ -393,6 +395,37 @@ function enumerateSupporterSubsets(
   return subsets
 }
 
+function primaryMinPowerWarnings(
+  lasers: MiningLaserSlotConfig[],
+  assignments: MoleHeadAssignment[],
+  requiredPower: number,
+  soloMining: boolean
+): MinPowerWarning[] {
+  const warnings: MinPowerWarning[] = []
+  const primaryCount = assignments.filter((assignment) => assignment.role === 'primary').length
+  const requiredMwForPrimary =
+    soloMining || primaryCount <= 1
+      ? requiredPower
+      : Math.round(requiredPower / Math.max(primaryCount, 1))
+
+  for (const assignment of assignments) {
+    if (assignment.role !== 'primary') continue
+    const slot = lasers[assignment.slotIndex]
+    if (!slot) continue
+    const profile = buildMoleHeadProfile(slot, assignment.slotIndex)
+    if (!profile) continue
+    const warning = assessMinPowerWarningForSlot(
+      slot.laserName,
+      requiredMwForPrimary,
+      profile.laserPower,
+      assignment.label,
+      assignment.slotIndex
+    )
+    if (warning) warnings.push(warning)
+  }
+  return warnings
+}
+
 export interface MoleStrategyOptions {
   /** Solo = one laser at a time (Prospector-style). Crew = multiple heads can run together. */
   soloMining: boolean
@@ -455,5 +488,11 @@ export function findBestMoleLoadoutStrategy(
     combinedInstabilityModifier: best.combinedInstabilityModifier,
     summary: best.summary,
     soloMining: options.soloMining,
+    minPowerWarnings: primaryMinPowerWarnings(
+      lasers,
+      best.assignments,
+      best.requiredPower,
+      options.soloMining
+    ),
   }
 }

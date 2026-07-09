@@ -68,6 +68,9 @@ interface RockCalculatorProps {
   loadEntry: MiningTrackerEntry | null
   loadToken: number
   onRockTargetChange?: (target: RockBreakabilityTarget) => void
+  variant?: 'sidebar' | 'strip'
+  detailsExpanded?: boolean
+  onDetailsExpandedChange?: (expanded: boolean) => void
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
@@ -81,6 +84,9 @@ export default function RockCalculator({
   loadEntry,
   loadToken,
   onRockTargetChange,
+  variant = 'sidebar',
+  detailsExpanded = false,
+  onDetailsExpandedChange,
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
@@ -334,6 +340,392 @@ export default function RockCalculator({
   const showDepositToggle = availableDepositTypes.length > 1
   const selectedLocationLabel =
     locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
+
+  const compositionSection =
+    materialRows.length > 0 ? (
+      <div className="space-y-2">
+        <div
+          className={`${MATERIAL_VALUES_ROW} text-[9px] uppercase tracking-wide text-slate-600`}
+        >
+          <span className={`${MATERIAL_PERCENT_W} text-left`}>Material</span>
+          <span className={`${MATERIAL_QUALITY_W} text-center`}>Q</span>
+          <span className={`${MATERIAL_SCU_W} text-right`}>cSCU</span>
+          <span className={`${MATERIAL_DFP_W} text-right`}>DFP</span>
+        </div>
+        <ul className="space-y-2">
+          {materialRows.map((row) => (
+            <li key={row.slotKey}>
+              <div className={MATERIAL_VALUES_ROW}>
+                <div className={`${MATERIAL_PERCENT_W} shrink-0 space-y-0.5`}>
+                  <span
+                    className="block text-[10px] leading-tight text-slate-200 truncate"
+                    title={
+                      row.bandTooltip ? `${row.label} (${row.bandTooltip})` : row.label
+                    }
+                  >
+                    {row.label}
+                  </span>
+                  {row.rangeHint ? (
+                    <span
+                      className="block text-[9px] leading-tight text-slate-500 tabular-nums"
+                      title="Typical composition range for this material"
+                    >
+                      {row.rangeHint}
+                    </span>
+                  ) : null}
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={0.1}
+                      inputMode="decimal"
+                      value={
+                        row.isInert
+                          ? row.percent.toFixed(1)
+                          : (percentBySlot[row.slotKey] ?? '0')
+                      }
+                      readOnly={row.isInert}
+                      disabled={row.isInert}
+                      onChange={
+                        row.isInert
+                          ? undefined
+                          : (e) =>
+                              setPercentBySlot((prev) => ({
+                                ...prev,
+                                [row.slotKey]: e.target.value,
+                              }))
+                      }
+                      className={`site-input w-full px-1 py-1 pr-3.5 text-[10px] font-mono tabular-nums text-right ${
+                        row.isInert ? 'opacity-60 cursor-not-allowed' : ''
+                      }`}
+                      aria-label={
+                        row.isInert
+                          ? `${row.label} percentage (auto-calculated)`
+                          : `${row.label} percentage`
+                      }
+                      title={
+                        row.isInert
+                          ? 'Auto-calculated as 100% minus other materials'
+                          : undefined
+                      }
+                    />
+                    <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
+                      %
+                    </span>
+                  </div>
+                </div>
+                <div className={`${MATERIAL_QUALITY_W} shrink-0`}>
+                  <MaterialQualitySelect
+                    elementName={row.part.elementName}
+                    value={String(row.quality)}
+                    onChange={(next) =>
+                      setQualityBySlot((prev) => ({ ...prev, [row.slotKey]: next }))
+                    }
+                    isInert={row.isInert}
+                  />
+                </div>
+                <span
+                  className={`${MATERIAL_SCU_W} text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0 pb-1`}
+                  title="cSCU in rock"
+                >
+                  {totalScu != null ? formatMaterialScu(row.scu ?? 0) : '—'}
+                </span>
+                <span
+                  className={`${MATERIAL_DFP_W} text-right text-[10px] font-mono tabular-nums text-emerald-300 shrink-0 pb-1`}
+                  title="Purchased Q0 DFP"
+                >
+                  {totalScu != null ? formatRockDfpValue(row.dfp ?? 0) : '—'}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <p className="text-[10px] text-slate-600">
+          DFP uses Purchased (Q0) catalog prices. Q band applies to ledger export only (Band 2
+          default; matching ore + quality merges cSCU). Inert % is auto-calculated and is not added
+          to the ledger.
+        </p>
+        <div
+          className={`pt-2 border-t border-slate-800 text-xs ${
+            percentOver ? 'text-red-400' : 'text-slate-400'
+          }`}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <span>Total entered</span>
+            <span className="font-mono tabular-nums font-medium">
+              {percentTotal.toFixed(1)}%
+            </span>
+          </div>
+          {!percentOver && derivedInertPercent > 0 ? (
+            <p className="mt-1 text-slate-500">Inert auto: {derivedInertPercent.toFixed(1)}%</p>
+          ) : null}
+          {percentOver ? (
+            <p className="mt-1 text-red-400/90">
+              Material percentages exceed 100% — check your scan values.
+            </p>
+          ) : null}
+        </div>
+      </div>
+    ) : oreName && selectedLocation && !calculatorParts.length ? (
+      <p className="text-xs text-slate-500 py-2">No composition data for this profile.</p>
+    ) : null
+
+  const ledgerSection = isRsiVerified ? (
+    <div>
+      <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
+        Mining ledger
+      </label>
+      <div className="flex gap-1.5">
+        <select
+          value={selectedLedgerId}
+          onChange={(e) => setSelectedLedgerId(e.target.value)}
+          className="site-input flex-1 min-w-0 px-1.5 py-1.5 text-xs truncate"
+          aria-label="Select mining ledger"
+        >
+          <option value="">No Ledger Selected</option>
+          {ledgers.map((ledger) => (
+            <option key={ledger.id} value={ledger.id}>
+              {ledger.name}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={() => void handleAddToLedger()}
+          disabled={!canAddToLedger}
+          className="shrink-0 px-2 py-1.5 text-[10px] font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          {ledgerSaving ? 'Adding…' : 'Add to Ledger'}
+        </button>
+      </div>
+      {ledgerToast ? (
+        <p
+          className={`mt-1 text-[10px] ${
+            /^(Added|Merged)/.test(ledgerToast) ? 'text-emerald-400' : 'text-red-400'
+          }`}
+        >
+          {ledgerToast}
+        </p>
+      ) : null}
+    </div>
+  ) : null
+
+  if (variant === 'strip') {
+    return (
+      <div className="w-full">
+        <div className="px-3 py-2.5">
+          <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
+            <div className="shrink-0 min-w-[5.5rem]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                Rock Calculator
+              </p>
+              {oreName ? (
+                <p className="text-xs font-semibold text-white truncate max-w-[10rem]" title={oreName}>
+                  {oreName}
+                </p>
+              ) : (
+                <p className="text-[10px] text-slate-600">Click a tracked card</p>
+              )}
+            </div>
+
+            <div className="flex-1 min-w-[10rem] max-w-xs">
+              <label className="block text-[9px] uppercase tracking-wide text-slate-600 mb-0.5">
+                Ore
+              </label>
+              <div className="flex gap-1 overflow-visible">
+                <div className="relative flex-1 min-w-0 overflow-visible">
+                  <input
+                    ref={searchRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value)
+                      const exact = RS_ORE_NAMES.find(
+                        (name) => name.toLowerCase() === e.target.value.trim().toLowerCase()
+                      )
+                      if (exact) handleSelectOre(exact)
+                    }}
+                    onFocus={(e) => {
+                      setSearchFocused(true)
+                      if (e.isTrusted && searchOptions.length > 0) setSearchOpen(true)
+                    }}
+                    onBlur={() => {
+                      setSearchFocused(false)
+                      window.setTimeout(() => {
+                        setSearchOpen(false)
+                        if (oreName) setSearchQuery(oreName)
+                      }, 150)
+                    }}
+                    placeholder="Search ore..."
+                    className="site-input w-full px-2 py-1.5 text-xs"
+                    spellCheck={false}
+                    autoComplete="off"
+                  />
+                  {searchOpen && searchOptions.length > 0 && (
+                    <ul className="absolute z-50 left-0 right-0 mt-1 rounded-lg border border-slate-600 bg-slate-900 shadow-xl max-h-48 overflow-y-auto overscroll-contain">
+                      {searchOptions.map((name) => (
+                        <li key={name}>
+                          <button
+                            type="button"
+                            className="w-full px-2 py-1.5 text-left text-sm hover:bg-slate-800 text-slate-200"
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => handleSelectOre(name)}
+                          >
+                            {name}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <select
+                  value={selectedLocation ?? ''}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  disabled={!oreName || locationOptions.length === 0}
+                  className="site-input w-[5.5rem] shrink-0 px-1 py-1.5 text-[10px] truncate disabled:opacity-40"
+                  title="Spawn location"
+                  aria-label="Spawn location"
+                >
+                  {locationOptions.length === 0 ? (
+                    <option value="">—</option>
+                  ) : (
+                    locationOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+            </div>
+
+            {showDepositToggle ? (
+              <div className="shrink-0">
+                <label className="block text-[9px] uppercase tracking-wide text-slate-600 mb-0.5">
+                  Deposit
+                </label>
+                <div className="flex gap-0.5 p-0.5 bg-slate-800/60 rounded-md">
+                  {availableDepositTypes.map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => handleDepositTypeChange(type)}
+                      className={`px-2 py-1 text-[10px] font-medium rounded transition-colors ${
+                        depositType === type
+                          ? 'bg-orange-600/90 text-white'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                      }`}
+                    >
+                      {depositTypeLabel(type)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {oreName ? (
+              <>
+                <div className="w-[6.5rem] shrink-0">
+                  <label className="block text-[9px] uppercase tracking-wide text-slate-600 mb-0.5">
+                    Mass
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={1}
+                    inputMode="numeric"
+                    value={scannerMassInput}
+                    onChange={(e) => setScannerMassInput(e.target.value)}
+                    placeholder="124756"
+                    className="site-input w-full px-2 py-1.5 text-xs font-mono tabular-nums"
+                    aria-label="Rock mass from scanner"
+                  />
+                </div>
+                <div className="w-[5.5rem] shrink-0">
+                  <label className="block text-[9px] uppercase tracking-wide text-slate-600 mb-0.5">
+                    Instab.
+                  </label>
+                  <input
+                    type="number"
+                    step={0.01}
+                    inputMode="decimal"
+                    value={instabilityInput}
+                    onChange={(e) => setInstabilityInput(e.target.value)}
+                    placeholder="952"
+                    className="site-input w-full px-2 py-1.5 text-xs font-mono tabular-nums"
+                    aria-label="Rock instability from scanner"
+                  />
+                </div>
+                <div className="w-[4.5rem] shrink-0">
+                  <label className="block text-[9px] uppercase tracking-wide text-slate-600 mb-0.5">
+                    Res %
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={1}
+                      inputMode="numeric"
+                      value={resistanceInput}
+                      onChange={(e) => setResistanceInput(e.target.value)}
+                      placeholder="50"
+                      className="site-input w-full px-2 py-1.5 pr-4 text-xs font-mono tabular-nums"
+                      aria-label="Rock resistance percent from scanner"
+                    />
+                    <span className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
+                      %
+                    </span>
+                  </div>
+                </div>
+                {requiredPowerLabel ? (
+                  <div className="shrink-0 pb-0.5">
+                    <p className="text-[9px] uppercase tracking-wide text-slate-600 mb-0.5">
+                      Required
+                    </p>
+                    <p className="text-xs text-cyan-300/90 font-mono tabular-nums font-semibold whitespace-nowrap">
+                      {requiredPowerLabel}
+                    </p>
+                  </div>
+                ) : null}
+              </>
+            ) : null}
+
+            <button
+              type="button"
+              onClick={() => onDetailsExpandedChange?.(!detailsExpanded)}
+              className="shrink-0 px-2 py-1.5 text-[10px] rounded-md border border-slate-600 text-slate-400 hover:text-white hover:bg-slate-800/80 transition-colors"
+            >
+              {detailsExpanded ? 'Hide details' : 'Composition & ledger'}
+            </button>
+          </div>
+        </div>
+
+        {detailsExpanded ? (
+          <div className="px-3 pb-3 pt-0 border-t border-slate-800/80 space-y-3">
+            <div className="max-w-xs pt-3">
+              <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
+                Total rock SCU
+              </label>
+              <input
+                type="number"
+                min={0}
+                step={0.001}
+                inputMode="decimal"
+                value={totalScuInput}
+                onChange={(e) => setTotalScuInput(e.target.value)}
+                placeholder="0.000"
+                className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
+              />
+            </div>
+            {ledgerSection}
+            {compositionSection}
+          </div>
+        ) : null}
+      </div>
+    )
+  }
 
   return (
     <aside className="w-full shrink-0">

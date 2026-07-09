@@ -39,8 +39,7 @@ import SiteTooltip from '../components/SiteTooltip'
 import MiningLedgerTab from '../components/mining/MiningLedgerTab'
 import { fetchMiningLedgerSiteStats, type MiningLedgerSiteStats } from '../lib/miningLedgerOps'
 import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
-import RockCalculator from '../components/mining/RockCalculator'
-import MiningLoadoutPanel from '../components/mining/MiningLoadoutPanel'
+import MiningWorkspace from '../components/mining/MiningWorkspace'
 import type { RockBreakabilityTarget } from '../lib/miningLoadoutCompare'
 import {
   guideLocationChipTooltip,
@@ -276,6 +275,13 @@ export default function MiningTrackerRoute() {
         </div>
       }
     >
+      <MiningWorkspace
+        loadEntry={calculatorLoadEntry}
+        loadToken={calculatorLoadToken}
+        rockTarget={rockTarget}
+        onRockTargetChange={setRockTarget}
+      />
+
       {/* View Mode Switcher */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
         <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
@@ -336,8 +342,7 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="flex gap-6 items-start min-w-[760px]">
-          <div className="flex-1 min-w-0 space-y-6">
+        <div className="space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
               <input
@@ -529,16 +534,6 @@ export default function MiningTrackerRoute() {
               </div>
             )}
           </section>
-          </div>
-
-          <div className="sticky top-14 self-start w-[320px] shrink-0 space-y-4">
-            <MiningLoadoutPanel rockTarget={rockTarget} />
-            <RockCalculator
-              loadEntry={calculatorLoadEntry}
-              loadToken={calculatorLoadToken}
-              onRockTargetChange={setRockTarget}
-            />
-          </div>
         </div>
       )}
 

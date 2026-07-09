@@ -23,7 +23,7 @@ export const MINING_VESSELS: MiningVessel[] = [
     displayName: 'Prospector',
     laserSlotCount: 1,
     laserSize: 1,
-    defaultLaserName: 'Mining_Laser_THCN_Helix_S1',
+    defaultLaserName: 'Mining_Laser_GRIN_Arbor_S1',
   },
   {
     id: 'mole',
@@ -45,7 +45,7 @@ export const MINING_VESSELS: MiningVessel[] = [
     displayName: 'ROC',
     laserSlotCount: 1,
     laserSize: 0,
-    defaultLaserName: 'Mining_Laser_SHIN_Klein_S0',
+    defaultLaserName: 'Mining_Laser_GRIN_Arbor_S0',
     isGroundVehicle: true,
   },
   {
@@ -53,7 +53,7 @@ export const MINING_VESSELS: MiningVessel[] = [
     displayName: 'ROC-DS',
     laserSlotCount: 1,
     laserSize: 0,
-    defaultLaserName: 'Mining_Laser_SHIN_Klein_S0',
+    defaultLaserName: 'Mining_Laser_SHIN_Hofstede_S0',
     isGroundVehicle: true,
   },
 ]

@@ -1,5 +1,9 @@
 import { requiredLaserPower } from './miningBreakability'
 import {
+  assessMinPowerWarningForSlot,
+  type MinPowerWarning,
+} from './miningMinPowerWarning'
+import {
   computeEffectiveLaserStats,
   laserResistanceMultiplier,
   type MiningLaserSlotConfig,
@@ -33,6 +37,8 @@ export interface LoadoutBreakabilityComparison {
   /** Best (lowest) laser resistance multiplier in the loadout — helps most on tough rocks */
   bestResistanceMultiplier: number
   lasers: LaserBreakabilityRow[]
+  /** Required MW is below head minimum output — overcharge risk */
+  minPowerWarnings: MinPowerWarning[]
 }
 
 export function isRockBreakabilityTargetReady(target: RockBreakabilityTarget | null | undefined): boolean {
@@ -111,6 +117,21 @@ export function compareLoadoutToRock(
     }
   })
 
+  const minPowerWarnings: MinPowerWarning[] = []
+  for (const row of laserRows) {
+    const slot = lasers[row.slotIndex]
+    if (!slot) continue
+    const requiredMw = slotCount === 1 ? requiredPower : row.requiredShare
+    const warning = assessMinPowerWarningForSlot(
+      slot.laserName,
+      requiredMw,
+      row.laserPower,
+      row.label,
+      row.slotIndex
+    )
+    if (warning) minPowerWarnings.push(warning)
+  }
+
   return {
     requiredPower,
     totalLaserPower,
@@ -118,5 +139,6 @@ export function compareLoadoutToRock(
     totalShortfallMw,
     bestResistanceMultiplier,
     lasers: laserRows,
+    minPowerWarnings,
   }
 }
