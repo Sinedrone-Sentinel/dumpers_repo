@@ -1,7 +1,7 @@
 import React, { useId } from 'react'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 
-export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl'
+export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 export type AppModalZIndex = 60 | 70 | 80
 
 const sizeClasses: Record<AppModalSize, string> = {
@@ -9,6 +9,7 @@ const sizeClasses: Record<AppModalSize, string> = {
   md: 'max-w-lg',
   lg: 'max-w-xl',
   xl: 'max-w-5xl',
+  '2xl': 'max-w-4xl',
 }
 
 const modalShellClass = 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden'

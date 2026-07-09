@@ -303,7 +303,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     <AppModal
       title="Scanner OCR"
       subtitle="Paste your fracture HUD screenshot, crop SCAN RESULTS, then Process"
-      size="lg"
+      size="2xl"
       onClose={handleClose}
       footer={
         <div className="flex items-center justify-between gap-2">
@@ -362,12 +362,9 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
         {isSuperAdmin && loaded && !showPreview ? (
           <div className="rounded-lg border border-violet-900/40 bg-violet-950/20 px-3 py-2 space-y-1.5">
-            <div className="flex items-center justify-between gap-2">
-              <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-violet-300/90">
-                Deskew (super-admin)
-              </label>
-              <span className="text-[10px] text-slate-400 tabular-nums">{deskewDegrees.toFixed(1)}°</span>
-            </div>
+            <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-violet-300/90">
+              Tilt crop box (super-admin)
+            </label>
             <input
               id="ocr-deskew"
               type="range"
@@ -379,14 +376,15 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
               className="w-full accent-violet-400"
             />
             <p className="text-[10px] text-slate-500 leading-snug">
-              Rotate the cropped scan before OCR if Q values are clipped or skewed.
+              Drag the slider — the orange crop box tilts in real time. Use if Q values are clipped or
+              the scan panel looks skewed.
             </p>
           </div>
         ) : null}
 
         <div
           ref={containerRef}
-          className="relative w-full h-[min(52dvh,28rem)] rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
+          className="relative w-full h-[min(62dvh,38rem)] rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
         >
           {loaded ? (
             <>
@@ -397,15 +395,32 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                 draggable={false}
               />
               {displayRect.width > 0 && !showPreview ? (
-                <>
+                <div
+                  className="absolute"
+                  style={{
+                    left: cropPx.x + cropPx.width / 2,
+                    top: cropPx.y + cropPx.height / 2,
+                    width: cropPx.width,
+                    height: cropPx.height,
+                    transform: `translate(-50%, -50%) rotate(${deskewDegrees}deg)`,
+                  }}
+                >
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <img
+                      src={loaded.objectUrl}
+                      alt=""
+                      draggable={false}
+                      className="absolute select-none max-w-none"
+                      style={{
+                        width: displayRect.width,
+                        height: displayRect.height,
+                        left: displayRect.left - cropPx.x,
+                        top: displayRect.top - cropPx.y,
+                      }}
+                    />
+                  </div>
                   <div
-                    className="absolute border-2 border-orange-400/90 bg-orange-500/10 cursor-move"
-                    style={{
-                      left: cropPx.x,
-                      top: cropPx.y,
-                      width: cropPx.width,
-                      height: cropPx.height,
-                    }}
+                    className="absolute inset-0 border-2 border-orange-400/90 bg-orange-500/10 cursor-move"
                     onMouseDown={(e) => {
                       e.preventDefault()
                       startDrag('move', e.clientX, e.clientY)
@@ -414,8 +429,8 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                   <div
                     className="absolute w-3 h-3 rounded-sm bg-orange-400 border border-white cursor-se-resize"
                     style={{
-                      left: cropPx.x + cropPx.width - 6,
-                      top: cropPx.y + cropPx.height - 6,
+                      right: -6,
+                      bottom: -6,
                     }}
                     onMouseDown={(e) => {
                       e.preventDefault()
@@ -423,7 +438,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                       startDrag('resize-se', e.clientX, e.clientY)
                     }}
                   />
-                </>
+                </div>
               ) : null}
             </>
           ) : (
