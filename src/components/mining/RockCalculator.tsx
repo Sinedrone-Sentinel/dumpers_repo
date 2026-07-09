@@ -204,6 +204,8 @@ export default function RockCalculator({
       return
     }
 
+    if (ocrOverrideActive || pendingOcrApply) return
+
     const match = resolveRockCalculatorLocationFromEntry(
       loadEntryRef.current,
       oreName,
@@ -212,7 +214,7 @@ export default function RockCalculator({
     )
 
     setSelectedLocation(match?.value ?? locationOptions[0].value)
-  }, [oreName, depositType, loadToken, locationOptions])
+  }, [oreName, depositType, loadToken, locationOptions, ocrOverrideActive, pendingOcrApply])
 
   const composition = useMemo(() => {
     if (!oreName || !selectedLocation) return null
@@ -239,10 +241,10 @@ export default function RockCalculator({
 
   useEffect(() => {
     if (!calculatorParts.length) return
-    if (pendingOcrApply) return
+    if (pendingOcrApply || ocrOverrideActive) return
     setPercentBySlot(buildDefaultPercentSlots(calculatorParts))
     setQualityBySlot(buildDefaultQualitySlots(calculatorParts))
-  }, [compositionKey, loadToken, calculatorParts, pendingOcrApply])
+  }, [compositionKey, loadToken, calculatorParts, pendingOcrApply, ocrOverrideActive])
 
   useEffect(() => {
     if (!pendingOcrApply || !calculatorParts.length) return
