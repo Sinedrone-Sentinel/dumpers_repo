@@ -182,7 +182,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       const dx = event.clientX - drag.startX
       const dy = event.clientY - drag.startY
       const minSize = 24
-      let next = { ...drag.startCropPx }
+      const next = { ...drag.startCropPx }
 
       if (drag.mode === 'move') {
         next.x = clamp(next.x + dx, displayRect.left, displayRect.left + displayRect.width - next.width)
