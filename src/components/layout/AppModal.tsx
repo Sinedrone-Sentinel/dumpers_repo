@@ -5,11 +5,13 @@ export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl'
 export type AppModalZIndex = 60 | 70 | 80
 
 const sizeClasses: Record<AppModalSize, string> = {
-  sm: 'max-w-md max-h-[min(90dvh,36rem)]',
-  md: 'max-w-lg max-h-[min(90dvh,36rem)]',
-  lg: 'max-w-xl max-h-[90dvh]',
-  xl: 'max-w-5xl max-h-[92dvh]',
+  sm: 'max-w-md',
+  md: 'max-w-lg',
+  lg: 'max-w-xl',
+  xl: 'max-w-5xl',
 }
+
+const modalShellClass = 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden'
 
 const zIndexClasses: Record<AppModalZIndex, string> = {
   60: 'z-[60]',
@@ -49,14 +51,14 @@ export default function AppModal({
 
   return (
     <div
-      className={`fixed inset-0 bg-black/85 ${zIndexClasses[zIndex]} flex items-start justify-center pt-[5vh] sm:pt-[10vh] p-4 overflow-hidden`}
+      className={`fixed inset-0 bg-black/85 ${zIndexClasses[zIndex]} flex items-center justify-center p-4`}
       onClick={closeOnBackdrop ? onClose : undefined}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
     >
       <div
-        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]}`}
+        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]} ${modalShellClass}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">

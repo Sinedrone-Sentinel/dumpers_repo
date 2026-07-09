@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
+import SiteTooltip from '../SiteTooltip'
 import {
   buildDefaultSlotQualities,
   mergeSlotQualities,
@@ -76,6 +77,12 @@ const EMPTY_MODULE_LINES: ModifierStatLine[] = [
   { key: 'shatter', label: 'Shatter damage', value: '0%', affectsCracking: false },
 ]
 
+const SLOT_GRID_COLS: Record<number, string> = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
+}
+
 function statCopy(line: ModifierStatLine) {
   return (
     STAT_COPY[line.key] ?? {
@@ -85,65 +92,102 @@ function statCopy(line: ModifierStatLine) {
   )
 }
 
-function StatValueBlock({ line }: { line: ModifierStatLine }) {
+function StatLabel({ title, hint }: { title: string; hint?: string }) {
+  if (!hint) {
+    return <span className="text-[10px] font-medium text-slate-400 truncate">{title}</span>
+  }
+  return (
+    <SiteTooltip content={hint} side="top">
+      <span className="text-[10px] font-medium text-slate-400 truncate cursor-help border-b border-dotted border-slate-600/80">
+        {title}
+      </span>
+    </SiteTooltip>
+  )
+}
+
+function StatValueRow({ line }: { line: ModifierStatLine }) {
   const copy = statCopy(line)
   const isPowerMw = line.key === 'power' && line.value.includes('MW')
   const isEmpty = line.value === '0%' || line.value === '0'
 
   return (
-    <div className="rounded-lg border border-slate-800/80 bg-slate-950/40 px-2.5 py-2 space-y-1">
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <p className="text-[11px] font-medium text-slate-300">{copy.title}</p>
+    <div className="flex items-center justify-between gap-1 rounded border border-slate-800/80 bg-slate-950/40 px-1.5 py-0.5 min-w-0">
+      <div className="flex items-center gap-0.5 min-w-0">
+        <StatLabel title={copy.title} hint={copy.hint} />
         {line.affectsCracking ? (
-          <span className="text-[9px] uppercase tracking-wide text-orange-400/80 font-semibold">
-            Fracture
+          <span className="text-[8px] uppercase tracking-wide text-orange-400/75 font-semibold shrink-0">
+            F
           </span>
         ) : null}
       </div>
-      <p
-        className={`font-mono tabular-nums leading-none ${
+      <span
+        className={`text-[10px] font-mono tabular-nums shrink-0 leading-none ${
           isPowerMw
-            ? 'text-lg font-semibold text-amber-300'
+            ? 'font-semibold text-amber-300'
             : isEmpty
-              ? 'text-sm text-slate-600'
-              : 'text-sm text-slate-200'
+              ? 'text-slate-600'
+              : 'text-slate-200'
         }`}
       >
         {line.value}
-      </p>
-      {copy.hint ? <p className="text-[10px] text-slate-500 leading-snug">{copy.hint}</p> : null}
+      </span>
+    </div>
+  )
+}
+
+function EffectiveStatTile({ line }: { line: ModifierStatLine }) {
+  const copy = statCopy(line)
+  const isPowerMw = line.key === 'power' && line.value.includes('MW')
+  const isEmpty = line.value === '0%' || line.value === '0'
+
+  return (
+    <div className="rounded border border-slate-800/80 bg-slate-950/40 px-2 py-1.5 flex flex-col items-center justify-center gap-0.5 min-w-0 text-center">
+      <div className="flex items-center gap-1">
+        <StatLabel title={copy.title} hint={copy.hint} />
+        {line.affectsCracking ? (
+          <span className="text-[8px] uppercase tracking-wide text-orange-400/75 font-semibold">
+            F
+          </span>
+        ) : null}
+      </div>
+      <span
+        className={`font-mono tabular-nums leading-none ${
+          isPowerMw
+            ? 'text-sm font-semibold text-amber-300'
+            : isEmpty
+              ? 'text-xs text-slate-600'
+              : 'text-xs text-slate-200'
+        }`}
+      >
+        {line.value}
+      </span>
     </div>
   )
 }
 
 function LoadoutCard({
   title,
-  subtitle,
+  titleHint,
   header,
   children,
   badge,
 }: {
   title: string
-  subtitle?: string
+  titleHint?: string
   header?: React.ReactNode
   children: React.ReactNode
   badge?: React.ReactNode
 }) {
   return (
-    <div className="blueprint-card-fixed rounded-xl border border-slate-700/70 bg-slate-900/55 flex flex-col min-h-[11rem]">
-      <div className="px-3 py-2.5 border-b border-slate-700/60 bg-slate-800/50 rounded-t-xl space-y-2 shrink-0">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p className="text-xs font-semibold text-slate-100">{title}</p>
-            {subtitle ? (
-              <p className="text-[10px] text-slate-500 mt-0.5 leading-snug">{subtitle}</p>
-            ) : null}
-          </div>
+    <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 flex flex-col min-w-0">
+      <div className="px-2 py-1.5 border-b border-slate-700/60 bg-slate-800/50 rounded-t-lg space-y-1 shrink-0">
+        <div className="flex items-center justify-between gap-1">
+          <StatLabel title={title} hint={titleHint} />
           {badge}
         </div>
         {header}
       </div>
-      <div className="p-3 flex-1 space-y-2">{children}</div>
+      <div className="p-1.5 flex-1 flex flex-col gap-0.5 min-w-0">{children}</div>
     </div>
   )
 }
@@ -152,42 +196,38 @@ function StockStatsBody({ lines }: { lines: ModifierStatLine[] }) {
   return (
     <>
       {lines.map((line) => (
-        <StatValueBlock key={`stock-${line.key}`} line={line} />
+        <StatValueRow key={`stock-${line.key}`} line={line} />
       ))}
     </>
   )
 }
 
 function ModuleStatsBody({ mod, empty }: { mod?: EquippedModuleStats; empty?: boolean }) {
-  if (empty || !mod) {
-    return (
-      <>
-        <p className="text-[11px] text-slate-500 leading-snug">
-          Empty slot — no module bonuses applied to this head.
-        </p>
-        {EMPTY_MODULE_LINES.map((line) => (
-          <StatValueBlock key={`empty-${line.key}`} line={line} />
-        ))}
-      </>
-    )
-  }
-
+  const lines = empty || !mod ? EMPTY_MODULE_LINES : mod.lines
   return (
     <>
-      {mod.lines.map((line) => (
-        <StatValueBlock key={`${mod.name}-${line.key}`} line={line} />
+      {lines.map((line) => (
+        <StatValueRow key={`mod-${line.key}-${line.value}`} line={line} />
       ))}
     </>
   )
 }
 
-function EffectiveStatsBody({ breakdown }: { breakdown: LaserLoadoutBreakdown }) {
+function EffectiveTotalsCard({ breakdown }: { breakdown: LaserLoadoutBreakdown }) {
   return (
-    <>
-      {breakdown.effective.map((line) => (
-        <StatValueBlock key={`eff-${line.key}`} line={line} />
-      ))}
-    </>
+    <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 col-span-full">
+      <div className="px-2 py-1.5 border-b border-slate-700/60 bg-slate-800/50 rounded-t-lg">
+        <StatLabel
+          title="Effective totals"
+          hint="Combined head + craft + modules — used for breakability vs your rock."
+        />
+      </div>
+      <div className="p-2 grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+        {breakdown.effective.map((line) => (
+          <EffectiveStatTile key={`eff-${line.key}`} line={line} />
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -268,13 +308,13 @@ function HeadSlotCards({
 
   const headTitle = showHeadLabel ? `Head ${slotIndex + 1}` : 'Mining head'
   const powerBadge = effective ? (
-    <span className="text-xs font-mono tabular-nums text-amber-300/90 shrink-0">
-      {formatLaserPowerMw(effective.laserPower)} MW
+    <span className="text-[10px] font-mono tabular-nums text-amber-300/90 shrink-0">
+      {formatLaserPowerMw(effective.laserPower)}
     </span>
   ) : null
 
   const headHeader = (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {editable && !isBespoke && laserOptions.length > 1 ? (
         <select
           value={slot.laserName}
@@ -285,7 +325,7 @@ function HeadSlotCards({
               modules: undefined,
             })
           }
-          className="site-input w-full px-2 py-1.5 text-xs"
+          className="site-input w-full px-1.5 py-1 text-[11px]"
         >
           {laserOptions.map((opt) => (
             <option key={opt.name} value={opt.name}>
@@ -294,11 +334,13 @@ function HeadSlotCards({
           ))}
         </select>
       ) : (
-        <p className="text-sm text-white leading-snug">{describeLaserHead(slot, laser)}</p>
+        <p className="text-[11px] text-white leading-snug truncate" title={describeLaserHead(slot, laser)}>
+          {describeLaserHead(slot, laser)}
+        </p>
       )}
 
       {editable && hasBp && !isBespoke ? (
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex items-center gap-1.5 cursor-pointer">
           <input
             type="checkbox"
             checked={slot.mode === 'custom'}
@@ -309,7 +351,7 @@ function HeadSlotCards({
             }
             className="rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
           />
-          <span className="text-xs text-slate-300">My crafted mining head</span>
+          <span className="text-[10px] text-slate-300">Crafted head</span>
         </label>
       ) : null}
 
@@ -318,8 +360,8 @@ function HeadSlotCards({
           type="text"
           value={slot.customLabel ?? ''}
           onChange={(e) => onChange({ ...slot, customLabel: e.target.value })}
-          placeholder="Optional label (e.g. Q847 Helix)"
-          className="site-input w-full px-2 py-1 text-xs"
+          placeholder="Label (optional)"
+          className="site-input w-full px-1.5 py-0.5 text-[10px]"
         />
       ) : null}
 
@@ -328,8 +370,8 @@ function HeadSlotCards({
           type="text"
           value={slot.customLabel ?? ''}
           onChange={(e) => onChange({ ...slot, mode: 'custom', customLabel: e.target.value })}
-          placeholder="Optional label (e.g. Q720 Pitman)"
-          className="site-input w-full px-2 py-1 text-xs"
+          placeholder="Label (optional)"
+          className="site-input w-full px-1.5 py-0.5 text-[10px]"
         />
       ) : null}
     </div>
@@ -337,7 +379,7 @@ function HeadSlotCards({
 
   const craftBody =
     showCraftedHead && blueprint?.slots?.length ? (
-      <div className="space-y-2 pb-1 border-b border-slate-800/80">
+      <div className="space-y-1 pb-1 border-b border-slate-800/80">
         {blueprint.slots.map((bpSlot, bpIdx) => {
           const quality = resolvedQualities[bpIdx]
           const modifiers = bpSlot.options?.[0]?.modifiers
@@ -355,105 +397,96 @@ function HeadSlotCards({
           )
         })}
         {effective && effective.powerMultiplier !== 1 ? (
-          <p className="text-[11px] text-slate-500">
-            Craft roll: {effective.powerMultiplier >= 1 ? '+' : ''}
-            {Math.round((effective.powerMultiplier - 1) * 100)}% power vs stock
+          <p className="text-[9px] text-slate-500">
+            Craft: {effective.powerMultiplier >= 1 ? '+' : ''}
+            {Math.round((effective.powerMultiplier - 1) * 100)}%
           </p>
         ) : null}
       </div>
     ) : null
 
-  const cards: React.ReactNode[] = []
+  const rowSlotCount = moduleSlots > 0 ? 1 + moduleSlots : 2
+  const gridColsClass = SLOT_GRID_COLS[rowSlotCount] ?? 'grid-cols-4'
 
-  cards.push(
-    <LoadoutCard
-      key="head"
-      title={headTitle}
-      subtitle="Stock head stats before modules and craft bonuses."
-      header={headHeader}
-      badge={powerBadge}
-    >
-      {craftBody}
-      {breakdown ? (
-        <StockStatsBody lines={breakdown.stock} />
-      ) : (
-        <p className="text-[11px] text-slate-500">Head data unavailable.</p>
-      )}
-    </LoadoutCard>
-  )
-
-  if (moduleSlots > 0) {
-    for (let modIdx = 0; modIdx < moduleSlots; modIdx++) {
-      const selected = resolvedModules[modIdx]
-      const equipped = equippedBySlot.get(modIdx)
-      const modMeta = selected ? getMiningModuleByName(selected) : null
-
-      cards.push(
+  return (
+    <div className="space-y-2 min-w-0">
+      <div className={`grid ${gridColsClass} gap-1.5 min-w-0`}>
         <LoadoutCard
-          key={`mod-${modIdx}`}
-          title={`Module slot ${modIdx + 1}`}
-          subtitle={
-            modMeta
-              ? modMeta.kind === 'active'
-                ? 'Active module — bonuses while the laser runs.'
-                : 'Passive module — always on for this head.'
-              : 'No module equipped in this slot.'
-          }
-          header={
-            editable ? (
-              <select
-                value={selected ?? ''}
-                onChange={(e) => handleModuleChange(modIdx, e.target.value)}
-                className="site-input w-full px-2 py-1.5 text-xs"
-              >
-                <option value="">— Empty —</option>
-                {moduleOptions.map((mod) => (
-                  <option key={mod.name} value={mod.name}>
-                    {mod.displayName}
-                    {mod.kind === 'active' ? ' (active)' : ''}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <p className="text-sm text-slate-300">
-                {modMeta?.displayName ?? '— Empty —'}
-              </p>
-            )
-          }
+          title={headTitle}
+          titleHint="Stock head stats before modules and craft bonuses."
+          header={headHeader}
+          badge={powerBadge}
         >
-          <ModuleStatsBody mod={equipped} empty={!selected} />
+          {craftBody}
+          {breakdown ? (
+            <StockStatsBody lines={breakdown.stock} />
+          ) : (
+            <p className="text-[10px] text-slate-500">Unavailable</p>
+          )}
         </LoadoutCard>
-      )
-    }
-  } else {
-    cards.push(
-      <LoadoutCard
-        key="no-modules"
-        title="Module slots"
-        subtitle="This mining head cannot equip modules."
-      >
-        <p className="text-[11px] text-slate-500 leading-snug">
-          No module hardpoints on this head — only stock and craft stats apply.
-        </p>
-      </LoadoutCard>
-    )
-  }
 
-  cards.push(
-    <LoadoutCard
-      key="effective"
-      title="Effective totals"
-      subtitle="Combined head + craft + modules — used for breakability vs your rock."
-    >
+        {moduleSlots > 0 ? (
+          Array.from({ length: moduleSlots }, (_, modIdx) => {
+            const selected = resolvedModules[modIdx]
+            const equipped = equippedBySlot.get(modIdx)
+            const modMeta = selected ? getMiningModuleByName(selected) : null
+
+            return (
+              <LoadoutCard
+                key={`mod-${modIdx}`}
+                title={`Mod ${modIdx + 1}`}
+                titleHint={
+                  modMeta
+                    ? modMeta.kind === 'active'
+                      ? 'Active module — bonuses while the laser runs.'
+                      : 'Passive module — always on for this head.'
+                    : 'No module equipped in this slot.'
+                }
+                header={
+                  editable ? (
+                    <select
+                      value={selected ?? ''}
+                      onChange={(e) => handleModuleChange(modIdx, e.target.value)}
+                      className="site-input w-full px-1.5 py-1 text-[11px]"
+                    >
+                      <option value="">— Empty —</option>
+                      {moduleOptions.map((mod) => (
+                        <option key={mod.name} value={mod.name}>
+                          {mod.displayName}
+                          {mod.kind === 'active' ? ' (A)' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="text-[11px] text-slate-300 truncate">
+                      {modMeta?.displayName ?? '— Empty —'}
+                    </p>
+                  )
+                }
+              >
+                <ModuleStatsBody mod={equipped} empty={!selected} />
+              </LoadoutCard>
+            )
+          })
+        ) : (
+          <LoadoutCard
+            title="Modules"
+            titleHint="This mining head cannot equip modules."
+          >
+            <p className="text-[10px] text-slate-500">No hardpoints</p>
+          </LoadoutCard>
+        )}
+      </div>
+
       {breakdown ? (
-        <EffectiveStatsBody breakdown={breakdown} />
+        <EffectiveTotalsCard breakdown={breakdown} />
       ) : (
-        <p className="text-[11px] text-slate-500">Totals unavailable.</p>
+        <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 px-2 py-1.5">
+          <p className="text-[10px] text-slate-500">Effective totals unavailable</p>
+        </div>
       )}
-    </LoadoutCard>
+    </div>
   )
-
-  return <>{cards}</>
 }
 
 export interface LoadoutHeadCardsGridProps {
@@ -474,37 +507,34 @@ export default function LoadoutHeadCardsGrid({
   const isMole = vesselId === 'mole' && slots.length > 1
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-2">
       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
         Head breakdown
       </p>
 
       {isMole ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-start">
+        <div className="space-y-3">
           {slots.map((slot, index) => (
-            <div key={`head-col-${index}`} className="space-y-3 min-w-0">
-              <HeadSlotCards
-                slotIndex={index}
-                slot={slot}
-                vesselId={vesselId}
-                editable={editable}
-                onChange={(next) => onSlotChange(index, next)}
-                showHeadLabel
-              />
-            </div>
+            <HeadSlotCards
+              key={`head-col-${index}`}
+              slotIndex={index}
+              slot={slot}
+              vesselId={vesselId}
+              editable={editable}
+              onChange={(next) => onSlotChange(index, next)}
+              showHeadLabel
+            />
           ))}
         </div>
       ) : (
-        <div className="blueprint-card-grid items-stretch">
-          <HeadSlotCards
-            slotIndex={0}
-            slot={slots[0]}
-            vesselId={vesselId}
-            editable={editable}
-            onChange={(next) => onSlotChange(0, next)}
-            showHeadLabel={slots.length > 1}
-          />
-        </div>
+        <HeadSlotCards
+          slotIndex={0}
+          slot={slots[0]}
+          vesselId={vesselId}
+          editable={editable}
+          onChange={(next) => onSlotChange(0, next)}
+          showHeadLabel={slots.length > 1}
+        />
       )}
     </section>
   )
