@@ -1,6 +1,7 @@
 import { resolveOcrOreName } from './miningOreCanonical'
 import { stripMineableLabel } from './miningOreLabel'
-import { isInertElement } from './rockCalculator'
+import { isInertElement, oreResourceKeyFromElementName } from './rockCalculator'
+import { getDefaultBandQuality, resolveLedgerQuality } from './qualityBands'
 
 export interface OcrCompositionLine {
   elementName: string
@@ -8,6 +9,7 @@ export interface OcrCompositionLine {
   quality: number | null
   qualityMissing: boolean
   scanBandRank: number
+  rawOcrLine: string
 }
 
 export interface RockScanOcrResult {
@@ -35,6 +37,38 @@ const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+)/i
 
 function hasTrailingQuality(line: string): boolean {
   return /\s+Q?\d{1,4}\s*$/i.test(line.trim())
+}
+
+function readOrphanQualityLine(line: string | undefined): number | null {
+  if (!line) return null
+  const match = line.trim().match(/^Q?(\d{1,4})$/i)
+  if (!match) return null
+  const quality = Number.parseInt(match[1], 10)
+  return Number.isFinite(quality) ? quality : null
+}
+
+function defaultLedgerQualityForElement(elementName: string): number {
+  return resolveLedgerQuality(
+    oreResourceKeyFromElementName(elementName),
+    elementName,
+    getDefaultBandQuality(elementName)
+  )
+}
+
+function buildQualityMissingWarning(elementName: string, rawLine: string): string {
+  const defaultQ = defaultLedgerQualityForElement(elementName)
+  const trimmed = rawLine.trim()
+  const longNameLikely =
+    elementName.length >= 12 ||
+    (trimmed.length >= 28 && !hasTrailingQuality(trimmed))
+  if (longNameLikely) {
+    return `${elementName} — Q may be hidden on the HUD; left at default Q${defaultQ}. Set manually if needed.`
+  }
+  return `${elementName} — Q not read from scan; left at default Q${defaultQ}. Set manually if needed.`
+}
+
+export function scanHasMissingQuality(scan: RockScanOcrResult): boolean {
+  return scan.compositionLines.some((line) => line.qualityMissing)
 }
 
 function normalizeElementName(raw: string, warnings: string[]): string {
@@ -110,6 +144,7 @@ function pushOreLine(
   percent: number,
   quality: number | null,
   qualityMissing: boolean,
+  rawOcrLine: string,
   elementRank: Map<string, number>,
   compositionLines: OcrCompositionLine[],
   warnings: string[]
@@ -117,9 +152,7 @@ function pushOreLine(
   if (isInertElement(elementName)) return
 
   if (qualityMissing) {
-    warnings.push(
-      `${elementName} quality was hidden on the scan (name too long) — set the Q band manually in the calculator.`
-    )
+    warnings.push(buildQualityMissingWarning(elementName, rawOcrLine))
   }
 
   const rank = elementRank.get(elementName) ?? 0
@@ -130,6 +163,7 @@ function pushOreLine(
     quality,
     qualityMissing,
     scanBandRank: rank,
+    rawOcrLine,
   })
 }
 
@@ -137,7 +171,10 @@ function parseCompositionLine(
   line: string,
   elementRank: Map<string, number>,
   compositionLines: OcrCompositionLine[],
-  warnings: string[]
+  warnings: string[],
+  allLines: string[],
+  lineIndex: number,
+  consumedLineIndices: Set<number>
 ): { kind: 'inert'; percent: number } | null {
   const inertMatch = line.match(INERT_LINE_RE)
   if (inertMatch) {
@@ -152,7 +189,7 @@ function parseCompositionLine(
     if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-    pushOreLine(elementName, percent, quality, false, elementRank, compositionLines, warnings)
+    pushOreLine(elementName, percent, quality, false, line, elementRank, compositionLines, warnings)
     return null
   }
 
@@ -164,7 +201,24 @@ function parseCompositionLine(
       if (!Number.isFinite(percent) || !elementName) return null
       if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-      pushOreLine(elementName, percent, null, true, elementRank, compositionLines, warnings)
+      const nextIndex = lineIndex + 1
+      const orphanQuality = readOrphanQualityLine(allLines[nextIndex])
+      if (orphanQuality != null) {
+        consumedLineIndices.add(nextIndex)
+        pushOreLine(
+          elementName,
+          percent,
+          orphanQuality,
+          false,
+          `${line.trim()} / ${allLines[nextIndex].trim()}`,
+          elementRank,
+          compositionLines,
+          warnings
+        )
+        return null
+      }
+
+      pushOreLine(elementName, percent, null, true, line, elementRank, compositionLines, warnings)
       return null
     }
   }
@@ -178,7 +232,7 @@ function parseCompositionLine(
   if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
   if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-  pushOreLine(elementName, percent, quality, false, elementRank, compositionLines, warnings)
+  pushOreLine(elementName, percent, quality, false, line, elementRank, compositionLines, warnings)
   return null
 }
 
@@ -192,12 +246,22 @@ function parseCompositionLines(
   const compositionLines: OcrCompositionLine[] = []
   let inertPercent: number | null = null
   const elementRank = new Map<string, number>()
+  const consumedLineIndices = new Set<number>()
 
-  for (const rawLine of lines) {
-    const line = rawLine.trim()
+  for (let i = 0; i < lines.length; i++) {
+    if (consumedLineIndices.has(i)) continue
+    const line = lines[i].trim()
     if (!line || !/%/.test(line)) continue
 
-    const parsed = parseCompositionLine(line, elementRank, compositionLines, warnings)
+    const parsed = parseCompositionLine(
+      line,
+      elementRank,
+      compositionLines,
+      warnings,
+      lines,
+      i,
+      consumedLineIndices
+    )
     if (parsed?.kind === 'inert') {
       inertPercent = parsed.percent
     }

@@ -56,6 +56,31 @@ function preprocessCrop(source: CanvasImageSource, width: number, height: number
   return canvas
 }
 
+function rotateCanvas(source: HTMLCanvasElement, degrees: number): HTMLCanvasElement {
+  if (!degrees) return source
+
+  const rad = (degrees * Math.PI) / 180
+  const sin = Math.abs(Math.sin(rad))
+  const cos = Math.abs(Math.cos(rad))
+  const width = source.width
+  const height = source.height
+  const rotatedWidth = Math.max(1, Math.ceil(width * cos + height * sin))
+  const rotatedHeight = Math.max(1, Math.ceil(width * sin + height * cos))
+
+  const canvas = document.createElement('canvas')
+  canvas.width = rotatedWidth
+  canvas.height = rotatedHeight
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return source
+
+  ctx.fillStyle = '#000'
+  ctx.fillRect(0, 0, rotatedWidth, rotatedHeight)
+  ctx.translate(rotatedWidth / 2, rotatedHeight / 2)
+  ctx.rotate(rad)
+  ctx.drawImage(source, -width / 2, -height / 2)
+  return canvas
+}
+
 function cropImageToCanvas(
   image: CanvasImageSource,
   sourceWidth: number,
@@ -126,14 +151,16 @@ export async function processRockScanCrop(
   image: CanvasImageSource,
   sourceWidth: number,
   sourceHeight: number,
-  crop: NormalizedCropRect
+  crop: NormalizedCropRect,
+  deskewDegrees = 0
 ): Promise<RockScanOcrParseResult> {
   const rawCrop = cropImageToCanvas(image, sourceWidth, sourceHeight, crop)
   if (!rawCrop) {
     return { ok: false, error: 'Crop area is too small — drag a larger box around SCAN RESULTS.' }
   }
 
-  const preprocessed = preprocessCrop(rawCrop, rawCrop.width, rawCrop.height)
+  const deskewed = rotateCanvas(rawCrop, deskewDegrees)
+  const preprocessed = preprocessCrop(deskewed, deskewed.width, deskewed.height)
   const text = await runMultiPassOcr(preprocessed)
   return parseRockScanOcrText(text)
 }
