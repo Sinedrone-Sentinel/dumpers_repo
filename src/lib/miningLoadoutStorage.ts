@@ -45,7 +45,7 @@ export function parseMiningLoadoutStore(raw: unknown): MiningLoadoutStore {
   const vessels: Partial<Record<MiningVesselId, VesselLoadoutState>> = {}
 
   if (parsed.vessels && typeof parsed.vessels === 'object') {
-    for (const id of ['prospector', 'mole', 'golem', 'roc-ds'] as MiningVesselId[]) {
+    for (const id of ['prospector', 'mole', 'golem', 'roc', 'roc-ds'] as MiningVesselId[]) {
       if (parsed.vessels[id]) {
         vessels[id] = normalizeVesselState(id, parsed.vessels[id])
       }

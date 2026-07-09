@@ -1,7 +1,7 @@
 import type { MiningLaser } from '../data'
 import { gameMining } from '../data'
 
-export type MiningVesselId = 'prospector' | 'mole' | 'golem' | 'roc-ds'
+export type MiningVesselId = 'prospector' | 'mole' | 'golem' | 'roc' | 'roc-ds'
 
 export interface MiningVessel {
   id: MiningVesselId
@@ -39,6 +39,14 @@ export const MINING_VESSELS: MiningVessel[] = [
     laserSize: 1,
     defaultLaserName: 'Mining_Laser_DRAK_Golem_S1',
     isBespoke: true,
+  },
+  {
+    id: 'roc',
+    displayName: 'ROC',
+    laserSlotCount: 1,
+    laserSize: 0,
+    defaultLaserName: 'Mining_Laser_SHIN_Klein_S0',
+    isGroundVehicle: true,
   },
   {
     id: 'roc-ds',
