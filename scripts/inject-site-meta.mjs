@@ -64,11 +64,22 @@ const replacements = [
   ],
 ]
 
+function ensureOgImageExtras(html) {
+  if (!html.includes('og:image:secure_url')) {
+    html = html.replace(
+      /<meta property="og:image" content="[^"]*" \/>/,
+      `<meta property="og:image" content="${SITE_OG_IMAGE}" />\n    <meta property="og:image:secure_url" content="${SITE_OG_IMAGE}" />\n    <meta property="og:image:type" content="image/png" />`
+    )
+  }
+  return html
+}
+
 function injectMeta(htmlPath) {
   let html = readFileSync(htmlPath, 'utf8')
   for (const [pattern, replacement] of replacements) {
     html = html.replace(pattern, replacement)
   }
+  html = ensureOgImageExtras(html)
   if (!html.includes('og:image:alt')) {
     html = html.replace(
       /<meta property="og:image:height" content="630" \/>/,

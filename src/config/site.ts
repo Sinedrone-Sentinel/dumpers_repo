@@ -12,8 +12,8 @@ export const SITE_OG_IMAGE_PATH = '/og-image.png' as const
 // =============================================================================
 // FRANCHISE CUSTOMIZABLE - Update these for your deployment
 // =============================================================================
-/** Your franchise's canonical URL (used for SEO, og:url) */
-export const SITE_URL = 'https://www.dumpers-repo.com' as const
+/** Your franchise's canonical URL (used for SEO, og:url) — must match the host GitHub Pages serves without redirect (apex, not www). */
+export const SITE_URL = 'https://dumpers-repo.com' as const
 /** Browser tab title and og:title */
 export const SITE_TITLE = "Dumper's Repo — Buy. Craft. Sell." as const
 /** Meta description and og:description */
