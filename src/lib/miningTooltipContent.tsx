@@ -382,3 +382,15 @@ export const SMART_CRACKER_BUTTON_TOOLTIP = (
     </ul>
   </div>
 )
+
+export const ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP = (
+  <div className="space-y-1.5 text-xs leading-snug">
+    <p className="font-medium text-slate-200">Paste scanner screenshot</p>
+    <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
+      <li>ALT+PrtSc the SCAN RESULTS panel in-game</li>
+      <li>Switch here and Ctrl+V into the OCR modal</li>
+      <li>Crop the scan panel and Process to auto-fill</li>
+      <li>Nothing is saved — image is discarded after processing</li>
+    </ul>
+  </div>
+)

@@ -39,7 +39,8 @@
     "dotenv": "^17.4.2",
     "framer-motion": "^12.42.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

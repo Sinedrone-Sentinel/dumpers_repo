@@ -1,0 +1,171 @@
+import type { PSM } from 'tesseract.js'
+import { parseRockScanOcrText, type RockScanOcrParseResult } from './rockCalculatorOcrParse'
+
+export interface NormalizedCropRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
+
+export async function terminateOcrWorker(): Promise<void> {
+  if (!activeWorker) return
+  await activeWorker.terminate()
+  activeWorker = null
+}
+
+function preprocessCrop(source: CanvasImageSource, width: number, height: number): HTMLCanvasElement {
+  const scale = 3
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.max(1, Math.round(width * scale))
+  canvas.height = Math.max(1, Math.round(height * scale))
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return canvas
+
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(source, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  const { data } = imageData
+  let min = 255
+  let max = 0
+
+  for (let i = 0; i < data.length; i += 4) {
+    const lum = Math.round(data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114)
+    min = Math.min(min, lum)
+    max = Math.max(max, lum)
+    data[i] = lum
+    data[i + 1] = lum
+    data[i + 2] = lum
+  }
+
+  const range = Math.max(1, max - min)
+  for (let i = 0; i < data.length; i += 4) {
+    const stretched = Math.round(((data[i] - min) / range) * 255)
+    const threshold = stretched >= 145 ? 255 : 0
+    data[i] = threshold
+    data[i + 1] = threshold
+    data[i + 2] = threshold
+    data[i + 3] = 255
+  }
+
+  ctx.putImageData(imageData, 0, 0)
+  return canvas
+}
+
+function cropImageToCanvas(
+  image: CanvasImageSource,
+  sourceWidth: number,
+  sourceHeight: number,
+  crop: NormalizedCropRect
+): HTMLCanvasElement | null {
+  const x = Math.max(0, Math.round(crop.x * sourceWidth))
+  const y = Math.max(0, Math.round(crop.y * sourceHeight))
+  const width = Math.max(1, Math.round(crop.width * sourceWidth))
+  const height = Math.max(1, Math.round(crop.height * sourceHeight))
+
+  if (width < 8 || height < 8) return null
+
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return null
+  ctx.drawImage(image, x, y, width, height, 0, 0, width, height)
+  return canvas
+}
+
+async function getWorker() {
+  if (activeWorker) {
+    const { PSM: PsmEnum } = await import('tesseract.js')
+    return { worker: activeWorker, PsmEnum }
+  }
+  const { createWorker, PSM: PsmEnum, OEM } = await import('tesseract.js')
+  const worker = await createWorker('eng', OEM.LSTM_ONLY)
+  activeWorker = worker
+  return { worker, PsmEnum }
+}
+
+async function recognizePass(
+  canvas: HTMLCanvasElement,
+  psm: PSM
+): Promise<{ text: string; confidence: number }> {
+  const { worker } = await getWorker()
+  await worker.setParameters({
+    tessedit_pageseg_mode: psm,
+    preserve_interword_spaces: '1',
+    user_defined_dpi: '300',
+  })
+  const result = await worker.recognize(canvas)
+  const confidence = Number.isFinite(result.data.confidence) ? result.data.confidence : 0
+  return { text: result.data.text ?? '', confidence }
+}
+
+async function runMultiPassOcr(canvas: HTMLCanvasElement): Promise<string> {
+  const { PsmEnum } = await getWorker()
+  const passes: PSM[] = [PsmEnum.SINGLE_BLOCK, PsmEnum.SINGLE_COLUMN, PsmEnum.SPARSE_TEXT]
+  const results = await Promise.all(passes.map((psm) => recognizePass(canvas, psm)))
+
+  results.sort((a, b) => b.confidence - a.confidence)
+  const merged = new Set<string>()
+  for (const result of results) {
+    for (const line of result.text.split('\n')) {
+      const trimmed = line.trim()
+      if (trimmed) merged.add(trimmed)
+    }
+  }
+
+  if (merged.size === 0) return results[0]?.text ?? ''
+  return [...merged].join('\n')
+}
+
+export async function processRockScanCrop(
+  image: CanvasImageSource,
+  sourceWidth: number,
+  sourceHeight: number,
+  crop: NormalizedCropRect
+): Promise<RockScanOcrParseResult> {
+  const rawCrop = cropImageToCanvas(image, sourceWidth, sourceHeight, crop)
+  if (!rawCrop) {
+    return { ok: false, error: 'Crop area is too small — drag a larger box around SCAN RESULTS.' }
+  }
+
+  const preprocessed = preprocessCrop(rawCrop, rawCrop.width, rawCrop.height)
+  const text = await runMultiPassOcr(preprocessed)
+  return parseRockScanOcrText(text)
+}
+
+export function loadImageFromFile(file: File): Promise<{
+  image: HTMLImageElement
+  objectUrl: string
+  width: number
+  height: number
+}> {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file)
+    const image = new Image()
+    image.onload = () => {
+      resolve({
+        image,
+        objectUrl,
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      })
+    }
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl)
+      reject(new Error('Could not load pasted image.'))
+    }
+    image.src = objectUrl
+  })
+}
+
+export const DEFAULT_CROP_RECT: NormalizedCropRect = {
+  x: 0.55,
+  y: 0.08,
+  width: 0.4,
+  height: 0.55,
+}

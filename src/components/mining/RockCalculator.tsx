@@ -54,7 +54,13 @@ import { getMineableElementStatHints } from '../../lib/mineableElementStats'
 import { formatRequiredPower } from '../../lib/miningBreakability'
 import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import SiteTooltip from '../SiteTooltip'
-import { SMART_CRACKER_BUTTON_TOOLTIP } from '../../lib/miningTooltipContent'
+import {
+  ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP,
+  SMART_CRACKER_BUTTON_TOOLTIP,
+} from '../../lib/miningTooltipContent'
+import RockCalculatorOcrModal from './RockCalculatorOcrModal'
+import { resolveOcrBasis, mapOcrToCalculatorSlots } from '../../lib/rockCalculatorOcrApply'
+import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -110,11 +116,20 @@ export default function RockCalculator({
   const [searchFocused, setSearchFocused] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
 
+  const [ocrModalOpen, setOcrModalOpen] = useState(false)
+  const [ocrOverrideActive, setOcrOverrideActive] = useState(false)
+  const [ocrWarnings, setOcrWarnings] = useState<string[]>([])
+  const [pendingOcrApply, setPendingOcrApply] = useState<RockScanOcrResult | null>(null)
+  const ocrApplyingRef = useRef(false)
+
   const loadEntryRef = useRef(loadEntry)
   loadEntryRef.current = loadEntry
 
   useEffect(() => {
     if (!loadEntry) return
+    setOcrOverrideActive(false)
+    setPendingOcrApply(null)
+    setOcrWarnings([])
     const entryDeposit: DepositType =
       loadEntry.depositType === 'asteroid' ? 'asteroid' : 'surface'
     setOreName(loadEntry.oreName)
@@ -158,6 +173,10 @@ export default function RockCalculator({
   }, [scannerMass, scannerResistance, scannerInstability, onRockTargetChange])
 
   useEffect(() => {
+    if (ocrApplyingRef.current) {
+      ocrApplyingRef.current = false
+      return
+    }
     setScannerMassInput('')
     setInstabilityInput('')
     setResistanceInput('')
@@ -220,9 +239,31 @@ export default function RockCalculator({
 
   useEffect(() => {
     if (!calculatorParts.length) return
+    if (pendingOcrApply) return
     setPercentBySlot(buildDefaultPercentSlots(calculatorParts))
     setQualityBySlot(buildDefaultQualitySlots(calculatorParts))
-  }, [compositionKey, loadToken, calculatorParts])
+  }, [compositionKey, loadToken, calculatorParts, pendingOcrApply])
+
+  useEffect(() => {
+    if (!pendingOcrApply || !calculatorParts.length) return
+
+    const mapped = mapOcrToCalculatorSlots(pendingOcrApply, calculatorParts)
+    setScannerMassInput(String(pendingOcrApply.mass))
+    setResistanceInput(String(pendingOcrApply.resistancePercent))
+    setInstabilityInput(String(pendingOcrApply.instability))
+    setTotalScuInput(String(pendingOcrApply.totalScu))
+    setPercentBySlot(mapped.percentBySlot)
+    setQualityBySlot(mapped.qualityBySlot)
+
+    if (mapped.unmatchedLines.length) {
+      setOcrWarnings((prev) => [
+        ...prev,
+        `Some scan lines did not match this ore profile: ${mapped.unmatchedLines.join('; ')}`,
+      ])
+    }
+
+    setPendingOcrApply(null)
+  }, [pendingOcrApply, calculatorParts])
 
   const totalScu = parseTotalScuInput(totalScuInput)
 
@@ -250,7 +291,7 @@ export default function RockCalculator({
         isInert,
         label: formatScannerBandLabel(part, index, calculatorParts),
         bandTooltip: formatScannerBandTooltip(part, index, calculatorParts),
-        rangeHint: formatCompositionRangeHint(part),
+        rangeHint: ocrOverrideActive ? null : formatCompositionRangeHint(part),
       }
     })
 
@@ -268,7 +309,7 @@ export default function RockCalculator({
           : null
       return { ...row, percent, scu, dfp }
     })
-  }, [calculatorParts, percentBySlot, qualityBySlot, totalScu])
+  }, [calculatorParts, percentBySlot, qualityBySlot, totalScu, ocrOverrideActive])
 
   const valuablePercentTotal = sumPercentages(
     materialRows.filter((row) => !row.isInert).map((row) => row.percent)
@@ -316,6 +357,9 @@ export default function RockCalculator({
   }, [canAddToLedger, materialRows, catalog, selectedLedgerId])
 
   const handleSelectOre = (name: string) => {
+    setOcrOverrideActive(false)
+    setPendingOcrApply(null)
+    setOcrWarnings([])
     setOreName(name)
     setSearchQuery(name)
     setSearchOpen(false)
@@ -335,7 +379,21 @@ export default function RockCalculator({
     setDepositType(next)
   }
 
-  const showDepositToggle = availableDepositTypes.length > 1
+  const handleOcrApply = useCallback((result: RockScanOcrResult) => {
+    const basis = resolveOcrBasis(result)
+    if (!basis) return
+
+    ocrApplyingRef.current = true
+    setOcrOverrideActive(true)
+    setOcrWarnings(result.warnings)
+    setOreName(basis.oreName)
+    setSearchQuery(basis.oreName)
+    setDepositType(basis.depositType)
+    setSelectedLocation(basis.locationValue)
+    setPendingOcrApply(result)
+  }, [])
+
+  const showDepositToggle = availableDepositTypes.length > 1 && !ocrOverrideActive
   const selectedLocationLabel =
     locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
 
@@ -370,24 +428,56 @@ export default function RockCalculator({
               )}
             </div>
             {onOpenSmartCracker ? (
-              <SiteTooltip
-                content={SMART_CRACKER_BUTTON_TOOLTIP}
-                side="left"
-                panelClassName="max-w-[16rem]"
-              >
-                <button
-                  type="button"
-                  onClick={onOpenSmartCracker}
-                  className="shrink-0 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-orange-600/90 text-white hover:bg-orange-500 transition-colors"
+              <div className="flex flex-col gap-1 shrink-0">
+                <SiteTooltip
+                  content={SMART_CRACKER_BUTTON_TOOLTIP}
+                  side="left"
+                  panelClassName="max-w-[16rem]"
                 >
-                  Smart Cracker
-                </button>
-              </SiteTooltip>
+                  <button
+                    type="button"
+                    onClick={onOpenSmartCracker}
+                    className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-orange-600/90 text-white hover:bg-orange-500 transition-colors"
+                  >
+                    Smart Cracker
+                  </button>
+                </SiteTooltip>
+                <SiteTooltip
+                  content={ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP}
+                  side="left"
+                  panelClassName="max-w-[16rem]"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOcrModalOpen(true)}
+                    className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-slate-700/90 text-slate-100 hover:bg-slate-600 transition-colors border border-slate-600"
+                  >
+                    OCR
+                  </button>
+                </SiteTooltip>
+              </div>
             ) : null}
           </div>
         </div>
 
         <div className="p-3 space-y-3">
+          {ocrOverrideActive ? (
+            <div className="rounded-md border border-amber-900/45 bg-amber-950/20 px-2.5 py-2 space-y-1">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90">
+                Filled from scan
+              </p>
+              <p className="text-[11px] text-slate-400 leading-snug">
+                Pick an ore from search or click a tracked card to return to normal deposit/location
+                mode.
+              </p>
+              {ocrWarnings.map((warning) => (
+                <p key={warning} className="text-[10px] text-amber-400/90 leading-snug">
+                  {warning}
+                </p>
+              ))}
+            </div>
+          ) : null}
+
           <div>
             <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
               Ore &amp; location
@@ -438,24 +528,33 @@ export default function RockCalculator({
                   </ul>
                 )}
               </div>
-              <select
-                value={selectedLocation ?? ''}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                disabled={!oreName || locationOptions.length === 0}
-                className="site-input w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs truncate disabled:opacity-40"
-                title="Spawn location"
-                aria-label="Spawn location"
-              >
-                {locationOptions.length === 0 ? (
-                  <option value="">—</option>
-                ) : (
-                  locationOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))
-                )}
-              </select>
+              {ocrOverrideActive ? (
+                <div
+                  className="w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs rounded border border-slate-700 bg-slate-800/60 text-slate-400 truncate"
+                  title="Location hidden while using scan fill"
+                >
+                  Scanned
+                </div>
+              ) : (
+                <select
+                  value={selectedLocation ?? ''}
+                  onChange={(e) => setSelectedLocation(e.target.value)}
+                  disabled={!oreName || locationOptions.length === 0}
+                  className="site-input w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs truncate disabled:opacity-40"
+                  title="Spawn location"
+                  aria-label="Spawn location"
+                >
+                  {locationOptions.length === 0 ? (
+                    <option value="">—</option>
+                  ) : (
+                    locationOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))
+                  )}
+                </select>
+              )}
             </div>
           </div>
 
@@ -548,7 +647,7 @@ export default function RockCalculator({
               <div className="flex gap-1.5">
                 <div className="flex-1 min-w-0">
                   <span className="block text-[10px] text-slate-400 mb-0.5">Instability</span>
-                  {statHints.instability ? (
+                  {!ocrOverrideActive && statHints.instability ? (
                     <span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
                       title="Expected instability from game data"
@@ -569,7 +668,7 @@ export default function RockCalculator({
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="block text-[10px] text-slate-400 mb-0.5">Resistance (%)</span>
-                  {statHints.resistance ? (
+                  {!ocrOverrideActive && statHints.resistance ? (
                     <span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
                       title="Expected resistance from game data (HUD % scale)"
@@ -761,6 +860,13 @@ export default function RockCalculator({
           )}
         </div>
       </div>
+
+      {ocrModalOpen ? (
+        <RockCalculatorOcrModal
+          onClose={() => setOcrModalOpen(false)}
+          onApply={handleOcrApply}
+        />
+      ) : null}
     </aside>
   )
 }
