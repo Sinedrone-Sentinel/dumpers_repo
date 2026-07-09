@@ -73,6 +73,14 @@ export function parseTotalScuInput(raw: string): number | null {
   return value
 }
 
+/** Parse scanner rock property inputs (instability, resistance); empty → null. */
+export function parseRockPropertyInput(raw: string): number | null {
+  const trimmed = raw.trim()
+  if (!trimmed) return null
+  const value = Number.parseFloat(trimmed)
+  return Number.isFinite(value) ? value : null
+}
+
 const SCANNER_BAND_SUFFIXES = ['High', 'Low'] as const
 
 /** In-game scanner label: duplicate element slots become High / Low by qualityScale. */

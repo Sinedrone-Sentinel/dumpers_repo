@@ -64,6 +64,46 @@ export function getMineableElementStats(oreName: string): MineableElementStats |
   }
 }
 
+function formatStatRangeHint(values: number[], decimals: number): string | null {
+  const finite = values.filter((v) => Number.isFinite(v))
+  if (!finite.length) return null
+  const min = Math.min(...finite)
+  const max = Math.max(...finite)
+  const fmt = (v: number) =>
+    decimals === 0
+      ? String(Math.round(v))
+      : Math.abs(v) >= 10 || Number.isInteger(v)
+        ? v.toFixed(Math.min(decimals, 1))
+        : v.toFixed(decimals)
+  if (min === max) return fmt(min)
+  return `${fmt(min)}–${fmt(max)}`
+}
+
+/** Expected instability/resistance hints for Rock Calculator (range when game data varies). */
+export function getMineableElementStatHints(oreName: string): {
+  instability: string | null
+  resistance: string | null
+} {
+  const key = guideOreLookupKey(oreName)
+  const candidates = elementsByGuideKey.get(key)
+  if (!candidates?.length) return { instability: null, resistance: null }
+
+  const ranked = [...candidates].sort((a, b) => elementMatchScore(b, oreName) - elementMatchScore(a, oreName))
+  const topScore = elementMatchScore(ranked[0], oreName)
+  const relevant = ranked.filter((c) => elementMatchScore(c, oreName) === topScore)
+
+  return {
+    instability: formatStatRangeHint(
+      relevant.map((c) => c.instability),
+      0
+    ),
+    resistance: formatStatRangeHint(
+      relevant.map((c) => c.resistance),
+      2
+    ),
+  }
+}
+
 export function formatMineableInstability(value: number): string {
   if (!Number.isFinite(value)) return '—'
   if (Math.abs(value) >= 10 || Number.isInteger(value)) return String(Math.round(value))

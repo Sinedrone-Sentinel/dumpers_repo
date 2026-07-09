@@ -137,20 +137,20 @@ function buildOverallProfile(locations, depositType, baseSignature, locationAlia
   const bestResolved = resolveAliasForSpawnKey(bestLocation, locationAliases)
 
   let scaleRange = null
-  let massRangeScu = null
+  let scannerMassRange = null
   for (const loc of filtered) {
     if (loc.scaleRange) {
       if (!scaleRange) {
         scaleRange = { ...loc.scaleRange }
-        massRangeScu = loc.massRangeScu ? { ...loc.massRangeScu } : null
+        scannerMassRange = loc.scannerMassRange ? { ...loc.scannerMassRange } : null
       } else {
         scaleRange.min = Math.min(scaleRange.min, loc.scaleRange.min)
         scaleRange.max = Math.max(scaleRange.max, loc.scaleRange.max)
-        if (loc.massRangeScu) {
-          if (!massRangeScu) massRangeScu = { ...loc.massRangeScu }
+        if (loc.scannerMassRange) {
+          if (!scannerMassRange) scannerMassRange = { ...loc.scannerMassRange }
           else {
-            massRangeScu.min = Math.min(massRangeScu.min, loc.massRangeScu.min)
-            massRangeScu.max = Math.max(massRangeScu.max, loc.massRangeScu.max)
+            scannerMassRange.min = Math.min(scannerMassRange.min, loc.scannerMassRange.min)
+            scannerMassRange.max = Math.max(scannerMassRange.max, loc.scannerMassRange.max)
           }
         }
       }
@@ -164,7 +164,7 @@ function buildOverallProfile(locations, depositType, baseSignature, locationAlia
     bestLocationDisplayName: bestResolved.displayName,
     bestLocationSpawnPercent: Math.round(bestLocationSpawnPercent * 1000) / 1000,
     scaleRange,
-    massRangeScu,
+    scannerMassRange,
   }
 }
 
@@ -243,25 +243,28 @@ function filledFactorFromEntity(entityPath) {
   return 1
 }
 
-function loadMiningGlobalShipMassBase(extractedDataRoot) {
+/** Mass coefficient from MiningGlobalParamsShip — converts volume cargo factor to scanner mass. */
+const MINING_MASS_COEFFICIENT = 0.2
+
+function loadMiningGlobalShipScannerMassBase(extractedDataRoot) {
   const path = join(extractedDataRoot, 'libs/foundry/records/mining/miningglobalparamsship.json')
   const json = readJson(path)
   const val = json?._RecordValue_
   const defaultVolume = val?.mineableExplosionParams?.defaultVolume ?? 0
   const cSCUPerVolume = val?.cSCUPerVolume ?? 0
   if (!defaultVolume || !cSCUPerVolume) return 0
-  return defaultVolume * cSCUPerVolume
+  return (defaultVolume * cSCUPerVolume) / MINING_MASS_COEFFICIENT
 }
 
-function massScuFromScale(scale, baseMassScuAtFullScale, filledFactor = 1) {
-  if (!baseMassScuAtFullScale || !Number.isFinite(scale)) return null
-  const mass = baseMassScuAtFullScale * filledFactor * scale ** 3
-  return Math.round(mass * 100) / 100
+function scannerMassFromScale(scale, baseScannerMassAtFullScale, filledFactor = 1) {
+  if (!baseScannerMassAtFullScale || !Number.isFinite(scale)) return null
+  const mass = baseScannerMassAtFullScale * filledFactor * scale ** 3
+  return Math.round(mass)
 }
 
 function buildPresetSpawnMetaMap(extractedDataRoot) {
   const map = new Map()
-  const baseMassScuAtFullScale = loadMiningGlobalShipMassBase(extractedDataRoot)
+  const baseScannerMassAtFullScale = loadMiningGlobalShipScannerMassBase(extractedDataRoot)
   const presetDir = join(extractedDataRoot, 'libs/foundry/records/harvestable/harvestablepresets')
   for (const file of walkJsonFiles(presetDir)) {
     const presetBasename = basename(file, '.json')
@@ -274,14 +277,14 @@ function buildPresetSpawnMetaMap(extractedDataRoot) {
 
     const entityPath = resolveRef(preset?._RecordValue_?.entityClass, extractedDataRoot)
     const filledFactor = entityPath ? filledFactorFromEntity(entityPath) : 1
-    const minMassScu = massScuFromScale(minScale, baseMassScuAtFullScale, filledFactor)
-    const maxMassScu = massScuFromScale(maxScale, baseMassScuAtFullScale, filledFactor)
+    const minScannerMass = scannerMassFromScale(minScale, baseScannerMassAtFullScale, filledFactor)
+    const maxScannerMass = scannerMassFromScale(maxScale, baseScannerMassAtFullScale, filledFactor)
 
     map.set(presetBasename, {
       scaleRange: { min: minScale, max: maxScale },
-      massRangeScu:
-        minMassScu != null && maxMassScu != null
-          ? { min: minMassScu, max: maxMassScu }
+      scannerMassRange:
+        minScannerMass != null && maxScannerMass != null
+          ? { min: minScannerMass, max: maxScannerMass }
           : null,
       filledFactor,
     })
@@ -426,7 +429,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
           maxNodes,
           clusterRows: rows,
           scaleRange: spawnMeta?.scaleRange ?? null,
-          massRangeScu: spawnMeta?.massRangeScu ?? null,
+          scannerMassRange: spawnMeta?.scannerMassRange ?? null,
         })
       }
     }
@@ -490,7 +493,7 @@ export function parseMiningSpawns(extractedDataRoot, miningLocations = {}, oreSi
         maxNodes: link.maxNodes,
         clusterRows: link.clusterRows,
         scaleRange: link.scaleRange ?? null,
-        massRangeScu: link.massRangeScu ?? null,
+        scannerMassRange: link.scannerMassRange ?? null,
       }
     }
   }

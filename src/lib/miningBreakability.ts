@@ -1,63 +1,103 @@
 import type { ClusterDisplayProfile, LocationSpawnProfile } from './miningClusterProfiles'
 import { getMineableElementStats } from './mineableElementStats'
 
+/** Ship mining global mass coefficient (from MiningGlobalParamsShip). */
+export const MINING_MASS_COEFFICIENT = 0.2
+
 export interface BreakabilityRange {
   min: number
   max: number
 }
 
 export interface BreakabilityResult {
-  massRangeScu: BreakabilityRange | null
+  scannerMassRange: BreakabilityRange | null
   breakabilityRange: BreakabilityRange | null
   resistance: number | null
 }
 
-type MassSource = Pick<ClusterDisplayProfile | LocationSpawnProfile, 'massRangeScu'>
+type MassSource = Pick<ClusterDisplayProfile | LocationSpawnProfile, 'scannerMassRange'>
 
-function roundPower(value: number): number {
+function roundDisplay(value: number): number {
   return Math.round(value)
+}
+
+/**
+ * Effective resistance fraction (0–1) from scanner resistance % and optional laser modifier.
+ * Negative scanner resistance clamps to 0 (easier to break).
+ */
+export function effectiveResistanceFraction(
+  resistancePercent: number,
+  resistanceModifier = 1
+): number {
+  return Math.max(0, Math.min(1, (resistancePercent / 100) * resistanceModifier))
+}
+
+/**
+ * Required laser power (MW) to fracture a rock from scanner mass and resistance.
+ */
+export function requiredLaserPower(
+  scannerMass: number,
+  resistancePercent: number,
+  resistanceModifier = 1
+): number {
+  if (!Number.isFinite(scannerMass) || scannerMass <= 0) return 0
+  const effective = effectiveResistanceFraction(resistancePercent, resistanceModifier)
+  const denominator = 1 - effective
+  if (denominator <= 0) return Infinity
+  return (scannerMass * MINING_MASS_COEFFICIENT) / denominator
 }
 
 export function computeBreakabilityForOre(
   oreName: string,
-  profile?: MassSource | null
+  profile?: MassSource | null,
+  resistanceOverride?: number | null
 ): BreakabilityResult {
   const stats = getMineableElementStats(oreName)
-  const massRangeScu = profile?.massRangeScu ?? null
+  const scannerMassRange = profile?.scannerMassRange ?? null
+  const resistance =
+    resistanceOverride != null && Number.isFinite(resistanceOverride)
+      ? resistanceOverride
+      : stats?.resistance ?? null
 
-  if (!stats) {
-    return { massRangeScu, breakabilityRange: null, resistance: null }
+  if (resistance == null) {
+    return { scannerMassRange, breakabilityRange: null, resistance: null }
   }
 
-  const resistance = stats.resistance
-  const multiplier = 1 + resistance / 100
-
-  if (!massRangeScu) {
-    return { massRangeScu: null, breakabilityRange: null, resistance }
+  if (!scannerMassRange) {
+    return { scannerMassRange: null, breakabilityRange: null, resistance }
   }
 
   return {
-    massRangeScu,
+    scannerMassRange,
     breakabilityRange: {
-      min: roundPower(massRangeScu.min * multiplier),
-      max: roundPower(massRangeScu.max * multiplier),
+      min: roundDisplay(requiredLaserPower(scannerMassRange.min, resistance)),
+      max: roundDisplay(requiredLaserPower(scannerMassRange.max, resistance)),
     },
     resistance,
   }
 }
 
-export function formatMassRangeScu(range: BreakabilityRange | null): string | null {
+export function formatScannerMassRange(range: BreakabilityRange | null): string | null {
   if (!range) return null
-  const min = roundPower(range.min)
-  const max = roundPower(range.max)
-  if (min === max) return `${min.toLocaleString()} SCU`
-  return `${min.toLocaleString()}–${max.toLocaleString()} SCU`
+  const min = roundDisplay(range.min)
+  const max = roundDisplay(range.max)
+  if (min === max) return min.toLocaleString()
+  return `${min.toLocaleString()}–${max.toLocaleString()}`
 }
 
 export function formatBreakabilityRange(range: BreakabilityRange | null): string | null {
   if (!range) return null
-  const min = roundPower(range.min)
-  const max = roundPower(range.max)
+  const min = roundDisplay(range.min)
+  const max = roundDisplay(range.max)
   if (min === max) return min.toLocaleString()
   return `${min.toLocaleString()}–${max.toLocaleString()}`
+}
+
+export function formatRequiredPower(scannerMass: number | null, resistancePercent: number | null): string | null {
+  if (scannerMass == null || resistancePercent == null) return null
+  if (!Number.isFinite(scannerMass) || scannerMass <= 0) return null
+  if (!Number.isFinite(resistancePercent)) return null
+  const power = requiredLaserPower(scannerMass, resistancePercent)
+  if (!Number.isFinite(power)) return null
+  return roundDisplay(power).toLocaleString()
 }

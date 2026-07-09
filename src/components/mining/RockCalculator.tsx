@@ -29,6 +29,7 @@ import {
   oreResourceKeyFromElementName,
   parsePercentInput,
   parseQualitySlotValue,
+  parseRockPropertyInput,
   parseTotalScuInput,
   sumPercentages,
   withInertCompositionPart,
@@ -49,6 +50,8 @@ import { fetchMiningLedgers } from '../../lib/miningLedgerOps'
 import type { MiningLedgerListItem } from '../../lib/miningLedger'
 import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
+import { getMineableElementStatHints } from '../../lib/mineableElementStats'
+import { formatRequiredPower } from '../../lib/miningBreakability'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -81,6 +84,9 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
   const [depositType, setDepositType] = useState<DepositType>('asteroid')
   const [selectedLocation, setSelectedLocation] = useState<string | undefined>(undefined)
   const [totalScuInput, setTotalScuInput] = useState('')
+  const [scannerMassInput, setScannerMassInput] = useState('')
+  const [instabilityInput, setInstabilityInput] = useState('')
+  const [resistanceInput, setResistanceInput] = useState('')
   const [percentBySlot, setPercentBySlot] = useState<Record<string, string>>({})
   const [qualityBySlot, setQualityBySlot] = useState<Record<string, string>>({})
 
@@ -105,6 +111,9 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     setDepositType(entryDeposit)
     setSearchQuery(loadEntry.oreName)
     setTotalScuInput('')
+    setScannerMassInput('')
+    setInstabilityInput('')
+    setResistanceInput('')
   }, [loadEntry, loadToken])
 
   useEffect(() => {
@@ -119,6 +128,21 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
   }, [ledgerToast])
 
   const searchOptions = useMemo(() => searchRsOres(searchQuery), [searchQuery])
+
+  const statHints = useMemo(
+    () => (oreName ? getMineableElementStatHints(oreName) : { instability: null, resistance: null }),
+    [oreName]
+  )
+
+  const scannerMass = parseRockPropertyInput(scannerMassInput)
+  const scannerResistance = parseRockPropertyInput(resistanceInput)
+  const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance)
+
+  useEffect(() => {
+    setScannerMassInput('')
+    setInstabilityInput('')
+    setResistanceInput('')
+  }, [oreName, depositType, selectedLocation])
 
   useEffect(() => {
     if (searchFocused && searchRef.current && document.activeElement === searchRef.current) {
@@ -277,6 +301,9 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     setSearchQuery(name)
     setSearchOpen(false)
     setTotalScuInput('')
+    setScannerMassInput('')
+    setInstabilityInput('')
+    setResistanceInput('')
     const types = getDepositTypes(name)
     if (types.length === 1) {
       setDepositType(types[0])
@@ -454,6 +481,77 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
               </div>
             </div>
           )}
+
+          {oreName ? (
+            <div className="space-y-2">
+              <div>
+                <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
+                  Scanner rock stats
+                </label>
+                <span className="block text-[10px] text-slate-400 mb-0.5">Mass</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={1}
+                  inputMode="numeric"
+                  value={scannerMassInput}
+                  onChange={(e) => setScannerMassInput(e.target.value)}
+                  placeholder="0"
+                  className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
+                  aria-label="Rock mass from scanner"
+                />
+              </div>
+              <div className="flex gap-1.5">
+                <div className="flex-1 min-w-0">
+                  <span className="block text-[10px] text-slate-400 mb-0.5">Instability</span>
+                  {statHints.instability ? (
+                    <span
+                      className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
+                      title="Expected instability from game data"
+                    >
+                      Exp. {statHints.instability}
+                    </span>
+                  ) : null}
+                  <input
+                    type="number"
+                    step={0.01}
+                    inputMode="decimal"
+                    value={instabilityInput}
+                    onChange={(e) => setInstabilityInput(e.target.value)}
+                    placeholder="0"
+                    className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
+                    aria-label="Rock instability from scanner"
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="block text-[10px] text-slate-400 mb-0.5">Resistance</span>
+                  {statHints.resistance ? (
+                    <span
+                      className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
+                      title="Expected resistance from game data"
+                    >
+                      Exp. {statHints.resistance}
+                    </span>
+                  ) : null}
+                  <input
+                    type="number"
+                    step={0.01}
+                    inputMode="decimal"
+                    value={resistanceInput}
+                    onChange={(e) => setResistanceInput(e.target.value)}
+                    placeholder="0.00"
+                    className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
+                    aria-label="Rock resistance from scanner"
+                  />
+                </div>
+              </div>
+              {requiredPowerLabel ? (
+                <p className="text-[11px] text-cyan-300/90 font-medium tabular-nums">
+                  Power required {requiredPowerLabel}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
 
           <div>
             <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">

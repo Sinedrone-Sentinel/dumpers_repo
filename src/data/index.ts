@@ -338,7 +338,7 @@ export interface MiningClusterDisplayProfile {
   bestLocation?: string
   bestLocationSpawnPercent?: number
   scaleRange?: { min: number; max: number } | null
-  massRangeScu?: { min: number; max: number } | null
+  scannerMassRange?: { min: number; max: number } | null
 }
 
 export interface MiningCompositionPart {
@@ -366,7 +366,7 @@ export interface MiningLocationSpawnProfile {
   maxNodes: number
   clusterRows: MiningClusterRow[]
   scaleRange?: { min: number; max: number } | null
-  massRangeScu?: { min: number; max: number } | null
+  scannerMassRange?: { min: number; max: number } | null
 }
 
 export interface MiningOreSpawnProfile {
