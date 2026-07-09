@@ -24,8 +24,11 @@ export type RockScanOcrParseResult =
   | { ok: true; data: RockScanOcrResult }
   | { ok: false; error: string }
 
+/** e.g. 12.43% BERYLLIUM (ORE) Q42 or 12.43% BERYLLIUM (ORE) 905 */
 const COMPOSITION_LINE_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\(ORE\))?\s+(\d+)\s*$/i
+  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\(ORE\))?\s+Q?(\d+)\s*$/i
+
+const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
 
 function normalizeElementName(raw: string): string {
   const stripped = stripMineableLabel(raw.replace(/\(ORE\)/gi, '').trim())
@@ -63,6 +66,75 @@ function extractLabeledValue(lines: string[], labels: string[]): number | null {
   return null
 }
 
+function extractTotalScu(lines: string[]): number | null {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+
+    const inline = line.match(/COMPOSITION\s*:?\s*(\d+(?:\.\d+)?)\s*SCU/i)
+    if (inline) return Number.parseFloat(inline[1])
+
+    if (/COMPOSITION/i.test(line)) {
+      const valueOnLabelLine = line.match(/COMPOSITION\s*:?\s*(\d+(?:\.\d+)?)/i)
+      if (valueOnLabelLine) return Number.parseFloat(valueOnLabelLine[1])
+
+      for (let j = i; j < Math.min(i + 3, lines.length); j++) {
+        const candidate = lines[j]
+        const scuMatch = candidate.match(/(\d+(?:\.\d+)?)\s*SCU/i)
+        if (scuMatch) return Number.parseFloat(scuMatch[1])
+      }
+    }
+  }
+
+  for (const line of lines) {
+    const loose = line.match(/(\d+(?:\.\d+)?)\s*SCU/i)
+    if (loose) return Number.parseFloat(loose[1])
+  }
+
+  return null
+}
+
+function parseCompositionLine(
+  line: string,
+  elementRank: Map<string, number>
+): { kind: 'inert'; percent: number } | { kind: 'ore'; line: OcrCompositionLine } | null {
+  const inertMatch = line.match(INERT_LINE_RE)
+  if (inertMatch) {
+    return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
+  }
+
+  const strict = line.match(COMPOSITION_LINE_RE)
+  if (strict) {
+    const percent = Number.parseFloat(strict[1])
+    const elementName = normalizeElementName(strict[2])
+    const quality = Number.parseInt(strict[3], 10)
+    if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
+    if (isInertElement(elementName)) return { kind: 'inert', percent }
+
+    const rank = elementRank.get(elementName) ?? 0
+    elementRank.set(elementName, rank + 1)
+    return {
+      kind: 'ore',
+      line: { elementName, percent, quality, scanBandRank: rank },
+    }
+  }
+
+  const loose = line.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+Q?(\d+)/i)
+  if (!loose) return null
+
+  const percent = Number.parseFloat(loose[1])
+  const elementName = normalizeElementName(loose[2])
+  const quality = Number.parseInt(loose[3], 10)
+  if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
+  if (isInertElement(elementName)) return { kind: 'inert', percent }
+
+  const rank = elementRank.get(elementName) ?? 0
+  elementRank.set(elementName, rank + 1)
+  return {
+    kind: 'ore',
+    line: { elementName, percent, quality, scanBandRank: rank },
+  }
+}
+
 function parseCompositionLines(lines: string[]): {
   lines: OcrCompositionLine[]
   inertPercent: number | null
@@ -73,41 +145,17 @@ function parseCompositionLines(lines: string[]): {
 
   for (const rawLine of lines) {
     const line = rawLine.trim()
-    if (!line) continue
+    if (!line || !/%/.test(line)) continue
 
-    const match = line.match(COMPOSITION_LINE_RE)
-    if (!match) {
-      const loose = line.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+(\d+)/i)
-      if (!loose) continue
-      const percent = Number.parseFloat(loose[1])
-      const elementName = normalizeElementName(loose[2])
-      const quality = Number.parseInt(loose[3], 10)
-      if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) continue
+    const parsed = parseCompositionLine(line, elementRank)
+    if (!parsed) continue
 
-      if (isInertElement(elementName)) {
-        inertPercent = percent
-        continue
-      }
-
-      const rank = elementRank.get(elementName) ?? 0
-      elementRank.set(elementName, rank + 1)
-      compositionLines.push({ elementName, percent, quality, scanBandRank: rank })
+    if (parsed.kind === 'inert') {
+      inertPercent = parsed.percent
       continue
     }
 
-    const percent = Number.parseFloat(match[1])
-    const elementName = normalizeElementName(match[2])
-    const quality = Number.parseInt(match[3], 10)
-    if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) continue
-
-    if (isInertElement(elementName)) {
-      inertPercent = percent
-      continue
-    }
-
-    const rank = elementRank.get(elementName) ?? 0
-    elementRank.set(elementName, rank + 1)
-    compositionLines.push({ elementName, percent, quality, scanBandRank: rank })
+    compositionLines.push(parsed.line)
   }
 
   return { lines: compositionLines, inertPercent }
@@ -125,8 +173,12 @@ function detectHeaderOre(lines: string[]): string | null {
   for (const line of lines) {
     const trimmed = line.trim()
     if (!trimmed || /^(SCAN|MASS|RESISTANCE|INSTABILITY|COMPOSITION)/i.test(trimmed)) continue
+
     const oreHeader = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s*\(ORE\)/i)
     if (oreHeader) return normalizeElementName(oreHeader[1])
+
+    const rockHeader = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
+    if (rockHeader) return normalizeElementName(rockHeader[1])
   }
   return null
 }
@@ -145,15 +197,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
   const mass = extractLabeledValue(lines, ['MASS'])
   const resistancePercent = extractLabeledValue(lines, ['RESISTANCE'])
   const instability = extractLabeledValue(lines, ['INSTABILITY'])
-
-  let totalScu: number | null = null
-  for (const line of lines) {
-    const scuMatch = line.match(/COMPOSITION\s+(\d+(?:\.\d+)?)\s*SCU/i)
-    if (scuMatch) {
-      totalScu = Number.parseFloat(scuMatch[1])
-      break
-    }
-  }
+  const totalScu = extractTotalScu(lines)
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines)
 
@@ -185,14 +229,13 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     }
   }
 
+  const warnings: string[] = []
   if (primaryFromLines && primaryFromHeader && primaryFromLines !== primaryFromHeader) {
-    return {
-      ok: false,
-      error: `Composition lines point to ${primaryFromLines} but the header shows ${primaryFromHeader} — crop may be misaligned.`,
-    }
+    warnings.push(
+      `Rock label shows ${primaryFromHeader} but composition High/Low bands are ${primaryFromLines} — using composition for calculator basis.`
+    )
   }
 
-  const warnings: string[] = []
   const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
   if (inertPercent != null) {
     const derivedInert = Math.max(0, Math.round((100 - valuableTotal) * 10) / 10)
