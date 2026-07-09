@@ -93,7 +93,7 @@ Three tabs:
 
 - Reference grid of base RS signatures and cluster spawn odds from extracted game data
 - Up to two tracked cards per ore (Surface / Asteroid); optional per-site location tracking
-- **Rock Calculator**: enter rock SCU and in-game material % → exact cSCU per material; export rows to a mining ledger at a chosen Q band (RSI-verified members)
+- **Rock Calculator** and **Smart Cracker** side by side in the RS Tracker sidebar — enter scanner stats and rock SCU/material %; compare loadout breakability and gadget fit (signed-in members)
 
 **Mining Guide**
 

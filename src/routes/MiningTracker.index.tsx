@@ -336,7 +336,7 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="flex gap-6 items-start min-w-[760px]">
+        <div className="flex gap-6 items-start min-w-[1080px]">
           <div className="flex-1 min-w-0 space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
@@ -531,13 +531,17 @@ export default function MiningTrackerRoute() {
           </section>
           </div>
 
-          <div className="sticky top-14 self-start w-[320px] shrink-0 space-y-4">
-            <MiningLoadoutPanel rockTarget={rockTarget} />
-            <RockCalculator
-              loadEntry={calculatorLoadEntry}
-              loadToken={calculatorLoadToken}
-              onRockTargetChange={setRockTarget}
-            />
+          <div className="sticky top-14 self-start shrink-0 flex gap-4 items-start">
+            <div className="w-[300px]">
+              <RockCalculator
+                loadEntry={calculatorLoadEntry}
+                loadToken={calculatorLoadToken}
+                onRockTargetChange={setRockTarget}
+              />
+            </div>
+            <div className="w-[300px]">
+              <MiningLoadoutPanel rockTarget={rockTarget} />
+            </div>
           </div>
         </div>
       )}

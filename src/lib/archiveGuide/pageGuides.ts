@@ -96,7 +96,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     title: 'Mining Tracker',
     description: 'Track ores by RS signature, browse the ore/location guide, and compare cluster readings.',
     details: [
-      'Smart Cracker sidebar (signed-in members): pick ship and loadout, compare laser power to a rock from the calculator — RSI verification not required',
+      'RS Tracker sidebar: Rock Calculator and Smart Cracker sit side by side (calculator toward tracked ores, Smart Cracker on the outside right)',
+      'Smart Cracker (signed-in members): pick ship and loadout, compare laser power to a rock from the calculator — RSI verification not required',
       'Smart Cracker collapses below loadout selection by default (heads, breakability, gadgets); expand/collapse state is saved in your browser',
       'Loadouts sync to your member account and are available on any device',
       'Create up to three custom loadouts per ship — each starts from that ship\'s Default heads; custom slots are editable including crafted mining heads',
@@ -107,7 +108,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Mole shows per-laser share, throttle %, shortfall, and solo vs crew head planning',
       'Smart Cracker: head plan first, then final gadget fit from that plan — Mole solo picks your best single head (same as Prospector); uncheck solo if friends run extra turrets',
       'RS Tracker tab: base RS plus cluster rows with Chance % from game spawn data',
-      'Rock Calculator column: enter total rock SCU and in-game material % to get exact cSCU per material (0.001 precision); Inert % auto-fills as the remainder (not exported to ledger)',
+      'Rock Calculator: enter scanner mass, instability, and resistance for breakability; total rock SCU and in-game material % for exact cSCU per material (0.001 precision); Inert % auto-fills as the remainder (not exported to ledger)',
       'Each material row has a compact Q band picker for ledger export (Purchased Q0 plus Bands 1–8; Band 2 default); DFP column always shows Purchased (Q0) value',
       'Click a tracked card to load its composition into the Rock Calculator; Surface/Asteroid toggle defaults to Asteroid',
       'Rock Calculator location dropdown lists every spawn site for the ore and deposit type (defaults to first)',
