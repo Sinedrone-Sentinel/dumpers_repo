@@ -31,6 +31,8 @@ export interface BlueprintSlotQualityCardProps {
   onQualityChange: (slotIndex: number, quality: number) => void
   modifierResults?: SlotModifierResult[]
   compact?: boolean
+  /** `q-values` shows Q847-style labels; default `bands` keeps Band N: Q847 (orders UI). */
+  qualityDisplay?: 'bands' | 'q-values'
 }
 
 export default function BlueprintSlotQualityCard({
@@ -40,6 +42,7 @@ export default function BlueprintSlotQualityCard({
   onQualityChange,
   modifierResults = [],
   compact = false,
+  qualityDisplay = 'bands',
 }: BlueprintSlotQualityCardProps) {
   const option = slot.options?.[0]
   const resourceName =
@@ -99,7 +102,7 @@ export default function BlueprintSlotQualityCard({
         <div className={`mt-3 pt-3 border-t border-slate-700/50 ${compact ? 'mt-2 pt-2' : ''}`}>
           <div className="flex items-center gap-3 mb-2">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
-              Quality Band
+              {qualityDisplay === 'q-values' ? 'Quality' : 'Quality Band'}
             </label>
             {bands ? (
               <select
@@ -109,9 +112,13 @@ export default function BlueprintSlotQualityCard({
               >
                 {bands.map((bandValue, idx) => {
                   const tier = getQualityTier(bandValue)
+                  const label =
+                    qualityDisplay === 'q-values'
+                      ? `Q${bandValue}`
+                      : `Band ${idx + 1}: Q${bandValue}`
                   return (
                     <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
-                      Band {idx + 1}: Q{bandValue}
+                      {label}
                     </option>
                   )
                 })}

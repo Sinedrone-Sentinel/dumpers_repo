@@ -98,8 +98,8 @@ export function getMineableElementStatHints(oreName: string): {
       0
     ),
     resistance: formatStatRangeHint(
-      relevant.map((c) => c.resistance),
-      2
+      relevant.map((c) => oreResistanceToHudPercent(c.resistance)),
+      0
     ),
   }
 }
@@ -110,7 +110,16 @@ export function formatMineableInstability(value: number): string {
   return value.toFixed(2)
 }
 
-export function formatMineableResistance(value: number): string {
+/** Game mineable element resistance is stored as a fraction (0.5 = 50% on scanner HUD). */
+export function oreResistanceToHudPercent(value: number): number {
+  if (!Number.isFinite(value)) return 0
+  if (Math.abs(value) <= 1.5) return value * 100
+  return value
+}
+
+export function formatHudResistancePercent(value: number): string {
   if (!Number.isFinite(value)) return '—'
-  return value.toFixed(2)
+  const hud = oreResistanceToHudPercent(value)
+  if (Math.abs(hud) >= 10 || Number.isInteger(hud)) return String(Math.round(hud))
+  return hud.toFixed(2)
 }

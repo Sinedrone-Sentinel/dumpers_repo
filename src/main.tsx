@@ -4,6 +4,7 @@ import QueryClientProvider from './providers/QueryClientProvider'
 import { AuthProvider } from './contexts/AuthContext'
 import { OrderDraftProvider } from './contexts/OrderDraftContext'
 import { MiningTrackerProvider } from './contexts/MiningTrackerContext'
+import { MiningLoadoutProvider } from './contexts/MiningLoadoutContext'
 import RouterApp from './components/RouterApp'
 import DfpInitGate from './components/DfpInitGate'
 import './index.css'
@@ -21,6 +22,7 @@ if (appElement) {
     <React.StrictMode>
       <AuthProvider>
         <MiningTrackerProvider>
+          <MiningLoadoutProvider>
           <OrderDraftProvider>
             <DfpInitGate>
               <QueryClientProvider>
@@ -28,6 +30,7 @@ if (appElement) {
               </QueryClientProvider>
             </DfpInitGate>
           </OrderDraftProvider>
+          </MiningLoadoutProvider>
         </MiningTrackerProvider>
       </AuthProvider>
     </React.StrictMode>

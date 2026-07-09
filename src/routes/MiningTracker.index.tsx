@@ -40,6 +40,8 @@ import MiningLedgerTab from '../components/mining/MiningLedgerTab'
 import { fetchMiningLedgerSiteStats, type MiningLedgerSiteStats } from '../lib/miningLedgerOps'
 import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
 import RockCalculator from '../components/mining/RockCalculator'
+import MiningLoadoutPanel from '../components/mining/MiningLoadoutPanel'
+import type { RockBreakabilityTarget } from '../lib/miningLoadoutCompare'
 import {
   guideLocationChipTooltip,
   guideLocationOreTooltip,
@@ -76,6 +78,7 @@ export default function MiningTrackerRoute() {
   const [calculatorEntryId, setCalculatorEntryId] = useState<string | null>(null)
   const [calculatorLoadEntry, setCalculatorLoadEntry] = useState<MiningTrackerEntry | null>(null)
   const [calculatorLoadToken, setCalculatorLoadToken] = useState(0)
+  const [rockTarget, setRockTarget] = useState<RockBreakabilityTarget | null>(null)
   
   // Guide view state
   const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
@@ -528,7 +531,14 @@ export default function MiningTrackerRoute() {
           </section>
           </div>
 
-          <RockCalculator loadEntry={calculatorLoadEntry} loadToken={calculatorLoadToken} />
+          <div className="sticky top-14 self-start w-[320px] shrink-0 space-y-4">
+            <MiningLoadoutPanel rockTarget={rockTarget} />
+            <RockCalculator
+              loadEntry={calculatorLoadEntry}
+              loadToken={calculatorLoadToken}
+              onRockTargetChange={setRockTarget}
+            />
+          </div>
         </div>
       )}
 

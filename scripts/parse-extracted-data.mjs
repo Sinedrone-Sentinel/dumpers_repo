@@ -3349,6 +3349,222 @@ function parseMineableElements() {
   return elements
 }
 
+function countMiningModulePorts(itemPortParams) {
+  if (!itemPortParams?.Ports?.length) return 0
+  return itemPortParams.Ports.filter((port) =>
+    port.Types?.some((t) => t.Type === 'MiningModifier')
+  ).length
+}
+
+function extractMiningModuleModifiers(components) {
+  const stats = {
+    powerMultiplier: 1,
+    resistanceModifier: 0,
+    optimalWindowModifier: 0,
+    filterModifier: 0,
+    instabilityModifier: 0,
+    shatterDamageModifier: 0,
+  }
+
+  const modifierComp = components?.find(
+    (c) => c?._Type_ === 'EntityComponentAttachableModifierParams'
+  )
+  if (!modifierComp?.modifiers?.length) return stats
+
+  for (const mod of modifierComp.modifiers) {
+    if (
+      mod._Type_ === 'ItemWeaponModifiersParams' &&
+      mod.showInUI &&
+      mod.weaponModifier?.weaponStats?.damageMultiplier != null
+    ) {
+      stats.powerMultiplier = mod.weaponModifier.weaponStats.damageMultiplier
+    }
+    if (mod._Type_ === 'ItemMiningModifierParams' && mod.MiningLaserModifier) {
+      const ml = mod.MiningLaserModifier
+      if (ml.resistanceModifier?.value != null) {
+        stats.resistanceModifier += ml.resistanceModifier.value
+      }
+      if (ml.optimalChargeWindowSizeModifier?.value != null) {
+        stats.optimalWindowModifier += ml.optimalChargeWindowSizeModifier.value
+      }
+      if (ml.laserInstability?.value != null) {
+        stats.instabilityModifier += ml.laserInstability.value
+      }
+      if (ml.shatterdamageModifier?.value != null) {
+        stats.shatterDamageModifier += ml.shatterdamageModifier.value
+      }
+    }
+    if (mod._Type_ === 'MiningFilterItemModifierParams') {
+      const filterVal = mod.filterParams?.filterModifier?.value
+      if (filterVal != null) stats.filterModifier += filterVal
+    }
+  }
+
+  return stats
+}
+
+function parseMiningModules(localization = {}) {
+  console.log('  Parsing mining modules...')
+
+  const modulePath = join(
+    EXTRACTED_DATA,
+    EXPECTED_PATHS.scitems,
+    'ships/utility/mining/miningarm'
+  )
+  if (!existsSync(modulePath)) {
+    validationIssues.push('Missing miningarm path for mining modules')
+    return []
+  }
+
+  const files = readdirSync(modulePath).filter(
+    (f) =>
+      f.endsWith('.json') &&
+      (f.startsWith('mining_modules_passive_') || f.startsWith('mining_modules_active_'))
+  )
+  const modules = []
+
+  for (const file of files) {
+    const filePath = join(modulePath, file)
+    const json = JSON.parse(readFileSync(filePath, 'utf-8'))
+    if (!json?._RecordValue_?.Components) continue
+
+    const recordName = (json._RecordName_ || file.replace('.json', '')).replace(
+      'EntityClassDefinition.',
+      ''
+    )
+    const kind = file.includes('_active_') ? 'active' : 'passive'
+
+    let attachParams = null
+    for (const comp of json._RecordValue_.Components) {
+      if (comp?._Type_ === 'SAttachableComponentParams') attachParams = comp
+    }
+
+    const rawDisplayName = attachParams?.AttachDef?.Localization?.Name || recordName
+    const displayName = resolveLocalization(rawDisplayName, localization) || recordName
+    const size = attachParams?.AttachDef?.Size ?? 0
+    const grade = attachParams?.AttachDef?.Grade ?? 0
+    const modifierStats = extractMiningModuleModifiers(json._RecordValue_.Components)
+
+    modules.push({
+      id: json._RecordId_,
+      name: recordName,
+      displayName,
+      kind,
+      size,
+      grade,
+      ...modifierStats,
+    })
+  }
+
+  modules.sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === 'passive' ? -1 : 1
+    return a.displayName.localeCompare(b.displayName)
+  })
+
+  console.log(`  Parsed ${modules.length} mining modules`)
+  return modules
+}
+
+function extractMiningRockModifiers(components) {
+  const stats = {
+    resistanceModifier: 0,
+    instabilityModifier: 0,
+    optimalWindowModifier: 0,
+    optimalWindowRateModifier: 0,
+    clusterFactorModifier: 0,
+    shatterDamageModifier: 0,
+  }
+
+  const modifierComp = components?.find(
+    (c) => c?._Type_ === 'EntityComponentAttachableModifierParams'
+  )
+  const rockMod = modifierComp?.modifiers?.find(
+    (m) => m._Type_ === 'ItemMineableRockModifierParams'
+  )
+  const ml = rockMod?.MiningLaserModifier
+  if (!ml) return stats
+
+  if (ml.resistanceModifier?.value != null) {
+    stats.resistanceModifier = ml.resistanceModifier.value
+  }
+  if (ml.laserInstability?.value != null) {
+    stats.instabilityModifier = ml.laserInstability.value
+  }
+  if (ml.optimalChargeWindowSizeModifier?.value != null) {
+    stats.optimalWindowModifier = ml.optimalChargeWindowSizeModifier.value
+  }
+  if (ml.optimalChargeWindowRateModifier?.value != null) {
+    stats.optimalWindowRateModifier = ml.optimalChargeWindowRateModifier.value
+  }
+  if (ml.clusterFactorModifier?.value != null) {
+    stats.clusterFactorModifier = ml.clusterFactorModifier.value
+  }
+  if (ml.shatterdamageModifier?.value != null) {
+    stats.shatterDamageModifier = ml.shatterdamageModifier.value
+  }
+
+  return stats
+}
+
+function gadgetDisplayNameFromRecord(recordName) {
+  const cleaned = recordName.replace('EntityClassDefinition.', '')
+  const match = cleaned.match(/^Mining_Gadget_[A-Z]+_(.+)$/i)
+  if (!match) return cleaned
+  return match[1].replace(/_/g, ' ')
+}
+
+function parseMiningGadgets(localization = {}) {
+  console.log('  Parsing mining gadgets...')
+
+  const gadgetPath = join(
+    EXTRACTED_DATA,
+    EXPECTED_PATHS.scitems,
+    'weapons/devices'
+  )
+  if (!existsSync(gadgetPath)) {
+    validationIssues.push('Missing weapons/devices path for mining gadgets')
+    return []
+  }
+
+  const files = readdirSync(gadgetPath).filter(
+    (f) => f.startsWith('mining_gadget_') && f.endsWith('.json')
+  )
+  const gadgets = []
+
+  for (const file of files) {
+    const filePath = join(gadgetPath, file)
+    const json = JSON.parse(readFileSync(filePath, 'utf-8'))
+    if (!json?._RecordValue_?.Components) continue
+
+    const recordName = (json._RecordName_ || file.replace('.json', '')).replace(
+      'EntityClassDefinition.',
+      ''
+    )
+
+    let attachParams = null
+    for (const comp of json._RecordValue_.Components) {
+      if (comp?._Type_ === 'SAttachableComponentParams') attachParams = comp
+    }
+
+    const rawDisplayName = attachParams?.AttachDef?.Localization?.Name || recordName
+    const displayName =
+      resolveLocalization(rawDisplayName, localization) ||
+      gadgetDisplayNameFromRecord(recordName)
+    const modifierStats = extractMiningRockModifiers(json._RecordValue_.Components)
+
+    gadgets.push({
+      id: json._RecordId_,
+      name: recordName,
+      displayName,
+      ...modifierStats,
+    })
+  }
+
+  gadgets.sort((a, b) => a.displayName.localeCompare(b.displayName))
+  console.log(`  Parsed ${gadgets.length} mining gadgets`)
+  return gadgets
+}
+
 function parseMiningLasers(localization = {}) {
   console.log('  Parsing mining lasers...')
   
@@ -3375,6 +3591,7 @@ function parseMiningLasers(localization = {}) {
     // Find mining laser params component
     let miningParams = null
     let attachParams = null
+    let itemPortParams = null
     
     for (const comp of json._RecordValue_.Components) {
       if (!comp) continue
@@ -3383,6 +3600,9 @@ function parseMiningLasers(localization = {}) {
       }
       if (comp._Type_ === 'SAttachableComponentParams') {
         attachParams = comp
+      }
+      if (comp._Type_ === 'SItemPortContainerComponentParams') {
+        itemPortParams = comp
       }
     }
     
@@ -3403,6 +3623,7 @@ function parseMiningLasers(localization = {}) {
       name: recordName.replace('EntityClassDefinition.', ''),
       displayName,
       size,
+      moduleSlotCount: countMiningModulePorts(itemPortParams),
       // Power stats (the main "damage" value for mining)
       laserPower: damageMatch ? parseFloat(damageMatch[1]) : 0,
       // Range stats
@@ -3953,6 +4174,8 @@ async function main() {
     console.log(`  ⚠ Missing RS signatures for: ${oreSignatureAudit.missingOres.join(', ')}`)
   }
   const miningLasers = parseMiningLasers(localization)
+  const miningModules = parseMiningModules(localization)
+  const miningGadgets = parseMiningGadgets(localization)
   const components = parseShipComponents(localization)
   const reputationSystem = parseReputationSystem(localization, reputationCaches)
   
@@ -4157,10 +4380,14 @@ async function main() {
     mineableElements,
     oreSignatures,
     miningLasers,
+    miningModules,
+    miningGadgets,
     summary: {
       elements: mineableElements.length,
       signatureOres: Object.keys(oreSignatures).length,
       lasers: miningLasers.length,
+      modules: miningModules.length,
+      gadgets: miningGadgets.length,
     },
   })
   

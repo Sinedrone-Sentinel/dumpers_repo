@@ -296,6 +296,8 @@ export interface MiningLaser {
   name: string
   displayName: string
   size: number
+  /** Consumable module ports on this head (from itemport defs accepting MiningModifier). */
+  moduleSlotCount: number
   laserPower: number
   optimalRange: number
   maxRange: number
@@ -309,6 +311,39 @@ export interface MiningLaser {
   tags: string
 }
 
+export type MiningModuleKind = 'passive' | 'active'
+
+export interface MiningModule {
+  id: string
+  name: string
+  displayName: string
+  kind: MiningModuleKind
+  size: number
+  grade: number
+  /** Laser power multiplier (1.0 = no change). */
+  powerMultiplier: number
+  /** Additive % applied to laser resistance modifier. */
+  resistanceModifier: number
+  optimalWindowModifier: number
+  filterModifier: number
+  instabilityModifier: number
+  shatterDamageModifier: number
+}
+
+export interface MiningGadget {
+  id: string
+  name: string
+  displayName: string
+  /** Multiplicative % applied to rock resistance when gadget is attached. */
+  resistanceModifier: number
+  /** Multiplicative % applied to rock instability when gadget is attached. */
+  instabilityModifier: number
+  optimalWindowModifier: number
+  optimalWindowRateModifier: number
+  clusterFactorModifier: number
+  shatterDamageModifier: number
+}
+
 export interface GameMiningData {
   _source: string
   _extracted: string
@@ -316,10 +351,14 @@ export interface GameMiningData {
   /** RS scanner base value per ship-minable ore (from mineable rock entity defs). */
   oreSignatures: Record<string, number>
   miningLasers: MiningLaser[]
+  miningModules: MiningModule[]
+  miningGadgets: MiningGadget[]
   summary: {
     elements: number
     signatureOres: number
     lasers: number
+    modules: number
+    gadgets: number
   }
 }
 

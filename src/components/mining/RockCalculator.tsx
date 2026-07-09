@@ -52,6 +52,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { getMineableElementStatHints } from '../../lib/mineableElementStats'
 import { formatRequiredPower } from '../../lib/miningBreakability'
+import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -66,6 +67,7 @@ function searchRsOres(query: string): string[] {
 interface RockCalculatorProps {
   loadEntry: MiningTrackerEntry | null
   loadToken: number
+  onRockTargetChange?: (target: RockBreakabilityTarget) => void
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
@@ -75,7 +77,11 @@ const MATERIAL_SCU_W = 'w-[3.25rem]'
 const MATERIAL_DFP_W = 'w-[4.75rem]'
 const MATERIAL_VALUES_ROW = 'flex items-end justify-end gap-1.5 shrink-0'
 
-export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorProps) {
+export default function RockCalculator({
+  loadEntry,
+  loadToken,
+  onRockTargetChange,
+}: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
   const { catalog } = useResourceCatalog()
@@ -136,7 +142,16 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
 
   const scannerMass = parseRockPropertyInput(scannerMassInput)
   const scannerResistance = parseRockPropertyInput(resistanceInput)
+  const scannerInstability = parseRockPropertyInput(instabilityInput)
   const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance)
+
+  useEffect(() => {
+    onRockTargetChange?.({
+      scannerMass,
+      resistancePercent: scannerResistance,
+      instability: scannerInstability,
+    })
+  }, [scannerMass, scannerResistance, scannerInstability, onRockTargetChange])
 
   useEffect(() => {
     setScannerMassInput('')
@@ -321,7 +336,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
     locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
 
   return (
-    <aside className="sticky top-14 self-start w-[320px] shrink-0">
+    <aside className="w-full shrink-0">
       <div className="rounded-xl border border-slate-700 bg-slate-900/70">
         <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 min-h-[3.25rem] rounded-t-xl">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -488,6 +503,9 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                 <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
                   Scanner rock stats
                 </label>
+                <p className="text-[10px] text-slate-500 mb-1">
+                  Enter values exactly as shown on the fracture scanner HUD.
+                </p>
                 <span className="block text-[10px] text-slate-400 mb-0.5">Mass</span>
                 <input
                   type="number"
@@ -496,7 +514,7 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                   inputMode="numeric"
                   value={scannerMassInput}
                   onChange={(e) => setScannerMassInput(e.target.value)}
-                  placeholder="0"
+                  placeholder="124756"
                   className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
                   aria-label="Rock mass from scanner"
                 />
@@ -518,31 +536,38 @@ export default function RockCalculator({ loadEntry, loadToken }: RockCalculatorP
                     inputMode="decimal"
                     value={instabilityInput}
                     onChange={(e) => setInstabilityInput(e.target.value)}
-                    placeholder="0"
+                    placeholder="952.25"
                     className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
                     aria-label="Rock instability from scanner"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="block text-[10px] text-slate-400 mb-0.5">Resistance</span>
+                  <span className="block text-[10px] text-slate-400 mb-0.5">Resistance (%)</span>
                   {statHints.resistance ? (
                     <span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
-                      title="Expected resistance from game data"
+                      title="Expected resistance from game data (HUD % scale)"
                     >
-                      Exp. {statHints.resistance}
+                      Exp. {statHints.resistance}%
                     </span>
                   ) : null}
-                  <input
-                    type="number"
-                    step={0.01}
-                    inputMode="decimal"
-                    value={resistanceInput}
-                    onChange={(e) => setResistanceInput(e.target.value)}
-                    placeholder="0.00"
-                    className="site-input w-full px-2 py-1.5 text-sm font-mono tabular-nums"
-                    aria-label="Rock resistance from scanner"
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={1}
+                      inputMode="numeric"
+                      value={resistanceInput}
+                      onChange={(e) => setResistanceInput(e.target.value)}
+                      placeholder="50"
+                      className="site-input w-full px-2 py-1.5 pr-6 text-sm font-mono tabular-nums"
+                      aria-label="Rock resistance percent from scanner"
+                    />
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 pointer-events-none">
+                      %
+                    </span>
+                  </div>
                 </div>
               </div>
               {requiredPowerLabel ? (

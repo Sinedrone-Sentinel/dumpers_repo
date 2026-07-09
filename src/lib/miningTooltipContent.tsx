@@ -30,8 +30,8 @@ import {
 } from './handMineables'
 import { formatHandMineableHabitatAtSite } from './handMineableHabitats'
 import {
+  formatHudResistancePercent,
   formatMineableInstability,
-  formatMineableResistance,
   getMineableElementStats,
 } from './mineableElementStats'
 function pct(n: number | null | undefined, digits = 2): string {
@@ -65,7 +65,7 @@ export function oreMineableStatsTooltipBlock(oreName: string): React.ReactNode |
   return (
     <div className="text-slate-400">
       Instability {formatMineableInstability(stats.instability)} · Resistance{' '}
-      {formatMineableResistance(stats.resistance)}
+      {formatHudResistancePercent(stats.resistance)}
     </div>
   )
 }

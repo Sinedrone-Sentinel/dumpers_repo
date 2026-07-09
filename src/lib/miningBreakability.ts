@@ -1,5 +1,5 @@
 import type { ClusterDisplayProfile, LocationSpawnProfile } from './miningClusterProfiles'
-import { getMineableElementStats } from './mineableElementStats'
+import { getMineableElementStats, oreResistanceToHudPercent } from './mineableElementStats'
 
 /** Ship mining global mass coefficient (from MiningGlobalParamsShip). */
 export const MINING_MASS_COEFFICIENT = 0.2
@@ -23,7 +23,7 @@ function roundDisplay(value: number): number {
 
 /**
  * Effective resistance fraction (0–1) from scanner resistance % and optional laser modifier.
- * Negative scanner resistance clamps to 0 (easier to break).
+ * `resistancePercent` is the HUD value (e.g. 50 for 50%, not 0.5).
  */
 export function effectiveResistanceFraction(
   resistancePercent: number,
@@ -57,7 +57,9 @@ export function computeBreakabilityForOre(
   const resistance =
     resistanceOverride != null && Number.isFinite(resistanceOverride)
       ? resistanceOverride
-      : stats?.resistance ?? null
+      : stats?.resistance != null
+        ? oreResistanceToHudPercent(stats.resistance)
+        : null
 
   if (resistance == null) {
     return { scannerMassRange, breakabilityRange: null, resistance: null }
