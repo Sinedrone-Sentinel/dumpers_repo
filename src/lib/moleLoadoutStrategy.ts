@@ -7,6 +7,7 @@ import {
 } from './miningLaserStats'
 import { combineModuleModifiers, normalizeModuleSelection } from './miningModules'
 import type { RockBreakabilityTarget } from './miningLoadoutCompare'
+import { formatSignedNumber, formatSignedPercent } from './miningLoadoutStatSemantics'
 import { assessMinPowerWarningForSlot, type MinPowerWarning } from './miningMinPowerWarning'
 import { displayMinThrottlePercent, throttlePercentFromMw } from './miningThrottleDisplay'
 import { getMiningLaserByName } from './miningVessels'
@@ -66,12 +67,6 @@ interface CandidateStrategy {
   combinedInstabilityModifier: number
   score: number
   summary: string
-}
-
-function formatSignedPercent(value: number): string {
-  if (!Number.isFinite(value) || value === 0) return '0%'
-  const rounded = Math.round(value)
-  return `${rounded > 0 ? '+' : ''}${rounded}%`
 }
 
 export function buildMoleHeadProfile(
@@ -134,7 +129,7 @@ function modifierDetail(profile: MoleHeadProfile): string | null {
     parts.push(`${formatSignedPercent(profile.optimalWindowModifier)} window`)
   }
   if (profile.instabilityModifier !== 0) {
-    parts.push(`${formatSignedPercent(profile.instabilityModifier)} instability`)
+    parts.push(`${formatSignedNumber(profile.instabilityModifier)} instability`)
   }
   return parts.length ? parts.join(', ') : null
 }

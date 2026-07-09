@@ -204,15 +204,17 @@ function EffectiveTotalsCard({
   breakdown,
   slot,
   vesselId,
+  moleSoloMining,
 }: {
   breakdown: LaserLoadoutBreakdown
   slot: MiningLaserSlotConfig
   vesselId: MiningVesselId
+  moleSoloMining: boolean
 }) {
-  const proTips = useMemo(
-    () => analyzeLoadoutProTips(breakdown, slot, vesselId),
-    [breakdown, slot, vesselId]
-  )
+  const proTips = useMemo(() => {
+    if (vesselId === 'mole' && !moleSoloMining) return []
+    return analyzeLoadoutProTips(breakdown, slot, vesselId)
+  }, [breakdown, slot, vesselId, moleSoloMining])
 
   return (
     <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 col-span-full">
@@ -251,6 +253,7 @@ interface HeadSlotCardsProps {
   slot: MiningLaserSlotConfig
   vesselId: MiningVesselId
   editable: boolean
+  moleSoloMining: boolean
   onChange: (next: MiningLaserSlotConfig) => void
   showHeadLabel: boolean
 }
@@ -260,6 +263,7 @@ function HeadSlotCards({
   slot,
   vesselId,
   editable,
+  moleSoloMining,
   onChange,
   showHeadLabel,
 }: HeadSlotCardsProps) {
@@ -483,7 +487,12 @@ function HeadSlotCards({
       </div>
 
       {breakdown ? (
-        <EffectiveTotalsCard breakdown={breakdown} slot={slot} vesselId={vesselId} />
+        <EffectiveTotalsCard
+          breakdown={breakdown}
+          slot={slot}
+          vesselId={vesselId}
+          moleSoloMining={moleSoloMining}
+        />
       ) : (
         <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 px-2 py-1.5">
           <p className="text-[10px] text-slate-500">Effective totals unavailable</p>
@@ -497,6 +506,7 @@ export interface LoadoutHeadCardsGridProps {
   vesselId: MiningVesselId
   slots: MiningLaserSlotConfig[]
   editable: boolean
+  moleSoloMining?: boolean
   onSlotChange: (index: number, next: MiningLaserSlotConfig) => void
 }
 
@@ -504,6 +514,7 @@ export default function LoadoutHeadCardsGrid({
   vesselId,
   slots,
   editable,
+  moleSoloMining = true,
   onSlotChange,
 }: LoadoutHeadCardsGridProps) {
   if (slots.length === 0) return null
@@ -525,6 +536,7 @@ export default function LoadoutHeadCardsGrid({
               slot={slot}
               vesselId={vesselId}
               editable={editable}
+              moleSoloMining={moleSoloMining}
               onChange={(next) => onSlotChange(index, next)}
               showHeadLabel
             />
@@ -536,6 +548,7 @@ export default function LoadoutHeadCardsGrid({
           slot={slots[0]}
           vesselId={vesselId}
           editable={editable}
+          moleSoloMining={moleSoloMining}
           onChange={(next) => onSlotChange(0, next)}
           showHeadLabel={slots.length > 1}
         />

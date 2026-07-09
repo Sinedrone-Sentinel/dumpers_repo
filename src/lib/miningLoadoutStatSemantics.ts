@@ -73,10 +73,27 @@ export function isNeutralModifierValue(value: string): boolean {
   return value === '0%' || value === '0'
 }
 
-function formatSignedPercent(value: number): string {
+export function formatSignedPercent(value: number): string {
   if (!Number.isFinite(value) || value === 0) return '0%'
   const rounded = Math.round(value)
   return `${rounded > 0 ? '+' : ''}${rounded}%`
+}
+
+export function formatSignedNumber(value: number): string {
+  if (!Number.isFinite(value) || value === 0) return '0'
+  const rounded = Math.round(value * 10) / 10
+  const text = rounded % 1 === 0 ? String(Math.round(rounded)) : rounded.toFixed(1)
+  return `${rounded > 0 ? '+' : ''}${text}`
+}
+
+function formatProjectedStat(
+  breakdown: LaserLoadoutBreakdown,
+  key: TipStatKey,
+  projected: number
+): string {
+  const line = effectiveLine(breakdown, key)
+  if (line) return line.value
+  return key === 'instability' ? formatSignedNumber(projected) : formatSignedPercent(projected)
 }
 
 export function statSentiment(key: string, value: string): StatSentiment {
@@ -225,10 +242,7 @@ function rankModuleSwaps(
       const delta = statDelta(current, projected, key)
       if (delta < minGain) continue
 
-      const projectedDisplay =
-        key === 'module-power'
-          ? (effectiveLine(breakdown, 'module-power')?.value ?? formatSignedPercent(projected))
-          : formatSignedPercent(projected)
+      const projectedDisplay = formatProjectedStat(breakdown, key, projected)
 
       candidates.push({
         description: `Mod ${modIndex + 1} → ${option.displayName}`,
@@ -270,10 +284,7 @@ function rankHeadSwaps(
     if (delta < minGain) continue
 
     const powerLine = effectiveLine(breakdown, 'power')
-    const projectedDisplay =
-      key === 'module-power'
-        ? (effectiveLine(breakdown, 'module-power')?.value ?? formatSignedPercent(projected))
-        : formatSignedPercent(projected)
+    const projectedDisplay = formatProjectedStat(breakdown, key, projected)
 
     const powerNote = powerLine ? ` @ ${powerLine.value}` : ''
     candidates.push({
@@ -286,13 +297,25 @@ function rankHeadSwaps(
   return candidates.sort((a, b) => b.delta - a.delta).slice(0, 2)
 }
 
-function formatSwapSuggestions(swaps: SwapCandidate[]): string {
+function formatSwapSuggestions(swaps: SwapCandidate[], currentDisplay: string): string {
   if (!swaps.length) return ''
-  const top = swaps.slice(0, 2)
-  return top
+
+  const seen = new Set<string>()
+  const unique: SwapCandidate[] = []
+  for (const swap of swaps) {
+    if (seen.has(swap.projectedDisplay)) continue
+    seen.add(swap.projectedDisplay)
+    unique.push(swap)
+    if (unique.length >= 2) break
+  }
+
+  return unique
     .map((swap) => {
-      const gain = formatSignedPercent(swap.delta)
-      return `${swap.description} → ~${swap.projectedDisplay} (${gain} on this stat)`
+      const gain =
+        swap.projectedDisplay.includes('%') || swap.projectedDisplay.includes('MW')
+          ? formatSignedPercent(swap.delta)
+          : formatSignedNumber(swap.delta)
+      return `${swap.description} → ${swap.projectedDisplay} (from ${currentDisplay}, improves by ${gain})`
     })
     .join('; ')
 }
@@ -384,10 +407,10 @@ function buildDynamicTip(
   const parts: string[] = []
   if (blame) parts.push(`Mainly from ${blame}`)
 
-  const swapText = formatSwapSuggestions(moduleSwaps)
+  const swapText = formatSwapSuggestions(moduleSwaps, problem.displayValue)
   if (swapText) parts.push(swapText)
 
-  const headText = formatSwapSuggestions(headSwaps)
+  const headText = formatSwapSuggestions(headSwaps, problem.displayValue)
   if (headText) parts.push(`Head swap: ${headText}`)
 
   if (!parts.length) {
@@ -406,8 +429,6 @@ export function analyzeLoadoutProTips(
   slot: MiningLaserSlotConfig,
   vesselId: MiningVesselId
 ): LoadoutProTip[] {
-  if (vesselId === 'mole') return []
-
   const laser = getMiningLaserByName(slot.laserName)
   if (!laser) return []
 

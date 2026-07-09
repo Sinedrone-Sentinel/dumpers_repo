@@ -113,6 +113,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Use **Tilt scan inside crop** in the OCR window when the panel looks skewed or quality numbers are clipped at the edge of your crop box',
       '**Smart Cracker** (button in the calculator header) opens a loadout planner and **automated crack advisor**. It uses the rock already in your calculator — set up the rock first, then open Smart Cracker',
       'Smart Cracker compares your selected ship and loadout against the rock, warns if a head cannot break it, suggests **throttle and head assignments** (including multi-crew Mole setups), and recommends **gadgets** when a rock is borderline',
+      '**Mole + Solo mining** (checkbox in Smart Cracker): one laser at a time like a Prospector — per-head pro-tips appear on each hardpoint, plus a **Solo garage · 3-head spread** panel that labels heavy / daily / finesse roles and flags gaps (power tiers too close, no wide-window head, duplicate builds)',
       'Sign in to save loadouts to your account (works on any device). RSI verification is **not** required for Smart Cracker or loadouts — only for Ledgers',
       'Each ship has a read-only **Default** loadout plus up to **three custom** slots: choose head models, mining modules (Focus, Rieger, FLTR, etc.), and optionally enter your **crafted mining head** stats if you run a blueprint head',
       '**Golem** ships use the factory **Pitman** head only (no swapping to other S1 models). Custom slots still equip **two module hardpoints** and can optionally toggle **Crafted head** for a blueprint Pitman',
