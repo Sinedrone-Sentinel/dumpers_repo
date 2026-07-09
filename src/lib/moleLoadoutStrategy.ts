@@ -105,24 +105,36 @@ export function buildMoleHeadProfile(
   }
 }
 
-function headModifierBenefit(profile: MoleHeadProfile): number {
+/** Modifier-only supporters: resistance > window > instability (power handled by canBreak). */
+function headModifierBenefit(
+  profile: MoleHeadProfile,
+  rockInstability: number | null
+): number {
   let benefit = 0
-  if (profile.optimalWindowModifier > 0) benefit += profile.optimalWindowModifier
-  if (profile.instabilityModifier < 0) benefit += Math.abs(profile.instabilityModifier) * 1.5
-  if (profile.resistanceModifier < 0) benefit += Math.abs(profile.resistanceModifier) * 0.75
+  if (profile.resistanceModifier < 0) {
+    benefit += Math.abs(profile.resistanceModifier) * 4
+  }
+  if (profile.optimalWindowModifier > 0) {
+    benefit += profile.optimalWindowModifier * 2.5
+  }
+  if (profile.instabilityModifier < 0) {
+    const instabilityWeight =
+      rockInstability != null && rockInstability >= 400 ? 2 : 0.75
+    benefit += Math.abs(profile.instabilityModifier) * instabilityWeight
+  }
   return benefit
 }
 
 function modifierDetail(profile: MoleHeadProfile): string | null {
   const parts: string[] = []
+  if (profile.resistanceModifier !== 0) {
+    parts.push(`${formatSignedPercent(profile.resistanceModifier)} resistance`)
+  }
   if (profile.optimalWindowModifier !== 0) {
     parts.push(`${formatSignedPercent(profile.optimalWindowModifier)} window`)
   }
   if (profile.instabilityModifier !== 0) {
     parts.push(`${formatSignedPercent(profile.instabilityModifier)} instability`)
-  }
-  if (profile.resistanceModifier !== 0) {
-    parts.push(`${formatSignedPercent(profile.resistanceModifier)} resistance`)
   }
   return parts.length ? parts.join(', ') : null
 }
@@ -141,9 +153,10 @@ function isDrivingMinShareValid(sharePercent: number): boolean {
 
 function isViableModifierSupporter(
   supporter: MoleHeadProfile,
-  drivingMinMw: number
+  drivingMinMw: number,
+  rockInstability: number | null
 ): boolean {
-  if (headModifierBenefit(supporter) <= 0) return false
+  if (headModifierBenefit(supporter, rockInstability) <= 0) return false
   if (drivingMinMw <= 0) return false
   return supporter.minLaserMw <= drivingMinMw * MODIFIER_SUPPORT_MAX_FRACTION_OF_DRIVING_MIN
 }
@@ -164,14 +177,16 @@ function requiredPowerForHeads(
 function combinedModifiers(
   profiles: MoleHeadProfile[],
   activeIndices: number[]
-): { window: number; instability: number } {
+): { resistance: number; window: number; instability: number } {
+  let resistance = 0
   let window = 0
   let instability = 0
   for (const index of activeIndices) {
+    resistance += profiles[index].resistanceModifier
     window += profiles[index].optimalWindowModifier
     instability += profiles[index].instabilityModifier
   }
-  return { window, instability }
+  return { resistance, window, instability }
 }
 
 function buildAssignment(
@@ -192,6 +207,7 @@ function buildAssignment(
 function scoreStrategy(
   canBreak: boolean,
   drivingMinSharePercent: number,
+  combinedResistanceModifier: number,
   combinedWindowModifier: number,
   combinedInstabilityModifier: number,
   modifierSupportCount: number,
@@ -201,18 +217,32 @@ function scoreStrategy(
 
   let score = 10_000
   score -= Math.abs(drivingMinSharePercent - DRIVING_MIN_IDEAL_PERCENT_OF_EQUALIZER) * 12
-  score += combinedWindowModifier * 4
+
+  // Power is satisfied by canBreak; rank remaining stats: resistance > window > instability.
+  if (combinedResistanceModifier < 0) {
+    score += Math.abs(combinedResistanceModifier) * 6
+  } else if (combinedResistanceModifier > 0) {
+    score -= combinedResistanceModifier * 8
+  }
+
+  score += combinedWindowModifier * 3
   score -= modifierSupportCount * 2
 
   if (instability != null && instability >= 400) {
     if (combinedInstabilityModifier < 0) {
-      score += Math.abs(combinedInstabilityModifier) * 3
+      score += Math.abs(combinedInstabilityModifier) * 2
+    } else if (combinedInstabilityModifier > 0) {
+      score -= combinedInstabilityModifier * 3
     }
-    score += combinedWindowModifier * 2
+  } else if (combinedInstabilityModifier > 0) {
+    score -= combinedInstabilityModifier
   }
 
+  if (modifierSupportCount > 0 && combinedResistanceModifier < 0) {
+    score += 20
+  }
   if (modifierSupportCount > 0 && combinedWindowModifier > 0) {
-    score += 30
+    score += 10
   }
 
   return score
@@ -286,7 +316,11 @@ function evaluateCrewStrategy(
 
     const viableModifiers = modifierOnlyIndices.filter((index) => {
       if (index === mainSupplementaryIndex || index === drivingIndex) return false
-      return isViableModifierSupporter(profiles.find((p) => p.slotIndex === index)!, driving.minLaserMw)
+      return isViableModifierSupporter(
+        profiles.find((p) => p.slotIndex === index)!,
+        driving.minLaserMw,
+        instability
+      )
     })
     if (viableModifiers.length !== modifierOnlyIndices.length) return null
 
@@ -359,6 +393,7 @@ function evaluateCrewStrategy(
       score: scoreStrategy(
         true,
         drivingShare,
+        mods.resistance,
         mods.window,
         mods.instability,
         viableModifiers.length,
@@ -392,7 +427,15 @@ function evaluateCrewStrategy(
     combinedWindowModifier: mods.window,
     combinedInstabilityModifier: mods.instability,
     summary: `Head ${drivingIndex + 1} fractures at ${soloThrottle}% — no supplementary laser needed.`,
-    score: scoreStrategy(true, drivingShare, mods.window, mods.instability, 0, instability) - 5,
+    score: scoreStrategy(
+      true,
+      drivingShare,
+      mods.resistance,
+      mods.window,
+      mods.instability,
+      0,
+      instability
+    ) - 5,
   }
 }
 
@@ -408,7 +451,6 @@ function evaluateSingleHeadOnly(
   const throttlePercent = soloDrivingThrottlePercent(primary, equalizingPower)
   const canBreak = throttlePercent != null && throttlePercent <= 100
   const mods = combinedModifiers(profiles, activeIndices)
-  const shortfallMw = canBreak ? 0 : equalizingPower - primary.laserPower
 
   const assignments = profiles.map((profile) => {
     if (profile.slotIndex === primaryIndex) {
@@ -440,7 +482,15 @@ function evaluateSingleHeadOnly(
       ? `Solo — Head ${primaryIndex + 1} fractures at ${throttlePercent}% throttle.`
       : `Solo — Head ${primaryIndex + 1} cannot crack this rock at full throttle.`,
     score: canBreak
-      ? scoreStrategy(true, drivingMinSharePercent(primary, equalizingPower), mods.window, mods.instability, 0, null)
+      ? scoreStrategy(
+          true,
+          drivingMinSharePercent(primary, equalizingPower),
+          mods.resistance,
+          mods.window,
+          mods.instability,
+          0,
+          null
+        )
       : -equalizingPower + primary.laserPower,
   }
 }
@@ -544,9 +594,16 @@ export function findBestMoleLoadoutStrategy(
     if (profiles.length < 2) return null
 
     for (const driving of profiles) {
-      candidates.push(
-        evaluateCrewStrategy(profiles, driving.slotIndex, null, [], mass, resistancePercent, instability)
+      const soloCrew = evaluateCrewStrategy(
+        profiles,
+        driving.slotIndex,
+        null,
+        [],
+        mass,
+        resistancePercent,
+        instability
       )
+      if (soloCrew) candidates.push(soloCrew)
 
       for (const supplementary of profiles) {
         if (supplementary.slotIndex === driving.slotIndex) continue

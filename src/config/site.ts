@@ -18,7 +18,7 @@ export const SITE_URL = 'https://www.dumpers-repo.com' as const
 export const SITE_TITLE = "Dumper's Repo — Buy. Craft. Sell." as const
 /** Meta description and og:description */
 export const SITE_DESCRIPTION =
-  "Dumper's Repo — Buy. Craft. Sell. Blueprint tracking, custom orders, and fulfillment for Star Citizen." as const
+  "Dumper's Repo — Buy. Craft. Sell. Blueprint tracking, mining tools, custom orders, resource coordination, and member marketplace for Star Citizen orgs." as const
 export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 /** Tagline shown in UI */
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
