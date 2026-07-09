@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppModal from '../layout/AppModal'
-import { useAuth } from '../../contexts/AuthContext'
 import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
   DEFAULT_CROP_RECT,
@@ -9,9 +8,7 @@ import {
   terminateOcrWorker,
   type NormalizedCropRect,
 } from '../../lib/rockCalculatorOcr'
-import { scanHasMissingQuality, type RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
-import { resolveLedgerQuality, getDefaultBandQuality } from '../../lib/qualityBands'
-import { oreResourceKeyFromElementName } from '../../lib/rockCalculator'
+import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
 
 interface LoadedImage {
   image: HTMLImageElement
@@ -78,33 +75,10 @@ function normalizedToDisplay(crop: NormalizedCropRect, display: DisplayRect) {
   }
 }
 
-function formatPreviewQualityLabel(
-  elementName: string,
-  quality: number | null,
-  qualityMissing: boolean
-): string {
-  if (qualityMissing || quality == null) {
-    const defaultQ = resolveLedgerQuality(
-      oreResourceKeyFromElementName(elementName),
-      elementName,
-      getDefaultBandQuality(elementName)
-    )
-    return `Q not read (default Q${defaultQ})`
-  }
-  const resolved = resolveLedgerQuality(
-    oreResourceKeyFromElementName(elementName),
-    elementName,
-    quality
-  )
-  return `Q${resolved} (scan Q${quality})`
-}
-
 export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalculatorOcrModalProps) {
-  const { isSuperAdmin } = useAuth()
   const [loaded, setLoaded] = useState<LoadedImage | null>(null)
   const [crop, setCrop] = useState<NormalizedCropRect>(DEFAULT_CROP_RECT)
   const [deskewDegrees, setDeskewDegrees] = useState(0)
-  const [previewResult, setPreviewResult] = useState<RockScanOcrResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
   const [progress, setProgress] = useState<string | null>(null)
@@ -127,7 +101,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
   const handleClose = useCallback(() => {
     clearImage()
-    setPreviewResult(null)
     void terminateOcrWorker()
     onClose()
   }, [clearImage, onClose])
@@ -194,7 +167,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
         setError(null)
         setProgress(null)
-        setPreviewResult(null)
         setDeskewDegrees(0)
         clearImage()
         try {
@@ -253,17 +225,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     }
   }, [displayRect, cropPx])
 
-  const applyParsedResult = useCallback(
-    (result: RockScanOcrResult) => {
-      onApply(result)
-      clearImage()
-      setPreviewResult(null)
-      void terminateOcrWorker()
-      onClose()
-    },
-    [clearImage, onApply, onClose]
-  )
-
   const handleProcess = async () => {
     if (!loaded) {
       setError('Paste a screenshot first (Ctrl+V).')
@@ -273,9 +234,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     setProcessing(true)
     setError(null)
     setProgress('Preparing image…')
-    setPreviewResult(null)
-
-    let holdForPreview = false
 
     try {
       setProgress('Running OCR…')
@@ -298,22 +256,17 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         return
       }
 
-      if (isSuperAdmin && scanHasMissingQuality(parsed.data)) {
-        setPreviewResult(parsed.data)
-        holdForPreview = true
-        return
-      }
-
-      applyParsedResult(parsed.data)
+      onApply(parsed.data)
+      clearImage()
+      void terminateOcrWorker()
+      onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'OCR failed — try adjusting the crop box.')
     } finally {
       setProcessing(false)
-      if (!holdForPreview) setProgress(null)
+      setProgress(null)
     }
   }
-
-  const showPreview = isSuperAdmin && previewResult != null
 
   return (
     <AppModal
@@ -327,42 +280,22 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
             Nothing is saved — image is discarded after a successful scan.
           </p>
           <div className="flex gap-2">
-            {showPreview ? (
-              <button
-                type="button"
-                onClick={() => setPreviewResult(null)}
-                className="px-3 py-1.5 text-xs rounded-md border border-slate-600 text-slate-300 hover:bg-slate-800"
-              >
-                Adjust crop
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleClose}
-                className="px-3 py-1.5 text-xs rounded-md border border-slate-600 text-slate-300 hover:bg-slate-800"
-                disabled={processing}
-              >
-                Cancel
-              </button>
-            )}
-            {showPreview ? (
-              <button
-                type="button"
-                onClick={() => applyParsedResult(previewResult)}
-                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500"
-              >
-                Apply to calculator
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => void handleProcess()}
-                disabled={!loaded || processing}
-                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500 disabled:opacity-40"
-              >
-                {processing ? 'Processing…' : 'Process'}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handleClose}
+              className="px-3 py-1.5 text-xs rounded-md border border-slate-600 text-slate-300 hover:bg-slate-800"
+              disabled={processing}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleProcess()}
+              disabled={!loaded || processing}
+              className="px-3 py-1.5 text-xs font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500 disabled:opacity-40"
+            >
+              {processing ? 'Processing…' : 'Process'}
+            </button>
           </div>
         </div>
       }
@@ -376,7 +309,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
           in-game screenshot (ALT+PrtSc the scan panel first).
         </div>
 
-        {loaded && !showPreview ? (
+        {loaded ? (
           <div className="rounded-lg border border-slate-700 bg-slate-950/40 px-3 py-2 space-y-1.5">
             <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-slate-300">
               Tilt scan inside crop
@@ -411,7 +344,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
                 draggable={false}
               />
-              {displayRect.width > 0 && cropImageStyle && !showPreview ? (
+              {displayRect.width > 0 && cropImageStyle ? (
                 <div
                   className="absolute z-10"
                   style={{
@@ -459,44 +392,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
             </div>
           )}
         </div>
-
-        {showPreview && previewResult ? (
-          <div className="rounded-lg border border-violet-900/45 bg-violet-950/25 px-3 py-2.5 space-y-2">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-violet-300/90">
-              Parse preview (super-admin)
-            </p>
-            <p className="text-[11px] text-slate-400">
-              {previewResult.primaryOreName} — mass {previewResult.mass}, resistance{' '}
-              {previewResult.resistancePercent}%, instability {previewResult.instability}, SCU{' '}
-              {previewResult.totalScu}
-            </p>
-            <ul className="space-y-1">
-              {previewResult.compositionLines.map((line, index) => (
-                <li
-                  key={`${line.elementName}-${line.scanBandRank}-${index}`}
-                  className="text-[10px] leading-snug text-slate-300"
-                >
-                  <span className={line.qualityMissing ? 'text-amber-400' : 'text-slate-200'}>
-                    {line.percent}% {line.elementName} —{' '}
-                    {formatPreviewQualityLabel(line.elementName, line.quality, line.qualityMissing)}
-                  </span>
-                  <span className="block text-slate-500 font-mono truncate" title={line.rawOcrLine}>
-                    OCR: {line.rawOcrLine}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            {previewResult.warnings.length ? (
-              <ul className="space-y-0.5 border-t border-violet-900/30 pt-2">
-                {previewResult.warnings.map((warning) => (
-                  <li key={warning} className="text-[10px] text-amber-400/90 leading-snug">
-                    {warning}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-        ) : null}
 
         {progress ? <p className="text-[11px] text-amber-300/90">{progress}</p> : null}
         {error ? <p className="text-[11px] text-red-400">{error}</p> : null}

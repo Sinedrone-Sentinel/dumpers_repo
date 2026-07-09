@@ -67,10 +67,6 @@ function buildQualityMissingWarning(elementName: string, rawLine: string): strin
   return `${elementName} — Q not read from scan; left at default Q${defaultQ}. Set manually if needed.`
 }
 
-export function scanHasMissingQuality(scan: RockScanOcrResult): boolean {
-  return scan.compositionLines.some((line) => line.qualityMissing)
-}
-
 function normalizeElementName(raw: string, warnings: string[]): string {
   const stripped = stripMineableLabel(raw.replace(/\(ORE\)/gi, '').trim())
   if (!stripped) return stripped
