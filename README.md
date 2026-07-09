@@ -1,6 +1,6 @@
 # Dumper's Repo
 
-**Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen orgs.
+**Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen.
 
 **Reference deployment:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`). Other hosts running this codebase are separate franchise instances.
 
