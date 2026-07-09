@@ -2,12 +2,10 @@ const STORAGE_KEY = 'dumpers_repo_mining_tracker_ui_v1'
 
 export interface MiningTrackerUiState {
   smartCrackerExpanded: boolean
-  calculatorDetailsExpanded: boolean
 }
 
 const DEFAULT_STATE: MiningTrackerUiState = {
   smartCrackerExpanded: false,
-  calculatorDetailsExpanded: false,
 }
 
 function safeParse<T>(raw: string | null, fallback: T): T {
@@ -29,7 +27,6 @@ export function readMiningTrackerUiState(): MiningTrackerUiState {
 
   return {
     smartCrackerExpanded: parsed.smartCrackerExpanded === true,
-    calculatorDetailsExpanded: parsed.calculatorDetailsExpanded === true,
   }
 }
 
@@ -39,8 +36,6 @@ export function writeMiningTrackerUiState(update: Partial<MiningTrackerUiState>)
   const current = readMiningTrackerUiState()
   const next: MiningTrackerUiState = {
     smartCrackerExpanded: update.smartCrackerExpanded ?? current.smartCrackerExpanded,
-    calculatorDetailsExpanded:
-      update.calculatorDetailsExpanded ?? current.calculatorDetailsExpanded,
   }
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
