@@ -1,11 +1,9 @@
 import type { MiningVesselId } from './miningVessels'
 import {
   buildDefaultLaserSlots,
-  getBlueprintForLaser,
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
 import { normalizeModuleSelection } from './miningModules'
-import { buildDefaultSlotQualities } from './blueprintQuality'
 import { getMiningVessel, vesselCustomLoadoutLabel, vesselDefaultLoadoutLabel } from './miningVessels'
 
 export const MINING_LOADOUT_STORAGE_VERSION = 1
@@ -164,28 +162,15 @@ export function listLoadoutsForVessel(
   return result
 }
 
-/** New custom slots clone the factory Default loadout; bespoke Golem starts in crafted-head mode. */
+/** New custom slots clone the factory Default loadout (stock head + modules). */
 export function cloneDefaultLasersForCustomLoadout(
-  vesselId: MiningVesselId,
+  _vesselId: MiningVesselId,
   defaultLasers: MiningLaserSlotConfig[]
 ): MiningLaserSlotConfig[] {
-  const vessel = getMiningVessel(vesselId)
-  const cloned = defaultLasers.map((l) => ({
+  return defaultLasers.map((l) => ({
     ...l,
     slotQualities: l.slotQualities ? { ...l.slotQualities } : undefined,
     modules: l.modules ? [...l.modules] : undefined,
-  }))
-
-  if (!vessel?.isBespoke) return cloned
-
-  const blueprint = getBlueprintForLaser(vessel.defaultLaserName)
-  const band2Defaults = blueprint ? buildDefaultSlotQualities(blueprint) : {}
-
-  return cloned.map((slot) => ({
-    laserName: vessel.defaultLaserName,
-    mode: 'custom' as const,
-    slotQualities: { ...band2Defaults, ...slot.slotQualities },
-    customLabel: slot.customLabel,
   }))
 }
 
@@ -259,10 +244,8 @@ export function updateLoadoutLasers(
   const normalizedLasers =
     vessel?.isBespoke
       ? lasers.map((slot) => ({
+          ...slot,
           laserName: vessel.defaultLaserName,
-          mode: 'custom' as const,
-          slotQualities: slot.slotQualities,
-          customLabel: slot.customLabel,
         }))
       : lasers
 

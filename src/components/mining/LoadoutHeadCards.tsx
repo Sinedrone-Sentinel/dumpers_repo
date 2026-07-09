@@ -32,7 +32,6 @@ import {
 import {
   getMiningLaserByName,
   getMiningVessel,
-  isBespokeVessel,
   listMiningLasersForVessel,
   type MiningVesselId,
 } from '../../lib/miningVessels'
@@ -265,7 +264,6 @@ function HeadSlotCards({
   showHeadLabel,
 }: HeadSlotCardsProps) {
   const vessel = getMiningVessel(vesselId)
-  const isBespoke = isBespokeVessel(vesselId)
   const laserOptions = useMemo(
     () => (vessel ? listMiningLasersForVessel(vessel) : []),
     [vessel]
@@ -281,7 +279,7 @@ function HeadSlotCards({
     [slot.laserName, slot.modules]
   )
   const breakdown = useMemo(() => computeLaserLoadoutBreakdown(slot), [slot])
-  const showCraftedHead = editable && hasBp && (isBespoke || slot.mode === 'custom')
+  const showCraftedHead = editable && hasBp && slot.mode === 'custom'
 
   const resolvedQualities = useMemo(
     () => (blueprint ? mergeSlotQualities(blueprint, slot.slotQualities) : {}),
@@ -308,7 +306,7 @@ function HeadSlotCards({
   const handleQualityChange = (bpSlotIndex: number, quality: number) => {
     onChange({
       ...slot,
-      mode: isBespoke ? 'custom' : slot.mode,
+      mode: 'custom',
       slotQualities: { ...(slot.slotQualities ?? {}), [bpSlotIndex]: quality },
     })
   }
@@ -331,7 +329,7 @@ function HeadSlotCards({
 
   const headHeader = (
     <div className="space-y-1">
-      {editable && !isBespoke && laserOptions.length > 1 ? (
+      {editable && laserOptions.length > 1 ? (
         <select
           value={slot.laserName}
           onChange={(e) =>
@@ -355,7 +353,7 @@ function HeadSlotCards({
         </p>
       )}
 
-      {editable && hasBp && !isBespoke ? (
+      {editable && hasBp ? (
         <label className="flex items-center gap-1.5 cursor-pointer">
           <input
             type="checkbox"
@@ -371,21 +369,11 @@ function HeadSlotCards({
         </label>
       ) : null}
 
-      {editable && slot.mode === 'custom' && hasBp && !isBespoke ? (
+      {editable && slot.mode === 'custom' && hasBp ? (
         <input
           type="text"
           value={slot.customLabel ?? ''}
           onChange={(e) => onChange({ ...slot, customLabel: e.target.value })}
-          placeholder="Label (optional)"
-          className="site-input w-full px-1.5 py-0.5 text-[10px]"
-        />
-      ) : null}
-
-      {showCraftedHead && isBespoke ? (
-        <input
-          type="text"
-          value={slot.customLabel ?? ''}
-          onChange={(e) => onChange({ ...slot, mode: 'custom', customLabel: e.target.value })}
           placeholder="Label (optional)"
           className="site-input w-full px-1.5 py-0.5 text-[10px]"
         />

@@ -12,7 +12,7 @@ export interface MiningVessel {
   laserSize: number
   /** Stock laser `name` from game-mining.json installed on each slot in the default loadout */
   defaultLaserName: string
-  /** Dedicated craft-only laser (Golem Pitman); no interchangeable mining heads */
+  /** Single fixed mining head (Golem Pitman); no swapping to other size-class heads */
   isBespoke?: boolean
   isGroundVehicle?: boolean
 }
