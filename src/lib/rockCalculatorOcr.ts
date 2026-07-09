@@ -17,7 +17,7 @@ export async function terminateOcrWorker(): Promise<void> {
 }
 
 function preprocessCrop(source: CanvasImageSource, width: number, height: number): HTMLCanvasElement {
-  const scale = 3
+  const scale = 4
   const canvas = document.createElement('canvas')
   canvas.width = Math.max(1, Math.round(width * scale))
   canvas.height = Math.max(1, Math.round(height * scale))
@@ -81,16 +81,26 @@ function rotateCanvas(source: HTMLCanvasElement, degrees: number): HTMLCanvasEle
   return canvas
 }
 
+export function cropPixelRect(
+  sourceWidth: number,
+  sourceHeight: number,
+  crop: NormalizedCropRect
+): { x: number; y: number; width: number; height: number } {
+  return {
+    x: Math.max(0, Math.round(crop.x * sourceWidth)),
+    y: Math.max(0, Math.round(crop.y * sourceHeight)),
+    width: Math.max(1, Math.round(crop.width * sourceWidth)),
+    height: Math.max(1, Math.round(crop.height * sourceHeight)),
+  }
+}
+
 function cropImageToCanvas(
   image: CanvasImageSource,
   sourceWidth: number,
   sourceHeight: number,
   crop: NormalizedCropRect
 ): HTMLCanvasElement | null {
-  const x = Math.max(0, Math.round(crop.x * sourceWidth))
-  const y = Math.max(0, Math.round(crop.y * sourceHeight))
-  const width = Math.max(1, Math.round(crop.width * sourceWidth))
-  const height = Math.max(1, Math.round(crop.height * sourceHeight))
+  const { x, y, width, height } = cropPixelRect(sourceWidth, sourceHeight, crop)
 
   if (width < 8 || height < 8) return null
 

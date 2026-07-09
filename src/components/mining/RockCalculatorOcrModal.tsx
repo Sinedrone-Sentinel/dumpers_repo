@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
   DEFAULT_CROP_RECT,
+  cropPixelRect,
   loadImageFromFile,
   processRockScanCrop,
   terminateOcrWorker,
@@ -165,6 +166,11 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     [crop, displayRect]
   )
 
+  const ocrCropPixels = useMemo(() => {
+    if (!loaded) return null
+    return cropPixelRect(loaded.width, loaded.height, crop)
+  }, [loaded, crop])
+
   const handlePaste = useCallback(
     async (event: React.ClipboardEvent) => {
       const items = event.clipboardData?.items
@@ -303,7 +309,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     <AppModal
       title="Scanner OCR"
       subtitle="Paste your fracture HUD screenshot, crop SCAN RESULTS, then Process"
-      size="2xl"
+      size="3xl"
       onClose={handleClose}
       footer={
         <div className="flex items-center justify-between gap-2">
@@ -363,7 +369,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         {isSuperAdmin && loaded && !showPreview ? (
           <div className="rounded-lg border border-violet-900/40 bg-violet-950/20 px-3 py-2 space-y-1.5">
             <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-violet-300/90">
-              Tilt crop box (super-admin)
+              Tilt scan inside crop (super-admin)
             </label>
             <input
               id="ocr-deskew"
@@ -376,8 +382,8 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
               className="w-full accent-violet-400"
             />
             <p className="text-[10px] text-slate-500 leading-snug">
-              Drag the slider — the orange crop box tilts in real time. Use if Q values are clipped or
-              the scan panel looks skewed.
+              Drag the slider — the image inside the orange box tilts in real time. The crop box stays
+              put. Use if Q values are clipped or the scan panel looks skewed.
             </p>
           </div>
         ) : null}
@@ -398,29 +404,39 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                 <div
                   className="absolute"
                   style={{
-                    left: cropPx.x + cropPx.width / 2,
-                    top: cropPx.y + cropPx.height / 2,
+                    left: cropPx.x,
+                    top: cropPx.y,
                     width: cropPx.width,
                     height: cropPx.height,
-                    transform: `translate(-50%, -50%) rotate(${deskewDegrees}deg)`,
                   }}
                 >
                   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <img
-                      src={loaded.objectUrl}
-                      alt=""
-                      draggable={false}
-                      className="absolute select-none max-w-none"
+                    <div
+                      className="absolute"
                       style={{
+                        left: '50%',
+                        top: '50%',
                         width: displayRect.width,
                         height: displayRect.height,
-                        left: displayRect.left - cropPx.x,
-                        top: displayRect.top - cropPx.y,
+                        transform: `translate(-50%, -50%) rotate(${deskewDegrees}deg)`,
                       }}
-                    />
+                    >
+                      <img
+                        src={loaded.objectUrl}
+                        alt=""
+                        draggable={false}
+                        className="absolute select-none max-w-none"
+                        style={{
+                          width: displayRect.width,
+                          height: displayRect.height,
+                          left: displayRect.left - cropPx.x - cropPx.width / 2,
+                          top: displayRect.top - cropPx.y - cropPx.height / 2,
+                        }}
+                      />
+                    </div>
                   </div>
                   <div
-                    className="absolute inset-0 border-2 border-orange-400/90 bg-orange-500/10 cursor-move"
+                    className="absolute inset-0 border-2 border-orange-400/90 cursor-move"
                     onMouseDown={(e) => {
                       e.preventDefault()
                       startDrag('move', e.clientX, e.clientY)
@@ -448,6 +464,13 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
             </div>
           )}
         </div>
+
+        {isSuperAdmin && loaded && ocrCropPixels ? (
+          <p className="text-[10px] text-violet-300/80 font-mono">
+            OCR uses full-resolution crop: {ocrCropPixels.width}×{ocrCropPixels.height} px from original{' '}
+            {loaded.width}×{loaded.height} (not the on-screen preview size)
+          </p>
+        ) : null}
 
         {showPreview && previewResult ? (
           <div className="rounded-lg border border-violet-900/45 bg-violet-950/25 px-3 py-2.5 space-y-2">
