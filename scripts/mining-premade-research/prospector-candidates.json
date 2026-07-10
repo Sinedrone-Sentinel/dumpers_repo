@@ -1,0 +1,463 @@
+{
+  "meta": {
+    "generatedAt": "2026-06-25",
+    "purpose": "Phase 1 research — review with user before catalog ingest",
+    "notes": "Prospector has a single mining head (hardpointIndex 0). Hofstede-S1 has 1 module port; Helix I has 2 module ports; Lancet MH1 has 1 module port.",
+    "namingConvention": {
+      "displayName": "{creator}'s {jobDesignation}",
+      "jobDesignation": "Purpose / job title — NOT a hardware stack label. Examples: General, Max Breaker, Surface Breaker, Quantanium, Beginner.",
+      "moduleTierNote": "XL modules = MK3 grade in game files (e.g. XTR-XL → Mining_Modules_Passive_XTR_MK3). XL tier is −5% module power vs −10% (L) / −15% (base).",
+      "variantRule": "A variant is a build mostly the same as another (e.g. iron vs titanium tweak). Distinct module combos with different jobs are separate standalone catalog entries, not variants."
+    },
+    "buildTaxonomy": {
+      "audience": {
+        "solo": "Single-seat ship — always solo unless noted",
+        "crew": "N/A for Prospector in practice",
+        "both": "N/A for Prospector in practice"
+      },
+      "partial": "Single-head ship — partial only when guide omits the one module port"
+    },
+    "moduleNameMap": {
+      "Rieger-C3": "Mining_Modules_Passive_Rieger_MK3",
+      "Focus III": "Mining_Modules_Passive_Focus_MK3",
+      "Surge": "Mining_Modules_Active_Surge",
+      "Stampede": "Mining_Modules_Active_Stampede",
+      "XTR-XL": "Mining_Modules_Passive_XTR_MK3",
+      "FLTR-XL": "Mining_Modules_Passive_FLTR_MK3"
+    },
+    "laserNameMap": {
+      "Hofstede-S1": "Mining_Laser_SHIN_Hofstede_S1",
+      "Helix I": "Mining_Laser_THCN_Helix_S1",
+      "Lancet MH1": "Mining_Laser_GRIN_Lancet_S1"
+    }
+  },
+  "candidates": [
+    {
+      "id": "ggwtb_hofstede_focus_beginner",
+      "status": "complete",
+      "proposedDisplayName": "GGWTB's General",
+      "creator": "GGWTB",
+      "jobDesignation": "General",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026 — 4.7 mining loadouts article",
+      "sources": [
+        {
+          "title": "Star Citizen 4.7 Mining Loadouts: Best MOLE & Prospector Builds",
+          "url": "https://ggwtb.com/blog/star-citizen-4-7-mining-loadouts-best-mole-prospector-builds",
+          "type": "article"
+        }
+      ],
+      "description": "Default 4.7 recommendation for most players — Hofstede-S1 trades raw power for the widest forgiving green zone.",
+      "purposeRationale": "Hofstede + Focus III: ~2,000 stock power but +100% optimal-window bonus (60% head + 40% Focus). Best general-purpose starter when window control matters more than peak DPS.",
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "laserDisplayName": "Hofstede-S1",
+          "modules": [
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Focus III"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "ggwtb_helix_rieger_aggressive",
+      "status": "complete",
+      "proposedDisplayName": "GGWTB's Passive Breaker",
+      "creator": "GGWTB",
+      "jobDesignation": "Passive Breaker",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026 — GGWTB 4.7 mining loadouts article",
+      "sources": [
+        {
+          "title": "Star Citizen 4.7 Mining Loadouts",
+          "url": "https://ggwtb.com/blog/star-citizen-4-7-mining-loadouts-best-mole-prospector-builds",
+          "type": "article"
+        }
+      ],
+      "description": "Always-on breaker: Helix I with Rieger-C3 on both ports — no actives, no window help. For miners who can hold a narrow green zone on tough rocks.",
+      "purposeRationale": "Double Rieger-C3 on Helix I ≈ 4,725 passive laser power (1.50× stock 3,150) — highest always-on Prospector DPS. Optimal window ≈ −42% (Helix −40% + Rieger penalties). Job = sustained passive breaking, not burst.",
+      "executiveDecisions": [
+        "'Rieger-C3 / Ryer C3' read as two Helix I module ports both Rieger-C3 — Ryer is misspelling of Rieger, not a second module type"
+      ],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "laserDisplayName": "Helix I",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Rieger-C3"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "loudguns_helix_rieger_focus",
+        "loudguns_helix_rieger_surge"
+      ],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "loudguns_helix_rieger_focus",
+      "status": "complete",
+      "proposedDisplayName": "Loud Guns's General",
+      "creator": "Loud Guns",
+      "jobDesignation": "General",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026-03-14 — 4.7 mining guide example build",
+      "sources": [
+        {
+          "title": "The Mining Guide - Star Citizen 4.7",
+          "url": "https://www.youtube.com/watch?v=blx3Z8n9Etk",
+          "type": "video"
+        }
+      ],
+      "description": "Balanced 4.7 daily driver — Rieger-C3 power with Focus III window recovery on Helix I.",
+      "purposeRationale": "Rieger + Focus on Helix I ≈ 3,780 passive power (1.20×) with optimal window near neutral (~−1%). Loud Guns's recommended general-purpose Helix build.",
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "laserDisplayName": "Helix I",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "loudguns_helix_rieger_surge",
+      "status": "complete",
+      "proposedDisplayName": "Loud Guns's Max Breaker",
+      "creator": "Loud Guns",
+      "jobDesignation": "Max Breaker",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026-03-14 — confidence / larger rocks",
+      "sources": [
+        {
+          "title": "The Mining Guide - Star Citizen 4.7",
+          "url": "https://www.youtube.com/watch?v=blx3Z8n9Etk",
+          "type": "video"
+        }
+      ],
+      "description": "Maximum Prospector breaking power — Helix I with Rieger-C3 passive baseline and Surge active burst for large, high-resistance rocks.",
+      "purposeRationale": "Rieger + Surge (Surge active) ≈ 5,513 laser power (1.75× stock 3,150) — highest peak power achievable on a Prospector. Narrow window (~−41%); job is hard-rock breaking when you can manage instability during Surge.",
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "laserDisplayName": "Helix I",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Active_Surge"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Surge"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "loudguns_helix_surge_stampede_max",
+        "ggwtb_helix_rieger_aggressive"
+      ],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "loudguns_helix_surge_stampede_max",
+      "status": "complete",
+      "proposedDisplayName": "Loud Guns's Burst Breaker",
+      "creator": "Loud Guns",
+      "jobDesignation": "Burst Breaker",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026-03-14 — all-active burst combo",
+      "sources": [
+        {
+          "title": "The Mining Guide - Star Citizen 4.7",
+          "url": "https://www.youtube.com/watch?v=blx3Z8n9Etk",
+          "type": "video"
+        }
+      ],
+      "description": "No passives — Surge + Stampede double-active burst for experienced miners who cycle actives instead of holding a passive baseline.",
+      "purposeRationale": "Surge + Stampede (both active) ≈ 4,253 peak power (1.35×) — lower peak than Max Breaker (Rieger+Surge) but dual actives with Stampede instability reduction (−10%) during burst windows. Distinct job: active cycling, not max DPS.",
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "laserDisplayName": "Helix I",
+          "modules": [
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Stampede"
+          ],
+          "moduleDisplayNames": [
+            "Surge",
+            "Stampede"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "loudguns_hofstede_rieger_friendly",
+      "status": "complete",
+      "proposedDisplayName": "Loud Guns's Beginner",
+      "creator": "Loud Guns",
+      "jobDesignation": "Beginner",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026-03-14 — learning / smaller rocks option",
+      "sources": [
+        {
+          "title": "The Mining Guide - Star Citizen 4.7",
+          "url": "https://www.youtube.com/watch?v=blx3Z8n9Etk",
+          "type": "video"
+        }
+      ],
+      "description": "Learner build — Hofstede-S1 wide window with a modest Rieger-C3 power bump for smaller rocks while learning throttle control.",
+      "purposeRationale": "Hofstede + Rieger ≈ 2,625 power (1.25×) with +59% optimal window. More power than pure Focus beginner setups but still forgiving — distinct from GGWTB General (Focus) and from Helix progression builds.",
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "laserDisplayName": "Hofstede-S1",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "ggwtb_hofstede_focus_beginner"
+      ],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "noobcitizen_lancet_quant",
+      "status": "complete",
+      "proposedDisplayName": "Noob Citizen's Quantanium",
+      "creator": "Noob Citizen",
+      "jobDesignation": "Quantanium",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "partial": false,
+      "patchEra": "pre-4.7",
+      "sourcePublishedHint": "Legacy quant guide — volatility mechanics may differ in 4.7+",
+      "sources": [
+        {
+          "title": "Quantanium Mining using a Prospector",
+          "url": "https://www.noobcitizen.com/posts/careers/quantanium-mining/",
+          "type": "article"
+        }
+      ],
+      "description": "Quantanium specialist — Lancet MH1 for narrow-window volatile extraction; carry spare Surge charges in utility slots.",
+      "purposeRationale": "Lancet MH1 (−10% instability, −60% window) + Surge for timed bursts on quantanium. Ore-specific job, not a general Helix/Hofstede progression build.",
+      "intendedOres": [
+        "Quantanium"
+      ],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_GRIN_Lancet_S1",
+          "laserDisplayName": "Lancet MH1",
+          "modules": [
+            "Mining_Modules_Active_Surge"
+          ],
+          "moduleDisplayNames": [
+            "Surge"
+          ],
+          "headMode": "stock",
+          "carriedConsumables": {
+            "note": "Guide equips Surge to 2+ utility sub-item slots for spare charges; only 1 mounts on Lancet's single module port",
+            "extraSurgeSlots": 2
+          }
+        }
+      ],
+      "incompleteReasons": [],
+      "mappingNotes": "Active Surge inventory vs laser port — catalog should document carried spares separately from laser module multiset match",
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "sinedrone_helix_xtr_surface_breaker",
+      "status": "org_anchor",
+      "proposedDisplayName": "Sinedrone's Surface Breaker",
+      "creator": "Sinedrone",
+      "jobDesignation": "Surface Breaker",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "Org Discord — surface deposit mining",
+      "sources": [
+        {
+          "title": "Dumper's Repo org reference",
+          "url": null,
+          "type": "org_discord"
+        }
+      ],
+      "description": "Surface breaker — Helix I with XTR-XL on both ports. Planetary surface rocks only; uses XL window widening to tame Helix's narrow charge zone, not power modules.",
+      "purposeRationale": "Double XTR-XL (MK3): −5% power each (−10% total) ≈ 2,835 MW; optimal charge window −40% Helix + 50% XTR = +10%. Chosen for XL-tier window recovery on a breaker head — not for filter/extraction side stats. Distinct from asteroid Rieger/Surge power builds.",
+      "moduleTier": "XL",
+      "intendedDepositType": "surface",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "laserDisplayName": "Helix I",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ],
+          "moduleDisplayNames": [
+            "XTR-XL",
+            "XTR-XL"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "sinedrone_general_all_purpose",
+        "sinedrone_hofstede_xtr_surface_wide",
+        "sinedrone_hofstede_fltr_surface_filter"
+      ],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "sinedrone_hofstede_fltr_surface_filter",
+      "status": "org_anchor",
+      "proposedDisplayName": "Sinedrone's Surface Filter",
+      "creator": "Sinedrone",
+      "jobDesignation": "Surface Filter",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "Org Discord — Hofstede surface option (FLTR-XL)",
+      "sources": [
+        {
+          "title": "Dumper's Repo org reference",
+          "url": null,
+          "type": "org_discord"
+        }
+      ],
+      "description": "Surface Hofstede with FLTR-XL — cut inert pulled into the Prospector's small hold after you crack the rock. Does not change inert inside the rock; reduces garbage collected during extraction so you mine longer before filling on junk.",
+      "purposeRationale": "FLTR-XL (MK3): +24 inert filter, −5% power, +0% charge window. Prospector cargo is tight on surface loops — filter lowers inert sucked up post-break (extraction phase), not pre-break rock composition. Hofstede's native +60% window unchanged. Pick over XTR-XL when hold efficiency matters more than extra green zone.",
+      "mappingNotes": "Inert filter affects extraction yield mix after fracture — not the inert content of the rock itself.",
+      "moduleTier": "XL",
+      "intendedDepositType": "surface",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "laserDisplayName": "Hofstede-S1",
+          "modules": [
+            "Mining_Modules_Passive_FLTR_MK3"
+          ],
+          "moduleDisplayNames": [
+            "FLTR-XL"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "sinedrone_hofstede_xtr_surface_wide",
+        "sinedrone_helix_xtr_surface_breaker"
+      ],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "sinedrone_hofstede_xtr_surface_wide",
+      "status": "org_anchor",
+      "proposedDisplayName": "Sinedrone's Surface Wide",
+      "creator": "Sinedrone",
+      "jobDesignation": "Surface Wide",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "Org Discord — Hofstede surface option (XTR-XL)",
+      "sources": [
+        {
+          "title": "Dumper's Repo org reference",
+          "url": null,
+          "type": "org_discord"
+        }
+      ],
+      "description": "Easy surface Hofstede — XTR-XL when surface rocks need more green zone than stock Hofstede alone. Same −5% XL power penalty; +25% charge window on top of the head's +60%.",
+      "purposeRationale": "XTR-XL (MK3): −5% power, +25% charge window. Hofstede effective window +85%. Chosen for XL window widening on forgiving surface runs. Swap with Surface Filter (FLTR-XL) when hold capacity / less extraction garbage matters more than extra green zone.",
+      "moduleTier": "XL",
+      "intendedDepositType": "surface",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "laserDisplayName": "Hofstede-S1",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3"
+          ],
+          "moduleDisplayNames": [
+            "XTR-XL"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "sinedrone_hofstede_fltr_surface_filter",
+        "sinedrone_helix_xtr_surface_breaker",
+        "sinedrone_general_all_purpose"
+      ],
+      "catalogPriority": "v1_ship"
+    }
+  ]
+}

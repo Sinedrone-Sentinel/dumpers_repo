@@ -13,9 +13,10 @@ import {
   saveMiningLoadoutState,
 } from '../lib/miningLoadoutOps'
 import {
-  createCustomLoadoutSlot,
+  createCustomLoadoutFromLasers,
   deleteCustomLoadoutSlot,
   emptyMiningLoadoutStore,
+  isCustomLoadoutKey,
   updateLoadoutLasers,
   type MiningLoadoutStore,
 } from '../lib/miningLoadoutStorage'
@@ -23,22 +24,24 @@ import type { MiningLaserSlotConfig } from '../lib/miningLaserStats'
 import type { LoadoutKey, CustomLoadoutSlotIndex } from '../lib/miningLoadoutStorage'
 import type { MiningVesselId } from '../lib/miningVessels'
 
-const SAVE_DEBOUNCE_MS = 400
-
 interface MiningLoadoutContextValue {
   canUse: boolean
   store: MiningLoadoutStore
   loading: boolean
   saving: boolean
   saveError: string | null
-  setStore: (next: MiningLoadoutStore) => void
-  createCustomLoadout: (vesselId: MiningVesselId) => CustomLoadoutSlotIndex | null
-  deleteCustomLoadout: (vesselId: MiningVesselId, slot: CustomLoadoutSlotIndex) => void
-  updateLasers: (
+  /** Persist the current custom slot (overwrites saved data). */
+  saveLoadout: (
     vesselId: MiningVesselId,
     loadoutKey: LoadoutKey,
     lasers: MiningLaserSlotConfig[]
-  ) => void
+  ) => Promise<boolean>
+  /** Save draft lasers into the next available custom slot. */
+  saveLoadoutAsNew: (
+    vesselId: MiningVesselId,
+    lasers: MiningLaserSlotConfig[]
+  ) => Promise<CustomLoadoutSlotIndex | null>
+  deleteCustomLoadout: (vesselId: MiningVesselId, slot: CustomLoadoutSlotIndex) => Promise<void>
 }
 
 const MiningLoadoutContext = createContext<MiningLoadoutContextValue | null>(null)
@@ -54,8 +57,6 @@ export function MiningLoadoutProvider({ children }: { children: React.ReactNode 
 
   const storeRef = useRef(store)
   storeRef.current = store
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const saveSeqRef = useRef(0)
 
   useEffect(() => {
     if (!canUse) {
@@ -87,75 +88,64 @@ export function MiningLoadoutProvider({ children }: { children: React.ReactNode 
     }
   }, [canUse, user?.id])
 
-  useEffect(() => {
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
-    }
-  }, [])
+  const persistStore = useCallback(
+    async (next: MiningLoadoutStore): Promise<boolean> => {
+      if (!canUse) return false
 
-  const queueSave = useCallback(
-    (next: MiningLoadoutStore) => {
-      if (!canUse) return
+      setStoreState(next)
+      setSaving(true)
 
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
-      const seq = ++saveSeqRef.current
-
-      saveTimerRef.current = setTimeout(() => {
-        setSaving(true)
-        saveMiningLoadoutState(next)
-          .then(() => {
-            if (seq === saveSeqRef.current) {
-              setSaveError(null)
-            }
-          })
-          .catch((err) => {
-            console.error('Failed to save mining loadouts:', err)
-            if (seq === saveSeqRef.current) {
-              setSaveError('Could not save loadout changes.')
-            }
-          })
-          .finally(() => {
-            if (seq === saveSeqRef.current) {
-              setSaving(false)
-            }
-          })
-      }, SAVE_DEBOUNCE_MS)
+      try {
+        await saveMiningLoadoutState(next)
+        setSaveError(null)
+        return true
+      } catch (err) {
+        console.error('Failed to save mining loadouts:', err)
+        setSaveError('Could not save loadout changes.')
+        return false
+      } finally {
+        setSaving(false)
+      }
     },
     [canUse]
   )
 
-  const setStore = useCallback(
-    (next: MiningLoadoutStore) => {
-      setStoreState(next)
-      queueSave(next)
+  const saveLoadout = useCallback(
+    async (
+      vesselId: MiningVesselId,
+      loadoutKey: LoadoutKey,
+      lasers: MiningLaserSlotConfig[]
+    ): Promise<boolean> => {
+      if (!isCustomLoadoutKey(loadoutKey)) return false
+      const next = updateLoadoutLasers(storeRef.current, vesselId, loadoutKey, lasers)
+      return persistStore(next)
     },
-    [queueSave]
+    [persistStore]
   )
 
-  const createCustomLoadout = useCallback(
-    (vesselId: MiningVesselId): CustomLoadoutSlotIndex | null => {
-      const { store: next, created } = createCustomLoadoutSlot(storeRef.current, vesselId)
+  const saveLoadoutAsNew = useCallback(
+    async (
+      vesselId: MiningVesselId,
+      lasers: MiningLaserSlotConfig[]
+    ): Promise<CustomLoadoutSlotIndex | null> => {
+      const { store: next, created } = createCustomLoadoutFromLasers(
+        storeRef.current,
+        vesselId,
+        lasers
+      )
       if (!created) return null
-      setStore(next)
-      return created
+      const ok = await persistStore(next)
+      return ok ? created : null
     },
-    [setStore]
+    [persistStore]
   )
 
   const deleteCustomLoadout = useCallback(
-    (vesselId: MiningVesselId, slot: CustomLoadoutSlotIndex) => {
+    async (vesselId: MiningVesselId, slot: CustomLoadoutSlotIndex) => {
       const next = deleteCustomLoadoutSlot(storeRef.current, vesselId, slot)
-      setStore(next)
+      await persistStore(next)
     },
-    [setStore]
-  )
-
-  const updateLasers = useCallback(
-    (vesselId: MiningVesselId, loadoutKey: LoadoutKey, lasers: MiningLaserSlotConfig[]) => {
-      const next = updateLoadoutLasers(storeRef.current, vesselId, loadoutKey, lasers)
-      setStore(next)
-    },
-    [setStore]
+    [persistStore]
   )
 
   return (
@@ -166,10 +156,9 @@ export function MiningLoadoutProvider({ children }: { children: React.ReactNode 
         loading,
         saving,
         saveError,
-        setStore,
-        createCustomLoadout,
+        saveLoadout,
+        saveLoadoutAsNew,
         deleteCustomLoadout,
-        updateLasers,
       }}
     >
       {children}

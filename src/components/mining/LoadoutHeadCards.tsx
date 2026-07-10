@@ -28,6 +28,8 @@ import {
 import {
   analyzeLoadoutProTips,
   statValueColorClass,
+  type LoadoutProTipSection,
+  type ProTipSectionKind,
 } from '../../lib/miningLoadoutStatSemantics'
 import {
   getMiningLaserByName,
@@ -200,6 +202,67 @@ function ModuleStatsBody({ mod, empty }: { mod?: EquippedModuleStats; empty?: bo
   )
 }
 
+const PRO_TIP_SECTION_STYLES: Record<
+  ProTipSectionKind,
+  { container: string; label: string; outcome: string }
+> = {
+  problem: {
+    container: 'border-amber-800/55 bg-amber-950/30',
+    label: 'text-amber-200',
+    outcome: 'text-amber-100/80',
+  },
+  cause: {
+    container: 'border-slate-600/50 bg-slate-800/45',
+    label: 'text-slate-300',
+    outcome: 'text-slate-400',
+  },
+  'module-suggestion': {
+    container: 'border-emerald-900/45 bg-emerald-950/25',
+    label: 'text-emerald-300',
+    outcome: 'text-emerald-200/90',
+  },
+  'module-variation': {
+    container: 'border-cyan-900/40 bg-cyan-950/20',
+    label: 'text-cyan-300/90',
+    outcome: 'text-cyan-200/80',
+  },
+  'head-suggestion': {
+    container: 'border-violet-900/45 bg-violet-950/25',
+    label: 'text-violet-300',
+    outcome: 'text-violet-200/90',
+  },
+  'head-alternative': {
+    container: 'border-indigo-900/40 bg-indigo-950/20',
+    label: 'text-indigo-300/90',
+    outcome: 'text-indigo-200/80',
+  },
+  fallback: {
+    container: 'border-slate-600/45 bg-slate-900/50',
+    label: 'text-slate-300',
+    outcome: 'text-slate-400',
+  },
+}
+
+function ProTipSectionBar({ section }: { section: LoadoutProTipSection }) {
+  const style = PRO_TIP_SECTION_STYLES[section.kind]
+  return (
+    <div className={`rounded-md border px-2.5 py-2 ${style.container}`}>
+      <p className={`text-[10px] font-bold uppercase tracking-wide ${style.label}`}>
+        {section.label}
+      </p>
+      <p className="text-[11px] text-slate-300 leading-snug mt-0.5">{section.body}</p>
+      {section.outcome ? (
+        <p className={`text-[11px] font-mono tabular-nums mt-1 ${style.outcome}`}>
+          <span>→ {section.outcome}</span>
+          {section.improvement ? (
+            <span className="text-emerald-400/90 font-sans"> · {section.improvement}</span>
+          ) : null}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
 function EffectiveTotalsCard({
   breakdown,
   slot,
@@ -230,16 +293,18 @@ function EffectiveTotalsCard({
         ))}
       </div>
       {proTips.length > 0 ? (
-        <div className="px-2 pb-2 space-y-1.5">
+        <div className="px-2 pb-2 space-y-2">
           {proTips.map((tip) => (
             <div
               key={tip.statKey}
-              className="rounded-md border border-amber-900/45 bg-amber-950/20 px-2.5 py-2"
+              className="rounded-lg border border-amber-900/40 bg-slate-950/40 p-2 space-y-1.5"
             >
-              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90 px-0.5">
                 Pro-tip · {tip.statLabel}
               </p>
-              <p className="text-[11px] text-slate-400 leading-snug mt-0.5">{tip.message}</p>
+              {tip.sections.map((section, index) => (
+                <ProTipSectionBar key={`${tip.statKey}-${section.kind}-${index}`} section={section} />
+              ))}
             </div>
           ))}
         </div>

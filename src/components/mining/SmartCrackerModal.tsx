@@ -17,7 +17,7 @@ export default function SmartCrackerModal({
   return (
     <AppModal
       title="Smart Cracker"
-      subtitle="Loadout planner, breakability, Mole head plan & gadget fit · synced to your account"
+      subtitle="Loadout planner — edit freely, then Save or Save as New · breakability & gadget fit"
       size="xl"
       onClose={onClose}
     >

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import SignInMenu from '../auth/SignInMenu'
 import { useMiningLoadouts } from '../../contexts/MiningLoadoutContext'
 import {
@@ -25,12 +25,20 @@ import {
 } from '../../lib/soloMoleLoadoutAdvice'
 import LoadoutHeadCardsGrid from './LoadoutHeadCards'
 import {
+  areLaserSlotsEqual,
   canCreateMoreLoadouts,
   canDeleteLoadout,
+  cloneLaserSlots,
   isCustomLoadoutKey,
   listLoadoutsForVessel,
   type LoadoutKey,
 } from '../../lib/miningLoadoutStorage'
+import {
+  getPreferredBuildById,
+  listPreferredBuildsForVessel,
+  preferredBuildLaserSlots,
+} from '../../lib/miningPreferredBuilds'
+import { matchPreferredBuild } from '../../lib/matchPreferredBuild'
 import {
   getMiningVessel,
   MINING_VESSELS,
@@ -438,33 +446,63 @@ export default function MiningLoadoutPanel({
   selection,
   embedded = false,
 }: MiningLoadoutPanelProps) {
-  const { canUse, store, loading, saving, saveError, createCustomLoadout, deleteCustomLoadout, updateLasers } =
+  const { canUse, store, loading, saving, saveError, saveLoadout, saveLoadoutAsNew, deleteCustomLoadout } =
     useMiningLoadouts()
 
   const { vesselId, loadoutKey, onVesselChange, onLoadoutChange } = selection
   const [moleSoloMining, setMoleSoloMining] = useState(true)
+  const [draftLasers, setDraftLasers] = useState<MiningLaserSlotConfig[] | null>(null)
 
   const vessel = getMiningVessel(vesselId)
   const loadouts = useMemo(() => listLoadoutsForVessel(store, vesselId), [store, vesselId])
   const activeLoadout = loadouts.find((l) => l.key === loadoutKey) ?? loadouts[0]
-  const editable = activeLoadout ? isCustomLoadoutKey(activeLoadout.key) : false
+  const isCustom = isCustomLoadoutKey(loadoutKey)
+
+  useEffect(() => {
+    const current =
+      listLoadoutsForVessel(store, vesselId).find((l) => l.key === loadoutKey) ??
+      listLoadoutsForVessel(store, vesselId)[0]
+    if (!current) {
+      setDraftLasers(null)
+      return
+    }
+    setDraftLasers(cloneLaserSlots(current.lasers))
+  }, [store, vesselId, loadoutKey])
+
+  const isDirty = useMemo(() => {
+    if (!draftLasers || !activeLoadout) return false
+    return !areLaserSlotsEqual(draftLasers, activeLoadout.lasers)
+  }, [activeLoadout, draftLasers])
+
+  const preferredBuilds = useMemo(() => listPreferredBuildsForVessel(vesselId), [vesselId])
+
+  const preferredMatch = useMemo(() => {
+    if (!draftLasers) return null
+    return matchPreferredBuild(vesselId, draftLasers)
+  }, [draftLasers, vesselId])
+
+  const handleApplyPreferredBuild = (buildId: string) => {
+    const build = getPreferredBuildById(buildId)
+    if (!build || build.vesselId !== vesselId) return
+    setDraftLasers(preferredBuildLaserSlots(build))
+  }
 
   const comparison = useMemo(() => {
-    if (!activeLoadout || !isRockBreakabilityTargetReady(rockTarget)) return null
-    return compareLoadoutToRock(activeLoadout.lasers, rockTarget!)
-  }, [activeLoadout, rockTarget])
+    if (!draftLasers || !isRockBreakabilityTargetReady(rockTarget)) return null
+    return compareLoadoutToRock(draftLasers, rockTarget!)
+  }, [draftLasers, rockTarget])
 
   const smartCracker = useMemo(() => {
-    if (!activeLoadout || !comparison || !isRockBreakabilityTargetReady(rockTarget)) return null
-    return buildSmartCracker(vesselId, activeLoadout.lasers, rockTarget!, comparison, {
+    if (!draftLasers || !comparison || !isRockBreakabilityTargetReady(rockTarget)) return null
+    return buildSmartCracker(vesselId, draftLasers, rockTarget!, comparison, {
       moleSoloMining,
     })
-  }, [activeLoadout, comparison, rockTarget, vesselId, moleSoloMining])
+  }, [draftLasers, comparison, rockTarget, vesselId, moleSoloMining])
 
   const soloMoleGarage = useMemo(() => {
-    if (vesselId !== 'mole' || !moleSoloMining || !activeLoadout) return null
-    return analyzeSoloMoleGarage(activeLoadout.lasers)
-  }, [activeLoadout, moleSoloMining, vesselId])
+    if (vesselId !== 'mole' || !moleSoloMining || !draftLasers) return null
+    return analyzeSoloMoleGarage(draftLasers)
+  }, [draftLasers, moleSoloMining, vesselId])
 
   if (!canUse) {
     return <LoadoutSignInGate embedded={embedded} />
@@ -475,23 +513,28 @@ export default function MiningLoadoutPanel({
     onLoadoutChange('default')
   }
 
-  const handleCreateLoadout = () => {
-    const created = createCustomLoadout(vesselId)
+  const handleCreateLoadout = async () => {
+    if (!draftLasers) return
+    const created = await saveLoadoutAsNew(vesselId, draftLasers)
     if (created) onLoadoutChange(`custom-${created}`)
   }
 
-  const handleDeleteLoadout = () => {
+  const handleSaveLoadout = async () => {
+    if (!draftLasers || !isCustom) return
+    await saveLoadout(vesselId, loadoutKey, draftLasers)
+  }
+
+  const handleDeleteLoadout = async () => {
     if (!canDeleteLoadout(loadoutKey)) return
     if (!isCustomLoadoutKey(loadoutKey)) return
     const slot = Number(loadoutKey.replace('custom-', '')) as 1 | 2 | 3
-    deleteCustomLoadout(vesselId, slot)
+    await deleteCustomLoadout(vesselId, slot)
     onLoadoutChange('default')
   }
 
   const handleLaserChange = (index: number, next: MiningLaserSlotConfig) => {
-    if (!activeLoadout || !editable) return
-    const lasers = activeLoadout.lasers.map((l, i) => (i === index ? next : l))
-    updateLasers(vesselId, activeLoadout.key, lasers)
+    if (!draftLasers) return
+    setDraftLasers(draftLasers.map((l, i) => (i === index ? next : l)))
   }
 
   if (!vessel) return null
@@ -546,41 +589,83 @@ export default function MiningLoadoutPanel({
         </select>
       </div>
 
-      <div className="flex gap-2">
-        {canCreateMoreLoadouts(store, vesselId) ? (
+      {preferredBuilds.length > 0 ? (
+        <div className="space-y-1">
+          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            Premade build
+          </label>
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              const id = e.target.value
+              if (!id) return
+              handleApplyPreferredBuild(id)
+              e.target.value = ''
+            }}
+            className="site-input w-full px-2 py-1.5 text-xs"
+          >
+            <option value="">Load a premade into editor…</option>
+            {preferredBuilds.map((build) => (
+              <option key={build.id} value={build.id}>
+                {build.displayName}
+              </option>
+            ))}
+          </select>
+          {preferredMatch ? (
+            <p className="text-[11px] text-cyan-300/90">
+              Matches {preferredMatch.build.displayName}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="flex flex-wrap gap-2">
+        {isCustom ? (
           <button
             type="button"
-            onClick={handleCreateLoadout}
-            className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800/80 transition-colors"
+            onClick={handleSaveLoadout}
+            disabled={!isDirty || saving || !draftLasers}
+            className="flex-1 min-w-[7rem] px-2 py-1.5 text-xs rounded-lg border border-orange-700/60 bg-orange-950/30 text-orange-200 hover:bg-orange-950/50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Create loadout
+            Save
           </button>
         ) : null}
-        {canDeleteLoadout(loadoutKey) && editable ? (
+        <button
+          type="button"
+          onClick={handleCreateLoadout}
+          disabled={!canCreateMoreLoadouts(store, vesselId) || saving || !draftLasers}
+          className="flex-1 min-w-[7rem] px-2 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Save as New
+        </button>
+        {canDeleteLoadout(loadoutKey) && isCustom ? (
           <button
             type="button"
             onClick={handleDeleteLoadout}
-            className="flex-1 px-2 py-1.5 text-xs rounded-lg border border-red-900/60 text-red-400/90 hover:bg-red-950/40 transition-colors"
+            disabled={saving}
+            className="flex-1 min-w-[7rem] px-2 py-1.5 text-xs rounded-lg border border-red-900/60 text-red-400/90 hover:bg-red-950/40 transition-colors disabled:opacity-40"
           >
             Delete
           </button>
         ) : null}
       </div>
 
-      {!editable ? (
-        <p className="text-[11px] text-slate-500">
-          Default is factory stock and read-only. Create Mole 1 / 2 / 3 (etc.) to set your mining
-          heads and crafted stats.
-        </p>
-      ) : null}
+      <p className="text-[11px] text-slate-500 leading-snug">
+        {isCustom
+          ? 'Tweak heads and modules freely — changes preview below until you Save. Use Save as New to copy this setup into another slot.'
+          : 'Default is factory stock — edit here to experiment, then Save as New to keep your setup. Default itself is never overwritten.'}
+        {isDirty ? (
+          <span className="text-amber-300/90"> Unsaved changes.</span>
+        ) : null}
+      </p>
 
       {soloMoleGarage ? <SoloMoleGaragePanel advice={soloMoleGarage} /> : null}
 
-      {activeLoadout?.lasers.length ? (
+      {draftLasers?.length ? (
         <LoadoutHeadCardsGrid
           vesselId={vesselId}
-          slots={activeLoadout.lasers}
-          editable={editable}
+          slots={draftLasers}
+          editable
           moleSoloMining={moleSoloMining}
           onSlotChange={handleLaserChange}
         />

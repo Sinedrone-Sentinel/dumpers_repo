@@ -1,0 +1,559 @@
+{
+  "meta": {
+    "generatedAt": "2026-06-25",
+    "purpose": "Phase 1 research — review with user before catalog ingest",
+    "namingConvention": {
+      "displayName": "{creator}'s {jobDesignation}",
+      "jobDesignation": "Purpose / job title — NOT a hardware stack label. Examples: General, Savrilium, Crew General, Unstable.",
+      "variantRule": "A variant is a build mostly the same as another (e.g. one head swap for a specific ore). Distinct crew roles or module philosophies are separate standalone catalog entries even when they share a creator."
+    },
+    "hardpointMapping": {
+      "slot1": {
+        "hardpointIndex": 0,
+        "appHead": "Head 1",
+        "nautical": "Front / Center"
+      },
+      "slot2": {
+        "hardpointIndex": 1,
+        "appHead": "Head 2",
+        "nautical": "Port / Left"
+      },
+      "slot3": {
+        "hardpointIndex": 2,
+        "appHead": "Head 3",
+        "nautical": "Starboard / Right"
+      }
+    },
+    "informalSourceLabels": {
+      "bottom": "Center / Front (slot 1, hardpointIndex 0) — some guides use 'bottom' for the forward center station when facing aft"
+    },
+    "buildTaxonomy": {
+      "audience": {
+        "solo": "Designed for one operator (may still list 3 heads if only one is used in practice)",
+        "crew": "Requires 2+ operators or role-split workflow",
+        "both": "General-purpose — viable solo or multicrew without a specific crew technique"
+      },
+      "kind": {
+        "general": "All-purpose / no specific ore or mission",
+        "job": "Tied to a specific ore, mission type, or farming loop",
+        "crew": "Legacy label — prefer audience + kind; kept on some entries until catalog ingest"
+      },
+      "partial": "When a guide only specs heads needed for a resource farm, omit unspecified hardpoints — do not invent a third laser",
+      "variation": "When source defines a complete build plus a mostly-same swap (one head for a specific rock type), catalog as a standalone entry with its own job title; keep variationOf for lineage only",
+      "reject": "Do not ingest StarZen bot summaries or auto CC/video transcriptions as loadout sources — incomplete and unreliable; require written guides or verified full specs"
+    },
+    "moduleNameMap": {
+      "Rieger-C3": "Mining_Modules_Passive_Rieger_MK3",
+      "Focus III": "Mining_Modules_Passive_Focus_MK3",
+      "Focus I": "Mining_Modules_Passive_Focus_MK1",
+      "Surge": "Mining_Modules_Active_Surge",
+      "Stampede": "Mining_Modules_Active_Stampede",
+      "Torrent III": "Mining_Modules_Passive_Torrent_MK3",
+      "XTR-XL": "Mining_Modules_Passive_XTR_MK3"
+    },
+    "laserNameMap": {
+      "Helix II": "Mining_Laser_THCN_Helix_S2",
+      "Hofstede-S2": "Mining_Laser_SHIN_Hofstede_S2",
+      "Impact II": "Mining_Laser_THCN_Impact_S2",
+      "Arbor MH2": "Mining_Laser_GRIN_Arbor_S2",
+      "Klein-S2": "Mining_Laser_SHIN_Klein_S2"
+    }
+  },
+  "candidates": [
+    {
+      "id": "sinedrone_general_all_purpose",
+      "status": "org_anchor",
+      "proposedDisplayName": "Sinedrone's General",
+      "creator": "Sinedrone",
+      "jobDesignation": "General",
+      "vesselId": "mole",
+      "kind": "general",
+      "audience": "both",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "Org Discord — stock heads",
+      "sources": [
+        {
+          "title": "Dumper's Repo org reference",
+          "url": null,
+          "type": "org_discord"
+        }
+      ],
+      "hardpointLabelsFromSource": {
+        "slot1": "Center / Head 1",
+        "slot2": "Left / Port / Head 2",
+        "slot3": "Right / Starboard / Head 3"
+      },
+      "mappingNotes": null,
+      "description": "Org general-purpose Mole template — Helix breakers center/port, Hofstede control starboard. Right slot has an Ouritite module tweak for matching only.",
+      "purposeRationale": "Triple-role generalist: dual Helix power stacks + Hofstede window on starboard. Default org anchor when no ore-specific job applies.",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "sourceSlotLabel": "Center",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Rieger-C3",
+            "Rieger-C3"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 1,
+          "sourceSlotLabel": "Left / Port",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 2,
+          "sourceSlotLabel": "Right / Starboard",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock",
+          "optionalModuleVariants": [
+            {
+              "modules": [
+                "Mining_Modules_Passive_Focus_MK3",
+                "Mining_Modules_Passive_Focus_MK3"
+              ],
+              "note": "Ouritite tweak — drop Rieger or double Focus III"
+            }
+          ]
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "coldhearted_rock_cracker",
+      "status": "org_anchor",
+      "proposedDisplayName": "Coldhearted's Savrilium",
+      "creator": "Coldhearted",
+      "jobDesignation": "Savrilium",
+      "vesselId": "mole",
+      "kind": "job",
+      "audience": "both",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "Org Discord — Savrilium surface deposits",
+      "sources": [
+        {
+          "title": "Dumper's Repo org reference",
+          "url": null,
+          "type": "org_discord"
+        }
+      ],
+      "mappingNotes": null,
+      "description": "Rock Cracker mission build — XTR-XL stacks on Helix breakers and Hofstede center for Savrilium surface deposits.",
+      "purposeRationale": "Full XTR-XL passive stacks maximize extraction yield on Savrilium farming loops. Ore-specific job, not a general template.",
+      "intendedOres": [
+        "Savrilium"
+      ],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "sourceSlotLabel": "Center",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ],
+          "moduleDisplayNames": [
+            "XTR-XL",
+            "XTR-XL"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 1,
+          "sourceSlotLabel": "Left / Port",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ],
+          "moduleDisplayNames": [
+            "XTR-XL",
+            "XTR-XL",
+            "XTR-XL"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 2,
+          "sourceSlotLabel": "Right / Starboard",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ],
+          "moduleDisplayNames": [
+            "XTR-XL",
+            "XTR-XL",
+            "XTR-XL"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "ggwtb_crew_balanced_47",
+      "status": "complete",
+      "proposedDisplayName": "GGWTB's Crew General",
+      "creator": "GGWTB",
+      "jobDesignation": "Crew General",
+      "vesselId": "mole",
+      "kind": "crew",
+      "audience": "crew",
+      "sources": [
+        {
+          "title": "Star Citizen 4.7 Mining Loadouts: Best MOLE & Prospector Builds",
+          "url": "https://ggwtb.com/blog/star-citizen-4-7-mining-loadouts-best-mole-prospector-builds",
+          "type": "article"
+        }
+      ],
+      "hardpointLabelsFromSource": {
+        "slot1": "Front",
+        "slot2": "Port",
+        "slot3": "Side / Utility (Starboard)"
+      },
+      "mappingNotes": "Uses correct Front / Port / Starboard nautical labels. 'Side / Utility' = Starboard (slot 3).",
+      "description": "4.7 multicrew role-split template: Helix breaker front, Hofstede control port, Impact stability starboard.",
+      "purposeRationale": "Three distinct crew stations — breaker / window control / instability management. General multicrew starter, not tied to a specific ore.",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "sourceSlotLabel": "Front",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Surge",
+            "Surge",
+            "Rieger-C3"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 1,
+          "sourceSlotLabel": "Port",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_Focus_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Focus III",
+            "Rieger-C3"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 2,
+          "sourceSlotLabel": "Starboard",
+          "laserName": "Mining_Laser_THCN_Impact_S2",
+          "laserDisplayName": "Impact II",
+          "modules": [
+            "Mining_Modules_Passive_Torrent_MK3",
+            "Mining_Modules_Passive_Torrent_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Torrent III",
+            "Torrent III",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "codepic_base_setup",
+      "status": "complete",
+      "proposedDisplayName": "codepic's Crew Passive",
+      "creator": "codepic",
+      "jobDesignation": "Crew Passive",
+      "vesselId": "mole",
+      "kind": "crew",
+      "audience": "crew",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "GitHub guide — passive modules only, PD 45",
+      "sources": [
+        {
+          "title": "codepic/StarCitizen.Mining.Mole — BaseSetup.md",
+          "url": "https://github.com/codepic/StarCitizen.Mining.Mole/blob/main/BaseSetup.md",
+          "type": "github"
+        }
+      ],
+      "hardpointLabelsFromSource": {
+        "slot1": "Front Turret (Turret Weapon Slot 1)",
+        "slot2": "Port Turret (Turret Weapon Slot 2)",
+        "slot3": "Starboard Turret (Turret Weapon Slot 3)"
+      },
+      "mappingNotes": null,
+      "description": "Passive-only multicrew setup — Helix front breaker, Arbor port for extraction support, Hofstede starboard for sub-break finesse.",
+      "purposeRationale": "No actives anywhere — sustained passive crew workflow optimized for extraction efficiency and PD 45 play. Distinct job from burst/active crew builds.",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "sourceSlotLabel": "Front",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Rieger-C3",
+            "Rieger-C3"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 1,
+          "sourceSlotLabel": "Port",
+          "laserName": "Mining_Laser_GRIN_Arbor_S2",
+          "laserDisplayName": "Arbor MH2",
+          "modules": [
+            "Mining_Modules_Passive_Focus_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Focus III",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 2,
+          "sourceSlotLabel": "Starboard",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "loudguns_multicrew_hofstede_sides",
+      "status": "complete",
+      "proposedDisplayName": "Loud Guns's Crew General",
+      "creator": "Loud Guns",
+      "jobDesignation": "Crew General",
+      "vesselId": "mole",
+      "kind": "crew",
+      "audience": "crew",
+      "patchEra": "4.7+",
+      "sourcePublishedHint": "2026-03-14 — The Mining Guide (4.7 PTU/open PTU era)",
+      "sources": [
+        {
+          "title": "The Mining Guide - Star Citizen 4.7 - Welcome to the Industrial Revolution!",
+          "url": "https://www.youtube.com/watch?v=blx3Z8n9Etk",
+          "type": "video"
+        }
+      ],
+      "hardpointLabelsFromSource": {
+        "slot1": "Front (heavy cracker)",
+        "slot2": "Side laser (symmetric)",
+        "slot3": "Side laser (symmetric)"
+      },
+      "mappingNotes": "Guide does not distinguish port vs starboard — both sides are identical Hofstede-S2 + Rieger-C3 + Focus III.",
+      "description": "Loud Guns 4.7 multicrew default — Helix front with Rieger + Surge + Stampede burst; symmetric Hofstede scalpel sides.",
+      "purposeRationale": "Front station = max Mole breaking burst (Rieger + dual actives). Sides = window-controlled finesse. General multicrew template for mixed rock types.",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "sourceSlotLabel": "Front",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Stampede"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Surge",
+            "Stampede"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 1,
+          "sourceSlotLabel": "Port (assumed — symmetric)",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 2,
+          "sourceSlotLabel": "Starboard (assumed — symmetric)",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "relatedCandidates": [
+        "loudguns_unstable_impact_side"
+      ],
+      "catalogPriority": "v1_ship"
+    },
+    {
+      "id": "loudguns_unstable_impact_side",
+      "status": "complete",
+      "proposedDisplayName": "Loud Guns's Unstable",
+      "creator": "Loud Guns",
+      "jobDesignation": "Unstable",
+      "vesselId": "mole",
+      "kind": "job",
+      "audience": "crew",
+      "patchEra": "4.7+",
+      "variationOf": "loudguns_multicrew_hofstede_sides",
+      "variationSpec": "Same crew layout as Crew General but one side Hofstede → Impact II for notoriously unstable, lower-resistance rocks",
+      "executiveDecisions": [
+        "Source does not say port vs starboard — swapped starboard (slot 3 / hardpointIndex 2) per normal Mole roles: center=breaker, port=mid, starboard=low-mid/unstable finesse",
+        "Impact II modules not in source — filled Rieger-C3 + Focus III + Torrent III (stability/instability role; Torrent III matches instability-offset intent)"
+      ],
+      "sourcePublishedHint": "2026-03-14 — variation aside in 4.7 mining guide",
+      "sources": [
+        {
+          "title": "The Mining Guide - Star Citizen 4.7",
+          "url": "https://www.youtube.com/watch?v=blx3Z8n9Etk",
+          "type": "video"
+        }
+      ],
+      "hardpointLabelsFromSource": {
+        "slot1": "Front — Helix II (unchanged from base)",
+        "slot2": "Port — Hofstede-S2 (unchanged from base)",
+        "slot3": "Starboard — Impact II (replaces Hofstede on one side)"
+      },
+      "mappingNotes": null,
+      "description": "Standalone catalog entry for high-instability secondary rocks — one Hofstede side swapped to Impact II with Torrent III stability support.",
+      "purposeRationale": "True variant of Crew General (one head swap) but distinct job: unstable-rock crew station. Impact II + Torrent III offsets instability on the side laser while front Helix burst unchanged.",
+      "intendedOres": [],
+      "hardpoints": [
+        {
+          "hardpointIndex": 0,
+          "sourceSlotLabel": "Front",
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "laserDisplayName": "Helix II",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Stampede"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Surge",
+            "Stampede"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 1,
+          "sourceSlotLabel": "Port",
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "laserDisplayName": "Hofstede-S2",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III"
+          ],
+          "headMode": "stock"
+        },
+        {
+          "hardpointIndex": 2,
+          "sourceSlotLabel": "Starboard (executive — swapped slot)",
+          "laserName": "Mining_Laser_THCN_Impact_S2",
+          "laserDisplayName": "Impact II",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3",
+            "Mining_Modules_Passive_Torrent_MK3"
+          ],
+          "moduleDisplayNames": [
+            "Rieger-C3",
+            "Focus III",
+            "Torrent III"
+          ],
+          "headMode": "stock"
+        }
+      ],
+      "incompleteReasons": [],
+      "catalogPriority": "v1_ship"
+    }
+  ]
+}

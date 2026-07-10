@@ -24,10 +24,29 @@ import {
 
 export type StatSentiment = 'good' | 'bad' | 'neutral'
 
+export type ProTipSectionKind =
+  | 'problem'
+  | 'cause'
+  | 'module-suggestion'
+  | 'module-variation'
+  | 'head-suggestion'
+  | 'head-alternative'
+  | 'fallback'
+
+export interface LoadoutProTipSection {
+  kind: ProTipSectionKind
+  label: string
+  body: string
+  /** Projected stat after the change, e.g. "-1%" or "2,100 MW" */
+  outcome?: string
+  /** Improvement vs current, e.g. "+41%" */
+  improvement?: string
+}
+
 export interface LoadoutProTip {
   statKey: string
   statLabel: string
-  message: string
+  sections: LoadoutProTipSection[]
 }
 
 type TipStatKey = 'module-power' | Exclude<PriorityMiningStat, 'power'>
@@ -297,27 +316,46 @@ function rankHeadSwaps(
   return candidates.sort((a, b) => b.delta - a.delta).slice(0, 2)
 }
 
-function formatSwapSuggestions(swaps: SwapCandidate[], currentDisplay: string): string {
-  if (!swaps.length) return ''
-
+function uniqueSwapCandidates(swaps: SwapCandidate[], limit = 2): SwapCandidate[] {
   const seen = new Set<string>()
   const unique: SwapCandidate[] = []
   for (const swap of swaps) {
     if (seen.has(swap.projectedDisplay)) continue
     seen.add(swap.projectedDisplay)
     unique.push(swap)
-    if (unique.length >= 2) break
+    if (unique.length >= limit) break
   }
-
   return unique
-    .map((swap) => {
-      const gain =
-        swap.projectedDisplay.includes('%') || swap.projectedDisplay.includes('MW')
-          ? formatSignedPercent(swap.delta)
-          : formatSignedNumber(swap.delta)
-      return `${swap.description} → ${swap.projectedDisplay} (from ${currentDisplay}, improves by ${gain})`
-    })
-    .join('; ')
+}
+
+function formatImprovement(delta: number, projectedDisplay: string): string {
+  const text =
+    projectedDisplay.includes('%') || projectedDisplay.includes('MW')
+      ? formatSignedPercent(delta)
+      : formatSignedNumber(delta)
+  return `${text} better`
+}
+
+function moduleSwapSections(swaps: SwapCandidate[]): LoadoutProTipSection[] {
+  const unique = uniqueSwapCandidates(swaps)
+  return unique.map((swap, index) => ({
+    kind: index === 0 ? 'module-suggestion' : 'module-variation',
+    label: index === 0 ? 'Suggestion' : `Variation ${index}`,
+    body: swap.description,
+    outcome: swap.projectedDisplay,
+    improvement: formatImprovement(swap.delta, swap.projectedDisplay),
+  }))
+}
+
+function headSwapSections(swaps: SwapCandidate[]): LoadoutProTipSection[] {
+  const unique = uniqueSwapCandidates(swaps)
+  return unique.map((swap, index) => ({
+    kind: index === 0 ? 'head-suggestion' : 'head-alternative',
+    label: index === 0 ? 'Head swap' : `Alt head ${index}`,
+    body: swap.description,
+    outcome: swap.projectedDisplay,
+    improvement: formatImprovement(swap.delta, swap.projectedDisplay),
+  }))
 }
 
 function detectProblems(breakdown: LaserLoadoutBreakdown): DetectedProblem[] {
@@ -389,38 +427,52 @@ function buildDynamicTip(
   const moduleSwaps = rankModuleSwaps(slot, problem.key, problem.numericValue)
   const headSwaps = rankHeadSwaps(slot, vesselId, problem.key, problem.numericValue)
 
-  const intro = (() => {
+  const problemBody = (() => {
     switch (problem.key) {
       case 'module-power':
-        return `Module stack is dragging fracture power (${problem.displayValue})`
+        return `Module stack is dragging fracture power (${problem.displayValue}).`
       case 'resistance':
-        return `Resistance shift is working against you (${problem.displayValue})`
+        return `Resistance shift is working against you (${problem.displayValue}).`
       case 'window':
-        return `Charge window is extremely tight (${problem.displayValue})`
+        return `Charge window is extremely tight (${problem.displayValue}).`
       case 'instability':
-        return `Laser instability is high (${problem.displayValue})`
+        return `Laser instability is high (${problem.displayValue}).`
       default:
-        return `${problem.label} is out of band (${problem.displayValue})`
+        return `${problem.label} is out of band (${problem.displayValue}).`
     }
   })()
 
-  const parts: string[] = []
-  if (blame) parts.push(`Mainly from ${blame}`)
+  const sections: LoadoutProTipSection[] = [
+    {
+      kind: 'problem',
+      label: 'Problem',
+      body: problemBody,
+    },
+  ]
 
-  const swapText = formatSwapSuggestions(moduleSwaps, problem.displayValue)
-  if (swapText) parts.push(swapText)
+  if (blame) {
+    sections.push({
+      kind: 'cause',
+      label: 'Why',
+      body: blame,
+    })
+  }
 
-  const headText = formatSwapSuggestions(headSwaps, problem.displayValue)
-  if (headText) parts.push(`Head swap: ${headText}`)
+  sections.push(...moduleSwapSections(moduleSwaps))
+  sections.push(...headSwapSections(headSwaps))
 
-  if (!parts.length) {
-    parts.push('Try a different head or module mix — simulate swaps above to recover this stat')
+  if (sections.length === 1) {
+    sections.push({
+      kind: 'fallback',
+      label: 'Try this',
+      body: 'Swap heads or modules above and watch effective totals update — aim to recover this stat.',
+    })
   }
 
   return {
     statKey: problem.key,
     statLabel: problem.label,
-    message: `${intro}. ${parts.join('. ')}.`,
+    sections,
   }
 }
 

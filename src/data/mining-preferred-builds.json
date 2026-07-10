@@ -1,0 +1,440 @@
+{
+  "version": 1,
+  "builds": [
+    {
+      "id": "sinedrone_general_all_purpose",
+      "displayName": "Sinedrone's General",
+      "creator": "Sinedrone",
+      "jobDesignation": "General",
+      "vesselId": "mole",
+      "kind": "general",
+      "audience": "both",
+      "description": "Org general-purpose Mole template — Helix breakers center/port, Hofstede control starboard. Right slot has an Ouritite module tweak for matching only.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coldhearted_rock_cracker",
+      "displayName": "Coldhearted's Savrilium",
+      "creator": "Coldhearted",
+      "jobDesignation": "Savrilium",
+      "vesselId": "mole",
+      "kind": "job",
+      "audience": "both",
+      "description": "Rock Cracker mission build — XTR-XL stacks on Helix breakers and Hofstede center for Savrilium surface deposits.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ]
+        }
+      ],
+      "intendedOres": [
+        "Savrilium"
+      ]
+    },
+    {
+      "id": "ggwtb_crew_balanced_47",
+      "displayName": "GGWTB's Crew General",
+      "creator": "GGWTB",
+      "jobDesignation": "Crew General",
+      "vesselId": "mole",
+      "kind": "crew",
+      "audience": "crew",
+      "description": "4.7 multicrew role-split template: Helix breaker front, Hofstede control port, Impact stability starboard.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Focus_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_THCN_Impact_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Torrent_MK3",
+            "Mining_Modules_Passive_Torrent_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        }
+      ],
+      "recognitionNotes": "Uses correct Front / Port / Starboard nautical labels. 'Side / Utility' = Starboard (slot 3)."
+    },
+    {
+      "id": "codepic_base_setup",
+      "displayName": "codepic's Crew Passive",
+      "creator": "codepic",
+      "jobDesignation": "Crew Passive",
+      "vesselId": "mole",
+      "kind": "crew",
+      "audience": "crew",
+      "description": "Passive-only multicrew setup — Helix front breaker, Arbor port for extraction support, Hofstede starboard for sub-break finesse.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_GRIN_Arbor_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Focus_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loudguns_multicrew_hofstede_sides",
+      "displayName": "Loud Guns's Crew General",
+      "creator": "Loud Guns",
+      "jobDesignation": "Crew General",
+      "vesselId": "mole",
+      "kind": "crew",
+      "audience": "crew",
+      "description": "Loud Guns 4.7 multicrew default — Helix front with Rieger + Surge + Stampede burst; symmetric Hofstede scalpel sides.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Stampede"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        }
+      ],
+      "recognitionNotes": "Guide does not distinguish port vs starboard — both sides are identical Hofstede-S2 + Rieger-C3 + Focus III."
+    },
+    {
+      "id": "loudguns_unstable_impact_side",
+      "displayName": "Loud Guns's Unstable",
+      "creator": "Loud Guns",
+      "jobDesignation": "Unstable",
+      "vesselId": "mole",
+      "kind": "job",
+      "audience": "crew",
+      "description": "Standalone catalog entry for high-instability secondary rocks — one Hofstede side swapped to Impact II with Torrent III stability support.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Stampede"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        },
+        {
+          "laserName": "Mining_Laser_THCN_Impact_S2",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3",
+            "Mining_Modules_Passive_Torrent_MK3"
+          ]
+        }
+      ],
+      "variationOf": "loudguns_multicrew_hofstede_sides"
+    },
+    {
+      "id": "ggwtb_hofstede_focus_beginner",
+      "displayName": "GGWTB's General",
+      "creator": "GGWTB",
+      "jobDesignation": "General",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "description": "Default 4.7 recommendation for most players — Hofstede-S1 trades raw power for the widest forgiving green zone.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ggwtb_helix_rieger_aggressive",
+      "displayName": "GGWTB's Passive Breaker",
+      "creator": "GGWTB",
+      "jobDesignation": "Passive Breaker",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "description": "Always-on breaker: Helix I with Rieger-C3 on both ports — no actives, no window help. For miners who can hold a narrow green zone on tough rocks.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Rieger_MK3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loudguns_helix_rieger_focus",
+      "displayName": "Loud Guns's General",
+      "creator": "Loud Guns",
+      "jobDesignation": "General",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "description": "Balanced 4.7 daily driver — Rieger-C3 power with Focus III window recovery on Helix I.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Passive_Focus_MK3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loudguns_helix_rieger_surge",
+      "displayName": "Loud Guns's Max Breaker",
+      "creator": "Loud Guns",
+      "jobDesignation": "Max Breaker",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "description": "Maximum Prospector breaking power — Helix I with Rieger-C3 passive baseline and Surge active burst for large, high-resistance rocks.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3",
+            "Mining_Modules_Active_Surge"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loudguns_helix_surge_stampede_max",
+      "displayName": "Loud Guns's Burst Breaker",
+      "creator": "Loud Guns",
+      "jobDesignation": "Burst Breaker",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "description": "No passives — Surge + Stampede double-active burst for experienced miners who cycle actives instead of holding a passive baseline.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Active_Surge",
+            "Mining_Modules_Active_Stampede"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loudguns_hofstede_rieger_friendly",
+      "displayName": "Loud Guns's Beginner",
+      "creator": "Loud Guns",
+      "jobDesignation": "Beginner",
+      "vesselId": "prospector",
+      "kind": "general",
+      "audience": "solo",
+      "description": "Learner build — Hofstede-S1 wide window with a modest Rieger-C3 power bump for smaller rocks while learning throttle control.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_Rieger_MK3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "noobcitizen_lancet_quant",
+      "displayName": "Noob Citizen's Quantanium",
+      "creator": "Noob Citizen",
+      "jobDesignation": "Quantanium",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "description": "Quantanium specialist — Lancet MH1 for narrow-window volatile extraction; carry spare Surge charges in utility slots.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_GRIN_Lancet_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Active_Surge"
+          ]
+        }
+      ],
+      "intendedOres": [
+        "Quantanium"
+      ],
+      "recognitionNotes": "Active Surge inventory vs laser port — catalog should document carried spares separately from laser module multiset match"
+    },
+    {
+      "id": "sinedrone_helix_xtr_surface_breaker",
+      "displayName": "Sinedrone's Surface Breaker",
+      "creator": "Sinedrone",
+      "jobDesignation": "Surface Breaker",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "description": "Surface breaker — Helix I with XTR-XL on both ports. Planetary surface rocks only; uses XL window widening to tame Helix's narrow charge zone, not power modules.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_THCN_Helix_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3",
+            "Mining_Modules_Passive_XTR_MK3"
+          ]
+        }
+      ],
+      "intendedDepositType": "surface"
+    },
+    {
+      "id": "sinedrone_hofstede_fltr_surface_filter",
+      "displayName": "Sinedrone's Surface Filter",
+      "creator": "Sinedrone",
+      "jobDesignation": "Surface Filter",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "description": "Surface Hofstede with FLTR-XL — cut inert pulled into the Prospector's small hold after you crack the rock. Does not change inert inside the rock; reduces garbage collected during extraction so you mine longer before filling on junk.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_FLTR_MK3"
+          ]
+        }
+      ],
+      "intendedDepositType": "surface",
+      "recognitionNotes": "Inert filter affects extraction yield mix after fracture — not the inert content of the rock itself."
+    },
+    {
+      "id": "sinedrone_hofstede_xtr_surface_wide",
+      "displayName": "Sinedrone's Surface Wide",
+      "creator": "Sinedrone",
+      "jobDesignation": "Surface Wide",
+      "vesselId": "prospector",
+      "kind": "job",
+      "audience": "solo",
+      "description": "Easy surface Hofstede — XTR-XL when surface rocks need more green zone than stock Hofstede alone. Same −5% XL power penalty; +25% charge window on top of the head's +60%.",
+      "lasers": [
+        {
+          "laserName": "Mining_Laser_SHIN_Hofstede_S1",
+          "mode": "stock",
+          "modules": [
+            "Mining_Modules_Passive_XTR_MK3"
+          ]
+        }
+      ],
+      "intendedDepositType": "surface"
+    }
+  ]
+}

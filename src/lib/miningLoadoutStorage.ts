@@ -6,6 +6,37 @@ import {
 import { normalizeModuleSelection } from './miningModules'
 import { getMiningVessel, vesselCustomLoadoutLabel, vesselDefaultLoadoutLabel } from './miningVessels'
 
+export function cloneLaserSlots(lasers: MiningLaserSlotConfig[]): MiningLaserSlotConfig[] {
+  return lasers.map((l) => ({
+    ...l,
+    slotQualities: l.slotQualities ? { ...l.slotQualities } : undefined,
+    modules: l.modules ? [...l.modules] : undefined,
+  }))
+}
+
+export function areLaserSlotsEqual(
+  a: MiningLaserSlotConfig[],
+  b: MiningLaserSlotConfig[]
+): boolean {
+  if (a.length !== b.length) return false
+  return a.every((slot, index) => {
+    const other = b[index]
+    if (!other) return false
+    if (slot.laserName !== other.laserName || slot.mode !== other.mode) return false
+    if ((slot.customLabel ?? '') !== (other.customLabel ?? '')) return false
+    const modsA = slot.modules ?? []
+    const modsB = other.modules ?? []
+    if (modsA.length !== modsB.length) return false
+    if (!modsA.every((m, i) => m === modsB[i])) return false
+    const qA = slot.slotQualities ?? {}
+    const qB = other.slotQualities ?? {}
+    const qKeysA = Object.keys(qA).sort()
+    const qKeysB = Object.keys(qB).sort()
+    if (qKeysA.length !== qKeysB.length) return false
+    return qKeysA.every((k) => qA[Number(k)] === qB[Number(k)])
+  })
+}
+
 export const MINING_LOADOUT_STORAGE_VERSION = 1
 
 export type CustomLoadoutSlotIndex = 1 | 2 | 3
@@ -167,11 +198,7 @@ export function cloneDefaultLasersForCustomLoadout(
   _vesselId: MiningVesselId,
   defaultLasers: MiningLaserSlotConfig[]
 ): MiningLaserSlotConfig[] {
-  return defaultLasers.map((l) => ({
-    ...l,
-    slotQualities: l.slotQualities ? { ...l.slotQualities } : undefined,
-    modules: l.modules ? [...l.modules] : undefined,
-  }))
+  return cloneLaserSlots(defaultLasers)
 }
 
 export function createCustomLoadoutSlot(
@@ -205,6 +232,50 @@ export function createCustomLoadoutSlot(
     },
     created: next,
   }
+}
+
+export function createCustomLoadoutFromLasers(
+  store: MiningLoadoutStore,
+  vesselId: MiningVesselId,
+  lasers: MiningLaserSlotConfig[]
+): { store: MiningLoadoutStore; created: CustomLoadoutSlotIndex | null } {
+  const state = getVesselLoadoutState(store, vesselId)
+  const next = ([1, 2, 3] as CustomLoadoutSlotIndex[]).find((n) => !state.customSlots.includes(n))
+  if (!next) return { store, created: null }
+
+  const vessel = getMiningVessel(vesselId)
+  const normalizedLasers = normalizeLasersForVessel(vesselId, lasers, vessel)
+
+  const key: LoadoutKey = `custom-${next}`
+  const updatedState: VesselLoadoutState = {
+    customSlots: [...state.customSlots, next].sort((a, b) => a - b),
+    loadouts: {
+      ...state.loadouts,
+      [key]: normalizedLasers,
+    },
+  }
+
+  return {
+    store: {
+      ...store,
+      vessels: { ...store.vessels, [vesselId]: updatedState },
+    },
+    created: next,
+  }
+}
+
+function normalizeLasersForVessel(
+  vesselId: MiningVesselId,
+  lasers: MiningLaserSlotConfig[],
+  vessel: ReturnType<typeof getMiningVessel>
+): MiningLaserSlotConfig[] {
+  if (vessel?.isBespoke) {
+    return lasers.map((slot) => ({
+      ...slot,
+      laserName: vessel.defaultLaserName,
+    }))
+  }
+  return cloneLaserSlots(lasers)
 }
 
 export function deleteCustomLoadoutSlot(
@@ -241,13 +312,7 @@ export function updateLoadoutLasers(
   if (loadoutKey === 'default') return store
 
   const vessel = getMiningVessel(vesselId)
-  const normalizedLasers =
-    vessel?.isBespoke
-      ? lasers.map((slot) => ({
-          ...slot,
-          laserName: vessel.defaultLaserName,
-        }))
-      : lasers
+  const normalizedLasers = normalizeLasersForVessel(vesselId, lasers, vessel)
 
   const state = getVesselLoadoutState(store, vesselId)
   return {
