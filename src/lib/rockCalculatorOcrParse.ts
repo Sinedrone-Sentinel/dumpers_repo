@@ -35,6 +35,13 @@ const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
 
 const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+)/i
 
+const RESULTS_CROP_ERROR =
+  'Could not read the RESULTS header — crop the entire SCAN RESULTS panel, including the word "RESULTS" and the ore name directly below it.'
+
+function hasResultsHeader(lines: string[]): boolean {
+  return lines.some((line) => /\bRESULTS\b/i.test(line.trim()))
+}
+
 function hasTrailingQuality(line: string): boolean {
   return /\s+Q?\d{1,4}\s*$/i.test(line.trim())
 }
@@ -266,26 +273,63 @@ function parseCompositionLines(
   return { lines: compositionLines, inertPercent }
 }
 
-function detectPrimaryOre(compositionLines: OcrCompositionLine[]): string | null {
-  if (compositionLines.length < 2) return null
-  const first = compositionLines[0].elementName
-  const second = compositionLines[1].elementName
-  if (first && first === second) return first
+/** Smaller composition % = High band (rank 0); larger % = Low band (rank 1). */
+function assignBandRanksByPercent(compositionLines: OcrCompositionLine[]): void {
+  const indicesByElement = new Map<string, number[]>()
+  compositionLines.forEach((line, index) => {
+    const indices = indicesByElement.get(line.elementName) ?? []
+    indices.push(index)
+    indicesByElement.set(line.elementName, indices)
+  })
+
+  for (const indices of indicesByElement.values()) {
+    if (indices.length < 2) continue
+    const sorted = [...indices].sort(
+      (a, b) => compositionLines[a].percent - compositionLines[b].percent
+    )
+    sorted.forEach((lineIndex, rank) => {
+      compositionLines[lineIndex].scanBandRank = rank
+    })
+  }
+}
+
+function parseOreNameFromResultsLine(raw: string, warnings: string[]): string | null {
+  const trimmed = raw.trim()
+  if (!trimmed || /^(MASS|RES\b|RESISTANCE|INST\b|INSTABILITY|COMPOSITION)/i.test(trimmed)) {
+    return null
+  }
+
+  const oreTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9\s]*?)\s*\(ORE\)/i)
+  if (oreTagged) return normalizeElementName(oreTagged[1], warnings)
+
+  const rockTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
+  if (rockTagged) return normalizeElementName(rockTagged[1], warnings)
+
   return null
 }
 
-function detectHeaderOre(lines: string[], warnings: string[]): string | null {
-  for (const line of lines) {
-    const trimmed = line.trim()
-    if (!trimmed || /^(SCAN|MASS|RESISTANCE|INSTABILITY|COMPOSITION)/i.test(trimmed)) continue
+function parseResultsHeaderOre(lines: string[], warnings: string[]): string | null {
+  for (let i = 0; i < lines.length; i++) {
+    if (!/\bRESULTS\b/i.test(lines[i])) continue
 
-    const oreHeader = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s*\(ORE\)/i)
-    if (oreHeader) return normalizeElementName(oreHeader[1], warnings)
+    const inlineOre = lines[i].replace(/^.*\bRESULTS\b\s*/i, '').trim()
+    const inlineName = parseOreNameFromResultsLine(inlineOre, warnings)
+    if (inlineName) return inlineName
 
-    const rockHeader = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
-    if (rockHeader) return normalizeElementName(rockHeader[1], warnings)
+    for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+      const oreName = parseOreNameFromResultsLine(lines[j], warnings)
+      if (oreName) return oreName
+    }
+    return null
   }
   return null
+}
+
+function countPrimaryOreBands(
+  compositionLines: OcrCompositionLine[],
+  primaryOreName: string
+): number {
+  return compositionLines.filter((line) => line.elementName === primaryOreName).length
 }
 
 export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
@@ -299,7 +343,16 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' }
   }
 
+  if (!hasResultsHeader(lines)) {
+    return { ok: false, error: RESULTS_CROP_ERROR }
+  }
+
   const warnings: string[] = []
+
+  const resultsHeaderOre = parseResultsHeaderOre(lines, warnings)
+  if (!resultsHeaderOre) {
+    return { ok: false, error: RESULTS_CROP_ERROR }
+  }
 
   const mass = extractLabeledValue(lines, ['MASS'])
   const resistancePercent = extractLabeledValue(lines, ['RESISTANCE'])
@@ -307,6 +360,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
   const totalScu = extractTotalScu(lines)
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
+  assignBandRanksByPercent(compositionLines)
 
   if (mass == null) {
     return { ok: false, error: 'Could not read Mass from the crop — include the MASS line.' }
@@ -321,33 +375,21 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'Could not read total SCU from COMPOSITION — include that header line.' }
   }
   if (compositionLines.length < 2) {
-    return { ok: false, error: 'Need at least two composition ore lines (High and Low) in the crop.' }
+    return { ok: false, error: 'Need at least two composition lines in the crop — include the full COMPOSITION list.' }
   }
 
-  const primaryFromLines = detectPrimaryOre(compositionLines)
-  const primaryFromHeader = detectHeaderOre(lines, warnings)
-  let primaryOreName = primaryFromLines ?? primaryFromHeader
-
-  if (primaryOreName) {
-    const resolvedPrimary = resolveOcrOreName(primaryOreName)
-    if (resolvedPrimary.correctedFrom) {
-      warnings.push(`Read "${resolvedPrimary.correctedFrom}" as ${resolvedPrimary.name} (primary ore).`)
-    }
-    primaryOreName = resolvedPrimary.name
+  const resolvedPrimary = resolveOcrOreName(resultsHeaderOre)
+  if (resolvedPrimary.correctedFrom) {
+    warnings.push(`Read "${resolvedPrimary.correctedFrom}" as ${resolvedPrimary.name} (primary ore).`)
   }
+  const primaryOreName = resolvedPrimary.name
 
-  if (!primaryOreName) {
+  const primaryBandCount = countPrimaryOreBands(compositionLines, primaryOreName)
+  if (primaryBandCount < 2) {
     return {
       ok: false,
-      error:
-        'First two composition lines must be the same ore (High/Low bands) — check your crop includes the full COMPOSITION list.',
+      error: `Found ${primaryOreName} under RESULTS but could not read both High and Low composition bands — include the full COMPOSITION list.`,
     }
-  }
-
-  if (primaryFromLines && primaryFromHeader && primaryFromLines !== primaryFromHeader) {
-    warnings.push(
-      `Rock label shows ${primaryFromHeader} but composition High/Low bands are ${primaryFromLines} — using composition for calculator basis.`
-    )
   }
 
   const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
