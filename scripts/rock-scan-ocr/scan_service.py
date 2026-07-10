@@ -4,26 +4,20 @@ from __future__ import annotations
 
 import sys
 import threading
-from dataclasses import dataclass
 from pathlib import Path
 
-from capture import capture_for_bridge_scan, crop_fraction, is_mostly_black
+from capture import crop_fraction, is_mostly_black
 from composition_parse import parse_composition_from_panel
+from focus_helper import get_foreground_hwnd
 from game_window import find_star_citizen_window
-from panel_crop import panel_pixels_from_fractions
-from region_store import SavedRegion, load_region
+from live_scan_types import LiveScanResult
+from panel_crop import PanelFractions
+from region_store import load_region
 from sc_toolbox import ensure_sc_ocr_import, resolve_mining_signals_path
+from scan_overlay_flow import run_bridge_scan_overlay
+from ui_thread import run_on_ui_thread
 
 _scan_lock = threading.Lock()
-
-
-@dataclass
-class LiveScanResult:
-    ok: bool
-    sc_ocr: dict | None = None
-    composition: dict | None = None
-    error: str | None = None
-    hints: list[str] | None = None
 
 
 def _run_sc_ocr(panel_img, mining_signals: Path) -> dict:
@@ -32,6 +26,99 @@ def _run_sc_ocr(panel_img, mining_signals: Path) -> dict:
 
     region = {"x": 0, "y": 0, "w": panel_img.width, "h": panel_img.height}
     return scan_hud_onnx(region, _img_override=panel_img)
+
+
+def _scan_captured_panel(
+    *,
+    fractions: PanelFractions,
+    client_img,
+    capture_method: str,
+    game_focused: bool,
+    mining_signals: Path,
+) -> LiveScanResult:
+    if not game_focused and capture_method.startswith("mss-screen"):
+        return LiveScanResult(
+            ok=False,
+            error="Could not switch to Star Citizen for screen capture.",
+            hints=[
+                "Windows blocked the tray app from bringing the game forward.",
+                "Click the Star Citizen window once, then press OCR again.",
+                "Keep the game in Borderless Windowed (not Exclusive Fullscreen).",
+            ],
+        )
+
+    panel_img = crop_fraction(client_img, fractions)
+
+    if is_mostly_black(client_img):
+        return LiveScanResult(
+            ok=False,
+            error="Capture failed: game image is black.",
+            hints=[
+                "Use Borderless Windowed (not Exclusive Fullscreen).",
+                "Keep the rock RESULTS panel open when you click OCR.",
+            ],
+        )
+
+    sc_ocr = _run_sc_ocr(panel_img, mining_signals)
+    mineral_hint = sc_ocr.get("mineral_name")
+    composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
+    return LiveScanResult(ok=True, sc_ocr=sc_ocr, composition=composition)
+
+
+def _perform_live_scan_ui(
+    sc_toolbox: str | None,
+    require_saved_region: bool,
+    *,
+    browser_hwnd: int,
+) -> LiveScanResult:
+    window = find_star_citizen_window()
+    if window is None:
+        return LiveScanResult(
+            ok=False,
+            error="Star Citizen game window not found.",
+            hints=[
+                "Launch the game (not RSI Launcher) with the rock RESULTS panel visible.",
+            ],
+        )
+
+    saved = load_region()
+    if saved is None:
+        if require_saved_region:
+            return LiveScanResult(
+                ok=False,
+                error="No capture region saved.",
+                hints=[
+                    "Right-click the BP Dumper tray icon → Calibrate RESULTS panel.",
+                    "Draw the RESULTS box on the overlay, then press Enter.",
+                ],
+            )
+        return LiveScanResult(ok=False, error="No capture region saved.")
+
+    mining_signals = resolve_mining_signals_path(sc_toolbox)
+
+    def scan_fn(
+        fractions: PanelFractions,
+        *,
+        client_img,
+        capture_method: str,
+        capture_notes: list[str],
+        game_focused: bool,
+    ) -> LiveScanResult:
+        _ = capture_notes
+        return _scan_captured_panel(
+            fractions=fractions,
+            client_img=client_img,
+            capture_method=capture_method,
+            game_focused=game_focused,
+            mining_signals=mining_signals,
+        )
+
+    return run_bridge_scan_overlay(
+        window,
+        saved,
+        return_focus_hwnd=browser_hwnd,
+        scan_fn=scan_fn,
+    )
 
 
 def perform_live_scan(
@@ -47,61 +134,17 @@ def perform_live_scan(
             hints=["Wait for the current scan to finish, then try again."],
         )
 
-    try:
-        window = find_star_citizen_window()
-        if window is None:
-            return LiveScanResult(
-                ok=False,
-                error="Star Citizen game window not found.",
-                hints=[
-                    "Launch the game (not RSI Launcher) with the rock RESULTS panel visible.",
-                ],
-            )
+    browser_hwnd = get_foreground_hwnd()
 
-        saved = load_region()
-        if saved is None:
-            if require_saved_region:
-                return LiveScanResult(
-                    ok=False,
-                    error="No capture region saved.",
-                    hints=[
-                        "Right-click the BP Dumper tray icon → Calibrate RESULTS panel.",
-                        "Draw the RESULTS box on the overlay, then press Enter.",
-                    ],
-                )
-            return LiveScanResult(ok=False, error="No capture region saved.")
-
-        mining_signals = resolve_mining_signals_path(sc_toolbox)
-        client_img, capture_method, capture_notes, game_focused = capture_for_bridge_scan(
-            window
+    def _ui_job() -> LiveScanResult:
+        return _perform_live_scan_ui(
+            sc_toolbox,
+            require_saved_region,
+            browser_hwnd=browser_hwnd,
         )
-        if not game_focused and capture_method.startswith("mss-screen"):
-            return LiveScanResult(
-                ok=False,
-                error="Could not switch to Star Citizen for screen capture.",
-                hints=[
-                    "Windows blocked the tray app from bringing the game forward.",
-                    "Click the Star Citizen window once, then press OCR again.",
-                    "Keep the game in Borderless Windowed (not Exclusive Fullscreen).",
-                ],
-            )
-        panel_img = crop_fraction(client_img, saved.fractions)
 
-        if is_mostly_black(client_img):
-            return LiveScanResult(
-                ok=False,
-                error="Capture failed: game image is black.",
-                hints=[
-                    "Use Borderless Windowed (not Exclusive Fullscreen).",
-                    "Keep the rock RESULTS panel open when you click OCR.",
-                ],
-            )
-
-        sc_ocr = _run_sc_ocr(panel_img, mining_signals)
-        mineral_hint = sc_ocr.get("mineral_name")
-        composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
-
-        return LiveScanResult(ok=True, sc_ocr=sc_ocr, composition=composition)
+    try:
+        return run_on_ui_thread(_ui_job)
     except FileNotFoundError as exc:
         return LiveScanResult(ok=False, error=str(exc))
     except Exception as exc:  # pragma: no cover

@@ -56,6 +56,9 @@ def _run_windows_tray(*, host: str, port: int | None) -> int:
     from bridge_server import make_server
     from calibrate_flow import run_calibration_overlay
     from region_store import load_region
+    from ui_thread import ensure_ui_thread
+
+    ensure_ui_thread()
 
     httpd = make_server(host=host, port=port)
     listen_port = httpd.server_address[1]

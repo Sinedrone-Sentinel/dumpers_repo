@@ -6,11 +6,13 @@ import sys
 import tkinter as tk
 from pathlib import Path
 
+from collections.abc import Callable
+
 from PIL import Image, ImageTk
 
 from capture import crop_fraction
 from panel_crop import PanelFractions
-from region_store import REGION_FILE, fractions_from_pixels, save_region
+from region_store import fractions_from_pixels
 
 
 class RegionOverlay:
@@ -25,11 +27,15 @@ class RegionOverlay:
         return_focus_hwnd: int,
         initial_fractions: PanelFractions | None = None,
         enter_label: str = "Enter = save & scan now",
+        after_confirm: Callable[[PanelFractions], tuple[bool, str]] | None = None,
+        restore_focus_on_finish: bool = True,
     ) -> None:
         self.client_w = width
         self.client_h = height
         self.bg_image = background
         self.return_focus_hwnd = return_focus_hwnd
+        self.after_confirm = after_confirm
+        self.restore_focus_on_finish = restore_focus_on_finish
         self.start_x = 0
         self.start_y = 0
         self.sel_rect_id: int | None = None
@@ -170,7 +176,8 @@ class RegionOverlay:
         from focus_helper import restore_focus  # noqa: PLC0415
 
         self.root.destroy()
-        restore_focus(self.return_focus_hwnd)
+        if self.restore_focus_on_finish:
+            restore_focus(self.return_focus_hwnd)
 
     def _on_cancel(self, _event: tk.Event | None = None) -> None:
         self.cancelled = True
@@ -184,6 +191,17 @@ class RegionOverlay:
         self.confirmed_fractions = fractions_from_pixels(
             x0, y0, x1, y1, self.client_w, self.client_h
         )
+        if self.after_confirm is not None:
+            self.hint.config(text="Preparing scan…", fg="#d7ffe0")
+            self.root.update_idletasks()
+            self.root.destroy()
+            try:
+                ok, message = self.after_confirm(self.confirmed_fractions)
+                if not ok:
+                    print(message, file=sys.stderr)
+            except Exception as exc:  # pragma: no cover
+                print(f"Scan failed: {exc}", file=sys.stderr)
+            return
         self._finish()
 
     def run(self) -> PanelFractions | None:
@@ -199,6 +217,8 @@ def confirm_region_on_snapshot(
     return_focus_hwnd: int,
     initial_fractions: PanelFractions | None = None,
     enter_label: str = "Enter = save & scan now",
+    after_confirm: Callable[[PanelFractions], tuple[bool, str]] | None = None,
+    restore_focus_on_finish: bool = True,
 ) -> PanelFractions | None:
     """Show overlay on a frozen frame; return fractions on Enter or None on Esc."""
     overlay = RegionOverlay(
@@ -210,6 +230,8 @@ def confirm_region_on_snapshot(
         return_focus_hwnd=return_focus_hwnd,
         initial_fractions=initial_fractions,
         enter_label=enter_label,
+        after_confirm=after_confirm,
+        restore_focus_on_finish=restore_focus_on_finish,
     )
     return overlay.run()
 

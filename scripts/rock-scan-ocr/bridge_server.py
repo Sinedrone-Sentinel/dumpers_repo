@@ -23,6 +23,7 @@ from urllib.parse import urlparse
 from bridge_convert import to_rock_scan_ocr_result
 from region_store import load_region
 from scan_service import perform_live_scan
+from ui_thread import ensure_ui_thread
 
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 38471
@@ -148,6 +149,7 @@ def make_server(*, host: str = DEFAULT_HOST, port: int | None = None) -> Threadi
 
 
 def run_server(*, host: str = DEFAULT_HOST, port: int | None = None) -> None:
+    ensure_ui_thread()
     httpd = make_server(host=host, port=port)
     listen_port = httpd.server_address[1]
     print(f"Rock scan bridge listening on http://{host}:{listen_port}", flush=True)
@@ -161,6 +163,7 @@ def run_server(*, host: str = DEFAULT_HOST, port: int | None = None) -> None:
 
 
 def start_bridge_daemon(*, host: str = DEFAULT_HOST, port: int | None = None) -> threading.Thread:
+    ensure_ui_thread()
     thread = threading.Thread(
         target=run_server,
         kwargs={"host": host, "port": port},
