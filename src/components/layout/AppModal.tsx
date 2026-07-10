@@ -41,6 +41,7 @@ interface AppModalProps {
   closeOnBackdrop?: boolean
   titleId?: string
   bodyClassName?: string
+  shellClassName?: string
 }
 
 export default function AppModal({
@@ -55,6 +56,7 @@ export default function AppModal({
   closeOnBackdrop = true,
   titleId: titleIdProp,
   bodyClassName = '',
+  shellClassName = '',
 }: AppModalProps) {
   const generatedId = useId()
   const titleId = titleIdProp ?? generatedId
@@ -72,7 +74,7 @@ export default function AppModal({
       aria-labelledby={titleId}
     >
       <div
-        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]} ${modalShellClasses[size]}`}
+        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]} ${shellClassName || modalShellClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">

@@ -2,9 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
-  initialOcrCropRect,
-  resolveOcrCropForImage,
-  writeSavedOcrCropRect,
+  initialOcrViewerState,
+  OCR_MAX_ZOOM,
+  OCR_MIN_ZOOM,
+  patchSavedOcrViewerState,
+  resolveOcrViewerForImage,
+  type OcrViewerState,
 } from '../../lib/rockCalculatorOcrCropState'
 import {
   loadImageFromFile,
@@ -33,7 +36,7 @@ interface RockCalculatorOcrModalProps {
   onApply: (result: RockScanOcrResult) => void
 }
 
-type DragMode = 'move' | 'resize-se' | null
+type DragMode = 'move' | 'resize-se' | 'pan' | null
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
@@ -56,6 +59,53 @@ function computeContainRect(
     top: (containerHeight - height) / 2,
     width,
     height,
+  }
+}
+
+function computeZoomedDisplayRect(baseRect: DisplayRect, zoom: number, panX: number, panY: number): DisplayRect {
+  if (zoom <= 1) {
+    return baseRect
+  }
+  return {
+    left: baseRect.left + panX,
+    top: baseRect.top + panY,
+    width: baseRect.width * zoom,
+    height: baseRect.height * zoom,
+  }
+}
+
+function zoomAtPoint(
+  zoom: number,
+  panX: number,
+  panY: number,
+  baseRect: DisplayRect,
+  focalX: number,
+  focalY: number,
+  deltaY: number
+): Pick<OcrViewerState, 'zoom' | 'panX' | 'panY'> {
+  const factor = Math.exp(-deltaY * 0.002)
+  const nextZoom = clamp(zoom * factor, OCR_MIN_ZOOM, OCR_MAX_ZOOM)
+  if (nextZoom === zoom) {
+    return { zoom, panX, panY }
+  }
+
+  if (nextZoom <= 1) {
+    return { zoom: 1, panX: 0, panY: 0 }
+  }
+
+  const display = computeZoomedDisplayRect(baseRect, zoom, panX, panY)
+  const normX = (focalX - display.left) / display.width
+  const normY = (focalY - display.top) / display.height
+
+  const newWidth = baseRect.width * nextZoom
+  const newHeight = baseRect.height * nextZoom
+  const newLeft = focalX - normX * newWidth
+  const newTop = focalY - normY * newHeight
+
+  return {
+    zoom: nextZoom,
+    panX: newLeft - baseRect.left,
+    panY: newTop - baseRect.top,
   }
 }
 
@@ -83,27 +133,43 @@ const OCR_PREVIEW_IMAGE_CLASS =
   'absolute pointer-events-none select-none max-w-none [image-rendering:-webkit-optimize-contrast]'
 
 export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalculatorOcrModalProps) {
+  const initialViewer = initialOcrViewerState()
   const [loaded, setLoaded] = useState<LoadedImage | null>(null)
-  const [crop, setCrop] = useState<NormalizedCropRect>(initialOcrCropRect)
-  const [deskewDegrees, setDeskewDegrees] = useState(0)
+  const [crop, setCrop] = useState<NormalizedCropRect>(initialViewer.crop)
+  const [zoom, setZoom] = useState(initialViewer.zoom)
+  const [panX, setPanX] = useState(initialViewer.panX)
+  const [panY, setPanY] = useState(initialViewer.panY)
+  const [deskewDegrees, setDeskewDegrees] = useState(initialViewer.deskewDegrees)
   const [error, setError] = useState<string | null>(null)
   const [errorHints, setErrorHints] = useState<string[]>([])
   const [processing, setProcessing] = useState(false)
   const [progress, setProgress] = useState<string | null>(null)
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const pasteRootRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
-  const cropRef = useRef(crop)
+  const viewerRef = useRef<OcrViewerState>(initialViewer)
   const dragRef = useRef<{
     mode: DragMode
     startX: number
     startY: number
     startCropPx: { x: number; y: number; width: number; height: number }
+    startPanX: number
+    startPanY: number
   } | null>(null)
 
+  const persistViewer = useCallback((patch: Partial<OcrViewerState>) => {
+    const next = patchSavedOcrViewerState({
+      ...viewerRef.current,
+      ...patch,
+    })
+    viewerRef.current = next
+    return next
+  }, [])
+
   useEffect(() => {
-    cropRef.current = crop
-  }, [crop])
+    viewerRef.current = { crop, zoom, panX, panY, deskewDegrees }
+  }, [crop, deskewDegrees, panX, panY, zoom])
 
   const clearImage = useCallback(() => {
     setLoaded((prev) => {
@@ -119,6 +185,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
   }, [clearImage, onClose])
 
   useEffect(() => {
+    pasteRootRef.current?.focus({ preventScroll: true })
     return () => {
       clearImage()
       void terminateOcrWorker()
@@ -141,15 +208,17 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     return () => observer.disconnect()
   }, [loaded])
 
-  const displayRect = useMemo(() => {
+  const baseRect = useMemo(() => {
     if (!loaded) return { left: 0, top: 0, width: 0, height: 0 }
     return computeContainRect(containerSize.width, containerSize.height, loaded.width, loaded.height)
   }, [loaded, containerSize])
 
-  const cropPx = useMemo(
-    () => normalizedToDisplay(crop, displayRect),
-    [crop, displayRect]
+  const displayRect = useMemo(
+    () => computeZoomedDisplayRect(baseRect, zoom, panX, panY),
+    [baseRect, panX, panY, zoom]
   )
+
+  const cropPx = useMemo(() => normalizedToDisplay(crop, displayRect), [crop, displayRect])
 
   const cropImageStyle = useMemo(() => {
     if (!displayRect.width || !cropPx.width) return null
@@ -167,6 +236,15 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     }
   }, [cropPx, deskewDegrees, displayRect])
 
+  const applyViewerState = useCallback((next: OcrViewerState) => {
+    setCrop(next.crop)
+    setZoom(next.zoom)
+    setPanX(next.panX)
+    setPanY(next.panY)
+    setDeskewDegrees(next.deskewDegrees)
+    viewerRef.current = next
+  }, [])
+
   const handlePaste = useCallback(
     async (event: React.ClipboardEvent) => {
       const items = event.clipboardData?.items
@@ -181,19 +259,19 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         setError(null)
         setErrorHints([])
         setProgress(null)
-        setDeskewDegrees(0)
         clearImage()
         try {
           const next = await loadImageFromFile(file)
+          const viewer = resolveOcrViewerForImage(next.width, next.height)
           setLoaded(next)
-          setCrop(resolveOcrCropForImage(next.width, next.height))
+          applyViewerState(viewer)
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Could not load pasted image.')
         }
         return
       }
     },
-    [clearImage]
+    [applyViewerState, clearImage]
   )
 
   const startDrag = (mode: DragMode, clientX: number, clientY: number) => {
@@ -203,6 +281,8 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       startX: clientX,
       startY: clientY,
       startCropPx: { ...cropPx },
+      startPanX: panX,
+      startPanY: panY,
     }
   }
 
@@ -216,6 +296,15 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       const minSize = 24
       const next = { ...drag.startCropPx }
 
+      if (drag.mode === 'pan') {
+        const nextPanX = drag.startPanX + dx
+        const nextPanY = drag.startPanY + dy
+        setPanX(nextPanX)
+        setPanY(nextPanY)
+        viewerRef.current = { ...viewerRef.current, panX: nextPanX, panY: nextPanY }
+        return
+      }
+
       if (drag.mode === 'move') {
         next.x = clamp(next.x + dx, displayRect.left, displayRect.left + displayRect.width - next.width)
         next.y = clamp(next.y + dy, displayRect.top, displayRect.top + displayRect.height - next.height)
@@ -224,14 +313,15 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         next.height = clamp(next.height + dy, minSize, displayRect.top + displayRect.height - next.y)
       }
 
-      setCrop(displayToNormalized(next, displayRect))
+      const normalized = displayToNormalized(next, displayRect)
+      setCrop(normalized)
+      viewerRef.current = { ...viewerRef.current, crop: normalized }
     }
 
     const onUp = () => {
-      if (dragRef.current) {
-        writeSavedOcrCropRect(cropRef.current)
-      }
+      if (!dragRef.current) return
       dragRef.current = null
+      patchSavedOcrViewerState(viewerRef.current)
     }
 
     window.addEventListener('mousemove', onMove)
@@ -241,6 +331,40 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       window.removeEventListener('mouseup', onUp)
     }
   }, [displayRect, cropPx])
+
+  useEffect(() => {
+    const node = containerRef.current
+    if (!node || !loaded) return
+
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault()
+      const rect = node.getBoundingClientRect()
+      const focalX = event.clientX - rect.left
+      const focalY = event.clientY - rect.top
+      const current = viewerRef.current
+      const nextZoomPan = zoomAtPoint(
+        current.zoom,
+        current.panX,
+        current.panY,
+        baseRect,
+        focalX,
+        focalY,
+        event.deltaY
+      )
+      const next = persistViewer(nextZoomPan)
+      setZoom(next.zoom)
+      setPanX(next.panX)
+      setPanY(next.panY)
+    }
+
+    node.addEventListener('wheel', onWheel, { passive: false })
+    return () => node.removeEventListener('wheel', onWheel)
+  }, [baseRect, loaded, persistViewer])
+
+  const handleDeskewChange = (value: number) => {
+    setDeskewDegrees(value)
+    persistViewer({ deskewDegrees: value })
+  }
 
   const handleProcess = async () => {
     if (!loaded) {
@@ -294,6 +418,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       title="Scanner OCR"
       subtitle="Paste your fracture HUD screenshot, crop SCAN RESULTS, then Process"
       size="3xl"
+      shellClassName="max-h-[min(94dvh,calc(100dvh-0.5rem))]"
       bodyClassName="flex flex-col overflow-hidden"
       onClose={handleClose}
       footer={
@@ -311,8 +436,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
           )}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[10px] text-slate-500 leading-snug">
-              Screenshot is discarded after scan; your crop box size and position are remembered on this
-              device.
+              Screenshot is discarded after scan. Crop, zoom, tilt, and pan are remembered on this device.
             </p>
             <div className="flex shrink-0 gap-2">
               <button
@@ -336,19 +460,16 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         </div>
       }
     >
-      <div className="flex h-full min-h-0 flex-1 flex-col gap-2" onPaste={(e) => void handlePaste(e)}>
-        <div
-          tabIndex={0}
-          className="shrink-0 rounded-lg border border-dashed border-slate-600 bg-slate-950/50 px-3 py-2 text-[11px] text-slate-400 outline-none focus:border-orange-500/60"
-        >
-          Click here and press <span className="text-slate-200 font-medium">Ctrl+V</span> to paste your
-          in-game screenshot (ALT+PrtSc the scan panel first).
-        </div>
-
+      <div
+        ref={pasteRootRef}
+        tabIndex={0}
+        className="flex h-full min-h-0 flex-1 flex-col gap-2 outline-none"
+        onPaste={(e) => void handlePaste(e)}
+      >
         {loaded ? (
-          <div className="shrink-0 rounded-lg border border-slate-700 bg-slate-950/40 px-3 py-2 space-y-1.5">
+          <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-slate-700 bg-slate-950/40 px-3 py-2">
             <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-slate-300">
-              Tilt scan inside crop
+              Tilt
             </label>
             <input
               id="ocr-deskew"
@@ -357,20 +478,24 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
               max={4}
               step={0.5}
               value={deskewDegrees}
-              onInput={(e) => setDeskewDegrees(Number.parseFloat(e.currentTarget.value))}
-              onChange={(e) => setDeskewDegrees(Number.parseFloat(e.target.value))}
-              className="w-full accent-orange-400"
+              onInput={(e) => handleDeskewChange(Number.parseFloat(e.currentTarget.value))}
+              onChange={(e) => handleDeskewChange(Number.parseFloat(e.target.value))}
+              className="w-32 sm:w-40 accent-orange-400"
             />
-            <p className="text-[10px] text-slate-500 leading-snug">
-              Drag the slider — the image inside the orange box tilts in real time. The crop box stays
-              put. Use if Q values are clipped or the scan panel looks skewed.
-            </p>
+            <span className="text-[10px] text-slate-500">
+              Scroll to zoom{zoom > 1 ? ' • drag image to pan' : ''} • crop box stays fixed
+            </span>
           </div>
-        ) : null}
+        ) : (
+          <p className="shrink-0 text-[11px] text-slate-400">
+            Press <span className="text-slate-200 font-medium">Ctrl+V</span> to paste your in-game screenshot
+            (ALT+PrtSc the scan panel first).
+          </p>
+        )}
 
         <div
           ref={containerRef}
-          className="relative min-h-[14rem] flex-1 w-full rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
+          className="relative min-h-[min(58dvh,38rem)] flex-1 w-full rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
         >
           {loaded ? (
             <>
@@ -379,12 +504,17 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                   src={loaded.objectUrl}
                   alt="Pasted scanner screenshot"
                   draggable={false}
-                  className={OCR_PREVIEW_IMAGE_CLASS}
+                  className={`${OCR_PREVIEW_IMAGE_CLASS} ${zoom > 1 ? 'pointer-events-auto cursor-grab active:cursor-grabbing' : ''}`}
                   style={{
                     width: displayRect.width,
                     height: displayRect.height,
                     left: displayRect.left,
                     top: displayRect.top,
+                  }}
+                  onMouseDown={(e) => {
+                    if (zoom <= 1) return
+                    e.preventDefault()
+                    startDrag('pan', e.clientX, e.clientY)
                   }}
                 />
               ) : null}
