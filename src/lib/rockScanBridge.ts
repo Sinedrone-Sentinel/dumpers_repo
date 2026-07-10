@@ -45,7 +45,7 @@ export async function requestRockScanFromBridge(
     signal: AbortSignal.timeout(timeoutMs),
   })
 
-  let payload: RockScanBridgeScanResult | null = null
+  let payload: RockScanBridgeScanResult
   try {
     payload = (await response.json()) as RockScanBridgeScanResult
   } catch {
@@ -55,18 +55,18 @@ export async function requestRockScanFromBridge(
   if (!response.ok) {
     return {
       ok: false,
-      error: payload?.error ?? `Rock scan failed (HTTP ${response.status}).`,
-      hints: payload?.hints,
-      warnings: payload?.warnings,
+      error: payload.error ?? `Rock scan failed (HTTP ${response.status}).`,
+      hints: payload.hints,
+      warnings: payload.warnings,
     }
   }
 
-  if (!payload?.ok || !payload.data) {
+  if (!payload.ok || !payload.data) {
     return {
       ok: false,
-      error: payload?.error ?? 'Rock scan bridge did not return calculator data.',
-      hints: payload?.hints,
-      warnings: payload?.warnings,
+      error: payload.error ?? 'Rock scan bridge did not return calculator data.',
+      hints: payload.hints,
+      warnings: payload.warnings,
     }
   }
 
