@@ -2,8 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
-  DEFAULT_CROP_RECT,
-  defaultCropRectForImage,
+  initialOcrCropRect,
+  resolveOcrCropForImage,
+  writeSavedOcrCropRect,
+} from '../../lib/rockCalculatorOcrCropState'
+import {
   loadImageFromFile,
   processRockScanCrop,
   terminateOcrWorker,
@@ -78,7 +81,7 @@ function normalizedToDisplay(crop: NormalizedCropRect, display: DisplayRect) {
 
 export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalculatorOcrModalProps) {
   const [loaded, setLoaded] = useState<LoadedImage | null>(null)
-  const [crop, setCrop] = useState<NormalizedCropRect>(DEFAULT_CROP_RECT)
+  const [crop, setCrop] = useState<NormalizedCropRect>(initialOcrCropRect)
   const [deskewDegrees, setDeskewDegrees] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [errorHints, setErrorHints] = useState<string[]>([])
@@ -87,12 +90,17 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
   const containerRef = useRef<HTMLDivElement>(null)
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
+  const cropRef = useRef(crop)
   const dragRef = useRef<{
     mode: DragMode
     startX: number
     startY: number
     startCropPx: { x: number; y: number; width: number; height: number }
   } | null>(null)
+
+  useEffect(() => {
+    cropRef.current = crop
+  }, [crop])
 
   const clearImage = useCallback(() => {
     setLoaded((prev) => {
@@ -175,7 +183,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         try {
           const next = await loadImageFromFile(file)
           setLoaded(next)
-          setCrop(defaultCropRectForImage(next.width, next.height))
+          setCrop(resolveOcrCropForImage(next.width, next.height))
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Could not load pasted image.')
         }
@@ -217,6 +225,9 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
     }
 
     const onUp = () => {
+      if (dragRef.current) {
+        writeSavedOcrCropRect(cropRef.current)
+      }
       dragRef.current = null
     }
 
@@ -284,7 +295,8 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       footer={
         <div className="flex items-center justify-between gap-2">
           <p className="text-[10px] text-slate-500">
-            Nothing is saved — image is discarded after a successful scan.
+            Screenshot is discarded after scan; your crop box size and position are remembered on this
+            device.
           </p>
           <div className="flex gap-2">
             <button
