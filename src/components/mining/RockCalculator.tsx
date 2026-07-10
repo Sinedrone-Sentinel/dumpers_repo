@@ -418,7 +418,7 @@ export default function RockCalculator({
     const health = await fetchRockScanBridgeHealth()
     if (!health?.ok) {
       setOcrBridgeError(
-        'Rock scan bridge offline — run RESTART-TRAY.vbs (or BP Dumper watch) on this PC, then try again.'
+        'Rock scan bridge offline — DR tray must be running on this PC (RESTART-TRAY.vbs). Fixed port 127.0.0.1:38471 — not the Vite dev port. Restart the tray after updates.'
       )
       return
     }

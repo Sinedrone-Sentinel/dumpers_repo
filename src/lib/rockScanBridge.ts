@@ -1,10 +1,15 @@
 import type { RockScanOcrResult } from './rockCalculatorOcrParse'
 
 const DEFAULT_BRIDGE_URL = 'http://127.0.0.1:38471'
+const BRIDGE_HEALTH_TIMEOUT_MS = 3000
 
 function bridgeBaseUrl(): string {
   const configured = import.meta.env.VITE_ROCK_SCAN_BRIDGE_URL?.trim()
   return configured || DEFAULT_BRIDGE_URL
+}
+
+export function rockScanBridgeUrl(): string {
+  return bridgeBaseUrl()
 }
 
 export interface RockScanBridgeHealth {
@@ -17,10 +22,11 @@ export type RockScanBridgeScanResult =
   | { ok: false; error: string; hints?: string[]; warnings?: string[] }
 
 export async function fetchRockScanBridgeHealth(
-  timeoutMs = 800
+  timeoutMs = BRIDGE_HEALTH_TIMEOUT_MS
 ): Promise<RockScanBridgeHealth | null> {
   try {
     const response = await fetch(`${bridgeBaseUrl()}/health`, {
+      mode: 'cors',
       signal: AbortSignal.timeout(timeoutMs),
     })
     if (!response.ok) return null
@@ -40,6 +46,7 @@ export async function requestRockScanFromBridge(
 ): Promise<RockScanBridgeScanResult> {
   const response = await fetch(`${bridgeBaseUrl()}/scan`, {
     method: 'POST',
+    mode: 'cors',
     headers: { 'Content-Type': 'application/json' },
     body: '{}',
     signal: AbortSignal.timeout(timeoutMs),
