@@ -21,7 +21,9 @@ Opens **one** window: **BP Dumper + Rock Scan Tray** (DR icon by the clock).
 
 **First time only:** right-click DR tray → **Calibrate RESULTS panel**.
 
-**Tray only** (no log watch): `RESTART-TRAY.vbs`
+**Reload tray after code updates:** `RESTART-TRAY.vbs` — stops the old bridge on port 38471, then starts fresh. You do **not** need to close BP Dumper or rerun START-HERE.bat.
+
+**Tray menu:** right-click DR icon → **Restart bridge (reload code)** — same as RESTART-TRAY.vbs.
 
 ## One-time setup
 

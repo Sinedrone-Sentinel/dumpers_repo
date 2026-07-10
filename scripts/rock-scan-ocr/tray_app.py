@@ -12,6 +12,7 @@ Windows only for the tray UI; other platforms run bridge_server.py instead.
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 import threading
 from pathlib import Path
@@ -86,8 +87,20 @@ def _run_windows_tray(*, host: str, port: int | None) -> int:
         httpd.shutdown()
         icon.stop()
 
+    def restart_action(_icon: pystray.Icon, _item: pystray.MenuItem) -> None:
+        script = Path(__file__).resolve().parent / "restart_tray.py"
+        if not script.is_file():
+            return
+        creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0) if sys.platform == "win32" else 0
+        subprocess.Popen(
+            [sys.executable, str(script)],
+            cwd=str(script.parent),
+            creationflags=creationflags,
+        )
+
     menu = pystray.Menu(
         pystray.MenuItem("Calibrate RESULTS panel…", calibrate_action),
+        pystray.MenuItem("Restart bridge (reload code)", restart_action),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Quit rock-scan tray", quit_action),
     )

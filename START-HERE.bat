@@ -84,7 +84,8 @@ echo     Right-click DR tray - Calibrate RESULTS panel
 echo.
 echo   In-game: Mole pilot, rock scanned, RESULTS panel open
 echo.
-echo   Tray only ^(no log watch^): double-click RESTART-TRAY.vbs
+echo   Tray only ^(reload after code updates^): double-click RESTART-TRAY.vbs
+echo     ^(stops the old bridge first, then starts fresh — no full shutdown needed^)
 echo   Tray quit? Same file brings it back.
 echo.
 pause
