@@ -3,6 +3,10 @@ import { stripMineableLabel } from './miningOreLabel'
 import { isInertElement, oreResourceKeyFromElementName } from './rockCalculator'
 import { getDefaultBandQuality, resolveLedgerQuality } from './qualityBands'
 
+// ---------------------------------------------------------------------------
+// Public types (unchanged — consumed by RockCalculator + apply layer)
+// ---------------------------------------------------------------------------
+
 export interface OcrCompositionLine {
   elementName: string
   percent: number
@@ -27,28 +31,30 @@ export type RockScanOcrParseResult =
   | { ok: true; data: RockScanOcrResult }
   | { ok: false; error: string; hints?: string[] }
 
-/** e.g. 12.43% BERYLLIUM (ORE) Q42 — trailing SCU counts (3+ digits) are handled separately */
-const COMPOSITION_LINE_WITH_Q_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s+Q?(\d{1,2})\s*$/i
+export interface OcrWordBox {
+  text: string
+  x0: number
+  y0: number
+  x1: number
+  y1: number
+}
 
-const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
+// ---------------------------------------------------------------------------
+// SCAN RESULTS panel schema (in-game top → bottom):
+//   primary ore → MASS → RES → INST → COMP (SCU) → composition % rows
+//
+// Parser strategy (order-independent):
+//   1. Cluster OCR words into spatial rows (true HUD order when boxes exist)
+//   2. Flatten rows into a searchable corpus for label regex extraction
+//   3. Collect composition % rows separately (order among % rows irrelevant)
+// ---------------------------------------------------------------------------
 
-const COMPOSITION_PERCENT_LINE_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+(.+?)(?:\s+\d{3,})?\s*$/i
+interface HudRows {
+  rows: string[]
+  corpus: string
+}
 
-const PRIMARY_ORE_ERROR =
-  'Could not read the primary ore — include the ore name (e.g. BORASE) above MASS or both composition bands in the crop.'
-
-/**
- * In-game SCAN RESULTS panel order (top → bottom):
- *   primary ore → MASS → RES → INST → COMP (SCU)
- * Mineral composition % rows follow COMP; their OCR line order does not matter.
- *
- * OCR text line order is not trusted. Each stat above COMP is resolved by scanning
- * all lines for its label. Composition rows are collected as an unordered set.
- */
-
-interface ScanPanelStats {
+interface PanelStats {
   mass: number | null
   resistancePercent: number | null
   instability: number | null
@@ -71,10 +77,23 @@ const HUD_LABEL_WORDS = new Set([
   'SCAN',
   'RESULTS',
   'RESULT',
+  'SCU',
 ])
 
-function normalizeOcrLetters(line: string): string {
-  return line.toUpperCase().replace(/[^A-Z]/g, '')
+const COMPOSITION_LINE_WITH_Q_RE =
+  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s+Q?(\d{1,2})\s*$/i
+
+const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
+
+const COMPOSITION_PERCENT_LINE_RE =
+  /(\d+(?:\.\d+)?)\s*%?\s+(.+?)(?:\s+\d{3,})?\s*$/i
+
+// ---------------------------------------------------------------------------
+// Text normalization
+// ---------------------------------------------------------------------------
+
+function cleanOcrText(text: string): string {
+  return text.replace(/\r/g, '\n').replace(/[|]/g, ' ')
 }
 
 function ocrHeaderLetters(line: string): string {
@@ -87,51 +106,278 @@ function ocrHeaderLetters(line: string): string {
     .replace(/[^A-Z]/g, '')
 }
 
-function levenshteinDistance(a: string, b: string): number {
-  if (a === b) return 0
-  if (!a.length) return b.length
-  if (!b.length) return a.length
-
-  const prev = Array.from({ length: b.length + 1 }, (_, i) => i)
-  for (let i = 0; i < a.length; i++) {
-    let prevDiag = prev[0]
-    prev[0] = i + 1
-    for (let j = 0; j < b.length; j++) {
-      const temp = prev[j + 1]
-      const cost = a[i] === b[j] ? 0 : 1
-      prev[j + 1] = Math.min(prev[j + 1] + 1, prev[j] + 1, prevDiag + cost)
-      prevDiag = temp
-    }
-  }
-  return prev[b.length]
+function parseNumberToken(raw: string): number | null {
+  const cleaned = raw.replace(/[^\d.,-]/g, '').replace(/,/g, '.')
+  if (!cleaned || cleaned === '-' || cleaned === '.') return null
+  const value = Number.parseFloat(cleaned)
+  return Number.isFinite(value) ? value : null
 }
 
-function lineLooksLikeResultsHeader(line: string): boolean {
-  const trimmed = line.trim()
-  if (!trimmed) return false
-  if (/\bRESULTS?\b/i.test(trimmed)) return true
+function buildHudRows(rawText: string, words?: OcrWordBox[]): HudRows {
+  const rows = words?.length ? clusterWordsIntoRows(words) : splitTextLines(rawText)
+  const corpus = rows.join(' ').replace(/\s+/g, ' ').trim()
+  return { rows, corpus }
+}
 
-  const letters = normalizeOcrLetters(trimmed)
-  if (!letters) return false
-  if (letters.includes('RESULTS') || letters.startsWith('RESULT')) return true
-  if (/^RESU.*LTS/.test(letters) || /^RE.*SULTS/.test(letters)) return true
+function splitTextLines(rawText: string): string[] {
+  return cleanOcrText(rawText)
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+}
 
-  const headerLetters = ocrHeaderLetters(trimmed)
-  if (headerLetters.length >= 5 && headerLetters.length <= 14) {
-    if (levenshteinDistance(headerLetters, 'RESULTS') <= 2) return true
-    if (levenshteinDistance(headerLetters, 'RESULT') <= 1) return true
+/** Sort OCR words by position, group into horizontal rows, join left-to-right. */
+function clusterWordsIntoRows(words: OcrWordBox[]): string[] {
+  const sorted = [...words]
+    .map((word) => ({
+      text: word.text.trim(),
+      x0: word.x0,
+      y0: word.y0,
+      y1: word.y1,
+    }))
+    .filter((word) => word.text.length > 0)
+    .sort((a, b) => a.y0 - b.y0 || a.x0 - b.x0)
+
+  if (!sorted.length) return []
+
+  const heights = sorted.map((word) => Math.max(1, word.y1 - word.y0))
+  const medianHeight = heights.sort((a, b) => a - b)[Math.floor(heights.length / 2)] ?? 12
+  const rowThreshold = Math.max(8, medianHeight * 0.65)
+
+  const rowGroups: Array<Array<{ text: string; x0: number }>> = []
+  let currentGroup: Array<{ text: string; x0: number; y0: number }> = []
+  let currentY = sorted[0].y0
+
+  for (const word of sorted) {
+    if (currentGroup.length && Math.abs(word.y0 - currentY) > rowThreshold) {
+      rowGroups.push(currentGroup.sort((a, b) => a.x0 - b.x0))
+      currentGroup = []
+      currentY = word.y0
+    }
+    currentGroup.push(word)
+    currentY = currentGroup.reduce((sum, item) => sum + item.y0, 0) / currentGroup.length
+  }
+  if (currentGroup.length) {
+    rowGroups.push(currentGroup.sort((a, b) => a.x0 - b.x0))
   }
 
+  return rowGroups
+    .map((group) => group.map((word) => word.text).join(' ').trim())
+    .filter(Boolean)
+}
+
+// ---------------------------------------------------------------------------
+// Panel stat extraction — regex on flat corpus (immune to newline splits)
+// ---------------------------------------------------------------------------
+
+function firstMatchingNumber(corpus: string, patterns: RegExp[]): number | null {
+  for (const pattern of patterns) {
+    const match = corpus.match(pattern)
+    if (!match?.[1]) continue
+    const value = parseNumberToken(match[1])
+    if (value != null) return value
+  }
+  return null
+}
+
+function extractMass(corpus: string, rows: string[]): number | null {
+  const fromCorpus = firstMatchingNumber(corpus, [
+    /\bMASS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bM[A4@]SS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+  ])
+  if (fromCorpus != null && fromCorpus >= 50) return fromCorpus
+
+  let best: number | null = null
+  for (const row of rows) {
+    if (isCompositionPercentRow(row) || rowHasHudStatLabel(row)) continue
+    const value = lastNumberInRow(row)
+    if (value == null || value < 50 || value > 1_000_000) continue
+    if (best == null || value > best) best = value
+  }
+  return best
+}
+
+function extractResistance(
+  corpus: string,
+  rows: string[],
+  known: { mass: number | null; instability: number | null; totalScu: number | null }
+): number | null {
+  const fromCorpus = firstMatchingNumber(corpus, [
+    /\bRESISTANCE\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bRE5\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)/i,
+    /(?:^|\s)RES(?![A-Z])\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)/i,
+  ])
+  if (fromCorpus != null && isResistanceValue(fromCorpus, known)) return fromCorpus
+
+  return extractStatFromRows(rows, isResRow, (value) => isResistanceValue(value, known))
+}
+
+function extractInstability(
+  corpus: string,
+  rows: string[],
+  known: { mass: number | null; resistancePercent: number | null; totalScu: number | null }
+): number | null {
+  const fromCorpus = firstMatchingNumber(corpus, [
+    /\bINSTABILITY\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bINST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /\b1NST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bIN5T\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bLNST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+  ])
+  if (fromCorpus != null && isInstabilityValue(fromCorpus, known)) return fromCorpus
+
+  return extractStatFromRows(rows, isInstRow, (value) => isInstabilityValue(value, known))
+}
+
+function extractTotalScu(corpus: string, rows: string[]): number | null {
+  const fromCorpus = firstMatchingNumber(corpus, [
+    /\bCOMP(?:OSITION)?\s*(?:\([^)]*SCU[^)]*\))?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /(-?\d[\d,]*\.?\d*)\s*SCU/i,
+  ])
+  if (fromCorpus != null && fromCorpus > 0) return fromCorpus
+
+  for (const row of rows) {
+    if (!/\bCOMP(?:OSITION)?\b/i.test(row) && !/\bSCU\b/i.test(row)) continue
+    const value = lastNumberInRow(row)
+    if (value != null && value > 0) return value
+  }
+  return null
+}
+
+function extractPanelStats(rows: HudRows): PanelStats {
+  const mass = extractMass(rows.corpus, rows.rows)
+  const resistancePercent = extractResistance(rows.corpus, rows.rows, {
+    mass,
+    instability: null,
+    totalScu: null,
+  })
+  const instability = extractInstability(rows.corpus, rows.rows, {
+    mass,
+    resistancePercent,
+    totalScu: null,
+  })
+  const totalScu = extractTotalScu(rows.corpus, rows.rows)
+
+  return { mass, resistancePercent, instability, totalScu }
+}
+
+function lastNumberInRow(row: string): number | null {
+  const matches = [...row.matchAll(/-?\d+(?:[.,]\d+)?/g)]
+  if (!matches.length) return null
+  return parseNumberToken(matches[matches.length - 1][0])
+}
+
+function valueFromLabelRow(row: string, lines: string[], index: number): number | null {
+  const inline = lastNumberInRow(row)
+  if (inline != null) return inline
+  for (let j = index + 1; j < Math.min(index + 2, lines.length); j++) {
+    const next = parseNumberToken(lines[j])
+    if (next != null) return next
+  }
+  return null
+}
+
+function extractStatFromRows(
+  rows: string[],
+  rowMatcher: (row: string) => boolean,
+  validate: (value: number) => boolean
+): number | null {
+  for (let i = 0; i < rows.length; i++) {
+    if (!rowMatcher(rows[i])) continue
+    const value = valueFromLabelRow(rows[i], rows, i)
+    if (value != null && validate(value)) return value
+  }
+  return null
+}
+
+function isResistanceValue(
+  value: number,
+  known: { mass: number | null; instability: number | null; totalScu: number | null }
+): boolean {
+  if (!Number.isFinite(value) || value < 0) return false
+  if (known.mass != null && Math.abs(value - known.mass) < 0.01) return false
+  if (known.instability != null && Math.abs(value - known.instability) < 0.01) return false
+  if (known.totalScu != null && value > 200 && Math.abs(value - known.totalScu) < 1) return false
+  if (value > 0 && value <= 1) return true
+  return value <= 100
+}
+
+function isInstabilityValue(
+  value: number,
+  known: { mass: number | null; resistancePercent: number | null; totalScu: number | null }
+): boolean {
+  if (!Number.isFinite(value) || value < 0) return false
+  if (known.mass != null && Math.abs(value - known.mass) < 0.01) return false
+  if (known.resistancePercent != null && Math.abs(value - known.resistancePercent) < 0.01) return false
+  if (known.totalScu != null && value > 200 && Math.abs(value - known.totalScu) < 1) return false
+  return value <= 100
+}
+
+function isResRow(row: string): boolean {
+  if (/\bRESULTS?\b/i.test(row)) return false
+  if (/\bRESISTANCE\b/i.test(row)) return true
+  if (/\bRE5\b/i.test(row)) return true
+  if (/(?:^|\s)RES\s*[:./\\-]/i.test(row)) return true
+
+  const letters = ocrHeaderLetters(row)
+  if (!letters || letters.startsWith('RESULT')) return false
+  if (letters.startsWith('RESISTANCE')) return true
+  if (letters.startsWith('RES')) return true
   return false
 }
 
-function hasTrailingQuality(line: string): boolean {
-  return /\s+Q?\d{1,4}\s*$/i.test(line.trim())
+function isInstRow(row: string): boolean {
+  if (/\bINST(?:ABILITY)?\b/i.test(row)) return true
+  const letters = ocrHeaderLetters(row)
+  if (!letters) return false
+  if (letters.startsWith('INST') || letters.includes('INSTABIL')) return true
+  return /^1NST|^IN5T|^LNST/.test(letters)
 }
 
-function readOrphanQualityLine(line: string | undefined): number | null {
-  if (!line) return null
-  const match = line.trim().match(/^Q?(\d{1,4})$/i)
+function isMassRow(row: string): boolean {
+  if (/\bMASS\b/i.test(row)) return true
+  const letters = ocrHeaderLetters(row)
+  return letters.startsWith('MASS')
+}
+
+function rowHasHudStatLabel(row: string): boolean {
+  return (
+    isMassRow(row) ||
+    isResRow(row) ||
+    isInstRow(row) ||
+    (/\bCOMP(?:OSITION)?\b/i.test(row) && /\bSCU\b/i.test(row)) ||
+    /\bCOMP(?:OSITION)?\b/i.test(row)
+  )
+}
+
+function normalizeResistancePercent(value: number): number {
+  if (value > 0 && value <= 1) return Math.round(value * 100)
+  return Math.round(value)
+}
+
+// ---------------------------------------------------------------------------
+// Composition rows
+// ---------------------------------------------------------------------------
+
+function isCompositionPercentRow(row: string): boolean {
+  if (rowHasHudStatLabel(row)) return false
+  return /(\d+(?:\.\d+)?)\s*%/.test(row)
+}
+
+function normalizeElementName(raw: string): string {
+  const stripped = stripMineableLabel(raw.replace(/\((?:ORE|RAW)\)/gi, '').trim())
+  if (!stripped) return stripped
+  if (/^inert/i.test(stripped)) return 'Inert'
+  return resolveOcrOreName(stripped).name
+}
+
+function hasTrailingQuality(row: string): boolean {
+  return /\s+Q?\d{1,4}\s*$/i.test(row.trim())
+}
+
+function readOrphanQualityRow(row: string | undefined): number | null {
+  if (!row) return null
+  const match = row.trim().match(/^Q?(\d{1,4})$/i)
   if (!match) return null
   const quality = Number.parseInt(match[1], 10)
   return Number.isFinite(quality) ? quality : null
@@ -145,295 +391,15 @@ function defaultLedgerQualityForElement(elementName: string): number {
   )
 }
 
-function buildQualityMissingWarning(elementName: string, rawLine: string): string {
+function buildQualityMissingWarning(elementName: string, rawRow: string): string {
   const defaultQ = defaultLedgerQualityForElement(elementName)
-  const trimmed = rawLine.trim()
+  const trimmed = rawRow.trim()
   const longNameLikely =
-    elementName.length >= 12 ||
-    (trimmed.length >= 28 && !hasTrailingQuality(trimmed))
+    elementName.length >= 12 || (trimmed.length >= 28 && !hasTrailingQuality(trimmed))
   if (longNameLikely) {
     return `${elementName} — Q may be hidden on the HUD; left at default Q${defaultQ}. Set manually if needed.`
   }
   return `${elementName} — Q not read from scan; left at default Q${defaultQ}. Set manually if needed.`
-}
-
-function normalizeElementName(raw: string): string {
-  const stripped = stripMineableLabel(raw.replace(/\((?:ORE|RAW)\)/gi, '').trim())
-  if (!stripped) return stripped
-  if (/^inert/i.test(stripped)) return 'Inert'
-
-  const resolved = resolveOcrOreName(stripped)
-  return resolved.name
-}
-
-function cleanOcrText(text: string): string {
-  return text.replace(/\r/g, '\n').replace(/[|]/g, ' ')
-}
-
-function parseNumberToken(raw: string): number | null {
-  const cleaned = raw.replace(/[^\d.,-]/g, '').replace(/,/g, '.')
-  if (!cleaned || cleaned === '-' || cleaned === '.') return null
-  const value = Number.parseFloat(cleaned)
-  return Number.isFinite(value) ? value : null
-}
-
-function readNumericFromLabelLine(line: string): number | null {
-  const matches = [...line.matchAll(/-?\d+(?:[.,]\d+)?/g)]
-  if (!matches.length) return null
-  const last = matches[matches.length - 1]?.[0]
-  return last ? parseNumberToken(last) : null
-}
-
-function lineLooksLikeMassLabel(line: string): boolean {
-  const trimmed = line.trim()
-  if (!trimmed) return false
-  if (/\bMASS\b/i.test(trimmed)) return true
-
-  const letters = ocrHeaderLetters(trimmed)
-  if (!letters) return false
-  if (letters.startsWith('MASS')) return true
-  if (letters.length >= 3 && letters.length <= 8 && levenshteinDistance(letters, 'MASS') <= 1) {
-    return true
-  }
-  return false
-}
-
-function isCompScuHeaderLine(line: string): boolean {
-  return /\bCOMP(?:OSITION)?\b/i.test(line) && /\bSCU\b/i.test(line)
-}
-
-/** Mineral composition rows — not HUD stat labels or the COMP SCU header. */
-function isCompositionPercentLine(line: string): boolean {
-  if (lineLooksLikeMassLabel(line) || lineLooksLikeResLabel(line) || lineLooksLikeInstLabel(line)) {
-    return false
-  }
-  if (isCompScuHeaderLine(line)) return false
-  return /(\d+(?:\.\d+)?)\s*%/.test(line)
-}
-
-function normalizeResistancePercent(value: number): number {
-  if (value > 0 && value <= 1) return Math.round(value * 100)
-  return Math.round(value)
-}
-
-function lineLooksLikeResLabel(line: string): boolean {
-  const trimmed = line.trim()
-  if (!trimmed) return false
-  if (lineLooksLikeResultsHeader(trimmed)) return false
-  if (/\bRES(?:ISTANCE)?\b/i.test(trimmed)) return true
-  if (/^RE\s*[:/\\-]?\s*[-/\\]?\s*\d/i.test(trimmed)) return true
-
-  const letters = ocrHeaderLetters(trimmed)
-  if (!letters) return false
-  if (letters.startsWith('RESULT')) return false
-  if (letters.startsWith('RES')) return true
-  if (letters.length >= 2 && letters.length <= 12) {
-    if (levenshteinDistance(letters.slice(0, 3), 'RES') <= 1) return true
-    if (levenshteinDistance(letters, 'RESISTANCE') <= 3) return true
-  }
-  return false
-}
-
-function isResistanceCandidateValue(
-  value: number,
-  mass: number | null,
-  instability: number | null,
-  totalScu: number | null
-): boolean {
-  if (!Number.isFinite(value) || value < 0) return false
-  if (mass != null && Math.abs(value - mass) < 0.01) return false
-  if (instability != null && Math.abs(value - instability) < 0.01) return false
-  if (totalScu != null && value > 200 && Math.abs(value - totalScu) < 1) return false
-  if (value > 0 && value <= 1) return true
-  return value <= 100
-}
-
-/** RES is often garbled or clipped to the bottom of the crop — infer from position or orphan values. */
-function extractResistanceFallback(
-  lines: string[],
-  known: { mass: number | null; instability: number | null; totalScu: number | null }
-): number | null {
-  let massIdx = -1
-  let instIdx = -1
-  for (let i = 0; i < lines.length; i++) {
-    if (massIdx < 0 && lineLooksLikeMassLabel(lines[i])) massIdx = i
-    if (lineLooksLikeInstLabel(lines[i])) instIdx = i
-  }
-
-  if (massIdx >= 0 && instIdx > massIdx) {
-    for (let i = massIdx + 1; i < instIdx; i++) {
-      if (isCompositionPercentLine(lines[i]) || lineHasStatLabel(lines[i])) continue
-      const value = readNumericFromLabelLine(lines[i])
-      if (value != null && isResistanceCandidateValue(value, known.mass, known.instability, known.totalScu)) {
-        return value
-      }
-    }
-  }
-
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const line = lines[i].trim()
-    if (!line || isCompositionPercentLine(line)) continue
-    if (lineLooksLikeMassLabel(line) || lineLooksLikeInstLabel(line)) continue
-    if (isCompScuHeaderLine(line)) continue
-    if (lineLooksLikeResultsHeader(line)) continue
-
-    if (lineLooksLikeResLabel(line)) {
-      const value = readHudStatValue(line, lines, i)
-      if (value != null && isResistanceCandidateValue(value, known.mass, known.instability, known.totalScu)) {
-        return value
-      }
-    }
-
-    if (!/%/.test(line) && /^[^A-Za-z]*\d/.test(line)) {
-      const value = readNumericFromLabelLine(line)
-      if (value != null && isResistanceCandidateValue(value, known.mass, known.instability, known.totalScu)) {
-        return value
-      }
-    }
-  }
-
-  return null
-}
-
-function lineLooksLikeInstLabel(line: string): boolean {
-  const trimmed = line.trim()
-  if (!trimmed) return false
-  if (/\bINST(?:ABILITY)?\b/i.test(trimmed)) return true
-
-  const letters = ocrHeaderLetters(trimmed)
-  if (!letters) return false
-  if (letters.startsWith('INST') || letters.includes('INSTABIL')) return true
-  if (/^1N5T|^IN5T|^1NST|^LNST/.test(letters)) return true
-  if (letters.length >= 4 && letters.length <= 14 && levenshteinDistance(letters, 'INSTABILITY') <= 3) {
-    return true
-  }
-  if (letters.length >= 3 && letters.length <= 6 && levenshteinDistance(letters, 'INST') <= 1) {
-    return true
-  }
-  return false
-}
-
-function readHudStatValue(line: string, lines: string[], index: number): number | null {
-  const inline = readNumericFromLabelLine(line)
-  if (inline != null) return inline
-
-  for (let j = index + 1; j < Math.min(index + 3, lines.length); j++) {
-    const next = parseNumberToken(lines[j])
-    if (next != null) return next
-  }
-
-  return null
-}
-
-function extractLabeledStat(
-  lines: string[],
-  matcher: (line: string) => boolean
-): number | null {
-  for (let i = 0; i < lines.length; i++) {
-    if (!matcher(lines[i])) continue
-    const value = readHudStatValue(lines[i], lines, i)
-    if (value != null) return value
-  }
-  return null
-}
-
-function lineHasStatLabel(line: string): boolean {
-  return (
-    lineLooksLikeMassLabel(line) ||
-    lineLooksLikeResLabel(line) ||
-    lineLooksLikeInstLabel(line) ||
-    isCompScuHeaderLine(line) ||
-    /(?:COMP(?:OSITION)?)/i.test(line)
-  )
-}
-
-/** Largest non-composition number in the panel — fallback when MASS label is garbled. */
-function extractMassFallback(lines: string[]): number | null {
-  let best: number | null = null
-
-  for (const line of lines) {
-    if (isCompositionPercentLine(line) || lineHasStatLabel(line)) continue
-    const value = readNumericFromLabelLine(line)
-    if (value == null || value < 50 || value > 1_000_000) continue
-    if (best == null || value > best) best = value
-  }
-
-  return best
-}
-
-function extractCompScu(lines: string[]): number | null {
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    if (!isCompScuHeaderLine(line) && !/(?:COMP(?:OSITION)?)/i.test(line)) continue
-
-    const inline = line.match(/(?:COMP(?:OSITION)?)\s*:?\s*(\d+(?:\.\d+)?)\s*SCU/i)
-    if (inline) return Number.parseFloat(inline[1])
-
-    const value = readHudStatValue(line, lines, i)
-    if (value != null) return value
-  }
-
-  for (const line of lines) {
-    const loose = line.match(/(\d+(?:\.\d+)?)\s*SCU/i)
-    if (loose) return Number.parseFloat(loose[1])
-  }
-
-  return null
-}
-
-/** Resolve MASS → RES → INST → COMP by label across all OCR lines (order-independent). */
-function extractOrderedScanPanelStats(lines: string[]): ScanPanelStats {
-  const mass =
-    extractLabeledStat(lines, lineLooksLikeMassLabel) ??
-    extractLabeledValue(lines, ['MASS']) ??
-    extractMassFallback(lines)
-  const instability =
-    extractLabeledStat(lines, lineLooksLikeInstLabel) ??
-    extractLabeledValue(lines, ['INSTABILITY']) ??
-    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
-  const totalScu = extractCompScu(lines)
-  const resistancePercent =
-    extractLabeledStat(lines, lineLooksLikeResLabel) ??
-    extractLabeledValue(lines, ['RESISTANCE']) ??
-    extractLabeledValue(lines, ['RES'], { wordBoundary: true }) ??
-    extractResistanceFallback(lines, { mass, instability, totalScu })
-
-  return {
-    mass,
-    resistancePercent,
-    instability,
-    totalScu,
-  }
-}
-
-function extractLabeledValue(
-  lines: string[],
-  labels: string[],
-  options?: { wordBoundary?: boolean }
-): number | null {
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim()
-    const upper = line.toUpperCase()
-    for (const label of labels) {
-      const matched = options?.wordBoundary
-        ? new RegExp(`\\b${label}\\b`, 'i').test(upper)
-        : upper.includes(label)
-      if (!matched) continue
-      const labelIndex = upper.search(new RegExp(label, 'i'))
-      const inline = line.slice(labelIndex + label.length)
-      const inlineValue = parseNumberToken(inline)
-      if (inlineValue != null) return inlineValue
-      for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
-        const nextValue = parseNumberToken(lines[j])
-        if (nextValue != null) return nextValue
-      }
-    }
-  }
-  return null
-}
-
-function extractTotalScu(lines: string[]): number | null {
-  return extractCompScu(lines)
 }
 
 function pushOreLine(
@@ -447,10 +413,7 @@ function pushOreLine(
   warnings: string[]
 ): void {
   if (isInertElement(elementName)) return
-
-  if (qualityMissing) {
-    warnings.push(buildQualityMissingWarning(elementName, rawOcrLine))
-  }
+  if (qualityMissing) warnings.push(buildQualityMissingWarning(elementName, rawOcrLine))
 
   const rank = elementRank.get(elementName) ?? 0
   elementRank.set(elementName, rank + 1)
@@ -464,49 +427,45 @@ function pushOreLine(
   })
 }
 
-function parseCompositionLine(
-  line: string,
+function parseCompositionRow(
+  row: string,
   elementRank: Map<string, number>,
   compositionLines: OcrCompositionLine[],
   warnings: string[],
-  allLines: string[],
-  lineIndex: number,
-  consumedLineIndices: Set<number>
+  allRows: string[],
+  rowIndex: number,
+  consumedIndices: Set<number>
 ): { kind: 'inert'; percent: number } | null {
-  const inertMatch = line.match(INERT_LINE_RE)
-  if (inertMatch) {
-    return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
-  }
+  const inertMatch = row.match(INERT_LINE_RE)
+  if (inertMatch) return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
 
-  const strict = line.match(COMPOSITION_LINE_WITH_Q_RE)
+  const strict = row.match(COMPOSITION_LINE_WITH_Q_RE)
   if (strict) {
     const percent = Number.parseFloat(strict[1])
     const elementName = normalizeElementName(strict[2])
     const quality = Number.parseInt(strict[3], 10)
     if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
-
-    pushOreLine(elementName, percent, quality, false, line, elementRank, compositionLines, warnings)
+    pushOreLine(elementName, percent, quality, false, row, elementRank, compositionLines, warnings)
     return null
   }
 
-  const percentOnly = line.match(COMPOSITION_PERCENT_LINE_RE)
-  if (percentOnly && /%/.test(line)) {
+  const percentOnly = row.match(COMPOSITION_PERCENT_LINE_RE)
+  if (percentOnly && /%/.test(row)) {
     const percent = Number.parseFloat(percentOnly[1])
     const elementName = normalizeElementName(percentOnly[2])
     if (!Number.isFinite(percent) || !elementName) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-    const nextIndex = lineIndex + 1
-    const orphanQuality = readOrphanQualityLine(allLines[nextIndex])
+    const orphanQuality = readOrphanQualityRow(allRows[rowIndex + 1])
     if (orphanQuality != null) {
-      consumedLineIndices.add(nextIndex)
+      consumedIndices.add(rowIndex + 1)
       pushOreLine(
         elementName,
         percent,
         orphanQuality,
         false,
-        `${line.trim()} / ${allLines[nextIndex].trim()}`,
+        `${row.trim()} / ${allRows[rowIndex + 1].trim()}`,
         elementRank,
         compositionLines,
         warnings
@@ -514,15 +473,12 @@ function parseCompositionLine(
       return null
     }
 
-    pushOreLine(elementName, percent, null, true, line, elementRank, compositionLines, warnings)
+    pushOreLine(elementName, percent, null, true, row, elementRank, compositionLines, warnings)
     return null
   }
 
-  if (!hasTrailingQuality(line)) {
-    return null
-  }
-
-  const loose = line.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+Q?(\d+)/i)
+  if (!hasTrailingQuality(row)) return null
+  const loose = row.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+Q?(\d+)/i)
   if (!loose) return null
 
   const percent = Number.parseFloat(loose[1])
@@ -530,46 +486,39 @@ function parseCompositionLine(
   const quality = Number.parseInt(loose[3], 10)
   if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
   if (isInertElement(elementName)) return { kind: 'inert', percent }
-
-  pushOreLine(elementName, percent, quality, false, line, elementRank, compositionLines, warnings)
+  pushOreLine(elementName, percent, quality, false, row, elementRank, compositionLines, warnings)
   return null
 }
 
-function parseCompositionLines(
-  lines: string[],
+function parseCompositionRows(
+  rows: string[],
   warnings: string[]
-): {
-  lines: OcrCompositionLine[]
-  inertPercent: number | null
-} {
+): { lines: OcrCompositionLine[]; inertPercent: number | null } {
   const compositionLines: OcrCompositionLine[] = []
   let inertPercent: number | null = null
   const elementRank = new Map<string, number>()
-  const consumedLineIndices = new Set<number>()
+  const consumedIndices = new Set<number>()
 
-  for (let i = 0; i < lines.length; i++) {
-    if (consumedLineIndices.has(i)) continue
-    const line = lines[i].trim()
-    if (!line || !isCompositionPercentLine(line)) continue
+  for (let i = 0; i < rows.length; i++) {
+    if (consumedIndices.has(i)) continue
+    const row = rows[i].trim()
+    if (!row || !isCompositionPercentRow(row)) continue
 
-    const parsed = parseCompositionLine(
-      line,
+    const parsed = parseCompositionRow(
+      row,
       elementRank,
       compositionLines,
       warnings,
-      lines,
+      rows,
       i,
-      consumedLineIndices
+      consumedIndices
     )
-    if (parsed?.kind === 'inert') {
-      inertPercent = parsed.percent
-    }
+    if (parsed?.kind === 'inert') inertPercent = parsed.percent
   }
 
   return { lines: compositionLines, inertPercent }
 }
 
-/** Smaller composition % = High band (rank 0); larger % = Low band (rank 1). */
 function assignBandRanksByPercent(compositionLines: OcrCompositionLine[]): void {
   const indicesByElement = new Map<string, number[]>()
   compositionLines.forEach((line, index) => {
@@ -589,11 +538,15 @@ function assignBandRanksByPercent(compositionLines: OcrCompositionLine[]): void 
   }
 }
 
-function parseOreNameFromResultsLine(raw: string): string | null {
+// ---------------------------------------------------------------------------
+// Primary ore
+// ---------------------------------------------------------------------------
+
+function parseOreNameFromRow(raw: string): string | null {
   const trimmed = raw.trim()
   if (!trimmed) return null
 
-  const oreTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9\s]*?)\s*\(ORE\)/i)
+  const oreTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9\s]*?)\s*\((?:ORE|RAW)\)/i)
   if (oreTagged) return normalizeElementName(oreTagged[1])
 
   const rockTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
@@ -605,46 +558,40 @@ function parseOreNameFromResultsLine(raw: string): string | null {
     if (HUD_LABEL_WORDS.has(token)) return null
     return normalizeElementName(plain[1])
   }
-
   return null
 }
 
-function parsePrimaryOreAboveMass(lines: string[]): string | null {
+function resolvePrimaryOreName(
+  rows: string[],
+  compositionLines: OcrCompositionLine[]
+): string | null {
   let massIndex = -1
-  for (let i = 0; i < lines.length; i++) {
-    if (lineLooksLikeMassLabel(lines[i])) {
+  for (let i = 0; i < rows.length; i++) {
+    if (isMassRow(rows[i])) {
       massIndex = i
       break
     }
   }
-  if (massIndex < 0) return null
 
-  for (let i = 0; i < massIndex; i++) {
-    if (lineLooksLikeResultsHeader(lines[i])) continue
-    const oreName = parseOreNameFromResultsLine(lines[i])
+  if (massIndex >= 0) {
+    for (let i = 0; i < massIndex; i++) {
+      if (/\bRESULTS?\b/i.test(rows[i])) continue
+      const oreName = parseOreNameFromRow(rows[i])
+      if (oreName) return oreName
+    }
+  }
+
+  for (const row of rows) {
+    if (/\bRESULTS?\b/i.test(row)) continue
+    if (rowHasHudStatLabel(row) || isCompositionPercentRow(row)) continue
+    const oreName = parseOreNameFromRow(row)
     if (oreName) return oreName
   }
 
-  return null
-}
-
-function parseStandaloneOreLine(lines: string[]): string | null {
-  for (const line of lines) {
-    if (!line.trim()) continue
-    if (lineLooksLikeResultsHeader(line)) continue
-    if (lineHasStatLabel(line) || isCompositionPercentLine(line)) continue
-    const oreName = parseOreNameFromResultsLine(line)
-    if (oreName) return oreName
-  }
-  return null
-}
-
-function inferPrimaryOreFromComposition(compositionLines: OcrCompositionLine[]): string | null {
   const bandCounts = new Map<string, number>()
   for (const line of compositionLines) {
     bandCounts.set(line.elementName, (bandCounts.get(line.elementName) ?? 0) + 1)
   }
-
   let best: string | null = null
   let bestCount = 0
   for (const [name, count] of bandCounts) {
@@ -656,87 +603,49 @@ function inferPrimaryOreFromComposition(compositionLines: OcrCompositionLine[]):
   return best
 }
 
-function resolvePrimaryOreName(
-  lines: string[],
-  compositionLines: OcrCompositionLine[]
-): string | null {
-  return (
-    parseResultsHeaderOre(lines) ??
-    parsePrimaryOreAboveMass(lines) ??
-    parseStandaloneOreLine(lines) ??
-    inferPrimaryOreFromComposition(compositionLines)
-  )
-}
+// ---------------------------------------------------------------------------
+// Main parse entry points
+// ---------------------------------------------------------------------------
 
-function parseResultsHeaderOre(lines: string[]): string | null {
-  for (let i = 0; i < lines.length; i++) {
-    if (!lineLooksLikeResultsHeader(lines[i])) continue
-
-    const inlineOre = lines[i].replace(/^.*\bRESULTS?\b\s*/i, '').trim()
-    const inlineName = parseOreNameFromResultsLine(inlineOre)
-    if (inlineName) return inlineName
-
-    for (let j = i + 1; j < Math.min(i + 6, lines.length); j++) {
-      const oreName = parseOreNameFromResultsLine(lines[j])
-      if (oreName) return oreName
-    }
-    return null
-  }
-  return null
-}
-
-function countPrimaryOreBands(
-  compositionLines: OcrCompositionLine[],
-  primaryOreName: string
-): number {
-  return compositionLines.filter((line) => line.elementName === primaryOreName).length
-}
-
-export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
-  const text = cleanOcrText(rawText)
-  const lines = text
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-
-  if (!lines.length) {
+function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
+  if (!rows.rows.length) {
     return { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' }
   }
 
   const warnings: string[] = []
-
-  const panel = extractOrderedScanPanelStats(lines)
-  const mass = panel.mass
-  const resistancePercent = panel.resistancePercent
-  const instability = panel.instability
-  const totalScu = panel.totalScu
-
-  const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
+  const panel = extractPanelStats(rows)
+  const { lines: compositionLines, inertPercent } = parseCompositionRows(rows.rows, warnings)
   assignBandRanksByPercent(compositionLines)
 
-  const resolvedPrimary = resolvePrimaryOreName(lines, compositionLines)
+  const resolvedPrimary = resolvePrimaryOreName(rows.rows, compositionLines)
   if (!resolvedPrimary) {
-    return { ok: false, error: PRIMARY_ORE_ERROR }
+    return {
+      ok: false,
+      error: 'Could not read the primary ore — include the ore name (e.g. BORASE) above MASS or both composition bands in the crop.',
+    }
   }
   const primaryOreName = resolveOcrOreName(resolvedPrimary).name
 
-  if (mass == null) {
+  if (panel.mass == null) {
     return { ok: false, error: 'Could not read Mass from the crop — include the MASS line.' }
   }
-  if (resistancePercent == null) {
+  if (panel.resistancePercent == null) {
     return { ok: false, error: 'Could not read Resistance from the crop — include the RES line.' }
   }
-  if (instability == null) {
-    return { ok: false, error: 'Could not read Instability from the crop — include the INST or INSTABILITY line.' }
+  if (panel.instability == null) {
+    return { ok: false, error: 'Could not read Instability from the crop — include the INST line.' }
   }
-  if (totalScu == null || totalScu <= 0) {
+  if (panel.totalScu == null || panel.totalScu <= 0) {
     return { ok: false, error: 'Could not read total SCU from COMPOSITION — include that header line.' }
   }
   if (compositionLines.length < 2) {
-    return { ok: false, error: 'Need at least two composition lines in the crop — include the full COMPOSITION list.' }
+    return {
+      ok: false,
+      error: 'Need at least two composition lines in the crop — include the full COMPOSITION list.',
+    }
   }
 
-  const primaryBandCount = countPrimaryOreBands(compositionLines, primaryOreName)
+  const primaryBandCount = compositionLines.filter((line) => line.elementName === primaryOreName).length
   if (primaryBandCount < 2) {
     return {
       ok: false,
@@ -758,10 +667,10 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     ok: true,
     data: {
       primaryOreName,
-      mass: Math.round(mass),
-      resistancePercent: normalizeResistancePercent(resistancePercent),
-      instability,
-      totalScu,
+      mass: Math.round(panel.mass),
+      resistancePercent: normalizeResistancePercent(panel.resistancePercent),
+      instability: panel.instability,
+      totalScu: panel.totalScu,
       compositionLines,
       inertPercentScanned: inertPercent,
       warnings,
@@ -769,7 +678,17 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
   }
 }
 
-/** Higher = more of the scan was understood. Used to decide whether to upscale OCR retries. */
+/** Parse from raw OCR text (fallback when word boxes unavailable). */
+export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
+  return parseRockScanHud(buildHudRows(rawText))
+}
+
+/** Parse from Tesseract word boxes — preferred; preserves spatial HUD order. */
+export function parseRockScanOcrWords(rawText: string, words: OcrWordBox[]): RockScanOcrParseResult {
+  return parseRockScanHud(buildHudRows(rawText, words))
+}
+
+/** Higher = more of the scan was understood. Used to pick the best OCR pass. */
 export function scoreRockScanOcrParseAttempt(result: RockScanOcrParseResult): number {
   if (result.ok) return 1000
 

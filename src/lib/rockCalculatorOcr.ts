@@ -1,11 +1,9 @@
 import type { PSM } from 'tesseract.js'
 import {
-  assessCropLegibility,
-  buildOcrFailureHints,
-} from './rockCalculatorOcrLegibility'
-import {
   parseRockScanOcrText,
+  parseRockScanOcrWords,
   scoreRockScanOcrParseAttempt,
+  type OcrWordBox,
   type RockScanOcrParseResult,
 } from './rockCalculatorOcrParse'
 
@@ -19,10 +17,7 @@ export interface NormalizedCropRect {
 const OCR_PREPROCESS_SCALES = [2, 3, 4] as const
 const LUMINANCE_THRESHOLD = 128
 
-function applyBinaryThreshold(
-  data: Uint8ClampedArray,
-  threshold: number
-): void {
+function applyBinaryThreshold(data: Uint8ClampedArray, threshold: number): void {
   for (let i = 0; i < data.length; i += 4) {
     const value = data[i] >= threshold ? 255 : 0
     data[i] = value
@@ -42,7 +37,14 @@ function stretchLuminanceToCanvas(
   canvas.width = Math.max(1, Math.round(width * scale))
   canvas.height = Math.max(1, Math.round(height * scale))
   const ctx = canvas.getContext('2d')
-  if (!ctx) return canvas
+  if (!ctx) {
+    const fallback = canvas.getContext('2d')
+    return {
+      canvas,
+      imageData: new ImageData(Math.max(1, canvas.width), Math.max(1, canvas.height)),
+      ctx: fallback!,
+    }
+  }
 
   ctx.imageSmoothingEnabled = true
   ctx.imageSmoothingQuality = 'high'
@@ -128,12 +130,38 @@ type CropPreprocessFn = (
   scale: number
 ) => HTMLCanvasElement
 
+interface OcrPassResult {
+  text: string
+  confidence: number
+  words: OcrWordBox[]
+  parsed: RockScanOcrParseResult
+  parseScore: number
+}
+
 interface OcrScaleEscalationResult {
   success: RockScanOcrParseResult | null
   bestFailure: RockScanOcrParseResult | null
   bestFailureScore: number
-  lastOcrText: string
-  maxOcrConfidence: number
+}
+
+function mapTesseractWords(data: {
+  words?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }>
+}): OcrWordBox[] {
+  if (!data.words?.length) return []
+  return data.words
+    .filter((word) => word.text.trim().length > 0)
+    .map((word) => ({
+      text: word.text,
+      x0: word.bbox.x0,
+      y0: word.bbox.y0,
+      x1: word.bbox.x1,
+      y1: word.bbox.y1,
+    }))
+}
+
+function parseOcrOutput(text: string, words: OcrWordBox[]): RockScanOcrParseResult {
+  if (words.length) return parseRockScanOcrWords(text, words)
+  return parseRockScanOcrText(text)
 }
 
 /** Run 2× → 3× → 4× with one preprocess variant; escalate only if parse score does not improve. */
@@ -144,57 +172,34 @@ async function runOcrScaleEscalation(
   let bestFailure: RockScanOcrParseResult | null = null
   let bestFailureScore = -1
   let previousScore = -1
-  let lastOcrText = ''
-  let maxOcrConfidence = 0
 
   for (let attempt = 0; attempt < OCR_PREPROCESS_SCALES.length; attempt++) {
     const scale = OCR_PREPROCESS_SCALES[attempt]
     const preprocessed = preprocess(deskewed, deskewed.width, deskewed.height, scale)
-    const ocr = await runMultiPassOcr(preprocessed)
-    lastOcrText = ocr.text
-    maxOcrConfidence = Math.max(maxOcrConfidence, ocr.maxConfidence)
-    const parsed = parseRockScanOcrText(ocr.text)
+    const pass = await runBestOcrPass(preprocessed)
 
-    if (parsed.ok) {
-      return {
-        success: parsed,
-        bestFailure: null,
-        bestFailureScore: -1,
-        lastOcrText,
-        maxOcrConfidence,
-      }
+    if (pass.parsed.ok) {
+      return { success: pass.parsed, bestFailure: null, bestFailureScore: -1 }
     }
 
-    const score = scoreRockScanOcrParseAttempt(parsed)
-    if (score > bestFailureScore) {
-      bestFailureScore = score
-      bestFailure = parsed
+    if (pass.parseScore > bestFailureScore) {
+      bestFailureScore = pass.parseScore
+      bestFailure = pass.parsed
     }
 
     const isLastScale = attempt === OCR_PREPROCESS_SCALES.length - 1
     if (isLastScale) break
-
-    if (attempt > 0 && score < previousScore) break
-
-    previousScore = score
+    if (attempt > 0 && pass.parseScore < previousScore) break
+    previousScore = pass.parseScore
   }
 
-  return {
-    success: null,
-    bestFailure,
-    bestFailureScore,
-    lastOcrText,
-    maxOcrConfidence,
-  }
+  return { success: null, bestFailure, bestFailureScore }
 }
 
-function pickBetterOcrPass(
-  normal: OcrScaleEscalationResult,
-  orange: OcrScaleEscalationResult
-): OcrScaleEscalationResult {
+function pickBetterOcrPass(normal: OcrScaleEscalationResult, orange: OcrScaleEscalationResult): OcrScaleEscalationResult {
   if (orange.bestFailureScore > normal.bestFailureScore) return orange
   if (normal.bestFailureScore > orange.bestFailureScore) return normal
-  return orange.maxOcrConfidence >= normal.maxOcrConfidence ? orange : normal
+  return orange
 }
 
 let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
@@ -250,7 +255,6 @@ function cropImageToCanvas(
   crop: NormalizedCropRect
 ): HTMLCanvasElement | null {
   const { x, y, width, height } = cropPixelRect(sourceWidth, sourceHeight, crop)
-
   if (width < 8 || height < 8) return null
 
   const canvas = document.createElement('canvas')
@@ -273,10 +277,7 @@ async function getWorker() {
   return { worker, PsmEnum }
 }
 
-async function recognizePass(
-  canvas: HTMLCanvasElement,
-  psm: PSM
-): Promise<{ text: string; confidence: number }> {
+async function recognizePass(canvas: HTMLCanvasElement, psm: PSM): Promise<OcrPassResult> {
   const { worker } = await getWorker()
   await worker.setParameters({
     tessedit_pageseg_mode: psm,
@@ -284,42 +285,37 @@ async function recognizePass(
     user_defined_dpi: '300',
   })
   const result = await worker.recognize(canvas)
+  const text = result.data.text ?? ''
   const confidence = Number.isFinite(result.data.confidence) ? result.data.confidence : 0
-  return { text: result.data.text ?? '', confidence }
-}
-
-async function runMultiPassOcr(
-  canvas: HTMLCanvasElement
-): Promise<{ text: string; maxConfidence: number }> {
-  const { PsmEnum } = await getWorker()
-  const passes: PSM[] = [PsmEnum.SINGLE_BLOCK, PsmEnum.SINGLE_COLUMN, PsmEnum.SPARSE_TEXT]
-  const results = await Promise.all(passes.map((psm) => recognizePass(canvas, psm)))
-
-  results.sort((a, b) => b.confidence - a.confidence)
-  const best = results[0]
+  const words = mapTesseractWords(result.data)
+  const parsed = parseOcrOutput(text, words)
   return {
-    text: best?.text ?? '',
-    maxConfidence: best?.confidence ?? 0,
+    text,
+    confidence,
+    words,
+    parsed,
+    parseScore: scoreRockScanOcrParseAttempt(parsed),
   }
 }
 
-function attachFailureHints(
-  result: RockScanOcrParseResult,
-  legibility: ReturnType<typeof assessCropLegibility>,
-  maxOcrConfidence: number,
-  lastOcrText: string
-): RockScanOcrParseResult {
-  if (result.ok) return result
+/** Try multiple page layouts; pick the pass that parses the most complete scan. */
+async function runBestOcrPass(canvas: HTMLCanvasElement): Promise<OcrPassResult> {
+  const { PsmEnum } = await getWorker()
+  const modes: PSM[] = [PsmEnum.SINGLE_BLOCK, PsmEnum.SINGLE_COLUMN, PsmEnum.SPARSE_TEXT]
+  const passes = await Promise.all(modes.map((psm) => recognizePass(canvas, psm)))
 
-  const hints = buildOcrFailureHints({
-    legibility,
-    maxOcrConfidence,
-    parseScore: scoreRockScanOcrParseAttempt(result),
-    hadReadableText: lastOcrText.trim().length > 0,
+  passes.sort((a, b) => {
+    if (b.parseScore !== a.parseScore) return b.parseScore - a.parseScore
+    return b.confidence - a.confidence
   })
 
-  if (!hints.length) return result
-  return { ...result, hints }
+  return passes[0] ?? {
+    text: '',
+    confidence: 0,
+    words: [],
+    parsed: { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' },
+    parseScore: 0,
+  }
 }
 
 export async function processRockScanCrop(
@@ -335,7 +331,6 @@ export async function processRockScanCrop(
   }
 
   const deskewed = rotateCanvas(rawCrop, deskewDegrees)
-  const legibility = assessCropLegibility(deskewed)
 
   const normalPass = await runOcrScaleEscalation(deskewed, preprocessCrop)
   if (normalPass.success) return normalPass.success
@@ -344,17 +339,11 @@ export async function processRockScanCrop(
   if (orangePass.success) return orangePass.success
 
   const bestPass = pickBetterOcrPass(normalPass, orangePass)
-  const failure =
+  return (
     bestPass.bestFailure ?? {
-      ok: false as const,
+      ok: false,
       error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.',
     }
-
-  return attachFailureHints(
-    failure,
-    legibility,
-    Math.max(normalPass.maxOcrConfidence, orangePass.maxOcrConfidence),
-    bestPass.lastOcrText
   )
 }
 
@@ -386,14 +375,12 @@ export function loadImageFromFile(file: File): Promise<{
 /** 16:9 reference capture (member 2560×1440) and ideal SCAN RESULTS panel crop (382×549). */
 const REFERENCE_DISPLAY = { width: 2560, height: 1440 } as const
 const REFERENCE_PANEL = { width: 382, height: 549 } as const
-/** Right HUD column — top-left of panel on the reference capture. */
 const REFERENCE_CROP_ORIGIN = { x: 2170, y: 115 } as const
 
 function clampCropFraction(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
 }
 
-/** Default SCAN RESULTS crop for a pasted screenshot (normalized 0–1). */
 export function defaultCropRectForImage(
   _imageWidth: number,
   _imageHeight: number
@@ -404,7 +391,6 @@ export function defaultCropRectForImage(
   const rightMargin =
     (REFERENCE_DISPLAY.width - REFERENCE_CROP_ORIGIN.x - REFERENCE_PANEL.width) /
     REFERENCE_DISPLAY.width
-
   const x = 1 - width - rightMargin
 
   return {
