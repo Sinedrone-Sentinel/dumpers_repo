@@ -289,6 +289,7 @@ function extractResistance(
 ): number | null {
   for (let i = 0; i < rows.length; i++) {
     if (!isResRow(rows[i])) continue
+    if (/\bRES\s*[:.]?\s*0(?:\.\d+)?\s*%?/i.test(rows[i])) return 0
     const value = valueFromLabelRow(rows[i], rows, i)
     if (value != null && value >= 0 && isResistanceValue(value, known)) return value
   }
@@ -1047,33 +1048,64 @@ function parseCompositionFromRowGroups(
   compositionLines: OcrCompositionLine[]
 ): number | null {
   let inertPercent: number | null = null
+  const oreSegments: Array<{
+    spatial: {
+      elementName: string
+      percent: number
+      quality: number | null
+      qualityMissing: boolean
+    }
+    rowText: string
+  }> = []
 
   for (const group of rowGroups) {
     for (const segment of splitRowGroupByPercents(group)) {
       const rowText = segment.map((word) => word.text).join(' ').trim()
-      if (!rowText || !isCompositionPercentRow(rowText)) continue
+      if (!rowText || !isCompositionPercentRow(rowText) || !/\bINERT\b/i.test(rowText)) continue
 
       const spatial = parseCompositionSpatial(segment, rowText)
-      if (!spatial) continue
-
-      if ('kind' in spatial && spatial.kind === 'inert') {
-        if (acceptInertPercent(spatial.percent, compositionLines)) {
-          inertPercent = spatial.percent
-        }
-        continue
+      if (
+        spatial &&
+        'kind' in spatial &&
+        spatial.kind === 'inert' &&
+        isPlausibleCompositionPercent(spatial.percent)
+      ) {
+        inertPercent = spatial.percent
       }
-
-      pushOreLine(
-        spatial.elementName,
-        spatial.percent,
-        spatial.quality,
-        spatial.qualityMissing,
-        rowText,
-        elementRank,
-        compositionLines,
-        []
-      )
     }
+  }
+
+  for (const group of rowGroups) {
+    for (const segment of splitRowGroupByPercents(group)) {
+      const rowText = segment.map((word) => word.text).join(' ').trim()
+      if (!rowText || !isCompositionPercentRow(rowText) || /\bINERT\b/i.test(rowText)) continue
+
+      const spatial = parseCompositionSpatial(segment, rowText)
+      if (!spatial || ('kind' in spatial && spatial.kind === 'inert')) continue
+
+      oreSegments.push({
+        spatial: {
+          elementName: spatial.elementName,
+          percent: spatial.percent,
+          quality: spatial.quality,
+          qualityMissing: spatial.qualityMissing,
+        },
+        rowText,
+      })
+    }
+  }
+
+  for (const { spatial, rowText } of oreSegments) {
+    pushOreLine(
+      spatial.elementName,
+      spatial.percent,
+      spatial.quality,
+      spatial.qualityMissing,
+      rowText,
+      elementRank,
+      compositionLines,
+      []
+    )
   }
 
   return inertPercent
@@ -1116,13 +1148,41 @@ function reconcileOverLimitComposition(
 
     if (inertPercent != null && inertPercent > 0) {
       const target = Math.max(0, Math.round((100 - inertPercent - siblingTotal) * 100) / 100)
-      if (
-        target > 0 &&
-        target < line.percent &&
-        target + siblingTotal + inertPercent <= 100.5
-      ) {
+      if (target > 0 && target < line.percent) {
         line.percent = target
       }
+    }
+  }
+}
+
+/** When HUD inert was scanned, fix a misread Low band on duplicate ores. */
+function reconcileDuplicateBandWithScannedInert(
+  compositionLines: OcrCompositionLine[],
+  inertPercent: number | null
+): void {
+  if (inertPercent == null || inertPercent <= 0) return
+
+  const indicesByElement = new Map<string, number[]>()
+  compositionLines.forEach((line, index) => {
+    const indices = indicesByElement.get(line.elementName) ?? []
+    indices.push(index)
+    indicesByElement.set(line.elementName, indices)
+  })
+
+  for (const indices of indicesByElement.values()) {
+    if (indices.length < 2) continue
+
+    const sorted = [...indices].sort(
+      (a, b) => compositionLines[a].percent - compositionLines[b].percent
+    )
+    const highIndex = sorted[0]
+    const lowIndex = sorted[sorted.length - 1]
+    const highPercent = compositionLines[highIndex].percent
+    const lowLine = compositionLines[lowIndex]
+    const target = Math.max(0, Math.round((100 - inertPercent - highPercent) * 100) / 100)
+
+    if (target > 0 && Math.abs(lowLine.percent - target) > 1.5) {
+      lowLine.percent = target
     }
   }
 }
@@ -1155,7 +1215,7 @@ function parseCompositionRows(
         i,
         consumedIndices
       )
-      if (parsed?.kind === 'inert' && acceptInertPercent(parsed.percent, compositionLines)) {
+      if (parsed?.kind === 'inert' && isPlausibleCompositionPercent(parsed.percent)) {
         inertPercent = parsed.percent
       }
     }
@@ -1164,6 +1224,7 @@ function parseCompositionRows(
   }
 
   reconcileOverLimitComposition(compositionLines, inertPercent)
+  reconcileDuplicateBandWithScannedInert(compositionLines, inertPercent)
   flushCompositionWarnings(compositionLines, warnings)
 
   return { lines: compositionLines, inertPercent }
