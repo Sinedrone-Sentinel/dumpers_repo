@@ -65,6 +65,7 @@ import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
 import {
   memberFacingRockScanError,
   memberFacingRockScanHint,
+  ROCK_SCAN_IN_PROGRESS_MESSAGE,
   ROCK_SCAN_NOT_CALIBRATED_MESSAGE,
   ROCK_SCAN_OFFLINE_MESSAGE,
 } from '../../lib/rockScanMemberCopy'
@@ -551,6 +552,17 @@ export default function RockCalculator({
         </div>
 
         <div className="p-3 space-y-3">
+          {ocrScanning ? (
+            <div className="rounded-md border border-sky-900/45 bg-sky-950/20 px-2.5 py-2">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-sky-300/90">
+                Scan in progress
+              </p>
+              <p className="text-[11px] text-sky-200/90 leading-snug mt-1">
+                {ROCK_SCAN_IN_PROGRESS_MESSAGE}
+              </p>
+            </div>
+          ) : null}
+
           {ocrBridgeError ? (
             <div className="rounded-md border border-rose-900/45 bg-rose-950/20 px-2.5 py-2">
               <p className="text-[10px] font-bold uppercase tracking-wide text-rose-300/90">

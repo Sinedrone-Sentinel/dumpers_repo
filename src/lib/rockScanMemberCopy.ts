@@ -4,6 +4,9 @@ export const ROCK_SCAN_OFFLINE_MESSAGE = `${DUMPER_APPS_DISPLAY_NAME} is not run
 
 export const ROCK_SCAN_NOT_CALIBRATED_MESSAGE = `Set up your scan area first: right-click the ${DUMPER_APPS_DISPLAY_NAME} icon in the system tray and choose Calibrate RESULTS panel.`
 
+export const ROCK_SCAN_IN_PROGRESS_MESSAGE =
+  'Switched to Star Citizen — confirm the green RESULTS box and press Enter to scan.'
+
 const ERROR_OVERRIDES: Record<string, string> = {
   'Could not find COMP header in OCR text.':
     'Could not read composition from your scan. Keep the full RESULTS panel visible and try again.',
@@ -37,6 +40,9 @@ export function memberFacingRockScanError(raw: string): string {
   const trimmed = raw.trim()
   if (!trimmed) return ROCK_SCAN_OFFLINE_MESSAGE
   if (containsDevLeak(trimmed)) return ROCK_SCAN_OFFLINE_MESSAGE
+  if (/Missing calculator-critical fields:/i.test(trimmed)) {
+    return 'Could not read all scan fields from the RESULTS panel. Keep the panel fully visible and try again.'
+  }
   return ERROR_OVERRIDES[trimmed] ?? trimmed
 }
 
