@@ -10,7 +10,7 @@ import mss
 import numpy as np
 from PIL import Image
 
-from focus_helper import get_foreground_hwnd, restore_focus
+from focus_helper import force_foreground, get_foreground_hwnd, restore_focus
 from game_window import GameWindow
 
 
@@ -37,40 +37,16 @@ class _BITMAPINFO(ctypes.Structure):
 PW_RENDERFULLCONTENT = 0x00000002
 
 
-def focus_window(hwnd: int) -> None:
-    focus_game_window(hwnd)
+def focus_window(hwnd: int) -> bool:
+    return focus_game_window(hwnd)
 
 
-def focus_game_window(hwnd: int) -> None:
+def focus_game_window(hwnd: int) -> bool:
     """Bring Star Citizen to the foreground (browser-triggered scans)."""
-    user32 = ctypes.windll.user32
-    kernel32 = ctypes.windll.kernel32
-
-    user32.AllowSetForegroundWindow(0xFFFFFFFF)  # ASFW_ANY — tray/bridge runs in background
-
-    if user32.IsIconic(hwnd):
-        user32.ShowWindow(hwnd, 9)  # SW_RESTORE
-    else:
-        user32.ShowWindow(hwnd, 5)  # SW_SHOW
-
-    try:
-        user32.SwitchToThisWindow(hwnd, True)
-    except Exception:
-        pass
-
-    if user32.GetForegroundWindow() != hwnd:
-        foreground = user32.GetForegroundWindow()
-        current_thread = kernel32.GetCurrentThreadId()
-        fg_thread = user32.GetWindowThreadProcessId(foreground, None)
-        target_thread = user32.GetWindowThreadProcessId(hwnd, None)
-        user32.AttachThreadInput(current_thread, fg_thread, True)
-        user32.AttachThreadInput(current_thread, target_thread, True)
-        user32.SetForegroundWindow(hwnd)
-        user32.BringWindowToTop(hwnd)
-        user32.AttachThreadInput(current_thread, fg_thread, False)
-        user32.AttachThreadInput(current_thread, target_thread, False)
-
-    time.sleep(0.4)
+    focused = force_foreground(hwnd)
+    if focused:
+        time.sleep(0.35)
+    return focused
 
 
 def image_median_luma(img: Image.Image) -> float:
@@ -197,13 +173,19 @@ def capture_game_frames(
 
 def capture_for_bridge_scan(
     window: GameWindow,
-) -> tuple[Image.Image, str, list[str]]:
+) -> tuple[Image.Image, str, list[str], bool]:
     """Switch to the game for capture; leave focus on Star Citizen afterward."""
     notes = ["Switching to Star Citizen for HUD capture."]
-    focus_game_window(window.hwnd)
+    focused = focus_game_window(window.hwnd)
+    if focused:
+        notes.append("Star Citizen is in the foreground.")
+    else:
+        notes.append(
+            "Could not bring Star Citizen to the foreground (Windows focus lock)."
+        )
     img, method, cap_notes = capture_game_frames(window, focus_first=False)
     notes.extend(cap_notes)
-    return img, method, notes
+    return img, method, notes, focused
 
 
 def capture_for_live_test(

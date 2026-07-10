@@ -72,7 +72,19 @@ def perform_live_scan(
             return LiveScanResult(ok=False, error="No capture region saved.")
 
         mining_signals = resolve_mining_signals_path(sc_toolbox)
-        client_img, _capture_method, _capture_notes = capture_for_bridge_scan(window)
+        client_img, capture_method, capture_notes, game_focused = capture_for_bridge_scan(
+            window
+        )
+        if not game_focused and capture_method.startswith("mss-screen"):
+            return LiveScanResult(
+                ok=False,
+                error="Could not switch to Star Citizen for screen capture.",
+                hints=[
+                    "Windows blocked the tray app from bringing the game forward.",
+                    "Click the Star Citizen window once, then press OCR again.",
+                    "Keep the game in Borderless Windowed (not Exclusive Fullscreen).",
+                ],
+            )
         panel_img = crop_fraction(client_img, saved.fractions)
 
         if is_mostly_black(client_img):
