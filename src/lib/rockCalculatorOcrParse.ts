@@ -81,13 +81,13 @@ const HUD_LABEL_WORDS = new Set([
   'SCU',
 ])
 
+/** e.g. 12.48% SAVRILIUM (ORE) 905 or 12.43% BORASE (ORE) Q54 — HUD omits "Q" on many patches */
 const COMPOSITION_LINE_WITH_Q_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s+Q?(\d{1,2})\s*$/i
+  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s+(?:Q)?(\d{1,4})\s*$/i
 
-const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
+const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS(?:\s+\d{1,4})?\s*$/i
 
-const COMPOSITION_PERCENT_LINE_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+(.+?)(?:\s+\d{3,})?\s*$/i
+const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s*$/i
 
 // ---------------------------------------------------------------------------
 // Text normalization
@@ -508,6 +508,10 @@ function pushOreLine(
   })
 }
 
+function isPlausibleScanQuality(value: number): boolean {
+  return Number.isFinite(value) && value >= 0 && value <= 9999
+}
+
 function parseCompositionRow(
   row: string,
   elementRank: Map<string, number>,
@@ -525,7 +529,13 @@ function parseCompositionRow(
     const percent = Number.parseFloat(strict[1])
     const elementName = normalizeElementName(strict[2])
     const quality = Number.parseInt(strict[3], 10)
-    if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
+    if (
+      !Number.isFinite(percent) ||
+      !elementName ||
+      !isPlausibleScanQuality(quality)
+    ) {
+      return null
+    }
     if (isInertElement(elementName)) return { kind: 'inert', percent }
     pushOreLine(elementName, percent, quality, false, row, elementRank, compositionLines, warnings)
     return null
@@ -534,9 +544,32 @@ function parseCompositionRow(
   const percentOnly = row.match(COMPOSITION_PERCENT_LINE_RE)
   if (percentOnly && /%/.test(row)) {
     const percent = Number.parseFloat(percentOnly[1])
-    const elementName = normalizeElementName(percentOnly[2])
+    let elementRaw = percentOnly[2].trim()
+    let inlineQuality: number | null = null
+
+    const trailingQ = elementRaw.match(/^(.*?)(?:\s+(?:Q)?(\d{1,4}))\s*$/i)
+    if (trailingQ && isPlausibleScanQuality(Number.parseInt(trailingQ[2], 10))) {
+      elementRaw = trailingQ[1].trim()
+      inlineQuality = Number.parseInt(trailingQ[2], 10)
+    }
+
+    const elementName = normalizeElementName(elementRaw)
     if (!Number.isFinite(percent) || !elementName) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
+
+    if (inlineQuality != null) {
+      pushOreLine(
+        elementName,
+        percent,
+        inlineQuality,
+        false,
+        row,
+        elementRank,
+        compositionLines,
+        warnings
+      )
+      return null
+    }
 
     const orphanQuality = readOrphanQualityRow(allRows[rowIndex + 1])
     if (orphanQuality != null) {
@@ -559,13 +592,19 @@ function parseCompositionRow(
   }
 
   if (!hasTrailingQuality(row)) return null
-  const loose = row.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+Q?(\d+)/i)
+  const loose = row.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+(?:Q)?(\d{1,4})\s*$/i)
   if (!loose) return null
 
   const percent = Number.parseFloat(loose[1])
   const elementName = normalizeElementName(loose[2])
   const quality = Number.parseInt(loose[3], 10)
-  if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
+  if (
+    !Number.isFinite(percent) ||
+    !elementName ||
+    !isPlausibleScanQuality(quality)
+  ) {
+    return null
+  }
   if (isInertElement(elementName)) return { kind: 'inert', percent }
   pushOreLine(elementName, percent, quality, false, row, elementRank, compositionLines, warnings)
   return null
