@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import AppModal from '../layout/AppModal'
 import CopyFeedbackButton from '../CopyFeedbackButton'
 import BpDumperDownloadLinks from './BpDumperDownloadLinks'
+import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 
@@ -65,8 +66,8 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
 
   return (
     <AppModal
-      title="BP Dumper"
-      subtitle="Automatically sync blueprint unlocks from your Star Citizen game logs."
+      title={DUMPER_APPS_DISPLAY_NAME}
+      subtitle="Desktop tools: blueprint log sync, live missions, and rock-scan OCR on this PC."
       onClose={onClose}
       size="lg"
     >
@@ -74,9 +75,11 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
         <section className="space-y-2">
           <h3 className="text-sm font-semibold text-white">What it does</h3>
           <p className="text-sm text-slate-400 leading-relaxed">
-            BP Dumper watches your game log while you play and sends newly acquired blueprints to
-            your Dumper&apos;s Repo account. Use the desktop executable or the Python script — both
-            connect with your personal API key.
+            <strong className="text-slate-300">BP Dumper</strong> watches your game log while you play
+            and sends newly acquired blueprints to your account. The{' '}
+            <strong className="text-slate-300">Rock Scan</strong> tray (Windows) runs a localhost bridge
+            so signed-in members can click <strong className="text-slate-300">OCR</strong> on the Rock
+            Calculator. Download the desktop build or Python kit and connect with your personal API key.
           </p>
         </section>
 
@@ -101,7 +104,8 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-400">
             <li>Download the build for your platform (or the Python zip).</li>
             <li>Copy your API key below and paste it when the dumper asks on first run.</li>
-            <li>Run BP Dumper — it imports old logs once, then watches for new unlocks.</li>
+            <li>Run BP Dumper in watch mode — it imports old logs once, then watches for new unlocks.</li>
+            <li>On Windows, the DR tray icon also serves Rock Calculator OCR (calibrate RESULTS panel once).</li>
           </ol>
         </section>
 
@@ -109,7 +113,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <div>
             <h3 className="text-sm font-semibold text-white">Your API key</h3>
             <p className="text-xs text-slate-500 mt-1">
-              Works only with BP Dumper. Paste this into the program on first run.
+              Works with Dumper desktop tools. Paste this into BP Dumper on first run.
             </p>
           </div>
 

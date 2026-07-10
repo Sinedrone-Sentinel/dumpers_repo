@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import MissionLocationTags from '../components/MissionLocationTags'
+import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
 import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
 
@@ -144,7 +145,7 @@ export default function TargetsLiveRoute() {
         <div className="rounded-xl border border-slate-700 bg-slate-900/60 px-6 py-10 text-center max-w-lg mx-auto">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-slate-500" aria-hidden />
-            <p className="text-base font-medium text-slate-200">BP Dumper not connected</p>
+            <p className="text-base font-medium text-slate-200">{DUMPER_APPS_DISPLAY_NAME} not connected</p>
           </div>
           <p className="text-sm text-slate-400 leading-relaxed">
             Start BP Dumper in watch mode with your API key, then keep this page open. Mission and
@@ -155,7 +156,7 @@ export default function TargetsLiveRoute() {
             onClick={openBpDumperModal}
             className="mt-6 px-4 py-2 text-sm font-medium rounded-lg bg-orange-600 hover:bg-orange-500 text-white transition-colors"
           >
-            Open BP Dumper setup
+            Open {DUMPER_APPS_DISPLAY_NAME}
           </button>
         </div>
       )}

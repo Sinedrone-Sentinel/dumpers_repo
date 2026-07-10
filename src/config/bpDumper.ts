@@ -8,6 +8,9 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
+/** Member-facing name for desktop tools (log watcher, rock-scan tray, downloads). */
+export const DUMPER_APPS_DISPLAY_NAME = 'Dumper Apps' as const
+
 export const BP_DUMPER_CALLOUT_DISMISS_KEY = 'dr_bp_dumper_callout_dismissed_v1' as const
 
 export type BpDumperDownloadOption = {

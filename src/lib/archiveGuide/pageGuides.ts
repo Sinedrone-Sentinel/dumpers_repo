@@ -245,7 +245,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
   },
   {
     id: 'bp-dumper',
-    title: 'BP Dumper',
+    title: 'Dumper Apps',
     description: 'Desktop log watcher that automatically syncs blueprint unlocks to your account.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',

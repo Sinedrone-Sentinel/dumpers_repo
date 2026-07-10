@@ -3,6 +3,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import type { Profile } from '../../lib/supabase'
 import { supabase } from '../../lib/supabase'
+import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
 import RsiVerifiedBadge from '../RsiVerifiedBadge'
 
 interface AppUserMenuProps {
@@ -278,7 +279,7 @@ export default function AppUserMenu({
                 }}
                 className="w-full px-4 py-2 text-left text-amber-300 hover:bg-slate-700 transition-colors"
               >
-                BP Dumper
+                {DUMPER_APPS_DISPLAY_NAME}
               </button>
               <Link
                 to="/discord-subscribe"

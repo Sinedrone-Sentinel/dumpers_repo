@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
-import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
+import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
 import { useBlueprintData } from './blueprints'
 import { useAuth } from '../contexts/AuthContext'
 import { useBpDumperModal } from '../contexts/BpDumperModalContext'
@@ -411,7 +411,7 @@ export default function TargetsRoute() {
             onClick={openBpDumperModal}
             className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-600 rounded-lg transition-colors"
           >
-            BP Dumper
+            {DUMPER_APPS_DISPLAY_NAME}
           </button>
           <Link
             to="/targets/live"
