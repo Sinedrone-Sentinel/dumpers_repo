@@ -167,15 +167,12 @@ function buildQualityMissingWarning(elementName: string, rawLine: string): strin
   return `${elementName} — Q not read from scan; left at default Q${defaultQ}. Set manually if needed.`
 }
 
-function normalizeElementName(raw: string, warnings: string[]): string {
-  const stripped = stripMineableLabel(raw.replace(/\(ORE\)/gi, '').trim())
+function normalizeElementName(raw: string): string {
+  const stripped = stripMineableLabel(raw.replace(/\((?:ORE|RAW)\)/gi, '').trim())
   if (!stripped) return stripped
   if (/^inert/i.test(stripped)) return 'Inert'
 
   const resolved = resolveOcrOreName(stripped)
-  if (resolved.correctedFrom) {
-    warnings.push(`Read "${resolved.correctedFrom}" as ${resolved.name}.`)
-  }
   return resolved.name
 }
 
@@ -420,7 +417,7 @@ function parseCompositionLine(
   const strict = line.match(COMPOSITION_LINE_WITH_Q_RE)
   if (strict) {
     const percent = Number.parseFloat(strict[1])
-    const elementName = normalizeElementName(strict[2], warnings)
+    const elementName = normalizeElementName(strict[2])
     const quality = Number.parseInt(strict[3], 10)
     if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
@@ -432,7 +429,7 @@ function parseCompositionLine(
   const percentOnly = line.match(COMPOSITION_PERCENT_LINE_RE)
   if (percentOnly && /%/.test(line)) {
     const percent = Number.parseFloat(percentOnly[1])
-    const elementName = normalizeElementName(percentOnly[2], warnings)
+    const elementName = normalizeElementName(percentOnly[2])
     if (!Number.isFinite(percent) || !elementName) return null
     if (isInertElement(elementName)) return { kind: 'inert', percent }
 
@@ -465,7 +462,7 @@ function parseCompositionLine(
   if (!loose) return null
 
   const percent = Number.parseFloat(loose[1])
-  const elementName = normalizeElementName(loose[2], warnings)
+  const elementName = normalizeElementName(loose[2])
   const quality = Number.parseInt(loose[3], 10)
   if (!Number.isFinite(percent) || !elementName || !Number.isFinite(quality)) return null
   if (isInertElement(elementName)) return { kind: 'inert', percent }
@@ -528,27 +525,27 @@ function assignBandRanksByPercent(compositionLines: OcrCompositionLine[]): void 
   }
 }
 
-function parseOreNameFromResultsLine(raw: string, warnings: string[]): string | null {
+function parseOreNameFromResultsLine(raw: string): string | null {
   const trimmed = raw.trim()
   if (!trimmed) return null
 
   const oreTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9\s]*?)\s*\(ORE\)/i)
-  if (oreTagged) return normalizeElementName(oreTagged[1], warnings)
+  if (oreTagged) return normalizeElementName(oreTagged[1])
 
   const rockTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
-  if (rockTagged) return normalizeElementName(rockTagged[1], warnings)
+  if (rockTagged) return normalizeElementName(rockTagged[1])
 
   const plain = trimmed.match(/^([A-Za-z][A-Za-z0-9]{2,})/)
   if (plain) {
     const token = plain[1].toUpperCase()
     if (HUD_LABEL_WORDS.has(token)) return null
-    return normalizeElementName(plain[1], warnings)
+    return normalizeElementName(plain[1])
   }
 
   return null
 }
 
-function parsePrimaryOreAboveMass(lines: string[], warnings: string[]): string | null {
+function parsePrimaryOreAboveMass(lines: string[]): string | null {
   let massIndex = -1
   for (let i = 0; i < lines.length; i++) {
     if (/\bMASS\b/i.test(lines[i])) {
@@ -560,23 +557,23 @@ function parsePrimaryOreAboveMass(lines: string[], warnings: string[]): string |
 
   for (let i = 0; i < massIndex; i++) {
     if (lineLooksLikeResultsHeader(lines[i])) continue
-    const oreName = parseOreNameFromResultsLine(lines[i], warnings)
+    const oreName = parseOreNameFromResultsLine(lines[i])
     if (oreName) return oreName
   }
 
   return null
 }
 
-function parseResultsHeaderOre(lines: string[], warnings: string[]): string | null {
+function parseResultsHeaderOre(lines: string[]): string | null {
   for (let i = 0; i < lines.length; i++) {
     if (!lineLooksLikeResultsHeader(lines[i])) continue
 
     const inlineOre = lines[i].replace(/^.*\bRESULTS?\b\s*/i, '').trim()
-    const inlineName = parseOreNameFromResultsLine(inlineOre, warnings)
+    const inlineName = parseOreNameFromResultsLine(inlineOre)
     if (inlineName) return inlineName
 
     for (let j = i + 1; j < Math.min(i + 6, lines.length); j++) {
-      const oreName = parseOreNameFromResultsLine(lines[j], warnings)
+      const oreName = parseOreNameFromResultsLine(lines[j])
       if (oreName) return oreName
     }
     return null
@@ -608,9 +605,9 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
 
   const warnings: string[] = []
 
-  let resultsHeaderOre = parseResultsHeaderOre(lines, warnings)
+  let resultsHeaderOre = parseResultsHeaderOre(lines)
   if (!resultsHeaderOre && hasScanResultsPanelStructure(lines)) {
-    resultsHeaderOre = parsePrimaryOreAboveMass(lines, warnings)
+    resultsHeaderOre = parsePrimaryOreAboveMass(lines)
   }
   if (!resultsHeaderOre) {
     return { ok: false, error: RESULTS_ORE_ERROR }
@@ -641,11 +638,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'Need at least two composition lines in the crop — include the full COMPOSITION list.' }
   }
 
-  const resolvedPrimary = resolveOcrOreName(resultsHeaderOre)
-  if (resolvedPrimary.correctedFrom) {
-    warnings.push(`Read "${resolvedPrimary.correctedFrom}" as ${resolvedPrimary.name} (primary ore).`)
-  }
-  const primaryOreName = resolvedPrimary.name
+  const primaryOreName = resolveOcrOreName(resultsHeaderOre).name
 
   const primaryBandCount = countPrimaryOreBands(compositionLines, primaryOreName)
   if (primaryBandCount < 2) {

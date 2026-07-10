@@ -1,5 +1,5 @@
 {
-  "_comment": "Known CIG localization / planet-desc typos → canonical ore spellings. Compendium (Journal_General_Mining_Compendium) is the master list; desc strings are matched here first, then fuzzy-matched to compendium names.",
+  "_comment": "Known CIG localization / planet-desc typos → canonical ore spellings. Compendium (Journal_General_Mining_Compendium) is the master list; desc strings are matched here first, then fuzzy-matched to compendium names. Scanner OCR misreads are handled only by resolveOcrOreName fuzzy matching — not this file.",
   "aliases": {
     "Aluminium": "Aluminum",
     "Alumium": "Aluminum",

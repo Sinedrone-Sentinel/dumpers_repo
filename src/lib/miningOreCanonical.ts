@@ -88,6 +88,23 @@ function lookupSpellingAlias(label: string): string | null {
   return null
 }
 
+/** Common HUD OCR glyph confusions before fuzzy match (not CIG alias table). */
+function ocrNormalizeOreLabel(label: string): string {
+  return label
+    .toLowerCase()
+    .replace(/5/g, 's')
+    .replace(/0/g, 'o')
+    .replace(/1/g, 'i')
+    .replace(/8/g, 'b')
+    .replace(/z/g, 'x')
+}
+
+function ocrMatchLabels(label: string): string[] {
+  const normalized = ocrNormalizeOreLabel(label)
+  if (normalized === label.toLowerCase()) return [label]
+  return [label, normalized]
+}
+
 function resolveByUniquePrefix(label: string, candidates: string[]): string | null {
   const lower = label.toLowerCase()
   if (lower.length < 3) return null
@@ -120,9 +137,15 @@ function fuzzyMatchOre(label: string, candidates: string[]): string | null {
   return null
 }
 
+function resolvedOre(label: string, canonical: string): ResolvedOreName {
+  return canonical.toLowerCase() === label.toLowerCase()
+    ? { name: canonical, correctedFrom: null }
+    : { name: canonical, correctedFrom: label }
+}
+
 /**
- * Resolve OCR / CIG typo labels to canonical ore or composition element names.
- * Uses alias table, RS ore list, quality-band resources, unique prefixes (e.g. Heph), and fuzzy match.
+ * CIG localization typos use mining-ore-aliases.json; OCR misreads use prefix + fuzzy match
+ * against the compendium master list (with light glyph normalization).
  */
 export function resolveOcrOreName(rawName: string): ResolvedOreName {
   const label = stripMineableLabel(rawName)
@@ -130,24 +153,26 @@ export function resolveOcrOreName(rawName: string): ResolvedOreName {
 
   const alias = lookupSpellingAlias(label)
   if (alias) {
-    return alias === label ? { name: alias, correctedFrom: null } : { name: alias, correctedFrom: label }
+    return resolvedOre(label, alias)
   }
 
-  const lower = label.toLowerCase()
-  for (const canonical of OCR_ORE_CANDIDATES) {
-    if (canonical.toLowerCase() === lower) {
-      return { name: canonical, correctedFrom: null }
+  for (const attempt of ocrMatchLabels(label)) {
+    const lower = attempt.toLowerCase()
+    for (const canonical of OCR_ORE_CANDIDATES) {
+      if (canonical.toLowerCase() === lower) {
+        return resolvedOre(label, canonical)
+      }
     }
-  }
 
-  const prefixMatch = resolveByUniquePrefix(label, OCR_ORE_CANDIDATES)
-  if (prefixMatch) {
-    return { name: prefixMatch, correctedFrom: label }
-  }
+    const prefixMatch = resolveByUniquePrefix(attempt, OCR_ORE_CANDIDATES)
+    if (prefixMatch) {
+      return resolvedOre(label, prefixMatch)
+    }
 
-  const fuzzy = fuzzyMatchOre(label, OCR_ORE_CANDIDATES)
-  if (fuzzy) {
-    return { name: fuzzy, correctedFrom: label }
+    const fuzzy = fuzzyMatchOre(attempt, OCR_ORE_CANDIDATES)
+    if (fuzzy) {
+      return resolvedOre(label, fuzzy)
+    }
   }
 
   return { name: label, correctedFrom: null }
