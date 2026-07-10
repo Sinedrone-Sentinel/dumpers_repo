@@ -65,6 +65,7 @@ const HUD_LABEL_WORDS = new Set([
   'MASS',
   'RES',
   'RESISTANCE',
+  'INS',
   'INST',
   'INSTABILITY',
   'COMPOSITION',
@@ -165,6 +166,12 @@ function clusterWordsIntoRows(words: OcrWordBox[]): string[] {
     .filter(Boolean)
 }
 
+const DIFFICULTY_ROW_RE =
+  /\b(?:IMPOSSIBLE|DIFFICULT|CHALLENGING|MODERATE|LOW|TRIVIAL|EASY|RISK|HAZARD)\b/i
+
+const MAX_INSTABILITY = 10_000
+const MAX_RESISTANCE_PERCENT = 100
+
 // ---------------------------------------------------------------------------
 // Panel stat extraction — regex on flat corpus (immune to newline splits)
 // ---------------------------------------------------------------------------
@@ -202,9 +209,10 @@ function extractResistance(
   known: { mass: number | null; instability: number | null; totalScu: number | null }
 ): number | null {
   const fromCorpus = firstMatchingNumber(corpus, [
-    /\bRESISTANCE\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)/i,
-    /\bRE5\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)/i,
-    /(?:^|\s)RES(?![A-Z])\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bRESISTANCE\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\bRE5\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /(?:^|\s)RES(?![A-Z])\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\bRST\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
   ])
   if (fromCorpus != null && isResistanceValue(fromCorpus, known)) return fromCorpus
 
@@ -217,15 +225,65 @@ function extractInstability(
   known: { mass: number | null; resistancePercent: number | null; totalScu: number | null }
 ): number | null {
   const fromCorpus = firstMatchingNumber(corpus, [
-    /\bINSTABILITY\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
-    /\bINST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
-    /\b1NST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
-    /\bIN5T\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
-    /\bLNST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
+    /\bINSTABILITY\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\bINST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\bINS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\b1NST(?:ABILITY)?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\bIN5T(?:ABILITY)?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
+    /\bLNST(?:ABILITY)?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
   ])
   if (fromCorpus != null && isInstabilityValue(fromCorpus, known)) return fromCorpus
 
   return extractStatFromRows(rows, isInstRow, (value) => isInstabilityValue(value, known))
+}
+
+function isCompHeaderRow(row: string): boolean {
+  return /\bCOMP(?:OSITION)?\b/i.test(row)
+}
+
+function isDifficultyRow(row: string): boolean {
+  return DIFFICULTY_ROW_RE.test(row)
+}
+
+/** HUD order between MASS and COMPOSITION: resistance then instability (labels vary by patch/HUD). */
+function extractResistanceInstabilityByPosition(
+  rows: string[],
+  mass: number | null
+): { resistancePercent: number | null; instability: number | null } {
+  let massIdx = -1
+  let compIdx = rows.length
+
+  for (let i = 0; i < rows.length; i++) {
+    if (massIdx < 0 && isMassRow(rows[i])) massIdx = i
+    if (compIdx === rows.length && (isCompHeaderRow(rows[i]) || isCompositionPercentRow(rows[i]))) {
+      compIdx = i
+    }
+  }
+
+  if (massIdx < 0) return { resistancePercent: null, instability: null }
+
+  const statValues: number[] = []
+  for (let i = massIdx + 1; i < compIdx; i++) {
+    const row = rows[i]
+    if (isCompositionPercentRow(row) || isDifficultyRow(row)) continue
+    if (parseOreNameFromRow(row) && !rowHasHudStatLabel(row)) continue
+
+    const value = valueFromLabelRow(row, rows, i)
+    if (value == null || !isBetweenMassAndCompStat(value, mass)) continue
+    statValues.push(value)
+  }
+
+  if (statValues.length >= 2) {
+    return { resistancePercent: statValues[0], instability: statValues[1] }
+  }
+  if (statValues.length === 1) {
+    const sole = statValues[0]
+    if (sole <= MAX_RESISTANCE_PERCENT) {
+      return { resistancePercent: sole, instability: null }
+    }
+    return { resistancePercent: null, instability: sole }
+  }
+  return { resistancePercent: null, instability: null }
 }
 
 function extractTotalScu(corpus: string, rows: string[]): number | null {
@@ -245,16 +303,21 @@ function extractTotalScu(corpus: string, rows: string[]): number | null {
 
 function extractPanelStats(rows: HudRows): PanelStats {
   const mass = extractMass(rows.corpus, rows.rows)
-  const resistancePercent = extractResistance(rows.corpus, rows.rows, {
+  let resistancePercent = extractResistance(rows.corpus, rows.rows, {
     mass,
     instability: null,
     totalScu: null,
   })
-  const instability = extractInstability(rows.corpus, rows.rows, {
+  let instability = extractInstability(rows.corpus, rows.rows, {
     mass,
     resistancePercent,
     totalScu: null,
   })
+
+  const positional = extractResistanceInstabilityByPosition(rows.rows, mass)
+  if (resistancePercent == null) resistancePercent = positional.resistancePercent
+  if (instability == null) instability = positional.instability
+
   const totalScu = extractTotalScu(rows.corpus, rows.rows)
 
   return { mass, resistancePercent, instability, totalScu }
@@ -289,47 +352,66 @@ function extractStatFromRows(
   return null
 }
 
+function isBetweenMassAndCompStat(value: number, mass: number | null): boolean {
+  if (!Number.isFinite(value) || value < 0) return false
+  if (mass != null && Math.abs(value - mass) < 0.01) return false
+  if (value > 50_000) return false
+  return true
+}
+
 function isResistanceValue(
   value: number,
   known: { mass: number | null; instability: number | null; totalScu: number | null }
 ): boolean {
-  if (!Number.isFinite(value) || value < 0) return false
-  if (known.mass != null && Math.abs(value - known.mass) < 0.01) return false
+  if (!isBetweenMassAndCompStat(value, known.mass)) return false
   if (known.instability != null && Math.abs(value - known.instability) < 0.01) return false
   if (known.totalScu != null && value > 200 && Math.abs(value - known.totalScu) < 1) return false
   if (value > 0 && value <= 1) return true
-  return value <= 100
+  return value <= MAX_RESISTANCE_PERCENT
 }
 
 function isInstabilityValue(
   value: number,
   known: { mass: number | null; resistancePercent: number | null; totalScu: number | null }
 ): boolean {
-  if (!Number.isFinite(value) || value < 0) return false
-  if (known.mass != null && Math.abs(value - known.mass) < 0.01) return false
-  if (known.resistancePercent != null && Math.abs(value - known.resistancePercent) < 0.01) return false
-  if (known.totalScu != null && value > 200 && Math.abs(value - known.totalScu) < 1) return false
-  return value <= 100
+  if (!isBetweenMassAndCompStat(value, known.mass)) return false
+  if (
+    known.resistancePercent != null &&
+    value <= MAX_RESISTANCE_PERCENT &&
+    Math.abs(value - known.resistancePercent) < 0.01
+  ) {
+    return false
+  }
+  if (known.totalScu != null && value > 500 && Math.abs(value - known.totalScu) < 1) return false
+  return value <= MAX_INSTABILITY
 }
 
 function isResRow(row: string): boolean {
   if (/\bRESULTS?\b/i.test(row)) return false
   if (/\bRESISTANCE\b/i.test(row)) return true
   if (/\bRE5\b/i.test(row)) return true
+  if (/\bRST\b/i.test(row)) return true
   if (/(?:^|\s)RES\s*[:./\\-]/i.test(row)) return true
 
   const letters = ocrHeaderLetters(row)
   if (!letters || letters.startsWith('RESULT')) return false
-  if (letters.startsWith('RESISTANCE')) return true
-  if (letters.startsWith('RES')) return true
+  if (letters.startsWith('RESISTANCE') || letters.startsWith('RES') || letters.startsWith('RST')) {
+    return true
+  }
   return false
 }
 
 function isInstRow(row: string): boolean {
-  if (/\bINST(?:ABILITY)?\b/i.test(row)) return true
+  if (/\bINSTABILITY\b/i.test(row)) return true
+  if (/\bINST\b/i.test(row)) return true
+  if (/\bINS\b/i.test(row)) return true
+
   const letters = ocrHeaderLetters(row)
   if (!letters) return false
-  if (letters.startsWith('INST') || letters.includes('INSTABIL')) return true
+  if (letters.startsWith('INSTABILITY') || letters.startsWith('INST') || letters === 'INS') {
+    return true
+  }
+  if (letters.includes('INSTABIL')) return true
   return /^1NST|^IN5T|^LNST/.test(letters)
 }
 
@@ -344,8 +426,8 @@ function rowHasHudStatLabel(row: string): boolean {
     isMassRow(row) ||
     isResRow(row) ||
     isInstRow(row) ||
-    (/\bCOMP(?:OSITION)?\b/i.test(row) && /\bSCU\b/i.test(row)) ||
-    /\bCOMP(?:OSITION)?\b/i.test(row)
+    (isCompHeaderRow(row) && /\bSCU\b/i.test(row)) ||
+    isCompHeaderRow(row)
   )
 }
 
@@ -629,10 +711,16 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
     return { ok: false, error: 'Could not read Mass from the crop — include the MASS line.' }
   }
   if (panel.resistancePercent == null) {
-    return { ok: false, error: 'Could not read Resistance from the crop — include the RES line.' }
+    return {
+      ok: false,
+      error: 'Could not read Resistance — include the resistance stat between MASS and INSTABILITY in the crop.',
+    }
   }
   if (panel.instability == null) {
-    return { ok: false, error: 'Could not read Instability from the crop — include the INST line.' }
+    return {
+      ok: false,
+      error: 'Could not read Instability — include the instability stat between MASS and COMPOSITION in the crop.',
+    }
   }
   if (panel.totalScu == null || panel.totalScu <= 0) {
     return { ok: false, error: 'Could not read total SCU from COMPOSITION — include that header line.' }
