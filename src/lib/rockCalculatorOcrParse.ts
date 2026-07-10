@@ -1083,7 +1083,7 @@ function reconcileOverLimitComposition(
   compositionLines: OcrCompositionLine[],
   inertPercent: number | null
 ): void {
-  let valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
+  const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
   if (valuableTotal <= 100.5) return
 
   const indicesByElement = new Map<string, number[]>()
@@ -1111,7 +1111,6 @@ function reconcileOverLimitComposition(
       reparsed + siblingTotal <= 100.5
     ) {
       line.percent = reparsed
-      valuableTotal = compositionLines.reduce((sum, item) => sum + item.percent, 0)
       continue
     }
 
@@ -1123,7 +1122,6 @@ function reconcileOverLimitComposition(
         target + siblingTotal + inertPercent <= 100.5
       ) {
         line.percent = target
-        valuableTotal = compositionLines.reduce((sum, item) => sum + item.percent, 0)
       }
     }
   }
