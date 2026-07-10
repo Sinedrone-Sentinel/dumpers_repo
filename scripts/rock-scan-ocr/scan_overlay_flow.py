@@ -1,10 +1,10 @@
-"""Live scan overlay: confirm RESULTS box, capture, OCR, per-row checkmarks."""
+"""Live scan overlay: confirm RESULTS box, frozen capture, OCR, per-row checkmarks."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
 
-from capture import capture_for_live_test, capture_game_frames, focus_game_window
+from capture import capture_game_frames, focus_game_window
 from focus_helper import restore_focus
 from game_window import GameWindow
 from live_scan_types import LiveScanResult
@@ -21,11 +21,12 @@ def run_bridge_scan_overlay(
     scan_fn: Callable[..., LiveScanResult],
 ) -> LiveScanResult:
     """
-    Switch to the game, show the dimmed confirm overlay, run scan_fn on Enter.
+    Switch to the game, show a frozen snapshot overlay, run scan_fn on Enter.
 
-    Overlay stays up during OCR with per-row checkmarks beside the RESULTS panel.
+    OCR reads the same frozen frame displayed on the overlay — ship/HUD sway after
+    the snapshot does not affect parsing.
     """
-    focused = focus_game_window(window.hwnd)
+    focus_game_window(window.hwnd)
     snapshot, _method, _notes = capture_game_frames(window, focus_first=False)
 
     def on_scan(
@@ -33,27 +34,20 @@ def run_bridge_scan_overlay(
         reporter: ScanProgressReporter,
     ) -> LiveScanResult:
         overlay = reporter._overlay  # noqa: SLF001
+        reporter.set_header("Scanning frozen HUD frame…")
 
-        reporter.set_header("Capturing live frame…")
-        overlay.root.withdraw()
-        overlay.root.update_idletasks()
-
-        client_img, capture_method, capture_notes, game_focused = _capture_after_confirm(
-            window,
-            return_focus_hwnd=return_focus_hwnd,
-            focused=focused,
-        )
-
-        overlay._refresh_background(client_img)  # noqa: SLF001
-        overlay.root.deiconify()
-        overlay.root.update_idletasks()
+        client_img = overlay.bg_image.copy()
+        capture_method = "frozen-overlay-snapshot"
+        capture_notes = [
+            "OCR uses the frozen frame shown on the overlay (ignores live ship sway).",
+        ]
 
         return scan_fn(
             fractions,
             client_img=client_img,
             capture_method=capture_method,
             capture_notes=capture_notes,
-            game_focused=game_focused,
+            game_focused=True,
             progress=reporter,
         )
 
@@ -69,21 +63,3 @@ def run_bridge_scan_overlay(
         restore_focus(return_focus_hwnd)
         return LiveScanResult(ok=False, error="Scan cancelled.")
     return result
-
-
-def _capture_after_confirm(
-    window: GameWindow,
-    *,
-    return_focus_hwnd: int,
-    focused: bool,
-) -> tuple:
-    """Live grab while the overlay is hidden."""
-    from capture import capture_for_bridge_scan  # noqa: PLC0415
-
-    if focused:
-        return capture_for_bridge_scan(window)
-
-    client_img, capture_method, capture_notes = capture_for_live_test(
-        window, return_focus_hwnd=return_focus_hwnd
-    )
-    return client_img, capture_method, capture_notes, True

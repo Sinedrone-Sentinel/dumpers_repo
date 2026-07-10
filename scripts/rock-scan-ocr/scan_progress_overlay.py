@@ -98,8 +98,8 @@ class BridgeScanOverlay:
         self.hint = tk.Label(
             self.root,
             text=(
-                "Box the RESULTS panel — adjust if needed  |  "
-                "Enter = scan now  |  Esc = cancel  |  R = reset"
+                "Frozen HUD snapshot — box the RESULTS panel  |  "
+                "Enter = scan this frame  |  Esc = cancel  |  R = reset"
             ),
             fg="#d7ffe0",
             bg="#102018",
@@ -281,7 +281,7 @@ class BridgeScanOverlay:
         )
 
         self._lock_scan_mode()
-        self.set_header("Preparing live capture…")
+        self.set_header("Scanning frozen HUD frame…")
         self._place_checkmarks()
         reporter = ScanProgressReporter(self)
 

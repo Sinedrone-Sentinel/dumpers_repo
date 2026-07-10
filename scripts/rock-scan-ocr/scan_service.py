@@ -44,7 +44,9 @@ def _scan_captured_panel(
             progress.mark_row(row_id, ok=ok)
             time.sleep(0.07)
 
-    if not game_focused and capture_method.startswith("mss-screen"):
+    frozen_capture = capture_method.startswith("frozen")
+
+    if not frozen_capture and not game_focused and capture_method.startswith("mss-screen"):
         if progress is not None:
             progress.set_header("Could not switch to Star Citizen")
         return LiveScanResult(
@@ -72,7 +74,7 @@ def _scan_captured_panel(
         )
 
     if progress is not None:
-        progress.set_header("Reading HUD signals…")
+        progress.set_header("Reading frozen HUD frame…")
 
     sc_ocr = _run_sc_ocr(panel_img, mining_signals)
     mark("ore", bool(sc_ocr.get("mineral_name")))
