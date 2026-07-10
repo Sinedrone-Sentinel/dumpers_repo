@@ -507,14 +507,11 @@ function extractResistanceInstabilityByPosition(
     }
     if (parseOreNameFromRow(row) && !rowHasHudStatLabel(row)) continue
 
-    let value: number | null = null
-    if (isResRow(row)) {
-      value = parseResistanceFromResRow(row, rows[i + 1])
-    } else if (isInstRow(row)) {
-      value = parseInstabilityFromInstRow(row, rows[i + 1])
-    } else {
-      value = valueFromLabelRow(row, rows, i)
-    }
+    const value = isResRow(row)
+      ? parseResistanceFromResRow(row, rows[i + 1])
+      : isInstRow(row)
+        ? parseInstabilityFromInstRow(row, rows[i + 1])
+        : valueFromLabelRow(row, rows, i)
     if (value == null || !isBetweenMassAndCompStat(value, mass)) continue
     if (knownRockScuValue(rows, value)) continue
     statValues.push(value)
@@ -669,14 +666,11 @@ function extractStatFromRows(
 ): number | null {
   for (let i = 0; i < rows.length; i++) {
     if (!rowMatcher(rows[i])) continue
-    let value: number | null = null
-    if (isResRow(rows[i])) {
-      value = parseResistanceFromResRow(rows[i], rows[i + 1])
-    } else if (isInstRow(rows[i])) {
-      value = parseInstabilityFromInstRow(rows[i], rows[i + 1])
-    } else {
-      value = valueFromLabelRow(rows[i], rows, i)
-    }
+    const value = isResRow(rows[i])
+      ? parseResistanceFromResRow(rows[i], rows[i + 1])
+      : isInstRow(rows[i])
+        ? parseInstabilityFromInstRow(rows[i], rows[i + 1])
+        : valueFromLabelRow(rows[i], rows, i)
     if (value != null && validate(value)) return value
   }
   return null
