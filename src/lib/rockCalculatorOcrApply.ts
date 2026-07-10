@@ -1,6 +1,6 @@
 import type { CompositionPart, DepositType } from './miningClusterProfiles'
 import { getDepositTypes } from './miningClusterProfiles'
-import { resolveLedgerQuality, getDefaultBandQuality } from './qualityBands'
+import { resolveLedgerQuality, getDefaultBandQuality, PURCHASED_STOCK_QUALITY } from './qualityBands'
 import {
   buildDefaultQualitySlots,
   compositionSlotKey,
@@ -8,7 +8,6 @@ import {
   INERT_SLOT_KEY,
   isInertElement,
   oreResourceKeyFromElementName,
-  PURCHASED_STOCK_QUALITY,
 } from './rockCalculator'
 import type { OcrCompositionLine, RockScanOcrResult } from './rockCalculatorOcrParse'
 
