@@ -3,6 +3,7 @@ import AppModal from '../layout/AppModal'
 import { isRsTrackerOre } from '../../lib/miningOreCanonical'
 import {
   DEFAULT_CROP_RECT,
+  defaultCropRectForImage,
   loadImageFromFile,
   processRockScanCrop,
   terminateOcrWorker,
@@ -174,7 +175,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         try {
           const next = await loadImageFromFile(file)
           setLoaded(next)
-          setCrop(DEFAULT_CROP_RECT)
+          setCrop(defaultCropRectForImage(next.width, next.height))
         } catch (err) {
           setError(err instanceof Error ? err.message : 'Could not load pasted image.')
         }

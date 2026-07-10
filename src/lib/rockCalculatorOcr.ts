@@ -274,9 +274,39 @@ export function loadImageFromFile(file: File): Promise<{
   })
 }
 
-export const DEFAULT_CROP_RECT: NormalizedCropRect = {
-  x: 0.55,
-  y: 0.08,
-  width: 0.4,
-  height: 0.55,
+/** 16:9 reference capture (member 2560×1440) and ideal SCAN RESULTS panel crop (382×549). */
+const REFERENCE_DISPLAY = { width: 2560, height: 1440 } as const
+const REFERENCE_PANEL = { width: 382, height: 549 } as const
+/** Right HUD column — top-left of panel on the reference capture. */
+const REFERENCE_CROP_ORIGIN = { x: 2170, y: 115 } as const
+
+function clampCropFraction(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value))
 }
+
+/** Default SCAN RESULTS crop for a pasted screenshot (normalized 0–1). */
+export function defaultCropRectForImage(
+  _imageWidth: number,
+  _imageHeight: number
+): NormalizedCropRect {
+  const width = REFERENCE_PANEL.width / REFERENCE_DISPLAY.width
+  const height = REFERENCE_PANEL.height / REFERENCE_DISPLAY.height
+  const y = REFERENCE_CROP_ORIGIN.y / REFERENCE_DISPLAY.height
+  const rightMargin =
+    (REFERENCE_DISPLAY.width - REFERENCE_CROP_ORIGIN.x - REFERENCE_PANEL.width) /
+    REFERENCE_DISPLAY.width
+
+  const x = 1 - width - rightMargin
+
+  return {
+    x: clampCropFraction(x, 0, 1 - width),
+    y: clampCropFraction(y, 0, 1 - height),
+    width,
+    height,
+  }
+}
+
+export const DEFAULT_CROP_RECT: NormalizedCropRect = defaultCropRectForImage(
+  REFERENCE_DISPLAY.width,
+  REFERENCE_DISPLAY.height
+)
