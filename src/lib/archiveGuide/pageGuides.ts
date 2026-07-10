@@ -184,8 +184,9 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Requires a verified RSI Handle; fulfiller and buyer pending limits apply by role',
       'Offline Mode shows a pending-order count teaser only — sign in to browse or accept',
       'Verify you have materials before accepting 800+ quality WTB blueprint orders',
+      'Marketplace listing ads can deep-link here with ?highlight= — the matching pending order expands and scrolls into view',
     ],
-    relatesTo: ['Custom Orders', 'Resource Tracker'],
+    relatesTo: ['Custom Orders', 'Resource Tracker', 'Settings'],
   },
   {
     id: 'discord-webhooks',
@@ -235,8 +236,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Disconnect a linked provider from Settings if you have at least two sign-in methods connected',
       'Clear Collected Blueprints to reset your acquired blueprint list (starter blueprints may reappear on refresh)',
       'Clear Tracked Resources to wipe all quantities and notes from My Resources in the Resource Tracker',
+      'Marketplace section (when an admin enables site-wide features): opt in or out of WTS listing ads, WTB listing ads, and live purchase toasts independently',
+      'Live purchase toasts only show accepts while you are online — there is no backlog for missed events',
     ],
-    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker', 'BP Dumper'],
+    relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker', 'BP Dumper', 'Fulfillment'],
   },
   {
     id: 'bp-dumper',

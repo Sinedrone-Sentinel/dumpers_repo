@@ -22,6 +22,18 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     dfpDisplayEnabled,
     autoApproveEnabled,
     updateAutoApprove,
+    marketplaceWtsAdsSiteEnabled,
+    marketplaceWtbAdsSiteEnabled,
+    marketplacePurchaseToastsSiteEnabled,
+    updateMarketplaceWtsAdsSite,
+    updateMarketplaceWtbAdsSite,
+    updateMarketplacePurchaseToastsSite,
+    marketplaceWtsAdsEnabled,
+    marketplaceWtbAdsEnabled,
+    marketplacePurchaseToastsEnabled,
+    updateMarketplaceWtsAds,
+    updateMarketplaceWtbAds,
+    updateMarketplacePurchaseToasts,
     signOut,
     isSuperAdmin,
     refreshAcquiredBlueprints,
@@ -36,6 +48,12 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [savingGroupBlueprintVariants, setSavingGroupBlueprintVariants] = useState(false)
   const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
   const [savingAutoApprove, setSavingAutoApprove] = useState(false)
+  const [savingMarketplaceWtsAds, setSavingMarketplaceWtsAds] = useState(false)
+  const [savingMarketplaceWtbAds, setSavingMarketplaceWtbAds] = useState(false)
+  const [savingMarketplacePurchaseToasts, setSavingMarketplacePurchaseToasts] = useState(false)
+  const [savingSiteWtsAds, setSavingSiteWtsAds] = useState(false)
+  const [savingSiteWtbAds, setSavingSiteWtbAds] = useState(false)
+  const [savingSitePurchaseToasts, setSavingSitePurchaseToasts] = useState(false)
   const [showWelcomeAlways, setShowWelcomeAlways] = useState(false)
   const [savingWelcome, setSavingWelcome] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -240,6 +258,57 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     setSavingGroupBlueprintVariants(false)
   }
 
+  const marketplaceSiteAnyEnabled =
+    marketplaceWtsAdsSiteEnabled || marketplaceWtbAdsSiteEnabled || marketplacePurchaseToastsSiteEnabled
+
+  const handleMarketplaceWtsAdsChange = async (enabled: boolean) => {
+    setSavingMarketplaceWtsAds(true)
+    setMessage(null)
+    const success = await updateMarketplaceWtsAds(enabled)
+    if (!success) setMessage({ type: 'error', text: 'Failed to update WTS listing ads preference.' })
+    setSavingMarketplaceWtsAds(false)
+  }
+
+  const handleMarketplaceWtbAdsChange = async (enabled: boolean) => {
+    setSavingMarketplaceWtbAds(true)
+    setMessage(null)
+    const success = await updateMarketplaceWtbAds(enabled)
+    if (!success) setMessage({ type: 'error', text: 'Failed to update WTB listing ads preference.' })
+    setSavingMarketplaceWtbAds(false)
+  }
+
+  const handleMarketplacePurchaseToastsChange = async (enabled: boolean) => {
+    setSavingMarketplacePurchaseToasts(true)
+    setMessage(null)
+    const success = await updateMarketplacePurchaseToasts(enabled)
+    if (!success) setMessage({ type: 'error', text: 'Failed to update purchase toast preference.' })
+    setSavingMarketplacePurchaseToasts(false)
+  }
+
+  const handleSiteWtsAdsChange = async (enabled: boolean) => {
+    setSavingSiteWtsAds(true)
+    setMessage(null)
+    const success = await updateMarketplaceWtsAdsSite(enabled)
+    if (!success) setMessage({ type: 'error', text: 'Failed to update site WTS ads setting.' })
+    setSavingSiteWtsAds(false)
+  }
+
+  const handleSiteWtbAdsChange = async (enabled: boolean) => {
+    setSavingSiteWtbAds(true)
+    setMessage(null)
+    const success = await updateMarketplaceWtbAdsSite(enabled)
+    if (!success) setMessage({ type: 'error', text: 'Failed to update site WTB ads setting.' })
+    setSavingSiteWtbAds(false)
+  }
+
+  const handleSitePurchaseToastsChange = async (enabled: boolean) => {
+    setSavingSitePurchaseToasts(true)
+    setMessage(null)
+    const success = await updateMarketplacePurchaseToastsSite(enabled)
+    if (!success) setMessage({ type: 'error', text: 'Failed to update site purchase toasts setting.' })
+    setSavingSitePurchaseToasts(false)
+  }
+
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'DELETE') return
 
@@ -423,6 +492,38 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             />
           </SettingsSection>
 
+          {marketplaceSiteAnyEnabled && (
+            <SettingsSection
+              title="Marketplace"
+              description="Bottom-left marketplace prompts and live purchase toasts"
+            >
+              <SettingsToggle
+                label="WTS listing ads"
+                description="Occasionally surface stale WTS listings you have not dismissed. Site-wide feature must be enabled by an admin."
+                checked={marketplaceWtsAdsEnabled}
+                onChange={handleMarketplaceWtsAdsChange}
+                saving={savingMarketplaceWtsAds}
+                disabled={!marketplaceWtsAdsSiteEnabled}
+              />
+              <SettingsToggle
+                label="WTB listing ads"
+                description="Occasionally surface stale WTB listings you have not dismissed. Site-wide feature must be enabled by an admin."
+                checked={marketplaceWtbAdsEnabled}
+                onChange={handleMarketplaceWtbAdsChange}
+                saving={savingMarketplaceWtbAds}
+                disabled={!marketplaceWtbAdsSiteEnabled}
+              />
+              <SettingsToggle
+                label="Live purchase toasts"
+                description="Show short live notifications when members accept marketplace orders. Only events while you are online — no backlog."
+                checked={marketplacePurchaseToastsEnabled}
+                onChange={handleMarketplacePurchaseToastsChange}
+                saving={savingMarketplacePurchaseToasts}
+                disabled={!marketplacePurchaseToastsSiteEnabled}
+              />
+            </SettingsSection>
+          )}
+
           {isSuperAdmin && (
             <SettingsSection
               title="Site"
@@ -461,6 +562,27 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 checked={showWelcomeAlways}
                 onChange={handleWelcomeAlwaysChange}
                 saving={savingWelcome}
+              />
+              <SettingsToggle
+                label="WTS listing ads (site-wide)"
+                description="Show bottom-left WTS listing ads to approved members. Members can opt out in Settings → Marketplace. Disabling clears ad pool data for WTS."
+                checked={marketplaceWtsAdsSiteEnabled}
+                onChange={handleSiteWtsAdsChange}
+                saving={savingSiteWtsAds}
+              />
+              <SettingsToggle
+                label="WTB listing ads (site-wide)"
+                description="Show bottom-left WTB listing ads to approved members. Members can opt out in Settings → Marketplace. Disabling clears ad pool data for WTB."
+                checked={marketplaceWtbAdsSiteEnabled}
+                onChange={handleSiteWtbAdsChange}
+                saving={savingSiteWtbAds}
+              />
+              <SettingsToggle
+                label="Live purchase toasts (site-wide)"
+                description="Broadcast short live purchase notifications to online members. No backlog — offline members miss events. Disabling clears the feed buffer."
+                checked={marketplacePurchaseToastsSiteEnabled}
+                onChange={handleSitePurchaseToastsChange}
+                saving={savingSitePurchaseToasts}
               />
             </SettingsSection>
           )}

@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useId } from 'react'
 import { Link } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import { useUiOverlayRegistration } from '../contexts/UiOverlayContext'
 
 interface WelcomeModalProps {
   onClose: () => void
@@ -10,6 +11,8 @@ interface WelcomeModalProps {
 
 export default function WelcomeModal({ onClose }: WelcomeModalProps) {
   useBodyScrollLock(true)
+  const overlayId = useId()
+  useUiOverlayRegistration(overlayId, true)
   
   const { profile, refreshProfile } = useAuth()
   const [step, setStep] = useState(0)

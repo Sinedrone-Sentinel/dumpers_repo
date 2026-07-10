@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useId } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
 import type { AppNavItem, NavGroup } from '../../config/appNav'
 import { isNavItemLocked } from '../../config/appNav'
 import { useAuth } from '../../contexts/AuthContext'
 import { useOrderDraft } from '../../contexts/OrderDraftContext'
+import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
 
 interface AppSidebarProps {
   groups: NavGroup[]
@@ -20,6 +21,9 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
   const pathname = routerState.pathname
   const search = routerState.searchStr
   const sidebarRef = useRef<HTMLDivElement>(null)
+  const overlayId = useId()
+
+  useUiOverlayRegistration(overlayId, isOpen)
 
   const toggleExpanded = (id: string) => {
     setExpandedItems(prev => {

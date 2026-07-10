@@ -26,6 +26,7 @@ function orderKindBadgeClass(order: CustomOrder): string {
 interface AvailableOrderCardProps {
   order: CustomOrder
   expanded: boolean
+  highlighted?: boolean
   onToggle: () => void
   blueprintById: Map<string, BlueprintWithSlots>
   showDfp: boolean
@@ -43,6 +44,7 @@ interface AvailableOrderCardProps {
 export default function AvailableOrderCard({
   order,
   expanded,
+  highlighted = false,
   onToggle,
   blueprintById,
   showDfp,
@@ -63,8 +65,13 @@ export default function AvailableOrderCard({
 
   return (
     <div
-      className={`rounded-xl border bg-slate-900/60 transition-colors ${
-        expanded ? 'border-slate-600' : 'border-slate-700'
+      id={`fulfillment-order-${order.id}`}
+      className={`rounded-xl border bg-slate-900/60 transition-colors scroll-mt-24 ${
+        highlighted
+          ? 'border-orange-400/70 ring-2 ring-orange-400/50'
+          : expanded
+            ? 'border-slate-600'
+            : 'border-slate-700'
       }`}
     >
       <div className="flex items-start gap-2 px-3 py-2">

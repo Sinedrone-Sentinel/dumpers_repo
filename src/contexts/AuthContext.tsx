@@ -97,6 +97,18 @@ interface AuthContextType {
   updateDfpDisplayEnabled: (enabled: boolean) => Promise<boolean>
   autoApproveEnabled: boolean
   updateAutoApprove: (enabled: boolean) => Promise<boolean>
+  marketplaceWtsAdsSiteEnabled: boolean
+  marketplaceWtbAdsSiteEnabled: boolean
+  marketplacePurchaseToastsSiteEnabled: boolean
+  updateMarketplaceWtsAdsSite: (enabled: boolean) => Promise<boolean>
+  updateMarketplaceWtbAdsSite: (enabled: boolean) => Promise<boolean>
+  updateMarketplacePurchaseToastsSite: (enabled: boolean) => Promise<boolean>
+  marketplaceWtsAdsEnabled: boolean
+  marketplaceWtbAdsEnabled: boolean
+  marketplacePurchaseToastsEnabled: boolean
+  updateMarketplaceWtsAds: (enabled: boolean) => Promise<boolean>
+  updateMarketplaceWtbAds: (enabled: boolean) => Promise<boolean>
+  updateMarketplacePurchaseToasts: (enabled: boolean) => Promise<boolean>
   orgLogoUrl: string
   orgLogoUpdatedAt: string | null
   orgLogoConfigured: boolean
@@ -117,6 +129,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [acquiredBlueprints, setAcquiredBlueprints] = useState<Record<string, boolean>>({})
   const [dfpDisplayEnabled, setDfpDisplayEnabled] = useState(true)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState(false)
+  const [marketplaceWtsAdsSiteEnabled, setMarketplaceWtsAdsSiteEnabled] = useState(false)
+  const [marketplaceWtbAdsSiteEnabled, setMarketplaceWtbAdsSiteEnabled] = useState(false)
+  const [marketplacePurchaseToastsSiteEnabled, setMarketplacePurchaseToastsSiteEnabled] =
+    useState(false)
   const [orgLogoUpdatedAt, setOrgLogoUpdatedAt] = useState<string | null>(null)
   const [orgLogoConfigured, setOrgLogoConfigured] = useState(false)
   const [isGuestPreview, setIsGuestPreview] = useState(() => readGuestPreviewSession())
@@ -229,18 +245,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchSiteSettings = useCallback(async () => {
     const { data, error } = await supabase
       .from('site_settings')
-      .select('dfp_display_enabled, auto_approve_enabled')
+      .select(
+        'dfp_display_enabled, auto_approve_enabled, marketplace_wts_ads_site_enabled, marketplace_wtb_ads_site_enabled, marketplace_purchase_toasts_site_enabled'
+      )
       .eq('id', 1)
       .maybeSingle()
 
     if (error) {
       console.error('Error fetching site settings:', error)
-      return { dfpDisplayEnabled: true, autoApproveEnabled: false }
+      return {
+        dfpDisplayEnabled: true,
+        autoApproveEnabled: false,
+        marketplaceWtsAdsSiteEnabled: false,
+        marketplaceWtbAdsSiteEnabled: false,
+        marketplacePurchaseToastsSiteEnabled: false,
+      }
     }
 
     return {
       dfpDisplayEnabled: data?.dfp_display_enabled ?? true,
       autoApproveEnabled: data?.auto_approve_enabled ?? false,
+      marketplaceWtsAdsSiteEnabled: data?.marketplace_wts_ads_site_enabled ?? false,
+      marketplaceWtbAdsSiteEnabled: data?.marketplace_wtb_ads_site_enabled ?? false,
+      marketplacePurchaseToastsSiteEnabled:
+        data?.marketplace_purchase_toasts_site_enabled ?? false,
     }
   }, [])
 
@@ -312,6 +340,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const siteSettings = await fetchSiteSettings()
     setDfpDisplayEnabled(siteSettings.dfpDisplayEnabled)
     setAutoApproveEnabled(siteSettings.autoApproveEnabled)
+    setMarketplaceWtsAdsSiteEnabled(siteSettings.marketplaceWtsAdsSiteEnabled)
+    setMarketplaceWtbAdsSiteEnabled(siteSettings.marketplaceWtbAdsSiteEnabled)
+    setMarketplacePurchaseToastsSiteEnabled(siteSettings.marketplacePurchaseToastsSiteEnabled)
   }, [checkBanned, handleBannedUser, fetchProfile, fetchAcquiredBlueprints, fetchSiteSettings])
 
   const setStep = useCallback((id: string, patch: Partial<Pick<BootstrapStep, 'status' | 'progress'>>) => {
@@ -357,6 +388,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const siteSettings = await fetchSiteSettings()
       setDfpDisplayEnabled(siteSettings.dfpDisplayEnabled)
       setAutoApproveEnabled(siteSettings.autoApproveEnabled)
+      setMarketplaceWtsAdsSiteEnabled(siteSettings.marketplaceWtsAdsSiteEnabled)
+      setMarketplaceWtbAdsSiteEnabled(siteSettings.marketplaceWtbAdsSiteEnabled)
+      setMarketplacePurchaseToastsSiteEnabled(siteSettings.marketplacePurchaseToastsSiteEnabled)
       setStep('settings', { status: 'done', progress: 100 })
 
       return true
@@ -753,6 +787,90 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true
   }, [])
 
+  const updateMarketplaceWtsAdsSite = useCallback(async (enabled: boolean): Promise<boolean> => {
+    if (profileRef.current?.role !== 'super-admin') return false
+    const { error } = await supabase.rpc('update_site_marketplace_wts_ads', { p_enabled: enabled })
+    if (error) {
+      console.error('Error updating WTS marketplace ads site setting:', error)
+      return false
+    }
+    setMarketplaceWtsAdsSiteEnabled(enabled)
+    return true
+  }, [])
+
+  const updateMarketplaceWtbAdsSite = useCallback(async (enabled: boolean): Promise<boolean> => {
+    if (profileRef.current?.role !== 'super-admin') return false
+    const { error } = await supabase.rpc('update_site_marketplace_wtb_ads', { p_enabled: enabled })
+    if (error) {
+      console.error('Error updating WTB marketplace ads site setting:', error)
+      return false
+    }
+    setMarketplaceWtbAdsSiteEnabled(enabled)
+    return true
+  }, [])
+
+  const updateMarketplacePurchaseToastsSite = useCallback(async (enabled: boolean): Promise<boolean> => {
+    if (profileRef.current?.role !== 'super-admin') return false
+    const { error } = await supabase.rpc('update_site_marketplace_purchase_toasts', {
+      p_enabled: enabled,
+    })
+    if (error) {
+      console.error('Error updating purchase toasts site setting:', error)
+      return false
+    }
+    setMarketplacePurchaseToastsSiteEnabled(enabled)
+    return true
+  }, [])
+
+  const updateMarketplaceWtsAds = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser || !marketplaceWtsAdsSiteEnabled) return false
+    const { error } = await supabase
+      .from('profiles')
+      .update({ marketplace_wts_ads_enabled: enabled })
+      .eq('id', activeUser.id)
+    if (error) {
+      console.error('Error updating WTS ads preference:', error)
+      return false
+    }
+    setProfile((prev) => (prev ? { ...prev, marketplace_wts_ads_enabled: enabled } : null))
+    return true
+  }, [marketplaceWtsAdsSiteEnabled])
+
+  const updateMarketplaceWtbAds = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser || !marketplaceWtbAdsSiteEnabled) return false
+    const { error } = await supabase
+      .from('profiles')
+      .update({ marketplace_wtb_ads_enabled: enabled })
+      .eq('id', activeUser.id)
+    if (error) {
+      console.error('Error updating WTB ads preference:', error)
+      return false
+    }
+    setProfile((prev) => (prev ? { ...prev, marketplace_wtb_ads_enabled: enabled } : null))
+    return true
+  }, [marketplaceWtbAdsSiteEnabled])
+
+  const updateMarketplacePurchaseToasts = useCallback(async (enabled: boolean): Promise<boolean> => {
+    const activeUser = userRef.current
+    if (!activeUser || !marketplacePurchaseToastsSiteEnabled) return false
+    const { error } = await supabase
+      .from('profiles')
+      .update({ marketplace_purchase_toasts_enabled: enabled })
+      .eq('id', activeUser.id)
+    if (error) {
+      console.error('Error updating purchase toasts preference:', error)
+      return false
+    }
+    setProfile((prev) => (prev ? { ...prev, marketplace_purchase_toasts_enabled: enabled } : null))
+    return true
+  }, [marketplacePurchaseToastsSiteEnabled])
+
+  const marketplaceWtsAdsEnabled = profile?.marketplace_wts_ads_enabled ?? true
+  const marketplaceWtbAdsEnabled = profile?.marketplace_wtb_ads_enabled ?? true
+  const marketplacePurchaseToastsEnabled = profile?.marketplace_purchase_toasts_enabled ?? true
+
   const isOfficerOrAbove = profile?.role === 'officer' || profile?.role === 'super-admin'
   const isSuperAdmin = profile?.role === 'super-admin'
   const isPending = profile?.role === 'pending'
@@ -825,6 +943,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateDfpDisplayEnabled,
       autoApproveEnabled,
       updateAutoApprove,
+      marketplaceWtsAdsSiteEnabled,
+      marketplaceWtbAdsSiteEnabled,
+      marketplacePurchaseToastsSiteEnabled,
+      updateMarketplaceWtsAdsSite,
+      updateMarketplaceWtbAdsSite,
+      updateMarketplacePurchaseToastsSite,
+      marketplaceWtsAdsEnabled,
+      marketplaceWtbAdsEnabled,
+      marketplacePurchaseToastsEnabled,
+      updateMarketplaceWtsAds,
+      updateMarketplaceWtbAds,
+      updateMarketplacePurchaseToasts,
       orgLogoUrl,
       orgLogoUpdatedAt,
       orgLogoConfigured,
@@ -868,6 +998,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updateDfpDisplayEnabled,
       autoApproveEnabled,
       updateAutoApprove,
+      marketplaceWtsAdsSiteEnabled,
+      marketplaceWtbAdsSiteEnabled,
+      marketplacePurchaseToastsSiteEnabled,
+      updateMarketplaceWtsAdsSite,
+      updateMarketplaceWtbAdsSite,
+      updateMarketplacePurchaseToastsSite,
+      marketplaceWtsAdsEnabled,
+      marketplaceWtbAdsEnabled,
+      marketplacePurchaseToastsEnabled,
+      updateMarketplaceWtsAds,
+      updateMarketplaceWtbAds,
+      updateMarketplacePurchaseToasts,
       orgLogoUrl,
       orgLogoUpdatedAt,
       orgLogoConfigured,

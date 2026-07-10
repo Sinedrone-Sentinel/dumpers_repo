@@ -87,6 +87,9 @@ const fulfillmentRoute = createRoute({
   path: '/fulfillment',
   component: FulfillmentRoute,
   beforeLoad: requireFeature('fulfillment'),
+  validateSearch: (search: Record<string, unknown>) => ({
+    highlight: typeof search.highlight === 'string' ? search.highlight : undefined,
+  }),
 })
 
 const archiveRoute = createRoute({

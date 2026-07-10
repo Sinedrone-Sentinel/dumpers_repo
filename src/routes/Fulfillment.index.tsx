@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link, getRouteApi } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import AvailableOrderCard from '../components/AvailableOrderCard'
 import AssignedOrderCard from '../components/AssignedOrderCard'
@@ -67,6 +67,8 @@ import {
   type ListingTypeFilter,
 } from '../lib/listingType'
 
+const fulfillmentRouteApi = getRouteApi('/fulfillment')
+
 export default function FulfillmentRoute() {
   const { user, profile, acquiredBlueprints, dfpDisplayEnabled, isGuestPreview } = useAuth()
   const isGuest = !user && isGuestPreview
@@ -96,6 +98,10 @@ export default function FulfillmentRoute() {
   const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
   const [listingTypeFilter, setListingTypeFilter] = useState<ListingTypeFilter>('all')
   const [expandedPendingOrderId, setExpandedPendingOrderId] = useState<string | null>(null)
+  const [flashOrderId, setFlashOrderId] = useState<string | null>(null)
+  const highlightAppliedRef = useRef<string | null>(null)
+
+  const { highlight } = fulfillmentRouteApi.useSearch()
 
   const userId = user?.id
 
@@ -226,12 +232,62 @@ export default function FulfillmentRoute() {
   }, [pendingOrders, onlyMyBlueprintOrders, acquiredBlueprints])
 
   useEffect(() => {
+    if (highlight) return
     setExpandedPendingOrderId(null)
-  }, [listingTypeFilter, minBuyerRepFilter, onlyMyBlueprintOrders])
+  }, [listingTypeFilter, minBuyerRepFilter, onlyMyBlueprintOrders, highlight])
 
   const handleTogglePendingOrder = useCallback((orderId: string) => {
     setExpandedPendingOrderId((current) => (current === orderId ? null : orderId))
   }, [])
+
+  useEffect(() => {
+    if (!highlight || loading || !userId) return
+    if (highlightAppliedRef.current === highlight) return
+
+    const target = orders.find(
+      (o) => o.id === highlight && o.status === 'pending' && o.requester_id !== userId
+    )
+    if (!target) return
+
+    if (!matchesListingTypeFilter(target, listingTypeFilter)) {
+      setListingTypeFilter(orderListingType(target) === 'wts' ? 'wts' : 'wtb')
+    }
+    if (
+      onlyMyBlueprintOrders &&
+      orderListingType(target) === 'wtb' &&
+      !fulfillerHasAllOrderBlueprints(target, acquiredBlueprints)
+    ) {
+      setOnlyMyBlueprintOrders(false)
+    }
+  }, [
+    highlight,
+    loading,
+    userId,
+    orders,
+    listingTypeFilter,
+    onlyMyBlueprintOrders,
+    acquiredBlueprints,
+  ])
+
+  useEffect(() => {
+    if (!highlight || loading || !userId) return
+    if (highlightAppliedRef.current === highlight) return
+    if (!visiblePendingOrders.some((o) => o.id === highlight)) return
+
+    highlightAppliedRef.current = highlight
+    setExpandedPendingOrderId(highlight)
+    setFlashOrderId(highlight)
+
+    requestAnimationFrame(() => {
+      document.getElementById(`fulfillment-order-${highlight}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      })
+    })
+
+    const timer = window.setTimeout(() => setFlashOrderId(null), 4000)
+    return () => window.clearTimeout(timer)
+  }, [highlight, loading, userId, visiblePendingOrders])
 
   const myBuyingOrders = useMemo(
     () =>
@@ -749,6 +805,7 @@ export default function FulfillmentRoute() {
                         key={order.id}
                         order={order}
                         expanded={expandedPendingOrderId === order.id}
+                        highlighted={flashOrderId === order.id}
                         onToggle={() => handleTogglePendingOrder(order.id)}
                         blueprintById={blueprintById}
                         showDfp={dfpDisplayEnabled}

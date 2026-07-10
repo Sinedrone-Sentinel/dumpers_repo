@@ -25,6 +25,9 @@ export interface Profile {
   approved_by: string | null
   craft_deduct_inventory: boolean
   group_blueprint_variants: boolean
+  marketplace_wts_ads_enabled: boolean
+  marketplace_wtb_ads_enabled: boolean
+  marketplace_purchase_toasts_enabled: boolean
 }
 
 export function getDisplayName(profile: Profile | null): string {

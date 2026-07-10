@@ -1,5 +1,6 @@
 import React, { useId } from 'react'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
 
 export type AppModalSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type AppModalZIndex = 60 | 70 | 80
@@ -55,8 +56,10 @@ export default function AppModal({
 }: AppModalProps) {
   const generatedId = useId()
   const titleId = titleIdProp ?? generatedId
+  const overlayId = useId()
 
   useBodyScrollLock(true)
+  useUiOverlayRegistration(overlayId, true)
 
   return (
     <div
