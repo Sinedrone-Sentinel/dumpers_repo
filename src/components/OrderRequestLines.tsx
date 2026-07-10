@@ -83,6 +83,8 @@ interface OrderRequestLinesProps {
   blueprintById?: Map<string, BlueprintWithSlots>
   /** Itemized cards with materials + stats (fulfillment / marketplace). */
   showEffectiveStats?: boolean
+  /** Hide the order-kind pill when the parent row already shows it. */
+  showKindBadge?: boolean
 }
 
 export function orderKindLabel(order: CustomOrder): string {
@@ -97,6 +99,7 @@ export default function OrderRequestLines({
   showDfp = true,
   blueprintById,
   showEffectiveStats = false,
+  showKindBadge = true,
 }: OrderRequestLinesProps) {
   const blueprintLines = useMemo(() => resolveOrderBlueprintLines(order), [order])
 
@@ -110,17 +113,19 @@ export default function OrderRequestLines({
   if (showEffectiveStats) {
     return (
       <div className="space-y-2">
-        <span
-          className={`inline-block px-2 py-0.5 rounded text-[10px] border font-medium uppercase tracking-wide ${
-            isMixed
-              ? 'bg-amber-950/40 text-amber-200 border-amber-500/30'
-              : blueprintLines.length > 0
-                ? 'bg-red-950/40 text-red-200 border-red-500/30'
-                : 'bg-cyan-950/40 text-cyan-200 border-cyan-500/30'
-          }`}
-        >
-          {kind}
-        </span>
+        {showKindBadge ? (
+          <span
+            className={`inline-block px-2 py-0.5 rounded text-[10px] border font-medium uppercase tracking-wide ${
+              isMixed
+                ? 'bg-amber-950/40 text-amber-200 border-amber-500/30'
+                : blueprintLines.length > 0
+                  ? 'bg-red-950/40 text-red-200 border-red-500/30'
+                  : 'bg-cyan-950/40 text-cyan-200 border-cyan-500/30'
+            }`}
+          >
+            {kind}
+          </span>
+        ) : null}
         <div className="space-y-2">
           {blueprintLines.map((line) => {
             const lineKey = `${order.id}-bp-${line.blueprintId}-${line.minQuality}-${line.quantity}`

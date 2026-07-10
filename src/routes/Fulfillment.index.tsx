@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
+import AvailableOrderCard from '../components/AvailableOrderCard'
 import AssignedOrderCard from '../components/AssignedOrderCard'
 import OrderArchiveCallout from '../components/OrderArchiveCallout'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
@@ -8,9 +9,7 @@ import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import TradeContactChip from '../components/TradeContactChip'
 import WtsSaleOrderCard from '../components/WtsSaleOrderCard'
-import WtsPartialPurchasePanel, {
-  type WtsLineSelection,
-} from '../components/WtsPartialPurchasePanel'
+import { type WtsLineSelection } from '../components/WtsPartialPurchasePanel'
 import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
@@ -29,7 +28,6 @@ import {
 } from '../lib/orderArchive'
 import { releaseOrderConfirmMessage } from '../lib/orderRelease'
 import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
-import { orderHasHighQualityBlueprint } from '../lib/orderDeadlines'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
 import { resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
@@ -64,7 +62,6 @@ import {
 } from '../lib/operations'
 import { displayNameFromFields } from '../lib/supabase'
 import {
-  isWtsPartialListing,
   matchesListingTypeFilter,
   orderListingType,
   type ListingTypeFilter,
@@ -98,6 +95,7 @@ export default function FulfillmentRoute() {
   const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
   const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
   const [listingTypeFilter, setListingTypeFilter] = useState<ListingTypeFilter>('all')
+  const [expandedPendingOrderId, setExpandedPendingOrderId] = useState<string | null>(null)
 
   const userId = user?.id
 
@@ -226,6 +224,14 @@ export default function FulfillmentRoute() {
     }
     return list
   }, [pendingOrders, onlyMyBlueprintOrders, acquiredBlueprints])
+
+  useEffect(() => {
+    setExpandedPendingOrderId(null)
+  }, [listingTypeFilter, minBuyerRepFilter, onlyMyBlueprintOrders])
+
+  const handleTogglePendingOrder = useCallback((orderId: string) => {
+    setExpandedPendingOrderId((current) => (current === orderId ? null : orderId))
+  }, [])
 
   const myBuyingOrders = useMemo(
     () =>
@@ -723,9 +729,7 @@ export default function FulfillmentRoute() {
               ) : (
                 <div className="space-y-2">
                   {visiblePendingOrders.map((order) => {
-                    const totalDfp = orderTotalDfp(order)
                     const isWts = orderListingType(order) === 'wts'
-                    const allowsPartial = isWts && isWtsPartialListing(order)
                     const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
                     const acceptBlockers = getOrderAcceptBlockers({
                       order,
@@ -739,107 +743,27 @@ export default function FulfillmentRoute() {
                       : orderLimits?.can_accept_order !== false
                     const canAccept =
                       acceptBlockers.length === 0 && meetsMinRep && canAcceptLimits
-                    const accepting = acceptingOrderId === order.id
 
                     return (
-                      <div
+                      <AvailableOrderCard
                         key={order.id}
-                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                          <div className="space-y-2 flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <p className="text-white font-medium">{order.title}</p>
-                              <ListingTypeBadge order={order} />
-                              {isWts && (
-                                <span
-                                  className={`px-2 py-0.5 rounded text-[10px] font-medium border ${
-                                    allowsPartial
-                                      ? 'bg-cyan-950/40 text-cyan-200 border-cyan-500/30'
-                                      : 'bg-slate-800 text-slate-400 border-slate-600'
-                                  }`}
-                                >
-                                  {allowsPartial ? 'Partial OK' : 'Full listing only'}
-                                </span>
-                              )}
-                            </div>
-                            <TradeContactChip
-                              role={isWts ? 'seller' : 'buyer'}
-                              profile={order.requester}
-                              compact
-                              className="mt-1"
-                            />
-                            {dfpDisplayEnabled && totalDfp > 0 && (
-                              <p className="text-amber-300/90 text-xs">{formatDfpAuec(totalDfp)}</p>
-                            )}
-                            <div className="flex flex-wrap gap-2">
-                              {!isWts && (
-                                <ReputationBadge label="Buyer rep" reputation={buyerRep} />
-                              )}
-                              {isWts && (
-                                <ReputationBadge
-                                  label="Seller rep"
-                                  reputation={fulfillerReputationFromRow(reputations[order.requester_id])}
-                                  type="fulfiller"
-                                />
-                              )}
-                              {order.min_fulfiller_reputation != null && (
-                                <span className="px-2 py-0.5 rounded text-xs border bg-slate-800 text-slate-300 border-slate-600">
-                                  Requires {isWts ? 'buyer' : 'fulfiller'}{' '}
-                                  {order.min_fulfiller_reputation}+
-                                </span>
-                              )}
-                            </div>
-                            <div className="mt-1">
-                              <OrderRequestLines order={order} blueprintById={blueprintById} showEffectiveStats />
-                            </div>
-                            {!meetsMinRep && (
-                              <p className="text-amber-400/90 text-xs">
-                                Your {isWts ? 'buyer' : 'fulfiller'} reputation is below this order&apos;s
-                                minimum.
-                              </p>
-                            )}
-                            {acceptBlockers.length > 0 && (
-                              <ul className="text-amber-400/80 text-xs space-y-0.5 max-w-full break-words">
-                                {acceptBlockers.map((blocker) => (
-                                  <li key={blocker}>{blocker}</li>
-                                ))}
-                              </ul>
-                            )}
-                            {!isWts && orderHasHighQualityBlueprint(order) && (
-                              <p className="text-orange-300/90 text-xs">
-                                This order includes 800+ quality items — confirm you have materials
-                                before accepting.
-                              </p>
-                            )}
-                          </div>
-                          {!allowsPartial && (
-                            <button
-                              type="button"
-                              onClick={() => void handleAccept(order.id)}
-                              disabled={!canAccept || accepting}
-                              className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
-                            >
-                              {accepting
-                                ? 'Accepting...'
-                                : isWts
-                                  ? 'Buy listing'
-                                  : 'Accept order'}
-                            </button>
-                          )}
-                        </div>
-                        {allowsPartial && (
-                          <WtsPartialPurchasePanel
-                            order={order}
-                            showDfp={dfpDisplayEnabled}
-                            disabled={!meetsMinRep || !canAcceptLimits}
-                            submitting={accepting}
-                            onPurchase={(selections) =>
-                              void handleAcceptPartial(order.id, selections)
-                            }
-                          />
-                        )}
-                      </div>
+                        order={order}
+                        expanded={expandedPendingOrderId === order.id}
+                        onToggle={() => handleTogglePendingOrder(order.id)}
+                        blueprintById={blueprintById}
+                        showDfp={dfpDisplayEnabled}
+                        buyerRep={buyerRep}
+                        sellerRep={fulfillerReputationFromRow(reputations[order.requester_id])}
+                        acceptBlockers={acceptBlockers}
+                        meetsMinRep={meetsMinRep}
+                        canAccept={canAccept}
+                        canAcceptLimits={canAcceptLimits}
+                        accepting={acceptingOrderId === order.id}
+                        onAccept={() => void handleAccept(order.id)}
+                        onAcceptPartial={(selections) =>
+                          void handleAcceptPartial(order.id, selections)
+                        }
+                      />
                     )
                   })}
                 </div>

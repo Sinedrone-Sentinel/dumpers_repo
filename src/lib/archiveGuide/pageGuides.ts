@@ -167,7 +167,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Browse, filter, and act on other members\' WTB and WTS orders.',
     details: [
       'Main filter: All, WTB only, or WTS only',
-      'WTB orders — accept to fulfill/craft for the buyer; itemized lines show materials and effective stats',
+      'Available orders collapse to a compact summary row (title, tag, buyer, price, rep) — click to expand blueprint details; only one order expands at a time',
+      'WTB orders — accept to fulfill/craft for the buyer; expanded view shows materials and effective stats per line',
       'WTS full listings (Full listing only badge) — Buy listing accepts the entire offer at once',
       'WTS partial listings (Partial OK badge) — check lines, set quantities, and buy only what you want',
       'Each partial purchase becomes its own order through the normal handoff, pickup, and rating flow',
