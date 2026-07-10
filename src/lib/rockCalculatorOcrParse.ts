@@ -32,7 +32,6 @@ export interface RockScanOcrResult {
   instability: number
   totalScu: number
   compositionLines: OcrCompositionLine[]
-  inertPercentScanned: number | null
   warnings: string[]
 }
 
@@ -1046,37 +1045,7 @@ function parseCompositionFromRowGroups(
   rowGroups: RowWord[][],
   elementRank: Map<string, number>,
   compositionLines: OcrCompositionLine[]
-): number | null {
-  // HUD inert % is not applied to the calculator (UI auto-derives inert). We read it first
-  // only as an anchor to fix misread valuable bands during reconciliation.
-  let inertPercent: number | null = null
-  const oreSegments: Array<{
-    spatial: {
-      elementName: string
-      percent: number
-      quality: number | null
-      qualityMissing: boolean
-    }
-    rowText: string
-  }> = []
-
-  for (const group of rowGroups) {
-    for (const segment of splitRowGroupByPercents(group)) {
-      const rowText = segment.map((word) => word.text).join(' ').trim()
-      if (!rowText || !isCompositionPercentRow(rowText) || !/\bINERT\b/i.test(rowText)) continue
-
-      const spatial = parseCompositionSpatial(segment, rowText)
-      if (
-        spatial &&
-        'kind' in spatial &&
-        spatial.kind === 'inert' &&
-        isPlausibleCompositionPercent(spatial.percent)
-      ) {
-        inertPercent = spatial.percent
-      }
-    }
-  }
-
+): void {
   for (const group of rowGroups) {
     for (const segment of splitRowGroupByPercents(group)) {
       const rowText = segment.map((word) => word.text).join(' ').trim()
@@ -1085,40 +1054,22 @@ function parseCompositionFromRowGroups(
       const spatial = parseCompositionSpatial(segment, rowText)
       if (!spatial || ('kind' in spatial && spatial.kind === 'inert')) continue
 
-      oreSegments.push({
-        spatial: {
-          elementName: spatial.elementName,
-          percent: spatial.percent,
-          quality: spatial.quality,
-          qualityMissing: spatial.qualityMissing,
-        },
+      pushOreLine(
+        spatial.elementName,
+        spatial.percent,
+        spatial.quality,
+        spatial.qualityMissing,
         rowText,
-      })
+        elementRank,
+        compositionLines,
+        []
+      )
     }
   }
-
-  for (const { spatial, rowText } of oreSegments) {
-    pushOreLine(
-      spatial.elementName,
-      spatial.percent,
-      spatial.quality,
-      spatial.qualityMissing,
-      rowText,
-      elementRank,
-      compositionLines,
-      []
-    )
-  }
-
-  return inertPercent
 }
 
-function reconcileOverLimitComposition(
-  compositionLines: OcrCompositionLine[],
-  inertPercent: number | null
-): void {
+function reconcileMisreadCompositionBands(compositionLines: OcrCompositionLine[]): void {
   const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
-  if (valuableTotal <= 100.5) return
 
   const indicesByElement = new Map<string, number[]>()
   compositionLines.forEach((line, index) => {
@@ -1134,57 +1085,16 @@ function reconcileOverLimitComposition(
       (a, b) => compositionLines[b].percent - compositionLines[a].percent
     )[0]
     const line = compositionLines[largestIndex]
-    const siblingTotal = indices
-      .filter((index) => index !== largestIndex)
-      .reduce((sum, index) => sum + compositionLines[index].percent, 0)
+    const otherTotal = valuableTotal - line.percent
+    const currentGap = Math.abs(100 - valuableTotal)
 
     const reparsed = reparsePercentFromRawOcrLine(line.rawOcrLine)
-    if (
-      reparsed != null &&
-      reparsed < line.percent &&
-      reparsed + siblingTotal <= 100.5
-    ) {
+    if (reparsed == null || reparsed >= line.percent) continue
+
+    const newTotal = otherTotal + reparsed
+    const newGap = Math.abs(100 - newTotal)
+    if (newTotal <= 100.5 && (valuableTotal > 100.5 || newGap < currentGap)) {
       line.percent = reparsed
-      continue
-    }
-
-    if (inertPercent != null && inertPercent > 0) {
-      const target = Math.max(0, Math.round((100 - inertPercent - siblingTotal) * 100) / 100)
-      if (target > 0 && target < line.percent) {
-        line.percent = target
-      }
-    }
-  }
-}
-
-/** When HUD inert was scanned, fix a misread Low band on duplicate ores. */
-function reconcileDuplicateBandWithScannedInert(
-  compositionLines: OcrCompositionLine[],
-  inertPercent: number | null
-): void {
-  if (inertPercent == null || inertPercent <= 0) return
-
-  const indicesByElement = new Map<string, number[]>()
-  compositionLines.forEach((line, index) => {
-    const indices = indicesByElement.get(line.elementName) ?? []
-    indices.push(index)
-    indicesByElement.set(line.elementName, indices)
-  })
-
-  for (const indices of indicesByElement.values()) {
-    if (indices.length < 2) continue
-
-    const sorted = [...indices].sort(
-      (a, b) => compositionLines[a].percent - compositionLines[b].percent
-    )
-    const highIndex = sorted[0]
-    const lowIndex = sorted[sorted.length - 1]
-    const highPercent = compositionLines[highIndex].percent
-    const lowLine = compositionLines[lowIndex]
-    const target = Math.max(0, Math.round((100 - inertPercent - highPercent) * 100) / 100)
-
-    if (target > 0 && Math.abs(lowLine.percent - target) > 1.5) {
-      lowLine.percent = target
     }
   }
 }
@@ -1193,13 +1103,12 @@ function parseCompositionRows(
   rows: string[],
   warnings: string[],
   rowGroups?: RowWord[][]
-): { lines: OcrCompositionLine[]; inertPercent: number | null } {
+): { lines: OcrCompositionLine[] } {
   const compositionLines: OcrCompositionLine[] = []
-  let inertPercent: number | null = null
   const elementRank = new Map<string, number>()
 
   if (rowGroups?.length) {
-    inertPercent = parseCompositionFromRowGroups(rowGroups, elementRank, compositionLines)
+    parseCompositionFromRowGroups(rowGroups, elementRank, compositionLines)
   } else {
     const consumedIndices = new Set<number>()
 
@@ -1217,19 +1126,16 @@ function parseCompositionRows(
         i,
         consumedIndices
       )
-      if (parsed?.kind === 'inert' && isPlausibleCompositionPercent(parsed.percent)) {
-        inertPercent = parsed.percent
-      }
+      if (parsed?.kind === 'inert') continue
     }
 
     enrichCompositionFromSpatial(compositionLines, rowGroups)
   }
 
-  reconcileOverLimitComposition(compositionLines, inertPercent)
-  reconcileDuplicateBandWithScannedInert(compositionLines, inertPercent)
+  reconcileMisreadCompositionBands(compositionLines)
   flushCompositionWarnings(compositionLines, warnings)
 
-  return { lines: compositionLines, inertPercent }
+  return { lines: compositionLines }
 }
 
 function assignBandRanksByPercent(compositionLines: OcrCompositionLine[]): void {
@@ -1334,7 +1240,7 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
 
   const warnings: string[] = []
   const panel = extractPanelStats(rows)
-  const { lines: compositionLines, inertPercent } = parseCompositionRows(
+  const { lines: compositionLines } = parseCompositionRows(
     rows.rows,
     warnings,
     rows.rowGroups
@@ -1386,8 +1292,6 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
     }
   }
 
-  const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
-
   return {
     ok: true,
     data: {
@@ -1397,7 +1301,6 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
       instability: panel.instability,
       totalScu: panel.totalScu,
       compositionLines,
-      inertPercentScanned: inertPercent,
       warnings,
     },
   }
@@ -1422,11 +1325,10 @@ export function scoreRockScanOcrParseAttempt(result: RockScanOcrParseResult): nu
       else score += 8
     }
     const valuableTotal = result.data.compositionLines.reduce((sum, line) => sum + line.percent, 0)
-    if (result.data.inertPercentScanned != null) {
-      if (Math.abs(valuableTotal + result.data.inertPercentScanned - 100) < 1.5) score += 25
-      else if (result.data.inertPercentScanned > 60 && valuableTotal > 35) score -= 30
-    } else if (Math.abs(valuableTotal - 100) < 2) {
-      score += 10
+    if (Math.abs(valuableTotal - 100) < 2) {
+      score += 15
+    } else if (valuableTotal > 100.5) {
+      score -= 25
     }
     if (result.data.totalScu != null && isPlausibleRockTotalScu(result.data.totalScu)) {
       score += 30
