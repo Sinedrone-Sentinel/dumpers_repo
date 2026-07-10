@@ -6,6 +6,7 @@ import {
   getRockCalculatorLocationOptions,
   resolveRockCalculatorLocationFromEntry,
   getRockCompositionProfile,
+  type CompositionPart,
   type DepositType,
 } from '../../lib/miningClusterProfiles'
 import { normalizeMiningOreName } from '../../lib/handMineables'
@@ -60,7 +61,7 @@ import {
   SMART_CRACKER_BUTTON_TOOLTIP,
 } from '../../lib/miningTooltipContent'
 import RockCalculatorOcrModal from './RockCalculatorOcrModal'
-import { resolveOcrBasis, mapOcrToCalculatorSlots } from '../../lib/rockCalculatorOcrApply'
+import { resolveOcrBasis, buildOcrCalculatorApply } from '../../lib/rockCalculatorOcrApply'
 import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
@@ -124,7 +125,7 @@ export default function RockCalculator({
   const [ocrModalOpen, setOcrModalOpen] = useState(false)
   const [ocrOverrideActive, setOcrOverrideActive] = useState(false)
   const [ocrWarnings, setOcrWarnings] = useState<string[]>([])
-  const [pendingOcrApply, setPendingOcrApply] = useState<RockScanOcrResult | null>(null)
+  const [ocrScanParts, setOcrScanParts] = useState<CompositionPart[] | null>(null)
   const ocrApplyingRef = useRef(false)
 
   const loadEntryRef = useRef(loadEntry)
@@ -133,7 +134,7 @@ export default function RockCalculator({
   useEffect(() => {
     if (!loadEntry) return
     setOcrOverrideActive(false)
-    setPendingOcrApply(null)
+    setOcrScanParts(null)
     setOcrWarnings([])
     const entryDeposit: DepositType =
       loadEntry.depositType === 'asteroid' ? 'asteroid' : 'surface'
@@ -201,7 +202,7 @@ export default function RockCalculator({
       return
     }
 
-    if (ocrOverrideActive || pendingOcrApply) return
+    if (ocrOverrideActive) return
 
     const match = resolveRockCalculatorLocationFromEntry(
       loadEntryRef.current,
@@ -211,7 +212,7 @@ export default function RockCalculator({
     )
 
     setSelectedLocation(match?.value ?? locationOptions[0].value)
-  }, [oreName, depositType, loadToken, locationOptions, ocrOverrideActive, pendingOcrApply])
+  }, [oreName, depositType, loadToken, locationOptions, ocrOverrideActive])
 
   const composition = useMemo(() => {
     if (!oreName || !selectedLocation) return null
@@ -222,9 +223,10 @@ export default function RockCalculator({
   }, [oreName, depositType, selectedLocation])
 
   const calculatorParts = useMemo(() => {
+    if (ocrOverrideActive && ocrScanParts?.length) return ocrScanParts
     if (!composition?.compositionParts.length) return []
     return withInertCompositionPart(composition.compositionParts)
-  }, [composition?.compositionParts])
+  }, [ocrOverrideActive, ocrScanParts, composition?.compositionParts])
 
   const compositionKey = useMemo(() => {
     if (!calculatorParts.length) return null
@@ -238,31 +240,10 @@ export default function RockCalculator({
 
   useEffect(() => {
     if (!calculatorParts.length) return
-    if (pendingOcrApply || ocrOverrideActive) return
+    if (ocrOverrideActive) return
     setPercentBySlot(buildDefaultPercentSlots(calculatorParts))
     setQualityBySlot(buildDefaultQualitySlots(calculatorParts))
-  }, [compositionKey, loadToken, calculatorParts, pendingOcrApply, ocrOverrideActive])
-
-  useEffect(() => {
-    if (!pendingOcrApply || !calculatorParts.length) return
-
-    const mapped = mapOcrToCalculatorSlots(pendingOcrApply, calculatorParts)
-    setScannerMassInput(String(pendingOcrApply.mass))
-    setResistanceInput(String(pendingOcrApply.resistancePercent))
-    setInstabilityInput(String(pendingOcrApply.instability))
-    setTotalScuInput(String(pendingOcrApply.totalScu))
-    setPercentBySlot(mapped.percentBySlot)
-    setQualityBySlot(mapped.qualityBySlot)
-
-    if (mapped.unmatchedLines.length) {
-      setOcrWarnings((prev) => [
-        ...prev,
-        `Some scan lines did not match this ore profile: ${mapped.unmatchedLines.join('; ')}`,
-      ])
-    }
-
-    setPendingOcrApply(null)
-  }, [pendingOcrApply, calculatorParts])
+  }, [compositionKey, loadToken, calculatorParts, ocrOverrideActive])
 
   const totalScu = parseTotalScuInput(totalScuInput)
 
@@ -385,7 +366,7 @@ export default function RockCalculator({
 
   const handleSelectOre = (name: string) => {
     setOcrOverrideActive(false)
-    setPendingOcrApply(null)
+    setOcrScanParts(null)
     setOcrWarnings([])
     setOreName(name)
     setSearchQuery(name)
@@ -410,19 +391,28 @@ export default function RockCalculator({
     const basis = resolveOcrBasis(result)
     if (!basis) return
 
+    const applied = buildOcrCalculatorApply(result)
+
     ocrApplyingRef.current = true
     setOcrOverrideActive(true)
     setOcrWarnings(result.warnings)
+    setOcrScanParts(applied.calculatorParts)
     setOreName(basis.oreName)
     setSearchQuery(basis.oreName)
     setDepositType(basis.depositType)
-    setSelectedLocation(basis.locationValue)
-    setPendingOcrApply(result)
+    setSelectedLocation(undefined)
+    setScannerMassInput(String(result.mass))
+    setResistanceInput(String(result.resistancePercent))
+    setInstabilityInput(String(result.instability))
+    setTotalScuInput(String(result.totalScu))
+    setPercentBySlot(applied.percentBySlot)
+    setQualityBySlot(applied.qualityBySlot)
   }, [])
 
   const showDepositToggle = availableDepositTypes.length > 1 && !ocrOverrideActive
-  const selectedLocationLabel =
-    locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
+  const selectedLocationLabel = ocrOverrideActive
+    ? null
+    : locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
 
   return (
     <aside className="w-full shrink-0">

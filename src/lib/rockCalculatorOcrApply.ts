@@ -1,73 +1,83 @@
 import type { CompositionPart, DepositType } from './miningClusterProfiles'
+import { getDepositTypes } from './miningClusterProfiles'
+import { resolveLedgerQuality, getDefaultBandQuality } from './qualityBands'
 import {
-  getDepositTypes,
-  getRockCalculatorLocationOptions,
-  getRockCompositionProfile,
-} from './miningClusterProfiles'
-import { resolveLedgerQuality } from './qualityBands'
-import {
-  buildDefaultPercentSlots,
   buildDefaultQualitySlots,
   compositionSlotKey,
+  INERT_ELEMENT_NAME,
+  INERT_SLOT_KEY,
   isInertElement,
   oreResourceKeyFromElementName,
+  PURCHASED_STOCK_QUALITY,
 } from './rockCalculator'
 import type { OcrCompositionLine, RockScanOcrResult } from './rockCalculatorOcrParse'
 
 export interface OcrBasisResolution {
   oreName: string
   depositType: DepositType
-  locationValue: string
-  locationLabel: string
 }
 
-function profileSlotsByElement(
-  calculatorParts: CompositionPart[],
-  elementName: string
-): Array<{ index: number; part: CompositionPart }> {
-  return calculatorParts
-    .map((part, index) => ({ part, index }))
-    .filter(({ part }) => part.elementName === elementName && !isInertElement(part.elementName))
-    .sort((a, b) => b.part.qualityScale - a.part.qualityScale)
+/** High/Low band ordering in the calculator matches profile qualityScale sort (higher = High). */
+function qualityScaleForScanBandRank(rank: number): number {
+  return Math.max(0.01, 1 - rank * 0.51)
 }
 
-function ocrLinesByElement(lines: OcrCompositionLine[]): Map<string, OcrCompositionLine[]> {
-  const grouped = new Map<string, OcrCompositionLine[]>()
-  for (const line of lines) {
-    if (isInertElement(line.elementName)) continue
-    const list = grouped.get(line.elementName) ?? []
-    list.push(line)
-    grouped.set(line.elementName, list)
+function buildInertPart(): CompositionPart {
+  return {
+    elementName: INERT_ELEMENT_NAME,
+    minPercentage: 0,
+    maxPercentage: 0,
+    qualityScale: 0,
   }
-  for (const list of grouped.values()) {
-    list.sort((a, b) => a.scanBandRank - b.scanBandRank)
-  }
-  return grouped
 }
 
-function scoreProfileMatch(
-  profileParts: CompositionPart[],
-  ocrLines: OcrCompositionLine[]
-): number {
-  const ocrElements = new Set(ocrLines.map((line) => line.elementName))
-  const profileElements = new Set(
-    profileParts.filter((part) => !isInertElement(part.elementName)).map((part) => part.elementName)
-  )
+/** Scan-driven slots: open 0–100% ranges (no spawn-location clamp). Inert is auto-derived in the UI. */
+export function buildOcrCalculatorParts(scan: RockScanOcrResult): CompositionPart[] {
+  const valuable = scan.compositionLines.filter((line) => !isInertElement(line.elementName))
+  const parts = valuable.map((line) => ({
+    elementName: line.elementName,
+    minPercentage: 0,
+    maxPercentage: 100,
+    qualityScale: qualityScaleForScanBandRank(line.scanBandRank),
+  }))
+  return [...parts, buildInertPart()]
+}
 
-  let score = 0
-  for (const element of ocrElements) {
-    if (profileElements.has(element)) score += 3
-  }
-
-  const primary = ocrLines[0]?.elementName
-  if (primary) {
-    const primarySlots = profileParts.filter(
-      (part) => part.elementName === primary && !isInertElement(part.elementName)
+function resolveLineQuality(line: OcrCompositionLine): number {
+  if (!line.qualityMissing && line.quality != null) {
+    return resolveLedgerQuality(
+      oreResourceKeyFromElementName(line.elementName),
+      line.elementName,
+      line.quality
     )
-    if (primarySlots.length >= 2) score += 5
   }
+  return resolveLedgerQuality(
+    oreResourceKeyFromElementName(line.elementName),
+    line.elementName,
+    getDefaultBandQuality(line.elementName)
+  )
+}
 
-  return score
+export function buildOcrCalculatorApply(scan: RockScanOcrResult): {
+  calculatorParts: CompositionPart[]
+  percentBySlot: Record<string, string>
+  qualityBySlot: Record<string, string>
+} {
+  const calculatorParts = buildOcrCalculatorParts(scan)
+  const valuable = scan.compositionLines.filter((line) => !isInertElement(line.elementName))
+  const percentBySlot: Record<string, string> = {}
+  const qualityBySlot = buildDefaultQualitySlots(calculatorParts)
+
+  valuable.forEach((line, index) => {
+    const part = calculatorParts[index]
+    const key = compositionSlotKey(index, part)
+    percentBySlot[key] = String(line.percent)
+    qualityBySlot[key] = String(resolveLineQuality(line))
+  })
+
+  qualityBySlot[INERT_SLOT_KEY] = String(PURCHASED_STOCK_QUALITY)
+
+  return { calculatorParts, percentBySlot, qualityBySlot }
 }
 
 export function resolveOcrBasis(scan: RockScanOcrResult): OcrBasisResolution | null {
@@ -75,99 +85,7 @@ export function resolveOcrBasis(scan: RockScanOcrResult): OcrBasisResolution | n
   const depositTypes = getDepositTypes(oreName)
   if (!depositTypes.length) return null
 
-  const valuableLines = scan.compositionLines.filter((line) => !isInertElement(line.elementName))
+  const depositType: DepositType = depositTypes.includes('asteroid') ? 'asteroid' : depositTypes[0]
 
-  let best:
-    | {
-        depositType: DepositType
-        locationValue: string
-        locationLabel: string
-        score: number
-      }
-    | null = null
-
-  for (const depositType of depositTypes) {
-    const options = getRockCalculatorLocationOptions(oreName, depositType)
-    for (const option of options) {
-      const profile = getRockCompositionProfile(oreName, depositType, {
-        profileMode: 'location',
-        locationName: option.value,
-      })
-      if (!profile?.compositionParts.length) continue
-      const score = scoreProfileMatch(profile.compositionParts, valuableLines)
-      if (!best || score > best.score) {
-        best = {
-          depositType,
-          locationValue: option.value,
-          locationLabel: option.label,
-          score,
-        }
-      }
-    }
-  }
-
-  if (!best) {
-    const fallbackDeposit: DepositType = depositTypes.includes('asteroid') ? 'asteroid' : depositTypes[0]
-    const options = getRockCalculatorLocationOptions(oreName, fallbackDeposit)
-    if (!options.length) return null
-    return {
-      oreName,
-      depositType: fallbackDeposit,
-      locationValue: options[0].value,
-      locationLabel: options[0].label,
-    }
-  }
-
-  return {
-    oreName,
-    depositType: best.depositType,
-    locationValue: best.locationValue,
-    locationLabel: best.locationLabel,
-  }
-}
-
-export function mapOcrToCalculatorSlots(
-  scan: RockScanOcrResult,
-  calculatorParts: CompositionPart[]
-): {
-  percentBySlot: Record<string, string>
-  qualityBySlot: Record<string, string>
-  unmatchedLines: string[]
-} {
-  const percentBySlot = buildDefaultPercentSlots(calculatorParts)
-  const qualityBySlot = buildDefaultQualitySlots(calculatorParts)
-  const unmatchedLines: string[] = []
-  const grouped = ocrLinesByElement(scan.compositionLines)
-
-  for (const [elementName, lines] of grouped) {
-    const slots = profileSlotsByElement(calculatorParts, elementName)
-    if (!slots.length) {
-      for (const line of lines) {
-        const qLabel = line.qualityMissing || line.quality == null ? 'Q?' : `Q${line.quality}`
-        unmatchedLines.push(`${line.percent}% ${elementName} ${qLabel}`)
-      }
-      continue
-    }
-
-    lines.forEach((line, rank) => {
-      const slot = slots[rank]
-      if (!slot) {
-        const qLabel = line.qualityMissing || line.quality == null ? 'Q?' : `Q${line.quality}`
-        unmatchedLines.push(`${line.percent}% ${elementName} ${qLabel}`)
-        return
-      }
-      const key = compositionSlotKey(slot.index, slot.part)
-      percentBySlot[key] = String(line.percent)
-      if (!line.qualityMissing && line.quality != null) {
-        const resolvedQuality = resolveLedgerQuality(
-          oreResourceKeyFromElementName(elementName),
-          elementName,
-          line.quality
-        )
-        qualityBySlot[key] = String(resolvedQuality)
-      }
-    })
-  }
-
-  return { percentBySlot, qualityBySlot, unmatchedLines }
+  return { oreName, depositType }
 }
