@@ -1047,6 +1047,8 @@ function parseCompositionFromRowGroups(
   elementRank: Map<string, number>,
   compositionLines: OcrCompositionLine[]
 ): number | null {
+  // HUD inert % is not applied to the calculator (UI auto-derives inert). We read it first
+  // only as an anchor to fix misread valuable bands during reconciliation.
   let inertPercent: number | null = null
   const oreSegments: Array<{
     spatial: {
@@ -1385,14 +1387,6 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
   }
 
   const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
-  if (inertPercent != null) {
-    const derivedInert = Math.max(0, Math.round((100 - valuableTotal) * 10) / 10)
-    if (Math.abs(derivedInert - inertPercent) > 1.5) {
-      warnings.push(
-        `Scanned inert (${inertPercent}%) differs from auto-derived (${derivedInert}%) — calculator will use auto-derived inert.`
-      )
-    }
-  }
 
   return {
     ok: true,
