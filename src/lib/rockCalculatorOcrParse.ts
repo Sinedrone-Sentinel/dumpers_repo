@@ -115,13 +115,16 @@ function hasResultsHeader(lines: string[]): boolean {
 }
 
 function hasScanResultsPanelStructure(lines: string[]): boolean {
+  const stats = extractScanHudStats(lines)
+  if (stats.mass != null && stats.resistancePercent != null && stats.instability != null) {
+    return true
+  }
+
   const mass = extractLabeledValue(lines, ['MASS'])
   const resistance =
     extractLabeledValue(lines, ['RESISTANCE']) ??
     extractLabeledValue(lines, ['RES'], { wordBoundary: true })
-  const instability =
-    extractLabeledValue(lines, ['INSTABILITY']) ??
-    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
+  const instability = extractInstability(lines)
   return mass != null && resistance != null && instability != null
 }
 
@@ -174,10 +177,127 @@ function cleanOcrText(text: string): string {
 }
 
 function parseNumberToken(raw: string): number | null {
-  const cleaned = raw.replace(/[^\d.]/g, '')
-  if (!cleaned) return null
+  const cleaned = raw.replace(/[^\d.,-]/g, '').replace(/,/g, '.')
+  if (!cleaned || cleaned === '-' || cleaned === '.') return null
   const value = Number.parseFloat(cleaned)
   return Number.isFinite(value) ? value : null
+}
+
+function readNumericFromLabelLine(line: string): number | null {
+  const matches = [...line.matchAll(/-?\d+(?:[.,]\d+)?/g)]
+  if (!matches.length) return null
+  const last = matches[matches.length - 1]?.[0]
+  return last ? parseNumberToken(last) : null
+}
+
+function lineLooksLikeMassLabel(line: string): boolean {
+  return /\bMASS\b/i.test(line)
+}
+
+function lineLooksLikeResLabel(line: string): boolean {
+  const trimmed = line.trim()
+  if (!trimmed) return false
+  if (/\bRES(?:ISTANCE)?\b/i.test(trimmed) && !lineLooksLikeResultsHeader(trimmed)) return true
+
+  const letters = ocrHeaderLetters(trimmed)
+  if (!letters) return false
+  if (letters.startsWith('RES') && !letters.startsWith('RESULT')) return true
+  return false
+}
+
+function lineLooksLikeInstLabel(line: string): boolean {
+  const trimmed = line.trim()
+  if (!trimmed) return false
+  if (/\bINST(?:ABILITY)?\b/i.test(trimmed)) return true
+
+  const letters = ocrHeaderLetters(trimmed)
+  if (!letters) return false
+  if (letters.startsWith('INST') || letters.includes('INSTABIL')) return true
+  if (/^1N5T|^IN5T|^1NST|^LNST/.test(letters)) return true
+  if (letters.length >= 4 && letters.length <= 14 && levenshteinDistance(letters, 'INSTABILITY') <= 3) {
+    return true
+  }
+  if (letters.length >= 3 && letters.length <= 6 && levenshteinDistance(letters, 'INST') <= 1) {
+    return true
+  }
+  return false
+}
+
+function readHudStatValue(line: string, lines: string[], index: number): number | null {
+  const inline = readNumericFromLabelLine(line)
+  if (inline != null) return inline
+
+  for (let j = index + 1; j < Math.min(index + 3, lines.length); j++) {
+    const next = parseNumberToken(lines[j])
+    if (next != null) return next
+  }
+
+  return null
+}
+
+function extractScanHudStats(lines: string[]): {
+  mass: number | null
+  resistancePercent: number | null
+  instability: number | null
+  resLineIndex: number | null
+  resValueLineIndex: number | null
+} {
+  let mass: number | null = null
+  let resistancePercent: number | null = null
+  let instability: number | null = null
+  let resLineIndex: number | null = null
+  let resValueLineIndex: number | null = null
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    if (/\bCOMP(?:OSITION)?\b/i.test(line)) break
+
+    if (mass == null && lineLooksLikeMassLabel(line)) {
+      mass = readHudStatValue(line, lines, i)
+    }
+
+    if (resistancePercent == null && lineLooksLikeResLabel(line)) {
+      resLineIndex = i
+      resistancePercent = readHudStatValue(line, lines, i)
+      if (resistancePercent != null) {
+        if (readNumericFromLabelLine(line) == null) {
+          for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
+            const next = parseNumberToken(lines[j])
+            if (next != null) {
+              resValueLineIndex = j
+              break
+            }
+          }
+        } else {
+          resValueLineIndex = i
+        }
+      }
+    }
+
+    if (instability == null && lineLooksLikeInstLabel(line)) {
+      instability = readHudStatValue(line, lines, i)
+    }
+  }
+
+  if (instability == null && resLineIndex != null) {
+    for (let j = resLineIndex + 1; j < Math.min(resLineIndex + 5, lines.length); j++) {
+      if (j === resValueLineIndex) continue
+      const line = lines[j]
+      if (/\bCOMP(?:OSITION)?\b/i.test(line) || /%/.test(line)) break
+      if (lineLooksLikeInstLabel(line)) {
+        instability = readHudStatValue(line, lines, j)
+        if (instability != null) break
+        continue
+      }
+      const lone = readNumericFromLabelLine(line)
+      if (lone != null && lone >= 0 && lone <= 100) {
+        instability = lone
+        break
+      }
+    }
+  }
+
+  return { mass, resistancePercent, instability, resLineIndex, resValueLineIndex }
 }
 
 function extractLabeledValue(
@@ -203,6 +323,24 @@ function extractLabeledValue(
       }
     }
   }
+  return null
+}
+
+function extractInstability(lines: string[]): number | null {
+  const stats = extractScanHudStats(lines)
+  if (stats.instability != null) return stats.instability
+
+  const labeled =
+    extractLabeledValue(lines, ['INSTABILITY']) ??
+    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
+  if (labeled != null) return labeled
+
+  for (let i = 0; i < lines.length; i++) {
+    if (!lineLooksLikeInstLabel(lines[i])) continue
+    const inline = readHudStatValue(lines[i], lines, i)
+    if (inline != null) return inline
+  }
+
   return null
 }
 
@@ -474,13 +612,13 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: RESULTS_ORE_ERROR }
   }
 
-  const mass = extractLabeledValue(lines, ['MASS'])
+  const hudStats = extractScanHudStats(lines)
+  const mass = hudStats.mass ?? extractLabeledValue(lines, ['MASS'])
   const resistancePercent =
+    hudStats.resistancePercent ??
     extractLabeledValue(lines, ['RESISTANCE']) ??
     extractLabeledValue(lines, ['RES'], { wordBoundary: true })
-  const instability =
-    extractLabeledValue(lines, ['INSTABILITY']) ??
-    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
+  const instability = hudStats.instability ?? extractInstability(lines)
   const totalScu = extractTotalScu(lines)
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
@@ -493,7 +631,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'Could not read Resistance from the crop — include the RESISTANCE line.' }
   }
   if (instability == null) {
-    return { ok: false, error: 'Could not read Instability from the crop — include the INSTABILITY line.' }
+    return { ok: false, error: 'Could not read Instability from the crop — include the INST or INSTABILITY line.' }
   }
   if (totalScu == null || totalScu <= 0) {
     return { ok: false, error: 'Could not read total SCU from COMPOSITION — include that header line.' }
