@@ -9,6 +9,7 @@ import {
   MIN_ROCK_SCANNER_MASS,
   parseCompositionLeadingPercent,
   parseLeadingPercentFromWordTokens,
+  reparsePercentFromRawOcrLine,
 } from './rockCalculatorOcrCorrect'
 
 // ---------------------------------------------------------------------------
@@ -286,6 +287,12 @@ function extractResistance(
   rows: string[],
   known: { mass: number | null; instability: number | null; totalScu: number | null }
 ): number | null {
+  for (let i = 0; i < rows.length; i++) {
+    if (!isResRow(rows[i])) continue
+    const value = valueFromLabelRow(rows[i], rows, i)
+    if (value != null && value >= 0 && isResistanceValue(value, known)) return value
+  }
+
   const fromCorpus = firstMatchingNumber(corpus, [
     /\bRESISTANCE\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
     /\bRE5\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
@@ -420,6 +427,12 @@ function extractTotalScu(corpus: string, rows: string[]): number | null {
   for (const row of rows) {
     if (isCargoRow(row)) continue
     if (!isCompHeaderRow(row) && !/\bCOMP\b/i.test(row)) continue
+
+    const compDecimal = row.match(/\bCOMP(?:OSITION)?\.?\s*(\d+\.\d{1,2})\b/i)
+    if (compDecimal) {
+      const value = Number.parseFloat(compDecimal[1])
+      if (isPlausibleRockTotalScu(value)) return value
+    }
 
     const tagged = row.match(/\bCOMP(?:OSITION)?\.?\s*(\d+(?:\.\d+)?)/i)
     if (tagged) {
@@ -670,8 +683,6 @@ function pushOreLine(
   )
   if (duplicate) return
 
-  if (qualityMissing) warnings.push(buildQualityMissingWarning(elementName, rawOcrLine))
-
   const rank = elementRank.get(elementName) ?? 0
   elementRank.set(elementName, rank + 1)
   compositionLines.push({
@@ -727,15 +738,81 @@ function elementTextFromRowWords(
     .trim()
 }
 
-function splitRowGroupByPercents(group: RowWord[]): RowWord[][] {
-  const sorted = [...group].sort((a, b) => a.x0 - b.x0)
-  const percentStarts: number[] = []
+function flushCompositionWarnings(
+  compositionLines: OcrCompositionLine[],
+  warnings: string[]
+): void {
+  for (const line of compositionLines) {
+    if (!line.qualityMissing) continue
+    warnings.push(buildQualityMissingWarning(line.elementName, line.rawOcrLine))
+  }
+}
+
+function isPercentToken(text: string): boolean {
+  return text === '%' || text.endsWith('%')
+}
+
+function isPercentDigitToken(text: string): boolean {
+  return /^[\d.]+$/.test(text)
+}
+
+function findPercentStartsInRowWords(sorted: RowWord[]): number[] {
+  const starts = new Set<number>()
+
   for (let i = 0; i < sorted.length; i++) {
     const token = sorted[i].text
+
     if (/(\d+(?:\.\d+)?)\s*%/.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && sorted[i + 1]?.text === '%')) {
-      percentStarts.push(i)
+      starts.add(i)
+      continue
+    }
+
+    if (/^\d{1,2}$/.test(token) && /^\.\d{1,2}$/.test(sorted[i + 1]?.text ?? '') && sorted[i + 2]?.text === '%') {
+      starts.add(i)
+      continue
+    }
+
+    if (isPercentToken(token)) {
+      let start = i
+      while (start > 0 && isPercentDigitToken(sorted[start - 1].text)) {
+        start--
+      }
+      starts.add(start)
     }
   }
+
+  return [...starts].sort((a, b) => a - b)
+}
+
+function percentEndXFromRowWords(sorted: RowWord[]): number {
+  for (let i = 0; i < sorted.length; i++) {
+    const token = sorted[i].text
+
+    if (/(\d+(?:\.\d+)?)\s*%/.test(token)) {
+      return sorted[i].x1
+    }
+
+    if (/^\d+(?:\.\d+)?$/.test(token) && sorted[i + 1]?.text === '%') {
+      return sorted[i + 1].x1
+    }
+
+    if (/^\d{1,2}$/.test(token) && /^\.\d{1,2}$/.test(sorted[i + 1]?.text ?? '')) {
+      const pctToken = sorted[i + 2]?.text
+      if (pctToken === '%') return sorted[i + 2].x1
+      if (sorted[i + 1].text.endsWith('%')) return sorted[i + 1].x1
+    }
+
+    if (isPercentToken(token)) {
+      return sorted[i].x1
+    }
+  }
+
+  return sorted[0]?.x1 ?? 0
+}
+
+function splitRowGroupByPercents(group: RowWord[]): RowWord[][] {
+  const sorted = [...group].sort((a, b) => a.x0 - b.x0)
+  const percentStarts = findPercentStartsInRowWords(sorted)
   if (percentStarts.length <= 1) return [group]
 
   const segments: RowWord[][] = []
@@ -760,14 +837,7 @@ function parseCompositionSpatial(
   if (percent == null || !isPlausibleCompositionPercent(percent)) return null
 
   const sorted = [...words].sort((a, b) => a.x0 - b.x0)
-  let percentEndX = sorted[0]?.x1 ?? 0
-  for (let i = 0; i < sorted.length; i++) {
-    const token = sorted[i].text
-    if (/(\d+(?:\.\d+)?)\s*%/.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && sorted[i + 1]?.text === '%')) {
-      percentEndX = sorted[i + 1]?.text === '%' ? sorted[i + 1].x1 : sorted[i].x1
-      break
-    }
-  }
+  const percentEndX = percentEndXFromRowWords(sorted)
 
   const quality = trailingQualityFromRowWords(words)
   const qualityWord = [...words]
@@ -920,7 +990,18 @@ function acceptInertPercent(
   return percent + valuableTotal <= 101.5
 }
 
-function enrichMissingQualityFromSpatial(
+function isWholePercent(value: number): boolean {
+  return Math.abs(value - Math.round(value)) < 0.001
+}
+
+function spatialPercentLooksBetter(existing: number, spatial: number): boolean {
+  if (Math.abs(existing - spatial) < 0.11) return false
+  if (isWholePercent(existing) && !isWholePercent(spatial)) return true
+  if (existing < 10 && spatial >= 10) return true
+  return Math.abs(spatial - existing) > 1
+}
+
+function enrichCompositionFromSpatial(
   compositionLines: OcrCompositionLine[],
   rowGroups: RowWord[][] | undefined
 ): void {
@@ -933,19 +1014,117 @@ function enrichMissingQualityFromSpatial(
 
       const spatial = parseCompositionSpatial(segment, rowText)
       if (!spatial || ('kind' in spatial && spatial.kind === 'inert')) continue
-      if (spatial.qualityMissing || spatial.quality == null) continue
 
-      const match = compositionLines.find(
+      const candidates = compositionLines.filter(
         (line) =>
           line.elementName === spatial.elementName &&
-          Math.abs(line.percent - spatial.percent) < 0.25 &&
-          line.qualityMissing
+          (line.qualityMissing ||
+            spatialPercentLooksBetter(line.percent, spatial.percent) ||
+            Math.abs(line.percent - spatial.percent) < 0.25)
       )
+      const match = candidates.sort(
+        (a, b) => Math.abs(a.percent - spatial.percent) - Math.abs(b.percent - spatial.percent)
+      )[0]
       if (!match) continue
 
-      match.quality = spatial.quality
-      match.qualityMissing = false
-      match.rawOcrLine = `${match.rawOcrLine} / spatial Q${spatial.quality}`
+      if (spatialPercentLooksBetter(match.percent, spatial.percent)) {
+        match.percent = spatial.percent
+        match.rawOcrLine = `${rowText} / spatial %${spatial.percent}`
+      }
+
+      if (!spatial.qualityMissing && spatial.quality != null) {
+        match.quality = spatial.quality
+        match.qualityMissing = false
+        match.rawOcrLine = `${match.rawOcrLine} / spatial Q${spatial.quality}`
+      }
+    }
+  }
+}
+
+function parseCompositionFromRowGroups(
+  rowGroups: RowWord[][],
+  elementRank: Map<string, number>,
+  compositionLines: OcrCompositionLine[]
+): number | null {
+  let inertPercent: number | null = null
+
+  for (const group of rowGroups) {
+    for (const segment of splitRowGroupByPercents(group)) {
+      const rowText = segment.map((word) => word.text).join(' ').trim()
+      if (!rowText || !isCompositionPercentRow(rowText)) continue
+
+      const spatial = parseCompositionSpatial(segment, rowText)
+      if (!spatial) continue
+
+      if ('kind' in spatial && spatial.kind === 'inert') {
+        if (acceptInertPercent(spatial.percent, compositionLines)) {
+          inertPercent = spatial.percent
+        }
+        continue
+      }
+
+      pushOreLine(
+        spatial.elementName,
+        spatial.percent,
+        spatial.quality,
+        spatial.qualityMissing,
+        rowText,
+        elementRank,
+        compositionLines,
+        []
+      )
+    }
+  }
+
+  return inertPercent
+}
+
+function reconcileOverLimitComposition(
+  compositionLines: OcrCompositionLine[],
+  inertPercent: number | null
+): void {
+  let valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
+  if (valuableTotal <= 100.5) return
+
+  const indicesByElement = new Map<string, number[]>()
+  compositionLines.forEach((line, index) => {
+    const indices = indicesByElement.get(line.elementName) ?? []
+    indices.push(index)
+    indicesByElement.set(line.elementName, indices)
+  })
+
+  for (const indices of indicesByElement.values()) {
+    if (indices.length < 2) continue
+
+    const largestIndex = [...indices].sort(
+      (a, b) => compositionLines[b].percent - compositionLines[a].percent
+    )[0]
+    const line = compositionLines[largestIndex]
+    const siblingTotal = indices
+      .filter((index) => index !== largestIndex)
+      .reduce((sum, index) => sum + compositionLines[index].percent, 0)
+
+    const reparsed = reparsePercentFromRawOcrLine(line.rawOcrLine)
+    if (
+      reparsed != null &&
+      reparsed < line.percent &&
+      reparsed + siblingTotal <= 100.5
+    ) {
+      line.percent = reparsed
+      valuableTotal = compositionLines.reduce((sum, item) => sum + item.percent, 0)
+      continue
+    }
+
+    if (inertPercent != null && inertPercent > 0) {
+      const target = Math.max(0, Math.round((100 - inertPercent - siblingTotal) * 100) / 100)
+      if (
+        target > 0 &&
+        target < line.percent &&
+        target + siblingTotal + inertPercent <= 100.5
+      ) {
+        line.percent = target
+        valuableTotal = compositionLines.reduce((sum, item) => sum + item.percent, 0)
+      }
     }
   }
 }
@@ -958,28 +1137,36 @@ function parseCompositionRows(
   const compositionLines: OcrCompositionLine[] = []
   let inertPercent: number | null = null
   const elementRank = new Map<string, number>()
-  const consumedIndices = new Set<number>()
 
-  for (let i = 0; i < rows.length; i++) {
-    if (consumedIndices.has(i)) continue
-    const row = rows[i].trim()
-    if (!row || !isCompositionPercentRow(row)) continue
+  if (rowGroups?.length) {
+    inertPercent = parseCompositionFromRowGroups(rowGroups, elementRank, compositionLines)
+  } else {
+    const consumedIndices = new Set<number>()
 
-    const parsed = parseCompositionRow(
-      row,
-      elementRank,
-      compositionLines,
-      warnings,
-      rows,
-      i,
-      consumedIndices
-    )
-    if (parsed?.kind === 'inert' && acceptInertPercent(parsed.percent, compositionLines)) {
-      inertPercent = parsed.percent
+    for (let i = 0; i < rows.length; i++) {
+      if (consumedIndices.has(i)) continue
+      const row = rows[i].trim()
+      if (!row || !isCompositionPercentRow(row)) continue
+
+      const parsed = parseCompositionRow(
+        row,
+        elementRank,
+        compositionLines,
+        warnings,
+        rows,
+        i,
+        consumedIndices
+      )
+      if (parsed?.kind === 'inert' && acceptInertPercent(parsed.percent, compositionLines)) {
+        inertPercent = parsed.percent
+      }
     }
+
+    enrichCompositionFromSpatial(compositionLines, rowGroups)
   }
 
-  enrichMissingQualityFromSpatial(compositionLines, rowGroups)
+  reconcileOverLimitComposition(compositionLines, inertPercent)
+  flushCompositionWarnings(compositionLines, warnings)
 
   return { lines: compositionLines, inertPercent }
 }
