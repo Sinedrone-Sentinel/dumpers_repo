@@ -55,6 +55,7 @@ import { formatRequiredPower } from '../../lib/miningBreakability'
 import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import SiteTooltip from '../SiteTooltip'
 import {
+  CREW_HEAD_PLAN_BUTTON_TOOLTIP,
   ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP,
   SMART_CRACKER_BUTTON_TOOLTIP,
 } from '../../lib/miningTooltipContent'
@@ -77,6 +78,8 @@ interface RockCalculatorProps {
   loadToken: number
   onRockTargetChange?: (target: RockBreakabilityTarget) => void
   onOpenSmartCracker?: () => void
+  crewHeadPlanEnabled?: boolean
+  onCrewHeadPlanClick?: () => void
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
@@ -91,6 +94,8 @@ export default function RockCalculator({
   loadToken,
   onRockTargetChange,
   onOpenSmartCracker,
+  crewHeadPlanEnabled = false,
+  onCrewHeadPlanClick,
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
@@ -450,7 +455,7 @@ export default function RockCalculator({
               )}
             </div>
             {onOpenSmartCracker ? (
-              <div className="flex flex-col gap-1 shrink-0">
+              <div className="flex flex-col items-end gap-1 shrink-0">
                 <SiteTooltip
                   content={SMART_CRACKER_BUTTON_TOOLTIP}
                   side="left"
@@ -464,19 +469,37 @@ export default function RockCalculator({
                     Smart Cracker
                   </button>
                 </SiteTooltip>
-                <SiteTooltip
-                  content={ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP}
-                  side="left"
-                  panelClassName="max-w-[16rem]"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setOcrModalOpen(true)}
-                    className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-slate-700/90 text-slate-100 hover:bg-slate-600 transition-colors border border-slate-600"
+                <div className="flex items-center justify-end gap-1">
+                  {onCrewHeadPlanClick ? (
+                    <SiteTooltip
+                      content={CREW_HEAD_PLAN_BUTTON_TOOLTIP}
+                      side="left"
+                      panelClassName="max-w-[16rem]"
+                    >
+                      <button
+                        type="button"
+                        onClick={onCrewHeadPlanClick}
+                        disabled={!crewHeadPlanEnabled}
+                        className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-950/50 text-cyan-200 hover:bg-cyan-900/50 transition-colors border border-cyan-800/60 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cyan-950/50"
+                      >
+                        CHP
+                      </button>
+                    </SiteTooltip>
+                  ) : null}
+                  <SiteTooltip
+                    content={ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP}
+                    side="left"
+                    panelClassName="max-w-[16rem]"
                   >
-                    OCR
-                  </button>
-                </SiteTooltip>
+                    <button
+                      type="button"
+                      onClick={() => setOcrModalOpen(true)}
+                      className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-slate-700/90 text-slate-100 hover:bg-slate-600 transition-colors border border-slate-600"
+                    >
+                      OCR
+                    </button>
+                  </SiteTooltip>
+                </div>
               </div>
             ) : null}
           </div>

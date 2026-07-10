@@ -41,9 +41,13 @@ import { fetchMiningLedgerSiteStats, type MiningLedgerSiteStats } from '../lib/m
 import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
 import RockCalculator from '../components/mining/RockCalculator'
 import SmartCrackerModal from '../components/mining/SmartCrackerModal'
+import CrewHeadPlanModal from '../components/mining/CrewHeadPlanModal'
 import type { MiningLoadoutSelection } from '../components/mining/MiningLoadoutPanel'
 import type { RockBreakabilityTarget } from '../lib/miningLoadoutCompare'
+import { isRockBreakabilityTargetReady } from '../lib/miningLoadoutCompare'
 import { useMiningLoadouts } from '../contexts/MiningLoadoutContext'
+import { listLoadoutsForVessel } from '../lib/miningLoadoutStorage'
+import { findBestMoleLoadoutStrategy } from '../lib/moleLoadoutStrategy'
 import { resolveActiveLoadoutLabel } from '../lib/miningLoadoutSelection'
 import type { LoadoutKey } from '../lib/miningLoadoutStorage'
 import type { MiningVesselId } from '../lib/miningVessels'
@@ -92,6 +96,8 @@ export default function MiningTrackerRoute() {
   const [rockTarget, setRockTarget] = useState<RockBreakabilityTarget | null>(null)
   const [loadoutUi, setLoadoutUi] = useState(readMiningTrackerUiState)
   const [smartCrackerOpen, setSmartCrackerOpen] = useState(false)
+  const [moleSoloMining, setMoleSoloMining] = useState(true)
+  const [crewHeadPlanOpen, setCrewHeadPlanOpen] = useState(false)
   
   // Guide view state
   const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
@@ -229,6 +235,48 @@ export default function MiningTrackerRoute() {
     () => resolveActiveLoadoutLabel(loadoutStore, loadoutUi.vesselId, loadoutUi.loadoutKey),
     [loadoutStore, loadoutUi.vesselId, loadoutUi.loadoutKey]
   )
+
+  const activeLoadoutLasers = useMemo(() => {
+    if (!canUseLoadouts) return null
+    const loadouts = listLoadoutsForVessel(loadoutStore, loadoutUi.vesselId)
+    const active = loadouts.find((loadout) => loadout.key === loadoutUi.loadoutKey) ?? loadouts[0]
+    return active?.lasers ?? null
+  }, [canUseLoadouts, loadoutStore, loadoutUi.vesselId, loadoutUi.loadoutKey])
+
+  const crewHeadPlanEnabled =
+    canUseLoadouts &&
+    loadoutUi.vesselId === 'mole' &&
+    activeLoadoutLasers != null &&
+    isRockBreakabilityTargetReady(rockTarget)
+
+  const crewHeadPlan = useMemo(() => {
+    if (!crewHeadPlanEnabled || !activeLoadoutLasers || !rockTarget) return null
+    return findBestMoleLoadoutStrategy(activeLoadoutLasers, rockTarget, { soloMining: false })
+  }, [crewHeadPlanEnabled, activeLoadoutLasers, rockTarget])
+
+  const handleCrewHeadPlanClick = useCallback(() => {
+    if (!crewHeadPlanEnabled) return
+    setMoleSoloMining(false)
+    setCrewHeadPlanOpen(true)
+  }, [crewHeadPlanEnabled])
+
+  useEffect(() => {
+    if (moleSoloMining) {
+      setCrewHeadPlanOpen(false)
+    }
+  }, [moleSoloMining])
+
+  useEffect(() => {
+    if (loadoutUi.vesselId !== 'mole') {
+      setCrewHeadPlanOpen(false)
+    }
+  }, [loadoutUi.vesselId])
+
+  useEffect(() => {
+    if (!crewHeadPlanEnabled) {
+      setCrewHeadPlanOpen(false)
+    }
+  }, [crewHeadPlanEnabled])
 
   // Guide view computed data
   const groupedByRarity = useMemo(() => {
@@ -590,6 +638,8 @@ export default function MiningTrackerRoute() {
               loadToken={calculatorLoadToken}
               onRockTargetChange={setRockTarget}
               onOpenSmartCracker={() => setSmartCrackerOpen(true)}
+              crewHeadPlanEnabled={crewHeadPlanEnabled}
+              onCrewHeadPlanClick={canUseLoadouts ? handleCrewHeadPlanClick : undefined}
             />
           </div>
         </div>
@@ -600,6 +650,16 @@ export default function MiningTrackerRoute() {
           rockTarget={rockTarget}
           selection={loadoutSelection}
           onClose={() => setSmartCrackerOpen(false)}
+          moleSoloMining={moleSoloMining}
+          onMoleSoloMiningChange={setMoleSoloMining}
+        />
+      ) : null}
+
+      {crewHeadPlanOpen && crewHeadPlan ? (
+        <CrewHeadPlanModal
+          strategy={crewHeadPlan}
+          loadoutLabel={selectedLoadoutLabel}
+          onClose={() => setCrewHeadPlanOpen(false)}
         />
       ) : null}
 

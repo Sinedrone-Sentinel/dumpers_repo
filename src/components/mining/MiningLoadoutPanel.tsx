@@ -12,6 +12,7 @@ import {
   formatSignedNumber,
   formatSignedPercent,
 } from '../../lib/miningLoadoutStatSemantics'
+import MoleHeadPlanPanel from './MoleHeadPlanPanel'
 import {
   buildSmartCracker,
   type SmartCrackerResult,
@@ -57,6 +58,8 @@ interface MiningLoadoutPanelProps {
   selection: MiningLoadoutSelection
   /** Modal body: no card chrome, details always visible */
   embedded?: boolean
+  moleSoloMining?: boolean
+  onMoleSoloMiningChange?: (solo: boolean) => void
 }
 
 function CheckIcon({ ok }: { ok: boolean }) {
@@ -147,81 +150,7 @@ function SmartCrackerPanel({
 
   return (
     <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-3">
-      {moleStrategy ? (
-        <div className="space-y-1.5">
-          <p className="text-[10px] uppercase tracking-wide text-slate-500">
-            Head plan{moleStrategy.soloMining ? ' · solo' : ' · crew'}
-          </p>
-          <p className="text-[11px] text-slate-400 leading-snug">{moleStrategy.summary}</p>
-          {!moleStrategy.canBreak ? (
-            <p className="text-xs text-red-400/90">
-              No head assignment cracks this rock — see final gadget fit below or try another
-              loadout.
-            </p>
-          ) : null}
-          <div className="space-y-1.5">
-            {moleStrategy.assignments.map((head) => (
-              <div
-                key={head.slotIndex}
-                className={`text-xs ${
-                  head.role === 'idle'
-                    ? 'text-slate-600'
-                    : head.role === 'support'
-                      ? 'text-cyan-300/90'
-                      : 'text-green-400/90'
-                }`}
-              >
-                <p>
-                  Head {head.slotIndex + 1}: {head.label}
-                  <span className="text-slate-500">
-                    {' '}
-                    ·{' '}
-                    {head.role === 'primary'
-                      ? 'Drive'
-                      : head.role === 'support' && head.throttlePercent === 100
-                        ? 'Full'
-                        : head.role === 'support'
-                          ? 'Support'
-                          : 'Off'}
-                    {head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
-                  </span>
-                </p>
-                {head.detail ? (
-                  <p className="pl-2 text-[11px] text-slate-500 leading-snug">{head.detail}</p>
-                ) : null}
-              </div>
-            ))}
-          </div>
-          {moleStrategy.combinedWindowModifier !== 0 ||
-          moleStrategy.combinedInstabilityModifier !== 0 ? (
-            <p className="text-[11px] font-mono tabular-nums text-slate-500">
-              Active heads combined:
-              {moleStrategy.combinedWindowModifier !== 0
-                ? ` ${formatSignedPercent(moleStrategy.combinedWindowModifier)} window`
-                : ''}
-              {moleStrategy.combinedInstabilityModifier !== 0
-                ? ` ${formatSignedNumber(moleStrategy.combinedInstabilityModifier)} instability`
-                : ''}
-            </p>
-          ) : null}
-          {moleStrategy.minPowerWarnings.length > 0 ? (
-            <div className="space-y-1.5">
-              {moleStrategy.minPowerWarnings.map((warning) => (
-                <div
-                  key={`mole-min-${warning.slotIndex}`}
-                  className={`rounded-md border px-2 py-1.5 text-[11px] leading-snug ${
-                    warning.level === 'misconfigured'
-                      ? 'border-amber-900/50 bg-amber-950/20 text-amber-200/90'
-                      : 'border-red-900/50 bg-red-950/20 text-red-300/90'
-                  }`}
-                >
-                  {minPowerWarningMessage(warning)}
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      ) : null}
+      {moleStrategy ? <MoleHeadPlanPanel strategy={moleStrategy} embedded /> : null}
 
       {slowCrack ? (
         <div
@@ -447,12 +376,16 @@ export default function MiningLoadoutPanel({
   rockTarget,
   selection,
   embedded = false,
+  moleSoloMining: moleSoloMiningProp,
+  onMoleSoloMiningChange,
 }: MiningLoadoutPanelProps) {
   const { canUse, store, loading, saving, saveError, saveLoadout, saveLoadoutAsNew, deleteCustomLoadout } =
     useMiningLoadouts()
 
   const { vesselId, loadoutKey, onVesselChange, onLoadoutChange } = selection
-  const [moleSoloMining, setMoleSoloMining] = useState(true)
+  const [internalMoleSoloMining, setInternalMoleSoloMining] = useState(true)
+  const moleSoloMining = moleSoloMiningProp ?? internalMoleSoloMining
+  const setMoleSoloMining = onMoleSoloMiningChange ?? setInternalMoleSoloMining
   const [draftLasers, setDraftLasers] = useState<MiningLaserSlotConfig[] | null>(null)
 
   const vessel = getMiningVessel(vesselId)

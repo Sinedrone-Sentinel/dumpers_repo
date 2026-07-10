@@ -7,12 +7,16 @@ interface SmartCrackerModalProps {
   rockTarget: RockBreakabilityTarget | null
   selection: MiningLoadoutSelection
   onClose: () => void
+  moleSoloMining?: boolean
+  onMoleSoloMiningChange?: (solo: boolean) => void
 }
 
 export default function SmartCrackerModal({
   rockTarget,
   selection,
   onClose,
+  moleSoloMining,
+  onMoleSoloMiningChange,
 }: SmartCrackerModalProps) {
   return (
     <AppModal
@@ -21,7 +25,13 @@ export default function SmartCrackerModal({
       size="xl"
       onClose={onClose}
     >
-      <MiningLoadoutPanel rockTarget={rockTarget} selection={selection} embedded />
+      <MiningLoadoutPanel
+        rockTarget={rockTarget}
+        selection={selection}
+        embedded
+        moleSoloMining={moleSoloMining}
+        onMoleSoloMiningChange={onMoleSoloMiningChange}
+      />
     </AppModal>
   )
 }
