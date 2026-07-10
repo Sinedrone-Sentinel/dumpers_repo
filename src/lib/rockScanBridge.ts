@@ -1,4 +1,5 @@
 import type { RockScanOcrResult } from './rockCalculatorOcrParse'
+import { memberFacingRockScanError } from './rockScanMemberCopy'
 
 const DEFAULT_BRIDGE_URL = 'http://127.0.0.1:38471'
 const BRIDGE_HEALTH_TIMEOUT_MS = 3000
@@ -56,13 +57,15 @@ export async function requestRockScanFromBridge(
   try {
     payload = (await response.json()) as RockScanBridgeScanResult
   } catch {
-    return { ok: false, error: 'Rock scan bridge returned invalid JSON.' }
+    return { ok: false, error: memberFacingRockScanError('Rock scan bridge returned invalid JSON.') }
   }
 
   if (!response.ok) {
     return {
       ok: false,
-      error: payload.error ?? `Rock scan failed (HTTP ${response.status}).`,
+      error: memberFacingRockScanError(
+        payload.error ?? `Rock scan failed (HTTP ${response.status}).`
+      ),
       hints: payload.hints,
       warnings: payload.warnings,
     }
@@ -71,7 +74,9 @@ export async function requestRockScanFromBridge(
   if (!payload.ok || !payload.data) {
     return {
       ok: false,
-      error: payload.error ?? 'Rock scan bridge did not return calculator data.',
+      error: memberFacingRockScanError(
+        payload.error ?? 'Rock scan bridge did not return calculator data.'
+      ),
       hints: payload.hints,
       warnings: payload.warnings,
     }

@@ -62,6 +62,12 @@ import {
 } from '../../lib/miningTooltipContent'
 import { resolveOcrBasis, buildOcrCalculatorApply } from '../../lib/rockCalculatorOcrApply'
 import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
+import {
+  memberFacingRockScanError,
+  memberFacingRockScanHint,
+  ROCK_SCAN_NOT_CALIBRATED_MESSAGE,
+  ROCK_SCAN_OFFLINE_MESSAGE,
+} from '../../lib/rockScanMemberCopy'
 import { fetchRockScanBridgeHealth, requestRockScanFromBridge } from '../../lib/rockScanBridge'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
@@ -417,15 +423,11 @@ export default function RockCalculator({
     setOcrBridgeError(null)
     const health = await fetchRockScanBridgeHealth()
     if (!health?.ok) {
-      setOcrBridgeError(
-        'Rock scan bridge offline — DR tray must be running on this PC (RESTART-TRAY.vbs). Fixed port 127.0.0.1:38471 — not the Vite dev port. Restart the tray after updates.'
-      )
+      setOcrBridgeError(ROCK_SCAN_OFFLINE_MESSAGE)
       return
     }
     if (!health.calibrated) {
-      setOcrBridgeError(
-        'Calibrate first: right-click the BP Dumper tray icon → Calibrate RESULTS panel (one time per resolution).'
-      )
+      setOcrBridgeError(ROCK_SCAN_NOT_CALIBRATED_MESSAGE)
       return
     }
 
@@ -433,9 +435,13 @@ export default function RockCalculator({
     try {
       const result = await requestRockScanFromBridge()
       if (!result.ok || !result.data) {
-        setOcrBridgeError(result.error)
+        setOcrBridgeError(memberFacingRockScanError(result.error))
         if (result.hints?.length) {
-          setOcrWarnings(result.hints)
+          setOcrWarnings(
+            result.hints
+              .map(memberFacingRockScanHint)
+              .filter((hint) => hint.length > 0)
+          )
         }
         return
       }
@@ -449,7 +455,7 @@ export default function RockCalculator({
       handleOcrApply(result.data)
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Rock scan failed.'
-      setOcrBridgeError(message)
+      setOcrBridgeError(memberFacingRockScanError(message))
     } finally {
       setOcrScanning(false)
     }
