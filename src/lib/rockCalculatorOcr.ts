@@ -262,6 +262,8 @@ function cropImageToCanvas(
   canvas.height = height
   const ctx = canvas.getContext('2d')
   if (!ctx) return null
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
   ctx.drawImage(image, x, y, width, height, 0, 0, width, height)
   return canvas
 }
@@ -357,12 +359,25 @@ export function loadImageFromFile(file: File): Promise<{
     const objectUrl = URL.createObjectURL(file)
     const image = new Image()
     image.onload = () => {
-      resolve({
-        image,
-        objectUrl,
-        width: image.naturalWidth,
-        height: image.naturalHeight,
-      })
+      void (async () => {
+        try {
+          if (typeof image.decode === 'function') {
+            await image.decode()
+          }
+        } catch {
+          // decode() can fail on some browsers; onload dimensions are still valid
+        }
+
+        const width = image.naturalWidth
+        const height = image.naturalHeight
+        if (width < 1 || height < 1) {
+          URL.revokeObjectURL(objectUrl)
+          reject(new Error('Pasted image has no pixel data — try ALT+PrtSc again.'))
+          return
+        }
+
+        resolve({ image, objectUrl, width, height })
+      })()
     }
     image.onerror = () => {
       URL.revokeObjectURL(objectUrl)

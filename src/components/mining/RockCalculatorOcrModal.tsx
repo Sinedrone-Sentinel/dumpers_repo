@@ -79,6 +79,9 @@ function normalizedToDisplay(crop: NormalizedCropRect, display: DisplayRect) {
   }
 }
 
+const OCR_PREVIEW_IMAGE_CLASS =
+  'absolute pointer-events-none select-none max-w-none [image-rendering:-webkit-optimize-contrast]'
+
 export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalculatorOcrModalProps) {
   const [loaded, setLoaded] = useState<LoadedImage | null>(null)
   const [crop, setCrop] = useState<NormalizedCropRect>(initialOcrCropRect)
@@ -291,45 +294,59 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       title="Scanner OCR"
       subtitle="Paste your fracture HUD screenshot, crop SCAN RESULTS, then Process"
       size="3xl"
+      bodyClassName="flex flex-col overflow-hidden"
       onClose={handleClose}
       footer={
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-[10px] text-slate-500">
-            Screenshot is discarded after scan; your crop box size and position are remembered on this
-            device.
-          </p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="px-3 py-1.5 text-xs rounded-md border border-slate-600 text-slate-300 hover:bg-slate-800"
-              disabled={processing}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={() => void handleProcess()}
-              disabled={!loaded || processing}
-              className="px-3 py-1.5 text-xs font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500 disabled:opacity-40"
-            >
-              {processing ? 'Processing…' : 'Process'}
-            </button>
+        <div className="space-y-2">
+          {(progress || error || errorHints.length > 0) && (
+            <div className="rounded-md border border-slate-700/80 bg-slate-950/60 px-3 py-2 space-y-1">
+              {progress ? <p className="text-[11px] text-amber-300/90">{progress}</p> : null}
+              {error ? <p className="text-[11px] text-red-400 leading-snug">{error}</p> : null}
+              {errorHints.map((hint) => (
+                <p key={hint} className="text-[11px] text-amber-200/90 leading-snug">
+                  {hint}
+                </p>
+              ))}
+            </div>
+          )}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[10px] text-slate-500 leading-snug">
+              Preview is scaled for cropping; OCR reads the full-resolution paste ({loaded ? `${loaded.width}×${loaded.height}` : 'paste to see size'}).
+              Screenshot is discarded after scan; crop box is remembered on this device.
+            </p>
+            <div className="flex shrink-0 gap-2">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="px-3 py-1.5 text-xs rounded-md border border-slate-600 text-slate-300 hover:bg-slate-800"
+                disabled={processing}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleProcess()}
+                disabled={!loaded || processing}
+                className="px-3 py-1.5 text-xs font-semibold rounded-md bg-orange-600/90 text-white hover:bg-orange-500 disabled:opacity-40"
+              >
+                {processing ? 'Processing…' : 'Process'}
+              </button>
+            </div>
           </div>
         </div>
       }
     >
-      <div className="space-y-3" onPaste={(e) => void handlePaste(e)}>
+      <div className="flex h-full min-h-0 flex-1 flex-col gap-2" onPaste={(e) => void handlePaste(e)}>
         <div
           tabIndex={0}
-          className="rounded-lg border border-dashed border-slate-600 bg-slate-950/50 px-3 py-2 text-[11px] text-slate-400 outline-none focus:border-orange-500/60"
+          className="shrink-0 rounded-lg border border-dashed border-slate-600 bg-slate-950/50 px-3 py-2 text-[11px] text-slate-400 outline-none focus:border-orange-500/60"
         >
           Click here and press <span className="text-slate-200 font-medium">Ctrl+V</span> to paste your
           in-game screenshot (ALT+PrtSc the scan panel first).
         </div>
 
         {loaded ? (
-          <div className="rounded-lg border border-slate-700 bg-slate-950/40 px-3 py-2 space-y-1.5">
+          <div className="shrink-0 rounded-lg border border-slate-700 bg-slate-950/40 px-3 py-2 space-y-1.5">
             <label htmlFor="ocr-deskew" className="text-[10px] font-bold uppercase tracking-wide text-slate-300">
               Tilt scan inside crop
             </label>
@@ -353,16 +370,24 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
         <div
           ref={containerRef}
-          className="relative w-full h-[min(56dvh,34rem)] rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
+          className="relative min-h-[14rem] flex-1 w-full rounded-lg border border-slate-700 bg-black/60 overflow-hidden"
         >
           {loaded ? (
             <>
-              <img
-                src={loaded.objectUrl}
-                alt="Pasted scanner screenshot"
-                className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
-                draggable={false}
-              />
+              {displayRect.width > 0 ? (
+                <img
+                  src={loaded.objectUrl}
+                  alt="Pasted scanner screenshot"
+                  draggable={false}
+                  className={OCR_PREVIEW_IMAGE_CLASS}
+                  style={{
+                    width: displayRect.width,
+                    height: displayRect.height,
+                    left: displayRect.left,
+                    top: displayRect.top,
+                  }}
+                />
+              ) : null}
               {displayRect.width > 0 && cropImageStyle ? (
                 <div
                   className="absolute z-10"
@@ -378,7 +403,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
                       src={loaded.objectUrl}
                       alt=""
                       draggable={false}
-                      className="absolute select-none max-w-none"
+                      className={OCR_PREVIEW_IMAGE_CLASS}
                       style={cropImageStyle}
                     />
                   </div>
@@ -411,18 +436,6 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
             </div>
           )}
         </div>
-
-        {progress ? <p className="text-[11px] text-amber-300/90">{progress}</p> : null}
-        {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
-        {errorHints.length > 0 ? (
-          <div className="space-y-1">
-            {errorHints.map((hint) => (
-              <p key={hint} className="text-[11px] text-amber-200/90 leading-snug">
-                {hint}
-              </p>
-            ))}
-          </div>
-        ) : null}
       </div>
     </AppModal>
   )

@@ -40,6 +40,7 @@ interface AppModalProps {
   headerExtra?: React.ReactNode
   closeOnBackdrop?: boolean
   titleId?: string
+  bodyClassName?: string
 }
 
 export default function AppModal({
@@ -53,6 +54,7 @@ export default function AppModal({
   headerExtra,
   closeOnBackdrop = true,
   titleId: titleIdProp,
+  bodyClassName = '',
 }: AppModalProps) {
   const generatedId = useId()
   const titleId = titleIdProp ?? generatedId
@@ -92,7 +94,9 @@ export default function AppModal({
 
         {headerExtra}
 
-        <div className="p-3 sm:p-4 overflow-y-auto overscroll-contain flex-1 min-h-0 min-w-0">
+        <div
+          className={`p-3 sm:p-4 overflow-y-auto overscroll-contain flex-1 min-h-0 min-w-0 ${bodyClassName}`.trim()}
+        >
           {children}
         </div>
 
