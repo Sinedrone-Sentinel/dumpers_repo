@@ -1,4 +1,4 @@
-"""Full-screen overlay with per-row scan checkmarks."""
+"""Full-screen overlay with per-row scan checkmarks beside HUD lines."""
 
 from __future__ import annotations
 
@@ -16,26 +16,33 @@ from region_store import fractions_from_pixels, save_region
 
 
 @dataclass(frozen=True)
-class ScanRow:
+class HudCheckRow:
     id: str
-    label: str
     y_frac: float
 
 
-# Approximate vertical bands inside the RESULTS panel box (top → bottom).
-SCAN_ROWS: tuple[ScanRow, ...] = (
-    ScanRow("capture", "Capture", 0.03),
-    ScanRow("ore", "Ore", 0.11),
-    ScanRow("mass", "Mass", 0.21),
-    ScanRow("res", "RES", 0.29),
-    ScanRow("inst", "INST", 0.37),
-    ScanRow("comp_scu", "COMP SCU", 0.45),
-    ScanRow("composition", "Composition %", 0.58),
+# Vertical bands aligned to the Mole pilot RESULTS panel (see member mockup).
+HUD_CHECK_ROWS: tuple[HudCheckRow, ...] = (
+    HudCheckRow("ore", 0.11),
+    HudCheckRow("mass", 0.20),
+    HudCheckRow("res", 0.27),
+    HudCheckRow("inst", 0.34),
+    HudCheckRow("comp_scu", 0.43),
 )
 
-_PENDING = "○"
-_OK = "✓"
-_FAIL = "✗"
+# Composition list below the SCU bar — up to 3 valuable lines + INERT anchor.
+COMPOSITION_CHECK_ROWS: tuple[HudCheckRow, ...] = (
+    HudCheckRow("comp_0", 0.58),
+    HudCheckRow("comp_1", 0.67),
+    HudCheckRow("comp_2", 0.76),
+    HudCheckRow("inert", 0.85),
+)
+
+_CHECK_SIZE = 16
+_CHECK_FONT = ("Segoe UI", _CHECK_SIZE, "bold")
+_PENDING_COLOR = "#3a5a44"
+_OK_COLOR = "#3dff6a"
+_FAIL_COLOR = "#ff5a5a"
 
 
 class BridgeScanOverlay:
@@ -67,7 +74,6 @@ class BridgeScanOverlay:
         self.shade_ids: list[int] = []
         self.selection: tuple[int, int, int, int] | None = None
         self._check_ids: dict[str, int] = {}
-        self._check_label_ids: dict[str, int] = {}
 
         self.root = tk.Tk()
         self._photo = ImageTk.PhotoImage(snapshot, master=self.root)
@@ -116,21 +122,36 @@ class BridgeScanOverlay:
         self.hint.config(text=text)
         self.root.update_idletasks()
 
+    def ensure_row(self, row_id: str, y_frac: float) -> None:
+        """Add a checkmark slot at a HUD row band (inside the green box, left edge)."""
+        if row_id in self._check_ids:
+            return
+        box = self._selection_box()
+        if box is None:
+            return
+        left, top, _right, bottom = box
+        height = max(1, bottom - top)
+        y = top + int(round(y_frac * height))
+        x = left + 8
+        self._check_ids[row_id] = self.canvas.create_text(
+            x,
+            y,
+            text="",
+            fill=_PENDING_COLOR,
+            font=_CHECK_FONT,
+            anchor=tk.W,
+        )
+
     def mark_row(self, row_id: str, *, ok: bool | None = None) -> None:
         item = self._check_ids.get(row_id)
         if item is None:
             return
         if ok is None:
-            symbol, color = _PENDING, "#8aa896"
+            self.canvas.itemconfig(item, text="", fill=_PENDING_COLOR)
         elif ok:
-            symbol, color = _OK, "#5cff7a"
+            self.canvas.itemconfig(item, text="✓", fill=_OK_COLOR)
         else:
-            symbol, color = _FAIL, "#ff6b6b"
-        self.canvas.itemconfig(item, text=symbol, fill=color)
-        label_item = self._check_label_ids.get(row_id)
-        if label_item is not None:
-            label_color = "#9dffb3" if ok else "#ffb3b3" if ok is False else "#8aa896"
-            self.canvas.itemconfig(label_item, fill=label_color)
+            self.canvas.itemconfig(item, text="✗", fill=_FAIL_COLOR)
         self.root.update_idletasks()
 
     def _set_selection_from_fractions(self, fractions: PanelFractions) -> None:
@@ -221,31 +242,10 @@ class BridgeScanOverlay:
         return min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)
 
     def _place_checkmarks(self) -> None:
-        box = self._selection_box()
-        if box is None:
-            return
-        left, top, right, bottom = box
-        height = max(1, bottom - top)
-        for row in SCAN_ROWS:
-            y = top + int(round(row.y_frac * height))
-            x_mark = max(8, left - 22)
-            x_label = right + 10
-            self._check_ids[row.id] = self.canvas.create_text(
-                x_mark,
-                y,
-                text=_PENDING,
-                fill="#8aa896",
-                font=("Segoe UI", 13, "bold"),
-                anchor=tk.E,
-            )
-            self._check_label_ids[row.id] = self.canvas.create_text(
-                x_label,
-                y,
-                text=row.label,
-                fill="#8aa896",
-                font=("Segoe UI", 9, "bold"),
-                anchor=tk.W,
-            )
+        for row in HUD_CHECK_ROWS:
+            self.ensure_row(row.id, row.y_frac)
+        for row in COMPOSITION_CHECK_ROWS:
+            self.ensure_row(row.id, row.y_frac)
 
     def _lock_scan_mode(self) -> None:
         self.scan_mode = True
@@ -285,22 +285,18 @@ class BridgeScanOverlay:
         self._place_checkmarks()
         reporter = ScanProgressReporter(self)
 
-        for row in SCAN_ROWS:
-            reporter.mark_row(row.id, ok=None)
-
         try:
             self.result = self.on_scan(fractions, reporter)
         except Exception as exc:  # pragma: no cover
             self.result = LiveScanResult(ok=False, error=f"Rock scan failed: {exc}")
             self.set_header(f"Scan failed: {exc}")
-            reporter.mark_row("capture", ok=False)
 
         if self.result and self.result.ok:
             self.set_header("Scan complete — returning to Rock Calculator…")
         elif self.result:
             self.set_header((self.result.error or "Scan failed")[:80])
 
-        self.root.after(1400, self._finish)
+        self.root.after(1600, self._finish)
 
     def _on_cancel(self, _event: tk.Event | None = None) -> None:
         if self.scan_mode:
@@ -323,7 +319,7 @@ class BridgeScanOverlay:
 
 
 class ScanProgressReporter:
-    """Update the live overlay header and row checkmarks."""
+    """Update the live overlay header and HUD-row checkmarks."""
 
     def __init__(self, overlay: BridgeScanOverlay) -> None:
         self._overlay = overlay
@@ -331,5 +327,33 @@ class ScanProgressReporter:
     def set_header(self, text: str) -> None:
         self._overlay.set_header(text)
 
+    def ensure_row(self, row_id: str, y_frac: float) -> None:
+        self._overlay.ensure_row(row_id, y_frac)
+
     def mark_row(self, row_id: str, *, ok: bool | None = None) -> None:
         self._overlay.mark_row(row_id, ok=ok)
+
+    def mark_composition_result(self, composition: dict) -> None:
+        """Tick each composition % line and the INERT anchor row like the HUD mockup."""
+        lines = composition.get("lines") or []
+        comp_start = COMPOSITION_CHECK_ROWS[0].y_frac
+        comp_step = 0.09
+
+        if not composition.get("ok") or not lines:
+            for row in COMPOSITION_CHECK_ROWS:
+                self.mark_row(row.id, ok=False)
+            return
+
+        for index in range(len(lines)):
+            row_id = f"comp_{index}"
+            y_frac = comp_start + index * comp_step
+            self.ensure_row(row_id, y_frac)
+            self.mark_row(row_id, ok=True)
+
+        inert_ok = composition.get("inert_anchor_line") is not None
+        if len(lines) <= 2:
+            self.mark_row("inert", ok=inert_ok)
+        else:
+            inert_y = min(comp_start + len(lines) * comp_step, 0.9)
+            self.ensure_row("inert", inert_y)
+            self.mark_row("inert", ok=inert_ok)

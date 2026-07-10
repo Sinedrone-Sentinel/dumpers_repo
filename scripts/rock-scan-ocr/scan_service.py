@@ -45,7 +45,8 @@ def _scan_captured_panel(
             time.sleep(0.07)
 
     if not game_focused and capture_method.startswith("mss-screen"):
-        mark("capture", False)
+        if progress is not None:
+            progress.set_header("Could not switch to Star Citizen")
         return LiveScanResult(
             ok=False,
             error="Could not switch to Star Citizen for screen capture.",
@@ -59,7 +60,8 @@ def _scan_captured_panel(
     panel_img = crop_fraction(client_img, fractions)
 
     if is_mostly_black(client_img):
-        mark("capture", False)
+        if progress is not None:
+            progress.set_header("Capture failed — image was black")
         return LiveScanResult(
             ok=False,
             error="Capture failed: game image is black.",
@@ -69,7 +71,6 @@ def _scan_captured_panel(
             ],
         )
 
-    mark("capture", True)
     if progress is not None:
         progress.set_header("Reading HUD signals…")
 
@@ -85,8 +86,12 @@ def _scan_captured_panel(
     mineral_hint = sc_ocr.get("mineral_name")
     composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
     mark("comp_scu", composition.get("total_scu") is not None)
-    comp_ok = bool(composition.get("ok")) and bool(composition.get("lines"))
-    mark("composition", comp_ok)
+
+    if progress is not None:
+        progress.mark_composition_result(composition)
+    else:
+        comp_ok = bool(composition.get("ok")) and bool(composition.get("lines"))
+        _ = comp_ok
 
     if progress is not None:
         if composition.get("ok") and sc_ocr.get("mass") is not None:
