@@ -40,8 +40,8 @@ export interface OcrWordBox {
 }
 
 // ---------------------------------------------------------------------------
-// SCAN RESULTS panel schema (in-game top → bottom):
-//   primary ore → MASS → RES → INST → COMP (SCU) → composition % rows
+// Mole pilot-seat RESULTS panel (crop the right-side HUD block):
+//   RESULTS → ore (ORE) → MASS → RES → INST → COMP xx SCU → xx% ORE (ORE) Q###
 //
 // Parser strategy (order-independent):
 //   1. Cluster OCR words into spatial rows (true HUD order when boxes exist)
@@ -95,6 +95,10 @@ const COMPOSITION_LINE_WITH_Q_RE =
 const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS(?:\s+\d{1,4})?\s*$/i
 
 const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s*$/i
+
+/** Alternate composition format: `ELEMENT: 43.5%` — kept as fallback only. */
+const COLON_COMPOSITION_LINE_RE =
+  /^([A-Za-z][A-Za-z0-9\s]*?)\s*:\s*(\d+(?:\.\d+)?)\s*%?\s*$/i
 
 // ---------------------------------------------------------------------------
 // Text normalization
@@ -184,7 +188,7 @@ function clusterWordsIntoRowGroups(words: OcrWordBox[]): RowWord[][] {
 
   const heights = sorted.map((word) => Math.max(1, word.y1 - word.y0))
   const medianHeight = heights.sort((a, b) => a - b)[Math.floor(heights.length / 2)] ?? 12
-  const rowThreshold = Math.max(8, medianHeight * 0.55)
+  const rowThreshold = Math.max(8, medianHeight * 0.65)
 
   const rowGroups: Array<Array<{ text: string; x0: number; x1: number; y0: number }>> = []
   let currentGroup: Array<{ text: string; x0: number; x1: number; y0: number }> = []
@@ -286,7 +290,11 @@ function isDifficultyRow(row: string): boolean {
   return DIFFICULTY_ROW_RE.test(row)
 }
 
-/** HUD order between MASS and COMPOSITION: resistance then instability (labels vary by patch/HUD). */
+function isRockScuRow(row: string): boolean {
+  return /\bROCK\s+SCU\b/i.test(row)
+}
+
+/** HUD order between MASS and COMPOSITION header: RES then INST. */
 function extractResistanceInstabilityByPosition(
   rows: string[],
   mass: number | null
@@ -296,8 +304,14 @@ function extractResistanceInstabilityByPosition(
 
   for (let i = 0; i < rows.length; i++) {
     if (massIdx < 0 && isMassRow(rows[i])) massIdx = i
-    if (compIdx === rows.length && (isCompHeaderRow(rows[i]) || isCompositionPercentRow(rows[i]))) {
-      compIdx = i
+    if (compIdx === rows.length && isCompHeaderRow(rows[i])) compIdx = i
+  }
+  if (compIdx === rows.length) {
+    for (let i = 0; i < rows.length; i++) {
+      if (isCompositionPercentRow(rows[i])) {
+        compIdx = i
+        break
+      }
     }
   }
 
@@ -306,11 +320,19 @@ function extractResistanceInstabilityByPosition(
   const statValues: number[] = []
   for (let i = massIdx + 1; i < compIdx; i++) {
     const row = rows[i]
-    if (isCompositionPercentRow(row) || isDifficultyRow(row)) continue
+    if (
+      isCompositionPercentRow(row) ||
+      isDifficultyRow(row) ||
+      isRockScuRow(row) ||
+      isCargoRow(row)
+    ) {
+      continue
+    }
     if (parseOreNameFromRow(row) && !rowHasHudStatLabel(row)) continue
 
     const value = valueFromLabelRow(row, rows, i)
     if (value == null || !isBetweenMassAndCompStat(value, mass)) continue
+    if (knownRockScuValue(rows, value)) continue
     statValues.push(value)
   }
 
@@ -319,7 +341,11 @@ function extractResistanceInstabilityByPosition(
   }
   if (statValues.length === 1) {
     const sole = statValues[0]
-    if (sole <= MAX_RESISTANCE_PERCENT) {
+    const hasFraction = Math.abs(sole - Math.round(sole)) > 0.001
+    if (hasFraction && sole < 20) {
+      return { resistancePercent: null, instability: sole }
+    }
+    if (sole <= MAX_RESISTANCE_PERCENT && Number.isInteger(sole)) {
       return { resistancePercent: sole, instability: null }
     }
     return { resistancePercent: null, instability: sole }
@@ -327,18 +353,70 @@ function extractResistanceInstabilityByPosition(
   return { resistancePercent: null, instability: null }
 }
 
+function knownRockScuValue(rows: string[], value: number): boolean {
+  for (const row of rows) {
+    if (!isRockScuRow(row)) continue
+    const last = lastNumberInRow(row)
+    if (last != null && Math.abs(last - value) < 0.01) return true
+  }
+  return false
+}
+
+function isCargoRow(row: string): boolean {
+  return /\bCARGO\b/i.test(row)
+}
+
+function isPlausibleRockTotalScu(value: number): boolean {
+  return Number.isFinite(value) && value >= 0.5 && value <= 500
+}
+
 function extractTotalScu(corpus: string, rows: string[]): number | null {
-  const fromCorpus = firstMatchingNumber(corpus, [
-    /\bCOMP(?:OSITION)?\s*(?:\([^)]*SCU[^)]*\))?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
-    /(-?\d[\d,]*\.?\d*)\s*SCU/i,
-  ])
-  if (fromCorpus != null && fromCorpus > 0) return fromCorpus
+  const candidates: number[] = []
 
   for (const row of rows) {
-    if (!/\bCOMP(?:OSITION)?\b/i.test(row) && !/\bSCU\b/i.test(row)) continue
-    const value = lastNumberInRow(row)
-    if (value != null && value > 0) return value
+    if (!isRockScuRow(row)) continue
+    const tagged = row.match(/\bROCK\s+SCU\s*[:.]?\s*(\d+(?:\.\d+)?)/i)
+    if (tagged) {
+      const value = Number.parseFloat(tagged[1])
+      if (isPlausibleRockTotalScu(value)) return value
+    }
+    const last = lastNumberInRow(row)
+    if (last != null && isPlausibleRockTotalScu(last)) return last
   }
+
+  for (const row of rows) {
+    if (isCargoRow(row)) continue
+    if (!isCompHeaderRow(row) && !/\bCOMP\b/i.test(row)) continue
+
+    const tagged = row.match(/\bCOMP(?:OSITION)?\.?\s*(\d+(?:\.\d+)?)/i)
+    if (tagged) {
+      const value = Number.parseFloat(tagged[1])
+      if (isPlausibleRockTotalScu(value)) candidates.push(value)
+    }
+
+    const last = lastNumberInRow(row)
+    if (last != null && isPlausibleRockTotalScu(last)) candidates.push(last)
+  }
+
+  if (candidates.length) {
+    return candidates.find((value) => !Number.isInteger(value)) ?? candidates[candidates.length - 1]
+  }
+
+  for (const row of rows) {
+    if (isCargoRow(row) || isCompositionPercentRow(row)) continue
+    if (!/\bSCU\b/i.test(row)) continue
+    const last = lastNumberInRow(row)
+    if (last != null && isPlausibleRockTotalScu(last)) candidates.push(last)
+  }
+
+  if (candidates.length) return candidates[candidates.length - 1]
+
+  const fromCorpus = firstMatchingNumber(corpus, [
+    /\bCOMP(?:OSITION)?\.?\s*(\d+(?:\.\d+)?)/i,
+    /(\d+(?:\.\d+)?)\s*SCU/i,
+  ])
+  if (fromCorpus != null && isPlausibleRockTotalScu(fromCorpus)) return fromCorpus
+
   return null
 }
 
@@ -406,7 +484,9 @@ function isResistanceValue(
 ): boolean {
   if (!isBetweenMassAndCompStat(value, known.mass)) return false
   if (known.instability != null && Math.abs(value - known.instability) < 0.01) return false
-  if (known.totalScu != null && value > 200 && Math.abs(value - known.totalScu) < 1) return false
+  if (known.totalScu != null && Math.abs(value - known.totalScu) < 1) return false
+  const hasFraction = Math.abs(value - Math.round(value)) > 0.001
+  if (hasFraction && value < 20) return false
   if (value > 0 && value <= 1) return true
   return value <= MAX_RESISTANCE_PERCENT
 }
@@ -482,14 +562,25 @@ function normalizeResistancePercent(value: number): number {
 // ---------------------------------------------------------------------------
 
 function isCompositionPercentRow(row: string): boolean {
-  if (rowHasHudStatLabel(row)) return false
+  if (rowHasHudStatLabel(row) || isRockScuRow(row)) return false
+  if (COLON_COMPOSITION_LINE_RE.test(row)) return true
   return /(\d+(?:\.\d+)?)\s*%/.test(row)
 }
 
 function normalizeElementName(raw: string): string {
+  const tagged = raw.match(/^(.+?)\s*\((?:ORE|RAW)\)/i)
+  if (tagged) {
+    const stripped = stripMineableLabel(tagged[1].trim())
+    if (!stripped) return stripped
+    if (/^inert/i.test(stripped)) return 'Inert'
+    return resolveOcrOreName(stripped).name
+  }
+
   const stripped = stripMineableLabel(raw.replace(/\((?:ORE|RAW)\)/gi, '').trim())
   if (!stripped) return stripped
   if (/^inert/i.test(stripped)) return 'Inert'
+  const firstToken = stripped.match(/^([A-Za-z][A-Za-z0-9]*)/)?.[1]
+  if (firstToken) return resolveOcrOreName(firstToken).name
   return resolveOcrOreName(stripped).name
 }
 
@@ -694,6 +785,16 @@ function parseCompositionRow(
   const inertMatch = row.match(INERT_LINE_RE)
   if (inertMatch) return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
 
+  const colon = row.match(COLON_COMPOSITION_LINE_RE)
+  if (colon) {
+    const elementName = normalizeElementName(colon[1])
+    const percent = Number.parseFloat(colon[2])
+    if (!Number.isFinite(percent) || !elementName) return null
+    if (isInertElement(elementName)) return { kind: 'inert', percent }
+    pushOreLine(elementName, percent, null, true, row, elementRank, compositionLines, warnings)
+    return null
+  }
+
   const strict = row.match(COMPOSITION_LINE_WITH_Q_RE)
   if (strict) {
     const percent = Number.parseFloat(strict[1])
@@ -780,6 +881,44 @@ function parseCompositionRow(
   return null
 }
 
+function acceptInertPercent(
+  percent: number,
+  compositionLines: OcrCompositionLine[]
+): boolean {
+  const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
+  return percent + valuableTotal <= 101.5
+}
+
+function enrichMissingQualityFromSpatial(
+  compositionLines: OcrCompositionLine[],
+  rowGroups: RowWord[][] | undefined
+): void {
+  if (!rowGroups?.length) return
+
+  for (const group of rowGroups) {
+    for (const segment of splitRowGroupByPercents(group)) {
+      const rowText = segment.map((word) => word.text).join(' ').trim()
+      if (!rowText || !isCompositionPercentRow(rowText)) continue
+
+      const spatial = parseCompositionSpatial(segment, rowText)
+      if (!spatial || ('kind' in spatial && spatial.kind === 'inert')) continue
+      if (spatial.qualityMissing || spatial.quality == null) continue
+
+      const match = compositionLines.find(
+        (line) =>
+          line.elementName === spatial.elementName &&
+          Math.abs(line.percent - spatial.percent) < 0.25 &&
+          line.qualityMissing
+      )
+      if (!match) continue
+
+      match.quality = spatial.quality
+      match.qualityMissing = false
+      match.rawOcrLine = `${match.rawOcrLine} / spatial Q${spatial.quality}`
+    }
+  }
+}
+
 function parseCompositionRows(
   rows: string[],
   warnings: string[],
@@ -789,58 +928,27 @@ function parseCompositionRows(
   let inertPercent: number | null = null
   const elementRank = new Map<string, number>()
   const consumedIndices = new Set<number>()
-  const parsedSpatialKeys = new Set<string>()
 
-  if (rowGroups?.length) {
-    for (const group of rowGroups) {
-      for (const segment of splitRowGroupByPercents(group)) {
-        const rowText = segment.map((word) => word.text).join(' ').trim()
-        if (!rowText || !isCompositionPercentRow(rowText)) continue
+  for (let i = 0; i < rows.length; i++) {
+    if (consumedIndices.has(i)) continue
+    const row = rows[i].trim()
+    if (!row || !isCompositionPercentRow(row)) continue
 
-        const spatial = parseCompositionSpatial(segment, rowText)
-        if (!spatial) continue
-
-        if ('kind' in spatial && spatial.kind === 'inert') {
-          inertPercent = spatial.percent
-          continue
-        }
-
-        const key = `${spatial.elementName}:${spatial.percent}:${spatial.quality ?? 'x'}`
-        if (parsedSpatialKeys.has(key)) continue
-        parsedSpatialKeys.add(key)
-
-        pushOreLine(
-          spatial.elementName,
-          spatial.percent,
-          spatial.quality,
-          spatial.qualityMissing,
-          rowText,
-          elementRank,
-          compositionLines,
-          warnings
-        )
-      }
+    const parsed = parseCompositionRow(
+      row,
+      elementRank,
+      compositionLines,
+      warnings,
+      rows,
+      i,
+      consumedIndices
+    )
+    if (parsed?.kind === 'inert' && acceptInertPercent(parsed.percent, compositionLines)) {
+      inertPercent = parsed.percent
     }
   }
 
-  if (!rowGroups?.length || compositionLines.length < 2) {
-    for (let i = 0; i < rows.length; i++) {
-      if (consumedIndices.has(i)) continue
-      const row = rows[i].trim()
-      if (!row || !isCompositionPercentRow(row)) continue
-
-      const parsed = parseCompositionRow(
-        row,
-        elementRank,
-        compositionLines,
-        warnings,
-        rows,
-        i,
-        consumedIndices
-      )
-      if (parsed?.kind === 'inert') inertPercent = parsed.percent
-    }
-  }
+  enrichMissingQualityFromSpatial(compositionLines, rowGroups)
 
   return { lines: compositionLines, inertPercent }
 }
@@ -926,7 +1034,14 @@ function resolvePrimaryOreName(
       bestCount = count
     }
   }
-  return best
+  if (best) return best
+
+  if (compositionLines.length) {
+    return compositionLines.reduce((top, line) =>
+      line.percent > top.percent ? line : top
+    ).elementName
+  }
+  return null
 }
 
 // ---------------------------------------------------------------------------
@@ -962,22 +1077,25 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
   if (panel.resistancePercent == null) {
     return {
       ok: false,
-      error: 'Could not read Resistance — include the resistance stat between MASS and INSTABILITY in the crop.',
+      error: 'Could not read Resistance — include the RES line between MASS and INST in the crop.',
     }
   }
   if (panel.instability == null) {
     return {
       ok: false,
-      error: 'Could not read Instability — include the instability stat between MASS and COMPOSITION in the crop.',
+      error: 'Could not read Instability — include the INST line between RES and COMP in the crop.',
     }
   }
   if (panel.totalScu == null || panel.totalScu <= 0) {
-    return { ok: false, error: 'Could not read total SCU from COMPOSITION — include that header line.' }
+    return {
+      ok: false,
+      error: 'Could not read total SCU — include the COMP xx SCU line in the crop.',
+    }
   }
   if (compositionLines.length < 2) {
     return {
       ok: false,
-      error: 'Need at least two composition lines in the crop — include the full COMPOSITION list.',
+      error: 'Need at least two composition lines in the crop — include the full composition list.',
     }
   }
 
@@ -985,7 +1103,7 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
   if (primaryBandCount < 2) {
     return {
       ok: false,
-      error: `Found ${primaryOreName} but could not read both High and Low composition bands — include the full COMPOSITION list.`,
+      error: `Found ${primaryOreName} but could not read both High and Low composition bands — include the full composition list.`,
     }
   }
 
@@ -1035,9 +1153,17 @@ export function scoreRockScanOcrParseAttempt(result: RockScanOcrParseResult): nu
     const valuableTotal = result.data.compositionLines.reduce((sum, line) => sum + line.percent, 0)
     if (result.data.inertPercentScanned != null) {
       if (Math.abs(valuableTotal + result.data.inertPercentScanned - 100) < 1.5) score += 25
+      else if (result.data.inertPercentScanned > 60 && valuableTotal > 35) score -= 30
     } else if (Math.abs(valuableTotal - 100) < 2) {
       score += 10
     }
+    if (result.data.totalScu != null && isPlausibleRockTotalScu(result.data.totalScu)) {
+      score += 30
+      if (!Number.isInteger(result.data.totalScu)) score += 10
+    } else {
+      score -= 40
+    }
+    if (result.data.totalScu === 1 && result.data.mass > 5000) score -= 80
     return score
   }
 

@@ -664,7 +664,7 @@ export default function RockCalculator({
                   Scanner rock stats
                 </label>
                 <p className="text-[10px] text-slate-500 mb-1">
-                  Enter values exactly as shown on the fracture scanner HUD.
+                  Enter values from the RESULTS panel on your Mole pilot HUD.
                 </p>
                 <span className="block text-[10px] text-slate-400 mb-0.5">Mass</span>
                 <input

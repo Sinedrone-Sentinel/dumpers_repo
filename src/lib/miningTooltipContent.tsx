@@ -387,8 +387,8 @@ export const ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP = (
   <div className="space-y-1.5 text-xs leading-snug">
     <p className="font-medium text-slate-200">Paste scanner screenshot</p>
     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
-      <li>ALT+PrtSc the SCAN RESULTS panel in-game</li>
-      <li>Crop the scan panel — ore name, MASS, RES, INST, COMPOSITION, and composition % rows</li>
+      <li>ALT+PrtSc the RESULTS panel from the Mole pilot seat</li>
+      <li>Crop the entire RESULTS block — header, ore name, MASS, RES, INST, COMP SCU, and composition % rows</li>
       <li>Switch here and Ctrl+V into the OCR modal</li>
       <li>Crop the scan panel and Process to auto-fill</li>
       <li>Star Strings shortens long names (e.g. Hephaestanite → Heph) — OCR works best with it on. Without it, the full name can cover the Q number on the HUD and you may need to set that material&apos;s Q band manually</li>

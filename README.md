@@ -94,7 +94,7 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - Reference grid of base RS signatures and cluster spawn odds; track up to two cards per ore (Surface / Asteroid) plus optional per-site location cards
 - Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
 - **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
-- **Scanner OCR** — paste SCAN RESULTS screenshot (Ctrl+V), crop, Process to auto-fill; tilt slider for skewed HUDs; screenshot never saved
+- **Scanner OCR** — paste Mole pilot RESULTS screenshot (Ctrl+V), crop, Process to auto-fill; tilt slider for skewed HUDs; screenshot never saved
 - **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship (sign-in; RSI verification not required)
 
 **Mining Guide**

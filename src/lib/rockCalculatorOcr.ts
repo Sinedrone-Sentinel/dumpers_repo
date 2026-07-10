@@ -1,4 +1,13 @@
-import type { PSM } from 'tesseract.js'
+import type { PSM, Worker } from 'tesseract.js'
+import {
+  detectTextLineBands,
+  extractLineCanvas,
+  OCR_USER_DPI,
+  preprocessHudCrop,
+  preprocessHudCropBinary,
+  scaleLineToTargetXHeight,
+  type TextLineBand,
+} from './rockCalculatorOcrPreprocess'
 import {
   parseRockScanOcrText,
   parseRockScanOcrWords,
@@ -6,6 +15,7 @@ import {
   type OcrWordBox,
   type RockScanOcrParseResult,
 } from './rockCalculatorOcrParse'
+import { ROCK_OCR_CHAR_WHITELIST } from './rockCalculatorOcrWordlist'
 
 export interface NormalizedCropRect {
   x: number
@@ -14,140 +24,16 @@ export interface NormalizedCropRect {
   height: number
 }
 
-const OCR_PREPROCESS_SCALES = [3, 4, 5, 6] as const
-const LUMINANCE_THRESHOLD = 128
+const OCR_PREPROCESS_SCALES = [2, 3, 4] as const
+const MIN_DETECTED_LINES = 5
 
-function applyBinaryThreshold(data: Uint8ClampedArray, threshold: number): void {
-  for (let i = 0; i < data.length; i += 4) {
-    const value = data[i] >= threshold ? 255 : 0
-    data[i] = value
-    data[i + 1] = value
-    data[i + 2] = value
-    data[i + 3] = 255
-  }
-}
-
-function stretchLuminanceToCanvas(
-  source: CanvasImageSource,
-  width: number,
-  height: number,
-  scale: number
-): { canvas: HTMLCanvasElement; imageData: ImageData; ctx: CanvasRenderingContext2D } {
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.max(1, Math.round(width * scale))
-  canvas.height = Math.max(1, Math.round(height * scale))
-  const ctx = canvas.getContext('2d')
-  if (!ctx) {
-    const fallback = canvas.getContext('2d')
-    return {
-      canvas,
-      imageData: new ImageData(Math.max(1, canvas.width), Math.max(1, canvas.height)),
-      ctx: fallback!,
-    }
-  }
-
-  ctx.imageSmoothingEnabled = true
-  ctx.imageSmoothingQuality = 'high'
-  ctx.drawImage(source, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  const { data } = imageData
-  let min = 255
-  let max = 0
-
-  for (let i = 0; i < data.length; i += 4) {
-    const lum = Math.round(data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114)
-    min = Math.min(min, lum)
-    max = Math.max(max, lum)
-    data[i] = lum
-    data[i + 1] = lum
-    data[i + 2] = lum
-  }
-
-  const range = Math.max(1, max - min)
-  for (let i = 0; i < data.length; i += 4) {
-    const stretched = Math.round(((data[i] - min) / range) * 255)
-    data[i] = stretched
-    data[i + 1] = stretched
-    data[i + 2] = stretched
-  }
-
-  return { canvas, imageData, ctx }
-}
-
-function preprocessCrop(
-  source: CanvasImageSource,
-  width: number,
-  height: number,
-  scale: number
-): HTMLCanvasElement {
-  const stretched = stretchLuminanceToCanvas(source, width, height, scale)
-  applyBinaryThreshold(stretched.imageData.data, LUMINANCE_THRESHOLD)
-  stretched.ctx.putImageData(stretched.imageData, 0, 0)
-  return stretched.canvas
-}
-
-/** Contrast-stretched grayscale only — no binary crush. Primary OCR path for HUD text. */
-function preprocessCropClean(
-  source: CanvasImageSource,
-  width: number,
-  height: number,
-  scale: number
-): HTMLCanvasElement {
-  const stretched = stretchLuminanceToCanvas(source, width, height, scale)
-  stretched.ctx.putImageData(stretched.imageData, 0, 0)
-  return stretched.canvas
-}
-
-/** Orange HUD text is often lost in luminance-only thresholding — isolate warm foreground pixels. */
-function preprocessCropOrangeHud(
-  source: CanvasImageSource,
-  width: number,
-  height: number,
-  scale: number
-): HTMLCanvasElement {
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.max(1, Math.round(width * scale))
-  canvas.height = Math.max(1, Math.round(height * scale))
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return canvas
-
-  ctx.imageSmoothingEnabled = true
-  ctx.imageSmoothingQuality = 'high'
-  ctx.drawImage(source, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  const { data } = imageData
-
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i]
-    const g = data[i + 1]
-    const b = data[i + 2]
-    const isOrangeHud = r >= 110 && r > g + 18 && r > b + 35 && g >= 35
-    const value = isOrangeHud ? 255 : 0
-    data[i] = value
-    data[i + 1] = value
-    data[i + 2] = value
-    data[i + 3] = 255
-  }
-
-  ctx.putImageData(imageData, 0, 0)
-  return canvas
-}
-
-type CropPreprocessFn = (
-  source: CanvasImageSource,
-  width: number,
-  height: number,
-  scale: number
-) => HTMLCanvasElement
-
-interface OcrPassResult {
+interface LineOcrPassResult {
   text: string
   confidence: number
   words: OcrWordBox[]
   parsed: RockScanOcrParseResult
   parseScore: number
+  lineCount: number
 }
 
 interface OcrScaleEscalationResult {
@@ -156,18 +42,22 @@ interface OcrScaleEscalationResult {
   bestFailureScore: number
 }
 
-function mapTesseractWords(data: {
-  words?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }>
-}): OcrWordBox[] {
+function mapTesseractWords(
+  data: {
+    words?: Array<{ text: string; bbox: { x0: number; y0: number; x1: number; y1: number } }>
+  },
+  lineOffsetY: number,
+  lineScale: number
+): OcrWordBox[] {
   if (!data.words?.length) return []
   return data.words
     .filter((word) => word.text.trim().length > 0)
     .map((word) => ({
       text: word.text,
-      x0: word.bbox.x0,
-      y0: word.bbox.y0,
-      x1: word.bbox.x1,
-      y1: word.bbox.y1,
+      x0: word.bbox.x0 / lineScale,
+      y0: word.bbox.y0 / lineScale + lineOffsetY,
+      x1: word.bbox.x1 / lineScale,
+      y1: word.bbox.y1 / lineScale + lineOffsetY,
     }))
 }
 
@@ -176,25 +66,130 @@ function parseOcrOutput(text: string, words: OcrWordBox[]): RockScanOcrParseResu
   return parseRockScanOcrText(text)
 }
 
-/** Run 2× → 3× → 4× with one preprocess variant; escalate only if parse score does not improve. */
+let activeWorker: Worker | null = null
+let workerReady: Promise<{ worker: Worker; PsmEnum: typeof import('tesseract.js').PSM }> | null =
+  null
+
+export async function terminateOcrWorker(): Promise<void> {
+  if (!activeWorker) return
+  await activeWorker.terminate()
+  activeWorker = null
+  workerReady = null
+}
+
+async function getWorker(): Promise<{ worker: Worker; PsmEnum: typeof import('tesseract.js').PSM }> {
+  if (workerReady) return workerReady
+
+  workerReady = (async () => {
+    const { createWorker, PSM: PsmEnum, OEM } = await import('tesseract.js')
+    const worker = await createWorker('eng', OEM.LSTM_ONLY)
+    await worker.setParameters({
+      tessedit_pageseg_mode: PsmEnum.SINGLE_LINE,
+      preserve_interword_spaces: '1',
+      user_defined_dpi: String(OCR_USER_DPI),
+      tessedit_char_whitelist: ROCK_OCR_CHAR_WHITELIST,
+      tessedit_enable_dict_correction: '0',
+      textord_min_xheight: '8',
+      min_sane_x_ht_pixels: '8',
+    })
+    activeWorker = worker
+    return { worker, PsmEnum }
+  })()
+
+  return workerReady
+}
+
+async function recognizeLine(
+  worker: Worker,
+  lineCanvas: HTMLCanvasElement,
+  psm: PSM,
+  lineOffsetY: number,
+  lineScale: number
+): Promise<{ text: string; confidence: number; words: OcrWordBox[] }> {
+  await worker.setParameters({ tessedit_pageseg_mode: psm })
+  const result = await worker.recognize(lineCanvas)
+  const text = (result.data.text ?? '').replace(/\s+/g, ' ').trim()
+  const confidence = Number.isFinite(result.data.confidence) ? result.data.confidence : 0
+  const words = mapTesseractWords(result.data, lineOffsetY, lineScale)
+  return { text, confidence, words }
+}
+
+async function runLineByLineOcr(
+  preprocessed: HTMLCanvasElement,
+  bands: TextLineBand[]
+): Promise<LineOcrPassResult> {
+  const { worker, PsmEnum } = await getWorker()
+  const lines: string[] = []
+  const words: OcrWordBox[] = []
+  let confidenceTotal = 0
+  let confidenceCount = 0
+
+  for (const band of bands) {
+    const rawLine = extractLineCanvas(preprocessed, band)
+    const scaled = scaleLineToTargetXHeight(rawLine)
+    const lineOffsetY = band.y0
+
+    const result = await recognizeLine(
+      worker,
+      scaled.canvas,
+      PsmEnum.SINGLE_LINE,
+      lineOffsetY,
+      scaled.scale
+    )
+    if (result.text) {
+      lines.push(result.text)
+      words.push(...result.words)
+      if (result.confidence > 0) {
+        confidenceTotal += result.confidence
+        confidenceCount++
+      }
+    }
+  }
+
+  const text = lines.join('\n')
+  const confidence = confidenceCount ? confidenceTotal / confidenceCount : 0
+  const parsed = parseOcrOutput(text, words)
+  const parseScore = scoreRockScanOcrParseAttempt(parsed)
+
+  return {
+    text,
+    confidence,
+    words,
+    parsed,
+    parseScore,
+    lineCount: lines.length,
+  }
+}
+
 async function runOcrScaleEscalation(
   deskewed: HTMLCanvasElement,
-  preprocess: CropPreprocessFn
+  useBinary: boolean
 ): Promise<OcrScaleEscalationResult> {
   let bestFailure: RockScanOcrParseResult | null = null
   let bestFailureScore = -1
+  let bestSuccess: RockScanOcrParseResult | null = null
+  let bestSuccessScore = -1
   let previousScore = -1
 
   for (let attempt = 0; attempt < OCR_PREPROCESS_SCALES.length; attempt++) {
     const scale = OCR_PREPROCESS_SCALES[attempt]
-    const preprocessed = preprocess(deskewed, deskewed.width, deskewed.height, scale)
-    const pass = await runBestOcrPass(preprocessed)
+    const preprocessed = useBinary
+      ? preprocessHudCropBinary(deskewed, deskewed.width, deskewed.height, scale)
+      : preprocessHudCrop(deskewed, deskewed.width, deskewed.height, scale)
 
-    if (pass.parsed.ok) {
-      return { success: pass.parsed, bestFailure: null, bestFailureScore: -1 }
+    const bands = detectTextLineBands(preprocessed)
+    if (bands.length < MIN_DETECTED_LINES) {
+      continue
     }
 
-    if (pass.parseScore > bestFailureScore) {
+    const pass = await runLineByLineOcr(preprocessed, bands)
+
+    if (pass.parsed.ok) {
+      if (pass.parseScore > bestSuccessScore) {
+        bestSuccessScore = pass.parseScore
+        bestSuccess = pass.parsed
+      }
+    } else if (pass.parseScore > bestFailureScore) {
       bestFailureScore = pass.parseScore
       bestFailure = pass.parsed
     }
@@ -205,6 +200,10 @@ async function runOcrScaleEscalation(
     previousScore = pass.parseScore
   }
 
+  if (bestSuccess) {
+    return { success: bestSuccess, bestFailure: null, bestFailureScore: -1 }
+  }
+
   return { success: null, bestFailure, bestFailureScore }
 }
 
@@ -212,14 +211,6 @@ function pickBestOcrFailure(...passes: OcrScaleEscalationResult[]): OcrScaleEsca
   return passes.reduce((best, pass) =>
     pass.bestFailureScore > best.bestFailureScore ? pass : best
   )
-}
-
-let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
-
-export async function terminateOcrWorker(): Promise<void> {
-  if (!activeWorker) return
-  await activeWorker.terminate()
-  activeWorker = null
 }
 
 function rotateCanvas(source: HTMLCanvasElement, degrees: number): HTMLCanvasElement {
@@ -279,58 +270,6 @@ function cropImageToCanvas(
   return canvas
 }
 
-async function getWorker() {
-  if (activeWorker) {
-    const { PSM: PsmEnum } = await import('tesseract.js')
-    return { worker: activeWorker, PsmEnum }
-  }
-  const { createWorker, PSM: PsmEnum, OEM } = await import('tesseract.js')
-  const worker = await createWorker('eng', OEM.LSTM_ONLY)
-  activeWorker = worker
-  return { worker, PsmEnum }
-}
-
-async function recognizePass(canvas: HTMLCanvasElement, psm: PSM): Promise<OcrPassResult> {
-  const { worker } = await getWorker()
-  await worker.setParameters({
-    tessedit_pageseg_mode: psm,
-    preserve_interword_spaces: '1',
-    user_defined_dpi: '300',
-  })
-  const result = await worker.recognize(canvas)
-  const text = result.data.text ?? ''
-  const confidence = Number.isFinite(result.data.confidence) ? result.data.confidence : 0
-  const words = mapTesseractWords(result.data)
-  const parsed = parseOcrOutput(text, words)
-  return {
-    text,
-    confidence,
-    words,
-    parsed,
-    parseScore: scoreRockScanOcrParseAttempt(parsed),
-  }
-}
-
-/** Try multiple page layouts; pick the pass that parses the most complete scan. */
-async function runBestOcrPass(canvas: HTMLCanvasElement): Promise<OcrPassResult> {
-  const { PsmEnum } = await getWorker()
-  const modes: PSM[] = [PsmEnum.SINGLE_BLOCK, PsmEnum.SINGLE_COLUMN, PsmEnum.SPARSE_TEXT]
-  const passes = await Promise.all(modes.map((psm) => recognizePass(canvas, psm)))
-
-  passes.sort((a, b) => {
-    if (b.parseScore !== a.parseScore) return b.parseScore - a.parseScore
-    return b.confidence - a.confidence
-  })
-
-  return passes[0] ?? {
-    text: '',
-    confidence: 0,
-    words: [],
-    parsed: { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' },
-    parseScore: 0,
-  }
-}
-
 export async function processRockScanCrop(
   image: CanvasImageSource,
   sourceWidth: number,
@@ -340,25 +279,23 @@ export async function processRockScanCrop(
 ): Promise<RockScanOcrParseResult> {
   const rawCrop = cropImageToCanvas(image, sourceWidth, sourceHeight, crop)
   if (!rawCrop) {
-    return { ok: false, error: 'Crop area is too small — drag a larger box around SCAN RESULTS.' }
+    return { ok: false, error: 'Crop area is too small — drag a larger box around the RESULTS panel.' }
   }
 
   const deskewed = rotateCanvas(rawCrop, deskewDegrees)
 
-  const cleanPass = await runOcrScaleEscalation(deskewed, preprocessCropClean)
+  const cleanPass = await runOcrScaleEscalation(deskewed, false)
   if (cleanPass.success) return cleanPass.success
 
-  const orangePass = await runOcrScaleEscalation(deskewed, preprocessCropOrangeHud)
-  if (orangePass.success) return orangePass.success
-
-  const binaryPass = await runOcrScaleEscalation(deskewed, preprocessCrop)
+  const binaryPass = await runOcrScaleEscalation(deskewed, true)
   if (binaryPass.success) return binaryPass.success
 
-  const bestPass = pickBestOcrFailure(cleanPass, orangePass, binaryPass)
+  const bestPass = pickBestOcrFailure(cleanPass, binaryPass)
   return (
     bestPass.bestFailure ?? {
       ok: false,
-      error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.',
+      error:
+        'OCR could not read enough RESULTS lines — crop the full panel (RESULTS header through composition rows).',
     }
   )
 }
@@ -456,7 +393,7 @@ export function loadImageFromFile(file: File): Promise<{
   })
 }
 
-/** 16:9 reference capture (member 2560×1440) and ideal SCAN RESULTS panel crop (382×549). */
+/** 16:9 reference capture (member 2560×1440) and ideal RESULTS panel crop (382×549). */
 const REFERENCE_DISPLAY = { width: 2560, height: 1440 } as const
 const REFERENCE_PANEL = { width: 382, height: 549 } as const
 const REFERENCE_CROP_ORIGIN = { x: 2170, y: 115 } as const

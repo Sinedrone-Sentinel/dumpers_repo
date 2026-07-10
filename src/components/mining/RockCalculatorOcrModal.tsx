@@ -416,7 +416,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
   return (
     <AppModal
       title="Scanner OCR"
-      subtitle="Paste your fracture HUD screenshot, crop SCAN RESULTS, then Process"
+      subtitle="Paste your Mole pilot RESULTS screenshot, crop the panel, then Process"
       size="3xl"
       shellClassName="max-h-[min(94dvh,calc(100dvh-0.5rem))]"
       bodyClassName="flex flex-col overflow-hidden"
@@ -561,7 +561,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
             </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-xs text-slate-500 px-6 text-center">
-              Screenshot preview will appear here after paste. Drag the orange box around SCAN RESULTS
+              Screenshot preview will appear here after paste. Drag the crop box around the RESULTS panel
               before processing.
             </div>
           )}
