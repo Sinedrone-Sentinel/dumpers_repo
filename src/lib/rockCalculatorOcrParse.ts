@@ -98,7 +98,7 @@ const HUD_LABEL_WORDS = new Set([
 
 /** e.g. 12.48% SAVRILIUM (ORE) 905 or 12.43% BORASE (ORE) Q54 — HUD omits "Q" on many patches */
 const COMPOSITION_LINE_WITH_Q_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s+(?:Q)?(\d{1,4})\s*$/i
+  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s*(?:Q)?(\d{1,4})\s*$/i
 
 const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS(?:\s+\d{1,4})?\s*$/i
 
@@ -288,7 +288,8 @@ function extractResistance(
 ): number | null {
   for (let i = 0; i < rows.length; i++) {
     if (!isResRow(rows[i])) continue
-    if (/\bRES\s*[:.]?\s*0(?:\.\d+)?\s*%?/i.test(rows[i])) return 0
+    const fromResRow = parseResistanceFromResRow(rows[i])
+    if (fromResRow != null && isResistanceValue(fromResRow, known)) return fromResRow
     const value = valueFromLabelRow(rows[i], rows, i)
     if (value != null && value >= 0 && isResistanceValue(value, known)) return value
   }
@@ -302,6 +303,33 @@ function extractResistance(
   if (fromCorpus != null && isResistanceValue(fromCorpus, known)) return fromCorpus
 
   return extractStatFromRows(rows, isResRow, (value) => isResistanceValue(value, known))
+}
+
+/** RES line often shows `0%`; OCR misreads the oval zero as 2, 3, or O. */
+function parseResistanceFromResRow(row: string): number | null {
+  const trimmed = row.trim()
+  if (!isResRow(trimmed)) return null
+
+  if (/\bRES(?:ISTANCE)?\b[^0-9\n]{0,16}0(?:\.0+)?\s*%/i.test(trimmed)) return 0
+  if (/\bRES(?:ISTANCE)?\b[^0-9\n]{0,16}[O0D][\s,.]*%/i.test(trimmed)) return 0
+
+  const suffix = trimmed.replace(/^.*?\bRES(?:ISTANCE)?\b\s*[:./\\-]?\s*/i, '').trim()
+  if (!suffix) return null
+
+  const leading = suffix.match(/^([O0D]|\d{1,3})(?:\.\d+)?\s*%?/i)
+  if (leading) {
+    const token = leading[1]
+    if (/^[O0D]$/i.test(token)) return 0
+    const value = Number.parseFloat(token)
+    if (Number.isFinite(value) && value >= 0) {
+      if (value >= 1 && value <= 5 && /%/.test(suffix) && !/\d{2}/.test(suffix.split('%')[0] ?? '')) {
+        if (value === 2 || value === 3) return 0
+      }
+      return value
+    }
+  }
+
+  return null
 }
 
 function extractInstability(
@@ -707,19 +735,41 @@ function leadingPercentFromRowWords(words: RowWord[]): number | null {
   return parseLeadingPercentFromWordTokens(words.map((word) => word.text))
 }
 
+function trailingQualityFromRowText(rowText: string): number | null {
+  const trimmed = rowText.trim()
+  const patterns = [
+    /(?:\((?:ORE|RAW)\)|(?:ORE|RAW))\s*(?:Q)?(\d{1,4})\s*$/i,
+    /\)\s*(?:Q)?(\d{1,4})\s*$/i,
+    /\s+(?:Q)?(\d{1,4})\s*$/,
+  ]
+  for (const pattern of patterns) {
+    const match = trimmed.match(pattern)
+    if (!match) continue
+    const quality = Number.parseInt(match[1], 10)
+    if (isPlausibleScanQuality(quality) && quality > 0) return quality
+  }
+  return null
+}
+
 function trailingQualityFromRowWords(words: RowWord[]): number | null {
   if (!words.length) return null
   const rowMinX = Math.min(...words.map((word) => word.x0))
   const rowMaxX = Math.max(...words.map((word) => word.x1))
-  const qZoneStart = rowMinX + (rowMaxX - rowMinX) * 0.5
+  const qZoneStart = rowMinX + (rowMaxX - rowMinX) * 0.38
 
   const sorted = [...words].sort((a, b) => b.x0 - a.x0)
   for (const word of sorted) {
-    if (word.x0 < qZoneStart) break
-    const match = word.text.match(/^Q?(\d{1,4})$/i)
+    const glued = word.text.match(/(?:\((?:ORE|RAW)\)|(?:ORE|RAW))\s*(?:Q)?(\d{1,4})$/i)
+    if (glued) {
+      const quality = Number.parseInt(glued[1], 10)
+      if (isPlausibleScanQuality(quality) && quality > 0) return quality
+    }
+
+    const match = word.text.match(/^(?:Q)?(\d{1,4})$/i)
     if (!match) continue
     const quality = Number.parseInt(match[1], 10)
-    if (isPlausibleScanQuality(quality) && quality > 0) return quality
+    if (!isPlausibleScanQuality(quality) || quality <= 0) continue
+    if (word.x0 >= qZoneStart || sorted.indexOf(word) === 0) return quality
   }
   return null
 }
@@ -839,7 +889,8 @@ function parseCompositionSpatial(
   const sorted = [...words].sort((a, b) => a.x0 - b.x0)
   const percentEndX = percentEndXFromRowWords(sorted)
 
-  const quality = trailingQualityFromRowWords(words)
+  const quality =
+    trailingQualityFromRowWords(words) ?? trailingQualityFromRowText(rowText)
   const qualityWord = [...words]
     .sort((a, b) => b.x0 - a.x0)
     .find((word) => {
@@ -1001,6 +1052,16 @@ function spatialPercentLooksBetter(existing: number, spatial: number): boolean {
   return Math.abs(spatial - existing) > 1
 }
 
+function recoverQualityFromRawLines(compositionLines: OcrCompositionLine[]): void {
+  for (const line of compositionLines) {
+    if (!line.qualityMissing) continue
+    const quality = trailingQualityFromRowText(line.rawOcrLine)
+    if (quality == null) continue
+    line.quality = quality
+    line.qualityMissing = false
+  }
+}
+
 function enrichCompositionFromSpatial(
   compositionLines: OcrCompositionLine[],
   rowGroups: RowWord[][] | undefined
@@ -1068,6 +1129,57 @@ function parseCompositionFromRowGroups(
   }
 }
 
+function tryAlternateTensPercent(percent: number, rawLine: string): number | null {
+  const alt70 = rawLine.match(/70\.(\d{2})/)
+  if (alt70 && percent >= 75 && percent < 85) {
+    const candidate = Number.parseFloat(`70.${alt70[1]}`)
+    if (isPlausibleCompositionPercent(candidate)) return candidate
+  }
+
+  const alt80 = rawLine.match(/80\.(\d{2})/)
+  if (alt80 && percent >= 85 && percent < 95) {
+    const candidate = Number.parseFloat(`80.${alt80[1]}`)
+    if (isPlausibleCompositionPercent(candidate)) return candidate
+  }
+
+  const alt30 = rawLine.match(/30\.(\d{2})/)
+  if (alt30 && percent >= 3 && percent < 10) {
+    const candidate = Number.parseFloat(`30.${alt30[1]}`)
+    if (isPlausibleCompositionPercent(candidate)) return candidate
+  }
+
+  return null
+}
+
+/** OCR often reads 70.xx as 78.xx on the Low band; fixing it raises auto-derived inert toward HUD. */
+function tryDecadeDownshiftForInertClosure(
+  percent: number,
+  otherValuableTotal: number
+): number | null {
+  const whole = Math.floor(percent)
+  const frac = Math.round((percent - whole) * 100) / 100
+  if (whole < 55 || whole >= 95) return null
+
+  const candidate = whole - 8 + frac
+  if (!isPlausibleCompositionPercent(candidate) || candidate >= percent) return null
+
+  const currentValuable = otherValuableTotal + percent
+  const newValuable = otherValuableTotal + candidate
+  const currentInert = 100 - currentValuable
+  const newInert = 100 - newValuable
+
+  if (
+    newInert > currentInert + 5 &&
+    newInert >= 8 &&
+    newInert <= 60 &&
+    newValuable <= 96
+  ) {
+    return candidate
+  }
+
+  return null
+}
+
 function reconcileMisreadCompositionBands(compositionLines: OcrCompositionLine[]): void {
   const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
 
@@ -1089,12 +1201,28 @@ function reconcileMisreadCompositionBands(compositionLines: OcrCompositionLine[]
     const currentGap = Math.abs(100 - valuableTotal)
 
     const reparsed = reparsePercentFromRawOcrLine(line.rawOcrLine)
-    if (reparsed == null || reparsed >= line.percent) continue
+    if (reparsed != null && reparsed < line.percent) {
+      const newTotal = otherTotal + reparsed
+      const newGap = Math.abs(100 - newTotal)
+      if (newTotal <= 100.5 && (valuableTotal > 100.5 || newGap < currentGap)) {
+        line.percent = reparsed
+        continue
+      }
+    }
 
-    const newTotal = otherTotal + reparsed
-    const newGap = Math.abs(100 - newTotal)
-    if (newTotal <= 100.5 && (valuableTotal > 100.5 || newGap < currentGap)) {
-      line.percent = reparsed
+    const tensFix = tryAlternateTensPercent(line.percent, line.rawOcrLine)
+    if (tensFix != null && tensFix < line.percent) {
+      const newTotal = otherTotal + tensFix
+      const newGap = Math.abs(100 - newTotal)
+      if (newTotal <= 100.5 && newGap < currentGap) {
+        line.percent = tensFix
+        continue
+      }
+    }
+
+    const downshift = tryDecadeDownshiftForInertClosure(line.percent, otherTotal)
+    if (downshift != null) {
+      line.percent = downshift
     }
   }
 }
@@ -1109,6 +1237,7 @@ function parseCompositionRows(
 
   if (rowGroups?.length) {
     parseCompositionFromRowGroups(rowGroups, elementRank, compositionLines)
+    enrichCompositionFromSpatial(compositionLines, rowGroups)
   } else {
     const consumedIndices = new Set<number>()
 
@@ -1133,6 +1262,7 @@ function parseCompositionRows(
   }
 
   reconcileMisreadCompositionBands(compositionLines)
+  recoverQualityFromRawLines(compositionLines)
   flushCompositionWarnings(compositionLines, warnings)
 
   return { lines: compositionLines }
