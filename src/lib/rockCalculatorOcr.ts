@@ -296,40 +296,11 @@ async function runMultiPassOcr(
   const results = await Promise.all(passes.map((psm) => recognizePass(canvas, psm)))
 
   results.sort((a, b) => b.confidence - a.confidence)
-  const maxConfidence = results[0]?.confidence ?? 0
-
-  const primaryLines = (results[0]?.text ?? '')
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-
-  if (primaryLines.length === 0) {
-    return { text: results[0]?.text ?? '', maxConfidence }
+  const best = results[0]
+  return {
+    text: best?.text ?? '',
+    maxConfidence: best?.confidence ?? 0,
   }
-
-  const merged = [...primaryLines]
-  const seen = new Set(primaryLines.map((line) => line.toUpperCase()))
-
-  for (let passIndex = 1; passIndex < results.length; passIndex++) {
-    for (const line of results[passIndex].text.split('\n')) {
-      const trimmed = line.trim()
-      if (!trimmed) continue
-
-      const key = trimmed.toUpperCase()
-      if (seen.has(key)) continue
-
-      const redundant = merged.some((existing) => {
-        const existingKey = existing.toUpperCase()
-        return existingKey.includes(key) || key.includes(existingKey)
-      })
-      if (redundant) continue
-
-      merged.push(trimmed)
-      seen.add(key)
-    }
-  }
-
-  return { text: merged.join('\n'), maxConfidence }
 }
 
 function attachFailureHints(

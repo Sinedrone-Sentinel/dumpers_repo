@@ -42,6 +42,22 @@ const RESULTS_CROP_ERROR =
 const RESULTS_ORE_ERROR =
   'Could not read the ore name under RESULTS — include the ore label directly below the RESULTS line (e.g. BORASE).'
 
+/**
+ * In-game SCAN RESULTS panel order (top → bottom):
+ *   RESULTS → primary ore → MASS → RES → INST → COMP (SCU)
+ * Mineral composition % rows follow COMP; their OCR line order does not matter.
+ *
+ * OCR text line order is not trusted. Each stat above COMP is resolved by scanning
+ * all lines for its label. Composition rows are collected as an unordered set.
+ */
+
+interface ScanPanelStats {
+  mass: number | null
+  resistancePercent: number | null
+  instability: number | null
+  totalScu: number | null
+}
+
 const HUD_LABEL_WORDS = new Set([
   'MASS',
   'RES',
@@ -115,17 +131,8 @@ function hasResultsHeader(lines: string[]): boolean {
 }
 
 function hasScanResultsPanelStructure(lines: string[]): boolean {
-  const stats = extractScanHudStats(lines)
-  if (stats.mass != null && stats.resistancePercent != null && stats.instability != null) {
-    return true
-  }
-
-  const mass = extractLabeledValue(lines, ['MASS'])
-  const resistance =
-    extractLabeledValue(lines, ['RESISTANCE']) ??
-    extractLabeledValue(lines, ['RES'], { wordBoundary: true })
-  const instability = extractInstability(lines)
-  return mass != null && resistance != null && instability != null
+  const panel = extractOrderedScanPanelStats(lines)
+  return panel.mass != null && panel.resistancePercent != null && panel.instability != null
 }
 
 function hasTrailingQuality(line: string): boolean {
@@ -217,106 +224,9 @@ function isCompositionPercentLine(line: string): boolean {
   return /(\d+(?:\.\d+)?)\s*%/.test(line)
 }
 
-function isCompositionSectionLine(line: string): boolean {
-  return isCompositionPercentLine(line)
-}
-
-function firstCompositionPercentLineIndex(lines: string[]): number {
-  for (let i = 0; i < lines.length; i++) {
-    if (isCompositionPercentLine(lines[i])) return i
-  }
-  return lines.length
-}
-
-function firstCompositionLineIndex(lines: string[]): number {
-  return firstCompositionPercentLineIndex(lines)
-}
-
-function isLikelyInstabilityValue(
-  value: number,
-  knownMass: number | null,
-  knownResistance: number | null
-): boolean {
-  if (value < 0 || value > 200) return false
-  if (knownMass != null && value >= Math.min(knownMass * 0.5, 500)) return false
-  if (knownResistance != null && Math.abs(value - knownResistance) < 0.01) return false
-  return true
-}
-
-function extractInstabilityFromHeaderLayout(
-  lines: string[],
-  knownMass: number | null,
-  knownResistance: number | null
-): number | null {
-  const headerEnd = firstCompositionPercentLineIndex(lines)
-
-  for (let i = 0; i < headerEnd; i++) {
-    if (!lineLooksLikeInstLabel(lines[i])) continue
-    const value = readHudStatValue(lines[i], lines, i)
-    if (value != null) return value
-  }
-
-  for (let i = 0; i < headerEnd; i++) {
-    if (!lineLooksLikeResLabel(lines[i])) continue
-
-    for (let j = i + 1; j < headerEnd; j++) {
-      const line = lines[j]
-      if (isCompositionPercentLine(line)) break
-      if (isCompScuHeaderLine(line)) continue
-      if (lineLooksLikeMassLabel(line)) continue
-
-      if (lineLooksLikeInstLabel(line)) {
-        const labeled = readHudStatValue(line, lines, j)
-        if (labeled != null) return labeled
-        continue
-      }
-
-      const lone = readNumericFromLabelLine(line)
-      if (lone != null && isLikelyInstabilityValue(lone, knownMass, knownResistance)) {
-        return lone
-      }
-    }
-  }
-
-  for (let i = 0; i < headerEnd; i++) {
-    const line = lines[i]
-    if (
-      isCompScuHeaderLine(line) ||
-      isCompositionPercentLine(line) ||
-      lineLooksLikeMassLabel(line) ||
-      lineLooksLikeResLabel(line) ||
-      lineLooksLikeInstLabel(line)
-    ) {
-      continue
-    }
-
-    const lone = readNumericFromLabelLine(line)
-    if (lone != null && isLikelyInstabilityValue(lone, knownMass, knownResistance)) {
-      return lone
-    }
-  }
-
-  return null
-}
-
 function normalizeResistancePercent(value: number): number {
   if (value > 0 && value <= 1) return Math.round(value * 100)
   return Math.round(value)
-}
-
-function extractMassFallback(lines: string[]): number | null {
-  const headerEnd = firstCompositionLineIndex(lines)
-  let best: number | null = null
-
-  for (let i = 0; i < headerEnd; i++) {
-    const line = lines[i]
-    if (isCompositionSectionLine(line)) break
-    const value = readNumericFromLabelLine(line)
-    if (value == null || value < 50 || value > 1_000_000) continue
-    if (best == null || value > best) best = value
-  }
-
-  return best
 }
 
 function lineLooksLikeResLabel(line: string): boolean {
@@ -360,64 +270,79 @@ function readHudStatValue(line: string, lines: string[], index: number): number 
   return null
 }
 
-function extractScanHudStats(lines: string[]): {
-  mass: number | null
-  resistancePercent: number | null
-  instability: number | null
-  resLineIndex: number | null
-  resValueLineIndex: number | null
-} {
-  let mass: number | null = null
-  let resistancePercent: number | null = null
-  let instability: number | null = null
-  let resLineIndex: number | null = null
-  let resValueLineIndex: number | null = null
+function extractLabeledStat(
+  lines: string[],
+  matcher: (line: string) => boolean
+): number | null {
+  for (let i = 0; i < lines.length; i++) {
+    if (!matcher(lines[i])) continue
+    const value = readHudStatValue(lines[i], lines, i)
+    if (value != null) return value
+  }
+  return null
+}
 
+function lineHasStatLabel(line: string): boolean {
+  return (
+    lineLooksLikeMassLabel(line) ||
+    lineLooksLikeResLabel(line) ||
+    lineLooksLikeInstLabel(line) ||
+    isCompScuHeaderLine(line) ||
+    /(?:COMP(?:OSITION)?)/i.test(line)
+  )
+}
+
+/** Largest non-composition number in the panel — fallback when MASS label is garbled. */
+function extractMassFallback(lines: string[]): number | null {
+  let best: number | null = null
+
+  for (const line of lines) {
+    if (isCompositionPercentLine(line) || lineHasStatLabel(line)) continue
+    const value = readNumericFromLabelLine(line)
+    if (value == null || value < 50 || value > 1_000_000) continue
+    if (best == null || value > best) best = value
+  }
+
+  return best
+}
+
+function extractCompScu(lines: string[]): number | null {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
+    if (!isCompScuHeaderLine(line) && !/(?:COMP(?:OSITION)?)/i.test(line)) continue
 
-    if (mass == null && lineLooksLikeMassLabel(line)) {
-      mass = readHudStatValue(line, lines, i)
-    }
+    const inline = line.match(/(?:COMP(?:OSITION)?)\s*:?\s*(\d+(?:\.\d+)?)\s*SCU/i)
+    if (inline) return Number.parseFloat(inline[1])
 
-    if (resistancePercent == null && lineLooksLikeResLabel(line)) {
-      resLineIndex = i
-      resistancePercent = readHudStatValue(line, lines, i)
-      if (resistancePercent != null) {
-        if (readNumericFromLabelLine(line) == null) {
-          for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
-            const next = parseNumberToken(lines[j])
-            if (next != null) {
-              resValueLineIndex = j
-              break
-            }
-          }
-        } else {
-          resValueLineIndex = i
-        }
-      }
-    }
-
-    if (instability == null && lineLooksLikeInstLabel(line)) {
-      instability = readHudStatValue(line, lines, i)
-    }
+    const value = readHudStatValue(line, lines, i)
+    if (value != null) return value
   }
 
-  if (mass == null) {
-    mass = extractLabeledValue(lines, ['MASS']) ?? extractMassFallback(lines)
+  for (const line of lines) {
+    const loose = line.match(/(\d+(?:\.\d+)?)\s*SCU/i)
+    if (loose) return Number.parseFloat(loose[1])
   }
 
-  if (instability == null) {
-    instability = extractInstabilityFromHeaderLayout(lines, mass, resistancePercent)
-  }
+  return null
+}
 
-  if (resistancePercent == null) {
-    resistancePercent =
+/** Resolve MASS → RES → INST → COMP by label across all OCR lines (order-independent). */
+function extractOrderedScanPanelStats(lines: string[]): ScanPanelStats {
+  return {
+    mass:
+      extractLabeledStat(lines, lineLooksLikeMassLabel) ??
+      extractLabeledValue(lines, ['MASS']) ??
+      extractMassFallback(lines),
+    resistancePercent:
+      extractLabeledStat(lines, lineLooksLikeResLabel) ??
       extractLabeledValue(lines, ['RESISTANCE']) ??
-      extractLabeledValue(lines, ['RES'], { wordBoundary: true })
+      extractLabeledValue(lines, ['RES'], { wordBoundary: true }),
+    instability:
+      extractLabeledStat(lines, lineLooksLikeInstLabel) ??
+      extractLabeledValue(lines, ['INSTABILITY']) ??
+      extractLabeledValue(lines, ['INST'], { wordBoundary: true }),
+    totalScu: extractCompScu(lines),
   }
-
-  return { mass, resistancePercent, instability, resLineIndex, resValueLineIndex }
 }
 
 function extractLabeledValue(
@@ -446,55 +371,8 @@ function extractLabeledValue(
   return null
 }
 
-function extractInstability(lines: string[], hudStats?: ReturnType<typeof extractScanHudStats>): number | null {
-  if (hudStats?.instability != null) return hudStats.instability
-
-  const stats = hudStats ?? extractScanHudStats(lines)
-  if (stats.instability != null) return stats.instability
-
-  const labeled =
-    extractLabeledValue(lines, ['INSTABILITY']) ??
-    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
-  if (labeled != null) return labeled
-
-  for (let i = 0; i < lines.length; i++) {
-    if (!lineLooksLikeInstLabel(lines[i])) continue
-    const inline = readHudStatValue(lines[i], lines, i)
-    if (inline != null) return inline
-  }
-
-  return extractInstabilityFromHeaderLayout(
-    lines,
-    hudStats?.mass ?? null,
-    hudStats?.resistancePercent ?? null
-  )
-}
-
 function extractTotalScu(lines: string[]): number | null {
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-
-    const inline = line.match(/(?:COMP(?:OSITION)?)\s*:?\s*(\d+(?:\.\d+)?)\s*SCU/i)
-    if (inline) return Number.parseFloat(inline[1])
-
-    if (/(?:COMP(?:OSITION)?)/i.test(line)) {
-      const valueOnLabelLine = line.match(/(?:COMP(?:OSITION)?)\s*:?\s*(\d+(?:\.\d+)?)/i)
-      if (valueOnLabelLine) return Number.parseFloat(valueOnLabelLine[1])
-
-      for (let j = i; j < Math.min(i + 3, lines.length); j++) {
-        const candidate = lines[j]
-        const scuMatch = candidate.match(/(\d+(?:\.\d+)?)\s*SCU/i)
-        if (scuMatch) return Number.parseFloat(scuMatch[1])
-      }
-    }
-  }
-
-  for (const line of lines) {
-    const loose = line.match(/(\d+(?:\.\d+)?)\s*SCU/i)
-    if (loose) return Number.parseFloat(loose[1])
-  }
-
-  return null
+  return extractCompScu(lines)
 }
 
 function pushOreLine(
@@ -611,7 +489,7 @@ function parseCompositionLines(
   for (let i = 0; i < lines.length; i++) {
     if (consumedLineIndices.has(i)) continue
     const line = lines[i].trim()
-    if (!line || !/%/.test(line)) continue
+    if (!line || !isCompositionPercentLine(line)) continue
 
     const parsed = parseCompositionLine(
       line,
@@ -738,11 +616,11 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: RESULTS_ORE_ERROR }
   }
 
-  const hudStats = extractScanHudStats(lines)
-  const mass = hudStats.mass
-  const resistancePercent = hudStats.resistancePercent
-  const instability = extractInstability(lines, hudStats)
-  const totalScu = extractTotalScu(lines)
+  const panel = extractOrderedScanPanelStats(lines)
+  const mass = panel.mass
+  const resistancePercent = panel.resistancePercent
+  const instability = panel.instability
+  const totalScu = panel.totalScu
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
   assignBandRanksByPercent(compositionLines)
