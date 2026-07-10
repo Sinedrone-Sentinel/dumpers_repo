@@ -112,10 +112,10 @@ function SmartCrackerPanel({
   onMoleSoloMiningChange: (solo: boolean) => void
   showSoloToggle: boolean
 }) {
-  const { crackGadget, qualityGadget, moleStrategy, slowCrack } = result
-  const hasGadget = crackGadget != null || qualityGadget != null
-  const activeMoleHeads =
-    moleStrategy?.assignments.filter((head) => head.role !== 'idle') ?? []
+  const { gadgetSuggestions, moleStrategy, slowCrack } = result
+  const hasGadget = gadgetSuggestions.length > 0
+  const recommendedGadget = gadgetSuggestions.find((suggestion) => suggestion.recommended)
+  const alternateGadgets = gadgetSuggestions.filter((suggestion) => !suggestion.recommended)
 
   if (!hasGadget && !moleStrategy && !showSoloToggle && !slowCrack) return null
 
@@ -240,29 +240,62 @@ function SmartCrackerPanel({
         <div
           className={`space-y-2 ${moleStrategy ? 'pt-2 border-t border-slate-700/60' : ''}`}
         >
-          <p className="text-[10px] uppercase tracking-wide text-slate-500">Final gadget fit</p>
-          <p className="text-[11px] text-slate-600">
-            Based on {moleStrategy ? 'the head plan above' : 'your loadout vs this rock'}.
+          <p className="text-[10px] uppercase tracking-wide text-slate-500">Gadget options</p>
+          <p className="text-[11px] text-slate-600 leading-snug">
+            Only one gadget per rock — benefits do not stack. Pick the job you need most, or use an
+            alternate if you do not have the recommended one.
           </p>
 
-          {crackGadget ? (
+          {recommendedGadget ? (
             <div className="rounded-md border border-amber-900/50 bg-amber-950/20 p-2 space-y-1">
               <p className="text-xs font-medium text-amber-300">
-                Try {crackGadget.gadget.displayName}
+                Recommended — {recommendedGadget.gadget.displayName}
+                <span className="text-slate-500 font-normal">
+                  {' '}
+                  ·{' '}
+                  {recommendedGadget.role === 'resistance'
+                    ? 'fracture power'
+                    : recommendedGadget.role === 'instability'
+                      ? 'instability control'
+                      : 'charge window'}
+                </span>
               </p>
-              <p className="text-[11px] text-slate-400 leading-snug">{crackGadget.reason}</p>
-              <p className="text-[11px] font-mono tabular-nums text-slate-500">
-                Required {crackGadget.requiredPower.toLocaleString()} MW with gadget
-              </p>
+              <p className="text-[11px] text-slate-400 leading-snug">{recommendedGadget.reason}</p>
+              {recommendedGadget.requiredPower != null ? (
+                <p className="text-[11px] font-mono tabular-nums text-slate-500">
+                  Required {recommendedGadget.requiredPower.toLocaleString()} MW with this gadget
+                </p>
+              ) : null}
             </div>
           ) : null}
 
-          {qualityGadget ? (
-            <div className="rounded-md border border-cyan-900/40 bg-cyan-950/15 p-2 space-y-1">
-              <p className="text-xs font-medium text-cyan-300">
-                Consider {qualityGadget.gadget.displayName}
-              </p>
-              <p className="text-[11px] text-slate-400 leading-snug">{qualityGadget.reason}</p>
+          {alternateGadgets.length > 0 ? (
+            <div className="space-y-1.5">
+              {alternateGadgets.map((suggestion) => (
+                <div
+                  key={suggestion.gadget.name}
+                  className="rounded-md border border-slate-700/70 bg-slate-900/40 p-2 space-y-1"
+                >
+                  <p className="text-xs font-medium text-slate-300">
+                    Also consider — {suggestion.gadget.displayName}
+                    <span className="text-slate-500 font-normal">
+                      {' '}
+                      ·{' '}
+                      {suggestion.role === 'resistance'
+                        ? 'fracture power'
+                        : suggestion.role === 'instability'
+                          ? 'instability control'
+                          : 'charge window'}
+                    </span>
+                  </p>
+                  <p className="text-[11px] text-slate-400 leading-snug">{suggestion.reason}</p>
+                  {suggestion.requiredPower != null ? (
+                    <p className="text-[11px] font-mono tabular-nums text-slate-500">
+                      Required {suggestion.requiredPower.toLocaleString()} MW with this gadget
+                    </p>
+                  ) : null}
+                </div>
+              ))}
             </div>
           ) : null}
         </div>
