@@ -4,11 +4,9 @@ import { isInertElement, oreResourceKeyFromElementName } from './rockCalculator'
 import { getDefaultBandQuality, resolveLedgerQuality } from './qualityBands'
 import {
   allDecimalsInRow,
-  allIntegersInRow,
-  correctCompositionPercent,
-  inferDecimalPercentFromRaw,
-  pickBestMassCandidate,
-  rebalanceCompositionPercents,
+  extractMassFromBlock,
+  parseCompositionLeadingPercent,
+  parseLeadingPercentFromWordTokens,
 } from './rockCalculatorOcrCorrect'
 
 // ---------------------------------------------------------------------------
@@ -240,32 +238,16 @@ function firstMatchingNumber(corpus: string, patterns: RegExp[]): number | null 
 }
 
 function extractMass(corpus: string, rows: string[]): number | null {
-  const massCandidates: number[] = []
-
   for (let i = 0; i < rows.length; i++) {
     if (!isMassRow(rows[i])) continue
 
     const block = [rows[i], rows[i + 1], rows[i + 2]].filter(Boolean).join(' ')
-    const fiveDigit = block.match(/\b(\d{5})\b/)
-    if (fiveDigit) {
-      const value = Number.parseInt(fiveDigit[1], 10)
-      if (value >= 1_000 && value <= 250_000) return value
-    }
-
-    massCandidates.push(...allIntegersInRow(rows[i]))
+    const fromBlock = extractMassFromBlock(block)
+    if (fromBlock != null) return fromBlock
 
     const inline = valueFromLabelRow(rows[i], rows, i)
-    if (inline != null) massCandidates.push(Math.round(inline))
-
-    const next = rows[i + 1]?.trim()
-    if (next && /^\d{3,6}$/.test(next)) {
-      massCandidates.push(Number.parseInt(next, 10))
-    }
-    if (next) massCandidates.push(...allIntegersInRow(next))
+    if (inline != null && inline >= 1_000) return Math.round(inline)
   }
-
-  const fromMassRows = pickBestMassCandidate(massCandidates)
-  if (fromMassRows != null) return fromMassRows
 
   const fromCorpus = firstMatchingNumber(corpus, [
     /\bMASS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
@@ -666,14 +648,6 @@ function pushOreLine(
 ): void {
   if (isInertElement(elementName)) return
 
-  const correctedPercent = correctCompositionPercent(percent, rawOcrLine)
-  if (Math.abs(correctedPercent - percent) > 0.05) {
-    warnings.push(
-      `${elementName} — OCR read ${percent}% but adjusted to ${correctedPercent}% (missing decimal).`
-    )
-  }
-  percent = correctedPercent
-
   const duplicate = compositionLines.some(
     (line) =>
       line.elementName === elementName && Math.abs(line.percent - percent) < 0.11
@@ -703,24 +677,7 @@ function isPlausibleCompositionPercent(value: number): boolean {
 }
 
 function leadingPercentFromRowWords(words: RowWord[]): number | null {
-  const sorted = [...words].sort((a, b) => a.x0 - b.x0)
-  for (let i = 0; i < sorted.length; i++) {
-    const token = sorted[i].text
-    const glued = token.match(/^(\d+(?:\.\d+)?)\s*%$/)
-    if (glued) return Number.parseFloat(glued[1])
-
-    const bare = token.match(/^(\d+(?:\.\d+)?)$/)
-    if (bare && i + 1 < sorted.length && sorted[i + 1].text === '%') {
-      return Number.parseFloat(bare[1])
-    }
-  }
-
-  const head = sorted
-    .slice(0, 3)
-    .map((word) => word.text)
-    .join('')
-  const headMatch = head.match(/(\d+(?:\.\d+)?)\s*%/)
-  return headMatch ? Number.parseFloat(headMatch[1]) : null
+  return parseLeadingPercentFromWordTokens(words.map((word) => word.text))
 }
 
 function trailingQualityFromRowWords(words: RowWord[]): number | null {
@@ -829,8 +786,17 @@ function parseCompositionRow(
   rowIndex: number,
   consumedIndices: Set<number>
 ): { kind: 'inert'; percent: number } | null {
-  const inertMatch = row.match(INERT_LINE_RE)
-  if (inertMatch) return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
+  if (/\bINERT\b/i.test(row)) {
+    const percent =
+      parseCompositionLeadingPercent(row) ??
+      (() => {
+        const inertMatch = row.match(INERT_LINE_RE)
+        return inertMatch ? Number.parseFloat(inertMatch[1]) : null
+      })()
+    if (percent != null && Number.isFinite(percent)) {
+      return { kind: 'inert', percent }
+    }
+  }
 
   const colon = row.match(COLON_COMPOSITION_LINE_RE)
   if (colon) {
@@ -844,11 +810,10 @@ function parseCompositionRow(
 
   const strict = row.match(COMPOSITION_LINE_WITH_Q_RE)
   if (strict) {
-    let percent = Number.parseFloat(strict[1])
+    const percent =
+      parseCompositionLeadingPercent(row) ?? Number.parseFloat(strict[1])
     const elementName = normalizeElementName(strict[2])
     const quality = Number.parseInt(strict[3], 10)
-    const inferred = inferDecimalPercentFromRaw(row)
-    if (inferred != null) percent = inferred
     if (
       !Number.isFinite(percent) ||
       !elementName ||
@@ -863,9 +828,8 @@ function parseCompositionRow(
 
   const percentOnly = row.match(COMPOSITION_PERCENT_LINE_RE)
   if (percentOnly && /%/.test(row)) {
-    let percent = Number.parseFloat(percentOnly[1])
-    const inferred = inferDecimalPercentFromRaw(row)
-    if (inferred != null) percent = inferred
+    const percent =
+      parseCompositionLeadingPercent(row) ?? Number.parseFloat(percentOnly[1])
     let elementRaw = percentOnly[2].trim()
     let inlineQuality: number | null = null
 
@@ -917,7 +881,7 @@ function parseCompositionRow(
   const loose = row.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+(?:Q)?(\d{1,4})\s*$/i)
   if (!loose) return null
 
-  const percent = Number.parseFloat(loose[1])
+  const percent = parseCompositionLeadingPercent(row) ?? Number.parseFloat(loose[1])
   const elementName = normalizeElementName(loose[2])
   const quality = Number.parseInt(loose[3], 10)
   if (
@@ -1112,13 +1076,6 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
     rows.rowGroups
   )
   assignBandRanksByPercent(compositionLines)
-
-  if (rebalanceCompositionPercents(compositionLines, isInertElement, inertPercent)) {
-    warnings.push(
-      'Some composition percentages were auto-corrected — verify rows if anything looks off.'
-    )
-    assignBandRanksByPercent(compositionLines)
-  }
 
   const resolvedPrimary = resolvePrimaryOreName(rows.rows, compositionLines)
   if (!resolvedPrimary) {

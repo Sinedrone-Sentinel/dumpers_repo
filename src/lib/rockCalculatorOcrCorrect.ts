@@ -1,162 +1,90 @@
 /**
- * Heuristics for HUD OCR misreads: dropped decimal points, glued digits, inflated trace %.
- * See Mole RESULTS lines like `12.80%` → `1280%` or `2.80%` → `280%`.
+ * HUD percent parsing — OCR often splits `2.00%` into `2`, `00`, `%` (no period token).
+ * We must not glue that into `200%`.
  */
 
-export function inferDecimalPercentFromRaw(rawLine: string): number | null {
-  const row = rawLine.trim()
-  if (!row) return null
+function roundPercent(value: number): number {
+  return Math.round(value * 100) / 100
+}
 
-  const explicit = row.match(/(\d+\.\d{1,2})\s*%/)
+/** Parse the leading composition % from a RESULTS panel line. */
+export function parseCompositionLeadingPercent(row: string): number | null {
+  const trimmed = row.trim()
+  if (!trimmed) return null
+
+  const explicit = trimmed.match(/^(\d+\.\d{1,2})\s*%/)
   if (explicit) {
     const value = Number.parseFloat(explicit[1])
-    if (value > 0 && value <= 100) return value
+    if (value > 0 && value <= 100) return roundPercent(value)
   }
 
-  const spaced = row.match(/(\d)\s+(\d{2})\s*%/)
-  if (spaced) {
-    const value = Number.parseFloat(`${spaced[1]}.${spaced[2]}`)
-    if (value > 0 && value <= 100) return value
+  const spacedCents = trimmed.match(/^(\d{1,2})\s+(\d{2})\s*%/)
+  if (spacedCents) {
+    const value = Number.parseFloat(`${spacedCents[1]}.${spacedCents[2]}`)
+    if (value > 0 && value <= 100) return roundPercent(value)
   }
 
-  const gluedAtStart = row.match(/^(\d{3,4})\s*%/)
-  if (gluedAtStart) {
-    const digits = gluedAtStart[1]
-    if (digits.length === 4) {
-      const value = Number.parseFloat(`${digits.slice(0, 2)}.${digits.slice(2)}`)
-      if (value > 0 && value <= 100) return value
-    }
+  const gluedCents = trimmed.match(/^(\d{3,4})\s*%/)
+  if (gluedCents) {
+    const digits = gluedCents[1]
     if (digits.length === 3) {
       const value = Number.parseFloat(`${digits[0]}.${digits.slice(1)}`)
-      if (value > 0 && value <= 100) return value
+      if (value > 0 && value <= 100) return roundPercent(value)
     }
+    if (digits.length === 4) {
+      const value = Number.parseFloat(`${digits.slice(0, 2)}.${digits.slice(2)}`)
+      if (value > 0 && value <= 100) return roundPercent(value)
+    }
+  }
+
+  const whole = trimmed.match(/^(\d{1,2})\s*%/)
+  if (whole) {
+    const value = Number.parseFloat(whole[1])
+    if (value > 0 && value <= 100) return roundPercent(value)
   }
 
   return null
 }
 
-export function correctCompositionPercent(percent: number, rawLine: string): number {
-  const inferred = inferDecimalPercentFromRaw(rawLine)
-  if (inferred != null) {
-    if (Math.abs(inferred - percent) > 0.05) return inferred
-    return percent
+export function parseLeadingPercentFromWordTokens(tokens: string[]): number | null {
+  if (!tokens.length) return null
+
+  const joinedLine = tokens.slice(0, 8).join(' ')
+  const fromLine = parseCompositionLeadingPercent(joinedLine)
+  if (fromLine != null) return fromLine
+
+  const compact = tokens.slice(0, 6).join('')
+  const compactExplicit = compact.match(/^(\d+\.\d{1,2})%/)
+  if (compactExplicit) {
+    const value = Number.parseFloat(compactExplicit[1])
+    if (value > 0 && value <= 100) return roundPercent(value)
   }
 
-  if (percent > 100 && percent < 10_000) {
-    const divided = Math.round((percent / 100) * 100) / 100
-    if (divided > 0 && divided <= 100) return divided
-  }
+  for (let i = 0; i < Math.min(tokens.length, 5); i++) {
+    const token = tokens[i]
+    const glued = token.match(/^(\d+\.\d{1,2})%$/)
+    if (glued) {
+      const value = Number.parseFloat(glued[1])
+      if (value > 0 && value <= 100) return roundPercent(value)
+    }
 
-  if (percent >= 100 && percent < 1000) {
-    const asDecimal = Number.parseFloat(`${Math.floor(percent / 100)}.${String(percent % 100).padStart(2, '0')}`)
-    if (asDecimal > 0 && asDecimal <= 60) return asDecimal
-  }
+    if (/^\d{1,2}$/.test(token) && tokens[i + 1] === '%') {
+      const value = Number.parseFloat(token)
+      if (value > 0 && value <= 100) return roundPercent(value)
+    }
 
-  return percent
-}
-
-export function isSuspiciousTracePercent(percent: number, elementBandCount: number): boolean {
-  if (elementBandCount >= 2) return false
-  return percent > 15
-}
-
-export function decimalCandidatesFromGluedPercent(percent: number): number[] {
-  if (!Number.isFinite(percent) || percent < 100 || percent >= 10_000) return []
-  const digits = String(Math.round(percent))
-  const candidates: number[] = []
-
-  if (digits.length === 3) {
-    candidates.push(Number.parseFloat(`${digits[0]}.${digits.slice(1)}`))
-  }
-  if (digits.length === 4) {
-    candidates.push(Number.parseFloat(`${digits.slice(0, 2)}.${digits.slice(2)}`))
-  }
-
-  return candidates.filter((value) => value > 0 && value <= 100)
-}
-
-/** Pick alternate % values that bring the valuable sum closest to the expected total. */
-export function rebalanceCompositionPercents(
-  lines: Array<{ elementName: string; percent: number; rawOcrLine: string }>,
-  isInert: (name: string) => boolean,
-  inertPercent: number | null = null
-): boolean {
-  const valuable = lines.filter((line) => !isInert(line.elementName))
-  const bandCounts = new Map<string, number>()
-  for (const line of valuable) {
-    bandCounts.set(line.elementName, (bandCounts.get(line.elementName) ?? 0) + 1)
-  }
-
-  const targetValuable =
-    inertPercent != null && inertPercent >= 0 && inertPercent <= 100
-      ? Math.round((100 - inertPercent) * 100) / 100
-      : 100
-
-  const total = () => valuable.reduce((sum, line) => sum + line.percent, 0)
-  if (Math.abs(total() - targetValuable) <= 1.5) return false
-
-  let changed = false
-
-  for (const line of valuable) {
-    const inferred = inferDecimalPercentFromRaw(line.rawOcrLine)
-    if (inferred != null && Math.abs(inferred - line.percent) > 0.05) {
-      line.percent = inferred
-      changed = true
+    if (/^\d{1,2}$/.test(token) && /^\d{2}$/.test(tokens[i + 1] ?? '') && tokens[i + 2] === '%') {
+      const value = Number.parseFloat(`${token}.${tokens[i + 1]}`)
+      if (value > 0 && value <= 100) return roundPercent(value)
     }
   }
 
-  if (Math.abs(total() - targetValuable) <= 1.5) return changed
-
-  for (const line of valuable) {
-    if (line.percent <= 100) continue
-    const fixed = correctCompositionPercent(line.percent, line.rawOcrLine)
-    if (Math.abs(fixed - line.percent) > 0.05) {
-      line.percent = fixed
-      changed = true
-    }
+  const gluedCents = compact.match(/^(\d{3,4})%/)
+  if (gluedCents) {
+    return parseCompositionLeadingPercent(`${gluedCents[1]}%`)
   }
 
-  if (Math.abs(total() - targetValuable) <= 1.5) return changed
-
-  for (const line of valuable) {
-    const bands = bandCounts.get(line.elementName) ?? 1
-    if (!isSuspiciousTracePercent(line.percent, bands)) continue
-
-    const glued = decimalCandidatesFromGluedPercent(line.percent)
-    const candidates = [
-      line.percent,
-      ...glued,
-      line.percent / 100,
-      ...glued.map((value) => Number.parseFloat(value.toFixed(2))),
-    ]
-    if (line.percent >= 180 && line.percent <= 299) {
-      candidates.push(Number.parseFloat(`${Math.floor(line.percent / 100)}.80`))
-    }
-
-    const unique = candidates.filter(
-      (value, index, array) => value > 0 && value <= 100 && array.indexOf(value) === index
-    )
-
-    let best = line.percent
-    let bestTotalDelta = Math.abs(total() - targetValuable)
-    for (const candidate of unique) {
-      const old = line.percent
-      line.percent = Math.round(candidate * 100) / 100
-      const delta = Math.abs(total() - targetValuable)
-      if (delta < bestTotalDelta) {
-        bestTotalDelta = delta
-        best = line.percent
-      }
-      line.percent = old
-    }
-
-    if (Math.abs(best - line.percent) > 0.05) {
-      line.percent = best
-      changed = true
-    }
-  }
-
-  return changed
+  return null
 }
 
 export function allIntegersInRow(row: string): number[] {
@@ -169,6 +97,23 @@ export function pickBestMassCandidate(candidates: number[]): number | null {
   const plausible = candidates.filter((value) => value >= 1_000 && value <= 250_000)
   if (!plausible.length) return null
   return plausible.sort((a, b) => b - a)[0]
+}
+
+/** Join split OCR mass like `15 001` or prefer a 5-digit read on the MASS block. */
+export function extractMassFromBlock(block: string): number | null {
+  const fiveDigit = block.match(/\b(\d{5})\b/)
+  if (fiveDigit) {
+    const value = Number.parseInt(fiveDigit[1], 10)
+    if (value >= 1_000 && value <= 250_000) return value
+  }
+
+  const spaced = block.match(/\b(\d{2,3})\s+(\d{3})\b/)
+  if (spaced) {
+    const value = Number.parseInt(`${spaced[1]}${spaced[2]}`, 10)
+    if (value >= 1_000 && value <= 250_000) return value
+  }
+
+  return pickBestMassCandidate(allIntegersInRow(block))
 }
 
 export function allDecimalsInRow(row: string): number[] {

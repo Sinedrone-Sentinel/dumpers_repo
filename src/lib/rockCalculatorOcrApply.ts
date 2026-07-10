@@ -57,6 +57,16 @@ function resolveLineQuality(line: OcrCompositionLine): number {
   )
 }
 
+function formatScanPercent(line: OcrCompositionLine): string {
+  if (/\d+\.\d{2}\s*%/.test(line.rawOcrLine)) {
+    return line.percent.toFixed(2)
+  }
+  if (Math.abs(line.percent - Math.round(line.percent)) > 0.001) {
+    return String(line.percent)
+  }
+  return String(line.percent)
+}
+
 export function buildOcrCalculatorApply(scan: RockScanOcrResult): {
   calculatorParts: CompositionPart[]
   percentBySlot: Record<string, string>
@@ -70,7 +80,7 @@ export function buildOcrCalculatorApply(scan: RockScanOcrResult): {
   valuable.forEach((line, index) => {
     const part = calculatorParts[index]
     const key = compositionSlotKey(index, part)
-    percentBySlot[key] = String(line.percent)
+    percentBySlot[key] = formatScanPercent(line)
     qualityBySlot[key] = String(resolveLineQuality(line))
   })
 
