@@ -27,13 +27,14 @@ export type RockScanOcrParseResult =
   | { ok: true; data: RockScanOcrResult }
   | { ok: false; error: string; hints?: string[] }
 
-/** e.g. 12.43% BERYLLIUM (ORE) Q42 or 12.43% BERYLLIUM (ORE) 905 */
-const COMPOSITION_LINE_RE =
-  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\(ORE\))?\s+Q?(\d+)\s*$/i
+/** e.g. 12.43% BERYLLIUM (ORE) Q42 — trailing SCU counts (3+ digits) are handled separately */
+const COMPOSITION_LINE_WITH_Q_RE =
+  /(\d+(?:\.\d+)?)\s*%?\s+([A-Za-z][A-Za-z0-9\s]*?)(?:\s*\((?:ORE|RAW)\))?\s+Q?(\d{1,2})\s*$/i
 
 const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
 
-const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+)/i
+const COMPOSITION_PERCENT_LINE_RE =
+  /(\d+(?:\.\d+)?)\s*%?\s+(.+?)(?:\s+\d{3,})?\s*$/i
 
 const RESULTS_CROP_ERROR =
   'Could not read the RESULTS header — crop the entire SCAN RESULTS panel, including the word "RESULTS" and the ore name directly below it.'
@@ -48,6 +49,7 @@ const HUD_LABEL_WORDS = new Set([
   'INST',
   'INSTABILITY',
   'COMPOSITION',
+  'COMP',
   'DISTANCE',
   'LOCK',
   'TARG',
@@ -62,6 +64,33 @@ function normalizeOcrLetters(line: string): string {
   return line.toUpperCase().replace(/[^A-Z]/g, '')
 }
 
+function ocrHeaderLetters(line: string): string {
+  return normalizeOcrLetters(line)
+    .replace(/5/g, 'S')
+    .replace(/0/g, 'O')
+    .replace(/1/g, 'I')
+    .replace(/8/g, 'B')
+}
+
+function levenshteinDistance(a: string, b: string): number {
+  if (a === b) return 0
+  if (!a.length) return b.length
+  if (!b.length) return a.length
+
+  const prev = Array.from({ length: b.length + 1 }, (_, i) => i)
+  for (let i = 0; i < a.length; i++) {
+    let prevDiag = prev[0]
+    prev[0] = i + 1
+    for (let j = 0; j < b.length; j++) {
+      const temp = prev[j + 1]
+      const cost = a[i] === b[j] ? 0 : 1
+      prev[j + 1] = Math.min(prev[j + 1] + 1, prev[j] + 1, prevDiag + cost)
+      prevDiag = temp
+    }
+  }
+  return prev[b.length]
+}
+
 function lineLooksLikeResultsHeader(line: string): boolean {
   const trimmed = line.trim()
   if (!trimmed) return false
@@ -71,11 +100,29 @@ function lineLooksLikeResultsHeader(line: string): boolean {
   if (!letters) return false
   if (letters.includes('RESULTS') || letters.startsWith('RESULT')) return true
   if (/^RESU.*LTS/.test(letters) || /^RE.*SULTS/.test(letters)) return true
+
+  const headerLetters = ocrHeaderLetters(trimmed)
+  if (headerLetters.length >= 5 && headerLetters.length <= 14) {
+    if (levenshteinDistance(headerLetters, 'RESULTS') <= 2) return true
+    if (levenshteinDistance(headerLetters, 'RESULT') <= 1) return true
+  }
+
   return false
 }
 
 function hasResultsHeader(lines: string[]): boolean {
   return lines.some((line) => lineLooksLikeResultsHeader(line))
+}
+
+function hasScanResultsPanelStructure(lines: string[]): boolean {
+  const mass = extractLabeledValue(lines, ['MASS'])
+  const resistance =
+    extractLabeledValue(lines, ['RESISTANCE']) ??
+    extractLabeledValue(lines, ['RES'], { wordBoundary: true })
+  const instability =
+    extractLabeledValue(lines, ['INSTABILITY']) ??
+    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
+  return mass != null && resistance != null && instability != null
 }
 
 function hasTrailingQuality(line: string): boolean {
@@ -163,11 +210,11 @@ function extractTotalScu(lines: string[]): number | null {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
 
-    const inline = line.match(/COMPOSITION\s*:?\s*(\d+(?:\.\d+)?)\s*SCU/i)
+    const inline = line.match(/(?:COMP(?:OSITION)?)\s*:?\s*(\d+(?:\.\d+)?)\s*SCU/i)
     if (inline) return Number.parseFloat(inline[1])
 
-    if (/COMPOSITION/i.test(line)) {
-      const valueOnLabelLine = line.match(/COMPOSITION\s*:?\s*(\d+(?:\.\d+)?)/i)
+    if (/(?:COMP(?:OSITION)?)/i.test(line)) {
+      const valueOnLabelLine = line.match(/(?:COMP(?:OSITION)?)\s*:?\s*(\d+(?:\.\d+)?)/i)
       if (valueOnLabelLine) return Number.parseFloat(valueOnLabelLine[1])
 
       for (let j = i; j < Math.min(i + 3, lines.length); j++) {
@@ -228,7 +275,7 @@ function parseCompositionLine(
     return { kind: 'inert', percent: Number.parseFloat(inertMatch[1]) }
   }
 
-  const strict = line.match(COMPOSITION_LINE_RE)
+  const strict = line.match(COMPOSITION_LINE_WITH_Q_RE)
   if (strict) {
     const percent = Number.parseFloat(strict[1])
     const elementName = normalizeElementName(strict[2], warnings)
@@ -240,34 +287,36 @@ function parseCompositionLine(
     return null
   }
 
-  if (!hasTrailingQuality(line)) {
-    const percentOnly = line.match(COMPOSITION_PERCENT_LINE_RE)
-    if (percentOnly) {
-      const percent = Number.parseFloat(percentOnly[1])
-      const elementName = normalizeElementName(percentOnly[2], warnings)
-      if (!Number.isFinite(percent) || !elementName) return null
-      if (isInertElement(elementName)) return { kind: 'inert', percent }
+  const percentOnly = line.match(COMPOSITION_PERCENT_LINE_RE)
+  if (percentOnly && /%/.test(line)) {
+    const percent = Number.parseFloat(percentOnly[1])
+    const elementName = normalizeElementName(percentOnly[2], warnings)
+    if (!Number.isFinite(percent) || !elementName) return null
+    if (isInertElement(elementName)) return { kind: 'inert', percent }
 
-      const nextIndex = lineIndex + 1
-      const orphanQuality = readOrphanQualityLine(allLines[nextIndex])
-      if (orphanQuality != null) {
-        consumedLineIndices.add(nextIndex)
-        pushOreLine(
-          elementName,
-          percent,
-          orphanQuality,
-          false,
-          `${line.trim()} / ${allLines[nextIndex].trim()}`,
-          elementRank,
-          compositionLines,
-          warnings
-        )
-        return null
-      }
-
-      pushOreLine(elementName, percent, null, true, line, elementRank, compositionLines, warnings)
+    const nextIndex = lineIndex + 1
+    const orphanQuality = readOrphanQualityLine(allLines[nextIndex])
+    if (orphanQuality != null) {
+      consumedLineIndices.add(nextIndex)
+      pushOreLine(
+        elementName,
+        percent,
+        orphanQuality,
+        false,
+        `${line.trim()} / ${allLines[nextIndex].trim()}`,
+        elementRank,
+        compositionLines,
+        warnings
+      )
       return null
     }
+
+    pushOreLine(elementName, percent, null, true, line, elementRank, compositionLines, warnings)
+    return null
+  }
+
+  if (!hasTrailingQuality(line)) {
+    return null
   }
 
   const loose = line.match(/(\d+(?:\.\d+)?)\s*%?\s+(.+?)\s+Q?(\d+)/i)
@@ -357,6 +406,25 @@ function parseOreNameFromResultsLine(raw: string, warnings: string[]): string | 
   return null
 }
 
+function parsePrimaryOreAboveMass(lines: string[], warnings: string[]): string | null {
+  let massIndex = -1
+  for (let i = 0; i < lines.length; i++) {
+    if (/\bMASS\b/i.test(lines[i])) {
+      massIndex = i
+      break
+    }
+  }
+  if (massIndex < 0) return null
+
+  for (let i = 0; i < massIndex; i++) {
+    if (lineLooksLikeResultsHeader(lines[i])) continue
+    const oreName = parseOreNameFromResultsLine(lines[i], warnings)
+    if (oreName) return oreName
+  }
+
+  return null
+}
+
 function parseResultsHeaderOre(lines: string[], warnings: string[]): string | null {
   for (let i = 0; i < lines.length; i++) {
     if (!lineLooksLikeResultsHeader(lines[i])) continue
@@ -392,13 +460,16 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' }
   }
 
-  if (!hasResultsHeader(lines)) {
+  if (!hasResultsHeader(lines) && !hasScanResultsPanelStructure(lines)) {
     return { ok: false, error: RESULTS_CROP_ERROR }
   }
 
   const warnings: string[] = []
 
-  const resultsHeaderOre = parseResultsHeaderOre(lines, warnings)
+  let resultsHeaderOre = parseResultsHeaderOre(lines, warnings)
+  if (!resultsHeaderOre && hasScanResultsPanelStructure(lines)) {
+    resultsHeaderOre = parsePrimaryOreAboveMass(lines, warnings)
+  }
   if (!resultsHeaderOre) {
     return { ok: false, error: RESULTS_ORE_ERROR }
   }

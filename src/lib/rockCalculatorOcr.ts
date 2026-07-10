@@ -17,21 +17,27 @@ export interface NormalizedCropRect {
 }
 
 const OCR_PREPROCESS_SCALES = [2, 3, 4] as const
+const LUMINANCE_THRESHOLD = 128
 
-let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
-
-export async function terminateOcrWorker(): Promise<void> {
-  if (!activeWorker) return
-  await activeWorker.terminate()
-  activeWorker = null
+function applyBinaryThreshold(
+  data: Uint8ClampedArray,
+  threshold: number
+): void {
+  for (let i = 0; i < data.length; i += 4) {
+    const value = data[i] >= threshold ? 255 : 0
+    data[i] = value
+    data[i + 1] = value
+    data[i + 2] = value
+    data[i + 3] = 255
+  }
 }
 
-function preprocessCrop(
+function stretchLuminanceToCanvas(
   source: CanvasImageSource,
   width: number,
   height: number,
   scale: number
-): HTMLCanvasElement {
+): { canvas: HTMLCanvasElement; imageData: ImageData; ctx: CanvasRenderingContext2D } {
   const canvas = document.createElement('canvas')
   canvas.width = Math.max(1, Math.round(width * scale))
   canvas.height = Math.max(1, Math.round(height * scale))
@@ -59,15 +65,70 @@ function preprocessCrop(
   const range = Math.max(1, max - min)
   for (let i = 0; i < data.length; i += 4) {
     const stretched = Math.round(((data[i] - min) / range) * 255)
-    const threshold = stretched >= 145 ? 255 : 0
-    data[i] = threshold
-    data[i + 1] = threshold
-    data[i + 2] = threshold
+    data[i] = stretched
+    data[i + 1] = stretched
+    data[i + 2] = stretched
+  }
+
+  return { canvas, imageData, ctx }
+}
+
+function preprocessCrop(
+  source: CanvasImageSource,
+  width: number,
+  height: number,
+  scale: number
+): HTMLCanvasElement {
+  const stretched = stretchLuminanceToCanvas(source, width, height, scale)
+  applyBinaryThreshold(stretched.imageData.data, LUMINANCE_THRESHOLD)
+  stretched.ctx.putImageData(stretched.imageData, 0, 0)
+  return stretched.canvas
+}
+
+/** Orange HUD text is often lost in luminance-only thresholding — isolate warm foreground pixels. */
+function preprocessCropOrangeHud(
+  source: CanvasImageSource,
+  width: number,
+  height: number,
+  scale: number
+): HTMLCanvasElement {
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.max(1, Math.round(width * scale))
+  canvas.height = Math.max(1, Math.round(height * scale))
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return canvas
+
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(source, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  const { data } = imageData
+
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i]
+    const g = data[i + 1]
+    const b = data[i + 2]
+    const isOrangeHud = r >= 110 && r > g + 18 && r > b + 35 && g >= 35
+    const value = isOrangeHud ? 255 : 0
+    data[i] = value
+    data[i + 1] = value
+    data[i + 2] = value
     data[i + 3] = 255
   }
 
   ctx.putImageData(imageData, 0, 0)
   return canvas
+}
+
+const OCR_PREPROCESS_VARIANTS = [preprocessCrop, preprocessCropOrangeHud] as const
+
+let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
+
+export async function terminateOcrWorker(): Promise<void> {
+  if (!activeWorker) return
+  await activeWorker.terminate()
+  activeWorker = null
 }
 
 function rotateCanvas(source: HTMLCanvasElement, degrees: number): HTMLCanvasElement {
@@ -218,26 +279,31 @@ export async function processRockScanCrop(
 
   for (let attempt = 0; attempt < OCR_PREPROCESS_SCALES.length; attempt++) {
     const scale = OCR_PREPROCESS_SCALES[attempt]
-    const preprocessed = preprocessCrop(deskewed, deskewed.width, deskewed.height, scale)
-    const ocr = await runMultiPassOcr(preprocessed)
-    lastOcrText = ocr.text
-    maxOcrConfidence = Math.max(maxOcrConfidence, ocr.maxConfidence)
-    const parsed = parseRockScanOcrText(ocr.text)
+    let scaleBestScore = -1
 
-    if (parsed.ok) return parsed
+    for (const preprocess of OCR_PREPROCESS_VARIANTS) {
+      const preprocessed = preprocess(deskewed, deskewed.width, deskewed.height, scale)
+      const ocr = await runMultiPassOcr(preprocessed)
+      lastOcrText = ocr.text
+      maxOcrConfidence = Math.max(maxOcrConfidence, ocr.maxConfidence)
+      const parsed = parseRockScanOcrText(ocr.text)
 
-    const score = scoreRockScanOcrParseAttempt(parsed)
-    if (score > bestFailureScore) {
-      bestFailureScore = score
-      bestFailure = parsed
+      if (parsed.ok) return parsed
+
+      const score = scoreRockScanOcrParseAttempt(parsed)
+      scaleBestScore = Math.max(scaleBestScore, score)
+      if (score > bestFailureScore) {
+        bestFailureScore = score
+        bestFailure = parsed
+      }
     }
 
     const isLastScale = attempt === OCR_PREPROCESS_SCALES.length - 1
     if (isLastScale) break
 
-    if (attempt > 0 && score < previousScore) break
+    if (attempt > 0 && scaleBestScore < previousScore) break
 
-    previousScore = score
+    previousScore = scaleBestScore
   }
 
   const failure =
