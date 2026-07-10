@@ -282,20 +282,65 @@ function extractMass(corpus: string, rows: string[]): number | null {
   return best != null ? Math.round(best) : null
 }
 
+function resultsPanelSlice(rows: string[]): {
+  slice: string[]
+  offset: number
+  corpus: string
+} {
+  let massIdx = -1
+  let compIdx = rows.length
+
+  for (let i = 0; i < rows.length; i++) {
+    if (massIdx < 0 && isMassRow(rows[i])) massIdx = i
+    if (compIdx === rows.length && isCompHeaderRow(rows[i])) compIdx = i
+  }
+  if (compIdx === rows.length) {
+    for (let i = 0; i < rows.length; i++) {
+      if (isCompositionPercentRow(rows[i])) {
+        compIdx = i
+        break
+      }
+    }
+  }
+
+  if (massIdx < 0) {
+    return { slice: rows, offset: 0, corpus: rows.join(' ') }
+  }
+
+  const slice = rows.slice(massIdx, compIdx)
+  return { slice, offset: massIdx, corpus: slice.join(' ') }
+}
+
+function normalizeInstabilityReading(value: number): number {
+  if (!Number.isFinite(value) || value < 0) return value
+  if (value >= 50 && value <= 500) return Math.round(value * 100) / 100
+
+  if (value >= 1000 && value < 20000) {
+    const scaled = value / 10
+    if (scaled >= 50 && scaled <= 500) return Math.round(scaled * 100) / 100
+  }
+  if (value >= 10000 && value < 200000) {
+    const scaled = value / 100
+    if (scaled >= 50 && scaled <= 500) return Math.round(scaled * 100) / 100
+  }
+
+  return Math.round(value * 100) / 100
+}
+
 function extractResistance(
   corpus: string,
   rows: string[],
   known: { mass: number | null; instability: number | null; totalScu: number | null }
 ): number | null {
-  for (let i = 0; i < rows.length; i++) {
-    if (!isResRow(rows[i])) continue
-    const fromResRow = parseResistanceFromResRow(rows[i])
+  const panel = resultsPanelSlice(rows)
+
+  for (let i = 0; i < panel.slice.length; i++) {
+    if (!isResRow(panel.slice[i])) continue
+    const fromResRow = parseResistanceFromResRow(panel.slice[i], panel.slice[i + 1])
     if (fromResRow != null && isResistanceValue(fromResRow, known)) return fromResRow
-    const value = valueFromLabelRow(rows[i], rows, i)
-    if (value != null && value >= 0 && isResistanceValue(value, known)) return value
   }
 
-  const fromCorpus = firstMatchingNumber(corpus, [
+  const fromCorpus = firstMatchingNumber(panel.corpus, [
     /\bRESISTANCE\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
     /\bRE5\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
     /(?:^|\s)RES(?![A-Z])\s*[:./\\-]*\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
@@ -303,18 +348,33 @@ function extractResistance(
   ])
   if (fromCorpus != null && isResistanceValue(fromCorpus, known)) return fromCorpus
 
-  return extractStatFromRows(rows, isResRow, (value) => isResistanceValue(value, known))
+  return extractStatFromRows(panel.slice, isResRow, (value) => isResistanceValue(value, known))
 }
 
-/** RES line often shows `0%`; OCR misreads the oval zero as 2, 3, or O. */
-function parseResistanceFromResRow(row: string): number | null {
-  const trimmed = row.trim()
-  if (!isResRow(trimmed)) return null
+/** RES line often shows `0%`; OCR misreads the oval zero as 2, 3, or O. Also splits `50%` into `5 0%`. */
+function parseResistanceFromResRow(row: string, nextRow?: string): number | null {
+  const block = [row, nextRow].filter(Boolean).join(' ').trim()
+  if (!isResRow(row) && !/\bRES(?:ISTANCE)?\b/i.test(block)) return null
 
-  if (/\bRES(?:ISTANCE)?\b[^0-9\n]{0,16}0(?:\.0+)?\s*%/i.test(trimmed)) return 0
-  if (/\bRES(?:ISTANCE)?\b[^0-9\n]{0,16}[O0D][\s,.]*%/i.test(trimmed)) return 0
+  if (/\bRES(?:ISTANCE)?\b[^0-9\n]{0,16}0(?:\.0+)?\s*%/i.test(block)) return 0
+  if (/\bRES(?:ISTANCE)?\b[^0-9\n]{0,16}[O0D](?:\s*%|\s+0\s*%)/i.test(block)) return 0
 
-  const suffix = trimmed.replace(/^.*?\bRES(?:ISTANCE)?\b\s*[:./\\-]?\s*/i, '').trim()
+  const spaced = block.match(/\bRES(?:ISTANCE)?\b\s*[:.]?\s*(\d)\s+(\d)\s*%/i)
+  if (spaced) {
+    const value = Number.parseInt(`${spaced[1]}${spaced[2]}`, 10)
+    if (value >= 0 && value <= 100) return value
+  }
+
+  const glued = block.match(/\bRES(?:ISTANCE)?\b\s*[:.]?\s*(\d{1,3})\s*%/i)
+  if (glued) {
+    const value = Number.parseInt(glued[1], 10)
+    if (Number.isFinite(value) && value >= 0) {
+      if (value === 2 || value === 3) return 0
+      return value
+    }
+  }
+
+  const suffix = block.replace(/^.*?\bRES(?:ISTANCE)?\b\s*[:./\\-]?\s*/i, '').trim()
   if (!suffix) return null
 
   const leading = suffix.match(/^([O0D]|\d{1,3})(?:\.\d+)?\s*%?/i)
@@ -323,11 +383,47 @@ function parseResistanceFromResRow(row: string): number | null {
     if (/^[O0D]$/i.test(token)) return 0
     const value = Number.parseFloat(token)
     if (Number.isFinite(value) && value >= 0) {
-      if (value >= 1 && value <= 5 && /%/.test(suffix) && !/\d{2}/.test(suffix.split('%')[0] ?? '')) {
-        if (value === 2 || value === 3) return 0
-      }
+      if (value === 2 || value === 3) return 0
       return value
     }
+  }
+
+  return null
+}
+
+function parseInstabilityFromInstRow(row: string, nextRow?: string): number | null {
+  const block = [row, nextRow].filter(Boolean).join(' ').trim()
+  if (!isInstRow(row) && !/\bINST(?:ABILITY)?\b/i.test(block)) return null
+
+  const decimal = block.match(/\bINST(?:ABILITY)?\b\s*[:.]?\s*-?\s*(\d{1,3}\.\d{1,3})/i)
+  if (decimal) {
+    const value = Number.parseFloat(decimal[1])
+    if (Number.isFinite(value)) return normalizeInstabilityReading(value)
+  }
+
+  const spacedCents = block.match(/\bINST(?:ABILITY)?\b\s*[:.]?\s*-?\s*(\d{2,3})\s+(\d{2})\b/i)
+  if (spacedCents) {
+    const value = Number.parseFloat(`${spacedCents[1]}.${spacedCents[2]}`)
+    if (Number.isFinite(value)) return normalizeInstabilityReading(value)
+  }
+
+  const glued = block.match(/\bINST(?:ABILITY)?\b\s*[:.]?\s*-?\s*(\d{4,6})\b/i)
+  if (glued) {
+    const digits = glued[1]
+    if (digits.length === 5) {
+      const value = Number.parseFloat(`${digits.slice(0, 3)}.${digits.slice(3)}`)
+      if (Number.isFinite(value)) return normalizeInstabilityReading(value)
+    }
+    if (digits.length === 4) {
+      const value = Number.parseFloat(`${digits.slice(0, 2)}.${digits.slice(2)}`)
+      if (Number.isFinite(value)) return normalizeInstabilityReading(value)
+    }
+  }
+
+  const whole = block.match(/\bINST(?:ABILITY)?\b\s*[:.]?\s*-?\s*(\d{2,4})\b/i)
+  if (whole) {
+    const value = Number.parseFloat(whole[1])
+    if (Number.isFinite(value)) return normalizeInstabilityReading(value)
   }
 
   return null
@@ -338,7 +434,15 @@ function extractInstability(
   rows: string[],
   known: { mass: number | null; resistancePercent: number | null; totalScu: number | null }
 ): number | null {
-  const fromCorpus = firstMatchingNumber(corpus, [
+  const panel = resultsPanelSlice(rows)
+
+  for (let i = 0; i < panel.slice.length; i++) {
+    if (!isInstRow(panel.slice[i])) continue
+    const fromInstRow = parseInstabilityFromInstRow(panel.slice[i], panel.slice[i + 1])
+    if (fromInstRow != null && isInstabilityValue(fromInstRow, known)) return fromInstRow
+  }
+
+  const fromCorpus = firstMatchingNumber(panel.corpus, [
     /\bINSTABILITY\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
     /\bINST\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
     /\bINS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
@@ -346,9 +450,13 @@ function extractInstability(
     /\bIN5T(?:ABILITY)?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
     /\bLNST(?:ABILITY)?\s*[:.]?\s*(-?\d[\d,]*\.?\d*)\s*%?/i,
   ])
-  if (fromCorpus != null && isInstabilityValue(fromCorpus, known)) return fromCorpus
+  if (fromCorpus != null && isInstabilityValue(fromCorpus, known)) {
+    return normalizeInstabilityReading(fromCorpus)
+  }
 
-  return extractStatFromRows(rows, isInstRow, (value) => isInstabilityValue(value, known))
+  return extractStatFromRows(panel.slice, isInstRow, (value) =>
+    isInstabilityValue(normalizeInstabilityReading(value), known)
+  )
 }
 
 function isCompHeaderRow(row: string): boolean {
@@ -399,7 +507,14 @@ function extractResistanceInstabilityByPosition(
     }
     if (parseOreNameFromRow(row) && !rowHasHudStatLabel(row)) continue
 
-    const value = valueFromLabelRow(row, rows, i)
+    let value: number | null = null
+    if (isResRow(row)) {
+      value = parseResistanceFromResRow(row, rows[i + 1])
+    } else if (isInstRow(row)) {
+      value = parseInstabilityFromInstRow(row, rows[i + 1])
+    } else {
+      value = valueFromLabelRow(row, rows, i)
+    }
     if (value == null || !isBetweenMassAndCompStat(value, mass)) continue
     if (knownRockScuValue(rows, value)) continue
     statValues.push(value)
@@ -501,20 +616,24 @@ function extractTotalScu(corpus: string, rows: string[]): number | null {
 
 function extractPanelStats(rows: HudRows): PanelStats {
   const mass = extractMass(rows.corpus, rows.rows)
-  let resistancePercent = extractResistance(rows.corpus, rows.rows, {
-    mass,
-    instability: null,
-    totalScu: null,
-  })
-  let instability = extractInstability(rows.corpus, rows.rows, {
-    mass,
-    resistancePercent,
-    totalScu: null,
-  })
-
   const positional = extractResistanceInstabilityByPosition(rows.rows, mass)
-  if (resistancePercent == null) resistancePercent = positional.resistancePercent
-  if (instability == null) instability = positional.instability
+  let resistancePercent = positional.resistancePercent
+  let instability = positional.instability
+
+  if (resistancePercent == null) {
+    resistancePercent = extractResistance(rows.corpus, rows.rows, {
+      mass,
+      instability,
+      totalScu: null,
+    })
+  }
+  if (instability == null) {
+    instability = extractInstability(rows.corpus, rows.rows, {
+      mass,
+      resistancePercent,
+      totalScu: null,
+    })
+  }
 
   const totalScu = extractTotalScu(rows.corpus, rows.rows)
   const reconciledMass = reconcileMassWithTotalScu(mass, totalScu)
@@ -550,7 +669,14 @@ function extractStatFromRows(
 ): number | null {
   for (let i = 0; i < rows.length; i++) {
     if (!rowMatcher(rows[i])) continue
-    const value = valueFromLabelRow(rows[i], rows, i)
+    let value: number | null = null
+    if (isResRow(rows[i])) {
+      value = parseResistanceFromResRow(rows[i], rows[i + 1])
+    } else if (isInstRow(rows[i])) {
+      value = parseInstabilityFromInstRow(rows[i], rows[i + 1])
+    } else {
+      value = valueFromLabelRow(rows[i], rows, i)
+    }
     if (value != null && validate(value)) return value
   }
   return null
@@ -670,7 +796,7 @@ function normalizeElementName(raw: string): string {
 }
 
 function hasTrailingQuality(row: string): boolean {
-  return /\s+Q?\d{1,4}\s*$/i.test(row.trim())
+  return /\s+(?:Q)?\d{3,4}\s*$/i.test(row.trim())
 }
 
 function readOrphanQualityRow(row: string | undefined): number | null {
@@ -1154,10 +1280,23 @@ function spatialPercentLooksBetter(existing: number, spatial: number): boolean {
 function recoverQualityFromRawLines(compositionLines: OcrCompositionLine[]): void {
   for (const line of compositionLines) {
     if (!line.qualityMissing) continue
+
     const quality = trailingQualityFromRowText(line.rawOcrLine)
-    if (quality == null) continue
-    line.quality = quality
-    line.qualityMissing = false
+    if (quality != null) {
+      line.quality = quality
+      line.qualityMissing = false
+      continue
+    }
+
+    for (const match of line.rawOcrLine.matchAll(/\b(\d{3,4})\b/g)) {
+      const candidate = Number.parseInt(match[1], 10)
+      if (!isPlausibleScanQuality(candidate) || candidate <= 0) continue
+      if (Math.abs(candidate - Math.round(line.percent)) < 2) continue
+      if (Math.abs(candidate - Math.round(line.percent * 100)) < 5) continue
+      line.quality = candidate
+      line.qualityMissing = false
+      break
+    }
   }
 }
 
@@ -1250,14 +1389,14 @@ function tryAlternateTensPercent(percent: number, rawLine: string): number | nul
   return null
 }
 
-/** OCR often reads 70.xx as 78.xx on the Low band; fixing it raises auto-derived inert toward HUD. */
+/** OCR often reads 70.xx as 78.xx on the Low band; only apply to 75–85 duplicate same-ore lows. */
 function tryDecadeDownshiftForInertClosure(
   percent: number,
   otherValuableTotal: number
 ): number | null {
   const whole = Math.floor(percent)
   const frac = Math.round((percent - whole) * 100) / 100
-  if (whole < 55 || whole >= 95) return null
+  if (whole < 75 || whole > 85) return null
 
   const candidate = whole - 8 + frac
   if (!isPlausibleCompositionPercent(candidate) || candidate >= percent) return null
@@ -1281,6 +1420,12 @@ function tryDecadeDownshiftForInertClosure(
 
 function reconcileMisreadCompositionBands(compositionLines: OcrCompositionLine[]): void {
   const valuableTotal = compositionLines.reduce((sum, line) => sum + line.percent, 0)
+  const distinctValuableElements = new Set(
+    compositionLines
+      .filter((line) => !isInertElement(line.elementName))
+      .map((line) => line.elementName)
+  )
+  const allowInertDownshift = distinctValuableElements.size < 3
 
   const indicesByElement = new Map<string, number[]>()
   compositionLines.forEach((line, index) => {
@@ -1319,7 +1464,9 @@ function reconcileMisreadCompositionBands(compositionLines: OcrCompositionLine[]
       }
     }
 
-    const downshift = tryDecadeDownshiftForInertClosure(line.percent, otherTotal)
+    const downshift = allowInertDownshift
+      ? tryDecadeDownshiftForInertClosure(line.percent, otherTotal)
+      : null
     if (downshift != null) {
       line.percent = downshift
     }
