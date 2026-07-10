@@ -109,42 +109,44 @@ function SoloMoleGaragePanel({ advice }: { advice: SoloMoleGarageAdvice }) {
   )
 }
 
+function MoleSoloMiningToggle({
+  solo,
+  onChange,
+}: {
+  solo: boolean
+  onChange: (solo: boolean) => void
+}) {
+  return (
+    <label className="flex items-start gap-2.5 rounded-md border border-slate-700/60 bg-slate-900/50 px-2.5 py-2 cursor-pointer">
+      <input
+        type="checkbox"
+        checked={solo}
+        onChange={(event) => onChange(event.target.checked)}
+        className="mt-0.5 rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
+      />
+      <span className="text-xs text-slate-400 leading-snug">
+        <span className="text-slate-200">Solo mining</span> — one laser only, same as a Prospector.
+        Mole just gives you three heads to choose from. Uncheck for <span className="text-slate-200">crew</span>{' '}
+        mode when friends are on the other turrets.
+      </span>
+    </label>
+  )
+}
+
 function SmartCrackerPanel({
   result,
-  moleSoloMining,
-  onMoleSoloMiningChange,
-  showSoloToggle,
 }: {
   result: SmartCrackerResult
-  moleSoloMining: boolean
-  onMoleSoloMiningChange: (solo: boolean) => void
-  showSoloToggle: boolean
 }) {
   const { gadgetSuggestions, moleStrategy, slowCrack } = result
   const hasGadget = gadgetSuggestions.length > 0
   const recommendedGadget = gadgetSuggestions.find((suggestion) => suggestion.recommended)
   const alternateGadgets = gadgetSuggestions.filter((suggestion) => !suggestion.recommended)
 
-  if (!hasGadget && !moleStrategy && !showSoloToggle && !slowCrack) return null
+  if (!hasGadget && !moleStrategy && !slowCrack) return null
 
   return (
     <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-3">
-      {showSoloToggle ? (
-        <label className="flex items-start gap-2.5 rounded-md border border-slate-700/60 bg-slate-900/50 px-2.5 py-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={moleSoloMining}
-            onChange={(event) => onMoleSoloMiningChange(event.target.checked)}
-            className="mt-0.5 rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
-          />
-          <span className="text-xs text-slate-400 leading-snug">
-            <span className="text-slate-200">Solo mining</span> — one laser only, same as a
-            Prospector. Mole just gives you three heads to choose from. Uncheck if a friend is
-            running extra turrets with you.
-          </span>
-        </label>
-      ) : null}
-
       {moleStrategy ? (
         <div className="space-y-1.5">
           <p className="text-[10px] uppercase tracking-wide text-slate-500">
@@ -589,6 +591,10 @@ export default function MiningLoadoutPanel({
         </select>
       </div>
 
+      {vesselId === 'mole' ? (
+        <MoleSoloMiningToggle solo={moleSoloMining} onChange={setMoleSoloMining} />
+      ) : null}
+
       {preferredBuilds.length > 0 ? (
         <div className="space-y-1">
           <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
@@ -681,12 +687,7 @@ export default function MiningLoadoutPanel({
       ) : null}
 
       {smartCracker ? (
-        <SmartCrackerPanel
-          result={smartCracker}
-          moleSoloMining={moleSoloMining}
-          onMoleSoloMiningChange={setMoleSoloMining}
-          showSoloToggle={vesselId === 'mole'}
-        />
+        <SmartCrackerPanel result={smartCracker} />
       ) : null}
 
       {rockTarget && !isRockBreakabilityTargetReady(rockTarget) ? (

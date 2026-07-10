@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
 import SiteTooltip from '../SiteTooltip'
 import {
@@ -28,6 +28,7 @@ import {
 import {
   analyzeLoadoutProTips,
   statValueColorClass,
+  type LoadoutProTip,
   type LoadoutProTipSection,
   type ProTipSectionKind,
 } from '../../lib/miningLoadoutStatSemantics'
@@ -263,6 +264,60 @@ function ProTipSectionBar({ section }: { section: LoadoutProTipSection }) {
   )
 }
 
+function ProTipBlock({
+  tip,
+  collapsible,
+}: {
+  tip: LoadoutProTip
+  collapsible: boolean
+}) {
+  const [expanded, setExpanded] = useState(false)
+
+  if (!collapsible) {
+    return (
+      <div className="rounded-lg border border-amber-900/40 bg-slate-950/40 p-2 space-y-1.5">
+        <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90 px-0.5">
+          Pro-tip · {tip.statLabel}
+        </p>
+        {tip.sections.map((section, index) => (
+          <ProTipSectionBar key={`${tip.statKey}-${section.kind}-${index}`} section={section} />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="rounded-lg border border-amber-900/40 bg-slate-950/40 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setExpanded((prev) => !prev)}
+        className="w-full flex items-center justify-between gap-2 px-2 py-1.5 text-left hover:bg-slate-900/60 transition-colors"
+        aria-expanded={expanded}
+      >
+        <span className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90">
+          Pro-tip · {tip.statLabel}
+        </span>
+        <svg
+          className={`w-3.5 h-3.5 text-slate-500 shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {expanded ? (
+        <div className="px-2 pb-2 space-y-1.5 border-t border-amber-900/25">
+          {tip.sections.map((section, index) => (
+            <ProTipSectionBar key={`${tip.statKey}-${section.kind}-${index}`} section={section} />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 function EffectiveTotalsCard({
   breakdown,
   slot,
@@ -278,6 +333,8 @@ function EffectiveTotalsCard({
     if (vesselId === 'mole' && !moleSoloMining) return []
     return analyzeLoadoutProTips(breakdown, slot, vesselId)
   }, [breakdown, slot, vesselId, moleSoloMining])
+
+  const collapsibleProTips = vesselId === 'mole'
 
   return (
     <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 col-span-full">
@@ -295,17 +352,7 @@ function EffectiveTotalsCard({
       {proTips.length > 0 ? (
         <div className="px-2 pb-2 space-y-2">
           {proTips.map((tip) => (
-            <div
-              key={tip.statKey}
-              className="rounded-lg border border-amber-900/40 bg-slate-950/40 p-2 space-y-1.5"
-            >
-              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90 px-0.5">
-                Pro-tip · {tip.statLabel}
-              </p>
-              {tip.sections.map((section, index) => (
-                <ProTipSectionBar key={`${tip.statKey}-${section.kind}-${index}`} section={section} />
-              ))}
-            </div>
+            <ProTipBlock key={tip.statKey} tip={tip} collapsible={collapsibleProTips} />
           ))}
         </div>
       ) : null}

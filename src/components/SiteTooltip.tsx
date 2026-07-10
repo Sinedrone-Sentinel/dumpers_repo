@@ -1,5 +1,6 @@
-import React, { useCallback, useId, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useUiOverlayPaused } from '../contexts/UiOverlayContext'
 
 type TooltipSide = 'top' | 'bottom' | 'left' | 'right'
 
@@ -89,6 +90,7 @@ export default function SiteTooltip({
   panelClassName = '',
   children,
 }: SiteTooltipProps) {
+  const overlayPaused = useUiOverlayPaused()
   const [open, setOpen] = useState(false)
   const [position, setPosition] = useState<PanelPosition | null>(null)
   const tooltipId = useId()
@@ -96,9 +98,17 @@ export default function SiteTooltip({
   const anchorRef = useRef<HTMLSpanElement>(null)
   const panelRef = useRef<HTMLSpanElement>(null)
 
+  useEffect(() => {
+    if (overlayPaused) {
+      setOpen(false)
+      setPosition(null)
+    }
+  }, [overlayPaused])
+
   const show = useCallback(() => {
-    if (!touchRef.current) setOpen(true)
-  }, [])
+    if (overlayPaused || touchRef.current) return
+    setOpen(true)
+  }, [overlayPaused])
 
   const hide = useCallback(() => {
     if (!touchRef.current) {
@@ -108,6 +118,7 @@ export default function SiteTooltip({
   }, [])
 
   const toggleTouch = useCallback(() => {
+    if (overlayPaused) return
     touchRef.current = true
     setOpen((prev) => {
       if (prev) setPosition(null)
@@ -116,7 +127,7 @@ export default function SiteTooltip({
     window.setTimeout(() => {
       touchRef.current = false
     }, 300)
-  }, [])
+  }, [overlayPaused])
 
   useLayoutEffect(() => {
     if (!open) return
@@ -149,7 +160,7 @@ export default function SiteTooltip({
     }
   }, [open, side, content])
 
-  const panel = open ? (
+  const panel = open && !overlayPaused ? (
     <span
       ref={panelRef}
       id={tooltipId}
