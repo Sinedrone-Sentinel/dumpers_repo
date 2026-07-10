@@ -191,7 +191,49 @@ function readNumericFromLabelLine(line: string): number | null {
 }
 
 function lineLooksLikeMassLabel(line: string): boolean {
-  return /\bMASS\b/i.test(line)
+  const trimmed = line.trim()
+  if (!trimmed) return false
+  if (/\bMASS\b/i.test(trimmed)) return true
+
+  const letters = ocrHeaderLetters(trimmed)
+  if (!letters) return false
+  if (letters.startsWith('MASS')) return true
+  if (letters.length >= 3 && letters.length <= 8 && levenshteinDistance(letters, 'MASS') <= 1) {
+    return true
+  }
+  return false
+}
+
+function isCompositionSectionLine(line: string): boolean {
+  if (/\bCOMP(?:OSITION)?\b/i.test(line) && /\bSCU\b/i.test(line)) return true
+  return /(\d+(?:\.\d+)?)\s*%/.test(line)
+}
+
+function firstCompositionLineIndex(lines: string[]): number {
+  for (let i = 0; i < lines.length; i++) {
+    if (isCompositionSectionLine(lines[i])) return i
+  }
+  return lines.length
+}
+
+function normalizeResistancePercent(value: number): number {
+  if (value > 0 && value <= 1) return Math.round(value * 100)
+  return Math.round(value)
+}
+
+function extractMassFallback(lines: string[]): number | null {
+  const headerEnd = firstCompositionLineIndex(lines)
+  let best: number | null = null
+
+  for (let i = 0; i < headerEnd; i++) {
+    const line = lines[i]
+    if (isCompositionSectionLine(line)) break
+    const value = readNumericFromLabelLine(line)
+    if (value == null || value < 50 || value > 1_000_000) continue
+    if (best == null || value > best) best = value
+  }
+
+  return best
 }
 
 function lineLooksLikeResLabel(line: string): boolean {
@@ -250,7 +292,6 @@ function extractScanHudStats(lines: string[]): {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
-    if (/\bCOMP(?:OSITION)?\b/i.test(line)) break
 
     if (mass == null && lineLooksLikeMassLabel(line)) {
       mass = readHudStatValue(line, lines, i)
@@ -279,11 +320,16 @@ function extractScanHudStats(lines: string[]): {
     }
   }
 
+  if (mass == null) {
+    mass = extractLabeledValue(lines, ['MASS']) ?? extractMassFallback(lines)
+  }
+
   if (instability == null && resLineIndex != null) {
-    for (let j = resLineIndex + 1; j < Math.min(resLineIndex + 5, lines.length); j++) {
+    const headerEnd = firstCompositionLineIndex(lines)
+    for (let j = resLineIndex + 1; j < Math.min(headerEnd, resLineIndex + 6); j++) {
       if (j === resValueLineIndex) continue
       const line = lines[j]
-      if (/\bCOMP(?:OSITION)?\b/i.test(line) || /%/.test(line)) break
+      if (isCompositionSectionLine(line)) break
       if (lineLooksLikeInstLabel(line)) {
         instability = readHudStatValue(line, lines, j)
         if (instability != null) break
@@ -295,6 +341,12 @@ function extractScanHudStats(lines: string[]): {
         break
       }
     }
+  }
+
+  if (resistancePercent == null) {
+    resistancePercent =
+      extractLabeledValue(lines, ['RESISTANCE']) ??
+      extractLabeledValue(lines, ['RES'], { wordBoundary: true })
   }
 
   return { mass, resistancePercent, instability, resLineIndex, resValueLineIndex }
@@ -326,8 +378,10 @@ function extractLabeledValue(
   return null
 }
 
-function extractInstability(lines: string[]): number | null {
-  const stats = extractScanHudStats(lines)
+function extractInstability(lines: string[], hudStats?: ReturnType<typeof extractScanHudStats>): number | null {
+  if (hudStats?.instability != null) return hudStats.instability
+
+  const stats = hudStats ?? extractScanHudStats(lines)
   if (stats.instability != null) return stats.instability
 
   const labeled =
@@ -613,12 +667,9 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
   }
 
   const hudStats = extractScanHudStats(lines)
-  const mass = hudStats.mass ?? extractLabeledValue(lines, ['MASS'])
-  const resistancePercent =
-    hudStats.resistancePercent ??
-    extractLabeledValue(lines, ['RESISTANCE']) ??
-    extractLabeledValue(lines, ['RES'], { wordBoundary: true })
-  const instability = hudStats.instability ?? extractInstability(lines)
+  const mass = hudStats.mass
+  const resistancePercent = hudStats.resistancePercent
+  const instability = extractInstability(lines, hudStats)
   const totalScu = extractTotalScu(lines)
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
@@ -669,7 +720,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     data: {
       primaryOreName,
       mass: Math.round(mass),
-      resistancePercent: Math.round(resistancePercent),
+      resistancePercent: normalizeResistancePercent(resistancePercent),
       instability,
       totalScu,
       compositionLines,

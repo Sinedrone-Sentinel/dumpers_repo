@@ -121,7 +121,81 @@ function preprocessCropOrangeHud(
   return canvas
 }
 
-const OCR_PREPROCESS_VARIANTS = [preprocessCrop, preprocessCropOrangeHud] as const
+type CropPreprocessFn = (
+  source: CanvasImageSource,
+  width: number,
+  height: number,
+  scale: number
+) => HTMLCanvasElement
+
+interface OcrScaleEscalationResult {
+  success: RockScanOcrParseResult | null
+  bestFailure: RockScanOcrParseResult | null
+  bestFailureScore: number
+  lastOcrText: string
+  maxOcrConfidence: number
+}
+
+/** Run 2× → 3× → 4× with one preprocess variant; escalate only if parse score does not improve. */
+async function runOcrScaleEscalation(
+  deskewed: HTMLCanvasElement,
+  preprocess: CropPreprocessFn
+): Promise<OcrScaleEscalationResult> {
+  let bestFailure: RockScanOcrParseResult | null = null
+  let bestFailureScore = -1
+  let previousScore = -1
+  let lastOcrText = ''
+  let maxOcrConfidence = 0
+
+  for (let attempt = 0; attempt < OCR_PREPROCESS_SCALES.length; attempt++) {
+    const scale = OCR_PREPROCESS_SCALES[attempt]
+    const preprocessed = preprocess(deskewed, deskewed.width, deskewed.height, scale)
+    const ocr = await runMultiPassOcr(preprocessed)
+    lastOcrText = ocr.text
+    maxOcrConfidence = Math.max(maxOcrConfidence, ocr.maxConfidence)
+    const parsed = parseRockScanOcrText(ocr.text)
+
+    if (parsed.ok) {
+      return {
+        success: parsed,
+        bestFailure: null,
+        bestFailureScore: -1,
+        lastOcrText,
+        maxOcrConfidence,
+      }
+    }
+
+    const score = scoreRockScanOcrParseAttempt(parsed)
+    if (score > bestFailureScore) {
+      bestFailureScore = score
+      bestFailure = parsed
+    }
+
+    const isLastScale = attempt === OCR_PREPROCESS_SCALES.length - 1
+    if (isLastScale) break
+
+    if (attempt > 0 && score < previousScore) break
+
+    previousScore = score
+  }
+
+  return {
+    success: null,
+    bestFailure,
+    bestFailureScore,
+    lastOcrText,
+    maxOcrConfidence,
+  }
+}
+
+function pickBetterOcrPass(
+  normal: OcrScaleEscalationResult,
+  orange: OcrScaleEscalationResult
+): OcrScaleEscalationResult {
+  if (orange.bestFailureScore > normal.bestFailureScore) return orange
+  if (normal.bestFailureScore > orange.bestFailureScore) return normal
+  return orange.maxOcrConfidence >= normal.maxOcrConfidence ? orange : normal
+}
 
 let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
 
@@ -223,18 +297,39 @@ async function runMultiPassOcr(
 
   results.sort((a, b) => b.confidence - a.confidence)
   const maxConfidence = results[0]?.confidence ?? 0
-  const merged = new Set<string>()
-  for (const result of results) {
-    for (const line of result.text.split('\n')) {
+
+  const primaryLines = (results[0]?.text ?? '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  if (primaryLines.length === 0) {
+    return { text: results[0]?.text ?? '', maxConfidence }
+  }
+
+  const merged = [...primaryLines]
+  const seen = new Set(primaryLines.map((line) => line.toUpperCase()))
+
+  for (let passIndex = 1; passIndex < results.length; passIndex++) {
+    for (const line of results[passIndex].text.split('\n')) {
       const trimmed = line.trim()
-      if (trimmed) merged.add(trimmed)
+      if (!trimmed) continue
+
+      const key = trimmed.toUpperCase()
+      if (seen.has(key)) continue
+
+      const redundant = merged.some((existing) => {
+        const existingKey = existing.toUpperCase()
+        return existingKey.includes(key) || key.includes(existingKey)
+      })
+      if (redundant) continue
+
+      merged.push(trimmed)
+      seen.add(key)
     }
   }
 
-  if (merged.size === 0) {
-    return { text: results[0]?.text ?? '', maxConfidence }
-  }
-  return { text: [...merged].join('\n'), maxConfidence }
+  return { text: merged.join('\n'), maxConfidence }
 }
 
 function attachFailureHints(
@@ -271,48 +366,25 @@ export async function processRockScanCrop(
   const deskewed = rotateCanvas(rawCrop, deskewDegrees)
   const legibility = assessCropLegibility(deskewed)
 
-  let bestFailure: RockScanOcrParseResult | null = null
-  let bestFailureScore = -1
-  let previousScore = -1
-  let lastOcrText = ''
-  let maxOcrConfidence = 0
+  const normalPass = await runOcrScaleEscalation(deskewed, preprocessCrop)
+  if (normalPass.success) return normalPass.success
 
-  for (let attempt = 0; attempt < OCR_PREPROCESS_SCALES.length; attempt++) {
-    const scale = OCR_PREPROCESS_SCALES[attempt]
-    let scaleBestScore = -1
+  const orangePass = await runOcrScaleEscalation(deskewed, preprocessCropOrangeHud)
+  if (orangePass.success) return orangePass.success
 
-    for (const preprocess of OCR_PREPROCESS_VARIANTS) {
-      const preprocessed = preprocess(deskewed, deskewed.width, deskewed.height, scale)
-      const ocr = await runMultiPassOcr(preprocessed)
-      lastOcrText = ocr.text
-      maxOcrConfidence = Math.max(maxOcrConfidence, ocr.maxConfidence)
-      const parsed = parseRockScanOcrText(ocr.text)
-
-      if (parsed.ok) return parsed
-
-      const score = scoreRockScanOcrParseAttempt(parsed)
-      scaleBestScore = Math.max(scaleBestScore, score)
-      if (score > bestFailureScore) {
-        bestFailureScore = score
-        bestFailure = parsed
-      }
-    }
-
-    const isLastScale = attempt === OCR_PREPROCESS_SCALES.length - 1
-    if (isLastScale) break
-
-    if (attempt > 0 && scaleBestScore < previousScore) break
-
-    previousScore = scaleBestScore
-  }
-
+  const bestPass = pickBetterOcrPass(normalPass, orangePass)
   const failure =
-    bestFailure ?? {
+    bestPass.bestFailure ?? {
       ok: false as const,
       error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.',
     }
 
-  return attachFailureHints(failure, legibility, maxOcrConfidence, lastOcrText)
+  return attachFailureHints(
+    failure,
+    legibility,
+    Math.max(normalPass.maxOcrConfidence, orangePass.maxOcrConfidence),
+    bestPass.lastOcrText
+  )
 }
 
 export function loadImageFromFile(file: File): Promise<{
