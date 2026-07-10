@@ -36,15 +36,12 @@ const INERT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+INERT\s+MATERIALS/i
 const COMPOSITION_PERCENT_LINE_RE =
   /(\d+(?:\.\d+)?)\s*%?\s+(.+?)(?:\s+\d{3,})?\s*$/i
 
-const RESULTS_CROP_ERROR =
-  'Could not read the RESULTS header — crop the entire SCAN RESULTS panel, including the word "RESULTS" and the ore name directly below it.'
-
-const RESULTS_ORE_ERROR =
-  'Could not read the ore name under RESULTS — include the ore label directly below the RESULTS line (e.g. BORASE).'
+const PRIMARY_ORE_ERROR =
+  'Could not read the primary ore — include the ore name (e.g. BORASE) above MASS or both composition bands in the crop.'
 
 /**
  * In-game SCAN RESULTS panel order (top → bottom):
- *   RESULTS → primary ore → MASS → RES → INST → COMP (SCU)
+ *   primary ore → MASS → RES → INST → COMP (SCU)
  * Mineral composition % rows follow COMP; their OCR line order does not matter.
  *
  * OCR text line order is not trusted. Each stat above COMP is resolved by scanning
@@ -124,15 +121,6 @@ function lineLooksLikeResultsHeader(line: string): boolean {
   }
 
   return false
-}
-
-function hasResultsHeader(lines: string[]): boolean {
-  return lines.some((line) => lineLooksLikeResultsHeader(line))
-}
-
-function hasScanResultsPanelStructure(lines: string[]): boolean {
-  const panel = extractOrderedScanPanelStats(lines)
-  return panel.mass != null && panel.resistancePercent != null && panel.instability != null
 }
 
 function hasTrailingQuality(line: string): boolean {
@@ -548,7 +536,7 @@ function parseOreNameFromResultsLine(raw: string): string | null {
 function parsePrimaryOreAboveMass(lines: string[]): string | null {
   let massIndex = -1
   for (let i = 0; i < lines.length; i++) {
-    if (/\bMASS\b/i.test(lines[i])) {
+    if (lineLooksLikeMassLabel(lines[i])) {
       massIndex = i
       break
     }
@@ -562,6 +550,46 @@ function parsePrimaryOreAboveMass(lines: string[]): string | null {
   }
 
   return null
+}
+
+function parseStandaloneOreLine(lines: string[]): string | null {
+  for (const line of lines) {
+    if (!line.trim()) continue
+    if (lineLooksLikeResultsHeader(line)) continue
+    if (lineHasStatLabel(line) || isCompositionPercentLine(line)) continue
+    const oreName = parseOreNameFromResultsLine(line)
+    if (oreName) return oreName
+  }
+  return null
+}
+
+function inferPrimaryOreFromComposition(compositionLines: OcrCompositionLine[]): string | null {
+  const bandCounts = new Map<string, number>()
+  for (const line of compositionLines) {
+    bandCounts.set(line.elementName, (bandCounts.get(line.elementName) ?? 0) + 1)
+  }
+
+  let best: string | null = null
+  let bestCount = 0
+  for (const [name, count] of bandCounts) {
+    if (count >= 2 && count > bestCount) {
+      best = name
+      bestCount = count
+    }
+  }
+  return best
+}
+
+function resolvePrimaryOreName(
+  lines: string[],
+  compositionLines: OcrCompositionLine[]
+): string | null {
+  return (
+    parseResultsHeaderOre(lines) ??
+    parsePrimaryOreAboveMass(lines) ??
+    parseStandaloneOreLine(lines) ??
+    inferPrimaryOreFromComposition(compositionLines)
+  )
 }
 
 function parseResultsHeaderOre(lines: string[]): string | null {
@@ -599,19 +627,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.' }
   }
 
-  if (!hasResultsHeader(lines) && !hasScanResultsPanelStructure(lines)) {
-    return { ok: false, error: RESULTS_CROP_ERROR }
-  }
-
   const warnings: string[] = []
-
-  let resultsHeaderOre = parseResultsHeaderOre(lines)
-  if (!resultsHeaderOre && hasScanResultsPanelStructure(lines)) {
-    resultsHeaderOre = parsePrimaryOreAboveMass(lines)
-  }
-  if (!resultsHeaderOre) {
-    return { ok: false, error: RESULTS_ORE_ERROR }
-  }
 
   const panel = extractOrderedScanPanelStats(lines)
   const mass = panel.mass
@@ -621,6 +637,12 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
   assignBandRanksByPercent(compositionLines)
+
+  const resolvedPrimary = resolvePrimaryOreName(lines, compositionLines)
+  if (!resolvedPrimary) {
+    return { ok: false, error: PRIMARY_ORE_ERROR }
+  }
+  const primaryOreName = resolveOcrOreName(resolvedPrimary).name
 
   if (mass == null) {
     return { ok: false, error: 'Could not read Mass from the crop — include the MASS line.' }
@@ -638,13 +660,11 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'Need at least two composition lines in the crop — include the full COMPOSITION list.' }
   }
 
-  const primaryOreName = resolveOcrOreName(resultsHeaderOre).name
-
   const primaryBandCount = countPrimaryOreBands(compositionLines, primaryOreName)
   if (primaryBandCount < 2) {
     return {
       ok: false,
-      error: `Found ${primaryOreName} under RESULTS but could not read both High and Low composition bands — include the full COMPOSITION list.`,
+      error: `Found ${primaryOreName} but could not read both High and Low composition bands — include the full COMPOSITION list.`,
     }
   }
 
@@ -679,8 +699,7 @@ export function scoreRockScanOcrParseAttempt(result: RockScanOcrParseResult): nu
 
   const error = result.error
   if (error.includes('no readable text')) return 0
-  if (error.includes('RESULTS header')) return 10
-  if (error.includes('ore name under RESULTS')) return 20
+  if (error.includes('primary ore')) return 20
   if (error.includes('Mass')) return 30
   if (error.includes('Resistance')) return 40
   if (error.includes('Instability')) return 50
