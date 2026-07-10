@@ -311,8 +311,8 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
           )}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[10px] text-slate-500 leading-snug">
-              Preview is scaled for cropping; OCR reads the full-resolution paste ({loaded ? `${loaded.width}×${loaded.height}` : 'paste to see size'}).
-              Screenshot is discarded after scan; crop box is remembered on this device.
+              Screenshot is discarded after scan; your crop box size and position are remembered on this
+              device.
             </p>
             <div className="flex shrink-0 gap-2">
               <button

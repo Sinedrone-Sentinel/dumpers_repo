@@ -87,6 +87,18 @@ function preprocessCrop(
   return stretched.canvas
 }
 
+/** Contrast-stretched grayscale only — no binary crush. Primary OCR path for HUD text. */
+function preprocessCropClean(
+  source: CanvasImageSource,
+  width: number,
+  height: number,
+  scale: number
+): HTMLCanvasElement {
+  const stretched = stretchLuminanceToCanvas(source, width, height, scale)
+  stretched.ctx.putImageData(stretched.imageData, 0, 0)
+  return stretched.canvas
+}
+
 /** Orange HUD text is often lost in luminance-only thresholding — isolate warm foreground pixels. */
 function preprocessCropOrangeHud(
   source: CanvasImageSource,
@@ -196,10 +208,10 @@ async function runOcrScaleEscalation(
   return { success: null, bestFailure, bestFailureScore }
 }
 
-function pickBetterOcrPass(normal: OcrScaleEscalationResult, orange: OcrScaleEscalationResult): OcrScaleEscalationResult {
-  if (orange.bestFailureScore > normal.bestFailureScore) return orange
-  if (normal.bestFailureScore > orange.bestFailureScore) return normal
-  return orange
+function pickBestOcrFailure(...passes: OcrScaleEscalationResult[]): OcrScaleEscalationResult {
+  return passes.reduce((best, pass) =>
+    pass.bestFailureScore > best.bestFailureScore ? pass : best
+  )
 }
 
 let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
@@ -262,8 +274,7 @@ function cropImageToCanvas(
   canvas.height = height
   const ctx = canvas.getContext('2d')
   if (!ctx) return null
-  ctx.imageSmoothingEnabled = true
-  ctx.imageSmoothingQuality = 'high'
+  ctx.imageSmoothingEnabled = false
   ctx.drawImage(image, x, y, width, height, 0, 0, width, height)
   return canvas
 }
@@ -334,13 +345,16 @@ export async function processRockScanCrop(
 
   const deskewed = rotateCanvas(rawCrop, deskewDegrees)
 
-  const normalPass = await runOcrScaleEscalation(deskewed, preprocessCrop)
-  if (normalPass.success) return normalPass.success
+  const cleanPass = await runOcrScaleEscalation(deskewed, preprocessCropClean)
+  if (cleanPass.success) return cleanPass.success
 
   const orangePass = await runOcrScaleEscalation(deskewed, preprocessCropOrangeHud)
   if (orangePass.success) return orangePass.success
 
-  const bestPass = pickBetterOcrPass(normalPass, orangePass)
+  const binaryPass = await runOcrScaleEscalation(deskewed, preprocessCrop)
+  if (binaryPass.success) return binaryPass.success
+
+  const bestPass = pickBestOcrFailure(cleanPass, orangePass, binaryPass)
   return (
     bestPass.bestFailure ?? {
       ok: false,
@@ -356,34 +370,89 @@ export function loadImageFromFile(file: File): Promise<{
   height: number
 }> {
   return new Promise((resolve, reject) => {
-    const objectUrl = URL.createObjectURL(file)
-    const image = new Image()
-    image.onload = () => {
-      void (async () => {
-        try {
-          if (typeof image.decode === 'function') {
-            await image.decode()
+    void (async () => {
+      try {
+        if (typeof createImageBitmap === 'function') {
+          const bitmap = await createImageBitmap(file)
+          const width = bitmap.width
+          const height = bitmap.height
+          if (width < 1 || height < 1) {
+            bitmap.close()
+            reject(new Error('Pasted image has no pixel data — try ALT+PrtSc again.'))
+            return
           }
-        } catch {
-          // decode() can fail on some browsers; onload dimensions are still valid
-        }
 
-        const width = image.naturalWidth
-        const height = image.naturalHeight
-        if (width < 1 || height < 1) {
-          URL.revokeObjectURL(objectUrl)
-          reject(new Error('Pasted image has no pixel data — try ALT+PrtSc again.'))
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          if (!ctx) {
+            bitmap.close()
+            reject(new Error('Could not load pasted image.'))
+            return
+          }
+          ctx.imageSmoothingEnabled = false
+          ctx.drawImage(bitmap, 0, 0)
+          bitmap.close()
+
+          const blob = await new Promise<Blob | null>((res) =>
+            canvas.toBlob((b) => res(b), 'image/png')
+          )
+          if (!blob) {
+            reject(new Error('Could not load pasted image.'))
+            return
+          }
+
+          const objectUrl = URL.createObjectURL(blob)
+          const image = new Image()
+          image.onload = () => {
+            void (async () => {
+              try {
+                if (typeof image.decode === 'function') await image.decode()
+              } catch {
+                // onload dimensions are still valid
+              }
+              resolve({ image, objectUrl, width, height })
+            })()
+          }
+          image.onerror = () => {
+            URL.revokeObjectURL(objectUrl)
+            reject(new Error('Could not load pasted image.'))
+          }
+          image.src = objectUrl
           return
         }
+      } catch {
+        // fall through to blob URL load
+      }
 
-        resolve({ image, objectUrl, width, height })
-      })()
-    }
-    image.onerror = () => {
-      URL.revokeObjectURL(objectUrl)
-      reject(new Error('Could not load pasted image.'))
-    }
-    image.src = objectUrl
+      const objectUrl = URL.createObjectURL(file)
+      const image = new Image()
+      image.onload = () => {
+        void (async () => {
+          try {
+            if (typeof image.decode === 'function') await image.decode()
+          } catch {
+            // onload dimensions are still valid
+          }
+
+          const width = image.naturalWidth
+          const height = image.naturalHeight
+          if (width < 1 || height < 1) {
+            URL.revokeObjectURL(objectUrl)
+            reject(new Error('Pasted image has no pixel data — try ALT+PrtSc again.'))
+            return
+          }
+
+          resolve({ image, objectUrl, width, height })
+        })()
+      }
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl)
+        reject(new Error('Could not load pasted image.'))
+      }
+      image.src = objectUrl
+    })()
   })
 }
 
