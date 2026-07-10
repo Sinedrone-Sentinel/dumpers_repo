@@ -152,7 +152,6 @@ function clusterWordsIntoRows(words: OcrWordBox[]): string[] {
     if (currentGroup.length && Math.abs(word.y0 - currentY) > rowThreshold) {
       rowGroups.push(currentGroup.sort((a, b) => a.x0 - b.x0))
       currentGroup = []
-      currentY = word.y0
     }
     currentGroup.push(word)
     currentY = currentGroup.reduce((sum, item) => sum + item.y0, 0) / currentGroup.length
