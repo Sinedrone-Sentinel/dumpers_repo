@@ -52,6 +52,13 @@ export interface OcrWordBox {
 interface HudRows {
   rows: string[]
   corpus: string
+  rowGroups?: RowWord[][]
+}
+
+interface RowWord {
+  text: string
+  x0: number
+  x1: number
 }
 
 interface PanelStats {
@@ -115,9 +122,23 @@ function parseNumberToken(raw: string): number | null {
 }
 
 function buildHudRows(rawText: string, words?: OcrWordBox[]): HudRows {
-  const rows = words?.length ? clusterWordsIntoRows(words) : splitTextLines(rawText)
-  const corpus = rows.join(' ').replace(/\s+/g, ' ').trim()
-  return { rows, corpus }
+  if (words?.length) {
+    const rowGroups = clusterWordsIntoRowGroups(words)
+    const rawRows = rowGroups
+      .map((group) => group.map((word) => word.text).join(' ').trim())
+      .filter(Boolean)
+    const rows = splitMergedCompositionRows(rawRows)
+    return {
+      rows,
+      corpus: rows.join(' ').replace(/\s+/g, ' ').trim(),
+      rowGroups,
+    }
+  }
+  const rows = splitMergedCompositionRows(splitTextLines(rawText))
+  return {
+    rows,
+    corpus: rows.join(' ').replace(/\s+/g, ' ').trim(),
+  }
 }
 
 function splitTextLines(rawText: string): string[] {
@@ -127,12 +148,32 @@ function splitTextLines(rawText: string): string[] {
     .filter(Boolean)
 }
 
+/** Split OCR rows where two composition lines were merged (multiple % tokens). */
+function splitMergedCompositionRows(rows: string[]): string[] {
+  const split: string[] = []
+  for (const row of rows) {
+    const matches = [...row.matchAll(/(\d+(?:\.\d+)?)\s*%/g)]
+    if (matches.length <= 1) {
+      split.push(row)
+      continue
+    }
+    for (let i = 0; i < matches.length; i++) {
+      const start = matches[i].index ?? 0
+      const end = i + 1 < matches.length ? (matches[i + 1].index ?? row.length) : row.length
+      const segment = row.slice(start, end).trim()
+      if (segment) split.push(segment)
+    }
+  }
+  return split
+}
+
 /** Sort OCR words by position, group into horizontal rows, join left-to-right. */
-function clusterWordsIntoRows(words: OcrWordBox[]): string[] {
+function clusterWordsIntoRowGroups(words: OcrWordBox[]): RowWord[][] {
   const sorted = [...words]
     .map((word) => ({
       text: word.text.trim(),
       x0: word.x0,
+      x1: word.x1,
       y0: word.y0,
       y1: word.y1,
     }))
@@ -143,10 +184,10 @@ function clusterWordsIntoRows(words: OcrWordBox[]): string[] {
 
   const heights = sorted.map((word) => Math.max(1, word.y1 - word.y0))
   const medianHeight = heights.sort((a, b) => a - b)[Math.floor(heights.length / 2)] ?? 12
-  const rowThreshold = Math.max(8, medianHeight * 0.65)
+  const rowThreshold = Math.max(8, medianHeight * 0.55)
 
-  const rowGroups: Array<Array<{ text: string; x0: number }>> = []
-  let currentGroup: Array<{ text: string; x0: number; y0: number }> = []
+  const rowGroups: Array<Array<{ text: string; x0: number; x1: number; y0: number }>> = []
+  let currentGroup: Array<{ text: string; x0: number; x1: number; y0: number }> = []
   let currentY = sorted[0].y0
 
   for (const word of sorted) {
@@ -162,8 +203,8 @@ function clusterWordsIntoRows(words: OcrWordBox[]): string[] {
   }
 
   return rowGroups
-    .map((group) => group.map((word) => word.text).join(' ').trim())
-    .filter(Boolean)
+    .map((group) => group.map((word) => ({ text: word.text, x0: word.x0, x1: word.x1 })))
+    .filter((group) => group.length > 0)
 }
 
 const DIFFICULTY_ROW_RE =
@@ -494,6 +535,13 @@ function pushOreLine(
   warnings: string[]
 ): void {
   if (isInertElement(elementName)) return
+
+  const duplicate = compositionLines.some(
+    (line) =>
+      line.elementName === elementName && Math.abs(line.percent - percent) < 0.11
+  )
+  if (duplicate) return
+
   if (qualityMissing) warnings.push(buildQualityMissingWarning(elementName, rawOcrLine))
 
   const rank = elementRank.get(elementName) ?? 0
@@ -510,6 +558,128 @@ function pushOreLine(
 
 function isPlausibleScanQuality(value: number): boolean {
   return Number.isFinite(value) && value >= 0 && value <= 9999
+}
+
+function isPlausibleCompositionPercent(value: number): boolean {
+  return Number.isFinite(value) && value > 0 && value <= 100
+}
+
+function leadingPercentFromRowWords(words: RowWord[]): number | null {
+  const sorted = [...words].sort((a, b) => a.x0 - b.x0)
+  for (let i = 0; i < sorted.length; i++) {
+    const token = sorted[i].text
+    const glued = token.match(/^(\d+(?:\.\d+)?)\s*%$/)
+    if (glued) return Number.parseFloat(glued[1])
+
+    const bare = token.match(/^(\d+(?:\.\d+)?)$/)
+    if (bare && i + 1 < sorted.length && sorted[i + 1].text === '%') {
+      return Number.parseFloat(bare[1])
+    }
+  }
+
+  const head = sorted
+    .slice(0, 3)
+    .map((word) => word.text)
+    .join('')
+  const headMatch = head.match(/(\d+(?:\.\d+)?)\s*%/)
+  return headMatch ? Number.parseFloat(headMatch[1]) : null
+}
+
+function trailingQualityFromRowWords(words: RowWord[]): number | null {
+  if (!words.length) return null
+  const rowMinX = Math.min(...words.map((word) => word.x0))
+  const rowMaxX = Math.max(...words.map((word) => word.x1))
+  const qZoneStart = rowMinX + (rowMaxX - rowMinX) * 0.5
+
+  const sorted = [...words].sort((a, b) => b.x0 - a.x0)
+  for (const word of sorted) {
+    if (word.x0 < qZoneStart) break
+    const match = word.text.match(/^Q?(\d{1,4})$/i)
+    if (!match) continue
+    const quality = Number.parseInt(match[1], 10)
+    if (isPlausibleScanQuality(quality) && quality > 0) return quality
+  }
+  return null
+}
+
+function elementTextFromRowWords(
+  words: RowWord[],
+  percentEndX: number,
+  qualityStartX: number | null
+): string {
+  const sorted = [...words].sort((a, b) => a.x0 - b.x0)
+  const endX = qualityStartX ?? Math.max(...words.map((word) => word.x1))
+  return sorted
+    .filter((word) => word.x0 >= percentEndX - 2 && word.x1 <= endX + 2)
+    .map((word) => word.text)
+    .join(' ')
+    .trim()
+}
+
+function splitRowGroupByPercents(group: RowWord[]): RowWord[][] {
+  const sorted = [...group].sort((a, b) => a.x0 - b.x0)
+  const percentStarts: number[] = []
+  for (let i = 0; i < sorted.length; i++) {
+    const token = sorted[i].text
+    if (/(\d+(?:\.\d+)?)\s*%/.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && sorted[i + 1]?.text === '%')) {
+      percentStarts.push(i)
+    }
+  }
+  if (percentStarts.length <= 1) return [group]
+
+  const segments: RowWord[][] = []
+  for (let p = 0; p < percentStarts.length; p++) {
+    const start = percentStarts[p]
+    const end = p + 1 < percentStarts.length ? percentStarts[p + 1] : sorted.length
+    segments.push(sorted.slice(start, end))
+  }
+  return segments
+}
+
+function parseCompositionSpatial(
+  words: RowWord[],
+  rowText: string
+): { elementName: string; percent: number; quality: number | null; qualityMissing: boolean } | { kind: 'inert'; percent: number } | null {
+  if (/INERT/i.test(rowText)) {
+    const percent = leadingPercentFromRowWords(words)
+    return percent != null && isPlausibleCompositionPercent(percent) ? { kind: 'inert', percent } : null
+  }
+
+  const percent = leadingPercentFromRowWords(words)
+  if (percent == null || !isPlausibleCompositionPercent(percent)) return null
+
+  const sorted = [...words].sort((a, b) => a.x0 - b.x0)
+  let percentEndX = sorted[0]?.x1 ?? 0
+  for (let i = 0; i < sorted.length; i++) {
+    const token = sorted[i].text
+    if (/(\d+(?:\.\d+)?)\s*%/.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && sorted[i + 1]?.text === '%')) {
+      percentEndX = sorted[i + 1]?.text === '%' ? sorted[i + 1].x1 : sorted[i].x1
+      break
+    }
+  }
+
+  const quality = trailingQualityFromRowWords(words)
+  const qualityWord = [...words]
+    .sort((a, b) => b.x0 - a.x0)
+    .find((word) => {
+      const rowMinX = Math.min(...words.map((item) => item.x0))
+      const rowMaxX = Math.max(...words.map((item) => item.x1))
+      const qZoneStart = rowMinX + (rowMaxX - rowMinX) * 0.5
+      return word.x0 >= qZoneStart && /^Q?\d{1,4}$/i.test(word.text)
+    })
+
+  const elementRaw = elementTextFromRowWords(words, percentEndX, qualityWord?.x0 ?? null)
+  const elementName = normalizeElementName(elementRaw)
+  if (!elementName || isInertElement(elementName)) {
+    return percent != null && isPlausibleCompositionPercent(percent) ? { kind: 'inert', percent } : null
+  }
+
+  return {
+    elementName,
+    percent,
+    quality,
+    qualityMissing: quality == null,
+  }
 }
 
 function parseCompositionRow(
@@ -612,28 +782,64 @@ function parseCompositionRow(
 
 function parseCompositionRows(
   rows: string[],
-  warnings: string[]
+  warnings: string[],
+  rowGroups?: RowWord[][]
 ): { lines: OcrCompositionLine[]; inertPercent: number | null } {
   const compositionLines: OcrCompositionLine[] = []
   let inertPercent: number | null = null
   const elementRank = new Map<string, number>()
   const consumedIndices = new Set<number>()
+  const parsedSpatialKeys = new Set<string>()
 
-  for (let i = 0; i < rows.length; i++) {
-    if (consumedIndices.has(i)) continue
-    const row = rows[i].trim()
-    if (!row || !isCompositionPercentRow(row)) continue
+  if (rowGroups?.length) {
+    for (const group of rowGroups) {
+      for (const segment of splitRowGroupByPercents(group)) {
+        const rowText = segment.map((word) => word.text).join(' ').trim()
+        if (!rowText || !isCompositionPercentRow(rowText)) continue
 
-    const parsed = parseCompositionRow(
-      row,
-      elementRank,
-      compositionLines,
-      warnings,
-      rows,
-      i,
-      consumedIndices
-    )
-    if (parsed?.kind === 'inert') inertPercent = parsed.percent
+        const spatial = parseCompositionSpatial(segment, rowText)
+        if (!spatial) continue
+
+        if ('kind' in spatial && spatial.kind === 'inert') {
+          inertPercent = spatial.percent
+          continue
+        }
+
+        const key = `${spatial.elementName}:${spatial.percent}:${spatial.quality ?? 'x'}`
+        if (parsedSpatialKeys.has(key)) continue
+        parsedSpatialKeys.add(key)
+
+        pushOreLine(
+          spatial.elementName,
+          spatial.percent,
+          spatial.quality,
+          spatial.qualityMissing,
+          rowText,
+          elementRank,
+          compositionLines,
+          warnings
+        )
+      }
+    }
+  }
+
+  if (!rowGroups?.length || compositionLines.length < 2) {
+    for (let i = 0; i < rows.length; i++) {
+      if (consumedIndices.has(i)) continue
+      const row = rows[i].trim()
+      if (!row || !isCompositionPercentRow(row)) continue
+
+      const parsed = parseCompositionRow(
+        row,
+        elementRank,
+        compositionLines,
+        warnings,
+        rows,
+        i,
+        consumedIndices
+      )
+      if (parsed?.kind === 'inert') inertPercent = parsed.percent
+    }
   }
 
   return { lines: compositionLines, inertPercent }
@@ -734,7 +940,11 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
 
   const warnings: string[] = []
   const panel = extractPanelStats(rows)
-  const { lines: compositionLines, inertPercent } = parseCompositionRows(rows.rows, warnings)
+  const { lines: compositionLines, inertPercent } = parseCompositionRows(
+    rows.rows,
+    warnings,
+    rows.rowGroups
+  )
   assignBandRanksByPercent(compositionLines)
 
   const resolvedPrimary = resolvePrimaryOreName(rows.rows, compositionLines)
@@ -816,7 +1026,20 @@ export function parseRockScanOcrWords(rawText: string, words: OcrWordBox[]): Roc
 
 /** Higher = more of the scan was understood. Used to pick the best OCR pass. */
 export function scoreRockScanOcrParseAttempt(result: RockScanOcrParseResult): number {
-  if (result.ok) return 1000
+  if (result.ok) {
+    let score = 1000
+    for (const line of result.data.compositionLines) {
+      if (line.qualityMissing) score -= 12
+      else score += 8
+    }
+    const valuableTotal = result.data.compositionLines.reduce((sum, line) => sum + line.percent, 0)
+    if (result.data.inertPercentScanned != null) {
+      if (Math.abs(valuableTotal + result.data.inertPercentScanned - 100) < 1.5) score += 25
+    } else if (Math.abs(valuableTotal - 100) < 2) {
+      score += 10
+    }
+    return score
+  }
 
   const error = result.error
   if (error.includes('no readable text')) return 0

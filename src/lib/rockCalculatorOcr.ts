@@ -14,7 +14,7 @@ export interface NormalizedCropRect {
   height: number
 }
 
-const OCR_PREPROCESS_SCALES = [2, 3, 4] as const
+const OCR_PREPROCESS_SCALES = [3, 4, 5, 6] as const
 const LUMINANCE_THRESHOLD = 128
 
 function applyBinaryThreshold(data: Uint8ClampedArray, threshold: number): void {
