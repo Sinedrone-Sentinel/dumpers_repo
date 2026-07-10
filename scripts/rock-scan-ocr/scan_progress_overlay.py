@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import queue
 import sys
+import threading
+import time
 import tkinter as tk
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -43,6 +46,11 @@ _CHECK_FONT = ("Segoe UI", _CHECK_SIZE, "bold")
 _PENDING_COLOR = "#3a5a44"
 _OK_COLOR = "#3dff6a"
 _FAIL_COLOR = "#ff5a5a"
+_PENDING = "○"
+_OK = "✓"
+_FAIL = "✗"
+_SCAN_FINISH_DELAY_MS = 2600
+_MARK_STAGGER_S = 0.14
 
 
 class BridgeScanOverlay:
@@ -74,6 +82,7 @@ class BridgeScanOverlay:
         self.shade_ids: list[int] = []
         self.selection: tuple[int, int, int, int] | None = None
         self._check_ids: dict[str, int] = {}
+        self._ui_ops: queue.Queue[Callable[[], None]] = queue.Queue()
 
         self.root = tk.Tk()
         self._photo = ImageTk.PhotoImage(snapshot, master=self.root)
@@ -117,10 +126,28 @@ class BridgeScanOverlay:
         self.root.protocol("WM_DELETE_WINDOW", self._on_cancel)
 
         self._set_selection_from_fractions(initial_fractions)
+        self.root.after(30, self._drain_ui_ops)
+
+    def schedule_ui(self, fn: Callable[[], None]) -> None:
+        """Thread-safe: run *fn* on the tk main loop."""
+        self._ui_ops.put(fn)
+
+    def _drain_ui_ops(self) -> None:
+        while True:
+            try:
+                fn = self._ui_ops.get_nowait()
+            except queue.Empty:
+                break
+            fn()
+            self.root.update()
+        self.root.after(30, self._drain_ui_ops)
 
     def set_header(self, text: str) -> None:
         self.hint.config(text=text)
-        self.root.update_idletasks()
+        self.root.update()
+
+    def _set_header_threadsafe(self, text: str) -> None:
+        self.schedule_ui(lambda: self.set_header(text))
 
     def ensure_row(self, row_id: str, y_frac: float) -> None:
         """Add a checkmark slot at a HUD row band (inside the green box, left edge)."""
@@ -147,12 +174,15 @@ class BridgeScanOverlay:
         if item is None:
             return
         if ok is None:
-            self.canvas.itemconfig(item, text="", fill=_PENDING_COLOR)
+            self.canvas.itemconfig(item, text=_PENDING, fill=_PENDING_COLOR)
         elif ok:
-            self.canvas.itemconfig(item, text="✓", fill=_OK_COLOR)
+            self.canvas.itemconfig(item, text=_OK, fill=_OK_COLOR)
         else:
-            self.canvas.itemconfig(item, text="✗", fill=_FAIL_COLOR)
-        self.root.update_idletasks()
+            self.canvas.itemconfig(item, text=_FAIL, fill=_FAIL_COLOR)
+        self.root.update()
+
+    def _mark_row_threadsafe(self, row_id: str, *, ok: bool | None = None) -> None:
+        self.schedule_ui(lambda: self.mark_row(row_id, ok=ok))
 
     def _set_selection_from_fractions(self, fractions: PanelFractions) -> None:
         left = int(round(fractions.x * self.client_w))
@@ -284,19 +314,29 @@ class BridgeScanOverlay:
         self.set_header("Scanning frozen HUD frame…")
         self._place_checkmarks()
         reporter = ScanProgressReporter(self)
+        for row in HUD_CHECK_ROWS:
+            reporter.mark_row(row.id, ok=None)
+        for row in COMPOSITION_CHECK_ROWS:
+            reporter.mark_row(row.id, ok=None)
+        self.root.update()
 
-        try:
-            self.result = self.on_scan(fractions, reporter)
-        except Exception as exc:  # pragma: no cover
-            self.result = LiveScanResult(ok=False, error=f"Rock scan failed: {exc}")
-            self.set_header(f"Scan failed: {exc}")
+        def work() -> None:
+            try:
+                result = self.on_scan(fractions, reporter)
+            except Exception as exc:  # pragma: no cover
+                result = LiveScanResult(ok=False, error=f"Rock scan failed: {exc}")
+            self.schedule_ui(lambda: self._apply_scan_result(result))
 
-        if self.result and self.result.ok:
+        threading.Thread(target=work, name="rock-scan-ocr", daemon=True).start()
+
+    def _apply_scan_result(self, result: LiveScanResult) -> None:
+        self.result = result
+        if result.ok:
             self.set_header("Scan complete — returning to Rock Calculator…")
-        elif self.result:
-            self.set_header((self.result.error or "Scan failed")[:80])
-
-        self.root.after(1600, self._finish)
+        else:
+            self.set_header((result.error or "Scan failed")[:80])
+        self.root.update()
+        self.root.after(_SCAN_FINISH_DELAY_MS, self._finish)
 
     def _on_cancel(self, _event: tk.Event | None = None) -> None:
         if self.scan_mode:
@@ -319,19 +359,20 @@ class BridgeScanOverlay:
 
 
 class ScanProgressReporter:
-    """Update the live overlay header and HUD-row checkmarks."""
+    """Thread-safe overlay updates while OCR runs off the UI thread."""
 
     def __init__(self, overlay: BridgeScanOverlay) -> None:
         self._overlay = overlay
 
     def set_header(self, text: str) -> None:
-        self._overlay.set_header(text)
+        self._overlay._set_header_threadsafe(text)
 
     def ensure_row(self, row_id: str, y_frac: float) -> None:
-        self._overlay.ensure_row(row_id, y_frac)
+        self._overlay.schedule_ui(lambda: self._overlay.ensure_row(row_id, y_frac))
 
     def mark_row(self, row_id: str, *, ok: bool | None = None) -> None:
-        self._overlay.mark_row(row_id, ok=ok)
+        self._overlay._mark_row_threadsafe(row_id, ok=ok)
+        time.sleep(_MARK_STAGGER_S)
 
     def mark_composition_result(self, composition: dict) -> None:
         """Tick each composition % line and the INERT anchor row like the HUD mockup."""
@@ -348,6 +389,7 @@ class ScanProgressReporter:
             row_id = f"comp_{index}"
             y_frac = comp_start + index * comp_step
             self.ensure_row(row_id, y_frac)
+            time.sleep(0.05)
             self.mark_row(row_id, ok=True)
 
         inert_ok = composition.get("inert_anchor_line") is not None
@@ -356,4 +398,5 @@ class ScanProgressReporter:
         else:
             inert_y = min(comp_start + len(lines) * comp_step, 0.9)
             self.ensure_row("inert", inert_y)
+            time.sleep(0.05)
             self.mark_row("inert", ok=inert_ok)

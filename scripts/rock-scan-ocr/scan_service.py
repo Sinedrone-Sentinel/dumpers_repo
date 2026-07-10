@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import sys
-import time
 import threading
 from pathlib import Path
 
@@ -42,7 +41,6 @@ def _scan_captured_panel(
     def mark(row_id: str, ok: bool | None) -> None:
         if progress is not None:
             progress.mark_row(row_id, ok=ok)
-            time.sleep(0.07)
 
     frozen_capture = capture_method.startswith("frozen")
 
@@ -74,9 +72,12 @@ def _scan_captured_panel(
         )
 
     if progress is not None:
-        progress.set_header("Reading frozen HUD frame…")
+        progress.set_header("Running HUD reader…")
 
     sc_ocr = _run_sc_ocr(panel_img, mining_signals)
+
+    if progress is not None:
+        progress.set_header("Checking HUD rows…")
     mark("ore", bool(sc_ocr.get("mineral_name")))
     mark("mass", sc_ocr.get("mass") is not None)
     mark("res", sc_ocr.get("resistance") is not None)
