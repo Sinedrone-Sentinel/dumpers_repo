@@ -19,11 +19,15 @@ export const DRIVING_MIN_MIN_PERCENT_OF_EQUALIZER = 1
 export const DRIVING_MIN_MAX_PERCENT_OF_EQUALIZER = 5
 /** Solo driving throttle targets this % under equalizing power. */
 export const SOLO_UNDER_EQUALIZER_IDEAL_PERCENT = 3
-/** Supplementary laser is first brought to this % under equalizing power, then tuned down. */
-export const SUPPLEMENTARY_INITIAL_UNDER_EQUALIZER_PERCENT = 1
+/** Crew 2-head plan: target this % under resistance equalizer (before instability bump). */
+export const CREW_UNDER_TWO_HEAD_PERCENT = 3
+/** Crew 3-head plan: target this % under resistance equalizer (before instability bump). */
+export const CREW_UNDER_THREE_HEAD_PERCENT = 6
+/** Within this MW, heads are treated as a power tie for driver vs full-blast selection. */
+export const POWER_TIE_MW = 150
 
-/** Modifier-only supporters at min must stay below this fraction of driving min MW. */
-const MODIFIER_SUPPORT_MAX_FRACTION_OF_DRIVING_MIN = 0.35
+const HIGH_INSTABILITY_SCANNER = 400
+const HIGHEST_INSTABILITY_DRIVER_PENALTY = 450
 
 export type MoleHeadRole = 'primary' | 'support' | 'idle'
 
@@ -100,7 +104,7 @@ export function buildMoleHeadProfile(
   }
 }
 
-/** Modifier-only supporters: resistance > window > instability (power handled by canBreak). */
+/** Modifier benefit for driver selection: resistance > window > instability reduction. */
 function headModifierBenefit(
   profile: MoleHeadProfile,
   rockInstability: number | null
@@ -114,7 +118,7 @@ function headModifierBenefit(
   }
   if (profile.instabilityModifier < 0) {
     const instabilityWeight =
-      rockInstability != null && rockInstability >= 400 ? 2 : 0.75
+      rockInstability != null && rockInstability >= HIGH_INSTABILITY_SCANNER ? 2 : 0.75
     benefit += Math.abs(profile.instabilityModifier) * instabilityWeight
   }
   return benefit
@@ -134,26 +138,11 @@ function modifierDetail(profile: MoleHeadProfile): string | null {
   return parts.length ? parts.join(', ') : null
 }
 
-function drivingMinSharePercent(profile: MoleHeadProfile, equalizingPower: number): number {
-  if (equalizingPower <= 0) return 0
-  return Math.round((profile.minLaserMw / equalizingPower) * 100)
-}
-
-function isDrivingMinShareValid(sharePercent: number): boolean {
-  return (
-    sharePercent >= DRIVING_MIN_MIN_PERCENT_OF_EQUALIZER &&
-    sharePercent <= DRIVING_MIN_MAX_PERCENT_OF_EQUALIZER
-  )
-}
-
-function isViableModifierSupporter(
-  supporter: MoleHeadProfile,
-  drivingMinMw: number,
-  rockInstability: number | null
-): boolean {
-  if (headModifierBenefit(supporter, rockInstability) <= 0) return false
-  if (drivingMinMw <= 0) return false
-  return supporter.minLaserMw <= drivingMinMw * MODIFIER_SUPPORT_MAX_FRACTION_OF_DRIVING_MIN
+function profileByIndex(
+  profiles: MoleHeadProfile[],
+  index: number
+): MoleHeadProfile | undefined {
+  return profiles.find((p) => p.slotIndex === index)
 }
 
 function requiredPowerForHeads(
@@ -162,9 +151,10 @@ function requiredPowerForHeads(
   profiles: MoleHeadProfile[],
   activeIndices: number[]
 ): number {
-  const multipliers = activeIndices.map((index) =>
-    laserResistanceMultiplier(profiles[index].resistanceModifier)
-  )
+  const multipliers = activeIndices.map((index) => {
+    const profile = profileByIndex(profiles, index)
+    return laserResistanceMultiplier(profile?.resistanceModifier ?? 0)
+  })
   const bestResistanceMultiplier = Math.min(...multipliers)
   return Math.round(requiredLaserPower(mass, resistancePercent, bestResistanceMultiplier))
 }
@@ -177,9 +167,11 @@ function combinedModifiers(
   let window = 0
   let instability = 0
   for (const index of activeIndices) {
-    resistance += profiles[index].resistanceModifier
-    window += profiles[index].optimalWindowModifier
-    instability += profiles[index].instabilityModifier
+    const profile = profileByIndex(profiles, index)
+    if (!profile) continue
+    resistance += profile.resistanceModifier
+    window += profile.optimalWindowModifier
+    instability += profile.instabilityModifier
   }
   return { resistance, window, instability }
 }
@@ -199,21 +191,91 @@ function buildAssignment(
   }
 }
 
-function scoreStrategy(
+export function crewUnderPercent(
+  activeHeadCount: number,
+  scannerInstability: number | null
+): number {
+  const base =
+    activeHeadCount >= 3 ? CREW_UNDER_THREE_HEAD_PERCENT : CREW_UNDER_TWO_HEAD_PERCENT
+  if (scannerInstability != null && scannerInstability >= HIGH_INSTABILITY_SCANNER) {
+    return base + 1
+  }
+  return base
+}
+
+function powerWithinTie(a: MoleHeadProfile, b: MoleHeadProfile): boolean {
+  return Math.abs(a.laserPower - b.laserPower) <= POWER_TIE_MW
+}
+
+function maxInstabilityModifier(profiles: MoleHeadProfile[]): number {
+  return Math.max(...profiles.map((p) => p.instabilityModifier))
+}
+
+function soloDrivingThrottlePercent(
+  profile: MoleHeadProfile,
+  equalizingPower: number,
+  underPercent = SOLO_UNDER_EQUALIZER_IDEAL_PERCENT
+): number | null {
+  const targetMw = equalizingPower * (1 - underPercent / 100)
+  if (targetMw > profile.laserPower) return null
+
+  const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
+  const minPercent = profile.throttleMinimumPercent
+  if (throttlePercent < minPercent) {
+    if (profile.minLaserMw >= equalizingPower) return null
+    return minPercent
+  }
+  return throttlePercent
+}
+
+function sortSupportIndices(
+  profiles: MoleHeadProfile[],
+  supportIndices: number[]
+): number[] {
+  return [...supportIndices].sort((a, b) => {
+    const pa = profileByIndex(profiles, a)
+    const pb = profileByIndex(profiles, b)
+    if (!pa || !pb) return 0
+    if (pa.laserPower !== pb.laserPower) return pa.laserPower - pb.laserPower
+    return pa.slotIndex - pb.slotIndex
+  })
+}
+
+function scoreCrewFullBlastStrategy(
   canBreak: boolean,
-  drivingMinSharePercent: number,
+  activeHeadCount: number,
+  driver: MoleHeadProfile,
+  supports: MoleHeadProfile[],
+  driverThrottle: number,
   combinedResistanceModifier: number,
   combinedWindowModifier: number,
   combinedInstabilityModifier: number,
-  modifierSupportCount: number,
-  instability: number | null
+  instability: number | null,
+  allProfiles: MoleHeadProfile[],
+  statDrivenDriver: boolean
 ): number {
   if (!canBreak) return -Infinity
 
   let score = 10_000
-  score -= Math.abs(drivingMinSharePercent - DRIVING_MIN_IDEAL_PERCENT_OF_EQUALIZER) * 12
 
-  // Power is satisfied by canBreak; rank remaining stats: resistance > window > instability.
+  score -= (activeHeadCount - 1) * 80
+  score += headModifierBenefit(driver, instability) * 2
+  score -= driverThrottle * 0.35
+
+  if (driver.instabilityModifier >= maxInstabilityModifier(allProfiles)) {
+    score -= HIGHEST_INSTABILITY_DRIVER_PENALTY
+  }
+
+  for (const support of supports) {
+    if (headModifierBenefit(support, instability) > headModifierBenefit(driver, instability) + 15) {
+      score -= 35
+    }
+  }
+
+  if (statDrivenDriver) {
+    score += 25
+  }
+
   if (combinedResistanceModifier < 0) {
     score += Math.abs(combinedResistanceModifier) * 6
   } else if (combinedResistanceModifier > 0) {
@@ -221,9 +283,8 @@ function scoreStrategy(
   }
 
   score += combinedWindowModifier * 3
-  score -= modifierSupportCount * 2
 
-  if (instability != null && instability >= 400) {
+  if (instability != null && instability >= HIGH_INSTABILITY_SCANNER) {
     if (combinedInstabilityModifier < 0) {
       score += Math.abs(combinedInstabilityModifier) * 2
     } else if (combinedInstabilityModifier > 0) {
@@ -233,150 +294,79 @@ function scoreStrategy(
     score -= combinedInstabilityModifier
   }
 
-  if (modifierSupportCount > 0 && combinedResistanceModifier < 0) {
-    score += 20
-  }
-  if (modifierSupportCount > 0 && combinedWindowModifier > 0) {
-    score += 10
-  }
-
   return score
 }
 
-function soloDrivingThrottlePercent(
-  profile: MoleHeadProfile,
-  equalizingPower: number,
-  underPercent = SOLO_UNDER_EQUALIZER_IDEAL_PERCENT
-): number | null {
-  const targetMw = equalizingPower * (1 - underPercent / 100)
-  const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
-  const minPercent = profile.throttleMinimumPercent
-
-  if (throttlePercent > 100) return null
-  if (throttlePercent < minPercent) {
-    const minMw = profile.minLaserMw
-    if (minMw >= equalizingPower) return null
-    return minPercent
+function buildCrewSummary(
+  driver: MoleHeadProfile,
+  supports: MoleHeadProfile[],
+  driverThrottle: number,
+  underPercent: number,
+  threeLaser: boolean
+): string {
+  const supportLabels = supports.map((s) => `Head ${s.slotIndex + 1}`).join(' + ')
+  if (supports.length === 0) {
+    return `Head ${driver.slotIndex + 1} drives at ${driverThrottle}% (~${underPercent}% under equalizer) — crew partner not needed on other turrets.`
   }
-  return throttlePercent
+  if (threeLaser) {
+    return `${supportLabels} full @ 100% first; Head ${driver.slotIndex + 1} drives at ${driverThrottle}% — three-laser crack (~${underPercent}% under equalizer).`
+  }
+  return `Head ${supports[0].slotIndex + 1} full @ 100% first; Head ${driver.slotIndex + 1} drives at ${driverThrottle}% (~${underPercent}% under equalizer).`
 }
 
-function supplementaryThrottleForCrew(
-  profile: MoleHeadProfile,
-  equalizingPower: number,
-  drivingMinMw: number,
-  modifierSupportMinMw: number
-): number | null {
-  const targetMw = equalizingPower - drivingMinMw - modifierSupportMinMw
-  if (targetMw <= 0) return null
-
-  const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
-  if (throttlePercent > 100) return null
-  if (throttlePercent < profile.throttleMinimumPercent) return null
-
-  const initialUnderMw =
-    equalizingPower * (1 - SUPPLEMENTARY_INITIAL_UNDER_EQUALIZER_PERCENT / 100)
-  const initialThrottle = throttlePercentFromMw(initialUnderMw, profile.laserPower)
-  if (initialThrottle > 100) return null
-
-  return throttlePercent
+function buildPowerTieNote(
+  driver: MoleHeadProfile,
+  supports: MoleHeadProfile[]
+): string | null {
+  const tied = supports.some((s) => powerWithinTie(driver, s))
+  if (!tied) return null
+  return 'Heads within 150 MW — driver picked for module stack and lower laser instability'
 }
 
-function evaluateCrewStrategy(
+function evaluateCrewFullBlastPlan(
   profiles: MoleHeadProfile[],
-  drivingIndex: number,
-  mainSupplementaryIndex: number | null,
-  modifierOnlyIndices: number[],
+  driverIndex: number,
+  supportIndices: number[],
   mass: number,
   resistancePercent: number,
   instability: number | null
 ): CandidateStrategy | null {
-  const driving = profiles.find((p) => p.slotIndex === drivingIndex)
-  if (!driving) return null
+  const driver = profileByIndex(profiles, driverIndex)
+  if (!driver) return null
 
-  const activeIndices = [drivingIndex]
-  if (mainSupplementaryIndex != null) activeIndices.push(mainSupplementaryIndex)
-  for (const index of modifierOnlyIndices) {
-    if (!activeIndices.includes(index)) activeIndices.push(index)
-  }
+  const sortedSupports = sortSupportIndices(profiles, supportIndices)
+  const supportProfiles = sortedSupports
+    .map((index) => profileByIndex(profiles, index))
+    .filter((p): p is MoleHeadProfile => p != null)
 
-  const equalizingPower = requiredPowerForHeads(mass, resistancePercent, profiles, activeIndices)
-  const drivingShare = drivingMinSharePercent(driving, equalizingPower)
+  const activeIndices = [driverIndex, ...sortedSupports]
+  const activeHeadCount = activeIndices.length
+  const equalizingPower = requiredPowerForHeads(
+    mass,
+    resistancePercent,
+    profiles,
+    activeIndices
+  )
+  const underPercent = crewUnderPercent(activeHeadCount, instability)
+  const mods = combinedModifiers(profiles, activeIndices)
 
-  if (mainSupplementaryIndex != null) {
-    if (!isDrivingMinShareValid(drivingShare)) return null
+  if (supportProfiles.length === 0) {
+    const throttlePercent = soloDrivingThrottlePercent(driver, equalizingPower, underPercent)
+    if (throttlePercent == null) return null
 
-    const mainSupp = profiles.find((p) => p.slotIndex === mainSupplementaryIndex)
-    if (!mainSupp) return null
-
-    const viableModifiers = modifierOnlyIndices.filter((index) => {
-      if (index === mainSupplementaryIndex || index === drivingIndex) return false
-      return isViableModifierSupporter(
-        profiles.find((p) => p.slotIndex === index)!,
-        driving.minLaserMw,
-        instability
-      )
-    })
-    if (viableModifiers.length !== modifierOnlyIndices.length) return null
-
-    const modifierSupportMinMw = viableModifiers.reduce(
-      (sum, index) => sum + (profiles.find((p) => p.slotIndex === index)?.minLaserMw ?? 0),
-      0
-    )
-
-    const suppThrottle = supplementaryThrottleForCrew(
-      mainSupp,
-      equalizingPower,
-      driving.minLaserMw,
-      modifierSupportMinMw
-    )
-    if (suppThrottle == null) return null
-
-    const mods = combinedModifiers(profiles, activeIndices)
     const drivingDetail = [
-      `Driving laser at min throttle (${driving.throttleMinimumPercent}%) — ${drivingShare}% of resistance equalizer`,
-      'Raise throttle from min for fine fracture control',
-      modifierDetail(driving),
-    ]
-      .filter(Boolean)
-      .join(' · ')
-
-    const suppDetail = [
-      `Resistance match at ${suppThrottle}% (tuned from ${SUPPLEMENTARY_INITIAL_UNDER_EQUALIZER_PERCENT}% under equalizer)`,
-      modifierDetail(mainSupp),
+      `Drive at ${throttlePercent}% (~${underPercent}% under resistance equalizer)`,
+      modifierDetail(driver),
     ]
       .filter(Boolean)
       .join(' · ')
 
     const assignments = profiles.map((profile) => {
-      if (profile.slotIndex === drivingIndex) {
-        return buildAssignment(profile, 'primary', driving.throttleMinimumPercent, drivingDetail)
+      if (profile.slotIndex === driverIndex) {
+        return buildAssignment(profile, 'primary', throttlePercent, drivingDetail)
       }
-      if (profile.slotIndex === mainSupplementaryIndex) {
-        return buildAssignment(profile, 'support', suppThrottle, suppDetail)
-      }
-      if (viableModifiers.includes(profile.slotIndex)) {
-        const modDetail = modifierDetail(profile)
-        return buildAssignment(
-          profile,
-          'support',
-          profile.throttleMinimumPercent,
-          [
-            `Module bonuses at min throttle (${profile.throttleMinimumPercent}%)`,
-            modDetail,
-          ]
-            .filter(Boolean)
-            .join(' · ')
-        )
-      }
-      return buildAssignment(profile, 'idle', 0, 'Off — not needed for this rock')
+      return buildAssignment(profile, 'idle', 0, 'Off — crew partner not needed on other turrets')
     })
-
-    const modifierLabels = viableModifiers.map((i) => `Head ${i + 1}`)
-    const summary =
-      modifierLabels.length > 0
-        ? `Head ${drivingIndex + 1} drives at ${driving.throttleMinimumPercent}% min; Head ${mainSupplementaryIndex + 1} matches resistance at ${suppThrottle}%; ${modifierLabels.join(' + ')} at min for modules.`
-        : `Head ${drivingIndex + 1} drives at ${driving.throttleMinimumPercent}% min; Head ${mainSupplementaryIndex + 1} matches resistance at ${suppThrottle}%.`
 
     return {
       assignments,
@@ -384,35 +374,67 @@ function evaluateCrewStrategy(
       requiredPower: equalizingPower,
       combinedWindowModifier: mods.window,
       combinedInstabilityModifier: mods.instability,
-      summary,
-      score: scoreStrategy(
+      summary: buildCrewSummary(driver, [], throttlePercent, underPercent, false),
+      score: scoreCrewFullBlastStrategy(
         true,
-        drivingShare,
+        1,
+        driver,
+        [],
+        throttlePercent,
         mods.resistance,
         mods.window,
         mods.instability,
-        viableModifiers.length,
-        instability
+        instability,
+        profiles,
+        false
       ),
     }
   }
 
-  const soloThrottle = soloDrivingThrottlePercent(driving, equalizingPower)
-  if (soloThrottle == null) return null
+  const targetTotalMw = equalizingPower * (1 - underPercent / 100)
+  const supportMw = supportProfiles.reduce((sum, p) => sum + p.laserPower, 0)
+  const maxCombinedMw = supportMw + driver.laserPower
+  if (maxCombinedMw < targetTotalMw) return null
 
-  const mods = combinedModifiers(profiles, [drivingIndex])
-  const drivingDetail = [
-    `Fracture at ${soloThrottle}% (~${SOLO_UNDER_EQUALIZER_IDEAL_PERCENT}% under resistance equalizer)`,
-    modifierDetail(driving),
-  ]
-    .filter(Boolean)
-    .join(' · ')
+  const driverMw = targetTotalMw - supportMw
+
+  if (driverMw <= 0 || driverMw > driver.laserPower || driverMw < driver.minLaserMw) {
+    return null
+  }
+
+  const driverThrottle = throttlePercentFromMw(driverMw, driver.laserPower)
+  if (
+    driverThrottle > 100 ||
+    driverThrottle < driver.throttleMinimumPercent
+  ) {
+    return null
+  }
+
+  const statDrivenDriver = supportProfiles.some((s) => powerWithinTie(driver, s))
+  const powerTieNote = buildPowerTieNote(driver, supportProfiles)
+  const threeLaser = activeHeadCount >= 3
 
   const assignments = profiles.map((profile) => {
-    if (profile.slotIndex === drivingIndex) {
-      return buildAssignment(profile, 'primary', soloThrottle, drivingDetail)
+    if (profile.slotIndex === driverIndex) {
+      const parts = [
+        `Drive at ${driverThrottle}% after full-blast head(s) (~${underPercent}% under equalizer combined)`,
+        powerTieNote,
+        modifierDetail(profile),
+      ].filter(Boolean)
+      return buildAssignment(profile, 'primary', driverThrottle, parts.join(' · '))
     }
-    return buildAssignment(profile, 'idle', 0, 'Off — crew partner not running a second laser')
+
+    if (sortedSupports.includes(profile.slotIndex)) {
+      const order =
+        sortedSupports.indexOf(profile.slotIndex) + 1
+      const parts = [
+        `Run at 100% first (full-blast #${order})`,
+        modifierDetail(profile),
+      ].filter(Boolean)
+      return buildAssignment(profile, 'support', 100, parts.join(' · '))
+    }
+
+    return buildAssignment(profile, 'idle', 0, 'Off — not needed for this rock')
   })
 
   return {
@@ -421,16 +443,20 @@ function evaluateCrewStrategy(
     requiredPower: equalizingPower,
     combinedWindowModifier: mods.window,
     combinedInstabilityModifier: mods.instability,
-    summary: `Head ${drivingIndex + 1} fractures at ${soloThrottle}% — no supplementary laser needed.`,
-    score: scoreStrategy(
+    summary: buildCrewSummary(driver, supportProfiles, driverThrottle, underPercent, threeLaser),
+    score: scoreCrewFullBlastStrategy(
       true,
-      drivingShare,
+      activeHeadCount,
+      driver,
+      supportProfiles,
+      driverThrottle,
       mods.resistance,
       mods.window,
       mods.instability,
-      0,
-      instability
-    ) - 5,
+      instability,
+      profiles,
+      statDrivenDriver
+    ),
   }
 }
 
@@ -477,41 +503,28 @@ function evaluateSingleHeadOnly(
       ? `Solo — Head ${primaryIndex + 1} fractures at ${throttlePercent}% throttle.`
       : `Solo — Head ${primaryIndex + 1} cannot crack this rock at full throttle.`,
     score: canBreak
-      ? scoreStrategy(
+      ? scoreCrewFullBlastStrategy(
           true,
-          drivingMinSharePercent(primary, equalizingPower),
+          1,
+          primary,
+          [],
+          throttlePercent!,
           mods.resistance,
           mods.window,
           mods.instability,
-          0,
-          null
+          null,
+          profiles,
+          false
         )
       : -equalizingPower + primary.laserPower,
   }
 }
 
-function enumerateModifierSubsets(
-  profiles: MoleHeadProfile[],
-  drivingIndex: number,
-  mainSupplementaryIndex: number
-): number[][] {
-  const others = profiles
-    .map((profile) => profile.slotIndex)
-    .filter((index) => index !== drivingIndex && index !== mainSupplementaryIndex)
-  const subsets: number[][] = [[]]
-
-  for (const index of others) {
-    const next = subsets.map((subset) => [...subset, index])
-    subsets.push(...next)
-  }
-
-  return subsets
-}
-
 function crewMinPowerWarnings(
   lasers: MiningLaserSlotConfig[],
   assignments: MoleHeadAssignment[],
-  equalizingPower: number
+  equalizingPower: number,
+  underPercent: number
 ): MinPowerWarning[] {
   const warnings: MinPowerWarning[] = []
 
@@ -522,40 +535,65 @@ function crewMinPowerWarnings(
     const profile = buildMoleHeadProfile(slot, assignment.slotIndex)
     if (!profile) continue
 
-    const share = drivingMinSharePercent(profile, equalizingPower)
-    if (assignment.throttlePercent === profile.throttleMinimumPercent) {
-      if (share < DRIVING_MIN_MIN_PERCENT_OF_EQUALIZER) {
-        warnings.push({
-          slotIndex: assignment.slotIndex,
-          label: assignment.label,
-          requiredMw: Math.round(equalizingPower * (DRIVING_MIN_IDEAL_PERCENT_OF_EQUALIZER / 100)),
-          minLaserMw: profile.minLaserMw,
-          throttleMinimumPercent: profile.throttleMinimumPercent,
-          level: 'misconfigured',
-        })
-      } else if (share > DRIVING_MIN_MAX_PERCENT_OF_EQUALIZER) {
-        warnings.push({
-          slotIndex: assignment.slotIndex,
-          label: assignment.label,
-          requiredMw: Math.round(equalizingPower * (DRIVING_MIN_IDEAL_PERCENT_OF_EQUALIZER / 100)),
-          minLaserMw: profile.minLaserMw,
-          throttleMinimumPercent: profile.throttleMinimumPercent,
-          level: 'misconfigured',
-        })
-      }
-    } else {
-      const warning = assessMinPowerWarningForSlot(
-        slot.laserName,
-        equalizingPower,
-        profile.laserPower,
-        assignment.label,
-        assignment.slotIndex
-      )
-      if (warning) warnings.push(warning)
-    }
+    const targetMw = Math.round(equalizingPower * (1 - underPercent / 100))
+    const warning = assessMinPowerWarningForSlot(
+      slot.laserName,
+      targetMw,
+      profile.laserPower,
+      assignment.label,
+      assignment.slotIndex
+    )
+    if (warning) warnings.push(warning)
   }
 
   return warnings
+}
+
+function activeHeadCountFromAssignments(assignments: MoleHeadAssignment[]): number {
+  return assignments.filter((a) => a.role !== 'idle').length
+}
+
+function maxCombinedLaserMw(profiles: MoleHeadProfile[]): number {
+  return profiles.reduce((sum, profile) => sum + profile.laserPower, 0)
+}
+
+function buildUncrackableCrewStrategy(
+  profiles: MoleHeadProfile[],
+  mass: number,
+  resistancePercent: number,
+  instability: number | null
+): MoleLoadoutStrategy {
+  const allIndices = profiles.map((profile) => profile.slotIndex)
+  const equalizingPower = requiredPowerForHeads(
+    mass,
+    resistancePercent,
+    profiles,
+    allIndices
+  )
+  const underPercent = crewUnderPercent(3, instability)
+  const targetTotalMw = equalizingPower * (1 - underPercent / 100)
+  const mods = combinedModifiers(profiles, allIndices)
+
+  const assignments = profiles.map((profile) =>
+    buildAssignment(profile, 'idle', 0, 'Off — rock exceeds this loadout')
+  )
+
+  const maxMw = maxCombinedLaserMw(profiles)
+  const summary =
+    maxMw < targetTotalMw
+      ? 'This rock is too large for three full-blast turrets on this loadout — skip it or bring more moles.'
+      : 'No two- or three-head crew plan can crack this rock on this loadout — skip it or bring more moles.'
+
+  return {
+    assignments,
+    canBreak: false,
+    requiredPower: equalizingPower,
+    combinedWindowModifier: mods.window,
+    combinedInstabilityModifier: mods.instability,
+    summary,
+    soloMining: false,
+    minPowerWarnings: [],
+  }
 }
 
 export interface MoleStrategyOptions {
@@ -588,44 +626,79 @@ export function findBestMoleLoadoutStrategy(
   } else {
     if (profiles.length < 2) return null
 
-    for (const driving of profiles) {
-      const soloCrew = evaluateCrewStrategy(
+    const allIndices = profiles.map((profile) => profile.slotIndex)
+    const bestEqualizing = requiredPowerForHeads(
+      mass,
+      resistancePercent,
+      profiles,
+      allIndices
+    )
+    const crewTargetMw =
+      bestEqualizing * (1 - crewUnderPercent(3, instability) / 100)
+    if (maxCombinedLaserMw(profiles) < crewTargetMw) {
+      return buildUncrackableCrewStrategy(
         profiles,
-        driving.slotIndex,
-        null,
+        mass,
+        resistancePercent,
+        instability
+      )
+    }
+
+    for (const driver of profiles) {
+      const oneHead = evaluateCrewFullBlastPlan(
+        profiles,
+        driver.slotIndex,
         [],
         mass,
         resistancePercent,
         instability
       )
-      if (soloCrew) candidates.push(soloCrew)
+      if (oneHead) candidates.push(oneHead)
 
-      for (const supplementary of profiles) {
-        if (supplementary.slotIndex === driving.slotIndex) continue
-        for (const modifierOnly of enumerateModifierSubsets(
+      for (const support of profiles) {
+        if (support.slotIndex === driver.slotIndex) continue
+        const twoHead = evaluateCrewFullBlastPlan(
           profiles,
-          driving.slotIndex,
-          supplementary.slotIndex
-        )) {
-          const candidate = evaluateCrewStrategy(
-            profiles,
-            driving.slotIndex,
-            supplementary.slotIndex,
-            modifierOnly,
-            mass,
-            resistancePercent,
-            instability
-          )
-          if (candidate) candidates.push(candidate)
+          driver.slotIndex,
+          [support.slotIndex],
+          mass,
+          resistancePercent,
+          instability
+        )
+        if (twoHead) candidates.push(twoHead)
+      }
+
+      if (profiles.length >= 3) {
+        for (let i = 0; i < profiles.length; i++) {
+          for (let j = i + 1; j < profiles.length; j++) {
+            const s1 = profiles[i]
+            const s2 = profiles[j]
+            if (s1.slotIndex === driver.slotIndex || s2.slotIndex === driver.slotIndex) continue
+            const threeHead = evaluateCrewFullBlastPlan(
+              profiles,
+              driver.slotIndex,
+              [s1.slotIndex, s2.slotIndex],
+              mass,
+              resistancePercent,
+              instability
+            )
+            if (threeHead) candidates.push(threeHead)
+          }
         }
       }
     }
   }
 
-  if (!candidates.length) return null
+  if (!candidates.length) {
+    return options.soloMining
+      ? null
+      : buildUncrackableCrewStrategy(profiles, mass, resistancePercent, instability)
+  }
 
   candidates.sort((a, b) => b.score - a.score)
   const best = candidates[0]
+  const activeCount = activeHeadCountFromAssignments(best.assignments)
+  const crewUnder = crewUnderPercent(activeCount, instability)
 
   return {
     assignments: best.assignments,
@@ -636,35 +709,7 @@ export function findBestMoleLoadoutStrategy(
     summary: best.summary,
     soloMining: options.soloMining,
     minPowerWarnings: options.soloMining
-      ? primaryMinPowerWarningsSolo(lasers, best.assignments, best.requiredPower)
-      : crewMinPowerWarnings(lasers, best.assignments, best.requiredPower),
+      ? crewMinPowerWarnings(lasers, best.assignments, best.requiredPower, SOLO_UNDER_EQUALIZER_IDEAL_PERCENT)
+      : crewMinPowerWarnings(lasers, best.assignments, best.requiredPower, crewUnder),
   }
-}
-
-function primaryMinPowerWarningsSolo(
-  lasers: MiningLaserSlotConfig[],
-  assignments: MoleHeadAssignment[],
-  equalizingPower: number
-): MinPowerWarning[] {
-  const warnings: MinPowerWarning[] = []
-
-  for (const assignment of assignments) {
-    if (assignment.role !== 'primary') continue
-    const slot = lasers[assignment.slotIndex]
-    if (!slot) continue
-    const profile = buildMoleHeadProfile(slot, assignment.slotIndex)
-    if (!profile) continue
-
-    const targetMw = equalizingPower * (1 - SOLO_UNDER_EQUALIZER_IDEAL_PERCENT / 100)
-    const warning = assessMinPowerWarningForSlot(
-      slot.laserName,
-      Math.round(targetMw),
-      profile.laserPower,
-      assignment.label,
-      assignment.slotIndex
-    )
-    if (warning) warnings.push(warning)
-  }
-
-  return warnings
 }

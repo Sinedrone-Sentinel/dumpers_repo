@@ -112,12 +112,12 @@ function SmartCrackerPanel({
   onMoleSoloMiningChange: (solo: boolean) => void
   showSoloToggle: boolean
 }) {
-  const { crackGadget, qualityGadget, moleStrategy } = result
+  const { crackGadget, qualityGadget, moleStrategy, slowCrack } = result
   const hasGadget = crackGadget != null || qualityGadget != null
   const activeMoleHeads =
     moleStrategy?.assignments.filter((head) => head.role !== 'idle') ?? []
 
-  if (!hasGadget && !moleStrategy && !showSoloToggle) return null
+  if (!hasGadget && !moleStrategy && !showSoloToggle && !slowCrack) return null
 
   return (
     <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-3">
@@ -167,10 +167,12 @@ function SmartCrackerPanel({
                     {' '}
                     ·{' '}
                     {head.role === 'primary'
-                      ? 'Fracture'
-                      : head.role === 'support'
-                        ? 'Support'
-                        : 'Off'}
+                      ? 'Drive'
+                      : head.role === 'support' && head.throttlePercent === 100
+                        ? 'Full'
+                        : head.role === 'support'
+                          ? 'Support'
+                          : 'Off'}
                     {head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
                   </span>
                 </p>
@@ -208,6 +210,29 @@ function SmartCrackerPanel({
               ))}
             </div>
           ) : null}
+        </div>
+      ) : null}
+
+      {slowCrack ? (
+        <div
+          className={`rounded-md border px-2.5 py-2 space-y-1 ${
+            slowCrack.worthWaiting
+              ? 'border-amber-900/50 bg-amber-950/20'
+              : 'border-orange-900/50 bg-orange-950/20'
+          }`}
+        >
+          <p
+            className={`text-xs font-medium ${
+              slowCrack.worthWaiting ? 'text-amber-300' : 'text-orange-300'
+            }`}
+          >
+            {slowCrack.headline}
+          </p>
+          <p className="text-[11px] text-slate-400 leading-snug">{slowCrack.detail}</p>
+          <p className="text-[11px] font-mono tabular-nums text-slate-500">
+            Full-blast {slowCrack.deliveredMw.toLocaleString()} MW vs{' '}
+            {slowCrack.equalizingMw.toLocaleString()} MW equalizer
+          </p>
         </div>
       ) : null}
 
@@ -250,7 +275,13 @@ function SmartCrackerPanel({
   )
 }
 
-function ComparisonPanel({ comparison }: { comparison: LoadoutBreakabilityComparison }) {
+function ComparisonPanel({
+  comparison,
+  suppressPerLaserDetail = false,
+}: {
+  comparison: LoadoutBreakabilityComparison
+  suppressPerLaserDetail?: boolean
+}) {
   const multiLaser = comparison.lasers.length > 1
   const hasMinPowerWarnings = comparison.minPowerWarnings.length > 0
 
@@ -305,7 +336,7 @@ function ComparisonPanel({ comparison }: { comparison: LoadoutBreakabilityCompar
         </div>
       ) : null}
 
-      {multiLaser ? (
+      {multiLaser && !suppressPerLaserDetail ? (
         <div className="pt-2 border-t border-slate-700/60 space-y-2">
           <p className="text-[10px] uppercase tracking-wide text-slate-500">Per laser</p>
           {comparison.lasers.map((row) => (
@@ -327,6 +358,11 @@ function ComparisonPanel({ comparison }: { comparison: LoadoutBreakabilityCompar
             </div>
           ))}
         </div>
+      ) : suppressPerLaserDetail ? (
+        <p className="text-[10px] text-slate-500 pt-2 border-t border-slate-700/60 leading-snug">
+          Mole crew head plan above uses full-blast + drive throttles — per-laser equal split does
+          not apply.
+        </p>
       ) : null}
     </div>
   )
@@ -517,7 +553,14 @@ export default function MiningLoadoutPanel({
         />
       ) : null}
 
-      {comparison ? <ComparisonPanel comparison={comparison} /> : null}
+      {comparison ? (
+        <ComparisonPanel
+          comparison={comparison}
+          suppressPerLaserDetail={
+            vesselId === 'mole' && !moleSoloMining && smartCracker?.moleStrategy != null
+          }
+        />
+      ) : null}
 
       {smartCracker ? (
         <SmartCrackerPanel

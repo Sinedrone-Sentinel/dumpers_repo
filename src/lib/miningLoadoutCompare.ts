@@ -9,11 +9,24 @@ import {
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
 
+export interface RockMaterialScan {
+  elementName: string
+  percent: number
+  quality: number
+  label?: string
+}
+
 export interface RockBreakabilityTarget {
   scannerMass: number | null
   resistancePercent: number | null
   /** Scanner instability (HUD value, e.g. 952.25). */
   instability: number | null
+  /** RS ore name from the calculator, when set. */
+  oreName?: string | null
+  /** Total SCU from composition panel, when entered. */
+  totalScu?: number | null
+  /** Valuable composition rows with % and Q band — used for grind-worth-it advice. */
+  materials?: RockMaterialScan[] | null
 }
 
 export interface LaserBreakabilityRow {

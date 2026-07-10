@@ -165,14 +165,6 @@ export default function RockCalculator({
   const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance)
 
   useEffect(() => {
-    onRockTargetChange?.({
-      scannerMass,
-      resistancePercent: scannerResistance,
-      instability: scannerInstability,
-    })
-  }, [scannerMass, scannerResistance, scannerInstability, onRockTargetChange])
-
-  useEffect(() => {
     if (ocrApplyingRef.current) {
       ocrApplyingRef.current = false
       return
@@ -312,6 +304,34 @@ export default function RockCalculator({
       return { ...row, percent, scu, dfp }
     })
   }, [calculatorParts, percentBySlot, qualityBySlot, totalScu, ocrOverrideActive])
+
+  useEffect(() => {
+    const valuableMaterials = materialRows
+      .filter((row) => !row.isInert && row.percent > 0)
+      .map((row) => ({
+        elementName: row.part.elementName,
+        percent: row.percent,
+        quality: row.quality,
+        label: row.label,
+      }))
+
+    onRockTargetChange?.({
+      scannerMass,
+      resistancePercent: scannerResistance,
+      instability: scannerInstability,
+      oreName: oreName || null,
+      totalScu,
+      materials: valuableMaterials.length ? valuableMaterials : null,
+    })
+  }, [
+    scannerMass,
+    scannerResistance,
+    scannerInstability,
+    oreName,
+    totalScu,
+    materialRows,
+    onRockTargetChange,
+  ])
 
   const valuablePercentTotal = sumPercentages(
     materialRows.filter((row) => !row.isInert).map((row) => row.percent)

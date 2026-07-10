@@ -5,6 +5,7 @@ import {
   type RockBreakabilityTarget,
 } from './miningLoadoutCompare'
 import type { MiningLaserSlotConfig } from './miningLaserStats'
+import { assessSlowCrackFromComparison, type SlowCrackAssessment } from './miningSlowCrack'
 import type { MiningVesselId } from './miningVessels'
 import { findBestMoleLoadoutStrategy, type MoleLoadoutStrategy } from './moleLoadoutStrategy'
 import {
@@ -35,6 +36,7 @@ export interface SmartCrackerResult {
   crackGadget: GadgetRecommendation | null
   qualityGadget: GadgetRecommendation | null
   moleStrategy: MoleLoadoutStrategy | null
+  slowCrack: SlowCrackAssessment | null
 }
 
 /** @deprecated Use SmartCrackerResult */
@@ -63,8 +65,16 @@ function isNearLoadoutCapacity(comparison: LoadoutBreakabilityComparison): boole
 
 function isNearCapacityFromMole(strategy: MoleLoadoutStrategy): boolean {
   if (!strategy.canBreak) return true
+  const activeCount = strategy.assignments.filter((assignment) => assignment.role !== 'idle').length
   const primary = strategy.assignments.find((assignment) => assignment.role === 'primary')
-  return primary != null && primary.throttlePercent >= 90
+  if (!primary) return true
+  if (activeCount >= 3) return true
+  if (primary.throttlePercent >= 80) return true
+  const fullBlastSupports = strategy.assignments.filter(
+    (assignment) => assignment.role === 'support' && assignment.throttlePercent === 100
+  ).length
+  if (fullBlastSupports >= 1 && primary.throttlePercent >= 50) return true
+  return false
 }
 
 function isEasyCrackFromComparison(
@@ -85,10 +95,77 @@ function isEasyCrackFromMole(
   instability: number | null
 ): boolean {
   if (!strategy.canBreak) return false
+  const activeCount = strategy.assignments.filter((assignment) => assignment.role !== 'idle').length
+  if (activeCount >= 3) return false
   const primary = strategy.assignments.find((assignment) => assignment.role === 'primary')
   if (!primary || primary.throttlePercent >= 75) return false
   if (instability != null && instability >= HIGH_INSTABILITY_THRESHOLD) return false
   return true
+}
+
+function findBestCrackGadgetForSlowGrind(
+  lasers: MiningLaserSlotConfig[],
+  target: RockBreakabilityTarget,
+  slowCrack: SlowCrackAssessment
+): GadgetRecommendation | null {
+  const candidates: GadgetRecommendation[] = []
+
+  for (const gadget of listMiningGadgets()) {
+    if (gadget.resistanceModifier >= 0) continue
+    const adjustedTarget = targetWithGadgetResistance(target, gadget)
+    if (!adjustedTarget) continue
+    const comparison = compareLoadoutToRock(lasers, adjustedTarget)
+    if (!comparison?.canBreak) continue
+
+    const adjustedResistance = rockResistanceWithGadget(target.resistancePercent!, gadget)
+    candidates.push({
+      gadget,
+      requiredPower: comparison.requiredPower,
+      reason: `${gadget.displayName} drops rock resistance to ${Math.round(adjustedResistance)}% (${formatGadgetModifierPercent(gadget.resistanceModifier)}) — bumps headroom from +${slowCrack.marginPercent}% over the equalizer so the crack finishes faster.`,
+    })
+  }
+
+  if (!candidates.length) return null
+
+  candidates.sort((a, b) => {
+    const marginA =
+      compareLoadoutToRock(lasers, targetWithGadgetResistance(target, a.gadget)!)!.totalLaserPower /
+      a.requiredPower
+    const marginB =
+      compareLoadoutToRock(lasers, targetWithGadgetResistance(target, b.gadget)!)!.totalLaserPower /
+      b.requiredPower
+    return marginB - marginA
+  })
+
+  return candidates[0]
+}
+
+function findBestCrackGadgetForMoleSlowGrind(
+  lasers: MiningLaserSlotConfig[],
+  target: RockBreakabilityTarget,
+  soloMining: boolean,
+  slowCrack: SlowCrackAssessment
+): GadgetRecommendation | null {
+  const candidates: GadgetRecommendation[] = []
+
+  for (const gadget of listMiningGadgets()) {
+    if (gadget.resistanceModifier >= 0) continue
+    const adjustedTarget = targetWithGadgetResistance(target, gadget)
+    if (!adjustedTarget) continue
+    const strategy = findBestMoleLoadoutStrategy(lasers, adjustedTarget, { soloMining })
+    if (!strategy?.canBreak) continue
+
+    const adjustedResistance = rockResistanceWithGadget(target.resistancePercent!, gadget)
+    candidates.push({
+      gadget,
+      requiredPower: strategy.requiredPower,
+      reason: `${gadget.displayName} drops rock resistance to ${Math.round(adjustedResistance)}% (${formatGadgetModifierPercent(gadget.resistanceModifier)}) — eases the +${slowCrack.marginPercent}% full-blast grind on your head plan.`,
+    })
+  }
+
+  if (!candidates.length) return null
+  candidates.sort((a, b) => a.requiredPower - b.requiredPower)
+  return candidates[0]
 }
 
 function findBestCrackGadgetForComparison(
@@ -230,15 +307,30 @@ export function buildSmartCracker(
         crackGadget: null,
         qualityGadget: null,
         moleStrategy: null,
+        slowCrack: null,
       }
     }
 
-    const shouldAdvise = !moleStrategy.canBreak || isNearCapacityFromMole(moleStrategy)
+    const slowCrack = assessSlowCrackFromComparison(
+      comparison,
+      target,
+      moleStrategy,
+      lasers
+    )
+    const shouldAdvise =
+      !moleStrategy.canBreak || isNearCapacityFromMole(moleStrategy) || slowCrack != null
     let crackGadget: GadgetRecommendation | null = null
     let qualityGadget: GadgetRecommendation | null = null
 
     if (!moleStrategy.canBreak) {
       crackGadget = findBestCrackGadgetForMolePlan(lasers, target, moleSoloMining, moleStrategy)
+    } else if (slowCrack && !slowCrack.worthWaiting) {
+      crackGadget = findBestCrackGadgetForMoleSlowGrind(
+        lasers,
+        target,
+        moleSoloMining,
+        slowCrack
+      )
     } else if (shouldAdvise && !isEasyCrackFromMole(moleStrategy, instability ?? null)) {
       if (instability != null && instability >= HIGH_INSTABILITY_THRESHOLD) {
         qualityGadget = findBestInstabilityGadgetForMolePlan(
@@ -251,24 +343,42 @@ export function buildSmartCracker(
       }
     }
 
+    if (slowCrack && !crackGadget) {
+      crackGadget = findBestCrackGadgetForMoleSlowGrind(
+        lasers,
+        target,
+        moleSoloMining,
+        slowCrack
+      )
+    }
+
     return {
       shouldAdvise,
       crackGadget,
       qualityGadget,
       moleStrategy,
+      slowCrack,
     }
   }
 
-  const shouldAdvise = !comparison.canBreak || isNearLoadoutCapacity(comparison)
+  const slowCrack = assessSlowCrackFromComparison(comparison, target)
+  const shouldAdvise =
+    !comparison.canBreak || isNearLoadoutCapacity(comparison) || slowCrack != null
   let crackGadget: GadgetRecommendation | null = null
   let qualityGadget: GadgetRecommendation | null = null
 
   if (!comparison.canBreak) {
     crackGadget = findBestCrackGadgetForComparison(lasers, target)
+  } else if (slowCrack && !slowCrack.worthWaiting) {
+    crackGadget = findBestCrackGadgetForSlowGrind(lasers, target, slowCrack)
   } else if (shouldAdvise && !isEasyCrackFromComparison(comparison, instability ?? null)) {
     if (instability != null && instability >= HIGH_INSTABILITY_THRESHOLD) {
       qualityGadget = findBestInstabilityGadgetForComparison(instability, lasers, target)
     }
+  }
+
+  if (slowCrack && !crackGadget) {
+    crackGadget = findBestCrackGadgetForSlowGrind(lasers, target, slowCrack)
   }
 
   return {
@@ -276,6 +386,7 @@ export function buildSmartCracker(
     crackGadget,
     qualityGadget,
     moleStrategy: null,
+    slowCrack,
   }
 }
 
