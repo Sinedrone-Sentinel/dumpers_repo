@@ -204,16 +204,99 @@ function lineLooksLikeMassLabel(line: string): boolean {
   return false
 }
 
-function isCompositionSectionLine(line: string): boolean {
-  if (/\bCOMP(?:OSITION)?\b/i.test(line) && /\bSCU\b/i.test(line)) return true
+function isCompScuHeaderLine(line: string): boolean {
+  return /\bCOMP(?:OSITION)?\b/i.test(line) && /\bSCU\b/i.test(line)
+}
+
+/** Mineral composition rows — not HUD stat labels or the COMP SCU header. */
+function isCompositionPercentLine(line: string): boolean {
+  if (lineLooksLikeMassLabel(line) || lineLooksLikeResLabel(line) || lineLooksLikeInstLabel(line)) {
+    return false
+  }
+  if (isCompScuHeaderLine(line)) return false
   return /(\d+(?:\.\d+)?)\s*%/.test(line)
 }
 
-function firstCompositionLineIndex(lines: string[]): number {
+function isCompositionSectionLine(line: string): boolean {
+  return isCompositionPercentLine(line)
+}
+
+function firstCompositionPercentLineIndex(lines: string[]): number {
   for (let i = 0; i < lines.length; i++) {
-    if (isCompositionSectionLine(lines[i])) return i
+    if (isCompositionPercentLine(lines[i])) return i
   }
   return lines.length
+}
+
+function firstCompositionLineIndex(lines: string[]): number {
+  return firstCompositionPercentLineIndex(lines)
+}
+
+function isLikelyInstabilityValue(
+  value: number,
+  knownMass: number | null,
+  knownResistance: number | null
+): boolean {
+  if (value < 0 || value > 200) return false
+  if (knownMass != null && value >= Math.min(knownMass * 0.5, 500)) return false
+  if (knownResistance != null && Math.abs(value - knownResistance) < 0.01) return false
+  return true
+}
+
+function extractInstabilityFromHeaderLayout(
+  lines: string[],
+  knownMass: number | null,
+  knownResistance: number | null
+): number | null {
+  const headerEnd = firstCompositionPercentLineIndex(lines)
+
+  for (let i = 0; i < headerEnd; i++) {
+    if (!lineLooksLikeInstLabel(lines[i])) continue
+    const value = readHudStatValue(lines[i], lines, i)
+    if (value != null) return value
+  }
+
+  for (let i = 0; i < headerEnd; i++) {
+    if (!lineLooksLikeResLabel(lines[i])) continue
+
+    for (let j = i + 1; j < headerEnd; j++) {
+      const line = lines[j]
+      if (isCompositionPercentLine(line)) break
+      if (isCompScuHeaderLine(line)) continue
+      if (lineLooksLikeMassLabel(line)) continue
+
+      if (lineLooksLikeInstLabel(line)) {
+        const labeled = readHudStatValue(line, lines, j)
+        if (labeled != null) return labeled
+        continue
+      }
+
+      const lone = readNumericFromLabelLine(line)
+      if (lone != null && isLikelyInstabilityValue(lone, knownMass, knownResistance)) {
+        return lone
+      }
+    }
+  }
+
+  for (let i = 0; i < headerEnd; i++) {
+    const line = lines[i]
+    if (
+      isCompScuHeaderLine(line) ||
+      isCompositionPercentLine(line) ||
+      lineLooksLikeMassLabel(line) ||
+      lineLooksLikeResLabel(line) ||
+      lineLooksLikeInstLabel(line)
+    ) {
+      continue
+    }
+
+    const lone = readNumericFromLabelLine(line)
+    if (lone != null && isLikelyInstabilityValue(lone, knownMass, knownResistance)) {
+      return lone
+    }
+  }
+
+  return null
 }
 
 function normalizeResistancePercent(value: number): number {
@@ -324,23 +407,8 @@ function extractScanHudStats(lines: string[]): {
     mass = extractLabeledValue(lines, ['MASS']) ?? extractMassFallback(lines)
   }
 
-  if (instability == null && resLineIndex != null) {
-    const headerEnd = firstCompositionLineIndex(lines)
-    for (let j = resLineIndex + 1; j < Math.min(headerEnd, resLineIndex + 6); j++) {
-      if (j === resValueLineIndex) continue
-      const line = lines[j]
-      if (isCompositionSectionLine(line)) break
-      if (lineLooksLikeInstLabel(line)) {
-        instability = readHudStatValue(line, lines, j)
-        if (instability != null) break
-        continue
-      }
-      const lone = readNumericFromLabelLine(line)
-      if (lone != null && lone >= 0 && lone <= 100) {
-        instability = lone
-        break
-      }
-    }
+  if (instability == null) {
+    instability = extractInstabilityFromHeaderLayout(lines, mass, resistancePercent)
   }
 
   if (resistancePercent == null) {
@@ -395,7 +463,11 @@ function extractInstability(lines: string[], hudStats?: ReturnType<typeof extrac
     if (inline != null) return inline
   }
 
-  return null
+  return extractInstabilityFromHeaderLayout(
+    lines,
+    hudStats?.mass ?? null,
+    hudStats?.resistancePercent ?? null
+  )
 }
 
 function extractTotalScu(lines: string[]): number | null {
