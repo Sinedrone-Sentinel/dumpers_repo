@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+import time
 import threading
 from pathlib import Path
 
@@ -13,8 +14,9 @@ from game_window import find_star_citizen_window
 from live_scan_types import LiveScanResult
 from panel_crop import PanelFractions
 from region_store import load_region
-from sc_toolbox import ensure_sc_ocr_import, resolve_mining_signals_path
 from scan_overlay_flow import run_bridge_scan_overlay
+from scan_progress_overlay import ScanProgressReporter
+from sc_toolbox import ensure_sc_ocr_import, resolve_mining_signals_path
 from ui_thread import run_on_ui_thread
 
 _scan_lock = threading.Lock()
@@ -35,8 +37,15 @@ def _scan_captured_panel(
     capture_method: str,
     game_focused: bool,
     mining_signals: Path,
+    progress: ScanProgressReporter | None = None,
 ) -> LiveScanResult:
+    def mark(row_id: str, ok: bool | None) -> None:
+        if progress is not None:
+            progress.mark_row(row_id, ok=ok)
+            time.sleep(0.07)
+
     if not game_focused and capture_method.startswith("mss-screen"):
+        mark("capture", False)
         return LiveScanResult(
             ok=False,
             error="Could not switch to Star Citizen for screen capture.",
@@ -50,6 +59,7 @@ def _scan_captured_panel(
     panel_img = crop_fraction(client_img, fractions)
 
     if is_mostly_black(client_img):
+        mark("capture", False)
         return LiveScanResult(
             ok=False,
             error="Capture failed: game image is black.",
@@ -59,9 +69,31 @@ def _scan_captured_panel(
             ],
         )
 
+    mark("capture", True)
+    if progress is not None:
+        progress.set_header("Reading HUD signals…")
+
     sc_ocr = _run_sc_ocr(panel_img, mining_signals)
+    mark("ore", bool(sc_ocr.get("mineral_name")))
+    mark("mass", sc_ocr.get("mass") is not None)
+    mark("res", sc_ocr.get("resistance") is not None)
+    mark("inst", sc_ocr.get("instability") is not None)
+
+    if progress is not None:
+        progress.set_header("Reading composition…")
+
     mineral_hint = sc_ocr.get("mineral_name")
     composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
+    mark("comp_scu", composition.get("total_scu") is not None)
+    comp_ok = bool(composition.get("ok")) and bool(composition.get("lines"))
+    mark("composition", comp_ok)
+
+    if progress is not None:
+        if composition.get("ok") and sc_ocr.get("mass") is not None:
+            progress.set_header("Scan complete — returning to Rock Calculator…")
+        else:
+            progress.set_header("Scan finished — some fields could not be read")
+
     return LiveScanResult(ok=True, sc_ocr=sc_ocr, composition=composition)
 
 
@@ -103,6 +135,7 @@ def _perform_live_scan_ui(
         capture_method: str,
         capture_notes: list[str],
         game_focused: bool,
+        progress: ScanProgressReporter | None = None,
     ) -> LiveScanResult:
         _ = capture_notes
         return _scan_captured_panel(
@@ -111,6 +144,7 @@ def _perform_live_scan_ui(
             capture_method=capture_method,
             game_focused=game_focused,
             mining_signals=mining_signals,
+            progress=progress,
         )
 
     return run_bridge_scan_overlay(
