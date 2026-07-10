@@ -63,6 +63,7 @@ import {
 import RockCalculatorOcrModal from './RockCalculatorOcrModal'
 import { resolveOcrBasis, buildOcrCalculatorApply } from '../../lib/rockCalculatorOcrApply'
 import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
+import { fetchRockScanBridgeHealth, requestRockScanFromBridge } from '../../lib/rockScanBridge'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -100,6 +101,7 @@ export default function RockCalculator({
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
+  const canUseScannerOcr = Boolean(user && !isGuestPreview)
   const { catalog } = useResourceCatalog()
 
   const [oreName, setOreName] = useState('')
@@ -123,6 +125,8 @@ export default function RockCalculator({
   const searchRef = useRef<HTMLInputElement>(null)
 
   const [ocrModalOpen, setOcrModalOpen] = useState(false)
+  const [ocrScanning, setOcrScanning] = useState(false)
+  const [ocrBridgeError, setOcrBridgeError] = useState<string | null>(null)
   const [ocrOverrideActive, setOcrOverrideActive] = useState(false)
   const [ocrWarnings, setOcrWarnings] = useState<string[]>([])
   const [ocrScanParts, setOcrScanParts] = useState<CompositionPart[] | null>(null)
@@ -407,7 +411,49 @@ export default function RockCalculator({
     setTotalScuInput(String(result.totalScu))
     setPercentBySlot(applied.percentBySlot)
     setQualityBySlot(applied.qualityBySlot)
+    setOcrBridgeError(null)
   }, [])
+
+  const handleOcrButtonClick = useCallback(async () => {
+    if (!canUseScannerOcr) return
+    setOcrBridgeError(null)
+    const health = await fetchRockScanBridgeHealth()
+    if (!health?.ok) {
+      setOcrModalOpen(true)
+      return
+    }
+    if (!health.calibrated) {
+      setOcrBridgeError(
+        'Calibrate first: right-click the BP Dumper tray icon → Calibrate RESULTS panel (one time per resolution).'
+      )
+      return
+    }
+
+    setOcrScanning(true)
+    try {
+      const result = await requestRockScanFromBridge()
+      if (!result.ok || !result.data) {
+        setOcrBridgeError(result.error)
+        if (result.hints?.length) {
+          setOcrWarnings(result.hints)
+        }
+        return
+      }
+
+      const basis = resolveOcrBasis(result.data)
+      if (!basis) {
+        setOcrBridgeError(`Unknown ore from scan: ${result.data.primaryOreName}`)
+        return
+      }
+
+      handleOcrApply(result.data)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Rock scan failed.'
+      setOcrBridgeError(message)
+    } finally {
+      setOcrScanning(false)
+    }
+  }, [canUseScannerOcr, handleOcrApply])
 
   const showDepositToggle = availableDepositTypes.length > 1 && !ocrOverrideActive
   const selectedLocationLabel = ocrOverrideActive
@@ -476,19 +522,22 @@ export default function RockCalculator({
                       </button>
                     </SiteTooltip>
                   ) : null}
-                  <SiteTooltip
-                    content={ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP}
-                    side="left"
-                    panelClassName="max-w-[16rem]"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setOcrModalOpen(true)}
-                      className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-slate-700/90 text-slate-100 hover:bg-slate-600 transition-colors border border-slate-600"
+                  {canUseScannerOcr ? (
+                    <SiteTooltip
+                      content={ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP}
+                      side="left"
+                      panelClassName="max-w-[16rem]"
                     >
-                      OCR
-                    </button>
-                  </SiteTooltip>
+                      <button
+                        type="button"
+                        onClick={() => void handleOcrButtonClick()}
+                        disabled={ocrScanning}
+                        className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-slate-700/90 text-slate-100 hover:bg-slate-600 transition-colors border border-slate-600 disabled:opacity-50 disabled:cursor-wait"
+                      >
+                        {ocrScanning ? 'Scanning…' : 'OCR'}
+                      </button>
+                    </SiteTooltip>
+                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -496,6 +545,15 @@ export default function RockCalculator({
         </div>
 
         <div className="p-3 space-y-3">
+          {ocrBridgeError ? (
+            <div className="rounded-md border border-rose-900/45 bg-rose-950/20 px-2.5 py-2">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-rose-300/90">
+                Desktop scan failed
+              </p>
+              <p className="text-[11px] text-rose-200/90 leading-snug mt-1">{ocrBridgeError}</p>
+            </div>
+          ) : null}
+
           {ocrOverrideActive ? (
             <div className="rounded-md border border-amber-900/45 bg-amber-950/20 px-2.5 py-2 space-y-1">
               <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90">
@@ -896,7 +954,7 @@ export default function RockCalculator({
         </div>
       </div>
 
-      {ocrModalOpen ? (
+      {ocrModalOpen && canUseScannerOcr ? (
         <RockCalculatorOcrModal
           onClose={() => setOcrModalOpen(false)}
           onApply={handleOcrApply}

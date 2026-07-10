@@ -385,14 +385,13 @@ export const SMART_CRACKER_BUTTON_TOOLTIP = (
 
 export const ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP = (
   <div className="space-y-1.5 text-xs leading-snug">
-    <p className="font-medium text-slate-200">Paste scanner screenshot</p>
+    <p className="font-medium text-slate-200">Scan from game HUD (signed-in members)</p>
     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
-      <li>ALT+PrtSc the RESULTS panel from the Mole pilot seat</li>
-      <li>Crop the entire RESULTS block — header, ore name, MASS, RES, INST, COMP SCU, and composition % rows</li>
-      <li>Switch here and Ctrl+V into the OCR modal</li>
-      <li>Crop the scan panel and Process to auto-fill</li>
-      <li>Star Strings shortens long names (e.g. Hephaestanite → Heph) — OCR works best with it on. Without it, the full name can cover the Q number on the HUD and you may need to set that material&apos;s Q band manually</li>
-      <li>Nothing is saved — image is discarded after processing</li>
+      <li>Keep BP Dumper running in watch mode (starts the local scan bridge automatically)</li>
+      <li>In-game: Mole pilot seat, rock scanned, RESULTS panel visible on the right</li>
+      <li>Click OCR here — desktop capture + SC_OCR fills mass, RES, COMP, composition %, and Q</li>
+      <li>First time only: right-click the BP Dumper tray icon → Calibrate RESULTS panel (draw the RESULTS box once per resolution)</li>
+      <li>Guests and offline preview cannot use Scanner OCR — sign in and run BP Dumper on this PC</li>
     </ul>
   </div>
 )
