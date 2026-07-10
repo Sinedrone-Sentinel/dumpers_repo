@@ -9,6 +9,7 @@ import {
   MIN_ROCK_SCANNER_MASS,
   parseCompositionLeadingPercent,
   parseLeadingPercentFromWordTokens,
+  reconcileMassWithTotalScu,
   reparsePercentFromRawOcrLine,
 } from './rockCalculatorOcrCorrect'
 
@@ -516,8 +517,14 @@ function extractPanelStats(rows: HudRows): PanelStats {
   if (instability == null) instability = positional.instability
 
   const totalScu = extractTotalScu(rows.corpus, rows.rows)
+  const reconciledMass = reconcileMassWithTotalScu(mass, totalScu)
 
-  return { mass, resistancePercent, instability, totalScu }
+  return {
+    mass: reconciledMass,
+    resistancePercent,
+    instability,
+    totalScu,
+  }
 }
 
 function lastNumberInRow(row: string): number | null {
@@ -668,10 +675,97 @@ function hasTrailingQuality(row: string): boolean {
 
 function readOrphanQualityRow(row: string | undefined): number | null {
   if (!row) return null
-  const match = row.trim().match(/^Q?(\d{1,4})$/i)
+  const trimmed = row.trim()
+  const match = trimmed.match(/^Q?(\d{3,4})$/i)
   if (!match) return null
   const quality = Number.parseInt(match[1], 10)
-  return Number.isFinite(quality) ? quality : null
+  return isPlausibleScanQuality(quality) && quality > 0 ? quality : null
+}
+
+function trailingQualityFromGroupContext(segment: RowWord[], fullGroup: RowWord[]): number | null {
+  const fromSegment =
+    trailingQualityFromRowWords(segment) ?? trailingQualityFromRowText(
+      segment.map((word) => word.text).join(' ')
+    )
+  if (fromSegment != null) return fromSegment
+
+  const segmentEndX = Math.max(...segment.map((word) => word.x1))
+  const sorted = [...fullGroup].sort((a, b) => a.x0 - b.x0)
+  const nextPercentX =
+    sorted.find((word) => word.x0 > segmentEndX + 2 && /%/.test(word.text))?.x0 ?? Infinity
+
+  let best: number | null = null
+  for (const word of sorted) {
+    if (word.x0 <= segmentEndX - 2 || word.x0 >= nextPercentX) continue
+    const match = word.text.match(/^(?:Q)?(\d{3,4})$/i)
+    if (!match) continue
+    const quality = Number.parseInt(match[1], 10)
+    if (isPlausibleScanQuality(quality) && quality > 0) best = quality
+  }
+  return best
+}
+
+function attachOrphanQualities(
+  compositionLines: OcrCompositionLine[],
+  rows: string[],
+  rowGroups?: RowWord[][]
+): void {
+  const attachToLine = (line: OcrCompositionLine | undefined, quality: number): void => {
+    if (!line || !line.qualityMissing) return
+    line.quality = quality
+    line.qualityMissing = false
+    line.rawOcrLine = `${line.rawOcrLine} / orphan Q${quality}`
+  }
+
+  const findLineForPercentRow = (row: string): OcrCompositionLine | undefined => {
+    const percent = parseCompositionLeadingPercent(row)
+    if (percent == null) return undefined
+    return compositionLines.find(
+      (line) => line.qualityMissing && Math.abs(line.percent - percent) < 0.6
+    )
+  }
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i].trim()
+    const orphanQ = readOrphanQualityRow(row)
+    if (orphanQ == null) continue
+
+    if (isCompositionPercentRow(row) && !hasTrailingQuality(row)) {
+      attachToLine(findLineForPercentRow(row), orphanQ)
+      continue
+    }
+
+    for (let j = i - 1; j >= 0; j--) {
+      const prev = rows[j].trim()
+      if (!isCompositionPercentRow(prev) || hasTrailingQuality(prev)) continue
+      const line = findLineForPercentRow(prev)
+      if (line) {
+        attachToLine(line, orphanQ)
+        break
+      }
+    }
+  }
+
+  if (!rowGroups?.length) return
+
+  for (let gi = 0; gi < rowGroups.length; gi++) {
+    const text = rowGroups[gi].map((word) => word.text).join(' ').trim()
+    const orphanQ = readOrphanQualityRow(text)
+    if (orphanQ == null) continue
+
+    if (gi > 0) {
+      const prevText = rowGroups[gi - 1].map((word) => word.text).join(' ').trim()
+      if (isCompositionPercentRow(prevText) && !hasTrailingQuality(prevText)) {
+        attachToLine(findLineForPercentRow(prevText), orphanQ)
+        continue
+      }
+    }
+
+    const fallback = [...compositionLines]
+      .filter((line) => line.qualityMissing)
+      .sort((a, b) => a.scanBandRank - b.scanBandRank)[0]
+    attachToLine(fallback, orphanQ)
+  }
 }
 
 function defaultLedgerQualityForElement(elementName: string): number {
@@ -876,7 +970,8 @@ function splitRowGroupByPercents(group: RowWord[]): RowWord[][] {
 
 function parseCompositionSpatial(
   words: RowWord[],
-  rowText: string
+  rowText: string,
+  groupContext?: RowWord[]
 ): { elementName: string; percent: number; quality: number | null; qualityMissing: boolean } | { kind: 'inert'; percent: number } | null {
   if (/INERT/i.test(rowText)) {
     const percent = leadingPercentFromRowWords(words)
@@ -890,7 +985,11 @@ function parseCompositionSpatial(
   const percentEndX = percentEndXFromRowWords(sorted)
 
   const quality =
-    trailingQualityFromRowWords(words) ?? trailingQualityFromRowText(rowText)
+    (groupContext
+      ? trailingQualityFromGroupContext(words, groupContext)
+      : null) ??
+    trailingQualityFromRowWords(words) ??
+    trailingQualityFromRowText(rowText)
   const qualityWord = [...words]
     .sort((a, b) => b.x0 - a.x0)
     .find((word) => {
@@ -1073,7 +1172,7 @@ function enrichCompositionFromSpatial(
       const rowText = segment.map((word) => word.text).join(' ').trim()
       if (!rowText || !isCompositionPercentRow(rowText)) continue
 
-      const spatial = parseCompositionSpatial(segment, rowText)
+      const spatial = parseCompositionSpatial(segment, rowText, group)
       if (!spatial || ('kind' in spatial && spatial.kind === 'inert')) continue
 
       const candidates = compositionLines.filter(
@@ -1112,7 +1211,7 @@ function parseCompositionFromRowGroups(
       const rowText = segment.map((word) => word.text).join(' ').trim()
       if (!rowText || !isCompositionPercentRow(rowText) || /\bINERT\b/i.test(rowText)) continue
 
-      const spatial = parseCompositionSpatial(segment, rowText)
+      const spatial = parseCompositionSpatial(segment, rowText, group)
       if (!spatial || ('kind' in spatial && spatial.kind === 'inert')) continue
 
       pushOreLine(
@@ -1262,7 +1361,9 @@ function parseCompositionRows(
   }
 
   reconcileMisreadCompositionBands(compositionLines)
+  assignBandRanksByPercent(compositionLines)
   recoverQualityFromRawLines(compositionLines)
+  attachOrphanQualities(compositionLines, rows, rowGroups)
   flushCompositionWarnings(compositionLines, warnings)
 
   return { lines: compositionLines }
@@ -1375,7 +1476,6 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
     warnings,
     rows.rowGroups
   )
-  assignBandRanksByPercent(compositionLines)
 
   const resolvedPrimary = resolvePrimaryOreName(rows.rows, compositionLines)
   if (!resolvedPrimary) {

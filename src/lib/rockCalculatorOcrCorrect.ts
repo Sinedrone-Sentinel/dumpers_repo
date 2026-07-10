@@ -193,6 +193,37 @@ export function pickBestMassCandidate(candidates: number[]): number | null {
   return plausible.sort((a, b) => b - a)[0]
 }
 
+/** When COMP SCU reads clearly (e.g. 17.98), fix MASS末 two digits confused 88↔98. */
+export function reconcileMassWithTotalScu(
+  mass: number | null,
+  totalScu: number | null
+): number | null {
+  if (mass == null || totalScu == null) return mass
+
+  const fraction = totalScu - Math.floor(totalScu)
+  if (fraction < 0.01) return mass
+
+  const scuSuffix = Math.round(fraction * 100)
+  if (scuSuffix < 10) return mass
+
+  const massRounded = Math.round(mass)
+  const massStr = String(massRounded)
+  if (massStr.length < 5) return mass
+
+  const massSuffix = Number.parseInt(massStr.slice(-2), 10)
+  if (massSuffix === scuSuffix) return massRounded
+
+  if (Math.abs(massSuffix - scuSuffix) === 10) {
+    const corrected = Number.parseInt(
+      `${massStr.slice(0, -2)}${String(scuSuffix).padStart(2, '0')}`,
+      10
+    )
+    if (isPlausibleScannerMass(corrected)) return corrected
+  }
+
+  return massRounded
+}
+
 /** Join split OCR mass (e.g. `150 001`) and prefer 4–6 digit reads on the MASS block. */
 export function extractMassFromBlock(block: string): number | null {
   const candidates: number[] = []
