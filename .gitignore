@@ -64,3 +64,8 @@ supabase/functions/log-watcher-webhook/lookup.json
 __pycache__/
 *.pyc
 
+# Local rock-scan OCR test exports (worktree only)
+scripts/rock-scan-ocr/rock-scan-exports/
+scripts/rock-scan-ocr/sc-toolbox.path
+eng.traineddata
+
