@@ -25,7 +25,7 @@ export interface RockScanOcrResult {
 
 export type RockScanOcrParseResult =
   | { ok: true; data: RockScanOcrResult }
-  | { ok: false; error: string }
+  | { ok: false; error: string; hints?: string[] }
 
 /** e.g. 12.43% BERYLLIUM (ORE) Q42 or 12.43% BERYLLIUM (ORE) 905 */
 const COMPOSITION_LINE_RE =
@@ -38,8 +38,44 @@ const COMPOSITION_PERCENT_LINE_RE = /(\d+(?:\.\d+)?)\s*%?\s+(.+)/i
 const RESULTS_CROP_ERROR =
   'Could not read the RESULTS header — crop the entire SCAN RESULTS panel, including the word "RESULTS" and the ore name directly below it.'
 
+const RESULTS_ORE_ERROR =
+  'Could not read the ore name under RESULTS — include the ore label directly below the RESULTS line (e.g. BORASE).'
+
+const HUD_LABEL_WORDS = new Set([
+  'MASS',
+  'RES',
+  'RESISTANCE',
+  'INST',
+  'INSTABILITY',
+  'COMPOSITION',
+  'DISTANCE',
+  'LOCK',
+  'TARG',
+  'AUTO',
+  'CARGO',
+  'SCAN',
+  'RESULTS',
+  'RESULT',
+])
+
+function normalizeOcrLetters(line: string): string {
+  return line.toUpperCase().replace(/[^A-Z]/g, '')
+}
+
+function lineLooksLikeResultsHeader(line: string): boolean {
+  const trimmed = line.trim()
+  if (!trimmed) return false
+  if (/\bRESULTS?\b/i.test(trimmed)) return true
+
+  const letters = normalizeOcrLetters(trimmed)
+  if (!letters) return false
+  if (letters.includes('RESULTS') || letters.startsWith('RESULT')) return true
+  if (/^RESU.*LTS/.test(letters) || /^RE.*SULTS/.test(letters)) return true
+  return false
+}
+
 function hasResultsHeader(lines: string[]): boolean {
-  return lines.some((line) => /\bRESULTS\b/i.test(line.trim()))
+  return lines.some((line) => lineLooksLikeResultsHeader(line))
 }
 
 function hasTrailingQuality(line: string): boolean {
@@ -97,13 +133,21 @@ function parseNumberToken(raw: string): number | null {
   return Number.isFinite(value) ? value : null
 }
 
-function extractLabeledValue(lines: string[], labels: string[]): number | null {
+function extractLabeledValue(
+  lines: string[],
+  labels: string[],
+  options?: { wordBoundary?: boolean }
+): number | null {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim()
     const upper = line.toUpperCase()
     for (const label of labels) {
-      if (!upper.includes(label)) continue
-      const inline = line.slice(upper.indexOf(label) + label.length)
+      const matched = options?.wordBoundary
+        ? new RegExp(`\\b${label}\\b`, 'i').test(upper)
+        : upper.includes(label)
+      if (!matched) continue
+      const labelIndex = upper.search(new RegExp(label, 'i'))
+      const inline = line.slice(labelIndex + label.length)
       const inlineValue = parseNumberToken(inline)
       if (inlineValue != null) return inlineValue
       for (let j = i + 1; j < Math.min(i + 3, lines.length); j++) {
@@ -295,9 +339,7 @@ function assignBandRanksByPercent(compositionLines: OcrCompositionLine[]): void 
 
 function parseOreNameFromResultsLine(raw: string, warnings: string[]): string | null {
   const trimmed = raw.trim()
-  if (!trimmed || /^(MASS|RES\b|RESISTANCE|INST\b|INSTABILITY|COMPOSITION)/i.test(trimmed)) {
-    return null
-  }
+  if (!trimmed) return null
 
   const oreTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9\s]*?)\s*\(ORE\)/i)
   if (oreTagged) return normalizeElementName(oreTagged[1], warnings)
@@ -305,18 +347,25 @@ function parseOreNameFromResultsLine(raw: string, warnings: string[]): string | 
   const rockTagged = trimmed.match(/^([A-Za-z][A-Za-z0-9]*)\s+ROCK/i)
   if (rockTagged) return normalizeElementName(rockTagged[1], warnings)
 
+  const plain = trimmed.match(/^([A-Za-z][A-Za-z0-9]{2,})/)
+  if (plain) {
+    const token = plain[1].toUpperCase()
+    if (HUD_LABEL_WORDS.has(token)) return null
+    return normalizeElementName(plain[1], warnings)
+  }
+
   return null
 }
 
 function parseResultsHeaderOre(lines: string[], warnings: string[]): string | null {
   for (let i = 0; i < lines.length; i++) {
-    if (!/\bRESULTS\b/i.test(lines[i])) continue
+    if (!lineLooksLikeResultsHeader(lines[i])) continue
 
-    const inlineOre = lines[i].replace(/^.*\bRESULTS\b\s*/i, '').trim()
+    const inlineOre = lines[i].replace(/^.*\bRESULTS?\b\s*/i, '').trim()
     const inlineName = parseOreNameFromResultsLine(inlineOre, warnings)
     if (inlineName) return inlineName
 
-    for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
+    for (let j = i + 1; j < Math.min(i + 6, lines.length); j++) {
       const oreName = parseOreNameFromResultsLine(lines[j], warnings)
       if (oreName) return oreName
     }
@@ -351,12 +400,16 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
 
   const resultsHeaderOre = parseResultsHeaderOre(lines, warnings)
   if (!resultsHeaderOre) {
-    return { ok: false, error: RESULTS_CROP_ERROR }
+    return { ok: false, error: RESULTS_ORE_ERROR }
   }
 
   const mass = extractLabeledValue(lines, ['MASS'])
-  const resistancePercent = extractLabeledValue(lines, ['RESISTANCE'])
-  const instability = extractLabeledValue(lines, ['INSTABILITY'])
+  const resistancePercent =
+    extractLabeledValue(lines, ['RESISTANCE']) ??
+    extractLabeledValue(lines, ['RES'], { wordBoundary: true })
+  const instability =
+    extractLabeledValue(lines, ['INSTABILITY']) ??
+    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
   const totalScu = extractTotalScu(lines)
 
   const { lines: compositionLines, inertPercent } = parseCompositionLines(lines, warnings)
@@ -415,4 +468,21 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
       warnings,
     },
   }
+}
+
+/** Higher = more of the scan was understood. Used to decide whether to upscale OCR retries. */
+export function scoreRockScanOcrParseAttempt(result: RockScanOcrParseResult): number {
+  if (result.ok) return 1000
+
+  const error = result.error
+  if (error.includes('no readable text')) return 0
+  if (error.includes('RESULTS header')) return 10
+  if (error.includes('ore name under RESULTS')) return 20
+  if (error.includes('Mass')) return 30
+  if (error.includes('Resistance')) return 40
+  if (error.includes('Instability')) return 50
+  if (error.includes('SCU')) return 60
+  if (error.includes('composition lines')) return 70
+  if (error.includes('High and Low')) return 80
+  return 5
 }

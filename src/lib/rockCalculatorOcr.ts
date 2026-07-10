@@ -1,5 +1,13 @@
 import type { PSM } from 'tesseract.js'
-import { parseRockScanOcrText, type RockScanOcrParseResult } from './rockCalculatorOcrParse'
+import {
+  assessCropLegibility,
+  buildOcrFailureHints,
+} from './rockCalculatorOcrLegibility'
+import {
+  parseRockScanOcrText,
+  scoreRockScanOcrParseAttempt,
+  type RockScanOcrParseResult,
+} from './rockCalculatorOcrParse'
 
 export interface NormalizedCropRect {
   x: number
@@ -7,6 +15,8 @@ export interface NormalizedCropRect {
   width: number
   height: number
 }
+
+const OCR_PREPROCESS_SCALES = [2, 3, 4] as const
 
 let activeWorker: Awaited<ReturnType<typeof import('tesseract.js').createWorker>> | null = null
 
@@ -16,8 +26,12 @@ export async function terminateOcrWorker(): Promise<void> {
   activeWorker = null
 }
 
-function preprocessCrop(source: CanvasImageSource, width: number, height: number): HTMLCanvasElement {
-  const scale = 4
+function preprocessCrop(
+  source: CanvasImageSource,
+  width: number,
+  height: number,
+  scale: number
+): HTMLCanvasElement {
   const canvas = document.createElement('canvas')
   canvas.width = Math.max(1, Math.round(width * scale))
   canvas.height = Math.max(1, Math.round(height * scale))
@@ -139,12 +153,15 @@ async function recognizePass(
   return { text: result.data.text ?? '', confidence }
 }
 
-async function runMultiPassOcr(canvas: HTMLCanvasElement): Promise<string> {
+async function runMultiPassOcr(
+  canvas: HTMLCanvasElement
+): Promise<{ text: string; maxConfidence: number }> {
   const { PsmEnum } = await getWorker()
   const passes: PSM[] = [PsmEnum.SINGLE_BLOCK, PsmEnum.SINGLE_COLUMN, PsmEnum.SPARSE_TEXT]
   const results = await Promise.all(passes.map((psm) => recognizePass(canvas, psm)))
 
   results.sort((a, b) => b.confidence - a.confidence)
+  const maxConfidence = results[0]?.confidence ?? 0
   const merged = new Set<string>()
   for (const result of results) {
     for (const line of result.text.split('\n')) {
@@ -153,8 +170,29 @@ async function runMultiPassOcr(canvas: HTMLCanvasElement): Promise<string> {
     }
   }
 
-  if (merged.size === 0) return results[0]?.text ?? ''
-  return [...merged].join('\n')
+  if (merged.size === 0) {
+    return { text: results[0]?.text ?? '', maxConfidence }
+  }
+  return { text: [...merged].join('\n'), maxConfidence }
+}
+
+function attachFailureHints(
+  result: RockScanOcrParseResult,
+  legibility: ReturnType<typeof assessCropLegibility>,
+  maxOcrConfidence: number,
+  lastOcrText: string
+): RockScanOcrParseResult {
+  if (result.ok) return result
+
+  const hints = buildOcrFailureHints({
+    legibility,
+    maxOcrConfidence,
+    parseScore: scoreRockScanOcrParseAttempt(result),
+    hadReadableText: lastOcrText.trim().length > 0,
+  })
+
+  if (!hints.length) return result
+  return { ...result, hints }
 }
 
 export async function processRockScanCrop(
@@ -170,9 +208,45 @@ export async function processRockScanCrop(
   }
 
   const deskewed = rotateCanvas(rawCrop, deskewDegrees)
-  const preprocessed = preprocessCrop(deskewed, deskewed.width, deskewed.height)
-  const text = await runMultiPassOcr(preprocessed)
-  return parseRockScanOcrText(text)
+  const legibility = assessCropLegibility(deskewed)
+
+  let bestFailure: RockScanOcrParseResult | null = null
+  let bestFailureScore = -1
+  let previousScore = -1
+  let lastOcrText = ''
+  let maxOcrConfidence = 0
+
+  for (let attempt = 0; attempt < OCR_PREPROCESS_SCALES.length; attempt++) {
+    const scale = OCR_PREPROCESS_SCALES[attempt]
+    const preprocessed = preprocessCrop(deskewed, deskewed.width, deskewed.height, scale)
+    const ocr = await runMultiPassOcr(preprocessed)
+    lastOcrText = ocr.text
+    maxOcrConfidence = Math.max(maxOcrConfidence, ocr.maxConfidence)
+    const parsed = parseRockScanOcrText(ocr.text)
+
+    if (parsed.ok) return parsed
+
+    const score = scoreRockScanOcrParseAttempt(parsed)
+    if (score > bestFailureScore) {
+      bestFailureScore = score
+      bestFailure = parsed
+    }
+
+    const isLastScale = attempt === OCR_PREPROCESS_SCALES.length - 1
+    if (isLastScale) break
+
+    if (attempt > 0 && score < previousScore) break
+
+    previousScore = score
+  }
+
+  const failure =
+    bestFailure ?? {
+      ok: false as const,
+      error: 'OCR returned no readable text — try a tighter crop around SCAN RESULTS.',
+    }
+
+  return attachFailureHints(failure, legibility, maxOcrConfidence, lastOcrText)
 }
 
 export function loadImageFromFile(file: File): Promise<{

@@ -80,6 +80,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
   const [crop, setCrop] = useState<NormalizedCropRect>(DEFAULT_CROP_RECT)
   const [deskewDegrees, setDeskewDegrees] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [errorHints, setErrorHints] = useState<string[]>([])
   const [processing, setProcessing] = useState(false)
   const [progress, setProgress] = useState<string | null>(null)
 
@@ -166,6 +167,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         if (!file) continue
 
         setError(null)
+        setErrorHints([])
         setProgress(null)
         setDeskewDegrees(0)
         clearImage()
@@ -233,6 +235,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
     setProcessing(true)
     setError(null)
+    setErrorHints([])
     setProgress('Preparing image…')
 
     try {
@@ -246,6 +249,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       )
       if (!parsed.ok) {
         setError(parsed.error)
+        setErrorHints(parsed.hints ?? [])
         return
       }
 
@@ -253,6 +257,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
         setError(
           `Could not match the scanned primary ore to an RS Tracker ore — check your crop or pick the ore manually after closing.`
         )
+        setErrorHints([])
         return
       }
 
@@ -262,6 +267,7 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
       onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'OCR failed — try adjusting the crop box.')
+      setErrorHints([])
     } finally {
       setProcessing(false)
       setProgress(null)
@@ -395,6 +401,15 @@ export default function RockCalculatorOcrModal({ onClose, onApply }: RockCalcula
 
         {progress ? <p className="text-[11px] text-amber-300/90">{progress}</p> : null}
         {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
+        {errorHints.length > 0 ? (
+          <div className="space-y-1">
+            {errorHints.map((hint) => (
+              <p key={hint} className="text-[11px] text-amber-200/90 leading-snug">
+                {hint}
+              </p>
+            ))}
+          </div>
+        ) : null}
       </div>
     </AppModal>
   )
