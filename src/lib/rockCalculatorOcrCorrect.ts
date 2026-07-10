@@ -87,6 +87,17 @@ export function parseLeadingPercentFromWordTokens(tokens: string[]): number | nu
   return null
 }
 
+export const MIN_ROCK_SCANNER_MASS = 1_000
+export const MAX_ROCK_SCANNER_MASS = 999_999
+
+function isPlausibleScannerMass(value: number): boolean {
+  return (
+    Number.isFinite(value) &&
+    value >= MIN_ROCK_SCANNER_MASS &&
+    value <= MAX_ROCK_SCANNER_MASS
+  )
+}
+
 export function allIntegersInRow(row: string): number[] {
   return [...row.matchAll(/\b(\d{3,6})\b/g)]
     .map((match) => Number.parseInt(match[1], 10))
@@ -94,26 +105,30 @@ export function allIntegersInRow(row: string): number[] {
 }
 
 export function pickBestMassCandidate(candidates: number[]): number | null {
-  const plausible = candidates.filter((value) => value >= 1_000 && value <= 250_000)
+  const plausible = candidates.filter(isPlausibleScannerMass)
   if (!plausible.length) return null
   return plausible.sort((a, b) => b - a)[0]
 }
 
-/** Join split OCR mass like `15 001` or prefer a 5-digit read on the MASS block. */
+/** Join split OCR mass (e.g. `150 001`) and prefer 4–6 digit reads on the MASS block. */
 export function extractMassFromBlock(block: string): number | null {
-  const fiveDigit = block.match(/\b(\d{5})\b/)
-  if (fiveDigit) {
-    const value = Number.parseInt(fiveDigit[1], 10)
-    if (value >= 1_000 && value <= 250_000) return value
+  const candidates: number[] = []
+
+  for (const match of block.matchAll(/\b(\d{4,6})\b/g)) {
+    const value = Number.parseInt(match[1], 10)
+    if (isPlausibleScannerMass(value)) candidates.push(value)
   }
 
-  const spaced = block.match(/\b(\d{2,3})\s+(\d{3})\b/)
-  if (spaced) {
-    const value = Number.parseInt(`${spaced[1]}${spaced[2]}`, 10)
-    if (value >= 1_000 && value <= 250_000) return value
+  for (const match of block.matchAll(/\b(\d{1,3})\s+(\d{3,5})\b/g)) {
+    const combined = `${match[1]}${match[2]}`
+    if (combined.length < 4 || combined.length > 6) continue
+    const value = Number.parseInt(combined, 10)
+    if (isPlausibleScannerMass(value)) candidates.push(value)
   }
 
-  return pickBestMassCandidate(allIntegersInRow(block))
+  candidates.push(...allIntegersInRow(block).filter(isPlausibleScannerMass))
+
+  return pickBestMassCandidate(candidates)
 }
 
 export function allDecimalsInRow(row: string): number[] {

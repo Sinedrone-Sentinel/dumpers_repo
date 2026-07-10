@@ -5,6 +5,8 @@ import { getDefaultBandQuality, resolveLedgerQuality } from './qualityBands'
 import {
   allDecimalsInRow,
   extractMassFromBlock,
+  MAX_ROCK_SCANNER_MASS,
+  MIN_ROCK_SCANNER_MASS,
   parseCompositionLeadingPercent,
   parseLeadingPercentFromWordTokens,
 } from './rockCalculatorOcrCorrect'
@@ -246,20 +248,34 @@ function extractMass(corpus: string, rows: string[]): number | null {
     if (fromBlock != null) return fromBlock
 
     const inline = valueFromLabelRow(rows[i], rows, i)
-    if (inline != null && inline >= 1_000) return Math.round(inline)
+    if (inline != null && inline >= MIN_ROCK_SCANNER_MASS && inline <= MAX_ROCK_SCANNER_MASS) {
+      return Math.round(inline)
+    }
   }
 
   const fromCorpus = firstMatchingNumber(corpus, [
     /\bMASS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
     /\bM[A4@]SS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
   ])
-  if (fromCorpus != null && fromCorpus >= 50) return Math.round(fromCorpus)
+  if (
+    fromCorpus != null &&
+    fromCorpus >= MIN_ROCK_SCANNER_MASS &&
+    fromCorpus <= MAX_ROCK_SCANNER_MASS
+  ) {
+    return Math.round(fromCorpus)
+  }
 
   let best: number | null = null
   for (const row of rows) {
     if (isCompositionPercentRow(row) || rowHasHudStatLabel(row)) continue
     const value = lastNumberInRow(row)
-    if (value == null || value < 50 || value > 1_000_000) continue
+    if (
+      value == null ||
+      value < MIN_ROCK_SCANNER_MASS ||
+      value > MAX_ROCK_SCANNER_MASS
+    ) {
+      continue
+    }
     if (best == null || value > best) best = value
   }
   return best != null ? Math.round(best) : null
