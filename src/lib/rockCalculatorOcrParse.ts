@@ -2,6 +2,14 @@ import { resolveOcrOreName } from './miningOreCanonical'
 import { stripMineableLabel } from './miningOreLabel'
 import { isInertElement, oreResourceKeyFromElementName } from './rockCalculator'
 import { getDefaultBandQuality, resolveLedgerQuality } from './qualityBands'
+import {
+  allDecimalsInRow,
+  allIntegersInRow,
+  correctCompositionPercent,
+  inferDecimalPercentFromRaw,
+  pickBestMassCandidate,
+  rebalanceCompositionPercents,
+} from './rockCalculatorOcrCorrect'
 
 // ---------------------------------------------------------------------------
 // Public types (unchanged — consumed by RockCalculator + apply layer)
@@ -232,11 +240,38 @@ function firstMatchingNumber(corpus: string, patterns: RegExp[]): number | null 
 }
 
 function extractMass(corpus: string, rows: string[]): number | null {
+  const massCandidates: number[] = []
+
+  for (let i = 0; i < rows.length; i++) {
+    if (!isMassRow(rows[i])) continue
+
+    const block = [rows[i], rows[i + 1], rows[i + 2]].filter(Boolean).join(' ')
+    const fiveDigit = block.match(/\b(\d{5})\b/)
+    if (fiveDigit) {
+      const value = Number.parseInt(fiveDigit[1], 10)
+      if (value >= 1_000 && value <= 250_000) return value
+    }
+
+    massCandidates.push(...allIntegersInRow(rows[i]))
+
+    const inline = valueFromLabelRow(rows[i], rows, i)
+    if (inline != null) massCandidates.push(Math.round(inline))
+
+    const next = rows[i + 1]?.trim()
+    if (next && /^\d{3,6}$/.test(next)) {
+      massCandidates.push(Number.parseInt(next, 10))
+    }
+    if (next) massCandidates.push(...allIntegersInRow(next))
+  }
+
+  const fromMassRows = pickBestMassCandidate(massCandidates)
+  if (fromMassRows != null) return fromMassRows
+
   const fromCorpus = firstMatchingNumber(corpus, [
     /\bMASS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
     /\bM[A4@]SS\s*[:.]?\s*(-?\d[\d,]*\.?\d*)/i,
   ])
-  if (fromCorpus != null && fromCorpus >= 50) return fromCorpus
+  if (fromCorpus != null && fromCorpus >= 50) return Math.round(fromCorpus)
 
   let best: number | null = null
   for (const row of rows) {
@@ -245,7 +280,7 @@ function extractMass(corpus: string, rows: string[]): number | null {
     if (value == null || value < 50 || value > 1_000_000) continue
     if (best == null || value > best) best = value
   }
-  return best
+  return best != null ? Math.round(best) : null
 }
 
 function extractResistance(
@@ -391,6 +426,10 @@ function extractTotalScu(corpus: string, rows: string[]): number | null {
     const tagged = row.match(/\bCOMP(?:OSITION)?\.?\s*(\d+(?:\.\d+)?)/i)
     if (tagged) {
       const value = Number.parseFloat(tagged[1])
+      if (isPlausibleRockTotalScu(value)) candidates.push(value)
+    }
+
+    for (const value of allDecimalsInRow(row)) {
       if (isPlausibleRockTotalScu(value)) candidates.push(value)
     }
 
@@ -627,6 +666,14 @@ function pushOreLine(
 ): void {
   if (isInertElement(elementName)) return
 
+  const correctedPercent = correctCompositionPercent(percent, rawOcrLine)
+  if (Math.abs(correctedPercent - percent) > 0.05) {
+    warnings.push(
+      `${elementName} — OCR read ${percent}% but adjusted to ${correctedPercent}% (missing decimal).`
+    )
+  }
+  percent = correctedPercent
+
   const duplicate = compositionLines.some(
     (line) =>
       line.elementName === elementName && Math.abs(line.percent - percent) < 0.11
@@ -797,9 +844,11 @@ function parseCompositionRow(
 
   const strict = row.match(COMPOSITION_LINE_WITH_Q_RE)
   if (strict) {
-    const percent = Number.parseFloat(strict[1])
+    let percent = Number.parseFloat(strict[1])
     const elementName = normalizeElementName(strict[2])
     const quality = Number.parseInt(strict[3], 10)
+    const inferred = inferDecimalPercentFromRaw(row)
+    if (inferred != null) percent = inferred
     if (
       !Number.isFinite(percent) ||
       !elementName ||
@@ -814,7 +863,9 @@ function parseCompositionRow(
 
   const percentOnly = row.match(COMPOSITION_PERCENT_LINE_RE)
   if (percentOnly && /%/.test(row)) {
-    const percent = Number.parseFloat(percentOnly[1])
+    let percent = Number.parseFloat(percentOnly[1])
+    const inferred = inferDecimalPercentFromRaw(row)
+    if (inferred != null) percent = inferred
     let elementRaw = percentOnly[2].trim()
     let inlineQuality: number | null = null
 
@@ -1061,6 +1112,13 @@ function parseRockScanHud(rows: HudRows): RockScanOcrParseResult {
     rows.rowGroups
   )
   assignBandRanksByPercent(compositionLines)
+
+  if (rebalanceCompositionPercents(compositionLines, isInertElement, inertPercent)) {
+    warnings.push(
+      'Some composition percentages were auto-corrected — verify rows if anything looks off.'
+    )
+    assignBandRanksByPercent(compositionLines)
+  }
 
   const resolvedPrimary = resolvePrimaryOreName(rows.rows, compositionLines)
   if (!resolvedPrimary) {

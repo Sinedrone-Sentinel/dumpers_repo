@@ -1,5 +1,5 @@
 /** Target cap height (px) for a single HUD text line before Tesseract — tuned for ~300 DPI reads. */
-export const TARGET_LINE_XHEIGHT = 56
+export const TARGET_LINE_XHEIGHT = 64
 
 export const OCR_USER_DPI = 300
 
