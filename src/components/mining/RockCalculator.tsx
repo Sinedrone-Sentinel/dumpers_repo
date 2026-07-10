@@ -60,7 +60,6 @@ import {
   ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP,
   SMART_CRACKER_BUTTON_TOOLTIP,
 } from '../../lib/miningTooltipContent'
-import RockCalculatorOcrModal from './RockCalculatorOcrModal'
 import { resolveOcrBasis, buildOcrCalculatorApply } from '../../lib/rockCalculatorOcrApply'
 import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
 import { fetchRockScanBridgeHealth, requestRockScanFromBridge } from '../../lib/rockScanBridge'
@@ -124,7 +123,6 @@ export default function RockCalculator({
   const [searchFocused, setSearchFocused] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
 
-  const [ocrModalOpen, setOcrModalOpen] = useState(false)
   const [ocrScanning, setOcrScanning] = useState(false)
   const [ocrBridgeError, setOcrBridgeError] = useState<string | null>(null)
   const [ocrOverrideActive, setOcrOverrideActive] = useState(false)
@@ -419,7 +417,9 @@ export default function RockCalculator({
     setOcrBridgeError(null)
     const health = await fetchRockScanBridgeHealth()
     if (!health?.ok) {
-      setOcrModalOpen(true)
+      setOcrBridgeError(
+        'Rock scan bridge offline — run RESTART-TRAY.vbs (or BP Dumper watch) on this PC, then try again.'
+      )
       return
     }
     if (!health.calibrated) {
@@ -953,13 +953,6 @@ export default function RockCalculator({
           )}
         </div>
       </div>
-
-      {ocrModalOpen && canUseScannerOcr ? (
-        <RockCalculatorOcrModal
-          onClose={() => setOcrModalOpen(false)}
-          onApply={handleOcrApply}
-        />
-      ) : null}
     </aside>
   )
 }

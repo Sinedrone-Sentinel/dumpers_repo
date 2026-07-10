@@ -389,8 +389,8 @@ export const ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP = (
     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
       <li>Keep BP Dumper running in watch mode (starts the local scan bridge automatically)</li>
       <li>In-game: Mole pilot seat, rock scanned, RESULTS panel visible on the right</li>
-      <li>Click OCR here — desktop capture + SC_OCR fills mass, RES, COMP, composition %, and Q</li>
-      <li>First time only: right-click the BP Dumper tray icon → Calibrate RESULTS panel (draw the RESULTS box once per resolution)</li>
+      <li>Click OCR — switches to Star Citizen, captures the RESULTS panel, and fills the calculator</li>
+      <li>DR tray icon must be running on this PC (BP Dumper watch or RESTART-TRAY.vbs)</li>
       <li>Guests and offline preview cannot use Scanner OCR — sign in and run BP Dumper on this PC</li>
     </ul>
   </div>
