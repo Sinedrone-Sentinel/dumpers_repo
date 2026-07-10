@@ -78,11 +78,13 @@ function normalizeOcrLetters(line: string): string {
 }
 
 function ocrHeaderLetters(line: string): string {
-  return normalizeOcrLetters(line)
+  return line
+    .toUpperCase()
     .replace(/5/g, 'S')
     .replace(/0/g, 'O')
     .replace(/1/g, 'I')
     .replace(/8/g, 'B')
+    .replace(/[^A-Z]/g, '')
 }
 
 function levenshteinDistance(a: string, b: string): number {
@@ -217,12 +219,80 @@ function normalizeResistancePercent(value: number): number {
 function lineLooksLikeResLabel(line: string): boolean {
   const trimmed = line.trim()
   if (!trimmed) return false
-  if (/\bRES(?:ISTANCE)?\b/i.test(trimmed) && !lineLooksLikeResultsHeader(trimmed)) return true
+  if (lineLooksLikeResultsHeader(trimmed)) return false
+  if (/\bRES(?:ISTANCE)?\b/i.test(trimmed)) return true
+  if (/^RE\s*[:/\\-]?\s*[-/\\]?\s*\d/i.test(trimmed)) return true
 
   const letters = ocrHeaderLetters(trimmed)
   if (!letters) return false
-  if (letters.startsWith('RES') && !letters.startsWith('RESULT')) return true
+  if (letters.startsWith('RESULT')) return false
+  if (letters.startsWith('RES')) return true
+  if (letters.length >= 2 && letters.length <= 12) {
+    if (levenshteinDistance(letters.slice(0, 3), 'RES') <= 1) return true
+    if (levenshteinDistance(letters, 'RESISTANCE') <= 3) return true
+  }
   return false
+}
+
+function isResistanceCandidateValue(
+  value: number,
+  mass: number | null,
+  instability: number | null,
+  totalScu: number | null
+): boolean {
+  if (!Number.isFinite(value) || value < 0) return false
+  if (mass != null && Math.abs(value - mass) < 0.01) return false
+  if (instability != null && Math.abs(value - instability) < 0.01) return false
+  if (totalScu != null && value > 200 && Math.abs(value - totalScu) < 1) return false
+  if (value > 0 && value <= 1) return true
+  return value <= 100
+}
+
+/** RES is often garbled or clipped to the bottom of the crop — infer from position or orphan values. */
+function extractResistanceFallback(
+  lines: string[],
+  known: { mass: number | null; instability: number | null; totalScu: number | null }
+): number | null {
+  let massIdx = -1
+  let instIdx = -1
+  for (let i = 0; i < lines.length; i++) {
+    if (massIdx < 0 && lineLooksLikeMassLabel(lines[i])) massIdx = i
+    if (lineLooksLikeInstLabel(lines[i])) instIdx = i
+  }
+
+  if (massIdx >= 0 && instIdx > massIdx) {
+    for (let i = massIdx + 1; i < instIdx; i++) {
+      if (isCompositionPercentLine(lines[i]) || lineHasStatLabel(lines[i])) continue
+      const value = readNumericFromLabelLine(lines[i])
+      if (value != null && isResistanceCandidateValue(value, known.mass, known.instability, known.totalScu)) {
+        return value
+      }
+    }
+  }
+
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const line = lines[i].trim()
+    if (!line || isCompositionPercentLine(line)) continue
+    if (lineLooksLikeMassLabel(line) || lineLooksLikeInstLabel(line)) continue
+    if (isCompScuHeaderLine(line)) continue
+    if (lineLooksLikeResultsHeader(line)) continue
+
+    if (lineLooksLikeResLabel(line)) {
+      const value = readHudStatValue(line, lines, i)
+      if (value != null && isResistanceCandidateValue(value, known.mass, known.instability, known.totalScu)) {
+        return value
+      }
+    }
+
+    if (!/%/.test(line) && /^[^A-Za-z]*\d/.test(line)) {
+      const value = readNumericFromLabelLine(line)
+      if (value != null && isResistanceCandidateValue(value, known.mass, known.instability, known.totalScu)) {
+        return value
+      }
+    }
+  }
+
+  return null
 }
 
 function lineLooksLikeInstLabel(line: string): boolean {
@@ -313,20 +383,26 @@ function extractCompScu(lines: string[]): number | null {
 
 /** Resolve MASS → RES → INST → COMP by label across all OCR lines (order-independent). */
 function extractOrderedScanPanelStats(lines: string[]): ScanPanelStats {
+  const mass =
+    extractLabeledStat(lines, lineLooksLikeMassLabel) ??
+    extractLabeledValue(lines, ['MASS']) ??
+    extractMassFallback(lines)
+  const instability =
+    extractLabeledStat(lines, lineLooksLikeInstLabel) ??
+    extractLabeledValue(lines, ['INSTABILITY']) ??
+    extractLabeledValue(lines, ['INST'], { wordBoundary: true })
+  const totalScu = extractCompScu(lines)
+  const resistancePercent =
+    extractLabeledStat(lines, lineLooksLikeResLabel) ??
+    extractLabeledValue(lines, ['RESISTANCE']) ??
+    extractLabeledValue(lines, ['RES'], { wordBoundary: true }) ??
+    extractResistanceFallback(lines, { mass, instability, totalScu })
+
   return {
-    mass:
-      extractLabeledStat(lines, lineLooksLikeMassLabel) ??
-      extractLabeledValue(lines, ['MASS']) ??
-      extractMassFallback(lines),
-    resistancePercent:
-      extractLabeledStat(lines, lineLooksLikeResLabel) ??
-      extractLabeledValue(lines, ['RESISTANCE']) ??
-      extractLabeledValue(lines, ['RES'], { wordBoundary: true }),
-    instability:
-      extractLabeledStat(lines, lineLooksLikeInstLabel) ??
-      extractLabeledValue(lines, ['INSTABILITY']) ??
-      extractLabeledValue(lines, ['INST'], { wordBoundary: true }),
-    totalScu: extractCompScu(lines),
+    mass,
+    resistancePercent,
+    instability,
+    totalScu,
   }
 }
 
@@ -648,7 +724,7 @@ export function parseRockScanOcrText(rawText: string): RockScanOcrParseResult {
     return { ok: false, error: 'Could not read Mass from the crop — include the MASS line.' }
   }
   if (resistancePercent == null) {
-    return { ok: false, error: 'Could not read Resistance from the crop — include the RESISTANCE line.' }
+    return { ok: false, error: 'Could not read Resistance from the crop — include the RES line.' }
   }
   if (instability == null) {
     return { ok: false, error: 'Could not read Instability from the crop — include the INST or INSTABILITY line.' }
