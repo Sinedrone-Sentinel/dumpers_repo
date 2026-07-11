@@ -10,6 +10,7 @@ import {
   type DepositType,
 } from '../../lib/miningClusterProfiles'
 import { normalizeMiningOreName } from '../../lib/handMineables'
+import { resolveOcrOreName } from '../../lib/miningOreCanonical'
 import type { MiningTrackerEntry } from '../../lib/localGuestCache'
 import {
   buildDefaultPercentSlots,
@@ -1013,16 +1014,17 @@ function MaterialQualitySelect({
     )
   }
 
-  const resourceKey = oreResourceKeyFromElementName(elementName)
-  const qualityOptions = getLedgerQualityOptions(resourceKey, elementName)
+  const canonicalElement = resolveOcrOreName(elementName).name
+  const resourceKey = oreResourceKeyFromElementName(canonicalElement)
+  const qualityOptions = getLedgerQualityOptions(resourceKey, canonicalElement)
   const parsed = Number.parseInt(value, 10)
   const resolvedQuality = Number.isFinite(parsed)
-    ? resolveLedgerQuality(resourceKey, elementName, parsed)
-    : getDefaultBandQuality(elementName)
+    ? resolveLedgerQuality(resourceKey, canonicalElement, parsed)
+    : getDefaultBandQuality(canonicalElement)
   const resolvedValue = String(resolvedQuality)
   const title = formatRockQualitySelectTitle(resolvedQuality)
 
-  if (qualityOptions.length > 0 && getResourceBands(elementName)) {
+  if (qualityOptions.length > 0 && getResourceBands(canonicalElement)) {
     return (
       <select
         value={resolvedValue}

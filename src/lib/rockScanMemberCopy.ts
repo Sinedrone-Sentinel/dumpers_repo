@@ -11,9 +11,13 @@ const ERROR_OVERRIDES: Record<string, string> = {
   'Could not find COMP header in OCR text.':
     'Could not read composition from your scan. Keep the full RESULTS panel visible and try again.',
   'Could not find INERT anchor line (bottom of composition list).':
-    'Could not read the bottom of the composition list. Check your scan area calibration.',
+    'Could not read composition from your scan. Keep the full RESULTS panel visible and try again.',
   'INERT anchor appears above COMP header — check panel crop.':
     'Scan area may be misaligned. Recalibrate the RESULTS panel from the system tray.',
+  'No composition rows found below COMP header.':
+    'Could not read composition from your scan. Keep the full RESULTS panel visible and try again.',
+  'No valuable composition rows found below COMP header.':
+    'Could not read valuable composition lines from your scan. Keep the RESULTS panel visible and try again.',
   'Rock scan bridge returned invalid JSON.': 'Scanner response was unreadable. Try OCR again.',
   'Rock scan bridge did not return calculator data.':
     'Scanner did not return rock data. Open the RESULTS panel in-game and try again.',

@@ -1,7 +1,7 @@
 import type { CompositionPart, DepositType } from './miningClusterProfiles'
 import { getDepositTypes } from './miningClusterProfiles'
 import { normalizeMiningOreName, resolveOcrOreName } from './miningOreCanonical'
-import { resolveLedgerQuality, getDefaultBandQuality, PURCHASED_STOCK_QUALITY } from './qualityBands'
+import { resolveLedgerQuality, getDefaultBandQuality, getLedgerQualityOptions, getResourceBands, PURCHASED_STOCK_QUALITY } from './qualityBands'
 import {
   buildDefaultQualitySlots,
   compositionSlotKey,
@@ -43,19 +43,26 @@ export function buildOcrCalculatorParts(scan: RockScanOcrResult): CompositionPar
   return [...parts, buildInertPart()]
 }
 
-function resolveLineQuality(line: OcrCompositionLine): number {
-  if (!line.qualityMissing && line.quality != null) {
-    return resolveLedgerQuality(
-      oreResourceKeyFromElementName(line.elementName),
-      line.elementName,
-      line.quality
-    )
+/** Exact HUD Q → ledger band; otherwise nearest game band; missing Q → Band 2. */
+function resolveScanLineQuality(line: OcrCompositionLine, elementName: string): number {
+  const canonical = resolveOcrOreName(elementName).name
+  const resourceKey = oreResourceKeyFromElementName(canonical)
+  const band2 = getDefaultBandQuality(canonical)
+
+  if (line.qualityMissing || line.quality == null) {
+    return band2
   }
-  return resolveLedgerQuality(
-    oreResourceKeyFromElementName(line.elementName),
-    line.elementName,
-    getDefaultBandQuality(line.elementName)
-  )
+
+  const options = getLedgerQualityOptions(resourceKey, canonical)
+  if (options.includes(line.quality)) {
+    return line.quality
+  }
+
+  if (getResourceBands(canonical)) {
+    return resolveLedgerQuality(resourceKey, canonical, line.quality)
+  }
+
+  return band2
 }
 
 function formatScanPercent(line: OcrCompositionLine): string {
@@ -82,7 +89,7 @@ export function buildOcrCalculatorApply(scan: RockScanOcrResult): {
     const part = calculatorParts[index]
     const key = compositionSlotKey(index, part)
     percentBySlot[key] = formatScanPercent(line)
-    qualityBySlot[key] = String(resolveLineQuality(line))
+    qualityBySlot[key] = String(resolveScanLineQuality(line, part.elementName))
   })
 
   qualityBySlot[INERT_SLOT_KEY] = String(PURCHASED_STOCK_QUALITY)
