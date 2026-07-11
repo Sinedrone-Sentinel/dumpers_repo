@@ -8,13 +8,13 @@ from PIL import Image
 
 from composition_parse import COMP_HEADER_RE, MAX_COMP_SCU
 from ore_canonical import resolve_ocr_ore_name
+from panel_res_parse import best_resistance_from_lines
 from panel_tesseract import merge_line_candidates, ocr_panel_line_candidates
 
 _MASS_RE = re.compile(r"\bMASS\b[:\s]*([\d,]+(?:\.\d+)?)", re.I)
 _RESULTS_RE = re.compile(r"\bRESULTS?\b", re.I)
 ROCK_MASS_MIN = 1_000
 ROCK_MASS_MAX = 999_999
-_RES_RE = re.compile(r"\bRES\b[:\s]*(\d+(?:\.\d+)?)\s*%?", re.I)
 _INST_RE = re.compile(r"\bINST\b[:\s]*(\d+(?:\.\d+)?)", re.I)
 _ORE_NAME_RE = re.compile(
     r"^([A-Za-z][A-Za-z0-9_\s-]*?)\s*\((?:ORE|RAW)\)",
@@ -94,12 +94,9 @@ def enrich_sc_ocr_from_panel(
                 enriched["mass"] = _parse_number(match.group(1))
                 break
 
-    if enriched.get("resistance") is None:
-        for line in lines:
-            match = _RES_RE.search(line)
-            if match is not None:
-                enriched["resistance"] = float(match.group(1))
-                break
+    panel_res = best_resistance_from_lines(lines)
+    if panel_res is not None:
+        enriched["resistance"] = panel_res
 
     if enriched.get("instability") is None:
         for line in lines:
