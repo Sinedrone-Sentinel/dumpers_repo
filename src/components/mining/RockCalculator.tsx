@@ -131,6 +131,7 @@ export default function RockCalculator({
   const searchRef = useRef<HTMLInputElement>(null)
 
   const [ocrScanning, setOcrScanning] = useState(false)
+  const [ocrScanPhase, setOcrScanPhase] = useState<string | null>(null)
   const [ocrBridgeError, setOcrBridgeError] = useState<string | null>(null)
   const [ocrOverrideActive, setOcrOverrideActive] = useState(false)
   const [ocrWarnings, setOcrWarnings] = useState<string[]>([])
@@ -433,8 +434,9 @@ export default function RockCalculator({
     }
 
     setOcrScanning(true)
+    setOcrScanPhase('Connecting to desktop scanner…')
     try {
-      const result = await requestRockScanFromBridge()
+      const result = await requestRockScanFromBridge(120_000, (phase) => setOcrScanPhase(phase))
       if (!result.ok || !result.data) {
         setOcrBridgeError(memberFacingRockScanError(result.error))
         if (result.hints?.length) {
@@ -459,6 +461,7 @@ export default function RockCalculator({
       setOcrBridgeError(memberFacingRockScanError(message))
     } finally {
       setOcrScanning(false)
+      setOcrScanPhase(null)
     }
   }, [canUseScannerOcr, handleOcrApply])
 
@@ -558,7 +561,7 @@ export default function RockCalculator({
                 Scan in progress
               </p>
               <p className="text-[11px] text-sky-200/90 leading-snug mt-1">
-                {ROCK_SCAN_IN_PROGRESS_MESSAGE}
+                {ocrScanPhase ?? ROCK_SCAN_IN_PROGRESS_MESSAGE}
               </p>
             </div>
           ) : null}

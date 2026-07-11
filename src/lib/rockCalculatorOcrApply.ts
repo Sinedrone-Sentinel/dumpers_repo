@@ -1,5 +1,6 @@
 import type { CompositionPart, DepositType } from './miningClusterProfiles'
 import { getDepositTypes } from './miningClusterProfiles'
+import { normalizeMiningOreName } from './miningOreCanonical'
 import { resolveLedgerQuality, getDefaultBandQuality, PURCHASED_STOCK_QUALITY } from './qualityBands'
 import {
   buildDefaultQualitySlots,
@@ -90,7 +91,7 @@ export function buildOcrCalculatorApply(scan: RockScanOcrResult): {
 }
 
 export function resolveOcrBasis(scan: RockScanOcrResult): OcrBasisResolution | null {
-  const oreName = scan.primaryOreName
+  const oreName = normalizeMiningOreName(scan.primaryOreName)
   const depositTypes = getDepositTypes(oreName)
   if (!depositTypes.length) return null
 

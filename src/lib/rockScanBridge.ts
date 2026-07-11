@@ -18,6 +18,12 @@ export interface RockScanBridgeHealth {
   calibrated?: boolean
 }
 
+export interface RockScanBridgeStatus {
+  ok: boolean
+  active: boolean
+  phase?: string
+}
+
 export type RockScanBridgeScanResult =
   | { ok: true; data: RockScanOcrResult; warnings?: string[] }
   | { ok: false; error: string; hints?: string[]; warnings?: string[] }
@@ -42,45 +48,79 @@ export async function probeRockScanBridge(timeoutMs = 800): Promise<boolean> {
   return health?.ok === true
 }
 
-export async function requestRockScanFromBridge(
-  timeoutMs = 120_000
-): Promise<RockScanBridgeScanResult> {
-  const response = await fetch(`${bridgeBaseUrl()}/scan`, {
-    method: 'POST',
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: '{}',
-    signal: AbortSignal.timeout(timeoutMs),
-  })
-
-  let payload: RockScanBridgeScanResult
+export async function fetchRockScanBridgeStatus(
+  timeoutMs = 1500
+): Promise<RockScanBridgeStatus | null> {
   try {
-    payload = (await response.json()) as RockScanBridgeScanResult
+    const response = await fetch(`${bridgeBaseUrl()}/scan/status`, {
+      mode: 'cors',
+      signal: AbortSignal.timeout(timeoutMs),
+    })
+    if (!response.ok) return null
+    return (await response.json()) as RockScanBridgeStatus
   } catch {
-    return { ok: false, error: memberFacingRockScanError('Rock scan bridge returned invalid JSON.') }
+    return null
   }
+}
 
-  if (!response.ok) {
-    return {
-      ok: false,
-      error: memberFacingRockScanError(
-        payload.error ?? `Rock scan failed (HTTP ${response.status}).`
-      ),
-      hints: payload.hints,
-      warnings: payload.warnings,
+export async function requestRockScanFromBridge(
+  timeoutMs = 120_000,
+  onPhase?: (phase: string) => void
+): Promise<RockScanBridgeScanResult> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+  let pollTimer: ReturnType<typeof setInterval> | undefined
+  if (onPhase) {
+    const poll = async () => {
+      const status = await fetchRockScanBridgeStatus(2000)
+      if (status?.active && status.phase) onPhase(status.phase)
     }
+    void poll()
+    pollTimer = setInterval(() => void poll(), 600)
   }
 
-  if (!payload.ok || !payload.data) {
-    return {
-      ok: false,
-      error: memberFacingRockScanError(
-        payload.error ?? 'Rock scan bridge did not return calculator data.'
-      ),
-      hints: payload.hints,
-      warnings: payload.warnings,
+  try {
+    const response = await fetch(`${bridgeBaseUrl()}/scan`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: controller.signal,
+    })
+
+    let payload: RockScanBridgeScanResult
+    try {
+      payload = (await response.json()) as RockScanBridgeScanResult
+    } catch {
+      return { ok: false, error: memberFacingRockScanError('Rock scan bridge returned invalid JSON.') }
     }
-  }
 
-  return payload
+    if (!response.ok) {
+      return {
+        ok: false,
+        error: memberFacingRockScanError(
+          payload.error ?? `Rock scan failed (HTTP ${response.status}).`
+        ),
+        hints: payload.hints,
+        warnings: payload.warnings,
+      }
+    }
+
+    if (!payload.ok || !payload.data) {
+      return {
+        ok: false,
+        error: memberFacingRockScanError(
+          payload.error ?? 'Rock scan bridge did not return calculator data.'
+        ),
+        hints: payload.hints,
+        warnings: payload.warnings,
+      }
+    }
+
+    return payload
+  } finally {
+    clearTimeout(timeoutId)
+    if (pollTimer) clearInterval(pollTimer)
+  }
 }
