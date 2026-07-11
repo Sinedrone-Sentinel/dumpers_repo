@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from PIL import Image
 
 from panel_digit_normalize import vote_decimal_string, vote_digit_string
+from ore_canonical import resolve_ocr_ore_name
 from quality_band_resolve import resolve_quality_reading
 
 
