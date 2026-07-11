@@ -10,6 +10,8 @@ from collections.abc import Callable
 
 from PIL import Image, ImageTk
 
+from overlay_frame import OverlayFrame
+
 from capture import crop_fraction
 from panel_crop import PanelFractions
 from region_store import fractions_from_pixels
@@ -221,11 +223,12 @@ def confirm_region_on_snapshot(
     restore_focus_on_finish: bool = True,
 ) -> PanelFractions | None:
     """Show overlay on a frozen frame; return fractions on Enter or None on Esc."""
+    frame = OverlayFrame.from_window_snapshot(window, snapshot)
     overlay = RegionOverlay(
-        window.client_left,
-        window.client_top,
-        window.client_width,
-        window.client_height,
+        frame.left,
+        frame.top,
+        frame.width,
+        frame.height,
         snapshot,
         return_focus_hwnd=return_focus_hwnd,
         initial_fractions=initial_fractions,

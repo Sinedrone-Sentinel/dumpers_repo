@@ -7,7 +7,8 @@ import sys
 from calibrate_overlay import confirm_region_on_snapshot, save_region_preview
 from capture import capture_game_frames, focus_window
 from focus_helper import get_foreground_hwnd, restore_focus
-from game_window import find_star_citizen_window
+from game_window import find_star_citizen_window, refresh_game_window
+from overlay_frame import normalize_snapshot
 from region_store import load_region, save_region
 
 
@@ -28,7 +29,9 @@ def run_calibration_overlay(*, enter_label: str = "Enter = save") -> bool:
     return_focus = get_foreground_hwnd()
     print("Focusing game briefly to grab a screenshot for calibration...")
     focus_window(window.hwnd)
+    window = refresh_game_window(window)
     snapshot, method, notes = capture_game_frames(window, focus_first=False)
+    snapshot = normalize_snapshot(snapshot, window)
     restore_focus(return_focus)
     print(f"Calibration snapshot via {method}.")
     for note in notes:
@@ -48,8 +51,8 @@ def run_calibration_overlay(*, enter_label: str = "Enter = save") -> bool:
 
     save_region(
         fractions,
-        client_width=window.client_width,
-        client_height=window.client_height,
+        client_width=snapshot.width,
+        client_height=snapshot.height,
     )
     preview_path = save_region_preview(snapshot, fractions)
     print(f"Saved capture region. Preview: {preview_path}")

@@ -11,11 +11,11 @@ from collections.abc import Callable
 
 from PIL import Image, ImageTk
 
-from capture import crop_fraction
 from game_window import GameWindow
 from live_scan_types import LiveScanResult
+from overlay_frame import OverlayFrame
 from panel_crop import PanelFractions
-from panel_row_layout import PanelRowLayout, detect_panel_row_layout
+from panel_row_layout import PanelRowLayout
 from region_store import fractions_from_pixels, save_region
 
 # HUD row ids ticked in scan order (y positions come from each frozen grab).
@@ -48,8 +48,9 @@ class BridgeScanOverlay:
         self.window = window
         self.return_focus_hwnd = return_focus_hwnd
         self.on_scan = on_scan
-        self.client_w = window.client_width
-        self.client_h = window.client_height
+        frame = OverlayFrame.from_window_snapshot(window, snapshot)
+        self.client_w = frame.width
+        self.client_h = frame.height
         self.bg_image = snapshot
         self.scan_mode = False
         self.cancelled = False
@@ -71,13 +72,13 @@ class BridgeScanOverlay:
         self.root.overrideredirect(True)
         self.root.attributes("-topmost", True)
         self.root.geometry(
-            f"{self.client_w}x{self.client_h}+{window.client_left}+{window.client_top}"
+            f"{frame.width}x{frame.height}+{frame.left}+{frame.top}"
         )
 
         self.canvas = tk.Canvas(
             self.root,
-            width=self.client_w,
-            height=self.client_h,
+            width=frame.width,
+            height=frame.height,
             cursor="crosshair",
             highlightthickness=0,
             bg="black",
@@ -268,19 +269,25 @@ class BridgeScanOverlay:
         x0, y0, x1, y1 = self.selection
         return min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)
 
-    def _detect_and_place_checkmarks(self, fractions: PanelFractions) -> None:
-        """Place checkmarks from word boxes on this frozen panel crop."""
-        panel_img = crop_fraction(self.bg_image, fractions)
-        self._row_layout = detect_panel_row_layout(panel_img)
+    def apply_row_layout(self, layout: PanelRowLayout) -> None:
+        """Reposition checkmarks after spatial row detection on the frozen crop."""
+        self._row_layout = layout
         for row_id in HUD_ROW_IDS:
             self.ensure_row(row_id)
         for row_id in sorted(
-            (key for key in self._row_layout.rows if key.startswith("comp_")),
+            (key for key in layout.rows if key.startswith("comp_")),
             key=lambda key: int(key.split("_", 1)[1]),
         ):
             self.ensure_row(row_id)
-        if "inert" in self._row_layout.rows:
+        if "inert" in layout.rows:
             self.ensure_row("inert")
+        self.root.update()
+
+    def _place_fallback_checkmarks(self) -> None:
+        """Show pending markers immediately; real positions arrive from the scan thread."""
+        self._row_layout = PanelRowLayout(rows={})
+        for row_id in HUD_ROW_IDS:
+            self.ensure_row(row_id)
 
     def _lock_scan_mode(self) -> None:
         self.scan_mode = True
@@ -316,8 +323,8 @@ class BridgeScanOverlay:
         )
 
         self._lock_scan_mode()
-        self.set_header("Aligning row markers to this frame…")
-        self._detect_and_place_checkmarks(fractions)
+        self.set_header("Scanning frozen HUD frame…")
+        self._place_fallback_checkmarks()
         reporter = ScanProgressReporter(self)
         for row_id in HUD_ROW_IDS:
             reporter.mark_row(row_id, ok=None)
@@ -374,6 +381,19 @@ class ScanProgressReporter:
         self._overlay.schedule_ui(
             lambda: self._overlay.ensure_row(row_id, y_frac)
         )
+
+    def apply_row_layout(self, layout: PanelRowLayout) -> None:
+        """Block until row markers are repositioned on the UI thread."""
+        done = threading.Event()
+
+        def _apply() -> None:
+            try:
+                self._overlay.apply_row_layout(layout)
+            finally:
+                done.set()
+
+        self._overlay.schedule_ui(_apply)
+        done.wait(timeout=15.0)
 
     def mark_row(self, row_id: str, *, ok: bool | None = None) -> None:
         self._overlay._mark_row_threadsafe(row_id, ok=ok)

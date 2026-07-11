@@ -16,6 +16,9 @@ _ui_lock = threading.Lock()
 
 def ensure_ui_thread() -> queue.Queue:
     global _ui_queue, _ui_thread
+    from win_dpi import ensure_dpi_awareness
+
+    ensure_dpi_awareness()
     with _ui_lock:
         if _ui_queue is not None and _ui_thread is not None and _ui_thread.is_alive():
             return _ui_queue

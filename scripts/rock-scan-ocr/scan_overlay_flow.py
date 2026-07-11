@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from capture import capture_game_frames, focus_game_window
+from capture import capture_game_frames, crop_fraction, focus_game_window
 from focus_helper import restore_focus
-from game_window import GameWindow
+from game_window import GameWindow, refresh_game_window
 from live_scan_types import LiveScanResult
+from overlay_frame import normalize_snapshot
 from panel_crop import PanelFractions
+from panel_row_layout import detect_panel_row_layout
 from region_store import SavedRegion
 from scan_progress_overlay import BridgeScanOverlay, ScanProgressReporter
 
@@ -27,7 +29,9 @@ def run_bridge_scan_overlay(
     the snapshot does not affect parsing.
     """
     focus_game_window(window.hwnd)
+    window = refresh_game_window(window)
     snapshot, _method, _notes = capture_game_frames(window, focus_first=False)
+    snapshot = normalize_snapshot(snapshot, window)
 
     def on_scan(
         fractions: PanelFractions,
@@ -41,6 +45,12 @@ def run_bridge_scan_overlay(
         capture_notes = [
             "OCR uses the frozen frame shown on the overlay (ignores live ship sway).",
         ]
+
+        panel_img = crop_fraction(client_img, fractions)
+        reporter.set_header("Aligning row markers to this frame…")
+        layout = detect_panel_row_layout(panel_img)
+        reporter.apply_row_layout(layout)
+        reporter.set_header("Running HUD reader…")
 
         return scan_fn(
             fractions,

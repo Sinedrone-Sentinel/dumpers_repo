@@ -20,6 +20,11 @@ from pathlib import Path
 DEFAULT_HOST = "127.0.0.1"
 
 
+from win_dpi import ensure_dpi_awareness
+
+ensure_dpi_awareness()
+
+
 def _tray_image():
     from PIL import Image
 

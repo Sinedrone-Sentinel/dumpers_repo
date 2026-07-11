@@ -77,6 +77,9 @@ def _client_rect_screen(hwnd: int) -> tuple[int, int, int, int] | None:
 
 def find_star_citizen_window() -> GameWindow | None:
     """Return the best visible StarCitizen.exe client window, if any."""
+    from win_dpi import ensure_dpi_awareness
+
+    ensure_dpi_awareness()
     user32 = ctypes.windll.user32
     matches: list[tuple[int, str, int, str]] = []
 
@@ -121,6 +124,24 @@ def find_star_citizen_window() -> GameWindow | None:
         title=title,
         pid=pid,
         process_name=proc,
+        client_left=left,
+        client_top=top,
+        client_width=width,
+        client_height=height,
+    )
+
+
+def refresh_game_window(window: GameWindow) -> GameWindow:
+    """Re-read client screen rect (resolution/DPI may change between calls)."""
+    rect = _client_rect_screen(window.hwnd)
+    if rect is None:
+        return window
+    left, top, width, height = rect
+    return GameWindow(
+        hwnd=window.hwnd,
+        title=window.title,
+        pid=window.pid,
+        process_name=window.process_name,
         client_left=left,
         client_top=top,
         client_width=width,
