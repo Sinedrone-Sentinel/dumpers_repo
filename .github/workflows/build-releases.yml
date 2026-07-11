@@ -12,14 +12,15 @@ on:
         default: 'v1.2.0'
 
 jobs:
-  build:
-    name: Build Go and Python Dumpers
+  resolve-tag:
+    name: Resolve release tag
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+      version: ${{ steps.version.outputs.version }}
+      min_version: ${{ steps.mingame.outputs.min_version }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Resolve release tag
         id: tag
@@ -33,35 +34,42 @@ jobs:
             TAG="v${VERSION}"
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "Release tag: $TAG"
 
       - name: Read dumper version
         id: version
         run: |
           VERSION=$(node -p "require('./scripts/bp-dumper/version.json').version")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Building BP Dumper v$VERSION"
 
       - name: Read min game version
         id: mingame
         run: |
           MIN_VER=$(node -p "(() => { const v = require('./src/data/game-build-version.json').version; const m = String(v).match(/^(\\d+\\.\\d+)/); if (!m) throw new Error('Invalid game version: ' + v); return m[1]; })()")
           echo "min_version=$MIN_VER" >> "$GITHUB_OUTPUT"
-          echo "Min game version: $MIN_VER"
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+  build-unix:
+    name: Build Go and Python zip
+    needs: resolve-tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
           cache: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Copy blueprint lookup for client builds
         run: node scripts/copy-blueprint-lookup.mjs
 
       - name: Build Go binaries
         env:
-          DUMPER_VERSION: ${{ steps.version.outputs.version }}
-          MIN_GAME_VERSION: ${{ steps.mingame.outputs.min_version }}
+          DUMPER_VERSION: ${{ needs.resolve-tag.outputs.version }}
+          MIN_GAME_VERSION: ${{ needs.resolve-tag.outputs.min_version }}
         run: |
           cd scripts/bp-dumper-go
           mkdir -p dist
@@ -72,7 +80,7 @@ jobs:
           GOOS=darwin GOARCH=arm64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-silicon
           GOOS=linux GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-linux
 
-      - name: Package Python dumper + Rock Scanner
+      - name: Package Python dumper + Rock Scanner zip
         run: |
           STAGE=$(mktemp -d)
           mkdir -p "$STAGE/scripts/bp-dumper-py" "$STAGE/scripts/rock-scan-ocr/vendor"
@@ -103,15 +111,73 @@ jobs:
           cd "$STAGE"
           zip -r "$GITHUB_WORKSPACE/scripts/bp-dumper-py.zip" .
 
-      - name: Upload binaries to GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Upload unix build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          files: |
+          name: unix-builds
+          path: |
             scripts/bp-dumper-go/dist/bp-dumper-windows.exe
             scripts/bp-dumper-go/dist/bp-dumper-mac-intel
             scripts/bp-dumper-go/dist/bp-dumper-mac-silicon
             scripts/bp-dumper-go/dist/bp-dumper-linux
             scripts/bp-dumper-py.zip
+
+  build-windows-installer:
+    name: Build Windows installer
+    needs: resolve-tag
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Copy blueprint lookup
+        run: node scripts/copy-blueprint-lookup.mjs
+
+      - name: Stage self-contained bundle
+        shell: pwsh
+        run: ./scripts/installer/prepare-bundle.ps1
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Compile installer
+        shell: pwsh
+        run: |
+          $version = "${{ needs.resolve-tag.outputs.version }}"
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $iscc "/DAppVersion=$version" "scripts/installer/dumper-apps.iss"
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: scripts/installer/output/DumperApps-Setup-*.exe
+
+  release:
+    name: Upload GitHub Release assets
+    needs: [resolve-tag, build-unix, build-windows-installer]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Upload binaries to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.resolve-tag.outputs.tag }}
+          files: |
+            artifacts/unix-builds/bp-dumper-windows.exe
+            artifacts/unix-builds/bp-dumper-mac-intel
+            artifacts/unix-builds/bp-dumper-mac-silicon
+            artifacts/unix-builds/bp-dumper-linux
+            artifacts/unix-builds/bp-dumper-py.zip
+            artifacts/windows-installer/DumperApps-Setup-*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

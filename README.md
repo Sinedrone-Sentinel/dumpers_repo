@@ -94,7 +94,7 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - Reference grid of base RS signatures and cluster spawn odds; track up to two cards per ore (Surface / Asteroid) plus optional per-site location cards
 - Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
 - **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
-- **Scanner OCR** — download Dumper Apps **Windows (recommended)**, run **START-HERE.bat**, calibrate the RESULTS panel once, then click **OCR** while the Mole pilot RESULTS panel is open in-game
+- **Scanner OCR** — install **Dumper Apps** (Windows installer), paste your API key, calibrate the RESULTS panel once, then click **OCR** in-game
 - **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship (sign-in; RSI verification not required)
 
 **Mining Guide**
@@ -228,8 +228,8 @@ Companion desktop apps for blueprint farming and Rock Calculator OCR — watches
 
 | Item | Detail |
 |------|--------|
-| **Downloads** | GitHub releases — **Windows (recommended)** zip with `START-HERE.bat` (BP Dumper + Rock Scanner); `.exe` is blueprints-only |
-| **Member setup** | Unzip → `START-HERE.bat` → paste API key → calibrate tray once → OCR in Rock Calculator |
+| **Downloads** | GitHub releases — **`DumperApps-Setup-X.Y.Z.exe`** (Windows, recommended); portable zip for advanced users |
+| **Member setup** | Run installer → Start Menu **Dumper Apps** → paste API key → calibrate tray once → OCR |
 | **Source** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/), [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/rock-scan-ocr/`](scripts/rock-scan-ocr/) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |

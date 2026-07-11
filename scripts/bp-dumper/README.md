@@ -17,7 +17,8 @@ Go and Python BP Dumper versions are managed with [semantic-release](https://sem
    - `bp-dumper-windows.exe`
    - `bp-dumper-mac-intel` / `bp-dumper-mac-silicon`
    - `bp-dumper-linux`
-   - `bp-dumper-py.zip` — `START-HERE.bat`, `scripts/bp-dumper-py/`, `scripts/rock-scan-ocr/` (Windows Rock Scanner)
+   - `bp-dumper-py.zip` — portable zip (no installer)
+   - `DumperApps-Setup-X.Y.Z.exe` — **Windows installer** (bundled Python, Tesseract, SC_OCR)
 
 Game-data parsing updates the canonical lookup at `src/data/blueprint-name-lookup.json` and copies it into Go/Python/embed paths locally. That alone does **not** trigger a semver release — ship a new dumper build and redeploy `log-watcher-webhook` after a game patch.
 

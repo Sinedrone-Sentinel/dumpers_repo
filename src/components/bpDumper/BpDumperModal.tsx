@@ -103,20 +103,21 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <h3 className="text-sm font-semibold text-white">Setup (Windows)</h3>
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-400">
             <li>
-              Download <strong className="text-slate-300">Windows (recommended)</strong> — the zip with{' '}
-              <strong className="text-slate-300">START-HERE.bat</strong>.
+              Download <strong className="text-slate-300">Windows (recommended)</strong> and run the installer.
             </li>
-            <li>Unzip anywhere → double-click <strong className="text-slate-300">START-HERE.bat</strong> → paste your API key below when asked.</li>
+            <li>
+              Open <strong className="text-slate-300">Dumper Apps</strong> from the Start Menu → paste your API key below when asked.
+            </li>
             <li>
               <strong className="text-slate-300">Once per resolution:</strong> right-click the DR tray icon →{' '}
               <strong className="text-slate-300">Calibrate RESULTS panel</strong>.
             </li>
             <li>
-              In-game: Mole pilot, RESULTS open → Mining Tracker → Rock Calculator → <strong className="text-slate-300">OCR</strong>.
+              In-game: Mole pilot, RESULTS open → Rock Calculator → <strong className="text-slate-300">OCR</strong>.
             </li>
           </ol>
           <p className="text-xs text-slate-500">
-            First run may install Python or Tesseract via winget. The Windows .exe is blueprints-only — use the zip for OCR.
+            No Python or Tesseract install needed — the installer bundles everything. Use the portable zip only if you prefer a manual folder.
           </p>
         </section>
 

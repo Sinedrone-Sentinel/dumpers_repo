@@ -9,6 +9,7 @@ on:
       - 'scripts/bp-dumper-py/**'
       - 'scripts/bp-dumper/**'
       - 'scripts/rock-scan-ocr/**'
+      - 'scripts/installer/**'
       - 'START-HERE.bat'
       - 'RESTART-TRAY.bat'
       - 'RESTART-TRAY.vbs'

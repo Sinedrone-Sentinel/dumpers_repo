@@ -249,7 +249,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Desktop log watcher that automatically syncs blueprint unlocks to your account.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
-      '**Windows:** download **Windows (recommended)** — unzip and double-click **START-HERE.bat**, then paste your API key',
+      '**Windows:** download **Windows (recommended)** and run the installer — then open **Dumper Apps** from the Start Menu and paste your API key',
       '**Once per resolution:** right-click the DR tray icon → **Calibrate RESULTS panel**',
       'In-game: Mole pilot with RESULTS open → Mining Tracker → Rock Calculator → **OCR**',
       'macOS/Linux downloads sync blueprints only (no Rock Scanner OCR on those builds yet)',

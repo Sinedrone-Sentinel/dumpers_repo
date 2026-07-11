@@ -8,6 +8,11 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
+/** Windows Inno Setup asset name for the current bundled dumper version. */
+export function getDumperAppsInstallerFilename(version: string = BP_DUMPER_VERSION): string {
+  return `DumperApps-Setup-${version}.exe`
+}
+
 /** Member-facing name for desktop tools (log watcher, rock-scan tray, downloads). */
 export const DUMPER_APPS_DISPLAY_NAME = 'Dumper Apps' as const
 
@@ -22,9 +27,15 @@ export type BpDumperDownloadOption = {
 
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
-    id: 'windows-full',
+    id: 'windows-installer',
     label: 'Windows (recommended)',
-    description: 'BP Dumper + Rock Scanner OCR — unzip and run START-HERE.bat',
+    description: 'Installer — next, next, paste API key, play',
+    filename: getDumperAppsInstallerFilename(),
+  },
+  {
+    id: 'windows-portable',
+    label: 'Windows (portable zip)',
+    description: 'No installer — unzip and run START-HERE.bat',
     filename: 'bp-dumper-py.zip',
   },
   {
