@@ -1,16 +1,17 @@
 # Stage a self-contained Dumper Apps tree for the Windows Inno Setup installer.
-# Requires: git, PowerShell 5.1+, network (Python embed, Tesseract, SC-Toolbox clone).
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path,
     [string]$OutDir = (Join-Path $PSScriptRoot "staging"),
-    [string]$PythonVersion = "3.12.7"
+    [string]$PythonVersion = "3.12.7",
+    [string]$PythonVenvPath = "",
+    [string]$TesseractSource = ""
 )
 
 $ErrorActionPreference = "Stop"
 
 function Write-Step([string]$Message) {
     Write-Host ""
-    Write-Host "==> $Message" -ForegroundColor Cyan
+    Write-Host ("==> [{0}] {1}" -f (Get-Date -Format "HH:mm:ss"), $Message) -ForegroundColor Cyan
 }
 
 if (Test-Path $OutDir) {
@@ -19,6 +20,7 @@ if (Test-Path $OutDir) {
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
 $pyDir = Join-Path $OutDir "python"
+$pyVenvDir = Join-Path $OutDir "python-venv"
 $tessDir = Join-Path $OutDir "tesseract"
 $bpPyDir = Join-Path $OutDir "scripts/bp-dumper-py"
 $rockDir = Join-Path $OutDir "scripts/rock-scan-ocr"
@@ -84,47 +86,67 @@ if ((Test-Path $hudOnnx) -and -not (Test-Path $hudData) -and -not (Test-Path $hu
     Move-Item $hudOnnx $hudQuarantine
 }
 
-Write-Step "Downloading Python $PythonVersion embeddable"
-$pyZip = Join-Path $env:TEMP "python-embed.zip"
-$pyUrl = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-embed-amd64.zip"
-Invoke-WebRequest -Uri $pyUrl -OutFile $pyZip -UseBasicParsing
-Expand-Archive -Path $pyZip -DestinationPath $pyDir -Force
-Remove-Item $pyZip -Force
+if ($PythonVenvPath) {
+    Write-Step "Copying pre-built Python venv from $PythonVenvPath"
+    $venvPy = Join-Path $PythonVenvPath "Scripts/python.exe"
+    if (-not (Test-Path $venvPy)) {
+        throw "PythonVenvPath missing Scripts/python.exe: $venvPy"
+    }
+    Copy-Item -Recurse -Path $PythonVenvPath -Destination $pyVenvDir
+} else {
+    Write-Step "Downloading Python $PythonVersion embeddable"
+    $pyZip = Join-Path $env:TEMP "python-embed.zip"
+    $pyUrl = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-embed-amd64.zip"
+    Invoke-WebRequest -Uri $pyUrl -OutFile $pyZip -UseBasicParsing
+    Expand-Archive -Path $pyZip -DestinationPath $pyDir -Force
+    Remove-Item $pyZip -Force
 
-$pthFile = Get-ChildItem "$pyDir/python*._pth" | Select-Object -First 1
-$pthLines = Get-Content $pthFile.FullName
-$pthLines = $pthLines | ForEach-Object { $_ -replace '^#\s*import site', 'import site' }
-if ($pthLines -notcontains 'Lib\site-packages') { $pthLines += 'Lib\site-packages' }
-Set-Content -Path $pthFile.FullName -Value $pthLines -Encoding ASCII
-New-Item -ItemType Directory -Force -Path (Join-Path $pyDir "Lib/site-packages") | Out-Null
+    $pthFile = Get-ChildItem "$pyDir/python*._pth" | Select-Object -First 1
+    $pthLines = Get-Content $pthFile.FullName
+    $pthLines = $pthLines | ForEach-Object { $_ -replace '^#\s*import site', 'import site' }
+    if ($pthLines -notcontains 'Lib\site-packages') { $pthLines += 'Lib\site-packages' }
+    Set-Content -Path $pthFile.FullName -Value $pthLines -Encoding ASCII
+    New-Item -ItemType Directory -Force -Path (Join-Path $pyDir "Lib/site-packages") | Out-Null
 
-$getPip = Join-Path $env:TEMP "get-pip.py"
-Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
-& (Join-Path $pyDir "python.exe") $getPip --no-warn-script-location
-Remove-Item $getPip -Force
+    $getPip = Join-Path $env:TEMP "get-pip.py"
+    Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
+    & (Join-Path $pyDir "python.exe") $getPip --no-warn-script-location
+    Remove-Item $getPip -Force
 
-$pip = Join-Path $pyDir "python.exe"
-$reqBp = Join-Path $bpPyDir "requirements.txt"
-$reqRock = Join-Path $rockDir "requirements.txt"
-Write-Step "Installing Python packages (may take several minutes)"
-& $pip -m pip install --upgrade pip --no-warn-script-location
-& $pip -m pip install -r $reqBp -r $reqRock --no-warn-script-location
-
-Write-Step "Installing portable Tesseract OCR"
-$tessInstaller = Join-Path $env:TEMP "tesseract-setup.exe"
-$tessUrl = "https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.4.0.20240606.exe"
-Invoke-WebRequest -Uri $tessUrl -OutFile $tessInstaller -UseBasicParsing
-if (Test-Path $tessDir) { Remove-Item -Recurse -Force $tessDir }
-New-Item -ItemType Directory -Force -Path $tessDir | Out-Null
-$proc = Start-Process -FilePath $tessInstaller -ArgumentList @(
-    "/VERYSILENT", "/SUPPRESSMSGBOXES", "/DIR=$tessDir", "/NOICONS", "/NORESTART"
-) -Wait -PassThru
-Remove-Item $tessInstaller -Force
-if ($proc.ExitCode -ne 0) {
-    throw "Tesseract installer failed with exit code $($proc.ExitCode)"
+    $pip = Join-Path $pyDir "python.exe"
+    $reqBp = Join-Path $bpPyDir "requirements.txt"
+    $reqRock = Join-Path $rockDir "requirements.txt"
+    Write-Step "Installing Python packages into embeddable runtime"
+    & $pip -m pip install --upgrade pip --no-warn-script-location
+    & $pip -m pip install -r $reqBp -r $reqRock --no-warn-script-location --prefer-binary
 }
+
+if ($TesseractSource) {
+    Write-Step "Copying Tesseract from $TesseractSource"
+    $tessExe = Join-Path $TesseractSource "tesseract.exe"
+    if (-not (Test-Path $tessExe)) {
+        throw "tesseract.exe not found in TesseractSource: $TesseractSource"
+    }
+    if (Test-Path $tessDir) { Remove-Item -Recurse -Force $tessDir }
+    New-Item -ItemType Directory -Force -Path $tessDir | Out-Null
+    Copy-Item -Recurse -Path "$TesseractSource\*" -Destination $tessDir
+} else {
+    Write-Step "Installing Tesseract via Chocolatey (local/CI with choco)"
+    if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+        throw "TesseractSource not provided and Chocolatey is unavailable. Install Tesseract manually or pass -TesseractSource."
+    }
+    & choco install tesseract -y --no-progress --limit-output
+    $chocoTess = "C:\Program Files\Tesseract-OCR"
+    if (-not (Test-Path (Join-Path $chocoTess "tesseract.exe"))) {
+        $chocoTess = "${env:ProgramFiles(x86)}\Tesseract-OCR"
+    }
+    if (Test-Path $tessDir) { Remove-Item -Recurse -Force $tessDir }
+    New-Item -ItemType Directory -Force -Path $tessDir | Out-Null
+    Copy-Item -Recurse -Path "$chocoTess\*" -Destination $tessDir
+}
+
 if (-not (Test-Path (Join-Path $tessDir "tesseract.exe"))) {
-    throw "tesseract.exe not found after install"
+    throw "tesseract.exe missing in bundle output"
 }
 
 Write-Step "Bundle ready: $OutDir"

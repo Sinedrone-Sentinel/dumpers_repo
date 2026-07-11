@@ -8,6 +8,8 @@ Members: download from **Dumper Apps** on the site → run the installer → pas
 
 Requires **Windows**, **Inno Setup 6**, **git**, and network.
 
+**CI fast path:** GitHub Actions pre-installs Python deps into a venv and Tesseract via Chocolatey, then `prepare-bundle.ps1` copies them (avoids hung Tesseract Inno installer on headless runners).
+
 ```powershell
 cd "Dumpers Repo"
 node scripts/copy-blueprint-lookup.mjs

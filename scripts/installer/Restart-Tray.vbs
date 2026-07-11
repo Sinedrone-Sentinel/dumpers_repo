@@ -2,7 +2,8 @@
 Set sh = CreateObject("WScript.Shell")
 Set fs = CreateObject("Scripting.FileSystemObject")
 root = fs.GetParentFolderName(WScript.ScriptFullName)
-python = root & "\python\python.exe"
+python = root & "\python-venv\Scripts\python.exe"
+If Not fs.FileExists(python) Then python = root & "\python\python.exe"
 trayDir = root & "\scripts\rock-scan-ocr"
 restart = trayDir & "\restart_tray.py"
 
