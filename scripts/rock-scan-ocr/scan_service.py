@@ -13,13 +13,17 @@ from game_window import find_star_citizen_window
 from live_scan_types import LiveScanResult
 from panel_crop import PanelFractions
 from region_store import load_region
-from scan_overlay_flow import run_bridge_scan_overlay
+from scan_overlay_flow import run_bridge_scan_full_frame, run_bridge_scan_overlay
 from scan_progress_overlay import ScanProgressReporter
-from sc_ocr_enrich import enrich_sc_ocr_from_panel
+from scan_status import begin_scan, end_scan
+from sc_ocr_enrich import enrich_composition_from_panel, enrich_sc_ocr_from_panel
 from sc_toolbox import ensure_sc_ocr_import, resolve_mining_signals_path
 from ui_thread import run_on_ui_thread
 
 _scan_lock = threading.Lock()
+
+# Test mode: OCR the full game client; skip RESULTS box overlay + crop.
+BYPASS_PANEL_SELECTION = True
 
 
 def _run_sc_ocr(panel_img, mining_signals: Path) -> dict:
@@ -79,10 +83,16 @@ def _scan_captured_panel(
 
     mineral_hint = sc_ocr.get("mineral_name")
     composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
+    composition = enrich_composition_from_panel(composition, panel_img)
 
     if progress is not None:
-        if composition.get("ok") and sc_ocr.get("mass") is not None:
-            progress.set_header("Scan complete — returning to Rock Calculator…")
+        if (
+            composition.get("ok")
+            and sc_ocr.get("mass") is not None
+            and sc_ocr.get("resistance") is not None
+            and composition.get("total_scu") is not None
+        ):
+            progress.set_header("Scan complete — applying results…")
         else:
             progress.set_header("Scan finished — some fields could not be read")
 
@@ -106,7 +116,7 @@ def _perform_live_scan_ui(
         )
 
     saved = load_region()
-    if saved is None:
+    if saved is None and not BYPASS_PANEL_SELECTION:
         if require_saved_region:
             return LiveScanResult(
                 ok=False,
@@ -139,6 +149,14 @@ def _perform_live_scan_ui(
             progress=progress,
         )
 
+    if BYPASS_PANEL_SELECTION:
+        return run_bridge_scan_full_frame(
+            window,
+            return_focus_hwnd=browser_hwnd,
+            scan_fn=scan_fn,
+        )
+
+    assert saved is not None
     return run_bridge_scan_overlay(
         window,
         saved,
@@ -162,18 +180,27 @@ def perform_live_scan(
 
     browser_hwnd = get_foreground_hwnd()
 
-    def _ui_job() -> LiveScanResult:
-        return _perform_live_scan_ui(
-            sc_toolbox,
-            require_saved_region,
-            browser_hwnd=browser_hwnd,
-        )
-
+    begin_scan()
     try:
+        if BYPASS_PANEL_SELECTION:
+            return _perform_live_scan_ui(
+                sc_toolbox,
+                require_saved_region,
+                browser_hwnd=browser_hwnd,
+            )
+
+        def _ui_job() -> LiveScanResult:
+            return _perform_live_scan_ui(
+                sc_toolbox,
+                require_saved_region,
+                browser_hwnd=browser_hwnd,
+            )
+
         return run_on_ui_thread(_ui_job)
     except FileNotFoundError as exc:
         return LiveScanResult(ok=False, error=str(exc))
     except Exception as exc:  # pragma: no cover
         return LiveScanResult(ok=False, error=f"Rock scan failed: {exc}")
     finally:
+        end_scan()
         _scan_lock.release()

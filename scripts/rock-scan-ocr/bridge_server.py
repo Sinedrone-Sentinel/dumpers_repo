@@ -22,7 +22,8 @@ from urllib.parse import urlparse
 
 from bridge_convert import to_rock_scan_ocr_result
 from region_store import load_region
-from scan_service import perform_live_scan
+from scan_service import BYPASS_PANEL_SELECTION, perform_live_scan
+from scan_status import get_scan_status
 from ui_thread import ensure_ui_thread
 
 DEFAULT_HOST = "127.0.0.1"
@@ -99,6 +100,9 @@ class BridgeHandler(BaseHTTPRequestHandler):
         if path == "/health":
             self._send_json(200, _health_payload())
             return
+        if path == "/scan/status":
+            self._send_json(200, get_scan_status())
+            return
         self._send_json(404, {"ok": False, "error": "Not found"})
 
     def do_POST(self) -> None:  # noqa: N802
@@ -139,7 +143,7 @@ def _health_payload() -> dict:
         "ok": True,
         "service": "rock-scan-bridge",
         "version": 1,
-        "calibrated": load_region() is not None,
+        "calibrated": load_region() is not None or BYPASS_PANEL_SELECTION,
     }
 
 
@@ -153,7 +157,7 @@ def run_server(*, host: str = DEFAULT_HOST, port: int | None = None) -> None:
     httpd = make_server(host=host, port=port)
     listen_port = httpd.server_address[1]
     print(f"Rock scan bridge listening on http://{host}:{listen_port}", flush=True)
-    print("Endpoints: GET /health  POST /scan", flush=True)
+    print("Endpoints: GET /health  GET /scan/status  POST /scan", flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

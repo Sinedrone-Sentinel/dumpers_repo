@@ -4,14 +4,72 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from capture import capture_game_frames, focus_game_window
-from focus_helper import restore_focus
+from capture import capture_game_frames, focus_game_window, is_mostly_black
+from focus_helper import force_foreground, restore_focus
 from game_window import GameWindow, refresh_game_window
 from live_scan_types import LiveScanResult
 from overlay_frame import normalize_snapshot
-from panel_crop import PanelFractions
+from panel_crop import PanelFractions, full_client_fractions
 from region_store import SavedRegion
 from scan_progress_overlay import BridgeScanOverlay, ScanProgressReporter
+from scan_status import BridgeScanStatusReporter, set_scan_phase
+
+
+def run_bridge_scan_full_frame(
+    window: GameWindow,
+    *,
+    return_focus_hwnd: int,
+    scan_fn: Callable[..., LiveScanResult],
+) -> LiveScanResult:
+    """
+    Capture the game client and OCR the full frame (no selection overlay).
+
+    Temporary test path so SC_OCR sees the native HUD layout.
+
+    Focus the game to capture the HUD, verify the snapshot, then return to the
+    Rock Calculator tab while OCR runs on the frozen frame.
+    """
+    set_scan_phase("Switching to Star Citizen…")
+    focus_game_window(window.hwnd)
+    window = refresh_game_window(window)
+
+    set_scan_phase("Capturing mining HUD…")
+    snapshot, method, notes = capture_game_frames(window, focus_first=False)
+    snapshot = normalize_snapshot(snapshot, window)
+
+    if is_mostly_black(snapshot):
+        force_foreground(return_focus_hwnd)
+        return LiveScanResult(
+            ok=False,
+            error="Capture failed: game image is black.",
+            hints=[
+                "Use Borderless Windowed (not Exclusive Fullscreen).",
+                "Keep the rock RESULTS panel open when you click OCR.",
+            ],
+        )
+
+    set_scan_phase("Returning to Rock Calculator…")
+    force_foreground(return_focus_hwnd)
+
+    fractions = full_client_fractions()
+    progress = BridgeScanStatusReporter()
+
+    try:
+        return scan_fn(
+            fractions,
+            client_img=snapshot,
+            capture_method="frozen-full-client",
+            capture_notes=[
+                "Full client frame — panel selection bypassed.",
+                "Captured with game focused; OCR runs after returning to browser.",
+                f"Capture via {method}.",
+                *notes,
+            ],
+            game_focused=True,
+            progress=progress,
+        )
+    finally:
+        force_foreground(return_focus_hwnd)
 
 
 def run_bridge_scan_overlay(

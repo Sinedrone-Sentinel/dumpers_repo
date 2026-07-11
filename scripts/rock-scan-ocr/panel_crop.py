@@ -39,6 +39,11 @@ def default_panel_fractions() -> PanelFractions:
     return PanelFractions(x=x, y=y, width=width, height=height)
 
 
+def full_client_fractions() -> PanelFractions:
+    """Entire game client area (no RESULTS box crop)."""
+    return PanelFractions(x=0.0, y=0.0, width=1.0, height=1.0)
+
+
 def panel_pixels_from_fractions(
     fractions: PanelFractions, client_w: int, client_h: int
 ) -> dict[str, int]:
