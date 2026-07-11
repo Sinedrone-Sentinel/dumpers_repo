@@ -82,6 +82,11 @@ def resolve_ocr_ore_name(raw: str, *, mineral_hint: str | None = None) -> str:
     if mineral_hint:
         candidates.insert(0, mineral_hint.title())
 
+    if mineral_hint:
+        hint_lower = mineral_hint.lower()
+        if _levenshtein(label.lower(), hint_lower) <= 3:
+            return mineral_hint.title()
+
     for attempt in attempts:
         lower = attempt.lower()
         for canonical in candidates:

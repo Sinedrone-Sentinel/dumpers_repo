@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from capture import crop_fraction, is_mostly_black
@@ -84,10 +85,12 @@ def _scan_captured_panel(
     if progress is not None:
         progress.set_header("Running HUD reader…")
 
-    # SC_OCR: full client frame (matches local `rock_scan_test.py --ocr-mode full-client`).
-    # Tesseract: once on the RESULTS crop only (local test never re-OCRs the full screenshot).
-    line_candidates = ocr_panel_line_candidates_fast(tess_img)
-    sc_ocr = _run_sc_ocr(panel_img, mining_signals)
+    # SC_OCR (full frame) and Tesseract (RESULTS crop) run in parallel.
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        tess_future = pool.submit(ocr_panel_line_candidates_fast, tess_img)
+        sc_future = pool.submit(_run_sc_ocr, panel_img, mining_signals)
+        line_candidates = tess_future.result()
+        sc_ocr = sc_future.result()
     sc_ocr = enrich_sc_ocr_from_panel(
         sc_ocr, tess_img, line_candidates=line_candidates
     )

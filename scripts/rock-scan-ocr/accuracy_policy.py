@@ -26,7 +26,7 @@ NEVER_OCR_FIELDS = [
 
 ACCURACY_NOTES = [
     "Instability is pass-through only (CHP/display); do not block on INST accuracy.",
-    "Inert is never OCR'd — the calculator derives it from composition %.",
-    "INERT (or MATERIALS on the last composition row) is used only as a bottom anchor.",
+    "Inert is never OCR'd — the calculator derives it from valuable composition %.",
+    "Composition parsing stops before INERT/MATERIALS or HUD footer when present; inert is not read.",
     "Ledger DFP rows come from calculator outputs (SCU × % × quality), not raw OCR.",
 ]

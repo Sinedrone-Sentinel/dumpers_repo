@@ -205,22 +205,19 @@ def find_comp_header_index(lines: list[str]) -> int | None:
     return None
 
 
-def find_inert_anchor_index(lines: list[str], comp_idx: int) -> int | None:
-    """INERT is always last — anchor within the COMP..footer window only."""
+def find_composition_end_index(lines: list[str], comp_idx: int) -> int:
+    """Exclusive end index for valuable rows below COMP (stops before INERT/footer)."""
     window_end = min(len(lines), comp_idx + MAX_COMPOSITION_WINDOW)
     for index in range(comp_idx + 1, window_end):
         if HUD_FOOTER_RE.search(lines[index]):
-            window_end = index
-            break
-
-    anchor: int | None = None
+            return index
     for index in range(comp_idx + 1, window_end):
         if is_inert_anchor_row(lines[index]):
-            anchor = index
-    return anchor
+            return index
+    return window_end
 
 
-def extract_total_scu(lines: list[str], comp_idx: int, inert_idx: int) -> float | None:
+def extract_total_scu(lines: list[str], comp_idx: int, end_idx: int) -> float | None:
     header = lines[comp_idx]
     decimal_candidates: list[float] = []
     if re.search(r"SCU", header, re.I) or COMP_HEADER_RE.search(header):
@@ -236,7 +233,7 @@ def extract_total_scu(lines: list[str], comp_idx: int, inert_idx: int) -> float 
     if decimal_candidates:
         return max(decimal_candidates, key=lambda v: (abs(v - round(v, 2)) > 0.001, v))
 
-    for row in lines[comp_idx + 1 : min(inert_idx + 1, comp_idx + 3)]:
+    for row in lines[comp_idx + 1 : min(end_idx, comp_idx + 3)]:
         if HUD_FOOTER_RE.search(row) or "%" in row:
             continue
         if not re.search(r"SCU", row, re.I):
@@ -319,21 +316,15 @@ def score_parse_result(result: CompositionParseResult, mineral_hint: str | None 
     if not result.ok:
         return -100.0
     score = 0.0
-    if result.inert_anchor_line:
-        if INERT_WORD_RE.search(result.inert_anchor_line):
-            score += 25.0
-        elif MATERIALS_RE.search(result.inert_anchor_line):
-            score += 12.0
     if result.total_scu is not None:
         score += 15.0
         if abs(result.total_scu - round(result.total_scu)) > 0.01:
             score += 8.0
     valuable_sum = sum(line.percent for line in result.lines)
-    inert_pct = parse_leading_percent(result.inert_anchor_line or "")
-    if inert_pct is not None:
-        score += 40.0 - abs(valuable_sum + inert_pct - 100.0) * 6.0
+    if valuable_sum <= 100.5:
+        score += 10.0 - abs(valuable_sum - 100.0) * 2.0
     else:
-        score -= abs(valuable_sum - 100.0) * 2.0
+        score -= 25.0
     for line in result.lines:
         score += 6.0
         if mineral_hint and line.element_name.lower() == mineral_hint.lower():
@@ -359,20 +350,23 @@ def parse_composition_from_lines(
         result.error = "Could not find COMP header in OCR text."
         return result
 
-    inert_idx = find_inert_anchor_index(lines, comp_idx)
-    if inert_idx is None:
-        result.error = "Could not find INERT anchor line (bottom of composition list)."
-        return result
-    if inert_idx <= comp_idx:
-        result.error = "INERT anchor appears above COMP header — check panel crop."
+    end_idx = find_composition_end_index(lines, comp_idx)
+    if end_idx <= comp_idx:
+        result.error = "No composition rows found below COMP header."
         return result
 
     result.comp_header_index = comp_idx
-    result.inert_anchor_index = inert_idx
-    result.inert_anchor_line = lines[inert_idx]
-    result.total_scu = extract_total_scu(lines, comp_idx, inert_idx)
+    result.inert_anchor_index = None
+    result.inert_anchor_line = None
+    for index in range(comp_idx + 1, end_idx):
+        if is_inert_anchor_row(lines[index]):
+            result.inert_anchor_index = index
+            result.inert_anchor_line = lines[index]
+            break
 
-    for row in lines[comp_idx + 1 : inert_idx]:
+    result.total_scu = extract_total_scu(lines, comp_idx, end_idx)
+
+    for row in lines[comp_idx + 1 : end_idx]:
         parsed = parse_composition_row(row, mineral_hint)
         if parsed is None:
             continue
@@ -381,7 +375,7 @@ def parse_composition_from_lines(
     result.lines = dedupe_composition_lines(result.lines)
 
     if not result.lines:
-        result.error = "No valuable composition rows found between COMP and INERT."
+        result.error = "No valuable composition rows found below COMP header."
         return result
 
     if result.total_scu is None:
