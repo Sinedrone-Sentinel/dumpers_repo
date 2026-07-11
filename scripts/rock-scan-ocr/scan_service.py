@@ -15,6 +15,7 @@ from panel_crop import PanelFractions
 from region_store import load_region
 from scan_overlay_flow import run_bridge_scan_overlay
 from scan_progress_overlay import ScanProgressReporter
+from sc_ocr_enrich import enrich_sc_ocr_from_panel
 from sc_toolbox import ensure_sc_ocr_import, resolve_mining_signals_path
 from ui_thread import run_on_ui_thread
 
@@ -75,6 +76,7 @@ def _scan_captured_panel(
         progress.set_header("Running HUD reader…")
 
     sc_ocr = _run_sc_ocr(panel_img, mining_signals)
+    sc_ocr = enrich_sc_ocr_from_panel(sc_ocr, panel_img)
 
     if progress is not None:
         progress.set_header("Checking HUD rows…")

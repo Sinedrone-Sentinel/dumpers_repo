@@ -26,20 +26,16 @@ class HudCheckRow:
 
 # Vertical bands aligned to the Mole pilot RESULTS panel (see member mockup).
 HUD_CHECK_ROWS: tuple[HudCheckRow, ...] = (
-    HudCheckRow("ore", 0.11),
-    HudCheckRow("mass", 0.20),
-    HudCheckRow("res", 0.27),
-    HudCheckRow("inst", 0.34),
-    HudCheckRow("comp_scu", 0.43),
+    HudCheckRow("ore", 0.10),
+    HudCheckRow("mass", 0.19),
+    HudCheckRow("res", 0.26),
+    HudCheckRow("inst", 0.33),
+    HudCheckRow("comp_scu", 0.42),
 )
 
-# Composition list below the SCU bar — up to 3 valuable lines + INERT anchor.
-COMPOSITION_CHECK_ROWS: tuple[HudCheckRow, ...] = (
-    HudCheckRow("comp_0", 0.58),
-    HudCheckRow("comp_1", 0.67),
-    HudCheckRow("comp_2", 0.76),
-    HudCheckRow("inert", 0.85),
-)
+# Composition lines are placed dynamically (2 bands + INERT is common).
+COMPOSITION_ROW_START = 0.57
+COMPOSITION_ROW_STEP = 0.078
 
 _CHECK_SIZE = 16
 _CHECK_FONT = ("Segoe UI", _CHECK_SIZE, "bold")
@@ -184,6 +180,16 @@ class BridgeScanOverlay:
     def _mark_row_threadsafe(self, row_id: str, *, ok: bool | None = None) -> None:
         self.schedule_ui(lambda: self.mark_row(row_id, ok=ok))
 
+    def clear_row(self, row_id: str) -> None:
+        item = self._check_ids.get(row_id)
+        if item is None:
+            return
+        self.canvas.itemconfig(item, text="", fill=_PENDING_COLOR)
+        self.root.update()
+
+    def _clear_row_threadsafe(self, row_id: str) -> None:
+        self.schedule_ui(lambda: self.clear_row(row_id))
+
     def _set_selection_from_fractions(self, fractions: PanelFractions) -> None:
         left = int(round(fractions.x * self.client_w))
         top = int(round(fractions.y * self.client_h))
@@ -274,8 +280,6 @@ class BridgeScanOverlay:
     def _place_checkmarks(self) -> None:
         for row in HUD_CHECK_ROWS:
             self.ensure_row(row.id, row.y_frac)
-        for row in COMPOSITION_CHECK_ROWS:
-            self.ensure_row(row.id, row.y_frac)
 
     def _lock_scan_mode(self) -> None:
         self.scan_mode = True
@@ -315,8 +319,6 @@ class BridgeScanOverlay:
         self._place_checkmarks()
         reporter = ScanProgressReporter(self)
         for row in HUD_CHECK_ROWS:
-            reporter.mark_row(row.id, ok=None)
-        for row in COMPOSITION_CHECK_ROWS:
             reporter.mark_row(row.id, ok=None)
         self.root.update()
 
@@ -374,29 +376,30 @@ class ScanProgressReporter:
         self._overlay._mark_row_threadsafe(row_id, ok=ok)
         time.sleep(_MARK_STAGGER_S)
 
+    def clear_row(self, row_id: str) -> None:
+        self._overlay._clear_row_threadsafe(row_id)
+
     def mark_composition_result(self, composition: dict) -> None:
-        """Tick each composition % line and the INERT anchor row like the HUD mockup."""
+        """Tick each composition % line and the INERT anchor — only rows that exist."""
         lines = composition.get("lines") or []
-        comp_start = COMPOSITION_CHECK_ROWS[0].y_frac
-        comp_step = 0.09
 
         if not composition.get("ok") or not lines:
-            for row in COMPOSITION_CHECK_ROWS:
-                self.mark_row(row.id, ok=False)
+            self.mark_row("comp_0", ok=False)
             return
 
         for index in range(len(lines)):
             row_id = f"comp_{index}"
-            y_frac = comp_start + index * comp_step
+            y_frac = COMPOSITION_ROW_START + index * COMPOSITION_ROW_STEP
             self.ensure_row(row_id, y_frac)
             time.sleep(0.05)
             self.mark_row(row_id, ok=True)
 
         inert_ok = composition.get("inert_anchor_line") is not None
-        if len(lines) <= 2:
-            self.mark_row("inert", ok=inert_ok)
-        else:
-            inert_y = min(comp_start + len(lines) * comp_step, 0.9)
-            self.ensure_row("inert", inert_y)
-            time.sleep(0.05)
-            self.mark_row("inert", ok=inert_ok)
+        inert_y = COMPOSITION_ROW_START + len(lines) * COMPOSITION_ROW_STEP
+        self.ensure_row("inert", inert_y)
+        time.sleep(0.05)
+        self.mark_row("inert", ok=inert_ok)
+
+        # Hide any pre-defined extra slots (e.g. comp_2) so we do not show stray ✗.
+        for spare_id in ("comp_2", "comp_3"):
+            self.clear_row(spare_id)
