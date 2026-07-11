@@ -7,8 +7,8 @@ from dataclasses import dataclass, field
 
 from PIL import Image
 
-from panel_tesseract import ocr_panel_line_candidates
-from ore_canonical import resolve_ocr_ore_name
+from panel_digit_normalize import vote_decimal_string, vote_digit_string
+from quality_band_resolve import resolve_quality_reading
 
 
 @dataclass
@@ -372,6 +372,89 @@ def parse_composition_from_lines(
     return result
 
 
+def _leading_percent_token(row: str) -> str | None:
+    trimmed = row.strip()
+    match = re.match(r"^(\d+\.\d{1,2})\s*%", trimmed, re.I)
+    if match:
+        return match.group(1)
+    match = re.match(r"^(\d{1,2})\s+(\d{2})\s*%", trimmed, re.I)
+    if match:
+        return f"{match.group(1)}.{match.group(2)}"
+    match = re.match(r"^(\d{3,4})\s*%", trimmed, re.I)
+    if match:
+        digits = match.group(1)
+        if len(digits) == 3:
+            return f"{digits[0]}.{digits[1:]}"
+        return f"{digits[:2]}.{digits[2:]}"
+    match = re.match(r"^(\d{1,2})\s*%", trimmed, re.I)
+    if match:
+        return f"{match.group(1)}.00"
+    return None
+
+
+def _valuable_row_slots_by_pass(
+    candidates: list[tuple[str, list[str]]],
+) -> dict[int, list[str]]:
+    slots: dict[int, list[str]] = {}
+    for _ocr_pass, lines in candidates:
+        comp_idx = find_comp_header_index(lines)
+        if comp_idx is None:
+            continue
+        end_idx = find_composition_end_index(lines, comp_idx)
+        slot = 0
+        for row in lines[comp_idx + 1 : end_idx]:
+            if is_inert_anchor_row(row):
+                break
+            if not is_composition_percent_row(row):
+                continue
+            slots.setdefault(slot, []).append(row)
+            slot += 1
+    return slots
+
+
+def refine_composition_from_candidates(
+    result: CompositionParseResult,
+    candidates: list[tuple[str, list[str]]],
+) -> CompositionParseResult:
+    """Slash-zero digit voting across OCR passes for composition % and Q bands."""
+    if not result.ok or not result.lines:
+        return result
+
+    slots = _valuable_row_slots_by_pass(candidates)
+    for line_index, line in enumerate(result.lines):
+        rows = slots.get(line_index, [])
+        if not rows:
+            continue
+
+        percent_tokens = [
+            token for token in (_leading_percent_token(row) for row in rows) if token
+        ]
+        if percent_tokens:
+            voted_percent = vote_decimal_string(percent_tokens)
+            if voted_percent is not None:
+                value = float(voted_percent)
+                if 0 < value <= 100:
+                    line.percent = round_percent(value)
+
+        quality_reads = [
+            reading
+            for reading in (trailing_quality(row) for row in rows)
+            if reading is not None
+        ]
+        if quality_reads:
+            voted_quality = vote_digit_string([str(reading) for reading in quality_reads])
+            raw_quality = int(voted_quality) if voted_quality else quality_reads[0]
+            line.quality = resolve_quality_reading(
+                line.element_name,
+                raw_quality,
+                alternate_reads=quality_reads,
+            )
+            line.quality_missing = False
+
+    assign_band_ranks(result.lines)
+    return result
+
+
 def pick_best_composition_parse(
     candidates: list[tuple[str, list[str]]],
     *,
@@ -403,6 +486,7 @@ def parse_composition_from_candidates(
     mineral_hint: str | None = None,
 ) -> CompositionParseResult:
     result = pick_best_composition_parse(candidates, mineral_hint=mineral_hint)
+    result = refine_composition_from_candidates(result, candidates)
     if result.total_scu is None:
         total_scu, scu_pass = extract_total_scu_from_candidates(candidates)
         if total_scu is not None:

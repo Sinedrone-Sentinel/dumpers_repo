@@ -4,6 +4,13 @@ from __future__ import annotations
 
 import re
 
+from panel_digit_normalize import (
+    extract_mass_tokens_from_line,
+    vote_decimal_string,
+    vote_digit_string,
+    vote_mass_tokens,
+)
+
 MIN_ROCK_SCANNER_MASS = 1_000
 MAX_ROCK_SCANNER_MASS = 999_999
 MAX_COMP_SCU = 80.0
@@ -48,7 +55,27 @@ def pick_best_mass_candidate(candidates: list[float]) -> int | None:
     plausible = [int(round(value)) for value in candidates if is_plausible_scanner_mass(value)]
     if not plausible:
         return None
+    voted = vote_digit_string([str(value) for value in plausible])
+    if voted is not None:
+        try:
+            voted_int = int(voted)
+            if is_plausible_scanner_mass(voted_int):
+                return voted_int
+        except ValueError:
+            pass
     return max(plausible)
+
+
+def collect_mass_tokens_from_candidates(
+    candidates: list[tuple[str, list[str]]],
+) -> list[str]:
+    tokens: list[str] = []
+    for _ocr_pass, lines in candidates:
+        for row in lines:
+            if not _is_mass_row(row):
+                continue
+            tokens.extend(extract_mass_tokens_from_line(row))
+    return tokens
 
 
 def extract_mass_from_block(block: str) -> int | None:
@@ -279,16 +306,24 @@ def pick_best_scu_candidate(
     if not candidates:
         return None
 
-    fixed = [try_fix_scu_decimal_reading(value, mass) for value in candidates]
-    decimals = [value for value in fixed if abs(value - round(value)) > 0.001]
-    pool = decimals or fixed
+    decimal_strings = [f"{value:.2f}" for value in candidates if abs(value - round(value)) > 0.001]
+    if decimal_strings:
+        voted = vote_decimal_string(decimal_strings)
+        if voted is not None:
+            value = float(voted)
+            if is_plausible_rock_total_scu(value):
+                return try_fix_scu_decimal_reading(value, mass)
+
+    pool = [try_fix_scu_decimal_reading(value, mass) for value in candidates]
+    pool = [value for value in pool if value is not None and is_plausible_rock_total_scu(value)]
+    if not pool:
+        return None
 
     votes: dict[float, int] = {}
     for value in pool:
         key = round(value, 2)
         votes[key] = votes.get(key, 0) + 1
 
-    # Most votes; tie-break toward lower SCU (avoids 8.87 beating 8.07).
     return min(votes.keys(), key=lambda key: (-votes[key], key))
 
 
@@ -365,10 +400,27 @@ def finalize_panel_mass(mass: int | None, total_scu: float | None) -> int | None
 def best_mass_from_candidates(
     candidates: list[tuple[str, list[str]]],
 ) -> tuple[int | None, str | None]:
+    token_lists = []
+    per_pass: list[tuple[int | None, str]] = []
+    for ocr_pass, lines in candidates:
+        row_tokens = []
+        for row in lines:
+            if _is_mass_row(row):
+                row_tokens.extend(extract_mass_tokens_from_line(row))
+        token_lists.append(row_tokens)
+        value = extract_mass_from_lines(lines)
+        per_pass.append((value, ocr_pass))
+
+    voted_mass = vote_mass_tokens(token_lists)
+    if voted_mass is not None and is_plausible_scanner_mass(voted_mass):
+        for value, ocr_pass in per_pass:
+            if value == voted_mass:
+                return voted_mass, ocr_pass
+        return voted_mass, "digit-vote"
+
     best: int | None = None
     best_pass: str | None = None
-    for ocr_pass, lines in candidates:
-        value = extract_mass_from_lines(lines)
+    for value, ocr_pass in per_pass:
         if value is None:
             continue
         if best is None or value > best:
