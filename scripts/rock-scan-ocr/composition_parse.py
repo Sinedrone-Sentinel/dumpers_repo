@@ -56,6 +56,7 @@ class CompositionParseResult:
             "warnings": self.warnings,
             "error": self.error,
             "ocr_line_count": len(self.ocr_lines),
+            "ocr_lines": list(self.ocr_lines),
         }
 
 

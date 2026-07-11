@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 
-from ore_canonical import resolve_ocr_ore_name
+from ore_canonical import is_known_rs_ore, resolve_ocr_ore_name
+from panel_ore_parse import resolve_primary_ore_name
 
 
 def _canonical_ore_label(raw: str) -> str:
@@ -72,9 +73,18 @@ def to_rock_scan_ocr_result(sc_ocr: dict, composition: dict) -> dict:
             "warnings": warnings,
         }
 
-    if not mineral:
-        first_line = composition_lines[0]
-        mineral = first_line["elementName"]
+    panel_lines = list(composition.get("ocr_lines") or [])
+    resolved_mineral = resolve_primary_ore_name(panel_lines, composition_lines)
+    if resolved_mineral:
+        mineral = resolved_mineral
+    elif mineral and is_known_rs_ore(resolve_ocr_ore_name(mineral)):
+        mineral = resolve_ocr_ore_name(mineral)
+    else:
+        return {
+            "ok": False,
+            "error": "Could not read the primary ore — include the ore name (e.g. IRON (ORE)) above MASS.",
+            "warnings": warnings,
+        }
 
     mineral = _canonical_ore_label(mineral)
 

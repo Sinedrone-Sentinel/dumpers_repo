@@ -18,6 +18,7 @@ from region_store import load_region
 from scan_overlay_flow import run_bridge_scan_full_frame, run_bridge_scan_overlay
 from scan_progress_overlay import ScanProgressReporter
 from scan_status import begin_scan, end_scan
+from ore_canonical import is_known_rs_ore, resolve_ocr_ore_name
 from sc_ocr_enrich import enrich_composition_from_panel, enrich_sc_ocr_from_panel
 from sc_toolbox import ensure_sc_ocr_import, resolve_mining_signals_path
 from ui_thread import run_on_ui_thread
@@ -99,6 +100,8 @@ def _scan_captured_panel(
         progress.set_header("Reading composition…")
 
     mineral_hint = sc_ocr.get("mineral_name")
+    if mineral_hint and not is_known_rs_ore(resolve_ocr_ore_name(mineral_hint)):
+        mineral_hint = None
     composition = parse_composition_from_candidates(
         line_candidates, mineral_hint=mineral_hint
     ).as_dict()

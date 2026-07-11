@@ -7,7 +7,8 @@ import re
 from PIL import Image
 
 from composition_parse import COMP_HEADER_RE, MAX_COMP_SCU
-from ore_canonical import resolve_ocr_ore_name
+from ore_canonical import is_known_rs_ore, resolve_ocr_ore_name
+from panel_ore_parse import resolve_primary_ore_name
 from panel_res_parse import best_resistance_from_lines
 from panel_tesseract import merge_line_candidates, ocr_panel_line_candidates
 
@@ -107,15 +108,24 @@ def enrich_sc_ocr_from_panel(
 
     mineral = (enriched.get("mineral_name") or "").strip()
     if mineral:
-        enriched["mineral_name"] = resolve_ocr_ore_name(mineral)
+        resolved = resolve_ocr_ore_name(mineral)
+        enriched["mineral_name"] = resolved if is_known_rs_ore(resolved) else None
+
     if not enriched.get("mineral_name"):
         for line in lines:
             match = _ORE_NAME_RE.search(line.strip())
             if match:
                 name = match.group(1).strip()
                 if name and not name.isdigit():
-                    enriched["mineral_name"] = resolve_ocr_ore_name(name)
-                    break
+                    resolved = resolve_ocr_ore_name(name)
+                    if is_known_rs_ore(resolved):
+                        enriched["mineral_name"] = resolved
+                        break
+
+    if not enriched.get("mineral_name"):
+        panel_primary = resolve_primary_ore_name(lines, [])
+        if panel_primary:
+            enriched["mineral_name"] = panel_primary
 
     if not enriched.get("panel_visible"):
         if enriched.get("mass") is not None or _SCU_ON_COMP_RE.search("\n".join(lines)):

@@ -68,6 +68,14 @@ def _ocr_normalize(label: str) -> str:
     )
 
 
+def is_known_rs_ore(name: str) -> bool:
+    """True when the label maps to a ship RS Tracker ore (not OCR garbage like Ran)."""
+    if not name or not name.strip():
+        return False
+    canonical = resolve_ocr_ore_name(name)
+    return canonical in _COMMON_ORES
+
+
 def resolve_ocr_ore_name(raw: str, *, mineral_hint: str | None = None) -> str:
     label = (raw or "").strip()
     if not label:
