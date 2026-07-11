@@ -102,10 +102,11 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
         <section className="space-y-2">
           <h3 className="text-sm font-semibold text-white">Setup</h3>
           <ol className="list-decimal list-inside space-y-1 text-sm text-slate-400">
-            <li>Download the build for your platform (or the Python zip).</li>
+            <li>Download the build for your platform. For Rock Calculator OCR on Windows, use the Python zip.</li>
+            <li>Unzip and double-click <strong className="text-slate-300">START-HERE.bat</strong> (Python zip) — it installs deps and starts watch mode + the DR tray icon.</li>
+            <li>One-time OCR setup: install Tesseract, copy <strong className="text-slate-300">rock-scan-ocr/sc-toolbox.path.example</strong> → <strong className="text-slate-300">sc-toolbox.path</strong> (SC Toolbox Mining_Signals folder), then right-click the tray → <strong className="text-slate-300">Calibrate RESULTS panel</strong>.</li>
             <li>Copy your API key below and paste it when the dumper asks on first run.</li>
-            <li>Run BP Dumper in watch mode — it imports old logs once, then watches for new unlocks.</li>
-            <li>On Windows, the system tray icon also powers Rock Calculator OCR — calibrate the RESULTS panel once per resolution.</li>
+            <li>Run while you play — blueprint imports and Live Mission Tracker update automatically. Use Rock Calculator → OCR with the Mole RESULTS panel open in-game.</li>
           </ol>
         </section>
 

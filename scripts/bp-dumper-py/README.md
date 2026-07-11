@@ -2,16 +2,28 @@
 
 A cross-platform utility to batch-import historical blueprint JSON exports or trail active logs from your game client to your account.
 
+On **Windows**, the **Python zip** from GitHub releases also includes **Rock Scanner OCR** (`START-HERE.bat`, tray on port 38471). Go `.exe` builds sync blueprints only — use the Python zip for Rock Calculator OCR.
+
 ---
 
-## 🚀 Quick Start (Build from source)
-Pre-built release binaries are not published yet. Use the Python script or build the Go binary locally (see `scripts/bp-dumper-go/README.md`).
+## 🚀 Quick Start (releases)
 
-**Python:**
+Download **`bp-dumper-py.zip`** or a platform `.exe` from [GitHub releases](https://github.com/michael-linzenmeyer/dumpers-repo/releases).
+
+**Python zip (recommended for Rock Scanner on Windows):**
+
+1. Unzip anywhere.
+2. Double-click **`START-HERE.bat`** at the zip root.
+3. Follow prompts for API key (from **Dumper Apps** on the site).
+4. See [`../rock-scan-ocr/README.md`](../rock-scan-ocr/README.md) for Tesseract, SC Toolbox, and tray calibration.
+
+**Single-folder Python (from git clone):**
+
 ```bash
 cd scripts/bp-dumper-py
 pip install -r requirements.txt
-python dumper.py --dry-run
+pip install -r ../rock-scan-ocr/requirements.txt
+python dumper.py --watch
 ```
 
 ---

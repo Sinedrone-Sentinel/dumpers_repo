@@ -249,14 +249,16 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Desktop log watcher that automatically syncs blueprint unlocks to your account.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
-      'Download Windows, macOS (Intel or Apple Silicon), Linux, or the Python script zip from GitHub releases',
+      'Download Windows, macOS (Intel or Apple Silicon), Linux, or the Python zip from GitHub releases',
+      '**Rock Calculator OCR (Windows):** use the Python zip — double-click **START-HERE.bat**, install Tesseract once, point **sc-toolbox.path** at SC Toolbox Mining_Signals, then right-click the DR tray icon → **Calibrate RESULTS panel** (once per resolution)',
+      'In-game: Mole pilot with the RESULTS panel open → Mining Tracker → Rock Calculator → **OCR** while Dumper Apps watch mode is running on the same PC',
       'Copy or reveal your personal API key in the modal — paste it into BP Dumper on first run',
       'Regenerate your key if compromised; the old key stops working immediately',
       'Run watch mode while you play; use Live Tracker on Mission Tracker to see active missions and remaining pool blueprints',
       'Watch mode reads Game.log for blueprint unlocks, mission accept/end events, and session changes (menu, quit, crash)',
       'Successful imports appear under BP Dumper — Success in the notification bell; ambiguous names may need manual review',
     ],
-    relatesTo: ['Blueprints', 'Mission Tracker', 'Live Mission Tracker', 'Notifications', 'Settings'],
+    relatesTo: ['Blueprints', 'Mission Tracker', 'Live Mission Tracker', 'Mining Tracker', 'Notifications', 'Settings'],
   },
   {
     id: 'support',

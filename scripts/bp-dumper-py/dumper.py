@@ -10,9 +10,12 @@ import concurrent.futures
 import json
 import os
 import re
+import subprocess
 import sys
 import threading
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Optional, Any
 
@@ -266,6 +269,72 @@ try:
 except ImportError:
     DUMPER_VERSION = "dev"
 DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
+ROCK_SCAN_BRIDGE_URL = os.environ.get("ROCK_SCAN_BRIDGE_URL", "http://127.0.0.1:38471")
+ROCK_SCAN_BRIDGE_HEALTH = f"{ROCK_SCAN_BRIDGE_URL.rstrip('/')}/health"
+
+
+def _rock_scan_bridge_script() -> Path | None:
+    folder = Path(__file__).resolve().parent.parent / "rock-scan-ocr"
+    if sys.platform == "win32":
+        script = folder / "tray_app.py"
+    else:
+        script = folder / "bridge_server.py"
+    return script if script.is_file() else None
+
+
+def _rock_scan_bridge_running() -> bool:
+    try:
+        with urllib.request.urlopen(ROCK_SCAN_BRIDGE_HEALTH, timeout=0.8) as response:
+            return response.status == 200
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return False
+
+
+def _python_for_tray() -> str:
+    if sys.platform == "win32":
+        pythonw = Path(sys.executable).with_name("pythonw.exe")
+        if pythonw.is_file():
+            return str(pythonw)
+    return sys.executable
+
+
+def start_rock_scan_bridge() -> subprocess.Popen | None:
+    """Start localhost bridge for Rock Calculator OCR (independent of log watching)."""
+    if _rock_scan_bridge_running():
+        print(f"{Colors.GREEN}Rock scan tray already running ({ROCK_SCAN_BRIDGE_URL}).{Colors.RESET}")
+        return None
+
+    script = _rock_scan_bridge_script()
+    if script is None:
+        print(
+            f"{Colors.YELLOW}Rock scan bridge not found — Calculator OCR button will use paste fallback.{Colors.RESET}"
+        )
+        return None
+
+    creationflags = 0
+    if sys.platform == "win32":
+        creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
+    proc = subprocess.Popen(
+        [_python_for_tray(), str(script)],
+        cwd=str(script.parent),
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        creationflags=creationflags,
+    )
+    for _ in range(12):
+        if _rock_scan_bridge_running():
+            print(
+                f"{Colors.GREEN}Rock scan tray started for Calculator OCR ({ROCK_SCAN_BRIDGE_URL}).{Colors.RESET}"
+            )
+            return proc
+        time.sleep(0.25)
+
+    print(
+        f"{Colors.YELLOW}Rock scan bridge did not respond on {ROCK_SCAN_BRIDGE_URL} — paste OCR fallback only.{Colors.RESET}"
+    )
+    return proc
+
 DEFAULT_RELEASES_URL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
 
 # Skip system/cache folders during drive scans
@@ -1118,6 +1187,11 @@ def main():
         help="Disable watch mode (batch import only)."
     )
     parser.add_argument(
+        "--no-rock-bridge",
+        action="store_true",
+        help="Do not start the localhost rock-scan bridge for Calculator OCR.",
+    )
+    parser.add_argument(
         "--log-dir",
         type=Path,
         help="Directly scan a specific directory for log files instead of auto-detecting Star Citizen."
@@ -1267,6 +1341,43 @@ def main():
     # Update script args.url with resolved URL for reference
     args.url = url
 
+    cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+    acquired_blueprints = load_cache_file(cache_path)
+
+    session = None
+    if not args.dry_run:
+        try:
+            import requests
+        except ImportError:
+            print("Error: The 'requests' library is not installed. Run 'pip install -r requirements.txt' to import blueprints to your account.", file=sys.stderr)
+            sys.exit(1)
+
+        session = requests.Session()
+        session.headers.update({
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        })
+
+        print(f"{Colors.DIM}Synchronizing blueprints list from server...{Colors.RESET}")
+        try:
+            res = session.get(args.url, timeout=15)
+            if res.status_code == 200:
+                response_json = res.json()
+                if response_json.get("success"):
+                    server_bps = response_json.get("blueprints", [])
+                    acquired_blueprints.update(server_bps)
+                    save_cache_file(cache_path, acquired_blueprints)
+                    print(f"Synced {len(server_bps)} blueprints from account.")
+
+                    latest_ver = response_json.get("latestDumperVersion", "")
+                    if latest_ver and latest_ver != DUMPER_VERSION:
+                        print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
+                        print(f"{Colors.YELLOW}Download the latest release from: {DEFAULT_RELEASES_URL}{Colors.RESET}\n")
+            else:
+                print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
+        except Exception as e:
+            print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
+
     # First run: Import old logs from backup paths if specified (runs before watch mode)
     did_import_old_logs = False
     if env_vars.get("IMPORT_OLD_LOGS") == "true":
@@ -1412,45 +1523,6 @@ def main():
             print(f"Please specify the log path directly (e.g. ./dumper.sh --watch /path/to/Game.log)", file=sys.stderr)
             sys.exit(1)
 
-        # Load local dumper cache
-        cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
-        acquired_blueprints = load_cache_file(cache_path)
-        
-        session = None
-        if not args.dry_run:
-            try:
-                import requests
-            except ImportError:
-                print("Error: The 'requests' library is not installed. Run 'pip install -r requirements.txt' to import blueprints to your account.", file=sys.stderr)
-                sys.exit(1)
-
-            session = requests.Session()
-            session.headers.update({
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            })
-
-            # Sync from database (Option 2: Webhook GET Sync)
-            print(f"{Colors.DIM}Synchronizing blueprints list from server...{Colors.RESET}")
-            try:
-                res = session.get(args.url, timeout=15)
-                if res.status_code == 200:
-                    response_json = res.json()
-                    if response_json.get("success"):
-                        server_bps = response_json.get("blueprints", [])
-                        acquired_blueprints.update(server_bps)
-                        save_cache_file(cache_path, acquired_blueprints)
-                        print(f"Synced {len(server_bps)} blueprints from account.")
-
-                        latest_ver = response_json.get("latestDumperVersion", "")
-                        if latest_ver and latest_ver != DUMPER_VERSION:
-                            print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
-                            print(f"{Colors.YELLOW}Download the latest release from: {DEFAULT_RELEASES_URL}{Colors.RESET}\n")
-                else:
-                    print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
-            except Exception as e:
-                print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
-
         # Load local translations if any
         channel_dir = watch_file.parent
         local_loc_map = parse_local_localization(channel_dir)
@@ -1459,6 +1531,8 @@ def main():
             print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
         state = WatcherState()
+        if not args.no_rock_bridge:
+            start_rock_scan_bridge()
         watch_log_file(watch_file, state, acquired_blueprints, args, session)
         return
 

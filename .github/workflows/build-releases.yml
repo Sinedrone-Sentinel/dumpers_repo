@@ -72,10 +72,26 @@ jobs:
           GOOS=darwin GOARCH=arm64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-silicon
           GOOS=linux GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-linux
 
-      - name: Package Python dumper
+      - name: Package Python dumper + Rock Scanner
         run: |
-          cd scripts/bp-dumper-py
-          zip -r ../bp-dumper-py.zip dumper.py _version.py _min_game_version.py blueprint_lookup.py lookup.json requirements.txt README.md dumper.bat dumper.sh
+          STAGE=$(mktemp -d)
+          mkdir -p "$STAGE/scripts/bp-dumper-py" "$STAGE/scripts/rock-scan-ocr"
+          cp scripts/bp-dumper-py/dumper.py \
+             scripts/bp-dumper-py/_version.py \
+             scripts/bp-dumper-py/_min_game_version.py \
+             scripts/bp-dumper-py/blueprint_lookup.py \
+             scripts/bp-dumper-py/lookup.json \
+             scripts/bp-dumper-py/requirements.txt \
+             scripts/bp-dumper-py/README.md \
+             scripts/bp-dumper-py/dumper.bat \
+             scripts/bp-dumper-py/dumper.sh \
+             "$STAGE/scripts/bp-dumper-py/"
+          cp START-HERE.bat RESTART-TRAY.bat RESTART-TRAY.vbs "$STAGE/"
+          rsync -a --exclude '__pycache__' --exclude '*.pyc' --exclude 'rock-scan-exports' \
+            --exclude 'sc-toolbox.path' --exclude 'capture-region.json' \
+            scripts/rock-scan-ocr/ "$STAGE/scripts/rock-scan-ocr/"
+          cd "$STAGE"
+          zip -r "$GITHUB_WORKSPACE/scripts/bp-dumper-py.zip" .
 
       - name: Upload binaries to GitHub Release
         uses: softprops/action-gh-release@v2
