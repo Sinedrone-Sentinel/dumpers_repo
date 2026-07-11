@@ -8,34 +8,18 @@ import threading
 import time
 import tkinter as tk
 from collections.abc import Callable
-from dataclasses import dataclass
 
 from PIL import Image, ImageTk
 
+from capture import crop_fraction
 from game_window import GameWindow
 from live_scan_types import LiveScanResult
 from panel_crop import PanelFractions
+from panel_row_layout import PanelRowLayout, detect_panel_row_layout
 from region_store import fractions_from_pixels, save_region
 
-
-@dataclass(frozen=True)
-class HudCheckRow:
-    id: str
-    y_frac: float
-
-
-# Vertical bands aligned to the Mole pilot RESULTS panel (see member mockup).
-HUD_CHECK_ROWS: tuple[HudCheckRow, ...] = (
-    HudCheckRow("ore", 0.10),
-    HudCheckRow("mass", 0.19),
-    HudCheckRow("res", 0.26),
-    HudCheckRow("inst", 0.33),
-    HudCheckRow("comp_scu", 0.42),
-)
-
-# Composition lines are placed dynamically (2 bands + INERT is common).
-COMPOSITION_ROW_START = 0.57
-COMPOSITION_ROW_STEP = 0.078
+# HUD row ids ticked in scan order (y positions come from each frozen grab).
+HUD_ROW_IDS: tuple[str, ...] = ("ore", "mass", "res", "inst", "comp_scu")
 
 _CHECK_SIZE = 16
 _CHECK_FONT = ("Segoe UI", _CHECK_SIZE, "bold")
@@ -78,6 +62,7 @@ class BridgeScanOverlay:
         self.shade_ids: list[int] = []
         self.selection: tuple[int, int, int, int] | None = None
         self._check_ids: dict[str, int] = {}
+        self._row_layout: PanelRowLayout | None = None
         self._ui_ops: queue.Queue[Callable[[], None]] = queue.Queue()
 
         self.root = tk.Tk()
@@ -145,10 +130,13 @@ class BridgeScanOverlay:
     def _set_header_threadsafe(self, text: str) -> None:
         self.schedule_ui(lambda: self.set_header(text))
 
-    def ensure_row(self, row_id: str, y_frac: float) -> None:
-        """Add a checkmark slot at a HUD row band (inside the green box, left edge)."""
-        if row_id in self._check_ids:
-            return
+    def ensure_row(self, row_id: str, y_frac: float | None = None) -> None:
+        """Add or reposition a checkmark at a HUD row band (inside the green box)."""
+        if y_frac is None:
+            if self._row_layout is not None:
+                y_frac = self._row_layout.y_frac(row_id)
+            else:
+                y_frac = 0.5
         box = self._selection_box()
         if box is None:
             return
@@ -156,6 +144,9 @@ class BridgeScanOverlay:
         height = max(1, bottom - top)
         y = top + int(round(y_frac * height))
         x = left + 8
+        if row_id in self._check_ids:
+            self.canvas.coords(self._check_ids[row_id], x, y)
+            return
         self._check_ids[row_id] = self.canvas.create_text(
             x,
             y,
@@ -277,9 +268,19 @@ class BridgeScanOverlay:
         x0, y0, x1, y1 = self.selection
         return min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)
 
-    def _place_checkmarks(self) -> None:
-        for row in HUD_CHECK_ROWS:
-            self.ensure_row(row.id, row.y_frac)
+    def _detect_and_place_checkmarks(self, fractions: PanelFractions) -> None:
+        """Place checkmarks from word boxes on this frozen panel crop."""
+        panel_img = crop_fraction(self.bg_image, fractions)
+        self._row_layout = detect_panel_row_layout(panel_img)
+        for row_id in HUD_ROW_IDS:
+            self.ensure_row(row_id)
+        for row_id in sorted(
+            (key for key in self._row_layout.rows if key.startswith("comp_")),
+            key=lambda key: int(key.split("_", 1)[1]),
+        ):
+            self.ensure_row(row_id)
+        if "inert" in self._row_layout.rows:
+            self.ensure_row("inert")
 
     def _lock_scan_mode(self) -> None:
         self.scan_mode = True
@@ -315,11 +316,11 @@ class BridgeScanOverlay:
         )
 
         self._lock_scan_mode()
-        self.set_header("Scanning frozen HUD frame…")
-        self._place_checkmarks()
+        self.set_header("Aligning row markers to this frame…")
+        self._detect_and_place_checkmarks(fractions)
         reporter = ScanProgressReporter(self)
-        for row in HUD_CHECK_ROWS:
-            reporter.mark_row(row.id, ok=None)
+        for row_id in HUD_ROW_IDS:
+            reporter.mark_row(row_id, ok=None)
         self.root.update()
 
         def work() -> None:
@@ -369,8 +370,10 @@ class ScanProgressReporter:
     def set_header(self, text: str) -> None:
         self._overlay._set_header_threadsafe(text)
 
-    def ensure_row(self, row_id: str, y_frac: float) -> None:
-        self._overlay.schedule_ui(lambda: self._overlay.ensure_row(row_id, y_frac))
+    def ensure_row(self, row_id: str, y_frac: float | None = None) -> None:
+        self._overlay.schedule_ui(
+            lambda: self._overlay.ensure_row(row_id, y_frac)
+        )
 
     def mark_row(self, row_id: str, *, ok: bool | None = None) -> None:
         self._overlay._mark_row_threadsafe(row_id, ok=ok)
@@ -384,22 +387,28 @@ class ScanProgressReporter:
         lines = composition.get("lines") or []
 
         if not composition.get("ok") or not lines:
+            self.ensure_row("comp_0")
             self.mark_row("comp_0", ok=False)
             return
 
         for index in range(len(lines)):
             row_id = f"comp_{index}"
-            y_frac = COMPOSITION_ROW_START + index * COMPOSITION_ROW_STEP
-            self.ensure_row(row_id, y_frac)
+            self.ensure_row(row_id)
             time.sleep(0.05)
             self.mark_row(row_id, ok=True)
 
         inert_ok = composition.get("inert_anchor_line") is not None
-        inert_y = COMPOSITION_ROW_START + len(lines) * COMPOSITION_ROW_STEP
-        self.ensure_row("inert", inert_y)
+        self.ensure_row("inert")
         time.sleep(0.05)
         self.mark_row("inert", ok=inert_ok)
 
-        # Hide any pre-defined extra slots (e.g. comp_2) so we do not show stray ✗.
-        for spare_id in ("comp_2", "comp_3"):
-            self.clear_row(spare_id)
+        # Hide extra composition slots detected on the grab but not parsed.
+        for row_id, _item in list(self._overlay._check_ids.items()):
+            if not row_id.startswith("comp_") or row_id == "comp_scu":
+                continue
+            try:
+                index = int(row_id.split("_", 1)[1])
+            except ValueError:
+                continue
+            if index >= len(lines):
+                self.clear_row(row_id)
