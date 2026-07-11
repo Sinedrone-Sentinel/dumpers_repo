@@ -4,7 +4,7 @@ Desktop capture + OCR for the **Rock Calculator** on [dumpers-repo.com](https://
 
 ## Member quick start (Windows)
 
-1. Download **`bp-dumper-py.zip`** from [Dumper Apps releases](https://github.com/michael-linzenmeyer/dumpers-repo/releases) (tagged `v*`).
+1. Download **`bp-dumper-py.zip`** from [Dumper Apps releases](https://github.com/Sinedrone-Sentinel/dumpers_repo/releases) (tagged `v*`).
 2. Unzip anywhere (e.g. `Desktop\Dumper Apps`) — keep the `scripts\` folder next to **`START-HERE.bat`**.
 3. **One-time setup:**
    - Install [Python 3.8+](https://www.python.org/downloads/) — check **Add Python to PATH**.

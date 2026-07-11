@@ -8,7 +8,7 @@ On **Windows**, the **Python zip** from GitHub releases also includes **Rock Sca
 
 ## 🚀 Quick Start (releases)
 
-Download **`bp-dumper-py.zip`** or a platform `.exe` from [GitHub releases](https://github.com/michael-linzenmeyer/dumpers-repo/releases).
+Download **`bp-dumper-py.zip`** or a platform `.exe` from [GitHub releases](https://github.com/Sinedrone-Sentinel/dumpers_repo/releases).
 
 **Python zip (recommended for Rock Scanner on Windows):**
 
