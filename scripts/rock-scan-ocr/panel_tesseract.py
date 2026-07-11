@@ -40,6 +40,9 @@ def _upscale(img: Image.Image, target_height: int = 2000) -> Image.Image:
     )
 
 
+_FAST_LAYOUT_TARGET_HEIGHT = 1000
+
+
 def _preprocess_warm_channel(img: Image.Image) -> Image.Image:
     """Warm-channel isolate (SC Toolbox label_captures pattern)."""
     arr = np.array(img.convert("RGB"))
@@ -147,3 +150,11 @@ def ocr_panel_words(img: Image.Image) -> list[dict[str, int | str]]:
             }
         )
     return words
+
+
+def ocr_panel_lines_fast(img: Image.Image) -> list[str]:
+    """Single-pass line OCR for overlay row-marker alignment (keeps UI responsive)."""
+    _configure_tesseract()
+    processed = _preprocess_bright_mask(_upscale(img, target_height=_FAST_LAYOUT_TARGET_HEIGHT))
+    text = _run_tesseract(processed, psm=6)
+    return _normalize_lines(text)

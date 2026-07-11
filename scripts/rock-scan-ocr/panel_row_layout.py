@@ -11,19 +11,16 @@ from composition_parse import (
     COMP_HEADER_RE,
     COMPOSITION_PERCENT_RE,
     HUD_FOOTER_RE,
-    HUD_SKIP_RE,
     is_inert_anchor_row,
 )
-from panel_tesseract import ocr_panel_words
-
-# Must match panel_tesseract._upscale target_height (word boxes live in this space).
-_OCR_UPSCALE_TARGET = 2000
+from panel_tesseract import ocr_panel_lines_fast
 
 MASS_LABEL_RE = re.compile(r"\bMASS\b", re.I)
 RES_LABEL_RE = re.compile(r"\bRES\b", re.I)
 INST_LABEL_RE = re.compile(r"\bINST\b", re.I)
 RESULTS_RE = re.compile(r"\bRESULTS?\b", re.I)
 ORE_TAG_RE = re.compile(r"\((?:ORE|RAW)\)|(?:ORE|RAW)\b", re.I)
+COMP_LINE_RE = re.compile(r"^comp_\d+$")
 
 # Last-resort bands inside the panel crop (not tied to any monitor).
 _FALLBACK: dict[str, float] = {
@@ -39,13 +36,6 @@ _FALLBACK: dict[str, float] = {
 
 
 @dataclass
-class PanelWordRow:
-    y_center: float
-    text: str
-    y_frac: float
-
-
-@dataclass
 class PanelRowLayout:
     rows: dict[str, float] = field(default_factory=dict)
     panel_height: int = 1
@@ -54,55 +44,15 @@ class PanelRowLayout:
         return self.rows.get(row_id, _FALLBACK.get(row_id, 0.5))
 
 
-def _ocr_word_space_height(panel_height: int) -> int:
-    """Height of the image Tesseract word boxes are measured against."""
-    return max(panel_height, _OCR_UPSCALE_TARGET)
+def _line_y_frac(index: int, total: int) -> float:
+    if total <= 0:
+        return 0.5
+    return (index + 0.5) / total
 
 
-def _cluster_word_rows(
-    words: list[dict[str, int | str]], ocr_height: int
-) -> list[PanelWordRow]:
-    if not words:
-        return []
-
-    tolerance = max(8, int(ocr_height * 0.028))
-    sorted_words = sorted(words, key=lambda w: (int(w["y0"]) + int(w["y1"])) / 2)
-    clusters: list[list[dict[str, int | str]]] = []
-
-    for word in sorted_words:
-        y_center = (int(word["y0"]) + int(word["y1"])) / 2
-        if not clusters:
-            clusters.append([word])
-            continue
-        last_cluster = clusters[-1]
-        last_y = sum((int(w["y0"]) + int(w["y1"])) / 2 for w in last_cluster) / len(
-            last_cluster
-        )
-        if y_center - last_y <= tolerance:
-            last_cluster.append(word)
-        else:
-            clusters.append([word])
-
-    rows: list[PanelWordRow] = []
-    for cluster in clusters:
-        y_center = sum((int(w["y0"]) + int(w["y1"])) / 2 for w in cluster) / len(cluster)
-        text = " ".join(
-            str(w["text"])
-            for w in sorted(cluster, key=lambda w: int(w["x0"]))
-        )
-        rows.append(
-            PanelWordRow(
-                y_center=y_center,
-                text=text,
-                y_frac=y_center / max(1, ocr_height),
-            )
-        )
-    return rows
-
-
-def _row_index(rows: list[PanelWordRow], pattern: re.Pattern[str]) -> int | None:
-    for index, row in enumerate(rows):
-        if pattern.search(row.text):
+def _line_index(lines: list[str], pattern: re.Pattern[str]) -> int | None:
+    for index, line in enumerate(lines):
+        if pattern.search(line):
             return index
     return None
 
@@ -112,8 +62,6 @@ def _is_composition_row(text: str) -> bool:
         return False
     if is_inert_anchor_row(text):
         return False
-    if HUD_SKIP_RE.search(text) and not COMPOSITION_PERCENT_RE.search(text):
-        return False
     return True
 
 
@@ -121,64 +69,68 @@ def detect_panel_row_layout(panel_img: Image.Image) -> PanelRowLayout:
     """
     Map checkmark row ids to y fractions inside the panel crop.
 
-    Positions come from word boxes on *this* frozen grab, not a fixed monitor layout.
+    Uses one fast line OCR pass (not word boxes) so marker alignment does not
+    block the scan overlay. Row bands stay at detected line positions — we do
+    not nudge markers vertically (that looked like the green box was shifting).
     """
     panel_height = max(1, panel_img.height)
-    ocr_height = _ocr_word_space_height(panel_height)
-    words = ocr_panel_words(panel_img)
-    rows = _cluster_word_rows(words, ocr_height)
+    lines = ocr_panel_lines_fast(panel_img)
+    if not lines:
+        return PanelRowLayout(rows={}, panel_height=panel_height)
+
+    total = len(lines)
     layout: dict[str, float] = {}
 
-    mass_idx = _row_index(rows, MASS_LABEL_RE)
-    res_idx = _row_index(rows, RES_LABEL_RE)
-    inst_idx = _row_index(rows, INST_LABEL_RE)
-    comp_idx = _row_index(rows, COMP_HEADER_RE)
+    mass_idx = _line_index(lines, MASS_LABEL_RE)
+    res_idx = _line_index(lines, RES_LABEL_RE)
+    inst_idx = _line_index(lines, INST_LABEL_RE)
+    comp_idx = _line_index(lines, COMP_HEADER_RE)
 
     if mass_idx is not None:
-        layout["mass"] = rows[mass_idx].y_frac
+        layout["mass"] = _line_y_frac(mass_idx, total)
         for index in range(mass_idx - 1, -1, -1):
-            text = rows[index].text
+            text = lines[index]
             if RESULTS_RE.search(text):
                 continue
             if HUD_FOOTER_RE.search(text):
                 continue
             if MASS_LABEL_RE.search(text) or RES_LABEL_RE.search(text):
                 continue
-            layout["ore"] = rows[index].y_frac
+            layout["ore"] = _line_y_frac(index, total)
             break
 
     if res_idx is not None:
-        layout["res"] = rows[res_idx].y_frac
+        layout["res"] = _line_y_frac(res_idx, total)
     if inst_idx is not None:
-        layout["inst"] = rows[inst_idx].y_frac
+        layout["inst"] = _line_y_frac(inst_idx, total)
     if comp_idx is not None:
-        layout["comp_scu"] = rows[comp_idx].y_frac
+        layout["comp_scu"] = _line_y_frac(comp_idx, total)
 
     inert_idx: int | None = None
     if comp_idx is not None:
-        for index in range(comp_idx + 1, len(rows)):
-            if HUD_FOOTER_RE.search(rows[index].text):
+        for index in range(comp_idx + 1, total):
+            if HUD_FOOTER_RE.search(lines[index]):
                 break
-            if is_inert_anchor_row(rows[index].text):
+            if is_inert_anchor_row(lines[index]):
                 inert_idx = index
+                break
         comp_line = 0
-        for index in range(comp_idx + 1, inert_idx or len(rows)):
+        for index in range(comp_idx + 1, inert_idx or total):
             if inert_idx is not None and index >= inert_idx:
                 break
-            if HUD_FOOTER_RE.search(rows[index].text):
+            if HUD_FOOTER_RE.search(lines[index]):
                 break
-            if _is_composition_row(rows[index].text):
-                layout[f"comp_{comp_line}"] = rows[index].y_frac
+            if _is_composition_row(lines[index]):
+                layout[f"comp_{comp_line}"] = _line_y_frac(index, total)
                 comp_line += 1
         if inert_idx is not None:
-            layout["inert"] = rows[inert_idx].y_frac
+            layout["inert"] = _line_y_frac(inert_idx, total)
 
-    # Ore fallback: first (ORE) row above composition block.
     if "ore" not in layout:
-        search_end = comp_idx if comp_idx is not None else len(rows)
+        search_end = comp_idx if comp_idx is not None else total
         for index in range(search_end):
-            if ORE_TAG_RE.search(rows[index].text) and not MASS_LABEL_RE.search(rows[index].text):
-                layout["ore"] = rows[index].y_frac
+            if ORE_TAG_RE.search(lines[index]) and not MASS_LABEL_RE.search(lines[index]):
+                layout["ore"] = _line_y_frac(index, total)
                 break
 
     return PanelRowLayout(rows=layout, panel_height=panel_height)

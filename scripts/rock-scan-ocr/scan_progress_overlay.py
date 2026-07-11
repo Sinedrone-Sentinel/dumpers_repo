@@ -62,6 +62,7 @@ class BridgeScanOverlay:
         self.sel_rect_id: int | None = None
         self.shade_ids: list[int] = []
         self.selection: tuple[int, int, int, int] | None = None
+        self._locked_box: tuple[int, int, int, int] | None = None
         self._check_ids: dict[str, int] = {}
         self._row_layout: PanelRowLayout | None = None
         self._ui_ops: queue.Queue[Callable[[], None]] = queue.Queue()
@@ -108,6 +109,7 @@ class BridgeScanOverlay:
         self.root.protocol("WM_DELETE_WINDOW", self._on_cancel)
 
         self._set_selection_from_fractions(initial_fractions)
+        self.root.update_idletasks()
         self.root.after(30, self._drain_ui_ops)
 
     def schedule_ui(self, fn: Callable[[], None]) -> None:
@@ -264,23 +266,18 @@ class BridgeScanOverlay:
         self.selection = None
 
     def _selection_box(self) -> tuple[int, int, int, int] | None:
+        if self.scan_mode and self._locked_box is not None:
+            return self._locked_box
         if self.selection is None:
             return None
         x0, y0, x1, y1 = self.selection
         return min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)
 
     def apply_row_layout(self, layout: PanelRowLayout) -> None:
-        """Reposition checkmarks after spatial row detection on the frozen crop."""
+        """Reposition HUD checkmarks; composition rows are placed when parsed."""
         self._row_layout = layout
         for row_id in HUD_ROW_IDS:
             self.ensure_row(row_id)
-        for row_id in sorted(
-            (key for key in layout.rows if key.startswith("comp_")),
-            key=lambda key: int(key.split("_", 1)[1]),
-        ):
-            self.ensure_row(row_id)
-        if "inert" in layout.rows:
-            self.ensure_row("inert")
         self.root.update()
 
     def _place_fallback_checkmarks(self) -> None:
@@ -322,15 +319,19 @@ class BridgeScanOverlay:
             client_height=self.client_h,
         )
 
+        locked = self._selection_box()
+        if locked is None:
+            return
+        self._locked_box = locked
+
         self._lock_scan_mode()
         self.set_header("Scanning frozen HUD frame…")
         self._place_fallback_checkmarks()
-        reporter = ScanProgressReporter(self)
         for row_id in HUD_ROW_IDS:
-            reporter.mark_row(row_id, ok=None)
-        self.root.update()
+            self.mark_row(row_id, ok=None)
 
         def work() -> None:
+            reporter = ScanProgressReporter(self)
             try:
                 result = self.on_scan(fractions, reporter)
             except Exception as exc:  # pragma: no cover
@@ -383,17 +384,7 @@ class ScanProgressReporter:
         )
 
     def apply_row_layout(self, layout: PanelRowLayout) -> None:
-        """Block until row markers are repositioned on the UI thread."""
-        done = threading.Event()
-
-        def _apply() -> None:
-            try:
-                self._overlay.apply_row_layout(layout)
-            finally:
-                done.set()
-
-        self._overlay.schedule_ui(_apply)
-        done.wait(timeout=15.0)
+        self._overlay.schedule_ui(lambda: self._overlay.apply_row_layout(layout))
 
     def mark_row(self, row_id: str, *, ok: bool | None = None) -> None:
         self._overlay._mark_row_threadsafe(row_id, ok=ok)
@@ -401,6 +392,18 @@ class ScanProgressReporter:
 
     def clear_row(self, row_id: str) -> None:
         self._overlay._clear_row_threadsafe(row_id)
+
+    def _composition_row_y_frac(self, index: int, line_count: int) -> float:
+        """Even bands between COMP header and INERT when line OCR missed a row."""
+        layout = self._overlay._row_layout
+        if layout is not None and f"comp_{index}" in layout.rows:
+            return layout.y_frac(f"comp_{index}")
+        top = layout.y_frac("comp_scu") if layout else 0.42
+        bottom = layout.y_frac("inert") if layout else 0.82
+        if line_count <= 0:
+            return top
+        slot = index + 1
+        return top + (bottom - top) * slot / (line_count + 1)
 
     def mark_composition_result(self, composition: dict) -> None:
         """Tick each composition % line and the INERT anchor — only rows that exist."""
@@ -413,7 +416,8 @@ class ScanProgressReporter:
 
         for index in range(len(lines)):
             row_id = f"comp_{index}"
-            self.ensure_row(row_id)
+            y_frac = self._composition_row_y_frac(index, len(lines))
+            self.ensure_row(row_id, y_frac)
             time.sleep(0.05)
             self.mark_row(row_id, ok=True)
 

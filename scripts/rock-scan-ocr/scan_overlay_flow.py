@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 from collections.abc import Callable
 
 from capture import capture_game_frames, crop_fraction, focus_game_window
@@ -47,10 +48,19 @@ def run_bridge_scan_overlay(
         ]
 
         panel_img = crop_fraction(client_img, fractions)
-        reporter.set_header("Aligning row markers to this frame…")
-        layout = detect_panel_row_layout(panel_img)
-        reporter.apply_row_layout(layout)
-        reporter.set_header("Running HUD reader…")
+
+        def align_markers() -> None:
+            try:
+                layout = detect_panel_row_layout(panel_img)
+                reporter.apply_row_layout(layout)
+            except Exception:
+                pass
+
+        threading.Thread(
+            target=align_markers,
+            name="rock-scan-row-layout",
+            daemon=True,
+        ).start()
 
         return scan_fn(
             fractions,
