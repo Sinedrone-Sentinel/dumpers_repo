@@ -414,7 +414,11 @@ export default function RockCalculator({
     setSelectedLocation(undefined)
     setScannerMassInput(String(result.mass))
     setResistanceInput(String(result.resistancePercent))
-    setInstabilityInput(String(result.instability))
+    setInstabilityInput(
+      Number.isFinite(result.instability)
+        ? String(Math.round(result.instability * 100) / 100)
+        : ''
+    )
     setTotalScuInput(String(result.totalScu))
     setPercentBySlot(applied.percentBySlot)
     setQualityBySlot(applied.qualityBySlot)
