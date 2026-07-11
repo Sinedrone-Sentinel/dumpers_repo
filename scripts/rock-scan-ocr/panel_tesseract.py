@@ -120,6 +120,7 @@ def ocr_panel_line_candidates_fast(img: Image.Image) -> list[tuple[str, list[str
     for label, processed in (
         ("warm-channel", _preprocess_warm_channel(base)),
         ("bright-mask", _preprocess_bright_mask(base)),
+        ("grayscale", _preprocess_grayscale(base, scale=1)),
     ):
         text = _run_tesseract(processed, psm=6)
         lines = _normalize_lines(text)

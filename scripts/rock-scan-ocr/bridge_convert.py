@@ -94,7 +94,7 @@ def to_rock_scan_ocr_result(sc_ocr: dict, composition: dict) -> dict:
             "primaryOreName": mineral,
             "mass": float(mass),
             "resistancePercent": float(resistance),
-            "instability": float(instability or 0),
+            "instability": round(float(instability or 0), 2),
             "totalScu": float(total_scu),
             "compositionLines": composition_lines,
             "warnings": warnings,

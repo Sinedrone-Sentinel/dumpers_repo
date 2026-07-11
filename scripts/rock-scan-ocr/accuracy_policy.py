@@ -26,6 +26,7 @@ NEVER_OCR_FIELDS = [
 
 ACCURACY_NOTES = [
     "Resistance (RES) is the highest-priority calculator stat — RESULTS panel OCR overrides SC_OCR.",
+    "Mass and COMP SCU are calculator-critical — panel OCR uses multi-pass reads and decimal preference.",
     "Instability is pass-through only (CHP/display); do not block on INST accuracy.",
     "Inert is never OCR'd — the calculator derives it from valuable composition %.",
     "Composition parsing stops before INERT/MATERIALS or HUD footer when present; inert is not read.",

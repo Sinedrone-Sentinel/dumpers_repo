@@ -106,8 +106,13 @@ def _scan_captured_panel(
         line_candidates, mineral_hint=mineral_hint
     ).as_dict()
     composition = enrich_composition_from_panel(
-        composition, tess_img, line_candidates=line_candidates
+        composition,
+        tess_img,
+        line_candidates=line_candidates,
+        panel_mass=int(sc_ocr["mass"]) if sc_ocr.get("mass") is not None else None,
     )
+    if composition.get("panel_mass_final") is not None:
+        sc_ocr["mass"] = float(composition["panel_mass_final"])
 
     if progress is not None:
         if (

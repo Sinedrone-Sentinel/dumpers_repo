@@ -219,31 +219,11 @@ def find_composition_end_index(lines: list[str], comp_idx: int) -> int:
 
 
 def extract_total_scu(lines: list[str], comp_idx: int, end_idx: int) -> float | None:
-    header = lines[comp_idx]
-    decimal_candidates: list[float] = []
-    if re.search(r"SCU", header, re.I) or COMP_HEADER_RE.search(header):
-        for decimal in re.findall(r"\d+\.\d{1,2}", header):
-            value = float(decimal)
-            if 0.5 <= value <= MAX_COMP_SCU:
-                decimal_candidates.append(value)
-        match = TOTAL_SCU_RE.search(header)
-        if match:
-            value = float(match.group(1))
-            if 0.5 <= value <= MAX_COMP_SCU:
-                decimal_candidates.append(value)
-    if decimal_candidates:
-        return max(decimal_candidates, key=lambda v: (abs(v - round(v, 2)) > 0.001, v))
+    from panel_mass_scu_parse import extract_total_scu_from_lines
 
-    for row in lines[comp_idx + 1 : min(end_idx, comp_idx + 3)]:
-        if HUD_FOOTER_RE.search(row) or "%" in row:
-            continue
-        if not re.search(r"SCU", row, re.I):
-            continue
-        for decimal in re.findall(r"\d+\.\d{1,2}", row):
-            value = float(decimal)
-            if 0.5 <= value <= MAX_COMP_SCU:
-                return value
-    return None
+    _ = comp_idx
+    _ = end_idx
+    return extract_total_scu_from_lines(lines)
 
 
 def parse_composition_row(row: str, mineral_hint: str | None = None) -> CompositionLine | None:
@@ -411,23 +391,10 @@ def pick_best_composition_parse(
 def extract_total_scu_from_candidates(
     candidates: list[tuple[str, list[str]]],
 ) -> tuple[float | None, str | None]:
-    """Scan every OCR pass for a COMP/SCU total (warm-channel often reads this best)."""
-    for ocr_pass, lines in candidates:
-        for row in lines:
-            if "%" in row and not COMP_HEADER_RE.search(row):
-                continue
-            scu_match = re.search(r"(\d+\.\d{1,2})\s*SCU", row, re.I)
-            if scu_match:
-                value = float(scu_match.group(1))
-                if 0.5 <= value <= MAX_COMP_SCU:
-                    return value, ocr_pass
-            if not COMP_HEADER_RE.search(row):
-                continue
-            for decimal in re.findall(r"\d+\.\d{1,2}", row):
-                value = float(decimal)
-                if 0.5 <= value <= MAX_COMP_SCU:
-                    return value, ocr_pass
-    return None, None
+    """Scan every OCR pass for a COMP/SCU total (prefer decimal reads)."""
+    from panel_mass_scu_parse import best_total_scu_from_candidates
+
+    return best_total_scu_from_candidates(candidates, mass=None)
 
 
 def parse_composition_from_candidates(
