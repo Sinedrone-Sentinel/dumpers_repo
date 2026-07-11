@@ -1,6 +1,6 @@
 import type { CompositionPart, DepositType } from './miningClusterProfiles'
 import { getDepositTypes } from './miningClusterProfiles'
-import { normalizeMiningOreName } from './miningOreCanonical'
+import { normalizeMiningOreName, resolveOcrOreName } from './miningOreCanonical'
 import { resolveLedgerQuality, getDefaultBandQuality, PURCHASED_STOCK_QUALITY } from './qualityBands'
 import {
   buildDefaultQualitySlots,
@@ -35,7 +35,7 @@ function buildInertPart(): CompositionPart {
 export function buildOcrCalculatorParts(scan: RockScanOcrResult): CompositionPart[] {
   const valuable = scan.compositionLines.filter((line) => !isInertElement(line.elementName))
   const parts = valuable.map((line) => ({
-    elementName: line.elementName,
+    elementName: resolveOcrOreName(line.elementName).name,
     minPercentage: 0,
     maxPercentage: 100,
     qualityScale: qualityScaleForScanBandRank(line.scanBandRank),
