@@ -18,6 +18,8 @@ def resolve_mining_signals_path(cli_path: str | None = None) -> Path:
         candidates.append(Path(env).expanduser())
 
     here = Path(__file__).resolve().parent
+    candidates.append(here / "vendor" / "Mining_Signals")
+
     path_file = here / "sc-toolbox.path"
     if path_file.is_file():
         for line in path_file.read_text(encoding="utf-8").splitlines():
@@ -42,7 +44,8 @@ def resolve_mining_signals_path(cli_path: str | None = None) -> Path:
     tried = "\n".join(f"  - {p}" for p in candidates)
     raise FileNotFoundError(
         "SC Toolbox Mining_Signals path not found.\n"
-        "Clone SC-Toolbox-Beta-V2 and set sc-toolbox.path or SC_TOOLBOX_MINING_SIGNALS.\n"
+        "Re-download bp-dumper-py.zip from Dumper Apps releases (SC_OCR is bundled),\n"
+        "or clone SC-Toolbox-Beta-V2 and set sc-toolbox.path or SC_TOOLBOX_MINING_SIGNALS.\n"
         f"Tried:\n{tried}"
     )
 

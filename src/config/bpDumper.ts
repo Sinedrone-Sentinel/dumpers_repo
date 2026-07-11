@@ -22,9 +22,15 @@ export type BpDumperDownloadOption = {
 
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
+    id: 'windows-full',
+    label: 'Windows (recommended)',
+    description: 'BP Dumper + Rock Scanner OCR — unzip and run START-HERE.bat',
+    filename: 'bp-dumper-py.zip',
+  },
+  {
     id: 'windows',
-    label: 'Windows',
-    description: '64-bit executable',
+    label: 'Windows (blueprints only)',
+    description: 'Log watcher only — no Rock Calculator OCR',
     filename: 'bp-dumper-windows.exe',
   },
   {
@@ -47,8 +53,8 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   },
   {
     id: 'python',
-    label: 'Python script',
-    description: 'Cross-platform zip',
+    label: 'Python zip (all platforms)',
+    description: 'Same kit as Windows recommended — macOS/Linux get log watcher only',
     filename: 'bp-dumper-py.zip',
   },
 ]

@@ -3,89 +3,101 @@ setlocal EnableDelayedExpansion
 set "ROOT=%~dp0"
 cd /d "%ROOT%"
 
-title Dumper Desktop Apps - Launcher
+title Dumper Apps
 
 echo.
 echo  ============================================================
-echo   START HERE - Desktop apps for Dumper's Repo
-echo   Folder: %ROOT%
+echo   DUMPER APPS - double-click launcher
 echo  ============================================================
 echo.
 
-where python >nul 2>nul
-if errorlevel 1 (
-    echo [ERROR] Python is not installed or not on PATH.
-    echo Install from https://www.python.org/downloads/ and check "Add Python to PATH".
-    echo.
-    pause
-    exit /b 1
-)
+call :ensure_python
+if errorlevel 1 exit /b 1
 
-if not exist "%ROOT%scripts\rock-scan-ocr\sc-toolbox.path" (
-    echo [ERROR] Missing scripts\rock-scan-ocr\sc-toolbox.path
-    echo.
-    echo   1. Copy scripts\rock-scan-ocr\sc-toolbox.path.example
-    echo      to scripts\rock-scan-ocr\sc-toolbox.path
-    echo   2. Edit it - one line pointing at your SC Toolbox Mining_Signals folder
-    echo      Example: C:\...\SC-Toolbox-Beta-V2\tools\Mining_Signals
-    echo.
-    pause
-    exit /b 1
-)
+call :ensure_tesseract
+if errorlevel 1 exit /b 1
 
 if not exist "%ROOT%scripts\bp-dumper-py\lookup.json" (
-    where node >nul 2>nul
-    if errorlevel 1 (
-        echo [ERROR] Node is required once to build BP Dumper lookup.json.
-        echo Install Node 22+ from https://nodejs.org/ then run START-HERE.bat again.
-        pause
-        exit /b 1
-    )
-    if not exist "%ROOT%node_modules\" (
-        echo [setup] Installing node deps for lookup copy - first time only...
-        call npm install
-    )
-    echo [setup] Copying blueprint lookup for BP Dumper...
-    call npm run copy-blueprint-lookup
-    if errorlevel 1 (
-        echo [ERROR] Could not create scripts\bp-dumper-py\lookup.json
-        pause
-        exit /b 1
-    )
-    echo.
+    echo [ERROR] Missing scripts\bp-dumper-py\lookup.json
+    echo Download the latest bp-dumper-py.zip from Dumper Apps releases — do not run from a partial copy.
+    pause
+    exit /b 1
 )
 
-echo [setup] Checking Python dependencies...
-python -m pip install -r "%ROOT%scripts\bp-dumper-py\requirements.txt" -q 2>nul
-python -m pip install -r "%ROOT%scripts\rock-scan-ocr\requirements.txt" -q 2>nul
+echo [setup] Installing Python packages ^(first run may take a minute^)...
+python -m pip install --upgrade pip -q 2>nul
+python -m pip install -r "%ROOT%scripts\bp-dumper-py\requirements.txt" -q
+if errorlevel 1 (
+    echo [ERROR] pip install failed for BP Dumper. Check your internet connection.
+    pause
+    exit /b 1
+)
+python -m pip install -r "%ROOT%scripts\rock-scan-ocr\requirements.txt" -q
+if errorlevel 1 (
+    echo [ERROR] pip install failed for Rock Scanner.
+    pause
+    exit /b 1
+)
 if not exist "%ROOT%scripts\rock-scan-ocr\assets\tray.ico" (
     python "%ROOT%scripts\rock-scan-ocr\build_tray_icon.py" >nul 2>nul
 )
 echo.
 
-echo Starting BP Dumper + rock-scan tray...
-start "BP Dumper + Rock Scan Tray" cmd /k "cd /d "%ROOT%scripts\bp-dumper-py" && title BP Dumper + Rock Scan Tray && python dumper.py --watch"
+echo Starting Dumper Apps...
+start "Dumper Apps" cmd /k "cd /d "%ROOT%scripts\bp-dumper-py" && title Dumper Apps && python dumper.py --watch"
 
 echo.
 echo  ============================================================
 echo   RUNNING
 echo  ============================================================
 echo.
-echo   One window: BP Dumper + Rock Scan Tray
-echo     - Tails your Game.log
-echo     - DR tray icon by the Windows clock ^(port 38471^)
+echo   Paste your API key when the window asks ^(copy from Dumper Apps on the site^).
+echo   Look for the DR icon by the Windows clock.
 echo.
-echo   Website: https://dumpers-repo.com  ^(live site - NOT localhost^)
-echo     - Sign in, Mining - Rock Calculator - OCR
-echo     - No npm run dev needed
+echo   FIRST TIME ONLY: right-click DR tray - Calibrate RESULTS panel
+echo   Then in-game: Mole pilot, RESULTS open - Rock Calculator - OCR on the site
 echo.
-echo   FIRST TIME ONLY ^(or new resolution^):
-echo     Right-click DR tray - Calibrate RESULTS panel
-echo.
-echo   In-game: Mole pilot, rock scanned, RESULTS panel open
-echo.
-echo   Tray only ^(reload after code updates^): double-click RESTART-TRAY.vbs
-echo     ^(stops the old bridge first, then starts fresh — no full shutdown needed^)
-echo   Tray quit? Same file brings it back.
+echo   Reload tray after updates: double-click RESTART-TRAY.vbs
 echo.
 pause
+exit /b 0
+
+:ensure_python
+where python >nul 2>nul
+if not errorlevel 1 exit /b 0
+echo Python not found.
+where winget >nul 2>nul
+if errorlevel 1 goto :python_manual
+echo Installing Python via winget...
+winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
+if errorlevel 1 goto :python_manual
+where python >nul 2>nul
+if not errorlevel 1 exit /b 0
+:python_manual
+echo.
+echo Install Python 3 from https://www.python.org/downloads/
+echo Check "Add Python to PATH", then run START-HERE.bat again.
+pause
+exit /b 1
+
+:ensure_tesseract
+where tesseract >nul 2>nul
+if not errorlevel 1 exit /b 0
+if exist "%ROOT%scripts\rock-scan-ocr\vendor\tesseract\tesseract.exe" exit /b 0
+if exist "C:\Program Files\Tesseract-OCR\tesseract.exe" exit /b 0
+if exist "C:\Program Files (x86)\Tesseract-OCR\tesseract.exe" exit /b 0
+echo Tesseract OCR not found ^(needed for Rock Scanner^).
+where winget >nul 2>nul
+if errorlevel 1 goto :tesseract_manual
+set /p INSTALL_TESS="Install Tesseract now with winget? [Y/N] "
+if /i not "!INSTALL_TESS!"=="Y" goto :tesseract_manual
+winget install -e --id UB-Mannheim.TesseractOCR --accept-package-agreements --accept-source-agreements
+where tesseract >nul 2>nul
+if not errorlevel 1 exit /b 0
+if exist "C:\Program Files\Tesseract-OCR\tesseract.exe" exit /b 0
+:tesseract_manual
+echo.
+echo Install Tesseract from https://github.com/UB-Mannheim/tesseract/wiki
+echo Then run START-HERE.bat again.
+pause
+exit /b 1

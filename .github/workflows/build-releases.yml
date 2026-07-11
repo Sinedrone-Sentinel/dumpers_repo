@@ -75,7 +75,7 @@ jobs:
       - name: Package Python dumper + Rock Scanner
         run: |
           STAGE=$(mktemp -d)
-          mkdir -p "$STAGE/scripts/bp-dumper-py" "$STAGE/scripts/rock-scan-ocr"
+          mkdir -p "$STAGE/scripts/bp-dumper-py" "$STAGE/scripts/rock-scan-ocr/vendor"
           cp scripts/bp-dumper-py/dumper.py \
              scripts/bp-dumper-py/_version.py \
              scripts/bp-dumper-py/_min_game_version.py \
@@ -88,8 +88,18 @@ jobs:
              "$STAGE/scripts/bp-dumper-py/"
           cp START-HERE.bat RESTART-TRAY.bat RESTART-TRAY.vbs "$STAGE/"
           rsync -a --exclude '__pycache__' --exclude '*.pyc' --exclude 'rock-scan-exports' \
-            --exclude 'sc-toolbox.path' --exclude 'capture-region.json' \
+            --exclude 'sc-toolbox.path' --exclude 'capture-region.json' --exclude 'vendor' \
             scripts/rock-scan-ocr/ "$STAGE/scripts/rock-scan-ocr/"
+          git clone --depth 1 --filter=blob:none --sparse \
+            https://github.com/ScPlaceholder/SC-Toolbox-Beta-V2.git /tmp/sc-toolbox
+          cd /tmp/sc-toolbox
+          git sparse-checkout set tools/Mining_Signals
+          cd -
+          rsync -a /tmp/sc-toolbox/tools/Mining_Signals/ "$STAGE/scripts/rock-scan-ocr/vendor/Mining_Signals/"
+          MODELS="$STAGE/scripts/rock-scan-ocr/vendor/Mining_Signals/ocr/models"
+          if [ -f "$MODELS/model_hud_cnn.onnx" ] && [ ! -f "$MODELS/model_hud_cnn.onnx.data" ]; then
+            mv "$MODELS/model_hud_cnn.onnx" "$MODELS/model_hud_cnn.onnx.missing_data"
+          fi
           cd "$STAGE"
           zip -r "$GITHUB_WORKSPACE/scripts/bp-dumper-py.zip" .
 

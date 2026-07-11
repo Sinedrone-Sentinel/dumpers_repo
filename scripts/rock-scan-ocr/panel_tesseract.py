@@ -21,6 +21,7 @@ def _configure_tesseract() -> None:
     if shutil.which("tesseract"):
         return
     candidates = [
+        Path(__file__).resolve().parent / "vendor" / "tesseract" / "tesseract.exe",
         Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe"),
         Path(r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"),
     ]
