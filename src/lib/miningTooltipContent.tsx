@@ -407,7 +407,7 @@ export const CREW_HEAD_PLAN_BUTTON_TOOLTIP = (
         <strong className="text-slate-300">mass</strong> and{' '}
         <strong className="text-slate-300">resistance</strong>, plus a saved{' '}
         <strong className="text-slate-300">Mole</strong> loadout</li>
-      <li>Opens the same crew head plan used in Smart Cracker — lighter heads full @ 100% first; driver finishes just under the equalizer</li>
+      <li>Opens the crew head plan from Smart Cracker — throttle assignments only</li>
     </ul>
   </div>
 )
@@ -416,11 +416,16 @@ export const SOLO_HEAD_PLAN_BUTTON_TOOLTIP = (
   <div className="space-y-1.5 text-xs leading-snug">
     <p className="font-medium text-slate-200">Solo Head Plan (SHP)</p>
     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
-      <li>Mole solo garage spread — heavy, daily, and finesse roles for your three heads</li>
-      <li>Requires <strong className="text-slate-300">Crew</strong> unchecked (solo mode) and a saved{' '}
-        <strong className="text-slate-300">Mole</strong> loadout</li>
-      <li>Opens the same solo garage panel from Smart Cracker so you can see gaps and which head fits each job</li>
-      <li>One laser at a time, same as a Prospector — pick the matching head per rock</li>
+      <li>
+        <strong className="text-slate-300">Mole:</strong> which head to run on the rock in your calculator
+        (when mass/resistance are set), plus your solo garage spread
+      </li>
+      <li>
+        <strong className="text-slate-300">Other ships:</strong> read-only loadout breakdown for your
+        selected setup
+      </li>
+      <li>Pro-tips for module and head swaps are included in this modal</li>
+      <li>Uncheck <strong className="text-slate-300">Crew</strong> on Mole, or use any non-Mole loadout</li>
     </ul>
   </div>
 )

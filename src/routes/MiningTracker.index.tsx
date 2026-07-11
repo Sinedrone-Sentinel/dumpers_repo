@@ -49,7 +49,6 @@ import { isRockBreakabilityTargetReady } from '../lib/miningLoadoutCompare'
 import { useMiningLoadouts } from '../contexts/MiningLoadoutContext'
 import { listLoadoutsForVessel } from '../lib/miningLoadoutStorage'
 import { findBestMoleLoadoutStrategy } from '../lib/moleLoadoutStrategy'
-import { analyzeSoloMoleGarage } from '../lib/soloMoleLoadoutAdvice'
 import { resolveActiveLoadoutLabel } from '../lib/miningLoadoutSelection'
 import type { LoadoutKey } from '../lib/miningLoadoutStorage'
 import type { MiningVesselId } from '../lib/miningVessels'
@@ -251,25 +250,26 @@ export default function MiningTrackerRoute() {
   const moleCrewModeAvailable =
     canUseLoadouts && loadoutUi.vesselId === 'mole' && activeLoadoutLasers != null
 
-  const headPlanBaseEnabled = moleCrewModeAvailable
+  const headPlanButtonAvailable =
+    canUseLoadouts && activeLoadoutLasers != null
+
+  const soloModeActive = loadoutUi.vesselId !== 'mole' || moleSoloMining
 
   const crewHeadPlanEnabled =
-    headPlanBaseEnabled && !moleSoloMining && isRockBreakabilityTargetReady(rockTarget)
+    headPlanButtonAvailable &&
+    loadoutUi.vesselId === 'mole' &&
+    !moleSoloMining &&
+    isRockBreakabilityTargetReady(rockTarget)
 
-  const soloHeadPlanEnabled = headPlanBaseEnabled && moleSoloMining
+  const soloHeadPlanEnabled = headPlanButtonAvailable && soloModeActive
 
-  const headPlanEnabled = moleSoloMining ? soloHeadPlanEnabled : crewHeadPlanEnabled
-  const headPlanLabel = moleSoloMining ? 'SHP' : 'CHP'
+  const headPlanEnabled = soloModeActive ? soloHeadPlanEnabled : crewHeadPlanEnabled
+  const headPlanLabel = soloModeActive ? 'SHP' : 'CHP'
 
   const crewHeadPlan = useMemo(() => {
     if (!crewHeadPlanEnabled || !activeLoadoutLasers || !rockTarget) return null
     return findBestMoleLoadoutStrategy(activeLoadoutLasers, rockTarget, { soloMining: false })
   }, [crewHeadPlanEnabled, activeLoadoutLasers, rockTarget])
-
-  const soloGarageAdvice = useMemo(() => {
-    if (!soloHeadPlanEnabled || !activeLoadoutLasers) return null
-    return analyzeSoloMoleGarage(activeLoadoutLasers)
-  }, [soloHeadPlanEnabled, activeLoadoutLasers])
 
   const handleMoleSoloMiningChange = useCallback((solo: boolean) => {
     setMoleSoloMining(solo)
@@ -284,28 +284,26 @@ export default function MiningTrackerRoute() {
   )
 
   const handleHeadPlanClick = useCallback(() => {
-    if (!headPlanEnabled) return
-    if (moleSoloMining) {
-      if (!soloGarageAdvice) return
+    if (!headPlanEnabled || !activeLoadoutLasers) return
+    if (soloModeActive) {
       setSoloHeadPlanOpen(true)
       return
     }
     if (!crewHeadPlan) return
     setCrewHeadPlanOpen(true)
-  }, [crewHeadPlan, headPlanEnabled, moleSoloMining, soloGarageAdvice])
+  }, [activeLoadoutLasers, crewHeadPlan, headPlanEnabled, soloModeActive])
 
   useEffect(() => {
-    if (moleSoloMining) {
+    if (soloModeActive) {
       setCrewHeadPlanOpen(false)
     } else {
       setSoloHeadPlanOpen(false)
     }
-  }, [moleSoloMining])
+  }, [soloModeActive])
 
   useEffect(() => {
     if (loadoutUi.vesselId !== 'mole') {
       setCrewHeadPlanOpen(false)
-      setSoloHeadPlanOpen(false)
     }
   }, [loadoutUi.vesselId])
 
@@ -697,9 +695,11 @@ export default function MiningTrackerRoute() {
         />
       ) : null}
 
-      {soloHeadPlanOpen && soloGarageAdvice ? (
+      {soloHeadPlanOpen && activeLoadoutLasers ? (
         <SoloHeadPlanModal
-          garageAdvice={soloGarageAdvice}
+          vesselId={loadoutUi.vesselId}
+          lasers={activeLoadoutLasers}
+          rockTarget={rockTarget}
           loadoutLabel={selectedLoadoutLabel}
           onClose={() => setSoloHeadPlanOpen(false)}
         />
