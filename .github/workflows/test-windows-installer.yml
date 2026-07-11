@@ -1,0 +1,53 @@
+name: Test Windows Installer Build
+
+# Manual smoke test for DumperApps-Setup build (no GitHub Release upload).
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows-installer:
+    name: Build Windows installer (test)
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Read dumper version
+        id: version
+        shell: pwsh
+        run: |
+          $version = node -p "require('./scripts/bp-dumper/version.json').version"
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Copy blueprint lookup
+        run: node scripts/copy-blueprint-lookup.mjs
+
+      - name: Stage self-contained bundle
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+          & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Compile installer
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { throw "ISCC not found at $iscc" }
+          & $iscc "/DAppVersion=$version" "$env:GITHUB_WORKSPACE/scripts/installer/dumper-apps.iss"
+          Get-ChildItem "$env:GITHUB_WORKSPACE/scripts/installer/output" -Filter "DumperApps-Setup-*.exe" |
+            ForEach-Object { Write-Host "Built $($_.FullName) ($([math]::Round($_.Length/1MB, 1)) MB)" }
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DumperApps-Setup-test
+          path: scripts/installer/output/DumperApps-Setup-*.exe
+          retention-days: 7

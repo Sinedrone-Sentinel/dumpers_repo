@@ -28,13 +28,13 @@ Write-Step "Copying Dumper Apps scripts"
 New-Item -ItemType Directory -Force -Path $bpPyDir, $rockDir | Out-Null
 
 $bpFiles = @(
-    "dumper.py", "_version.py", "_min_game_version.py", "blueprint_lookup.py",
+    "dumper.py", "_version.py", "_min_game_version.py",
     "lookup.json", "requirements.txt", "README.md", "dumper.bat", "dumper.sh"
 )
 foreach ($name in $bpFiles) {
     $src = Join-Path $RepoRoot "scripts/bp-dumper-py/$name"
     if (-not (Test-Path $src)) {
-        throw "Missing $src — run: node scripts/copy-blueprint-lookup.mjs"
+        throw "Missing $src (run: node scripts/copy-blueprint-lookup.mjs)"
     }
     Copy-Item $src (Join-Path $bpPyDir $name)
 }
@@ -60,14 +60,23 @@ $toolboxRoot = Join-Path $env:TEMP "dumper-sc-toolbox-$(Get-Random)"
 if (Test-Path $toolboxRoot) { Remove-Item -Recurse -Force $toolboxRoot }
 git clone --depth 1 --filter=blob:none --sparse "https://github.com/ScPlaceholder/SC-Toolbox-Beta-V2.git" $toolboxRoot
 Push-Location $toolboxRoot
+git sparse-checkout init --cone
 git sparse-checkout set tools/Mining_Signals
 Pop-Location
+
+$miningSignalsSrc = Join-Path $toolboxRoot "tools/Mining_Signals"
+$apiPy = Join-Path $miningSignalsSrc "ocr/sc_ocr/api.py"
+if (-not (Test-Path $apiPy)) {
+    throw "SC_OCR api.py missing after sparse checkout: $apiPy"
+}
+
 if (Test-Path $vendorParent) { Remove-Item -Recurse -Force $vendorParent }
 New-Item -ItemType Directory -Force -Path $vendorParent | Out-Null
-Copy-Item -Recurse -Path (Join-Path $toolboxRoot "tools/Mining_Signals") -Destination $vendorParent
+Copy-Item -Recurse -Path $miningSignalsSrc -Destination $vendorParent
 Remove-Item -Recurse -Force $toolboxRoot
 
 $vendorDir = Join-Path $vendorParent "Mining_Signals"
+$models = Join-Path $vendorDir "ocr/models"
 $hudOnnx = Join-Path $models "model_hud_cnn.onnx"
 $hudData = Join-Path $models "model_hud_cnn.onnx.data"
 $hudQuarantine = Join-Path $models "model_hud_cnn.onnx.missing_data"
@@ -97,6 +106,7 @@ Remove-Item $getPip -Force
 $pip = Join-Path $pyDir "python.exe"
 $reqBp = Join-Path $bpPyDir "requirements.txt"
 $reqRock = Join-Path $rockDir "requirements.txt"
+Write-Step "Installing Python packages (may take several minutes)"
 & $pip -m pip install --upgrade pip --no-warn-script-location
 & $pip -m pip install -r $reqBp -r $reqRock --no-warn-script-location
 
@@ -107,7 +117,7 @@ Invoke-WebRequest -Uri $tessUrl -OutFile $tessInstaller -UseBasicParsing
 if (Test-Path $tessDir) { Remove-Item -Recurse -Force $tessDir }
 New-Item -ItemType Directory -Force -Path $tessDir | Out-Null
 $proc = Start-Process -FilePath $tessInstaller -ArgumentList @(
-    "/SILENT", "/DIR=$tessDir", "/NOICONS", "/NORESTART"
+    "/VERYSILENT", "/SUPPRESSMSGBOXES", "/DIR=$tessDir", "/NOICONS", "/NORESTART"
 ) -Wait -PassThru
 Remove-Item $tessInstaller -Force
 if ($proc.ExitCode -ne 0) {

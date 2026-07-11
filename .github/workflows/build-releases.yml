@@ -87,7 +87,6 @@ jobs:
           cp scripts/bp-dumper-py/dumper.py \
              scripts/bp-dumper-py/_version.py \
              scripts/bp-dumper-py/_min_game_version.py \
-             scripts/bp-dumper-py/blueprint_lookup.py \
              scripts/bp-dumper-py/lookup.json \
              scripts/bp-dumper-py/requirements.txt \
              scripts/bp-dumper-py/README.md \
@@ -101,8 +100,9 @@ jobs:
           git clone --depth 1 --filter=blob:none --sparse \
             https://github.com/ScPlaceholder/SC-Toolbox-Beta-V2.git /tmp/sc-toolbox
           cd /tmp/sc-toolbox
+          git sparse-checkout init --cone
           git sparse-checkout set tools/Mining_Signals
-          cd -
+          test -f tools/Mining_Signals/ocr/sc_ocr/api.py
           rsync -a /tmp/sc-toolbox/tools/Mining_Signals/ "$STAGE/scripts/rock-scan-ocr/vendor/Mining_Signals/"
           MODELS="$STAGE/scripts/rock-scan-ocr/vendor/Mining_Signals/ocr/models"
           if [ -f "$MODELS/model_hud_cnn.onnx" ] && [ ! -f "$MODELS/model_hud_cnn.onnx.data" ]; then
@@ -126,6 +126,7 @@ jobs:
     name: Build Windows installer
     needs: resolve-tag
     runs-on: windows-latest
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -138,7 +139,9 @@ jobs:
 
       - name: Stage self-contained bundle
         shell: pwsh
-        run: ./scripts/installer/prepare-bundle.ps1
+        run: |
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+          & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
@@ -148,7 +151,8 @@ jobs:
         run: |
           $version = "${{ needs.resolve-tag.outputs.version }}"
           $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-          & $iscc "/DAppVersion=$version" "scripts/installer/dumper-apps.iss"
+          if (-not (Test-Path $iscc)) { throw "ISCC not found at $iscc" }
+          & $iscc "/DAppVersion=$version" "$env:GITHUB_WORKSPACE/scripts/installer/dumper-apps.iss"
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4

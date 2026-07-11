@@ -19,4 +19,5 @@ Output: `scripts/installer/output/DumperApps-Setup-1.5.0.exe`
 
 ## CI
 
-`.github/workflows/build-releases.yml` job **`build-windows-installer`** runs on `windows-latest` and uploads the installer to the GitHub release alongside Go binaries and the portable zip.
+- **Smoke test (no release):** Actions → **Test Windows Installer Build** → Run workflow. Downloads the `DumperApps-Setup-test` artifact when green.
+- **Release build:** `.github/workflows/build-releases.yml` job **`build-windows-installer`** on tag / workflow_dispatch.
