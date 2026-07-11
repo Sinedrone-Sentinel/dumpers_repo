@@ -403,10 +403,24 @@ export const CREW_HEAD_PLAN_BUTTON_TOOLTIP = (
     <p className="font-medium text-slate-200">Crew Head Plan (CHP)</p>
     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
       <li>Mole multi-turret throttle plan for the rock in your calculator</li>
-      <li>Requires scanner <strong className="text-slate-300">mass</strong> and{' '}
-        <strong className="text-slate-300">resistance</strong> plus a saved <strong className="text-slate-300">Mole</strong> loadout</li>
-      <li>Opens the same head plan used in Smart Cracker in its own modal and switches to crew mode</li>
-      <li>Lighter heads run full @ 100% first; the driver finishes just under the equalizer</li>
+      <li>Requires <strong className="text-slate-300">Crew</strong> checked, scanner{' '}
+        <strong className="text-slate-300">mass</strong> and{' '}
+        <strong className="text-slate-300">resistance</strong>, plus a saved{' '}
+        <strong className="text-slate-300">Mole</strong> loadout</li>
+      <li>Opens the same crew head plan used in Smart Cracker — lighter heads full @ 100% first; driver finishes just under the equalizer</li>
+    </ul>
+  </div>
+)
+
+export const SOLO_HEAD_PLAN_BUTTON_TOOLTIP = (
+  <div className="space-y-1.5 text-xs leading-snug">
+    <p className="font-medium text-slate-200">Solo Head Plan (SHP)</p>
+    <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
+      <li>Mole solo garage spread — heavy, daily, and finesse roles for your three heads</li>
+      <li>Requires <strong className="text-slate-300">Crew</strong> unchecked (solo mode) and a saved{' '}
+        <strong className="text-slate-300">Mole</strong> loadout</li>
+      <li>Opens the same solo garage panel from Smart Cracker so you can see gaps and which head fits each job</li>
+      <li>One laser at a time, same as a Prospector — pick the matching head per rock</li>
     </ul>
   </div>
 )

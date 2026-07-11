@@ -42,12 +42,14 @@ import { formatLedgerSiteStatsMessage } from '../lib/miningLedger'
 import RockCalculator from '../components/mining/RockCalculator'
 import SmartCrackerModal from '../components/mining/SmartCrackerModal'
 import CrewHeadPlanModal from '../components/mining/CrewHeadPlanModal'
+import SoloHeadPlanModal from '../components/mining/SoloHeadPlanModal'
 import type { MiningLoadoutSelection } from '../components/mining/MiningLoadoutPanel'
 import type { RockBreakabilityTarget } from '../lib/miningLoadoutCompare'
 import { isRockBreakabilityTargetReady } from '../lib/miningLoadoutCompare'
 import { useMiningLoadouts } from '../contexts/MiningLoadoutContext'
 import { listLoadoutsForVessel } from '../lib/miningLoadoutStorage'
 import { findBestMoleLoadoutStrategy } from '../lib/moleLoadoutStrategy'
+import { analyzeSoloMoleGarage } from '../lib/soloMoleLoadoutAdvice'
 import { resolveActiveLoadoutLabel } from '../lib/miningLoadoutSelection'
 import type { LoadoutKey } from '../lib/miningLoadoutStorage'
 import type { MiningVesselId } from '../lib/miningVessels'
@@ -96,8 +98,11 @@ export default function MiningTrackerRoute() {
   const [rockTarget, setRockTarget] = useState<RockBreakabilityTarget | null>(null)
   const [loadoutUi, setLoadoutUi] = useState(readMiningTrackerUiState)
   const [smartCrackerOpen, setSmartCrackerOpen] = useState(false)
-  const [moleSoloMining, setMoleSoloMining] = useState(true)
+  const [moleSoloMining, setMoleSoloMining] = useState(
+    () => readMiningTrackerUiState().moleSoloMining
+  )
   const [crewHeadPlanOpen, setCrewHeadPlanOpen] = useState(false)
+  const [soloHeadPlanOpen, setSoloHeadPlanOpen] = useState(false)
   
   // Guide view state
   const [guideRarityFilter, setGuideRarityFilter] = useState<string | null>(null)
@@ -243,40 +248,73 @@ export default function MiningTrackerRoute() {
     return active?.lasers ?? null
   }, [canUseLoadouts, loadoutStore, loadoutUi.vesselId, loadoutUi.loadoutKey])
 
+  const moleCrewModeAvailable =
+    canUseLoadouts && loadoutUi.vesselId === 'mole' && activeLoadoutLasers != null
+
+  const headPlanBaseEnabled = moleCrewModeAvailable
+
   const crewHeadPlanEnabled =
-    canUseLoadouts &&
-    loadoutUi.vesselId === 'mole' &&
-    activeLoadoutLasers != null &&
-    isRockBreakabilityTargetReady(rockTarget)
+    headPlanBaseEnabled && !moleSoloMining && isRockBreakabilityTargetReady(rockTarget)
+
+  const soloHeadPlanEnabled = headPlanBaseEnabled && moleSoloMining
+
+  const headPlanEnabled = moleSoloMining ? soloHeadPlanEnabled : crewHeadPlanEnabled
+  const headPlanLabel = moleSoloMining ? 'SHP' : 'CHP'
 
   const crewHeadPlan = useMemo(() => {
     if (!crewHeadPlanEnabled || !activeLoadoutLasers || !rockTarget) return null
     return findBestMoleLoadoutStrategy(activeLoadoutLasers, rockTarget, { soloMining: false })
   }, [crewHeadPlanEnabled, activeLoadoutLasers, rockTarget])
 
-  const handleCrewHeadPlanClick = useCallback(() => {
-    if (!crewHeadPlanEnabled) return
-    setMoleSoloMining(false)
+  const soloGarageAdvice = useMemo(() => {
+    if (!soloHeadPlanEnabled || !activeLoadoutLasers) return null
+    return analyzeSoloMoleGarage(activeLoadoutLasers)
+  }, [soloHeadPlanEnabled, activeLoadoutLasers])
+
+  const handleMoleSoloMiningChange = useCallback((solo: boolean) => {
+    setMoleSoloMining(solo)
+    writeMiningTrackerUiState({ moleSoloMining: solo })
+  }, [])
+
+  const handleMoleCrewModeChange = useCallback(
+    (crew: boolean) => {
+      handleMoleSoloMiningChange(!crew)
+    },
+    [handleMoleSoloMiningChange]
+  )
+
+  const handleHeadPlanClick = useCallback(() => {
+    if (!headPlanEnabled) return
+    if (moleSoloMining) {
+      if (!soloGarageAdvice) return
+      setSoloHeadPlanOpen(true)
+      return
+    }
+    if (!crewHeadPlan) return
     setCrewHeadPlanOpen(true)
-  }, [crewHeadPlanEnabled])
+  }, [crewHeadPlan, headPlanEnabled, moleSoloMining, soloGarageAdvice])
 
   useEffect(() => {
     if (moleSoloMining) {
       setCrewHeadPlanOpen(false)
+    } else {
+      setSoloHeadPlanOpen(false)
     }
   }, [moleSoloMining])
 
   useEffect(() => {
     if (loadoutUi.vesselId !== 'mole') {
       setCrewHeadPlanOpen(false)
+      setSoloHeadPlanOpen(false)
     }
   }, [loadoutUi.vesselId])
 
   useEffect(() => {
-    if (!crewHeadPlanEnabled) {
+    if (!headPlanEnabled) {
       setCrewHeadPlanOpen(false)
+      setSoloHeadPlanOpen(false)
     }
-  }, [crewHeadPlanEnabled])
+  }, [headPlanEnabled])
 
   // Guide view computed data
   const groupedByRarity = useMemo(() => {
@@ -638,8 +676,12 @@ export default function MiningTrackerRoute() {
               loadToken={calculatorLoadToken}
               onRockTargetChange={setRockTarget}
               onOpenSmartCracker={() => setSmartCrackerOpen(true)}
-              crewHeadPlanEnabled={crewHeadPlanEnabled}
-              onCrewHeadPlanClick={canUseLoadouts ? handleCrewHeadPlanClick : undefined}
+              moleCrewModeAvailable={moleCrewModeAvailable}
+              moleCrewMode={!moleSoloMining}
+              onMoleCrewModeChange={handleMoleCrewModeChange}
+              headPlanEnabled={headPlanEnabled}
+              headPlanLabel={headPlanLabel}
+              onHeadPlanClick={canUseLoadouts ? handleHeadPlanClick : undefined}
             />
           </div>
         </div>
@@ -651,7 +693,15 @@ export default function MiningTrackerRoute() {
           selection={loadoutSelection}
           onClose={() => setSmartCrackerOpen(false)}
           moleSoloMining={moleSoloMining}
-          onMoleSoloMiningChange={setMoleSoloMining}
+          onMoleSoloMiningChange={handleMoleSoloMiningChange}
+        />
+      ) : null}
+
+      {soloHeadPlanOpen && soloGarageAdvice ? (
+        <SoloHeadPlanModal
+          garageAdvice={soloGarageAdvice}
+          loadoutLabel={selectedLoadoutLabel}
+          onClose={() => setSoloHeadPlanOpen(false)}
         />
       ) : null}
 

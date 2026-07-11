@@ -6,11 +6,14 @@ const STORAGE_KEY = 'dumpers_repo_mining_tracker_ui_v1'
 export interface MiningTrackerUiState {
   vesselId: MiningVesselId
   loadoutKey: LoadoutKey
+  /** Mole only — true = solo (one head), false = crew turrets. Persisted for calculator + Smart Cracker. */
+  moleSoloMining: boolean
 }
 
 const DEFAULT_STATE: MiningTrackerUiState = {
   vesselId: 'prospector',
   loadoutKey: 'default',
+  moleSoloMining: true,
 }
 
 const VESSEL_IDS: MiningVesselId[] = ['prospector', 'mole', 'golem', 'roc', 'roc-ds']
@@ -43,6 +46,8 @@ export function readMiningTrackerUiState(): MiningTrackerUiState {
   return {
     vesselId: isVesselId(parsed.vesselId) ? parsed.vesselId : DEFAULT_STATE.vesselId,
     loadoutKey: isLoadoutKey(parsed.loadoutKey) ? parsed.loadoutKey : DEFAULT_STATE.loadoutKey,
+    moleSoloMining:
+      typeof parsed.moleSoloMining === 'boolean' ? parsed.moleSoloMining : DEFAULT_STATE.moleSoloMining,
   }
 }
 
@@ -53,6 +58,7 @@ export function writeMiningTrackerUiState(update: Partial<MiningTrackerUiState>)
   const next: MiningTrackerUiState = {
     vesselId: update.vesselId ?? current.vesselId,
     loadoutKey: update.loadoutKey ?? current.loadoutKey,
+    moleSoloMining: update.moleSoloMining ?? current.moleSoloMining,
   }
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next))

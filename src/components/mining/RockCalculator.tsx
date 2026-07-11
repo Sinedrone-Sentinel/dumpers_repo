@@ -60,6 +60,7 @@ import {
   CREW_HEAD_PLAN_BUTTON_TOOLTIP,
   ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP,
   SMART_CRACKER_BUTTON_TOOLTIP,
+  SOLO_HEAD_PLAN_BUTTON_TOOLTIP,
 } from '../../lib/miningTooltipContent'
 import { resolveOcrBasis, buildOcrCalculatorApply } from '../../lib/rockCalculatorOcrApply'
 import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
@@ -71,6 +72,7 @@ import {
   ROCK_SCAN_OFFLINE_MESSAGE,
 } from '../../lib/rockScanMemberCopy'
 import { fetchRockScanBridgeHealth, requestRockScanFromBridge } from '../../lib/rockScanBridge'
+import MoleCrewModeCheckbox from './MoleCrewModeCheckbox'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
   (a, b) => a.localeCompare(b)
@@ -87,8 +89,12 @@ interface RockCalculatorProps {
   loadToken: number
   onRockTargetChange?: (target: RockBreakabilityTarget) => void
   onOpenSmartCracker?: () => void
-  crewHeadPlanEnabled?: boolean
-  onCrewHeadPlanClick?: () => void
+  moleCrewModeAvailable?: boolean
+  moleCrewMode?: boolean
+  onMoleCrewModeChange?: (crew: boolean) => void
+  headPlanEnabled?: boolean
+  headPlanLabel?: 'CHP' | 'SHP'
+  onHeadPlanClick?: () => void
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
@@ -103,8 +109,12 @@ export default function RockCalculator({
   loadToken,
   onRockTargetChange,
   onOpenSmartCracker,
-  crewHeadPlanEnabled = false,
-  onCrewHeadPlanClick,
+  moleCrewModeAvailable = false,
+  moleCrewMode = false,
+  onMoleCrewModeChange,
+  headPlanEnabled = false,
+  headPlanLabel = 'CHP',
+  onHeadPlanClick,
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
@@ -484,6 +494,12 @@ export default function RockCalculator({
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 Rock Calculator
               </p>
+              {moleCrewModeAvailable && onMoleCrewModeChange ? (
+                <MoleCrewModeCheckbox
+                  crewMode={moleCrewMode}
+                  onCrewModeChange={onMoleCrewModeChange}
+                />
+              ) : null}
               {oreName ? (
                 <>
                   <div className="mt-1 flex items-center gap-2 flex-wrap">
@@ -501,9 +517,7 @@ export default function RockCalculator({
                     </p>
                   ) : null}
                 </>
-              ) : (
-                <p className="text-xs text-slate-500 mt-1">Search an ore or click a tracked card</p>
-              )}
+              ) : null}
             </div>
             {onOpenSmartCracker ? (
               <div className="flex flex-col items-end gap-1 shrink-0">
@@ -521,19 +535,23 @@ export default function RockCalculator({
                   </button>
                 </SiteTooltip>
                 <div className="flex items-center justify-end gap-1">
-                  {onCrewHeadPlanClick ? (
+                  {onHeadPlanClick ? (
                     <SiteTooltip
-                      content={CREW_HEAD_PLAN_BUTTON_TOOLTIP}
+                      content={
+                        headPlanLabel === 'SHP'
+                          ? SOLO_HEAD_PLAN_BUTTON_TOOLTIP
+                          : CREW_HEAD_PLAN_BUTTON_TOOLTIP
+                      }
                       side="left"
                       panelClassName="max-w-[16rem]"
                     >
                       <button
                         type="button"
-                        onClick={onCrewHeadPlanClick}
-                        disabled={!crewHeadPlanEnabled}
+                        onClick={onHeadPlanClick}
+                        disabled={!headPlanEnabled}
                         className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-950/50 text-cyan-200 hover:bg-cyan-900/50 transition-colors border border-cyan-800/60 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cyan-950/50"
                       >
-                        CHP
+                        {headPlanLabel}
                       </button>
                     </SiteTooltip>
                   ) : null}
