@@ -7,11 +7,12 @@ import threading
 from pathlib import Path
 
 from capture import crop_fraction, is_mostly_black
-from composition_parse import parse_composition_from_panel
+from composition_parse import parse_composition_from_candidates
 from focus_helper import get_foreground_hwnd
 from game_window import find_star_citizen_window
 from live_scan_types import LiveScanResult
-from panel_crop import PanelFractions
+from panel_crop import PanelFractions, default_panel_fractions
+from panel_tesseract import ocr_panel_line_candidates_fast
 from region_store import load_region
 from scan_overlay_flow import run_bridge_scan_full_frame, run_bridge_scan_overlay
 from scan_progress_overlay import ScanProgressReporter
@@ -24,6 +25,13 @@ _scan_lock = threading.Lock()
 
 # Test mode: OCR the full game client; skip RESULTS box overlay + crop.
 BYPASS_PANEL_SELECTION = True
+
+
+def _results_panel_fractions() -> PanelFractions:
+    saved = load_region()
+    if saved is not None:
+        return saved.fractions
+    return default_panel_fractions()
 
 
 def _run_sc_ocr(panel_img, mining_signals: Path) -> dict:
@@ -59,6 +67,7 @@ def _scan_captured_panel(
         )
 
     panel_img = crop_fraction(client_img, fractions)
+    tess_img = crop_fraction(client_img, _results_panel_fractions())
 
     if is_mostly_black(client_img):
         if progress is not None:
@@ -75,15 +84,24 @@ def _scan_captured_panel(
     if progress is not None:
         progress.set_header("Running HUD reader…")
 
+    # SC_OCR: full client frame (matches local `rock_scan_test.py --ocr-mode full-client`).
+    # Tesseract: once on the RESULTS crop only (local test never re-OCRs the full screenshot).
+    line_candidates = ocr_panel_line_candidates_fast(tess_img)
     sc_ocr = _run_sc_ocr(panel_img, mining_signals)
-    sc_ocr = enrich_sc_ocr_from_panel(sc_ocr, panel_img)
+    sc_ocr = enrich_sc_ocr_from_panel(
+        sc_ocr, tess_img, line_candidates=line_candidates
+    )
 
     if progress is not None:
         progress.set_header("Reading composition…")
 
     mineral_hint = sc_ocr.get("mineral_name")
-    composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
-    composition = enrich_composition_from_panel(composition, panel_img)
+    composition = parse_composition_from_candidates(
+        line_candidates, mineral_hint=mineral_hint
+    ).as_dict()
+    composition = enrich_composition_from_panel(
+        composition, tess_img, line_candidates=line_candidates
+    )
 
     if progress is not None:
         if (

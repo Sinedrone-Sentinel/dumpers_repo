@@ -94,7 +94,7 @@ def _normalize_lines(text: str) -> list[str]:
 
 
 def ocr_panel_line_candidates(img: Image.Image) -> list[tuple[str, list[str]]]:
-    """Return separate OCR line lists per preprocessing pass."""
+    """Return separate OCR line lists per preprocessing pass (thorough — offline/debug)."""
     _configure_tesseract()
     base = _upscale(img)
     passes: list[tuple[str, Image.Image]] = [
@@ -110,6 +110,35 @@ def ocr_panel_line_candidates(img: Image.Image) -> list[tuple[str, list[str]]]:
             if lines:
                 candidates.append((f"{label}-psm{psm}", lines))
     return candidates
+
+
+def ocr_panel_line_candidates_fast(img: Image.Image) -> list[tuple[str, list[str]]]:
+    """Two-pass OCR for live bridge scans (warm + bright, psm 6 only)."""
+    _configure_tesseract()
+    base = _upscale(img, target_height=_FAST_LAYOUT_TARGET_HEIGHT)
+    candidates: list[tuple[str, list[str]]] = []
+    for label, processed in (
+        ("warm-channel", _preprocess_warm_channel(base)),
+        ("bright-mask", _preprocess_bright_mask(base)),
+    ):
+        text = _run_tesseract(processed, psm=6)
+        lines = _normalize_lines(text)
+        if lines:
+            candidates.append((f"{label}-psm6", lines))
+    return candidates
+
+
+def merge_line_candidates(candidates: list[tuple[str, list[str]]]) -> list[str]:
+    seen: set[str] = set()
+    merged: list[str] = []
+    for _label, lines in candidates:
+        for line in lines:
+            key = line.strip()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            merged.append(key)
+    return merged
 
 
 def ocr_panel_lines(img: Image.Image) -> list[str]:

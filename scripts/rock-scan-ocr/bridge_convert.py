@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 
+from ore_canonical import resolve_ocr_ore_name
+
+
 def _canonical_ore_label(raw: str) -> str:
     """HUD/SC_OCR often returns ALL CAPS (e.g. IRON); RS Tracker uses title case (Iron)."""
     token = (raw or "").strip()
@@ -51,7 +54,9 @@ def to_rock_scan_ocr_result(sc_ocr: dict, composition: dict) -> dict:
     for line in composition.get("lines") or []:
         composition_lines.append(
             {
-                "elementName": line["element_name"],
+                "elementName": resolve_ocr_ore_name(
+                    line["element_name"], mineral_hint=mineral or None
+                ),
                 "percent": line["percent"],
                 "quality": line["quality"],
                 "qualityMissing": line["quality_missing"],

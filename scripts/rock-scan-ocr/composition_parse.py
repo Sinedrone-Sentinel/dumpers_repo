@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from PIL import Image
 
 from panel_tesseract import ocr_panel_line_candidates
+from ore_canonical import resolve_ocr_ore_name
 
 
 @dataclass
@@ -164,15 +165,23 @@ def normalize_element_name(raw: str, mineral_hint: str | None = None) -> str:
         candidate = token.group(1).title()
         if len(candidate) <= 2 and mineral_hint:
             return mineral_hint.title()
-        return candidate
+        return resolve_ocr_ore_name(candidate, mineral_hint=mineral_hint)
     if mineral_hint:
         return mineral_hint.title()
-    return name.title()
+    return resolve_ocr_ore_name(name, mineral_hint=mineral_hint)
 
 
 def trailing_quality(row: str) -> int | None:
     """HUD often shows quality as a bare number after (ORE), e.g. `12.10% TORITE (ORE) 661`."""
     trimmed = row.strip()
+    ore_match = ORE_TAG_RE.search(trimmed)
+    if ore_match:
+        tail = trimmed[ore_match.end() :]
+        tail_numbers = re.findall(r"\b(\d{1,4})\b", tail)
+        if tail_numbers:
+            value = int(tail_numbers[-1])
+            if 0 <= value <= 9999:
+                return value
     for pattern in (EXPLICIT_Q_RE, ORE_Q_RE):
         match = pattern.search(trimmed)
         if not match:
@@ -213,16 +222,19 @@ def find_inert_anchor_index(lines: list[str], comp_idx: int) -> int | None:
 
 def extract_total_scu(lines: list[str], comp_idx: int, inert_idx: int) -> float | None:
     header = lines[comp_idx]
-    if re.search(r"SCU", header, re.I):
+    decimal_candidates: list[float] = []
+    if re.search(r"SCU", header, re.I) or COMP_HEADER_RE.search(header):
+        for decimal in re.findall(r"\d+\.\d{1,2}", header):
+            value = float(decimal)
+            if 0.5 <= value <= MAX_COMP_SCU:
+                decimal_candidates.append(value)
         match = TOTAL_SCU_RE.search(header)
         if match:
             value = float(match.group(1))
             if 0.5 <= value <= MAX_COMP_SCU:
-                return value
-        for decimal in re.findall(r"\d+\.\d{1,2}", header):
-            value = float(decimal)
-            if 0.5 <= value <= MAX_COMP_SCU:
-                return value
+                decimal_candidates.append(value)
+    if decimal_candidates:
+        return max(decimal_candidates, key=lambda v: (abs(v - round(v, 2)) > 0.001, v))
 
     for row in lines[comp_idx + 1 : min(inert_idx + 1, comp_idx + 3)]:
         if HUD_FOOTER_RE.search(row) or "%" in row:
@@ -314,12 +326,22 @@ def score_parse_result(result: CompositionParseResult, mineral_hint: str | None 
             score += 12.0
     if result.total_scu is not None:
         score += 15.0
+        if abs(result.total_scu - round(result.total_scu)) > 0.01:
+            score += 8.0
+    valuable_sum = sum(line.percent for line in result.lines)
+    inert_pct = parse_leading_percent(result.inert_anchor_line or "")
+    if inert_pct is not None:
+        score += 40.0 - abs(valuable_sum + inert_pct - 100.0) * 6.0
+    else:
+        score -= abs(valuable_sum - 100.0) * 2.0
     for line in result.lines:
         score += 6.0
         if mineral_hint and line.element_name.lower() == mineral_hint.lower():
             score += 4.0
         elif len(line.element_name) >= 4:
             score += 2.0
+        if not line.quality_missing:
+            score += 3.0
     score -= len(result.warnings) * 0.25
     return score
 
@@ -413,12 +435,11 @@ def extract_total_scu_from_candidates(
     return None, None
 
 
-def parse_composition_from_panel(
-    panel_img: Image.Image,
+def parse_composition_from_candidates(
+    candidates: list[tuple[str, list[str]]],
     *,
     mineral_hint: str | None = None,
 ) -> CompositionParseResult:
-    candidates = ocr_panel_line_candidates(panel_img)
     result = pick_best_composition_parse(candidates, mineral_hint=mineral_hint)
     if result.total_scu is None:
         total_scu, scu_pass = extract_total_scu_from_candidates(candidates)
@@ -431,3 +452,24 @@ def parse_composition_from_panel(
             if "Could not read COMP total SCU from OCR text." in result.warnings:
                 result.warnings.remove("Could not read COMP total SCU from OCR text.")
     return result
+
+
+def parse_composition_from_panel(
+    panel_img: Image.Image,
+    *,
+    mineral_hint: str | None = None,
+    line_candidates: list[tuple[str, list[str]]] | None = None,
+    fast: bool = False,
+) -> CompositionParseResult:
+    if line_candidates is not None:
+        return parse_composition_from_candidates(
+            line_candidates, mineral_hint=mineral_hint
+        )
+    from panel_tesseract import ocr_panel_line_candidates_fast
+
+    candidates = (
+        ocr_panel_line_candidates_fast(panel_img)
+        if fast
+        else ocr_panel_line_candidates(panel_img)
+    )
+    return parse_composition_from_candidates(candidates, mineral_hint=mineral_hint)

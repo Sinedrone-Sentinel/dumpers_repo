@@ -7,9 +7,13 @@ import re
 from PIL import Image
 
 from composition_parse import COMP_HEADER_RE, MAX_COMP_SCU
-from panel_tesseract import ocr_panel_line_candidates
+from ore_canonical import resolve_ocr_ore_name
+from panel_tesseract import merge_line_candidates, ocr_panel_line_candidates
 
 _MASS_RE = re.compile(r"\bMASS\b[:\s]*([\d,]+(?:\.\d+)?)", re.I)
+_RESULTS_RE = re.compile(r"\bRESULTS?\b", re.I)
+ROCK_MASS_MIN = 1_000
+ROCK_MASS_MAX = 999_999
 _RES_RE = re.compile(r"\bRES\b[:\s]*(\d+(?:\.\d+)?)\s*%?", re.I)
 _INST_RE = re.compile(r"\bINST\b[:\s]*(\d+(?:\.\d+)?)", re.I)
 _ORE_NAME_RE = re.compile(
@@ -22,17 +26,13 @@ _SCU_ON_COMP_RE = re.compile(
 )
 
 
-def _merged_panel_lines(panel_img: Image.Image) -> list[str]:
-    seen: set[str] = set()
-    merged: list[str] = []
-    for _label, lines in ocr_panel_line_candidates(panel_img):
-        for line in lines:
-            key = line.strip()
-            if not key or key in seen:
-                continue
-            seen.add(key)
-            merged.append(key)
-    return merged
+def _merged_panel_lines(
+    panel_img: Image.Image,
+    *,
+    line_candidates: list[tuple[str, list[str]]] | None = None,
+) -> list[str]:
+    candidates = line_candidates or ocr_panel_line_candidates(panel_img)
+    return merge_line_candidates(candidates)
 
 
 def _parse_number(token: str) -> float:
@@ -49,12 +49,45 @@ def _scu_from_comp_line(line: str) -> float | None:
     return None
 
 
-def enrich_sc_ocr_from_panel(sc_ocr: dict, panel_img: Image.Image) -> dict:
+def _best_mass_from_lines(lines: list[str]) -> float | None:
+    best: float | None = None
+    best_score = -1
+    for line in lines:
+        match = _MASS_RE.search(line)
+        if not match:
+            continue
+        value = _parse_number(match.group(1))
+        if not (ROCK_MASS_MIN <= value <= ROCK_MASS_MAX):
+            continue
+        score = 0
+        if _RESULTS_RE.search(line):
+            score += 25
+        if value <= 300_000:
+            score += 8
+        if value <= 100_000:
+            score += 4
+        if best is None or score > best_score or (score == best_score and value < best):
+            best_score = score
+            best = value
+    return best
+
+
+def enrich_sc_ocr_from_panel(
+    sc_ocr: dict,
+    panel_img: Image.Image,
+    *,
+    line_candidates: list[tuple[str, list[str]]] | None = None,
+) -> dict:
     """Patch missing SC_OCR fields using Tesseract lines from the frozen panel."""
     enriched = dict(sc_ocr)
-    lines = _merged_panel_lines(panel_img)
+    lines = _merged_panel_lines(panel_img, line_candidates=line_candidates)
 
-    if enriched.get("mass") is None:
+    panel_mass = _best_mass_from_lines(lines)
+    sc_mass = enriched.get("mass")
+    if panel_mass is not None:
+        if sc_mass is None or abs(sc_mass - panel_mass) / max(panel_mass, 1) > 0.15:
+            enriched["mass"] = panel_mass
+    elif enriched.get("mass") is None:
         for line in lines:
             match = _MASS_RE.search(line)
             if match:
@@ -76,13 +109,15 @@ def enrich_sc_ocr_from_panel(sc_ocr: dict, panel_img: Image.Image) -> dict:
                 break
 
     mineral = (enriched.get("mineral_name") or "").strip()
-    if not mineral:
+    if mineral:
+        enriched["mineral_name"] = resolve_ocr_ore_name(mineral)
+    if not enriched.get("mineral_name"):
         for line in lines:
             match = _ORE_NAME_RE.search(line.strip())
             if match:
                 name = match.group(1).strip()
                 if name and not name.isdigit():
-                    enriched["mineral_name"] = name
+                    enriched["mineral_name"] = resolve_ocr_ore_name(name)
                     break
 
     if not enriched.get("panel_visible"):
@@ -92,13 +127,18 @@ def enrich_sc_ocr_from_panel(sc_ocr: dict, panel_img: Image.Image) -> dict:
     return enriched
 
 
-def enrich_composition_from_panel(composition: dict, panel_img: Image.Image) -> dict:
+def enrich_composition_from_panel(
+    composition: dict,
+    panel_img: Image.Image,
+    *,
+    line_candidates: list[tuple[str, list[str]]] | None = None,
+) -> dict:
     """Patch missing COMP SCU total from panel line OCR."""
     enriched = dict(composition)
     if enriched.get("total_scu") is not None:
         return enriched
 
-    for line in _merged_panel_lines(panel_img):
+    for line in _merged_panel_lines(panel_img, line_candidates=line_candidates):
         value = _scu_from_comp_line(line)
         if value is not None:
             enriched["total_scu"] = value
