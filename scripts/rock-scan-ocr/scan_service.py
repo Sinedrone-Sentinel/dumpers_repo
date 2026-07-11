@@ -39,10 +39,6 @@ def _scan_captured_panel(
     mining_signals: Path,
     progress: ScanProgressReporter | None = None,
 ) -> LiveScanResult:
-    def mark(row_id: str, ok: bool | None) -> None:
-        if progress is not None:
-            progress.mark_row(row_id, ok=ok)
-
     frozen_capture = capture_method.startswith("frozen")
 
     if not frozen_capture and not game_focused and capture_method.startswith("mss-screen"):
@@ -79,24 +75,10 @@ def _scan_captured_panel(
     sc_ocr = enrich_sc_ocr_from_panel(sc_ocr, panel_img)
 
     if progress is not None:
-        progress.set_header("Checking HUD rows…")
-    mark("ore", bool(sc_ocr.get("mineral_name")))
-    mark("mass", sc_ocr.get("mass") is not None)
-    mark("res", sc_ocr.get("resistance") is not None)
-    mark("inst", sc_ocr.get("instability") is not None)
-
-    if progress is not None:
         progress.set_header("Reading composition…")
 
     mineral_hint = sc_ocr.get("mineral_name")
     composition = parse_composition_from_panel(panel_img, mineral_hint=mineral_hint).as_dict()
-    mark("comp_scu", composition.get("total_scu") is not None)
-
-    if progress is not None:
-        progress.mark_composition_result(composition)
-    else:
-        comp_ok = bool(composition.get("ok")) and bool(composition.get("lines"))
-        _ = comp_ok
 
     if progress is not None:
         if composition.get("ok") and sc_ocr.get("mass") is not None:

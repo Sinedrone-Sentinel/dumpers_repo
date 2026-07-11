@@ -1,17 +1,15 @@
-"""Live scan overlay: confirm RESULTS box, frozen capture, OCR, per-row checkmarks."""
+"""Live scan overlay: confirm RESULTS box, frozen capture, OCR."""
 
 from __future__ import annotations
 
-import threading
 from collections.abc import Callable
 
-from capture import capture_game_frames, crop_fraction, focus_game_window
+from capture import capture_game_frames, focus_game_window
 from focus_helper import restore_focus
 from game_window import GameWindow, refresh_game_window
 from live_scan_types import LiveScanResult
 from overlay_frame import normalize_snapshot
 from panel_crop import PanelFractions
-from panel_row_layout import detect_panel_row_layout
 from region_store import SavedRegion
 from scan_progress_overlay import BridgeScanOverlay, ScanProgressReporter
 
@@ -46,21 +44,6 @@ def run_bridge_scan_overlay(
         capture_notes = [
             "OCR uses the frozen frame shown on the overlay (ignores live ship sway).",
         ]
-
-        panel_img = crop_fraction(client_img, fractions)
-
-        def align_markers() -> None:
-            try:
-                layout = detect_panel_row_layout(panel_img)
-                reporter.apply_row_layout(layout)
-            except Exception:
-                pass
-
-        threading.Thread(
-            target=align_markers,
-            name="rock-scan-row-layout",
-            daemon=True,
-        ).start()
 
         return scan_fn(
             fractions,
