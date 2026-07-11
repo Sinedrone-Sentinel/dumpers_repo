@@ -7,7 +7,7 @@ Powers the **OCR** button on the Rock Calculator. Members do not need this READM
 1. Download **`bp-dumper-py.zip`** (Windows recommended) from Dumper Apps releases.
 2. Unzip → double-click **`START-HERE.bat`** → paste your API key.
 3. **Once per resolution:** right-click the DR tray icon → **Calibrate RESULTS panel**.
-4. In-game: Mole pilot, RESULTS panel open → site → Rock Calculator → **OCR**.
+4. In-game: Mole pilot seat after a completed rock scan — RESULTS panel must show mass, RES, and composition → site → Rock Calculator → **OCR**.
 
 `START-HERE.bat` installs Python packages automatically and can install Python / Tesseract via winget if they are missing. SC_OCR models are **bundled inside the release zip** — no SC Toolbox clone.
 

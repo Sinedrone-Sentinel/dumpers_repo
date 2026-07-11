@@ -4,6 +4,7 @@ import AppModal from '../layout/AppModal'
 import CopyFeedbackButton from '../CopyFeedbackButton'
 import BpDumperDownloadLinks from './BpDumperDownloadLinks'
 import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
+import { ROCK_SCAN_IN_GAME_PREREQ } from '../../lib/rockScanMemberCopy'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 
@@ -67,20 +68,28 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Desktop tools: blueprint log sync, live missions, and rock-scan OCR on this PC."
+      subtitle="Install on your PC to sync blueprint unlocks and power Rock Calculator OCR."
       onClose={onClose}
       size="lg"
     >
       <div className="space-y-6">
         <section className="space-y-2">
-          <h3 className="text-sm font-semibold text-white">What it does</h3>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            <strong className="text-slate-300">BP Dumper</strong> watches your game log while you play
-            and sends newly acquired blueprints to your account. The{' '}
-            <strong className="text-slate-300">Rock Scanner</strong> on Windows lets signed-in members
-            click <strong className="text-slate-300">OCR</strong> on the Rock Calculator. Download
-            the desktop build or Python kit and connect with your personal API key.
-          </p>
+          <h3 className="text-sm font-semibold text-white">What you get</h3>
+          <ul className="list-disc list-inside space-y-1 text-sm text-slate-400">
+            <li>
+              <strong className="text-slate-300">Blueprint sync</strong> — new unlocks from your game log
+              go to your account automatically.
+            </li>
+            <li>
+              <strong className="text-slate-300">Live Mission Tracker</strong> — see active missions and
+              what is still in your pool.
+            </li>
+            <li>
+              <strong className="text-slate-300">Rock Calculator OCR</strong> (Windows only) — after a
+              completed Mole scan with the RESULTS panel showing rock data, click{' '}
+              <strong className="text-slate-300">OCR</strong> on the Rock Calculator.
+            </li>
+          </ul>
         </section>
 
         <section className="space-y-3">
@@ -100,32 +109,37 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
         </section>
 
         <section className="space-y-2">
-          <h3 className="text-sm font-semibold text-white">Setup (Windows)</h3>
-          <ol className="list-decimal list-inside space-y-1 text-sm text-slate-400">
+          <h3 className="text-sm font-semibold text-white">How to set up (Windows)</h3>
+          <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
-              Download <strong className="text-slate-300">Windows (recommended)</strong> and run the installer.
+              Under <strong className="text-slate-300">Downloads</strong>, get{' '}
+              <strong className="text-slate-300">Windows installer</strong> and run it. Use the default
+              options in the setup wizard.
             </li>
             <li>
-              Open <strong className="text-slate-300">Dumper Apps</strong> from the Start Menu → paste your API key below when asked.
+              Copy your <strong className="text-slate-300">API key</strong> below, then open{' '}
+              <strong className="text-slate-300">Dumper Apps</strong> from the Start Menu. Paste the key
+              when the black window asks for it.
             </li>
             <li>
-              <strong className="text-slate-300">Once per resolution:</strong> right-click the DR tray icon →{' '}
-              <strong className="text-slate-300">Calibrate RESULTS panel</strong>.
+              Look for the <strong className="text-slate-300">DR</strong> icon by the Windows clock.{' '}
+              <strong className="text-slate-300">First time only:</strong> right-click it →{' '}
+              <strong className="text-slate-300">Calibrate RESULTS panel</strong> (once per screen
+              resolution).
             </li>
             <li>
-              In-game: Mole pilot, RESULTS open → Rock Calculator → <strong className="text-slate-300">OCR</strong>.
+              In-game: {ROCK_SCAN_IN_GAME_PREREQ} → on the site open{' '}
+              <strong className="text-slate-300">Rock Calculator</strong> → click{' '}
+              <strong className="text-slate-300">OCR</strong>.
             </li>
           </ol>
-          <p className="text-xs text-slate-500">
-            No Python or Tesseract install needed — the installer bundles everything. Use the portable zip only if you prefer a manual folder.
-          </p>
         </section>
 
         <section className="space-y-3 rounded-lg border border-slate-700 bg-slate-800/30 p-4">
           <div>
             <h3 className="text-sm font-semibold text-white">Your API key</h3>
             <p className="text-xs text-slate-500 mt-1">
-              Works with Dumper desktop tools. Paste this into BP Dumper on first run.
+              Paste this into Dumper Apps when the desktop window asks on first run. One key per account.
             </p>
           </div>
 

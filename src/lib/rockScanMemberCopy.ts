@@ -7,6 +7,12 @@ export const ROCK_SCAN_NOT_CALIBRATED_MESSAGE = `Set up your scan area first: ri
 export const ROCK_SCAN_IN_PROGRESS_MESSAGE =
   'Briefly switches to Star Citizen to capture your HUD, then returns here while reading the scan. This may take up to a minute.'
 
+/** Completed scan with populated RESULTS HUD — required before OCR can read fields. */
+export const ROCK_SCAN_IN_GAME_PREREQ =
+  'Mole pilot seat after a completed rock scan — RESULTS panel must show mass, RES, and composition'
+
+export const ROCK_SCAN_IN_GAME_FLOW = `In-game: ${ROCK_SCAN_IN_GAME_PREREQ} → Mining Tracker → Rock Calculator → OCR`
+
 const ERROR_OVERRIDES: Record<string, string> = {
   'Could not find COMP header in OCR text.':
     'Could not read composition from your scan. Keep the full RESULTS panel visible and try again.',
@@ -20,7 +26,7 @@ const ERROR_OVERRIDES: Record<string, string> = {
     'Could not read valuable composition lines from your scan. Keep the RESULTS panel visible and try again.',
   'Rock scan bridge returned invalid JSON.': 'Scanner response was unreadable. Try OCR again.',
   'Rock scan bridge did not return calculator data.':
-    'Scanner did not return rock data. Open the RESULTS panel in-game and try again.',
+    'Scanner did not return rock data. Finish a rock scan so the RESULTS panel shows mass, RES, and composition, then try OCR again.',
   'Could not switch to Star Citizen for screen capture.':
     'Could not switch to Star Citizen. Click the game window once, then try OCR again.',
 }

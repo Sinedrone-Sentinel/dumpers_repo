@@ -23,50 +23,52 @@ export type BpDumperDownloadOption = {
   label: string
   description: string
   filename: string
+  /** Groups cards in the Dumper Apps modal. */
+  group: 'windows' | 'mac-linux' | 'advanced'
 }
 
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
     id: 'windows-installer',
-    label: 'Windows (recommended)',
-    description: 'Installer — next, next, paste API key, play',
+    label: 'Windows installer',
+    description: 'Recommended. Run the setup wizard, then open Dumper Apps from the Start Menu.',
     filename: getDumperAppsInstallerFilename(),
+    group: 'windows',
   },
   {
     id: 'windows-portable',
-    label: 'Windows (portable zip)',
-    description: 'No installer — unzip and run START-HERE.bat',
+    label: 'Windows portable zip',
+    description: 'Same app as the installer — unzip the folder and double-click START-HERE.bat.',
     filename: 'bp-dumper-py.zip',
-  },
-  {
-    id: 'windows',
-    label: 'Windows (blueprints only)',
-    description: 'Log watcher only — no Rock Calculator OCR',
-    filename: 'bp-dumper-windows.exe',
+    group: 'windows',
   },
   {
     id: 'mac-intel',
     label: 'macOS (Intel)',
-    description: 'x64 binary',
+    description: 'Blueprint log sync only. Rock Calculator OCR is not available on Mac yet.',
     filename: 'bp-dumper-mac-intel',
+    group: 'mac-linux',
   },
   {
     id: 'mac-silicon',
     label: 'macOS (Apple Silicon)',
-    description: 'arm64 binary',
+    description: 'Blueprint log sync only. Rock Calculator OCR is not available on Mac yet.',
     filename: 'bp-dumper-mac-silicon',
+    group: 'mac-linux',
   },
   {
     id: 'linux',
     label: 'Linux',
-    description: 'x64 binary',
+    description: 'Blueprint log sync only. Rock Calculator OCR is not available on Linux yet.',
     filename: 'bp-dumper-linux',
+    group: 'mac-linux',
   },
   {
-    id: 'python',
-    label: 'Python zip (all platforms)',
-    description: 'Same kit as Windows recommended — macOS/Linux get log watcher only',
-    filename: 'bp-dumper-py.zip',
+    id: 'windows',
+    label: 'Windows .exe (blueprints only)',
+    description: 'Smaller download. Syncs blueprint unlocks only — no Rock Calculator OCR.',
+    filename: 'bp-dumper-windows.exe',
+    group: 'advanced',
   },
 ]
 
