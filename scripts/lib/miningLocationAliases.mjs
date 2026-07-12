@@ -411,83 +411,161 @@ function collectLocValues(localization, keyPattern, limit = Infinity) {
   return out
 }
 
+const PYRO_ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI']
+
 /**
- * In-game navigation hints per spawn key — "what do I type into the starmap
- * search / which QT marker do I fly to". Station names are resolved from game
- * localization so patch renames flow through automatically; only the geography
- * (which belt sits at which Lagrange point) is curated.
+ * One belt group per Pyro planet: L1–L5 with any named station at each point.
+ * Station names come from RR_P{n}_L{m} / AsteroidBase_P{n}_L{m} loc keys
+ * (clinics and planet-orbit stations without an L index are not belt markers).
+ */
+function pyroBeltGroup(localization, planetNum) {
+  const markers = []
+  for (let l = 1; l <= 5; l++) {
+    const stations = [
+      locValue(localization, `RR_P${planetNum}_L${l}`),
+      locValue(localization, `AsteroidBase_P${planetNum}_L${l}`),
+    ].filter(Boolean)
+    markers.push(stations.length ? `L${l} · ${stations.join(', ')}` : `L${l}`)
+  }
+  return {
+    label: `Pyro ${PYRO_ROMAN[planetNum - 1]} belt — QT markers PYR${planetNum} L1–L5`,
+    markers,
+  }
+}
+
+/** RAB/RMB wandering-cluster bases grouped by Pyro region A–D. */
+function pyroRegionGroups(localization) {
+  const byRegion = { A: [], B: [], C: [], D: [] }
+  for (const [rawKey, value] of Object.entries(localization)) {
+    if (rawKey === '_lowerMap') continue
+    const key = rawKey.replace(/,P$/, '')
+    const rab = /^AsteroidCluster_\d+Base_Pyro_Encounter_Region([A-D](?:and[A-D])?)_\d+$/i.exec(key)
+    if (rab) {
+      for (const region of rab[1].toUpperCase().split('AND')) byRegion[region]?.push(value)
+      continue
+    }
+    const rmb = /^ab_mine_pyro_region([a-d])_(?:med|sml)_\d+$/i.exec(key)
+    if (rmb) byRegion[rmb[1].toUpperCase()]?.push(value)
+  }
+  // RAB bases first, then RMB mines, alphabetical within each family.
+  const sortMarkers = (a, b) => {
+    const aRab = a.startsWith('RAB-')
+    const bRab = b.startsWith('RAB-')
+    if (aRab !== bRab) return aRab ? -1 : 1
+    return a.localeCompare(b)
+  }
+  return ['A', 'B', 'C', 'D']
+    .filter((region) => byRegion[region].length > 0)
+    .map((region) => ({
+      label: `Pyro Region ${region} — wandering cluster bases`,
+      note: 'Clusters drift around the system; starmap-search any of these markers to QT into that region',
+      markers: byRegion[region].sort(sortMarkers),
+    }))
+}
+
+/**
+ * In-game navigation data per spawn key — a short one-line hint (tooltips) and
+ * optional structured marker groups (location view). Station names are resolved
+ * from game localization so patch renames flow through automatically; only the
+ * geography (which belt sits at which Lagrange point) is curated.
  */
 export function buildNavHints(localization) {
   const val = (key) => locValue(localization, key)
-  const list = (keys) => keys.map(val).filter(Boolean)
-  const hints = {}
+  const nav = {}
 
   // ── Pyro Lagrange belts (PYR# L# markers on the starmap) ──────────────────
-  const warm1Stations = list(['RR_P1_L2', 'RR_P1_L3', 'RR_P1_L5', 'RR_P2', 'RR_P2_L3', 'RR_P2_L4'])
-  hints['Pyro Warm01'] =
-    'QT to the PYR1 L1–L5 / PYR2 L1–L5 markers' +
-    (warm1Stations.length ? ` — stations in these belts: ${warm1Stations.join(', ')}` : '')
-
-  const warm2Stations = list(['RR_P3_L3', 'RR_P3_L5', 'AsteroidBase_P3_L4', 'AsteroidBase_P3_L5'])
-  hints['Pyro Warm02'] =
-    'QT to the PYR3 L1–L5 markers' +
-    (warm2Stations.length ? ` — stations in these belts: ${warm2Stations.join(', ')}` : '')
-
-  const cool1Stations = list(['RR_P5_L1', 'RR_P5_L3'])
-  hints['Pyro Cool01'] =
-    'QT to the PYR5 L1–L5 markers' +
-    (cool1Stations.length ? ` — stations in these belts: ${cool1Stations.join(', ')}` : '')
-
-  hints['Pyro Cool02'] = 'QT to the PYR6 L1–L5 markers around Terminus'
+  nav['Pyro Warm01'] = {
+    navHint: 'QT to the PYR1 / PYR2 L1–L5 Lagrange markers — belt asteroids cluster around the L-points',
+    navMarkers: [pyroBeltGroup(localization, 1), pyroBeltGroup(localization, 2)],
+  }
+  nav['Pyro Warm02'] = {
+    navHint: 'QT to the PYR3 L1–L5 Lagrange markers — belt asteroids cluster around the L-points',
+    navMarkers: [pyroBeltGroup(localization, 3)],
+  }
+  nav['Pyro Cool01'] = {
+    navHint: 'QT to the PYR5 L1–L5 Lagrange markers — belt asteroids cluster around the L-points',
+    navMarkers: [pyroBeltGroup(localization, 5)],
+  }
+  nav['Pyro Cool02'] = {
+    navHint: 'QT to the PYR6 L1–L5 Lagrange markers around Terminus',
+    navMarkers: [pyroBeltGroup(localization, 6)],
+  }
 
   // ── Named Pyro clusters ────────────────────────────────────────────────────
   const akiroStation = val('RR_P1_L3')
-  hints['Akiro Cluster'] =
-    'Starmap search "Akiro Cluster" — sits near Pyro I L3' +
-    (akiroStation ? ` (closest station: ${akiroStation})` : '')
+  nav['Akiro Cluster'] = {
+    navHint:
+      'Starmap search "Akiro Cluster" — sits near Pyro I L3' +
+      (akiroStation ? ` (closest station: ${akiroStation})` : ''),
+  }
 
-  const rabSamples = collectLocValues(
-    localization,
-    /^AsteroidCluster_\d+Base_Pyro_Encounter_Region[A-D]/i,
-    3
-  )
-  const rmbSamples = collectLocValues(localization, /^ab_mine_pyro_region[a-d]_/i, 2)
-  const clusterSamples = [...rabSamples, ...rmbSamples]
-  hints['Pyro Deepspaceasteroids'] =
-    'Wandering clusters between planets — starmap search RAB / RMB markers' +
-    (clusterSamples.length ? ` (e.g. ${clusterSamples.join(', ')}…)` : '')
+  nav['Pyro Deepspaceasteroids'] = {
+    navHint:
+      'Wandering clusters between planets — QT to RAB / RMB markers (full list in the location view)',
+    navMarkers: pyroRegionGroups(localization),
+  }
 
   // ── Nyx rings ──────────────────────────────────────────────────────────────
-  const brkSamples = collectLocValues(localization, /^Nyx_RockCracker_\d+$/i, 3).map(shortBreakerName)
-  const brkSuffix = brkSamples.length
-    ? ` — QV Breaker Stations (${brkSamples.join(', ')}…) roam the Nyx belts as QT markers`
-    : ''
-  hints['Glaciem Ring'] = `Starmap search "Glaciem Ring" — ring around the planet Glaciem${brkSuffix}`
-  hints['Keeger Belt'] = `Starmap search "Keeger Belt"${brkSuffix}`
+  const brkStations = collectLocValues(localization, /^Nyx_RockCracker_\d+$/i)
+    .map(shortBreakerName)
+    .sort()
+  const brkGroup = brkStations.length
+    ? [
+        {
+          label: 'QV Breaker Stations — roam the Nyx belts',
+          note: 'Any BRK station puts you inside the Nyx asteroid fields',
+          markers: brkStations,
+        },
+      ]
+    : undefined
+  nav['Glaciem Ring'] = {
+    navHint:
+      'Starmap search "Glaciem Ring" — ring around the planet Glaciem; QV Breaker Stations (BRK-###) roam the belts',
+    navMarkers: brkGroup,
+  }
+  nav['Keeger Belt'] = {
+    navHint:
+      'Starmap search "Keeger Belt" — QV Breaker Stations (BRK-###) roam the Nyx belts',
+    navMarkers: brkGroup,
+  }
 
   // ── Stanton ────────────────────────────────────────────────────────────────
-  hints['Aaron Halo'] =
-    'Asteroid band between Crusader and ArcCorp orbits — no starmap marker; drop out of quantum partway along CRU-L5 ↔ ARC-L1 routes'
-  hints['Stanton2c Belt'] = 'Yela\u2019s asteroid ring — QT to Yela or GrimHEX and fly into the ring'
-  hints['Lagrange G'] =
-    'Outer Aaron Halo band — no direct marker; drop out of quantum along the halo'
-  hints['Lagrange Occupied'] =
-    'Aaron Halo band near the occupied halo stations — no direct marker'
+  nav['Aaron Halo'] = {
+    navHint:
+      'Asteroid band between Crusader and ArcCorp orbits — no starmap marker; drop out of quantum partway along CRU-L5 ↔ ARC-L1 routes',
+  }
+  nav['Stanton2c Belt'] = {
+    navHint: 'Yela\u2019s asteroid ring — QT to Yela or GrimHEX and fly into the ring',
+  }
+  nav['Lagrange G'] = {
+    navHint: 'Outer Aaron Halo band — no direct marker; drop out of quantum along the halo',
+  }
+  nav['Lagrange Occupied'] = {
+    navHint: 'Aaron Halo band near the occupied halo stations — no direct marker',
+  }
 
-  return hints
+  return nav
 }
 
 function applyNavHints(aliases, localization) {
-  for (const [spawnKey, navHint] of Object.entries(buildNavHints(localization))) {
-    upsertAlias(aliases, spawnKey, { navHint })
+  for (const [spawnKey, navData] of Object.entries(buildNavHints(localization))) {
+    const patch = { navHint: navData.navHint }
+    if (navData.navMarkers?.length) patch.navMarkers = navData.navMarkers
+    upsertAlias(aliases, spawnKey, patch)
   }
 
   // Stanton Lagrange belts A–F surround their named station markers (ARC-L5 etc.)
   for (const [spawnKey, alias] of aliases) {
     if (!/^Lagrange [A-F]$/i.test(spawnKey) || alias.navHint) continue
-    const stations = (alias.guideNames ?? []).filter((name) => /-L\d$/.test(name))
+    const stations = (alias.guideNames ?? []).filter((name) => /-L\d$/.test(name)).sort()
     if (stations.length) {
       alias.navHint = `QT straight to ${stations.join(' / ')} — the belt surrounds the station`
+      alias.navMarkers = [
+        {
+          label: 'Lagrange stations with this belt profile',
+          markers: stations,
+        },
+      ]
     }
   }
 }

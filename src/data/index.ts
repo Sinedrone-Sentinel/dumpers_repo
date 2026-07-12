@@ -29,6 +29,8 @@ export interface MiningLocationsData {
       source?: string
       /** In-game "how to find it" — QT markers / starmap search terms. */
       navHint?: string
+      /** Structured QT marker/station lists grouped by belt/region. */
+      navMarkers?: Array<{ label: string; note?: string; markers: string[] }>
     }
   >
   guideToSpawnKeys?: Record<string, string[]>

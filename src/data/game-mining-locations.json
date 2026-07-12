@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-12T21:22:17.774Z",
+  "_extracted": "2026-07-12T21:51:36.889Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -3564,7 +3564,35 @@
       "displayName": "Glaciem Ring",
       "system": "Nyx",
       "source": "spawn_code_table+hpp_path_audit",
-      "navHint": "Starmap search \"Glaciem Ring\" — ring around the planet Glaciem — QV Breaker Stations (BRK-204, BRK-320, BRK-546…) roam the Nyx belts as QT markers"
+      "navHint": "Starmap search \"Glaciem Ring\" — ring around the planet Glaciem; QV Breaker Stations (BRK-###) roam the belts",
+      "navMarkers": [
+        {
+          "label": "QV Breaker Stations — roam the Nyx belts",
+          "note": "Any BRK station puts you inside the Nyx asteroid fields",
+          "markers": [
+            "BRK-127",
+            "BRK-184",
+            "BRK-204",
+            "BRK-235",
+            "BRK-267",
+            "BRK-284",
+            "BRK-304",
+            "BRK-320",
+            "BRK-425",
+            "BRK-437",
+            "BRK-521",
+            "BRK-542",
+            "BRK-546",
+            "BRK-563",
+            "BRK-608",
+            "BRK-711",
+            "BRK-782",
+            "BRK-879",
+            "BRK-970",
+            "BRK-985"
+          ]
+        }
+      ]
     },
     "Keeger Belt": {
       "spawnKey": "Keeger Belt",
@@ -3575,7 +3603,35 @@
       "displayName": "Keeger Belt",
       "system": "Nyx",
       "source": "spawn_code_table+hpp_path_audit",
-      "navHint": "Starmap search \"Keeger Belt\" — QV Breaker Stations (BRK-204, BRK-320, BRK-546…) roam the Nyx belts as QT markers"
+      "navHint": "Starmap search \"Keeger Belt\" — QV Breaker Stations (BRK-###) roam the Nyx belts",
+      "navMarkers": [
+        {
+          "label": "QV Breaker Stations — roam the Nyx belts",
+          "note": "Any BRK station puts you inside the Nyx asteroid fields",
+          "markers": [
+            "BRK-127",
+            "BRK-184",
+            "BRK-204",
+            "BRK-235",
+            "BRK-267",
+            "BRK-284",
+            "BRK-304",
+            "BRK-320",
+            "BRK-425",
+            "BRK-437",
+            "BRK-521",
+            "BRK-542",
+            "BRK-546",
+            "BRK-563",
+            "BRK-608",
+            "BRK-711",
+            "BRK-782",
+            "BRK-879",
+            "BRK-970",
+            "BRK-985"
+          ]
+        }
+      ]
     },
     "Lagrange A": {
       "spawnKey": "Lagrange A",
@@ -3587,7 +3643,17 @@
       "displayName": "HUR-L1",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to HUR-L1 / HUR-L4 / HUR-L5 — the belt surrounds the station"
+      "navHint": "QT straight to HUR-L1 / HUR-L4 / HUR-L5 — the belt surrounds the station",
+      "navMarkers": [
+        {
+          "label": "Lagrange stations with this belt profile",
+          "markers": [
+            "HUR-L1",
+            "HUR-L4",
+            "HUR-L5"
+          ]
+        }
+      ]
     },
     "Lagrange B": {
       "spawnKey": "Lagrange B",
@@ -3599,7 +3665,17 @@
       "displayName": "ARC-L5",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to ARC-L5 / CRU-L4 / MIC-L3 — the belt surrounds the station"
+      "navHint": "QT straight to ARC-L5 / CRU-L4 / MIC-L3 — the belt surrounds the station",
+      "navMarkers": [
+        {
+          "label": "Lagrange stations with this belt profile",
+          "markers": [
+            "ARC-L5",
+            "CRU-L4",
+            "MIC-L3"
+          ]
+        }
+      ]
     },
     "Lagrange C": {
       "spawnKey": "Lagrange C",
@@ -3612,7 +3688,18 @@
       "displayName": "CRU-L3",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to CRU-L3 / MIC-L1 / MIC-L2 / MIC-L5 — the belt surrounds the station"
+      "navHint": "QT straight to CRU-L3 / MIC-L1 / MIC-L2 / MIC-L5 — the belt surrounds the station",
+      "navMarkers": [
+        {
+          "label": "Lagrange stations with this belt profile",
+          "markers": [
+            "CRU-L3",
+            "MIC-L1",
+            "MIC-L2",
+            "MIC-L5"
+          ]
+        }
+      ]
     },
     "Lagrange D": {
       "spawnKey": "Lagrange D",
@@ -3624,7 +3711,17 @@
       "displayName": "ARC-L3",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to ARC-L3 / CRU-L5 / MIC-L4 — the belt surrounds the station"
+      "navHint": "QT straight to ARC-L3 / CRU-L5 / MIC-L4 — the belt surrounds the station",
+      "navMarkers": [
+        {
+          "label": "Lagrange stations with this belt profile",
+          "markers": [
+            "ARC-L3",
+            "CRU-L5",
+            "MIC-L4"
+          ]
+        }
+      ]
     },
     "Lagrange E": {
       "spawnKey": "Lagrange E",
@@ -3636,7 +3733,17 @@
       "displayName": "CRU-L1",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to CRU-L1 / CRU-L2 / HUR-L3 — the belt surrounds the station"
+      "navHint": "QT straight to CRU-L1 / CRU-L2 / HUR-L3 — the belt surrounds the station",
+      "navMarkers": [
+        {
+          "label": "Lagrange stations with this belt profile",
+          "markers": [
+            "CRU-L1",
+            "CRU-L2",
+            "HUR-L3"
+          ]
+        }
+      ]
     },
     "Lagrange F": {
       "spawnKey": "Lagrange F",
@@ -3649,7 +3756,18 @@
       "displayName": "ARC-L1",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT straight to ARC-L1 / ARC-L2 / ARC-L4 / HUR-L2 — the belt surrounds the station"
+      "navHint": "QT straight to ARC-L1 / ARC-L2 / ARC-L4 / HUR-L2 — the belt surrounds the station",
+      "navMarkers": [
+        {
+          "label": "Lagrange stations with this belt profile",
+          "markers": [
+            "ARC-L1",
+            "ARC-L2",
+            "ARC-L4",
+            "HUR-L2"
+          ]
+        }
+      ]
     },
     "Lagrange G": {
       "spawnKey": "Lagrange G",
@@ -3678,7 +3796,19 @@
       "displayName": "Pyro V Lagrange belts",
       "system": "Pyro",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT to the PYR5 L1–L5 markers — stations in these belts: PYAM-FARSTAT-5-1, PYAM-FARSTAT-5-3"
+      "navHint": "QT to the PYR5 L1–L5 Lagrange markers — belt asteroids cluster around the L-points",
+      "navMarkers": [
+        {
+          "label": "Pyro V belt — QT markers PYR5 L1–L5",
+          "markers": [
+            "L1 · PYAM-FARSTAT-5-1",
+            "L2 · Gaslight",
+            "L3 · PYAM-FARSTAT-5-3",
+            "L4 · Rod's Fuel 'N Supplies",
+            "L5 · Rat's Nest"
+          ]
+        }
+      ]
     },
     "Pyro Cool02": {
       "spawnKey": "Pyro Cool02",
@@ -3693,7 +3823,19 @@
       "displayName": "Pyro VI Lagrange belts",
       "system": "Pyro",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT to the PYR6 L1–L5 markers around Terminus"
+      "navHint": "QT to the PYR6 L1–L5 Lagrange markers around Terminus",
+      "navMarkers": [
+        {
+          "label": "Pyro VI belt — QT markers PYR6 L1–L5",
+          "markers": [
+            "L1",
+            "L2 · PYAM-FARSTAT-6-2",
+            "L3 · Endgame",
+            "L4 · Dudley & Daughters",
+            "L5 · Megumi Refueling"
+          ]
+        }
+      ]
     },
     "Pyro Deepspaceasteroids": {
       "spawnKey": "Pyro Deepspaceasteroids",
@@ -3703,7 +3845,153 @@
       "displayName": "Pyro Asteroid Clusters",
       "system": "Pyro",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "Wandering clusters between planets — starmap search RAB / RMB markers (e.g. RAB-ALPHA, RAB-TUNG, RAB-KILO, RMB-PURI, RMB-BALM…)"
+      "navHint": "Wandering clusters between planets — QT to RAB / RMB markers (full list in the location view)",
+      "navMarkers": [
+        {
+          "label": "Pyro Region A — wandering cluster bases",
+          "note": "Clusters drift around the system; starmap-search any of these markers to QT into that region",
+          "markers": [
+            "RAB-ALPHA",
+            "RAB-BRAVO",
+            "RAB-FOXTROT",
+            "RAB-IGNITION",
+            "RAB-KILO",
+            "RAB-NOVEMBER",
+            "RAB-ROTH",
+            "RAB-TUNG",
+            "RMB-BALE",
+            "RMB-BALM",
+            "RMB-CEDI",
+            "RMB-DREG",
+            "RMB-ELMS",
+            "RMB-EVEN",
+            "RMB-GREX",
+            "RMB-HOWE",
+            "RMB-IKAN",
+            "RMB-KAIN",
+            "RMB-LAZO",
+            "RMB-LIRE",
+            "RMB-MYAL",
+            "RMB-NAIN",
+            "RMB-NIGH",
+            "RMB-ONER",
+            "RMB-PURI",
+            "RMB-RIGG",
+            "RMB-SHEW",
+            "RMB-SURD",
+            "RMB-TIAN",
+            "RMB-VOES",
+            "RMB-ZARF"
+          ]
+        },
+        {
+          "label": "Pyro Region B — wandering cluster bases",
+          "note": "Clusters drift around the system; starmap-search any of these markers to QT into that region",
+          "markers": [
+            "RAB-BRAVO",
+            "RAB-CHARLIE",
+            "RAB-GULF",
+            "RAB-MAT",
+            "RAB-ULTRA",
+            "RAB-WHISKEY",
+            "RAB-YORK",
+            "RMB-AXIL",
+            "RMB-BASK",
+            "RMB-BUCK",
+            "RMB-DARI",
+            "RMB-GADE",
+            "RMB-GRAY",
+            "RMB-HELM",
+            "RMB-HORN",
+            "RMB-JONG",
+            "RMB-KIFF",
+            "RMB-KNAP",
+            "RMB-LEST",
+            "RMB-LUNE",
+            "RMB-MAGE",
+            "RMB-MUGG",
+            "RMB-OXID",
+            "RMB-PALL",
+            "RMB-PEKE",
+            "RMB-TACK",
+            "RMB-WARB",
+            "RMB-YEAD"
+          ]
+        },
+        {
+          "label": "Pyro Region C — wandering cluster bases",
+          "note": "Clusters drift around the system; starmap-search any of these markers to QT into that region",
+          "markers": [
+            "RAB-DELTA",
+            "RAB-ECHO",
+            "RAB-FOXTROT",
+            "RAB-HELIO",
+            "RAB-JAK",
+            "RAB-LAMDA",
+            "RAB-OVER",
+            "RAB-POINT",
+            "RAB-QUAGMIRE",
+            "RAB-ROTH",
+            "RAB-SIERRA",
+            "RAB-VICTORY",
+            "RAB-XENO",
+            "RAB-ZETA",
+            "RMB-ALME",
+            "RMB-ARID",
+            "RMB-BORS",
+            "RMB-DORY",
+            "RMB-FLAG",
+            "RMB-HADE",
+            "RMB-JUTE",
+            "RMB-KYUS",
+            "RMB-LANX",
+            "RMB-LYES",
+            "RMB-MURK",
+            "RMB-NARY",
+            "RMB-NONG",
+            "RMB-OAKS",
+            "RMB-OLLA",
+            "RMB-RINE",
+            "RMB-RODE",
+            "RMB-SIJO",
+            "RMB-SPAW",
+            "RMB-TYRO",
+            "RMB-VERD"
+          ]
+        },
+        {
+          "label": "Pyro Region D — wandering cluster bases",
+          "note": "Clusters drift around the system; starmap-search any of these markers to QT into that region",
+          "markers": [
+            "RAB-COOK",
+            "RAB-ION",
+            "RAB-LYNX",
+            "RAB-MAT",
+            "RAB-ULTRA",
+            "RMB-CHAM",
+            "RMB-CRUE",
+            "RMB-DIRK",
+            "RMB-HARK",
+            "RMB-JADE",
+            "RMB-KELT",
+            "RMB-LOWN",
+            "RMB-MARA",
+            "RMB-MEFF",
+            "RMB-MOSK",
+            "RMB-NENE",
+            "RMB-PIZE",
+            "RMB-PLEX",
+            "RMB-QINS",
+            "RMB-RAIK",
+            "RMB-RAWN",
+            "RMB-SAIC",
+            "RMB-SEER",
+            "RMB-SOWL",
+            "RMB-TIGS",
+            "RMB-UMUS"
+          ]
+        }
+      ]
     },
     "Pyro Warm01": {
       "spawnKey": "Pyro Warm01",
@@ -3723,7 +4011,29 @@
       "displayName": "Pyro I–II Lagrange belts",
       "system": "Pyro",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT to the PYR1 L1–L5 / PYR2 L1–L5 markers — stations in these belts: PYAM-FARSTAT-1-2, PYAM-FARSTAT-1-3, PYAM-FARSTAT-1-5, PYAM-FARSTAT-2-0, PYAM-FARSTAT-2-3, Checkmate"
+      "navHint": "QT to the PYR1 / PYR2 L1–L5 Lagrange markers — belt asteroids cluster around the L-points",
+      "navMarkers": [
+        {
+          "label": "Pyro I belt — QT markers PYR1 L1–L5",
+          "markers": [
+            "L1",
+            "L2 · PYAM-FARSTAT-1-2",
+            "L3 · PYAM-FARSTAT-1-3",
+            "L4",
+            "L5 · PYAM-FARSTAT-1-5"
+          ]
+        },
+        {
+          "label": "Pyro II belt — QT markers PYR2 L1–L5",
+          "markers": [
+            "L1",
+            "L2",
+            "L3 · PYAM-FARSTAT-2-3",
+            "L4 · Checkmate",
+            "L5"
+          ]
+        }
+      ]
     },
     "Pyro Warm02": {
       "spawnKey": "Pyro Warm02",
@@ -3738,7 +4048,19 @@
       "displayName": "Pyro III Lagrange belts",
       "system": "Pyro",
       "source": "verified_overlay+hpp_path_audit",
-      "navHint": "QT to the PYR3 L1–L5 markers — stations in these belts: Patch City, PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-4, PYAM-SUPVISR-3-5"
+      "navHint": "QT to the PYR3 L1–L5 Lagrange markers — belt asteroids cluster around the L-points",
+      "navMarkers": [
+        {
+          "label": "Pyro III belt — QT markers PYR3 L1–L5",
+          "markers": [
+            "L1 · Starlight Service Station",
+            "L2",
+            "L3 · Patch City",
+            "L4 · PYAM-SUPVISR-3-4",
+            "L5 · PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-5"
+          ]
+        }
+      ]
     },
     "Pyro1": {
       "spawnKey": "Pyro1",

@@ -5,6 +5,12 @@
 
 import { miningLocations } from '../data'
 
+export interface NavMarkerGroup {
+  label: string
+  note?: string
+  markers: string[]
+}
+
 export interface LocationAlias {
   spawnKey: string
   guideName?: string
@@ -14,6 +20,8 @@ export interface LocationAlias {
   source?: string
   /** In-game "how to find it" — QT markers / starmap search terms. */
   navHint?: string
+  /** Structured QT marker/station lists grouped by belt/region. */
+  navMarkers?: NavMarkerGroup[]
 }
 
 const locationAliases = miningLocations.locationAliases ?? {}
@@ -64,21 +72,29 @@ export function getNavHintForSpawnKey(spawnKey: string | undefined): string | nu
   return locationAliases[spawnKey]?.navHint ?? null
 }
 
-/**
- * Nav hint for a guide/compendium location name. Broad Pyro cluster bucket maps
- * to the deep-space template; otherwise the first mapped spawn key with a hint wins.
- */
-export function getNavHintForGuideLocation(guideLocationName: string): string | null {
-  if (guideLocationName === 'Pyro Asteroid Clusters') {
-    return getNavHintForSpawnKey('Pyro Deepspaceasteroids')
-  }
-  const direct = getNavHintForSpawnKey(guideLocationName)
-  if (direct) return direct
+/** Guide/compendium location name → spawn key that carries nav data, if any. */
+function resolveNavSpawnKey(guideLocationName: string): string | null {
+  // Broad Pyro cluster bucket maps to the deep-space template.
+  if (guideLocationName === 'Pyro Asteroid Clusters') return 'Pyro Deepspaceasteroids'
+  if (locationAliases[guideLocationName]?.navHint) return guideLocationName
   for (const spawnKey of getSpawnKeysForGuideName(guideLocationName)) {
-    const hint = getNavHintForSpawnKey(spawnKey)
-    if (hint) return hint
+    if (locationAliases[spawnKey]?.navHint || locationAliases[spawnKey]?.navMarkers?.length) {
+      return spawnKey
+    }
   }
   return null
+}
+
+/** Nav hint for a guide/compendium location name. */
+export function getNavHintForGuideLocation(guideLocationName: string): string | null {
+  return getNavHintForSpawnKey(resolveNavSpawnKey(guideLocationName) ?? undefined)
+}
+
+/** Structured QT marker groups for a guide/compendium location name. */
+export function getNavMarkersForGuideLocation(guideLocationName: string): NavMarkerGroup[] {
+  const spawnKey = resolveNavSpawnKey(guideLocationName)
+  if (!spawnKey) return []
+  return locationAliases[spawnKey]?.navMarkers ?? []
 }
 
 /** Broad compendium buckets with no single spawn key — system is explicit. */

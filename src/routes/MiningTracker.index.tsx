@@ -34,7 +34,11 @@ import {
   isLocationTrackerEntry,
 } from '../lib/miningClusterProfiles'
 import { isBroadGuideLocation } from '../lib/miningLocationAliases'
-import { getNavHintForGuideLocation } from '../lib/miningLocationNames'
+import {
+  getNavHintForGuideLocation,
+  getNavMarkersForGuideLocation,
+  type NavMarkerGroup,
+} from '../lib/miningLocationNames'
 import TrackOreButtons from '../components/TrackOreButton'
 import SiteTooltip from '../components/SiteTooltip'
 import MiningLedgerTab from '../components/mining/MiningLedgerTab'
@@ -1458,12 +1462,50 @@ function GuideOreModal({
   )
 }
 
+function NavMarkerPanel({ groups }: { groups: NavMarkerGroup[] }) {
+  const totalMarkers = groups.reduce((n, g) => n + g.markers.length, 0)
+  if (totalMarkers === 0) return null
+  return (
+    <details
+      className="mb-4 rounded-lg border border-sky-800/40 bg-sky-950/20"
+      open={totalMarkers <= 15}
+    >
+      <summary className="cursor-pointer select-none px-3 py-2 text-xs font-medium text-sky-300 hover:text-sky-200">
+        📍 QT markers &amp; stations ({totalMarkers})
+      </summary>
+      <div className="px-3 pb-3 space-y-3">
+        {groups.map((group) => (
+          <div key={group.label}>
+            <div className="text-[10px] uppercase tracking-wider text-sky-400/90">
+              {group.label}
+            </div>
+            {group.note && (
+              <div className="text-[10px] text-slate-500 mt-0.5">{group.note}</div>
+            )}
+            <div className="mt-1.5 flex flex-wrap gap-1">
+              {group.markers.map((marker) => (
+                <span
+                  key={marker}
+                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800/70 text-slate-300 border border-slate-700/50 whitespace-nowrap"
+                >
+                  {marker}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </details>
+  )
+}
+
 function GuideLocationModal({ location, ores, onClose }: { location: string; ores: MiningData[]; onClose: () => void }) {
   useBodyScrollLock(true)
   
   const system = LOCATION_SYSTEMS[location]
   const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
   const navHint = getNavHintForGuideLocation(location)
+  const navMarkerGroups = getNavMarkersForGuideLocation(location)
   
   const sortedOres = [...ores].sort((a, b) => {
     return MINING_RARITY_ORDER.indexOf(a.rarity) - MINING_RARITY_ORDER.indexOf(b.rarity)
@@ -1494,6 +1536,7 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
         </div>
         
         <div className="p-4 overflow-y-auto max-h-[60vh]">
+          <NavMarkerPanel groups={navMarkerGroups} />
           <p className="text-sm text-slate-400 mb-4">
             {ores.length} ore{ores.length !== 1 ? 's' : ''} found at this location:
           </p>
