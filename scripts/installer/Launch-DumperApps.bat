@@ -3,8 +3,6 @@ setlocal
 set "ROOT=%~dp0"
 set "PYTHON=%ROOT%python-venv\Scripts\python.exe"
 if not exist "%PYTHON%" set "PYTHON=%ROOT%python\python.exe"
-set "PATH=%ROOT%tesseract;%PATH%"
-set "TESSDATA_PREFIX=%ROOT%tesseract\tessdata"
 
 if not exist "%PYTHON%" (
     echo [ERROR] Bundled Python missing. Reinstall Dumper Apps from the site.

@@ -64,10 +64,3 @@ supabase/functions/log-watcher-webhook/lookup.json
 __pycache__/
 *.pyc
 
-# Rock Scanner OCR — per-user local files
-scripts/rock-scan-ocr/rock-scan-exports/
-scripts/rock-scan-ocr/sc-toolbox.path
-scripts/rock-scan-ocr/capture-region.json
-scripts/rock-scan-ocr/vendor/
-eng.traineddata
-

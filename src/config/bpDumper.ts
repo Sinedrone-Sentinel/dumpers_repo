@@ -13,7 +13,7 @@ export function getDumperAppsInstallerFilename(version: string = BP_DUMPER_VERSI
   return `DumperApps-Setup-${version}.exe`
 }
 
-/** Member-facing name for desktop tools (log watcher, rock-scan tray, downloads). */
+/** Member-facing name for desktop tools (blueprint log watcher + Live Mission Tracker). */
 export const DUMPER_APPS_DISPLAY_NAME = 'Dumper Apps' as const
 
 export const BP_DUMPER_CALLOUT_DISMISS_KEY = 'dr_bp_dumper_callout_dismissed_v1' as const
