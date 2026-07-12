@@ -45,6 +45,8 @@ export interface MoleHeadProfile {
   resistanceModifier: number
   optimalWindowModifier: number
   instabilityModifier: number
+  /** Beam optimal range (m) — beyond this, power transfer falls off. */
+  optimalRange: number
 }
 
 export interface MoleHeadAssignment {
@@ -105,6 +107,7 @@ export function buildMoleHeadProfile(
     resistanceModifier: effective.resistanceModifier,
     optimalWindowModifier: laser.optimalWindowModifier + moduleMods.optimalWindowModifier,
     instabilityModifier: effective.instabilityModifier,
+    optimalRange: laser.optimalRange,
   }
 }
 
@@ -522,6 +525,48 @@ function evaluateCrewFullBlastPlan(
   }
 }
 
+/** Solo throttle above this % leaves too little headroom to push charge past equalization. */
+export const SOLO_IDEAL_THROTTLE_MAX = 65
+
+/**
+ * Solo head scoring — throttle headroom dominates.
+ *
+ * Field-verified: the same rock needing ~3,400 MW was "way easier, smoother and
+ * faster" on a 7,140 MW head (~47% throttle) than a 4,692 MW head (72% throttle),
+ * despite the smaller head carrying a +39% window bonus and the big head -43%.
+ * Cracking requires pushing power ABOVE equalization; a head running near its
+ * ceiling has no room to do that. Window/resistance modifiers are tiebreakers.
+ *
+ * Also penalizes overshoot: if equalization sits below the laser's minimum
+ * output, even the lowest throttle overpowers the rock (explosion risk on
+ * small rocks), so finesse heads win those.
+ */
+function scoreSoloHeadStrategy(
+  profile: MoleHeadProfile,
+  throttlePercent: number,
+  equalizingPower: number,
+  mods: { resistance: number; window: number; instability: number },
+  instability: number | null
+): number {
+  let score = 10_000
+
+  score -= throttlePercent * 1.5
+  if (throttlePercent > SOLO_IDEAL_THROTTLE_MAX) {
+    score -= (throttlePercent - SOLO_IDEAL_THROTTLE_MAX) * 40
+  }
+
+  const rawThrottle = throttlePercentFromMw(equalizingPower, profile.laserPower)
+  if (rawThrottle < profile.throttleMinimumPercent) {
+    score -= (profile.throttleMinimumPercent - rawThrottle) * 40
+  }
+
+  score += headModifierBenefit(profile, instability)
+  score += mods.window * 1.5
+  if (mods.resistance < 0) score += Math.abs(mods.resistance) * 2
+
+  return score
+}
+
 function soloHeadFractureNotes(
   profile: MoleHeadProfile,
   pilotResistancePercent: number,
@@ -535,6 +580,7 @@ function soloHeadFractureNotes(
     `pilot RES ${Math.round(pilotResistancePercent)}% → ${effectiveHudRes}% on this head`,
     `${profile.laserPower.toLocaleString()} MW after modules`,
     `${equalizingPower.toLocaleString()} MW required`,
+    `hold within ${profile.optimalRange}m — power falls off past optimal range`,
   ].join(' · ')
 }
 
@@ -588,19 +634,7 @@ function evaluateSingleHeadOnly(
       ? `Solo — Head ${primaryIndex + 1} @ ${throttlePercent}% throttle.`
       : `Solo — Head ${primaryIndex + 1} cannot crack this rock at full throttle.`,
     score: canBreak
-      ? scoreCrewFullBlastStrategy(
-          true,
-          1,
-          primary,
-          [],
-          throttlePercent!,
-          mods.resistance,
-          mods.window,
-          mods.instability,
-          null,
-          profiles,
-          false
-        )
+      ? scoreSoloHeadStrategy(primary, throttlePercent!, equalizingPower, mods, instability)
       : -crackableThreshold + primary.laserPower,
   }
 }
