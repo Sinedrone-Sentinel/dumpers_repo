@@ -95,8 +95,10 @@ function MoleSoloMiningToggle({
 
 function SmartCrackerPanel({
   result,
+  oreName,
 }: {
   result: SmartCrackerResult
+  oreName?: string | null
 }) {
   const { gadgetSuggestions, moleStrategy, slowCrack } = result
   const hasGadget = gadgetSuggestions.length > 0
@@ -107,7 +109,7 @@ function SmartCrackerPanel({
 
   return (
     <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-3">
-      {moleStrategy ? <MoleHeadPlanPanel strategy={moleStrategy} embedded /> : null}
+      {moleStrategy ? <MoleHeadPlanPanel strategy={moleStrategy} oreName={oreName} embedded /> : null}
 
       {slowCrack ? (
         <div
@@ -577,7 +579,7 @@ export default function MiningLoadoutPanel({
       ) : null}
 
       {smartCracker ? (
-        <SmartCrackerPanel result={smartCracker} />
+        <SmartCrackerPanel result={smartCracker} oreName={rockTarget?.oreName} />
       ) : null}
 
       {rockTarget && !isRockBreakabilityTargetReady(rockTarget) ? (

@@ -6,12 +6,14 @@ import type { MoleLoadoutStrategy } from '../../lib/moleLoadoutStrategy'
 interface CrewHeadPlanModalProps {
   strategy: MoleLoadoutStrategy
   loadoutLabel: string
+  oreName?: string | null
   onClose: () => void
 }
 
 export default function CrewHeadPlanModal({
   strategy,
   loadoutLabel,
+  oreName = null,
   onClose,
 }: CrewHeadPlanModalProps) {
   return (
@@ -21,7 +23,7 @@ export default function CrewHeadPlanModal({
       size="md"
       onClose={onClose}
     >
-      <MoleHeadPlanPanel strategy={strategy} />
+      <MoleHeadPlanPanel strategy={strategy} oreName={oreName} />
     </AppModal>
   )
 }

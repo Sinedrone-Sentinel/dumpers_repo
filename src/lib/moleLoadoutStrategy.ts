@@ -58,6 +58,8 @@ export interface MoleHeadAssignment {
   detail: string | null
   /** For idle heads in solo mode: could this seat crack the rock on its own? */
   backupViability?: 'works' | 'cannot'
+  /** Combined laser + passive module optimal-window modifier % for this head. */
+  windowModifierPercent: number
 }
 
 export interface MoleLoadoutStrategy {
@@ -234,6 +236,7 @@ function buildAssignment(
     role,
     throttlePercent,
     detail,
+    windowModifierPercent: profile.optimalWindowModifier,
     ...(backupViability ? { backupViability } : {}),
   }
 }

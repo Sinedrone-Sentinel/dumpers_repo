@@ -709,6 +709,7 @@ export default function MiningTrackerRoute() {
         <CrewHeadPlanModal
           strategy={crewHeadPlan}
           loadoutLabel={selectedLoadoutLabel}
+          oreName={rockTarget?.oreName}
           onClose={() => setCrewHeadPlanOpen(false)}
         />
       ) : null}

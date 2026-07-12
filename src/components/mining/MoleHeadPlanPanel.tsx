@@ -1,15 +1,19 @@
 import React from 'react'
 import { minPowerWarningMessage } from '../../lib/miningMinPowerWarning'
 import { formatSignedPercent } from '../../lib/miningLoadoutStatSemantics'
+import { buildWindowBarModel } from '../../lib/miningWindowDisplay'
+import WindowSizeBar from './WindowSizeBar'
 import type { MoleLoadoutStrategy } from '../../lib/moleLoadoutStrategy'
 
 interface MoleHeadPlanPanelProps {
   strategy: MoleLoadoutStrategy
+  /** Rock ore from the calculator — enables per-head estimated window bars. */
+  oreName?: string | null
   /** Omit outer card chrome when nested inside Smart Cracker advisor panel */
   embedded?: boolean
 }
 
-export default function MoleHeadPlanPanel({ strategy, embedded = false }: MoleHeadPlanPanelProps) {
+export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded = false }: MoleHeadPlanPanelProps) {
   const body = (
     <div className="space-y-1.5">
       <p className="text-[10px] uppercase tracking-wide text-slate-500">
@@ -44,6 +48,10 @@ export default function MoleHeadPlanPanel({ strategy, embedded = false }: MoleHe
                   : isWorkableBackup
                     ? 'Backup'
                     : 'Off'
+          const windowBar =
+            oreName && head.backupViability !== 'cannot'
+              ? buildWindowBarModel(oreName, head.windowModifierPercent)
+              : null
           return (
             <div key={head.slotIndex} className={`text-xs ${headClass}`}>
               <p>
@@ -62,6 +70,19 @@ export default function MoleHeadPlanPanel({ strategy, embedded = false }: MoleHe
                 >
                   {head.detail}
                 </p>
+              ) : null}
+              {windowBar ? (
+                <div className="pl-2 pr-4 pt-1 flex items-center gap-2">
+                  <div className="flex-1">
+                    <WindowSizeBar model={windowBar} compact />
+                  </div>
+                  <span className="text-[10px] text-slate-500 whitespace-nowrap tabular-nums">
+                    window{' '}
+                    {head.windowModifierPercent !== 0
+                      ? `${formatSignedPercent(head.windowModifierPercent)} mods`
+                      : 'stock'}
+                  </span>
+                </div>
               ) : null}
             </div>
           )

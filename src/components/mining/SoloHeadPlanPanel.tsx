@@ -81,7 +81,7 @@ export default function SoloHeadPlanPanel({
     return (
       <div className="space-y-3">
         {soloRockPlan ? (
-          <MoleHeadPlanPanel strategy={soloRockPlan} />
+          <MoleHeadPlanPanel strategy={soloRockPlan} oreName={rockTarget?.oreName} />
         ) : (
             <p className="text-[11px] text-slate-500 leading-snug rounded-md border border-slate-700/60 bg-slate-900/40 px-2.5 py-2">
               Enter pilot-scan <strong className="text-slate-300">mass</strong> and{' '}

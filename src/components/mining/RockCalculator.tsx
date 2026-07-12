@@ -53,6 +53,8 @@ import type { MiningLedgerListItem } from '../../lib/miningLedger'
 import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { getMineableElementStatHints } from '../../lib/mineableElementStats'
+import { buildWindowBarModel } from '../../lib/miningWindowDisplay'
+import WindowSizeBar from './WindowSizeBar'
 import { formatRequiredPower } from '../../lib/miningBreakability'
 import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import SiteTooltip from '../SiteTooltip'
@@ -167,6 +169,7 @@ export default function RockCalculator({
   const scannerResistance = parseRockPropertyInput(resistanceInput)
   const scannerInstability = parseRockPropertyInput(instabilityInput)
   const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance, scannerInstability)
+  const windowBarModel = useMemo(() => (oreName ? buildWindowBarModel(oreName) : null), [oreName])
 
   useEffect(() => {
     setScannerMassInput('')
@@ -667,6 +670,23 @@ export default function RockCalculator({
                 <p className="text-[11px] text-cyan-300/90 font-medium tabular-nums">
                   Power required {requiredPowerLabel}
                 </p>
+              ) : null}
+              {windowBarModel ? (
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-wide text-slate-500">
+                    Estimated window size ·{' '}
+                    <span
+                      className={
+                        windowBarModel.rating === 'wide' || windowBarModel.rating === 'average'
+                          ? 'text-green-500/90'
+                          : 'text-amber-400/90'
+                      }
+                    >
+                      {windowBarModel.rating}
+                    </span>
+                  </p>
+                  <WindowSizeBar model={windowBarModel} />
+                </div>
               ) : null}
             </div>
           ) : null}
