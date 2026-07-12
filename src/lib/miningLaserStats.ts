@@ -5,7 +5,7 @@ import {
   type BlueprintForEffectiveStats,
 } from './blueprintEffectiveStats'
 import {
-  combineModuleModifiers,
+  combinePassiveModuleModifiers,
   effectivePowerMultiplierFromBase,
   normalizeModuleSelection,
 } from './miningModules'
@@ -88,7 +88,7 @@ export function computeEffectiveLaserStats(
     : 1
 
   const moduleNames = normalizeModuleSelection(slot.laserName, slot.modules)
-  const moduleMods = combineModuleModifiers(moduleNames)
+  const moduleMods = combinePassiveModuleModifiers(moduleNames)
   const powerMultiplier = effectivePowerMultiplierFromBase(headMultiplier, moduleNames)
   const effectiveResistance = laser.resistanceModifier + moduleMods.resistanceModifier
 

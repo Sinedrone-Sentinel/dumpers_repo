@@ -5,7 +5,7 @@ import {
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
 import {
-  combineModuleModifiers,
+  combinePassiveModuleModifiers,
   getMiningModuleByName,
   normalizeModuleSelection,
 } from './miningModules'
@@ -147,7 +147,7 @@ function effectiveHeadLines(
   slot: MiningLaserSlotConfig,
   effective: NonNullable<ReturnType<typeof computeEffectiveLaserStats>>
 ): ModifierStatLine[] {
-  const moduleMods = combineModuleModifiers(normalizeModuleSelection(slot.laserName, slot.modules))
+  const moduleMods = combinePassiveModuleModifiers(normalizeModuleSelection(slot.laserName, slot.modules))
   const craftMult = headPowerMultiplier(slot)
   const craftPowerPct = (craftMult - 1) * 100
 

@@ -1,4 +1,4 @@
-import { requiredLaserPower } from './miningBreakability'
+import { crackablePower } from './miningBreakability'
 import {
   assessMinPowerWarningForSlot,
   type MinPowerWarning,
@@ -76,6 +76,7 @@ export function compareLoadoutToRock(
 
   const mass = target.scannerMass!
   const resistance = target.resistancePercent!
+  const instability = target.instability ?? 0
 
   const effectiveStats = lasers
     .map((slot) => computeEffectiveLaserStats(slot))
@@ -89,7 +90,7 @@ export function compareLoadoutToRock(
   const bestResistanceMultiplier = Math.min(...resistanceMultipliers)
 
   const requiredPower = Math.round(
-    requiredLaserPower(mass, resistance, bestResistanceMultiplier)
+    crackablePower(mass, resistance, instability, bestResistanceMultiplier)
   )
 
   const totalLaserPower = effectiveStats.reduce((sum, s) => sum + s.laserPower, 0)
@@ -100,7 +101,7 @@ export function compareLoadoutToRock(
 
   const laserRows: LaserBreakabilityRow[] = effectiveStats.map((stats, slotIndex) => {
     const slotResistance = laserResistanceMultiplier(stats.resistanceModifier)
-    const slotRequired = Math.round(requiredLaserPower(mass, resistance, slotResistance))
+    const slotRequired = Math.round(crackablePower(mass, resistance, instability, slotResistance))
     const shareRequired = Math.round(slotRequired / slotCount)
     const canBreakShare = stats.laserPower >= shareRequired
     const throttlePercent =

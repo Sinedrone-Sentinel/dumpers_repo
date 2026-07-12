@@ -6,11 +6,13 @@ import { applyRockMultiplicativePercent } from './miningGadgets'
 export const MINING_MASS_COEFFICIENT = 0.2
 
 /**
- * Instability scale for crackability calculation.
- * Higher instability increases the effective power required to crack a rock.
- * With scale 1000, inst=500 adds ~50% to required power.
+ * Instability scaling factor for crackable power calculation (quadratic formula).
+ * Instability effect is non-linear — gets exponentially worse at higher values.
+ * Formula: margin = (instability / SCALE)²
+ * At 500 instability: 2.0× equalization power needed
+ * At 1000 instability: 5.0× equalization power needed
  */
-export const INSTABILITY_POWER_SCALE = 1000
+export const INSTABILITY_QUADRATIC_SCALE = 500
 
 export interface BreakabilityRange {
   min: number
@@ -57,11 +59,11 @@ export function effectiveHudResistancePercent(
 }
 
 /**
- * Required laser power (MW) to fracture a rock from scanner mass and resistance.
- * This is the "equalizing power" — the power at which charge rate equals decay rate.
- * Does NOT include instability; use `instabilityAdjustedPower` for crackability checks.
+ * Equalization power (MW) — the power at which charge rate equals decay rate.
+ * At this power level, the rock's energy stays stable (no growth, no decay).
+ * You CANNOT crack a rock at exactly equalization power — you need margin above it.
  */
-export function requiredLaserPower(
+export function equalizationPower(
   scannerMass: number,
   resistancePercent: number,
   resistanceModifier = 1
@@ -74,37 +76,43 @@ export function requiredLaserPower(
 }
 
 /**
- * Adjust base required power by instability factor.
- * High instability increases the effective power needed to crack a rock because
- * instability causes energy fluctuations that reduce the net charge rate.
+ * Crackable power (MW) — the actual power needed to fracture a rock.
+ * This is equalization power PLUS margin for instability fluctuations.
+ * Higher instability = exponentially more margin needed (quadratic scaling).
  *
- * Formula: adjustedPower = basePower × (1 + instability / INSTABILITY_POWER_SCALE)
+ * Formula: crackablePower = equalizationPower × (1 + (instability / SCALE)²)
  *
- * Example: 4,520 MW base with 515 instability → 4,520 × 1.515 ≈ 6,848 MW
+ * Examples:
+ *   100 inst → 1.04× equalization
+ *   300 inst → 1.36× equalization
+ *   500 inst → 2.00× equalization
+ *   700 inst → 2.96× equalization
+ *  1000 inst → 5.00× equalization
  */
-export function instabilityAdjustedPower(
-  basePower: number,
-  instability: number | null | undefined,
-  scale = INSTABILITY_POWER_SCALE
+export function crackablePower(
+  scannerMass: number,
+  resistancePercent: number,
+  instability: number,
+  resistanceModifier = 1
 ): number {
-  if (instability == null || !Number.isFinite(instability) || instability <= 0) {
-    return basePower
-  }
-  return basePower * (1 + instability / scale)
+  const eqPower = equalizationPower(scannerMass, resistancePercent, resistanceModifier)
+  if (!Number.isFinite(eqPower)) return eqPower
+  const normalized = Math.max(0, instability) / INSTABILITY_QUADRATIC_SCALE
+  const instabilityMargin = normalized * normalized
+  return eqPower * (1 + instabilityMargin)
 }
 
 /**
- * Required laser power (MW) including instability adjustment for crackability check.
- * This is the power you need to actually be able to crack the rock.
+ * @deprecated Use equalizationPower or crackablePower instead.
+ * This returns equalization power, which is NOT enough to actually crack —
+ * use crackablePower for accurate predictions.
  */
-export function requiredLaserPowerWithInstability(
+export function requiredLaserPower(
   scannerMass: number,
   resistancePercent: number,
-  resistanceModifier: number,
-  instability: number | null | undefined
+  resistanceModifier = 1
 ): number {
-  const basePower = requiredLaserPower(scannerMass, resistancePercent, resistanceModifier)
-  return instabilityAdjustedPower(basePower, instability)
+  return equalizationPower(scannerMass, resistancePercent, resistanceModifier)
 }
 
 export function computeBreakabilityForOre(
@@ -155,11 +163,19 @@ export function formatBreakabilityRange(range: BreakabilityRange | null): string
   return `${min.toLocaleString()}–${max.toLocaleString()}`
 }
 
-export function formatRequiredPower(scannerMass: number | null, resistancePercent: number | null): string | null {
+/**
+ * Format the crackable power for display.
+ * Includes instability margin when provided.
+ */
+export function formatRequiredPower(
+  scannerMass: number | null,
+  resistancePercent: number | null,
+  instability: number | null = null
+): string | null {
   if (scannerMass == null || resistancePercent == null) return null
   if (!Number.isFinite(scannerMass) || scannerMass <= 0) return null
   if (!Number.isFinite(resistancePercent)) return null
-  const power = requiredLaserPower(scannerMass, resistancePercent)
+  const power = crackablePower(scannerMass, resistancePercent, instability ?? 0)
   if (!Number.isFinite(power)) return null
   return roundDisplay(power).toLocaleString()
 }

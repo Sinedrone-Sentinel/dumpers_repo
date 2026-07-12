@@ -189,7 +189,7 @@ export default function RockCalculator({
   const scannerMass = parseRockPropertyInput(scannerMassInput)
   const scannerResistance = parseRockPropertyInput(resistanceInput)
   const scannerInstability = parseRockPropertyInput(instabilityInput)
-  const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance)
+  const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance, scannerInstability)
 
   useEffect(() => {
     if (ocrApplyingRef.current) {
