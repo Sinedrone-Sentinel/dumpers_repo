@@ -239,15 +239,15 @@ function maxInstabilityModifier(profiles: MoleHeadProfile[]): number {
 }
 
 /**
- * Solo cracking throttle: target crackable power (equalization + instability margin).
- * Returns the throttle % needed to reach crackable threshold.
- * No extra margin — user feathers throttle once in the green.
+ * Solo cracking throttle: target equalization power (stable point).
+ * User feathers up from equalization to build charge — instability fluctuations help.
+ * For easy rocks, equalization is enough. For tough rocks, user adds power as needed.
  */
 function soloCrackingThrottlePercent(
   profile: MoleHeadProfile,
-  crackableThreshold: number
+  equalizingPower: number
 ): number | null {
-  const targetMw = crackableThreshold
+  const targetMw = equalizingPower
   if (targetMw > profile.laserPower) return null
 
   const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
@@ -410,11 +410,11 @@ function evaluateCrewFullBlastPlan(
   const mods = combinedModifiers(profiles, activeIndices)
 
   if (supportProfiles.length === 0) {
-    // No supports = single head must crack alone → use crackable threshold
-    const throttlePercent = soloCrackingThrottlePercent(driver, crackableThreshold)
+    // No supports = single head must crack alone → use equalization as starting point
+    const throttlePercent = soloCrackingThrottlePercent(driver, equalizingPower)
     if (throttlePercent == null) return null
 
-    // Single driver must exceed crackable threshold
+    // Single driver must exceed crackable threshold at full power
     if (driver.laserPower < crackableThreshold) return null
 
     const drivingDetail = [
@@ -556,7 +556,7 @@ function evaluateSingleHeadOnly(
   const crackableThreshold = crackablePowerForHeads(mass, resistancePercent, instability, profiles, activeIndices)
   const canBreakAtFull = primary.laserPower >= crackableThreshold
   const throttlePercent = canBreakAtFull
-    ? soloCrackingThrottlePercent(primary, crackableThreshold)
+    ? soloCrackingThrottlePercent(primary, equalizingPower)
     : null
   const canBreak = canBreakAtFull && throttlePercent != null
   const mods = combinedModifiers(profiles, activeIndices)
