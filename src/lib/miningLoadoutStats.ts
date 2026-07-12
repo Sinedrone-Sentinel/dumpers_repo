@@ -58,13 +58,6 @@ function formatSignedPercent(value: number, decimals = 0): string {
   return `${rounded > 0 ? '+' : ''}${text}%`
 }
 
-function formatSignedNumber(value: number): string {
-  if (!Number.isFinite(value) || value === 0) return '0'
-  const rounded = Math.round(value * 10) / 10
-  const text = rounded % 1 === 0 ? String(Math.round(rounded)) : rounded.toFixed(1)
-  return `${rounded > 0 ? '+' : ''}${text}`
-}
-
 function moduleStatLines(mod: MiningModule): ModifierStatLine[] {
   const powerPct = (mod.powerMultiplier - 1) * 100
   return [
@@ -95,8 +88,8 @@ function moduleStatLines(mod: MiningModule): ModifierStatLine[] {
     {
       key: 'instability',
       label: 'Laser instability',
-      value: formatSignedNumber(mod.instabilityModifier),
-      affectsCracking: false,
+      value: formatSignedPercent(mod.instabilityModifier),
+      affectsCracking: true,
     },
     {
       key: 'shatter',
@@ -136,8 +129,8 @@ function stockHeadLines(laser: NonNullable<ReturnType<typeof getMiningLaserByNam
     {
       key: 'instability',
       label: 'Laser instability',
-      value: formatSignedNumber(laser.instabilityModifier),
-      affectsCracking: false,
+      value: formatSignedPercent(laser.instabilityModifier),
+      affectsCracking: true,
     },
   ]
 }
@@ -205,8 +198,8 @@ function effectiveHeadLines(
     {
       key: 'instability',
       label: 'Laser instability',
-      value: formatSignedNumber(effectiveInstability),
-      affectsCracking: false,
+      value: formatSignedPercent(effectiveInstability),
+      affectsCracking: true,
     },
     {
       key: 'shatter',

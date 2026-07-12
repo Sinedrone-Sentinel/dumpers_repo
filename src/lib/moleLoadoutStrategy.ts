@@ -11,7 +11,7 @@ import {
 } from './miningLaserStats'
 import { combinePassiveModuleModifiers, normalizeModuleSelection } from './miningModules'
 import type { RockBreakabilityTarget } from './miningLoadoutCompare'
-import { formatSignedNumber, formatSignedPercent } from './miningLoadoutStatSemantics'
+import { formatSignedPercent } from './miningLoadoutStatSemantics'
 import { assessMinPowerWarningForSlot, type MinPowerWarning } from './miningMinPowerWarning'
 import { displayMinThrottlePercent, throttlePercentFromMw } from './miningThrottleDisplay'
 import { getMiningLaserByName } from './miningVessels'
@@ -137,7 +137,7 @@ function modifierDetail(profile: MoleHeadProfile): string | null {
     parts.push(`${formatSignedPercent(profile.optimalWindowModifier)} window`)
   }
   if (profile.instabilityModifier !== 0) {
-    parts.push(`${formatSignedNumber(profile.instabilityModifier)} instability`)
+    parts.push(`${formatSignedPercent(profile.instabilityModifier)} instability`)
   }
   return parts.length ? parts.join(', ') : null
 }
@@ -170,7 +170,11 @@ function equalizationPowerForHeads(
 /**
  * Crackable power for heads — actual power needed to fracture (includes instability margin).
  * Used for canBreak checks.
- * Applies head instability modifiers to the rock's base instability.
+ *
+ * Head/module "Laser Instability" % modifies the rock's effective instability on that seat
+ * MULTIPLICATIVELY, the same way the resistance modifier works (confirmed in-game: seat HUD
+ * shows a lower instability than the pilot scan on stabilizing heads).
+ * Uses the best (lowest) multiplier across active heads, matching resistance handling.
  */
 function crackablePowerForHeads(
   mass: number,
@@ -184,14 +188,14 @@ function crackablePowerForHeads(
     return laserResistanceMultiplier(profile?.resistanceModifier ?? 0)
   })
   const bestResistanceMultiplier = Math.min(...multipliers)
-  
-  // Apply instability modifier from heads (additive)
-  const combinedInstabilityMod = activeIndices.reduce((sum, index) => {
+
+  const instabilityMultipliers = activeIndices.map((index) => {
     const profile = profileByIndex(profiles, index)
-    return sum + (profile?.instabilityModifier ?? 0)
-  }, 0)
-  const effectiveInstability = Math.max(0, (instability ?? 0) + combinedInstabilityMod)
-  
+    return 1 + (profile?.instabilityModifier ?? 0) / 100
+  })
+  const bestInstabilityMultiplier = Math.min(...instabilityMultipliers)
+  const effectiveInstability = Math.max(0, (instability ?? 0) * bestInstabilityMultiplier)
+
   return Math.round(crackablePower(mass, resistancePercent, effectiveInstability, bestResistanceMultiplier))
 }
 
@@ -251,6 +255,9 @@ function maxInstabilityModifier(profiles: MoleHeadProfile[]): number {
  * Solo cracking throttle: target equalization power (stable point).
  * User feathers up from equalization to build charge — instability fluctuations help.
  * For easy rocks, equalization is enough. For tough rocks, user adds power as needed.
+ *
+ * Returns null only if laser max power cannot reach equalization.
+ * If minimum throttle exceeds target, use minimum — caller handles crackability.
  */
 function soloCrackingThrottlePercent(
   profile: MoleHeadProfile,
@@ -261,29 +268,8 @@ function soloCrackingThrottlePercent(
 
   const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
   const minPercent = profile.throttleMinimumPercent
+  // If target < minimum throttle output, use minimum — slight overshoot is fine for solo
   if (throttlePercent < minPercent) {
-    if (profile.minLaserMw >= crackableThreshold) return null
-    return minPercent
-  }
-  return throttlePercent
-}
-
-/**
- * Crew coordination throttle: target under equalization so supports do the lifting.
- * Used for multi-head crew plans where driver finishes with controlled power.
- */
-function crewDrivingThrottlePercent(
-  profile: MoleHeadProfile,
-  equalizingPower: number,
-  underPercent = SOLO_UNDER_EQUALIZER_IDEAL_PERCENT
-): number | null {
-  const targetMw = equalizingPower * (1 - underPercent / 100)
-  if (targetMw > profile.laserPower) return null
-
-  const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
-  const minPercent = profile.throttleMinimumPercent
-  if (throttlePercent < minPercent) {
-    if (profile.minLaserMw >= equalizingPower) return null
     return minPercent
   }
   return throttlePercent

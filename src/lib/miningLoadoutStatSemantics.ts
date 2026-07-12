@@ -112,7 +112,7 @@ function formatProjectedStat(
 ): string {
   const line = effectiveLine(breakdown, key)
   if (line) return line.value
-  return key === 'instability' ? formatSignedNumber(projected) : formatSignedPercent(projected)
+  return formatSignedPercent(projected)
 }
 
 export function statSentiment(key: string, value: string): StatSentiment {

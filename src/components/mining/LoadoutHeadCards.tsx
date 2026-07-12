@@ -79,7 +79,7 @@ const EMPTY_MODULE_LINES: ModifierStatLine[] = [
   { key: 'resistance', label: 'Resistance', value: '0%', affectsCracking: true },
   { key: 'window', label: 'Optimal charge window', value: '0%', affectsCracking: false },
   { key: 'filter', label: 'Inert filter', value: '0%', affectsCracking: false },
-  { key: 'instability', label: 'Laser instability', value: '0', affectsCracking: false },
+  { key: 'instability', label: 'Laser instability', value: '0%', affectsCracking: true },
   { key: 'shatter', label: 'Shatter damage', value: '0%', affectsCracking: false },
 ]
 

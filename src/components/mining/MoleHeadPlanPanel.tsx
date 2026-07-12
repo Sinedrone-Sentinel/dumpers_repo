@@ -1,9 +1,6 @@
 import React from 'react'
 import { minPowerWarningMessage } from '../../lib/miningMinPowerWarning'
-import {
-  formatSignedNumber,
-  formatSignedPercent,
-} from '../../lib/miningLoadoutStatSemantics'
+import { formatSignedPercent } from '../../lib/miningLoadoutStatSemantics'
 import type { MoleLoadoutStrategy } from '../../lib/moleLoadoutStrategy'
 
 interface MoleHeadPlanPanelProps {
@@ -66,7 +63,7 @@ export default function MoleHeadPlanPanel({ strategy, embedded = false }: MoleHe
             ? ` ${formatSignedPercent(strategy.combinedWindowModifier)} window`
             : ''}
           {strategy.combinedInstabilityModifier !== 0
-            ? ` ${formatSignedNumber(strategy.combinedInstabilityModifier)} instability`
+            ? ` ${formatSignedPercent(strategy.combinedInstabilityModifier)} instability`
             : ''}
         </p>
       ) : null}

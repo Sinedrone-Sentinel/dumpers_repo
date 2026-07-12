@@ -1,5 +1,5 @@
 import type { MiningLaserSlotConfig } from './miningLaserStats'
-import { formatSignedNumber, formatSignedPercent } from './miningLoadoutStatSemantics'
+import { formatSignedPercent } from './miningLoadoutStatSemantics'
 import { buildMoleHeadProfile } from './moleLoadoutStrategy'
 import { listMiningLasersForSize } from './miningVessels'
 
@@ -87,7 +87,7 @@ function slotDetail(slot: SlotSnapshot): string {
     parts.push(`${formatSignedPercent(slot.resistanceModifier)} resistance`)
   }
   if (slot.instabilityModifier !== 0) {
-    parts.push(`${formatSignedNumber(slot.instabilityModifier)} instability`)
+    parts.push(`${formatSignedPercent(slot.instabilityModifier)} instability`)
   }
   return parts.join(' · ')
 }

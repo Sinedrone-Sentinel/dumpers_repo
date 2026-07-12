@@ -228,7 +228,7 @@ function findInstabilityGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCa
 
     candidates.push({
       gadget,
-      reason: `${gadget.displayName} cuts scanner instability from ${Math.round(instability).toLocaleString()} to ~${Math.round(adjusted).toLocaleString()} (${formatGadgetModifierPercent(gadget.instabilityModifier)}).${tradeoff}`,
+      reason: `${gadget.displayName} cuts instability from ${Math.round(instability).toLocaleString()} to ~${Math.round(adjusted).toLocaleString()} (${formatGadgetModifierPercent(gadget.instabilityModifier)}).${tradeoff}`,
       requiredPower: comparison.requiredPower,
       score: Math.abs(gadget.instabilityModifier) - gadget.resistanceModifier * 2,
     })

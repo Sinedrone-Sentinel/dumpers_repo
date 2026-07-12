@@ -29,11 +29,15 @@ export function rockResistanceWithGadget(
   return applyRockMultiplicativePercent(resistancePercent, gadget.resistanceModifier)
 }
 
+/**
+ * Gadget "Laser Instability" modifies the rock's displayed instability multiplicatively,
+ * the same way the resistance modifier works (e.g. BoreMax −70% → instability × 0.30).
+ */
 export function rockInstabilityWithGadget(
   instability: number,
   gadget: MiningGadget
 ): number {
-  return applyRockMultiplicativePercent(instability, gadget.instabilityModifier)
+  return Math.max(0, applyRockMultiplicativePercent(instability, gadget.instabilityModifier))
 }
 
 export function formatGadgetModifierPercent(value: number): string {
