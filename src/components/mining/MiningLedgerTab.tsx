@@ -1220,7 +1220,7 @@ export default function MiningLedgerTab({
       <div className="text-center py-12 rounded-lg border border-dashed border-slate-700/50">
         <p className="text-slate-400 text-sm max-w-md mx-auto">
           Mining crew ledgers require a signed-in account with a verified RSI Handle. Sign in and
-          verify your handle in Profile Settings to create ledgers and track crew payouts.
+          verify your handle in Settings to create ledgers and track crew payouts.
         </p>
       </div>
     )
@@ -1232,7 +1232,7 @@ export default function MiningLedgerTab({
         <p className="text-slate-300 text-sm max-w-md mx-auto">
           Mining crew ledgers are available to members with a{' '}
           <strong className="text-amber-300/90">verified RSI Handle</strong> on Dumper&apos;s Repo.
-          Open <strong className="text-white">Profile Settings</strong> from the user menu to validate
+          Open <strong className="text-white">Settings</strong> from the user menu to validate
           your handle, then return here.
         </p>
       </div>

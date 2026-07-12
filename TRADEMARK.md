@@ -26,7 +26,7 @@ card flip animations). Upload your org logo in **Settings → Site** (super-admi
 after running migration `089_org_logo.sql`. Do not commit your org logo PNG to
 the franchise repo — it is stored in your Supabase project, not in git.
 
-## Dumpers Fair-Value Pricing (DFP)
+## Dumper's Fair-Value Price (DFP)
 
 DFP is proprietary to Michael Linzenmeyer. Franchises must use the official
 canonical DFP engine URL in production. Do not publish, document, or

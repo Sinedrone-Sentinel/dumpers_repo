@@ -128,8 +128,8 @@ function SmartCrackerPanel({
           </p>
           <p className="text-[11px] text-slate-400 leading-snug">{slowCrack.detail}</p>
           <p className="text-[11px] font-mono tabular-nums text-slate-500">
-            Full-blast {slowCrack.deliveredMw.toLocaleString()} MW vs{' '}
-            {slowCrack.equalizingMw.toLocaleString()} MW equalizer
+            Max output {slowCrack.deliveredMw.toLocaleString()} MW vs{' '}
+            {slowCrack.equalizingMw.toLocaleString()} MW needed to hold the charge
           </p>
         </div>
       ) : null}
@@ -250,11 +250,7 @@ function ComparisonPanel({
           {comparison.minPowerWarnings.map((warning) => (
             <div
               key={warning.slotIndex}
-              className={`rounded-md border px-2 py-1.5 text-[11px] leading-snug ${
-                warning.level === 'misconfigured'
-                  ? 'border-amber-900/50 bg-amber-950/20 text-amber-200/90'
-                  : 'border-red-900/50 bg-red-950/20 text-red-300/90'
-              }`}
+              className="rounded-md border px-2 py-1.5 text-[11px] leading-snug border-red-900/50 bg-red-950/20 text-red-300/90"
             >
               {multiLaser ? (
                 <p className="text-[10px] uppercase tracking-wide text-slate-500 mb-0.5">
@@ -291,8 +287,8 @@ function ComparisonPanel({
         </div>
       ) : suppressPerLaserDetail ? (
         <p className="text-[10px] text-slate-500 pt-2 border-t border-slate-700/60 leading-snug">
-          Mole crew head plan above uses full-blast + drive throttles — per-laser equal split does
-          not apply.
+          The crew head plan above gives each head its own throttle, so an equal per-laser split is
+          not shown here.
         </p>
       ) : null}
     </div>

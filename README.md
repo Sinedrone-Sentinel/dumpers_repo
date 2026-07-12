@@ -83,7 +83,7 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 - **Cards** view (edit quantities) and **List** view (read-only overview)
 - Mined/refined ore uses bands Q500–Q1000; salvage and trade goods use fixed **Purchased (Q0)** tiers
 - **Site Total** rollup (officers and super-admins only) — org-wide inventory aggregate
-- Super-admins can sync the resource catalog from game data via **DB Actions**
+- Resource catalog ships with the site from parsed game data — no manual sync
 
 ### Mining Tracker (`/mining-tracker`)
 
@@ -94,7 +94,7 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - Reference grid of base RS signatures and cluster spawn odds; track up to two cards per ore (Surface / Asteroid) plus optional per-site location cards
 - Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
 - **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
-- **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship (sign-in; RSI verification not required)
+- **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship sync across devices when signed in (RSI verification not required)
 
 **Mining Guide**
 
@@ -127,6 +127,12 @@ Single **New Order** builder for both listing types:
 - Seller actions on-card: start handoff, mark ready, cancel/release
 - **Reputation badges** show buyer rep, fulfiller/seller rep, and average delivery time (after 5 completed trades)
 - Offline users see pending-order **count only** — sign in to browse or accept
+
+### Marketplace ads & purchase toasts
+
+- Optional bottom-corner **listing ads** rotate active WTS/WTB listings from other members (opens the listing on click)
+- Optional **purchase toasts** announce completed marketplace deals in real time
+- Site-wide toggles are super-admin controlled (off by default); members can opt out individually in Settings
 
 ### Info Archive (`/archive`)
 
@@ -169,12 +175,14 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 - **Connected Accounts** — link Google and Discord (auto-merge when emails match)
 - **Deduct inventory on craft complete** — optional WTB fulfillment material deduct from Resource Tracker
 - **Group FPS blueprint variants** — Blueprints page display preference
+- **Marketplace ads / purchase toasts** — personal opt-out toggles (shown when the site has them enabled)
 - **My Data** — wipe acquired blueprints or tracked resources
 - Delete account (blocked while active orders exist)
 
 **Super-admin only (same Settings modal)**
 
 - Toggle **DFP display** site-wide (required opt-out footer when disabled)
+- Enable **marketplace ads** (WTS/WTB) and **purchase toasts** site-wide
 - **Auto-approve** new sign-ups
 - **Welcome modal** always-show (testing)
 - Upload **org logo** (`ORG_LOGO.png` in Supabase Storage) — franchise branding, not git
@@ -186,7 +194,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 | **Admin Panel** | Officers + super-admins | Approve `pending` users, promote/demote roles, ban/unban |
 | **Support Dashboard** | Officers + super-admins | Ticket queue |
 | **Site Analytics** (`/analytics`) | Super-admins | Visitors, tool-time, guest vs signed-in split, geo |
-| **DB Actions** | Super-admins | Game data extract/parse/deploy; wipe all personal inventory; revoke RSI verification; reset buyer/fulfiller rep |
+| **DB Actions** | Super-admins | Game-data update runbook reference; wipe all personal inventory; revoke RSI verification; reset buyer/fulfiller rep |
 | **Discord** (modal) | Super-admins | Official webhook, queue status, coalesce minutes, manual send |
 
 ---
@@ -271,7 +279,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`114_cleanup_legacy_db_objects.sql`**
+   Apply migrations in numeric order through **`118_drop_game_data_mirror_tables.sql`**
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
@@ -342,13 +350,18 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-mining-locations.json` | Ore/location compendium + aliases |
 | `game-mining-spawns.json` | Per-site spawn weights and cluster profiles |
 | `game-components.json` | Ship components |
+| `game-ordnance.json` | Missiles and torpedoes (Archive Ordnance tab) |
+| `game-fps-weapons.json` | FPS weapon stats |
+| `game-salvage-modules.json` | Salvage modules |
+| `game-manufacturers.json` | Manufacturer names/codes |
+| `game-build-version.json` | Extracted game build version (feeds BP Dumper min version) |
 | `game-reputation.json` | Faction standings and mission brokers |
 | `game-quality-bands.json` | Crafting quality curves |
 | `game-lore.json` | Archive resource/item lore |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
-Super-admins can run extract → parse → deploy from **DB Actions** without a local toolchain on every machine.
+The **DB Actions** modal shows super-admins the extract → parse → deploy runbook for reference; the steps themselves run locally in a terminal on a machine with the game files and this repo.
 
 ### Repository layout
 

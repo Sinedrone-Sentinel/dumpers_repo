@@ -62,9 +62,10 @@ export default function SoloHeadPlanPanel({
           <MoleHeadPlanPanel strategy={soloRockPlan} oreName={rockTarget?.oreName} />
         ) : (
             <p className="text-[11px] text-slate-500 leading-snug rounded-md border border-slate-700/60 bg-slate-900/40 px-2.5 py-2">
-              Enter pilot-scan <strong className="text-slate-300">mass</strong> and{' '}
-              <strong className="text-slate-300">resistance</strong> from the Rock Calculator (raw RESULTS
-              values). SHP shifts RES per head/modules — e.g. 74% pilot → ~52% on a Helix turret.
+              Enter the <strong className="text-slate-300">mass</strong> and{' '}
+              <strong className="text-slate-300">resistance</strong> from your pilot-seat scan into the
+              Rock Calculator. The plan then adjusts resistance for each head&apos;s modules — a 74%
+              pilot reading can drop to ~52% on a Helix turret.
             </p>
         )}
         <ModuleSwapSuggestionsPanel suggestions={swapSuggestions} />

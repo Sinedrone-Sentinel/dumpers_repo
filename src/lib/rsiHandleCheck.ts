@@ -24,7 +24,7 @@ export async function checkRsiHandleExistsOnRsi(
     const {
       data: { session },
     } = await supabase.auth.getSession()
-    if (!session) return { valid: false, error: 'Not authenticated' }
+    if (!session) return { valid: false, error: 'Your session has expired — please sign in again.' }
 
     const response = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-rsi-handle-exists`,

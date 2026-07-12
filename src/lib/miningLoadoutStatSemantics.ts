@@ -430,15 +430,15 @@ function buildDynamicTip(
   const problemBody = (() => {
     switch (problem.key) {
       case 'module-power':
-        return `Module stack is dragging fracture power (${problem.displayValue}).`
+        return `Your modules are reducing this laser's power output (${problem.displayValue}).`
       case 'resistance':
-        return `Resistance shift is working against you (${problem.displayValue}).`
+        return `This setup raises rock resistance instead of lowering it (${problem.displayValue}).`
       case 'window':
-        return `Charge window is extremely tight (${problem.displayValue}).`
+        return `This setup makes the optimal charge window very narrow (${problem.displayValue}).`
       case 'instability':
-        return `Laser instability is high (${problem.displayValue}).`
+        return `Laser instability is high (${problem.displayValue}) — expect a jumpy charge.`
       default:
-        return `${problem.label} is out of band (${problem.displayValue}).`
+        return `${problem.label} is outside the normal range (${problem.displayValue}).`
     }
   })()
 

@@ -20,11 +20,12 @@ export const GUEST_MEMBERSHIP_PITCH = {
 export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCopy>> = {
   custom_orders: {
     title: 'Custom Orders',
-    description: 'Create and manage custom crafting orders with other members.',
+    description: 'Buy and sell crafted items and resources with other members.',
     details: [
-      'Request crafted items with blueprint, quality, and quantity requirements',
+      'Post WTB orders for crafted items (blueprint, quality, quantity) or bulk resources',
+      'Post WTS listings for stock you have on hand',
       'Get notified when a fulfiller accepts your order',
-      'Rate fulfillers when orders complete — builds community reputation',
+      'Rate your trade partners when orders complete — builds community reputation',
       'Requires a verified RSI Handle and officer approval to participate',
     ],
   },

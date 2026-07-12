@@ -21,7 +21,7 @@ export const NOTIFICATION_CATEGORIES: NotificationCategoryDefinition[] = [
   { id: 'wtb-orders', label: 'WTB & Craft Orders' },
   { id: 'wts-listings', label: 'WTS Listings' },
   { id: 'support', label: 'Support' },
-  { id: 'mining', label: 'Mining Ledger' },
+  { id: 'mining', label: 'Mining Ledgers' },
   { id: 'ratings', label: 'Ratings' },
   { id: 'other', label: 'Other' },
 ]

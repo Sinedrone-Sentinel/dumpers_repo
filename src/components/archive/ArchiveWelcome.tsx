@@ -377,7 +377,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <div>
               <h4 className="text-sm font-medium text-green-300">The Solution</h4>
               <p className="text-sm text-slate-400 mt-1 leading-relaxed">
-                <strong className="text-white">Dumper's Fair-Value Price (DFP)</strong> is an algorithmic pricing 
+                <strong className="text-white">Dumper's Fair-Value Price (DFP)</strong> is a pricing
                 system that calculates what resources and crafted items are actually worth based on:
               </p>
               <ul className="mt-2 space-y-1 text-sm text-slate-400">

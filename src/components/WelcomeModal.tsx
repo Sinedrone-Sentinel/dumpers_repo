@@ -35,7 +35,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
-        setValidationError('Not authenticated')
+        setValidationError('Your session has expired — please sign in again.')
         setValidating(false)
         return
       }
@@ -130,7 +130,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                 and <strong className="text-orange-300">fair-value pricing</strong>.
               </p>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Our <strong className="text-white">Dumper's Fair-Value Price (DFP)</strong> algorithm calculates 
+                Our <strong className="text-white">Dumper's Fair-Value Price (DFP)</strong> system calculates 
                 what resources and items are actually worth — no more getting gouged by grey market sellers 
                 asking billions for items that take an hour to get.
               </p>

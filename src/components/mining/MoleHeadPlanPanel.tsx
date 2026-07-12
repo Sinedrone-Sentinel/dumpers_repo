@@ -112,11 +112,7 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
           {strategy.minPowerWarnings.map((warning) => (
             <div
               key={`mole-min-${warning.slotIndex}`}
-              className={`rounded-md border px-2 py-1.5 text-[11px] leading-snug ${
-                warning.level === 'misconfigured'
-                  ? 'border-amber-900/50 bg-amber-950/20 text-amber-200/90'
-                  : 'border-red-900/50 bg-red-950/20 text-red-300/90'
-              }`}
+              className="rounded-md border px-2 py-1.5 text-[11px] leading-snug border-red-900/50 bg-red-950/20 text-red-300/90"
             >
               {minPowerWarningMessage(warning)}
             </div>

@@ -31,6 +31,11 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 | `game-mining-locations.json` | Ore/location compendium, `locationAliases` (spawnKey → displayName/guideName), mineable details | Game localization (`*_desc` keys) + compendium + HPP audit |
 | `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles; each location includes `spawnKey`, `displayName`, `guideName` | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |
+| `game-ordnance.json` | Missiles and torpedoes (Archive Ordnance tab) | `entities/scitem/ships/weapons/missiles/` |
+| `game-fps-weapons.json` | FPS weapon stats | `entities/scitem/weapons/` |
+| `game-salvage-modules.json` | Salvage modules | `entities/scitem/ships/` |
+| `game-manufacturers.json` | Manufacturer names/codes | Manufacturer records |
+| `game-build-version.json` | Extracted game build version (BP Dumper min version) | Extraction metadata |
 | `game-reputation.json` | Reputation standings, contracts, mission broker entries | `reputation/standings/`, `missionbroker/`, contract generators |
 | `game-quality-bands.json` | Crafting quality quantization + distribution curves | `crafting/qualityquantization/`, `crafting/qualitydistribution/` |
 | `game-lore.json` | Resource/item lore for Archive | Game localization (`global.ini`) |
@@ -164,7 +169,8 @@ These were removed from the repo and must not be reintroduced:
 | Legacy source | Was replaced by |
 |---------------|-----------------|
 | sccrafter.com `Blueprints.json` + `sync-blueprints` | `game-blueprints.json` from game extraction |
-| MrKraken StarStrings + `sync-starstrings` | `parse-extracted-data.mjs` + `game_*` DB tables |
+| MrKraken StarStrings + `sync-starstrings` | `parse-extracted-data.mjs` + bundled `game-*.json` |
+| Supabase `game_*` mirror tables + `sync-game-data-to-db.mjs` | Bundled `game-*.json` at build time (mirrors dropped in migration 118) |
 | Separate `blueprint-acquisition.json` | `rewardMissions` on entries in `game-blueprints.json` |
 
 ---

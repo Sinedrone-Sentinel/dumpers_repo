@@ -32,7 +32,7 @@ export const OFFLINE_MODE_SECTION = {
     'Custom Orders — post WTB buy requests and WTS sell listings (partial OK by default)',
     'Fulfillment — browse, accept full or partial WTS buys, and complete trades',
     'BP Dumper + Live Mission Tracker — sync log unlocks and watch active missions',
-    'Mining Ledger — crew payout tracking (requires verified RSI Handle on your account)',
+    'Mining Ledgers — crew payout tracking (requires verified RSI Handle on your account)',
     'View member directory / browse collections',
     'Cross-device data sync',
   ],
@@ -52,7 +52,7 @@ export const DFP_SECTION = {
   solution: {
     title: 'The Solution',
     intro:
-      "**Dumper's Fair-Value Price (DFP)** is an algorithmic pricing system that calculates what resources and crafted items are actually worth based on:",
+      "**Dumper's Fair-Value Price (DFP)** is a pricing system that calculates what resources and crafted items are actually worth based on:",
     bullets: [
       'Time investment required to acquire/craft',
       'Resource rarity and availability',

@@ -141,7 +141,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
-        setMessage({ type: 'error', text: 'Not authenticated' })
+        setMessage({ type: 'error', text: 'Your session has expired — please sign in again.' })
         setValidatingRsi(false)
         return
       }

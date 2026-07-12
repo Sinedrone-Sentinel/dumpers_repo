@@ -4,7 +4,7 @@ This guide covers deploying your own Dumper's Repo franchise instance.
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 22+ and npm 11+ (see `.nvmrc`)
 - A Supabase project (see `SUPABASE_SETUP.md`)
 - A static file hosting provider
 
@@ -12,8 +12,8 @@ This guide covers deploying your own Dumper's Repo franchise instance.
 
 1. Clone the repository
 2. Copy `.env.example` to `.env` and configure Supabase credentials
-3. Run database migrations through **`078_order_listing_type.sql`** — see [docs/SUPABASE_SETUP.md](SUPABASE_SETUP.md)
-4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`)
+3. Run all database migrations in numeric order (currently through **`118_drop_game_data_mirror_tables.sql`**) — see [docs/SUPABASE_SETUP.md](SUPABASE_SETUP.md)
+4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`, `log-watcher-webhook`)
 5. Build and deploy
 
 ```bash
@@ -115,7 +115,7 @@ Also update `index.html` for:
 
 ## DFP Engine (Important)
 
-Per the LICENSE, franchise deployments **must** load the DFP engine from the canonical host (`dumpers-repo.com` or the GitHub raw URL). Do not bundle or self-host the DFP engine in production.
+Per the LICENSE, franchise deployments **must** load the DFP engine from the canonical host (`https://www.dumpers-repo.com`). Do not bundle or self-host the DFP engine in production.
 
 The `VITE_DFP_ENGINE_BASE_URL` environment variable is for **local development only**.
 
@@ -134,11 +134,11 @@ The `VITE_DFP_ENGINE_BASE_URL` environment variable is for **local development o
 Your host isn't configured for SPA routing. All paths need to serve `index.html`.
 
 ### CORS errors loading DFP
-The canonical DFP host (`raw.githubusercontent.com`) serves `Access-Control-Allow-Origin: *`. If you see CORS errors, check that you're not accidentally trying to load from a different origin.
+The canonical DFP host (`https://www.dumpers-repo.com`) must allow your franchise origin. If you see CORS errors, verify you are loading from the canonical host and contact the licensor to have your origin allowed.
 
 ### Edge Functions not working
 1. Verify functions are deployed: `npx supabase functions list`
-2. Required functions: `ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`
+2. Required functions: `ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`, `log-watcher-webhook`
 3. Check function logs: `npx supabase functions logs send-discord`
 4. Discord queue cron requires **pg_cron** + **pg_net** (see `SUPABASE_SETUP.md` migrations 065–068)
 5. Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in Supabase dashboard

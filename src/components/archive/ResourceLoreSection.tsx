@@ -95,16 +95,9 @@ export default function ResourceLoreSection() {
       <div className="p-4 bg-amber-900/30 border border-amber-500/30 rounded-lg">
         <h3 className="text-sm font-medium text-amber-300 mb-2">Game Lore Not Available</h3>
         <p className="text-xs text-amber-200/70">
-          Game lore has not been extracted yet. Run the game data pipeline locally:
+          Lore entries are not available in this build. They will return with the next game-data
+          update.
         </p>
-        <ul className="text-xs text-slate-400 mt-2 list-disc list-inside space-y-1">
-          <li>
-            <code className="text-violet-300">.\scripts\extract-game-data.ps1</code>
-          </li>
-          <li>
-            <code className="text-violet-300">node scripts/parse-extracted-data.mjs</code>
-          </li>
-        </ul>
       </div>
     )
   }

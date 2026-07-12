@@ -1,15 +1,12 @@
 import { getMiningLaserByName } from './miningVessels'
 import { displayMinThrottlePercent } from './miningThrottleDisplay'
 
-export type MinPowerWarningLevel = 'misconfigured' | 'danger'
-
 export interface MinPowerWarning {
   slotIndex: number
   label: string
   requiredMw: number
   minLaserMw: number
   throttleMinimumPercent: number
-  level: MinPowerWarningLevel
 }
 
 export function minLaserMw(laserPower: number, throttleMinimumFraction: number): number {
@@ -35,18 +32,11 @@ export function assessMinPowerWarning(
     requiredMw,
     minLaserMw: minMw,
     throttleMinimumPercent: displayMinThrottlePercent(throttleMinimumFraction),
-    level: 'danger',
   }
 }
 
 export function minPowerWarningMessage(warning: MinPowerWarning): string {
-  const minPercent = warning.throttleMinimumPercent
-
-  if (warning.level === 'misconfigured') {
-    return `Min throttle (${minPercent}%) does not land the driving laser in the 1–5% band below the resistance equalizer — swap heads or modules instead of feathering power on/off.`
-  }
-
-  return `Minimum throttle (${minPercent}%) is still above the fracture band just under the resistance equalizer — try a different head, support laser, or gadget.`
+  return `Even at minimum throttle (${warning.throttleMinimumPercent}%), this laser puts out more power than the rock needs — the charge can spike and blow the rock. Pulse the laser in short bursts or switch to a weaker head.`
 }
 
 export function assessMinPowerWarningForSlot(
