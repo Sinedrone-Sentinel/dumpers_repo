@@ -74,7 +74,7 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
               {windowBar ? (
                 <div className="pl-2 pr-4 pt-1 flex items-center gap-2">
                   <div className="flex-1">
-                    <WindowSizeBar model={windowBar} compact />
+                    <WindowSizeBar model={windowBar} />
                   </div>
                   <span className="text-[10px] text-slate-500 whitespace-nowrap tabular-nums">
                     window{' '}

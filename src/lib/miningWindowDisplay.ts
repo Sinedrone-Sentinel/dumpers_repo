@@ -22,13 +22,28 @@ export function modifiedWindowBarPercent(basePercent: number, windowModifierPerc
   return Math.max(4, Math.min(90, modified))
 }
 
+/**
+ * Physical bar thickness in CSS px for a window size %.
+ *
+ * Anchor: the thinnest window realistically seen in game — Quantainium
+ * (thinness 2.3 → ~16.7%) with a full negative window stack (-43%) ≈ 9.5% —
+ * draws 6px, which is 1/16 inch at the CSS reference 96 dpi. Everything
+ * scales linearly from that anchor; CSS px track device pixel ratio, so the
+ * proportions hold across resolutions.
+ */
+const THINNEST_KNOWN_PERCENT = 9.5
+const THINNEST_KNOWN_PX = 6
+
+export function windowBarHeightPx(widthPercent: number): number {
+  const px = Math.round(widthPercent * (THINNEST_KNOWN_PX / THINNEST_KNOWN_PERCENT))
+  return Math.max(4, Math.min(44, px))
+}
+
 export interface WindowBarModel {
-  /** Band width, % of track. */
+  /** Estimated window size, % of the charge bar (relative scale). */
   widthPercent: number
-  /** Band center position, % of track (game window midpoint). */
-  midpointPercent: number
-  /** Extra span (each side) the band can drift per rock, % of track. */
-  driftPercent: number
+  /** Physical bar thickness (CSS px), anchored to the thinnest known in-game window. */
+  heightPx: number
   rating: OreWindowProfile['rating']
 }
 
@@ -44,8 +59,7 @@ export function buildWindowBarModel(
 
   return {
     widthPercent: Math.round(width),
-    midpointPercent: Math.round(profile.midpoint * 100),
-    driftPercent: Math.round(profile.randomness * 100),
+    heightPx: windowBarHeightPx(width),
     rating: profile.rating,
   }
 }

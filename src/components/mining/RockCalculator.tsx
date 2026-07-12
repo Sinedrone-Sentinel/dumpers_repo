@@ -674,16 +674,7 @@ export default function RockCalculator({
               {windowBarModel ? (
                 <div className="space-y-1">
                   <p className="text-[10px] uppercase tracking-wide text-slate-500">
-                    Estimated window size ·{' '}
-                    <span
-                      className={
-                        windowBarModel.rating === 'wide' || windowBarModel.rating === 'average'
-                          ? 'text-green-500/90'
-                          : 'text-amber-400/90'
-                      }
-                    >
-                      {windowBarModel.rating}
-                    </span>
+                    Estimated window size
                   </p>
                   <WindowSizeBar model={windowBarModel} />
                 </div>
