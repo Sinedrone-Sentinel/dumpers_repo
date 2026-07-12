@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
@@ -14,10 +15,14 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
+      react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
     rules: {
+      // Undefined JSX components are runtime ReferenceErrors — Vite/esbuild
+      // does not catch them at build time (assumes possible globals).
+      'react/jsx-no-undef': 'error',
       // Classic hooks rules only — react-hooks 7 recommended preset also enables compiler rules.
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
