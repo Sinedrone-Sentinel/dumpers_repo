@@ -3,7 +3,6 @@ import { pricingForResourceLine } from './orderPricing'
 import {
   DEFAULT_QUALITY,
   getDefaultBandQuality,
-  getResourceBands,
   PURCHASED_STOCK_QUALITY,
   resolveLedgerQuality,
 } from './qualityBands'

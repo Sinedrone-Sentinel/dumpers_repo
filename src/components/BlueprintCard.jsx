@@ -30,7 +30,7 @@ export default function BlueprintCard({
   ownerCount,
   dfpDisplayEnabled = true,
 }) {
-  const dfpEngineReady = useDfpEngineReady()
+  const _dfpEngineReady = useDfpEngineReady()
   const isStarterBlueprint = isDefaultBlueprint(blueprint.internalName || blueprint.file)
 
   const defaultSlotQualities = useMemo(
@@ -39,7 +39,7 @@ export default function BlueprintCard({
   )
   const dfp = useMemo(
     () => calculateBlueprintDfpWithParts(blueprint, defaultSlotQualities),
-    [blueprint, defaultSlotQualities, dfpEngineReady]
+    [blueprint, defaultSlotQualities]
   )
 
   if (!(blueprint.internalName || blueprint.file) || !blueprint.blueprintName) return null

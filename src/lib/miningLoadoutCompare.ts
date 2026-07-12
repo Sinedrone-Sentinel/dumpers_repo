@@ -97,7 +97,6 @@ export function compareLoadoutToRock(
   const totalShortfallMw = canBreak ? 0 : requiredPower - totalLaserPower
 
   const slotCount = effectiveStats.length
-  const requiredShare = Math.round(requiredPower / slotCount)
 
   const laserRows: LaserBreakabilityRow[] = effectiveStats.map((stats, slotIndex) => {
     const slotResistance = laserResistanceMultiplier(stats.resistanceModifier)

@@ -82,7 +82,7 @@ function resolveBlueprintInternalName(blueprintId: string | null | undefined): s
   return normalized.trim()
 }
 
-function normalizeMissionTitle(title: string): string {
+function _normalizeMissionTitle(title: string): string {
   return title.replace(/\\n/g, '').replace(/\n/g, '').trim()
 }
 

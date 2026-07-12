@@ -118,6 +118,7 @@ export default function BlueprintDetailsModal({
 
   useEffect(() => {
     setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset only when blueprint identity changes
   }, [blueprint.internalName])
 
   const effectiveSlotQualities = useMemo(

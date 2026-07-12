@@ -915,7 +915,7 @@ function pushOreLine(
   rawOcrLine: string,
   elementRank: Map<string, number>,
   compositionLines: OcrCompositionLine[],
-  warnings: string[]
+  _warnings: string[]
 ): void {
   if (isInertElement(elementName)) return
 
@@ -1252,7 +1252,7 @@ function parseCompositionRow(
   return null
 }
 
-function acceptInertPercent(
+function _acceptInertPercent(
   percent: number,
   compositionLines: OcrCompositionLine[]
 ): boolean {

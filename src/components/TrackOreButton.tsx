@@ -126,7 +126,7 @@ export default function TrackOreButtons({
   rarity,
   compact = false,
   showTrackerLink = false,
-  profileMode = 'overall',
+  _profileMode = 'overall',
   locationName,
   depositType,
   onOpenTracker,

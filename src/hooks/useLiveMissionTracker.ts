@@ -28,11 +28,13 @@ export function useLiveMissionTracker() {
 
   const isConnected = useMemo(
     () => isDumperWatchConnected(watchActive, lastPingAt),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- connectionTick forces re-check on interval
     [watchActive, lastPingAt, connectionTick]
   )
 
   const statusBar = useMemo(
     () => getLiveTrackerStatusBar(gameStatus, gameStatusAt, Date.now()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- connectionTick forces re-check on interval
     [gameStatus, gameStatusAt, connectionTick]
   )
 

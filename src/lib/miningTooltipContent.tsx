@@ -24,9 +24,7 @@ import {
 } from './miningLocationAliases'
 import { formatRsReading } from './miningSignatures'
 import {
-  getGuideLocationSpawnLabel,
   hasShipRsSignature,
-  isGuideLocationListOnlyOre,
   isHandMineableOre,
   rsTrackerUnmappedDetail,
 } from './handMineables'

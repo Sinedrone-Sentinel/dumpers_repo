@@ -210,7 +210,7 @@ export default function MiningTrackerRoute() {
   }, [filteredEntries])
 
   const handleVesselChange = useCallback((vesselId: MiningVesselId) => {
-    setLoadoutUi((prev) => {
+    setLoadoutUi((_prev) => {
       const next = { vesselId, loadoutKey: 'default' as LoadoutKey }
       writeMiningTrackerUiState(next)
       return next
@@ -315,7 +315,7 @@ export default function MiningTrackerRoute() {
   }, [headPlanEnabled])
 
   // Guide view computed data
-  const groupedByRarity = useMemo(() => {
+  const _groupedByRarity = useMemo(() => {
     if (!data) return {}
     return data.reduce<Record<string, MiningData[]>>((acc, item) => {
       if (!acc[item.rarity]) acc[item.rarity] = []
@@ -949,7 +949,7 @@ function GuideOreCard({ item, onLocationClick }: { item: MiningData; onLocationC
       return a.location.localeCompare(b.location)
     })
     return { surface, asteroid }
-  }, [item.ore_name, item.locations, item.rarity, locationListOnly])
+  }, [item.ore_name, item.locations, locationListOnly])
 
   const renderChip = (chip: {
     location: string

@@ -347,7 +347,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
   }
 
   // Try to find matching pool by searching all pools for matching titles
-  for (const [poolKey, missions] of Object.entries(missionsByPool)) {
+  for (const [_poolKey, missions] of Object.entries(missionsByPool)) {
     for (const mission of missions) {
       const mTitle = (mission.title || '').toLowerCase()
       const labelLower = (missionLabel || '').toLowerCase()

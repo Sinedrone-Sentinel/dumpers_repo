@@ -8,10 +8,6 @@ import {
   type RockBreakabilityTarget,
 } from '../../lib/miningLoadoutCompare'
 import { minPowerWarningMessage } from '../../lib/miningMinPowerWarning'
-import {
-  formatSignedNumber,
-  formatSignedPercent,
-} from '../../lib/miningLoadoutStatSemantics'
 import MoleHeadPlanPanel from './MoleHeadPlanPanel'
 import {
   buildSmartCracker,

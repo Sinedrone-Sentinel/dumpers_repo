@@ -187,7 +187,7 @@ function BrandRevealAnimatedModal({
 
   const targetRect = useMemo(() => computeTargetRect(size ?? 'md'), [size])
 
-  const originBox = useMemo(() => rectToBox(originRef.current), [originRect])
+  const originBox = useMemo(() => rectToBox(originRef.current), [])
   const interactive = stage === 'ready'
 
   useBodyScrollLock(true)

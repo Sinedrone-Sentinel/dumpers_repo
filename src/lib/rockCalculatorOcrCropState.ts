@@ -18,7 +18,7 @@ export interface OcrViewerState {
   deskewDegrees: number
 }
 
-const DEFAULT_VIEWER_STATE: OcrViewerState = {
+const _DEFAULT_VIEWER_STATE: OcrViewerState = {
   crop: DEFAULT_CROP_RECT,
   zoom: 1,
   panX: 0,

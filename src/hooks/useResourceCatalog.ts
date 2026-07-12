@@ -102,6 +102,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     }
 
     setLoading(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- catalog lengths used for loading state only
   }, [buildInventoryContext, withInventory, includeInactive])
 
   const refresh = useCallback(async () => {

@@ -529,7 +529,7 @@ export default function ResourceBuyOrderPanel({
     if (expandedCartKey === cartKey) setExpandedCartKey(null)
   }
 
-  const updateResourceCartLine = (
+  const _updateResourceCartLine = (
     cartKey: string,
     updates: Partial<CartResourceLine>
   ) => {

@@ -38,7 +38,7 @@ import {
   type OrderListTab,
 } from '../lib/orderArchive'
 import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
-import { isSemanticBuyer, isWtsPartialListing, isWtsPartialPurchaseOrder } from '../lib/listingType'
+import { isWtsPartialListing, isWtsPartialPurchaseOrder } from '../lib/listingType'
 import {
   archiveCustomOrderWithRating,
   abandonCustomOrderFulfillment,
