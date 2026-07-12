@@ -16,6 +16,9 @@
     "generate-archive-guide": "node scripts/generate-archive-guide.mjs",
     "preview": "vite preview",
     "lint": "eslint src",
+    "parse-game-data": "node scripts/parse-extracted-data.mjs",
+    "diff-game-data": "node scripts/diff-game-data.mjs",
+    "patch-audit": "node scripts/audit-mining-aliases.mjs && node scripts/audit-ore-name-consistency.mjs && node scripts/validate-blueprints.mjs && node scripts/diff-game-data.mjs",
     "validate-blueprints": "node scripts/validate-blueprints.mjs",
     "audit-mission-rewards": "node scripts/audit-blueprint-mission-rewards.mjs",
     "audit-hpp-mining-locations": "node scripts/audit-hpp-mining-locations.mjs",
@@ -41,8 +44,7 @@
     "dotenv": "^17.4.2",
     "framer-motion": "^12.42.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "tesseract.js": "^7.0.0"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -98,12 +98,12 @@ Located in `/scripts/`:
 | Script | Purpose |
 |--------|---------|
 | `extract-game-data.ps1` | Extract full DCB + localization from Data.p4k; optional shop data with `-IncludeShopData` |
-| `parse-extracted-data.mjs` | Parse extracted JSON into `src/data/game-*.json` |
+| `parse-extracted-data.mjs` | Parse extracted JSON into `src/data/game-*.json` (`npm run parse-game-data`) |
+| `diff-game-data.mjs` | Patch diff: adds/removes/renames/stat changes vs last commit (`npm run diff-game-data`) |
 | `generate-mission-broker-order.mjs` | Regenerate `lib/missionBrokerOrder.mjs` after a patch if mission broker records reorder (one-off `dcb query`) |
 | `audit-mining-aliases.mjs` | Verify all spawn keys have member-facing locationAliases |
 | `audit-ore-name-consistency.mjs` | Cross-check ore names across mining JSON outputs |
 | `audit-alias-tables.mjs` | Report which manual alias/rarity tables are still required |
-| `sync-game-data-to-db.mjs` | Optional: upsert mining/components/ordnance to Supabase `game_*` tables |
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
 | `verify-dfp-spotcheck.mjs` | Spot-check DFP engine output against catalog |
@@ -115,13 +115,28 @@ Located in `/scripts/`:
 
 When a new Star Citizen patch drops:
 
-1. **Extract:** `.\scripts\extract-game-data.ps1`
-2. **Parse:** `node scripts/parse-extracted-data.mjs`
-3. **Audit mining aliases:** `node scripts/audit-mining-aliases.mjs`
-4. **Validate:** `npm run validate-blueprints`
-5. **Optional DB sync:** `node scripts/sync-game-data-to-db.mjs` (mining, components, ordnance → Supabase `game_*` tables)
+1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`)
+2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch)
+3. **Review the patch diff:** `npm run diff-game-data`
+   - Compares fresh parse output against the last commit (`--ref <ref>` for another baseline)
+   - Reports **ADDED / REMOVED / RENAMED-MOVED / CHANGED** records per file, with field-level stat changes
+   - `--full` shows every changed field; `--file game-mining.json` limits scope
+4. **Verify removals are real** — CIG moves records between directories more often than it deletes them:
+   - Same-id renames are auto-detected and reported as RENAMED/MOVED, not removed
+   - For anything still listed as REMOVED, check `src/data/_extraction-validation.json` for
+     "Missing expected path" (a moved directory looks like a mass removal), then search the
+     new extract: `rg -l -i "<name>" extracted-data/libs/foundry/records`
+   - If a whole directory moved, update `EXPECTED_PATHS` in `scripts/parse-extracted-data.mjs`
+5. **Audit + validate:** `npm run patch-audit` (mining aliases, ore-name consistency, blueprint sanity, diff)
+   - New CIG misspellings surface here — add corrections to the typo handlers in
+     `parse-extracted-data.mjs` (component names) or `src/data/mining-ore-aliases.json` (ores)
 6. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`
-7. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
+7. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`,
+   and `npm run sync-min-game-version` if the game major.minor changed
+8. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
+
+No DB sync step: all game catalogs (mining guide, ordnance, components, blueprints) are bundled
+from the parsed `game-*.json` at build time — deploying the site updates everything at once.
 
 If Step 2 reports validation issues in `_extraction-validation.json`, the game data structure may have changed.
 

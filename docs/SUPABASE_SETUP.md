@@ -235,7 +235,7 @@ curl -X POST "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-
 
 **Error codes:** 401 invalid/missing key · 403 banned or pending approval · 405 wrong HTTP method · 400 invalid JSON or blueprint ID
 
-> **Removed from repo:** `sync-blueprints` (sccrafter.com) and `sync-starstrings` (StarStrings). Blueprint catalog ships from `game-blueprints.json`; reference data uses game file extraction + optional `sync-game-data-to-db.mjs`.
+> **Removed from repo:** `sync-blueprints` (sccrafter.com), `sync-starstrings` (StarStrings), and `sync-game-data-to-db.mjs` (Supabase `game_*` mirror tables, dropped in migration 118). All game catalogs ship bundled from parsed `game-*.json`.
 
 ---
 

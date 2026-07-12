@@ -322,10 +322,15 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 
 ```powershell
 .\scripts\extract-game-data.ps1
-node scripts/parse-extracted-data.mjs
-node scripts/sync-game-data-to-db.mjs   # optional: push game_mining, ordnance, blueprint pools to Supabase
-npm run sync-min-game-version           # optional: update dumper min game version in source
+npm run parse-game-data       # regenerate src/data/game-*.json from scratch
+npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
+npm run patch-audit           # mining aliases + ore names + blueprint sanity + diff
+npm run sync-min-game-version # optional: update dumper min game version in source
 ```
+
+All game catalogs (mining guide, ordnance, components, blueprints) are bundled from the parsed `game-*.json` at build time — no Supabase sync step on patch day.
+
+Full patch-day runbook (including how to verify removals vs CIG moving records around): [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md#data-update-process).
 
 **Generated app files** (`src/data/`):
 

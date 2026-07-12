@@ -14,9 +14,6 @@ echo.
 call :ensure_python
 if errorlevel 1 exit /b 1
 
-call :ensure_tesseract
-if errorlevel 1 exit /b 1
-
 if not exist "%ROOT%scripts\bp-dumper-py\lookup.json" (
     echo [ERROR] Missing scripts\bp-dumper-py\lookup.json
     echo Download the latest bp-dumper-py.zip from Dumper Apps releases — do not run from a partial copy.
@@ -62,27 +59,5 @@ if not errorlevel 1 exit /b 0
 echo.
 echo Install Python 3 from https://www.python.org/downloads/
 echo Check "Add Python to PATH", then run START-HERE.bat again.
-pause
-exit /b 1
-
-:ensure_tesseract
-where tesseract >nul 2>nul
-if not errorlevel 1 exit /b 0
-if exist "%ROOT%scripts\rock-scan-ocr\vendor\tesseract\tesseract.exe" exit /b 0
-if exist "C:\Program Files\Tesseract-OCR\tesseract.exe" exit /b 0
-if exist "C:\Program Files (x86)\Tesseract-OCR\tesseract.exe" exit /b 0
-echo Tesseract OCR not found ^(needed for Rock Scanner^).
-where winget >nul 2>nul
-if errorlevel 1 goto :tesseract_manual
-set /p INSTALL_TESS="Install Tesseract now with winget? [Y/N] "
-if /i not "!INSTALL_TESS!"=="Y" goto :tesseract_manual
-winget install -e --id UB-Mannheim.TesseractOCR --accept-package-agreements --accept-source-agreements
-where tesseract >nul 2>nul
-if not errorlevel 1 exit /b 0
-if exist "C:\Program Files\Tesseract-OCR\tesseract.exe" exit /b 0
-:tesseract_manual
-echo.
-echo Install Tesseract from https://github.com/UB-Mannheim/tesseract/wiki
-echo Then run START-HERE.bat again.
 pause
 exit /b 1

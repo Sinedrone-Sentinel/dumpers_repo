@@ -207,21 +207,9 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               </code>
             </div>
 
-            {/* Step 3: Sync supplementary game data to DB (optional) */}
+            {/* Step 3: Deploy */}
             <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
               <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">3</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Sync Game Data to DB (optional)</p>
-                <p className="text-[10px] text-slate-500">Upserts mining, components, ordnance, and blueprint pools to Supabase</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
-                node scripts/sync-game-data-to-db.mjs
-              </code>
-            </div>
-
-            {/* Step 4: Deploy */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">4</span>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-white font-medium">Commit &amp; Deploy</p>
                 <p className="text-[10px] text-slate-500">Commit game-*.json changes, then build and deploy</p>
@@ -232,7 +220,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             </div>
 
             <p className="text-[10px] text-slate-600 italic pt-1">
-              Steps 1–3 run locally in terminal. Blueprint catalog is bundled from game-blueprints.json at build time.
+              Steps 1–2 run locally in terminal. All game catalogs (blueprints, mining, ordnance, components) are bundled from the parsed game-*.json at build time — no DB sync needed.
             </p>
             <p className="text-[10px] text-amber-400/70 pt-1">
               If Step 2 reports validation issues, game data structure may have changed.
