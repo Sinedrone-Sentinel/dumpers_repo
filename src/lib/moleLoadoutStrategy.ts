@@ -240,14 +240,14 @@ function maxInstabilityModifier(profiles: MoleHeadProfile[]): number {
 
 /**
  * Solo cracking throttle: target crackable power (equalization + instability margin).
- * Returns the throttle % needed to just exceed crackable threshold.
+ * Returns the throttle % needed to reach crackable threshold.
+ * No extra margin — user feathers throttle once in the green.
  */
 function soloCrackingThrottlePercent(
   profile: MoleHeadProfile,
-  crackableThreshold: number,
-  overPercent = 2
+  crackableThreshold: number
 ): number | null {
-  const targetMw = crackableThreshold * (1 + overPercent / 100)
+  const targetMw = crackableThreshold
   if (targetMw > profile.laserPower) return null
 
   const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
