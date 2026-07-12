@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 /**
  * Audit ore×location coverage across compendium, HPP, spawn profiles, and site data.
- * Exits non-zero when spawn-backed ores list compendium-only sites with no HPP link.
+ *
+ * Exits non-zero only on real drift in published data:
+ * - missing-listed: a spawn-backed site is absent from oreLocations
+ * - unsupported-listed: oreLocations lists a site with no spawn/HPP/site backing
+ *
+ * compendium-only entries (in-game journal lore listing sites with no spawn data)
+ * are reported as informational — the site does not display them.
  */
 
 import { readFileSync } from 'fs'
@@ -115,8 +121,12 @@ for (const [ore, spawnSites] of spawnByOre) {
   }
 }
 
+const failing = issues.filter((issue) => issue.type !== 'compendium-only')
+const informational = issues.filter((issue) => issue.type === 'compendium-only')
+
 console.log(`Spawn-backed ores: ${spawnByOre.size}`)
-console.log(`Issues: ${issues.length}`)
+console.log(`Failing issues: ${failing.length}`)
+console.log(`Informational (compendium lore without spawn backing, not shown on site): ${informational.length}`)
 
 const byType = {}
 for (const issue of issues) {
@@ -124,19 +134,15 @@ for (const issue of issues) {
 }
 console.log('By type:', byType)
 
-if (issues.length > 0) {
-  console.log('\nSample issues:')
-  for (const issue of issues.slice(0, 40)) {
+if (failing.length > 0) {
+  console.log('\nFailing issues:')
+  for (const issue of failing.slice(0, 40)) {
     console.log(`  [${issue.type}] ${issue.ore} @ ${issue.loc}`)
   }
 }
 
-const ouratite = {
-  listed: locations.oreLocations?.Ouratite ?? [],
-  spawn: [...(spawnByOre.get('Ouratite') ?? [])],
-  hpp: [...(hppByOre.get('Ouratite') ?? [])],
-  compendium: compendium.Ouratite ?? [],
+if (failing.length === 0) {
+  console.log('\nOK: published ore locations match spawn/HPP/site data')
 }
-console.log('\nOuratite snapshot:', ouratite)
 
-process.exit(issues.length > 0 ? 1 : 0)
+process.exit(failing.length > 0 ? 1 : 0)

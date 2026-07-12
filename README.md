@@ -332,7 +332,7 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 .\scripts\extract-game-data.ps1
 npm run parse-game-data       # regenerate src/data/game-*.json from scratch
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
-npm run patch-audit           # mining aliases + ore names + blueprint sanity + diff
+npm run patch-audit           # full audit battery: data consistency + math verifiers + diff
 npm run sync-min-game-version # optional: update dumper min game version in source
 ```
 

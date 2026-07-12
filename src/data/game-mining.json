@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-09T01:47:11.859Z",
+  "_extracted": "2026-07-12T16:28:44.822Z",
   "mineableElements": [
     {
       "id": "d61d6c33-e428-4014-9326-0b06034de16a",
@@ -238,9 +238,9 @@
       "optimalWindowThinness": 1,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "169ed316-3944-432f-88fa-0a39c5e6d2de",
@@ -253,9 +253,9 @@
       "optimalWindowThinness": 10,
       "explosionMultiplier": 0.5,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "60d46a41-5930-4a13-9c72-bd988192d3a1",
@@ -268,9 +268,9 @@
       "optimalWindowThinness": 10,
       "explosionMultiplier": 0.5,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "c2a1ab26-6b2a-4258-8bae-b32cf08818bc",
@@ -283,9 +283,9 @@
       "optimalWindowThinness": 1,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "a2b247b4-f3a8-4f51-9690-9773a0ce3bd7",
@@ -298,9 +298,9 @@
       "optimalWindowThinness": 1,
       "explosionMultiplier": -1000,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "3af2af8d-5850-4900-ac7a-f9b38a959a07",
@@ -313,9 +313,9 @@
       "optimalWindowThinness": 1,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "f5b8c10a-521b-40f6-8761-1863e71fb8d4",
@@ -328,9 +328,9 @@
       "optimalWindowThinness": 3,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "7e324c5c-1b28-400a-ab66-290188ef282c",
@@ -343,9 +343,9 @@
       "optimalWindowThinness": 10,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "af5ae7e0-467e-44c1-abd1-b5ce8ed63bcf",
@@ -358,9 +358,9 @@
       "optimalWindowThinness": 1,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "8bb75cd2-f59d-40a5-9077-55089c1626c4",
@@ -373,9 +373,9 @@
       "optimalWindowThinness": 5,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "0a523c7c-6fa5-4061-81ce-f1537e255c3e",
@@ -388,9 +388,9 @@
       "optimalWindowThinness": 5,
       "explosionMultiplier": 1,
       "clusterFactor": 1,
-      "isFPS": false,
+      "isFPS": true,
       "isGroundVehicle": false,
-      "isShip": true
+      "isShip": false
     },
     {
       "id": "76e7e6e9-6508-47a1-a381-e34ec1c997ce",
@@ -404,8 +404,8 @@
       "explosionMultiplier": 1,
       "clusterFactor": 1,
       "isFPS": false,
-      "isGroundVehicle": false,
-      "isShip": true
+      "isGroundVehicle": true,
+      "isShip": false
     },
     {
       "id": "c793af1c-7dab-457e-a74d-88c435c9708b",
@@ -419,8 +419,8 @@
       "explosionMultiplier": 0.5,
       "clusterFactor": 1,
       "isFPS": false,
-      "isGroundVehicle": false,
-      "isShip": true
+      "isGroundVehicle": true,
+      "isShip": false
     },
     {
       "id": "7e0eaf11-77e6-48c9-a184-f88648e7c148",
@@ -434,8 +434,8 @@
       "explosionMultiplier": 1,
       "clusterFactor": 1,
       "isFPS": false,
-      "isGroundVehicle": false,
-      "isShip": true
+      "isGroundVehicle": true,
+      "isShip": false
     },
     {
       "id": "7e465c37-1d58-4533-a6e4-13abf1073554",
@@ -449,8 +449,8 @@
       "explosionMultiplier": 1,
       "clusterFactor": 1,
       "isFPS": false,
-      "isGroundVehicle": false,
-      "isShip": true
+      "isGroundVehicle": true,
+      "isShip": false
     },
     {
       "id": "8723956e-e947-4b84-9dcb-b2c6137895ab",
@@ -1481,7 +1481,7 @@
     {
       "id": "478ffd41-77dc-4239-a842-9fdf3d2072ac",
       "name": "Mining_Gadget_GRIN_WaveShift",
-      "displayName": "WaveShift",
+      "displayName": "Waveshift",
       "resistanceModifier": 0,
       "instabilityModifier": -35,
       "optimalWindowModifier": 100,

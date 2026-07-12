@@ -132,7 +132,10 @@ When a new Star Citizen patch drops:
      "Missing expected path" (a moved directory looks like a mass removal), then search the
      new extract: `rg -l -i "<name>" extracted-data/libs/foundry/records`
    - If a whole directory moved, update `EXPECTED_PATHS` in `scripts/parse-extracted-data.mjs`
-5. **Audit + validate:** `npm run patch-audit` (mining aliases, ore-name consistency, blueprint sanity, diff)
+5. **Audit + validate:** `npm run patch-audit` — full battery: mining aliases, ore names, broad
+   locations, blueprint sanity, mission rewards, HPP/alias/coverage cross-checks against the raw
+   extract (skipped with a warning if `extracted-data/` is absent), mining math + crew strategy
+   verifiers, and the patch diff
    - New CIG misspellings surface here — add corrections to the typo handlers in
      `parse-extracted-data.mjs` (component names) or `src/data/mining-ore-aliases.json` (ores)
 6. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`

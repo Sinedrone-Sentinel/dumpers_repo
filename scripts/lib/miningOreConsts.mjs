@@ -8,9 +8,10 @@ export const HAND_MINEABLE_ORES = new Set([
   'Glacosite',
   'Feynmaline',
   'Sadaryx',
+  'Carinite',
 ])
 
-export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline'])
+export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline', 'Carinite'])
 
 /** Strip trailing parenthetical from desc mineable lines, e.g. "Janalite (Caves only)". */
 export function stripMineableLabel(raw) {

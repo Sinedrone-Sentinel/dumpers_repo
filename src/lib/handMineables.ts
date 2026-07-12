@@ -10,10 +10,11 @@ export const HAND_MINEABLE_ORES = new Set([
   'Glacosite',
   'Feynmaline',
   'Sadaryx',
+  'Carinite',
 ])
 
 /** Ground-vehicle gems (not in RS Tracker reference; not FPS hand-mineable). */
-export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline'])
+export const GROUND_VEHICLE_GEMS = new Set(['Beradom', 'Glacosite', 'Feynmaline', 'Carinite'])
 
 export { normalizeMiningOreName }
 

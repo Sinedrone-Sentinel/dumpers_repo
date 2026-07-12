@@ -3338,9 +3338,9 @@ function parseMineableElements() {
       optimalWindowThinness: val.elementOptimalWindowThinness || 1,
       explosionMultiplier: val.elementExplosionMultiplier || 1,
       clusterFactor: val.elementClusterFactor || 1,
-      isFPS: recordName.includes('_fps_'),
-      isGroundVehicle: recordName.includes('_groundvehicle_'),
-      isShip: !recordName.includes('_fps_') && !recordName.includes('_groundvehicle_')
+      isFPS: /_fps_/i.test(recordName),
+      isGroundVehicle: /_groundvehicle_/i.test(recordName),
+      isShip: !/_fps_|_groundvehicle_/i.test(recordName)
     })
   }
   
