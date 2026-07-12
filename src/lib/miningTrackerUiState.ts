@@ -8,12 +8,15 @@ export interface MiningTrackerUiState {
   loadoutKey: LoadoutKey
   /** Mole only — true = solo (one head), false = crew turrets. Persisted for calculator + Smart Cracker. */
   moleSoloMining: boolean
+  /** Crew head plan size — 2 = two-person crew (2X CHP), 3 = full crew (3X+ CHP). */
+  chpCrewSize: 2 | 3
 }
 
 const DEFAULT_STATE: MiningTrackerUiState = {
   vesselId: 'prospector',
   loadoutKey: 'default',
   moleSoloMining: true,
+  chpCrewSize: 3,
 }
 
 const VESSEL_IDS: MiningVesselId[] = ['prospector', 'mole', 'golem', 'roc', 'roc-ds']
@@ -48,6 +51,7 @@ export function readMiningTrackerUiState(): MiningTrackerUiState {
     loadoutKey: isLoadoutKey(parsed.loadoutKey) ? parsed.loadoutKey : DEFAULT_STATE.loadoutKey,
     moleSoloMining:
       typeof parsed.moleSoloMining === 'boolean' ? parsed.moleSoloMining : DEFAULT_STATE.moleSoloMining,
+    chpCrewSize: parsed.chpCrewSize === 2 || parsed.chpCrewSize === 3 ? parsed.chpCrewSize : DEFAULT_STATE.chpCrewSize,
   }
 }
 
@@ -59,6 +63,7 @@ export function writeMiningTrackerUiState(update: Partial<MiningTrackerUiState>)
     vesselId: update.vesselId ?? current.vesselId,
     loadoutKey: update.loadoutKey ?? current.loadoutKey,
     moleSoloMining: update.moleSoloMining ?? current.moleSoloMining,
+    chpCrewSize: update.chpCrewSize ?? current.chpCrewSize,
   }
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next))

@@ -22,9 +22,9 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
       <p className="text-[11px] text-slate-400 leading-snug">{strategy.summary}</p>
       {!strategy.canBreak ? (
         <p className="text-xs text-red-400/90">
-          No head on this loadout can crack this rock solo at full throttle — check MW after modules
-          and the pilot RES → mining-seat RES shift on each head. Open Smart Cracker to edit modules or
-          try crew mode.
+          {strategy.soloMining
+            ? 'No head on this loadout can crack this rock solo at full throttle — check MW after modules and the pilot RES → mining-seat RES shift on each head. Open Smart Cracker to edit modules or try crew mode.'
+            : 'Even with every available seat at full blast, this loadout cannot crack this rock — check MW after modules and the pilot RES → mining-seat RES shift on each head, or bring another mining ship.'}
         </p>
       ) : null}
       <div className="space-y-1.5">

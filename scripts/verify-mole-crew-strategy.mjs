@@ -49,30 +49,33 @@ const arbor = {
 }
 
 const lasers = [helix, impact, arbor]
-const toughRock = { scannerMass: 22000, resistancePercent: 55, instability: 500 }
+// 22k @ 55% RES equalizes at ~7,154 MW (Helix -30% RES). With 250 instability the
+// quadratic margin puts crackable at ~8,943 MW — under the 9,840 MW loadout total,
+// so this still exercises the multi-head full-blast + driver path.
+const toughRock = { scannerMass: 22000, resistancePercent: 55, instability: 250 }
 
 const strategy = findBestMoleLoadoutStrategy(lasers, toughRock, { soloMining: false })
 assert(strategy, 'expected a crew strategy for tough rock')
 assert(strategy.canBreak, 'expected canBreak')
 
-const fullBlast = strategy.assignments.filter(
-  (a) => a.role === 'support' && a.throttlePercent === 100
-)
 const driver = strategy.assignments.find((a) => a.role === 'primary')
 assert(driver, 'expected driver assignment')
-assert(
-  fullBlast.length >= 1 || driver.throttlePercent < 100,
-  'expected full-blast supports and/or computed driver throttle'
-)
 
-const profiles = lasers.map((slot, i) => buildMoleHeadProfile(slot, i)).filter(Boolean)
-const maxInstability = Math.max(...profiles.map((p) => p.instabilityModifier))
-if (profiles.filter((p) => p.instabilityModifier < maxInstability).length > 0) {
+const driverProfile = buildMoleHeadProfile(lasers[driver.slotIndex], driver.slotIndex)
+const supports = strategy.assignments.filter((a) => a.role === 'support')
+
+if (supports.length > 0) {
+  // Field tactic: driver fires LAST from minimum throttle and ramps up to drive.
   assert(
-    driver && buildMoleHeadProfile(lasers[driver.slotIndex], driver.slotIndex).instabilityModifier <
-      maxInstability,
-    'driver should avoid highest-instability head when possible'
+    driver.throttlePercent === driverProfile.throttleMinimumPercent,
+    'multi-head driver should start at its minimum throttle and ramp'
   )
+  // Only ONE seat (the highest-MW support) may back down from 100%; benefit seats
+  // held at min power for their window bonus are exempt from this rule.
+  const backedDown = supports.filter(
+    (a) => a.throttlePercent < 100 && !(a.detail ?? '').includes('window benefit')
+  )
+  assert(backedDown.length <= 1, 'only the highest-MW support may back down — no multi-drops')
 }
 
 assert(crewUnderPercent(3, 500) === 7, '3-head high instability should be 7% under')
@@ -82,17 +85,29 @@ const hugeRock = { scannerMass: 100000, resistancePercent: 75, instability: 500 
 const hugeStrategy = findBestMoleLoadoutStrategy(lasers, hugeRock, { soloMining: false })
 assert(hugeStrategy, 'expected crew strategy object for huge rock')
 assert(!hugeStrategy.canBreak, '100k rock should not be crackable on one mole loadout')
-assert(
-  fullBlast.length >= 1,
-  'tough rock should use at least one full-blast support'
-)
+
+// 2X CHP: only two seats manned — plan must never use more than two heads.
+const twoSeatStrategy = findBestMoleLoadoutStrategy(lasers, toughRock, {
+  soloMining: false,
+  crewSize: 2,
+})
+assert(twoSeatStrategy, 'expected a 2X crew strategy object')
+if (twoSeatStrategy.canBreak) {
+  assert(
+    twoSeatStrategy.assignments.filter((a) => a.role !== 'idle').length <= 2,
+    '2X CHP must not use more than two heads'
+  )
+}
 
 const easyRock = { scannerMass: 5000, resistancePercent: 25, instability: 200 }
 const easyStrategy = findBestMoleLoadoutStrategy(lasers, easyRock, { soloMining: false })
 assert(easyStrategy?.canBreak, 'easy rock should be crackable in crew mode')
+const easyActive = easyStrategy.assignments.filter((a) => a.role !== 'idle')
+const easyExtras = easyActive.filter((a) => a.role !== 'primary')
+assert(easyActive.some((a) => a.role === 'primary'), 'easy rock should have a driver')
 assert(
-  easyStrategy.assignments.filter((a) => a.role !== 'idle').length === 1,
-  'easy rock should prefer one-head crew when one turret suffices'
+  easyExtras.every((a) => (a.detail ?? '').includes('window benefit')),
+  'easy rock extra seats are only allowed as min-power window-benefit seats'
 )
 
 const focusMk3 = 'Mining_Modules_Passive_Focus_MK3'

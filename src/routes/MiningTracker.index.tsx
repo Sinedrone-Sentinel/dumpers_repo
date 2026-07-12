@@ -101,6 +101,9 @@ export default function MiningTrackerRoute() {
     () => readMiningTrackerUiState().moleSoloMining
   )
   const [crewHeadPlanOpen, setCrewHeadPlanOpen] = useState(false)
+  const [chpCrewSize, setChpCrewSize] = useState<2 | 3>(
+    () => readMiningTrackerUiState().chpCrewSize
+  )
   const [soloHeadPlanOpen, setSoloHeadPlanOpen] = useState(false)
   
   // Guide view state
@@ -268,8 +271,11 @@ export default function MiningTrackerRoute() {
 
   const crewHeadPlan = useMemo(() => {
     if (!crewHeadPlanEnabled || !activeLoadoutLasers || !rockTarget) return null
-    return findBestMoleLoadoutStrategy(activeLoadoutLasers, rockTarget, { soloMining: false })
-  }, [crewHeadPlanEnabled, activeLoadoutLasers, rockTarget])
+    return findBestMoleLoadoutStrategy(activeLoadoutLasers, rockTarget, {
+      soloMining: false,
+      crewSize: chpCrewSize,
+    })
+  }, [crewHeadPlanEnabled, activeLoadoutLasers, rockTarget, chpCrewSize])
 
   const handleMoleSoloMiningChange = useCallback((solo: boolean) => {
     setMoleSoloMining(solo)
@@ -292,6 +298,16 @@ export default function MiningTrackerRoute() {
     if (!crewHeadPlan) return
     setCrewHeadPlanOpen(true)
   }, [activeLoadoutLasers, crewHeadPlan, headPlanEnabled, soloModeActive])
+
+  const handleCrewHeadPlanClick = useCallback(
+    (size: 2 | 3) => {
+      if (!headPlanEnabled || !activeLoadoutLasers || soloModeActive) return
+      setChpCrewSize(size)
+      writeMiningTrackerUiState({ chpCrewSize: size })
+      setCrewHeadPlanOpen(true)
+    },
+    [activeLoadoutLasers, headPlanEnabled, soloModeActive]
+  )
 
   useEffect(() => {
     if (soloModeActive) {
@@ -680,6 +696,7 @@ export default function MiningTrackerRoute() {
               headPlanEnabled={headPlanEnabled}
               headPlanLabel={headPlanLabel}
               onHeadPlanClick={canUseLoadouts ? handleHeadPlanClick : undefined}
+              onCrewSizeHeadPlanClick={canUseLoadouts ? handleCrewHeadPlanClick : undefined}
             />
           </div>
         </div>
@@ -710,6 +727,7 @@ export default function MiningTrackerRoute() {
           strategy={crewHeadPlan}
           loadoutLabel={selectedLoadoutLabel}
           oreName={rockTarget?.oreName}
+          crewSize={chpCrewSize}
           onClose={() => setCrewHeadPlanOpen(false)}
         />
       ) : null}

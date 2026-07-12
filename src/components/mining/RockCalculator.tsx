@@ -86,6 +86,8 @@ interface RockCalculatorProps {
   headPlanEnabled?: boolean
   headPlanLabel?: 'CHP' | 'SHP'
   onHeadPlanClick?: () => void
+  /** Crew mode: opens the crew head plan for a 2-person or full (3+) crew. */
+  onCrewSizeHeadPlanClick?: (size: 2 | 3) => void
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
@@ -106,6 +108,7 @@ export default function RockCalculator({
   headPlanEnabled = false,
   headPlanLabel = 'CHP',
   onHeadPlanClick,
+  onCrewSizeHeadPlanClick,
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
@@ -431,7 +434,32 @@ export default function RockCalculator({
                   </button>
                 </SiteTooltip>
                 <div className="flex items-center justify-end gap-1">
-                  {onHeadPlanClick ? (
+                  {headPlanLabel === 'CHP' && onCrewSizeHeadPlanClick ? (
+                    <SiteTooltip
+                      content={CREW_HEAD_PLAN_BUTTON_TOOLTIP}
+                      side="left"
+                      panelClassName="max-w-[16rem]"
+                    >
+                      <span className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => onCrewSizeHeadPlanClick(2)}
+                          disabled={!headPlanEnabled}
+                          className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-950/50 text-cyan-200 hover:bg-cyan-900/50 transition-colors border border-cyan-800/60 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cyan-950/50"
+                        >
+                          2X CHP
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onCrewSizeHeadPlanClick(3)}
+                          disabled={!headPlanEnabled}
+                          className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-cyan-950/50 text-cyan-200 hover:bg-cyan-900/50 transition-colors border border-cyan-800/60 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cyan-950/50"
+                        >
+                          3X+ CHP
+                        </button>
+                      </span>
+                    </SiteTooltip>
+                  ) : onHeadPlanClick ? (
                     <SiteTooltip
                       content={
                         headPlanLabel === 'SHP'

@@ -171,23 +171,26 @@ assert(breakability.requiredLaserPower(0, 50) === 0, 'Zero mass → 0 MW')
 assert(!Number.isFinite(breakability.requiredLaserPower(10000, 100)), '100% RES → Infinity (impossible)')
 assert(breakability.requiredLaserPower(-100, 50) === 0, 'Negative mass → 0 MW')
 
-// 1.4 instabilityAdjustedPower (crackability check)
-console.log('\n1.4 instabilityAdjustedPower')
-// Formula: adjustedPower = basePower × (1 + instability / 1000)
-assert(breakability.instabilityAdjustedPower(4500, null) === 4500, 'Null instability → no adjustment')
-assert(breakability.instabilityAdjustedPower(4500, 0) === 4500, 'Zero instability → no adjustment')
-assertApprox(breakability.instabilityAdjustedPower(4500, 515), 6817, 10, '4,500 MW + 515 inst → ~6,817 MW')
-assertApprox(breakability.instabilityAdjustedPower(1000, 1000), 2000, 1, '1,000 MW + 1000 inst → 2× = 2,000 MW')
-assertApprox(breakability.instabilityAdjustedPower(4520, 515), 6848, 10, 'User scenario: 4,520 × 1.515 ≈ 6,848 MW')
+// 1.4 equalizationPower vs crackablePower (quadratic instability margin)
+console.log('\n1.4 equalizationPower / crackablePower')
+// crackablePower = equalizationPower × (1 + (instability / 500)²)
+const eq5k = breakability.equalizationPower(5000, 25)
+assert(breakability.crackablePower(5000, 25, 0) === eq5k, 'Zero instability → crackable = equalization')
+assertApprox(breakability.crackablePower(5000, 25, 500), eq5k * 2, 1, '500 inst → 2× equalization')
+assertApprox(breakability.crackablePower(5000, 25, 1000), eq5k * 5, 1, '1000 inst → 5× equalization')
+assertApprox(breakability.crackablePower(5000, 25, 100), eq5k * 1.04, 1, '100 inst → 1.04× equalization')
+assert(!Number.isFinite(breakability.crackablePower(10000, 100, 300)), '100% RES → Infinity (impossible)')
 
-// 1.5 requiredLaserPowerWithInstability (combined formula)
-console.log('\n1.5 requiredLaserPowerWithInstability')
-// User scenario: 10849 mass, 74% RES with Helix (-30%), 515 instability
-// Base: (10849 × 0.2) / (1 - 0.518) ≈ 4,502 MW
-// With instability: 4,502 × (1 + 515/1000) ≈ 6,820 MW
-const userRequired = breakability.requiredLaserPowerWithInstability(10849, 74, 0.7, 515)
-assertApprox(userRequired, 6820, 50, 'User scenario with instability ≈ 6,820 MW')
-console.log(`  → User scenario: ${userRequired.toFixed(0)} MW required with instability`)
+// 1.5 crackablePower with resistance modifier (user-verified Riccite scenario)
+console.log('\n1.5 crackablePower with resistance modifier')
+// 10849 mass, 74% RES with Helix (-30% → 0.7), 515 instability
+// Equalization: (10849 × 0.2) / (1 - 0.518) ≈ 4,502 MW
+// Crackable: 4,502 × (1 + (515/500)²) ≈ 9,278 MW
+const userEq = breakability.equalizationPower(10849, 74, 0.7)
+assertApprox(userEq, 4502, 10, 'User scenario equalization ≈ 4,502 MW')
+const userRequired = breakability.crackablePower(10849, 74, 515, 0.7)
+assertApprox(userRequired, 9278, 60, 'User scenario crackable with 515 inst ≈ 9,278 MW')
+console.log(`  → User scenario: ${userEq.toFixed(0)} MW to equalize, ${userRequired.toFixed(0)} MW to crack`)
 
 // ============================================================================
 // 2. LASER STATS COMPOSITION
@@ -505,11 +508,11 @@ const userHeadProfile = moleStrategy.buildMoleHeadProfile(USER_HELIX_WITH_MODULE
 assert(userHeadProfile?.laserPower === 4692, `User head: 4080 × 1.15 = 4,692 MW (got ${userHeadProfile?.laserPower})`)
 
 // Verify the required power calculations
-const basePower = breakability.requiredLaserPower(10849, 74, 0.7)
-const adjustedPower = breakability.instabilityAdjustedPower(basePower, 515)
+const basePower = breakability.equalizationPower(10849, 74, 0.7)
+const adjustedPower = breakability.crackablePower(10849, 74, 515, 0.7)
 console.log(`  → User head power: ${userHeadProfile?.laserPower} MW`)
-console.log(`  → Base required (RES only): ${basePower.toFixed(0)} MW`)
-console.log(`  → Adjusted required (+515 inst): ${adjustedPower.toFixed(0)} MW`)
+console.log(`  → Equalization (RES only): ${basePower.toFixed(0)} MW`)
+console.log(`  → Crackable (+515 inst margin): ${adjustedPower.toFixed(0)} MW`)
 console.log(`  → Can solo crack: ${userSoloStrategy?.canBreak}`)
 
 // THE KEY TEST: Without instability, 4692 > 4520 = crackable (BUG!)

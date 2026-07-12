@@ -386,11 +386,15 @@ export const CREW_HEAD_PLAN_BUTTON_TOOLTIP = (
     <p className="font-medium text-slate-200">Crew Head Plan (CHP)</p>
     <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
       <li>Mole multi-turret throttle plan for the rock in your calculator</li>
+      <li>
+        <strong className="text-slate-300">2X CHP</strong> = two seats manned;{' '}
+        <strong className="text-slate-300">3X+ CHP</strong> = full crew, all seats available
+      </li>
       <li>Requires <strong className="text-slate-300">Crew</strong> checked, scanner{' '}
         <strong className="text-slate-300">mass</strong> and{' '}
         <strong className="text-slate-300">resistance</strong>, plus a saved{' '}
         <strong className="text-slate-300">Mole</strong> loadout</li>
-      <li>Opens the crew head plan from Smart Cracker — throttle assignments only</li>
+      <li>Plan uses the fewest heads with the best power headroom — supports fire first, driver ramps last</li>
     </ul>
   </div>
 )
