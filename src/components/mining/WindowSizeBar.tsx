@@ -14,7 +14,7 @@ interface WindowSizeBarProps {
 export default function WindowSizeBar({ model }: WindowSizeBarProps) {
   return (
     <div
-      className="w-full rounded-sm bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]"
+      className="inline-block w-14 shrink-0 rounded-sm bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)] align-middle"
       style={{ height: `${model.heightPx}px` }}
       role="img"
       aria-label={`Estimated optimal window thickness, ${model.rating}`}

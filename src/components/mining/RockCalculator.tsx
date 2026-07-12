@@ -672,7 +672,7 @@ export default function RockCalculator({
                 </p>
               ) : null}
               {windowBarModel ? (
-                <div className="space-y-1">
+                <div className="flex items-center gap-2">
                   <p className="text-[10px] uppercase tracking-wide text-slate-500">
                     Estimated window size
                   </p>

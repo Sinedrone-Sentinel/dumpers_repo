@@ -72,16 +72,14 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
                 </p>
               ) : null}
               {windowBar ? (
-                <div className="pl-2 pr-4 pt-1 flex items-center gap-2">
-                  <div className="flex-1">
-                    <WindowSizeBar model={windowBar} />
-                  </div>
+                <div className="pl-2 pt-1 flex items-center gap-2">
                   <span className="text-[10px] text-slate-500 whitespace-nowrap tabular-nums">
                     window{' '}
                     {head.windowModifierPercent !== 0
                       ? `${formatSignedPercent(head.windowModifierPercent)} mods`
                       : 'stock'}
                   </span>
+                  <WindowSizeBar model={windowBar} />
                 </div>
               ) : null}
             </div>
