@@ -762,6 +762,12 @@ function evaluateSingleHeadOnly(
   }
 }
 
+/**
+ * Overcharge warnings for the driving head. Compares the rock's EQUALIZATION
+ * point (not the crackable threshold) against the head's minimum output —
+ * if the laser's floor already exceeds the hold target, the charge builds
+ * even at minimum throttle and small rocks can blow before you react.
+ */
 function crewMinPowerWarnings(
   lasers: MiningLaserSlotConfig[],
   assignments: MoleHeadAssignment[],
@@ -1005,6 +1011,15 @@ export function findBestMoleLoadoutStrategy(
   const activeCount = activeHeadCountFromAssignments(best.assignments)
   const crewUnder = crewUnderPercent(activeCount, instability)
 
+  // Min-power (overcharge) check targets the plan's hold point, which is based
+  // on the EQUALIZER for the active heads — not the crackable threshold.
+  const activeIndices = best.assignments
+    .filter((a) => a.role !== 'idle')
+    .map((a) => a.slotIndex)
+  const planEqualizer = activeIndices.length
+    ? equalizationPowerForHeads(mass, resistancePercent, profiles, activeIndices)
+    : 0
+
   return {
     assignments: best.assignments,
     canBreak: best.canBreak,
@@ -1014,7 +1029,7 @@ export function findBestMoleLoadoutStrategy(
     summary: best.summary,
     soloMining: options.soloMining,
     minPowerWarnings: options.soloMining
-      ? crewMinPowerWarnings(lasers, best.assignments, best.requiredPower, SOLO_UNDER_EQUALIZER_IDEAL_PERCENT)
-      : crewMinPowerWarnings(lasers, best.assignments, best.requiredPower, crewUnder),
+      ? crewMinPowerWarnings(lasers, best.assignments, planEqualizer, SOLO_UNDER_EQUALIZER_IDEAL_PERCENT)
+      : crewMinPowerWarnings(lasers, best.assignments, planEqualizer, crewUnder),
   }
 }

@@ -134,6 +134,32 @@ assert(
 const head2Profile = buildMoleHeadProfile(helixS2FocusPair, 1)
 assert(head2Profile?.laserPower === 3672, 'two Focus III modules should net −10% on Helix II (3672 MW)')
 
+// ── Hardware minimum throttle (from game data throttleMinimum) ──────────────
+// Impact II and Helix II floor at 30%; Arbor MH2 at 5%. Plans must never tell
+// the player to set a throttle below the head's real minimum.
+const impactProfile = buildMoleHeadProfile(impact, 0)
+assert(
+  impactProfile.throttleMinimumPercent === 30,
+  `Impact II minimum throttle should be 30% (got ${impactProfile.throttleMinimumPercent}%)`
+)
+assert(impactProfile.laserPower === 3360, 'Impact II stock power should be 3,360 MW')
+const helixProfile = buildMoleHeadProfile(helix, 0)
+assert(helixProfile.throttleMinimumPercent === 30, 'Helix II minimum throttle should be 30%')
+const arborProfile = buildMoleHeadProfile(arbor, 0)
+assert(arborProfile.throttleMinimumPercent === 5, 'Arbor MH2 minimum throttle should be 5%')
+
+for (const plan of [strategy, twoSeatStrategy, easyStrategy]) {
+  if (!plan?.canBreak) continue
+  for (const a of plan.assignments) {
+    if (a.role === 'idle') continue
+    const profile = buildMoleHeadProfile(lasers[a.slotIndex], a.slotIndex)
+    assert(
+      a.throttlePercent >= profile.throttleMinimumPercent,
+      `Head ${a.slotIndex + 1} assigned ${a.throttlePercent}% — below its ${profile.throttleMinimumPercent}% hardware minimum`
+    )
+  }
+}
+
 console.log('verify-mole-crew-strategy: OK')
 console.log('tough summary:', strategy.summary)
 console.log('huge summary:', hugeStrategy.summary)

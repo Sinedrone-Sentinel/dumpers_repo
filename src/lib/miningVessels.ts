@@ -75,13 +75,26 @@ export function listMiningLasersForVessel(vessel: MiningVessel): MiningLaser[] {
   return listMiningLasersForSize(vessel.laserSize)
 }
 
+/**
+ * Dev/test and non-hardpoint laser defs that must never appear in pickers.
+ * `Mining_Laser_TEST` / `_TEST_Best` share the "Impact II Mining Laser" display
+ * name with the real THCN head but carry test stats (2,000 MW, 0.1% min throttle)
+ * — if they leak through, the duplicate-name dedupe drops the REAL Impact II.
+ * `Mining_Laser_MPUV_Arm` is the Argo utility arm, not an equippable head.
+ */
+const EXCLUDED_LASER_NAME = /_test(_|$)|template|_mpuv_/i
+
+export function isProductionMiningLaser(laser: MiningLaser): boolean {
+  return !EXCLUDED_LASER_NAME.test(laser.name)
+}
+
 /** Production mining lasers for a size class (excludes test / duplicate defs). */
 export function listMiningLasersForSize(size: number): MiningLaser[] {
   const seen = new Set<string>()
   return gameMining.miningLasers
     .filter((laser) => {
       if (laser.size !== size) return false
-      if (/_Test_|Template/i.test(laser.name)) return false
+      if (!isProductionMiningLaser(laser)) return false
       const key = laser.displayName.toLowerCase()
       if (seen.has(key)) return false
       seen.add(key)

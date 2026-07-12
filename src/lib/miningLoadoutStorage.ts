@@ -98,10 +98,25 @@ function defaultVesselState(vesselId: MiningVesselId): VesselLoadoutState {
   }
 }
 
+/**
+ * Saved loadouts created before the picker excluded dev laser defs may hold a
+ * test record instead of the real head. `Mining_Laser_TEST` shares the
+ * "Impact II Mining Laser" display name with the real THCN head but has test
+ * stats (2,000 MW, 0.1% min throttle vs the real 3,360 MW / 30% min) — remap
+ * on load so plans use real-head math.
+ */
+const LEGACY_LASER_REMAP: Record<string, string> = {
+  Mining_Laser_TEST: 'Mining_Laser_THCN_Impact_S2',
+  Mining_Laser_TEST_Best: 'Mining_Laser_THCN_Impact_S2',
+  Mining_Laser_GRIN_Arbor_S1_Test_Active_1: 'Mining_Laser_GRIN_Arbor_S1',
+  Mining_Laser_MPUV_Arm: 'Mining_Laser_GRIN_Arbor_S1',
+}
+
 function normalizeLaserSlot(raw: unknown): MiningLaserSlotConfig | null {
   if (!raw || typeof raw !== 'object') return null
   const slot = raw as Partial<MiningLaserSlotConfig>
   if (typeof slot.laserName !== 'string' || !slot.laserName) return null
+  const laserName = LEGACY_LASER_REMAP[slot.laserName] ?? slot.laserName
   const mode = slot.mode === 'custom' ? 'custom' : 'stock'
   const qualities =
     slot.slotQualities && typeof slot.slotQualities === 'object'
@@ -112,10 +127,10 @@ function normalizeLaserSlot(raw: unknown): MiningLaserSlotConfig | null {
         )
       : undefined
   const modules = Array.isArray(slot.modules)
-    ? normalizeModuleSelection(slot.laserName, slot.modules)
+    ? normalizeModuleSelection(laserName, slot.modules)
     : undefined
   return {
-    laserName: slot.laserName,
+    laserName,
     mode,
     slotQualities: qualities,
     customLabel: typeof slot.customLabel === 'string' ? slot.customLabel : undefined,

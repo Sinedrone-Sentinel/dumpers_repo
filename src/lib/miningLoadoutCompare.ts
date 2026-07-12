@@ -8,6 +8,8 @@ import {
   laserResistanceMultiplier,
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
+import { displayMinThrottlePercent } from './miningThrottleDisplay'
+import { getMiningLaserByName } from './miningVessels'
 
 export interface RockMaterialScan {
   elementName: string
@@ -104,10 +106,15 @@ export function compareLoadoutToRock(
     const slotRequired = Math.round(crackablePower(mass, resistance, instability, slotResistance))
     const shareRequired = Math.round(slotRequired / slotCount)
     const canBreakShare = stats.laserPower >= shareRequired
-    const throttlePercent =
+    // Lasers can't run below their hardware minimum throttle (e.g. Impact II
+    // floors at 30%) — clamp so the displayed % is actually settable in-game.
+    const laserDef = getMiningLaserByName(lasers[slotIndex]?.laserName ?? stats.laserName)
+    const minThrottlePercent = laserDef ? displayMinThrottlePercent(laserDef.throttleMinimum) : 0
+    const rawThrottle =
       stats.laserPower > 0
         ? Math.min(100, Math.round((shareRequired / stats.laserPower) * 100))
         : 100
+    const throttlePercent = Math.max(minThrottlePercent, rawThrottle)
     const shortfallMw = canBreakShare ? 0 : shareRequired - stats.laserPower
 
     const slot = lasers[slotIndex]
