@@ -1,4 +1,8 @@
-import { effectiveHudResistancePercent, requiredLaserPower } from './miningBreakability'
+import {
+  effectiveHudResistancePercent,
+  instabilityAdjustedPower,
+  requiredLaserPower,
+} from './miningBreakability'
 import {
   computeEffectiveLaserStats,
   describeLaserHead,
@@ -341,12 +345,15 @@ function evaluateCrewFullBlastPlan(
 
   const activeIndices = [driverIndex, ...sortedSupports]
   const activeHeadCount = activeIndices.length
-  const equalizingPower = requiredPowerForHeads(
+  // Base required power (resistance only)
+  const baseEqualizingPower = requiredPowerForHeads(
     mass,
     resistancePercent,
     profiles,
     activeIndices
   )
+  // Instability-adjusted power for crackability check
+  const equalizingPower = Math.round(instabilityAdjustedPower(baseEqualizingPower, instability))
   const underPercent = crewUnderPercent(activeHeadCount, instability)
   const mods = combinedModifiers(profiles, activeIndices)
 
@@ -463,35 +470,58 @@ function evaluateCrewFullBlastPlan(
 function soloHeadFractureNotes(
   profile: MoleHeadProfile,
   pilotResistancePercent: number,
-  equalizingPower: number
+  baseEqualizingPower: number,
+  instability: number | null,
+  crackabilityPower: number
 ): string {
   const effectiveHudRes = effectiveHudResistancePercent(
     pilotResistancePercent,
     profile.resistanceModifier
   )
-  return [
+  const notes = [
     `pilot RES ${Math.round(pilotResistancePercent)}% → ${effectiveHudRes}% on this head`,
     `${profile.laserPower.toLocaleString()} MW after modules`,
-    `${equalizingPower.toLocaleString()} MW required`,
-  ].join(' · ')
+  ]
+
+  // Show instability impact if significant
+  if (instability != null && instability > 0 && crackabilityPower !== baseEqualizingPower) {
+    notes.push(
+      `${crackabilityPower.toLocaleString()} MW needed (${baseEqualizingPower.toLocaleString()} base + ${Math.round(instability)} inst)`
+    )
+  } else {
+    notes.push(`${crackabilityPower.toLocaleString()} MW required`)
+  }
+
+  return notes.join(' · ')
 }
 
 function evaluateSingleHeadOnly(
   profiles: MoleHeadProfile[],
   primaryIndex: number,
   mass: number,
-  resistancePercent: number
+  resistancePercent: number,
+  instability: number | null
 ): CandidateStrategy {
   const primary = profiles[primaryIndex]
   const activeIndices = [primaryIndex]
-  const equalizingPower = requiredPowerForHeads(mass, resistancePercent, profiles, activeIndices)
-  const canBreakAtFull = primary.laserPower >= equalizingPower
+  // Base required power (resistance only, no instability)
+  const baseEqualizingPower = requiredPowerForHeads(mass, resistancePercent, profiles, activeIndices)
+  // Instability-adjusted power for crackability check
+  const crackabilityPower = Math.round(instabilityAdjustedPower(baseEqualizingPower, instability))
+  // Use base power for throttle calculation, but instability-adjusted for canBreak
+  const canBreakAtFull = primary.laserPower >= crackabilityPower
   const throttlePercent = canBreakAtFull
-    ? soloDrivingThrottlePercent(primary, equalizingPower)
+    ? soloDrivingThrottlePercent(primary, baseEqualizingPower)
     : null
   const canBreak = canBreakAtFull && throttlePercent != null
   const mods = combinedModifiers(profiles, activeIndices)
-  const fractureNotes = soloHeadFractureNotes(primary, resistancePercent, equalizingPower)
+  const fractureNotes = soloHeadFractureNotes(
+    primary,
+    resistancePercent,
+    baseEqualizingPower,
+    instability,
+    crackabilityPower
+  )
 
   const assignments = profiles.map((profile) => {
     if (profile.slotIndex === primaryIndex) {
@@ -517,12 +547,12 @@ function evaluateSingleHeadOnly(
   return {
     assignments,
     canBreak,
-    requiredPower: equalizingPower,
+    requiredPower: crackabilityPower,
     combinedWindowModifier: mods.window,
     combinedInstabilityModifier: mods.instability,
     summary: canBreak
       ? `Solo — Head ${primaryIndex + 1} fractures at ${throttlePercent}% throttle.`
-      : `Solo — Head ${primaryIndex + 1} cannot crack this rock at full throttle.`,
+      : `Solo — Head ${primaryIndex + 1} cannot crack this rock at full throttle (high instability increases power needed).`,
     score: canBreak
       ? scoreCrewFullBlastStrategy(
           true,
@@ -533,11 +563,11 @@ function evaluateSingleHeadOnly(
           mods.resistance,
           mods.window,
           mods.instability,
-          null,
+          instability,
           profiles,
           false
         )
-      : -equalizingPower + primary.laserPower,
+      : -crackabilityPower + primary.laserPower,
   }
 }
 
@@ -585,12 +615,15 @@ function buildUncrackableCrewStrategy(
   instability: number | null
 ): MoleLoadoutStrategy {
   const allIndices = profiles.map((profile) => profile.slotIndex)
-  const equalizingPower = requiredPowerForHeads(
+  // Base required power (resistance only)
+  const baseEqualizingPower = requiredPowerForHeads(
     mass,
     resistancePercent,
     profiles,
     allIndices
   )
+  // Instability-adjusted power for crackability check
+  const equalizingPower = Math.round(instabilityAdjustedPower(baseEqualizingPower, instability))
   const underPercent = crewUnderPercent(3, instability)
   const targetTotalMw = equalizingPower * (1 - underPercent / 100)
   const mods = combinedModifiers(profiles, allIndices)
@@ -600,10 +633,14 @@ function buildUncrackableCrewStrategy(
   )
 
   const maxMw = maxCombinedLaserMw(profiles)
+  const highInstabilityNote =
+    instability != null && instability > HIGH_INSTABILITY_SCANNER
+      ? ' High instability significantly increases power needed.'
+      : ''
   const summary =
     maxMw < targetTotalMw
-      ? 'This rock is too large for three full-blast turrets on this loadout — skip it or bring more moles.'
-      : 'No two- or three-head crew plan can crack this rock on this loadout — skip it or bring more moles.'
+      ? `This rock is too large for three full-blast turrets on this loadout — skip it or bring more moles.${highInstabilityNote}`
+      : `No two- or three-head crew plan can crack this rock on this loadout — skip it or bring more moles.${highInstabilityNote}`
 
   return {
     assignments,
@@ -642,18 +679,21 @@ export function findBestMoleLoadoutStrategy(
 
   if (options.soloMining) {
     for (const primary of profiles) {
-      candidates.push(evaluateSingleHeadOnly(profiles, primary.slotIndex, mass, resistancePercent))
+      candidates.push(evaluateSingleHeadOnly(profiles, primary.slotIndex, mass, resistancePercent, instability))
     }
   } else {
     if (profiles.length < 2) return null
 
     const allIndices = profiles.map((profile) => profile.slotIndex)
-    const bestEqualizing = requiredPowerForHeads(
+    // Base required power (resistance only)
+    const baseEqualizing = requiredPowerForHeads(
       mass,
       resistancePercent,
       profiles,
       allIndices
     )
+    // Instability-adjusted power for crackability check
+    const bestEqualizing = Math.round(instabilityAdjustedPower(baseEqualizing, instability))
     const crewTargetMw =
       bestEqualizing * (1 - crewUnderPercent(3, instability) / 100)
     if (maxCombinedLaserMw(profiles) < crewTargetMw) {

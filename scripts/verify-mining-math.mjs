@@ -171,6 +171,24 @@ assert(breakability.requiredLaserPower(0, 50) === 0, 'Zero mass → 0 MW')
 assert(!Number.isFinite(breakability.requiredLaserPower(10000, 100)), '100% RES → Infinity (impossible)')
 assert(breakability.requiredLaserPower(-100, 50) === 0, 'Negative mass → 0 MW')
 
+// 1.4 instabilityAdjustedPower (crackability check)
+console.log('\n1.4 instabilityAdjustedPower')
+// Formula: adjustedPower = basePower × (1 + instability / 1000)
+assert(breakability.instabilityAdjustedPower(4500, null) === 4500, 'Null instability → no adjustment')
+assert(breakability.instabilityAdjustedPower(4500, 0) === 4500, 'Zero instability → no adjustment')
+assertApprox(breakability.instabilityAdjustedPower(4500, 515), 6817, 10, '4,500 MW + 515 inst → ~6,817 MW')
+assertApprox(breakability.instabilityAdjustedPower(1000, 1000), 2000, 1, '1,000 MW + 1000 inst → 2× = 2,000 MW')
+assertApprox(breakability.instabilityAdjustedPower(4520, 515), 6848, 10, 'User scenario: 4,520 × 1.515 ≈ 6,848 MW')
+
+// 1.5 requiredLaserPowerWithInstability (combined formula)
+console.log('\n1.5 requiredLaserPowerWithInstability')
+// User scenario: 10849 mass, 74% RES with Helix (-30%), 515 instability
+// Base: (10849 × 0.2) / (1 - 0.518) ≈ 4,502 MW
+// With instability: 4,502 × (1 + 515/1000) ≈ 6,820 MW
+const userRequired = breakability.requiredLaserPowerWithInstability(10849, 74, 0.7, 515)
+assertApprox(userRequired, 6820, 50, 'User scenario with instability ≈ 6,820 MW')
+console.log(`  → User scenario: ${userRequired.toFixed(0)} MW required with instability`)
+
 // ============================================================================
 // 2. LASER STATS COMPOSITION
 // ============================================================================
@@ -470,18 +488,42 @@ const prospectorSmartCracker = gadgetRecs.buildSmartCracker(
 )
 assert(prospectorSmartCracker.moleStrategy === null, 'Prospector should not have mole strategy')
 
-// 9.4 End-to-end: User's exact scenario (Helix II + 2× Focus III, 74% rock)
-console.log('\n9.4 User scenario: Helix II + 2× Focus III on 74% rock')
-const userLoadout = [HELIX_FOCUS_PAIR, HELIX_FOCUS_PAIR, HELIX_FOCUS_PAIR]
+// 9.4 End-to-end: User's exact scenario (Helix II + 2× Focus III + Rieger, 74% rock, 515 instability)
+// This tests the critical bug: game shows IMPOSSIBLE but old math said CRACKABLE
+console.log('\n9.4 User scenario: Helix II + 2× Focus III + Rieger on 74%/515 rock')
+const USER_HELIX_WITH_MODULES = {
+  laserName: 'Mining_Laser_THCN_Helix_S2',
+  mode: 'stock',
+  modules: [FOCUS_MK3, FOCUS_MK3, RIEGER_MK3],  // -5% -5% +25% = +15% net
+}
+const userLoadoutActual = [USER_HELIX_WITH_MODULES, HELIX_S2, ARBOR_S2]
 const userRock = { scannerMass: 10849, resistancePercent: 74, instability: 515 }
-const userComparison = loadoutCompare.compareLoadoutToRock(userLoadout, userRock)
-const userSoloStrategy = moleStrategy.findBestMoleLoadoutStrategy(userLoadout, userRock, { soloMining: true })
+const userSoloStrategy = moleStrategy.findBestMoleLoadoutStrategy(userLoadoutActual, userRock, { soloMining: true })
 
-console.log(`  → Each head: 3,672 MW (verified: ${3672 === moleStrategy.buildMoleHeadProfile(HELIX_FOCUS_PAIR, 0)?.laserPower})`)
-console.log(`  → Pilot RES: 74% → Turret RES: ~52% (Helix −30%)`)
-console.log(`  → Required power (with 0.7× multiplier): ${breakability.requiredLaserPower(10849, 74, 0.7).toFixed(0)} MW`)
+// Verify the head power: 4080 × 1.15 = 4692 MW
+const userHeadProfile = moleStrategy.buildMoleHeadProfile(USER_HELIX_WITH_MODULES, 0)
+assert(userHeadProfile?.laserPower === 4692, `User head: 4080 × 1.15 = 4,692 MW (got ${userHeadProfile?.laserPower})`)
+
+// Verify the required power calculations
+const basePower = breakability.requiredLaserPower(10849, 74, 0.7)
+const adjustedPower = breakability.instabilityAdjustedPower(basePower, 515)
+console.log(`  → User head power: ${userHeadProfile?.laserPower} MW`)
+console.log(`  → Base required (RES only): ${basePower.toFixed(0)} MW`)
+console.log(`  → Adjusted required (+515 inst): ${adjustedPower.toFixed(0)} MW`)
 console.log(`  → Can solo crack: ${userSoloStrategy?.canBreak}`)
-assert(!userSoloStrategy?.canBreak, 'User scenario should NOT be crackable solo')
+
+// THE KEY TEST: Without instability, 4692 > 4520 = crackable (BUG!)
+// With instability: 4692 < 6820 = NOT crackable (CORRECT!)
+assert(userHeadProfile?.laserPower > basePower, 'Without instability, laser power exceeds base required (old bug)')
+assert(userHeadProfile?.laserPower < adjustedPower, 'With instability, laser power is insufficient (correct)')
+assert(!userSoloStrategy?.canBreak, 'User scenario must NOT be crackable solo (matches game IMPOSSIBLE)')
+
+// Verify the strategy reports instability in the summary
+assert(
+  userSoloStrategy?.summary?.includes('instability') || userSoloStrategy?.assignments[0]?.detail?.includes('inst'),
+  'Solo strategy should mention instability in notes'
+)
+console.log(`  → Summary: ${userSoloStrategy?.summary}`)
 
 // ============================================================================
 // SUMMARY

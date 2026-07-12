@@ -2,8 +2,15 @@ import type { ClusterDisplayProfile, LocationSpawnProfile } from './miningCluste
 import { getMineableElementStats, oreResistanceToHudPercent } from './mineableElementStats'
 import { applyRockMultiplicativePercent } from './miningGadgets'
 
-/** Ship mining global mass coefficient (from MiningGlobalParamsShip). */
+/** Ship mining global mass coefficient (from MiningGlobalParamsShip decayPerMass). */
 export const MINING_MASS_COEFFICIENT = 0.2
+
+/**
+ * Instability scale for crackability calculation.
+ * Higher instability increases the effective power required to crack a rock.
+ * With scale 1000, inst=500 adds ~50% to required power.
+ */
+export const INSTABILITY_POWER_SCALE = 1000
 
 export interface BreakabilityRange {
   min: number
@@ -51,6 +58,8 @@ export function effectiveHudResistancePercent(
 
 /**
  * Required laser power (MW) to fracture a rock from scanner mass and resistance.
+ * This is the "equalizing power" — the power at which charge rate equals decay rate.
+ * Does NOT include instability; use `instabilityAdjustedPower` for crackability checks.
  */
 export function requiredLaserPower(
   scannerMass: number,
@@ -62,6 +71,40 @@ export function requiredLaserPower(
   const denominator = 1 - effective
   if (denominator <= 0) return Infinity
   return (scannerMass * MINING_MASS_COEFFICIENT) / denominator
+}
+
+/**
+ * Adjust base required power by instability factor.
+ * High instability increases the effective power needed to crack a rock because
+ * instability causes energy fluctuations that reduce the net charge rate.
+ *
+ * Formula: adjustedPower = basePower × (1 + instability / INSTABILITY_POWER_SCALE)
+ *
+ * Example: 4,520 MW base with 515 instability → 4,520 × 1.515 ≈ 6,848 MW
+ */
+export function instabilityAdjustedPower(
+  basePower: number,
+  instability: number | null | undefined,
+  scale = INSTABILITY_POWER_SCALE
+): number {
+  if (instability == null || !Number.isFinite(instability) || instability <= 0) {
+    return basePower
+  }
+  return basePower * (1 + instability / scale)
+}
+
+/**
+ * Required laser power (MW) including instability adjustment for crackability check.
+ * This is the power you need to actually be able to crack the rock.
+ */
+export function requiredLaserPowerWithInstability(
+  scannerMass: number,
+  resistancePercent: number,
+  resistanceModifier: number,
+  instability: number | null | undefined
+): number {
+  const basePower = requiredLaserPower(scannerMass, resistancePercent, resistanceModifier)
+  return instabilityAdjustedPower(basePower, instability)
 }
 
 export function computeBreakabilityForOre(
