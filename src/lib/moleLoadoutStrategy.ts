@@ -170,6 +170,7 @@ function equalizationPowerForHeads(
 /**
  * Crackable power for heads — actual power needed to fracture (includes instability margin).
  * Used for canBreak checks.
+ * Applies head instability modifiers to the rock's base instability.
  */
 function crackablePowerForHeads(
   mass: number,
@@ -183,7 +184,15 @@ function crackablePowerForHeads(
     return laserResistanceMultiplier(profile?.resistanceModifier ?? 0)
   })
   const bestResistanceMultiplier = Math.min(...multipliers)
-  return Math.round(crackablePower(mass, resistancePercent, instability ?? 0, bestResistanceMultiplier))
+  
+  // Apply instability modifier from heads (additive)
+  const combinedInstabilityMod = activeIndices.reduce((sum, index) => {
+    const profile = profileByIndex(profiles, index)
+    return sum + (profile?.instabilityModifier ?? 0)
+  }, 0)
+  const effectiveInstability = Math.max(0, (instability ?? 0) + combinedInstabilityMod)
+  
+  return Math.round(crackablePower(mass, resistancePercent, effectiveInstability, bestResistanceMultiplier))
 }
 
 function combinedModifiers(
