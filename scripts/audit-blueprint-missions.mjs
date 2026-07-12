@@ -65,12 +65,13 @@ function isHeadhunterLawfulEscort(contract) {
 
 function resolveContractIsLawful(contract) {
   const factionKey = String(contract.factionKey || '').toLowerCase()
-  const debugName = contract.debugName || ''
+
+  // Board escort/defend templates stay lawful even under an unlawful faction's
+  // generator (mirrors src/lib/missionLawfulStatus.ts ordering).
+  if (isHeadhunterLawfulEscort(contract)) return true
 
   if (factionKey.startsWith('unlawful_')) return false
   if (factionKey.startsWith('lawful_')) return true
-  if (factionKey === 'unknown' || factionKey === '') return true
-  if (isHeadhunterLawfulEscort(contract)) return true
 
   return true
 }
@@ -111,14 +112,23 @@ for (const contract of contracts) {
     issues.push(`Bad title [${faction}] ${contract.debugName} → "${contract.displayTitle || contract.title}"`)
   }
 
-  if (
-    isHeadhunterLawfulEscort(contract) &&
-    contract.factionKey === 'unlawful_headhunters'
-  ) {
+  if (isHeadhunterLawfulEscort(contract) && !resolveContractIsLawful(contract)) {
     issues.push(
-      `Headhunter escort mis-tagged unlawful [${contract.debugName}] factionKey=${contract.factionKey}`
+      `Board escort resolves unlawful [${contract.debugName}] factionKey=${contract.factionKey}`
     )
   }
+}
+
+// Locality gates: most blueprint contracts carry a "where you must be" gate.
+// If the parser's MissionLocality extraction breaks (path/schema change in a
+// patch), this count collapses — fail loudly instead of shipping empty tags.
+const blueprintContracts = contracts.filter(contractHasBlueprints)
+const withLocality = blueprintContracts.filter((c) => c.locality?.label)
+const localityCoverage = blueprintContracts.length > 0 ? withLocality.length / blueprintContracts.length : 0
+if (localityCoverage < 0.5) {
+  issues.push(
+    `Locality coverage collapsed: ${withLocality.length}/${blueprintContracts.length} blueprint contracts have a locality gate (expected most of them)`
+  )
 }
 
 console.log('Blueprint mission audit')

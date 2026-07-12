@@ -4,6 +4,45 @@ import { resolveMissionIsLawful } from './missionLawfulStatus'
 
 export { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
 
+/** Reputation change on mission completion. Negative amounts are cross-faction losses. */
+export interface MissionRepEffect {
+  factionKey: string
+  faction: string
+  amount: number
+}
+
+/** A mission that must be completed before a gated mission starts appearing. */
+export interface PrereqMissionRef {
+  debugName?: string
+  title: string
+  faction: string
+  factionKey?: string
+  system?: string | null
+  region?: string | null
+  category?: string | null
+  isLawful?: boolean
+  /** False = starter/intro mission with no blueprint reward of its own. */
+  hasBlueprints?: boolean
+  /** True = faction intro/invite mission (game's introContracts list). */
+  isIntro?: boolean
+  /** Where you must be for this prerequisite mission to appear. */
+  locality?: MissionLocality | null
+}
+
+/** One prerequisite group: complete `requiredCount` of the listed missions. */
+export interface MissionPrereq {
+  requiredCount: number
+  missions: PrereqMissionRef[]
+  totalEmitters: number
+}
+
+/** Where the player must be for the mission to appear in Contracts. */
+export interface MissionLocality {
+  key: string
+  label: string
+  systems: string[]
+}
+
 export interface BlueprintRewardMission {
   mission: string
   /** Effective per-completion probability this blueprint is selected from this contract's pools. */
@@ -30,6 +69,12 @@ export interface BlueprintRewardMission {
   debugName?: string
   isLawful: boolean
   title: string
+  /** All rep changes on completion (gains + any cross-faction losses). */
+  repEffects: MissionRepEffect[]
+  /** Intro/starter missions that must be completed before this mission appears. */
+  prereqMissions: MissionPrereq[]
+  /** Locality gate: where you must be for this mission to appear. */
+  locality: MissionLocality | null
 }
 
 type MissionPoolBlueprint = {
@@ -63,6 +108,9 @@ type ContractEntry = {
   scenarioPointsRequired?: number | null
   scenarioProgressLabel?: string | null
   repPoints: number
+  repEffects?: MissionRepEffect[]
+  prereqMissions?: MissionPrereq[]
+  locality?: MissionLocality | null
 }
 
 const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
@@ -132,6 +180,9 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           region: contract.region ?? null,
           category: contract.category ?? null,
           repPoints: contract.repPoints ?? 0,
+          repEffects: contract.repEffects ?? [],
+          prereqMissions: contract.prereqMissions ?? [],
+          locality: contract.locality ?? null,
           minReputation: contract.minStanding?.minReputation ?? null,
           maxReputation: contract.maxStanding?.minReputation ?? null,
           standingName: contract.minStanding?.name ?? null,
@@ -320,6 +371,9 @@ export interface ContractMissionBrowseEntry {
   repCareerLabel?: string | null
   repScopeKey?: string | null
   repPoints: number
+  repEffects: MissionRepEffect[]
+  prereqMissions: MissionPrereq[]
+  locality: MissionLocality | null
   poolKeys: string[]
   /** Lowest pool roll chance when any attached pool is < 100%. */
   minPoolChance: number
@@ -390,6 +444,9 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       repCareerLabel: contract.repCareerLabel ?? null,
       repScopeKey: contract.repScopeKey ?? null,
       repPoints: contract.repPoints ?? 0,
+      repEffects: contract.repEffects ?? [],
+      prereqMissions: contract.prereqMissions ?? [],
+      locality: contract.locality ?? null,
       poolKeys,
       minPoolChance,
       hasPartialPoolRoll: minPoolChance < 1,

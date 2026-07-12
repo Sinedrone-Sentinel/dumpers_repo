@@ -1,10 +1,10 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-12T16:28:44.813Z",
+  "_extracted": "2026-07-12T18:29:11.303Z",
   "stats": {
     "internalNames": 1553,
-    "displayNames": 1537,
-    "ambiguousDisplayNames": 15,
+    "displayNames": 1536,
+    "ambiguousDisplayNames": 16,
     "contractDefinitions": 1371
   },
   "byInternalName": {
@@ -1925,7 +1925,7 @@
       "categoryName": "FPSArmours"
     },
     "slaver_armor_medium_legs_01_01_13": {
-      "blueprintName": "Slaver Armor Medium Legs 01 01 13",
+      "blueprintName": "DustUp Legs Desert",
       "categoryName": "FPSArmours"
     },
     "slaver_armor_medium_legs_01_01_15": {
@@ -4313,7 +4313,7 @@
       "categoryName": "FPSWeapons"
     },
     "ksar_sniper_ballistic_01_white_blue_01": {
-      "blueprintName": "Ksar Sniper Ballistic 01 White Blue 01",
+      "blueprintName": "Scalpel \"Permafrost\" Sniper Rifle",
       "categoryName": "FPSWeapons"
     },
     "lbco_sniper_energy_01": {
@@ -4665,7 +4665,7 @@
       "categoryName": "Veh. Comp. S3"
     },
     "mining_laser_drak_golem_s1": {
-      "blueprintName": "Mining Laser Drak Golem S1",
+      "blueprintName": "Pitman Mining Laser",
       "categoryName": "Veh. Comp. S1"
     },
     "mining_laser_grin_arbor_s0": {
@@ -8138,13 +8138,21 @@
       "internalName": "slaver_armor_medium_legs_01_01_01",
       "blueprintName": "DustUp Legs Tactical"
     },
-    "slaver armor medium legs 01 01 13": {
-      "internalName": "slaver_armor_medium_legs_01_01_13",
-      "blueprintName": "Slaver Armor Medium Legs 01 01 13"
-    },
     "dustup legs desert": {
-      "internalName": "slaver_armor_medium_legs_01_01_15",
-      "blueprintName": "DustUp Legs Desert"
+      "ambiguous": true,
+      "displayName": "DustUp Legs Desert",
+      "candidates": [
+        {
+          "internalName": "slaver_armor_medium_legs_01_01_13",
+          "blueprintName": "DustUp Legs Desert",
+          "categoryName": "FPSArmours"
+        },
+        {
+          "internalName": "slaver_armor_medium_legs_01_01_15",
+          "blueprintName": "DustUp Legs Desert",
+          "categoryName": "FPSArmours"
+        }
+      ]
     },
     "macflex arms": {
       "internalName": "rsi_deckcrew_armor_light_arms_01_01_01",
@@ -10590,9 +10598,9 @@
       "internalName": "ksar_sniper_ballistic_01",
       "blueprintName": "Scalpel Sniper Rifle"
     },
-    "ksar sniper ballistic 01 white blue 01": {
+    "scalpel \"permafrost\" sniper rifle": {
       "internalName": "ksar_sniper_ballistic_01_white_blue_01",
-      "blueprintName": "Ksar Sniper Ballistic 01 White Blue 01"
+      "blueprintName": "Scalpel \"Permafrost\" Sniper Rifle"
     },
     "atzkav sniper rifle": {
       "internalName": "lbco_sniper_energy_01",
@@ -10971,9 +10979,9 @@
       "internalName": "cool_wcpr_s03_kragen",
       "blueprintName": "Kragen"
     },
-    "mining laser drak golem s1": {
+    "pitman mining laser": {
       "internalName": "mining_laser_drak_golem_s1",
-      "blueprintName": "Mining Laser Drak Golem S1"
+      "blueprintName": "Pitman Mining Laser"
     },
     "arbor mhv mining laser": {
       "internalName": "mining_laser_grin_arbor_s0",

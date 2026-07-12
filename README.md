@@ -66,6 +66,9 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 
 - **My Tracker** — personal wishlist of blueprints you are grinding toward
 - **Browse Missions** — pick a faction, browse mission pools with location/rep/category tags and X/X progress per location
+- **Rep effect tags** — completion gains plus any cross-faction losses per mission (from game contract data)
+- **🔒 Prerequisite chips** — gated contracts link to the intro/starter missions that unlock them
+- **📍 Locality tags** — where you must be for a contract to appear (game `MissionLocality` gates)
 - Investigation, collection, and bounty mission families (including Hathor PAF sites) with color-coded tag legend
 - Header shortcuts: **BP Dumper** (setup + API key) and **Live Tracker** (`/targets/live`)
 - Dismissible callout explains the BP Dumper + Live Tracker workflow

@@ -51,6 +51,7 @@ import {
   buildEntityClassPathIndex,
   buildRecordBasenameIndex,
   extractEntityBaseStats,
+  resolveEntityFile,
 } from './lib/entityBaseStats.mjs'
 import {
   BLUEPRINT_MISSION_TRACKING_EXCLUSIONS,
@@ -84,6 +85,7 @@ const EXPECTED_PATHS = {
   fpsWeapons: 'libs/foundry/records/entities/scitem/weapons/fps_weapons',
   contractGenerators: 'libs/foundry/records/contracts/contractgenerator',
   contractScenarios: 'libs/foundry/records/contracts/contractscenarios',
+  missionLocality: 'libs/foundry/records/missiondata/pu_missionlocality',
   reputationRewards: 'libs/foundry/records/reputation/rewards',
   factionReputation: 'libs/foundry/records/factions/factionreputation',
 }
@@ -1234,10 +1236,12 @@ function resolveContractIsLawful(factionKey, debugName) {
   const key = String(factionKey || '').toLowerCase()
   const debug = String(debugName || '')
 
+  // Generic board escort/defend templates are lawful work even when offered
+  // under an unlawful faction's generator (e.g. Headhunters site defense).
+  if (/_(defendentitiesandescort|defenddestructibleentities)_/i.test(debug)) return true
+
   if (key.startsWith('unlawful_')) return false
   if (key.startsWith('lawful_')) return true
-  if (key === 'unknown' || key === '') return true
-  if (/_(defendentitiesandescort|defenddestructibleentities)_/i.test(debug)) return true
 
   return true
 }
@@ -1262,8 +1266,9 @@ function parseContractGenerators(localization, reputationCaches = {}) {
   if (reputationCaches.standingDefs) {
     console.log(`  Using ${Object.keys(standingDefs).length} cached standing definitions`)
   }
-  // Build faction name cache
+  // Build faction name cache (+ reverse display-name → canonical key lookup)
   const factionNames = {}
+  const factionKeyByName = {}
   const factionFiles = findJsonFiles(EXPECTED_PATHS.factionReputation)
   for (const file of factionFiles) {
     const json = readJson(file)
@@ -1280,14 +1285,26 @@ function parseContractGenerators(localization, reputationCaches = {}) {
         recordName: json._RecordName_,
       })
       factionNames[key] = displayName || json._RecordName_.replace('FactionReputation.', '')
+      const canonicalKey = key.replace(/^factionreputation_/, '')
+      if (factionNames[key]) {
+        factionKeyByName[factionNames[key].toLowerCase()] = canonicalKey
+      }
     }
   }
   console.log(`  Cached ${Object.keys(factionNames).length} faction names`)
+
+  // Locality gates: which system/planet you must be near for the mission to appear
+  const missionLocalityCatalog = buildMissionLocalityCatalog(localization)
   
   const contracts = []
   const missionsByPool = {} // Pool key -> array of missions
   const poolsByBlueprint = {} // Blueprint name -> array of pool keys
-  
+
+  // Prerequisite chains: completion tag id -> missions that emit it on success,
+  // and blueprint contracts that require completed-contract tags (intro/starter chains).
+  const completionTagEmitters = new Map()
+  const prereqPending = []
+
   let totalContracts = 0
   let contractsWithBlueprints = 0
   
@@ -1389,7 +1406,18 @@ function parseContractGenerators(localization, reputationCaches = {}) {
     const generators = json._RecordValue_.generators
     
     for (const generator of generators) {
-      if (!generator.contracts) continue
+      // introContracts are starter/invite missions (e.g. Vaughn's "A Chance to Impress",
+      // faction initial invites) — no blueprint pools, but they emit the completion tags
+      // that unlock gated missions, so they must be indexed as prereq chain sources.
+      const generatorContracts = [
+        ...(generator.introContracts ?? []),
+        ...(generator.contracts ?? []),
+      ]
+      if (generatorContracts.length === 0) continue
+      const introContractSet = new Set(generator.introContracts ?? [])
+      // Generator-wide availability gates apply to every contract it offers
+      const generatorPrereqDefs = extractTagPrereqDefs(generator.defaultAvailability?.prerequisites)
+      const generatorLocalityKey = extractLocalityKey(generator.defaultAvailability?.prerequisites)
       
       // Extract faction from factionReputation path
       let factionKey = 'unknown'
@@ -1417,7 +1445,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
         }
       }
       
-      for (const contract of generator.contracts) {
+      for (const contract of generatorContracts) {
         totalContracts++
         
         const debugName = contract.debugName || ''
@@ -1479,24 +1507,22 @@ function parseContractGenerators(localization, reputationCaches = {}) {
         })
         factionKey = resolvedFaction.factionKey
         factionName = resolvedFaction.factionName
-        
-        // Extract rep points from contractResults
-        let repPoints = 0
-        if (contract.contractResults?.contractResults) {
-          for (const result of contract.contractResults.contractResults) {
-            if (!result) continue
-            if (result._Type_ === 'ContractResult_LegacyReputation') {
-              const rewardPath = result.contractResultReputationAmounts?.reward
-              if (rewardPath) {
-                const rewardMatch = rewardPath.match(/([^/]+)\.json$/i)
-                if (rewardMatch) {
-                  const rewardKey = rewardMatch[1].toLowerCase()
-                  repPoints = repRewardAmounts[rewardKey] || 0
-                }
-              }
-            }
-          }
+
+        // Backfill canonical factionKey when the generator lacks a rep binding
+        // but the display name matches a known faction record (e.g. board
+        // escort templates offered under Foxwell / Headhunters generators).
+        if ((factionKey === 'unknown' || !factionKey) && factionName && factionName !== 'Unknown') {
+          const canonicalKey = factionKeyByName[factionName.toLowerCase()]
+          if (canonicalKey) factionKey = canonicalKey
         }
+        
+        // Extract rep effects (gains + cross-faction losses on completion)
+        const { repPoints, repEffects } = extractContractRepEffects(
+          contract,
+          repRewardAmounts,
+          factionNames,
+          factionKey
+        )
         
         // Extract standing requirements (direct fields or ContractPrerequisite_Reputation)
         const repPrereq = extractContractReputationPrerequisite(contract)
@@ -1527,12 +1553,27 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             system = 'Stanton'
           }
         }
-        
+
+        // Locality prerequisite: where the player must BE for the mission to
+        // appear in Contracts. Contract-level overrides the generator gate.
+        const localityKey = extractLocalityKey(contract.additionalPrerequisites) ?? generatorLocalityKey
+        const locality = localityKey ? missionLocalityCatalog[localityKey] ?? null : null
+
+        // Locality is ground truth when name-based system inference failed
+        if (system === 'Unknown' && locality?.systems.length === 1) {
+          system = locality.systems[0]
+        }
+
         // Extract region from debugName (e.g., RegionA, RegionB, RegionC, RegionD)
         let region = null
         const regionMatch = debugName.match(/Region([A-Z])/i)
         if (regionMatch) {
           region = regionMatch[1].toUpperCase() // Just the letter: A, B, C, D
+        }
+        // Region locality gate (regiona-regiond) fills in when debugName lacks it
+        if (!region && localityKey) {
+          const localityRegion = localityKey.match(/^region([a-d])$/)
+          if (localityRegion) region = localityRegion[1].toUpperCase()
         }
         
         // Extract mission category from missionTypeOverride or paramOverrides
@@ -1626,6 +1667,40 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           }
         }
         
+        // Register completion tags this contract emits on success (prereq chain sources)
+        const emittedTagIds = extractContractCompletionTagIds(contract)
+        if (emittedTagIds.length > 0) {
+          let emitterTitle = resolveContractDisplayTitle({
+            title,
+            titleKey,
+            debugName,
+            localization,
+            category,
+            system,
+          })
+          // Prereq chips must always be readable — placeholder-only titles fall back to debugName
+          if (!emitterTitle || emitterTitle.includes('~mission')) {
+            emitterTitle = humanizeContractDebugName(debugName)
+          }
+          const emitterMeta = {
+            debugName: contract.debugName,
+            title: emitterTitle,
+            faction: factionName,
+            factionKey,
+            system,
+            region,
+            category,
+            locality,
+            isLawful: resolveContractIsLawful(factionKey, contract.debugName),
+            hasBlueprints: blueprintPools.length > 0,
+            isIntro: introContractSet.has(contract),
+          }
+          for (const tagId of emittedTagIds) {
+            if (!completionTagEmitters.has(tagId)) completionTagEmitters.set(tagId, [])
+            completionTagEmitters.get(tagId).push(emitterMeta)
+          }
+        }
+
         if (blueprintPools.length > 0) {
           contractsWithBlueprints++
 
@@ -1653,6 +1728,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             minStanding,
             maxStanding,
             repPoints,
+            repEffects,
+            locality,
             isLawful: resolveContractIsLawful(factionKey, contract.debugName),
             __minStandingPath: repPrereq?.minStandingPath ?? null,
             __maxStandingPath: repPrereq?.maxStandingPath ?? null,
@@ -1660,7 +1737,13 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           }
           
           contracts.push(contractData)
-          
+
+          // Queue completed-contract-tag prerequisites for post-loop resolution
+          const prereqDefs = combineTagPrereqDefs(contract, generatorPrereqDefs)
+          if (prereqDefs.length > 0) {
+            prereqPending.push({ contractData, prereqDefs })
+          }
+
           // Index by pool
           for (const pool of blueprintPools) {
             if (!missionsByPool[pool.key]) {
@@ -1679,7 +1762,9 @@ function parseContractGenerators(localization, reputationCaches = {}) {
               category,
               minStanding,
               maxStanding,
-              repPoints
+              repPoints,
+              repEffects,
+              locality
             })
           }
         }
@@ -1687,10 +1772,21 @@ function parseContractGenerators(localization, reputationCaches = {}) {
     }
   }
   
+  // Resolve prerequisite chains now that every generator's completion tags are indexed
+  let prereqResolved = 0
+  for (const { contractData, prereqDefs } of prereqPending) {
+    const prereqMissions = resolveContractPrereqMissions(prereqDefs, completionTagEmitters, contractData.debugName)
+    if (prereqMissions.length > 0) {
+      contractData.prereqMissions = prereqMissions
+      prereqResolved++
+    }
+  }
+
   console.log(`  Parsed ${totalContracts} total contracts`)
   console.log(`  Found ${contractsWithBlueprints} contracts with blueprint rewards`)
   console.log(`  Indexed ${Object.keys(missionsByPool).length} unique blueprint pools`)
-  
+  console.log(`  Resolved prerequisite mission chains for ${prereqResolved} of ${prereqPending.length} gated contract(s)`)
+
   return { contracts, missionsByPool, poolsByBlueprint, factionNames, standingDefs, repRewardAmounts }
 }
 
@@ -1725,18 +1821,250 @@ function extractContractStandingRequirements(contract, standingDefs, localizatio
   return { minStanding, maxStanding }
 }
 
-function extractContractRepPoints(contract, repRewardAmounts) {
-  if (!contract?.contractResults?.contractResults) return 0
-  for (const result of contract.contractResults.contractResults) {
-    if (!result || result._Type_ !== 'ContractResult_LegacyReputation') continue
-    const rewardPath = result.contractResultReputationAmounts?.reward
-    if (!rewardPath) continue
-    const rewardMatch = rewardPath.match(/([^/\\]+)\.json$/i)
-    if (rewardMatch) {
-      return repRewardAmounts[rewardMatch[1].toLowerCase()] || 0
+function contractTagRecordId(tagRef) {
+  if (!tagRef) return null
+  if (tagRef._RecordId_) return String(tagRef._RecordId_).toLowerCase()
+  const name = tagRef._RecordName_
+  if (name) return String(name).replace(/^Tag\./i, '').toLowerCase()
+  return null
+}
+
+/** Completion tag ids this contract awards on mission success (prereq chain sources). */
+function extractContractCompletionTagIds(contract) {
+  const results = contract?.contractResults?.contractResults
+  if (!Array.isArray(results)) return []
+
+  const tagIds = []
+  for (const result of results) {
+    if (!result || result._Type_ !== 'ContractResult_CompletionTags') continue
+    if (result.missionResults?.[0] !== true) continue
+    for (const completion of result.completionTags ?? []) {
+      const id = contractTagRecordId(completion?.tag)
+      if (id) tagIds.push(id)
     }
   }
-  return 0
+  return tagIds
+}
+
+/**
+ * Completed-contract-tag prerequisites: this mission only appears after the
+ * player finishes N missions carrying specific completion tags (intro/starter
+ * chains like Rayari_Intro or the rank-0 hauling certifications).
+ * Accepts a raw prerequisite array (contract.additionalPrerequisites or
+ * generator.defaultAvailability.prerequisites).
+ */
+function extractTagPrereqDefs(prereqList) {
+  const prereqDefs = []
+  for (const prereq of prereqList ?? []) {
+    if (!prereq || prereq._Type_ !== 'ContractPrerequisite_CompletedContractTags') continue
+    const tagIds = (prereq.requiredCompletedContractTags?.tags ?? [])
+      .map((tag) => contractTagRecordId(tag))
+      .filter(Boolean)
+    if (tagIds.length === 0) continue
+    prereqDefs.push({ tagIds, requiredCount: prereq.requiredCountValue ?? 1 })
+  }
+  return prereqDefs
+}
+
+/**
+ * Mission locality catalog: MissionLocality records gate WHERE a contract is
+ * offered ("you must be near Hurston to see this mission"). Each record lists
+ * starmap objects (stars = system-wide, planets, moons, Lagrange points).
+ * Returns lowercase locality key -> { key, label, systems }.
+ */
+function buildMissionLocalityCatalog(localization) {
+  const catalog = {}
+  const localityFiles = findJsonFiles(EXPECTED_PATHS.missionLocality)
+
+  const locName = (token) =>
+    localization?.[token] || localization?._lowerMap?.[token.toLowerCase()] || null
+
+  for (const file of localityFiles) {
+    const json = readJson(file)
+    const locations = json?._RecordValue_?.availableLocations
+    if (!Array.isArray(locations)) continue
+
+    const key = basename(file, '.json').toLowerCase()
+    const systems = new Set()
+    const starNames = []
+    const planetNames = []
+    let hasMoons = false
+    let hasLagrange = false
+
+    for (const ref of locations) {
+      const refPath = String(ref || '').toLowerCase()
+      const systemMatch = refPath.match(/\/system\/(stanton|pyro|nyx)\//)
+      if (systemMatch) {
+        systems.add(systemMatch[1].charAt(0).toUpperCase() + systemMatch[1].slice(1))
+      }
+
+      // Normalize "starmapobject.stanton2" and "pyro1" style basenames to one token
+      const base = basename(refPath, '.json').replace(/^starmapobject\./, '')
+
+      if (/^(stanton|pyro|nyx)_?star$/.test(base)) {
+        starNames.push(base)
+      } else if (/^(stanton|pyro|nyx)\d+$/.test(base)) {
+        const name = locName(base)
+        if (name && !planetNames.includes(name)) planetNames.push(name)
+      } else if (/^(stanton|pyro|nyx)\d+[a-z]$/.test(base)) {
+        hasMoons = true
+      } else if (refPath.includes('/lagrange/')) {
+        hasLagrange = true
+      }
+      // Stations / asteroid clusters / clinics are omitted from the label
+    }
+
+    const systemList = [...systems]
+    let label
+    const regionMatch = key.match(/^region([a-d])$/)
+    if (regionMatch) {
+      const around = planetNames.length > 0 ? ` (near ${planetNames.join(', ')})` : ''
+      label = `Pyro region ${regionMatch[1].toUpperCase()}${around}`
+      if (systemList.length === 0) systemList.push('Pyro')
+    } else if (starNames.length > 0 || planetNames.length === 0) {
+      // Star anchors (or nothing more specific) = system-wide availability
+      const names = systemList.length > 0 ? systemList : starNames
+      label = names.length > 0 ? `Anywhere in ${names.join(' or ')}` : null
+    } else {
+      // hasMoons/hasLagrange just confirm the gate covers the whole neighborhood
+      const suffix = hasMoons || hasLagrange ? ' area' : ''
+      label = `${planetNames.join(' / ')}${suffix}`
+    }
+
+    if (!label) continue
+    catalog[key] = { key, label, systems: systemList }
+  }
+
+  console.log(`  Cached ${Object.keys(catalog).length} mission locality records`)
+  return catalog
+}
+
+/** First ContractPrerequisite_Locality key in a prerequisite list (or null). */
+function extractLocalityKey(prereqList) {
+  for (const prereq of prereqList ?? []) {
+    if (!prereq || prereq._Type_ !== 'ContractPrerequisite_Locality') continue
+    const match = String(prereq.localityAvailable ?? '').match(/([^/\\]+)\.json$/i)
+    if (match) return match[1].toLowerCase()
+  }
+  return null
+}
+
+/** Contract-level prereqs plus generator-wide defaultAvailability gates, deduped. */
+function combineTagPrereqDefs(contract, generatorPrereqDefs) {
+  const combined = [...(generatorPrereqDefs ?? []), ...extractTagPrereqDefs(contract?.additionalPrerequisites)]
+  const seen = new Set()
+  return combined.filter((def) => {
+    const key = `${[...def.tagIds].sort().join(',')}#${def.requiredCount}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+/** Resolve required tags to the missions that emit them (deduped by faction + title). */
+function resolveContractPrereqMissions(prereqDefs, completionTagEmitters, ownDebugName) {
+  const prereqMissions = []
+
+  for (const def of prereqDefs) {
+    const seen = new Set()
+    const missions = []
+    let totalEmitters = 0
+
+    for (const tagId of def.tagIds) {
+      for (const emitter of completionTagEmitters.get(tagId) ?? []) {
+        if (emitter.debugName === ownDebugName) continue
+        totalEmitters++
+        const key = `${emitter.faction}|${emitter.title}`
+        if (seen.has(key)) continue
+        seen.add(key)
+        missions.push({
+          debugName: emitter.debugName,
+          title: emitter.title,
+          faction: emitter.faction,
+          factionKey: emitter.factionKey,
+          system: emitter.system,
+          region: emitter.region,
+          category: emitter.category,
+          locality: emitter.locality ?? null,
+          isLawful: emitter.isLawful,
+          hasBlueprints: emitter.hasBlueprints,
+          isIntro: emitter.isIntro,
+        })
+      }
+    }
+
+    if (missions.length === 0) continue
+    prereqMissions.push({
+      requiredCount: def.requiredCount,
+      missions: missions.slice(0, 12),
+      totalEmitters,
+    })
+  }
+
+  return prereqMissions
+}
+
+/**
+ * Reputation effects on mission COMPLETION (missionResults[0] === true).
+ * A contract can touch multiple factions — e.g. CFP sabotage missions grant
+ * Citizens for Prosperity rep while dropping Head Hunters rep. Amounts from
+ * multiple scopes (faction standing + affinity) of the same faction are summed.
+ *
+ * Returns:
+ *   repPoints  — total completion gain for the contract's own faction
+ *                (fallback: first faction seen). Abandon/fail penalties
+ *                (missionResults[2]) are deliberately excluded.
+ *   repEffects — [{ factionKey, faction, amount }] for every faction touched
+ *                on completion, own faction first.
+ */
+function extractContractRepEffects(contract, repRewardAmounts, factionNames, contractFactionKey = null) {
+  const empty = { repPoints: 0, repEffects: [] }
+  const results = contract?.contractResults?.contractResults
+  if (!Array.isArray(results)) return empty
+
+  const byFaction = new Map()
+
+  for (const result of results) {
+    if (!result || result._Type_ !== 'ContractResult_LegacyReputation') continue
+    // Index 0 = mission completed; index 2 carries abandon/fail penalties.
+    if (result.missionResults?.[0] !== true) continue
+
+    const params = result.contractResultReputationAmounts
+    const rewardMatch = String(params?.reward ?? '').match(/([^/\\]+)\.json$/i)
+    if (!rewardMatch) continue
+    const amount = repRewardAmounts[rewardMatch[1].toLowerCase()]
+    if (typeof amount !== 'number' || amount === 0) continue
+
+    const factionMatch = String(params?.factionReputation ?? '').match(/factionreputation_([\w]+)\.json$/i)
+    const factionKey = factionMatch ? factionMatch[1].toLowerCase() : 'unknown'
+
+    const existing = byFaction.get(factionKey)
+    if (existing) {
+      existing.amount += amount
+    } else {
+      byFaction.set(factionKey, {
+        factionKey,
+        faction:
+          factionNames?.[`factionreputation_${factionKey}`]
+          || factionNames?.[factionKey]
+          || factionKey,
+        amount,
+      })
+    }
+  }
+
+  if (byFaction.size === 0) return empty
+
+  const repEffects = [...byFaction.values()].sort((a, b) => {
+    if (a.factionKey === contractFactionKey) return -1
+    if (b.factionKey === contractFactionKey) return 1
+    return b.amount - a.amount
+  })
+
+  const own = contractFactionKey ? byFaction.get(contractFactionKey) : null
+  const repPoints = own?.amount ?? repEffects[0].amount
+
+  return { repPoints, repEffects }
 }
 
 function normalizeBlueprintPoolKeyFromPath(poolPath) {
@@ -1767,6 +2095,7 @@ function indexContractInMissionsByPool(contract, missionsByPool) {
       minStanding: contract.minStanding,
       maxStanding: contract.maxStanding,
       repPoints: contract.repPoints,
+      repEffects: contract.repEffects ?? [],
       repCareerLabel: contract.repCareerLabel ?? null,
       repScopeKey: contract.repScopeKey ?? null,
     })
@@ -1875,6 +2204,7 @@ function parseContractScenarios(localization, factionNames) {
             scenarioPointsRequired: minPoints,
             scenarioProgressLabel: progressionLabel,
             repPoints: 0,
+            repEffects: [],
             isLawful: resolveContractIsLawful(factionKey, debugName),
             source: 'contractScenario',
           })
@@ -1955,7 +2285,9 @@ function parseRedWindBridgedContracts(localization, factionNames, standingDefs, 
 
     const minStanding = sampleContract ? resolveStandingFromPath(sampleContract.minStanding, standingDefs, localization) : null
     const maxStanding = sampleContract ? resolveStandingFromPath(sampleContract.maxStanding, standingDefs, localization) : null
-    const repPoints = sampleContract ? extractContractRepPoints(sampleContract, repRewardAmounts) : 0
+    const { repPoints, repEffects } = sampleContract
+      ? extractContractRepEffects(sampleContract, repRewardAmounts, factionNames, factionKey)
+      : { repPoints: 0, repEffects: [] }
 
     contracts.push({
       id: debugName,
@@ -1983,6 +2315,7 @@ function parseRedWindBridgedContracts(localization, factionNames, standingDefs, 
       minStanding,
       maxStanding,
       repPoints,
+      repEffects,
       isLawful: true,
       source: 'orphanPoolBridge',
     })
@@ -3118,6 +3451,25 @@ function parseBlueprintDefinitions(localization = {}) {
       }
     }
     
+    // Generic last-chance lookup: read the entity SCItem's own display name
+    // (AttachDef.Localization.Name). Catches items whose loc key can't be
+    // derived from the internal name (e.g. mining_laser_drak_golem_s1 →
+    // @item_Mining_MiningLaser_Drake_Default_S0 = "Pitman Mining Laser").
+    if (!blueprintName && (entityClass || internalName)) {
+      const entityFile = resolveEntityFile(entityClass || internalName, entityPathIndex)
+      const entityJson = entityFile ? readJson(entityFile) : null
+      const attachComp = (entityJson?._RecordValue_?.Components ?? []).find(
+        (comp) => comp?._Type_ === 'SAttachableComponentParams'
+      )
+      const nameKey = attachComp?.AttachDef?.Localization?.Name
+      if (nameKey && nameKey !== '@LOC_PLACEHOLDER' && nameKey !== '@LOC_EMPTY') {
+        const resolved = resolveLocalization(nameKey, localization)
+        if (resolved && !resolved.startsWith('@')) {
+          blueprintName = resolved
+        }
+      }
+    }
+
     // Fallback: generate from internal name if not in localization
     // Track this for priority rule: isReward=true items MUST have localization
     let usedFallbackName = false

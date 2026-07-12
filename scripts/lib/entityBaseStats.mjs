@@ -340,7 +340,7 @@ function entityHasTractorBeamParams(root) {
   return found
 }
 
-function resolveEntityFile(entityClass, entityPathIndex) {
+export function resolveEntityFile(entityClass, entityPathIndex) {
   if (!entityClass || !entityPathIndex) return null
   const key = String(entityClass).toLowerCase()
   if (entityPathIndex.has(key)) return entityPathIndex.get(key)

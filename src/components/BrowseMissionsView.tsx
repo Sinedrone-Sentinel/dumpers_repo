@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionLocationTags from './MissionLocationTags'
+import MissionRepEffectTags from './MissionRepEffectTags'
+import MissionPrereqTag from './MissionPrereqInfo'
+import MissionLocalityTag from './MissionLocalityTag'
 import BlueprintMissionMeta from './BlueprintMissionMeta'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
@@ -12,10 +15,7 @@ import {
   type BlueprintRewardMission,
   type ContractMissionBrowseEntry,
 } from '../lib/blueprintMissionRewards'
-import {
-  formatRepReward,
-  formatStandingRange,
-} from '../lib/missionAcquisition'
+import { formatStandingRange } from '../lib/missionAcquisition'
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
@@ -358,7 +358,6 @@ export default function BrowseMissionsView({
         : []
 
     const standingLabel = formatStandingRange(mission.minStanding, mission.maxStanding, mission.repCareerLabel)
-    const repText = formatRepReward(mission.repPoints, mission.repPoints)
     const poolRollText =
       mission.hasPartialPoolRoll && mission.minPoolChance < 1
         ? `${Math.round(mission.minPoolChance * 100)}% pool roll`
@@ -386,14 +385,18 @@ export default function BrowseMissionsView({
           system={mission.system}
           poolKey={mission.poolKeys[0]}
         />
+        <MissionLocalityTag locality={mission.locality} />
         {standingLabel && (
           <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
             {standingLabel}
           </span>
         )}
-        {repText && (
-          <span className="text-[10px] text-emerald-400/90">{repText}</span>
-        )}
+        <MissionPrereqTag prereqMissions={mission.prereqMissions} missionTitle={mission.title} />
+        <MissionRepEffectTags
+          repEffects={mission.repEffects}
+          repPoints={mission.repPoints}
+          missionFaction={mission.faction}
+        />
         {poolRollText && (
           <span className="text-[10px] text-amber-400/80">{poolRollText}</span>
         )}

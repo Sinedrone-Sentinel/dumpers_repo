@@ -10,7 +10,7 @@ import { useTargetList } from '../hooks/useTargetList'
 import { catalogIsReward } from '../lib/blueprintOrderable'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { buildMissionList, getMissionsForBlueprint, missionKey, type MissionListEntry, type Region } from '../lib/missions'
-import { findBrowseMissionEntry, getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
+import { findBrowseMissionEntry, getRewardMissionsForBlueprint, type MissionLocality, type MissionPrereq, type MissionRepEffect } from '../lib/blueprintMissionRewards'
 import {
   formatBlueprintUnlockBadge,
   formatBlueprintDropChance,
@@ -21,6 +21,9 @@ import {
 } from '../lib/missionAcquisition'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import MissionLocationTags from '../components/MissionLocationTags'
+import MissionRepEffectTags from '../components/MissionRepEffectTags'
+import MissionPrereqTag from '../components/MissionPrereqInfo'
+import MissionLocalityTag from '../components/MissionLocalityTag'
 import { readMissionTrackerUiState, writeMissionTrackerUiState, makeBrowseMissionKey } from '../lib/missionTrackerUiState'
 import { setAnalyticsSubTool } from '../lib/analytics'
 
@@ -80,6 +83,11 @@ function MissionMetaLine({
   category,
   repMin,
   repMax,
+  repEffects,
+  prereqMissions,
+  locality,
+  missionFaction,
+  missionTitle,
   minStandingName,
   minReputation,
   repCareerLabel,
@@ -94,6 +102,11 @@ function MissionMetaLine({
   category?: string | null
   repMin?: number | null
   repMax?: number | null
+  repEffects?: MissionRepEffect[] | null
+  prereqMissions?: MissionPrereq[] | null
+  locality?: MissionLocality | null
+  missionFaction?: string | null
+  missionTitle?: string
   minStandingName?: string | null
   minReputation?: number | null
   repCareerLabel?: string | null
@@ -102,7 +115,7 @@ function MissionMetaLine({
   aUecMin?: number
   aUecMax?: number
 }) {
-  const repText = formatRepReward(repMin ?? null, repMax ?? null)
+  const repText = repEffects?.length ? null : formatRepReward(repMin ?? null, repMax ?? null)
   const dropText = formatDropChance(dropChance)
   
   // Format aUEC reward
@@ -122,7 +135,12 @@ function MissionMetaLine({
       )}
       <MissionCategoryBadge category={category} />
       <MissionLocationTags regions={regions} subRegion={subRegion} system={system} />
+      <MissionLocalityTag locality={locality} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} repCareerLabel={repCareerLabel} />
+      <MissionPrereqTag prereqMissions={prereqMissions} missionTitle={missionTitle} />
+      {repEffects?.length ? (
+        <MissionRepEffectTags repEffects={repEffects} missionFaction={missionFaction} />
+      ) : null}
       {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
       {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}
       {dropText && <span className="text-[10px] text-amber-400/80">{dropText}</span>}
@@ -222,6 +240,11 @@ function MissionChecklistGroups({
                         category={mission.category}
                         repMin={mission.repMin}
                         repMax={mission.repMax}
+                        repEffects={mission.repEffects}
+                        prereqMissions={mission.prereqMissions}
+                        locality={mission.locality}
+                        missionFaction={mission.giver}
+                        missionTitle={mission.title}
                         minStandingName={mission.minStandingName}
                         minReputation={mission.minReputation}
                         repCareerLabel={mission.repCareerLabel}
@@ -654,6 +677,11 @@ export default function TargetsRoute() {
                                     category={m.category}
                                     repMin={m.repMin}
                                     repMax={m.repMax}
+                                    repEffects={m.repEffects}
+                                    prereqMissions={m.prereqMissions}
+                                    locality={m.locality}
+                                    missionFaction={m.giver}
+                                    missionTitle={m.mission}
                                     minStandingName={m.minStandingName}
                                     minReputation={m.minReputation}
                                     repCareerLabel={m.repCareerLabel}

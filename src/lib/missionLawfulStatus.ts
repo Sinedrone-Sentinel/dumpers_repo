@@ -21,17 +21,14 @@ export function resolveMissionIsLawful(input: MissionLawfulInput): boolean {
   const factionKey = (input.factionKey || '').toLowerCase()
   const debugName = input.debugName || ''
 
+  // Board escort/defend templates are lawful work even when offered under an
+  // unlawful faction's generator (e.g. Headhunters site defense).
+  if (LAWFUL_BOARD_ESCORT_DEBUG.test(debugName)) return true
+
   if (factionKey.startsWith('unlawful_')) return false
   if (factionKey.startsWith('lawful_')) return true
 
-  // Generator missing rep binding — generic contractor/board work.
-  if (factionKey === 'unknown' || factionKey === '') {
-    return true
-  }
-
-  if (LAWFUL_BOARD_ESCORT_DEBUG.test(debugName)) return true
-
-  // Non-prefixed keys (e.g. wikelo) — default lawful unless explicitly unlawful above.
+  // unknown/non-prefixed keys (generic board work, wikelo) default to lawful.
   return true
 }
 
