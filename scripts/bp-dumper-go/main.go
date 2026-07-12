@@ -994,9 +994,8 @@ func main() {
 		dryRun        bool
 		watch         bool
 		noWatch       bool
-		logDir        string
-		configure     bool
-		rockScanTest  bool
+		logDir    string
+		configure bool
 	)
 
 	flag.StringVar(&filePath, "file", "", "Path to the JSON file or log file to parse.")
@@ -1021,15 +1020,8 @@ func main() {
 	flag.BoolVar(&configure, "configure", false, "Force running the configuration wizard.")
 	flag.BoolVar(&configure, "c", false, "Force running the configuration wizard (shorthand).")
 
-	flag.BoolVar(&rockScanTest, "rock-scan-test", false, "Local test: capture game RESULTS panel and run SC_OCR (exports PNG + JSON).")
-	flag.BoolVar(&rockScanTest, "rock-scan", false, "Shorthand for --rock-scan-test.")
-
 	// Support positional file path (standard parsing behavior)
 	flag.Parse()
-
-	if rockScanTest {
-		os.Exit(runRockScanTest(flag.Args()))
-	}
 
 	// If filePath wasn't set by flags, check first positional arg
 	if filePath == "" && len(flag.Args()) > 0 {

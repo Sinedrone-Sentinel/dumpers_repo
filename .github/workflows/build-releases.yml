@@ -80,10 +80,10 @@ jobs:
           GOOS=darwin GOARCH=arm64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-silicon
           GOOS=linux GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-linux
 
-      - name: Package Python dumper + Rock Scanner zip
+      - name: Package Python dumper zip
         run: |
           STAGE=$(mktemp -d)
-          mkdir -p "$STAGE/scripts/bp-dumper-py" "$STAGE/scripts/rock-scan-ocr/vendor"
+          mkdir -p "$STAGE/scripts/bp-dumper-py"
           cp scripts/bp-dumper-py/dumper.py \
              scripts/bp-dumper-py/_version.py \
              scripts/bp-dumper-py/_min_game_version.py \
@@ -93,21 +93,7 @@ jobs:
              scripts/bp-dumper-py/dumper.bat \
              scripts/bp-dumper-py/dumper.sh \
              "$STAGE/scripts/bp-dumper-py/"
-          cp START-HERE.bat RESTART-TRAY.bat RESTART-TRAY.vbs "$STAGE/"
-          rsync -a --exclude '__pycache__' --exclude '*.pyc' --exclude 'rock-scan-exports' \
-            --exclude 'sc-toolbox.path' --exclude 'capture-region.json' --exclude 'vendor' \
-            scripts/rock-scan-ocr/ "$STAGE/scripts/rock-scan-ocr/"
-          git clone --depth 1 --filter=blob:none --sparse \
-            https://github.com/ScPlaceholder/SC-Toolbox-Beta-V2.git /tmp/sc-toolbox
-          cd /tmp/sc-toolbox
-          git sparse-checkout init --cone
-          git sparse-checkout set tools/Mining_Signals
-          test -f tools/Mining_Signals/ocr/sc_ocr/api.py
-          rsync -a /tmp/sc-toolbox/tools/Mining_Signals/ "$STAGE/scripts/rock-scan-ocr/vendor/Mining_Signals/"
-          MODELS="$STAGE/scripts/rock-scan-ocr/vendor/Mining_Signals/ocr/models"
-          if [ -f "$MODELS/model_hud_cnn.onnx" ] && [ ! -f "$MODELS/model_hud_cnn.onnx.data" ]; then
-            mv "$MODELS/model_hud_cnn.onnx" "$MODELS/model_hud_cnn.onnx.missing_data"
-          fi
+          cp START-HERE.bat "$STAGE/"
           cd "$STAGE"
           zip -r "$GITHUB_WORKSPACE/scripts/bp-dumper-py.zip" .
 
@@ -138,9 +124,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: |
-            scripts/bp-dumper-py/requirements.txt
-            scripts/rock-scan-ocr/requirements.txt
+          cache-dependency-path: scripts/bp-dumper-py/requirements.txt
 
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
@@ -152,27 +136,15 @@ jobs:
           & "$env:RUNNER_TEMP/dumper-python/Scripts/python.exe" -m pip install --upgrade pip
           & "$env:RUNNER_TEMP/dumper-python/Scripts/pip.exe" install `
             -r scripts/bp-dumper-py/requirements.txt `
-            -r scripts/rock-scan-ocr/requirements.txt `
             --prefer-binary
-
-      - name: Install Tesseract (Chocolatey)
-        run: choco install tesseract -y --no-progress
 
       - name: Stage self-contained bundle
         shell: pwsh
         timeout-minutes: 20
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          $tess = "C:\Program Files\Tesseract-OCR"
-          if (-not (Test-Path "$tess\tesseract.exe")) {
-            $tess = "${env:ProgramFiles(x86)}\Tesseract-OCR"
-          }
-          if (-not (Test-Path "$tess\tesseract.exe")) {
-            throw "Chocolatey tesseract not found under Program Files"
-          }
           & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1" `
-            -PythonVenvPath "$env:RUNNER_TEMP/dumper-python" `
-            -TesseractSource $tess
+            -PythonVenvPath "$env:RUNNER_TEMP/dumper-python"
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress

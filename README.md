@@ -94,7 +94,6 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - Reference grid of base RS signatures and cluster spawn odds; track up to two cards per ore (Surface / Asteroid) plus optional per-site location cards
 - Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
 - **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
-- **Scanner OCR** — install **Dumper Apps** (Windows installer), paste your API key, calibrate the RESULTS panel once, then after a completed Mole scan (RESULTS panel showing mass, RES, and composition) click **OCR** on the Rock Calculator
 - **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship (sign-in; RSI verification not required)
 
 **Mining Guide**
@@ -224,21 +223,19 @@ On **first sign-in** (welcome onboarding), valid offline data migrates to the ac
 
 ## BP Dumper (desktop)
 
-Companion desktop apps for blueprint farming and Rock Calculator OCR — watches Star Citizen `Game.log` for blueprint unlocks and mission/session events. On Windows, the **Python zip** also runs the Rock Scanner tray (`http://127.0.0.1:38471`).
+Companion desktop app for blueprint farming — watches Star Citizen `Game.log` for blueprint unlocks and mission/session events.
 
 | Item | Detail |
 |------|--------|
 | **Downloads** | GitHub releases — **`DumperApps-Setup-X.Y.Z.exe`** (Windows, recommended); portable zip for advanced users |
-| **Member setup** | Run installer → Start Menu **Dumper Apps** → paste API key → calibrate tray once → OCR |
-| **Source** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/), [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/rock-scan-ocr/`](scripts/rock-scan-ocr/) |
+| **Member setup** | Run installer → Start Menu **Dumper Apps** → paste API key |
+| **Source** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/), [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` Edge Function — blueprint acquire, mission sync, watch ping, game status |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
 **Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications.
-
-**Rock Scanner (Windows):** bundled in the recommended zip — no SC Toolbox clone. One-time tray calibration, then **OCR** on the Rock Calculator.
 
 ---
 

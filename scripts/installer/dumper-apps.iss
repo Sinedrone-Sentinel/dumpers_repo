@@ -23,8 +23,8 @@ DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 OutputDir=output
 OutputBaseFilename=DumperApps-Setup-{#AppVersion}
-SetupIconFile=..\rock-scan-ocr\assets\tray.ico
-UninstallDisplayIcon={app}\scripts\rock-scan-ocr\assets\tray.ico
+SetupIconFile=tray.ico
+UninstallDisplayIcon={app}\tray.ico
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
@@ -42,14 +42,14 @@ Name: "launchapp"; Description: "Launch Dumper Apps after install"; GroupDescrip
 
 [Files]
 Source: "staging\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "tray.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\scripts\rock-scan-ocr\assets\tray.ico"
-Name: "{group}\Restart Rock Scanner tray"; Filename: "{app}\Restart-Tray.vbs"; IconFilename: "{app}\scripts\rock-scan-ocr\assets\tray.ico"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon; IconFilename: "{app}\scripts\rock-scan-ocr\assets\tray.ico"
+Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"; IconFilename: "{app}\tray.ico"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon; IconFilename: "{app}\tray.ico"
 
 [Run]
 Filename: "{app}\{#AppExeName}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent; Tasks: launchapp
 
 [Messages]
-WelcomeLabel2=This installs Dumper Apps on your PC:%n%n• Syncs blueprint unlocks from Star Citizen%n• Powers Rock Calculator OCR (Windows tray)%n%nAfter install, paste your API key from the site when prompted. Calibrate the RESULTS panel once from the DR tray icon.
+WelcomeLabel2=This installs Dumper Apps on your PC:%n%n• Syncs blueprint unlocks from Star Citizen%n• Powers Live Mission Tracker%n%nAfter install, paste your API key from the site when prompted.

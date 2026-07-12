@@ -20,9 +20,7 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: |
-            scripts/bp-dumper-py/requirements.txt
-            scripts/rock-scan-ocr/requirements.txt
+          cache-dependency-path: scripts/bp-dumper-py/requirements.txt
 
       - name: Read dumper version
         id: version
@@ -41,27 +39,15 @@ jobs:
           & "$env:RUNNER_TEMP/dumper-python/Scripts/python.exe" -m pip install --upgrade pip
           & "$env:RUNNER_TEMP/dumper-python/Scripts/pip.exe" install `
             -r scripts/bp-dumper-py/requirements.txt `
-            -r scripts/rock-scan-ocr/requirements.txt `
             --prefer-binary
-
-      - name: Install Tesseract (Chocolatey)
-        run: choco install tesseract -y --no-progress
 
       - name: Stage self-contained bundle
         shell: pwsh
         timeout-minutes: 20
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          $tess = "C:\Program Files\Tesseract-OCR"
-          if (-not (Test-Path "$tess\tesseract.exe")) {
-            $tess = "${env:ProgramFiles(x86)}\Tesseract-OCR"
-          }
-          if (-not (Test-Path "$tess\tesseract.exe")) {
-            throw "Chocolatey tesseract not found under Program Files"
-          }
           & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1" `
-            -PythonVenvPath "$env:RUNNER_TEMP/dumper-python" `
-            -TesseractSource $tess
+            -PythonVenvPath "$env:RUNNER_TEMP/dumper-python"
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress

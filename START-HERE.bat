@@ -32,15 +32,6 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-python -m pip install -r "%ROOT%scripts\rock-scan-ocr\requirements.txt" -q
-if errorlevel 1 (
-    echo [ERROR] pip install failed for Rock Scanner.
-    pause
-    exit /b 1
-)
-if not exist "%ROOT%scripts\rock-scan-ocr\assets\tray.ico" (
-    python "%ROOT%scripts\rock-scan-ocr\build_tray_icon.py" >nul 2>nul
-)
 echo.
 
 echo Starting Dumper Apps...
@@ -52,12 +43,6 @@ echo   RUNNING
 echo  ============================================================
 echo.
 echo   Paste your API key when the window asks ^(copy from Dumper Apps on the site^).
-echo   Look for the DR icon by the Windows clock.
-echo.
-echo   FIRST TIME ONLY: right-click DR tray - Calibrate RESULTS panel
-echo   Then in-game: Mole pilot, RESULTS open - Rock Calculator - OCR on the site
-echo.
-echo   Reload tray after updates: double-click RESTART-TRAY.vbs
 echo.
 pause
 exit /b 0

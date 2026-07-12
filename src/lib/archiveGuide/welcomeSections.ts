@@ -294,7 +294,7 @@ export const ARCHIVE_TIPS = [
   {
     title: 'Mining workflow',
     content:
-      'On Mining Tracker: look up an ore in RS Tracker or the Mining Guide, click a card to seed the Rock Calculator, enter stats manually or use **Scanner OCR** when signed in with BP Dumper on the same PC, then open Smart Cracker for breakability and gadget advice. RSI-verified members can push yields into Ledgers for crew splits.',
+      'On Mining Tracker: look up an ore in RS Tracker or the Mining Guide, click a card to seed the Rock Calculator, enter scanner stats manually, then open Smart Cracker for breakability and gadget advice. RSI-verified members can push yields into Ledgers for crew splits.',
   },
   {
     title: 'Resource Tracking',

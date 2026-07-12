@@ -238,7 +238,32 @@ function maxInstabilityModifier(profiles: MoleHeadProfile[]): number {
   return Math.max(...profiles.map((p) => p.instabilityModifier))
 }
 
-function soloDrivingThrottlePercent(
+/**
+ * Solo cracking throttle: target crackable power (equalization + instability margin).
+ * Returns the throttle % needed to just exceed crackable threshold.
+ */
+function soloCrackingThrottlePercent(
+  profile: MoleHeadProfile,
+  crackableThreshold: number,
+  overPercent = 2
+): number | null {
+  const targetMw = crackableThreshold * (1 + overPercent / 100)
+  if (targetMw > profile.laserPower) return null
+
+  const throttlePercent = throttlePercentFromMw(targetMw, profile.laserPower)
+  const minPercent = profile.throttleMinimumPercent
+  if (throttlePercent < minPercent) {
+    if (profile.minLaserMw >= crackableThreshold) return null
+    return minPercent
+  }
+  return throttlePercent
+}
+
+/**
+ * Crew coordination throttle: target under equalization so supports do the lifting.
+ * Used for multi-head crew plans where driver finishes with controlled power.
+ */
+function crewDrivingThrottlePercent(
   profile: MoleHeadProfile,
   equalizingPower: number,
   underPercent = SOLO_UNDER_EQUALIZER_IDEAL_PERCENT
@@ -333,12 +358,12 @@ function buildCrewSummary(
 ): string {
   const supportLabels = supports.map((s) => `Head ${s.slotIndex + 1}`).join(' + ')
   if (supports.length === 0) {
-    return `Head ${driver.slotIndex + 1} drives at ${driverThrottle}% (~${underPercent}% under equalizer) — crew partner not needed on other turrets.`
+    return `Head ${driver.slotIndex + 1} @ ${driverThrottle}% — crew partner not needed on other turrets.`
   }
   if (threeLaser) {
-    return `${supportLabels} full @ 100% first; Head ${driver.slotIndex + 1} drives at ${driverThrottle}% — three-laser crack (~${underPercent}% under equalizer).`
+    return `${supportLabels} full @ 100% first; Head ${driver.slotIndex + 1} @ ${driverThrottle}% — three-laser crack (~${underPercent}% under combined equalizer).`
   }
-  return `Head ${supports[0].slotIndex + 1} full @ 100% first; Head ${driver.slotIndex + 1} drives at ${driverThrottle}% (~${underPercent}% under equalizer).`
+  return `Head ${supports[0].slotIndex + 1} full @ 100% first; Head ${driver.slotIndex + 1} @ ${driverThrottle}% (~${underPercent}% under combined equalizer).`
 }
 
 function buildPowerTieNote(
@@ -385,11 +410,15 @@ function evaluateCrewFullBlastPlan(
   const mods = combinedModifiers(profiles, activeIndices)
 
   if (supportProfiles.length === 0) {
-    const throttlePercent = soloDrivingThrottlePercent(driver, equalizingPower, underPercent)
+    // No supports = single head must crack alone → use crackable threshold
+    const throttlePercent = soloCrackingThrottlePercent(driver, crackableThreshold)
     if (throttlePercent == null) return null
 
+    // Single driver must exceed crackable threshold
+    if (driver.laserPower < crackableThreshold) return null
+
     const drivingDetail = [
-      `Drive at ${throttlePercent}% (~${underPercent}% under resistance equalizer)`,
+      `Drive @ ${throttlePercent}%`,
       modifierDetail(driver),
     ]
       .filter(Boolean)
@@ -401,9 +430,6 @@ function evaluateCrewFullBlastPlan(
       }
       return buildAssignment(profile, 'idle', 0, 'Off — crew partner not needed on other turrets')
     })
-
-    // Single driver must exceed crackable threshold
-    if (driver.laserPower < crackableThreshold) return null
 
     return {
       assignments,
@@ -530,7 +556,7 @@ function evaluateSingleHeadOnly(
   const crackableThreshold = crackablePowerForHeads(mass, resistancePercent, instability, profiles, activeIndices)
   const canBreakAtFull = primary.laserPower >= crackableThreshold
   const throttlePercent = canBreakAtFull
-    ? soloDrivingThrottlePercent(primary, equalizingPower)
+    ? soloCrackingThrottlePercent(primary, crackableThreshold)
     : null
   const canBreak = canBreakAtFull && throttlePercent != null
   const mods = combinedModifiers(profiles, activeIndices)
@@ -545,7 +571,7 @@ function evaluateSingleHeadOnly(
         canBreak ? throttlePercent! : 100,
         canBreak
           ? [
-              `Fracture at ${throttlePercent}% (~${SOLO_UNDER_EQUALIZER_IDEAL_PERCENT}% under resistance equalizer)`,
+              `Drive @ ${throttlePercent}%`,
               fractureNotes,
               modDetail,
             ]
@@ -564,7 +590,7 @@ function evaluateSingleHeadOnly(
     combinedWindowModifier: mods.window,
     combinedInstabilityModifier: mods.instability,
     summary: canBreak
-      ? `Solo — Head ${primaryIndex + 1} fractures at ${throttlePercent}% throttle.`
+      ? `Solo — Head ${primaryIndex + 1} @ ${throttlePercent}% throttle.`
       : `Solo — Head ${primaryIndex + 1} cannot crack this rock at full throttle.`,
     score: canBreak
       ? scoreCrewFullBlastStrategy(

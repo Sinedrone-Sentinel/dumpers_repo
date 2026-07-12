@@ -4,7 +4,6 @@ import AppModal from '../layout/AppModal'
 import CopyFeedbackButton from '../CopyFeedbackButton'
 import BpDumperDownloadLinks from './BpDumperDownloadLinks'
 import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
-import { ROCK_SCAN_IN_GAME_PREREQ } from '../../lib/rockScanMemberCopy'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 
@@ -68,7 +67,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Install on your PC to sync blueprint unlocks and power Rock Calculator OCR."
+      subtitle="Install on your PC to sync blueprint unlocks and power Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >
@@ -83,11 +82,6 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
             <li>
               <strong className="text-slate-300">Live Mission Tracker</strong> — see active missions and
               what is still in your pool.
-            </li>
-            <li>
-              <strong className="text-slate-300">Rock Calculator OCR</strong> (Windows only) — after a
-              completed Mole scan with the RESULTS panel showing rock data, click{' '}
-              <strong className="text-slate-300">OCR</strong> on the Rock Calculator.
             </li>
           </ul>
         </section>
@@ -122,15 +116,8 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
               when the black window asks for it.
             </li>
             <li>
-              Look for the <strong className="text-slate-300">DR</strong> icon by the Windows clock.{' '}
-              <strong className="text-slate-300">First time only:</strong> right-click it →{' '}
-              <strong className="text-slate-300">Calibrate RESULTS panel</strong> (once per screen
-              resolution).
-            </li>
-            <li>
-              In-game: {ROCK_SCAN_IN_GAME_PREREQ} → on the site open{' '}
-              <strong className="text-slate-300">Rock Calculator</strong> → click{' '}
-              <strong className="text-slate-300">OCR</strong>.
+              Leave the window open while playing — blueprint unlocks sync to your account
+              automatically.
             </li>
           </ol>
         </section>

@@ -1,6 +1,4 @@
 import React from 'react'
-import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
-import { ROCK_SCAN_IN_GAME_PREREQ } from './rockScanMemberCopy'
 import type { DepositType, LocationSpawnProfile } from './miningClusterProfiles'
 import {
   depositTypeLabel,
@@ -379,19 +377,6 @@ export const SMART_CRACKER_BUTTON_TOOLTIP = (
       <li>Breakability check and minimum-throttle warnings</li>
       <li>Mole head plan — solo vs crew turrets</li>
       <li>Gadget suggestions when a rock is tough to crack</li>
-    </ul>
-  </div>
-)
-
-export const ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP = (
-  <div className="space-y-1.5 text-xs leading-snug">
-    <p className="font-medium text-slate-200">Scan from game HUD (signed-in members)</p>
-    <ul className="list-disc pl-4 space-y-0.5 text-slate-400">
-      <li>Keep {DUMPER_APPS_DISPLAY_NAME} running in watch mode on this PC</li>
-      <li>In-game: {ROCK_SCAN_IN_GAME_PREREQ}</li>
-      <li>Click OCR — switches to Star Citizen, captures the RESULTS panel, and fills the calculator</li>
-      <li>The {DUMPER_APPS_DISPLAY_NAME} icon must show in your system tray while you scan</li>
-      <li>Guests and offline preview cannot use Scanner OCR — sign in and run BP Dumper on this PC</li>
     </ul>
   </div>
 )

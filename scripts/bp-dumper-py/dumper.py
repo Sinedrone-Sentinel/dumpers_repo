@@ -269,71 +269,6 @@ try:
 except ImportError:
     DUMPER_VERSION = "dev"
 DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
-ROCK_SCAN_BRIDGE_URL = os.environ.get("ROCK_SCAN_BRIDGE_URL", "http://127.0.0.1:38471")
-ROCK_SCAN_BRIDGE_HEALTH = f"{ROCK_SCAN_BRIDGE_URL.rstrip('/')}/health"
-
-
-def _rock_scan_bridge_script() -> Path | None:
-    folder = Path(__file__).resolve().parent.parent / "rock-scan-ocr"
-    if sys.platform == "win32":
-        script = folder / "tray_app.py"
-    else:
-        script = folder / "bridge_server.py"
-    return script if script.is_file() else None
-
-
-def _rock_scan_bridge_running() -> bool:
-    try:
-        with urllib.request.urlopen(ROCK_SCAN_BRIDGE_HEALTH, timeout=0.8) as response:
-            return response.status == 200
-    except (urllib.error.URLError, TimeoutError, OSError):
-        return False
-
-
-def _python_for_tray() -> str:
-    if sys.platform == "win32":
-        pythonw = Path(sys.executable).with_name("pythonw.exe")
-        if pythonw.is_file():
-            return str(pythonw)
-    return sys.executable
-
-
-def start_rock_scan_bridge() -> subprocess.Popen | None:
-    """Start localhost bridge for Rock Calculator OCR (independent of log watching)."""
-    if _rock_scan_bridge_running():
-        print(f"{Colors.GREEN}Rock scan tray already running ({ROCK_SCAN_BRIDGE_URL}).{Colors.RESET}")
-        return None
-
-    script = _rock_scan_bridge_script()
-    if script is None:
-        print(
-            f"{Colors.YELLOW}Rock scan bridge not found — Calculator OCR button will use paste fallback.{Colors.RESET}"
-        )
-        return None
-
-    creationflags = 0
-    if sys.platform == "win32":
-        creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-
-    proc = subprocess.Popen(
-        [_python_for_tray(), str(script)],
-        cwd=str(script.parent),
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        creationflags=creationflags,
-    )
-    for _ in range(12):
-        if _rock_scan_bridge_running():
-            print(
-                f"{Colors.GREEN}Rock scan tray started for Calculator OCR ({ROCK_SCAN_BRIDGE_URL}).{Colors.RESET}"
-            )
-            return proc
-        time.sleep(0.25)
-
-    print(
-        f"{Colors.YELLOW}Rock scan bridge did not respond on {ROCK_SCAN_BRIDGE_URL} — paste OCR fallback only.{Colors.RESET}"
-    )
-    return proc
 
 DEFAULT_RELEASES_URL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
 
@@ -1187,11 +1122,6 @@ def main():
         help="Disable watch mode (batch import only)."
     )
     parser.add_argument(
-        "--no-rock-bridge",
-        action="store_true",
-        help="Do not start the localhost rock-scan bridge for Calculator OCR.",
-    )
-    parser.add_argument(
         "--log-dir",
         type=Path,
         help="Directly scan a specific directory for log files instead of auto-detecting Star Citizen."
@@ -1531,8 +1461,6 @@ def main():
             print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
         state = WatcherState()
-        if not args.no_rock_bridge:
-            start_rock_scan_bridge()
         watch_log_file(watch_file, state, acquired_blueprints, args, session)
         return
 

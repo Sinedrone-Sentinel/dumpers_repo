@@ -8,7 +8,7 @@ const DOWNLOAD_GROUPS: { id: BpDumperDownloadOption['group']; title: string; hin
   {
     id: 'windows',
     title: 'Windows',
-    hint: 'Includes blueprint sync and Rock Calculator OCR. Python and Tesseract are bundled — nothing else to install.',
+    hint: 'Includes blueprint sync and Live Mission Tracker. Python is bundled — nothing else to install.',
   },
   {
     id: 'mac-linux',
@@ -18,7 +18,7 @@ const DOWNLOAD_GROUPS: { id: BpDumperDownloadOption['group']; title: string; hin
   {
     id: 'advanced',
     title: 'Advanced',
-    hint: 'Only use this if you intentionally want blueprints without OCR.',
+    hint: 'For advanced users who want to run Python manually.',
   },
 ]
 

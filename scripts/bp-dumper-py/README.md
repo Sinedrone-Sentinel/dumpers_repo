@@ -2,15 +2,14 @@
 
 A cross-platform utility to batch-import historical blueprint JSON exports or trail active logs from your game client to your account.
 
-On **Windows**, download **`bp-dumper-py.zip`** (labeled **Windows recommended** on the site) — unzip and double-click **`START-HERE.bat`**. That starts blueprint sync and Rock Calculator OCR (DR tray icon). The `.exe` is blueprints-only.
+On **Windows**, download **`bp-dumper-py.zip`** (labeled **Windows recommended** on the site) — unzip and double-click **`START-HERE.bat`**. That starts blueprint sync. The `.exe` is a standalone alternative.
 
 ---
 
 ## 🚀 Quick Start (releases)
 
 1. Download from [GitHub releases](https://github.com/Sinedrone-Sentinel/dumpers_repo/releases).
-2. **Windows + OCR:** unzip `bp-dumper-py.zip` → **`START-HERE.bat`** → paste API key from the site.
-3. Right-click DR tray → **Calibrate RESULTS panel** (once per resolution).
+2. **Windows:** unzip `bp-dumper-py.zip` → **`START-HERE.bat`** → paste API key from the site.
 
 ---
 
@@ -27,9 +26,8 @@ Open your terminal (or command prompt) inside this folder and run:
 pip install -r requirements.txt
 ```
 
-**Git clone with Rock Scanner:**
+Then start watch mode:
 ```bash
-pip install -r ../rock-scan-ocr/requirements.txt
 python dumper.py --watch
 ```
 

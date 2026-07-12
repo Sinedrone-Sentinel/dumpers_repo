@@ -58,20 +58,9 @@ import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import SiteTooltip from '../SiteTooltip'
 import {
   CREW_HEAD_PLAN_BUTTON_TOOLTIP,
-  ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP,
   SMART_CRACKER_BUTTON_TOOLTIP,
   SOLO_HEAD_PLAN_BUTTON_TOOLTIP,
 } from '../../lib/miningTooltipContent'
-import { resolveOcrBasis, buildOcrCalculatorApply } from '../../lib/rockCalculatorOcrApply'
-import type { RockScanOcrResult } from '../../lib/rockCalculatorOcrParse'
-import {
-  memberFacingRockScanError,
-  memberFacingRockScanHint,
-  ROCK_SCAN_IN_PROGRESS_MESSAGE,
-  ROCK_SCAN_NOT_CALIBRATED_MESSAGE,
-  ROCK_SCAN_OFFLINE_MESSAGE,
-} from '../../lib/rockScanMemberCopy'
-import { fetchRockScanBridgeHealth, requestRockScanFromBridge } from '../../lib/rockScanBridge'
 import MoleCrewModeCheckbox from './MoleCrewModeCheckbox'
 
 const RS_ORE_NAMES = [...new Set(Object.keys(ORE_SIGNATURES).map(normalizeMiningOreName))].sort(
@@ -118,7 +107,6 @@ export default function RockCalculator({
 }: RockCalculatorProps) {
   const { user, profile, isGuestPreview } = useAuth()
   const isRsiVerified = Boolean(user && !isGuestPreview && profile?.rsi_handle_verified)
-  const canUseScannerOcr = Boolean(user && !isGuestPreview)
   const { catalog } = useResourceCatalog()
 
   const [oreName, setOreName] = useState('')
@@ -141,22 +129,11 @@ export default function RockCalculator({
   const [searchFocused, setSearchFocused] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
 
-  const [ocrScanning, setOcrScanning] = useState(false)
-  const [ocrScanPhase, setOcrScanPhase] = useState<string | null>(null)
-  const [ocrBridgeError, setOcrBridgeError] = useState<string | null>(null)
-  const [ocrOverrideActive, setOcrOverrideActive] = useState(false)
-  const [ocrWarnings, setOcrWarnings] = useState<string[]>([])
-  const [ocrScanParts, setOcrScanParts] = useState<CompositionPart[] | null>(null)
-  const ocrApplyingRef = useRef(false)
-
   const loadEntryRef = useRef(loadEntry)
   loadEntryRef.current = loadEntry
 
   useEffect(() => {
     if (!loadEntry) return
-    setOcrOverrideActive(false)
-    setOcrScanParts(null)
-    setOcrWarnings([])
     const entryDeposit: DepositType =
       loadEntry.depositType === 'asteroid' ? 'asteroid' : 'surface'
     setOreName(loadEntry.oreName)
@@ -192,10 +169,6 @@ export default function RockCalculator({
   const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance, scannerInstability)
 
   useEffect(() => {
-    if (ocrApplyingRef.current) {
-      ocrApplyingRef.current = false
-      return
-    }
     setScannerMassInput('')
     setInstabilityInput('')
     setResistanceInput('')
@@ -223,8 +196,6 @@ export default function RockCalculator({
       return
     }
 
-    if (ocrOverrideActive) return
-
     const match = resolveRockCalculatorLocationFromEntry(
       loadEntryRef.current,
       oreName,
@@ -233,7 +204,7 @@ export default function RockCalculator({
     )
 
     setSelectedLocation(match?.value ?? locationOptions[0].value)
-  }, [oreName, depositType, loadToken, locationOptions, ocrOverrideActive])
+  }, [oreName, depositType, loadToken, locationOptions])
 
   const composition = useMemo(() => {
     if (!oreName || !selectedLocation) return null
@@ -244,10 +215,9 @@ export default function RockCalculator({
   }, [oreName, depositType, selectedLocation])
 
   const calculatorParts = useMemo(() => {
-    if (ocrOverrideActive && ocrScanParts?.length) return ocrScanParts
     if (!composition?.compositionParts.length) return []
     return withInertCompositionPart(composition.compositionParts)
-  }, [ocrOverrideActive, ocrScanParts, composition?.compositionParts])
+  }, [composition?.compositionParts])
 
   const compositionKey = useMemo(() => {
     if (!calculatorParts.length) return null
@@ -261,10 +231,9 @@ export default function RockCalculator({
 
   useEffect(() => {
     if (!calculatorParts.length) return
-    if (ocrOverrideActive) return
     setPercentBySlot(buildDefaultPercentSlots(calculatorParts))
     setQualityBySlot(buildDefaultQualitySlots(calculatorParts))
-  }, [compositionKey, loadToken, calculatorParts, ocrOverrideActive])
+  }, [compositionKey, loadToken, calculatorParts])
 
   const totalScu = parseTotalScuInput(totalScuInput)
 
@@ -292,7 +261,7 @@ export default function RockCalculator({
         isInert,
         label: formatScannerBandLabel(part, index, calculatorParts),
         bandTooltip: formatScannerBandTooltip(part, index, calculatorParts),
-        rangeHint: ocrOverrideActive ? null : formatCompositionRangeHint(part),
+        rangeHint: formatCompositionRangeHint(part),
       }
     })
 
@@ -310,7 +279,7 @@ export default function RockCalculator({
           : null
       return { ...row, percent, scu, dfp }
     })
-  }, [calculatorParts, percentBySlot, qualityBySlot, totalScu, ocrOverrideActive])
+  }, [calculatorParts, percentBySlot, qualityBySlot, totalScu])
 
   useEffect(() => {
     const valuableMaterials = materialRows
@@ -386,9 +355,6 @@ export default function RockCalculator({
   }, [canAddToLedger, materialRows, catalog, selectedLedgerId])
 
   const handleSelectOre = (name: string) => {
-    setOcrOverrideActive(false)
-    setOcrScanParts(null)
-    setOcrWarnings([])
     setOreName(name)
     setSearchQuery(name)
     setSearchOpen(false)
@@ -408,82 +374,9 @@ export default function RockCalculator({
     setDepositType(next)
   }
 
-  const handleOcrApply = useCallback((result: RockScanOcrResult) => {
-    const basis = resolveOcrBasis(result)
-    if (!basis) return
-
-    const applied = buildOcrCalculatorApply(result)
-
-    ocrApplyingRef.current = true
-    setOcrOverrideActive(true)
-    setOcrWarnings(result.warnings)
-    setOcrScanParts(applied.calculatorParts)
-    setOreName(basis.oreName)
-    setSearchQuery(basis.oreName)
-    setDepositType(basis.depositType)
-    setSelectedLocation(undefined)
-    setScannerMassInput(String(result.mass))
-    setResistanceInput(String(result.resistancePercent))
-    setInstabilityInput(
-      Number.isFinite(result.instability)
-        ? String(Math.round(result.instability * 100) / 100)
-        : ''
-    )
-    setTotalScuInput(String(result.totalScu))
-    setPercentBySlot(applied.percentBySlot)
-    setQualityBySlot(applied.qualityBySlot)
-    setOcrBridgeError(null)
-  }, [])
-
-  const handleOcrButtonClick = useCallback(async () => {
-    if (!canUseScannerOcr) return
-    setOcrBridgeError(null)
-    const health = await fetchRockScanBridgeHealth()
-    if (!health?.ok) {
-      setOcrBridgeError(ROCK_SCAN_OFFLINE_MESSAGE)
-      return
-    }
-    if (!health.calibrated) {
-      setOcrBridgeError(ROCK_SCAN_NOT_CALIBRATED_MESSAGE)
-      return
-    }
-
-    setOcrScanning(true)
-    setOcrScanPhase('Connecting to desktop scanner…')
-    try {
-      const result = await requestRockScanFromBridge(120_000, (phase) => setOcrScanPhase(phase))
-      if (!result.ok || !result.data) {
-        setOcrBridgeError(memberFacingRockScanError(result.error))
-        if (result.hints?.length) {
-          setOcrWarnings(
-            result.hints
-              .map(memberFacingRockScanHint)
-              .filter((hint) => hint.length > 0)
-          )
-        }
-        return
-      }
-
-      const basis = resolveOcrBasis(result.data)
-      if (!basis) {
-        setOcrBridgeError(`Unknown ore from scan: ${result.data.primaryOreName}`)
-        return
-      }
-
-      handleOcrApply(result.data)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Rock scan failed.'
-      setOcrBridgeError(memberFacingRockScanError(message))
-    } finally {
-      setOcrScanning(false)
-      setOcrScanPhase(null)
-    }
-  }, [canUseScannerOcr, handleOcrApply])
-
-  const showDepositToggle = availableDepositTypes.length > 1 && !ocrOverrideActive
-  const selectedLocationLabel = ocrOverrideActive
-    ? null
-    : locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
+  const showDepositToggle = availableDepositTypes.length > 1
+  const selectedLocationLabel =
+    locationOptions.find((opt) => opt.value === selectedLocation)?.label ?? composition?.sourceLabel
 
   return (
     <aside className="w-full shrink-0">
@@ -555,22 +448,6 @@ export default function RockCalculator({
                       </button>
                     </SiteTooltip>
                   ) : null}
-                  {canUseScannerOcr ? (
-                    <SiteTooltip
-                      content={ROCK_CALCULATOR_OCR_BUTTON_TOOLTIP}
-                      side="left"
-                      panelClassName="max-w-[16rem]"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => void handleOcrButtonClick()}
-                        disabled={ocrScanning}
-                        className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-slate-700/90 text-slate-100 hover:bg-slate-600 transition-colors border border-slate-600 disabled:opacity-50 disabled:cursor-wait"
-                      >
-                        {ocrScanning ? 'Scanning…' : 'OCR'}
-                      </button>
-                    </SiteTooltip>
-                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -578,43 +455,6 @@ export default function RockCalculator({
         </div>
 
         <div className="p-3 space-y-3">
-          {ocrScanning ? (
-            <div className="rounded-md border border-sky-900/45 bg-sky-950/20 px-2.5 py-2">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-sky-300/90">
-                Scan in progress
-              </p>
-              <p className="text-[11px] text-sky-200/90 leading-snug mt-1">
-                {ocrScanPhase ?? ROCK_SCAN_IN_PROGRESS_MESSAGE}
-              </p>
-            </div>
-          ) : null}
-
-          {ocrBridgeError ? (
-            <div className="rounded-md border border-rose-900/45 bg-rose-950/20 px-2.5 py-2">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-rose-300/90">
-                Desktop scan failed
-              </p>
-              <p className="text-[11px] text-rose-200/90 leading-snug mt-1">{ocrBridgeError}</p>
-            </div>
-          ) : null}
-
-          {ocrOverrideActive ? (
-            <div className="rounded-md border border-amber-900/45 bg-amber-950/20 px-2.5 py-2 space-y-1">
-              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90">
-                Filled from scan
-              </p>
-              <p className="text-[11px] text-slate-400 leading-snug">
-                Pick an ore from search or click a tracked card to return to normal deposit/location
-                mode.
-              </p>
-              {ocrWarnings.map((warning) => (
-                <p key={warning} className="text-[10px] text-amber-400/90 leading-snug">
-                  {warning}
-                </p>
-              ))}
-            </div>
-          ) : null}
-
           <div>
             <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
               Ore &amp; location
@@ -665,33 +505,24 @@ export default function RockCalculator({
                   </ul>
                 )}
               </div>
-              {ocrOverrideActive ? (
-                <div
-                  className="w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs rounded border border-slate-700 bg-slate-800/60 text-slate-400 truncate"
-                  title="Location hidden while using scan fill"
-                >
-                  Scanned
-                </div>
-              ) : (
-                <select
-                  value={selectedLocation ?? ''}
-                  onChange={(e) => setSelectedLocation(e.target.value)}
-                  disabled={!oreName || locationOptions.length === 0}
-                  className="site-input w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs truncate disabled:opacity-40"
-                  title="Spawn location"
-                  aria-label="Spawn location"
-                >
-                  {locationOptions.length === 0 ? (
-                    <option value="">—</option>
-                  ) : (
-                    locationOptions.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))
-                  )}
-                </select>
-              )}
+              <select
+                value={selectedLocation ?? ''}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                disabled={!oreName || locationOptions.length === 0}
+                className="site-input w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs truncate disabled:opacity-40"
+                title="Spawn location"
+                aria-label="Spawn location"
+              >
+                {locationOptions.length === 0 ? (
+                  <option value="">—</option>
+                ) : (
+                  locationOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))
+                )}
+              </select>
             </div>
           </div>
 
@@ -784,7 +615,7 @@ export default function RockCalculator({
               <div className="flex gap-1.5">
                 <div className="flex-1 min-w-0">
                   <span className="block text-[10px] text-slate-400 mb-0.5">Instability</span>
-                  {!ocrOverrideActive && statHints.instability ? (
+                  {statHints.instability ? (
                     <span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
                       title="Expected instability from game data"
@@ -805,7 +636,7 @@ export default function RockCalculator({
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="block text-[10px] text-slate-400 mb-0.5">Resistance (%)</span>
-                  {!ocrOverrideActive && statHints.resistance ? (
+                  {statHints.resistance ? (
                     <span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
                       title="Expected resistance from game data (HUD % scale)"
