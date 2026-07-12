@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import LoadoutProTipsList from './LoadoutProTipsList'
 import MoleHeadPlanPanel from './MoleHeadPlanPanel'
 import SoloMoleGaragePanel from './SoloMoleGaragePanel'
-import { getOreWindowProfile } from '../../lib/mineableElementStats'
 import { isRockBreakabilityTargetReady, type RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import type { MiningLaserSlotConfig } from '../../lib/miningLaserStats'
 import { suggestModuleSwaps, type ModuleSwapSuggestion } from '../../lib/miningModuleSwapAdvice'
@@ -24,27 +23,6 @@ function ModuleSwapSuggestionsPanel({ suggestions }: { suggestions: ModuleSwapSu
         </p>
       ))}
     </div>
-  )
-}
-
-function OreWindowNote({ oreName }: { oreName: string | null | undefined }) {
-  const profile = oreName ? getOreWindowProfile(oreName) : null
-  if (!profile || !oreName) return null
-  const tone =
-    profile.rating === 'wide'
-      ? 'text-green-500/80'
-      : profile.rating === 'average'
-        ? 'text-slate-400'
-        : 'text-amber-400/90'
-  return (
-    <p className="text-[11px] leading-snug text-slate-500">
-      <span className={tone}>
-        {oreName} optimal window: {profile.rating}
-      </span>{' '}
-      (game data) — {profile.rating === 'wide' || profile.rating === 'average'
-        ? 'window mods are optional on this ore.'
-        : 'window mods (Focus/Stampede) pay off on this ore.'}
-    </p>
   )
 }
 
@@ -90,7 +68,6 @@ export default function SoloHeadPlanPanel({
             </p>
         )}
         <ModuleSwapSuggestionsPanel suggestions={swapSuggestions} />
-        <OreWindowNote oreName={rockTarget?.oreName} />
         {garageAdvice ? (
           <SoloMoleGaragePanel advice={garageAdvice} oreName={rockTarget?.oreName} />
         ) : null}
@@ -101,7 +78,6 @@ export default function SoloHeadPlanPanel({
   return (
     <div className="space-y-3">
       <ModuleSwapSuggestionsPanel suggestions={swapSuggestions} />
-      <OreWindowNote oreName={rockTarget?.oreName} />
       <LoadoutProTipsList
         vesselId={vesselId}
         slots={lasers}
