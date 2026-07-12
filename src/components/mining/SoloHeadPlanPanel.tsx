@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
-import LoadoutHeadCardsGrid from './LoadoutHeadCards'
+import LoadoutProTipsList from './LoadoutProTipsList'
 import MoleHeadPlanPanel from './MoleHeadPlanPanel'
 import SoloMoleGaragePanel from './SoloMoleGaragePanel'
 import { isRockBreakabilityTargetReady, type RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import type { MiningLaserSlotConfig } from '../../lib/miningLaserStats'
 import { findBestMoleLoadoutStrategy } from '../../lib/moleLoadoutStrategy'
 import { analyzeSoloMoleGarage } from '../../lib/soloMoleLoadoutAdvice'
-import { getMiningVessel, type MiningVesselId } from '../../lib/miningVessels'
+import type { MiningVesselId } from '../../lib/miningVessels'
 
 interface SoloHeadPlanPanelProps {
   vesselId: MiningVesselId
@@ -19,7 +19,6 @@ export default function SoloHeadPlanPanel({
   lasers,
   rockTarget,
 }: SoloHeadPlanPanelProps) {
-  const vessel = getMiningVessel(vesselId)
   const isMole = vesselId === 'mole'
   const rockReady = isRockBreakabilityTargetReady(rockTarget)
 
@@ -33,36 +32,28 @@ export default function SoloHeadPlanPanel({
     return analyzeSoloMoleGarage(lasers)
   }, [isMole, lasers])
 
-  const noopSlotChange = () => {}
+  if (isMole) {
+    return (
+      <div className="space-y-3">
+        {soloRockPlan ? (
+          <MoleHeadPlanPanel strategy={soloRockPlan} />
+        ) : (
+            <p className="text-[11px] text-slate-500 leading-snug rounded-md border border-slate-700/60 bg-slate-900/40 px-2.5 py-2">
+              Enter pilot-scan <strong className="text-slate-300">mass</strong> and{' '}
+              <strong className="text-slate-300">resistance</strong> from the Rock Calculator (raw RESULTS
+              values). SHP shifts RES per head/modules — e.g. 74% pilot → ~52% on a Helix turret.
+            </p>
+        )}
+        {garageAdvice ? <SoloMoleGaragePanel advice={garageAdvice} /> : null}
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-3">
-      {isMole ? (
-        <>
-          {soloRockPlan ? (
-            <MoleHeadPlanPanel strategy={soloRockPlan} />
-          ) : (
-            <p className="text-[11px] text-slate-500 leading-snug rounded-md border border-slate-700/60 bg-slate-900/40 px-2.5 py-2">
-              Enter scanner <strong className="text-slate-300">mass</strong> and{' '}
-              <strong className="text-slate-300">resistance</strong> in the Rock Calculator to see which
-              Mole head fits this rock.
-            </p>
-          )}
-          {garageAdvice ? <SoloMoleGaragePanel advice={garageAdvice} /> : null}
-        </>
-      ) : (
-        <p className="text-[11px] text-slate-400 leading-snug">
-          {vessel?.displayName ?? 'Loadout'} breakdown and module tips for solo mining on this ship.
-        </p>
-      )}
-
-      <LoadoutHeadCardsGrid
-        vesselId={vesselId}
-        slots={lasers}
-        editable={false}
-        moleSoloMining
-        onSlotChange={noopSlotChange}
-      />
-    </div>
+    <LoadoutProTipsList
+      vesselId={vesselId}
+      slots={lasers}
+      showHeadLabel={lasers.length > 1}
+    />
   )
 }

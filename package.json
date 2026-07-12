@@ -23,6 +23,8 @@
     "audit-ore-name-consistency": "node scripts/audit-ore-name-consistency.mjs",
     "normalize-mining-ore-data": "node scripts/normalize-mining-ore-data.mjs",
     "audit-alias-tables": "node scripts/audit-alias-tables.mjs",
+    "verify-mining-math": "node scripts/verify-mining-math.mjs",
+    "verify-mole-strategy": "node scripts/verify-mole-crew-strategy.mjs",
     "rebuild-mission-rewards": "node scripts/rebuild-blueprint-reward-missions.mjs && node scripts/audit-blueprint-mission-rewards.mjs",
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs",
     "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs",

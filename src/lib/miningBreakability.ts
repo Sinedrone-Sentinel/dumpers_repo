@@ -1,5 +1,6 @@
 import type { ClusterDisplayProfile, LocationSpawnProfile } from './miningClusterProfiles'
 import { getMineableElementStats, oreResistanceToHudPercent } from './mineableElementStats'
+import { applyRockMultiplicativePercent } from './miningGadgets'
 
 /** Ship mining global mass coefficient (from MiningGlobalParamsShip). */
 export const MINING_MASS_COEFFICIENT = 0.2
@@ -30,6 +31,22 @@ export function effectiveResistanceFraction(
   resistanceModifier = 1
 ): number {
   return Math.max(0, Math.min(1, (resistancePercent / 100) * resistanceModifier))
+}
+
+/**
+ * Mining-seat HUD resistance from the pilot scan plus head/module resistance shift.
+ * Example: pilot 74% with Helix −30% → ~52% on that turret.
+ */
+export function effectiveHudResistancePercent(
+  pilotResistancePercent: number,
+  headResistanceModifierPercent: number
+): number {
+  return Math.round(
+    Math.max(
+      0,
+      Math.min(100, applyRockMultiplicativePercent(pilotResistancePercent, headResistanceModifierPercent))
+    )
+  )
 }
 
 /**

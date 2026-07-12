@@ -421,10 +421,10 @@ export const SOLO_HEAD_PLAN_BUTTON_TOOLTIP = (
         (when mass/resistance are set), plus your solo garage spread
       </li>
       <li>
-        <strong className="text-slate-300">Other ships:</strong> read-only loadout breakdown for your
-        selected setup
+        <strong className="text-slate-300">Other ships:</strong> per-head module and head swap
+        suggestions for your selected loadout
       </li>
-      <li>Pro-tips for module and head swaps are included in this modal</li>
+      <li>Full loadout stats stay in Smart Cracker — this modal is suggestions only</li>
       <li>Uncheck <strong className="text-slate-300">Crew</strong> on Mole, or use any non-Mole loadout</li>
     </ul>
   </div>

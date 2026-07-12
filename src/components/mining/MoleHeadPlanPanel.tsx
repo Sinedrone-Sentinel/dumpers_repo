@@ -21,8 +21,9 @@ export default function MoleHeadPlanPanel({ strategy, embedded = false }: MoleHe
       <p className="text-[11px] text-slate-400 leading-snug">{strategy.summary}</p>
       {!strategy.canBreak ? (
         <p className="text-xs text-red-400/90">
-          No head assignment cracks this rock — try another loadout or check gadget fit in Smart
-          Cracker.
+          No head on this loadout can crack this rock solo at full throttle — check MW after modules
+          and the pilot RES → mining-seat RES shift on each head. Open Smart Cracker to edit modules or
+          try crew mode.
         </p>
       ) : null}
       <div className="space-y-1.5">

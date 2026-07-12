@@ -95,6 +95,30 @@ assert(
   'easy rock should prefer one-head crew when one turret suffices'
 )
 
+const focusMk3 = 'Mining_Modules_Passive_Focus_MK3'
+const helixS2FocusPair = {
+  laserName: 'Mining_Laser_THCN_Helix_S2',
+  mode: 'stock',
+  modules: [focusMk3, focusMk3, null],
+}
+const ricciteRock = { scannerMass: 10849, resistancePercent: 74, instability: 515 }
+const soloHead2Only = findBestMoleLoadoutStrategy(
+  [helixS2FocusPair, helixS2FocusPair, helixS2FocusPair],
+  ricciteRock,
+  { soloMining: true }
+)
+assert(!soloHead2Only.canBreak, 'Helix II with −10% module power cannot solo-crack this pilot-scan rock')
+assert(
+  soloHead2Only.assignments[0].detail?.includes('3,672 MW after modules'),
+  'solo fracture notes should show module-adjusted MW'
+)
+assert(
+  soloHead2Only.assignments[0].detail?.includes('74% → 52%'),
+  'solo fracture notes should show pilot RES shifted by head modifiers'
+)
+const head2Profile = buildMoleHeadProfile(helixS2FocusPair, 1)
+assert(head2Profile?.laserPower === 3672, 'two Focus III modules should net −10% on Helix II (3672 MW)')
+
 console.log('verify-mole-crew-strategy: OK')
 console.log('tough summary:', strategy.summary)
 console.log('huge summary:', hugeStrategy.summary)

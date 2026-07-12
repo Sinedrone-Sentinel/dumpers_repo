@@ -23,7 +23,7 @@ export default function SoloHeadPlanModal({
   const subtitle =
     vesselId === 'mole'
       ? `${loadoutLabel} · which Mole head to run solo on this rock`
-      : `${loadoutLabel} · solo loadout breakdown and pro-tips`
+      : `${loadoutLabel} · module and head suggestions`
 
   return (
     <AppModal title="Solo Head Plan" subtitle={subtitle} size="md" onClose={onClose}>

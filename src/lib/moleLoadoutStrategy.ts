@@ -1,4 +1,4 @@
-import { requiredLaserPower } from './miningBreakability'
+import { effectiveHudResistancePercent, requiredLaserPower } from './miningBreakability'
 import {
   computeEffectiveLaserStats,
   describeLaserHead,
@@ -460,6 +460,22 @@ function evaluateCrewFullBlastPlan(
   }
 }
 
+function soloHeadFractureNotes(
+  profile: MoleHeadProfile,
+  pilotResistancePercent: number,
+  equalizingPower: number
+): string {
+  const effectiveHudRes = effectiveHudResistancePercent(
+    pilotResistancePercent,
+    profile.resistanceModifier
+  )
+  return [
+    `pilot RES ${Math.round(pilotResistancePercent)}% → ${effectiveHudRes}% on this head`,
+    `${profile.laserPower.toLocaleString()} MW after modules`,
+    `${equalizingPower.toLocaleString()} MW required`,
+  ].join(' · ')
+}
+
 function evaluateSingleHeadOnly(
   profiles: MoleHeadProfile[],
   primaryIndex: number,
@@ -469,9 +485,13 @@ function evaluateSingleHeadOnly(
   const primary = profiles[primaryIndex]
   const activeIndices = [primaryIndex]
   const equalizingPower = requiredPowerForHeads(mass, resistancePercent, profiles, activeIndices)
-  const throttlePercent = soloDrivingThrottlePercent(primary, equalizingPower)
-  const canBreak = throttlePercent != null && throttlePercent <= 100
+  const canBreakAtFull = primary.laserPower >= equalizingPower
+  const throttlePercent = canBreakAtFull
+    ? soloDrivingThrottlePercent(primary, equalizingPower)
+    : null
+  const canBreak = canBreakAtFull && throttlePercent != null
   const mods = combinedModifiers(profiles, activeIndices)
+  const fractureNotes = soloHeadFractureNotes(primary, resistancePercent, equalizingPower)
 
   const assignments = profiles.map((profile) => {
     if (profile.slotIndex === primaryIndex) {
@@ -483,11 +503,12 @@ function evaluateSingleHeadOnly(
         canBreak
           ? [
               `Fracture at ${throttlePercent}% (~${SOLO_UNDER_EQUALIZER_IDEAL_PERCENT}% under resistance equalizer)`,
+              fractureNotes,
               modDetail,
             ]
               .filter(Boolean)
               .join(' · ')
-          : `Short at full throttle — need a stronger head or support laser`
+          : `Cannot crack at full throttle — ${fractureNotes}${modDetail ? ` · ${modDetail}` : ''}`
       )
     }
     return buildAssignment(profile, 'idle', 0, 'Off — solo mining uses one head only')
@@ -695,7 +716,10 @@ export function findBestMoleLoadoutStrategy(
       : buildUncrackableCrewStrategy(profiles, mass, resistancePercent, instability)
   }
 
-  candidates.sort((a, b) => b.score - a.score)
+  candidates.sort((a, b) => {
+    if (a.canBreak !== b.canBreak) return a.canBreak ? -1 : 1
+    return b.score - a.score
+  })
   const best = candidates[0]
   const activeCount = activeHeadCountFromAssignments(best.assignments)
   const crewUnder = crewUnderPercent(activeCount, instability)
