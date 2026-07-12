@@ -42,6 +42,8 @@ export interface WindowBarModel {
   widthPercent: number
   /** Physical bar thickness (CSS px), anchored to the thinnest known in-game window. */
   heightPx: number
+  /** Display scale is pegged — real window is at/near the whole charge arc. */
+  saturated: boolean
   rating: OreWindowProfile['rating']
 }
 
@@ -53,11 +55,13 @@ export function buildWindowBarModel(
   if (!profile) return null
 
   const base = estimatedWindowBarPercent(profile.thinness)
+  const rawModified = base * (1 + windowModifierPercent / 100)
   const width = windowModifierPercent === 0 ? base : modifiedWindowBarPercent(base, windowModifierPercent)
 
   return {
     widthPercent: Math.round(width),
     heightPx: windowBarHeightPx(width),
+    saturated: rawModified >= 90,
     rating: profile.rating,
   }
 }

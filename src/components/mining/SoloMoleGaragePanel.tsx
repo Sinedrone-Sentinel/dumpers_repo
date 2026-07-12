@@ -33,6 +33,9 @@ export default function SoloMoleGaragePanel({ advice, oreName = null }: SoloMole
                   <span className="text-slate-500"> — {head.label}</span>
                 </span>
                 {windowBar ? <WindowSizeBar model={windowBar} /> : null}
+                {windowBar?.saturated ? (
+                  <span className="text-[10px] text-slate-500">maxed</span>
+                ) : null}
               </p>
               <p className="pl-2 text-[11px] text-slate-500 leading-snug">
                 {head.detail}. {soloMoleGarageRoleHint(head.role)}

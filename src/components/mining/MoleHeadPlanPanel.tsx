@@ -80,6 +80,9 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
                       : 'stock'}
                   </span>
                   <WindowSizeBar model={windowBar} />
+                  {windowBar.saturated ? (
+                    <span className="text-[10px] text-slate-500">maxed</span>
+                  ) : null}
                 </div>
               ) : null}
             </div>
@@ -102,7 +105,17 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
           {!strategy.soloMining && oreName && strategy.canBreak
             ? (() => {
                 const combinedBar = buildWindowBarModel(oreName, strategy.combinedWindowModifier)
-                return combinedBar ? <WindowSizeBar model={combinedBar} /> : null
+                if (!combinedBar) return null
+                return (
+                  <>
+                    <WindowSizeBar model={combinedBar} />
+                    {combinedBar.saturated ? (
+                      <span className="text-[10px] text-slate-500">
+                        maxed — expect the green band to span most of the charge arc
+                      </span>
+                    ) : null}
+                  </>
+                )
               })()
             : null}
         </div>

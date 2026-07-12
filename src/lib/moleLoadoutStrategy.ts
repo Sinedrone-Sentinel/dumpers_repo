@@ -153,6 +153,11 @@ function modifierDetail(profile: MoleHeadProfile): string | null {
   return parts.length ? parts.join(', ') : null
 }
 
+/** Range reminder — power falls off hard past a head's optimal range. */
+function rangeNote(profile: MoleHeadProfile): string {
+  return `hold ≤${profile.optimalRange}m`
+}
+
 function profileByIndex(
   profiles: MoleHeadProfile[],
   index: number
@@ -442,7 +447,7 @@ function evaluateCrewPlan(inputs: CrewPlanInputs): CandidateStrategy | null {
     const throttlePercent = soloCrackingThrottlePercent(driver, equalizingPower)
     if (throttlePercent == null) return null
 
-    const drivingDetail = [`Drive @ ${throttlePercent}%`, modifierDetail(driver)]
+    const drivingDetail = [`Drive @ ${throttlePercent}%`, rangeNote(driver), modifierDetail(driver)]
       .filter(Boolean)
       .join(' · ')
 
@@ -483,7 +488,11 @@ function evaluateCrewPlan(inputs: CrewPlanInputs): CandidateStrategy | null {
 
     const assignments = profiles.map((profile) => {
       if (profile.slotIndex === driverIndex) {
-        const parts = [`Drive @ ${driverThrottle}% — ramp up from there to fill the window`, modifierDetail(profile)]
+        const parts = [
+          `Drive @ ${driverThrottle}% — ramp up from there to fill the window`,
+          rangeNote(profile),
+          modifierDetail(profile),
+        ]
         return buildAssignment(profile, 'primary', driverThrottle, parts.filter(Boolean).join(' · '))
       }
       if (benefitIndices.includes(profile.slotIndex)) {
@@ -539,10 +548,27 @@ function evaluateCrewPlan(inputs: CrewPlanInputs): CandidateStrategy | null {
 
   const powerTieNote = buildPowerTieNote(driver, supportProfiles)
 
+  // Where the driver's ramp actually crosses the equalizer (supports and the
+  // adjuster are at FULL during the ramp — the adjuster backs down only after
+  // the bar moves). Below this throttle nothing visibly happens; just above it
+  // the fill is glacial and speeds up with every extra percent.
+  const rampSupportMw = fullSupportMw + adjuster.laserPower + benefitMw
+  const crossMw = equalizingPower - rampSupportMw
+  const driverCrossThrottle =
+    crossMw <= driver.minLaserMw
+      ? null
+      : Math.min(100, Math.max(driver.throttleMinimumPercent, throttlePercentFromMw(crossMw, driver.laserPower)))
+  const crossNote =
+    driverCrossThrottle == null
+      ? 'the charge bar should start moving as soon as you fire'
+      : `nothing visible happens until ~${driverCrossThrottle}% on this head — the bar creeps just past that and fills faster the higher you push`
+
   const assignments = profiles.map((profile) => {
     if (profile.slotIndex === driverIndex) {
       const parts = [
         `Fire last — ramp up from ${driver.throttleMinimumPercent}% to drive the charge home`,
+        crossNote,
+        rangeNote(profile),
         powerTieNote,
         modifierDetail(profile),
       ].filter(Boolean)
@@ -554,13 +580,16 @@ function evaluateCrewPlan(inputs: CrewPlanInputs): CandidateStrategy | null {
         adjusterAtFull
           ? 'Run at 100% — fits under the equalizer at full blast'
           : `Fire full, then back down to ~${adjusterThrottle}% once the charge bar starts moving`,
+        rangeNote(profile),
         modifierDetail(profile),
       ].filter(Boolean)
       return buildAssignment(profile, 'support', adjusterAtFull ? 100 : adjusterThrottle, parts.join(' · '))
     }
 
     if (fullSupports.some((p) => p.slotIndex === profile.slotIndex)) {
-      const parts = ['Fire first — run at 100%', modifierDetail(profile)].filter(Boolean)
+      const parts = ['Fire first — run at 100%', rangeNote(profile), modifierDetail(profile)].filter(
+        Boolean
+      )
       return buildAssignment(profile, 'support', 100, parts.join(' · '))
     }
 
@@ -593,7 +622,9 @@ function evaluateCrewPlan(inputs: CrewPlanInputs): CandidateStrategy | null {
     )
   }
   summaryParts.push(
-    `Head ${driverIndex + 1} drives — ramp from ${driver.throttleMinimumPercent}% (~${underPercent}% under combined equalizer)`
+    driverCrossThrottle == null
+      ? `Head ${driverIndex + 1} drives — ramp from ${driver.throttleMinimumPercent}% (bar moves right away)`
+      : `Head ${driverIndex + 1} drives — ramp from ${driver.throttleMinimumPercent}%, bar starts moving past ~${driverCrossThrottle}%`
   )
 
   return {
