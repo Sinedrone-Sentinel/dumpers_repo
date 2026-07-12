@@ -192,7 +192,7 @@ export function formatClusterRows(
   }
 }
 
-export type SpawnTagTier = 'best' | 'high' | 'medium' | 'low' | 'broad'
+export type SpawnTagTier = 'best' | 'high' | 'medium' | 'low' | 'trace' | 'broad'
 
 export function getOverallSpawnTag(
   oreName: string,
@@ -229,6 +229,8 @@ export function getLocationSpawnTag(
   }
   if (pct >= 1) return { label: `${pct.toFixed(1)}% spawn`, tier: 'high' }
   if (pct >= 0.3) return { label: `${pct.toFixed(2)}% spawn`, tier: 'medium' }
+  // Real but effectively negligible odds — don't round down to a confusing "0.00%".
+  if (pct < 0.01) return { label: 'trace spawn (<0.01%)', tier: 'trace' }
   return { label: `${pct.toFixed(2)}% spawn`, tier: 'low' }
 }
 

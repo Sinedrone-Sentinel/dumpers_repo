@@ -32,9 +32,22 @@ import {
   formatMineableInstability,
   getMineableElementStats,
 } from './mineableElementStats'
+import { getNavHintForGuideLocation, getNavHintForSpawnKey } from './miningLocationNames'
 function pct(n: number | null | undefined, digits = 2): string {
   if (n == null || !Number.isFinite(n)) return '—'
   return `${n.toFixed(digits)}%`
+}
+
+/** Spawn % display that never rounds a real (nonzero) chance down to "0.00%". */
+function spawnPct(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return '—'
+  if (n > 0 && n < 0.01) return '<0.01%'
+  return pct(n)
+}
+
+function navHintLine(hint: string | null): React.ReactNode | null {
+  if (!hint) return null
+  return <div className="text-sky-300/90">📍 {hint}</div>
 }
 
 function compositionSummary(parts: LocationSpawnProfile['compositionParts'] | undefined): string {
@@ -207,6 +220,7 @@ export function guideLocationChipTooltip(
           </div>
         )}
         <div>Cluster: {clusterPreview(overall.clusterRows)}</div>
+        {navHintLine(getNavHintForGuideLocation(guideLocationName))}
         <div className="text-slate-400 text-[11px]">
           Same data as Track Surface/Asteroid (overall) on the RS Tracker.
         </div>
@@ -229,16 +243,22 @@ export function guideLocationChipTooltip(
   return (
     <div className="space-y-1">
       <div className="font-semibold text-orange-300">
+        {profile.displayName ?? guideLocationName}
+      </div>
+      <div className="text-orange-300/80">
         {depositTypeLabel(depositType)} · {profile.system} System
       </div>
       <div>
-        Spawn ~{pct(profile.effectiveSpawnPercent)} · max {profile.maxNodes}× cluster
+        Spawn ~{spawnPct(profile.effectiveSpawnPercent)} · max {profile.maxNodes}× cluster
       </div>
       <div className="text-slate-400">
         Pool {profile.relativeSpawnWeight} · group {pct(profile.groupSpawnPercent, 1)}
       </div>
       <div>Cluster: {clusterPreview(profile.clusterRows)}</div>
       <div className="text-slate-400">Composition: {compositionSummary(profile.compositionParts)}</div>
+      {navHintLine(
+        getNavHintForSpawnKey(profile.spawnKey) ?? getNavHintForGuideLocation(guideLocationName)
+      )}
       {oreMineableStatsTooltipBlock(oreName)}
     </div>
   )

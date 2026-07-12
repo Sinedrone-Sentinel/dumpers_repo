@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-12T18:29:10.837Z",
+  "_extracted": "2026-07-12T21:22:17.774Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -3541,7 +3541,8 @@
       ],
       "displayName": "Aaron Halo",
       "system": "Stanton",
-      "source": "spawn_code_table+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit",
+      "navHint": "Asteroid band between Crusader and ArcCorp orbits — no starmap marker; drop out of quantum partway along CRU-L5 ↔ ARC-L1 routes"
     },
     "Akiro Cluster": {
       "spawnKey": "Akiro Cluster",
@@ -3551,7 +3552,8 @@
       ],
       "displayName": "Akiro Cluster",
       "system": "Pyro",
-      "source": "spawn_code_table+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit",
+      "navHint": "Starmap search \"Akiro Cluster\" — sits near Pyro I L3 (closest station: PYAM-FARSTAT-1-3)"
     },
     "Glaciem Ring": {
       "spawnKey": "Glaciem Ring",
@@ -3561,7 +3563,8 @@
       ],
       "displayName": "Glaciem Ring",
       "system": "Nyx",
-      "source": "spawn_code_table+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit",
+      "navHint": "Starmap search \"Glaciem Ring\" — ring around the planet Glaciem — QV Breaker Stations (BRK-204, BRK-320, BRK-546…) roam the Nyx belts as QT markers"
     },
     "Keeger Belt": {
       "spawnKey": "Keeger Belt",
@@ -3571,7 +3574,8 @@
       ],
       "displayName": "Keeger Belt",
       "system": "Nyx",
-      "source": "spawn_code_table+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit",
+      "navHint": "Starmap search \"Keeger Belt\" — QV Breaker Stations (BRK-204, BRK-320, BRK-546…) roam the Nyx belts as QT markers"
     },
     "Lagrange A": {
       "spawnKey": "Lagrange A",
@@ -3582,7 +3586,8 @@
       ],
       "displayName": "HUR-L1",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT straight to HUR-L1 / HUR-L4 / HUR-L5 — the belt surrounds the station"
     },
     "Lagrange B": {
       "spawnKey": "Lagrange B",
@@ -3593,7 +3598,8 @@
       ],
       "displayName": "ARC-L5",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT straight to ARC-L5 / CRU-L4 / MIC-L3 — the belt surrounds the station"
     },
     "Lagrange C": {
       "spawnKey": "Lagrange C",
@@ -3605,7 +3611,8 @@
       ],
       "displayName": "CRU-L3",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT straight to CRU-L3 / MIC-L1 / MIC-L2 / MIC-L5 — the belt surrounds the station"
     },
     "Lagrange D": {
       "spawnKey": "Lagrange D",
@@ -3616,7 +3623,8 @@
       ],
       "displayName": "ARC-L3",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT straight to ARC-L3 / CRU-L5 / MIC-L4 — the belt surrounds the station"
     },
     "Lagrange E": {
       "spawnKey": "Lagrange E",
@@ -3627,7 +3635,8 @@
       ],
       "displayName": "CRU-L1",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT straight to CRU-L1 / CRU-L2 / HUR-L3 — the belt surrounds the station"
     },
     "Lagrange F": {
       "spawnKey": "Lagrange F",
@@ -3639,19 +3648,22 @@
       ],
       "displayName": "ARC-L1",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT straight to ARC-L1 / ARC-L2 / ARC-L4 / HUR-L2 — the belt surrounds the station"
     },
     "Lagrange G": {
       "spawnKey": "Lagrange G",
       "displayName": "Aaron Halo belt · G",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "Outer Aaron Halo band — no direct marker; drop out of quantum along the halo"
     },
     "Lagrange Occupied": {
       "spawnKey": "Lagrange Occupied",
       "displayName": "Occupied Lagrange belt",
       "system": "Stanton",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "Aaron Halo band near the occupied halo stations — no direct marker"
     },
     "Pyro Cool01": {
       "spawnKey": "Pyro Cool01",
@@ -3665,7 +3677,8 @@
       ],
       "displayName": "Pyro V Lagrange belts",
       "system": "Pyro",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT to the PYR5 L1–L5 markers — stations in these belts: PYAM-FARSTAT-5-1, PYAM-FARSTAT-5-3"
     },
     "Pyro Cool02": {
       "spawnKey": "Pyro Cool02",
@@ -3679,7 +3692,8 @@
       ],
       "displayName": "Pyro VI Lagrange belts",
       "system": "Pyro",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT to the PYR6 L1–L5 markers around Terminus"
     },
     "Pyro Deepspaceasteroids": {
       "spawnKey": "Pyro Deepspaceasteroids",
@@ -3688,7 +3702,8 @@
       ],
       "displayName": "Pyro Asteroid Clusters",
       "system": "Pyro",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "Wandering clusters between planets — starmap search RAB / RMB markers (e.g. RAB-ALPHA, RAB-TUNG, RAB-KILO, RMB-PURI, RMB-BALM…)"
     },
     "Pyro Warm01": {
       "spawnKey": "Pyro Warm01",
@@ -3707,7 +3722,8 @@
       ],
       "displayName": "Pyro I–II Lagrange belts",
       "system": "Pyro",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT to the PYR1 L1–L5 / PYR2 L1–L5 markers — stations in these belts: PYAM-FARSTAT-1-2, PYAM-FARSTAT-1-3, PYAM-FARSTAT-1-5, PYAM-FARSTAT-2-0, PYAM-FARSTAT-2-3, Checkmate"
     },
     "Pyro Warm02": {
       "spawnKey": "Pyro Warm02",
@@ -3721,7 +3737,8 @@
       ],
       "displayName": "Pyro III Lagrange belts",
       "system": "Pyro",
-      "source": "verified_overlay+hpp_path_audit"
+      "source": "verified_overlay+hpp_path_audit",
+      "navHint": "QT to the PYR3 L1–L5 markers — stations in these belts: Patch City, PYAM-FARSTAT-3-5, PYAM-SUPVISR-3-4, PYAM-SUPVISR-3-5"
     },
     "Pyro1": {
       "spawnKey": "Pyro1",
@@ -3946,7 +3963,8 @@
       ],
       "displayName": "Yela Ring",
       "system": "Stanton",
-      "source": "spawn_code_table+hpp_path_audit"
+      "source": "spawn_code_table+hpp_path_audit",
+      "navHint": "Yela’s asteroid ring — QT to Yela or GrimHEX and fly into the ring"
     },
     "Stanton3a": {
       "spawnKey": "Stanton3a",

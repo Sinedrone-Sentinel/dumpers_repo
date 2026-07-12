@@ -27,6 +27,8 @@ export interface MiningLocationsData {
       displayName?: string
       system?: string
       source?: string
+      /** In-game "how to find it" — QT markers / starmap search terms. */
+      navHint?: string
     }
   >
   guideToSpawnKeys?: Record<string, string[]>

@@ -12,6 +12,8 @@ export interface LocationAlias {
   displayName?: string
   system?: string
   source?: string
+  /** In-game "how to find it" — QT markers / starmap search terms. */
+  navHint?: string
 }
 
 const locationAliases = miningLocations.locationAliases ?? {}
@@ -54,6 +56,29 @@ export function getPrimaryCompendiumGuideName(spawnKey: string | undefined): str
 export function getSpawnKeysForGuideName(guideName: string): string[] {
   const mapped = guideToSpawnKeys[guideName]
   return mapped?.length ? [...mapped] : []
+}
+
+/** In-game nav hint (QT markers / starmap search) for a spawn key. */
+export function getNavHintForSpawnKey(spawnKey: string | undefined): string | null {
+  if (!spawnKey) return null
+  return locationAliases[spawnKey]?.navHint ?? null
+}
+
+/**
+ * Nav hint for a guide/compendium location name. Broad Pyro cluster bucket maps
+ * to the deep-space template; otherwise the first mapped spawn key with a hint wins.
+ */
+export function getNavHintForGuideLocation(guideLocationName: string): string | null {
+  if (guideLocationName === 'Pyro Asteroid Clusters') {
+    return getNavHintForSpawnKey('Pyro Deepspaceasteroids')
+  }
+  const direct = getNavHintForSpawnKey(guideLocationName)
+  if (direct) return direct
+  for (const spawnKey of getSpawnKeysForGuideName(guideLocationName)) {
+    const hint = getNavHintForSpawnKey(spawnKey)
+    if (hint) return hint
+  }
+  return null
 }
 
 /** Broad compendium buckets with no single spawn key — system is explicit. */
