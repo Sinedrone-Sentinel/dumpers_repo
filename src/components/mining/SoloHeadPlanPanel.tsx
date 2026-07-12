@@ -2,11 +2,51 @@ import React, { useMemo } from 'react'
 import LoadoutProTipsList from './LoadoutProTipsList'
 import MoleHeadPlanPanel from './MoleHeadPlanPanel'
 import SoloMoleGaragePanel from './SoloMoleGaragePanel'
+import { getOreWindowProfile } from '../../lib/mineableElementStats'
 import { isRockBreakabilityTargetReady, type RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import type { MiningLaserSlotConfig } from '../../lib/miningLaserStats'
+import { suggestModuleSwaps, type ModuleSwapSuggestion } from '../../lib/miningModuleSwapAdvice'
 import { findBestMoleLoadoutStrategy } from '../../lib/moleLoadoutStrategy'
 import { analyzeSoloMoleGarage } from '../../lib/soloMoleLoadoutAdvice'
 import type { MiningVesselId } from '../../lib/miningVessels'
+
+function ModuleSwapSuggestionsPanel({ suggestions }: { suggestions: ModuleSwapSuggestion[] }) {
+  if (!suggestions.length) return null
+  return (
+    <div className="rounded-lg border border-amber-900/40 bg-amber-950/15 p-3 space-y-1.5">
+      <p className="text-[10px] uppercase tracking-wide text-amber-500/80">
+        Module swap ideas · modules change on the fly at the head
+      </p>
+      {suggestions.map((s) => (
+        <p key={`${s.slotIndex}-${s.portIndex}-${s.addModule}`} className="text-[11px] text-amber-200/80 leading-snug">
+          <span className="text-amber-300/90">Head {s.slotIndex + 1}</span> · {s.reason}
+          <span className="text-amber-600/80"> (if you're carrying one)</span>
+        </p>
+      ))}
+    </div>
+  )
+}
+
+function OreWindowNote({ oreName }: { oreName: string | null | undefined }) {
+  const profile = oreName ? getOreWindowProfile(oreName) : null
+  if (!profile || !oreName) return null
+  const tone =
+    profile.rating === 'wide'
+      ? 'text-green-500/80'
+      : profile.rating === 'average'
+        ? 'text-slate-400'
+        : 'text-amber-400/90'
+  return (
+    <p className="text-[11px] leading-snug text-slate-500">
+      <span className={tone}>
+        {oreName} optimal window: {profile.rating}
+      </span>{' '}
+      (game data) — {profile.rating === 'wide' || profile.rating === 'average'
+        ? 'window mods are optional on this ore.'
+        : 'window mods (Focus/Stampede) pay off on this ore.'}
+    </p>
+  )
+}
 
 interface SoloHeadPlanPanelProps {
   vesselId: MiningVesselId
@@ -32,6 +72,11 @@ export default function SoloHeadPlanPanel({
     return analyzeSoloMoleGarage(lasers)
   }, [isMole, lasers])
 
+  const swapSuggestions = useMemo(() => {
+    if (!rockReady || !rockTarget) return []
+    return suggestModuleSwaps(lasers, rockTarget)
+  }, [lasers, rockReady, rockTarget])
+
   if (isMole) {
     return (
       <div className="space-y-3">
@@ -44,16 +89,22 @@ export default function SoloHeadPlanPanel({
               values). SHP shifts RES per head/modules — e.g. 74% pilot → ~52% on a Helix turret.
             </p>
         )}
+        <ModuleSwapSuggestionsPanel suggestions={swapSuggestions} />
+        <OreWindowNote oreName={rockTarget?.oreName} />
         {garageAdvice ? <SoloMoleGaragePanel advice={garageAdvice} /> : null}
       </div>
     )
   }
 
   return (
-    <LoadoutProTipsList
-      vesselId={vesselId}
-      slots={lasers}
-      showHeadLabel={lasers.length > 1}
-    />
+    <div className="space-y-3">
+      <ModuleSwapSuggestionsPanel suggestions={swapSuggestions} />
+      <OreWindowNote oreName={rockTarget?.oreName} />
+      <LoadoutProTipsList
+        vesselId={vesselId}
+        slots={lasers}
+        showHeadLabel={lasers.length > 1}
+      />
+    </div>
   )
 }

@@ -64,6 +64,41 @@ export function getMineableElementStats(oreName: string): MineableElementStats |
   }
 }
 
+export type OreWindowRating = 'wide' | 'average' | 'narrow' | 'very narrow'
+
+export interface OreWindowProfile {
+  /** Game `elementOptimalWindowThinness` — higher = thinner optimal charge window. */
+  thinness: number
+  /** Where the window sits on the charge arc (0–1, 0.5 = middle). */
+  midpoint: number
+  /** Per-rock random shift of the midpoint. */
+  randomness: number
+  rating: OreWindowRating
+}
+
+/**
+ * How forgiving this ore's optimal charge window is, from game data.
+ * Ship-ore thinness spans −0.9 (copper/iron — huge windows) to 2.3
+ * (Quantainium/Riccite — razor thin).
+ */
+export function getOreWindowProfile(oreName: string): OreWindowProfile | null {
+  const key = guideOreLookupKey(oreName)
+  const candidates = elementsByGuideKey.get(key)
+  if (!candidates?.length) return null
+
+  const best = [...candidates].sort((a, b) => elementMatchScore(b, oreName) - elementMatchScore(a, oreName))[0]
+  const thinness = best.optimalWindowThinness
+  const rating: OreWindowRating =
+    thinness >= 2 ? 'very narrow' : thinness >= 1 ? 'narrow' : thinness > 0 ? 'average' : 'wide'
+
+  return {
+    thinness,
+    midpoint: best.optimalWindowMidpoint,
+    randomness: best.optimalWindowRandomness,
+    rating,
+  }
+}
+
 function formatStatRangeHint(values: number[], decimals: number): string | null {
   const finite = values.filter((v) => Number.isFinite(v))
   if (!finite.length) return null
