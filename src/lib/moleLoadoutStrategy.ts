@@ -584,6 +584,32 @@ function soloHeadFractureNotes(
   ].join(' · ')
 }
 
+/**
+ * Backup verdict for a head left OFF in the solo plan — tells the player
+ * whether that seat could crack this rock on its own if they used it instead.
+ */
+function idleSoloBackupDetail(
+  profile: MoleHeadProfile,
+  profiles: MoleHeadProfile[],
+  mass: number,
+  resistancePercent: number,
+  instability: number | null
+): string {
+  const activeIndices = [profile.slotIndex]
+  const equalizingPower = equalizationPowerForHeads(mass, resistancePercent, profiles, activeIndices)
+  const crackableThreshold = crackablePowerForHeads(mass, resistancePercent, instability, profiles, activeIndices)
+
+  if (profile.laserPower < crackableThreshold) {
+    return `Off — backup: cannot crack (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
+  }
+
+  const throttlePercent = soloCrackingThrottlePercent(profile, equalizingPower)
+  if (throttlePercent == null) {
+    return `Off — backup: cannot crack (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
+  }
+  return `Off — backup: would also work, drive @ ${throttlePercent}%`
+}
+
 function evaluateSingleHeadOnly(
   profiles: MoleHeadProfile[],
   primaryIndex: number,
@@ -621,7 +647,12 @@ function evaluateSingleHeadOnly(
           : `Cannot crack at full throttle — ${fractureNotes}${modDetail ? ` · ${modDetail}` : ''}`
       )
     }
-    return buildAssignment(profile, 'idle', 0, 'Off — solo mining uses one head only')
+    return buildAssignment(
+      profile,
+      'idle',
+      0,
+      idleSoloBackupDetail(profile, profiles, mass, resistancePercent, instability)
+    )
   })
 
   return {
