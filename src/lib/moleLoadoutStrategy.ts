@@ -303,6 +303,20 @@ function soloCrackingThrottlePercent(
  */
 const DRIVER_ROUND_ROBIN_BONUS: Record<number, number> = { 0: 0.3, 2: 0.2, 1: 0.1 }
 
+/**
+ * Two-head pairing geometry (field-verified): seats 2 and 3 are the Mole's
+ * left/right arms — on many rocks they physically cannot BOTH sit at optimal
+ * range. Pairings that include seat 1 converge better, with 1+3 the best.
+ * Bonuses are tiny (<1) so any real stat difference still wins.
+ */
+const TWO_HEAD_PAIR_BONUS: Record<string, number> = { '0,2': 0.6, '0,1': 0.4 }
+
+function twoHeadPairBonus(activeIndices: number[]): number {
+  if (activeIndices.length !== 2) return 0
+  const key = [...activeIndices].sort((a, b) => a - b).join(',')
+  return TWO_HEAD_PAIR_BONUS[key] ?? 0
+}
+
 function scoreCrewPlan(
   activeHeadCount: number,
   driver: MoleHeadProfile,
@@ -431,15 +445,16 @@ function evaluateCrewPlan(inputs: CrewPlanInputs): CandidateStrategy | null {
   )
   if (maxCombinedMw < crackableThreshold) return null
 
-  const score = scoreCrewPlan(
-    activeHeadCount,
-    driver,
-    mods,
-    instability,
-    windowTight,
-    maxCombinedMw,
-    crackableThreshold
-  )
+  const score =
+    scoreCrewPlan(
+      activeHeadCount,
+      driver,
+      mods,
+      instability,
+      windowTight,
+      maxCombinedMw,
+      crackableThreshold
+    ) + twoHeadPairBonus(activeIndices)
 
   // ── Single head, no companions ─────────────────────────────────────────────
   if (supportProfiles.length === 0 && benefitProfiles.length === 0) {

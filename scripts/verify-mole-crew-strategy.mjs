@@ -99,6 +99,23 @@ if (twoSeatStrategy.canBreak) {
   )
 }
 
+// ── Two-head pairing geometry ────────────────────────────────────────────────
+// Seats 2+3 are the Mole's left/right arms and often can't BOTH hold optimal
+// range. With stat-identical heads, a two-head plan must pick seats 1 + 3.
+const identicalHeads = [helix, helix, helix]
+const twoHeadRock = { scannerMass: 30000, resistancePercent: 0, instability: 50 }
+const pairStrategy = findBestMoleLoadoutStrategy(identicalHeads, twoHeadRock, { soloMining: false })
+assert(pairStrategy?.canBreak, 'two-head pairing rock should be crackable')
+const pairActive = pairStrategy.assignments
+  .filter((a) => a.role !== 'idle')
+  .map((a) => a.slotIndex)
+  .sort()
+assert(pairActive.length === 2, `pairing rock should use exactly two heads (got ${pairActive.length})`)
+assert(
+  pairActive[0] === 0 && pairActive[1] === 2,
+  `stat-identical two-head plan should pair seats 1 + 3 (got seats ${pairActive.map((i) => i + 1).join(' + ')})`
+)
+
 const easyRock = { scannerMass: 5000, resistancePercent: 25, instability: 200 }
 const easyStrategy = findBestMoleLoadoutStrategy(lasers, easyRock, { soloMining: false })
 assert(easyStrategy?.canBreak, 'easy rock should be crackable in crew mode')
