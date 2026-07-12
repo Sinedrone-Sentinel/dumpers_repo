@@ -91,7 +91,9 @@ export default function SoloHeadPlanPanel({
         )}
         <ModuleSwapSuggestionsPanel suggestions={swapSuggestions} />
         <OreWindowNote oreName={rockTarget?.oreName} />
-        {garageAdvice ? <SoloMoleGaragePanel advice={garageAdvice} /> : null}
+        {garageAdvice ? (
+          <SoloMoleGaragePanel advice={garageAdvice} oreName={rockTarget?.oreName} />
+        ) : null}
       </div>
     )
   }

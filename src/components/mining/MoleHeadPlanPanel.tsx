@@ -49,7 +49,7 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
                     ? 'Backup'
                     : 'Off'
           const windowBar =
-            oreName && head.backupViability !== 'cannot'
+            strategy.soloMining && oreName && head.backupViability !== 'cannot'
               ? buildWindowBarModel(oreName, head.windowModifierPercent)
               : null
           return (
@@ -86,16 +86,26 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
           )
         })}
       </div>
-      {strategy.combinedWindowModifier !== 0 || strategy.combinedInstabilityModifier !== 0 ? (
-        <p className="text-[11px] font-mono tabular-nums text-slate-500">
-          Active heads combined:
-          {strategy.combinedWindowModifier !== 0
-            ? ` ${formatSignedPercent(strategy.combinedWindowModifier)} window`
-            : ''}
-          {strategy.combinedInstabilityModifier !== 0
-            ? ` ${formatSignedPercent(strategy.combinedInstabilityModifier)} instability`
-            : ''}
-        </p>
+      {strategy.combinedWindowModifier !== 0 ||
+      strategy.combinedInstabilityModifier !== 0 ||
+      (!strategy.soloMining && oreName && strategy.canBreak) ? (
+        <div className="flex items-center gap-2">
+          <p className="text-[11px] font-mono tabular-nums text-slate-500">
+            Active heads combined:
+            {strategy.combinedWindowModifier !== 0
+              ? ` ${formatSignedPercent(strategy.combinedWindowModifier)} window`
+              : ''}
+            {strategy.combinedInstabilityModifier !== 0
+              ? ` ${formatSignedPercent(strategy.combinedInstabilityModifier)} instability`
+              : ''}
+          </p>
+          {!strategy.soloMining && oreName && strategy.canBreak
+            ? (() => {
+                const combinedBar = buildWindowBarModel(oreName, strategy.combinedWindowModifier)
+                return combinedBar ? <WindowSizeBar model={combinedBar} /> : null
+              })()
+            : null}
+        </div>
       ) : null}
       {strategy.minPowerWarnings.length > 0 ? (
         <div className="space-y-1.5">

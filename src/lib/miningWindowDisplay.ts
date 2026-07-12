@@ -25,18 +25,16 @@ export function modifiedWindowBarPercent(basePercent: number, windowModifierPerc
 /**
  * Physical bar thickness in CSS px for a window size %.
  *
- * Anchor: the thinnest window realistically seen in game — Quantainium
- * (thinness 2.3 → ~16.7%) with a full negative window stack (-43%) ≈ 9.5% —
- * draws 6px, which is 1/16 inch at the CSS reference 96 dpi. Everything
- * scales linearly from that anchor; CSS px track device pixel ratio, so the
- * proportions hold across resolutions.
+ * Anchor (field-calibrated): raw Quantainium (thinness 2.3 → ~16.7%) draws
+ * ~6px ≈ 1/16 inch at the CSS reference 96 dpi. A full negative window stack
+ * on top of that bottoms out around 3–4px. Linear from there; CSS px track
+ * device pixel ratio, so proportions hold across resolutions.
  */
-const THINNEST_KNOWN_PERCENT = 9.5
-const THINNEST_KNOWN_PX = 6
+const PX_PER_WINDOW_PERCENT = 0.38
 
 export function windowBarHeightPx(widthPercent: number): number {
-  const px = Math.round(widthPercent * (THINNEST_KNOWN_PX / THINNEST_KNOWN_PERCENT))
-  return Math.max(4, Math.min(44, px))
+  const px = Math.round(widthPercent * PX_PER_WINDOW_PERCENT)
+  return Math.max(3, Math.min(32, px))
 }
 
 export interface WindowBarModel {

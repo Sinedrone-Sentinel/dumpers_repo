@@ -557,7 +557,9 @@ export default function MiningLoadoutPanel({
         ) : null}
       </p>
 
-      {soloMoleGarage ? <SoloMoleGaragePanel advice={soloMoleGarage} /> : null}
+      {soloMoleGarage ? (
+        <SoloMoleGaragePanel advice={soloMoleGarage} oreName={rockTarget?.oreName} />
+      ) : null}
 
       {draftLasers?.length ? (
         <LoadoutHeadCardsGrid
