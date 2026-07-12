@@ -286,14 +286,22 @@ console.log(`  → Can break: ${focusComparison.canBreak}`)
 // ============================================================================
 section('4. Mole Strategy - Crew Mode')
 
-// 4.1 Easy rock — should use one head
+// 4.1 Easy rock — one driving head; extra seats allowed only as min-power
+// window-benefit holds (crew doctrine: spare seats may hold min for the window).
 console.log('\n4.1 Easy rock (one-head crew)')
 const easyCrewStrategy = moleStrategy.findBestMoleLoadoutStrategy(moleLasers, EASY_ROCK, { soloMining: false })
 assert(easyCrewStrategy != null, 'Easy rock crew strategy exists')
 assert(easyCrewStrategy.canBreak, 'Easy rock should be crackable')
 const activeHeads = easyCrewStrategy.assignments.filter(a => a.role !== 'idle')
-assert(activeHeads.length === 1, `Easy rock should use 1 head (got ${activeHeads.length})`)
+const easyDrivers = easyCrewStrategy.assignments.filter(a => a.role === 'primary')
+assert(easyDrivers.length === 1, `Easy rock should have exactly 1 driving head (got ${easyDrivers.length})`)
+const easyExtras = activeHeads.filter(a => a.role !== 'primary')
+assert(
+  easyExtras.every(a => /window benefit/i.test(a.detail ?? '')),
+  'Easy rock extra seats must be min-power window-benefit holds only'
+)
 console.log(`  → ${easyCrewStrategy.summary}`)
+console.log(`  → Active heads: ${activeHeads.length} (driver + ${easyExtras.length} window seat${easyExtras.length === 1 ? '' : 's'})`)
 
 // 4.2 Medium rock — should use two heads
 console.log('\n4.2 Medium rock (two-head crew)')

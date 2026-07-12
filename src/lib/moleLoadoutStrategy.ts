@@ -291,7 +291,12 @@ function soloCrackingThrottlePercent(
 }
 
 /**
- * Crew plan scoring — fewest lasers with the best power headroom wins.
+ * Crew plan scoring — comfortable power headroom first, then fewest lasers.
+ *
+ * Field-verified: a thin-margin plan (both seats pegged at 100%, minutes to
+ * crack) is worse than manning one more turret. Headroom is the primary
+ * driver; the fewest-heads preference only wins once the smaller crew clears
+ * roughly 40%+ headroom over the crackable threshold.
  *
  * Field-verified driver rules:
  * - The driver does the final ramp-up and window filling, so lighter (lower MW)
@@ -302,6 +307,12 @@ function soloCrackingThrottlePercent(
  * - Exact ties go round-robin clockwise: seat 1 → seat 3 → seat 2.
  */
 const DRIVER_ROUND_ROBIN_BONUS: Record<number, number> = { 0: 0.3, 2: 0.2, 1: 0.1 }
+
+/** Headroom beyond this fraction of crackable power stops adding value. */
+const HEADROOM_COMFORT_FRACTION = 0.8
+const HEADROOM_WEIGHT = 400
+/** Cost of manning one more turret — an extra head must buy real headroom. */
+const EXTRA_HEAD_PENALTY = 150
 
 /**
  * Two-head pairing geometry (field-verified): seats 2 and 3 are the Mole's
@@ -328,13 +339,15 @@ function scoreCrewPlan(
 ): number {
   let score = 10_000
 
-  // Fewest lasers dominates all other preferences.
-  score -= (activeHeadCount - 1) * 300
+  // An extra manned turret must pay for itself in headroom (see weights above).
+  score -= (activeHeadCount - 1) * EXTRA_HEAD_PENALTY
 
-  // Power headroom over the crackable threshold — more room = smoother crack.
+  // Power headroom over the crackable threshold dominates — a plan that needs
+  // every head pegged at 100% barely creeps past the equalizer and takes
+  // minutes to crack. Gains flatten out past the comfort point.
   const headroom =
     crackableThreshold > 0 ? (maxCombinedMw - crackableThreshold) / crackableThreshold : 0
-  score += Math.min(headroom, 1.5) * 100
+  score += Math.min(headroom, HEADROOM_COMFORT_FRACTION) * HEADROOM_WEIGHT
 
   // Lighter drivers preferred — they ramp with finer control.
   score -= driver.laserPower * 0.02
