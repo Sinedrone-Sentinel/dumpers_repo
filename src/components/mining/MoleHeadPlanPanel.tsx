@@ -24,37 +24,48 @@ export default function MoleHeadPlanPanel({ strategy, embedded = false }: MoleHe
         </p>
       ) : null}
       <div className="space-y-1.5">
-        {strategy.assignments.map((head) => (
-          <div
-            key={head.slotIndex}
-            className={`text-xs ${
-              head.role === 'idle'
-                ? 'text-slate-600'
+        {strategy.assignments.map((head) => {
+          const isWorkableBackup = head.role === 'idle' && head.backupViability === 'works'
+          const headClass =
+            head.role === 'primary'
+              ? 'text-green-400/90'
+              : head.role === 'support'
+                ? 'text-cyan-300/90'
+                : isWorkableBackup
+                  ? 'text-yellow-400/80'
+                  : 'text-slate-600'
+          const statusLabel =
+            head.role === 'primary'
+              ? 'Drive'
+              : head.role === 'support' && head.throttlePercent === 100
+                ? 'Full'
                 : head.role === 'support'
-                  ? 'text-cyan-300/90'
-                  : 'text-green-400/90'
-            }`}
-          >
-            <p>
-              Head {head.slotIndex + 1}: {head.label}
-              <span className="text-slate-500">
-                {' '}
-                ·{' '}
-                {head.role === 'primary'
-                  ? 'Drive'
-                  : head.role === 'support' && head.throttlePercent === 100
-                    ? 'Full'
-                    : head.role === 'support'
-                      ? 'Support'
-                      : 'Off'}
-                {head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
-              </span>
-            </p>
-            {head.detail ? (
-              <p className="pl-2 text-[11px] text-slate-500 leading-snug">{head.detail}</p>
-            ) : null}
-          </div>
-        ))}
+                  ? 'Support'
+                  : isWorkableBackup
+                    ? 'Backup'
+                    : 'Off'
+          return (
+            <div key={head.slotIndex} className={`text-xs ${headClass}`}>
+              <p>
+                Head {head.slotIndex + 1}: {head.label}
+                <span className={isWorkableBackup ? 'text-yellow-600/80' : 'text-slate-500'}>
+                  {' '}
+                  · {statusLabel}
+                  {head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
+                </span>
+              </p>
+              {head.detail ? (
+                <p
+                  className={`pl-2 text-[11px] leading-snug ${
+                    isWorkableBackup ? 'text-yellow-700/80' : 'text-slate-500'
+                  }`}
+                >
+                  {head.detail}
+                </p>
+              ) : null}
+            </div>
+          )
+        })}
       </div>
       {strategy.combinedWindowModifier !== 0 || strategy.combinedInstabilityModifier !== 0 ? (
         <p className="text-[11px] font-mono tabular-nums text-slate-500">

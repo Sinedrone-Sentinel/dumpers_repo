@@ -56,6 +56,8 @@ export interface MoleHeadAssignment {
   /** Whole-number throttle % shown to the player. */
   throttlePercent: number
   detail: string | null
+  /** For idle heads in solo mode: could this seat crack the rock on its own? */
+  backupViability?: 'works' | 'cannot'
 }
 
 export interface MoleLoadoutStrategy {
@@ -223,7 +225,8 @@ function buildAssignment(
   profile: MoleHeadProfile,
   role: MoleHeadRole,
   throttlePercent: number,
-  detail: string | null
+  detail: string | null,
+  backupViability?: 'works' | 'cannot'
 ): MoleHeadAssignment {
   return {
     slotIndex: profile.slotIndex,
@@ -231,6 +234,7 @@ function buildAssignment(
     role,
     throttlePercent,
     detail,
+    ...(backupViability ? { backupViability } : {}),
   }
 }
 
@@ -588,26 +592,30 @@ function soloHeadFractureNotes(
  * Backup verdict for a head left OFF in the solo plan — tells the player
  * whether that seat could crack this rock on its own if they used it instead.
  */
-function idleSoloBackupDetail(
+function idleSoloBackupVerdict(
   profile: MoleHeadProfile,
   profiles: MoleHeadProfile[],
   mass: number,
   resistancePercent: number,
   instability: number | null
-): string {
+): { detail: string; viability: 'works' | 'cannot' } {
   const activeIndices = [profile.slotIndex]
   const equalizingPower = equalizationPowerForHeads(mass, resistancePercent, profiles, activeIndices)
   const crackableThreshold = crackablePowerForHeads(mass, resistancePercent, instability, profiles, activeIndices)
 
+  const cannotDetail = `Off — cannot crack this rock (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
   if (profile.laserPower < crackableThreshold) {
-    return `Off — backup: cannot crack (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
+    return { detail: cannotDetail, viability: 'cannot' }
   }
 
   const throttlePercent = soloCrackingThrottlePercent(profile, equalizingPower)
   if (throttlePercent == null) {
-    return `Off — backup: cannot crack (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
+    return { detail: cannotDetail, viability: 'cannot' }
   }
-  return `Off — backup: would also work, drive @ ${throttlePercent}%`
+  return {
+    detail: `Would also work — drive @ ${throttlePercent}%, but not the best pick for this rock`,
+    viability: 'works',
+  }
 }
 
 function evaluateSingleHeadOnly(
@@ -647,12 +655,8 @@ function evaluateSingleHeadOnly(
           : `Cannot crack at full throttle — ${fractureNotes}${modDetail ? ` · ${modDetail}` : ''}`
       )
     }
-    return buildAssignment(
-      profile,
-      'idle',
-      0,
-      idleSoloBackupDetail(profile, profiles, mass, resistancePercent, instability)
-    )
+    const verdict = idleSoloBackupVerdict(profile, profiles, mass, resistancePercent, instability)
+    return buildAssignment(profile, 'idle', 0, verdict.detail, verdict.viability)
   })
 
   return {
