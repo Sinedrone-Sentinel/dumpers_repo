@@ -6,7 +6,7 @@ import TradeContactChip from './TradeContactChip'
 import WtsPartialPurchasePanel, { type WtsLineSelection } from './WtsPartialPurchasePanel'
 import { formatDfpAuec } from '../lib/dfp'
 import { orderHasHighQualityBlueprint } from '../lib/orderDeadlines'
-import { isWtsPartialListing, orderListingType } from '../lib/listingType'
+import { isListingContainer, orderListingType } from '../lib/listingType'
 import { orderTotalDfp } from '../lib/orderPricing'
 import type { MemberReputation } from '../lib/reputation'
 import type { CustomOrder } from '../lib/operations'
@@ -34,10 +34,10 @@ interface AvailableOrderCardProps {
   sellerRep: MemberReputation
   acceptBlockers: string[]
   meetsMinRep: boolean
-  canAccept: boolean
   canAcceptLimits: boolean
   accepting: boolean
-  onAccept: () => void
+  /** Fulfill mode: used to disable WTB blueprint lines the fulfiller does not own. */
+  acquiredBlueprints?: Record<string, boolean>
   onAcceptPartial: (selections: WtsLineSelection[]) => void
 }
 
@@ -52,14 +52,13 @@ export default function AvailableOrderCard({
   sellerRep,
   acceptBlockers,
   meetsMinRep,
-  canAccept,
   canAcceptLimits,
   accepting,
-  onAccept,
+  acquiredBlueprints,
   onAcceptPartial,
 }: AvailableOrderCardProps) {
   const isWts = orderListingType(order) === 'wts'
-  const allowsPartial = isWts && isWtsPartialListing(order)
+  const allowsPartial = isListingContainer(order)
   const totalDfp = orderTotalDfp(order)
   const kindLabel = orderKindLabel(order)
 
@@ -100,15 +99,9 @@ export default function AvailableOrderCard({
 
             <ListingTypeBadge order={order} />
 
-            {isWts ? (
-              <span
-                className={`px-2 py-0.5 rounded text-[10px] font-medium border ${
-                  allowsPartial
-                    ? 'bg-cyan-950/40 text-cyan-200 border-cyan-500/30'
-                    : 'bg-slate-800 text-slate-400 border-slate-600'
-                }`}
-              >
-                {allowsPartial ? 'Partial OK' : 'Full listing only'}
+            {allowsPartial ? (
+              <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
+                {isWts ? 'Pick items to buy' : 'Pick items to fulfill'}
               </span>
             ) : null}
 
@@ -147,16 +140,6 @@ export default function AvailableOrderCard({
           </div>
         </button>
 
-        {!allowsPartial ? (
-          <button
-            type="button"
-            onClick={onAccept}
-            disabled={!canAccept || accepting}
-            className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
-          >
-            {accepting ? 'Accepting...' : isWts ? 'Buy listing' : 'Accept order'}
-          </button>
-        ) : null}
       </div>
 
       {expanded ? (
@@ -193,6 +176,8 @@ export default function AvailableOrderCard({
           {allowsPartial ? (
             <WtsPartialPurchasePanel
               order={order}
+              mode={isWts ? 'buy' : 'fulfill'}
+              acquiredBlueprints={acquiredBlueprints}
               showDfp={showDfp}
               disabled={!meetsMinRep || !canAcceptLimits}
               submitting={accepting}

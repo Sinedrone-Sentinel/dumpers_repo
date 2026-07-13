@@ -19,13 +19,13 @@ export const GUEST_MEMBERSHIP_PITCH = {
 
 export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCopy>> = {
   custom_orders: {
-    title: 'Custom Orders',
-    description: 'Buy and sell crafted items and resources with other members.',
+    title: 'My Listings',
+    description: 'Buy and sell crafted items and resources with other members on the Bazaar.',
     details: [
-      'Post WTB orders for crafted items (blueprint, quality, quantity) or bulk resources',
-      'Post WTS listings for stock you have on hand',
-      'Get notified when a fulfiller accepts your order',
-      'Rate your trade partners when orders complete — builds community reputation',
+      'Keep one WTB buy listing for crafted items (blueprint, quality, quantity) or bulk resources',
+      'Keep one WTS sell listing for stock you have on hand',
+      'Get notified when someone buys or claims items from your listings',
+      'Rate your trade partners when transactions complete — builds community reputation',
       'Requires a verified RSI Handle and officer approval to participate',
     ],
   },

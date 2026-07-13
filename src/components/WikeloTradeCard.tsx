@@ -1,9 +1,50 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { calculateWikeloTradeDfp, formatDfpValue, formatWikeloDfpLabel } from '../lib/dfp'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
+import { useOrderDraft } from '../contexts/OrderDraftContext'
+import { wikeloRewardResourceKey } from '../config/wikeloItems'
 import type { WikeloTrade } from '../routes/wikelo'
+import WikeloRewardSilhouette, {
+  resolveWikeloRewardSilhouette,
+  wikeloTradeUsesBlueprintPaper,
+} from './WikeloRewardSilhouette'
 
 const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
+const SILHOUETTE_PANEL =
+  'relative rounded-lg border border-slate-600/50 bg-slate-900/60 p-2.5 overflow-hidden'
+
+/** Reward items listable on WTS/WTB (gear + currency; not blueprints or game-bound vehicles). */
+export function tradableWikeloRewards(trade: WikeloTrade) {
+  return trade.rewards
+    .filter((r) => r.kind === 'item')
+    .map((r) => {
+      const resourceKey = wikeloRewardResourceKey(r.entityClass)
+      return resourceKey ? { resourceKey, label: r.name, quantity: r.amount } : null
+    })
+    .filter((r): r is { resourceKey: string; label: string; quantity: number } => r != null)
+}
+
+/** Shared add-to-cart hook: sends the trade's tradable reward items to the order draft. */
+export function useAddWikeloTradeToCart(trade: WikeloTrade) {
+  const { addResourceToDraft } = useOrderDraft()
+  const [added, setAdded] = useState(false)
+  const rewards = useMemo(() => tradableWikeloRewards(trade), [trade])
+
+  const addToCart = () => {
+    if (rewards.length === 0) return
+    for (const reward of rewards) {
+      addResourceToDraft({
+        resourceKey: reward.resourceKey,
+        resourceLabel: reward.label,
+        quantity: reward.quantity,
+      })
+    }
+    setAdded(true)
+    setTimeout(() => setAdded(false), 3000)
+  }
+
+  return { canAdd: rewards.length > 0, added, addToCart }
+}
 
 export const WIKELO_SUBCATEGORY_LABELS: Record<string, string> = {
   ship: 'Ship',
@@ -41,6 +82,7 @@ interface WikeloTradeCardProps {
   onClick: (trade: WikeloTrade, e: React.MouseEvent<HTMLDivElement>) => void
   onOpenMission: (trade: WikeloTrade) => void
   dfpDisplayEnabled?: boolean
+  canAddToOrder?: boolean
 }
 
 export default function WikeloTradeCard({
@@ -48,14 +90,18 @@ export default function WikeloTradeCard({
   onClick,
   onOpenMission,
   dfpDisplayEnabled = true,
+  canAddToOrder = false,
 }: WikeloTradeCardProps) {
+  const { canAdd, added, addToCart } = useAddWikeloTradeToCart(trade)
   const dfpEngineReady = useDfpEngineReady()
   // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute when engine loads
   const dfp = useMemo(() => calculateWikeloTradeDfp(trade), [trade, dfpEngineReady])
+  const useBlueprintPaper = wikeloTradeUsesBlueprintPaper(trade)
+  const rewardSilhouette = useMemo(() => resolveWikeloRewardSilhouette(trade), [trade])
 
   const dfpLabel = formatWikeloDfpLabel(dfp)
   const dfpTooltip = dfp.isVehicleReward
-    ? 'Vehicle rewards are account-bound and cannot be priced'
+    ? 'Vehicle rewards are game bound and cannot be priced'
     : dfp.unpricedItems.length > 0
       ? `Hand-in value estimate (excludes: ${dfp.unpricedItems.join(', ')})`
       : `Fair value of everything you hand in: ${formatDfpValue(dfp.total ?? 0)}`
@@ -110,9 +156,12 @@ export default function WikeloTradeCard({
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col text-sm">
-          <div className={PAPER_PANEL}>
-            <p className="text-[10px] uppercase tracking-wide text-sky-200/70 mb-1.5">Hand in</p>
-            <div className="flex flex-wrap gap-1">
+          <div className={useBlueprintPaper ? PAPER_PANEL : SILHOUETTE_PANEL}>
+            {!useBlueprintPaper && <WikeloRewardSilhouette kind={rewardSilhouette} />}
+            <p className="relative z-[1] text-[10px] uppercase tracking-wide text-sky-200/70 mb-1.5">
+              Hand in
+            </p>
+            <div className="relative z-[1] flex flex-wrap gap-1">
               {trade.costs.slice(0, 6).map((cost, idx) => (
                 <span
                   key={idx}
@@ -154,15 +203,33 @@ export default function WikeloTradeCard({
           </div>
           <div className="flex items-center justify-between gap-2 min-h-[1.375rem]">
             <span className="text-xs text-slate-500">
-              {trade.isVehicleReward ? '🚀 Account-bound reward' : '🤝 Barter trade'}
+              {trade.isVehicleReward ? '🚀 Game-bound reward' : '🤝 Barter trade'}
             </span>
-            <button
-              onClick={handleMissionClick}
-              className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
-              title="View this trade in the Mission Tracker"
-            >
-              Mission
-            </button>
+            <div className="flex items-center gap-1">
+              {canAddToOrder && canAdd && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    addToCart()
+                  }}
+                  className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
+                    added
+                      ? 'bg-green-600/30 text-green-300'
+                      : 'bg-slate-700/50 text-slate-400 hover:bg-red-600/20 hover:text-red-300'
+                  }`}
+                  title="Add this trade's reward items to your listing cart"
+                >
+                  {added ? '✓ Added' : '🛒 Cart'}
+                </button>
+              )}
+              <button
+                onClick={handleMissionClick}
+                className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
+                title="View this trade in the Mission Tracker"
+              >
+                Mission
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -105,7 +105,7 @@ function pathToTool(pathname: string): string | null {
       return 'mining_tracker'
     case '/orders':
       return 'custom_orders'
-    case '/fulfillment':
+    case '/bazaar':
       return 'fulfillment'
     case '/archive':
       return 'archive'

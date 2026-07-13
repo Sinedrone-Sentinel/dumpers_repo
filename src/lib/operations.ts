@@ -1,6 +1,7 @@
 import type { MemberReputationRow } from './reputation'
 import { supabase } from './supabase'
 import { EXTRA_CATALOG_RESOURCE_KEYS, EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
+import { WIKELO_ITEM_RESOURCE_KEYS, WIKELO_ITEM_RESOURCES } from '../config/wikeloItems'
 import {
   extractBlueprintResources,
   type BlueprintWithSlots,
@@ -209,6 +210,7 @@ export async function syncBlueprintResourceCatalog(
   const extracted: ExtractedBlueprintResource[] = [
     ...extractBlueprintResources(blueprints),
     ...EXTRA_CATALOG_RESOURCES,
+    ...WIKELO_ITEM_RESOURCES,
   ]
   const activeKeys = new Set(extracted.map((r) => r.resourceKey))
   const now = new Date().toISOString()
@@ -238,7 +240,8 @@ export async function syncBlueprintResourceCatalog(
       (row) =>
         row.is_active &&
         !activeKeys.has(row.resource_key) &&
-        !EXTRA_CATALOG_RESOURCE_KEYS.has(row.resource_key)
+        !EXTRA_CATALOG_RESOURCE_KEYS.has(row.resource_key) &&
+        !WIKELO_ITEM_RESOURCE_KEYS.has(row.resource_key)
     )
     .map((row) => row.resource_key)
 
@@ -888,6 +891,160 @@ export async function acceptWtsPartialPurchase(
     purchaseOrderId: result.purchase_order_id,
     listingId: result.listing_id,
   }
+}
+
+export async function acceptWtbPartialFulfillment(
+  listingId: string,
+  selections: { lineId: string; kind: 'blueprint' | 'resource'; quantity: number }[]
+): Promise<{ purchaseOrderId?: string; listingId?: string; error?: string }> {
+  const { data, error } = await supabase.rpc('accept_wtb_partial', {
+    p_listing_id: listingId,
+    p_selections: selections.map((sel) => ({
+      line_id: sel.lineId,
+      kind: sel.kind,
+      quantity: sel.quantity,
+    })),
+  })
+
+  if (error) return { error: error.message }
+
+  const result = data as {
+    success?: boolean
+    purchase_order_id?: string
+    listing_id?: string
+    error?: string
+  }
+
+  if (!result?.success) {
+    return { error: result?.error ?? 'Failed to claim selected items' }
+  }
+
+  return {
+    purchaseOrderId: result.purchase_order_id,
+    listingId: result.listing_id,
+  }
+}
+
+export interface AppendToListingResult {
+  orderId?: string
+  created?: boolean
+  linesAdded?: number
+  totalDfpAuec?: number
+  error?: string
+  errorType?: CreateOrderErrorType
+  unratedCount?: number
+}
+
+/** Bazaar model: create-or-extend the user's single WTS/WTB listing. */
+export async function appendToMyListing(input: {
+  listingType: 'wtb' | 'wts'
+  blueprints: CustomOrderBlueprintInput[]
+  resources: CustomOrderResourceInput[]
+  items: { resourceKey: string; quantity: number }[]
+  notes?: string
+  minFulfillerReputation?: number | null
+  orderOverridesMap?: Record<string, boolean>
+}): Promise<AppendToListingResult> {
+  if (input.blueprints.length === 0 && input.resources.length === 0) {
+    return { error: 'Add at least one blueprint or resource' }
+  }
+
+  const orderCheck = validateOrderBlueprintIds(
+    input.blueprints.map((bp) => bp.blueprintId),
+    input.orderOverridesMap ?? {}
+  )
+  if (!orderCheck.ok) {
+    return { error: 'This blueprint is not available for orders' }
+  }
+
+  const { data, error } = await supabase.rpc('append_to_my_listing', {
+    p_listing_type: input.listingType,
+    p_blueprints: input.blueprints.map((bp) => ({
+      blueprint_id: bp.blueprintId,
+      blueprint_title: bp.blueprintTitle,
+      min_quality: bp.minQuality,
+      slot_qualities: bp.slotQualities ?? null,
+      line_snapshot: bp.lineSnapshot ?? null,
+      quantity: bp.quantity,
+      unit_dfp_auec: Math.round(bp.unitDfpAuec),
+      line_dfp_auec: Math.round(bp.lineDfpAuec),
+      base_unit_dfp_auec:
+        bp.baseUnitDfpAuec != null ? Math.round(bp.baseUnitDfpAuec) : null,
+    })),
+    p_resources: input.resources.map((line) => ({
+      resource_key: line.resourceKey,
+      resource_label: line.resourceLabel,
+      min_quality: line.minQuality,
+      quantity_scu: normalizeResourceQuantity(line.quantityScu),
+      unit_dfp_auec: Math.round(line.unitDfpAuec),
+      line_dfp_auec: Math.round(line.lineDfpAuec),
+      base_unit_dfp_auec:
+        line.baseUnitDfpAuec != null ? Math.round(line.baseUnitDfpAuec) : null,
+    })),
+    p_items: input.items.map((item) => ({
+      resource_key: item.resourceKey,
+      quantity: item.quantity,
+    })),
+    p_notes: input.notes?.trim() || null,
+    p_min_fulfiller_reputation: input.minFulfillerReputation ?? null,
+  })
+
+  if (error) return { error: error.message, errorType: 'generic' }
+
+  const result = data as {
+    success?: boolean
+    error?: string
+    error_type?: string
+    order_id?: string
+    created?: boolean
+    lines_added?: number
+    total_dfp_auec?: number
+    unrated_count?: number
+  }
+
+  if (!result?.success) {
+    return {
+      error: result?.error ?? 'Failed to update listing',
+      errorType: (result?.error_type as CreateOrderErrorType) ?? 'generic',
+      unratedCount: result?.unrated_count,
+    }
+  }
+
+  return {
+    orderId: result.order_id,
+    created: result.created,
+    linesAdded: result.lines_added,
+    totalDfpAuec: result.total_dfp_auec,
+  }
+}
+
+/** Update the quantity of a line on your own open listing. */
+export async function updateListingLine(
+  lineId: string,
+  kind: 'blueprint' | 'resource',
+  quantity: number
+): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('update_listing_line', {
+    p_line_id: lineId,
+    p_kind: kind,
+    p_quantity: quantity,
+  })
+  if (error) return { error: error.message }
+  return {}
+}
+
+/** Remove a line from your own open listing (empty listings are closed). */
+export async function removeListingLine(
+  lineId: string,
+  kind: 'blueprint' | 'resource'
+): Promise<{ listingClosed?: boolean; error?: string }> {
+  const { data, error } = await supabase.rpc('remove_listing_line', {
+    p_line_id: lineId,
+    p_kind: kind,
+  })
+  if (error) return { error: error.message }
+  const result = data as { listing_closed?: boolean }
+  return { listingClosed: result?.listing_closed }
 }
 
 export async function deleteCustomOrderRequester(

@@ -1,5 +1,5 @@
 import { isSalvageResource } from '../config/extraResources'
-import { isHarvestResource } from '../config/resourceTypes'
+import { isHarvestResource, isWikeloItemResource } from '../config/resourceTypes'
 import { AMMO_ORDER_MIN_QUALITY } from '../config/dfp'
 import { slotQualitiesToParts } from './blueprintQuality'
 import { getResourceBands } from './qualityBands'
@@ -81,6 +81,7 @@ export function formatResourceOrderQualityLabel(
 ): string {
   if (isSalvageResource(resourceKey)) return 'Q0 (salvage)'
   if (isHarvestResource(resourceKey)) return 'Harvest'
+  if (isWikeloItemResource(resourceKey)) return 'Wikelo item'
   return `Q${minQuality}`
 }
 
@@ -203,7 +204,7 @@ export interface WikeloTradeDfpInput {
 }
 
 export interface WikeloDfpResult {
-  /** null = account-bound vehicle reward (shown as N/A) */
+  /** null = game-bound vehicle reward (shown as N/A) */
   total: number | null
   lines: { name: string; amount: number; lineTotal: number }[]
   unpricedItems: string[]

@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0-wikelo",
-  "sha256": "a651fa077820313ac8edafb60be800a68235c6c6f06e4a8a8444ab240f2533e5",
+  "version": "1.7.0-wikelo-items",
+  "sha256": "12000d21da7d649d00603490592977b81806912672a3d2589bd1a245396230a5",
   "module": "dfp-engine.js"
 }

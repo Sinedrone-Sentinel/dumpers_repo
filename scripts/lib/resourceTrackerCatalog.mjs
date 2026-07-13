@@ -18,7 +18,7 @@ const SALVAGE_KEYS = new Set([
   'inert_materials',
 ])
 
-const HARVEST_KEYS = new Set(['yormandi_eye'])
+const HARVEST_KEYS = new Set(['yormandi_eye', 'yormandi_tongue'])
 
 /** Parse EXTRA_CATALOG_RESOURCES from extraResources.ts */
 export function parseExtraCatalog(extraResourcesPath) {

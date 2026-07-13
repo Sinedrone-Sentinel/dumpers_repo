@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, getRouteApi } from '@tanstack/react-router'
 import AvailableOrderCard from '../components/AvailableOrderCard'
 import AssignedOrderCard from '../components/AssignedOrderCard'
@@ -17,10 +17,6 @@ import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResou
 import { formatDfpAuec } from '../lib/dfp'
 import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import {
-  fulfillerHasAllOrderBlueprints,
-  getOrderAcceptBlockers,
-} from '../lib/orderAccept'
-import {
   archiveRatingInfo,
   canUserArchiveOrder,
 } from '../lib/orderArchive'
@@ -29,6 +25,7 @@ import { fulfillmentItemsMatch } from '../lib/orderFulfillment'
 import { orderTotalDfp, resolveOrderFulfillmentItems } from '../lib/orderPricing'
 import { resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
+import { getBandTier, getResourceBands } from '../lib/qualityBands'
 import { useBlueprintData } from './blueprints'
 import {
   buyerReputationFromRow,
@@ -40,8 +37,8 @@ import {
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { useAuth } from '../contexts/AuthContext'
 import {
-  acceptCustomOrder,
   acceptWtsPartialPurchase,
+  acceptWtbPartialFulfillment,
   abandonCustomOrderFulfillment,
   archiveCustomOrderWithRating,
   completeOrderCraft,
@@ -59,15 +56,67 @@ import {
   type UserOrderLimits,
 } from '../lib/operations'
 import { displayNameFromFields } from '../lib/supabase'
-import {
-  matchesListingTypeFilter,
-  orderListingType,
-  type ListingTypeFilter,
-} from '../lib/listingType'
+import { orderListingType } from '../lib/listingType'
 
-const fulfillmentRouteApi = getRouteApi('/fulfillment')
+const bazaarRouteApi = getRouteApi('/bazaar')
 
-export default function FulfillmentRoute() {
+type BazaarTab = 'fulfillment' | 'store'
+
+const QUALITY_BAND_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8]
+
+/** Fallback band mapping for lines without resource-specific bands (Q 0–1000 → 1–8). */
+function fallbackBand(quality: number): number {
+  return Math.min(8, Math.max(1, Math.ceil(quality / 125)))
+}
+
+function resourceLineBand(label: string, quality: number): number {
+  const bands = getResourceBands(label)
+  if (bands && bands.length > 0) return getBandTier(quality, bands)
+  return fallbackBand(quality)
+}
+
+function blueprintLineBand(
+  minQuality: number,
+  slotQualities: Record<number, number> | null
+): number {
+  const qualities = slotQualities ? Object.values(slotQualities) : []
+  const quality = qualities.length > 0 ? Math.max(...qualities) : minQuality
+  return fallbackBand(quality)
+}
+
+/** True when any listing line matches the text search and minimum Q-band. */
+function listingMatchesSearch(
+  order: CustomOrder,
+  searchText: string,
+  minBand: number | null
+): boolean {
+  const text = searchText.trim().toLowerCase()
+  if (!text && minBand == null) return true
+
+  const bpLines = order.blueprints ?? []
+  const resLines = order.resource_lines ?? []
+
+  for (const line of bpLines) {
+    const title = (line.blueprint_title ?? line.blueprint_id).toLowerCase()
+    if (text && !title.includes(text)) continue
+    if (minBand != null && blueprintLineBand(line.min_quality, line.slot_qualities) < minBand) {
+      continue
+    }
+    return true
+  }
+
+  for (const line of resLines) {
+    if (text && !line.resource_label.toLowerCase().includes(text)) continue
+    if (minBand != null && resourceLineBand(line.resource_label, line.min_quality) < minBand) {
+      continue
+    }
+    return true
+  }
+
+  return false
+}
+
+export default function BazaarRoute() {
   const { user, profile, acquiredBlueprints, dfpDisplayEnabled, isGuestPreview } = useAuth()
   const isGuest = !user && isGuestPreview
   const craftDeductInventory = profile?.craft_deduct_inventory ?? false
@@ -94,12 +143,14 @@ export default function FulfillmentRoute() {
   const [archiving, setArchiving] = useState(false)
   const [orderLimits, setOrderLimits] = useState<UserOrderLimits | null>(null)
   const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
-  const [listingTypeFilter, setListingTypeFilter] = useState<ListingTypeFilter>('all')
+  const [activeTab, setActiveTab] = useState<BazaarTab>('fulfillment')
+  const [searchText, setSearchText] = useState('')
+  const [minBandFilter, setMinBandFilter] = useState('')
   const [expandedPendingOrderId, setExpandedPendingOrderId] = useState<string | null>(null)
   const [flashOrderId, setFlashOrderId] = useState<string | null>(null)
   const highlightAppliedRef = useRef<string | null>(null)
 
-  const { highlight } = fulfillmentRouteApi.useSearch()
+  const { highlight } = bazaarRouteApi.useSearch()
 
   const userId = user?.id
 
@@ -201,38 +252,40 @@ export default function FulfillmentRoute() {
     [reputations, userId]
   )
 
-  const pendingOrders = useMemo(() => {
-    const minFilter = minBuyerRepFilter ? Number(minBuyerRepFilter) : null
+  const activeListingType = activeTab === 'store' ? 'wts' : 'wtb'
+  const minBand = minBandFilter ? Number(minBandFilter) : null
+
+  const pendingListings = useMemo(() => {
+    const minRepFilter = minBuyerRepFilter ? Number(minBuyerRepFilter) : null
 
     return orders.filter((order) => {
       if (order.status !== 'pending' || order.requester_id === userId) return false
-      if (!matchesListingTypeFilter(order, listingTypeFilter)) return false
+      if (order.source_listing_id) return false
+      if (orderListingType(order) !== activeListingType) return false
 
-      if (orderListingType(order) === 'wtb') {
+      if (activeListingType === 'wtb') {
         const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
-        if (!passesBuyerRepFilter(buyerRep, minFilter)) return false
+        if (!passesBuyerRepFilter(buyerRep, minRepFilter)) return false
       }
 
-      return true
+      return listingMatchesSearch(order, searchText, minBand)
     })
-  }, [orders, userId, minBuyerRepFilter, reputations, listingTypeFilter])
+  }, [orders, userId, minBuyerRepFilter, reputations, activeListingType, searchText, minBand])
 
-  const visiblePendingOrders = useMemo(() => {
-    let list = pendingOrders
-    if (onlyMyBlueprintOrders) {
-      list = list.filter(
-        (order) =>
-          orderListingType(order) === 'wts' ||
-          fulfillerHasAllOrderBlueprints(order, acquiredBlueprints)
-      )
-    }
-    return list
-  }, [pendingOrders, onlyMyBlueprintOrders, acquiredBlueprints])
+  const visiblePendingListings = useMemo(() => {
+    if (activeListingType !== 'wtb' || !onlyMyBlueprintOrders) return pendingListings
+    // Partial fulfillment: keep listings where at least one blueprint line is owned.
+    return pendingListings.filter((order) => {
+      const bpLines = order.blueprints ?? []
+      if (bpLines.length === 0) return (order.resource_lines ?? []).length > 0
+      return bpLines.some((line) => acquiredBlueprints[line.blueprint_id] === true)
+    })
+  }, [pendingListings, activeListingType, onlyMyBlueprintOrders, acquiredBlueprints])
 
   useEffect(() => {
     if (highlight) return
     setExpandedPendingOrderId(null)
-  }, [listingTypeFilter, minBuyerRepFilter, onlyMyBlueprintOrders, highlight])
+  }, [activeTab, minBuyerRepFilter, onlyMyBlueprintOrders, searchText, minBandFilter, highlight])
 
   const handleTogglePendingOrder = useCallback((orderId: string) => {
     setExpandedPendingOrderId((current) => (current === orderId ? null : orderId))
@@ -247,30 +300,26 @@ export default function FulfillmentRoute() {
     )
     if (!target) return
 
-    if (!matchesListingTypeFilter(target, listingTypeFilter)) {
-      setListingTypeFilter(orderListingType(target) === 'wts' ? 'wts' : 'wtb')
-    }
-    if (
-      onlyMyBlueprintOrders &&
-      orderListingType(target) === 'wtb' &&
-      !fulfillerHasAllOrderBlueprints(target, acquiredBlueprints)
-    ) {
-      setOnlyMyBlueprintOrders(false)
-    }
+    const targetTab: BazaarTab = orderListingType(target) === 'wts' ? 'store' : 'fulfillment'
+    if (activeTab !== targetTab) setActiveTab(targetTab)
+    if (onlyMyBlueprintOrders) setOnlyMyBlueprintOrders(false)
+    if (searchText) setSearchText('')
+    if (minBandFilter) setMinBandFilter('')
   }, [
     highlight,
     loading,
     userId,
     orders,
-    listingTypeFilter,
+    activeTab,
     onlyMyBlueprintOrders,
-    acquiredBlueprints,
+    searchText,
+    minBandFilter,
   ])
 
   useEffect(() => {
     if (!highlight || loading || !userId) return
     if (highlightAppliedRef.current === highlight) return
-    if (!visiblePendingOrders.some((o) => o.id === highlight)) return
+    if (!visiblePendingListings.some((o) => o.id === highlight)) return
 
     highlightAppliedRef.current = highlight
     setExpandedPendingOrderId(highlight)
@@ -285,67 +334,60 @@ export default function FulfillmentRoute() {
 
     const timer = window.setTimeout(() => setFlashOrderId(null), 4000)
     return () => window.clearTimeout(timer)
-  }, [highlight, loading, userId, visiblePendingOrders])
+  }, [highlight, loading, userId, visiblePendingListings])
 
   const myBuyingOrders = useMemo(
     () =>
       orders.filter(
         (o) =>
-          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.requester_id === userId &&
           o.listing_type !== 'wts' &&
           o.assignee_id != null &&
           ['accepted', 'in_progress', 'ready_for_pickup', 'completed'].includes(o.status)
       ),
-    [orders, userId, listingTypeFilter]
+    [orders, userId]
   )
 
   const myAssignedOrders = useMemo(
     () =>
       orders.filter(
         (o) =>
-          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.assignee_id === userId &&
           orderListingType(o) === 'wtb' &&
           ['accepted', 'in_progress'].includes(o.status)
       ),
-    [orders, userId, listingTypeFilter]
+    [orders, userId]
   )
 
   const myWtsSales = useMemo(
     () =>
       orders.filter(
         (o) =>
-          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.requester_id === userId &&
           orderListingType(o) === 'wts' &&
           o.assignee_id != null &&
           ['accepted', 'in_progress', 'ready_for_pickup'].includes(o.status)
       ),
-    [orders, userId, listingTypeFilter]
+    [orders, userId]
   )
 
   const myFinishedOrders = useMemo(
     () =>
       orders.filter(
         (o) =>
-          matchesListingTypeFilter(o, listingTypeFilter) &&
           o.assignee_id === userId &&
           orderListingType(o) === 'wtb' &&
           o.status === 'ready_for_pickup'
       ),
-    [orders, userId, listingTypeFilter]
+    [orders, userId]
   )
 
   const myOrdersNeedingRating = useMemo(
     () =>
       orders.filter(
-        (o) =>
-          matchesListingTypeFilter(o, listingTypeFilter) &&
-          o.status === 'completed' &&
-          canUserArchiveOrder(o, userId)
+        (o) => o.status === 'completed' && canUserArchiveOrder(o, userId)
       ),
-    [orders, userId, listingTypeFilter]
+    [orders, userId]
   )
 
   const openArchiveForOrder = (order: CustomOrder) => {
@@ -397,11 +439,14 @@ export default function FulfillmentRoute() {
     [craftDeductInventory, fulfillmentItemsForOrder, quantityByKey, labelMap]
   )
 
-  const handleAcceptPartial = async (listingId: string, selections: WtsLineSelection[]) => {
-    setAcceptingOrderId(listingId)
+  const handleAcceptPartial = async (listing: CustomOrder, selections: WtsLineSelection[]) => {
+    setAcceptingOrderId(listing.id)
     setError(null)
 
-    const result = await acceptWtsPartialPurchase(listingId, selections)
+    const result =
+      orderListingType(listing) === 'wts'
+        ? await acceptWtsPartialPurchase(listing.id, selections)
+        : await acceptWtbPartialFulfillment(listing.id, selections)
 
     if (result.error) {
       setAcceptingOrderId(null)
@@ -411,9 +456,9 @@ export default function FulfillmentRoute() {
 
     if (result.purchaseOrderId) {
       const { data: refreshed } = await fetchCustomOrders()
-      const purchaseOrder = refreshed.find((o) => o.id === result.purchaseOrderId)
-      if (purchaseOrder) {
-        const syncResult = await syncFulfillmentItems(purchaseOrder)
+      const childOrder = refreshed.find((o) => o.id === result.purchaseOrderId)
+      if (childOrder) {
+        const syncResult = await syncFulfillmentItems(childOrder)
         if (syncResult.error) {
           setAcceptingOrderId(null)
           setError(syncResult.error)
@@ -423,32 +468,6 @@ export default function FulfillmentRoute() {
     }
 
     setAcceptingOrderId(null)
-    await loadData()
-  }
-
-  const handleAccept = async (orderId: string) => {
-    const order = orders.find((o) => o.id === orderId)
-    if (!order) return
-
-    setAcceptingOrderId(orderId)
-    setError(null)
-
-    const syncResult = await syncFulfillmentItems(order)
-    if (syncResult.error) {
-      setAcceptingOrderId(null)
-      setError(syncResult.error)
-      return
-    }
-
-    const result = await acceptCustomOrder(orderId)
-
-    setAcceptingOrderId(null)
-
-    if (result.error) {
-      setError(result.error)
-      return
-    }
-
     await loadData()
   }
 
@@ -553,54 +572,50 @@ export default function FulfillmentRoute() {
   // Guest teaser view
   if (isGuest) {
     return (
-      <FeaturePageLayout title="Fulfillment" subtitle={SITE_SLOGAN}>
+      <FeaturePageLayout title="The Bazaar" subtitle={SITE_SLOGAN}>
         <div className="max-w-2xl mx-auto py-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 mb-6">
             <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-3">Order Fulfillment</h2>
+          <h2 className="text-2xl font-bold text-white mb-3">The Bazaar</h2>
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm max-w-md mx-auto">
               {error}
-              {error.includes('get_pending_custom_order_count') && (
-                <p className="mt-2 text-red-200/80">
-                  Run pending Supabase migration 077 first.
-                </p>
-              )}
             </div>
           )}
           {loading ? (
-            <div className="text-slate-400 mb-4">Checking pending orders...</div>
+            <div className="text-slate-400 mb-4">Checking open listings...</div>
           ) : guestPendingCount !== null && guestPendingCount > 0 ? (
             <div className="mb-4">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/30">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                 <span className="text-green-300 font-medium">
-                  {guestPendingCount} order{guestPendingCount === 1 ? '' : 's'} waiting for fulfillment
+                  {guestPendingCount} open listing{guestPendingCount === 1 ? '' : 's'} on the Bazaar
                 </span>
               </span>
             </div>
           ) : (
-            <p className="text-slate-400 mb-4">No pending orders right now.</p>
+            <p className="text-slate-400 mb-4">No open listings right now.</p>
           )}
           <p className="text-slate-400 mb-6 max-w-md mx-auto">
-            Members browse live <strong className="text-amber-300">WTB</strong> buy requests and{' '}
-            <strong className="text-cyan-300">WTS</strong> sell listings, then accept trades that match
-            their blueprints or needs. Build reputation and earn aUEC — sign in to participate.
+            Members browse live <strong className="text-amber-300">WTB</strong> buy listings and{' '}
+            <strong className="text-cyan-300">WTS</strong> sell listings, then pick the exact items
+            and quantities they want to fulfill or buy. Build reputation and earn aUEC — sign in to
+            participate.
           </p>
           <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700 text-left max-w-md mx-auto">
             <h3 className="text-white font-medium mb-2">What members can do:</h3>
             <ul className="text-sm text-slate-400 space-y-1">
-              <li>• Fulfill WTB craft orders that match your acquired blueprints</li>
-              <li>• Buy WTS listings from members selling stock on hand</li>
-              <li>• Track progress and mark orders ready for pickup</li>
+              <li>• Fulfill WTB craft requests that match your acquired blueprints</li>
+              <li>• Shop WTS listings from members selling stock on hand</li>
+              <li>• Pick individual items and quantities — no all-or-nothing trades</li>
               <li>• Build buyer and seller reputation through ratings</li>
             </ul>
           </div>
           <p className="text-amber-300/70 text-sm mt-6">
-            Sign in to browse full order details and accept trades.
+            Sign in to browse full listing details and trade.
           </p>
         </div>
       </FeaturePageLayout>
@@ -609,14 +624,15 @@ export default function FulfillmentRoute() {
 
   return (
     <FeaturePageLayout
-      title="Fulfillment"
+      title="The Bazaar"
       subtitle={SITE_SLOGAN}
       actions={
         <Link
           to="/orders"
+          search={{ tab: undefined }}
           className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
         >
-          View orders
+          My Listings
         </Link>
       }
     >
@@ -637,7 +653,7 @@ export default function FulfillmentRoute() {
             <div>
               <h3 className="text-amber-300 font-medium">RSI Handle Verification Required</h3>
               <p className="text-amber-200/70 text-sm mt-1">
-                To accept and fulfill orders, you must first verify your RSI Handle. This ensures all traders 
+                To trade on the Bazaar, you must first verify your RSI Handle. This ensures all traders 
                 can be identified by their in-game identity.
               </p>
               <p className="text-amber-200/70 text-sm mt-2">
@@ -660,7 +676,7 @@ export default function FulfillmentRoute() {
               <h3 className="text-red-300 font-medium">Rate Your Completed Orders</h3>
               <p className="text-red-200/70 text-sm mt-1">
                 You have <strong className="text-red-300">{orderLimits.unrated_count}</strong> completed {orderLimits.unrated_count === 1 ? 'order' : 'orders'} awaiting your rating.
-                You must archive and rate all completed orders before accepting new ones. You can still browse the marketplace and work on orders you have already accepted.
+                You must archive and rate all completed orders before starting new trades. You can still browse the Bazaar and work on trades you have already started.
               </p>
               <Link
                 to="/orders"
@@ -677,19 +693,25 @@ export default function FulfillmentRoute() {
       {isRsiVerified && (
         <>
           <p className="mb-4 text-slate-500 text-sm">
-            Browse pending orders here with buyer reputation before accepting. You need every required
-            blueprint to accept. Once accepted, you have <strong className="text-slate-300">72 hours</strong>{' '}
-            to mark the order ready or it releases back to the pool. Orders with blueprints at{' '}
-            <strong className="text-slate-300">800+ quality</strong> require materials on hand — only
-            accept if you can fulfill. Enable{' '}
-            <span className="text-slate-300">Deduct inventory on craft complete</span> in Settings if
-            you want My Resources checked and deducted when you finish a craft. Ratings show as{' '}
-            <span className="text-slate-400 italic">Pending</span> until a member has 5 completed
-            orders or fulfillments.
+            Every listing is priced at exact{' '}
+            <a
+              href="/archive#dfp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-orange-400/70 hover:text-orange-300 underline"
+            >
+              DFP
+            </a>{' '}
+            and every trade is item-by-item — pick what you want from a listing and the rest stays
+            open. Once you start a trade, you have{' '}
+            <strong className="text-slate-300">72 hours</strong> to finish your side or it returns
+            to the listing. Ratings show as <span className="text-slate-400 italic">Pending</span>{' '}
+            until a member has 5 completed trades.
           </p>
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} type="fulfiller" />
+            <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" />
             {orderLimits?.has_pending_fulfiller_rep && (
               <>
                 <span className="text-slate-500">·</span>
@@ -710,43 +732,69 @@ export default function FulfillmentRoute() {
         </>
       )}
 
-      {isRsiVerified && (
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-slate-500 mr-1">Show:</span>
-          {(
-            [
-              { id: 'all', label: 'All' },
-              { id: 'wtb', label: 'WTB' },
-              { id: 'wts', label: 'WTS' },
-            ] as const
-          ).map((opt) => (
-            <button
-              key={opt.id}
-              type="button"
-              onClick={() => setListingTypeFilter(opt.id)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors site-btn-shimmer ${
-                listingTypeFilter === opt.id
-                  ? 'site-filter-selected-slate'
-                  : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
-
       {loading ? (
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <section className="space-y-6">
-            <div>
-              <div className="flex flex-col gap-3 mb-3">
-                <h2 className="text-white font-medium">Available orders</h2>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <>
+          {isRsiVerified && (
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {(
+                  [
+                    { id: 'fulfillment', label: 'Fulfillment (WTB)' },
+                    { id: 'store', label: 'Store (WTS)' },
+                  ] as const
+                ).map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors site-btn-shimmer ${
+                      activeTab === tab.id
+                        ? tab.id === 'store'
+                          ? 'bg-cyan-950/50 text-cyan-200 border-cyan-500/40'
+                          : 'bg-red-950/50 text-red-200 border-red-500/40'
+                        : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2 mb-3">
+                <input
+                  type="search"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  placeholder={
+                    activeTab === 'store'
+                      ? 'Search items for sale (e.g. Killshot, Quantainium)…'
+                      : 'Search wanted items (e.g. Killshot, Quantainium)…'
+                  }
+                  className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500"
+                />
+                <label className="flex items-center gap-2 text-xs text-slate-400 shrink-0">
+                  <span>Min Q-band</span>
+                  <select
+                    value={minBandFilter}
+                    onChange={(e) => setMinBandFilter(e.target.value)}
+                    className="px-2 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                  >
+                    <option value="">Any</option>
+                    {QUALITY_BAND_OPTIONS.map((band) => (
+                      <option key={band} value={band}>
+                        Band {band}+
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              {activeTab === 'fulfillment' && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                   <label className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
                     <input
                       type="checkbox"
@@ -754,7 +802,7 @@ export default function FulfillmentRoute() {
                       onChange={(e) => setOnlyMyBlueprintOrders(e.target.checked)}
                       className="rounded border-slate-500 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
                     />
-                    <span>Only orders with my blueprints</span>
+                    <span>Only listings with my blueprints</span>
                   </label>
                   <label className="flex items-center gap-2 text-xs text-slate-400">
                     <span className="shrink-0">Min buyer rep</span>
@@ -772,31 +820,32 @@ export default function FulfillmentRoute() {
                     </select>
                   </label>
                 </div>
-              </div>
-              <p className="text-slate-500 text-xs mb-3">
-                Buyers without 5 completed orders always appear — they cannot be filtered out.
-              </p>
-              {visiblePendingOrders.length === 0 ? (
+              )}
+
+              {activeTab === 'fulfillment' && (
+                <p className="text-slate-500 text-xs mb-3">
+                  Buyers without 5 completed orders always appear — they cannot be filtered out.
+                  You only need the blueprints for the lines you choose to fulfill.
+                </p>
+              )}
+
+              {visiblePendingListings.length === 0 ? (
                 <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                  No pending orders match your filters.
+                  {activeTab === 'store'
+                    ? 'No sell listings match your search.'
+                    : 'No buy listings match your search.'}
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {visiblePendingOrders.map((order) => {
+                  {visiblePendingListings.map((order) => {
                     const isWts = orderListingType(order) === 'wts'
                     const buyerRep = buyerReputationFromRow(reputations[order.requester_id])
-                    const acceptBlockers = getOrderAcceptBlockers({
-                      order,
-                      acquiredBlueprints,
-                    })
                     const meetsMinRep = isWts
                       ? fulfillerMeetsOrderMinRep(myBuyerRep, order.min_fulfiller_reputation)
                       : fulfillerMeetsOrderMinRep(myFulfillerRep, order.min_fulfiller_reputation)
                     const canAcceptLimits = isWts
                       ? orderLimits?.can_accept_wts_order !== false
                       : orderLimits?.can_accept_order !== false
-                    const canAccept =
-                      acceptBlockers.length === 0 && meetsMinRep && canAcceptLimits
 
                     return (
                       <AvailableOrderCard
@@ -809,14 +858,13 @@ export default function FulfillmentRoute() {
                         showDfp={dfpDisplayEnabled}
                         buyerRep={buyerRep}
                         sellerRep={fulfillerReputationFromRow(reputations[order.requester_id])}
-                        acceptBlockers={acceptBlockers}
+                        acceptBlockers={[]}
                         meetsMinRep={meetsMinRep}
-                        canAccept={canAccept}
                         canAcceptLimits={canAcceptLimits}
                         accepting={acceptingOrderId === order.id}
-                        onAccept={() => void handleAccept(order.id)}
+                        acquiredBlueprints={acquiredBlueprints}
                         onAcceptPartial={(selections) =>
-                          void handleAcceptPartial(order.id, selections)
+                          void handleAcceptPartial(order, selections)
                         }
                       />
                     )
@@ -824,251 +872,254 @@ export default function FulfillmentRoute() {
                 </div>
               )}
             </div>
+          )}
 
-            <div>
-            <h2 className="text-white font-medium mb-3">My assigned orders</h2>
-            {myAssignedOrders.length === 0 ? (
-              <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                No orders assigned to you. Accept a pending order from Available orders above.
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {myAssignedOrders.map((order) => {
-                  const orderItems = fulfillmentItemsForOrder(order)
-                  const stockCheck = getStockCheckForOrder(order)
-                  const isSubmitting = submittingOrderId === order.id
-
-                  return (
-                    <AssignedOrderCard
-                      key={order.id}
-                      order={order}
-                      blueprintById={blueprintById}
-                      dfpDisplayEnabled={dfpDisplayEnabled}
-                      craftDeductInventory={craftDeductInventory}
-                      reputations={reputations}
-                      labelMap={labelMap}
-                      quantityByKey={quantityByKey}
-                      orderItems={orderItems}
-                      stockCheck={stockCheck}
-                      notes={craftNotesByOrderId[order.id] ?? ''}
-                      onNotesChange={(value) =>
-                        setCraftNotesByOrderId((prev) => ({ ...prev, [order.id]: value }))
-                      }
-                      submitting={isSubmitting}
-                      onAbandon={() => void handleAbandon(order.id)}
-                      onStartWork={() => void handleStartWork(order.id)}
-                      onCompleteCraft={() => void handleCompleteCraft(order.id)}
-                    />
-                  )
-                })}
-              </div>
-            )}
-            </div>
-
-            <div>
-              <h2 className="text-white font-medium mb-3">My WTS sales</h2>
-              {myWtsSales.length === 0 ? (
-                <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                  No active sell listings with a buyer yet.
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {myWtsSales.map((order) => (
-                    <WtsSaleOrderCard
-                      key={order.id}
-                      order={order}
-                      userId={userId ?? ''}
-                      blueprintById={blueprintById}
-                      dfpDisplayEnabled={dfpDisplayEnabled}
-                      submitting={submittingOrderId === order.id}
-                      onAbandon={() => void handleAbandon(order.id)}
-                      onStartWork={() => void handleStartWork(order.id)}
-                      onMarkReady={() => void handleMarkWtsReady(order.id)}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section className="space-y-6">
-            {myBuyingOrders.length > 0 && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <section className="space-y-6">
               <div>
-                <h2 className="text-white font-medium mb-3">Orders you&apos;re buying</h2>
-                <p className="text-slate-500 text-xs mb-3">
-                  Fulfiller reputation appears after they accept your order.
-                </p>
-                <div className="space-y-2">
-                  {myBuyingOrders.map((order) => {
-                    const totalDfp = orderTotalDfp(order)
-                    const fulfillerRep = fulfillerReputationFromRow(
-                      order.assignee_id ? reputations[order.assignee_id] : undefined
-                    )
+                <h2 className="text-white font-medium mb-3">My assigned orders</h2>
+                {myAssignedOrders.length === 0 ? (
+                  <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    No orders assigned to you. Claim items from a buy listing above.
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {myAssignedOrders.map((order) => {
+                      const orderItems = fulfillmentItemsForOrder(order)
+                      const stockCheck = getStockCheckForOrder(order)
+                      const isSubmitting = submittingOrderId === order.id
 
-                    return (
-                      <div
-                        key={order.id}
-                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-2"
-                      >
-                        <p className="text-white text-sm font-medium">{order.title}</p>
-                        <p className="text-slate-500 text-xs">
-                          {order.status.replace(/_/g, ' ')}
-                          {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
-                        </p>
-                        {order.assignee && (
-                          <TradeContactChip role="fulfiller" profile={order.assignee} compact />
-                        )}
-                        {order.assignee_id && (
-                          <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} type="fulfiller" />
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
+                      return (
+                        <AssignedOrderCard
+                          key={order.id}
+                          order={order}
+                          blueprintById={blueprintById}
+                          dfpDisplayEnabled={dfpDisplayEnabled}
+                          craftDeductInventory={craftDeductInventory}
+                          reputations={reputations}
+                          labelMap={labelMap}
+                          quantityByKey={quantityByKey}
+                          orderItems={orderItems}
+                          stockCheck={stockCheck}
+                          notes={craftNotesByOrderId[order.id] ?? ''}
+                          onNotesChange={(value) =>
+                            setCraftNotesByOrderId((prev) => ({ ...prev, [order.id]: value }))
+                          }
+                          submitting={isSubmitting}
+                          onAbandon={() => void handleAbandon(order.id)}
+                          onStartWork={() => void handleStartWork(order.id)}
+                          onCompleteCraft={() => void handleCompleteCraft(order.id)}
+                        />
+                      )
+                    })}
+                  </div>
+                )}
               </div>
-            )}
 
-            <div>
-            {myOrdersNeedingRating.length > 0 && (
-              <div className="mb-6">
-                <h2 className="text-white font-medium mb-1">Rate completed orders</h2>
-                <p className="text-slate-500 text-xs mb-3">
-                  Pickup is done — archive &amp; rate each order below to finish the deal. Both
-                  parties must rate before new orders unlock.
-                </p>
-                <div className="space-y-2">
-                  {myOrdersNeedingRating.map((order) => {
-                    const totalDfp = orderTotalDfp(order)
-                    return (
-                      <div
+              <div>
+                <h2 className="text-white font-medium mb-3">My WTS sales</h2>
+                {myWtsSales.length === 0 ? (
+                  <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    No active sales from your sell listing yet.
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {myWtsSales.map((order) => (
+                      <WtsSaleOrderCard
                         key={order.id}
-                        className="p-4 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-3"
-                      >
-                        <div>
-                          <p className="text-white text-sm font-medium flex items-center gap-2 flex-wrap">
-                            {order.title}
-                            <ListingTypeBadge order={order} />
-                          </p>
-                          <p className="text-slate-500 text-xs mt-1">
-                            completed
+                        order={order}
+                        userId={userId ?? ''}
+                        blueprintById={blueprintById}
+                        dfpDisplayEnabled={dfpDisplayEnabled}
+                        submitting={submittingOrderId === order.id}
+                        onAbandon={() => void handleAbandon(order.id)}
+                        onStartWork={() => void handleStartWork(order.id)}
+                        onMarkReady={() => void handleMarkWtsReady(order.id)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+
+            <section className="space-y-6">
+              {myBuyingOrders.length > 0 && (
+                <div>
+                  <h2 className="text-white font-medium mb-3">Orders you&apos;re buying</h2>
+                  <p className="text-slate-500 text-xs mb-3">
+                    Fulfiller reputation appears after they claim items from your listing.
+                  </p>
+                  <div className="space-y-2">
+                    {myBuyingOrders.map((order) => {
+                      const totalDfp = orderTotalDfp(order)
+                      const fulfillerRep = fulfillerReputationFromRow(
+                        order.assignee_id ? reputations[order.assignee_id] : undefined
+                      )
+
+                      return (
+                        <div
+                          key={order.id}
+                          className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-2"
+                        >
+                          <p className="text-white text-sm font-medium">{order.title}</p>
+                          <p className="text-slate-500 text-xs">
+                            {order.status.replace(/_/g, ' ')}
                             {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                           </p>
-                          {order.listing_type === 'wts' && order.assignee && (
-                            <div className="mt-2">
-                              <TradeContactChip role="buyer" profile={order.assignee} compact />
-                            </div>
+                          {order.assignee && (
+                            <TradeContactChip role="fulfiller" profile={order.assignee} compact />
                           )}
-                          {order.listing_type === 'wtb' && order.requester && (
+                          {order.assignee_id && (
+                            <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} type="fulfiller" />
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                {myOrdersNeedingRating.length > 0 && (
+                  <div className="mb-6">
+                    <h2 className="text-white font-medium mb-1">Rate completed orders</h2>
+                    <p className="text-slate-500 text-xs mb-3">
+                      Pickup is done — archive &amp; rate each order below to finish the deal. Both
+                      parties must rate before new trades unlock.
+                    </p>
+                    <div className="space-y-2">
+                      {myOrdersNeedingRating.map((order) => {
+                        const totalDfp = orderTotalDfp(order)
+                        return (
+                          <div
+                            key={order.id}
+                            className="p-4 bg-purple-950/20 border border-purple-500/30 rounded-xl space-y-3"
+                          >
+                            <div>
+                              <p className="text-white text-sm font-medium flex items-center gap-2 flex-wrap">
+                                {order.title}
+                                <ListingTypeBadge order={order} />
+                              </p>
+                              <p className="text-slate-500 text-xs mt-1">
+                                completed
+                                {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                              </p>
+                              {order.listing_type === 'wts' && order.assignee && (
+                                <div className="mt-2">
+                                  <TradeContactChip role="buyer" profile={order.assignee} compact />
+                                </div>
+                              )}
+                              {order.listing_type === 'wtb' && order.requester && (
+                                <div className="mt-2">
+                                  <TradeContactChip role="customer" profile={order.requester} compact />
+                                </div>
+                              )}
+                            </div>
+                            <OrderArchiveCallout
+                              order={order}
+                              userId={userId}
+                              onArchive={() => openArchiveForOrder(order)}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
+                {myFinishedOrders.length === 0 ? (
+                  <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    No WTB orders waiting on customer pickup confirmation.
+                  </div>
+                ) : (
+                  <div className="space-y-2 mb-6">
+                    {myFinishedOrders.map((order) => {
+                      const totalDfp = orderTotalDfp(order)
+
+                      return (
+                        <div
+                          key={order.id}
+                          className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3"
+                        >
+                          <div>
+                            <p className="text-white text-sm font-medium">{order.title}</p>
+                            <p className="text-slate-500 text-xs mt-1">
+                              {order.status.replace(/_/g, ' ')}
+                              {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                            </p>
                             <div className="mt-2">
                               <TradeContactChip role="customer" profile={order.requester} compact />
                             </div>
-                          )}
+                            <div className="mt-2">
+                              <ReputationBadge
+                                label="Buyer rep"
+                                reputation={buyerReputationFromRow(reputations[order.requester_id])}
+                              />
+                            </div>
+                            <p className="text-cyan-300/80 text-xs mt-2">
+                              Waiting for customer pickup confirmation in My Listings.
+                            </p>
+                            <div className="mt-2">
+                              <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
+                            </div>
+                          </div>
                         </div>
-                        <OrderArchiveCallout
-                          order={order}
-                          userId={userId}
-                          onArchive={() => openArchiveForOrder(order)}
-                        />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
-            {myFinishedOrders.length === 0 ? (
-              <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                No WTB orders waiting on customer pickup confirmation.
-              </div>
-            ) : (
-              <div className="space-y-2 mb-6">
-                {myFinishedOrders.map((order) => {
-                  const totalDfp = orderTotalDfp(order)
-
-                  return (
-                    <div
-                      key={order.id}
-                      className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3"
-                    >
-                      <div>
-                        <p className="text-white text-sm font-medium">{order.title}</p>
-                        <p className="text-slate-500 text-xs mt-1">
-                          {order.status.replace(/_/g, ' ')}
-                          {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
-                        </p>
-                        <div className="mt-2">
-                          <TradeContactChip role="customer" profile={order.requester} compact />
-                        </div>
-                        <div className="mt-2">
-                          <ReputationBadge
-                            label="Buyer rep"
-                            reputation={buyerReputationFromRow(reputations[order.requester_id])}
-                          />
-                        </div>
-                        <p className="text-cyan-300/80 text-xs mt-2">
-                          Waiting for customer pickup confirmation in Custom Orders.
-                        </p>
-                        <div className="mt-2">
-                          <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-
-            </div>
-
-            <div>
-            <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
-            {fulfillments.length === 0 ? (
-              <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                No fulfillments yet.
-              </div>
-            ) : (
-              <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                {fulfillments.map((entry) => (
-                  <div
-                    key={entry.id}
-                    className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
-                  >
-                    <p className="text-white text-sm font-medium">
-                      {entry.order?.title ?? 'Order'}
-                    </p>
-                    <p className="text-slate-500 text-xs mt-1">
-                      {new Date(entry.created_at).toLocaleString()}
-                      {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
-                      {dfpDisplayEnabled &&
-                        entry.order?.total_dfp_auec != null &&
-                        Number(entry.order.total_dfp_auec) > 0 &&
-                        ` · ${formatDfpAuec(Number(entry.order.total_dfp_auec))}`}
-                    </p>
-                    {entry.notes && (
-                      <p className="text-slate-400 text-sm mt-2">{entry.notes}</p>
-                    )}
-                    {entry.items && entry.items.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {entry.items.map((item, idx) => (
-                          <span
-                            key={`${entry.id}-${idx}`}
-                            className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
-                          >
-                            {getResourceLabel(item.resource_key, labelMap)} −
-                            {formatQuantityForResource(item.resource_key, Number(item.quantity))}{' '}
-                            {resourceQuantityUnitLabel(item.resource_key)}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                      )
+                    })}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-            </div>
-          </section>
-        </div>
+
+              <div>
+                <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
+                {fulfillments.length === 0 ? (
+                  <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    No fulfillments yet.
+                  </div>
+                ) : (
+                  <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                    {fulfillments.map((entry) => (
+                      <div
+                        key={entry.id}
+                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                      >
+                        <p className="text-white text-sm font-medium">
+                          {entry.order?.title ?? 'Order'}
+                        </p>
+                        <p className="text-slate-500 text-xs mt-1">
+                          {new Date(entry.created_at).toLocaleString()}
+                          {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
+                          {dfpDisplayEnabled &&
+                            entry.order?.total_dfp_auec != null &&
+                            Number(entry.order.total_dfp_auec) > 0 &&
+                            ` · ${formatDfpAuec(Number(entry.order.total_dfp_auec))}`}
+                        </p>
+                        {entry.notes && (
+                          <p className="text-slate-400 text-sm mt-2">{entry.notes}</p>
+                        )}
+                        {entry.items && entry.items.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {entry.items.map((item, idx) => (
+                              <span
+                                key={`${entry.id}-${idx}`}
+                                className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
+                              >
+                                {getResourceLabel(item.resource_key, labelMap)} −
+                                {formatQuantityForResource(item.resource_key, Number(item.quantity))}{' '}
+                                {resourceQuantityUnitLabel(item.resource_key)}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+        </>
       )}
 
       {archiveRatingModal && (

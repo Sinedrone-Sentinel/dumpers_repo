@@ -8,10 +8,10 @@ import {
   SALVAGE_ORDER_MIN_QUALITY,
   EXTRA_CATALOG_RESOURCE_KEYS,
 } from './extraResources'
-import { isHarvestResource } from './resourceTypes'
+import { isHarvestResource, isWikeloItemResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.5.3-calibration'
+export const DFP_VERSION = '1.7.0-wikelo-items'
 
 /** Banded ores: Q0 + Band 1 flat UEX Sell base; Band 2+ uses log-linear qualityScale on exact band Q. Salvage unchanged. */
 
@@ -35,6 +35,7 @@ export function isNoQualityResource(resourceKey: string): boolean {
     isFuelResource(resourceKey) ||
     isContrabandResource(resourceKey) ||
     isTradeGoodResource(resourceKey) ||
+    isWikeloItemResource(resourceKey) ||
     EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)
   )
 }

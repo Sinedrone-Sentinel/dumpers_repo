@@ -10,8 +10,12 @@ export interface WtsLineSelection {
   quantity: number
 }
 
-interface WtsPartialPurchasePanelProps {
+interface PartialSelectionPanelProps {
   order: CustomOrder
+  /** 'buy' = purchasing from a WTS listing; 'fulfill' = crafting for a WTB listing. */
+  mode?: 'buy' | 'fulfill'
+  /** Fulfill mode: blueprint lines you do not own are disabled. */
+  acquiredBlueprints?: Record<string, boolean>
   showDfp?: boolean
   disabled?: boolean
   submitting?: boolean
@@ -20,17 +24,22 @@ interface WtsPartialPurchasePanelProps {
 
 export default function WtsPartialPurchasePanel({
   order,
+  mode = 'buy',
+  acquiredBlueprints,
   showDfp = true,
   disabled = false,
   submitting = false,
   onPurchase,
-}: WtsPartialPurchasePanelProps) {
+}: PartialSelectionPanelProps) {
+  const isFulfill = mode === 'fulfill'
+
   const blueprintLines = useMemo(
     () =>
       [...(order.blueprints ?? [])]
         .sort((a, b) => a.sort_order - b.sort_order)
         .map((row) => ({
           lineId: row.id,
+          blueprintId: row.blueprint_id,
           title: row.blueprint_title ?? row.blueprint_id,
           available: row.quantity,
           unitDfpAuec: Number(row.unit_dfp_auec),
@@ -57,6 +66,9 @@ export default function WtsPartialPurchasePanel({
 
   const [selected, setSelected] = useState<Record<string, boolean>>({})
   const [quantities, setQuantities] = useState<Record<string, string>>({})
+
+  const canSelectBlueprint = (blueprintId: string) =>
+    !isFulfill || !acquiredBlueprints || acquiredBlueprints[blueprintId] === true
 
   const toggleLine = (lineId: string, defaultQty: number) => {
     setSelected((prev) => {
@@ -104,29 +116,39 @@ export default function WtsPartialPurchasePanel({
     return out
   }
 
+  const qtyVerb = isFulfill ? 'Crafting' : 'Buying'
+
   return (
     <div className="mt-3 p-3 rounded-lg border border-cyan-500/30 bg-cyan-950/20 space-y-3">
       <div>
-        <p className="text-cyan-200 text-xs font-medium">Partial purchase available</p>
+        <p className="text-cyan-200 text-xs font-medium">
+          {isFulfill ? 'Select items to fulfill' : 'Partial purchase available'}
+        </p>
         <p className="text-slate-400 text-[11px] mt-0.5">
-          Check the items you want and set quantities. Unsold stock stays listed.
+          {isFulfill
+            ? 'Check the items you will craft and set quantities. The rest stays open for other fulfillers.'
+            : 'Check the items you want and set quantities. Unsold stock stays listed.'}
         </p>
       </div>
 
       <div className="space-y-2">
         {blueprintLines.map((line) => {
           const isOn = !!selected[line.lineId]
+          const selectable = canSelectBlueprint(line.blueprintId)
           return (
             <div
               key={line.lineId}
               className={`rounded-lg border p-2.5 ${
-                isOn ? 'border-cyan-500/40 bg-slate-900/50' : 'border-slate-700 bg-slate-900/30'
-              }`}
+                isOn
+                  ? 'border-cyan-500/40 bg-slate-900/50'
+                  : 'border-slate-700 bg-slate-900/30'
+              } ${!selectable ? 'opacity-60' : ''}`}
             >
-              <label className="flex items-start gap-2 cursor-pointer">
+              <label className={`flex items-start gap-2 ${selectable ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
                 <input
                   type="checkbox"
                   checked={isOn}
+                  disabled={!selectable}
                   onChange={() => toggleLine(line.lineId, 1)}
                   className="mt-1 accent-cyan-500"
                 />
@@ -134,7 +156,7 @@ export default function WtsPartialPurchasePanel({
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <span className="text-white text-sm font-medium">{line.title}</span>
                     <span className="text-slate-500 text-xs">
-                      {line.available} listed
+                      {line.available} {isFulfill ? 'requested' : 'listed'}
                       {showDfp && line.unitDfpAuec > 0 && (
                         <span className="text-amber-300/80 ml-1">
                           · {formatDfpAuec(line.unitDfpAuec)}/ea
@@ -142,9 +164,14 @@ export default function WtsPartialPurchasePanel({
                       )}
                     </span>
                   </div>
+                  {!selectable && (
+                    <p className="text-amber-400/80 text-[11px] mt-1">
+                      You need this blueprint to fulfill this line.
+                    </p>
+                  )}
                   {isOn && (
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-slate-500 text-xs">Buying</span>
+                      <span className="text-slate-500 text-xs">{qtyVerb}</span>
                       <input
                         type="number"
                         min={1}
@@ -187,13 +214,14 @@ export default function WtsPartialPurchasePanel({
                     </span>
                     <span className="text-slate-500 text-xs">
                       {formatQuantityForResource(line.resourceKey, line.available)}{' '}
-                      {resourceQuantityUnitLabel(line.resourceKey)} listed ·{' '}
+                      {resourceQuantityUnitLabel(line.resourceKey)}{' '}
+                      {isFulfill ? 'requested' : 'listed'} ·{' '}
                       {formatResourceOrderQualityLabel(line.resourceKey, line.title, line.minQuality)}
                     </span>
                   </div>
                   {isOn && (
                     <div className="mt-2 flex items-center gap-2">
-                      <span className="text-slate-500 text-xs">Buying</span>
+                      <span className="text-slate-500 text-xs">{qtyVerb}</span>
                       <input
                         type="number"
                         min={0.001}
@@ -230,7 +258,13 @@ export default function WtsPartialPurchasePanel({
           }}
           className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
         >
-          {submitting ? 'Purchasing...' : 'Buy selected items'}
+          {submitting
+            ? isFulfill
+              ? 'Claiming...'
+              : 'Purchasing...'
+            : isFulfill
+              ? 'Fulfill selected items'
+              : 'Buy selected items'}
         </button>
       </div>
     </div>

@@ -52,16 +52,16 @@ export function getNotificationActionLink(
 
   switch (type) {
     case 'order_new':
-      return { to: '/fulfillment', label: 'Browse Fulfillment' }
+      return { to: '/bazaar', label: 'Browse the Bazaar' }
 
     case 'order_accepted':
       if (listingType === 'wts' || title === 'Partial sale' || title === 'Listing accepted') {
-        return { to: '/fulfillment', label: 'View sale' }
+        return { to: '/bazaar', label: 'View sale' }
       }
       return { to: ordersPath('active'), label: 'View order' }
 
     case 'order_accepted_price':
-      return { to: '/fulfillment', label: 'Open Fulfillment' }
+      return { to: '/bazaar', label: 'Open the Bazaar' }
 
     case 'order_in_progress':
       return { to: ordersPath('active'), label: 'View order' }
@@ -74,7 +74,7 @@ export function getNotificationActionLink(
 
     case 'order_abandoned':
       if (listingType === 'wts' && !payload.source_listing_id) {
-        return { to: '/fulfillment', label: 'View in Fulfillment' }
+        return { to: '/bazaar', label: 'View in the Bazaar' }
       }
       return { to: ordersPath('active'), label: 'View order' }
 

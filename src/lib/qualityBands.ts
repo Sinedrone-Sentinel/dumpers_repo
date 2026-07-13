@@ -54,6 +54,7 @@ const RESOURCE_ALIASES: Record<string, string> = {
   'aluminium': 'aluminum',      // RS Tracker / UK spelling vs game "Aluminum" bands
   'pressurizedice': 'rawice',   // Pressurized_Ice maps to RawIce
   'yormandieye': 'beryl',       // Yormandi Eye is a variant of Beryl (use Beryl's bands)
+  'yormanditongue': 'beryl',    // Yormandi Tongue — harvest item, bands unused (Q0 only)
   'sileron': 'stileron',        // Game composition typo vs quality band key
 }
 

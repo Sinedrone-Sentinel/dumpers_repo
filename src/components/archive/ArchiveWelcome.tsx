@@ -310,15 +310,15 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <li>• Build your Mission Tracker list (local only)</li>
                 <li>• Track resources in Resource Tracker (local only)</li>
                 <li>• Use the Mining Tracker for RS references</li>
-                <li>• Preview Fulfillment — see how many WTB/WTS orders are waiting (sign in to accept)</li>
+                <li>• Preview The Bazaar — see how many WTB/WTS listings are open (sign in to trade)</li>
               </ul>
             </div>
             
             <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
               <h4 className="text-sm font-medium text-amber-400 mb-2">Members-Only Features</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Custom Orders — post WTB buy requests and WTS sell listings (partial OK by default)</li>
-                <li>• Fulfillment — browse, accept full or partial WTS buys, and complete trades</li>
+                <li>• My Listings — keep one WTB buy listing and one WTS sell listing (always item-by-item)</li>
+                <li>• The Bazaar — shop sell listings, fulfill buy listings, and complete trades</li>
                 <li>• BP Dumper + Live Mission Tracker — sync log unlocks and watch active missions</li>
                 <li>• Cross-device data sync</li>
               </ul>
@@ -463,7 +463,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </h3>
         <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
-            Custom Orders and Fulfillment use one <strong className="text-white">reputation rating system</strong> for
+            My Listings and The Bazaar use one <strong className="text-white">reputation rating system</strong> for
             both <strong className="text-amber-300">WTB</strong> (want to buy) and{' '}
             <strong className="text-cyan-300">WTS</strong> (want to sell) listings. There is no separate sell rating —
             the same 1–5 star archive flow and buyer/fulfiller scores apply to both tags.
@@ -473,15 +473,15 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <h4 className="text-sm font-medium text-white mb-2">WTB vs WTS — who is the buyer?</h4>
             <ul className="text-xs text-slate-400 space-y-1.5">
               <li>
-                • <strong className="text-amber-300">WTB</strong> — you post a buy request; someone fulfills it for you.
-                You are the <strong className="text-slate-300">buyer</strong>; they are the seller/fulfiller.
+                • <strong className="text-amber-300">WTB</strong> — you list items you want; fulfillers claim lines from
+                your listing on The Bazaar. You are the <strong className="text-slate-300">buyer</strong>; they are the seller/fulfiller.
               </li>
               <li>
-                • <strong className="text-cyan-300">WTS</strong> — you post a sell listing; someone buys it on Fulfillment
-                (full listing or partial lines). You are the <strong className="text-slate-300">seller</strong>; they are the buyer.
+                • <strong className="text-cyan-300">WTS</strong> — you list stock for sale; buyers pick lines from your
+                listing on The Bazaar. You are the <strong className="text-slate-300">seller</strong>; they are the buyer.
               </li>
               <li>
-                • Partial WTS purchases are separate child orders — same rating flow as any other deal.
+                • Every purchase or fulfillment claim is a separate child transaction — same rating flow as any other deal.
               </li>
               <li>
                 • Ratings always land in the same two buckets: <strong className="text-slate-300">buyer rep</strong> and{' '}
@@ -553,11 +553,10 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
               <h4 className="text-sm font-medium text-emerald-400 mb-2">Pending Buyer Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Applies when you are the <strong className="text-slate-300">buyer</strong> — WTB posts and WTS purchases (including partial buys)</li>
-                <li>• Maximum of 2 active buyer-side orders at a time</li>
+                <li>• Applies when you are the <strong className="text-slate-300">buyer</strong> — WTB transactions in progress and WTS purchases</li>
+                <li>• Maximum of 2 active buyer-side transactions at a time</li>
                 <li>• Total buyer-side value capped at 1,000,000 aUEC</li>
-                <li>• Minimum 10,000 aUEC per <strong className="text-amber-300">WTB</strong> post while pending</li>
-                <li>• Posting <strong className="text-cyan-300">WTS</strong> listings is not capped by the 2-order / 1M buyer limits</li>
+                <li>• Your open <strong className="text-amber-300">WTB</strong>/<strong className="text-cyan-300">WTS</strong> listings do not count — only transactions someone has started</li>
                 <li>• Limits lift after 5 completed transactions as a buyer</li>
               </ul>
             </div>
@@ -565,9 +564,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
               <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Seller / Fulfiller Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Applies when you are the <strong className="text-slate-300">seller</strong> — WTB fulfillments and active WTS sales (each partial child order counts)</li>
+                <li>• Applies when you are the <strong className="text-slate-300">seller</strong> — WTB fulfillment claims and active WTS sales (each child transaction counts)</li>
                 <li>• Can only have 1 active seller-side job at a time</li>
-                <li>• Complete or release it before accepting another WTB or WTS handoff</li>
+                <li>• Complete or release it before starting another WTB or WTS handoff</li>
                 <li>• Limits lift after 5 completed transactions as a seller/fulfiller</li>
               </ul>
             </div>
@@ -619,8 +618,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 What's Not Allowed
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• Duplicate <strong className="text-amber-300">WTB</strong> posts for the same blueprint while one is active</li>
-                <li>• Making artificially small <strong className="text-amber-300">WTB</strong> orders to farm reputation quickly</li>
+                <li>• Making artificially small <strong className="text-amber-300">WTB</strong> claims or purchases to farm reputation quickly</li>
                 <li>• Repeatedly trading with the same person to inflate ratings (WTB or WTS)</li>
                 <li>• Using multiple accounts to manipulate the marketplace</li>
                 <li>• Abandoning accepted jobs without good reason</li>
@@ -634,10 +632,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 Pending Rep Requirements
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• <strong className="text-slate-300">Minimum WTB value:</strong> 10,000 aUEC per buy post while reputation is pending</li>
-                <li>• <strong className="text-slate-300">No duplicate WTB:</strong> Cannot post another buy request for the same blueprint if one is pending or in progress</li>
-                <li>• <strong className="text-slate-300">Buyer limits:</strong> Max 2 active buyer-side orders / 1M aUEC (WTB posts + WTS purchases, including partial buys)</li>
-                <li>• <strong className="text-slate-300">Seller limits:</strong> Max 1 active seller-side job (WTB fulfillment or WTS sale in progress; each partial sale counts)</li>
+                <li>• <strong className="text-slate-300">Buyer limits:</strong> Max 2 active buyer-side transactions / 1M aUEC (WTB fulfillments in progress + WTS purchases)</li>
+                <li>• <strong className="text-slate-300">Seller limits:</strong> Max 1 active seller-side job (WTB fulfillment or WTS sale in progress; each transaction counts)</li>
+                <li>• Open WTB/WTS <strong className="text-slate-300">listings</strong> do not count toward these caps — only started transactions do</li>
               </ul>
             </div>
 
@@ -647,8 +644,8 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 Time Limits
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• <strong className="text-slate-300">Seller deadline:</strong> 72 hours to mark ready after accept (WTB craft or WTS handoff), or the deal releases back to the pool</li>
-                <li>• <strong className="text-slate-300">Partial WTS cancel:</strong> Cancelling a partial purchase restores quantities to the seller&apos;s listing</li>
+                <li>• <strong className="text-slate-300">Seller deadline:</strong> 72 hours to mark ready after a trade starts (WTB craft or WTS handoff), or the items return to the listing</li>
+                <li>• <strong className="text-slate-300">Cancel/release:</strong> Cancelling a transaction restores its items and quantities to the parent listing</li>
                 <li>• <strong className="text-slate-300">Buyer pickup:</strong> 72 hours to confirm after ready, or auto-complete (buyer may receive a strike)</li>
                 <li>• <strong className="text-slate-300">Rating deadline:</strong> 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf</li>
                 <li>• <strong className="text-slate-300">3 strikes in 30 days</strong> may lead to account restrictions</li>
@@ -685,16 +682,16 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </h3>
         <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
-            These tips focus on <strong className="text-amber-300">WTB</strong> buy requests (Submit Buy Order). See the
-            Custom Orders page guide for WTS partial listings and the order builder.
+            These tips focus on <strong className="text-amber-300">WTB</strong> buy listings (Add to my WTB listing).
+            See the My Listings page guide for the item builder and line management.
           </p>
           <p className="text-sm text-slate-400 leading-relaxed">
-            For <strong className="text-cyan-300">WTS</strong> sell listings: post only stock you have on hand; partial
-            purchase is the default so buyers can cherry-pick lines. Check “Buyers must purchase the full listing” only
-            when you need an all-or-nothing sale. Mark ready promptly once a buyer accepts (full or partial).
+            For <strong className="text-cyan-300">WTS</strong> sell listings: list only stock you have on hand — every
+            listing is item-by-item, so buyers cherry-pick lines and quantities. Mark ready promptly once a buyer picks
+            items.
           </p>
           <p className="text-sm text-slate-400 leading-relaxed">
-            For WTB posts, follow these tips to get fulfilled faster and make it easier for sellers to help you.
+            For WTB listings, follow these tips to get fulfilled faster and make it easier for sellers to help you.
           </p>
 
           <div className="space-y-3">
@@ -710,12 +707,12 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
 
             <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
               <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
-                <span>✓</span> Separate Easy from Hard
+                <span>✓</span> Fulfillers Pick Line by Line
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Create <strong className="text-slate-300">separate orders</strong> for easy items (Q500–Q700) and harder items (Q800–Q1000). 
-                Mixing them forces fulfillers to either source rare high-quality materials for everything or skip your order entirely.
-                Split them up and get your easy items faster.
+                Fulfillers only need the blueprints for the <strong className="text-slate-300">lines they claim</strong> — your
+                easy Q500–Q700 items can get crafted right away even if harder Q800+ lines wait for a specialist.
+                Mixing them on one listing no longer blocks anything.
               </p>
             </div>
 
@@ -725,30 +722,8 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Each blueprint card shows how many members own it. If <strong className="text-amber-400">no one owns a blueprint</strong>, 
-                your order may sit unfulfilled until someone acquires it. Consider ordering common blueprints separately 
-                from rare ones so your easier items don&apos;t get blocked.
-              </p>
-            </div>
-
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
-              <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
-                <span>✓</span> One Hard Item Per Order
-              </h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                For Q800+ or rare blueprints, consider <strong className="text-slate-300">one item per order</strong>. 
-                This lets specialized fulfillers pick up what they can craft well, rather than needing someone who 
-                happens to have all your specific blueprints and high-quality materials.
-              </p>
-            </div>
-
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
-              <h4 className="text-sm font-medium text-amber-400 mb-2 flex items-center gap-2">
-                <span>⚠</span> Avoid Mixed-Ownership Orders
-              </h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                If your order includes blueprints that some members own and others that <strong className="text-slate-300">no one owns yet</strong>, 
-                the entire order is unfulfillable. A fulfiller must own <em>every</em> blueprint in an order to accept it. 
-                You&apos;ll see a warning when creating such orders.
+                that line may sit unfulfilled until someone acquires it — the rest of your listing stays claimable.
+                You&apos;ll see a warning when posting such lines.
               </p>
             </div>
           </div>
@@ -759,8 +734,8 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>
-                <strong>Tip:</strong> Smaller, focused orders tend to get picked up faster than large mixed orders. 
-                Fulfillers can quickly see if they can help and jump in immediately.
+                <strong>Tip:</strong> Keep your listing tidy — remove lines you no longer need and keep quantities realistic. 
+                Fulfillers can quickly see what they can help with and jump in immediately.
               </span>
             </p>
           </div>

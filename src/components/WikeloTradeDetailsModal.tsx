@@ -6,6 +6,7 @@ import type { WikeloTrade } from '../routes/wikelo'
 import {
   WIKELO_SUBCATEGORY_LABELS,
   formatWikeloCostAmount,
+  useAddWikeloTradeToCart,
   wikeloSubCategoryChipClass,
 } from './WikeloTradeCard'
 
@@ -14,6 +15,7 @@ interface WikeloTradeDetailsModalProps {
   onClose: () => void
   onOpenMission: (trade: WikeloTrade) => void
   dfpDisplayEnabled?: boolean
+  canAddToOrder?: boolean
 }
 
 export default function WikeloTradeDetailsModal({
@@ -21,7 +23,9 @@ export default function WikeloTradeDetailsModal({
   onClose,
   onOpenMission,
   dfpDisplayEnabled = true,
+  canAddToOrder = false,
 }: WikeloTradeDetailsModalProps) {
+  const { canAdd, added, addToCart } = useAddWikeloTradeToCart(trade)
   const dfpEngineReady = useDfpEngineReady()
   // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute when engine loads
   const dfp = useMemo(() => calculateWikeloTradeDfp(trade), [trade, dfpEngineReady])
@@ -60,12 +64,27 @@ export default function WikeloTradeDetailsModal({
           ) : (
             <span />
           )}
-          <button
-            onClick={() => onOpenMission(trade)}
-            className="px-3 py-1.5 text-sm font-medium bg-sky-600/20 text-sky-300 border border-sky-500/40 rounded-lg hover:bg-sky-600/30 transition-colors"
-          >
-            View in Mission Tracker
-          </button>
+          <div className="flex items-center gap-2">
+            {canAddToOrder && canAdd && (
+              <button
+                onClick={addToCart}
+                className={`px-3 py-1.5 text-sm font-medium border rounded-lg transition-colors ${
+                  added
+                    ? 'bg-green-600/20 text-green-300 border-green-500/40'
+                    : 'bg-red-600/20 text-red-300 border-red-500/40 hover:bg-red-600/30'
+                }`}
+                title="Add this trade's reward items to your listing cart"
+              >
+                {added ? '✓ Added to cart' : '🛒 Add to cart'}
+              </button>
+            )}
+            <button
+              onClick={() => onOpenMission(trade)}
+              className="px-3 py-1.5 text-sm font-medium bg-sky-600/20 text-sky-300 border border-sky-500/40 rounded-lg hover:bg-sky-600/30 transition-colors"
+            >
+              View in Mission Tracker
+            </button>
+          </div>
         </div>
       }
     >
@@ -133,7 +152,7 @@ export default function WikeloTradeDetailsModal({
                 <span className="min-w-0">{reward.name}</span>
                 {reward.kind === 'vehicle' && (
                   <span className="ml-auto shrink-0 text-[10px] px-1.5 py-0.5 bg-sky-950/50 text-sky-300 border border-sky-500/40 rounded">
-                    Vehicle · account-bound
+                    Vehicle · game bound
                   </span>
                 )}
               </li>

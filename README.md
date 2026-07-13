@@ -38,8 +38,8 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/targets/live` | Live Mission Tracker | Members (BP Dumper watch mode) |
 | `/resources` | Resource Tracker | Offline + members |
 | `/mining-tracker` | Mining Tracker | Offline + members |
-| `/orders` | Custom Orders | Approved members |
-| `/fulfillment` | Fulfillment | Approved members (offline: pending count only) |
+| `/orders` | My Listings | Approved members |
+| `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
 | `/discord-subscribe` | Discord Webhooks | Signed-in members |
 | `/support-dashboard` | Support Dashboard | Officers + super-admins |
@@ -59,7 +59,7 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 - **Member collection directory** on each card — see which org members own a blueprint (respects privacy flags in the database)
 - Blueprint detail modal: crafting materials, components, stats, **Dumper's Fair-Value Price (DFP)** at selectable quality bands
 - **Missions** on each blueprint lists every contract that rewards it and opens Mission Tracker browse
-- Add blueprints to a session **order draft** (continues on Custom Orders) or **target list** (Mission Tracker)
+- Add blueprints to a session **order draft** (continues on My Listings) or **target list** (Mission Tracker)
 - Optional **Display** setting: group FPS weapon and armor variants into expandable family cards (off by default)
 - **BP Dumper** syncs acquired marks from `Game.log` automatically
 
@@ -68,7 +68,7 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 - All **Wikelo Emporium barter trades** parsed from game contract data (`game-wikelo-trades.json`)
 - Category filter tags: Ships, Ground Vehicles, Armor, Weapons, Gear, Favors
 - Cards show hand-in costs, rewards, Wikelo rep gained, customer-rank gates, and intro-mission requirements
-- **DFP** prices each trade from the fair value of its hand-in items; account-bound vehicle rewards show **N/A**
+- **DFP** prices each trade from the fair value of its hand-in items; game-bound vehicle rewards show **N/A**
 - **Mission** button jumps to the Wikelo Emporium faction in Mission Tracker browse
 
 ### Mission Tracker (`/targets`)
@@ -123,25 +123,27 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 
 Game mining data is bundled with the site (see [Game data](#game-data)).
 
-### Custom Orders (`/orders`)
+### My Listings (`/orders`)
 
-Single **New Order** builder for both listing types:
+Each member keeps at most **one open WTB listing** and **one open WTS listing** — posting new items appends lines to the matching listing:
 
-- **WTB** (Submit Buy Order) — request crafted items or supplied resources at DFP
-- **WTS** (Submit Sell Order) — offer stock on hand; **partial purchases** allowed by default, or require full-listing purchase
-- WTS list-price sliders: ±20% per line (partial) or ±10% on order total (full listing); 0% = DFP base
+- **Add to my WTB listing** — request crafted items or supplied resources at DFP
+- **Add to my WTS listing** — offer stock on hand; every listing is **always partially shoppable**
+- **Pure DFP pricing** — no price sliders or adjustments; line totals must equal DFP
 - Expand cart lines to set per-slot material qualities; live DFP total and stat preview
-- Tabs: pending, active, completed, archive — edit/delete while pending; confirm pickup; **Archive & rate** after completion
-- Requires **verified RSI Handle**; pending-member buyer/seller limits apply
+- **My open listings** panel: edit line quantities, remove lines, or close a listing inline
+- Tabs: active, completed, archive track **child transactions**; confirm pickup; **Archive & rate** after completion
+- Requires **verified RSI Handle**; pending-member buyer/seller limits apply per transaction (open listings don't count)
 
-### Fulfillment (`/fulfillment`)
+### The Bazaar (`/bazaar`)
 
-- Filter **All / WTB / WTS**
-- Accept WTB to craft for buyers; buy WTS full listings or partial line quantities
-- Each partial WTS purchase spawns a full child order (same handoff, deadlines, ratings)
-- Seller actions on-card: start handoff, mark ready, cancel/release
+- Two tabs: **Fulfillment** (WTB listings) and **Store** (WTS listings)
+- Item-level **search** plus **minimum quality-band filter**; Fulfillment tab adds min buyer rep and "only listings with my blueprints" filters
+- Pick exact lines and quantities to buy or fulfill — fulfillers only need blueprints for the lines they claim
+- Every checkout/claim spawns a full child transaction (same handoff, deadlines, ratings)
+- Seller actions on-card: start handoff, mark ready, cancel/release (items restore to the listing)
 - **Reputation badges** show buyer rep, fulfiller/seller rep, and average delivery time (after 5 completed trades)
-- Offline users see pending-order **count only** — sign in to browse or accept
+- Offline users see open-listing **count only** — sign in to browse or trade
 
 ### Marketplace ads & purchase toasts
 
@@ -218,7 +220,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 | Role | Capabilities |
 |------|----------------|
-| **Offline** | Browse core tools + Archive; local storage; Fulfillment count teaser |
+| **Offline** | Browse core tools + Archive; local storage; Bazaar listing-count teaser |
 | **pending** | Signed in, awaiting officer approval; no marketplace or notifications |
 | **member** | Full marketplace, BP Dumper, mining ledgers (with RSI verification), Discord webhooks |
 | **officer** | Admin Panel, Support Dashboard, Site Total on Resource Tracker |
@@ -226,7 +228,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **Sign-in:** Google or Discord OAuth. Enable **Manual Linking** in Supabase Auth settings so members can connect both providers from Settings.
 
-**RSI Handle verification** is required to post or accept Custom Orders, register personal Discord webhooks, and use Mining Ledgers. Validated via the `validate-rsi-handle` Edge Function.
+**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. Validated via the `validate-rsi-handle` Edge Function.
 
 ---
 
@@ -234,11 +236,11 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 Works without an account in the browser:
 
-- Blueprints (acquired marks), Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), Archive, Fulfillment pending-count teaser
+- Blueprints (acquired marks), Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), Archive, Bazaar listing-count teaser
 
 Requires a free member account:
 
-- Custom Orders, Fulfillment browse/accept, BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
+- My Listings, The Bazaar (shop/fulfill), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
 
 On **first sign-in** (welcome onboarding), valid offline data migrates to the account. Stale offline IDs from before an update are cleared automatically.
 
@@ -294,7 +296,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`118_drop_game_data_mirror_tables.sql`**
+   Apply migrations in numeric order through **`120_bazaar_one_listing.sql`**
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)

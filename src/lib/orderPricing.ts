@@ -44,6 +44,24 @@ export interface OrderResourceLine {
   lineDfpAuec: number
 }
 
+/** Bazaar model: listings are always priced at exact DFP (no adjustments). */
+export function createCartPricingFields(
+  unitDfpAuec: number,
+  lineDfpAuec: number
+): {
+  baseUnitDfpAuec: number
+  baseLineDfpAuec: number
+  unitDfpAuec: number
+  lineDfpAuec: number
+} {
+  return {
+    baseUnitDfpAuec: unitDfpAuec,
+    baseLineDfpAuec: lineDfpAuec,
+    unitDfpAuec,
+    lineDfpAuec,
+  }
+}
+
 export function pricingForBlueprintLine(
   blueprint: BlueprintWithSlots,
   slotQualities: Record<number, number>,

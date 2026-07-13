@@ -8,6 +8,7 @@ import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import ReputationBadge from '../components/ReputationBadge'
 import TradeContactChip from '../components/TradeContactChip'
+import MyListingCard from '../components/MyListingCard'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import AppModal from '../components/layout/AppModal'
@@ -38,7 +39,7 @@ import {
   type OrderListTab,
 } from '../lib/orderArchive'
 import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
-import { isWtsPartialListing, isWtsPartialPurchaseOrder } from '../lib/listingType'
+import { isListingContainer, isWtsPartialPurchaseOrder } from '../lib/listingType'
 import {
   archiveCustomOrderWithRating,
   abandonCustomOrderFulfillment,
@@ -124,7 +125,7 @@ export default function CustomOrdersRoute() {
     return map
   }, [blueprints])
   const { catalog, labelMap, loading: catalogLoading } = useResourceCatalog()
-  const { draftItems, draftCount, clearDraft } = useOrderDraft()
+  const { draftItems, draftResourceItems, draftCount, clearDraft } = useOrderDraft()
   const search = customOrdersRoute.useSearch()
   const [orders, setOrders] = useState<CustomOrder[]>([])
   const [loading, setLoading] = useState(true)
@@ -314,20 +315,39 @@ export default function CustomOrdersRoute() {
     [orders, userId]
   )
 
+  // Open Bazaar listings (one WTS + one WTB container max) — managed above the tabs
+  const myListings = useMemo(
+    () =>
+      myOrders.filter((o) => o.requester_id === userId && isListingContainer(o)),
+    [myOrders, userId]
+  )
+
+  const isMyListing = useCallback(
+    (o: CustomOrder) => o.requester_id === userId && isListingContainer(o),
+    [userId]
+  )
+
   const visibleOrders = useMemo(
     () =>
       myOrders.filter(
-        (o) => o.status !== 'cancelled' && orderMatchesTab(o, listTab, userId)
+        (o) =>
+          o.status !== 'cancelled' &&
+          !isMyListing(o) &&
+          orderMatchesTab(o, listTab, userId)
       ),
-    [myOrders, listTab, userId]
+    [myOrders, listTab, userId, isMyListing]
   )
 
   const openOrderCount = useMemo(
     () =>
       myOrders.filter(
-        (o) => o.status !== 'cancelled' && isOpenOrder(o) && !isArchivedForUser(o, userId)
+        (o) =>
+          o.status !== 'cancelled' &&
+          !isMyListing(o) &&
+          isOpenOrder(o) &&
+          !isArchivedForUser(o, userId)
       ).length,
-    [myOrders, userId]
+    [myOrders, userId, isMyListing]
   )
 
   const completedOrderCount = useMemo(
@@ -365,17 +385,30 @@ export default function CustomOrdersRoute() {
     [draftItems, blueprintById]
   )
 
+  // Resource draft lines (Wikelo reward items etc.) — priced when the panel hydrates them
+  const draftResourceLines = useMemo(
+    () =>
+      draftResourceItems.map((item) => ({
+        cartKey: item.cartKey,
+        resourceKey: item.resourceKey,
+        resourceLabel: item.resourceLabel,
+        quantity: item.quantity,
+      })),
+    [draftResourceItems]
+  )
+
   return (
     <FeaturePageLayout
-      title="Custom Orders"
+      title="My Listings"
       subtitle={SITE_SLOGAN}
       actions={
         <>
           <Link
-            to="/fulfillment"
+            to="/bazaar"
+            search={{ highlight: undefined }}
             className="px-3 py-1.5 text-sm bg-purple-950/50 hover:bg-purple-900/50 text-purple-300 border border-purple-500/30 rounded-lg transition-colors"
           >
-            Go to Fulfillment
+            Go to the Bazaar
           </Link>
           <button
             onClick={() => {
@@ -384,7 +417,7 @@ export default function CustomOrdersRoute() {
             }}
             disabled={
               !isRsiVerified ||
-              (orderLimits &&
+              (orderLimits != null &&
                 !orderLimits.can_create_order &&
                 !orderLimits.can_create_sell_order)
             }
@@ -408,7 +441,7 @@ export default function CustomOrdersRoute() {
                   : undefined
             }
           >
-            {showForm ? 'Close form' : 'New order'}
+            {showForm ? 'Close form' : 'Post items'}
           </button>
         </>
       }
@@ -430,7 +463,7 @@ export default function CustomOrdersRoute() {
             <div>
               <h3 className="text-amber-300 font-medium">RSI Handle Verification Required</h3>
               <p className="text-amber-200/70 text-sm mt-1">
-                To create Custom Orders, you must first verify your RSI Handle. This ensures all traders 
+                To post listings, you must first verify your RSI Handle. This ensures all traders 
                 can be identified by their in-game identity.
               </p>
               <p className="text-amber-200/70 text-sm mt-2">
@@ -503,8 +536,8 @@ export default function CustomOrdersRoute() {
             <div className="flex-1">
               <h3 className="text-red-300 font-medium">Draft Order</h3>
               <p className="text-red-200/70 text-sm mt-1">
-                You have <strong className="text-red-300">{draftCount}</strong> blueprint{draftCount !== 1 ? 's' : ''} in your draft order.
-                Click <strong className="text-red-300">New order</strong> to continue building or submit.
+                You have <strong className="text-red-300">{draftCount}</strong> item{draftCount !== 1 ? 's' : ''} in your draft.
+                Click <strong className="text-red-300">Post items</strong> to continue building or submit.
               </p>
               <div className="flex gap-2 mt-2">
                 <button
@@ -527,18 +560,45 @@ export default function CustomOrdersRoute() {
         </div>
       )}
 
+      {userId && isRsiVerified && !loading && (
+        <div className="mb-6 space-y-3">
+          <h2 className="text-white font-medium">My open listings</h2>
+          {myListings.length === 0 ? (
+            <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+              No open listings. Click <strong className="text-slate-300">Post items</strong> to
+              start your WTB or WTS listing on the Bazaar.
+            </div>
+          ) : (
+            myListings.map((listing) => (
+              <MyListingCard
+                key={listing.id}
+                order={listing}
+                showDfp={dfpDisplayEnabled}
+                onChanged={() => void loadOrders()}
+                onAddItems={() => {
+                  setEditingOrderId(null)
+                  setShowForm(true)
+                }}
+                onDelete={() => setDeleteModalOrder(listing)}
+                onError={setError}
+              />
+            ))
+          )}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Open orders</p>
+          <p className="text-slate-500 text-xs uppercase tracking-wide">Active transactions</p>
           <p className="text-2xl font-bold text-amber-300 mt-1">{openOrderCount}</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Completed orders</p>
+          <p className="text-slate-500 text-xs uppercase tracking-wide">Completed</p>
           <p className="text-2xl font-bold text-cyan-300 mt-1">{completedOrderCount}</p>
           <p className="text-slate-500 text-[10px] mt-1">Ready for pickup or awaiting archive</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Total orders</p>
+          <p className="text-slate-500 text-xs uppercase tracking-wide">Total transactions</p>
           <p className="text-2xl font-bold text-white mt-1">{totalOrderCount}</p>
         </div>
       </div>
@@ -546,7 +606,10 @@ export default function CustomOrdersRoute() {
       <div className="flex flex-wrap gap-2 mb-6">
         {LIST_TABS.map((tab) => {
           const count = orders.filter(
-            (o) => o.status !== 'cancelled' && orderMatchesTab(o, tab.id, userId)
+            (o) =>
+              o.status !== 'cancelled' &&
+              !isMyListing(o) &&
+              orderMatchesTab(o, tab.id, userId)
           ).length
 
           return (
@@ -571,9 +634,10 @@ export default function CustomOrdersRoute() {
 
       {showForm && user?.id && !editingOrderId && (
         <div className="mb-6 bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <h2 className="text-white font-medium mb-2">New Order</h2>
+          <h2 className="text-white font-medium mb-2">Post items</h2>
           <p className="text-slate-500 text-xs mb-4">
-            Orders post under {getDisplayName(profile)}. Use the same form for buy (WTB) or sell (WTS) listings — DFP prices both.
+            Items post under {getDisplayName(profile)} and are added to your open WTB or WTS
+            listing (one of each) — everything is priced at exact DFP.
           </p>
           <ResourceBuyOrderPanel
             userId={user.id}
@@ -581,19 +645,13 @@ export default function CustomOrdersRoute() {
             catalog={catalog}
             labelMap={labelMap}
             orderOverridesMap={overridesMap}
-            hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
-            minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
             canCreateSellOrder={orderLimits?.can_create_sell_order ?? true}
             initialBlueprintLines={draftCartLines.length > 0 ? draftCartLines : undefined}
+            initialResourceLines={draftResourceLines.length > 0 ? draftResourceLines : undefined}
             blueprintOwnerCounts={blueprintOwnerCounts}
             onError={setError}
             onSubmitted={() => {
               setShowForm(false)
-              void loadOrders()
-            }}
-            onForceEditOrder={(orderId) => {
-              setShowForm(false)
-              setEditingOrderId(orderId)
               void loadOrders()
             }}
             onDraftCleared={clearDraft}
@@ -614,8 +672,6 @@ export default function CustomOrdersRoute() {
             labelMap={labelMap}
             orderOverridesMap={overridesMap}
             editOrder={orders.find((o) => o.id === editingOrderId) ?? null}
-            hasPendingBuyerRep={orderLimits?.has_pending_buyer_rep}
-            minOrderValue={orderLimits?.buyer_min_order_value ?? 10000}
             blueprintOwnerCounts={blueprintOwnerCounts}
             onCancelEdit={() => setEditingOrderId(null)}
             onError={setError}
@@ -634,7 +690,7 @@ export default function CustomOrdersRoute() {
       ) : visibleOrders.length === 0 ? (
         <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
           <p className="text-slate-400">
-            {listTab === 'active' && 'No open orders.'}
+            {listTab === 'active' && 'No active transactions.'}
             {listTab === 'completed' &&
               'No completed orders. After pickup is confirmed, orders appear here for Archive & rate.'}
             {listTab === 'archive' && 'No archived orders yet.'}
@@ -654,11 +710,6 @@ export default function CustomOrdersRoute() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-white font-medium">{order.title}</h3>
                       <ListingTypeBadge order={order} />
-                      {isWtsPartialListing(order) && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
-                          Partial OK
-                        </span>
-                      )}
                       {isWtsPartialPurchaseOrder(order) && (
                         <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
                           Partial purchase

@@ -125,6 +125,10 @@ export const EXTRA_CATALOG_RESOURCES: ExtractedBlueprintResource[] = [
   // === ALLOYS ===
   { resourceKey: 'xa_pyen', label: "Xa'Pyen" },
 
+  // === YORMANDI HARVEST (whole units, no quality tier) ===
+  { resourceKey: 'yormandi_eye', label: 'Yormandi Eye' },
+  { resourceKey: 'yormandi_tongue', label: 'Yormandi Tongue' },
+
   // === NATURAL / ORGANIC ===
   { resourceKey: 'amioshi_plague', label: 'Amioshi Plague' },
   { resourceKey: 'carbon_silk', label: 'Carbon-Silk' },
@@ -159,7 +163,21 @@ export const EXTRA_CATALOG_RESOURCES: ExtractedBlueprintResource[] = [
   { resourceKey: 'luminalia_gift', label: 'Luminalia Gift' },
   { resourceKey: 'party_favors', label: 'Party Favors' },
   { resourceKey: 'souvenirs', label: 'Souvenirs' },
+
+  // === WIKELO CURRENCY (physicalized, tradable — whole units) ===
+  { resourceKey: 'wikelo_favor', label: 'Wikelo Favor' },
+  { resourceKey: 'polaris_bit', label: 'Polaris Bit' },
+  { resourceKey: 'council_scrip', label: 'Council Scrip' },
+  { resourceKey: 'mg_scrip', label: 'MG Scrip' },
 ]
+
+/** Wikelo Emporium currency items — mission-awarded, hand-in barter currency. */
+export const WIKELO_CURRENCY_RESOURCE_KEYS = new Set([
+  'wikelo_favor',
+  'polaris_bit',
+  'council_scrip',
+  'mg_scrip',
+])
 
 export const EXTRA_CATALOG_RESOURCE_KEYS = new Set(
   EXTRA_CATALOG_RESOURCES.map((r) => r.resourceKey)

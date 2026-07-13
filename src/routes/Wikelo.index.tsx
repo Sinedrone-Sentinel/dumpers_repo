@@ -23,7 +23,8 @@ const CATEGORY_FILTERS: { id: string; label: string }[] = [
 
 export default function WikeloRoute() {
   const navigate = useNavigate()
-  const { dfpDisplayEnabled } = useAuth()
+  const { dfpDisplayEnabled, isApproved, isGuestPreview } = useAuth()
+  const canAddToOrder = isApproved && !isGuestPreview
 
   const [searchTerm, setSearchTerm] = React.useState('')
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null)
@@ -146,6 +147,7 @@ export default function WikeloRoute() {
                 onClick={(t) => setSelectedTrade(t)}
                 onOpenMission={handleOpenMission}
                 dfpDisplayEnabled={dfpDisplayEnabled}
+                canAddToOrder={canAddToOrder}
               />
             ))}
           </div>
@@ -158,6 +160,7 @@ export default function WikeloRoute() {
           onClose={() => setSelectedTrade(null)}
           onOpenMission={handleOpenMission}
           dfpDisplayEnabled={dfpDisplayEnabled}
+          canAddToOrder={canAddToOrder}
         />
       )}
     </FeaturePageLayout>

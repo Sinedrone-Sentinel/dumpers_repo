@@ -90,5 +90,5 @@ export async function recordMarketplaceAdAction(
 }
 
 export function fulfillmentHighlightPath(orderId: string): string {
-  return `/fulfillment?highlight=${encodeURIComponent(orderId)}`
+  return `/bazaar?highlight=${encodeURIComponent(orderId)}`
 }

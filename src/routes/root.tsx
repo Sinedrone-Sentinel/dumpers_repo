@@ -5,7 +5,7 @@ import BlueprintsRoute from './Blueprints.index'
 import WikeloRoute from './Wikelo.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
-import FulfillmentRoute from './Fulfillment.index'
+import BazaarRoute from './Bazaar.index'
 import TargetsRoute from './Targets.index'
 import TargetsLiveRoute from './TargetsLive.index'
 import ArchiveRoute from './Archive.index'
@@ -90,10 +90,10 @@ const customOrdersRoute = createRoute({
   }),
 })
 
-const fulfillmentRoute = createRoute({
+const bazaarRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/fulfillment',
-  component: FulfillmentRoute,
+  path: '/bazaar',
+  component: BazaarRoute,
   beforeLoad: requireFeature('fulfillment'),
   validateSearch: (search: Record<string, unknown>) => ({
     highlight: typeof search.highlight === 'string' ? search.highlight : undefined,
@@ -144,7 +144,7 @@ export const routeTree = rootRoute.addChildren([
   targetsLiveRoute,
   resourceTrackerRoute,
   customOrdersRoute,
-  fulfillmentRoute,
+  bazaarRoute,
   archiveRoute,
   supportDashboardRoute,
   guestLockedRoute,

@@ -7,6 +7,7 @@ import {
   isContrabandResource,
   isTradeGoodResource,
 } from './extraResources'
+import { WIKELO_ITEM_RESOURCE_KEYS } from './wikeloItems'
 
 function slugifyResourceName(name: string | null | undefined): string {
   if (!name) return ''
@@ -27,6 +28,7 @@ export type ResourceType =
   | 'fuel'
   | 'contraband'
   | 'trade_good'
+  | 'wikelo_item'
 
 const GEM_RESOURCE_KEYS = new Set([
   'aphorite',
@@ -40,17 +42,30 @@ const GEM_RESOURCE_KEYS = new Set([
   'sadaryx',
 ])
 
-const HARVEST_RESOURCE_KEYS = new Set(['yormandi_eye'])
+const HARVEST_RESOURCE_KEYS = new Set(['yormandi_eye', 'yormandi_tongue'])
 
-const SHOP_SPECIAL_RESOURCE_KEYS = new Set(['saldynium_ore'])
+const SHOP_SPECIAL_RESOURCE_KEYS = new Set([
+  'saldynium_ore',
+  // Wikelo Emporium currency — mission-awarded barter items, whole units
+  'wikelo_favor',
+  'polaris_bit',
+  'council_scrip',
+  'mg_scrip',
+])
 
-/** Whole-unit materials — gems, harvest, and shop specials (never fractional). */
+/** Whole-unit materials — gems, harvest, shop specials, Wikelo gear (never fractional). */
 export function isWholeUnitResource(resourceKey: string): boolean {
   return (
     GEM_RESOURCE_KEYS.has(resourceKey) ||
     HARVEST_RESOURCE_KEYS.has(resourceKey) ||
-    SHOP_SPECIAL_RESOURCE_KEYS.has(resourceKey)
+    SHOP_SPECIAL_RESOURCE_KEYS.has(resourceKey) ||
+    WIKELO_ITEM_RESOURCE_KEYS.has(resourceKey)
   )
+}
+
+/** Wikelo Emporium reward gear (armor, weapons, magazines) — whole units, no quality tiers. */
+export function isWikeloItemResource(resourceKey: string): boolean {
+  return WIKELO_ITEM_RESOURCE_KEYS.has(resourceKey)
 }
 
 export function isGemResource(resourceKey: string): boolean {
@@ -74,6 +89,7 @@ export function getResourceType(resourceKey: string): ResourceType {
   if (isTradeGoodResource(resourceKey)) return 'trade_good'
   if (HARVEST_RESOURCE_KEYS.has(resourceKey)) return 'harvest'
   if (SHOP_SPECIAL_RESOURCE_KEYS.has(resourceKey)) return 'shop_special'
+  if (WIKELO_ITEM_RESOURCE_KEYS.has(resourceKey)) return 'wikelo_item'
   if (GEM_RESOURCE_KEYS.has(resourceKey)) return 'gem'
   if (EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)) return 'trade_good'
   return 'ore'
@@ -91,6 +107,8 @@ export function resourceLabelClassName(resourceKey: string): string {
       return 'text-purple-400'
     case 'shop_special':
       return 'text-cyan-400'
+    case 'wikelo_item':
+      return 'text-orange-400'
     case 'salvage':
       return 'text-emerald-400'
     case 'gas':
@@ -116,6 +134,8 @@ export function resourceChipClassName(resourceKey: string): string {
       return 'bg-purple-950/30 text-purple-400 border-purple-500/20'
     case 'shop_special':
       return 'bg-cyan-950/30 text-cyan-400 border-cyan-500/20'
+    case 'wikelo_item':
+      return 'bg-orange-950/30 text-orange-400 border-orange-500/20'
     case 'salvage':
       return 'bg-emerald-950/30 text-emerald-400 border-emerald-500/20'
     case 'gas':

@@ -65,15 +65,15 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   },
   {
     id: 'custom-orders',
-    label: 'Custom Orders',
+    label: 'My Listings',
     path: '/orders',
     icon: 'orders',
     featureId: 'custom_orders',
   },
   {
     id: 'fulfillment',
-    label: 'Fulfillment',
-    path: '/fulfillment',
+    label: 'The Bazaar',
+    path: '/bazaar',
     icon: 'fulfillment',
     featureId: 'fulfillment',
   },
