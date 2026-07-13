@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `118_drop_game_data_mirror_tables.sql` (drops the unused `game_*` mirror tables — game catalogs ship bundled with the site). Apply through `118` in numeric order if catching up.
+**Latest migration:** `119_mining_ledger_close_payout_total.sql` (ledger close passes the app-computed payout so site stats show real aUEC; zero-payout ledgers no longer count). Apply through `119` in numeric order if catching up.
 
 ---
 
@@ -149,6 +149,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 81 | `116_marketplace_ads.sql` | Marketplace listing ads, purchase toasts, dismissals, site/profile toggles |
 | 82 | `117_marketplace_ads_rpc_hooks.sql` | Marketplace ad hooks on order RPCs; fix partial WTS line depletion |
 | 83 | `118_drop_game_data_mirror_tables.sql` | Drop `game_*` mirror tables — game catalogs ship bundled from parsed JSON |
+| 84 | `119_mining_ledger_close_payout_total.sql` | Ledger close records app-computed payout in site stats; skip zero-payout ledgers |
 
 ### pg_cron (migrations 054, 065–068)
 

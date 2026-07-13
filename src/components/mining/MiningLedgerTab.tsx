@@ -1174,7 +1174,14 @@ export default function MiningLedgerTab({
   const handleCloseConfirm = async () => {
     if (!activeId) return
     handleExport()
-    const { error: closeError } = await closeLedger({ recordArchiveStats: true })
+    // Site stats use Pool (Actual), falling back to Pool (Est.) — both 0 means
+    // a fake/empty ledger that should not count toward the billboard totals.
+    const statsPayout =
+      computed.poolActual > 0 ? computed.poolActual : Math.max(0, computed.poolEstimate)
+    const { error: closeError } = await closeLedger({
+      recordArchiveStats: true,
+      totalPayoutAuec: statsPayout,
+    })
     setShowCloseModal(false)
     if (closeError) setError(closeError)
     else onLedgerArchived?.()

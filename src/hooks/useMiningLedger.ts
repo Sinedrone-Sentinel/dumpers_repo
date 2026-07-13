@@ -158,7 +158,7 @@ export function useMiningLedger() {
     [activeId, flushSave, loadLedger]
   )
 
-  const closeLedger = useCallback(async (options?: { recordArchiveStats?: boolean }) => {
+  const closeLedger = useCallback(async (options?: { recordArchiveStats?: boolean; totalPayoutAuec?: number }) => {
     if (!activeId) return { error: 'No active ledger' }
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current)

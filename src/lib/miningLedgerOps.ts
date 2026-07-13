@@ -157,11 +157,14 @@ export async function fetchMiningLedgerSiteStats(): Promise<{
 
 export async function closeMiningLedger(
   ledgerId: string,
-  options?: { recordArchiveStats?: boolean }
+  options?: { recordArchiveStats?: boolean; totalPayoutAuec?: number }
 ): Promise<{ error: string | null }> {
+  const payout = options?.totalPayoutAuec
   const { data, error } = await supabase.rpc('close_mining_ledger', {
     p_ledger_id: ledgerId,
     p_record_archive_stats: options?.recordArchiveStats ?? false,
+    p_total_payout_auec:
+      payout != null && Number.isFinite(payout) ? Math.max(0, Math.round(payout)) : null,
   })
   if (error) return { error: error.message }
   const result = data as RpcResult
