@@ -92,11 +92,6 @@ export default function WikeloTradeDetailsModal({
               Complete “Wikelo Arrive to System” first
             </span>
           )}
-          {trade.maxPerPlayer != null && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-slate-800/70 text-slate-300 border border-slate-500/40 rounded">
-              {trade.maxPerPlayer}× per player
-            </span>
-          )}
         </div>
 
         <section>
