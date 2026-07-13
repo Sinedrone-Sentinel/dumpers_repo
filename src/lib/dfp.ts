@@ -190,6 +190,40 @@ export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
   }
 }
 
+export interface WikeloTradeDfpInput {
+  category?: string
+  isVehicleReward?: boolean
+  costs?: {
+    entityClass?: string
+    resourceName?: string
+    name?: string
+    amount?: number
+    scu?: number
+  }[]
+}
+
+export interface WikeloDfpResult {
+  /** null = account-bound vehicle reward (shown as N/A) */
+  total: number | null
+  lines: { name: string; amount: number; lineTotal: number }[]
+  unpricedItems: string[]
+  isVehicleReward: boolean
+}
+
+export function calculateWikeloTradeDfp(trade: WikeloTradeDfpInput): WikeloDfpResult {
+  const isVehicleReward = trade.isVehicleReward === true || trade.category === 'vehicle'
+  const eng = tryGetEngine()
+  if (!eng?.calculateWikeloTradeDfp) {
+    return { total: isVehicleReward ? null : 0, lines: [], unpricedItems: [], isVehicleReward }
+  }
+  return eng.calculateWikeloTradeDfp(trade)
+}
+
+export function formatWikeloDfpLabel(result: WikeloDfpResult): string {
+  if (result.isVehicleReward || result.total === null) return 'DFP N/A'
+  return formatDfpLabel(result.total)
+}
+
 export function formatDfpValue(value: number): string {
   if (!Number.isFinite(value) || value <= 0) return '—'
 

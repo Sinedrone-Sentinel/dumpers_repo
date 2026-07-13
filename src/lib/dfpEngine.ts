@@ -35,6 +35,23 @@ export interface DfpEngineApi {
     lines: unknown[]
   }
   isAmmoBlueprint: (blueprint: { categoryName?: string }) => boolean
+  /** Wikelo trade pricing (engine >= 1.6.0). total: null = account-bound vehicle (N/A). */
+  calculateWikeloTradeDfp?: (trade: {
+    category?: string
+    isVehicleReward?: boolean
+    costs?: {
+      entityClass?: string
+      resourceName?: string
+      name?: string
+      amount?: number
+      scu?: number
+    }[]
+  }) => {
+    total: number | null
+    lines: { name: string; amount: number; lineTotal: number }[]
+    unpricedItems: string[]
+    isVehicleReward: boolean
+  }
 }
 
 let engine: DfpEngineApi | null = null

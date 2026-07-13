@@ -33,6 +33,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | Route | Page | Access |
 |-------|------|--------|
 | `/` | Blueprints | Offline + members |
+| `/wikelo` | Wikelo | Offline + members |
 | `/targets` | Mission Tracker | Offline + members |
 | `/targets/live` | Live Mission Tracker | Members (BP Dumper watch mode) |
 | `/resources` | Resource Tracker | Offline + members |
@@ -61,6 +62,14 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 - Add blueprints to a session **order draft** (continues on Custom Orders) or **target list** (Mission Tracker)
 - Optional **Display** setting: group FPS weapon and armor variants into expandable family cards (off by default)
 - **BP Dumper** syncs acquired marks from `Game.log` automatically
+
+### Wikelo (`/wikelo`)
+
+- All **Wikelo Emporium barter trades** parsed from game contract data (`game-wikelo-trades.json`)
+- Category filter tags: Ships, Ground Vehicles, Armor, Weapons, Gear, Favors
+- Cards show hand-in costs, rewards, Wikelo rep gained, customer-rank gates, and intro-mission requirements
+- **DFP** prices each trade from the fair value of its hand-in items; account-bound vehicle rewards show **N/A**
+- **Mission** button jumps to the Wikelo Emporium faction in Mission Tracker browse
 
 ### Mission Tracker (`/targets`)
 

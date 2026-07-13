@@ -3,6 +3,7 @@ import { roleAtLeast } from './roles'
 
 export type FeatureId =
   | 'blueprints_browse'
+  | 'wikelo_browse'
   | 'archive_browse'
   | 'blueprints_acquire'
   | 'admin_panel'
@@ -53,6 +54,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
   if (ctx.isGuestPreview) {
     return (
       featureId === 'blueprints_browse' ||
+      featureId === 'wikelo_browse' ||
       featureId === 'archive_browse' ||
       featureId === 'blueprints_acquire' ||
       featureId === 'mining_tracker' ||
@@ -64,6 +66,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
   switch (featureId) {
     case 'blueprints_browse':
+      return !!ctx.role
+
+    case 'wikelo_browse':
       return !!ctx.role
 
     case 'archive_browse':

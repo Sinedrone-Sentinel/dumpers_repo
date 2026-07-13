@@ -2,6 +2,7 @@ import { createRootRoute, createRoute } from '@tanstack/react-router'
 import Layout from '../components/Layout'
 import { RouteErrorPage, RouteNotFoundPage } from '../components/RouteErrorPage'
 import BlueprintsRoute from './Blueprints.index'
+import WikeloRoute from './Wikelo.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
 import FulfillmentRoute from './Fulfillment.index'
@@ -26,6 +27,13 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: BlueprintsRoute,
+})
+
+const wikeloRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/wikelo',
+  component: WikeloRoute,
+  beforeLoad: requireFeature('wikelo_browse'),
 })
 
 const miningTrackerRoute = createRoute({
@@ -130,6 +138,7 @@ const discordSubscribeRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
+  wikeloRoute,
   miningTrackerRoute,
   targetsRoute,
   targetsLiveRoute,

@@ -32,6 +32,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     minRole: 'member',
   },
   {
+    id: 'wikelo',
+    label: 'Wikelo',
+    path: '/wikelo',
+    icon: 'wikelo',
+    featureId: 'wikelo_browse',
+    minRole: 'member',
+  },
+  {
     id: 'targets',
     label: 'Mission Tracker',
     path: '/targets',
@@ -91,7 +99,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'core',
     label: 'Core',
-    itemIds: ['blueprints', 'targets', 'resource-tracker', 'mining-tracker'],
+    itemIds: ['blueprints', 'wikelo', 'targets', 'resource-tracker', 'mining-tracker'],
   },
   {
     id: 'tools',

@@ -1,0 +1,3369 @@
+{
+  "_source": "Star Citizen Game Files (TheCollector contract generator)",
+  "_extracted": "2026-07-13T04:47:23.534Z",
+  "trades": [
+    {
+      "id": "5bf19672-f057-4ccf-bdd4-d309edfeea15",
+      "debugName": "TheCollector_Vehicle_Large_Anvil_Asgard",
+      "title": "Asgard Fight Mod",
+      "description": "Wikelo mod Asgard and so that it fights more. You in a fight, this mod is what you want. Plus, good deal on the trade. Just bring items here and I give you the ship.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl1",
+          "name": "RCMBNT-PWL-1",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl2",
+          "name": "RCMBNT-PWL-2",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl3",
+          "name": "RCMBNT-PWL-3",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl1",
+          "name": "RCMBNT-RGL-1",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl2",
+          "name": "RCMBNT-RGL-2",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl3",
+          "name": "RCMBNT-RGL-3",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl1",
+          "name": "RCMBNT-XTL-1",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl2",
+          "name": "RCMBNT-XTL-2",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl3",
+          "name": "RCMBNT-XTL-3",
+          "amount": 5
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "anvl_asgard_collector_military",
+          "name": "Anvil Asgard Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "2fba83a9-7652-40a7-b761-1cf8651bbc34",
+      "debugName": "TheColllector_Vehicle_Ground_ATLS_RedNBlue",
+      "title": "ATLS Cool Metal Color",
+      "description": "Wikelo give deep red and green colors to make ATLS legs look like they cooling from heat. Very pretty.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 1
+        },
+        {
+          "entityClass": "argo_atls",
+          "name": "Argo ATLS",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "argo_atls_geo_collector_grad03",
+          "name": "ATLS Cool Metal Color",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "1a9c813d-f143-49e6-addf-5d068a456cc5",
+      "debugName": "TheColllector_Vehicle_Ground_ATLS_OrangeNGrey",
+      "title": "ATLS Orange Line",
+      "description": "Many Human work place have orange color there. Must mean work to you. This suit does work. Make sense.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "argo_atls",
+          "name": "Argo ATLS",
+          "amount": 1
+        },
+        {
+          "resourceName": "Quantanium",
+          "name": "Quantanium",
+          "scu": 36
+        },
+        {
+          "resourceName": "Copper",
+          "name": "Copper",
+          "scu": 8
+        },
+        {
+          "resourceName": "Tungsten",
+          "name": "Tungsten",
+          "scu": 8
+        },
+        {
+          "resourceName": "Corundum",
+          "name": "Corundum",
+          "scu": 8
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "argo_atls_geo_collector_grad02",
+          "name": "ATLS Orange Line",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "7649f7a6-e0e0-44b5-87bc-803d6052c9f8",
+      "debugName": "TheColllector_Vehicle_Ground_ATLS_WhiteNGreen",
+      "title": "ATLS Snowland Color",
+      "description": "Wikelo travel to one Human planet and find very cold, but very pretty. This remind of that.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 1
+        },
+        {
+          "entityClass": "argo_atls",
+          "name": "Argo ATLS",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "argo_atls_geo_collector_grad01",
+          "name": "ATLS Snowland Color",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "0424e501-e57e-47cb-bada-79f849560b4e",
+      "debugName": "TheCollector_Vehicle_Medium_Scorpius",
+      "title": "Build a Mod Scorpius",
+      "description": "Don't know what the name mean, but ship is very fast, very good in fight. With tweak, can better. You see list of what Wikelo need, go get and I make. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_scorpius_stealth",
+          "name": "RSI Scorpius Wikelo Sneak Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "d4d26850-d4f4-4549-a0af-a478ee0be480",
+      "debugName": "TheCollector_Vehicle_L22_Wolf",
+      "title": "Extra Special Wolf",
+      "description": "Wikelo very excited. Have idea for new material. But making it is most tricky. Very complicated. Need help fabricating a test sample. I give you blueprint, you make, bring to me, and I will trade. Give you extra special L-22 Wolf. Very powerful, very wolf.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_2h_cy_collectormaterial_001",
+          "name": "Metamaterial Test #146",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "krig_l22_alphawolf_collector_military",
+          "name": "Kruger L-22 Alpha Wolf Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_collectormaterial_001"
+      ],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "eba10cd5-37dc-440a-8eff-18dbcc5e5d8c",
+      "debugName": "TheCollector_Vehicle_Large_F8C_Milt",
+      "title": "F8 War Mod",
+      "description": "Can make you custom of F8 that take good fighting ship and make a better fighting ship. Bring things and I will make. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 40
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 4
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "anvl_lightning_f8c_collector_military",
+          "name": "Anvil F8C Lightning Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "1ef81be1-714c-4fea-9185-e7a4c2604256",
+      "debugName": "TheCollector_Vehicle_Medium_Firebird",
+      "title": "Firebird Mod",
+      "description": "Been digging into Aegis Sabre ship. Firebird is very bomb-y. Good build but could make some fun change to it. If you want, I can do. Have a look and tell me. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 4
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_d",
+          "name": "Government Cartography Agency Medal (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "aegs_sabre_firebird_collector_milt",
+          "name": "Aegis Sabre Firebird Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "7c5bdaa6-ad6a-44b3-a374-796b13ddd5e4",
+      "debugName": "TheCollector_Vehicle_Small_Fortune",
+      "title": "Fortune ship for you",
+      "description": "Hello, practicing on making ship fly better. Xi'an help human make ship. Fly good. Salvage good. But Wikelo can make better if you want. Bring things and will do. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "misc_fortune_collector_industrial",
+          "name": "MISC Fortune Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "5712cdfc-84da-456f-97ed-697c9d04c026",
+      "debugName": "TheCollector_Vehicle_Small_Drake_Golem",
+      "title": "Golem Rocks",
+      "description": "Universe need resources so Wikelo always respect people who dig. Good profession. If you starting and want boost to Golem ship. I can do.\n\nBring.\n\nI make.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 2
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 15
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "drak_golem_collector_indust",
+          "name": "Drake Golem Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "684c9209-3dec-4519-a86c-7f49df47d14c",
+      "debugName": "TheCollector_Vehicle_Medium_Guardian",
+      "title": "Guardian Fight Mod",
+      "description": "This ship look like insect in the Protectorate. Fun look. Painful sting. Wikelo can make custom version for you if you want. Make enemies sting. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_high_02",
+          "name": "Irradiated Valakkar Pearl (Grade AA)",
+          "amount": 15
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 20
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "mrai_guardian_military",
+          "name": "Mirai Guardian Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "1af113f6-5650-4da9-abf3-9676dcaf8a91",
+      "debugName": "TheCollector_Vehicle_Medium_GuardianQI",
+      "title": "Guardian take down ship",
+      "description": "Insect ship again. This one help take down other ship but if you want it to take down better. Can make. See list and tell Wikelo. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 25
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_high_02",
+          "name": "Irradiated Valakkar Pearl (Grade AA)",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_b",
+          "name": "UEE 6th Platoon Medal (Pristine)",
+          "amount": 2
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "mrai_guardian_qi_collector_indust",
+          "name": "Mirai Guardian QI Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "ad595a7c-d314-442b-acce-ea140a56cffd",
+      "debugName": "TheCollector_Vehicle_Medium_GuardianMX",
+      "title": "Guardian WiK-X",
+      "description": "You Humans enjoy strange letter combinations. It very funny. Guardian ship very useful but if you want even more useful, bring me things. I give you better ship. Look better. Act better.\n\nThank you. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 25
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_a",
+          "name": "Vanduul Plating",
+          "amount": 30
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 30
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_cy_hadesian_fragment_1_large_pristine_a",
+          "name": "Large Artifact Fragment (Pristine)",
+          "amount": 2
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "mrai_guardian_mx_collector_military",
+          "name": "Mirai Guardian MX Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "5dec704a-de79-4311-88d1-53f9d05db952",
+      "debugName": "TheCollector_Vehicle_Ground_Ursa_Medical",
+      "title": "Make a Ursa Mod",
+      "description": "Wikelo branching into ships too. Took a look at Ursa and improved. Bring parts for me and I will make for you. Explore planet better. Go do.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 4
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 20
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_ursa_medivac_stealth",
+          "name": "RSI Ursa Medivac Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "12926a62-afde-4984-8887-dbe564527192",
+      "debugName": "TheCollector_Vehicle_Ground_ATLS_IKTI",
+      "title": "Make ATLS shoot",
+      "description": "Hello. Know you human like strange metal suit. How about metal suit with ikti? Sorry, ikti is Banu word, you call it 'gun.'\n\nIf want, bring things I say and I will make for you. Gun will shoot. Cause many damage.\n\nBye.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 2
+        },
+        {
+          "entityClass": "carryable_tbo_creature_trophy_vlkapexfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Apex)",
+          "amount": 5
+        },
+        {
+          "entityClass": "argo_atls",
+          "name": "Argo ATLS",
+          "amount": 1
+        },
+        {
+          "entityClass": "mxox_neutroncannon_s1",
+          "name": "NN-13 Cannon",
+          "amount": 2
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "argo_atls_ikti",
+          "name": "Argo ATLS IKTI",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "7b7cd8d9-d3e4-4f48-b995-487933fd332e",
+      "debugName": "TheCollector_Vehicle_Ground_ATLS_IKTI_GEO",
+      "title": "Make jumpy ATLS shoot",
+      "description": "Find very fun piece to add to big human suit that let you jump very high. Now you shoot and jump. Exciting.\n\nIf you want, bring me these to the Emporium. Will make.\n\nWikelo",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "argo_atls_geo",
+          "name": "Argo ATLS GEO",
+          "amount": 1
+        },
+        {
+          "entityClass": "mxox_neutroncannon_s1",
+          "name": "NN-13 Cannon",
+          "amount": 2
+        },
+        {
+          "entityClass": "argo_atls_ikti",
+          "name": "Argo ATLS IKTI",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "argo_atls_geo_ikti",
+          "name": "Argo ATLS GEO IKTI",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "99b90562-4e98-46d2-aa7e-0926bed3bdf8",
+      "debugName": "TheCollector_Vehicle_Large_Starlancer_max",
+      "title": "More than a Max",
+      "description": "If you want to move many things. Hercules ship, very good for that. Wikelo even know souli back in Protectorate that started to use. Very big. Wikelo can give you similar version if you get what Wikelo need. Look at list and tell me.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 30
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "misc_starlancer_max_collector_indust",
+          "name": "MISC Starlancer MAX Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "3c839c32-d313-4c13-ade0-eb45b5bdea4b",
+      "debugName": "TheCollector_Vehicle_Small_Kruger_Wolf_Unique",
+      "title": "Most Special Wolf",
+      "description": "You have been good trade partner for Wikelo. Offer you this very special Wolf mod. Make trade even better - Bring me what I want and I give you the special Wolf AND Antium Armor AND a VOLT LMG. Very good deal for my very good customer.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 5
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "krig_l21_wolf_collector_military",
+          "name": "Kruger L-21 Wolf Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_helmet_01_03_01",
+          "name": "Antium Helmet Midnight Sun",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_core_01_03_01",
+          "name": "Antium Core Midnight Sun",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_arms_01_03_01",
+          "name": "Antium Arms Midnight Sun",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_legs_01_03_01",
+          "name": "Antium Legs Midnight Sun",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_lmg_energy_01_collector01",
+          "name": "Fresnel \"Deepwater\" Energy LMG",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": {
+        "name": "Very Good Customer",
+        "minReputation": 340
+      },
+      "maxStanding": {
+        "name": "Very Best Customer",
+        "minReputation": 999
+      },
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "5c494816-ebc0-46a6-a23c-d463d4b0330d",
+      "debugName": "TheCollector_Vehicle_Large_Starlancer_TAC",
+      "title": "New Move Big Starlancer Ship",
+      "description": "If you like big space to move things, Wikelo can do useful and wonder things to MISC ship for you. Bring me pieces and I will give you version even better than what Xi'an can do.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 50
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 15
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 30
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 3
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "misc_starlancer_tac_collector_military",
+          "name": "MISC Starlancer TAC Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "e05b8ffb-7455-4f24-bbcf-43e9dffc0cca",
+      "debugName": "TheCollector_Vehicle_Polaris",
+      "title": "Now make Polaris. Short Time Deal.",
+      "description": "Wikelo recently get many blueprints in trade with human who not very smart. Now can make very big ship.\n\nNot cheap and need many pieces but will make. If you want, go quick, this cost much to Wikelo so won't be able to do for long but I like new Human system so I want to thank you all for welcome.\n\nBring to the Emporium if want.\n\nBye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo_special",
+          "name": "Polaris Bit",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 20
+        },
+        {
+          "entityClass": "carryable_tbo_creature_trophy_vlkapexfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Apex)",
+          "amount": 20
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 20
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_b",
+          "name": "UEE 6th Platoon Medal (Pristine)",
+          "amount": 15
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 15
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl1",
+          "name": "RCMBNT-PWL-1",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl2",
+          "name": "RCMBNT-PWL-2",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl3",
+          "name": "RCMBNT-PWL-3",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl1",
+          "name": "RCMBNT-RGL-1",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl2",
+          "name": "RCMBNT-RGL-2",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl3",
+          "name": "RCMBNT-RGL-3",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl1",
+          "name": "RCMBNT-XTL-1",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl2",
+          "name": "RCMBNT-XTL-2",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl3",
+          "name": "RCMBNT-XTL-3",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_polaris_collector_military",
+          "name": "RSI Polaris Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 1000,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "a033aab9-262e-44da-9213-35e225fc828a",
+      "debugName": "TheCollector_Vehicle_Ground_Nox",
+      "title": "Noxy Mod",
+      "description": "Wikelo know many Xi'an. Talk slow but very interesting if you have patience. This is very fast little thing to get you across planet. Wikelo made a few tweaks to make it zippier. If you want, Wikelo will make for you. Bye.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 4
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "xian_nox_collector_mod",
+          "name": "Aopoa Nox Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "ade95587-2c0d-433e-87c4-865e7dc80b0c",
+      "debugName": "TheCollector_Vehicle_Medium_Peregrine",
+      "title": "Peregrine Wikelo Mod",
+      "description": "Wikelo not want to race but can still make fast ship faster. If you want, bring me things, and go faster.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "aegs_sabre_peregrine_collector_competition",
+          "name": "Aegis Sabre Peregrine Wikelo Speedy Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "200def0f-c70b-4f05-918f-b3efa7f8590f",
+      "debugName": "TheCollector_Vehicle_Small_MISC_Prospector",
+      "title": "Prospects Look Good",
+      "description": "Wikelo loves rocks. Wants to help you get more better rocks. Made this Prospector more better for that tough job. Trade items and you can have.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 6
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 30
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 40
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "misc_prospector_collector_indust",
+          "name": "MISC Prospector Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "fec1ba32-a1bb-4cfb-adc9-8a2f792544e6",
+      "debugName": "TheCollector_Vehicle_Large_Prowler_Utility",
+      "title": "Prowler More Utility",
+      "description": "Wikelo work hard. You work hard. Prowler Utility work hard. But you bring me right items, I make it work more hard, then you work less hard. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 40
+        },
+        {
+          "entityClass": "carryable_2h_cy_yormandi_tongue",
+          "name": "Yormandi Tongue",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_yormandi_eye",
+          "name": "Yormandi Eye",
+          "amount": 20
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 3
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "espr_prowler_utility_collector_indust",
+          "name": "Esperia Prowler Utility Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "7304cb29-5e2a-4d01-80bb-2795b6e789d4",
+      "debugName": "TheCollector_Vehicle_Ground_Pulse",
+      "title": "Pulse Plus",
+      "description": "Wikelo really like this little Human ship. Pulse feel very fast. Can have many configuration to make Pulse go faster. If you want, can give you configurated Pulse that I like. Have list of what I want for job. Bye.",
+      "category": "vehicle",
+      "subCategory": "ground",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 4
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "mrai_pulse_collector_civ",
+          "name": "Mirai Pulse Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 20,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "fec4c8e6-df2f-4775-b8c3-c0e3fb7c35e7",
+      "debugName": "TheCollector_Vehicle_Small_ARGO_Raft",
+      "title": "Ready for RAFT?",
+      "description": "RAFT is very useful. Wikelo take it and make it very very useful. Do work and make you happy. You want? Bring items to Wikelo for trade.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 8
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkadultfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Adult)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang_irradiated",
+          "name": "Irradiated Valakkar Fang (Juvenile)",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_kopionhorn_irradiated",
+          "name": "Irradiated Kopion Horn",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "argo_raft_collector_indust",
+          "name": "Argo RAFT Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "af13a863-6d63-4935-bec6-d55d73e44f83",
+      "debugName": "TheCollector_Vehicle_Apollo_Triage",
+      "title": "Red Fight Apollo",
+      "description": "Apollo very good ship. Would be much better if ship was red. Wikelo make all things possible. You trade for what I want and we have a deal.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 30
+        },
+        {
+          "resourceName": "Savrilium",
+          "name": "Savrilium",
+          "scu": 48
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_apollo_triage_collector_stealth",
+          "name": "RSI Apollo Triage Wikelo Sneak Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "71b27232-bb75-417e-8009-a8b5d9787e5a",
+      "debugName": "TheCollector_Vehicle_Small_RSI_Meteor",
+      "title": "RSI Meteor Mod",
+      "description": "Meteor big. It heavy. Have many guns. But Wikelo figure out way to make even better. You have things I will take to do.\n\nThat is all.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_a",
+          "name": "Vanduul Plating",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 10
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_hadesian_fragment_1_large_pristine_a",
+          "name": "Large Artifact Fragment (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_meteor_collector_stealth",
+          "name": "RSI Meteor Wikelo Sneak Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "6357945d-2e51-426f-b183-9c6f84c6a88b",
+      "debugName": "TheCollector_Vehicle_Large_F8C_Stealth",
+      "title": "Sneaky Stabber",
+      "description": "Have the pieces to build useful ship for people who like to sneak then fight. Take F8C ship and make even better. Have put what Wikelo will need to build for you. Now you decide. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 40
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 15
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "anvl_lightning_f8c_collector_stealth",
+          "name": "Anvil F8C Lightning Wikelo Sneak Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "da19d1a7-be72-4fea-803e-880d97ffdbe3",
+      "debugName": "TheCollector_Vehicle_Medium_Starfighter_Ion",
+      "title": "Sneaky Starfighter Ion",
+      "description": "Starfighter Ion good ship, but it could be more sneak, yes? Surprise your not friends when you shoot them. I help with this for you. I need the right items and then I can give to you. Bring to me. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_yormandi_eye",
+          "name": "Yormandi Eye",
+          "amount": 10
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "crus_starfighter_ion_collector_stealth",
+          "name": "Crusader Ares Star Fighter Ion Wikelo Sneak Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "77fa8882-e82f-4c97-9cab-a7151758cb99",
+      "debugName": "TheCollector_Vehicle_Super_Idris",
+      "title": "Special Idris For Killing",
+      "description": "Since Wikelo has done good business with you, make you this very special trade. Idris is a powerful ship perfect for big important person like you. Wikelo has even done mod to make it more dangerous! Bring me a few items and the ship is yours.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo_special",
+          "name": "Polaris Bit",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 50
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_tbo_creature_trophy_vlkapexfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Apex)",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 50
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 30
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_b",
+          "name": "UEE 6th Platoon Medal (Pristine)",
+          "amount": 30
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 30
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 30
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl1",
+          "name": "RCMBNT-PWL-1",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl2",
+          "name": "RCMBNT-PWL-2",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl3",
+          "name": "RCMBNT-PWL-3",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl1",
+          "name": "RCMBNT-RGL-1",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl2",
+          "name": "RCMBNT-RGL-2",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl3",
+          "name": "RCMBNT-RGL-3",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl1",
+          "name": "RCMBNT-XTL-1",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl2",
+          "name": "RCMBNT-XTL-2",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl3",
+          "name": "RCMBNT-XTL-3",
+          "amount": 5
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "aegs_idris_p_collector_military",
+          "name": "Aegis Idris-P Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": {
+        "name": "Very Best Customer",
+        "minReputation": 999
+      },
+      "maxStanding": {
+        "name": "Very Best Customer",
+        "minReputation": 999
+      },
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "64f01a7a-62c6-42fa-8a62-6b537dfa3668",
+      "debugName": "TheCollector_Vehicle_Medium_Spirit_C1",
+      "title": "Spirit Cargo mod",
+      "description": "Wikelo love useful cargo ship. Spirit is very useful. If you want one, can make for you. Just bring me things and I will do. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 8
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "crus_spirit_c1_civilian",
+          "name": "Crusader C1 Spirit Wikelo Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "f7e6a331-3f4c-4400-a4cf-dbd75bffa102",
+      "debugName": "TheCollector_Vehicle_Medium_Starfighter_Inferno",
+      "title": "Starfighter Inferno Special",
+      "description": "Starfighter Inferno good ship, but what if you want it to be better ship at fighting? Wikelo knows just what to do. You bring me the items and I make it for you. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_2h_cy_yormandi_tongue",
+          "name": "Yormandi Tongue",
+          "amount": 5
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_b",
+          "name": "UEE 6th Platoon Medal (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "crus_starfighter_inferno_collector_military",
+          "name": "Crusader Ares Star Fighter Inferno Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "3b698db0-7623-4210-9653-2025d491ab10",
+      "debugName": "TheCollector_Vehicle_Large_Crusader_A2",
+      "title": "Starlifter A2 War Mod",
+      "description": "Bring Wikelo the things and I make you A2 Starlifter that fights better. Does war so good make you call it A1! Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 50
+        },
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo_special",
+          "name": "Polaris Bit",
+          "amount": 20
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 20
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 6
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 6
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 6
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 6
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 6
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "crus_starlifter_a2_collector_military",
+          "name": "Crusader A2 Hercules Starlifter Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 500,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "c55c9f61-84d9-4180-8715-eab2fe524deb",
+      "debugName": "TheCollector_Vehicle_Small_Intrepid",
+      "title": "Upgrade Intrepid",
+      "description": "If you are looking for Intrepid ship that more intrepid. Wikelo can help. Bring things and you will get special touches on ship by Wikelo and pretty new coat to it. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_d",
+          "name": "Government Cartography Agency Medal (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "crus_intrepid_collector_indust",
+          "name": "Crusader Intrepid Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "8d7849fe-85c5-4c63-9754-a71bae57792f",
+      "debugName": "TheCollector_Vehicle_Large_Connie_Tau",
+      "title": "Want Taurus ship",
+      "description": "Wikelo came across plans to build Constellation Taurus ship. Nice ship, but Wikelo make a little better. Prettier too. If you want, bring stuff.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 30
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_d",
+          "name": "Government Cartography Agency Medal (Pristine)",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_constellation_taurus_military",
+          "name": "RSI Constellation Taurus Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 250,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "94bdfda2-a4d9-4d1a-877b-68518eedf320",
+      "debugName": "TheCollector_Vehicle_Medium_Terrapin_Medic",
+      "title": "What is Terrapin?",
+      "description": "Wikelo not know this Human word but ship is very useful when things go danger. If you want, can give new version of it. Maybe more useful?\n\nYou fly and tell. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 15
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "anvl_terrapin_medic_collector_medic",
+          "name": "Anvil Terrapin Medic Wikelo Savior Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "758e6b6a-f89e-4721-ae9e-1ec27d7b2f97",
+      "debugName": "TheCollector_Vehicle_Small_Kruger_Wolf",
+      "title": "Where Wolf? Here Wolf",
+      "description": "If you want to be quiet and surprise people, this is the Wolf you want. Wikelo mod it to be extra stealth. Trade you for it when you bring me the items I want.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_a",
+          "name": "Vanduul Plating",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_hadesian_fragment_1_large_pristine_a",
+          "name": "Large Artifact Fragment (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "krig_l21_wolf_collector_stealth",
+          "name": "Kruger L-21 Wolf Wikelo Sneak Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "c63d9c5a-5e25-49da-8254-b78706abea86",
+      "debugName": "TheCollector_Vehicle_Medium_F7_MK2",
+      "title": "Wikelo Navy F7",
+      "description": "Know how much you Humans like Navy so Wikelo have one now. If you want Wikelo version of F7 mk2, bring me things and you are in. Very funny. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 16
+        },
+        {
+          "entityClass": "carryable_1h_sq_pyro_serverblade_5",
+          "name": "DCHS-05 Orbital Positioning Comp-Board",
+          "amount": 3
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_d",
+          "name": "Government Cartography Agency Medal (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "anvl_hornet_f7_mk2_collector_mod",
+          "name": "Anvil F7 Hornet Mk Wikelo",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "c3722ee0-4f40-4232-acab-6f254a1d0e25",
+      "debugName": "TheCollector_Vehicle_Medium_ZeusCL",
+      "title": "Zeus Cargo Special",
+      "description": "Wikelo can make new version of cargo Zeus ship. If you want, bring what needed, then you can have ship. Fair. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 15
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 2
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_zeus_cl_collector_indust",
+          "name": "RSI Zeus Mk II CL",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "69db67eb-05b6-49cd-bf41-83831f993142",
+      "debugName": "TheCollector_Vehicle_Medium_ZeusES",
+      "title": "Zeus Special",
+      "description": "Wikelo can make new version of Zeus ship. I know it important ship to Human. Not sure why, but yes, very useful ship. Anyway, can upgrade and make a little prettier. What I need listed, if you want, bring. Bye.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_b",
+          "name": "UEE 6th Platoon Medal (Pristine)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_zeus_es_collector_indust",
+          "name": "RSI Zeus Mk II ES Wikelo Work Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 30,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "eda899b9-c58b-48df-88d9-6b34368af2f2",
+      "debugName": "TheCollector_OrbArm",
+      "title": "Armor with horn and string",
+      "description": "Hello, know many humans want saldynium for regen problem. Credits good, yes, but Wikelo can use that, kopion horn, and other things to make special armor.\n\nOnce done, you be very tough. Very scary.\n\nYou see items needed. Bring to the Emporium and I make for you.\n\nBye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_core_01_01_01",
+          "name": "Antium Core",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_helmet_01_01_01",
+          "name": "Antium Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_legs_01_01_01",
+          "name": "Antium Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_arms_01_01_01",
+          "name": "Antium Arms",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "qrt_combat_heavy_arms_02_02_01",
+          "name": "Ana Arms Endro",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_heavy_legs_02_02_01",
+          "name": "Ana Legs Endro",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_heavy_core_02_02_01",
+          "name": "Ana Core Endro",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_heavy_helmet_02_02_01",
+          "name": "Ana Helmet Endro",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "372b0eff-0e55-4654-a3ca-542058cb84cf",
+      "debugName": "TheCollector_SpikeyArmor",
+      "title": "Armor with Vanduul",
+      "description": "Vanduul have strange ways. I never talk to them, old souli used to, but not Wikelo. Anyway, though not friendly, they make interesting thing. If you like, Wikelo can make you look more like.\n\nBring things. Will do.\n\nBye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_a",
+          "name": "Vanduul Plating",
+          "amount": 15
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 15
+        },
+        {
+          "entityClass": "qrt_combat_medium_legs_01_01_16",
+          "name": "Testudo Legs Turfwar",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_combat_medium_helmet_01_01_16",
+          "name": "Testudo Helmet Turfwar",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_combat_medium_core_01_01_16",
+          "name": "Testudo Core Turfwar",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_combat_medium_arms_01_01_16",
+          "name": "Testudo Arms Turfwar",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_combat_medium_backpack_01_01_16",
+          "name": "Testudo Backpack Turfwar",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "qrt_combat_medium_helmet_02_01_01",
+          "name": "Testudo Helmet Clanguard",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_medium_arms_02_01_01",
+          "name": "Testudo Arms Clanguard",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_medium_core_02_01_01",
+          "name": "Testudo Core Clanguard",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_medium_legs_02_01_01",
+          "name": "Testudo Legs Clanguard",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_medium_backpack_02_01_01",
+          "name": "Testudo Backpack Clanguard",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "9c4459ac-2527-4024-b8f1-a08081df252a",
+      "debugName": "TheCollector_BigBooma",
+      "title": "Curious Weapon",
+      "description": "Wikelo find very strange but functional weapon while wandering through your systems. It very simple but very effective. If you bring me things, I show you what I do to it.\n\nVery fun.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_a",
+          "name": "Vanduul Plating",
+          "amount": 2
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 2
+        },
+        {
+          "entityClass": "none_special_ballistic_01",
+          "name": "Boomtube Rocket Launcher",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "none_special_ballistic_01_collector01",
+          "name": "Boomtube \"Clanguard\" Rocket Launcher",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "none_special_ballistic_01_rocket",
+          "name": "Boomtube Rocket",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "9d32ff6d-6b62-43d4-8b71-85d50e4154f5",
+      "debugName": "TheCollector_Nov_Molten",
+      "title": "Do Lava Suit",
+      "description": "If you have armor, Wikelo can make it look warm. Good look for useful armor. Bring me things and will do.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 30
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl1",
+          "name": "RCMBNT-PWL-1",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl2",
+          "name": "RCMBNT-PWL-2",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_pwl3",
+          "name": "RCMBNT-PWL-3",
+          "amount": 4
+        },
+        {
+          "entityClass": "grin_utility_medium_arms_02_01_01",
+          "name": "Strata Arms",
+          "amount": 1
+        },
+        {
+          "entityClass": "grin_utility_medium_legs_02_01_01",
+          "name": "Strata Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "fta_medium_helmet_01_01_05",
+          "name": "Strata Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "grin_utility_medium_backpack_02_01_01",
+          "name": "Strata Backpack",
+          "amount": 1
+        },
+        {
+          "entityClass": "grin_utility_medium_core_02_01_01",
+          "name": "Strata Core",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "grin_utility_medium_core_03_04_01",
+          "name": "Strata Core Heatwave",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "grin_utility_medium_arms_03_04_01",
+          "name": "Strata Arms Heatwave",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "grin_utility_medium_legs_03_04_01",
+          "name": "Strata Legs Heatwave",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "fta_medium_helmet_02_01_01",
+          "name": "Strata Helmet Heatwave",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "grin_utility_medium_backpack_03_04_01",
+          "name": "Strata Backpack Heatwave",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "31f004c2-9b77-4a0f-a500-89f89b606a96",
+      "debugName": "TheCollector_OrbVolt_KopSkull",
+      "title": "Fun Kopion Skull Gun",
+      "description": "Hello. Can make fun change to gun if you want. Use kopion skin for pattern and little skull dangle. Very effective. Shoot much better.\n\nAll you need is bring me parts to the Emporium and will make.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 15
+        },
+        {
+          "entityClass": "volt_rifle_energy_01",
+          "name": "Parallax Energy Assault Rifle",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_kopionhorn_tundra",
+          "name": "Tundra Kopion Horn",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 20
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_rifle_energy_01_collector02",
+          "name": "Parallax \"Fun Kopion Skull\" Energy Assault Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_rifle_energy_01_mag",
+          "name": "Parallax Rifle Battery (80 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "4341c2d8-85b4-4623-8271-eff4480ec674",
+      "debugName": "TheCollector_OrbVolt_MiltSkull",
+      "title": "Fun Military Skull Gun",
+      "description": "Hello. Can do version of gun if you kopion soldier. Make material like soldier camouflage but with dead skull on front. Gun shoot better too.\n\nIf want, bring part to the Emporium and will make.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 15
+        },
+        {
+          "entityClass": "volt_rifle_energy_01",
+          "name": "Parallax Energy Assault Rifle",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang_irradiated",
+          "name": "Irradiated Valakkar Fang (Juvenile)",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 20
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_rifle_energy_01_collector03",
+          "name": "Parallax \"Fun Military Skull\" Energy Assault Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_rifle_energy_01_mag",
+          "name": "Parallax Rifle Battery (80 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "9d32ff6d-6b62-43d4-8b71-85d50e413743",
+      "debugName": "TheCollector_AD_Hush",
+      "title": "Hide Snow Suit",
+      "description": "You want be hidden. Wikelo understand. Not ask questions why. But what do when you in snow? Wikelo have suit for that.\n\nWelcome.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 4
+        },
+        {
+          "entityClass": "kap_combat_light_arms_02_01_01",
+          "name": "Geist Armor Arms ASD Edition",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_light_core_02_01_01",
+          "name": "Geist Armor Core ASD Edition",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_light_helmet_02_01_01",
+          "name": "Geist Armor Helmet ASD Edition",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_light_legs_02_01_01",
+          "name": "Geist Armor Legs ASD Edition",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_light_backpack_01_03_01",
+          "name": "Geist Backpack ASD Edition",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "kap_combat_light_arms_02_02_01",
+          "name": "Geist Armor Arms Snow Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_light_core_02_02_01",
+          "name": "Geist Armor Core Snow Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_light_helmet_02_02_01",
+          "name": "Geist Armor Helmet Snow Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_light_legs_02_02_01",
+          "name": "Geist Armor Legs Snow Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_light_backpack_01_04_01",
+          "name": "Geist Backpack Snow Camo",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "ba4e3db4-0f7d-4692-8b9d-8efe3085e84d",
+      "debugName": "TheCollector_NonePistol",
+      "title": "Hot Shot",
+      "description": "You need a good weapon, yes? Have one for you. Small but powerful. Like an extra spicy balalu pepper. Wikelo make this pistol look extra spicy too. You bring things I need and I do a trade.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_armillaria",
+          "name": "Bluemoon Fungus",
+          "amount": 20
+        },
+        {
+          "entityClass": "none_pistol_ballistic_01",
+          "name": "Tripledown Pistol",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "none_pistol_ballistic_01_collector01",
+          "name": "Tripledown \"Heatwave\" Pistol",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "none_pistol_ballistic_01_mag",
+          "name": "Tripledown Pistol Magazine (12 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "b4a0ba2d-a5f6-496b-bc04-5f0bce49067a",
+      "debugName": "TheCollector_AO_IrrArm",
+      "title": "Make glowy armor",
+      "description": "Wikelo had exciting idea during brief work rest. Was thinking about the little glow worms in Pyro and saw armor get changed to look like.\n\nIf you get me parts, bring to the Emporium and will make for you then you can glow too.\n\nBye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "qrt_specialist_heavy_core_01_01_01",
+          "name": "Antium Core",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_helmet_01_01_01",
+          "name": "Antium Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_arms_01_01_01",
+          "name": "Antium Arms",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_specialist_heavy_legs_01_01_01",
+          "name": "Antium Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "qrt_combat_heavy_core_02_01_01",
+          "name": "Bokto Core",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_heavy_arms_02_01_01",
+          "name": "Bokto Arms",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_heavy_legs_02_01_01",
+          "name": "Bokto Legs",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_combat_heavy_helmet_02_01_01",
+          "name": "Bokto Helmet",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "e404f6c6-997d-4195-8e48-1a8f859398c9",
+      "debugName": "TheCollector_AO_VoltThwack",
+      "title": "Make VOLT shotgun angrier",
+      "description": "You feel like gun not angry enough? VOLT shotgun very powerful, very dangerous, but not scary? Bring to me. Can make very scary and angry.\n\nThey respect you then. Bring to the Emporium and we make.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_trophy_1h_vlkadultfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Adult)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang_irradiated",
+          "name": "Irradiated Valakkar Fang (Juvenile)",
+          "amount": 5
+        },
+        {
+          "entityClass": "volt_shotgun_energy_01",
+          "name": "Prism Laser Shotgun",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_shotgun_energy_01_collector01",
+          "name": "Prism \"Irradiated\" Laser Shotgun",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_shotgun_energy_01_mag",
+          "name": "Prism Laser Shotgun Battery (20 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "05bb00fc-bb90-40a5-bcff-214ff876662b",
+      "debugName": "TheCollector_RedHunterArmour",
+      "title": "Red Fight Armor",
+      "description": "Wikelo hear that Humans think red is the color of passion and anger. This armor good for both. You give me items on list and this red armor is yours.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_sadaryx",
+          "name": "Sadaryx",
+          "amount": 10
+        },
+        {
+          "entityClass": "kap_combat_heavy_helmet_02_01_01",
+          "name": "Monde Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_core_02_01_01",
+          "name": "Monde Core",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_arms_02_01_01",
+          "name": "Monde Arms",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_legs_02_01_01",
+          "name": "Monde Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "vgl_combat_heavy_backpack_01_06_01",
+          "name": "Warden Backpack Monde",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "kap_combat_heavy_helmet_02_06_01",
+          "name": "Monde Helmet Crimson Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_core_02_06_01",
+          "name": "Monde Core Crimson Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_arms_02_06_01",
+          "name": "Monde Arms Crimson Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_legs_02_06_01",
+          "name": "Monde Legs Crimson Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "vgl_combat_heavy_backpack_01_08_01",
+          "name": "Warden Backpack Crimson Camo",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "cc80cd24-2ed0-4e9c-aa10-766e6bbdf3d1",
+      "debugName": "TheCollector_GeminiShotgun",
+      "title": "Red Fight Shotgun",
+      "description": "Shooting can be messy. Red Human Blood everywhere. Not a problem with this shotgun. Splashes blends right in! I give it to you if you give me everything I want on list. Good trade.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_sadaryx",
+          "name": "Sadaryx",
+          "amount": 10
+        },
+        {
+          "entityClass": "gmni_shotgun_ballistic_01",
+          "name": "R97 Shotgun",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "gmni_shotgun_ballistic_01_reward01",
+          "name": "R97 \"Crimson Camo\" Shotgun",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "gmni_shotgun_ballistic_01_mag",
+          "name": "R97 Shotgun Magazine (18 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "9d32ff6d-6b62-43d4-8b71-85d50e413745",
+      "debugName": "TheCollector_Nov_HeavyUtil",
+      "title": "Shiny Builder Suit",
+      "description": "You need utility suit. Good for work. If you like, Wikelo can make shinier. Look real good. See what Wikelo need and bring.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "omc_utility_heavy_core_01_01_16",
+          "name": "Corbel Core Mire",
+          "amount": 1
+        },
+        {
+          "entityClass": "omc_utility_heavy_arms_01_01_16",
+          "name": "Corbel Arms Mire",
+          "amount": 1
+        },
+        {
+          "entityClass": "omc_utility_heavy_legs_01_01_16",
+          "name": "Corbel Legs Mire",
+          "amount": 1
+        },
+        {
+          "entityClass": "clda_env_heavy_backpack_01_02_16",
+          "name": "Novikov Backpack Mire",
+          "amount": 1
+        },
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl1",
+          "name": "RCMBNT-RGL-1",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl2",
+          "name": "RCMBNT-RGL-2",
+          "amount": 3
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_rgl3",
+          "name": "RCMBNT-RGL-3",
+          "amount": 3
+        },
+        {
+          "entityClass": "omc_utility_heavy_helmet_01_01_16",
+          "name": "Corbel Helmet Mire",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "omc_utility_heavy_helmet_01_02_01",
+          "name": "Corbel Helmet Crush",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "omc_utility_heavy_core_01_02_01",
+          "name": "Corbel Core Crush",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "omc_utility_heavy_arms_01_02_01",
+          "name": "Corbel Arms Crush",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "omc_utility_heavy_legs_01_02_01",
+          "name": "Corbel Legs Crush",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "clda_env_heavy_backpack_01_03_01",
+          "name": "Novikov Backpack Crush",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "ab52c274-a29e-4730-a311-917a271917a8",
+      "debugName": "TheCollector_AD_ZapZip",
+      "title": "Snow Snipe",
+      "description": "Want to shoot long away and stay hiding. But it snowing? Wikelo have gun for you.\n\nBring things. I give.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 7
+        },
+        {
+          "entityClass": "volt_sniper_energy_01",
+          "name": "Zenith Laser Sniper Rifle",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_sniper_energy_01_collector01",
+          "name": "Zenith \"Snow Camo\" Laser Sniper Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_sniper_energy_01_mag",
+          "name": "Zenith Laser Sniper Rifle Battery (22 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "eae3334f-310a-4213-88e5-b84d248cc083",
+      "debugName": "TheCollector_vglFlightsuit",
+      "title": "Suit Up Take Off",
+      "description": "Ships have big windows. Everyone can see you flying. You should look the best. Wikelo has very good flight suit for you. Do trade, bring me what I need and Wikelo give suit. Give blueprint as well if you do not have.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "vgl_flightsuit_01_01_01",
+          "name": "Tailwind Flight Suit",
+          "amount": 1
+        },
+        {
+          "entityClass": "vgl_flightsuit_helmet_01_01_01",
+          "name": "Tailwind Flight Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_missionitem_tsg_fueltank",
+          "name": "Expired Quantanium Fuel Canister",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "vgl_flightsuit_01_02_01",
+          "name": "Tailwind Flight Suit Dominion Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "vgl_flightsuit_helmet_01_02_01",
+          "name": "Tailwind Flight Helmet Dominion Camo",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_vgl_flightsuit_helmet_01_02_01",
+        "bp_reward_vgl_flightsuit_01_02_01"
+      ],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "318bc17e-1b97-4ba5-a527-0c81076ef811",
+      "debugName": "TheCollector_Battle",
+      "title": "Test Armor",
+      "description": "Bring me armor and other things and I give you special test armor. First version. Very special. Bring and I give. Bye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "harvestable_trophy_1h_yormandi_eye",
+          "name": "Yormandi Eye",
+          "amount": 14
+        },
+        {
+          "entityClass": "carryable_2h_cy_yormandi_tongue",
+          "name": "Yormandi Tongue",
+          "amount": 7
+        },
+        {
+          "entityClass": "qrt_utility_heavy_helmet_01_01_01",
+          "name": "Palatino Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_utility_heavy_arms_01_01_01",
+          "name": "Palatino Arms",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_utility_heavy_legs_01_01_01",
+          "name": "Palatino Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_utility_heavy_core_01_01_01",
+          "name": "Palatino Core",
+          "amount": 1
+        },
+        {
+          "entityClass": "qrt_utility_heavy_backpack_01_01_01",
+          "name": "Palatino Backpack",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "qrt_utility_heavy_helmet_02_01_01",
+          "name": "Palatino Helmet Mark I",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_utility_heavy_arms_02_01_01",
+          "name": "Palatino Arms Mark I",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_utility_heavy_legs_02_01_01",
+          "name": "Palatino Legs Mark I",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_utility_heavy_core_02_01_01",
+          "name": "Palatino Core Mark I",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "qrt_utility_heavy_backpack_02_01_01",
+          "name": "Palatino Backpack Mark I",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "8df7d9a9-c887-4302-b93c-863788bdca01",
+      "debugName": "TheCollector_SlimyLMG",
+      "title": "Yormandi Gun",
+      "description": "This gun has picture of amazing creature on side. Use it and it make you big and strong like Yormandi. Spit lightning. Bring my items and then you get it. Bye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_trophy_1h_yormandi_eye",
+          "name": "Yormandi Eye",
+          "amount": 6
+        },
+        {
+          "entityClass": "carryable_2h_cy_yormandi_tongue",
+          "name": "Yormandi Tongue",
+          "amount": 3
+        },
+        {
+          "entityClass": "volt_lmg_energy_01",
+          "name": "Fresnel Energy LMG",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_lmg_energy_01_collector02",
+          "name": "Fresnel \"Yormandi\" Energy LMG",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "dcc744eb-e9c5-4364-a1d2-9b39864baecf",
+      "debugName": "TheCollector_NoneAssultRifle",
+      "title": "Your Best Shot",
+      "description": "This rifle is very good at shooting, but could have nicer design. Wikelo fix. Looks very nice now. Give to you for trade. Bring me things, I give you rifle. Even give you blueprint if you need.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "none_rifle_multi_01",
+          "name": "Killshot Rifle",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_tbo_missionitem_tsg_fueltank",
+          "name": "Expired Quantanium Fuel Canister",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "none_rifle_multi_01_collector01",
+          "name": "Killshot \"Dominion Camo\" Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "none_rifle_multi_01_mag",
+          "name": "Killshot Rifle Magazine (45 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_none_rifle_multi_01_collector01"
+      ],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "7dfd619c-9977-4788-80bb-5671d221c342",
+      "debugName": "TheCollector_Favours_CouncilScrip",
+      "title": "Trade Council Scrip for Favors?",
+      "description": "If you want other way to get favors from Wikelo, have thing for you. Wikelo have need for scrip given out by Council group. Wikelo not part of thief souli, but has business from time to time.\n\nIf you bring scrips to the Emporium, will trade for favor.\n\nBye.",
+      "category": "favor",
+      "subCategory": "favor",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_council_1",
+          "name": "Council Scrip",
+          "amount": 50
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": true,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "f6717a7c-115e-4e27-8efe-ec8e01b56487",
+      "debugName": "TheCollector_Favours_MercScrip",
+      "title": "Trade Merc Scrip for Favors?",
+      "description": "Wikelo has another way to get favors if you interested.\n\nYour Mercenary souli has scrip metal, used like favors, but made of very interesting metal that Wikelo need for new project.\n\nIf you bring scrips to the Emporium, will trade for favor.\n\nBye.",
+      "category": "favor",
+      "subCategory": "favor",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 50
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": true,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "8743632c-fac2-4b7c-ae11-a48e683f11fa",
+      "debugName": "TheCollector_Favours_IrradiatedPearls",
+      "title": "Trade Worm Parts for Favors?",
+      "description": "Have new way to get favors from Wikelo. Hear much about worm things in radiation storms. Made up of many interesting parts that Wikelo find use for.\n\nIf you bring parts to the Emporium, will trade for favor.\n\nBye.",
+      "category": "favor",
+      "subCategory": "favor",
+      "costs": [
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_high_02",
+          "name": "Irradiated Valakkar Pearl (Grade AA)",
+          "amount": 12
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": true,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "1141c381-b38d-47af-b8eb-9b8a35985a8e",
+      "debugName": "TheCollector_Favours_Caranite",
+      "title": "Turn Things to Favor",
+      "description": "Maybe Wikelo not have something you want made (that strange, but okay). Old souli would give out favors, very good way to prove that you do work for me. Collect enough and trade when I have something you want.\n\nBring things to the Emporium and will trade for favor.\n\nBye.",
+      "category": "favor",
+      "subCategory": "favor",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 50
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": true,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "82a0d506-def3-4ab5-b0e0-8833c7102f34",
+      "debugName": "TheCollector_Favours_PolarisParts",
+      "title": "Want Polaris? Need something special.",
+      "description": "Wikelo need large amounts of quantainium and is willing to give you nice Polaris in exchange but also know many humans not have much space, so you trade as you go. Wikelo will you Polaris bits if you want trade quantainium. Work like favors. Help Wikelo remember how much you give.\n\nBring quantainium to the Emporium and will trade for bits.\n\nBye.",
+      "category": "favor",
+      "subCategory": "favor",
+      "costs": [
+        {
+          "resourceName": "Quantanium",
+          "name": "Quantanium",
+          "scu": 24
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo_special",
+          "name": "Polaris Bit",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": true,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "028d7a46-bd97-4e32-a5bf-0b1775f05e1c",
+      "debugName": "TheCollector_Intro",
+      "title": "Wikelo Arrive to System",
+      "description": "Hello, I am Wikelo. Recent addition to your system and very excited to be here. Spent many time here in UEE and happy to spent more.\n\nHave place where I make things from other things.\n\nNeed person to bring me useful things to finish project I work on. You have list. Get, please. I am at the Emporium.\n\nWill give you item for your help.\n\nAlso, when done, if you want to do more. Have many things can make in my humble shop. Come, look at pretty poster and then decide what you want me to make.\n\nBye.",
+      "category": "intro",
+      "subCategory": "intro",
+      "costs": [
+        {
+          "entityClass": "drink_bottle_vestal_01_a",
+          "name": "Vestal Water",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_kopionhorn_tundra",
+          "name": "Tundra Kopion Horn",
+          "amount": 3
+        }
+      ],
+      "rewards": [],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "2597ef18-f1d5-4d97-bba4-8b6f900ded50",
+      "debugName": "TheCollector_FoodOrder",
+      "title": "Very Hungry",
+      "description": "You humans keep Wikelo very busy. Work more than when I at old souli. But Wikelo very hungry now and can't get food.\n\nPlease help. Bring food and drink to Wikelo Emporium at the Emporium.\n\nVery appreciate your help. Will give thing in return.\n\nBye.",
+      "category": "food",
+      "subCategory": "food",
+      "costs": [
+        {
+          "entityClass": "drink_bottle_smoothie_01_a",
+          "name": "Berry Blend Smoothie",
+          "amount": 1
+        },
+        {
+          "entityClass": "food_icecream_eff_01_fatfree_a",
+          "name": "Ermer Family Farms Fat Free Ice Cream",
+          "amount": 1
+        }
+      ],
+      "rewards": [],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": true,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    }
+  ],
+  "standings": {
+    "reputationstanding_wikelo_000": {
+      "name": "New Customer",
+      "minReputation": 0
+    },
+    "reputationstanding_wikelo_001": {
+      "name": "Very Good Customer",
+      "minReputation": 340
+    },
+    "reputationstanding_wikelo_002": {
+      "name": "Very Best Customer",
+      "minReputation": 999
+    },
+    "reputationstanding_wikelo_003": {
+      "name": "Idris",
+      "minReputation": 999
+    }
+  },
+  "summary": {
+    "totalTrades": 66,
+    "vehicleTrades": 41,
+    "gearTrades": 18,
+    "favorTrades": 5
+  }
+}

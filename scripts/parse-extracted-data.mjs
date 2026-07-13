@@ -66,6 +66,7 @@ import {
 import { parseQualityBands } from './lib/parseQualityBands.mjs'
 import { parseMissionBrokerData } from './lib/parseMissionBroker.mjs'
 import { readGameBuildVersion } from './lib/gameBuildVersion.mjs'
+import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -4541,6 +4542,18 @@ async function main() {
     contractData.repRewardAmounts
   )
   enrichContractStandingData(contractData, reputationSystem, localization)
+
+  // Wikelo Emporium barter trades (TheCollector contracts)
+  console.log('\n[WIKELO] Parsing Wikelo Emporium trades...')
+  const wikeloData = parseWikeloTrades({
+    extractedData: EXTRACTED_DATA,
+    localization,
+    repRewardAmounts,
+  })
+  console.log(`  Parsed ${wikeloData.trades.length} Wikelo trades`)
+  for (const issue of wikeloData.issues) {
+    validationIssues.push(`[Wikelo] ${issue}`)
+  }
   
   // Parse weapons, ordnance, and modules
   console.log('\n[6/7] Parsing FPS weapons, ordnance, and salvage modules...')
@@ -4790,6 +4803,20 @@ async function main() {
     }
   })
   
+  // Wikelo Emporium trades (barter contracts at TheCollector)
+  saveJson('game-wikelo-trades.json', {
+    _source: 'Star Citizen Game Files (TheCollector contract generator)',
+    _extracted: new Date().toISOString(),
+    trades: wikeloData.trades,
+    standings: wikeloData.standings,
+    summary: {
+      totalTrades: wikeloData.trades.length,
+      vehicleTrades: wikeloData.trades.filter(t => t.category === 'vehicle').length,
+      gearTrades: wikeloData.trades.filter(t => t.category === 'gear').length,
+      favorTrades: wikeloData.trades.filter(t => t.category === 'favor').length
+    }
+  })
+
   // FPS Weapons (replaces wiki-enriched weapon data)
   saveJson('game-fps-weapons.json', {
     _source: 'Star Citizen Game Files (extracted)',

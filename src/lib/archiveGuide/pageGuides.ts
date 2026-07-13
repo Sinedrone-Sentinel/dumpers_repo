@@ -29,6 +29,22 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     relatesTo: ['Mission Tracker', 'Resource Tracker', 'Custom Orders', 'Settings'],
   },
   {
+    id: 'wikelo',
+    title: 'Wikelo',
+    description: 'Browse every Wikelo Emporium barter trade — what to hand in and what you get back.',
+    details: [
+      'Every Wikelo trade is listed as a card: hand-in items on the front, full details on click',
+      'Filter tags by reward category: Ships, Ground Vehicles, Armor, Weapons, Gear, Favors',
+      'Search by trade name, hand-in item, or reward item',
+      'Each card shows the Wikelo reputation gained and any customer-rank requirement',
+      'Trades marked "Intro required" unlock after completing "Wikelo Arrive to System"',
+      'Trades that also award a crafting blueprint carry a ★ Blueprint tag',
+      'DFP estimates the fair value of everything you hand in — ship and vehicle rewards show N/A because they are account-bound',
+      'Mission button jumps to the Wikelo Emporium faction in the Mission Tracker browse view',
+    ],
+    relatesTo: ['Blueprints', 'Mission Tracker'],
+  },
+  {
     id: 'targets',
     title: 'Mission Tracker',
     description: 'Your personal wishlist of blueprints you\'re working towards unlocking.',
