@@ -140,11 +140,19 @@ export default function WikeloRewardSilhouette({ kind, className = '' }: WikeloR
       aria-hidden
     >
       {imageSrc ? (
-        <img
-          src={imageSrc}
-          alt=""
-          className="w-[72%] max-h-[110px] h-[72%] object-contain"
-          style={{ filter: 'brightness(0)', opacity: 0.18 }}
+        <div
+          className="w-[72%] max-h-[110px] h-[72%]"
+          style={{
+            backgroundColor: 'rgba(148, 163, 184, 0.18)',
+            maskImage: `url(${imageSrc})`,
+            maskSize: 'contain',
+            maskRepeat: 'no-repeat',
+            maskPosition: 'center',
+            WebkitMaskImage: `url(${imageSrc})`,
+            WebkitMaskSize: 'contain',
+            WebkitMaskRepeat: 'no-repeat',
+            WebkitMaskPosition: 'center',
+          }}
         />
       ) : (
         <svg
