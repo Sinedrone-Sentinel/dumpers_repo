@@ -336,15 +336,6 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
 
-      {isSuperAdmin && syncResult && (
-        <div className="mb-4 p-3 rounded-lg bg-purple-900/20 border border-purple-500/30 text-purple-200 text-sm">
-          Catalog synced from blueprints: {syncResult.totalActive} active
-          {syncResult.added > 0 && ` · ${syncResult.added} new`}
-          {syncResult.reactivated > 0 && ` · ${syncResult.reactivated} reactivated`}
-          {syncResult.deactivated > 0 && ` · ${syncResult.deactivated} deactivated`}
-        </div>
-      )}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 w-full min-w-0">
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel}</p>
