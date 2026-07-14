@@ -85,7 +85,6 @@ export default function ResourceTrackerRoute() {
     error,
     refresh,
   } = useResourceCatalog({
-    enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
     withInventory: !isGuest,
     inventoryContext,
