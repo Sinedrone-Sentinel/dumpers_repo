@@ -165,7 +165,7 @@ export default function WikeloTradeCard({
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col text-sm">
-          <div className={useBlueprintPaper ? PAPER_PANEL : SILHOUETTE_PANEL}>
+          <div className={`flex-1 flex flex-col min-h-0 ${useBlueprintPaper ? PAPER_PANEL : SILHOUETTE_PANEL}`}>
             {!useBlueprintPaper && <WikeloRewardSilhouette kind={rewardSilhouette} />}
             <p className="relative z-[1] text-[10px] uppercase tracking-wide text-sky-200/70 mb-1.5">
               Hand in
