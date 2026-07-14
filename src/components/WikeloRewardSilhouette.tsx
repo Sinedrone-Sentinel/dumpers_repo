@@ -110,6 +110,20 @@ const SILHOUETTE_PATHS: Record<WikeloSilhouetteKind, string> = {
 /** Image-based silhouettes (better quality than hand-coded SVG paths) */
 const SILHOUETTE_IMAGES: Partial<Record<WikeloSilhouetteKind, string>> = {
   fighter: '/silhouettes/fighter.png',
+  ground: '/silhouettes/ground.png',
+  armor: '/silhouettes/armor.png',
+  flightsuit: '/silhouettes/flightsuit.png',
+  backpack: '/silhouettes/backpack.png',
+  pistol: '/silhouettes/pistol.png',
+  rifle: '/silhouettes/rifle.png',
+  shotgun: '/silhouettes/shotgun.png',
+  sniper: '/silhouettes/sniper.png',
+  lmg: '/silhouettes/lmg.png',
+  launcher: '/silhouettes/launcher.png',
+  favor: '/silhouettes/favor.png',
+  handshake: '/silhouettes/handshake.png',
+  food: '/silhouettes/food.png',
+  rep: '/silhouettes/rep.png',
 }
 
 interface WikeloRewardSilhouetteProps {
