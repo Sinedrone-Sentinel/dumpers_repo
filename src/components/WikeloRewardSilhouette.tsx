@@ -107,7 +107,7 @@ const SILHOUETTE_PATHS: Record<WikeloSilhouetteKind, string> = {
     'M50 14 L58 32 L76 36 L64 50 L66 68 L50 60 L34 68 L36 50 L24 36 L42 32 Z',
 }
 
-/** Image-based silhouettes (better quality than hand-coded SVG paths) */
+/** Image-based silhouettes */
 const SILHOUETTE_IMAGES: Partial<Record<WikeloSilhouetteKind, string>> = {
   fighter: '/silhouettes/fighter.png',
   ground: '/silhouettes/ground.png',
@@ -144,6 +144,7 @@ export default function WikeloRewardSilhouette({ kind, className = '' }: WikeloR
           src={imageSrc}
           alt=""
           className="w-[72%] max-h-[110px] h-[72%] object-contain opacity-[0.18]"
+          style={{ mixBlendMode: 'multiply' }}
         />
       ) : (
         <svg
