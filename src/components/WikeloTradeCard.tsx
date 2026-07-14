@@ -5,8 +5,15 @@ import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { wikeloRewardResourceKey } from '../config/wikeloItems'
 import type { WikeloTrade } from '../routes/wikelo'
 
-const CONTENT_PANEL = 'relative rounded-lg border border-slate-600/40 bg-slate-950/20 p-2.5'
-/** Hand-in chips — light glass so reward silhouettes stay visible. */
+const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
+const HAND_IN_PANEL = 'relative rounded-lg border border-slate-600/40 bg-slate-950/20 p-2.5'
+
+/** True when the trade awards a crafting blueprint — use blueprint paper. */
+function wikeloTradeUsesBlueprintPaper(trade: WikeloTrade): boolean {
+  return trade.blueprintPools.length > 0
+}
+
+/** Hand-in chips — light glass over panel backgrounds. */
 const HAND_IN_CHIP_CLASS =
   'inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words bg-slate-950/35 text-sky-100/90 border-sky-400/30 backdrop-blur-[2px]'
 
@@ -99,6 +106,7 @@ export default function WikeloTradeCard({
   const dfpEngineReady = useDfpEngineReady()
   // eslint-disable-next-line react-hooks/exhaustive-deps -- recompute when engine loads
   const dfp = useMemo(() => calculateWikeloTradeDfp(trade), [trade, dfpEngineReady])
+  const useBlueprintPaper = wikeloTradeUsesBlueprintPaper(trade)
 
   const dfpLabel = formatWikeloDfpLabel(dfp)
   const dfpTooltip = dfp.isVehicleReward
@@ -157,7 +165,7 @@ export default function WikeloTradeCard({
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col text-sm">
-          <div className={`flex-1 flex flex-col min-h-0 ${CONTENT_PANEL}`}>
+          <div className={`flex-1 flex flex-col min-h-0 ${useBlueprintPaper ? PAPER_PANEL : HAND_IN_PANEL}`}>
             <p className="text-[10px] uppercase tracking-wide text-sky-200/70 mb-1.5">
               Hand in
             </p>
