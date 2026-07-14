@@ -876,74 +876,78 @@ export default function BazaarRoute() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <section className="space-y-6">
-              <div>
-                <h2 className="text-white font-medium mb-3">My assigned orders</h2>
-                {myAssignedOrders.length === 0 ? (
-                  <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                    No orders assigned to you. Claim items from a buy listing above.
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {myAssignedOrders.map((order) => {
-                      const orderItems = fulfillmentItemsForOrder(order)
-                      const stockCheck = getStockCheckForOrder(order)
-                      const isSubmitting = submittingOrderId === order.id
+              {activeTab === 'fulfillment' && (
+                <div>
+                  <h2 className="text-white font-medium mb-3">My assigned orders</h2>
+                  {myAssignedOrders.length === 0 ? (
+                    <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                      No orders assigned to you. Claim items from a buy listing above.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {myAssignedOrders.map((order) => {
+                        const orderItems = fulfillmentItemsForOrder(order)
+                        const stockCheck = getStockCheckForOrder(order)
+                        const isSubmitting = submittingOrderId === order.id
 
-                      return (
-                        <AssignedOrderCard
+                        return (
+                          <AssignedOrderCard
+                            key={order.id}
+                            order={order}
+                            blueprintById={blueprintById}
+                            dfpDisplayEnabled={dfpDisplayEnabled}
+                            craftDeductInventory={craftDeductInventory}
+                            reputations={reputations}
+                            labelMap={labelMap}
+                            quantityByKey={quantityByKey}
+                            orderItems={orderItems}
+                            stockCheck={stockCheck}
+                            notes={craftNotesByOrderId[order.id] ?? ''}
+                            onNotesChange={(value) =>
+                              setCraftNotesByOrderId((prev) => ({ ...prev, [order.id]: value }))
+                            }
+                            submitting={isSubmitting}
+                            onAbandon={() => void handleAbandon(order.id)}
+                            onStartWork={() => void handleStartWork(order.id)}
+                            onCompleteCraft={() => void handleCompleteCraft(order.id)}
+                          />
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'store' && (
+                <div>
+                  <h2 className="text-white font-medium mb-3">My WTS sales</h2>
+                  {myWtsSales.length === 0 ? (
+                    <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                      No active sales from your sell listing yet.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {myWtsSales.map((order) => (
+                        <WtsSaleOrderCard
                           key={order.id}
                           order={order}
+                          userId={userId ?? ''}
                           blueprintById={blueprintById}
                           dfpDisplayEnabled={dfpDisplayEnabled}
-                          craftDeductInventory={craftDeductInventory}
-                          reputations={reputations}
-                          labelMap={labelMap}
-                          quantityByKey={quantityByKey}
-                          orderItems={orderItems}
-                          stockCheck={stockCheck}
-                          notes={craftNotesByOrderId[order.id] ?? ''}
-                          onNotesChange={(value) =>
-                            setCraftNotesByOrderId((prev) => ({ ...prev, [order.id]: value }))
-                          }
-                          submitting={isSubmitting}
+                          submitting={submittingOrderId === order.id}
                           onAbandon={() => void handleAbandon(order.id)}
                           onStartWork={() => void handleStartWork(order.id)}
-                          onCompleteCraft={() => void handleCompleteCraft(order.id)}
+                          onMarkReady={() => void handleMarkWtsReady(order.id)}
                         />
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <h2 className="text-white font-medium mb-3">My WTS sales</h2>
-                {myWtsSales.length === 0 ? (
-                  <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                    No active sales from your sell listing yet.
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {myWtsSales.map((order) => (
-                      <WtsSaleOrderCard
-                        key={order.id}
-                        order={order}
-                        userId={userId ?? ''}
-                        blueprintById={blueprintById}
-                        dfpDisplayEnabled={dfpDisplayEnabled}
-                        submitting={submittingOrderId === order.id}
-                        onAbandon={() => void handleAbandon(order.id)}
-                        onStartWork={() => void handleStartWork(order.id)}
-                        onMarkReady={() => void handleMarkWtsReady(order.id)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </section>
 
             <section className="space-y-6">
-              {myBuyingOrders.length > 0 && (
+              {activeTab === 'fulfillment' && myBuyingOrders.length > 0 && (
                 <div>
                   <h2 className="text-white font-medium mb-3">Orders you&apos;re buying</h2>
                   <p className="text-slate-500 text-xs mb-3">
@@ -1027,96 +1031,102 @@ export default function BazaarRoute() {
                   </div>
                 )}
 
-                <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
-                {myFinishedOrders.length === 0 ? (
-                  <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                    No WTB orders waiting on customer pickup confirmation.
-                  </div>
-                ) : (
-                  <div className="space-y-2 mb-6">
-                    {myFinishedOrders.map((order) => {
-                      const totalDfp = orderTotalDfp(order)
-
-                      return (
-                        <div
-                          key={order.id}
-                          className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3"
-                        >
-                          <div>
-                            <p className="text-white text-sm font-medium">{order.title}</p>
-                            <p className="text-slate-500 text-xs mt-1">
-                              {order.status.replace(/_/g, ' ')}
-                              {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
-                            </p>
-                            <div className="mt-2">
-                              <TradeContactChip role="customer" profile={order.requester} compact />
-                            </div>
-                            <div className="mt-2">
-                              <ReputationBadge
-                                label="Buyer rep"
-                                reputation={buyerReputationFromRow(reputations[order.requester_id])}
-                              />
-                            </div>
-                            <p className="text-cyan-300/80 text-xs mt-2">
-                              Waiting for customer pickup confirmation in My Listings.
-                            </p>
-                            <div className="mt-2">
-                              <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
-                {fulfillments.length === 0 ? (
-                  <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
-                    No fulfillments yet.
-                  </div>
-                ) : (
-                  <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                    {fulfillments.map((entry) => (
-                      <div
-                        key={entry.id}
-                        className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
-                      >
-                        <p className="text-white text-sm font-medium">
-                          {entry.order?.title ?? 'Order'}
-                        </p>
-                        <p className="text-slate-500 text-xs mt-1">
-                          {new Date(entry.created_at).toLocaleString()}
-                          {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
-                          {dfpDisplayEnabled &&
-                            entry.order?.total_dfp_auec != null &&
-                            Number(entry.order.total_dfp_auec) > 0 &&
-                            ` · ${formatDfpAuec(Number(entry.order.total_dfp_auec))}`}
-                        </p>
-                        {entry.notes && (
-                          <p className="text-slate-400 text-sm mt-2">{entry.notes}</p>
-                        )}
-                        {entry.items && entry.items.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            {entry.items.map((item, idx) => (
-                              <span
-                                key={`${entry.id}-${idx}`}
-                                className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
-                              >
-                                {getResourceLabel(item.resource_key, labelMap)} −
-                                {formatQuantityForResource(item.resource_key, Number(item.quantity))}{' '}
-                                {resourceQuantityUnitLabel(item.resource_key)}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                {activeTab === 'fulfillment' && (
+                  <>
+                    <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
+                    {myFinishedOrders.length === 0 ? (
+                      <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                        No WTB orders waiting on customer pickup confirmation.
                       </div>
-                    ))}
-                  </div>
+                    ) : (
+                      <div className="space-y-2 mb-6">
+                        {myFinishedOrders.map((order) => {
+                          const totalDfp = orderTotalDfp(order)
+
+                          return (
+                            <div
+                              key={order.id}
+                              className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3"
+                            >
+                              <div>
+                                <p className="text-white text-sm font-medium">{order.title}</p>
+                                <p className="text-slate-500 text-xs mt-1">
+                                  {order.status.replace(/_/g, ' ')}
+                                  {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
+                                </p>
+                                <div className="mt-2">
+                                  <TradeContactChip role="customer" profile={order.requester} compact />
+                                </div>
+                                <div className="mt-2">
+                                  <ReputationBadge
+                                    label="Buyer rep"
+                                    reputation={buyerReputationFromRow(reputations[order.requester_id])}
+                                  />
+                                </div>
+                                <p className="text-cyan-300/80 text-xs mt-2">
+                                  Waiting for customer pickup confirmation in My Listings.
+                                </p>
+                                <div className="mt-2">
+                                  <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
+
+              {activeTab === 'fulfillment' && (
+                <div>
+                  <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
+                  {fulfillments.length === 0 ? (
+                    <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                      No fulfillments yet.
+                    </div>
+                  ) : (
+                    <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                      {fulfillments.map((entry) => (
+                        <div
+                          key={entry.id}
+                          className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                        >
+                          <p className="text-white text-sm font-medium">
+                            {entry.order?.title ?? 'Order'}
+                          </p>
+                          <p className="text-slate-500 text-xs mt-1">
+                            {new Date(entry.created_at).toLocaleString()}
+                            {entry.order?.status && ` · ${entry.order.status.replace(/_/g, ' ')}`}
+                            {dfpDisplayEnabled &&
+                              entry.order?.total_dfp_auec != null &&
+                              Number(entry.order.total_dfp_auec) > 0 &&
+                              ` · ${formatDfpAuec(Number(entry.order.total_dfp_auec))}`}
+                          </p>
+                          {entry.notes && (
+                            <p className="text-slate-400 text-sm mt-2">{entry.notes}</p>
+                          )}
+                          {entry.items && entry.items.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                              {entry.items.map((item, idx) => (
+                                <span
+                                  key={`${entry.id}-${idx}`}
+                                  className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
+                                >
+                                  {getResourceLabel(item.resource_key, labelMap)} −
+                                  {formatQuantityForResource(item.resource_key, Number(item.quantity))}{' '}
+                                  {resourceQuantityUnitLabel(item.resource_key)}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </section>
           </div>
         </>

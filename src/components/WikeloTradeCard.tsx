@@ -16,10 +16,16 @@ const SILHOUETTE_PANEL =
 const HAND_IN_CHIP_CLASS =
   'inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words bg-slate-950/35 text-sky-100/90 border-sky-400/30 backdrop-blur-[2px]'
 
-/** Reward items listable on WTS/WTB (gear + currency; not blueprints or game-bound vehicles). */
+/** True if the reward name looks like ammo (magazines, batteries). */
+function isAmmoReward(name: string): boolean {
+  const lower = name.toLowerCase()
+  return lower.includes('magazine') || lower.includes('battery')
+}
+
+/** Reward items listable on WTS/WTB (gear + currency; not blueprints, vehicles, or ammo). */
 export function tradableWikeloRewards(trade: WikeloTrade) {
   return trade.rewards
-    .filter((r) => r.kind === 'item')
+    .filter((r) => r.kind === 'item' && !isAmmoReward(r.name))
     .map((r) => {
       const resourceKey = wikeloRewardResourceKey(r.entityClass)
       return resourceKey ? { resourceKey, label: r.name, quantity: r.amount } : null
