@@ -35,12 +35,12 @@
   }
 
   /*
-   * Blueprint grid: columns are at least 17.5rem; when a full extra column
-   * cannot fit, existing columns grow equally (auto-fit + 1fr) to use the row.
+   * Blueprint grid: columns are at least 17.5rem; auto-fill keeps a lone card on
+   * the last row from stretching across the full row (auto-fit would expand it).
    */
   .blueprint-card-grid {
     @apply grid gap-3 sm:gap-4 w-full min-w-0;
-    grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
   }
 
   .blueprint-card-fixed {

@@ -2945,6 +2945,9 @@ function parseBlueprintDefinitions(localization = {}) {
           'vanguard': 'Vanguard',
           'pontes': 'Pontes',
           'goliath': 'Goliath',
+          'v80111': 'V801-11',
+          'vb80112': 'V801-12',
+          'v80112': 'V801-12',
           // Generic fallback processing for unknown names
         }
         

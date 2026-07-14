@@ -1,6 +1,6 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-13T04:47:23.493Z",
+  "_extracted": "2026-07-14T01:05:38.285Z",
   "stats": {
     "internalNames": 1553,
     "displayNames": 1536,
@@ -5389,7 +5389,7 @@
       "categoryName": "Veh. Comp. S2"
     },
     "radr_grnp_s02_vb80112": {
-      "blueprintName": "Vb80112",
+      "blueprintName": "V801-12",
       "categoryName": "Veh. Comp. S2"
     },
     "radr_grnp_s02_vigilance": {
@@ -11715,9 +11715,9 @@
       "internalName": "radr_grnp_s02_savoir",
       "blueprintName": "Savoir"
     },
-    "vb80112": {
+    "v801-12": {
       "internalName": "radr_grnp_s02_vb80112",
-      "blueprintName": "Vb80112"
+      "blueprintName": "V801-12"
     },
     "vigilance": {
       "internalName": "radr_grnp_s02_vigilance",

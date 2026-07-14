@@ -1193,22 +1193,24 @@ function GuideLocationCard({
     <div className="p-4 rounded-lg border bg-slate-800/30 border-slate-700/50">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          {onLocationClick ? (
-            <button
-              type="button"
-              onClick={() => onLocationClick(location)}
-              className="font-semibold text-white hover:text-orange-300 transition-colors text-left block"
-            >
-              {location}
-            </button>
-          ) : (
-            <h3 className="font-semibold text-white">{location}</h3>
-          )}
-          {system && (
-            <span className={`block text-xs ${systemColor} uppercase tracking-wider mt-0.5`}>
-              {system} System
-            </span>
-          )}
+          <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+            {onLocationClick ? (
+              <button
+                type="button"
+                onClick={() => onLocationClick(location)}
+                className="font-semibold text-white hover:text-orange-300 transition-colors text-left"
+              >
+                {location}
+              </button>
+            ) : (
+              <h3 className="font-semibold text-white">{location}</h3>
+            )}
+            {system && (
+              <span className={`text-xs ${systemColor} uppercase tracking-wider`}>
+                {system} System
+              </span>
+            )}
+          </div>
         </div>
         <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
           {sortedOres.length} ore{sortedOres.length !== 1 ? 's' : ''}
@@ -1517,10 +1519,12 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
       <div className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
         <div className="p-4 border-b border-slate-800 flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-white">{location}</h2>
-            {system && (
-              <span className={`block text-sm ${systemColor} mt-0.5`}>{system} System</span>
-            )}
+            <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+              <h2 className="text-lg font-semibold text-white">{location}</h2>
+              {system && (
+                <span className={`text-sm ${systemColor}`}>{system} System</span>
+              )}
+            </div>
             {navHint && (
               <p className="text-xs text-sky-300/90 mt-1">📍 {navHint}</p>
             )}
