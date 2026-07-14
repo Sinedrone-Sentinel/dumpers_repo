@@ -1,3 +1,4 @@
+import { AMMO_CRAFT_MATERIAL_QUALITY } from '../config/dfp'
 import { DEFAULT_QUALITY, getDefaultBandQuality } from './qualityBands'
 import type { BlueprintSlot, BlueprintWithSlots } from './blueprintResources'
 
@@ -20,8 +21,11 @@ export function defaultQualityForSlotResource(resourceName: string): number {
 export function buildDefaultSlotQualities(blueprint: BlueprintWithSlots): Record<number, number> {
   const qualities: Record<number, number> = {}
   const slots = blueprint.slots ?? []
+  const isAmmo = blueprint.categoryName === 'Ammo'
   for (let i = 0; i < slots.length; i++) {
-    qualities[i] = defaultQualityForSlotResource(resolveSlotResourceName(slots[i]))
+    qualities[i] = isAmmo
+      ? AMMO_CRAFT_MATERIAL_QUALITY
+      : defaultQualityForSlotResource(resolveSlotResourceName(slots[i]))
   }
   return qualities
 }

@@ -784,7 +784,7 @@ export default function ResourceBuyOrderPanel({
                   <span className="text-slate-400"> · Base price only (Q0)</span>
                 )}
                 {resUsesFlatBandPrice && (
-                  <span className="text-slate-400"> · Base price only (Q0 / Band 1)</span>
+                  <span className="text-slate-400"> · Purchased Q0 (Q500) or Band 1 below store</span>
                 )}
               </p>
             )}

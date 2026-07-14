@@ -8,6 +8,9 @@ const commodityBases = JSON.parse(
   fs.readFileSync(path.join(root, 'src/data/dfp-commodity-bases.json'), 'utf8')
 )
 const engine = await import(pathToFileURL(path.join(root, 'public/dfp-engine.js')).href)
+const qualityBands = JSON.parse(
+  fs.readFileSync(path.join(root, 'src/data/game-quality-bands.json'), 'utf8')
+)
 
 function band4Defaults(bp) {
   const qualities = {}
@@ -62,8 +65,12 @@ if (igniter) {
 
 const ammoMag = catalog.blueprints.find((b) => b.internalName === 'behr_shotgun_ballistic_01_mag')
 if (ammoMag) {
-  const ammo = engine.calculateBlueprintDfp(ammoMag)
-  console.log(`BR-2 mag (ammo, quality-agnostic): ${ammo.total.toLocaleString()}`)
+  const ammo = engine.calculateBlueprintDfp(ammoMag, {
+    bandThresholdsForResource: (name) => qualityBands.bandThresholds[name.toLowerCase()],
+  })
+  console.log(`BR-2 mag (ammo, Q1 commodity): ${ammo.total.toLocaleString()}`)
+  console.assert(ammo.acquisitionPremium === 0, 'Ammo must not include acquisition premium')
+  console.assert(ammo.total < 10_000, 'Ammo DFP must be commodity-scale, not mission-reward premium')
 }
 
 const targets = ['behr_shotgun_ballistic_01', 'lbco_sniper_energy_01_sunset01', 'carryable_2h_cy_collectormaterial_001']
@@ -108,25 +115,22 @@ console.assert(rmcByDisplay === rmcBase.basePerScu * 10, 'RMC salvage buy anchor
 
 console.log('\n--- Banded ore pricing ---')
 
-const qualityBands = JSON.parse(
-  fs.readFileSync(path.join(root, 'src/data/game-quality-bands.json'), 'utf8')
-)
 const berylBands = qualityBands.bandThresholds.beryl
 const ironBands = qualityBands.bandThresholds.iron
 const qty = 300
 
-const berylQ0 = engine.calculateMaterialDfpPrice('Beryl', 0, qty, berylBands)
+const berylQ0 = engine.calculateMaterialDfpPrice('Beryl', 500, qty, berylBands)
 const berylBand1 = engine.calculateMaterialDfpPrice('Beryl', berylBands[0], qty, berylBands)
 const berylBand2 = engine.calculateMaterialDfpPrice('Beryl', berylBands[1], qty, berylBands)
 const berylBand4 = engine.calculateMaterialDfpPrice('Beryl', berylBands[3], qty, berylBands)
 
-console.log(`Beryl ${qty} SCU Q0: ${berylQ0.toLocaleString()}`)
+console.log(`Beryl ${qty} SCU Q0 (Q500 purchased): ${berylQ0.toLocaleString()}`)
 console.log(`Beryl ${qty} SCU Band1 Q${berylBands[0]}: ${berylBand1.toLocaleString()}`)
 console.log(`Beryl ${qty} SCU Band2 Q${berylBands[1]}: ${berylBand2.toLocaleString()}`)
 console.log(`Beryl ${qty} SCU Band4 Q${berylBands[3]}: ${berylBand4.toLocaleString()}`)
 
-console.assert(berylQ0 === berylBand1, 'Beryl Q0 must equal Band 1 flat base')
-console.assert(berylBand2 > berylBand1, 'Beryl Band 2 must exceed Band 1 flat base')
+console.assert(berylBand1 < berylQ0, 'Beryl Band 1 must be below Q0 (Q500 purchased)')
+console.assert(berylBand2 > berylBand1, 'Beryl Band 2 must exceed Band 1')
 console.assert(berylBand4 > berylBand2, 'Beryl Band 4 must exceed Band 2 via quality engine')
 console.assert(
   berylBand2 !== Math.round(19643 * (80 / 50) * qty),
@@ -138,12 +142,12 @@ console.assert(
   'Beryl Band 2 uses exact band Q log-linear scale'
 )
 
-const ironQ0 = engine.calculateMaterialDfpPrice('Iron', 0, qty, ironBands)
+const ironQ0 = engine.calculateMaterialDfpPrice('Iron', 500, qty, ironBands)
 const ironBand1 = engine.calculateMaterialDfpPrice('Iron', ironBands[0], qty, ironBands)
 const ironBand4 = engine.calculateMaterialDfpPrice('Iron', ironBands[3], qty, ironBands)
 
-console.log(`Iron ${qty} SCU Q0: ${ironQ0.toLocaleString()}`)
+console.log(`Iron ${qty} SCU Q0 (Q500): ${ironQ0.toLocaleString()}`)
 console.log(`Iron ${qty} SCU Band4 Q${ironBands[3]}: ${ironBand4.toLocaleString()}`)
 
-console.assert(ironQ0 === ironBand1, 'Iron Q0 must equal Band 1 flat base')
-console.assert(ironBand4 > ironQ0, 'Iron Band 4 must exceed flat base')
+console.assert(ironBand1 < ironQ0, 'Iron Band 1 must be below Q0 (Q500 purchased)')
+console.assert(ironBand4 > ironQ0, 'Iron Band 4 must exceed Q0 purchased anchor')

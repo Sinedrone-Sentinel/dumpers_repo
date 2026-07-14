@@ -17,47 +17,47 @@
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl1",
-          "name": "RCMBNT-PWL-1",
+          "name": "ASD Power Module (PWL-1)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl2",
-          "name": "RCMBNT-PWL-2",
+          "name": "ASD Power Module (PWL-2)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl3",
-          "name": "RCMBNT-PWL-3",
+          "name": "ASD Power Module (PWL-3)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl1",
-          "name": "RCMBNT-RGL-1",
+          "name": "ASD Regulator Module (RGL-1)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl2",
-          "name": "RCMBNT-RGL-2",
+          "name": "ASD Regulator Module (RGL-2)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl3",
-          "name": "RCMBNT-RGL-3",
+          "name": "ASD Regulator Module (RGL-3)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl1",
-          "name": "RCMBNT-XTL-1",
+          "name": "ASD Extract Module (XTL-1)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl2",
-          "name": "RCMBNT-XTL-2",
+          "name": "ASD Extract Module (XTL-2)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl3",
-          "name": "RCMBNT-XTL-3",
+          "name": "ASD Extract Module (XTL-3)",
           "amount": 5
         },
         {
@@ -955,47 +955,47 @@
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl1",
-          "name": "RCMBNT-PWL-1",
+          "name": "ASD Power Module (PWL-1)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl2",
-          "name": "RCMBNT-PWL-2",
+          "name": "ASD Power Module (PWL-2)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl3",
-          "name": "RCMBNT-PWL-3",
+          "name": "ASD Power Module (PWL-3)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl1",
-          "name": "RCMBNT-RGL-1",
+          "name": "ASD Regulator Module (RGL-1)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl2",
-          "name": "RCMBNT-RGL-2",
+          "name": "ASD Regulator Module (RGL-2)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl3",
-          "name": "RCMBNT-RGL-3",
+          "name": "ASD Regulator Module (RGL-3)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl1",
-          "name": "RCMBNT-XTL-1",
+          "name": "ASD Extract Module (XTL-1)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl2",
-          "name": "RCMBNT-XTL-2",
+          "name": "ASD Extract Module (XTL-2)",
           "amount": 1
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl3",
-          "name": "RCMBNT-XTL-3",
+          "name": "ASD Extract Module (XTL-3)",
           "amount": 1
         }
       ],
@@ -1500,47 +1500,47 @@
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl1",
-          "name": "RCMBNT-PWL-1",
+          "name": "ASD Power Module (PWL-1)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl2",
-          "name": "RCMBNT-PWL-2",
+          "name": "ASD Power Module (PWL-2)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl3",
-          "name": "RCMBNT-PWL-3",
+          "name": "ASD Power Module (PWL-3)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl1",
-          "name": "RCMBNT-RGL-1",
+          "name": "ASD Regulator Module (RGL-1)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl2",
-          "name": "RCMBNT-RGL-2",
+          "name": "ASD Regulator Module (RGL-2)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl3",
-          "name": "RCMBNT-RGL-3",
+          "name": "ASD Regulator Module (RGL-3)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl1",
-          "name": "RCMBNT-XTL-1",
+          "name": "ASD Extract Module (XTL-1)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl2",
-          "name": "RCMBNT-XTL-2",
+          "name": "ASD Extract Module (XTL-2)",
           "amount": 5
         },
         {
           "entityClass": "carryable_tbo_asdreward_xtl3",
-          "name": "RCMBNT-XTL-3",
+          "name": "ASD Extract Module (XTL-3)",
           "amount": 5
         }
       ],
@@ -2214,17 +2214,17 @@
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl1",
-          "name": "RCMBNT-PWL-1",
+          "name": "ASD Power Module (PWL-1)",
           "amount": 4
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl2",
-          "name": "RCMBNT-PWL-2",
+          "name": "ASD Power Module (PWL-2)",
           "amount": 4
         },
         {
           "entityClass": "carryable_tbo_asdreward_pwl3",
-          "name": "RCMBNT-PWL-3",
+          "name": "ASD Power Module (PWL-3)",
           "amount": 4
         },
         {
@@ -2809,17 +2809,17 @@
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl1",
-          "name": "RCMBNT-RGL-1",
+          "name": "ASD Regulator Module (RGL-1)",
           "amount": 3
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl2",
-          "name": "RCMBNT-RGL-2",
+          "name": "ASD Regulator Module (RGL-2)",
           "amount": 3
         },
         {
           "entityClass": "carryable_tbo_asdreward_rgl3",
-          "name": "RCMBNT-RGL-3",
+          "name": "ASD Regulator Module (RGL-3)",
           "amount": 3
         },
         {

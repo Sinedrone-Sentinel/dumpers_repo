@@ -31,6 +31,19 @@ const ENTITY_DIRS = [
 /** Contracts CIG has retired or that are internal test flows. */
 const SKIP_DEBUG_NAME = /DO_NOT_USE|FlowTest/i
 
+/** Loot-run items whose game localization is an internal code (RCMBNT-*). */
+const ENTITY_DISPLAY_OVERRIDES = {
+  carryable_tbo_asdreward_pwl1: 'ASD Power Module (PWL-1)',
+  carryable_tbo_asdreward_pwl2: 'ASD Power Module (PWL-2)',
+  carryable_tbo_asdreward_pwl3: 'ASD Power Module (PWL-3)',
+  carryable_tbo_asdreward_rgl1: 'ASD Regulator Module (RGL-1)',
+  carryable_tbo_asdreward_rgl2: 'ASD Regulator Module (RGL-2)',
+  carryable_tbo_asdreward_rgl3: 'ASD Regulator Module (RGL-3)',
+  carryable_tbo_asdreward_xtl1: 'ASD Extract Module (XTL-1)',
+  carryable_tbo_asdreward_xtl2: 'ASD Extract Module (XTL-2)',
+  carryable_tbo_asdreward_xtl3: 'ASD Extract Module (XTL-3)',
+}
+
 function walkJsonFiles(dir, acc = []) {
   if (!existsSync(dir)) return acc
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -127,6 +140,11 @@ function buildEntityNameResolver(extractedData, localization) {
       } catch {
         // unreadable entity record — humanized fallback stands
       }
+    }
+    const override = ENTITY_DISPLAY_OVERRIDES[key]
+    if (override) {
+      result.name = override
+      result.resolved = true
     }
     cache.set(key, result)
     return result

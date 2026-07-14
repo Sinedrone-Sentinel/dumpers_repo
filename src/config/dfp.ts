@@ -10,12 +10,10 @@ import {
 } from './extraResources'
 import { isHarvestResource, isWikeloItemResource } from './resourceTypes'
 
-/** Public DFP UX constants only — formula lives in canonical dfp-engine.js */
-export const DFP_VERSION = '1.7.0-wikelo-items'
+/** Public DFP UX constants only — formula lives in dfp-engine-private → public/dfp-engine.js */
+export const DFP_VERSION = '1.7.3-wikelo-ammo-bases'
 
-/** Banded ores: Q0 + Band 1 flat UEX Sell base; Band 2+ uses log-linear qualityScale on exact band Q. Salvage unchanged. */
-
-/** Q0 = store-bought; Q100–Q1000 = mined/refined in 100-point steps. */
+/** Q0 (purchased) = exactly Q500 in orders. Mined ores use game band thresholds (Band 1, 2, …). */
 export const STOCK_QUALITY_TIERS: readonly number[] = [
   0,
   ...Array.from({ length: 10 }, (_, i) => (i + 1) * 100),
@@ -23,7 +21,10 @@ export const STOCK_QUALITY_TIERS: readonly number[] = [
 
 export const ORDER_QUALITY_TIERS = STOCK_QUALITY_TIERS
 export const DEFAULT_STOCK_QUALITY = 500
+/** Order sentinel — ammo listings do not pick a quality tier. */
 export const AMMO_ORDER_MIN_QUALITY = 0
+/** Material quality sent to engine for ammo crafts (Band 1 / game minQuality 1). */
+export const AMMO_CRAFT_MATERIAL_QUALITY = 1
 
 /** Trade commodities without quality tiers (always Q0). */
 export function isNoQualityResource(resourceKey: string): boolean {

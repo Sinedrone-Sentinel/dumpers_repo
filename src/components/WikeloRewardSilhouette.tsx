@@ -120,7 +120,7 @@ export default function WikeloRewardSilhouette({ kind, className = '' }: WikeloR
     >
       <svg
         viewBox="0 0 100 100"
-        className="w-[72%] max-h-[110px] h-[72%] fill-slate-400/[0.14]"
+        className="w-[72%] max-h-[110px] h-[72%] fill-slate-400/[0.18]"
         preserveAspectRatio="xMidYMid meet"
       >
         <path d={SILHOUETTE_PATHS[kind]} />

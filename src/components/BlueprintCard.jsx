@@ -4,7 +4,7 @@ import { slugifyResourceName } from '../lib/blueprintResources'
 import { getBlueprintDisplayTags } from '../lib/blueprintTaxonomy'
 import BlueprintCategoryTags from './BlueprintCategoryTags'
 import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
-import { calculateBlueprintDfpWithParts, formatCraftDfpBreakdown, formatDfpLabel } from '../lib/dfp'
+import { calculateBlueprintDfpWithParts, calculateBlueprintDfp, formatCraftDfpBreakdown, formatDfpLabel, isAmmoBlueprint } from '../lib/dfp'
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
@@ -38,7 +38,10 @@ export default function BlueprintCard({
     [blueprint]
   )
   const dfp = useMemo(
-    () => calculateBlueprintDfpWithParts(blueprint, defaultSlotQualities),
+    () =>
+      isAmmoBlueprint(blueprint)
+        ? calculateBlueprintDfp(blueprint)
+        : calculateBlueprintDfpWithParts(blueprint, defaultSlotQualities),
     [blueprint, defaultSlotQualities]
   )
 

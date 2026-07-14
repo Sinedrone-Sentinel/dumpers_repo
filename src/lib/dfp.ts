@@ -70,7 +70,7 @@ export function isAmmoBlueprint(blueprint: BlueprintDfpInput): boolean {
 }
 
 export function formatBlueprintOrderQualityLabel(minQuality: number): string {
-  if (minQuality === AMMO_ORDER_MIN_QUALITY) return 'Any (ammo)'
+  if (minQuality === AMMO_ORDER_MIN_QUALITY) return 'Q1 (ammo)'
   return `Q${minQuality}`
 }
 
@@ -179,7 +179,9 @@ export function calculateBlueprintDfpForOrder(
 export function calculateBlueprintDfp(blueprint: BlueprintDfpInput): DfpResult {
   const eng = tryGetEngine()
   if (!eng) return { ...EMPTY_DFP_RESULT, typeKey: resolveDfpTypeKey(blueprint) }
-  const raw = eng.calculateBlueprintDfp(blueprint)
+  const raw = eng.calculateBlueprintDfp(blueprint, {
+    bandThresholdsForResource: (name) => getResourceBands(name),
+  })
   return {
     materialTotal: raw.materialTotal,
     acquisitionPremium: raw.acquisitionPremium ?? 0,

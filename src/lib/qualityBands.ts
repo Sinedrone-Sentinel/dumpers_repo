@@ -12,8 +12,8 @@ import { isSalvageResource } from '../config/extraResources'
 import { isHarvestResource } from '../config/resourceTypes'
 import qualityBandsData from '../data/game-quality-bands.json'
 
-/** In-game quality for terminal-purchased refined materials (distinct from mined band thresholds). */
-export const PURCHASED_STOCK_QUALITY = 0
+/** Terminal-purchased stock — Q0 in UI maps to exactly Q500 for DFP (not a mined band). */
+export const PURCHASED_STOCK_QUALITY = 500
 
 /**
  * Resource-specific quality bands (8 bands per resource)

@@ -11,7 +11,10 @@ import WikeloRewardSilhouette, {
 
 const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
 const SILHOUETTE_PANEL =
-  'relative rounded-lg border border-slate-600/50 bg-slate-900/60 p-2.5 overflow-hidden'
+  'relative rounded-lg border border-slate-600/40 bg-slate-950/20 p-2.5 overflow-hidden'
+/** Hand-in chips — light glass so reward silhouettes stay visible. */
+const HAND_IN_CHIP_CLASS =
+  'inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words bg-slate-950/35 text-sky-100/90 border-sky-400/30 backdrop-blur-[2px]'
 
 /** Reward items listable on WTS/WTB (gear + currency; not blueprints or game-bound vehicles). */
 export function tradableWikeloRewards(trade: WikeloTrade) {
@@ -165,7 +168,7 @@ export default function WikeloTradeCard({
               {trade.costs.slice(0, 6).map((cost, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words shadow-sm shadow-sky-950/30 bg-slate-800/70 text-sky-100/90 border-sky-400/25"
+                  className={HAND_IN_CHIP_CLASS}
                 >
                   <span className="text-amber-300/90 mr-1 tabular-nums">{formatWikeloCostAmount(cost)}</span>
                   {cost.name}
