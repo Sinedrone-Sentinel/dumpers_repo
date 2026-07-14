@@ -208,28 +208,14 @@ export async function syncBlueprintResourceCatalog(
   blueprints: BlueprintWithSlots[]
 ): Promise<{ result?: ResourceCatalogSyncResult; error?: string }> {
   const bpResources = extractBlueprintResources(blueprints)
-  const extracted: ExtractedBlueprintResource[] = [
-    ...bpResources,
-    ...EXTRA_CATALOG_RESOURCES,
-    ...WIKELO_ITEM_RESOURCES,
-  ]
 
-  console.log('[syncBlueprintResourceCatalog] Blueprint resources:', bpResources.length)
-  console.log('[syncBlueprintResourceCatalog] Extra catalog resources:', EXTRA_CATALOG_RESOURCES.length)
-  console.log('[syncBlueprintResourceCatalog] Wikelo item resources:', WIKELO_ITEM_RESOURCES.length)
-  console.log('[syncBlueprintResourceCatalog] Total to sync:', extracted.length)
+  // Dedupe by resourceKey - EXTRA takes priority over blueprint-extracted, WIKELO takes priority over both
+  const byKey = new Map<string, ExtractedBlueprintResource>()
+  for (const r of bpResources) byKey.set(r.resourceKey, r)
+  for (const r of EXTRA_CATALOG_RESOURCES) byKey.set(r.resourceKey, r)
+  for (const r of WIKELO_ITEM_RESOURCES) byKey.set(r.resourceKey, r)
 
-  // Check for specific items the user reported missing
-  const yormandi = extracted.find((r) => r.resourceKey === 'yormandi_tongue')
-  const wikelo = extracted.find((r) => r.resourceKey === 'wikelo_favor')
-  const councilScrip = extracted.find((r) => r.resourceKey === 'council_scrip')
-  const mgScrip = extracted.find((r) => r.resourceKey === 'mg_scrip')
-  console.log('[syncBlueprintResourceCatalog] Checking for missing items:')
-  console.log('  - yormandi_tongue:', yormandi ?? 'NOT FOUND')
-  console.log('  - wikelo_favor:', wikelo ?? 'NOT FOUND')
-  console.log('  - council_scrip:', councilScrip ?? 'NOT FOUND')
-  console.log('  - mg_scrip:', mgScrip ?? 'NOT FOUND')
-
+  const extracted = [...byKey.values()]
   const activeKeys = new Set(extracted.map((r) => r.resourceKey))
   const now = new Date().toISOString()
 
@@ -241,18 +227,14 @@ export async function syncBlueprintResourceCatalog(
       synced_at: now,
     }))
 
-    console.log('[syncBlueprintResourceCatalog] Upserting', payload.length, 'resources...')
-
     const { error: upsertError } = await supabase.from('blueprint_resources').upsert(
       payload,
       { onConflict: 'resource_key' }
     )
 
     if (upsertError) {
-      console.error('[syncBlueprintResourceCatalog] Upsert error:', upsertError)
       return { error: upsertError.message }
     }
-    console.log('[syncBlueprintResourceCatalog] Upsert successful')
   }
 
   const { data: existing, error: fetchError } = await supabase
