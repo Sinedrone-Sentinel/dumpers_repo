@@ -81,24 +81,14 @@ export default function ResourceTrackerRoute() {
     catalogWithInventory,
     personalLineKeys,
     labelMap,
-    syncResult,
     loading,
     error,
     refresh,
-    syncFromBlueprints,
   } = useResourceCatalog({
-    enableCatalogSync: isSuperAdmin,
     includeInactive: showInactive,
     withInventory: !isGuest,
     inventoryContext,
   })
-  const [syncing, setSyncing] = useState(false)
-
-  const handleSyncCatalog = async () => {
-    setSyncing(true)
-    await syncFromBlueprints()
-    setSyncing(false)
-  }
 
   // Build stock cards: guests mirror logged-in — one card per (resource_key, quality) row
   const stockCards = useMemo(() => {
@@ -641,33 +631,6 @@ export default function ResourceTrackerRoute() {
       )}
       </div>
 
-      {isSuperAdmin && (
-        <div className="mt-6 p-4 bg-slate-900/60 border border-slate-700 rounded-xl">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-slate-300 text-sm font-medium">Sync Resource Catalog</p>
-              <p className="text-slate-500 text-xs mt-1">
-                Import resources from game data and extra catalog.
-                {syncResult && (
-                  <span className="text-emerald-400 ml-2">
-                    Last sync: {syncResult.totalActive} active
-                    {syncResult.added > 0 && ` · ${syncResult.added} new`}
-                    {syncResult.reactivated > 0 && ` · ${syncResult.reactivated} reactivated`}
-                  </span>
-                )}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => void handleSyncCatalog()}
-              disabled={syncing}
-              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-lg font-medium shrink-0"
-            >
-              {syncing ? 'Syncing...' : 'Sync from Blueprints'}
-            </button>
-          </div>
-        </div>
-      )}
       </div>
     </FeaturePageLayout>
   )

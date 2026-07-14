@@ -1,12 +1,19 @@
 import React, { useState } from 'react'
-import { wipeResourceTracker } from '../lib/operations'
+import { wipeResourceTracker, syncBlueprintResourceCatalog, type ResourceCatalogSyncResult } from '../lib/operations'
 import { supabase } from '../lib/supabase'
+import { useBlueprintData } from '../routes/blueprints'
 import AppModal from './layout/AppModal'
 
 export default function DbActionsModal({ onClose }: { onClose: () => void }) {
+  const { data: blueprints } = useBlueprintData()
+
   const [confirmText, setConfirmText] = useState('')
   const [wiping, setWiping] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Resource catalog sync state
+  const [syncing, setSyncing] = useState(false)
+  const [syncResult, setSyncResult] = useState<ResourceCatalogSyncResult | null>(null)
 
   // RSI Handle verification removal state
   const [rsiHandleToRevoke, setRsiHandleToRevoke] = useState('')
@@ -20,6 +27,29 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const [clearArchived, setClearArchived] = useState(false)
   const [searchingUser, setSearchingUser] = useState(false)
   const [resettingRep, setResettingRep] = useState(false)
+
+  const handleSyncCatalog = async () => {
+    if (!blueprints) return
+
+    setSyncing(true)
+    setMessage(null)
+    setSyncResult(null)
+
+    const result = await syncBlueprintResourceCatalog(blueprints)
+
+    setSyncing(false)
+
+    if (result.error) {
+      setMessage({ type: 'error', text: result.error })
+      return
+    }
+
+    setSyncResult(result.result ?? null)
+    setMessage({
+      type: 'success',
+      text: `Catalog synced: ${result.result?.totalActive ?? 0} active resources`,
+    })
+  }
 
   const handleWipe = async () => {
     if (confirmText !== 'WIPE') return
@@ -226,6 +256,33 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
               If Step 2 reports validation issues, game data structure may have changed.
             </p>
           </div>
+        </div>
+
+        {/* Resource Catalog Sync */}
+        <div className="p-3 sm:p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 space-y-3">
+          <div>
+            <h3 className="text-white font-medium text-sm">Sync Resource Catalog</h3>
+            <p className="text-xs text-slate-400 mt-1">
+              Sync commodities from blueprint materials + extra catalog (scrips, salvage, gases, etc.)
+              to the database. Run after game data updates or if commodities are missing from Bazaar.
+            </p>
+          </div>
+          {syncResult && (
+            <div className="text-xs text-emerald-400 bg-emerald-900/30 p-2 rounded-lg">
+              Last sync: {syncResult.totalActive} active
+              {syncResult.added > 0 && ` · ${syncResult.added} new`}
+              {syncResult.reactivated > 0 && ` · ${syncResult.reactivated} reactivated`}
+              {syncResult.deactivated > 0 && ` · ${syncResult.deactivated} deactivated`}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => void handleSyncCatalog()}
+            disabled={syncing || !blueprints}
+            className="w-full px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+          >
+            {syncing ? 'Syncing...' : 'Sync from Blueprints'}
+          </button>
         </div>
 
         {/* RSI Handle Verification Revoke */}
