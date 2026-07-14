@@ -76,7 +76,7 @@ export function wikeloTradeUsesBlueprintPaper(trade: WikeloTrade): boolean {
 const SILHOUETTE_PATHS: Record<WikeloSilhouetteKind, string> = {
   // Heavy gunship — twin engine pods, chunky body, nose pointing right
   fighter:
-    'M92 50 L78 42 L65 42 L58 34 L42 34 L36 42 L24 42 L18 30 L8 30 L8 42 L16 44 L16 56 L8 58 L8 70 L18 70 L24 58 L36 58 L42 66 L58 66 L65 58 L78 58 Z',
+    'M94 50 L82 44 L70 44 L66 40 L50 40 L46 44 L32 44 L32 38 L28 34 L18 34 L14 38 L14 46 L28 46 L28 54 L14 54 L14 62 L18 66 L28 66 L32 62 L32 56 L46 56 L50 60 L66 60 L70 56 L82 56 Z',
   ground:
     'M14 58 L22 44 L38 38 L64 38 L78 46 L90 52 L90 68 L84 68 A11 11 0 0 0 62 68 L38 68 A11 11 0 0 0 16 68 L10 68 L10 62 Z M30 48 L24 52 L22 56 L36 56 Z M46 48 L46 56 L62 56 L58 48 Z M26 70 A8 8 0 1 1 26 70.01 Z M74 70 A8 8 0 1 1 74 70.01 Z',
   armor:
