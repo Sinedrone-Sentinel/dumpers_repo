@@ -107,24 +107,39 @@ const SILHOUETTE_PATHS: Record<WikeloSilhouetteKind, string> = {
     'M50 14 L58 32 L76 36 L64 50 L66 68 L50 60 L34 68 L36 50 L24 36 L42 32 Z',
 }
 
+/** Image-based silhouettes (better quality than hand-coded SVG paths) */
+const SILHOUETTE_IMAGES: Partial<Record<WikeloSilhouetteKind, string>> = {
+  fighter: '/silhouettes/fighter.png',
+}
+
 interface WikeloRewardSilhouetteProps {
   kind: WikeloSilhouetteKind
   className?: string
 }
 
 export default function WikeloRewardSilhouette({ kind, className = '' }: WikeloRewardSilhouetteProps) {
+  const imageSrc = SILHOUETTE_IMAGES[kind]
+
   return (
     <div
       className={`pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden ${className}`}
       aria-hidden
     >
-      <svg
-        viewBox="0 0 100 100"
-        className="w-[72%] max-h-[110px] h-[72%] fill-slate-400/[0.18]"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <path d={SILHOUETTE_PATHS[kind]} />
-      </svg>
+      {imageSrc ? (
+        <img
+          src={imageSrc}
+          alt=""
+          className="w-[72%] max-h-[110px] h-[72%] object-contain opacity-[0.18]"
+        />
+      ) : (
+        <svg
+          viewBox="0 0 100 100"
+          className="w-[72%] max-h-[110px] h-[72%] fill-slate-400/[0.18]"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <path d={SILHOUETTE_PATHS[kind]} />
+        </svg>
+      )}
     </div>
   )
 }
