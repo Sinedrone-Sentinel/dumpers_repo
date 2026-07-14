@@ -28,6 +28,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { filterOrderableBlueprints } from '../lib/blueprintOrderable'
+import { WIKELO_ITEM_RESOURCES } from '../config/wikeloItems'
 import {
   archiveRatingInfo,
   canSemanticBuyerConfirmPickup,
@@ -113,10 +114,18 @@ export default function CustomOrdersRoute() {
   const isRsiVerified = profile?.rsi_handle_verified ?? false
   const { data: blueprints = [] } = useBlueprintData()
   const { overridesMap } = useBlueprintOrderOverrides()
-  const orderableBlueprints = useMemo(
-    () => filterOrderableBlueprints(blueprints, overridesMap),
-    [blueprints, overridesMap]
-  )
+  const orderableBlueprints = useMemo(() => {
+    const craftable = filterOrderableBlueprints(blueprints, overridesMap)
+    // Add Wikelo reward items as synthetic "blueprints" (tradable items)
+    const wikeloItems: BlueprintWithSlots[] = WIKELO_ITEM_RESOURCES.map((item) => ({
+      internalName: `wikelo_item_${item.resourceKey}`,
+      blueprintName: item.label,
+      categoryName: 'Wikelo Rewards',
+      subCategoryName: 'Reward Items',
+      slots: [],
+    }))
+    return [...craftable, ...wikeloItems]
+  }, [blueprints, overridesMap])
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
     blueprints.forEach((bp) => {
