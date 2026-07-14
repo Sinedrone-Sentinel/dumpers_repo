@@ -207,26 +207,52 @@ export interface CustomOrderResourceInput {
 export async function syncBlueprintResourceCatalog(
   blueprints: BlueprintWithSlots[]
 ): Promise<{ result?: ResourceCatalogSyncResult; error?: string }> {
+  const bpResources = extractBlueprintResources(blueprints)
   const extracted: ExtractedBlueprintResource[] = [
-    ...extractBlueprintResources(blueprints),
+    ...bpResources,
     ...EXTRA_CATALOG_RESOURCES,
     ...WIKELO_ITEM_RESOURCES,
   ]
+
+  console.log('[syncBlueprintResourceCatalog] Blueprint resources:', bpResources.length)
+  console.log('[syncBlueprintResourceCatalog] Extra catalog resources:', EXTRA_CATALOG_RESOURCES.length)
+  console.log('[syncBlueprintResourceCatalog] Wikelo item resources:', WIKELO_ITEM_RESOURCES.length)
+  console.log('[syncBlueprintResourceCatalog] Total to sync:', extracted.length)
+
+  // Check for specific items the user reported missing
+  const yormandi = extracted.find((r) => r.resourceKey === 'yormandi_tongue')
+  const wikelo = extracted.find((r) => r.resourceKey === 'wikelo_favor')
+  const councilScrip = extracted.find((r) => r.resourceKey === 'council_scrip')
+  const mgScrip = extracted.find((r) => r.resourceKey === 'mg_scrip')
+  console.log('[syncBlueprintResourceCatalog] Checking for missing items:')
+  console.log('  - yormandi_tongue:', yormandi ?? 'NOT FOUND')
+  console.log('  - wikelo_favor:', wikelo ?? 'NOT FOUND')
+  console.log('  - council_scrip:', councilScrip ?? 'NOT FOUND')
+  console.log('  - mg_scrip:', mgScrip ?? 'NOT FOUND')
+
   const activeKeys = new Set(extracted.map((r) => r.resourceKey))
   const now = new Date().toISOString()
 
   if (extracted.length > 0) {
+    const payload = extracted.map((resource) => ({
+      resource_key: resource.resourceKey,
+      label: resource.label,
+      is_active: true,
+      synced_at: now,
+    }))
+
+    console.log('[syncBlueprintResourceCatalog] Upserting', payload.length, 'resources...')
+
     const { error: upsertError } = await supabase.from('blueprint_resources').upsert(
-      extracted.map((resource) => ({
-        resource_key: resource.resourceKey,
-        label: resource.label,
-        is_active: true,
-        synced_at: now,
-      })),
+      payload,
       { onConflict: 'resource_key' }
     )
 
-    if (upsertError) return { error: upsertError.message }
+    if (upsertError) {
+      console.error('[syncBlueprintResourceCatalog] Upsert error:', upsertError)
+      return { error: upsertError.message }
+    }
+    console.log('[syncBlueprintResourceCatalog] Upsert successful')
   }
 
   const { data: existing, error: fetchError } = await supabase
@@ -318,7 +344,19 @@ export async function fetchResourceCatalog(options?: {
 
   const { data, error } = await query
 
-  if (error) return { data: [], error: error.message }
+  if (error) {
+    console.error('[fetchResourceCatalog] Error:', error)
+    return { data: [], error: error.message }
+  }
+
+  console.log('[fetchResourceCatalog] Fetched', data?.length ?? 0, 'resources')
+
+  // Check for specific items
+  const yormandi = data?.find((r) => r.resource_key === 'yormandi_tongue')
+  const wikelo = data?.find((r) => r.resource_key === 'wikelo_favor')
+  console.log('[fetchResourceCatalog] yormandi_tongue in results:', !!yormandi)
+  console.log('[fetchResourceCatalog] wikelo_favor in results:', !!wikelo)
+
   return { data: (data ?? []) as BlueprintResourceRow[] }
 }
 

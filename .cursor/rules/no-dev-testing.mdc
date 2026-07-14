@@ -1,0 +1,24 @@
+# No Dev Server Testing
+
+**PRIORITY: CRITICAL**
+
+## Rule
+
+**DO NOT suggest running a dev server to test changes in this project.**
+
+- Do NOT run `npm run dev`
+- Do NOT tell the user to "test this in the browser"
+- Do NOT ask the user to check browser console output
+- Do NOT create test pages or debugging routes
+
+## Why
+
+This is a production application. The user tests on their live deployment, not locally. When debugging issues, investigate the code directly rather than suggesting interactive testing workflows.
+
+## What To Do Instead
+
+1. Read the code carefully
+2. Trace the logic path
+3. Identify the bug through code analysis
+4. Fix it
+5. If unsure, ask the user for specific information (error messages, what they see in production)

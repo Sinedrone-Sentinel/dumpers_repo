@@ -650,7 +650,9 @@ export default function ResourceTrackerRoute() {
                 Import resources from game data and extra catalog.
                 {syncResult && (
                   <span className="text-emerald-400 ml-2">
-                    Last sync: {syncResult.inserted} added, {syncResult.updated} updated
+                    Last sync: {syncResult.totalActive} active
+                    {syncResult.added > 0 && ` · ${syncResult.added} new`}
+                    {syncResult.reactivated > 0 && ` · ${syncResult.reactivated} reactivated`}
                   </span>
                 )}
               </p>

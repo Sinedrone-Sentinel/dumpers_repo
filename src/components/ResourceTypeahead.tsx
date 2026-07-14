@@ -1,41 +1,38 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import type { BlueprintWithSlots } from '../lib/blueprintResources'
-import {
-  BLUEPRINT_SEARCH_MAX_RESULTS,
-  filterBlueprintsForSearch,
-} from '../lib/blueprintSearch'
+import type { BlueprintResourceRow } from '../lib/operations'
 
-interface BlueprintTypeaheadProps {
-  blueprints: BlueprintWithSlots[]
-  selectedBlueprint: BlueprintWithSlots | null
-  onSelect: (blueprint: BlueprintWithSlots) => void
-  onClear: () => void
+const MAX_RESULTS = 50
+
+interface ResourceTypeaheadProps {
+  resources: BlueprintResourceRow[]
+  selectedResource: BlueprintResourceRow | null
+  onSelect: (resource: BlueprintResourceRow) => void
 }
 
-export default function BlueprintTypeahead({
-  blueprints,
-  selectedBlueprint,
+export default function ResourceTypeahead({
+  resources,
+  selectedResource,
   onSelect,
-  onClear,
-}: BlueprintTypeaheadProps) {
+}: ResourceTypeaheadProps) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [highlightIndex, setHighlightIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const { results, totalMatches } = useMemo(() => {
-    const q = query.trim()
-    if (q.length === 0) {
-      const sorted = [...blueprints].sort((a, b) =>
-        (a.blueprintName || a.file || '').localeCompare(b.blueprintName || b.file || '')
-      )
-      return {
-        results: sorted.slice(0, BLUEPRINT_SEARCH_MAX_RESULTS),
-        totalMatches: sorted.length,
-      }
+    const q = query.trim().toLowerCase()
+    const matches = q.length === 0
+      ? resources
+      : resources.filter((r) => r.label.toLowerCase().includes(q))
+
+    const sorted = [...matches].sort((a, b) => a.label.localeCompare(b.label))
+
+    return {
+      results: sorted.slice(0, MAX_RESULTS),
+      totalMatches: sorted.length,
     }
-    return filterBlueprintsForSearch(blueprints, query)
-  }, [blueprints, query])
+  }, [resources, query])
 
   useEffect(() => {
     setHighlightIndex(0)
@@ -51,8 +48,8 @@ export default function BlueprintTypeahead({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSelect = (bp: BlueprintWithSlots) => {
-    onSelect(bp)
+  const handleSelect = (resource: BlueprintResourceRow) => {
+    onSelect(resource)
     setQuery('')
     setOpen(false)
   }
@@ -73,33 +70,35 @@ export default function BlueprintTypeahead({
       setHighlightIndex((i) => Math.max(i - 1, 0))
     } else if (e.key === 'Enter') {
       e.preventDefault()
-      const bp = results[highlightIndex]
-      if (bp) handleSelect(bp)
+      const r = results[highlightIndex]
+      if (r) handleSelect(r)
     }
   }
 
   return (
     <div ref={containerRef} className="space-y-2">
-      {selectedBlueprint?.file && (
+      {selectedResource && (
         <div className="flex items-center justify-between gap-2 px-3 py-2 bg-slate-800/80 border border-slate-600 rounded-lg">
           <span className="text-slate-200 text-sm truncate">
-            Selected: {selectedBlueprint.blueprintName || selectedBlueprint.file}
+            Selected: {selectedResource.label}
           </span>
           <button
             type="button"
             onClick={() => {
-              onClear()
               setQuery('')
+              inputRef.current?.focus()
+              setOpen(true)
             }}
             className="text-xs text-slate-400 hover:text-white shrink-0"
           >
-            Clear
+            Change
           </button>
         </div>
       )}
 
       <div className="relative">
         <input
+          ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => {
@@ -108,7 +107,7 @@ export default function BlueprintTypeahead({
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Type to search items…"
+          placeholder="Type to search commodities…"
           className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
           autoComplete="off"
         />
@@ -119,25 +118,25 @@ export default function BlueprintTypeahead({
               <p className="px-3 py-2 text-slate-500 text-xs">No matches for &quot;{query.trim()}&quot;</p>
             ) : (
               <>
-                {totalMatches > BLUEPRINT_SEARCH_MAX_RESULTS && (
+                {totalMatches > MAX_RESULTS && (
                   <p className="px-3 py-1.5 text-slate-500 text-[10px] border-b border-slate-700">
-                    Showing {BLUEPRINT_SEARCH_MAX_RESULTS} of {totalMatches} — type to filter
+                    Showing {MAX_RESULTS} of {totalMatches} — type to filter
                   </p>
                 )}
                 <ul>
-                  {results.map((bp, index) => (
-                    <li key={bp.internalName}>
+                  {results.map((r, index) => (
+                    <li key={r.resource_key}>
                       <button
                         type="button"
                         onMouseEnter={() => setHighlightIndex(index)}
-                        onClick={() => handleSelect(bp)}
+                        onClick={() => handleSelect(r)}
                         className={`w-full text-left px-3 py-2 text-sm transition-colors ${
                           index === highlightIndex
-                            ? 'bg-red-950/50 text-red-100'
+                            ? 'bg-amber-950/50 text-amber-100'
                             : 'text-slate-300 hover:bg-slate-800'
                         }`}
                       >
-                        {bp.blueprintName || bp.internalName}
+                        {r.label}
                       </button>
                     </li>
                   ))}

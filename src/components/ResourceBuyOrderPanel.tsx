@@ -59,6 +59,7 @@ import {
   type CustomOrder,
 } from '../lib/operations'
 import ResourceQuantityInput from './ResourceQuantityInput'
+import ResourceTypeahead from './ResourceTypeahead'
 import { resourceChipClassName } from '../config/resourceTypes'
 import {
   formatQuantityForResource,
@@ -359,10 +360,6 @@ export default function ResourceBuyOrderPanel({
     [bpCart, resCart, blueprintById]
   )
 
-  useEffect(() => {
-    if (resourceKey || activeCatalog.length === 0) return
-    setResourceKey(activeCatalog[0].resource_key)
-  }, [activeCatalog, resourceKey])
 
   useEffect(() => {
     if (selectedResNoQuality) {
@@ -600,7 +597,7 @@ export default function ResourceBuyOrderPanel({
               mode === 'blueprint' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Add blueprint
+            Add Item
           </button>
           <button
             type="button"
@@ -609,7 +606,7 @@ export default function ResourceBuyOrderPanel({
               mode === 'resource' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Add resource
+            Add Commodity
           </button>
         </div>
 
@@ -680,28 +677,24 @@ export default function ResourceBuyOrderPanel({
           </div>
         ) : (
           <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">
-            <select
-              value={resourceKey}
-              onChange={(e) => setResourceKey(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
-            >
-              {activeCatalog.map((r) => (
-                <option key={r.resource_key} value={r.resource_key}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-            {selectedResIsSalvage && (
-              <p className="text-slate-400 text-xs">
-                Salvage — always Q0. No quality tier on RMC or construction material.
-              </p>
-            )}
-            {selectedResIsHarvest && (
-              <p className="text-slate-400 text-xs">
-                Harvest item — whole units only. Priced by farm effort, not quality tier.
-              </p>
-            )}
-            <div className={`grid gap-2 ${selectedResNoQuality ? 'grid-cols-2' : 'grid-cols-3'}`}>
+            <ResourceTypeahead
+              resources={activeCatalog}
+              selectedResource={selectedResource ?? null}
+              onSelect={(r) => setResourceKey(r.resource_key)}
+            />
+            {selectedResource && (
+              <>
+                {selectedResIsSalvage && (
+                  <p className="text-slate-400 text-xs">
+                    Salvage — always Q0. No quality tier on RMC or construction material.
+                  </p>
+                )}
+                {selectedResIsHarvest && (
+                  <p className="text-slate-400 text-xs">
+                    Harvest item — whole units only. Priced by farm effort, not quality tier.
+                  </p>
+                )}
+                <div className={`grid gap-2 ${selectedResNoQuality ? 'grid-cols-2' : 'grid-cols-3'}`}>
               {!selectedResNoQuality && (
                 resourceBands ? (
                   <select
@@ -766,27 +759,28 @@ export default function ResourceBuyOrderPanel({
               >
                 Add
               </button>
-            </div>
-            {dfpDisplayEnabled &&
-              selectedResource &&
-              parseQuantityForResource(selectedResource.resource_key, resQty) != null && (
-              <p className="text-amber-200/90 text-xs">
-                Material DFP:{' '}
-                {formatDfpLabel(
-                  pricingForResourceLine(
-                    selectedResource.resource_key,
-                    selectedResource.label,
-                    Number(resQuality) || DEFAULT_STOCK_QUALITY,
-                    parseQuantityForResource(selectedResource.resource_key, resQty)!
-                  ).lineDfpAuec
+                </div>
+                {dfpDisplayEnabled &&
+                  parseQuantityForResource(selectedResource.resource_key, resQty) != null && (
+                  <p className="text-amber-200/90 text-xs">
+                    Material DFP:{' '}
+                    {formatDfpLabel(
+                      pricingForResourceLine(
+                        selectedResource.resource_key,
+                        selectedResource.label,
+                        Number(resQuality) || DEFAULT_STOCK_QUALITY,
+                        parseQuantityForResource(selectedResource.resource_key, resQty)!
+                      ).lineDfpAuec
+                    )}
+                    {selectedResNoQuality && (
+                      <span className="text-slate-400"> · Base price only (Q0)</span>
+                    )}
+                    {resUsesFlatBandPrice && (
+                      <span className="text-slate-400"> · Purchased Q0 (Q500) or Band 1 below store</span>
+                    )}
+                  </p>
                 )}
-                {selectedResNoQuality && (
-                  <span className="text-slate-400"> · Base price only (Q0)</span>
-                )}
-                {resUsesFlatBandPrice && (
-                  <span className="text-slate-400"> · Purchased Q0 (Q500) or Band 1 below store</span>
-                )}
-              </p>
+              </>
             )}
           </div>
         )}

@@ -169,7 +169,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Manage your one WTB buy listing and one WTS sell listing, plus every transaction they create.',
     details: [
       'You have at most one open WTB listing and one open WTS listing — posting new items appends them to the matching listing',
-      'Click Post items to open the builder for blueprints and/or resources; Add to my WTB listing requests items, Add to my WTS listing offers stock on hand',
+      'Click Post items to open the builder for items (blueprints) and/or commodities (resources); Add to my WTB listing requests items, Add to my WTS listing offers stock on hand',
       'All pricing is exact DFP — no price sliders or adjustments; the live total and effective stat preview update as you compose the cart',
       'Expand any cart line to edit per-slot material qualities and see stat changes before posting',
       'Add blueprints from the Blueprints page into a session draft, then continue on My Listings',
