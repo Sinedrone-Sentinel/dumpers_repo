@@ -1,7 +1,6 @@
 import type { MemberReputationRow } from './reputation'
 import { supabase } from './supabase'
 import { EXTRA_CATALOG_RESOURCE_KEYS, EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
-import { WIKELO_ITEM_RESOURCE_KEYS, WIKELO_ITEM_RESOURCES } from '../config/wikeloItems'
 import {
   extractBlueprintResources,
   type BlueprintWithSlots,
@@ -209,11 +208,11 @@ export async function syncBlueprintResourceCatalog(
 ): Promise<{ result?: ResourceCatalogSyncResult; error?: string }> {
   const bpResources = extractBlueprintResources(blueprints)
 
-  // Dedupe by resourceKey - EXTRA takes priority over blueprint-extracted, WIKELO takes priority over both
+  // Dedupe by resourceKey - EXTRA_CATALOG takes priority over blueprint-extracted
+  // NOTE: WIKELO_ITEM_RESOURCES are gear (armor/weapons), NOT commodities - don't include them here
   const byKey = new Map<string, ExtractedBlueprintResource>()
   for (const r of bpResources) byKey.set(r.resourceKey, r)
   for (const r of EXTRA_CATALOG_RESOURCES) byKey.set(r.resourceKey, r)
-  for (const r of WIKELO_ITEM_RESOURCES) byKey.set(r.resourceKey, r)
 
   const extracted = [...byKey.values()]
   const activeKeys = new Set(extracted.map((r) => r.resourceKey))
@@ -248,8 +247,7 @@ export async function syncBlueprintResourceCatalog(
       (row) =>
         row.is_active &&
         !activeKeys.has(row.resource_key) &&
-        !EXTRA_CATALOG_RESOURCE_KEYS.has(row.resource_key) &&
-        !WIKELO_ITEM_RESOURCE_KEYS.has(row.resource_key)
+        !EXTRA_CATALOG_RESOURCE_KEYS.has(row.resource_key)
     )
     .map((row) => row.resource_key)
 
