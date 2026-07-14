@@ -1192,12 +1192,12 @@ function GuideLocationCard({
   return (
     <div className="p-4 rounded-lg border bg-slate-800/30 border-slate-700/50">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           {onLocationClick ? (
             <button
               type="button"
               onClick={() => onLocationClick(location)}
-              className="font-semibold text-white hover:text-orange-300 transition-colors text-left"
+              className="font-semibold text-white hover:text-orange-300 transition-colors text-left block"
             >
               {location}
             </button>
@@ -1205,7 +1205,7 @@ function GuideLocationCard({
             <h3 className="font-semibold text-white">{location}</h3>
           )}
           {system && (
-            <span className={`text-xs ${systemColor} uppercase tracking-wider`}>
+            <span className={`block text-xs ${systemColor} uppercase tracking-wider mt-0.5`}>
               {system} System
             </span>
           )}
@@ -1519,7 +1519,7 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
           <div>
             <h2 className="text-lg font-semibold text-white">{location}</h2>
             {system && (
-              <span className={`text-sm ${systemColor}`}>{system} System</span>
+              <span className={`block text-sm ${systemColor} mt-0.5`}>{system} System</span>
             )}
             {navHint && (
               <p className="text-xs text-sky-300/90 mt-1">📍 {navHint}</p>

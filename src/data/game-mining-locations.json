@@ -3564,7 +3564,7 @@
       "displayName": "Glaciem Ring",
       "system": "Nyx",
       "source": "spawn_code_table+hpp_path_audit",
-      "navHint": "Starmap search \"Glaciem Ring\" — ring around the planet Glaciem; QV Breaker Stations (BRK-###) roam the belts",
+      "navHint": "Starmap search \"Glaciem Ring\" — QV Breaker Stations (BRK-###) roam the Nyx belts",
       "navMarkers": [
         {
           "label": "QV Breaker Stations — roam the Nyx belts",

@@ -520,7 +520,7 @@ export function buildNavHints(localization) {
     : undefined
   nav['Glaciem Ring'] = {
     navHint:
-      'Starmap search "Glaciem Ring" — ring around the planet Glaciem; QV Breaker Stations (BRK-###) roam the belts',
+      'Starmap search "Glaciem Ring" — QV Breaker Stations (BRK-###) roam the Nyx belts',
     navMarkers: brkGroup,
   }
   nav['Keeger Belt'] = {
