@@ -143,8 +143,8 @@ export default function WikeloRewardSilhouette({ kind, className = '' }: WikeloR
         <img
           src={imageSrc}
           alt=""
-          className="w-[72%] max-h-[110px] h-[72%] object-contain opacity-[0.18]"
-          style={{ mixBlendMode: 'multiply' }}
+          className="w-[72%] max-h-[110px] h-[72%] object-contain"
+          style={{ filter: 'brightness(0)', opacity: 0.18 }}
         />
       ) : (
         <svg

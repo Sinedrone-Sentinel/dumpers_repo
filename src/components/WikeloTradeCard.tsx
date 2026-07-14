@@ -10,7 +10,8 @@ import WikeloRewardSilhouette, {
 } from './WikeloRewardSilhouette'
 
 const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
-const SILHOUETTE_PANEL = 'relative p-2.5 overflow-hidden'
+const SILHOUETTE_PANEL =
+  'relative rounded-lg border border-slate-600/40 bg-slate-950/20 p-2.5 overflow-hidden'
 /** Hand-in chips — light glass so reward silhouettes stay visible. */
 const HAND_IN_CHIP_CLASS =
   'inline-flex items-center max-w-full px-1.5 py-0.5 rounded text-xs border break-words bg-slate-950/35 text-sky-100/90 border-sky-400/30 backdrop-blur-[2px]'
