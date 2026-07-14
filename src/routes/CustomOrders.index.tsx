@@ -116,14 +116,17 @@ export default function CustomOrdersRoute() {
   const { overridesMap } = useBlueprintOrderOverrides()
   const orderableBlueprints = useMemo(() => {
     const craftable = filterOrderableBlueprints(blueprints, overridesMap)
-    // Add Wikelo reward items as synthetic "blueprints" (tradable items)
-    const wikeloItems: BlueprintWithSlots[] = WIKELO_ITEM_RESOURCES.map((item) => ({
-      internalName: `wikelo_item_${item.resourceKey}`,
-      blueprintName: item.label,
-      categoryName: 'Wikelo Rewards',
-      subCategoryName: 'Reward Items',
-      slots: [],
-    }))
+    // Add Wikelo reward items that don't already exist as craftable blueprints
+    const craftableNames = new Set(craftable.map((bp) => bp.blueprintName?.toLowerCase()))
+    const wikeloItems: BlueprintWithSlots[] = WIKELO_ITEM_RESOURCES
+      .filter((item) => !craftableNames.has(item.label.toLowerCase()))
+      .map((item) => ({
+        internalName: `wikelo_item_${item.resourceKey}`,
+        blueprintName: item.label,
+        categoryName: 'Wikelo Rewards',
+        subCategoryName: 'Reward Items',
+        slots: [],
+      }))
     return [...craftable, ...wikeloItems]
   }, [blueprints, overridesMap])
   const blueprintById = useMemo(() => {
