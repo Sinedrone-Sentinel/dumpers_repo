@@ -23,52 +23,16 @@ export type BpDumperDownloadOption = {
   label: string
   description: string
   filename: string
-  /** Groups cards in the Dumper Apps modal. */
-  group: 'windows' | 'mac-linux' | 'advanced'
 }
 
+/** Windows installer — the only member-facing BP Dumper download. */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
     id: 'windows-installer',
     label: 'Windows installer',
-    description: 'Recommended. Run the setup wizard, then open Dumper Apps from the Start Menu.',
+    description:
+      'Recommended for Windows. Run the setup wizard, then open Dumper Apps from the Start Menu. Python is bundled — nothing else to install.',
     filename: getDumperAppsInstallerFilename(),
-    group: 'windows',
-  },
-  {
-    id: 'windows-portable',
-    label: 'Windows portable zip',
-    description: 'Same app as the installer — unzip the folder and double-click START-HERE.bat.',
-    filename: 'bp-dumper-py.zip',
-    group: 'windows',
-  },
-  {
-    id: 'mac-intel',
-    label: 'macOS (Intel)',
-    description: 'Blueprint log sync for Mac with Intel processor.',
-    filename: 'bp-dumper-mac-intel',
-    group: 'mac-linux',
-  },
-  {
-    id: 'mac-silicon',
-    label: 'macOS (Apple Silicon)',
-    description: 'Blueprint log sync for Mac with M1/M2/M3 chip.',
-    filename: 'bp-dumper-mac-silicon',
-    group: 'mac-linux',
-  },
-  {
-    id: 'linux',
-    label: 'Linux',
-    description: 'Blueprint log sync for Linux.',
-    filename: 'bp-dumper-linux',
-    group: 'mac-linux',
-  },
-  {
-    id: 'windows',
-    label: 'Windows .exe (standalone)',
-    description: 'Smaller download. Single .exe with no Python bundled.',
-    filename: 'bp-dumper-windows.exe',
-    group: 'advanced',
   },
 ]
 

@@ -18,7 +18,6 @@ jobs:
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
       version: ${{ steps.version.outputs.version }}
-      min_version: ${{ steps.mingame.outputs.min_version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -41,78 +40,11 @@ jobs:
           VERSION=$(node -p "require('./scripts/bp-dumper/version.json').version")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Read min game version
-        id: mingame
-        run: |
-          MIN_VER=$(node -p "(() => { const v = require('./src/data/game-build-version.json').version; const m = String(v).match(/^(\\d+\\.\\d+)/); if (!m) throw new Error('Invalid game version: ' + v); return m[1]; })()")
-          echo "min_version=$MIN_VER" >> "$GITHUB_OUTPUT"
-
-  build-unix:
-    name: Build Go and Python zip
-    needs: resolve-tag
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
-          cache: false
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Copy blueprint lookup for client builds
-        run: node scripts/copy-blueprint-lookup.mjs
-
-      - name: Build Go binaries
-        env:
-          DUMPER_VERSION: ${{ needs.resolve-tag.outputs.version }}
-          MIN_GAME_VERSION: ${{ needs.resolve-tag.outputs.min_version }}
-        run: |
-          cd scripts/bp-dumper-go
-          mkdir -p dist
-          LDFLAGS="-X main.DumperVersion=${DUMPER_VERSION} -X main.MinGameVersion=${MIN_GAME_VERSION} -s -w"
-
-          GOOS=windows GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-windows.exe
-          GOOS=darwin GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-intel
-          GOOS=darwin GOARCH=arm64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-mac-silicon
-          GOOS=linux GOARCH=amd64 go build -ldflags="$LDFLAGS" -o dist/bp-dumper-linux
-
-      - name: Package Python dumper zip
-        run: |
-          STAGE=$(mktemp -d)
-          mkdir -p "$STAGE/scripts/bp-dumper-py"
-          cp scripts/bp-dumper-py/dumper.py \
-             scripts/bp-dumper-py/_version.py \
-             scripts/bp-dumper-py/_min_game_version.py \
-             scripts/bp-dumper-py/lookup.json \
-             scripts/bp-dumper-py/requirements.txt \
-             scripts/bp-dumper-py/README.md \
-             scripts/bp-dumper-py/dumper.bat \
-             scripts/bp-dumper-py/dumper.sh \
-             "$STAGE/scripts/bp-dumper-py/"
-          cp START-HERE.bat "$STAGE/"
-          cd "$STAGE"
-          zip -r "$GITHUB_WORKSPACE/scripts/bp-dumper-py.zip" .
-
-      - name: Upload unix build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: unix-builds
-          path: |
-            scripts/bp-dumper-go/dist/bp-dumper-windows.exe
-            scripts/bp-dumper-go/dist/bp-dumper-mac-intel
-            scripts/bp-dumper-go/dist/bp-dumper-mac-silicon
-            scripts/bp-dumper-go/dist/bp-dumper-linux
-            scripts/bp-dumper-py.zip
-
   build-windows-installer:
     name: Build Windows installer
     needs: resolve-tag
     runs-on: windows-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -120,31 +52,15 @@ jobs:
         with:
           node-version: 22
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: pip
-          cache-dependency-path: scripts/bp-dumper-py/requirements.txt
-
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
 
-      - name: Install Python packages into portable venv
-        shell: pwsh
-        run: |
-          python -m venv "$env:RUNNER_TEMP/dumper-python"
-          & "$env:RUNNER_TEMP/dumper-python/Scripts/python.exe" -m pip install --upgrade pip
-          & "$env:RUNNER_TEMP/dumper-python/Scripts/pip.exe" install `
-            -r scripts/bp-dumper-py/requirements.txt `
-            --prefer-binary
-
       - name: Stage self-contained bundle
         shell: pwsh
-        timeout-minutes: 20
+        timeout-minutes: 45
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1" `
-            -PythonVenvPath "$env:RUNNER_TEMP/dumper-python"
+          & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
 
       - name: Install Inno Setup
         run: choco install innosetup -y --no-progress
@@ -166,7 +82,7 @@ jobs:
 
   release:
     name: Upload GitHub Release assets
-    needs: [resolve-tag, build-unix, build-windows-installer]
+    needs: [resolve-tag, build-windows-installer]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -176,16 +92,10 @@ jobs:
         with:
           path: artifacts
 
-      - name: Upload binaries to GitHub Release
+      - name: Upload installer to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: |
-            artifacts/unix-builds/bp-dumper-windows.exe
-            artifacts/unix-builds/bp-dumper-mac-intel
-            artifacts/unix-builds/bp-dumper-mac-silicon
-            artifacts/unix-builds/bp-dumper-linux
-            artifacts/unix-builds/bp-dumper-py.zip
-            artifacts/windows-installer/DumperApps-Setup-*.exe
+          files: artifacts/windows-installer/DumperApps-Setup-*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

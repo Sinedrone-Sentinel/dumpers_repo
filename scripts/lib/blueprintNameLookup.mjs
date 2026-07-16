@@ -81,7 +81,6 @@ export function buildBlueprintNameLookup(blueprints, contractData, missionBluepr
 const CANONICAL_LOOKUP = 'src/data/blueprint-name-lookup.json'
 
 const LOOKUP_COPY_TARGETS = [
-  'scripts/bp-dumper-go/lookup.json',
   'scripts/bp-dumper-py/lookup.json',
   'supabase/functions/log-watcher-webhook/lookup.json',
 ]

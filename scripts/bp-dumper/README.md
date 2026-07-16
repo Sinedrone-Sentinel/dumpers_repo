@@ -1,34 +1,29 @@
 # BP Dumper Releases
 
-Go and Python BP Dumper versions are managed with [semantic-release](https://semantic-release.gitbook.io/) using [Conventional Commits](https://www.conventionalcommits.org/).
+Python BP Dumper versions are managed with [semantic-release](https://semantic-release.gitbook.io/) using [Conventional Commits](https://www.conventionalcommits.org/).
 
 ## Version source of truth
 
 - `scripts/bp-dumper/version.json` — canonical semver
-- Synced to `scripts/bp-dumper-go/main.go`, `scripts/bp-dumper-py/_version.py`, and `scripts/bp-dumper/package.json`
+- Synced to `scripts/bp-dumper-py/_version.py` and `scripts/bp-dumper/package.json`
 - Bundled fallback for the site UI: `src/data/bp-dumper-version.json` (the BP Dumper modal also checks GitHub live)
 
 ## Automatic release flow
 
-1. Push to `main` that changes **dumper source** (not generated game-data sync files) triggers **Release BP Dumper** (`.github/workflows/release-dumper.yml`).
+1. Push to `main` that changes **dumper source** triggers **Release BP Dumper** (`.github/workflows/release-dumper.yml`).
 2. semantic-release analyzes commits since the last `v*` tag. **Only `feat(dumper)` / `fix(dumper)` / `perf(dumper)` commits bump the version** — general repo commits do not.
 3. A release commit updates version files, creates a `vX.Y.Z` tag, and publishes GitHub release notes.
 4. semantic-release dispatches **Build Executables on Release**, which uploads:
-   - `bp-dumper-windows.exe`
-   - `bp-dumper-mac-intel` / `bp-dumper-mac-silicon`
-   - `bp-dumper-linux`
-   - `bp-dumper-py.zip` — portable zip (no installer)
-   - `DumperApps-Setup-X.Y.Z.exe` — **Windows installer** (bundled Python + BP Dumper)
+   - `DumperApps-Setup-X.Y.Z.exe` — **Windows installer** (bundled Python + BP Dumper scripts)
 
-Game-data parsing updates the canonical lookup at `src/data/blueprint-name-lookup.json` and copies it into Go/Python/embed paths locally. That alone does **not** trigger a semver release — ship a new dumper build and redeploy `log-watcher-webhook` after a game patch.
+Game-data parsing updates the canonical lookup at `src/data/blueprint-name-lookup.json` and copies it into Python/embed paths locally. That alone does **not** trigger a semver release — ship a new dumper build and redeploy `log-watcher-webhook` after a game patch.
 
 ## Blueprint lookup (canonical + copies)
 
 | Artifact | Path | Tracked in git |
 |----------|------|----------------|
 | Canonical (site + source) | `src/data/blueprint-name-lookup.json` | Yes |
-| Go embed | `scripts/bp-dumper-go/lookup.json` | No — copied at build |
-| Python zip | `scripts/bp-dumper-py/lookup.json` | No — copied at build |
+| Python bundle | `scripts/bp-dumper-py/lookup.json` | No — copied at build |
 | Edge function | `supabase/functions/log-watcher-webhook/lookup.json` | No — copied before deploy |
 
 ```bash

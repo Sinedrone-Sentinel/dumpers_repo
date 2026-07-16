@@ -67,7 +67,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Install on your PC to sync blueprint unlocks and power Live Mission Tracker."
+      subtitle="Windows desktop app — syncs blueprint unlocks and powers Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >

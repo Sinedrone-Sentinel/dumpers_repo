@@ -8,7 +8,7 @@ Members: download from **Dumper Apps** on the site → run the installer → pas
 
 Requires **Windows**, **Inno Setup 6**, **git**, and network.
 
-**CI fast path:** GitHub Actions pre-installs Python deps into a venv, then `prepare-bundle.ps1` copies them into the staging folder.
+**CI and local builds** download embeddable Python and install deps into the staging folder via `prepare-bundle.ps1` (portable — no machine-specific venv paths).
 
 ```powershell
 cd "Dumpers Repo"

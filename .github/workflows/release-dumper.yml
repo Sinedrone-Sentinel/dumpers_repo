@@ -5,11 +5,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'scripts/bp-dumper-go/**'
       - 'scripts/bp-dumper-py/**'
       - 'scripts/bp-dumper/**'
       - 'scripts/installer/**'
-      - 'START-HERE.bat'
       - 'scripts/sync-dumper-version.mjs'
       - 'scripts/lib/syncDumperMinGameVersion.mjs'
       - 'release.config.js'

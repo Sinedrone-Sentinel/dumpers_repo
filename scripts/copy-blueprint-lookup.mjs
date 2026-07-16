@@ -8,4 +8,4 @@ import { copyBlueprintLookupTargets } from './lib/blueprintNameLookup.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 copyBlueprintLookupTargets(root)
-console.log('Copied blueprint-name-lookup.json → 3 targets')
+console.log('Copied blueprint-name-lookup.json → 2 targets')

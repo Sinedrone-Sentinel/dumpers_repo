@@ -2,8 +2,7 @@
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path,
     [string]$OutDir = (Join-Path $PSScriptRoot "staging"),
-    [string]$PythonVersion = "3.12.7",
-    [string]$PythonVenvPath = ""
+    [string]$PythonVersion = "3.12.7"
 )
 
 $ErrorActionPreference = "Stop"
@@ -19,7 +18,6 @@ if (Test-Path $OutDir) {
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
 $pyDir = Join-Path $OutDir "python"
-$pyVenvDir = Join-Path $OutDir "python-venv"
 $bpPyDir = Join-Path $OutDir "scripts/bp-dumper-py"
 
 Write-Step "Copying Dumper Apps scripts"
@@ -39,39 +37,30 @@ foreach ($name in $bpFiles) {
 
 Copy-Item (Join-Path $PSScriptRoot "Launch-DumperApps.bat") (Join-Path $OutDir "Launch-DumperApps.bat")
 
-if ($PythonVenvPath) {
-    Write-Step "Copying pre-built Python venv from $PythonVenvPath"
-    $venvPy = Join-Path $PythonVenvPath "Scripts/python.exe"
-    if (-not (Test-Path $venvPy)) {
-        throw "PythonVenvPath missing Scripts/python.exe: $venvPy"
-    }
-    Copy-Item -Recurse -Path $PythonVenvPath -Destination $pyVenvDir
-} else {
-    Write-Step "Downloading Python $PythonVersion embeddable"
-    $pyZip = Join-Path $env:TEMP "python-embed.zip"
-    $pyUrl = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-embed-amd64.zip"
-    Invoke-WebRequest -Uri $pyUrl -OutFile $pyZip -UseBasicParsing
-    Expand-Archive -Path $pyZip -DestinationPath $pyDir -Force
-    Remove-Item $pyZip -Force
+Write-Step "Downloading Python $PythonVersion embeddable"
+$pyZip = Join-Path $env:TEMP "python-embed.zip"
+$pyUrl = "https://www.python.org/ftp/python/$PythonVersion/python-$PythonVersion-embed-amd64.zip"
+Invoke-WebRequest -Uri $pyUrl -OutFile $pyZip -UseBasicParsing
+Expand-Archive -Path $pyZip -DestinationPath $pyDir -Force
+Remove-Item $pyZip -Force
 
-    $pthFile = Get-ChildItem "$pyDir/python*._pth" | Select-Object -First 1
-    $pthLines = Get-Content $pthFile.FullName
-    $pthLines = $pthLines | ForEach-Object { $_ -replace '^#\s*import site', 'import site' }
-    if ($pthLines -notcontains 'Lib\site-packages') { $pthLines += 'Lib\site-packages' }
-    Set-Content -Path $pthFile.FullName -Value $pthLines -Encoding ASCII
-    New-Item -ItemType Directory -Force -Path (Join-Path $pyDir "Lib/site-packages") | Out-Null
+$pthFile = Get-ChildItem "$pyDir/python*._pth" | Select-Object -First 1
+$pthLines = Get-Content $pthFile.FullName
+$pthLines = $pthLines | ForEach-Object { $_ -replace '^#\s*import site', 'import site' }
+if ($pthLines -notcontains 'Lib\site-packages') { $pthLines += 'Lib\site-packages' }
+Set-Content -Path $pthFile.FullName -Value $pthLines -Encoding ASCII
+New-Item -ItemType Directory -Force -Path (Join-Path $pyDir "Lib/site-packages") | Out-Null
 
-    $getPip = Join-Path $env:TEMP "get-pip.py"
-    Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
-    & (Join-Path $pyDir "python.exe") $getPip --no-warn-script-location
-    Remove-Item $getPip -Force
+$getPip = Join-Path $env:TEMP "get-pip.py"
+Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
+& (Join-Path $pyDir "python.exe") $getPip --no-warn-script-location
+Remove-Item $getPip -Force
 
-    $pip = Join-Path $pyDir "python.exe"
-    $reqBp = Join-Path $bpPyDir "requirements.txt"
-    Write-Step "Installing Python packages into embeddable runtime"
-    & $pip -m pip install --upgrade pip --no-warn-script-location
-    & $pip -m pip install -r $reqBp --no-warn-script-location --prefer-binary
-}
+$pip = Join-Path $pyDir "python.exe"
+$reqBp = Join-Path $bpPyDir "requirements.txt"
+Write-Step "Installing Python packages into embeddable runtime"
+& $pip -m pip install --upgrade pip --no-warn-script-location
+& $pip -m pip install -r $reqBp --no-warn-script-location --prefer-binary
 
 Write-Step "Bundle ready: $OutDir"
 Get-ChildItem $OutDir -Recurse -File | Measure-Object -Property Length -Sum |

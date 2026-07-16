@@ -199,7 +199,7 @@ Set these under **Project Settings → Edge Functions → Secrets** (or let sema
 |--------|---------|-------------------|
 | `LATEST_DUMPER_VERSION` | Latest BP Dumper semver shown to desktop clients | Updated by semantic-release when dumper releases ship |
 
-BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into each release build**, not stored in Supabase. When game data is parsed (`parse-extracted-data.mjs`), `npm run sync-min-game-version` updates `scripts/bp-dumper-go/main.go` and `scripts/bp-dumper-py/_min_game_version.py` from `src/data/game-build-version.json`.
+BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into each release build**, not stored in Supabase. When game data is parsed (`parse-extracted-data.mjs`), `npm run sync-min-game-version` updates `scripts/bp-dumper-py/_min_game_version.py` from `src/data/game-build-version.json`.
 
 ### BP Dumper webhook API
 

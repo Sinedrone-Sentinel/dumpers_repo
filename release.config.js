@@ -49,7 +49,6 @@ export default {
           'scripts/bp-dumper/version.json',
           'scripts/bp-dumper/package.json',
           'scripts/bp-dumper/CHANGELOG.md',
-          'scripts/bp-dumper-go/main.go',
           'scripts/bp-dumper-py/_version.py',
           'scripts/bp-dumper-py/_min_game_version.py',
           'src/data/bp-dumper-version.json',

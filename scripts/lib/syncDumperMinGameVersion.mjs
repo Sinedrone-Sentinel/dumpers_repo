@@ -5,7 +5,6 @@ import { resolveGameBuildVersion, toMinGameVersionSecret } from './gameBuildVers
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..', '..')
-const GO_MAIN = join(PROJECT_ROOT, 'scripts', 'bp-dumper-go', 'main.go')
 const PY_MIN_VERSION = join(PROJECT_ROOT, 'scripts', 'bp-dumper-py', '_min_game_version.py')
 const GAME_BUILD_FILE = join(PROJECT_ROOT, 'src', 'data', 'game-build-version.json')
 
@@ -19,7 +18,7 @@ function readCommittedGameBuildVersion() {
 }
 
 /**
- * Bake major.minor game version into BP Dumper Go/Python sources.
+ * Bake major.minor game version into BP Dumper Python sources.
  */
 export function syncDumperMinGameVersion(version, options = {}) {
   const minVersion = toMinGameVersionSecret(version)
@@ -32,15 +31,6 @@ export function syncDumperMinGameVersion(version, options = {}) {
     console.log(`  [dry-run] Would set dumper MinGameVersion=${minVersion}`)
     return { dryRun: true, minVersion }
   }
-
-  const goSource = readFileSync(GO_MAIN, 'utf8')
-  if (!/(?:var|const) MinGameVersion = "[^"]*"/.test(goSource)) {
-    throw new Error(`Could not find MinGameVersion in ${GO_MAIN}`)
-  }
-  writeFileSync(
-    GO_MAIN,
-    goSource.replace(/(?:var|const) MinGameVersion = "[^"]*"/, `var MinGameVersion = "${minVersion}"`)
-  )
 
   writeFileSync(
     PY_MIN_VERSION,

@@ -1,85 +1,38 @@
-# BP Dumper
+# BP Dumper (Python)
 
-A cross-platform utility to batch-import historical blueprint JSON exports or trail active logs from your game client to your account.
+Desktop log watcher for Star Citizen — syncs blueprint unlocks and powers Live Mission Tracker on Windows.
 
-On **Windows**, download **`bp-dumper-py.zip`** (labeled **Windows recommended** on the site) — unzip and double-click **`START-HERE.bat`**. That starts blueprint sync. The `.exe` is a standalone alternative.
+## Members (Windows)
 
----
+1. Open **Dumper Apps** on the site (avatar menu or Mission Tracker).
+2. Download **Windows installer** and run the setup wizard.
+3. Open **Dumper Apps** from the Start Menu and paste your API key when prompted.
 
-## 🚀 Quick Start (releases)
+The installer bundles Python and the scripts in this folder — no separate Python install required.
 
-1. Download from [GitHub releases](https://github.com/Sinedrone-Sentinel/dumpers_repo/releases).
-2. **Windows:** unzip `bp-dumper-py.zip` → **`START-HERE.bat`** → paste API key from the site.
+## Developer setup
 
----
+Requires **Python 3.8+** on PATH.
 
-## 🛠️ Python/Developer Setup Instructions
-
-### 1. Prerequisites
-- **Python 3.8+** must be installed on your system.
-  - Windows: Make sure **"Add Python to PATH"** is selected during installation.
-  - macOS/Linux: Usually installed by default. Verify via `python3 --version`.
-
-### 2. Installation
-Open your terminal (or command prompt) inside this folder and run:
 ```bash
+cd scripts/bp-dumper-py
 pip install -r requirements.txt
+python dumper.py --watch --key "dr_your_api_key"
 ```
 
-Then start watch mode:
-```bash
-python dumper.py --watch
-```
+Or double-click **`dumper.bat`** on Windows and follow the prompts.
 
----
-
-## How to Run
-
-### Windows (Quick Start)
-1. Double-click the **`dumper.bat`** file.
-2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape your local Star Citizen installation logs.
-3. Enter your Secret API Key (generate one in Settings under **BP Dumper**).
-4. Enter the Supabase Webhook URL.
-
-### macOS & Linux (Quick Start)
-1. Open your terminal inside this folder and run:
-   ```bash
-   chmod +x dumper.sh dumper.py
-   ./dumper.sh
-   ```
-2. Enter the path to your JSON export file when prompted, **or leave it blank** and press **Enter** to automatically scrape local Star Citizen log files.
-3. Choose whether to perform a dry run (local only, no API key required).
-4. Enter your Secret API Key and Supabase Webhook URL when prompted.
-
-### Advanced Usage (CLI One-Liners)
-You can pass arguments directly to **`dumper.bat`** (Windows) or **`dumper.sh`** (macOS/Linux) to bypass the prompts and run it in a single command. 
-
-They accept all the same arguments as `dumper.py`:
+### CLI examples
 
 ```bash
-# Dry Run Mode: Auto-detect and scan local Star Citizen logs (no API key required)
-./dumper.sh --dry-run
-# Windows: dumper.bat --dry-run
+# Dry run — scan local Game.log without sending to the API
+python dumper.py --dry-run
 
-# Dry Run Mode: Scan a specific JSON export file
-./dumper.sh /path/to/your/export.json --dry-run
+# Watch mode with API key
+python dumper.py --watch --key "dr_your_api_key"
 
-# Real Mode: Auto-detect logs and import using environment key (webhook URL is built in)
-export LOG_WATCHER_API_KEY="dr_your_secret_api_key"
-./dumper.sh
-
-# Real Mode: Scan specific Game.log file directly and pass key as parameter
-./dumper.sh /path/to/Game.log --key "dr_your_secret_api_key"
-
-# Optional: override webhook URL (e.g. local dev)
-./dumper.sh --url "http://localhost/mock" --dry-run
+# One-shot import from a specific log file
+python dumper.py /path/to/Game.log --key "dr_your_api_key"
 ```
 
----
-
-## Output Description
-The script will display the status of each unique blueprint:
-- **`★ Would Import`**: (Dry run mode only) The blueprint was detected locally and is ready to import.
-- **`★ Successfully Imported`**: The blueprint was added to your account.
-- **`↻ Already Acquired`**: The blueprint was already present (skipped, no duplicate created).
-- **`✗ Failed`**: The API returned an error (e.g., account pending approval, banned, or invalid ID).
+Releases and versioning: [`../bp-dumper/README.md`](../bp-dumper/README.md).

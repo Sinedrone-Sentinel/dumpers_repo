@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Sync BP Dumper version to Go, Python, and package manifests.
+ * Sync BP Dumper version to Python and package manifests.
  *
  * Usage:
  *   node scripts/sync-dumper-version.mjs           # read scripts/bp-dumper/version.json
@@ -14,7 +14,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const VERSION_FILE = join(ROOT, 'scripts', 'bp-dumper', 'version.json')
 const PACKAGE_FILE = join(ROOT, 'scripts', 'bp-dumper', 'package.json')
-const GO_MAIN = join(ROOT, 'scripts', 'bp-dumper-go', 'main.go')
 const PY_VERSION = join(ROOT, 'scripts', 'bp-dumper-py', '_version.py')
 const APP_VERSION_FILE = join(ROOT, 'src', 'data', 'bp-dumper-version.json')
 
@@ -37,17 +36,6 @@ writeFileSync(VERSION_FILE, `${JSON.stringify({ version }, null, 2)}\n`)
 const pkg = JSON.parse(readFileSync(PACKAGE_FILE, 'utf8'))
 pkg.version = version
 writeFileSync(PACKAGE_FILE, `${JSON.stringify(pkg, null, 2)}\n`)
-
-const goSource = readFileSync(GO_MAIN, 'utf8')
-const goMatch = goSource.match(/(?:var|const) DumperVersion = "[^"]*"/)
-if (!goMatch) {
-  throw new Error(`Could not find DumperVersion in ${GO_MAIN}`)
-}
-const goNext = goSource.replace(
-  /(?:var|const) DumperVersion = "[^"]*"/,
-  `var DumperVersion = "${version}"`
-)
-writeFileSync(GO_MAIN, goNext)
 
 writeFileSync(
   PY_VERSION,
