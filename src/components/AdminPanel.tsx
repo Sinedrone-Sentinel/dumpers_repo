@@ -1,64 +1,110 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
 import RsiVerifiedBadge from './RsiVerifiedBadge'
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
+type MemberFilter = 'verified' | 'unverified'
+
+const PAGE_SIZE = 10
+const UNVERIFIED_FILTER = 'rsi_handle_verified.is.null,rsi_handle_verified.eq.false'
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const { profile: currentUser, isOfficerOrAbove, isSuperAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<TabType>('pending')
+  const [memberFilter, setMemberFilter] = useState<MemberFilter>('verified')
   const [users, setUsers] = useState<Profile[]>([])
   const [bannedUsers, setBannedUsers] = useState<BannedUser[]>([])
+  const [memberCounts, setMemberCounts] = useState({ verified: 0, unverified: 0 })
+  const [page, setPage] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [banTarget, setBanTarget] = useState<Profile | null>(null)
   const [banReason, setBanReason] = useState('')
   const [unbanTarget, setUnbanTarget] = useState<BannedUser | null>(null)
-  useEffect(() => {
-    if (activeTab === 'banned') {
-      fetchBannedUsers()
-    } else {
-      fetchUsers()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab])
 
-  const fetchUsers = async () => {
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+
+  const fetchData = useCallback(async () => {
     setLoading(true)
-    let query = supabase.from('profiles').select('*')
+    const from = page * PAGE_SIZE
+    const to = from + PAGE_SIZE - 1
 
+    if (activeTab === 'banned') {
+      const { data, error, count } = await supabase
+        .from('banned_users')
+        .select('*', { count: 'exact' })
+        .order('banned_at', { ascending: false })
+        .range(from, to)
+      if (error) console.error('Error fetching banned users:', error)
+      setBannedUsers(error ? [] : data || [])
+      setTotalCount(error ? 0 : count ?? 0)
+      setLoading(false)
+      return
+    }
+
+    let query = supabase.from('profiles').select('*', { count: 'exact' })
     if (activeTab === 'pending') {
       query = query.eq('role', 'pending')
     } else if (activeTab === 'members') {
       query = query.eq('role', 'member')
+      query =
+        memberFilter === 'verified'
+          ? query.eq('rsi_handle_verified', true)
+          : query.or(UNVERIFIED_FILTER)
     } else if (activeTab === 'officers') {
       query = query.in('role', ['officer', 'super-admin'])
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false })
+    const { data, error, count } = await query
+      .order('created_at', { ascending: false })
+      .range(from, to)
+    if (error) console.error('Error fetching users:', error)
+    setUsers(error ? [] : data || [])
+    setTotalCount(error ? 0 : count ?? 0)
 
-    if (error) {
-      console.error('Error fetching users:', error)
-    } else {
-      setUsers(data || [])
+    if (activeTab === 'members') {
+      const [verified, unverified] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .eq('role', 'member')
+          .eq('rsi_handle_verified', true),
+        supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .eq('role', 'member')
+          .or(UNVERIFIED_FILTER),
+      ])
+      setMemberCounts({ verified: verified.count ?? 0, unverified: unverified.count ?? 0 })
     }
+
     setLoading(false)
+  }, [activeTab, memberFilter, page])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  const changeTab = (tab: TabType) => {
+    setActiveTab(tab)
+    setPage(0)
   }
 
-  const fetchBannedUsers = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('banned_users')
-      .select('*')
-      .order('banned_at', { ascending: false })
+  const changeMemberFilter = (filter: MemberFilter) => {
+    setMemberFilter(filter)
+    setPage(0)
+  }
 
-    if (error) {
-      console.error('Error fetching banned users:', error)
+  // Refetch after a mutation; step back a page if we just emptied the last one.
+  const refreshAfterMutation = () => {
+    const currentLen = activeTab === 'banned' ? bannedUsers.length : users.length
+    if (currentLen <= 1 && page > 0) {
+      setPage((p) => p - 1)
     } else {
-      setBannedUsers(data || [])
+      fetchData()
     }
-    setLoading(false)
   }
 
   const updateUserRole = async (userId: string, newRole: UserRole) => {
@@ -85,7 +131,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       return
     }
 
-    fetchUsers()
+    refreshAfterMutation()
     setActionLoading(null)
   }
 
@@ -100,7 +146,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     } else {
       setBanTarget(null)
       setBanReason('')
-      fetchUsers()
+      refreshAfterMutation()
     }
 
     setActionLoading(null)
@@ -116,7 +162,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       alert(result.error || 'Failed to unban user')
     } else {
       setUnbanTarget(null)
-      fetchBannedUsers()
+      refreshAfterMutation()
     }
 
     setActionLoading(null)
@@ -156,21 +202,79 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
         size="lg"
         zIndex={70}
         headerExtra={
-          <div className="flex border-b border-slate-700 shrink-0">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors ${
-                  activeTab === tab.id
-                    ? 'bg-slate-800 text-white border-b-2 border-red-500'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="shrink-0">
+            <div className="flex border-b border-slate-700">
+              {tabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => changeTab(tab.id)}
+                  className={`flex-1 px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors ${
+                    activeTab === tab.id
+                      ? 'bg-slate-800 text-white border-b-2 border-red-500'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            {activeTab === 'members' && (
+              <div className="flex items-center gap-2 px-3 py-2 bg-slate-900/60 border-b border-slate-700">
+                {(['verified', 'unverified'] as MemberFilter[]).map(filter => {
+                  const active = memberFilter === filter
+                  const count = filter === 'verified' ? memberCounts.verified : memberCounts.unverified
+                  return (
+                    <button
+                      key={filter}
+                      onClick={() => changeMemberFilter(filter)}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
+                        active
+                          ? filter === 'verified'
+                            ? 'bg-emerald-900/40 text-emerald-300 border-emerald-500/50'
+                            : 'bg-slate-700 text-white border-slate-500'
+                          : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-800/60'
+                      }`}
+                    >
+                      {filter === 'verified' ? (
+                        <>
+                          <RsiVerifiedBadge size="sm" />
+                          RSI Verified
+                        </>
+                      ) : (
+                        'Unverified'
+                      )}
+                      <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${active ? 'bg-black/30' : 'bg-slate-800 text-slate-500'}`}>
+                        {count}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
           </div>
+        }
+        footer={
+          totalCount > PAGE_SIZE ? (
+            <div className="flex items-center justify-between gap-3">
+              <button
+                onClick={() => setPage(p => Math.max(0, p - 1))}
+                disabled={page === 0 || loading}
+                className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                ← Prev
+              </button>
+              <span className="text-xs text-slate-400">
+                Page {page + 1} of {totalPages} · {totalCount} total
+              </span>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                disabled={page >= totalPages - 1 || loading}
+                className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Next →
+              </button>
+            </div>
+          ) : undefined
         }
       >
           {loading ? (
@@ -231,7 +335,11 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
             )
           ) : users.length === 0 ? (
             <div className="text-center py-8 text-slate-400">
-              No users in this category
+              {activeTab === 'members'
+                ? memberFilter === 'verified'
+                  ? 'No RSI verified members'
+                  : 'No unverified members'
+                : 'No users in this category'}
             </div>
           ) : (
             <div className="space-y-3">
