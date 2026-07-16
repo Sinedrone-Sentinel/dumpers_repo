@@ -11,7 +11,7 @@ import {
 import { isHarvestResource, isWikeloItemResource } from './resourceTypes'
 
 /** Public DFP UX constants only — formula lives in dfp-engine-private → public/dfp-engine.js */
-export const DFP_VERSION = '1.7.3-wikelo-ammo-bases'
+export const DFP_VERSION = '1.7.4-wikelo-blueprint-premiums'
 
 /** Q0 (purchased) = exactly Q500 in orders. Mined ores use game band thresholds (Band 1, 2, …). */
 export const STOCK_QUALITY_TIERS: readonly number[] = [

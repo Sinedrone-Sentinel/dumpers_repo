@@ -1,5 +1,5 @@
 {
-  "version": "1.7.3-wikelo-ammo-bases",
-  "sha256": "f915b224cf67824922f12bde6d0fc27a2e3ed46a7217c7b4bf277609973715ed",
+  "version": "1.7.4-wikelo-blueprint-premiums",
+  "sha256": "56e5f9dc0c9bc469ed411ac35ef9633a28e0b3e6acb2aee81aa12402a376ef0d",
   "module": "dfp-engine.js"
 }
