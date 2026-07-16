@@ -615,7 +615,7 @@ func saveCacheFile(path string, cache map[string]bool) {
 }
 
 var DumperVersion = "1.7.0"
-var MinGameVersion = "4.8"
+var MinGameVersion = "4.9"
 
 const DefaultWebhookURL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 const DefaultReleasesURL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"

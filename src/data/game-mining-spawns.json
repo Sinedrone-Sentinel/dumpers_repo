@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted harvestable/HPP data)",
-  "_extracted": "2026-07-13T04:47:23.051Z",
+  "_extracted": "2026-07-16T04:36:19.941Z",
   "clusterPresets": {
     "HarvestableClusterPreset.Asteroid_Cluster_Pyro": {
       "probabilityOfClustering": 30,
@@ -460,22 +460,22 @@
               "nodes": 4,
               "rs": 17140,
               "chancePercent": 60,
-              "bestAtLocation": "Glaciem Ring",
-              "bestAtLocationDisplayName": "Glaciem Ring"
+              "bestAtLocation": "Keeger Belt",
+              "bestAtLocationDisplayName": "Keeger Belt"
             },
             {
               "nodes": 5,
               "rs": 21425,
               "chancePercent": 30,
-              "bestAtLocation": "Glaciem Ring",
-              "bestAtLocationDisplayName": "Glaciem Ring"
+              "bestAtLocation": "Keeger Belt",
+              "bestAtLocationDisplayName": "Keeger Belt"
             },
             {
               "nodes": 6,
               "rs": 25710,
               "chancePercent": 10,
-              "bestAtLocation": "Glaciem Ring",
-              "bestAtLocationDisplayName": "Glaciem Ring"
+              "bestAtLocation": "Keeger Belt",
+              "bestAtLocationDisplayName": "Keeger Belt"
             }
           ],
           "bestLocation": "Aaron Halo",
@@ -492,76 +492,6 @@
         }
       },
       "locations": {
-        "Glaciem Ring|asteroid": {
-          "locationName": "Glaciem Ring",
-          "spawnKey": "Glaciem Ring",
-          "displayName": "Glaciem Ring",
-          "guideName": "Glaciem Ring",
-          "hppKey": "HarvestableProviderPreset.HPP_Nyx_GlaciemRing",
-          "system": "Nyx",
-          "depositType": "asteroid",
-          "groupName": "SpaceShip_Mineables",
-          "groupSpawnPercent": 0.1,
-          "relativeSpawnWeight": 13.8,
-          "poolSharePercent": 13.8,
-          "effectiveSpawnPercent": 0.0138,
-          "harvestablePreset": "mining_asteroidcommon_aluminum",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
-          "compositionParts": [
-            {
-              "elementName": "Aluminum",
-              "minPercentage": 2.82,
-              "maxPercentage": 6.82,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Aluminum",
-              "minPercentage": 39.18,
-              "maxPercentage": 83.18,
-              "qualityScale": 0.49
-            },
-            {
-              "elementName": "Corundum",
-              "minPercentage": 5,
-              "maxPercentage": 10,
-              "qualityScale": 0.789
-            }
-          ],
-          "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
-          "probabilityOfClustering": 100,
-          "maxNodes": 6,
-          "clusterRows": [
-            {
-              "nodes": 4,
-              "rs": 17140,
-              "chancePercent": 60,
-              "minProximity": 1,
-              "maxProximity": 6
-            },
-            {
-              "nodes": 5,
-              "rs": 21425,
-              "chancePercent": 30,
-              "minProximity": 1,
-              "maxProximity": 8
-            },
-            {
-              "nodes": 6,
-              "rs": 25710,
-              "chancePercent": 10,
-              "minProximity": 1,
-              "maxProximity": 12
-            }
-          ],
-          "scaleRange": {
-            "min": 0.6,
-            "max": 1
-          },
-          "scannerMassRange": {
-            "min": 3873,
-            "max": 17929
-          }
-        },
         "Keeger Belt|asteroid": {
           "locationName": "Keeger Belt",
           "spawnKey": "Keeger Belt",
@@ -572,9 +502,9 @@
           "depositType": "asteroid",
           "groupName": "SpaceShip_Mineables",
           "groupSpawnPercent": 0.1,
-          "relativeSpawnWeight": 13.8,
-          "poolSharePercent": 13.8,
-          "effectiveSpawnPercent": 0.0138,
+          "relativeSpawnWeight": 20.75,
+          "poolSharePercent": 20.75,
+          "effectiveSpawnPercent": 0.0208,
           "harvestablePreset": "mining_asteroidcommon_aluminum",
           "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Aluminum",
           "compositionParts": [
@@ -4024,9 +3954,9 @@
           "depositType": "asteroid",
           "groupName": "SpaceShip_Mineables",
           "groupSpawnPercent": 0.1,
-          "relativeSpawnWeight": 13.9,
-          "poolSharePercent": 13.9,
-          "effectiveSpawnPercent": 0.0139,
+          "relativeSpawnWeight": 20.75,
+          "poolSharePercent": 20.75,
+          "effectiveSpawnPercent": 0.0208,
           "harvestablePreset": "mining_asteroidcommon_ice",
           "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
           "compositionParts": [
@@ -4088,9 +4018,9 @@
           "depositType": "asteroid",
           "groupName": "SpaceShip_Mineables",
           "groupSpawnPercent": 0.1,
-          "relativeSpawnWeight": 13.9,
-          "poolSharePercent": 13.9,
-          "effectiveSpawnPercent": 0.0139,
+          "relativeSpawnWeight": 20.75,
+          "poolSharePercent": 20.75,
+          "effectiveSpawnPercent": 0.0208,
           "harvestablePreset": "mining_asteroidcommon_ice",
           "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Ice",
           "compositionParts": [
@@ -5209,73 +5139,9 @@
           "depositType": "asteroid",
           "groupName": "SpaceShip_Mineables",
           "groupSpawnPercent": 0.1,
-          "relativeSpawnWeight": 13.8,
-          "poolSharePercent": 13.8,
-          "effectiveSpawnPercent": 0.0138,
-          "harvestablePreset": "mining_asteroidcommon_iron",
-          "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
-          "compositionParts": [
-            {
-              "elementName": "Iron",
-              "minPercentage": 9.7,
-              "maxPercentage": 15.7,
-              "qualityScale": 1
-            },
-            {
-              "elementName": "Iron",
-              "minPercentage": 34.3,
-              "maxPercentage": 84.3,
-              "qualityScale": 0.49
-            }
-          ],
-          "clusterPresetKey": "HarvestableClusterPreset.CommonShipMineable_Cluster",
-          "probabilityOfClustering": 100,
-          "maxNodes": 6,
-          "clusterRows": [
-            {
-              "nodes": 4,
-              "rs": 17080,
-              "chancePercent": 60,
-              "minProximity": 1,
-              "maxProximity": 6
-            },
-            {
-              "nodes": 5,
-              "rs": 21350,
-              "chancePercent": 30,
-              "minProximity": 1,
-              "maxProximity": 8
-            },
-            {
-              "nodes": 6,
-              "rs": 25620,
-              "chancePercent": 10,
-              "minProximity": 1,
-              "maxProximity": 12
-            }
-          ],
-          "scaleRange": {
-            "min": 0.6,
-            "max": 1
-          },
-          "scannerMassRange": {
-            "min": 3873,
-            "max": 17929
-          }
-        },
-        "Keeger Belt|asteroid": {
-          "locationName": "Keeger Belt",
-          "spawnKey": "Keeger Belt",
-          "displayName": "Keeger Belt",
-          "guideName": "Keeger Belt",
-          "hppKey": "HarvestableProviderPreset.HPP_Nyx_KeegerBelt",
-          "system": "Nyx",
-          "depositType": "asteroid",
-          "groupName": "SpaceShip_Mineables",
-          "groupSpawnPercent": 0.1,
-          "relativeSpawnWeight": 13.8,
-          "poolSharePercent": 13.8,
-          "effectiveSpawnPercent": 0.0138,
+          "relativeSpawnWeight": 20.75,
+          "poolSharePercent": 20.75,
+          "effectiveSpawnPercent": 0.0208,
           "harvestablePreset": "mining_asteroidcommon_iron",
           "compositionRecordName": "MineableComposition.CommonShipMineablesAsteroid_Iron",
           "compositionParts": [
@@ -17227,7 +17093,7 @@
   "summary": {
     "signatureOres": 26,
     "oresWithProfiles": 26,
-    "totalSpawnLinks": 213,
-    "totalLocationProfiles": 213
+    "totalSpawnLinks": 211,
+    "totalLocationProfiles": 211
   }
 }

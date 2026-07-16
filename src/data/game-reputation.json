@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-13T04:47:23.503Z",
+  "_extracted": "2026-07-16T04:36:20.468Z",
   "factions": {
     "factionreputation_aciedo": {
       "id": "f088575d-92ea-40e4-8d52-ce83884a11dd",
@@ -21,6 +21,16 @@
       "recordName": "FactionReputation.FactionReputation_ArcCorp",
       "filePath": "libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
       "reputationContextFile": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_bounty-security.json"
+    },
+    "factionreputation_battaglia": {
+      "id": "f4cc3bfe-ee9d-41d1-818b-fdb55c979d09",
+      "key": "factionreputation_battaglia",
+      "name": "Recco Battaglia",
+      "displayNameKey": "@mg_battaglia_contractor",
+      "descriptionKey": "",
+      "recordName": "FactionReputation.FactionReputation_Battaglia",
+      "filePath": "libs/foundry/records/factions/factionreputation/factionreputation_battaglia.json",
+      "reputationContextFile": "file://./../../../../../libs/foundry/records/reputation/contexts/missionprovider/reputationcontext_battaglia.json"
     },
     "factionreputation_cdf": {
       "id": "c618bb17-61cb-462c-8b51-8d4dfcb527de",
@@ -146,7 +156,7 @@
       "id": "4cd28d63-24ba-4180-a881-86036c29cd64",
       "key": "factionreputation_lawful_highpointwildernessspecialists",
       "name": "Highpoint Wilderness Specialists",
-      "displayNameKey": "@LOC_PLACEHOLDER",
+      "displayNameKey": "@Highpoint_RepUI_Name",
       "descriptionKey": "",
       "recordName": "FactionReputation.FactionReputation_Lawful_HighpointWildernessSpecialists",
       "filePath": "libs/foundry/records/factions/factionreputation/factionreputation_lawful_highpointwildernessspecialists.json",
@@ -374,6 +384,679 @@
     }
   },
   "factionContexts": {
+    "battaglia": {
+      "primaryScope": {
+        "scopeKey": "ReputationScope_Affinity",
+        "standings": [
+          {
+            "id": "bcd1f776-9a6e-4ffd-85c4-6df64f4cf2ed",
+            "name": "Affinity_Good_100_Exalted",
+            "displayName": "Exalted",
+            "displayNameKey": "@RepStanding_MissionGiver_Default_Exalted_Name",
+            "perkDescription": "@blank_space",
+            "minReputation": 10000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_100",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_100.json"
+          },
+          {
+            "id": "0d096e31-151e-49c8-9f71-339097b6720c",
+            "name": "Affinity_Good_095",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 9500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_095",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_095.json"
+          },
+          {
+            "id": "97d61efe-fadd-4a2b-b0ca-dcf991562ef0",
+            "name": "Affinity_Good_090",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 9000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_090",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_090.json"
+          },
+          {
+            "id": "e85ae6eb-5d9f-4ec8-b66c-8ec6d8277149",
+            "name": "Affinity_Good_085",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 8500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_085",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_085.json"
+          },
+          {
+            "id": "3c74c655-b9c5-4bf0-be9d-31d5d7b8d202",
+            "name": "Affinity_Good_080",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 8000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_080",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_080.json"
+          },
+          {
+            "id": "7cd39e89-f905-4525-9d3a-af8360ffa21c",
+            "name": "Affinity_Good_075",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 7500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_075",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_075.json"
+          },
+          {
+            "id": "1193ff60-89aa-4f86-a024-d61d5e490394",
+            "name": "Affinity_Good_070",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 7000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_070",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_070.json"
+          },
+          {
+            "id": "77118af3-8fbd-4afc-8015-1f26790599b3",
+            "name": "Affinity_Good_065",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 6500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_065",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_065.json"
+          },
+          {
+            "id": "f161b01c-9ed1-4816-9a60-cbbd89df921f",
+            "name": "Affinity_Good_060",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 6500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_060",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_060.json"
+          },
+          {
+            "id": "6b230fab-ddbe-4aa6-9147-4f9a586a1a91",
+            "name": "Affinity_Good_055",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 5500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_055",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_055.json"
+          },
+          {
+            "id": "b8e118e5-ee31-4c85-a31d-5dacaaefc57f",
+            "name": "Affinity_Good_050_Liked",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 5000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_050",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_050.json"
+          },
+          {
+            "id": "f2d7c9af-eb8f-4d74-a93a-0c2397e13016",
+            "name": "Affinity_Good_045",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 4500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_045",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_045.json"
+          },
+          {
+            "id": "cad08f37-f839-4a72-816a-4f4cb54c78ee",
+            "name": "Affinity_Good_040",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 4000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_040",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_040.json"
+          },
+          {
+            "id": "389ccf9a-3f9b-450c-bc4c-20c4d17c3f66",
+            "name": "Affinity_Good_035",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 3500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_035",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_035.json"
+          },
+          {
+            "id": "83786f0e-8d2f-419e-b139-ea3b32970dcf",
+            "name": "Affinity_Good_030",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 3000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_030",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_030.json"
+          },
+          {
+            "id": "0b9c061e-46f9-4fea-b375-105e3f097221",
+            "name": "Affinity_Good_025",
+            "displayName": "Liked",
+            "displayNameKey": "@RepStanding_MissionGiver_Default_Liked_Name",
+            "perkDescription": "@blank_space",
+            "minReputation": 2500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Ally_025",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_ally_025.json"
+          },
+          {
+            "id": "e4601884-d96a-4bd9-be71-956961b12a74",
+            "name": "Affinity_Good_020",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 2000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_020",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_neutral_020.json"
+          },
+          {
+            "id": "3cb3b0e4-a4c0-4eae-bb1c-ad7a2751b01b",
+            "name": "Affinity_Good_015",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 1500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_015",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_neutral_015.json"
+          },
+          {
+            "id": "670607b2-13aa-4ea2-90d7-7b7822f07f92",
+            "name": "Affinity_Good_010",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 1000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_010",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_neutral_010.json"
+          },
+          {
+            "id": "4503a76d-bcb2-4edd-bda9-93aa40e1b756",
+            "name": "Affinity_Good_005",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": 500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_005",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_neutral_005.json"
+          },
+          {
+            "id": "cf6f6a08-b8a0-4b13-9e20-2b74cd783059",
+            "name": "Affinity_000_Neutral",
+            "displayName": "Neutral",
+            "displayNameKey": "@RepStanding_MissionGiver_Default_Neutral_Name",
+            "perkDescription": "@blank_space",
+            "minReputation": 0,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": true,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_000",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_neutral_000.json"
+          },
+          {
+            "id": "3dcef506-9006-4755-a6a8-70aa31869f6f",
+            "name": "Affinity_Bad_005",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-005",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-005.json"
+          },
+          {
+            "id": "0cf50aad-039a-49b8-a8ed-dd41c2a4a063",
+            "name": "Affinity_Bad_010",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -1000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-010",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-010.json"
+          },
+          {
+            "id": "122adc3b-8c23-4c4a-8849-49bf31138d46",
+            "name": "Affinity_Bad_015",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -1500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-015",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-015.json"
+          },
+          {
+            "id": "85ae0f35-5831-4a22-b573-34d3b6f8586c",
+            "name": "Affinity_Bad_020",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -2000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-020",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-020.json"
+          },
+          {
+            "id": "aed7200f-3eca-4e31-8a4d-6bf6eae12eda",
+            "name": "Affinity_Bad_025",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -2500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-025",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-025.json"
+          },
+          {
+            "id": "1cbd6002-2134-48b6-8503-2dde79dffd48",
+            "name": "Affinity_Bad_030",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -3000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-030",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-030.json"
+          },
+          {
+            "id": "d00367c4-c67d-4023-9394-acfcb82d8c05",
+            "name": "Affinity_Bad_035",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -3500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-035",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-035.json"
+          },
+          {
+            "id": "512ec76a-0a8b-4d9d-8ebf-1862c0b4ddc9",
+            "name": "Affinity_Bad_040",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -4000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-040",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-040.json"
+          },
+          {
+            "id": "b51383b3-e81f-489a-97ec-88df6aac797d",
+            "name": "Affinity_Bad_045",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -4500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-045",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-045.json"
+          },
+          {
+            "id": "4e5e4df1-ce14-4e9b-aaf1-d7e431b40f0c",
+            "name": "Affinity_Bad_050_Disliked",
+            "displayName": "Disliked",
+            "displayNameKey": "@RepStanding_MissionGiver_Default_Disliked_Name",
+            "perkDescription": "@blank_space",
+            "minReputation": -5000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-050",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-050.json"
+          },
+          {
+            "id": "4ed21feb-0ad9-4397-8ba1-5653e3234a69",
+            "name": "Affinity_Bad_055",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -5500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-055",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-055.json"
+          },
+          {
+            "id": "8b64d312-6858-432b-996c-a9f3657b6594",
+            "name": "Affinity_Bad_060",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -6000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-060",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-060.json"
+          },
+          {
+            "id": "854175b9-0d43-43ff-9273-87c50f4aa202",
+            "name": "Affinity_Bad_065",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -6500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-065",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-065.json"
+          },
+          {
+            "id": "09b21b0c-9271-44c9-907c-37e5fd15dc31",
+            "name": "Affinity_Bad_070",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -7000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-070",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-070.json"
+          },
+          {
+            "id": "9418b1f8-37c5-4ab0-b375-d82529ea26aa",
+            "name": "Affinity_Bad_075",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -7500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-075",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-075.json"
+          },
+          {
+            "id": "c7852015-316b-4d46-9972-39171202db94",
+            "name": "Affinity_Bad_080",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -8000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-080",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-080.json"
+          },
+          {
+            "id": "56155155-cb71-4112-8919-b64f6d6f1f59",
+            "name": "Affinity_Bad_085",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -8500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-085",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-085.json"
+          },
+          {
+            "id": "0e3ee08d-b543-4402-9561-f6e2753c4774",
+            "name": "Affinity_Bad_090",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -9000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-090",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-090.json"
+          },
+          {
+            "id": "8f67ffc7-d4ef-4499-b23f-594ea3484012",
+            "name": "Affinity_Bad_095",
+            "displayName": "<= PLACEHOLDER =>",
+            "displayNameKey": "@LOC_PLACEHOLDER",
+            "perkDescription": "@blank_space",
+            "minReputation": -9500,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-095",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-095.json"
+          },
+          {
+            "id": "37867ba7-ca89-460f-8679-df5be5322463",
+            "name": "Affinity_Bad_100_Hated",
+            "displayName": "Hated",
+            "displayNameKey": "@RepStanding_MissionGiver_Default_Hated_Name",
+            "perkDescription": "@blank_space",
+            "minReputation": -10000,
+            "driftReputation": 0,
+            "driftTimeHours": 0,
+            "gated": false,
+            "category": "affinity",
+            "recordName": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-100",
+            "filePath": "libs\\foundry\\records\\reputation\\standings\\affinity\\reputationstanding_affinity_enemy_-100.json"
+          }
+        ]
+      },
+      "careerScopes": [
+        {
+          "scopeKey": "MissionProviderReputationScope_Battaglia",
+          "scopeName": "missionproviderbattaglia",
+          "standings": [
+            {
+              "id": "17afca66-f96e-4884-b147-2a76673c547e",
+              "name": "MissionProviderRep_Battaglia_Rank0",
+              "displayName": "Prospective Associate",
+              "displayNameKey": "@mg_battaglia_RepScope_Rank0",
+              "perkDescription": "@blank_space",
+              "minReputation": 0,
+              "driftReputation": 0,
+              "driftTimeHours": 0,
+              "gated": false,
+              "category": "missionprovider",
+              "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank0",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank0.json"
+            },
+            {
+              "id": "637f8a61-9702-4eea-97a7-9d28950da767",
+              "name": "MissionProviderRep_Battaglia_Rank1",
+              "displayName": "Associate",
+              "displayNameKey": "@mg_battaglia_RepScope_Rank1",
+              "perkDescription": "@blank_space",
+              "minReputation": 2400,
+              "driftReputation": 0,
+              "driftTimeHours": 0,
+              "gated": false,
+              "category": "missionprovider",
+              "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank1",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank1.json"
+            },
+            {
+              "id": "ed57ef3d-fc4c-4615-ad2f-1a5c8a5b3ead",
+              "name": "MissionProviderRep_Battaglia_Rank2",
+              "displayName": "Trusted Associate",
+              "displayNameKey": "@mg_battaglia_RepScope_Rank2",
+              "perkDescription": "@blank_space",
+              "minReputation": 6000,
+              "driftReputation": 0,
+              "driftTimeHours": 0,
+              "gated": false,
+              "category": "missionprovider",
+              "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank2",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank2.json"
+            },
+            {
+              "id": "e72afefd-831e-4578-8629-ed1911f77019",
+              "name": "MissionProviderRep_Battaglia_Rank3",
+              "displayName": "Prestige 1",
+              "displayNameKey": "@mg_battaglia_RepScope_Rank3",
+              "perkDescription": "@mg_battaglia_RepScope_Rank3_perk",
+              "minReputation": 10800,
+              "driftReputation": 0,
+              "driftTimeHours": 0,
+              "gated": false,
+              "category": "missionprovider",
+              "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank3",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank3.json"
+            },
+            {
+              "id": "f592f3a5-8584-45a9-a697-de9ab9026ad3",
+              "name": "MissionProviderRep_Battaglia_Rank4",
+              "displayName": "Prestige 2",
+              "displayNameKey": "@mg_battaglia_RepScope_Rank4",
+              "perkDescription": "@mg_battaglia_RepScope_Rank4_perk",
+              "minReputation": 30000,
+              "driftReputation": 0,
+              "driftTimeHours": 0,
+              "gated": false,
+              "category": "missionprovider",
+              "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank4",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank4.json"
+            },
+            {
+              "id": "cf6b1540-1d1a-4634-a25e-fe7ca7be8784",
+              "name": "MissionProviderRep_Battaglia_Rank5",
+              "displayName": "Prestige 3",
+              "displayNameKey": "@mg_battaglia_RepScope_Rank5",
+              "perkDescription": "@mg_battaglia_RepScope_Rank5_perk",
+              "minReputation": 69600,
+              "driftReputation": 0,
+              "driftTimeHours": 0,
+              "gated": false,
+              "category": "missionprovider",
+              "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank5",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank5.json"
+            }
+          ]
+        }
+      ]
+    },
     "faction": {
       "primaryScope": {
         "scopeKey": "ReputationScope_Faction_Band_0",
@@ -17451,68 +18134,6 @@
       },
       "careerScopes": [
         {
-          "scopeKey": "ReputationScope_Courier",
-          "scopeName": "courier",
-          "standings": [
-            {
-              "id": "2d6c9dae-549a-42ea-b88c-abb4507e8120",
-              "name": "Courier_NotEligible",
-              "displayName": "Not Eligible",
-              "displayNameKey": "@RepStanding_NotEligible",
-              "perkDescription": "@blank_space",
-              "minReputation": -1000,
-              "driftReputation": 250,
-              "driftTimeHours": 1,
-              "gated": false,
-              "category": "courier",
-              "recordName": "SReputationStandingParams.ReputationStanding_Courier_NotEligible",
-              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_noteligible.json"
-            },
-            {
-              "id": "1b756200-f6e7-451f-98b2-5bbb6fe2d68e",
-              "name": "Courier_Rank0",
-              "displayName": "Applicant",
-              "displayNameKey": "@RepStanding_Courier_Rank0",
-              "perkDescription": "@blank_space",
-              "minReputation": 0,
-              "driftReputation": 0,
-              "driftTimeHours": 24,
-              "gated": true,
-              "category": "courier",
-              "recordName": "SReputationStandingParams.ReputationStanding_Courier_Rank0",
-              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_rank0.json"
-            },
-            {
-              "id": "03da1e49-fdd8-4718-9125-3ea6cc1b0e40",
-              "name": "Courier_Rank1",
-              "displayName": "Jr. Runner",
-              "displayNameKey": "@RepStanding_Courier_Rank1",
-              "perkDescription": "@blank_space",
-              "minReputation": 1,
-              "driftReputation": 0,
-              "driftTimeHours": 24,
-              "gated": true,
-              "category": "courier",
-              "recordName": "SReputationStandingParams.ReputationStanding_Courier_Rank1",
-              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_rank1.json"
-            },
-            {
-              "id": "fa9c1f7e-1046-4fe5-b41f-12d554dd6e69",
-              "name": "Courier_Rank2",
-              "displayName": "Runner",
-              "displayNameKey": "@RepStanding_Courier_Rank2",
-              "perkDescription": "@blank_space",
-              "minReputation": 2500,
-              "driftReputation": 0,
-              "driftTimeHours": 24,
-              "gated": false,
-              "category": "courier",
-              "recordName": "SReputationStandingParams.ReputationStanding_Courier_Rank2",
-              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_rank2.json"
-            }
-          ]
-        },
-        {
           "scopeKey": "ReputationScope_Hauling",
           "scopeName": "hauling",
           "standings": [
@@ -17627,6 +18248,68 @@
               "category": "delivery",
               "recordName": "SReputationStandingParams.ReputationStanding_Hauling_Rank6",
               "filePath": "libs\\foundry\\records\\reputation\\standings\\delivery\\reputationstanding_hauling_rank6.json"
+            }
+          ]
+        },
+        {
+          "scopeKey": "ReputationScope_Courier",
+          "scopeName": "courier",
+          "standings": [
+            {
+              "id": "2d6c9dae-549a-42ea-b88c-abb4507e8120",
+              "name": "Courier_NotEligible",
+              "displayName": "Not Eligible",
+              "displayNameKey": "@RepStanding_NotEligible",
+              "perkDescription": "@blank_space",
+              "minReputation": -1000,
+              "driftReputation": 250,
+              "driftTimeHours": 1,
+              "gated": false,
+              "category": "courier",
+              "recordName": "SReputationStandingParams.ReputationStanding_Courier_NotEligible",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_noteligible.json"
+            },
+            {
+              "id": "1b756200-f6e7-451f-98b2-5bbb6fe2d68e",
+              "name": "Courier_Rank0",
+              "displayName": "Applicant",
+              "displayNameKey": "@RepStanding_Courier_Rank0",
+              "perkDescription": "@blank_space",
+              "minReputation": 0,
+              "driftReputation": 0,
+              "driftTimeHours": 24,
+              "gated": true,
+              "category": "courier",
+              "recordName": "SReputationStandingParams.ReputationStanding_Courier_Rank0",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_rank0.json"
+            },
+            {
+              "id": "03da1e49-fdd8-4718-9125-3ea6cc1b0e40",
+              "name": "Courier_Rank1",
+              "displayName": "Jr. Runner",
+              "displayNameKey": "@RepStanding_Courier_Rank1",
+              "perkDescription": "@blank_space",
+              "minReputation": 1,
+              "driftReputation": 0,
+              "driftTimeHours": 24,
+              "gated": true,
+              "category": "courier",
+              "recordName": "SReputationStandingParams.ReputationStanding_Courier_Rank1",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_rank1.json"
+            },
+            {
+              "id": "fa9c1f7e-1046-4fe5-b41f-12d554dd6e69",
+              "name": "Courier_Rank2",
+              "displayName": "Runner",
+              "displayNameKey": "@RepStanding_Courier_Rank2",
+              "perkDescription": "@blank_space",
+              "minReputation": 2500,
+              "driftReputation": 0,
+              "driftTimeHours": 24,
+              "gated": false,
+              "category": "courier",
+              "recordName": "SReputationStandingParams.ReputationStanding_Courier_Rank2",
+              "filePath": "libs\\foundry\\records\\reputation\\standings\\courier\\reputationstanding_courier_rank2.json"
             }
           ]
         },
@@ -20062,6 +20745,82 @@
         }
       ]
     },
+    "factionreputation_battaglia": {
+      "faction": "Recco Battaglia",
+      "factionKey": "factionreputation_battaglia",
+      "careers": {
+        "missionproviderbattaglia": {
+          "scopeKey": "MissionProviderReputationScope_Battaglia",
+          "displayScopeKey": "MissionProviderReputationScope_Battaglia",
+          "name": "Standing",
+          "standings": [
+            {
+              "displayName": "Prospective Associate",
+              "minReputation": 0,
+              "gated": false
+            },
+            {
+              "displayName": "Associate",
+              "minReputation": 2400,
+              "gated": false
+            },
+            {
+              "displayName": "Trusted Associate",
+              "minReputation": 6000,
+              "gated": false
+            },
+            {
+              "displayName": "Prestige 1",
+              "minReputation": 10800,
+              "gated": false
+            },
+            {
+              "displayName": "Prestige 2",
+              "minReputation": 30000,
+              "gated": false
+            },
+            {
+              "displayName": "Prestige 3",
+              "minReputation": 69600,
+              "gated": false
+            }
+          ]
+        }
+      },
+      "scopeName": "MissionProviderReputationScope_Battaglia",
+      "standings": [
+        {
+          "displayName": "Prospective Associate",
+          "minReputation": 0,
+          "gated": false
+        },
+        {
+          "displayName": "Associate",
+          "minReputation": 2400,
+          "gated": false
+        },
+        {
+          "displayName": "Trusted Associate",
+          "minReputation": 6000,
+          "gated": false
+        },
+        {
+          "displayName": "Prestige 1",
+          "minReputation": 10800,
+          "gated": false
+        },
+        {
+          "displayName": "Prestige 2",
+          "minReputation": 30000,
+          "gated": false
+        },
+        {
+          "displayName": "Prestige 3",
+          "minReputation": 69600,
+          "gated": false
+        }
+      ]
+    },
     "factionreputation_cdf": {
       "faction": "Civilian Defense Force",
       "factionKey": "factionreputation_cdf",
@@ -20886,33 +21645,6 @@
       "faction": "Covalex",
       "factionKey": "factionreputation_lawful_covalexshipping",
       "careers": {
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
         "hauling": {
           "scopeKey": "ReputationScope_Hauling",
           "displayScopeKey": "ReputationScope_Hauling",
@@ -20960,6 +21692,33 @@
             }
           ]
         },
+        "courier": {
+          "scopeKey": "ReputationScope_Courier",
+          "displayScopeKey": "ReputationScope_Courier",
+          "name": "Courier",
+          "standings": [
+            {
+              "displayName": "Not Eligible",
+              "minReputation": -1000,
+              "gated": false
+            },
+            {
+              "displayName": "Applicant",
+              "minReputation": 0,
+              "gated": true
+            },
+            {
+              "displayName": "Jr. Runner",
+              "minReputation": 1,
+              "gated": true
+            },
+            {
+              "displayName": "Runner",
+              "minReputation": 2500,
+              "gated": false
+            }
+          ]
+        },
         "factionreputationscope": {
           "scopeKey": "FactionReputationScope",
           "displayScopeKey": "FactionReputationScope",
@@ -21003,7 +21762,7 @@
           ]
         }
       },
-      "scopeName": "ReputationScope_Courier",
+      "scopeName": "ReputationScope_Hauling",
       "standings": [
         {
           "displayName": "Not Eligible",
@@ -21011,18 +21770,38 @@
           "gated": false
         },
         {
-          "displayName": "Applicant",
+          "displayName": "Trainee",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Jr. Runner",
-          "minReputation": 1,
-          "gated": true
+          "displayName": "Rookie",
+          "minReputation": 50,
+          "gated": false
         },
         {
-          "displayName": "Runner",
-          "minReputation": 2500,
+          "displayName": "Junior",
+          "minReputation": 250,
+          "gated": false
+        },
+        {
+          "displayName": "Member",
+          "minReputation": 5250,
+          "gated": false
+        },
+        {
+          "displayName": "Experienced",
+          "minReputation": 27750,
+          "gated": false
+        },
+        {
+          "displayName": "Senior",
+          "minReputation": 77750,
+          "gated": false
+        },
+        {
+          "displayName": "Master",
+          "minReputation": 237750,
           "gated": false
         }
       ]
@@ -21312,33 +22091,6 @@
       "faction": "FTL Courier",
       "factionKey": "factionreputation_lawful_ftlcourier",
       "careers": {
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
         "hauling": {
           "scopeKey": "ReputationScope_Hauling",
           "displayScopeKey": "ReputationScope_Hauling",
@@ -21386,6 +22138,33 @@
             }
           ]
         },
+        "courier": {
+          "scopeKey": "ReputationScope_Courier",
+          "displayScopeKey": "ReputationScope_Courier",
+          "name": "Courier",
+          "standings": [
+            {
+              "displayName": "Not Eligible",
+              "minReputation": -1000,
+              "gated": false
+            },
+            {
+              "displayName": "Applicant",
+              "minReputation": 0,
+              "gated": true
+            },
+            {
+              "displayName": "Jr. Runner",
+              "minReputation": 1,
+              "gated": true
+            },
+            {
+              "displayName": "Runner",
+              "minReputation": 2500,
+              "gated": false
+            }
+          ]
+        },
         "factionreputationscope": {
           "scopeKey": "FactionReputationScope",
           "displayScopeKey": "FactionReputationScope",
@@ -21429,7 +22208,7 @@
           ]
         }
       },
-      "scopeName": "ReputationScope_Courier",
+      "scopeName": "ReputationScope_Hauling",
       "standings": [
         {
           "displayName": "Not Eligible",
@@ -21437,18 +22216,38 @@
           "gated": false
         },
         {
-          "displayName": "Applicant",
+          "displayName": "Trainee",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Jr. Runner",
-          "minReputation": 1,
-          "gated": true
+          "displayName": "Rookie",
+          "minReputation": 50,
+          "gated": false
         },
         {
-          "displayName": "Runner",
-          "minReputation": 2500,
+          "displayName": "Junior",
+          "minReputation": 250,
+          "gated": false
+        },
+        {
+          "displayName": "Member",
+          "minReputation": 5250,
+          "gated": false
+        },
+        {
+          "displayName": "Experienced",
+          "minReputation": 27750,
+          "gated": false
+        },
+        {
+          "displayName": "Senior",
+          "minReputation": 77750,
+          "gated": false
+        },
+        {
+          "displayName": "Master",
+          "minReputation": 237750,
           "gated": false
         }
       ]
@@ -21797,33 +22596,6 @@
       "faction": "Ling Family Hauling",
       "factionKey": "factionreputation_lawful_lingfamilyhauling",
       "careers": {
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
         "hauling": {
           "scopeKey": "ReputationScope_Hauling",
           "displayScopeKey": "ReputationScope_Hauling",
@@ -21871,6 +22643,33 @@
             }
           ]
         },
+        "courier": {
+          "scopeKey": "ReputationScope_Courier",
+          "displayScopeKey": "ReputationScope_Courier",
+          "name": "Courier",
+          "standings": [
+            {
+              "displayName": "Not Eligible",
+              "minReputation": -1000,
+              "gated": false
+            },
+            {
+              "displayName": "Applicant",
+              "minReputation": 0,
+              "gated": true
+            },
+            {
+              "displayName": "Jr. Runner",
+              "minReputation": 1,
+              "gated": true
+            },
+            {
+              "displayName": "Runner",
+              "minReputation": 2500,
+              "gated": false
+            }
+          ]
+        },
         "factionreputationscope": {
           "scopeKey": "FactionReputationScope",
           "displayScopeKey": "FactionReputationScope",
@@ -21914,7 +22713,7 @@
           ]
         }
       },
-      "scopeName": "ReputationScope_Courier",
+      "scopeName": "ReputationScope_Hauling",
       "standings": [
         {
           "displayName": "Not Eligible",
@@ -21922,18 +22721,38 @@
           "gated": false
         },
         {
-          "displayName": "Applicant",
+          "displayName": "Trainee",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Jr. Runner",
-          "minReputation": 1,
-          "gated": true
+          "displayName": "Rookie",
+          "minReputation": 50,
+          "gated": false
         },
         {
-          "displayName": "Runner",
-          "minReputation": 2500,
+          "displayName": "Junior",
+          "minReputation": 250,
+          "gated": false
+        },
+        {
+          "displayName": "Member",
+          "minReputation": 5250,
+          "gated": false
+        },
+        {
+          "displayName": "Experienced",
+          "minReputation": 27750,
+          "gated": false
+        },
+        {
+          "displayName": "Senior",
+          "minReputation": 77750,
+          "gated": false
+        },
+        {
+          "displayName": "Master",
+          "minReputation": 237750,
           "gated": false
         }
       ]
@@ -22164,33 +22983,6 @@
       "faction": "Red Wind Linehaul",
       "factionKey": "factionreputation_lawful_redwindlinehaul",
       "careers": {
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
         "hauling": {
           "scopeKey": "ReputationScope_Hauling",
           "displayScopeKey": "ReputationScope_Hauling",
@@ -22238,6 +23030,33 @@
             }
           ]
         },
+        "courier": {
+          "scopeKey": "ReputationScope_Courier",
+          "displayScopeKey": "ReputationScope_Courier",
+          "name": "Courier",
+          "standings": [
+            {
+              "displayName": "Not Eligible",
+              "minReputation": -1000,
+              "gated": false
+            },
+            {
+              "displayName": "Applicant",
+              "minReputation": 0,
+              "gated": true
+            },
+            {
+              "displayName": "Jr. Runner",
+              "minReputation": 1,
+              "gated": true
+            },
+            {
+              "displayName": "Runner",
+              "minReputation": 2500,
+              "gated": false
+            }
+          ]
+        },
         "factionreputationscope": {
           "scopeKey": "FactionReputationScope",
           "displayScopeKey": "FactionReputationScope",
@@ -22281,7 +23100,7 @@
           ]
         }
       },
-      "scopeName": "ReputationScope_Courier",
+      "scopeName": "ReputationScope_Hauling",
       "standings": [
         {
           "displayName": "Not Eligible",
@@ -22289,18 +23108,38 @@
           "gated": false
         },
         {
-          "displayName": "Applicant",
+          "displayName": "Trainee",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Jr. Runner",
-          "minReputation": 1,
-          "gated": true
+          "displayName": "Rookie",
+          "minReputation": 50,
+          "gated": false
         },
         {
-          "displayName": "Runner",
-          "minReputation": 2500,
+          "displayName": "Junior",
+          "minReputation": 250,
+          "gated": false
+        },
+        {
+          "displayName": "Member",
+          "minReputation": 5250,
+          "gated": false
+        },
+        {
+          "displayName": "Experienced",
+          "minReputation": 27750,
+          "gated": false
+        },
+        {
+          "displayName": "Senior",
+          "minReputation": 77750,
+          "gated": false
+        },
+        {
+          "displayName": "Master",
+          "minReputation": 237750,
           "gated": false
         }
       ]
@@ -22807,33 +23646,6 @@
       "faction": "Unified Distribution Management",
       "factionKey": "factionreputation_udm",
       "careers": {
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
         "hauling": {
           "scopeKey": "ReputationScope_Hauling",
           "displayScopeKey": "ReputationScope_Hauling",
@@ -22881,6 +23693,33 @@
             }
           ]
         },
+        "courier": {
+          "scopeKey": "ReputationScope_Courier",
+          "displayScopeKey": "ReputationScope_Courier",
+          "name": "Courier",
+          "standings": [
+            {
+              "displayName": "Not Eligible",
+              "minReputation": -1000,
+              "gated": false
+            },
+            {
+              "displayName": "Applicant",
+              "minReputation": 0,
+              "gated": true
+            },
+            {
+              "displayName": "Jr. Runner",
+              "minReputation": 1,
+              "gated": true
+            },
+            {
+              "displayName": "Runner",
+              "minReputation": 2500,
+              "gated": false
+            }
+          ]
+        },
         "factionreputationscope": {
           "scopeKey": "FactionReputationScope",
           "displayScopeKey": "FactionReputationScope",
@@ -22924,7 +23763,7 @@
           ]
         }
       },
-      "scopeName": "ReputationScope_Courier",
+      "scopeName": "ReputationScope_Hauling",
       "standings": [
         {
           "displayName": "Not Eligible",
@@ -22932,18 +23771,38 @@
           "gated": false
         },
         {
-          "displayName": "Applicant",
+          "displayName": "Trainee",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Jr. Runner",
-          "minReputation": 1,
-          "gated": true
+          "displayName": "Rookie",
+          "minReputation": 50,
+          "gated": false
         },
         {
-          "displayName": "Runner",
-          "minReputation": 2500,
+          "displayName": "Junior",
+          "minReputation": 250,
+          "gated": false
+        },
+        {
+          "displayName": "Member",
+          "minReputation": 5250,
+          "gated": false
+        },
+        {
+          "displayName": "Experienced",
+          "minReputation": 27750,
+          "gated": false
+        },
+        {
+          "displayName": "Senior",
+          "minReputation": 77750,
+          "gated": false
+        },
+        {
+          "displayName": "Master",
+          "minReputation": 237750,
           "gated": false
         }
       ]
@@ -27481,6 +28340,92 @@
         "filePath": "libs\\foundry\\records\\reputation\\standings\\maintenance\\reputationstanding_maintenance_rank5.json"
       }
     ],
+    "missionprovider": [
+      {
+        "id": "17afca66-f96e-4884-b147-2a76673c547e",
+        "name": "MissionProviderRep_Battaglia_Rank0",
+        "displayName": "Prospective Associate",
+        "displayNameKey": "@mg_battaglia_RepScope_Rank0",
+        "perkDescription": "@blank_space",
+        "minReputation": 0,
+        "driftReputation": 0,
+        "driftTimeHours": 0,
+        "gated": false,
+        "category": "missionprovider",
+        "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank0",
+        "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank0.json"
+      },
+      {
+        "id": "637f8a61-9702-4eea-97a7-9d28950da767",
+        "name": "MissionProviderRep_Battaglia_Rank1",
+        "displayName": "Associate",
+        "displayNameKey": "@mg_battaglia_RepScope_Rank1",
+        "perkDescription": "@blank_space",
+        "minReputation": 2400,
+        "driftReputation": 0,
+        "driftTimeHours": 0,
+        "gated": false,
+        "category": "missionprovider",
+        "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank1",
+        "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank1.json"
+      },
+      {
+        "id": "ed57ef3d-fc4c-4615-ad2f-1a5c8a5b3ead",
+        "name": "MissionProviderRep_Battaglia_Rank2",
+        "displayName": "Trusted Associate",
+        "displayNameKey": "@mg_battaglia_RepScope_Rank2",
+        "perkDescription": "@blank_space",
+        "minReputation": 6000,
+        "driftReputation": 0,
+        "driftTimeHours": 0,
+        "gated": false,
+        "category": "missionprovider",
+        "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank2",
+        "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank2.json"
+      },
+      {
+        "id": "e72afefd-831e-4578-8629-ed1911f77019",
+        "name": "MissionProviderRep_Battaglia_Rank3",
+        "displayName": "Prestige 1",
+        "displayNameKey": "@mg_battaglia_RepScope_Rank3",
+        "perkDescription": "@mg_battaglia_RepScope_Rank3_perk",
+        "minReputation": 10800,
+        "driftReputation": 0,
+        "driftTimeHours": 0,
+        "gated": false,
+        "category": "missionprovider",
+        "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank3",
+        "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank3.json"
+      },
+      {
+        "id": "f592f3a5-8584-45a9-a697-de9ab9026ad3",
+        "name": "MissionProviderRep_Battaglia_Rank4",
+        "displayName": "Prestige 2",
+        "displayNameKey": "@mg_battaglia_RepScope_Rank4",
+        "perkDescription": "@mg_battaglia_RepScope_Rank4_perk",
+        "minReputation": 30000,
+        "driftReputation": 0,
+        "driftTimeHours": 0,
+        "gated": false,
+        "category": "missionprovider",
+        "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank4",
+        "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank4.json"
+      },
+      {
+        "id": "cf6b1540-1d1a-4634-a25e-fe7ca7be8784",
+        "name": "MissionProviderRep_Battaglia_Rank5",
+        "displayName": "Prestige 3",
+        "displayNameKey": "@mg_battaglia_RepScope_Rank5",
+        "perkDescription": "@mg_battaglia_RepScope_Rank5_perk",
+        "minReputation": 69600,
+        "driftReputation": 0,
+        "driftTimeHours": 0,
+        "gated": false,
+        "category": "missionprovider",
+        "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank5",
+        "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank5.json"
+      }
+    ],
     "negative": [
       {
         "id": "1b813893-8536-45e4-af6c-a92239e2cc55",
@@ -29390,6 +30335,100 @@
         }
       ],
       "standingCount": 7
+    },
+    "MissionProviderReputationScope_Battaglia": {
+      "id": "3d5342a7-c3da-4ca0-872b-4b184efe5a07",
+      "name": "MissionProviderReputationScope_Battaglia",
+      "displayName": "@mobiGlas_Reputation_Standing",
+      "reputationCeiling": 69600,
+      "initialReputation": 0,
+      "standings": [
+        {
+          "id": "17afca66-f96e-4884-b147-2a76673c547e",
+          "name": "MissionProviderRep_Battaglia_Rank0",
+          "displayName": "Prospective Associate",
+          "displayNameKey": "@mg_battaglia_RepScope_Rank0",
+          "perkDescription": "@blank_space",
+          "minReputation": 0,
+          "driftReputation": 0,
+          "driftTimeHours": 0,
+          "gated": false,
+          "category": "missionprovider",
+          "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank0",
+          "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank0.json"
+        },
+        {
+          "id": "637f8a61-9702-4eea-97a7-9d28950da767",
+          "name": "MissionProviderRep_Battaglia_Rank1",
+          "displayName": "Associate",
+          "displayNameKey": "@mg_battaglia_RepScope_Rank1",
+          "perkDescription": "@blank_space",
+          "minReputation": 2400,
+          "driftReputation": 0,
+          "driftTimeHours": 0,
+          "gated": false,
+          "category": "missionprovider",
+          "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank1",
+          "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank1.json"
+        },
+        {
+          "id": "ed57ef3d-fc4c-4615-ad2f-1a5c8a5b3ead",
+          "name": "MissionProviderRep_Battaglia_Rank2",
+          "displayName": "Trusted Associate",
+          "displayNameKey": "@mg_battaglia_RepScope_Rank2",
+          "perkDescription": "@blank_space",
+          "minReputation": 6000,
+          "driftReputation": 0,
+          "driftTimeHours": 0,
+          "gated": false,
+          "category": "missionprovider",
+          "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank2",
+          "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank2.json"
+        },
+        {
+          "id": "e72afefd-831e-4578-8629-ed1911f77019",
+          "name": "MissionProviderRep_Battaglia_Rank3",
+          "displayName": "Prestige 1",
+          "displayNameKey": "@mg_battaglia_RepScope_Rank3",
+          "perkDescription": "@mg_battaglia_RepScope_Rank3_perk",
+          "minReputation": 10800,
+          "driftReputation": 0,
+          "driftTimeHours": 0,
+          "gated": false,
+          "category": "missionprovider",
+          "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank3",
+          "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank3.json"
+        },
+        {
+          "id": "f592f3a5-8584-45a9-a697-de9ab9026ad3",
+          "name": "MissionProviderRep_Battaglia_Rank4",
+          "displayName": "Prestige 2",
+          "displayNameKey": "@mg_battaglia_RepScope_Rank4",
+          "perkDescription": "@mg_battaglia_RepScope_Rank4_perk",
+          "minReputation": 30000,
+          "driftReputation": 0,
+          "driftTimeHours": 0,
+          "gated": false,
+          "category": "missionprovider",
+          "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank4",
+          "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank4.json"
+        },
+        {
+          "id": "cf6b1540-1d1a-4634-a25e-fe7ca7be8784",
+          "name": "MissionProviderRep_Battaglia_Rank5",
+          "displayName": "Prestige 3",
+          "displayNameKey": "@mg_battaglia_RepScope_Rank5",
+          "perkDescription": "@mg_battaglia_RepScope_Rank5_perk",
+          "minReputation": 69600,
+          "driftReputation": 0,
+          "driftTimeHours": 0,
+          "gated": false,
+          "category": "missionprovider",
+          "recordName": "SReputationStandingParams.ReputationStanding_MissionProviderRep_Battaglia_Rank5",
+          "filePath": "libs\\foundry\\records\\reputation\\standings\\missionprovider\\battaglia\\reputationstanding_missionproviderrep_battaglia_rank5.json"
+        }
+      ],
+      "standingCount": 6
     },
     "ReputationScope_Faction_Band_0": {
       "id": "eda5dea0-4a30-49f3-989d-a0dbbf3937d8",
@@ -34934,11 +35973,6 @@
       "amount": -190500,
       "editorName": "Undefined Name"
     },
-    "repuationrewardamount_positive_100": {
-      "name": "SReputationRewardAmount.RepuationRewardAmount_Positive_100",
-      "amount": 100,
-      "editorName": "Undefined Name"
-    },
     "repuationrewardamount_positive_1200": {
       "name": "SReputationRewardAmount.RepuationRewardAmount_Positive_1200",
       "amount": 1200,
@@ -35017,6 +36051,31 @@
     "repuationrewardamount_positive_bigboost": {
       "name": "SReputationRewardAmount.RepuationRewardAmount_Positive_BigBoost",
       "amount": 2251,
+      "editorName": "Undefined Name"
+    },
+    "reputationrewardamount_positive_020": {
+      "name": "SReputationRewardAmount.ReputationRewardAmount_Positive_020",
+      "amount": 20,
+      "editorName": "Undefined Name"
+    },
+    "reputationrewardamount_positive_040": {
+      "name": "SReputationRewardAmount.ReputationRewardAmount_Positive_040",
+      "amount": 40,
+      "editorName": "Undefined Name"
+    },
+    "reputationrewardamount_positive_060": {
+      "name": "SReputationRewardAmount.ReputationRewardAmount_Positive_060",
+      "amount": 60,
+      "editorName": "Undefined Name"
+    },
+    "reputationrewardamount_positive_080": {
+      "name": "SReputationRewardAmount.ReputationRewardAmount_Positive_080",
+      "amount": 80,
+      "editorName": "Undefined Name"
+    },
+    "reputationrewardamount_positive_100": {
+      "name": "SReputationRewardAmount.ReputationRewardAmount_Positive_100",
+      "amount": 100,
       "editorName": "Undefined Name"
     },
     "reputationrewardamount_positive_250": {
@@ -139529,11 +140588,11 @@
     ]
   },
   "summary": {
-    "totalStandings": 374,
-    "totalScopes": 45,
-    "totalFactions": 37,
-    "totalContexts": 26,
-    "totalRewardTypes": 53,
+    "totalStandings": 380,
+    "totalScopes": 46,
+    "totalFactions": 38,
+    "totalContexts": 27,
+    "totalRewardTypes": 57,
     "totalMissions": 2584,
     "missionsWithBlueprints": 0,
     "missionsWithRepRequirements": 1571

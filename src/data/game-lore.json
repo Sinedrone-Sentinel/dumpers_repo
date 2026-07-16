@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-13T04:47:22.873Z",
+  "_extracted": "2026-07-16T04:36:19.749Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -1360,7 +1360,7 @@
     },
     "valakkarfang": {
       "key": "items_commodities_valakkarfang_desc",
-      "label": "Valakkarfang",
+      "label": "Valakkar Fang",
       "description": "The valakkar continually sheds its teeth throughout its lifetime. As the animal burrows through the sand and catches prey, its teeth are frequently damaged. Once a new tooth finishes forming, it severs the connective tissue that was holding the old tooth in place, causing it to break off and fall to the ground. The fangs of the valakkar can also be extracted from the animal's mouth after its death. Collectors seek out the valakkar fangs for use in crafting various luxury items.",
       "kind": "commodity"
     },
@@ -1888,7 +1888,7 @@
     },
     "600i_paint_unity": {
       "key": "item_Desc600i_Paint_Unity",
-      "label": "600i Foundation Fest Livery",
+      "label": "600i Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -3058,7 +3058,7 @@
     },
     "arrow_paint_unity": {
       "key": "item_DescArrow_Paint_Unity",
-      "label": "Arrow Foundation Fest Livery",
+      "label": "Arrow Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -3114,6 +3114,12 @@
       "key": "item_DescAsgard_Paint_vip_copper",
       "label": "Asgard Valhalla Livery",
       "description": "The Valhalla livery melds a dazzling copper finish with green accents to give the Asgard a truly distinct appearance.",
+      "kind": "item"
+    },
+    "atls_paint_silver_teal_white": {
+      "key": "item_DescAtls_Paint_silver_teal_white",
+      "label": "ATLS Foundation Fest Livery",
+      "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
     "aurora_mk2_paint_black_black_black": {
@@ -3220,7 +3226,7 @@
     },
     "aurora_paint_blue_black_red": {
       "key": "item_DescAurora_Paint_Blue_Black_Red",
-      "label": "Auorora Mk I Disco Livery",
+      "label": "Aurora Mk I Disco Livery",
       "description": "Equip the ship livery used by ace pilot Disco in the classic children's cartoon Rory Nova. While it turns the Aurora Mk I metallic dark blue, black, and red, whether you turn into the 'dynamic, instinctive spacecraft operator' that inspired the livery's name is up to you.",
       "kind": "item"
     },
@@ -3299,6 +3305,18 @@
     "aurora_paint_unity": {
       "key": "item_DescAurora_Paint_Unity",
       "label": "Aurora Mk I Foundation Fest Livery",
+      "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
+      "kind": "item"
+    },
+    "aurora_mk2_paint_silver_teal_white": {
+      "key": "item_DescAurora_mk2_Paint_silver_teal_white",
+      "label": "Aurora Mk II Foundation Fest Livery",
+      "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
+      "kind": "item"
+    },
+    "aurora_mk2_paint_silver_teal_white_torch": {
+      "key": "item_DescAurora_mk2_Paint_silver_teal_white_torch",
+      "label": "Aurora Mk II Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -3672,6 +3690,30 @@
       "key": "item_DescBanu_cube_1_a",
       "label": "Banu Lockbox Replica",
       "description": "This replica Banu lockbox mimics the look and feel of these rare and highly sought after collector's items. Usually owned by the heads of soulis to hold valuable items or documents, this realistic replica version was produced as a purely decorative item for Humans and can't be opened.",
+      "kind": "item"
+    },
+    "basher_paint_black_grey_grey": {
+      "key": "item_DescBasher_Paint_Black_Grey_Grey",
+      "label": "Basher Razorburn Livery",
+      "description": "With an aggressive rusted look, the Razorburn livery shows that 'verse that you're ready to scrap.",
+      "kind": "item"
+    },
+    "basher_paint_brown_green_grey": {
+      "key": "item_DescBasher_Paint_Brown_Green_Grey",
+      "label": "Basher Corroded Livery",
+      "description": "The Corroded livery embraces the Basher's less than conventional origins by featuring well-oxidized copper plating along the ship's hull.",
+      "kind": "item"
+    },
+    "basher_paint_brown_white_brown": {
+      "key": "item_DescBasher_Paint_Brown_White_Brown",
+      "label": "Basher Nightmare Livery",
+      "description": "Featuring a sinister skull atop a brown base paint, the Nightmare livery gives the Basher a look that sends shivers down the spine.",
+      "kind": "item"
+    },
+    "basher_paint_white_blue_black": {
+      "key": "item_DescBasher_Paint_White_Blue_Black",
+      "label": "Basher Blue Blossom Livery",
+      "description": "Turn the Basher into a beauty and a brute with the Blue Blossom livery, featuring a colorful and ornate flower pattern across the top of the ship.",
       "kind": "item"
     },
     "behring_marksman_hs_platform_x1": {
@@ -4352,6 +4394,12 @@
       "description": "A gilded red coin celebrating the Year of the Rat. Said to bring good fortune and prosperity in the upcoming cycle, coins like these have become a popular gift during the annual Red Festival.",
       "kind": "item"
     },
+    "carryable_1h_sq_flair_coin_pirateweek_2026": {
+      "key": "item_DescCarryable_1H_SQ_Flair_Coin_PirateWeek_2026",
+      "label": "Crossed Swords '56 Coin",
+      "description": "A worthy treasure for those who know where to look, this coin bears a menacing skull and a pair of cutlasses on one side making it the envy of many a pirate across the 'verse.",
+      "kind": "item"
+    },
     "carryable_2h_cy_flair_arccorp_statue_1_a": {
       "key": "item_DescCarryable_2H_CY_flair_arccorp_statue_1_a",
       "label": "ArcCorp Cog Sphere Replica",
@@ -4406,6 +4454,12 @@
       "description": "Proudly display your coins with this handsome case featuring a red velvet setting for up to ten coins and a pristine glass front so all can enjoy your collection.",
       "kind": "item"
     },
+    "carryable_2h_fl_container_anim_coin_case_1_concierge_a": {
+      "key": "item_DescCarryable_2H_FL_Container_Anim_coin_case_1_concierge_a",
+      "label": "Chairman's Club Coin Display Case",
+      "description": "Emblazoned with the Chairman's Club signature lion, this sleek black case with gold trim allows you to tastefully display ten commemorative coins.",
+      "kind": "item"
+    },
     "carryable_2h_fl_container_anim_medgun_1_a": {
       "key": "item_DescCarryable_2H_FL_Container_Anim_medgun_1_a",
       "label": "Field Medic Kit",
@@ -4418,10 +4472,22 @@
       "description": "Medical emergencies can happen any time, any place. Be prepared with this Field Medic Kit from Curelife which provides convenient and portable storage for a ParaMed Medical Device, Pancea MedGel refills, and additional medicine injectors.",
       "kind": "item"
     },
+    "carryable_2h_fl_missionitem_prototype_ship_component_1_a": {
+      "key": "item_DescCarryable_2H_FL_MissionItem_prototype_ship_component_1_a",
+      "label": "TH-01 Propulsor",
+      "description": "Specifically fabricated to be compatible with Orison's floating platforms, the TH-01's metal frame and bespoke heat sinks ensure the propulsor can provide crucial lift for prolonged periods of time without risk of overheating.",
+      "kind": "item"
+    },
     "carryable_2h_fl_painting_constellation_a": {
       "key": "item_DescCarryable_2H_FL_Painting_Constellation_a",
       "label": "RSI Constellation Painting",
       "description": "Rendered with incredible detail, this beautiful painting features RSI's iconic ship sailing through a tempestuous stretch of unexplored space.",
+      "kind": "item"
+    },
+    "carryable_2h_fl_safe_locked": {
+      "key": "item_DescCarryable_2H_FL_Safe_Locked",
+      "label": "Safe",
+      "description": "This safe provides secure storage for valuable or sensitive items.",
       "kind": "item"
     },
     "carryable_2h_fl_ball_basketball_1_a": {
@@ -4476,6 +4542,12 @@
       "key": "item_DescCarryable_2H_MissionItem_EvidenceBox",
       "label": "Evidence",
       "description": "This box is specifically designed for use with evidence in order to help prevent tampering and properly ensure the chain of custody.",
+      "kind": "item"
+    },
+    "carryable_2h_sq_aurora_mk2_model_1_stand_a": {
+      "key": "item_DescCarryable_2H_SQ_aurora_mk2_model_1_stand_a",
+      "label": "Aurora Mk II Model",
+      "description": "Created by Takuetsu Starships using micron-accurate lasers, this precisely fashioned and hand-finished model captures the striking angles of RSI's reimagined Aurora Mk II.",
       "kind": "item"
     },
     "carryable_2h_sq_gladius_model_1_stand_a": {
@@ -4594,7 +4666,7 @@
     },
     "caterpillar_paint_unity": {
       "key": "item_DescCaterpillar_Paint_Unity",
-      "label": "Caterpillar Foundation Fest Livery",
+      "label": "Caterpillar Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -4990,7 +5062,7 @@
     },
     "cutlass_paint_unity": {
       "key": "item_DescCutlass_Paint_Unity",
-      "label": "Cutlass Foundation Fest Livery",
+      "label": "Cutlass Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -7522,7 +7594,7 @@
     },
     "freelancer_paint_unity": {
       "key": "item_DescFreelancer_Paint_Unity",
-      "label": "Freelancer Foundation Fest Livery",
+      "label": "Freelancer Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -7554,6 +7626,12 @@
       "key": "item_DescFury_Paint_2954Fortuna_Green_Grey",
       "label": "Fury Fortuna Livery",
       "description": "Make luck your co-pilot. Boldly set your sights on the stars and adventure forth in style with the Fortuna livery. This Stella Fortuna themed paint scheme is primarily green with grey accents.",
+      "kind": "item"
+    },
+    "fury_paint_black_black_gold": {
+      "key": "item_DescFury_Paint_Black_Black_Gold",
+      "label": "Fury Goldsmith Livery",
+      "description": "The Goldsmith livery features a floral pattern against an luxurious black and gold hull for an extravagant look.",
       "kind": "item"
     },
     "fury_paint_blue_black_black": {
@@ -7640,10 +7718,22 @@
       "description": "Manufacturer: Gallenson Tactical Systems Item Type: Ballistic Gatling Size: 3 The Mantis GT-220 is a hydraulically-driven Gatling-type rotary cannon designed to deliver smaller rounds at a very high rate of fire. The Mantis is designed to shred armor on very fast targets, sacrificing power for absolute saturation of the target area.",
       "kind": "item"
     },
+    "glsn_ballisticgatling_s2": {
+      "key": "item_DescGLSN_BallisticGatling_S2",
+      "label": "Deathroll S2 Gatling",
+      "description": "Created from a mixture of different parts, the Deathroll gatling gun can rapidly fire across a long range. Though it requires ammunition, the explosive power each shot contains more than makes up for the cost of ammo.",
+      "kind": "item"
+    },
     "glsn_ballisticgatling_s4": {
       "key": "item_DescGLSN_BallisticGatling_S4",
       "label": "Breakneck S4 Gatling",
       "description": "Manufacturer: Unknown Item Type: Ballistic Gatling Size: 4 While the exact origins and designer are unknown, the Breakneck is built off an existing ballistic gatling then modified to cause more mayhem. When the Breakneck starts shooting, the fun begins.",
+      "kind": "item"
+    },
+    "glsn_laserrepeater_s2": {
+      "key": "item_DescGLSN_LaserRepeater_S2",
+      "label": "Snapper S2 Repeater",
+      "description": "With its rapid rate of fire and high-intensity heat per blast, the Snapper laser repeater builds on the standards of its kind and improves on them with its combination of components from a range of other guns.",
       "kind": "item"
     },
     "glsn_laserrepeater_s3": {
@@ -7978,7 +8068,7 @@
     },
     "gladius_paint_unity": {
       "key": "item_DescGladius_Paint_Unity",
-      "label": "Gladius Foundation Fest Livery",
+      "label": "Gladius Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -8082,6 +8172,12 @@
       "key": "item_DescGolem_Paint_Yellow_Grey_Orange",
       "label": "Golem Faultline Livery",
       "description": "The Golem gets a distinct look with the Faultline livery with strategically placed yellow and orange stripes making the ship more visible.",
+      "kind": "item"
+    },
+    "golem_paint_silver_teal_white": {
+      "key": "item_DescGolem_Paint_silver_teal_white",
+      "label": "Golem Foundation Fest Livery",
+      "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
     "guardian_paint_black_black_red": {
@@ -8864,6 +8960,12 @@
       "description": "Primarily green with yellow accents, the Commando livery allows the Ironclad to blend in with forests and verdant locations.",
       "kind": "item"
     },
+    "jdrv_orig_s04_890j": {
+      "key": "item_DescJDRV_ORIG_S04_890J",
+      "label": "890 Jump Module",
+      "description": "Item Type: Jump Module Manufacturer: Origin Jumpworks Size: 4 This capital-class jump module was designed specifically for the 890 Jump.",
+      "kind": "item"
+    },
     "jdrv_wetk_s04_idris": {
       "key": "item_DescJDRV_WETK_S04_Idris",
       "label": "Exfiltrate",
@@ -8936,16 +9038,34 @@
       "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 1 Featuring a three-barrel sequential fire design, the Klaus & Werner CF-117 Bulldog laser repeater is capable of delivering high velocity energy rounds while maintaining heat efficiency making it a favorite among new pilots who are outfitting their first ship.",
       "kind": "item"
     },
+    "klwe_laserrepeater_s1_mr01": {
+      "key": "item_DescKLWE_LaserRepeater_S1_mr01",
+      "label": "CF-117 Bulldog \"Hazard-Zone\" Repeater",
+      "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 1 Featuring a three-barrel sequential fire design, the Klaus & Werner CF-117 Bulldog laser repeater is capable of delivering high velocity energy rounds while maintaining heat efficiency making it a favorite among new pilots who are outfitting their first ship. The Hazard-Zone edition, adorned with striking mustard yellow highlights on a black base, will have you armed and ready to fight in style.",
+      "kind": "item"
+    },
     "klwe_laserrepeater_s2": {
       "key": "item_DescKLWE_LaserRepeater_S2",
       "label": "CF-227 Badger Repeater",
       "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 2 The CF-227 Badger is Klaus & Werner’s dependable size two repeating laser. Its increased output and high rate of fire make it a solid contender in any fight.",
       "kind": "item"
     },
+    "klwe_laserrepeater_s2_mr01": {
+      "key": "item_DescKLWE_LaserRepeater_S2_mr01",
+      "label": "CF-227 Badger \"Hazard-Zone\" Repeater",
+      "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 2 The CF-227 Badger is Klaus & Werner’s dependable size two repeating laser. Its increased output and high rate of fire make it a solid contender in any fight. The Hazard-Zone edition, adorned with striking mustard yellow highlights on a black base, will have you armed and ready to fight in style.",
+      "kind": "item"
+    },
     "klwe_laserrepeater_s3": {
       "key": "item_DescKLWE_LaserRepeater_S3",
       "label": "CF-337 Panther Repeater",
       "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 3 The CF-337 Panther is the size three model in Klaus & Werner's laser repeater line. The Panther is a true fire-and-forget weapon with a respectable power consumption-to-damage ratio. Pilots who outfit their ships with Panthers rarely regret the decision.",
+      "kind": "item"
+    },
+    "klwe_laserrepeater_s3_mr01": {
+      "key": "item_DescKLWE_LaserRepeater_S3_mr01",
+      "label": "CF-337 Panther \"Hazard-Zone\" Repeater",
+      "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 3 The CF-337 Panther is the size three model in Klaus & Werner's laser repeater line. The Panther is a true fire-and-forget weapon with a respectable power consumption-to-damage ratio. Pilots who outfit their ships with Panthers rarely regret the decision. The Hazard-Zone edition, adorned with striking mustard yellow highlights on a black base, will have you armed and ready to fight in style.",
       "kind": "item"
     },
     "klwe_laserrepeater_s4": {
@@ -9974,6 +10094,12 @@
       "description": "Standard equipment for most UEE military Retaliators, this rear module can carry 2x S9 torpedoes.",
       "kind": "item"
     },
+    "modu_grey_basher_cosmetic_mohawk_default": {
+      "key": "item_DescMODU_GREY_Basher_Cosmetic_Mohawk_Default",
+      "label": "Basher Chopper Bodykit Top",
+      "description": "The quickest, surefire way to let everyone who sees you know that you're no one to mess with - the Chopper Bodykit gives the top of your ship a dramatic edge without sacrificing aerodynamics. With this giant steel-plated mast on, you won't just turn heads; your enemies will turn tail on your approach too.",
+      "kind": "item"
+    },
     "modu_grey_shiv_cosmetic_nose_seta": {
       "key": "item_DescMODU_GREY_Shiv_Cosmetic_Nose_SetA",
       "label": "Shiv \"Slasher\" Bodykit Front",
@@ -10212,6 +10338,18 @@
       "key": "item_DescMRCK_S02_BEHR_Single_S02",
       "label": "MSD-212 Missile Rack",
       "description": "Item Type: Missile Rack Manufacturer: Behring Size: 2 Missiles: 1xS2 Behring’s MSD-212 \"Marsden\" is a complete ordnance storage and deployment system that can be mounted on any compatible size 2 hardpoint for the reliable and effective launch of one S2 missile.",
+      "kind": "item"
+    },
+    "mrck_s02_orig_100i_dual_s02": {
+      "key": "item_DescMRCK_S02_ORIG_100i_Dual_S02",
+      "label": "Origin 100i Missile Rack",
+      "description": "Item Type: Missile Rack Manufacturer: Origin Jumpworks Size: 2 Missiles: 2xS2 Bespoke missile rack for the 100i that fires two S2 missiles.",
+      "kind": "item"
+    },
+    "mrck_s02_orig_125a_quad_s02": {
+      "key": "item_DescMRCK_S02_ORIG_125a_Quad_S02",
+      "label": "Origin 125a Missile Rack",
+      "description": "Item Type: Missile Rack Manufacturer: Origin Jumpworks Size: 2 Missiles: 4xS2 Bespoke missile rack for the 125a that fires four S2 missiles.",
       "kind": "item"
     },
     "mrck_s02_orig_400i_octo_s01": {
@@ -11045,7 +11183,7 @@
     "movable_trolley_hover_cargo": {
       "key": "item_DescMovable_Trolley_Hover_cargo",
       "label": "Utility Grav-Cart",
-      "description": "Thanks to GravLev, this utility hand truck makes carting heavy loads much easier.",
+      "description": "Thanks to grav-lev, this utility hand truck makes carting heavy loads much easier.",
       "kind": "item"
     },
     "mule_paint_bushwacker": {
@@ -12182,6 +12320,12 @@
       "description": "Mounted onto a standing case, this display shows the remains of a Vanduul lance recovered from the aftermath of the Battle of Vega.",
       "kind": "item"
     },
+    "playerdeco_gunrack_4p_3r_lowtech_1_a": {
+      "key": "item_DescPlayerDeco_Gunrack_4P_3R_Lowtech_1_a",
+      "label": "Bosco Weapon Display Rack",
+      "description": "Made for the weapon enthusiast who values their guns for more than just the amount of damage they can do. Complete with numerous display shelves for your favorite arms, as well as storage space for spare ammo and accessories, all in a stylish package that shows off your top picks.",
+      "kind": "item"
+    },
     "playerdeco_it_couch_improvised_1_combined_a_pirate": {
       "key": "item_DescPlayerDeco_It_couch_improvised_1_combined_a_pirate",
       "label": "Salvaged Skull Couch",
@@ -12406,7 +12550,7 @@
     },
     "prospector_paint_unity": {
       "key": "item_DescProspector_Paint_Unity",
-      "label": "Prospector Foundation Fest Livery",
+      "label": "Prospector Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -13210,7 +13354,7 @@
     },
     "razor_paint_unity": {
       "key": "item_DescRazor_Paint_Unity",
-      "label": "Razor Foundation Fest Livery",
+      "label": "Razor Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -13850,6 +13994,12 @@
       "description": "Inspired by the colors of Coramor, the Lovestruck livery is a stylish iridescent pink and black look for your Salvation.",
       "kind": "item"
     },
+    "salvation_paint_silver_teal_white": {
+      "key": "item_DescSalvation_Paint_silver_teal_white",
+      "label": "Salvation Foundation Fest Livery",
+      "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
+      "kind": "item"
+    },
     "santokyai_paint_alienweek_teal_pink": {
       "key": "item_DescSanTokYai_Paint_AlienWeek_Teal_Pink",
       "label": "San'tok.yai Harmony Livery",
@@ -14356,7 +14506,7 @@
     },
     "star_runner_paint_unity": {
       "key": "item_DescStar_Runner_Paint_Unity",
-      "label": "Mercury Star Runner Foundation Fest Livery",
+      "label": "Mercury Star Runner Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -14380,7 +14530,7 @@
     },
     "starfarer_paint_unity": {
       "key": "item_DescStarfarer_Paint_Unity",
-      "label": "Starfarer Foundation Fest Livery",
+      "label": "Starfarer Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -15202,7 +15352,7 @@
     },
     "valkyrie_paint_unity": {
       "key": "item_DescValkyrie_Paint_Unity",
-      "label": "Valkyrie Foundation Fest Livery",
+      "label": "Valkyrie Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -15340,7 +15490,7 @@
     },
     "vulture_paint_unity": {
       "key": "item_DescVulture_Paint_Unity",
-      "label": "Vulture Foundation Fest Livery",
+      "label": "Vulture Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
       "kind": "item"
     },
@@ -16142,6 +16292,12 @@
       "description": "Enhance your basic t-shirt game with this stylish short sleeve t-shirt from City Lights, which features a dynamic, asymmetrical line across the front. Women's sizes currently out of stock.",
       "kind": "item"
     },
+    "carryable_1h_sq_flair_coin_1_chairmansclub_a": {
+      "key": "item_Desc_Carryable_1H_SQ_Flair_Coin_1_chairmansclub_a",
+      "label": "Chairman's Club Coin",
+      "description": "This collectible coin features the distinguished logo of the Chairman's Club elegantly embossed on it's surface.",
+      "kind": "item"
+    },
     "carryable_2h_cy_collectormaterial_001": {
       "key": "item_Desc_Carryable_2H_CY_CollectorMaterial_001",
       "label": "Metamaterial Test #146",
@@ -16580,6 +16736,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. A toolbelt with convenient pouches and a reinforced backpack offers plenty of storage. The award-winning helmet design has been copied by other manufacturers, but the original still reigns supreme with its high quality materials and next-gen air filtration system that enables clean breathing whether in a deep mine or hostile atmospheres. The Heatwave edition is primarily black with glowing red highlights.",
       "kind": "item"
     },
+    "grin_utility_medium_arms_03_05_16": {
+      "key": "item_Desc_GRIN_utility_medium_arms_03_05_16",
+      "label": "Strata Arms Levski Edition",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. The Levski edition features sleek black plating with dark yellow highlights.",
+      "kind": "item"
+    },
     "grin_utility_medium_backpack_01": {
       "key": "item_Desc_GRIN_utility_medium_backpack_01",
       "label": "Aril Backpack",
@@ -16662,6 +16824,12 @@
       "key": "item_Desc_GRIN_utility_medium_backpack_03_04_01",
       "label": "Strata Backpack Heatwave",
       "description": "Item Type: Medium Backpack Carrying Capacity: 127.5K µSCU Core Compatibility: Medium & Heavy Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. A toolbelt with convenient pouches and a reinforced backpack offers plenty of storage. The award-winning helmet design has been copied by other manufacturers, but the original still reigns supreme with its high quality materials and next-gen air filtration system that enables clean breathing whether in a deep mine or hostile atmospheres. The Heatwave edition is primarily black with glowing red highlights.",
+      "kind": "item"
+    },
+    "grin_utility_medium_backpack_03_05_16": {
+      "key": "item_Desc_GRIN_utility_medium_backpack_03_05_16",
+      "label": "Strata Backpack Levski Edition",
+      "description": "Item Type: Medium Backpack Carrying Capacity: 127.5K µSCU Core Compatibility: Medium & Heavy Made for miners but ready for any adventure, Greycat Industrial's Strata backpack has been designed to offer a functional storage solution. The Levski edition features sleek black plating with dark yellow highlights and the People's Alliance symbol.",
       "kind": "item"
     },
     "grin_utility_medium_core_01": {
@@ -16748,6 +16916,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Carrying Capacity: 15k µSCU Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Backpack Compatibility: Light & Medium Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. A toolbelt with convenient pouches and a reinforced backpack offers plenty of storage. The award-winning helmet design has been copied by other manufacturers, but the original still reigns supreme with its high quality materials and next-gen air filtration system that enables clean breathing whether in a deep mine or hostile atmospheres. The Heatwave edition is primarily black with glowing red highlights.",
       "kind": "item"
     },
+    "grin_utility_medium_core_03_05_16": {
+      "key": "item_Desc_GRIN_utility_medium_core_03_05_16",
+      "label": "Strata Core Levski Edition",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Carrying Capacity: 15k µSCU Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Backpack Compatibility: Light & Medium Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. A toolbelt with convenient pouches and a reinforced backpack offers plenty of storage. The Levski edition features sleek black plating with dark yellow highlights and the People's Alliance symbol.",
+      "kind": "item"
+    },
     "grin_utility_medium_helmet_01": {
       "key": "item_Desc_GRIN_utility_medium_helmet_01",
       "label": "Aril Helmet",
@@ -16818,6 +16992,12 @@
       "key": "item_Desc_GRIN_utility_medium_legs_03_04_01",
       "label": "Strata Legs Heatwave",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Carrying Capacity: 10k µSCU Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. A toolbelt with convenient pouches and a reinforced backpack offers plenty of storage. The award-winning helmet design has been copied by other manufacturers, but the original still reigns supreme with its high quality materials and next-gen air filtration system that enables clean breathing whether in a deep mine or hostile atmospheres. The Heatwave edition is primarily black with glowing red highlights.",
+      "kind": "item"
+    },
+    "grin_utility_medium_legs_03_05_16": {
+      "key": "item_Desc_GRIN_utility_medium_legs_03_05_16",
+      "label": "Strata Legs Levski Edition",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Carrying Capacity: 10k µSCU Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. The Levski edition features sleek black plating with dark yellow highlights and the People's Alliance symbol.",
       "kind": "item"
     },
     "gsb_boots_01_01_01": {
@@ -16908,6 +17088,30 @@
       "key": "item_Desc_KeyCard_PAF_Security",
       "label": "PAF Security Keycard",
       "description": "A single-use keycard that grants Platform Alignment Facility employees access to security doors.",
+      "kind": "item"
+    },
+    "keycard_soo_iffi_1": {
+      "key": "item_Desc_KeyCard_SOO_IFFI_1",
+      "label": "Solanki Inverter Code",
+      "description": "A single use card that contains the codes for accessing the Nine Tails' Identity Friend and Foe Inverter on the Solanki platform.",
+      "kind": "item"
+    },
+    "keycard_soo_iffi_2": {
+      "key": "item_Desc_KeyCard_SOO_IFFI_2",
+      "label": "Hartmore Inverter Code",
+      "description": "A single use card that contains the codes for accessing the Nine Tails' Identity Friend and Foe Inverter on the Hartmore platform.",
+      "kind": "item"
+    },
+    "keycard_soo_iffi_3": {
+      "key": "item_Desc_KeyCard_SOO_IFFI_3",
+      "label": "Cargo Barge Inverter Code",
+      "description": "A single use card that contains the codes for accessing the Nine Tails' Identity Friend and Foe Inverter on the Cargo Barge.",
+      "kind": "item"
+    },
+    "keycard_soo_weaponcache": {
+      "key": "item_Desc_KeyCard_SOO_WeaponCache",
+      "label": "Storage Container Access Card",
+      "description": "A single use access code for a Nine Tails' storage container.",
       "kind": "item"
     },
     "keycard_olp_paf_bunkercard": {
@@ -18212,6 +18416,12 @@
       "description": "Made for hostile environments, the Salluq Mask keeps dirt, dust, and grit out of your eyes while providing you with a wide field of vision. Please note that this mask is not space-rated and should only be worn in naturally breathable environments.",
       "kind": "item"
     },
+    "alb_mask_04_01_01": {
+      "key": "item_Desc_alb_mask_04_01_01",
+      "label": "Volatus Balaclava Stealth Kitten",
+      "description": "The Volatus Balaclava is a staple for security and military operatives. Designed using strong, breathable, 100% Sol-grown cotton with reinforced polymer fibers embedded into the material, this balaclava serves to both keep you comfortable, as well as obscure your identity. The signature pink with blue whiskers imprinted on this mask, combined with the limited-edition Shinobi Sally icon make this face wear a statement piece for any look.",
+      "kind": "item"
+    },
     "alb_pants_01": {
       "key": "item_Desc_alb_pants_01",
       "label": "Tekaw Pants",
@@ -18348,6 +18558,30 @@
       "key": "item_Desc_basl_combat_light_helmet_02_01_01",
       "label": "Ace Interceptor Helmet",
       "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s The unique open-faced design makes the Ace Interceptor helmet a lightweight and liberating option for operating in atmosphere. It features precisely layered plating to protect the head from a variety of combat and environmental hazards and an impact resistant, anti-glare visor over the eyes. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
+    "battaglia_boot_01": {
+      "key": "item_Desc_battaglia_boot_01",
+      "label": "Geodusk Boots",
+      "description": "A classic workman's boot. This rubber-toed shoe is both sturdy and lightweight, with extra padding in the sole for easy movement and reduced pressure on Battaglia's remaining foot.",
+      "kind": "item"
+    },
+    "battaglia_jacket_01": {
+      "key": "item_Desc_battaglia_jacket_01",
+      "label": "Geodusk Jacket",
+      "description": "Simple, practical, and gets the job done without a fuss - much like Battaglia herself. The look features a sleeveless dark green military-style jacket, complete with plenty of pocket space, over her signature yellow undershirt and white vest.",
+      "kind": "item"
+    },
+    "battaglia_meca_01": {
+      "key": "item_Desc_battaglia_meca_01",
+      "label": "RB-CX4 Prosthetics",
+      "description": "Made specially for Battaglia after a mining accident, the prosthetics feature tough iron plating with mustard yellow accents. The hand, developed with precise movement in mind, makes complicated finger movement possible. The leg, powered by kinetic sensors in the ankle, allows the prosthetic leg to adapt to her movement needs without need for manual adjustment.",
+      "kind": "item"
+    },
+    "battaglia_pants_01": {
+      "key": "item_Desc_battaglia_pants_01",
+      "label": "Geodusk Pants",
+      "description": "The ultimate cargo pants for someone who isn't afraid to put in the work, but wants to be comfortable doing it. These dark brown pants feature large pockets on the upper legs, as well as cropping at the right knee that Battaglia shortened herself to make room for her prosthetic leg.",
       "kind": "item"
     },
     "cba_boots_01_01_01": {
@@ -18806,6 +19040,12 @@
       "description": "This light grey hat featuring Origin's name and signature logo is a perennial best seller at their showroom in New Austin.",
       "kind": "item"
     },
+    "cbd_hat_03_palevski_01": {
+      "key": "item_Desc_cbd_hat_03_palevski_01",
+      "label": "People's Alliance Hat",
+      "description": "This brimmed hat is a dark green color and displays the People's Alliance logo on the front.",
+      "kind": "item"
+    },
     "cbd_hat_03_redwind_01": {
       "key": "item_Desc_cbd_hat_03_redwind_01",
       "label": "Red Wind Hat",
@@ -19082,6 +19322,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Endure the most brutal attacks with the DCP heavy armor. This set features easy-swing joints that provide freedom of movement in the heat of battle, and was crafted with a multi-layer shock-absorbing shell that helps its wearer shake off the hardest hits.",
       "kind": "item"
     },
+    "cds_armor_heavy_core_01_02_02": {
+      "key": "item_Desc_cds_armor_heavy_core_01_02_02",
+      "label": "ADP-mk4 Core Big Boss",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU Backpacks: All Based on CDS' ADP-mk4 heavy combat armor, this set has been modified from its original form. When there's a difficult job at hand, you want to ensure that you can see it through to the end. This armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers.",
+      "kind": "item"
+    },
     "cds_armor_heavy_core_02_01_01": {
       "key": "item_Desc_cds_armor_heavy_core_02_01_01",
       "label": "ADP-mk4 Core (Modified)",
@@ -19094,6 +19340,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU Backpacks: All Endure the most brutal attacks with the DCP heavy armor. This set features easy-swing joints that provide freedom of movement in the heat of battle, and was crafted with a multi-layer shock-absorbing shell that helps its wearer shake off the hardest hits.",
       "kind": "item"
     },
+    "cds_armor_heavy_helmet_01_02_02": {
+      "key": "item_Desc_cds_armor_heavy_helmet_01_02_02",
+      "label": "ADP-mk4 Helmet Big Boss",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Based on CDS' ADP-mk4 heavy combat armor, this set has been modified from its original form. When there's a difficult job at hand, you want to ensure that you can see it through to the end. This armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
     "cds_armor_heavy_helmet_02_01_01": {
       "key": "item_Desc_cds_armor_heavy_helmet_02_01_01",
       "label": "ADP-mk4 Helmet (Modified)",
@@ -19104,6 +19356,12 @@
       "key": "item_Desc_cds_armor_heavy_helmet_03",
       "label": "DCP Armor Helmet Hunter Camo",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 16800 REM Radiation Scrub Rate: 145.8 REM/s Endure the most brutal attacks with the DCP heavy armor. This set features easy-swing joints that provide freedom of movement in the heat of battle, and was crafted with a multi-layer shock-absorbing shell that helps its wearer shake off the hardest hits.",
+      "kind": "item"
+    },
+    "cds_armor_heavy_legs_01_02_02": {
+      "key": "item_Desc_cds_armor_heavy_legs_01_02_02",
+      "label": "ADP-mk4 Legs Big Boss",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU Based on CDS' ADP-mk4 heavy combat armor, this set has been modified from its original form. When there's a difficult job at hand, you want to ensure that you can see it through to the end. This armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers.",
       "kind": "item"
     },
     "cds_armor_heavy_legs_02_01_01": {
@@ -19148,10 +19406,40 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU This version of CDS' ORC-mkX legs has been modified from its original form. The mark X is the latest in CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
+    "cds_combat_heavy_arms_01_02_02": {
+      "key": "item_Desc_cds_combat_heavy_arms_01_02_02",
+      "label": "ADP-mk4 Arms SecondWind",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
     "cds_combat_heavy_backpack_01_01_01": {
       "key": "item_Desc_cds_combat_heavy_backpack_01_01_01",
       "label": "CSP-68H Backpack",
       "description": "Item Type: Heavy Backpack Carrying Capacity: 150K µSCU Core Compatibility: Heavy Be ready for any situation with the CSP-68H Backpack. Originally designed for the rigors of combat support, this heavy backpack has become popular thanks to its durability and a patented core connector that helps the CSP-68H sit comfortably and balanced on the back.",
+      "kind": "item"
+    },
+    "cds_combat_heavy_core_01_02_02": {
+      "key": "item_Desc_cds_combat_heavy_core_01_02_02",
+      "label": "ADP-mk4 Core SecondWind",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU Backpacks: All When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
+    "cds_combat_heavy_helmet_01_02_02": {
+      "key": "item_Desc_cds_combat_heavy_helmet_01_02_02",
+      "label": "ADP-mk4 Helmet SecondWind",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
+    "cds_combat_heavy_legs_01_02_02": {
+      "key": "item_Desc_cds_combat_heavy_legs_01_02_02",
+      "label": "ADP-mk4 Legs SecondWind",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
+    "cds_combat_light_arms_02_02_01": {
+      "key": "item_Desc_cds_combat_light_arms_02_02_01",
+      "label": "FBL-8a Arms SecondWind",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_light_arms_03": {
@@ -19196,6 +19484,12 @@
       "description": "Item Type: Light Backpack Carrying Capacity: 54K µSCU Core Compatibility: All Be ready for any situation with the CSP-68L Backpack. Originally designed for the rigors of combat support, this light backpack has become popular thanks to its durability and a patented core connector that helps the CSP-68L sit comfortably and balanced on the back. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
       "kind": "item"
     },
+    "cds_combat_light_backpack_01_06_01": {
+      "key": "item_Desc_cds_combat_light_backpack_01_06_01",
+      "label": "Geist Backpack Stronghold",
+      "description": "Item Type: Light Backpack Carrying Capacity: 54K µSCU Core Compatibility: All An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
     "cds_combat_light_backpack_02_01_01": {
       "key": "item_Desc_cds_combat_light_backpack_02_01_01",
       "label": "CSP-68L Backpack Cayman",
@@ -19220,6 +19514,12 @@
       "description": "Item Type: Light Backpack Carrying Capacity: 54K µSCU Core Compatibility: All An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. This matte black stealth armor is embellished with intricate golden flowers, giving your enemies one final glimpse of life before death.",
       "kind": "item"
     },
+    "cds_combat_light_core_02_02_01": {
+      "key": "item_Desc_cds_combat_light_core_02_02_01",
+      "label": "FBL-8a Core SecondWind",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
     "cds_combat_light_core_03": {
       "key": "item_Desc_cds_combat_light_core_03",
       "label": "FBL-8a Core (Modified)",
@@ -19230,6 +19530,12 @@
       "key": "item_Desc_cds_combat_light_core_04",
       "label": "FBL-8a Core (Modified)",
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
+      "kind": "item"
+    },
+    "cds_combat_light_helmet_02_02_01": {
+      "key": "item_Desc_cds_combat_light_helmet_02_02_01",
+      "label": "FBL-8a Helmet SecondWind",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. Visor is AR crosshair compatible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_light_helmet_03": {
@@ -19244,6 +19550,12 @@
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. Visor is AR crosshair compatible.",
       "kind": "item"
     },
+    "cds_combat_light_legs_02_02_01": {
+      "key": "item_Desc_cds_combat_light_legs_02_02_01",
+      "label": "FBL-8a Legs SecondWind",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
     "cds_combat_light_legs_03": {
       "key": "item_Desc_cds_combat_light_legs_03",
       "label": "FBL-8a Legs (Modified)",
@@ -19254,6 +19566,12 @@
       "key": "item_Desc_cds_combat_light_legs_04",
       "label": "FBL-8a Legs (Modified)",
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
+      "kind": "item"
+    },
+    "cds_combat_medium_arms_01_02_01": {
+      "key": "item_Desc_cds_combat_medium_arms_01_02_01",
+      "label": "ORC-mkX Arms SecondWind",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_medium_arms_03_01_01": {
@@ -19292,6 +19610,12 @@
       "description": "Item Type: Medium Backpack Carrying Capacity: 105K µSCU Core Compatibility: Medium & Heavy Headed to the front lines? Bring everything you need and more with the GCD-Army Backpack. With an impressive carrying capacity and an outer shell made from an impact-resistant composite, it's the perfect way to ensure your valuables stay safe during the heat of combat.",
       "kind": "item"
     },
+    "cds_combat_medium_core_01_02_01": {
+      "key": "item_Desc_cds_combat_medium_core_01_02_01",
+      "label": "ORC-mkX Core SecondWind",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
     "cds_combat_medium_core_03_01_01": {
       "key": "item_Desc_cds_combat_medium_core_03_01_01",
       "label": "ORC-mkX Core (XenoThreat)",
@@ -19310,6 +19634,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
+    "cds_combat_medium_helmet_01_02_01": {
+      "key": "item_Desc_cds_combat_medium_helmet_01_02_01",
+      "label": "ORC-mkX Helmet SecondWind",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -55 / 85 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. Visor is AR crosshair compatible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "kind": "item"
+    },
     "cds_combat_medium_helmet_03_01_01": {
       "key": "item_Desc_cds_combat_medium_helmet_03_01_01",
       "label": "ORC-mkX Helmet (XenoThreat)",
@@ -19320,6 +19650,12 @@
       "key": "item_Desc_cds_combat_medium_helmet_04_01_xenothreat",
       "label": "ORC-mkX Helmet (XenoThreat v2)",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 93 °C This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
+    "cds_combat_medium_legs_01_02_01": {
+      "key": "item_Desc_cds_combat_medium_legs_01_02_01",
+      "label": "ORC-mkX Legs SecondWind",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_medium_legs_03_01_01": {
@@ -19338,6 +19674,96 @@
       "key": "item_Desc_cds_combat_medium_legs_04_01_xenothreat",
       "label": "ORC-mkX Legs (XenoThreat v2)",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_arms_02_01_01": {
+      "key": "item_Desc_cds_combat_superheavy_arms_02_01_01",
+      "label": "BUL-H4 Armor Arms Stronghold",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_backpack_01_01_01": {
+      "key": "item_Desc_cds_combat_superheavy_backpack_01_01_01",
+      "label": "H4-PBF Ammo Carrier",
+      "description": "Item Type: Ammo Carrier Core Compatibility: Medium & Heavy Carrying Capacity: 150K µSCU Custom built to store additional ammo for heavy machine guns, this carrier connects directly to your weapon via an ammo belt, ensuring prolonged continuous fire without impairment.",
+      "kind": "item"
+    },
+    "_cds_combat_superheavy_backpack_01_01_02": {
+      "key": "item_Desc_cds_combat_superheavy_backpack_01_01_02",
+      "label": "H4-PBF Ammo Carrier",
+      "description": "PH - Description for cds_combat_superheavy_backpack_01_01_02",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_backpack_01_03_01": {
+      "key": "item_Desc_cds_combat_superheavy_backpack_01_03_01",
+      "label": "H4-PBF Ammo Carrier Snow Camo",
+      "description": "Item Type: Ammo Carrier Core Compatibility: Medium & Heavy Carrying Capacity: 150K µSCU Custom built to store additional ammo for heavy machine guns, this carrier connects directly to your weapon via an ammo belt, ensuring prolonged continuous fire without impairment. Featuring a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_backpack_01_04_01": {
+      "key": "item_Desc_cds_combat_superheavy_backpack_01_04_01",
+      "label": "H4-PBF Ammo Carrier SteelTek",
+      "description": "Item Type: Ammo Carrier Core Compatibility: Medium & Heavy Carrying Capacity: 150K µSCU Custom built to store additional ammo for heavy machine guns, this carrier connects directly to your weapon via an ammo belt, ensuring prolonged continuous fire without impairment. The SteelTek edition features a shining metallic coating with a Damascus pattern that runs across the surface.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_backpack_01_05_01": {
+      "key": "item_Desc_cds_combat_superheavy_backpack_01_05_01",
+      "label": "BUL-H4 Ammo Carrier Stronghold",
+      "description": "Item Type: Ammo Carrier Core Compatibility: Medium & Heavy Carrying Capacity: 150K µSCU Custom built to store additional ammo for heavy machine guns, this carrier connects directly to your weapon via an ammo belt, ensuring prolonged continuous fire without impairment. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_helmet_01_01_01": {
+      "key": "item_Desc_cds_combat_superheavy_helmet_01_01_01",
+      "label": "BUL-H4 Helmet",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Redefine personal protection with the BUL-H4 series. CDS's proprietary PROWL hardware combines the video input from quad-visor slots to create one singular feed, offering uninhibited vision without compromising on safety.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_helmet_01_01_02": {
+      "key": "item_Desc_cds_combat_superheavy_helmet_01_01_02",
+      "label": "BUL-H4 Helmet Stronghold",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Wreak havoc beyond belief while keeping your head intact with the XXXX helmet. With a full face visor and reinforced metal plating, plus extra internal padding to keep you comfortable, not just safe - you'll become a force to be reckoned with. Visor is AR crosshair compatible. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_helmet_01_03_01": {
+      "key": "item_Desc_cds_combat_superheavy_helmet_01_03_01",
+      "label": "BUL-H4 Helmet Snow Camo",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Redefine personal protection with the BUL-H4 series. CDS's proprietary PROWL hardware combines the video input from quad-visor slots to create one singular feed, offering uninhibited vision without compromising on safety. Featuring a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_helmet_01_04_01": {
+      "key": "item_Desc_cds_combat_superheavy_helmet_01_04_01",
+      "label": "BUL-H4 Helmet SteelTek",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Redefine personal protection with the BUL-H4 series. CDS's proprietary PROWL hardware combines the video input from quad-visor slots to create one singular feed, offering uninhibited vision without compromising on safety. The SteelTek edition features a shining metallic coating with a Damascus pattern that runs across the surface.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_legs_02_01_01": {
+      "key": "item_Desc_cds_combat_superheavy_legs_02_01_01",
+      "label": "BUL-H4 Armor Legs Stronghold",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_suit_01_01_01": {
+      "key": "item_Desc_cds_combat_superheavy_suit_01_01_01",
+      "label": "BUL-H4 Armor",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_suit_01_03_01": {
+      "key": "item_Desc_cds_combat_superheavy_suit_01_03_01",
+      "label": "BUL-H4 Armor Snow Camo",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. Featuring a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_suit_01_04_01": {
+      "key": "item_Desc_cds_combat_superheavy_suit_01_04_01",
+      "label": "BUL-H4 Armor SteelTek",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The SteelTek edition features a shining metallic silver with a mercurial pattern that runs across the surface.",
+      "kind": "item"
+    },
+    "cds_combat_superheavy_suit_02_01_01": {
+      "key": "item_Desc_cds_combat_superheavy_suit_02_01_01",
+      "label": "BUL-H4 Armor Stronghold",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "cds_heavy_armor_01_shared": {
@@ -19868,6 +20294,12 @@
       "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Using materials made with orb-weave technology, CDS has created a lightweight, durable undersuit that has been designed to meet the needs of on-the-ground combatants. It was made to match the limited-edition GCD-Army medium armor, but is compatible with a wide range of other sets.",
       "kind": "item"
     },
+    "cds_undersuit_armor_01_02_02": {
+      "key": "item_Desc_cds_undersuit_armor_01_02_02",
+      "label": "FBL-8u Undersuit SecondWind",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% The FBL-8u is the first CDS undersuit to utilize the manufacturers new orb-weave technology that produces an impressively light yet strong material that can withstand the rigors of space travel. Originally developed to pair perfectly with CDS's FBL-8a light armor, it remains compatible with other armor sets. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the undersuit with a navy blue base adorned with a sleek, gray accents.",
+      "kind": "item"
+    },
     "cds_undersuit_helmet_01": {
       "key": "item_Desc_cds_undersuit_helmet_01",
       "label": "A23 Flight Helmet Woodland",
@@ -20378,6 +20810,12 @@
       "description": "Lightweight, quick-drying, and durable, the Adroit fingerless gloves keep your hands warm without sacrificing agility to perform delicate work. The material on the wrist extends to meet long-sleeved apparel, cutting down on places that might be exposed to the elements. The CFP edition is a deep fjord blue with black accents.",
       "kind": "item"
     },
+    "_dmc_frontier_gloves_01_02_11": {
+      "key": "item_Desc_dmc_frontier_gloves_01_02_11",
+      "label": "Adroit Gloves Charcoal",
+      "description": "PLACEHOLDER - dmc_frontier_gloves_01_02_11",
+      "kind": "item"
+    },
     "dmc_frontier_jacket_01_01_01": {
       "key": "item_Desc_dmc_frontier_jacket_01_01_01",
       "label": "Silverton Jacket Brown",
@@ -20388,6 +20826,12 @@
       "key": "item_Desc_dmc_frontier_jacket_01_02_01",
       "label": "Silverton Jacket CFP",
       "description": "Carrying Capacity: 1K µSCU When you're on the frontier, you need reliable clothing that won't fray when the going gets tough. That's why DMC made the Silverton jacket with double-stitched, element-resistant leather and plenty of roomy pockets so you can keep your supplies on hand. With the Silverton, you'll be prepared for anything. The CFP edition is a deep, fjord blue with the CFP's distinctive logo printed across the chest and back.",
+      "kind": "item"
+    },
+    "_dmc_frontier_jacket_01_02_11": {
+      "key": "item_Desc_dmc_frontier_jacket_01_02_11",
+      "label": "Silverton Jacket Brown",
+      "description": "PLACEHOLDER - dmc_frontier_jacket_01_02_11",
       "kind": "item"
     },
     "dmc_frontier_jacket_01_03_01": {
@@ -20418,6 +20862,12 @@
       "key": "item_Desc_dmc_frontier_pants_01_02_01",
       "label": "Silverton Pants CFP",
       "description": "Carrying Capacity: 1K µSCU Made with a sturdy blend of tough and flexible materials, the Silverton pants are the perfect fit for someone who needs heavy-duty workwear without sacrificing mobility. Got a job to do? We've got you covered. The CFP edition is a deep fjord blue with black accents.",
+      "kind": "item"
+    },
+    "_dmc_frontier_pants_01_02_11": {
+      "key": "item_Desc_dmc_frontier_pants_01_02_11",
+      "label": "Silverton Pants Charcoal",
+      "description": "PLACEHOLDER - dmc_frontier_pants_01_02_11",
       "kind": "item"
     },
     "dmc_gloves_02_01_9tails01": {
@@ -20574,6 +21024,12 @@
       "key": "item_Desc_dmc_shirt_01",
       "label": "Greenwater Shirt Walnut",
       "description": "The Greenwater is a long-sleeved shirt tailor-made to be worn underneath most standard sets of armor. Crafted with a durable mix of natural and synthetic fibers, it stands up to daily wear and tear without sacrificing comfort.",
+      "kind": "item"
+    },
+    "dnn_shoes_03_02_01": {
+      "key": "item_Desc_dnn_shoes_03_02_01",
+      "label": "Doubleback Shoes Ultimatum",
+      "description": "Want to be light on your feet in comfortable trainers without compromising on style? With multi-level memory foam padding on soles built to fit and flex with your specific shape, as well as eye-catching LED highlights in the outsoles, make every step a bold one with the Doubleback shoes. The Ultimatum edition are deep blue with bold pink colors.",
       "kind": "item"
     },
     "doom_armor_medium_arms_02_01_01": {
@@ -21386,6 +21842,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -50 / 80 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Made for miners but ready for any adventure, Greycat Industrial's Strata armor provides premium protection and convenient features. Each piece features an angular and precise design to deliver coverage where it's most needed most. A toolbelt with convenient pouches and a reinforced backpack offers plenty of storage. The award-winning helmet design features high quality materials and a next-gen air filtration system that enables clean breathing whether in a deep mine or hostile atmospheres. The Shubin Edition was made specifically for the company.",
       "kind": "item"
     },
+    "fta_medium_helmet_01_15_16": {
+      "key": "item_Desc_fta_medium_helmet_01_15_16",
+      "label": "Strata Helmet Levski Edition",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -50 / 80 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Made for miners but ready for any adventure, Greycat Industrial's Strata helmet design features high quality materials and a next-gen air filtration system that enables clean breathing whether in a deep mine or hostile atmospheres. The Levski edition features sleek black plating with dark yellow highlights, and the People's Alliance symbol.",
+      "kind": "item"
+    },
     "fta_medium_helmet_02_01_01": {
       "key": "item_Desc_fta_medium_helmet_02_01_01",
       "label": "Strata Helmet Heatwave",
@@ -21504,6 +21966,12 @@
       "key": "item_Desc_gsb_frontier_boots_01_02_01",
       "label": "Corsti Boots CFP",
       "description": "Made with hardy and adaptable materials, the Corsti boots are suitable for any conditions, whether you're taking a day-long hike on a well-worn road or exploring a strange landscape on an untamed world. The CFP edition is a deep fjord blue with black vamp detailing.",
+      "kind": "item"
+    },
+    "_gsb_frontier_boots_01_02_11": {
+      "key": "item_Desc_gsb_frontier_boots_01_02_11",
+      "label": "Corsti Boots",
+      "description": "PLACEHOLDER - gsb_frontier_boots_01_02_11",
       "kind": "item"
     },
     "gsb_pants_01": {
@@ -22166,6 +22634,12 @@
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. This matte black stealth armor is embellished with intricate golden flowers, giving your enemies one final glimpse of life before death.",
       "kind": "item"
     },
+    "kap_combat_light_arms_04_01_01": {
+      "key": "item_Desc_kap_combat_light_arms_04_01_01",
+      "label": "Geist Armor Arms Stronghold",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
     "kap_combat_light_core_01": {
       "key": "item_Desc_kap_combat_light_core_01",
       "label": "Geist Armor Core",
@@ -22194,6 +22668,12 @@
       "key": "item_Desc_kap_combat_light_core_03_01_01",
       "label": "Geist Armor Core Golden Blossom",
       "description": "Item Type: Light Armor Damage Reduction: 20% Carrying Capacity: 8k µSCU Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Backpacks: Light An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. This matte black stealth armor is embellished with intricate golden flowers, giving your enemies one final glimpse of life before death.",
+      "kind": "item"
+    },
+    "kap_combat_light_core_04_01_01": {
+      "key": "item_Desc_kap_combat_light_core_04_01_01",
+      "label": "Geist Armor Core Stronghold",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "kap_combat_light_helmet_01": {
@@ -22250,6 +22730,12 @@
       "description": "Item Type: Light Armor Damage Reduction: 20% Carrying Capacity: 2.5k µSCU Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. This matte black stealth armor is embellished with intricate golden flowers, giving your enemies one final glimpse of life before death.",
       "kind": "item"
     },
+    "kap_combat_light_legs_04_01_01": {
+      "key": "item_Desc_kap_combat_light_legs_04_01_01",
+      "label": "Geist Armor Legs Stronghold",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
     "ksar_armor_heavy_helmet_01": {
       "key": "item_Desc_ksar_armor_heavy_helmet_01",
       "label": "Manticore Helmet",
@@ -22286,124 +22772,304 @@
       "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU This baseline undersuit from Kastak Arms offers complete protection seal from the elements and compatibility with multiple armor types.",
       "kind": "item"
     },
+    "m_hdtc_jacket_01_01_01": {
+      "key": "item_Desc_m_hdtc_jacket_01_01_01",
+      "label": "Bellator Jacket",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, this jacket provides some combat protection thanks to the intricate weaving of layered graphene in its threads. Adorned with a decorative lapel pin, the jacket's spacious inner lining is also capable of subtly concealing small weaponry and devices.",
+      "kind": "item"
+    },
+    "m_hdtc_jacket_01_02_01": {
+      "key": "item_Desc_m_hdtc_jacket_01_02_01",
+      "label": "Bellator Jacket Continental",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, this jacket provides some combat protection thanks to the intricate weaving of layered graphene in its threads. Adorned with a decorative lapel pin, the jacket's spacious inner lining is also capable of subtly concealing small weaponry and devices. The Continental edition features subtle white pinstripes against a grayish blue.",
+      "kind": "item"
+    },
+    "m_hdtc_jacket_01_03_01": {
+      "key": "item_Desc_m_hdtc_jacket_01_03_01",
+      "label": "Bellator Jacket Tatton",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, this jacket provides some combat protection thanks to the intricate weaving of layered graphene in its threads. Adorned with a decorative lapel pin, the jacket's spacious inner lining is also capable of subtly concealing small weaponry and devices. The Tatton edition is a granite gray with a tartan pattern.",
+      "kind": "item"
+    },
+    "m_hdtc_jacket_01_04_01": {
+      "key": "item_Desc_m_hdtc_jacket_01_04_01",
+      "label": "Bellator Jacket Midas",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, this jacket provides some combat protection thanks to the intricate weaving of layered graphene in its threads. Adorned with a decorative lapel pin, the jacket's spacious inner lining is also capable of subtly concealing small weaponry and devices. Golden lapels set against a black jacket bring a touch of class to the Midas edition.",
+      "kind": "item"
+    },
+    "m_hdtc_jacket_01_05_01": {
+      "key": "item_Desc_m_hdtc_jacket_01_05_01",
+      "label": "Bellator Jacket Anchor",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, this jacket provides some combat protection thanks to the intricate weaving of layered graphene in its threads. Adorned with a decorative lapel pin, the jacket's spacious inner lining is also capable of subtly concealing small weaponry and devices. The Anchor edition consists of a slate gray jacket with a crisp white pocket square.",
+      "kind": "item"
+    },
+    "m_hdtc_jacket_02_01_01": {
+      "key": "item_Desc_m_hdtc_jacket_02_01_01",
+      "label": "Bellator Jacket Goldsmith",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, this jacket provides some combat protection thanks to the intricate weaving of layered graphene in its threads. Adorned with a decorative lapel pin, the jacket's spacious inner lining is also capable of subtly concealing small weaponry and devices. The Goldsmith edition features gold filigree and seaming on luxurious black for an extravagant look.",
+      "kind": "item"
+    },
+    "m_hdtc_pants_01_01_01": {
+      "key": "item_Desc_m_hdtc_pants_01_01_01",
+      "label": "Bellator Trousers",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, these tapered trousers provide some combat protection thanks to the intricate weaving of layered graphene in its threads.",
+      "kind": "item"
+    },
+    "m_hdtc_pants_01_01_07": {
+      "key": "item_Desc_m_hdtc_pants_01_01_07",
+      "label": "Bellator Trousers Anchor",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, these tapered trousers provide some combat protection thanks to the intricate weaving of layered graphene in its threads. The Anchor edition consists of a pair of slate gray trousers.",
+      "kind": "item"
+    },
+    "m_hdtc_pants_01_02_01": {
+      "key": "item_Desc_m_hdtc_pants_01_02_01",
+      "label": "Bellator Trousers Continental",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, these tapered trousers provide some combat protection thanks to the intricate weaving of layered graphene in its threads. The Continental edition features subtle white pinstripes against a grayish blue.",
+      "kind": "item"
+    },
+    "m_hdtc_pants_01_03_01": {
+      "key": "item_Desc_m_hdtc_pants_01_03_01",
+      "label": "Bellator Trousers Tatton",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, these tapered trousers provide some combat protection thanks to the intricate weaving of layered graphene in its threads. The Tatton edition is a granite gray with a tartan pattern.",
+      "kind": "item"
+    },
+    "m_hdtc_pants_01_04_01": {
+      "key": "item_Desc_m_hdtc_pants_01_04_01",
+      "label": "Bellator Trousers Midas",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, these tapered trousers provide some combat protection thanks to the intricate weaving of layered graphene in its threads. Striking black trousers bring a touch of class to the Midas edition.",
+      "kind": "item"
+    },
+    "m_hdtc_pants_01_06_01": {
+      "key": "item_Desc_m_hdtc_pants_01_06_01",
+      "label": "Bellator Trousers Goldsmith",
+      "description": "Damage Reduction: 20% Carrying Capacity: 0.4K µSCU Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Blending cutting edge technology with precise measurements, these tapered trousers provide some combat protection thanks to the intricate weaving of layered graphene in its threads. The Goldsmith edition gold filigree and seaming on luxurious black for an extravagant look.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_01_01_01": {
+      "key": "item_Desc_m_hdtc_shirt_01_01_01",
+      "label": "Bellator Shirt",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie, this shirt provides some combat protection thanks to the intricate weaving of layered graphene into its threads.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_01_02_01": {
+      "key": "item_Desc_m_hdtc_shirt_01_02_01",
+      "label": "Bellator Shirt Continental",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie, this shirt provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Continental edition features an off-white shirt and teal tie with star-like patterns.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_01_03_01": {
+      "key": "item_Desc_m_hdtc_shirt_01_03_01",
+      "label": "Bellator Shirt Tatton",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie, this shirt provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Tatton edition features a pale gray shirt paired with a regal gold and blue striped gray tie.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_01_04_01": {
+      "key": "item_Desc_m_hdtc_shirt_01_04_01",
+      "label": "Bellator Shirt Midas",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie, this shirt provides some combat protection thanks to the intricate weaving of layered graphene into its threads. A black shirt and golden tie complete the luxurious look of the Midas edition.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_01_05_01": {
+      "key": "item_Desc_m_hdtc_shirt_01_05_01",
+      "label": "Bellator Shirt Anchor",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie, this shirt provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Anchor edition features a marine blue tie that pops against a bright white shirt.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_01_06_01": {
+      "key": "item_Desc_m_hdtc_shirt_01_06_01",
+      "label": "Bellator Shirt Goldsmith",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie, this shirt provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Goldsmith edition features gold filigree and seaming on luxurious black for an extravagant look.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_02_01_01": {
+      "key": "item_Desc_m_hdtc_shirt_02_01_01",
+      "label": "Bellator Shirt and Waistcoat",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie and smart fitting waistcoat, this shirts provides some combat protection thanks to the intricate weaving of layered graphene into its threads.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_02_02_01": {
+      "key": "item_Desc_m_hdtc_shirt_02_02_01",
+      "label": "Bellator Shirt and Waistcoat Continental",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie and smart fitting waistcoat, this shirts provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Continental edition features a gray waistcoat, off-white shirt, and a teal tie with star-like patterns.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_02_03_01": {
+      "key": "item_Desc_m_hdtc_shirt_02_03_01",
+      "label": "Bellator Shirt and Waistcoat Tatton",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie and smart fitting waistcoat, this shirts provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Tatton edition features an ashen gray waistcoat, a pale gray shirt, finished with a regal gold and blue striped gray tie.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_02_04_01": {
+      "key": "item_Desc_m_hdtc_shirt_02_04_01",
+      "label": "Bellator Shirt and Waistcoat Midas",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie and smart fitting waistcoat, this shirts provides some combat protection thanks to the intricate weaving of layered graphene into its threads. A brushed gold waistcoat with a floral pattern, black shirt, and golden tie complete the luxurious look of the Midas edition.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_02_05_01": {
+      "key": "item_Desc_m_hdtc_shirt_02_05_01",
+      "label": "Bellator Shirt and Waistcoat Anchor",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie and smart fitting waistcoat, this shirts provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Anchor edition features a slate gray waistcoat and a marine blue tie that pops against a bright white shirt.",
+      "kind": "item"
+    },
+    "m_hdtc_shirt_02_06_01": {
+      "key": "item_Desc_m_hdtc_shirt_02_06_01",
+      "label": "Bellator Shirt and Waistcoat Goldsmith",
+      "description": "Damage Reduction: 20% Stylish, functional, and deadly: the Bellator clothing line is designed to fit in at dinner party just as well as a gunfight. Accompanied by a luxurious silk tie and smart fitting waistcoat, this shirts provides some combat protection thanks to the intricate weaving of layered graphene into its threads. The Goldsmith edition gold filigree and seaming on luxurious black for an extravagant look.",
+      "kind": "item"
+    },
+    "m_hdtc_shoes_01_01_01": {
+      "key": "item_Desc_m_hdtc_shoes_01_01_01",
+      "label": "Spettro Shoes",
+      "description": "Hand crafted from premium Quasi Grazer leather, the Spettro shoes are a sleek and refined addition to any wardrobe. Styled after traditional human dress shoes, they pair perfectly with any formal outfit.",
+      "kind": "item"
+    },
+    "m_hdtc_shoes_01_01_04": {
+      "key": "item_Desc_m_hdtc_shoes_01_01_04",
+      "label": "Spettro Shoes Midas",
+      "description": "Hand crafted from premium Quasi Grazer leather, the Spettro shoes are a sleek and refined addition to any wardrobe. Styled after traditional human dress shoes, they pair perfectly with any formal outfit. The Midas edition is a pebble gray with a black sole.",
+      "kind": "item"
+    },
+    "m_hdtc_shoes_01_01_07": {
+      "key": "item_Desc_m_hdtc_shoes_01_01_07",
+      "label": "Spettro Shoes Anchor",
+      "description": "Hand crafted from premium Quasi Grazer leather, the Spettro shoes are a sleek and refined addition to any wardrobe. Styled after traditional human dress shoes, they pair perfectly with any formal outfit. The Anchor edition is a charcoal black from heel to toe.",
+      "kind": "item"
+    },
+    "m_hdtc_shoes_01_02_01": {
+      "key": "item_Desc_m_hdtc_shoes_01_02_01",
+      "label": "Spettro Shoes Continental",
+      "description": "Hand crafted from premium Quasi Grazer leather, the Spettro shoes are a sleek and refined addition to any wardrobe. Styled after traditional human dress shoes, they pair perfectly with any formal outfit. The Continental edition is a deep mahogany brown with a black sole.",
+      "kind": "item"
+    },
+    "m_hdtc_shoes_01_03_01": {
+      "key": "item_Desc_m_hdtc_shoes_01_03_01",
+      "label": "Spettro Shoes Tatton",
+      "description": "Hand crafted from premium Quasi Grazer leather, the Spettro shoes are a sleek and refined addition to any wardrobe. Styled after traditional human dress shoes, they pair perfectly with any formal outfit. The Tatton edition is a walnut brown with a black sole.",
+      "kind": "item"
+    },
+    "m_hdtc_shoes_01_06_01": {
+      "key": "item_Desc_m_hdtc_shoes_01_06_01",
+      "label": "Spettro Shoes Goldsmith",
+      "description": "Hand crafted from premium Quasi Grazer leather, the Spettro shoes are a sleek and refined addition to any wardrobe. Styled after traditional human dress shoes, they pair perfectly with any formal outfit. The Goldsmith edition features gold seaming on luxurious black for an extravagant look.",
+      "kind": "item"
+    },
     "mrai_boots_01_01_01": {
       "key": "item_Desc_mrai_boots_01_01_01",
-      "label": "Mirai Racing Boots",
-      "description": "Mirai’s Racing Boots use synthetic fabrics sourced from the Xi’an to create a comfortable flight suit durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the design of the boots is both elegant and striking.",
+      "label": "Neutrino Racing Boots Mirai",
+      "description": "The Neutrino Racing Boots use synthetic fabrics sourced from Xi’an artisans to create a comfortable pair of boots that are durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the design of these special Mirai edition boots are striking but elegant.",
       "kind": "item"
     },
     "mrai_flightsuit_01_01_01": {
       "key": "item_Desc_mrai_flightsuit_01_01_01",
-      "label": "Mirai Racing Flight Suit",
-      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Mirai’s Racing Flight Suit uses synthetic fabrics sourced from the Xi’an to create a comfortable flight suit durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red stripe across the body of the flight suit results in a striking but elegant design.",
+      "label": "Neutrino Racing Flight Suit Mirai",
+      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU The Neutrino Racing Flight Suit uses synthetic fabrics sourced from Xi’an artisans to create a comfortable flight suit durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red stripe across the body of this special Mirai edition results in a striking but elegant design.",
       "kind": "item"
     },
     "_mrai_flightsuit_01_02_01": {
       "key": "item_Desc_mrai_flightsuit_01_02_01",
-      "label": "Mirai Racing Flight Suit",
+      "label": "Neutrino Racing Flight Suit Mirai",
       "description": "PH - mrai_flightsuit_01_02_01",
       "kind": "item"
     },
     "mrai_flightsuit_01_03_01": {
       "key": "item_Desc_mrai_flightsuit_01_03_01",
-      "label": "Origin Racing Flight Suit",
-      "description": "Item Type: Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Embody luxury, style, and speed by stepping into the flight suit worn by the Origin racing team. This crisp white flight suit features blue and grey highlight and the Origin logo in several prominent places.",
+      "label": "Neutrino Racing Flight Suit Origin",
+      "description": "Item Type: Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Embody luxury, style, and speed by stepping into this Sakura Sun Neutrino flight suit, inspired by those worn by the Origin racing team. This officially sanctioned crisp white flight suit features blue and grey highlight and the Origin logo in several prominent places.",
       "kind": "item"
     },
     "mrai_flightsuit_01_04_01": {
       "key": "item_Desc_mrai_flightsuit_01_04_01",
-      "label": "Murray Cup Racing Flight Suit",
-      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Bold neon yellow and vivid blue combine to make the official Murray Cup racing flight suit stand out from the crowd. Designed to the same standards as the flight suits worn by professional racers, it also features logos from official sponsors of the Murray Cup race.",
+      "label": "Neutrino Racing Flight Suit Murray Cup",
+      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Bold neon yellow and vivid blue combine to make the special edition Neutrino racing flight suit stand out from the crowd. Designed to the same standards as the flight suits worn by professional racers, it features logos from official sponsors to mimic the Murray Cup racer suits.",
       "kind": "item"
     },
     "mrai_flightsuit_01_05_01": {
       "key": "item_Desc_mrai_flightsuit_01_05_01",
-      "label": "Star Kitten Racing Flight Suit",
-      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU The Star Kitten racing flight suit embraces the iconic look of the cartoon character. Worn by Team Takahashi racers, the flight suit is primarily pink with teal highlights and larges images of Star Kitten on the front and back.",
+      "label": "Neutrino Racing Flight Suit Star Kitten",
+      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU The limited edition Neutrino racing flight suit embraces the iconic look of the cartoon character Star Kitten. Inspired by those worn by Team Takahashi racers, the flight suit is primarily pink with teal highlights and large images of Star Kitten on the front and back.",
       "kind": "item"
     },
     "mrai_flightsuit_01_07_02": {
       "key": "item_Desc_mrai_flightsuit_01_07_02",
-      "label": "WhiteHot Racing Flight Suit",
-      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Make an unmissable statement in the WhiteHot racing flight suit. Fitting like a second skin without skimping on style, it's pure-white profile enhanced by red accents offers a combination of eye-catching style and function, allowing you to concentrate on what matters most: winning.",
+      "label": "Neutrino Racing Flight Suit WhiteHot",
+      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Make an unmissable statement in this Neutrino racing flight suit. Fitting like a second skin without skimping on style, the WhiteHot edition's pure-white profile enhanced by red accents offers a combination of eye-catching style and function, allowing you to concentrate on what matters most: winning.",
       "kind": "item"
     },
     "mrai_flightsuit_01_07_12": {
       "key": "item_Desc_mrai_flightsuit_01_07_12",
-      "label": "BlackFire Racing Flight Suit",
-      "description": "Item Type: Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU A racing suit that fits like a second skin without skimping on style, the BlackFire has a sleek monochrome profile enhanced by pale gray accents and offers a low-key combination of looks and protection, allowing you to concentrate on what matters most: winning.",
+      "label": "Neutrino Racing Flight Suit BlackFire",
+      "description": "Item Type: Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU A racing flight suit that fits like a second skin without skimping on style, the Neutrino BlackFire edition has a sleek monochrome profile enhanced by pale gray accents and offers a low-key combination of looks and protection, allowing you to concentrate on what matters most: winning.",
       "kind": "item"
     },
     "mrai_flightsuit_01_07_18": {
       "key": "item_Desc_mrai_flightsuit_01_07_18",
-      "label": "BlueFlame Racing Flight Suit",
-      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Cut a dashing figure in the BlueFlame racing flight suit. Fitting like a second skin without skimping on style, it's dark blue profile enhanced by red and white accents offers a combination of eye-catching style and function, allowing you to concentrate on what matters most: winning.",
+      "label": "Neutrino Racing Flight Suit BlueFlame",
+      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Cut a dashing figure in this Neutrino racing flight suit. Fitting like a second skin without skimping on style, this special BlueFlame edition sports a dark blue profile enhanced by red and white accents offers a combination of eye-catching style and function, allowing you to concentrate on what matters most: winning.",
       "kind": "item"
     },
     "mrai_flightsuit_02_01_01": {
       "key": "item_Desc_mrai_flightsuit_02_01_01",
-      "label": "Fortuna Racing Flight Suit",
-      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Need a bit of luck to help you cross the finish line? This Fortuna Racing Flight Suit in green with shimmering accents may be just the thing to turn your fortune around.",
+      "label": "Neutrino Racing Flight Suit Fortuna",
+      "description": "Item Type: Racing Flight Suit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +100% Carrying Capacity: 8.0 µSCU Need a bit of luck to help you cross the finish line? Sakura Sun's exclusive Fortuna edition of the Neutrino Racing Flight Suit in green with shimmering accents may be just the thing to turn your fortune around.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_01_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_01_01",
-      "label": "Mirai Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Mirai’s Racing helmets uses advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red highlight and bold Mirai branding results in a striking but elegant design.",
+      "label": "Neutrino Racing Helmet Mirai",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s The Neutrino Racing Helmet uses advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the stark red highlight and special edition Mirai branding results in a striking but elegant design.",
       "kind": "item"
     },
     "_mrai_flightsuit_helmet_01_02_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_02_01",
-      "label": "Mirai Racing Helmet",
+      "label": "Neutrino Racing Helmet Mirai",
       "description": "PH - mrai_flightsuit_helmet_01_02_01",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_03_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_03_01",
-      "label": "Origin Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Plunge headlong into extreme speed in comfort and style with the Origin racing helmet. Primarily white with black and blue highlights, the helmet features a wide visor for unobstructed views as you speed by.",
+      "label": "Neutrino Racing Helmet Origin",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Plunge headlong into extreme speed in comfort and style with this special edition Origin-inspired Neutrino racing helmet. Primarily white with black and blue highlights, the helmet features a wide visor for unobstructed views as you speed by.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_04_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_04_01",
-      "label": "Murray Cup Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s The Murray Cup racing helmet was made to match the flight suit of the same name. Neon yellow, blue, and packed full of logos from official race sponsors, the helmet is both lightweight and supremely comfortable.",
+      "label": "Neutrino Racing Helmet Murray Cup",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s This special edition Neutrino racing helmet was made to pay homage to Murray Cup racers. Neon yellow, blue, and packed full of logos from official race sponsors, the helmet is both lightweight and supremely comfortable.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_05_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_05_01",
-      "label": "Star Kitten Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s The famous Star Kitten racing helmet worn by Team Takahashi racers can now be yours. It's vibrant pink with Star Kitten iconography on the front and back, plus playful teal whiskers across the faceplate.",
+      "label": "Neutrino Racing Helmet Star Kitten",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Sakura Sun's take on the iconic racing helmet worn by Team Takahashi racers can now be yours. This special edition Neutrino helmet features vibrant pink with Star Kitten iconography on the front and back, plus playful teal whiskers across the faceplate.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_06_01": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_06_01",
-      "label": "Fortuna Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Need a bit of luck to help you cross the finish line? This Fortuna Racing Helmet in shimmering green may be just the thing to turn your fortune around.",
+      "label": "Neutrino Racing Helmet Fortuna",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Need a bit of luck to help you cross the finish line? Sakura Sun's exclusive Fortuna edition of the Neutrino Racing Helmet in shimmering green may be just the thing to turn your fortune around.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_07_02": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_07_02",
-      "label": "WhiteHot Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Mirai’s racing helmets use advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to handle the stresses of high-velocity racing. The WhiteHot helmet features a bright white and red finish paired with a sleek, minimalist aesthetic.",
+      "label": "Neutrino Racing Helmet WhiteHot",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s The Neutrino racing helmet utilises advanced Xi’an materials to create a comfortable, lightweight design durable enough to handle the stresses of high-velocity racing. The WhiteHot edition features a bright white and red finish paired with a sleek, minimalist aesthetic.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_07_12": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_07_12",
-      "label": "BlackFire Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Mirai’s racing helmets use advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to handle the stresses of high-velocity racing. The BlackFire helmet features a dark gray finish paired with a sleek, minimalist aesthetic.",
+      "label": "Neutrino Racing Helmet BlackFire",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Sakura Sun utilises advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to handle the stresses of high-velocity racing. The Neutrino BlackFire edition helmet features a dark gray finish paired with a sleek, minimalist aesthetic.",
       "kind": "item"
     },
     "mrai_flightsuit_helmet_01_07_18": {
       "key": "item_Desc_mrai_flightsuit_helmet_01_07_18",
-      "label": "BlueFlame Racing Helmet",
-      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Mirai’s racing helmets use advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to handle the stresses of high-velocity racing. The BlueFlame helmet features a deep blue and red finish paired with a sleek, minimalist aesthetic.",
+      "label": "Neutrino Racing Helmet BlueFlame",
+      "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Sakura Sun utilises advanced Xi’an materials to create a comfortable, lightweight helmet durable enough to handle the stresses of high-velocity racing. The Neutrino BlueFlame edition helmet features a deep blue and red finish paired with a sleek, minimalist aesthetic.",
       "kind": "item"
     },
     "mrai_gloves_01_01_01": {
       "key": "item_Desc_mrai_gloves_01_01_01",
-      "label": "Mirai Racing Gloves",
-      "description": "Mirai’s Racing Gloves use synthetic fabrics sourced from the Xi’an to create a comfortable flight suit durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the design of the gloves is both elegant and striking.",
+      "label": "Neutrino Racing Gloves Mirai",
+      "description": "The Neutrino Racing Gloves use synthetic fabrics sourced from Xi’an artisans to create a comfortable pair of gloves that are durable enough to endure the stresses of high-velocity racing. Taking inspiration from traditional Saisei culture and aesthetics, the design of these special Mirai edition gloves are striking but elegant.",
       "kind": "item"
     },
     "mym_fashion_suit_01_01_01": {
@@ -22518,6 +23184,12 @@
       "key": "item_Desc_nvs_jumpsuit_01_16_16",
       "label": "Falston Jumpsuit \"ASD Edition\"",
       "description": "Carrying Capacity: 1K µSCU The Falston jumpsuit has a high collar to guard against the elements, triple-reinforced stitching, and an extra soft interior lining because everyone deserves a bit of comfort. The ASD Edition features the deep greens and reds associated with research company.",
+      "kind": "item"
+    },
+    "nvs_jumpsuit_01_17_16": {
+      "key": "item_Desc_nvs_jumpsuit_01_17_16",
+      "label": "Falston Jumpsuit \"People's Alliance Edition\"",
+      "description": "Carrying Capacity: 1K µSCU The Falston jumpsuit has a high collar to guard against the elements, triple-reinforced stitching, and an extra soft interior lining because everyone deserves a bit of comfort. The People's Alliance edition features a dark green color with the People's Alliance logo on the back.",
       "kind": "item"
     },
     "nvs_pants_02_01_01": {
@@ -23144,6 +23816,24 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -85 / 115 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s This Antium Armor was modified from its original version. Carefully-selected fangs and bones were mounted to the set to give it a primal look.",
       "kind": "item"
     },
+    "qrt_combat_heavy_helmet_03_01_01": {
+      "key": "item_Desc_qrt_combat_heavy_helmet_03_01_01",
+      "label": "Kiba Helmet",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Inspired by ancient Human folklore, the Kiba helmet features a demonic face with long fangs. The use of high-end treated metals creates an ornamental aesthetic, whilst still providing substantial protection from all angles. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
+    "qrt_combat_heavy_helmet_04_01_01": {
+      "key": "item_Desc_qrt_combat_heavy_helmet_04_01_01",
+      "label": "Oni Kiba Helmet",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Inspired by ancient Human folklore, the Oni Kiba helmet features a demonic face with long fangs and sharp horns. The use of high-end treated metals creates an ornamental aesthetic, whilst still providing substantial protection from all angles. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
+    "qrt_combat_heavy_helmet_05_01_01": {
+      "key": "item_Desc_qrt_combat_heavy_helmet_05_01_01",
+      "label": "Shogun Kiba Helmet Stronghold",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Inspired by ancient Human folklore, the Shogun Kiba helmet features a demonic face with long fangs paired with curved-horns and a flared back plating. The use of high-end treated metals creates an ornamental aesthetic, whilst still providing substantial protection from all angles. Visor is AR crosshair compatible. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
     "qrt_combat_heavy_legs_02": {
       "key": "item_Desc_qrt_combat_heavy_legs_02",
       "label": "Bokto Legs",
@@ -23208,6 +23898,12 @@
       "key": "item_Desc_qrt_combat_medium_arms_04_01_01",
       "label": "Testudo Arms Deathblow",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -50 / 80 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Based on Quirinus Tech's Testudo medium combat armor, the Deathblow variant has received unauthorized aftermarket modifications. This armor set weaves tough, yet lightweight, plating with ultra-strong synthetic fibers to provide premium protection. Lining the inside is a proprietary micromodal fabric that's soft to the touch and wicks away moisture for supreme comfort.",
+      "kind": "item"
+    },
+    "qrt_combat_medium_arms_05_01_01": {
+      "key": "item_Desc_qrt_combat_medium_arms_05_01_01",
+      "label": "Tetsudo Arms Stronghold",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -50 / 80 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s The Testudo armor for Quirinus Tech blends battlefield durability with everyday comfort. It weaves tough, yet lightweight, plating with ultra-strong synthetic fibers to provide premium protection. Lining the inside is a proprietary micromodal fabric that's soft to the touch and wicks away moisture for supreme comfort. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "qrt_combat_medium_backpack_01_01_01": {
@@ -23426,6 +24122,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -50 / 80 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Based on Quirinus Tech's Testudo medium combat armor, the Deathblow variant has received unauthorized aftermarket modifications. This armor set weaves tough, yet lightweight, plating with ultra-strong synthetic fibers to provide premium protection. Lining the inside is a proprietary micromodal fabric that's soft to the touch and wicks away moisture for supreme comfort.",
       "kind": "item"
     },
+    "qrt_combat_medium_legs_05_01_01": {
+      "key": "item_Desc_qrt_combat_medium_legs_05_01_01",
+      "label": "Tetsudo Legs Stronghold",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -50 / 80 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU The Testudo armor for Quirinus Tech blends battlefield durability with everyday comfort. It weaves tough, yet lightweight, plating with ultra-strong synthetic fibers to provide premium protection. Lining the inside is a proprietary micromodal fabric that's soft to the touch and wicks away moisture for supreme comfort. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
     "qrt_mantis_undersuit_01_01_01": {
       "key": "item_Desc_qrt_mantis_undersuit_01_01_01",
       "label": "Sabine Undersuit",
@@ -23450,6 +24152,12 @@
       "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% The Sabine embodies the advanced look and performance you expect from Quirinus Tech. This cutting edge undersuit integrates strong, yet flexible microweaves with strategically placed plating to provide protection while remaining lightweight. Featuring a sleek design, the Sabine undersuit will ensure you stay safe and stylish no matter the path ahead. This special Red Festival variant features deep red and gleaming gold accents to help give your lunar new year an auspicious start.",
       "kind": "item"
     },
+    "qrt_mantis_undersuit_01_05_01": {
+      "key": "item_Desc_qrt_mantis_undersuit_01_05_01",
+      "label": "Sabine Undersuit Ultimatum",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% The Sabine embodies the advanced look and performance you expect from Quirinus Tech. This cutting edge undersuit integrates strong, yet flexible microweaves with strategically placed plating to provide protection while remaining lightweight. Featuring a sleek design, the Sabine undersuit will ensure you stay safe and stylish no matter the path ahead. The Ultimatum edition is branded with the bright neon stylings of the Nine Tails gang.",
+      "kind": "item"
+    },
     "qrt_mantis_undersuit_helmet_01_01_01": {
       "key": "item_Desc_qrt_mantis_undersuit_helmet_01_01_01",
       "label": "Calva Racing Helmet",
@@ -23472,6 +24180,42 @@
       "key": "item_Desc_qrt_mantis_undersuit_helmet_02_02_01",
       "label": "Calva Helmet Red Racing Festival",
       "description": "Item Type: Racing Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Get a clear view of everything around you with the Calva helmet from Quirinus Tech. The large face shield made from proprietary synthetic sapphire provides scratch resistance while remaining just as thin and light as typical materials. This special Red Festival variant features deep red and gleaming gold accents with an all gold visor to help give your lunar new year an auspicious start.",
+      "kind": "item"
+    },
+    "qrt_mask_01_01_01": {
+      "key": "item_Desc_qrt_mask_01_01_01",
+      "label": "Kiba Mask",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -5 / 50 °C Inspired by ancient Human folklore, the Kiba mask features a demonic face with long fangs and still offers some protection thanks to the use of treated metals. This intimidating visage is enough to transform any warrior into a terrifying presence on the battlefield.",
+      "kind": "item"
+    },
+    "qrt_mask_01_01_02": {
+      "key": "item_Desc_qrt_mask_01_01_02",
+      "label": "Kiba Mask Flush",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -5 / 50 °C Inspired by ancient Human folklore, the Kiba mask features a demonic face with long fangs and still offers some protection thanks to the use of treated metals. This intimidating visage is enough to transform any warrior into a terrifying presence on the battlefield. The Flush edition is deep crimson with black features.",
+      "kind": "item"
+    },
+    "qrt_mask_01_01_04": {
+      "key": "item_Desc_qrt_mask_01_01_04",
+      "label": "Kiba Mask Greed",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -5 / 50 °C Inspired by ancient Human folklore, the Kiba mask features a demonic face with long fangs and still offers some protection thanks to the use of treated metals. This intimidating visage is enough to transform any warrior into a terrifying presence on the battlefield. The Greed edition is primarily gold with gritty black teeth.",
+      "kind": "item"
+    },
+    "qrt_mask_01_01_09": {
+      "key": "item_Desc_qrt_mask_01_01_09",
+      "label": "Kiba Mask Passion",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -5 / 50 °C Inspired by ancient Human folklore, the Kiba mask features a demonic face with long fangs and still offers some protection thanks to the use of treated metals. This intimidating visage is enough to transform any warrior into a terrifying presence on the battlefield. The Passion edition consists of a shocking pink with gray teeth.",
+      "kind": "item"
+    },
+    "qrt_mask_01_01_11": {
+      "key": "item_Desc_qrt_mask_01_01_11",
+      "label": "Kiba Mask Raku",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -5 / 50 °C Inspired by ancient Human folklore, the Kiba mask features a demonic face with long fangs and still offers some protection thanks to the use of treated metals. This intimidating visage is enough to transform any warrior into a terrifying presence on the battlefield. The Raku edition is a metallic gray with shining golden teeth.",
+      "kind": "item"
+    },
+    "qrt_mask_01_01_12": {
+      "key": "item_Desc_qrt_mask_01_01_12",
+      "label": "Kiba Mask Avarice",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -5 / 50 °C Inspired by ancient Human folklore, the Kiba mask features a demonic face with long fangs and still offers some protection thanks to the use of treated metals. This intimidating visage is enough to transform any warrior into a terrifying presence on the battlefield. The Avarice edition is a listless black with sharp golden teeth.",
       "kind": "item"
     },
     "qrt_specialist_heavy_arms_01": {
@@ -23580,6 +24324,12 @@
       "key": "item_Desc_qrt_specialist_medium_helmet_01_03",
       "label": "Artimex Helmet Elysium",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Blending durability and a striking style, the Artimex armor exemplifies the Quirinus aesthetic. This intricately detailed armor considers both form and function, especially when paired with the fully enclosed helmet that features a neon ocular flourish. The armor also comes with a unique cowl that fans over the helmet and a knee length fitted cape. The Elysium edition combines bright gold detailing of winged skulls with a navy blue.",
+      "kind": "item"
+    },
+    "qrt_specialist_medium_helmet_01_05_01": {
+      "key": "item_Desc_qrt_specialist_medium_helmet_01_05_01",
+      "label": "Artimex Helmet Ultimatum",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Blending durability and a striking style, the Artimex armor exemplifies the Quirinus aesthetic. This intricately detailed armor considers both form and function, especially when paired with the fully enclosed helmet that features a neon ocular flourish. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "qrt_specialist_medium_helmet_02": {
@@ -23714,6 +24464,12 @@
       "description": "Item Type: Heavy Backpack Carrying Capacity: 180K µSCU Core Compatibility: Heavy Elegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage. The Shadow Gild variant is dark gray and features stylish gold highlights.",
       "kind": "item"
     },
+    "qrt_utility_heavy_backpack_01_04_01": {
+      "key": "item_Desc_qrt_utility_heavy_backpack_01_04_01",
+      "label": "Palatino Backpack Stronghold",
+      "description": "Item Type: Heavy Backpack Carrying Capacity: 180K µSCU Core Compatibility: Heavy Elegant design meets innovation with the Palatino armor from Quirinus Tech. The associated backpack seamlessly integrates into the armor, matching its silhouette while also providing ample storage. The Stronghold edition compliments its matching armor with gold plating around the base of the pack, with the Nine Tails logo embedded into the leather.",
+      "kind": "item"
+    },
     "qrt_utility_heavy_backpack_02_01_01": {
       "key": "item_Desc_qrt_utility_heavy_backpack_02_01_01",
       "label": "Palatino Backpack Mark I",
@@ -23772,6 +24528,12 @@
       "key": "item_Desc_qrt_utility_heavy_core_02_01_01",
       "label": "Palatino Core Mark I",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: All Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Mark I variant is primarily icy white with blue and red highlights.",
+      "kind": "item"
+    },
+    "qrt_utility_heavy_core_03_01_01": {
+      "key": "item_Desc_qrt_utility_heavy_core_03_01_01",
+      "label": "Palatino Core Stronghold",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: All Elegant design meets innovation with the Palatino armor from Quirinus Tech. This armor set masterfully mixes reinforced plating with patented new materials that are light-weight and flexible, yet rated to withstand heavy damage allowing the wearer to be fashionable, light on their feet, and able to withstand serious firepower. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "qrt_utility_heavy_helmet_01_01_01": {
@@ -24086,6 +24848,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -97 / 121 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Gideon edition features a heavily worn teal finish with yellow accents and a signature red snake insignia.",
       "kind": "item"
     },
+    "_rrs_specialist_heavy_arms_06_01_01": {
+      "key": "item_Desc_rrs_specialist_heavy_arms_06_01_01",
+      "label": "Morozov-SH Arms",
+      "description": "PH - Description for rrs_specialist_heavy_arms_06_01_01",
+      "kind": "item"
+    },
     "rrs_specialist_heavy_backpack_05_01_01": {
       "key": "item_Desc_rrs_specialist_heavy_backpack_05_01_01",
       "label": "Morozov-CH-I Backpack Gideon",
@@ -24138,6 +24906,12 @@
       "key": "item_Desc_rrs_specialist_heavy_core_05_01_01",
       "label": "Morozov-SH-I Core Gideon",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -97 / 121 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Gideon edition features a heavily worn teal finish with yellow accents and a signature red snake insignia.",
+      "kind": "item"
+    },
+    "_rrs_specialist_heavy_core_06_01_01": {
+      "key": "item_Desc_rrs_specialist_heavy_core_06_01_01",
+      "label": "Morozov-SH Core",
+      "description": "PH - Description for rrs_specialist_heavy_core_06_01_01",
       "kind": "item"
     },
     "rrs_specialist_heavy_helmet_01": {
@@ -24230,6 +25004,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -97 / 121 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Gideon edition features a heavily worn teal finish with yellow accents.",
       "kind": "item"
     },
+    "_rrs_specialist_heavy_legs_06_01_01": {
+      "key": "item_Desc_rrs_specialist_heavy_legs_06_01_01",
+      "label": "Morozov-SH Legs",
+      "description": "PH - Description for rrs_specialist_heavy_legs_06_01_01",
+      "kind": "item"
+    },
     "rrs_specialist_light_arms_01": {
       "key": "item_Desc_rrs_specialist_light_arms_01",
       "label": "Arden-SL Arms",
@@ -24288,6 +25068,12 @@
       "key": "item_Desc_rrs_specialist_light_helmet_01_01_9tails01",
       "label": "Arden-SL Helmet (Modified)",
       "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s This version of Roussimoff Rehabilitation Systems' Arden-SL helmet has been modified from its original form. With its excellent design and eye-catching style, the Arden-SL armor exemplifies why security specialists love Roussimoff Rehabilitation Systems. This versatile armor set lets the wearer stay agile but safe thanks to the precise placement of special composite armor plating and fabrics. It also features a fully enclosed helmet with an integrated cowl. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
+    "rrs_specialist_light_helmet_01_05_01": {
+      "key": "item_Desc_rrs_specialist_light_helmet_01_05_01",
+      "label": "PH",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s With its excellent design and eye-catching style, the Arden-SL armor exemplifies why security specialists love Roussimoff Rehabilitation Systems. This versatile armor set lets the wearer stay agile but safe thanks to the precise placement of special composite armor plating and fabrics. It also features a fully enclosed helmet with an integrated cowl. Visor is AR crosshair compatible. PH",
       "kind": "item"
     },
     "rrs_specialist_light_helmet_01_coramor_01": {
@@ -25190,6 +25976,78 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire, but the real gem is the modified helmet. That thing was built to withstand explosions, so it should totally protect you against some shots. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying.",
       "kind": "item"
     },
+    "slaver_combat_heavy_arms_01_02_01": {
+      "key": "item_Desc_slaver_combat_heavy_arms_01_02_01",
+      "label": "Defiance Arms Ultimatum",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_heavy_core_01_02_01": {
+      "key": "item_Desc_slaver_combat_heavy_core_01_02_01",
+      "label": "Defiance Core Ultimatum",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_heavy_helmet_01_02_01": {
+      "key": "item_Desc_slaver_combat_heavy_helmet_01_02_01",
+      "label": "Defiance Helmet Ultimatum",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s The Defiance features a fully enclosed battle helmet constructed with two layers of composite weaves underneath armor plating, providing you maximum protection against penetrating and concussive attacks. Visor is AR crosshair compatible. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_heavy_legs_01_02_01": {
+      "key": "item_Desc_slaver_combat_heavy_legs_01_02_01",
+      "label": "Defiance Legs Ultimatum",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_light_arms_01_02_01": {
+      "key": "item_Desc_slaver_combat_light_arms_01_02_01",
+      "label": "Calico Arms Ultimatum",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_light_core_01_02_01": {
+      "key": "item_Desc_slaver_combat_light_core_01_02_01",
+      "label": "Calico Core Ultimatum",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_light_helmet_01_02_01": {
+      "key": "item_Desc_slaver_combat_light_helmet_01_02_01",
+      "label": "Calico Helmet Tactical",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Kastak Arm's Renegade combat helmet is a light but durable infantry helmet designed for added protection and impact-reduction during in-atmosphere operations. Visor is AR crosshair compatible.",
+      "kind": "item"
+    },
+    "slaver_combat_light_legs_01_02_01": {
+      "key": "item_Desc_slaver_combat_light_legs_01_02_01",
+      "label": "Calico Legs Ultimatum",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features subtle Nine Tails neon pink accents along the length of the armor.",
+      "kind": "item"
+    },
+    "slaver_combat_medium_arms_01_02_01": {
+      "key": "item_Desc_slaver_combat_medium_arms_01_02_01",
+      "label": "DustUp Arms Ultimatum",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_medium_core_01_02_01": {
+      "key": "item_Desc_slaver_combat_medium_core_01_02_01",
+      "label": "DustUp Core Ultimatum",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_medium_helmet_01_02_01": {
+      "key": "item_Desc_slaver_combat_medium_helmet_01_02_01",
+      "label": "DustUp Helmet Ultimatum",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s The DustUp has your back if you’re looking to get into some trouble. Originally built to withstand explosions, it should totally protect you against some shots. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
+    "slaver_combat_medium_legs_01_02_01": {
+      "key": "item_Desc_slaver_combat_medium_legs_01_02_01",
+      "label": "DustUp Legs Ultimatum",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "kind": "item"
+    },
     "slaver_medium_armor_helmet_01_starkitty": {
       "key": "item_Desc_slaver_medium_armor_helmet_01_starkitty",
       "label": "DustUp Helmet Star Kitten Custom",
@@ -25204,13 +26062,13 @@
     },
     "slaver_undersuit_helmet_01": {
       "key": "item_Desc_slaver_undersuit_helmet_01",
-      "label": "Stoneskin Helmet Desert",
+      "label": "Stoneskin Helmet Tactical",
       "description": "Item Type: Flight Helmet Damage Reduction: 15% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Kastak Arms' Stoneskin series is built upon CDS' famous TCS-4 system based on extensive feedback from the operators who rely on this technology in the field. The Stoneskin is set to rival competitors as a rugged and reliable helmet.",
       "kind": "item"
     },
     "slaver_undersuit_helmet_02": {
       "key": "item_Desc_slaver_undersuit_helmet_02",
-      "label": "Stoneskin Helmet Tactical",
+      "label": "Stoneskin Helmet Desert",
       "description": "Item Type: Flight Helmet Damage Reduction: 15% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Kastak Arms' Stoneskin series is built upon CDS' famous TCS-4 system based on extensive feedback from the operators who rely on this technology in the field. The Stoneskin is set to rival competitors as a rugged and reliable helmet.",
       "kind": "item"
     },
@@ -25274,6 +26132,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -85 / 115 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Reinforced alloys are carefully layered to recreate the appearance of warriors from Humanity's past to create an armor that's intimidating and functional. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
       "kind": "item"
     },
+    "srvl_combat_heavy_arms_03_01_01": {
+      "key": "item_Desc_srvl_combat_heavy_arms_03_01_01",
+      "label": "Wrecker Arms",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. It is sprayed with orange paint and anointed with bone fragments and Vanduul armor pieces.",
+      "kind": "item"
+    },
     "srvl_combat_heavy_arms_03_02_01": {
       "key": "item_Desc_srvl_combat_heavy_arms_03_02_01",
       "label": "Wrecker Arms Payback",
@@ -25284,6 +26148,12 @@
       "key": "item_Desc_srvl_combat_heavy_arms_03_03_01",
       "label": "Wrecker Arms Ashen",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. The Ashen version is sprayed with white paint and anointed with bone fragments and Vanduul armor pieces.",
+      "kind": "item"
+    },
+    "srvl_combat_heavy_core_03_01_01": {
+      "key": "item_Desc_srvl_combat_heavy_core_03_01_01",
+      "label": "Wrecker Core",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: Medium, Light Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. It is sprayed with orange paint and anointed with bone fragments and Vanduul armor pieces.",
       "kind": "item"
     },
     "srvl_combat_heavy_core_03_02_01": {
@@ -25298,6 +26168,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: All Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. The Ashen version is sprayed with white paint and anointed with bone fragments and Vanduul armor pieces.",
       "kind": "item"
     },
+    "srvl_combat_heavy_helmet_03_01_01": {
+      "key": "item_Desc_srvl_combat_heavy_helmet_03_01_01",
+      "label": "Wrecker Helmet",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -50 / 80 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. It features an intimidating and enclosed helmet with four eye-like red sensors to keep the wearer connected to the world around them.",
+      "kind": "item"
+    },
     "srvl_combat_heavy_helmet_03_02_01": {
       "key": "item_Desc_srvl_combat_heavy_helmet_03_02_01",
       "label": "Wrecker Helmet Payback",
@@ -25308,6 +26184,12 @@
       "key": "item_Desc_srvl_combat_heavy_helmet_03_03_01",
       "label": "Wrecker Helmet Ashen",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. It features an intimidating and enclosed helmet with four eye-like red sensors to keep the wearer connected to the world around them. The Ashen version is sprayed with white paint and anointed with bone fragments and Vanduul armor pieces.",
+      "kind": "item"
+    },
+    "srvl_combat_heavy_legs_03_01_01": {
+      "key": "item_Desc_srvl_combat_heavy_legs_03_01_01",
+      "label": "Wrecker Legs",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Favored by the most brutal of hunters, the Wrecker armor is a fusion of discarded metal and pilfered fabric cobbled together to offer protection while stalking prey. It is sprayed with orange paint and anointed with bone fragments and Vanduul armor pieces.",
       "kind": "item"
     },
     "srvl_combat_heavy_legs_03_02_01": {
@@ -26464,8 +27346,8 @@
     },
     "vpw_bouncer_jacket_01_01_01": {
       "key": "item_Desc_vpw_bouncer_jacket_01_01_01",
-      "label": "Creese Jacket",
-      "description": "Carrying Capacity: 1K µSCU The Vaporwear Creese jacket features an old-Earth collar and tags around the shoulders. Armored shoulder accents and ventilated sleeves allow the jacket to be worn casually or piloting an open canopy vehicle.",
+      "label": "Creese Jacket Nine Tails",
+      "description": "Carrying Capacity: 1K µSCU The Vaporwear Creese jacket features an old-Earth collar and tags around the shoulders. Armored shoulder accents and ventilated sleeves provide protection without restricting movement, allowing the jacket to be worn casually or piloting an open canopy vehicle. The special Nine Tails edition features the symbology of the gang.",
       "kind": "item"
     },
     "vpw_bouncer_jacket_01_02_01": {
@@ -26526,6 +27408,60 @@
       "key": "item_Desc_vpw_bouncer_shirt_01_01_01",
       "label": "Tyger (Project Purple) Shirt",
       "description": "Vaporwear's Tyger messaging shirt features the brand's distinct camo pattern with a programmable monocolor digital cloth statement strip. The all-purple and black design isn't likely to keep anyone truly camouflage in all but the most alien jungle, but it's sure to make a statement in any crowded metropolis.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01": {
+      "key": "item_Descapar_hmg_ballistic_01",
+      "label": "Vendetta HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_collector01": {
+      "key": "item_Descapar_hmg_ballistic_01_collector01",
+      "label": "Vendetta \"Snow Camo\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. Featuring a white digital camo pattern, the Snow Camo edition is perfect for stalking prey in frozen environments.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_mag": {
+      "key": "item_Descapar_hmg_ballistic_01_mag",
+      "label": "Vendetta HMG Magazine (1000 Cap)",
+      "description": "Item Type: Magazine Capacity: 1000 This magazine for the Apocalypse Arms Vendetta HMG comes pre-loaded with a thousand rounds.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_mr01": {
+      "key": "item_Descapar_hmg_ballistic_01_mr01",
+      "label": "Vendetta \"Siegebreaker\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. The Siegebreaker edition features a two-tone gray camo with bold yellow accents.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_mr02": {
+      "key": "item_Descapar_hmg_ballistic_01_mr02",
+      "label": "Vendetta \"Stronghold\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_store01": {
+      "key": "item_Descapar_hmg_ballistic_01_store01",
+      "label": "Vendetta \"SteelTek\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. The SteelTek edition features a shining metallic coating with a Damascus pattern that runs across the surface.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_tint01": {
+      "key": "item_Descapar_hmg_ballistic_01_tint01",
+      "label": "Vendetta \"Trencher\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. The Trencher edition features dark green with metallic highlights ideal for making your presence known on the battlefield.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_tint02": {
+      "key": "item_Descapar_hmg_ballistic_01_tint02",
+      "label": "Vendetta \"Darkstalker\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. The Darkstalker edition features a dark black finish that is both subtle and intimidating.",
+      "kind": "item"
+    },
+    "apar_hmg_ballistic_01_tint03": {
+      "key": "item_Descapar_hmg_ballistic_01_tint03",
+      "label": "Vendetta \"Brightstar\" HMG",
+      "description": "Manufacturer: Apocalypse Arms Item Type: HMG Class: Ballistic Magazine Size: 1000 Rate Of Fire: 1000 rpm Effective Range: 35 m Attachments: N/A Too large to use except with a heavy exo-suit, the Vendetta from Apocalypse Arms is a belt-fed instrument of death. What it lacks in accuracy it makes up for with a high rate of fire for complete target saturation and battlefield dominance. The Brightstar edition features a metallic frame with royal blue highlights ready for any hero to make their stand.",
       "kind": "item"
     },
     "apar_melee_01": {
@@ -27086,6 +28022,12 @@
       "description": "Item Type: Magazine Capacity: 20 This magazine for the Behring S-38 pistol holds twenty 10mm rounds.",
       "kind": "item"
     },
+    "behr_pistol_ballistic_01_mr01": {
+      "key": "item_Descbehr_pistol_ballistic_01_mr01",
+      "label": "S-38 \"SecondWind\" Pistol",
+      "description": "Manufacturer: Behring Item Type: Pistol Class: Ballistic Magazine Size: 20 Rate Of Fire: 450 rpm Effective Range: 25 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) Thanks to a streamlined design and a lightweight polymer frame that helps to minimize recoil, it's easy to see why the versatile and dependable S-38 from Behring has become a trusted sidearm across the Empire for both citizens and law enforcement officers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the weapon with a rich blue base adorned with a sleek, flowing air design along the length of the gun.",
+      "kind": "item"
+    },
     "behr_rifle_ballistic_01": {
       "key": "item_Descbehr_rifle_ballistic_01",
       "label": "P4-AR Rifle",
@@ -27102,6 +28044,18 @@
       "key": "item_Descbehr_rifle_ballistic_01_mag",
       "label": "P4-AR Magazine (40 cap)",
       "description": "Item Type: Magazine Capacity: 40 This magazine for the Behring P4-AR rifle holds fourty 5.56mm cartridges.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_01_mr01": {
+      "key": "item_Descbehr_rifle_ballistic_01_mr01",
+      "label": "P4-AR \"SecondWind\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the weapon with a rich blue base adorned with a sleek, flowing air design along the length of the gun.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_01_sf01": {
+      "key": "item_Descbehr_rifle_ballistic_01_sf01",
+      "label": "P4-AR \"Star Kitten\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 550 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Behring's classic P4-AR rifle features a collapsible stock and shortened barrel, making it an ideal choice for close-quarter firefights. Its accuracy and general ease of use make it universally valued among security, military and civilian users. The \"Star Kitten\" edition features Sally's signature pink with blue accents and the famous cat herself printed along the side.",
       "kind": "item"
     },
     "behr_rifle_ballistic_01_store01": {
@@ -27168,6 +28122,42 @@
       "key": "item_Descbehr_rifle_ballistic_02a",
       "label": "P8-ARM Rifle",
       "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 30 Rate Of Fire: 600 rpm Effective Range: 60 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Built to be the standard issue weapon of UEE Marines, the Behring P8-ARM excels in its dependability and straightforward operation to allow you to focus on the fight at hand.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03": {
+      "key": "item_Descbehr_rifle_ballistic_03",
+      "label": "CQ7 Rifle",
+      "description": "Manufacturer: Behring Item Type: Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 600 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Designed for close quarter engagements such as boarding actions, Behring's CQ7 is a next generation bullpup battle rifle designed to dominate the rigors of the modern battlefield environment.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03_mag": {
+      "key": "item_Descbehr_rifle_ballistic_03_mag",
+      "label": "CQ7 Rifle Magazine (40 Cap)",
+      "description": "Item Type: Magazine Capacity: 40 This magazine for the CQ7 rifle comes pre-loaded with forty rounds.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03_store01": {
+      "key": "item_Descbehr_rifle_ballistic_03_store01",
+      "label": "CQ7 \"Goldsmith\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 600 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Designed for close quarter engagements such as boarding actions, Behring's CQ7 is a next generation bullpup battle rifle designed to dominate the rigors of the modern battlefield environment. The Goldsmith edition was made in conjunction with Hardin Tactical and feature gold filigree on luxurious black for an extravagant look.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03_tint01": {
+      "key": "item_Descbehr_rifle_ballistic_03_tint01",
+      "label": "CQ7 \"Blacklist\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 600 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Designed for close quarter engagements such as boarding actions, Behring's CQ7 is a next generation bullpup battle rifle designed to dominate the rigors of the modern battlefield environment. The Blacklist edition features a dark black finish.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03_tint02": {
+      "key": "item_Descbehr_rifle_ballistic_03_tint02",
+      "label": "CQ7 \"Snowfire\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 600 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Designed for close quarter engagements such as boarding actions, Behring's CQ7 is a next generation bullpup battle rifle designed to dominate the rigors of the modern battlefield environment. The Snowfire edition features a white and light gray finish with black accents.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03_tint03": {
+      "key": "item_Descbehr_rifle_ballistic_03_tint03",
+      "label": "CQ7 \"Infantry\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 600 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Designed for close quarter engagements such as boarding actions, Behring's CQ7 is a next generation bullpup battle rifle designed to dominate the rigors of the modern battlefield environment. The Infantry edition features a neutral green and brown finish with black accents.",
       "kind": "item"
     },
     "behr_shotgun_ballistic_01": {
@@ -27962,6 +28952,18 @@
       "description": "Item Type: Magazine Capacity: 8 This magazine for the Salvo Frag Pistol holds eight .50 caliber rounds.",
       "kind": "item"
     },
+    "hdgw_rifle_ballistic_01": {
+      "key": "item_Deschdgw_rifle_ballistic_01",
+      "label": "Arlington Rifle",
+      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 25 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier.",
+      "kind": "item"
+    },
+    "hdgw_rifle_ballistic_01_mag": {
+      "key": "item_Deschdgw_rifle_ballistic_01_mag",
+      "label": "Arlington Rifle (25 Cap)",
+      "description": "Item Type: Magazine Capacity: 25 This magazine for the Arlington rifle comes pre-loaded with twenty-five rounds.",
+      "kind": "item"
+    },
     "ht_glass_wine_1_a": {
       "key": "item_Descht_glass_wine_1_a",
       "label": "Castilla Wine Glass",
@@ -28116,6 +29118,12 @@
       "key": "item_Descklwe_smg_energy_01_mag",
       "label": "Lumin V SMG Battery (45 cap)",
       "description": "Item Type: Battery Capacity: 45 Replacement battery for Klaus & Werner's Lumin V SMG.",
+      "kind": "item"
+    },
+    "klwe_smg_energy_01_mr01": {
+      "key": "item_Descklwe_smg_energy_01_mr01",
+      "label": "Lumin V \"SecondWind\" SMG",
+      "description": "Manufacturer: Klaus & Werner Item Type: SMG Class: Laser Battery Size: 45 Rate Of Fire: 562.5 rpm Effective Range: 25m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) Klaus & Werner's expert craftsmanship is once again on full display to make the Lumin V laser compact energy rifle even more deadly and dependable. A new \"interval autofire\" mode blasts five-round barrages when the trigger is held down, utilizing the target saturation that comes with autofire while providing breaks to recompensate aim. Even when constantly on the attack, the gun's excellent design provides low recoil and a tight spread. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the weapon with a rich blue base adorned with a sleek, flowing air design along the length of the gun.",
       "kind": "item"
     },
     "klwe_smg_energy_blue_gold_01": {
@@ -30640,6 +31648,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 5106
+    "totalDescriptions": 5274
   }
 }

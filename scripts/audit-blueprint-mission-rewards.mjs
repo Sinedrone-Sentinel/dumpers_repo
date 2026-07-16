@@ -6,7 +6,7 @@
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import { BLUEPRINT_MISSION_TRACKING_EXCLUSIONS } from './lib/orphanPoolBridges.mjs'
+import { BLUEPRINT_MISSION_TRACKING_EXCLUSIONS, REWARD_POOL_TRACKING_EXCLUSIONS } from './lib/orphanPoolBridges.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const missionData = JSON.parse(readFileSync(join(root, 'src/data/game-blueprint-missions.json'), 'utf-8'))
@@ -24,7 +24,9 @@ for (const contract of contracts) {
   }
 }
 
-const orphanPools = Object.keys(missionBlueprints).filter((key) => !linkedPoolKeys.has(key))
+const orphanPools = Object.keys(missionBlueprints).filter(
+  (key) => !linkedPoolKeys.has(key) && !REWARD_POOL_TRACKING_EXCLUSIONS.includes(key)
+)
 
 function buildExpectedRewards(internalName) {
   const bpName = internalName.toLowerCase()

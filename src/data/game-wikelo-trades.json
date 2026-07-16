@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (TheCollector contract generator)",
-  "_extracted": "2026-07-13T04:47:23.534Z",
+  "_extracted": "2026-07-16T04:36:20.500Z",
   "trades": [
     {
       "id": "5bf19672-f057-4ccf-bdd4-d309edfeea15",
@@ -251,6 +251,38 @@
       ],
       "blueprintPools": [],
       "repReward": 100,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": true
+    },
+    {
+      "id": "41231c57-f186-4c5e-ae51-524fc1e1d9a3",
+      "debugName": "TheCollector_Vehicle_DrakeClipper",
+      "title": "Clipper Fight Now",
+      "description": "Clipper does a bunch of things good, but Wikelo think what if it did more fight? Then it still do all things, but now do one thing better. Good yes? I give you blueprint, you make my new metamaterial, bring to me, and I will trade.",
+      "category": "vehicle",
+      "subCategory": "ship",
+      "costs": [
+        {
+          "entityClass": "carryable_2h_cy_collectormaterial_001",
+          "name": "Metamaterial Test #146",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "drak_clipper_collector_military",
+          "name": "Drake Clipper Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_collectormaterial_002"
+      ],
+      "repReward": 0,
       "minStanding": null,
       "maxStanding": null,
       "requiresIntro": false,
@@ -780,12 +812,6 @@
       ],
       "rewards": [
         {
-          "entityClass": "krig_l21_wolf_collector_military",
-          "name": "Kruger L-21 Wolf Wikelo War Special",
-          "amount": 1,
-          "kind": "vehicle"
-        },
-        {
           "entityClass": "qrt_specialist_heavy_helmet_01_03_01",
           "name": "Antium Helmet Midnight Sun",
           "amount": 1,
@@ -814,6 +840,12 @@
           "name": "Fresnel \"Deepwater\" Energy LMG",
           "amount": 1,
           "kind": "item"
+        },
+        {
+          "entityClass": "krig_l21_wolf_collector_military",
+          "name": "Kruger L-21 Wolf Wikelo War Special",
+          "amount": 1,
+          "kind": "vehicle"
         }
       ],
       "blueprintPools": [],
@@ -2154,6 +2186,44 @@
       "isVehicleReward": false
     },
     {
+      "id": "bd341b1f-3a22-46f2-bedc-b5350b371b1f",
+      "debugName": "TheCollector_CombatClothing",
+      "title": "CombatClothing",
+      "description": null,
+      "category": "gear",
+      "subCategory": "gear",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_superheavy_backpack_01_01_01",
+          "name": "H4-PBF Ammo Carrier",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_superheavy_suit_01_01_01",
+          "name": "BUL-H4 Armor",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_superheavy_helmet_01_01_01",
+          "name": "BUL-H4 Helmet",
+          "amount": 1
+        }
+      ],
+      "rewards": [],
+      "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
       "id": "9c4459ac-2527-4024-b8f1-a08081df252a",
       "debugName": "TheCollector_BigBooma",
       "title": "Curious Weapon",
@@ -2398,6 +2468,48 @@
         }
       ],
       "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
+      "id": "88bb3702-e20a-42e3-8ba3-328f2333e30c",
+      "debugName": "TheCollector_SuperHeavyCombat",
+      "title": "Heavy and Bright",
+      "description": "This armor is big, yes! Protect you real good. Wikelo make it extra bright so everyone can see how good your armor is. If you bring the things I need, I trade for it.",
+      "category": "gear",
+      "subCategory": "gear",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_superheavy_helmet_01_01_01",
+          "name": "BUL-H4 Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_superheavy_suit_01_01_01",
+          "name": "BUL-H4 Armor",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_combat_superheavy_backpack_01_01_01",
+          "name": "H4-PBF Ammo Carrier",
+          "amount": 1
+        }
+      ],
+      "rewards": [],
+      "blueprintPools": [
+        "bp_reward_cds_combat_superheavy_backpack_01_03_01",
+        "bp_reward_cds_combat_superheavy_suit_01_03_01",
+        "bp_reward_cds_combat_superheavy_helmet_01_03_01"
+      ],
       "repReward": 10,
       "minStanding": null,
       "maxStanding": null,
@@ -3048,6 +3160,49 @@
       "isVehicleReward": false
     },
     {
+      "id": "a026b45d-6726-4a86-898c-e0207f2880c4",
+      "debugName": "TheCollector_apar_hmg",
+      "title": "Too Much Gun",
+      "description": "This gun is very big and very loud. Wikelo love it. Made it extra bright so that everyone can see how special this gun is. I think you will like this so bring me trade.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "apar_hmg_ballistic_01",
+          "name": "Vendetta HMG",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "apar_hmg_ballistic_01_collector01",
+          "name": "Vendetta \"Snow Camo\" HMG",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "apar_hmg_ballistic_01_mag",
+          "name": "Vendetta HMG Magazine (1000 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_apar_hmg_ballistic_01_collector01"
+      ],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false
+    },
+    {
       "id": "8df7d9a9-c887-4302-b93c-863788bdca01",
       "debugName": "TheCollector_SlimyLMG",
       "title": "Yormandi Gun",
@@ -3361,9 +3516,9 @@
     }
   },
   "summary": {
-    "totalTrades": 66,
-    "vehicleTrades": 41,
-    "gearTrades": 18,
+    "totalTrades": 70,
+    "vehicleTrades": 42,
+    "gearTrades": 21,
     "favorTrades": 5
   }
 }

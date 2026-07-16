@@ -1,7 +1,98 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-13T04:47:23.535Z",
+  "_extracted": "2026-07-16T04:36:20.501Z",
   "weapons": [
+    {
+      "id": "e302c7ae-b850-412d-983e-36dbf04f98fe",
+      "name": "apar_hmg_ballistic_01",
+      "displayName": "Vendetta HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "2445465a-d906-4e06-9a02-7eaead122bf7",
+      "name": "apar_hmg_ballistic_01_collector01",
+      "displayName": "Vendetta \"Snow Camo\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "8d77c07f-2f9d-426a-ab24-5d8e0fb1d2ca",
+      "name": "apar_hmg_ballistic_01_mr01",
+      "displayName": "Vendetta \"Siegebreaker\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "565b47b7-9043-4e5d-89dd-936a5b7c1251",
+      "name": "apar_hmg_ballistic_01_mr02",
+      "displayName": "Vendetta \"Stronghold\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "bfa503cd-cf8d-407c-abf5-0d89ceeae639",
+      "name": "apar_hmg_ballistic_01_tint01",
+      "displayName": "Vendetta \"Trencher\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "3f79efad-4990-43ed-9906-4f52afc8db67",
+      "name": "apar_hmg_ballistic_01_tint02",
+      "displayName": "Vendetta \"Darkstalker\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
+    {
+      "id": "4a0d9247-7bbb-44b6-ab3a-0a24ddb0b9ac",
+      "name": "apar_hmg_ballistic_01_tint03",
+      "displayName": "Vendetta \"Brightstar\" HMG",
+      "type": "Large",
+      "size": 5,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "heavyhip hip hmg apar_hmg_ballistic_01 SM_RestrictedWep"
+    },
     {
       "id": "699db405-4ca1-4993-ba58-a9f90001ae6b",
       "name": "apar_special_ballistic_01",
@@ -289,6 +380,19 @@
       "tags": "pistol"
     },
     {
+      "id": "c8c2e14b-5263-44f4-add3-bf70055976a3",
+      "name": "behr_pistol_ballistic_01_mr01",
+      "displayName": "S-38 \"SecondWind\" Pistol",
+      "type": "Small",
+      "size": 1,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "pistol"
+    },
+    {
       "id": "02d4cd2e-fa98-4086-aee1-6b2dfce8ea27",
       "name": "behr_rifle_ballistic_01",
       "displayName": "P4-AR Rifle",
@@ -305,6 +409,32 @@
       "id": "5d6c1c28-1589-4c72-8cc3-ff90f998dca3",
       "name": "behr_rifle_ballistic_01_contestedzonereward",
       "displayName": "P4-AR Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "62669187-1bcc-446f-881b-dd9ecd5f9704",
+      "name": "behr_rifle_ballistic_01_mr01",
+      "displayName": "P4-AR \"SecondWind\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "5bafbf55-7706-4daf-8782-31e2684048cc",
+      "name": "behr_rifle_ballistic_01_sf01",
+      "displayName": "P4-AR \"Star Kitten\" Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -404,6 +534,71 @@
       "damageMultiplier": 1,
       "combatRangeCategory": "Unknown",
       "tags": "stocked behr_rifle_ballistic_02_civilian behr_rifle_ballistic_02"
+    },
+    {
+      "id": "adb5c353-7685-461c-9c3c-32ad182430b1",
+      "name": "behr_rifle_ballistic_03",
+      "displayName": "CQ7 Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "09ca39f1-ebc5-49d2-9683-14cafc2724a5",
+      "name": "behr_rifle_ballistic_03_mr01",
+      "displayName": "@item_Namebehr_rifle_ballistic_03_mr01",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "4207dfc1-099d-4942-8869-f1b67b5aedda",
+      "name": "behr_rifle_ballistic_03_tint01",
+      "displayName": "CQ7 \"Blacklist\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "8363b277-253a-4e48-9963-b088f4f75e96",
+      "name": "behr_rifle_ballistic_03_tint02",
+      "displayName": "CQ7 \"Snowfire\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "6190ce62-3d9f-4844-9834-55edeb0017e2",
+      "name": "behr_rifle_ballistic_03_tint03",
+      "displayName": "CQ7 \"Infantry\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
     },
     {
       "id": "70fba024-7de1-4b3e-b169-256a77cc080f",
@@ -1901,6 +2096,19 @@
       "tags": "stocked smg klwe_smg_energy_01"
     },
     {
+      "id": "da14a7b1-daa4-4109-8684-54be0d13bb61",
+      "name": "klwe_smg_energy_01_mr01",
+      "displayName": "Lumin V \"SecondWind\" SMG",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked smg klwe_smg_energy_01"
+    },
+    {
       "id": "5ea1071e-2dc7-4c96-8ae7-aa10775a093a",
       "name": "klwe_sniper_energy_01",
       "displayName": "Arrowhead Sniper Rifle",
@@ -2476,6 +2684,19 @@
       "id": "bab1362b-0860-4a52-ad5b-dfb63d12f651",
       "name": "ksar_sniper_ballistic_01",
       "displayName": "Scalpel Sniper Rifle",
+      "type": "Medium",
+      "size": 3,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked sniper"
+    },
+    {
+      "id": "9bce2684-8971-4134-821b-4182bc7a5e27",
+      "name": "ksar_sniper_ballistic_01_sf01",
+      "displayName": "@item_Nameksar_sniper_ballistic_01_sf01",
       "type": "Medium",
       "size": 3,
       "fireRate": 0,
@@ -3826,6 +4047,6 @@
     }
   ],
   "summary": {
-    "totalWeapons": 294
+    "totalWeapons": 311
   }
 }

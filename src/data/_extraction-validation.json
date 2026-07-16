@@ -1,0 +1,22 @@
+{
+  "_generated": "2026-07-16T04:36:20.503Z",
+  "issues": [
+    "[Wikelo] Unlocalized Wikelo trade title: TheCollector_CombatClothing (@TheCollector_Recipes_Title_CombatSuit)"
+  ],
+  "expectedPaths": {
+    "blueprints": "libs/foundry/records/crafting/blueprints/crafting",
+    "blueprintRewards": "libs/foundry/records/crafting/blueprintrewards",
+    "mineableElements": "libs/foundry/records/mining/mineableelements",
+    "scitems": "libs/foundry/records/entities/scitem",
+    "reputation": "libs/foundry/records/reputation/standings",
+    "missionBroker": "libs/foundry/records/missionbroker",
+    "qualityQuantization": "libs/foundry/records/crafting/qualityquantization",
+    "qualityDistribution": "libs/foundry/records/crafting/qualitydistribution",
+    "fpsWeapons": "libs/foundry/records/entities/scitem/weapons/fps_weapons",
+    "contractGenerators": "libs/foundry/records/contracts/contractgenerator",
+    "contractScenarios": "libs/foundry/records/contracts/contractscenarios",
+    "missionLocality": "libs/foundry/records/missiondata/pu_missionlocality",
+    "reputationRewards": "libs/foundry/records/reputation/rewards",
+    "factionReputation": "libs/foundry/records/factions/factionreputation"
+  }
+}

@@ -141,7 +141,7 @@ const soloHead2Only = findBestMoleLoadoutStrategy(
 )
 assert(!soloHead2Only.canBreak, 'Helix II with −10% module power cannot solo-crack this pilot-scan rock')
 assert(
-  soloHead2Only.assignments[0].detail?.includes('3,672 MW after modules'),
+  soloHead2Only.assignments[0].detail?.includes('4,437 MW after modules'),
   'solo fracture notes should show module-adjusted MW'
 )
 assert(
@@ -149,7 +149,7 @@ assert(
   'solo fracture notes should show pilot RES shifted by head modifiers'
 )
 const head2Profile = buildMoleHeadProfile(helixS2FocusPair, 1)
-assert(head2Profile?.laserPower === 3672, 'two Focus III modules should net −10% on Helix II (3672 MW)')
+assert(head2Profile?.laserPower === 4437, 'two Focus III modules should net −10% on Helix II (4437 MW)')
 
 // ── Hardware minimum throttle (from game data throttleMinimum) ──────────────
 // Impact II and Helix II floor at 30%; Arbor MH2 at 5%. Plans must never tell
@@ -159,7 +159,7 @@ assert(
   impactProfile.throttleMinimumPercent === 30,
   `Impact II minimum throttle should be 30% (got ${impactProfile.throttleMinimumPercent}%)`
 )
-assert(impactProfile.laserPower === 3360, 'Impact II stock power should be 3,360 MW')
+assert(impactProfile.laserPower === 4060, 'Impact II stock power should be 4,060 MW')
 const helixProfile = buildMoleHeadProfile(helix, 0)
 assert(helixProfile.throttleMinimumPercent === 30, 'Helix II minimum throttle should be 30%')
 const arborProfile = buildMoleHeadProfile(arbor, 0)

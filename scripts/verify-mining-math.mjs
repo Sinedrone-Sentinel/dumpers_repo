@@ -224,15 +224,15 @@ assertApprox(riegerMultiplier, 1.25, 0.01, 'Stock head + Rieger MK3 → 1.25× m
 console.log('\n2.3 computeEffectiveLaserStats')
 const helixStock = laserStats.computeEffectiveLaserStats(HELIX_S2)
 assert(helixStock != null, 'Helix S2 stats computed')
-assert(helixStock.laserPower === 4080, `Helix S2 stock = 4,080 MW (got ${helixStock?.laserPower})`)
+assert(helixStock.laserPower === 4930, `Helix S2 stock = 4,930 MW (got ${helixStock?.laserPower})`)
 assert(helixStock.resistanceModifier === -30, 'Helix S2 resistance mod = −30%')
 
 const helixFocusPair = laserStats.computeEffectiveLaserStats(HELIX_FOCUS_PAIR)
 assert(helixFocusPair != null, 'Helix + Focus pair computed')
-assert(helixFocusPair.laserPower === 3672, `Helix + 2× Focus III = 3,672 MW (got ${helixFocusPair?.laserPower})`)
+assert(helixFocusPair.laserPower === 4437, `Helix + 2× Focus III = 4,437 MW (got ${helixFocusPair?.laserPower})`)
 
 const helixRieger = laserStats.computeEffectiveLaserStats(HELIX_RIEGER)
-assert(helixRieger.laserPower === 5100, `Helix + Rieger MK3 = 5,100 MW (got ${helixRieger?.laserPower})`)
+assert(helixRieger.laserPower === 6163, `Helix + Rieger MK3 = 6,163 MW (got ${helixRieger?.laserPower})`)
 
 // 2.4 Resistance multiplier conversion
 console.log('\n2.4 laserResistanceMultiplier')
@@ -276,7 +276,7 @@ console.log('\n3.3 High-RES rock with module-adjusted heads')
 const focusLoadout = [HELIX_FOCUS_PAIR, HELIX_FOCUS_PAIR, HELIX_FOCUS_PAIR]
 const focusComparison = loadoutCompare.compareLoadoutToRock(focusLoadout, HIGH_RES_ROCK)
 assert(focusComparison != null, 'Focus loadout comparison computed')
-console.log(`  → Each head: ${3672} MW (3× Focus-pair Helix)`)
+console.log(`  → Each head: ${4437} MW (3× Focus-pair Helix)`)
 console.log(`  → Total: ${focusComparison.totalLaserPower} MW`)
 console.log(`  → Required (with −30% RES mod): ${focusComparison.requiredPower} MW`)
 console.log(`  → Can break: ${focusComparison.canBreak}`)
@@ -369,7 +369,7 @@ assert(highResSoloStrategy != null, 'High-RES solo strategy exists')
 assert(!highResSoloStrategy.canBreak, 'Focus-pair heads cannot crack 74% RES rock solo')
 
 const primaryAssignment = highResSoloStrategy.assignments.find(a => a.role === 'primary')
-assert(primaryAssignment?.detail?.includes('3,672 MW'), 'Solo notes should show module-adjusted MW')
+assert(primaryAssignment?.detail?.includes('4,437 MW'), 'Solo notes should show module-adjusted MW')
 assert(primaryAssignment?.detail?.includes('74%') && primaryAssignment?.detail?.includes('52%'), 
   'Solo notes should show pilot RES → turret RES')
 console.log(`  → ${highResSoloStrategy.summary}`)
@@ -386,10 +386,10 @@ console.log(`  → ${riegerSoloStrategy.summary}`)
 // 5.4 Verify head profile calculations with modules
 console.log('\n5.4 Head profile with modules')
 const focusProfile = moleStrategy.buildMoleHeadProfile(HELIX_FOCUS_PAIR, 0)
-assert(focusProfile?.laserPower === 3672, `Focus-pair Helix = 3,672 MW (got ${focusProfile?.laserPower})`)
+assert(focusProfile?.laserPower === 4437, `Focus-pair Helix = 4,437 MW (got ${focusProfile?.laserPower})`)
 
 const riegerProfile = moleStrategy.buildMoleHeadProfile(HELIX_RIEGER, 0)
-assert(riegerProfile?.laserPower === 5100, `Rieger Helix = 5,100 MW (got ${riegerProfile?.laserPower})`)
+assert(riegerProfile?.laserPower === 6163, `Rieger Helix = 6,163 MW (got ${riegerProfile?.laserPower})`)
 
 // ============================================================================
 // 6. THROTTLE AND MIN-POWER WARNINGS
@@ -398,10 +398,10 @@ section('6. Throttle and Min-Power Calculations')
 
 // 6.1 throttlePercentFromMw
 console.log('\n6.1 throttlePercentFromMw')
-assert(throttleDisplay.throttlePercentFromMw(2040, 4080) === 50, '2,040 / 4,080 = 50%')
-assert(throttleDisplay.throttlePercentFromMw(4080, 4080) === 100, '4,080 / 4,080 = 100%')
-assert(throttleDisplay.throttlePercentFromMw(500, 4080) === 12, '500 / 4,080 = ~12%')
-assert(throttleDisplay.throttlePercentFromMw(5000, 4080) === 100, 'Over max clamped to 100%')
+assert(throttleDisplay.throttlePercentFromMw(2465, 4930) === 50, '2,465 / 4,930 = 50%')
+assert(throttleDisplay.throttlePercentFromMw(4930, 4930) === 100, '4,930 / 4,930 = 100%')
+assert(throttleDisplay.throttlePercentFromMw(500, 4930) === 10, '500 / 4,930 = ~10%')
+assert(throttleDisplay.throttlePercentFromMw(5000, 4930) === 100, 'Over max clamped to 100%')
 assert(throttleDisplay.throttlePercentFromMw(100, 0) === 0, 'Zero laser power → 0%')
 
 // 6.2 displayMinThrottlePercent
@@ -412,12 +412,12 @@ assert(throttleDisplay.displayMinThrottlePercent(0.005) === 1, 'Very low fractio
 
 // 6.3 Min power warnings
 console.log('\n6.3 Min power warnings')
-const warning = minPowerWarning.assessMinPowerWarning(100, 4080, 0.2, 'Helix', 0)
+const warning = minPowerWarning.assessMinPowerWarning(100, 4930, 0.2, 'Helix', 0)
 assert(warning != null, 'Should warn when required MW < min output')
-assert(warning?.minLaserMw === 816, 'Min output = 4080 × 0.2 = 816 MW')
+assert(warning?.minLaserMw === 986, 'Min output = 4930 × 0.2 = 986 MW')
 assert(warning?.requiredMw === 100, 'Required = 100 MW')
 
-const noWarning = minPowerWarning.assessMinPowerWarning(1000, 4080, 0.2, 'Helix', 0)
+const noWarning = minPowerWarning.assessMinPowerWarning(1000, 4930, 0.2, 'Helix', 0)
 assert(noWarning == null, 'No warning when required >= min output')
 
 // ============================================================================
@@ -511,9 +511,9 @@ const userLoadoutActual = [USER_HELIX_WITH_MODULES, HELIX_S2, ARBOR_S2]
 const userRock = { scannerMass: 10849, resistancePercent: 74, instability: 515 }
 const userSoloStrategy = moleStrategy.findBestMoleLoadoutStrategy(userLoadoutActual, userRock, { soloMining: true })
 
-// Verify the head power: 4080 × 1.15 = 4692 MW
+// Verify the head power: 4930 × 1.15 = 5670 MW
 const userHeadProfile = moleStrategy.buildMoleHeadProfile(USER_HELIX_WITH_MODULES, 0)
-assert(userHeadProfile?.laserPower === 4692, `User head: 4080 × 1.15 = 4,692 MW (got ${userHeadProfile?.laserPower})`)
+assert(userHeadProfile?.laserPower === 5670, `User head: 4930 × 1.15 = 5,670 MW (got ${userHeadProfile?.laserPower})`)
 
 // Verify the required power calculations
 const basePower = breakability.equalizationPower(10849, 74, 0.7)
@@ -523,8 +523,8 @@ console.log(`  → Equalization (RES only): ${basePower.toFixed(0)} MW`)
 console.log(`  → Crackable (+515 inst margin): ${adjustedPower.toFixed(0)} MW`)
 console.log(`  → Can solo crack: ${userSoloStrategy?.canBreak}`)
 
-// THE KEY TEST: Without instability, 4692 > 4520 = crackable (BUG!)
-// With instability: 4692 < 6820 = NOT crackable (CORRECT!)
+// THE KEY TEST: Without instability, 5670 > base = crackable (BUG!)
+// With instability: 5670 < adjusted = NOT crackable (CORRECT!)
 assert(userHeadProfile?.laserPower > basePower, 'Without instability, laser power exceeds base required (old bug)')
 assert(userHeadProfile?.laserPower < adjustedPower, 'With instability, laser power is insufficient (correct)')
 assert(!userSoloStrategy?.canBreak, 'User scenario must NOT be crackable solo (matches game IMPOSSIBLE)')

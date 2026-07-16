@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-13T04:47:23.050Z",
+  "_extracted": "2026-07-16T04:36:19.940Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -249,7 +249,6 @@
           "ARC-L1",
           "Arial",
           "CRU-L3",
-          "Glaciem Ring",
           "HUR-L1",
           "Ita",
           "Keeger Belt",
@@ -314,7 +313,6 @@
           "Fairo",
           "Fuego",
           "Glaciem Ring",
-          "Keeger Belt",
           "Lyria",
           "microTech",
           "Monox",
@@ -573,7 +571,6 @@
       "ARC-L1",
       "Arial",
       "CRU-L3",
-      "Glaciem Ring",
       "HUR-L1",
       "Ita",
       "Keeger Belt",
@@ -830,7 +827,6 @@
       "Fairo",
       "Fuego",
       "Glaciem Ring",
-      "Keeger Belt",
       "Lyria",
       "microTech",
       "Monox",
@@ -1524,36 +1520,6 @@
         "rarity": "uncommon"
       }
     ],
-    "Glaciem Ring": [
-      {
-        "name": "Aluminum",
-        "rarity": "common"
-      },
-      {
-        "name": "Bexalite",
-        "rarity": "rare"
-      },
-      {
-        "name": "Ice",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
-        "rarity": "common"
-      },
-      {
-        "name": "Lindinium",
-        "rarity": "epic"
-      },
-      {
-        "name": "Savrilium",
-        "rarity": "legendary"
-      },
-      {
-        "name": "Torite",
-        "rarity": "uncommon"
-      }
-    ],
     "HUR-L1": [
       {
         "name": "Aluminum",
@@ -1644,10 +1610,6 @@
       },
       {
         "name": "Ice",
-        "rarity": "common"
-      },
-      {
-        "name": "Iron",
         "rarity": "common"
       },
       {
@@ -1972,6 +1934,32 @@
       {
         "name": "Beradom",
         "rarity": "handMineable"
+      }
+    ],
+    "Glaciem Ring": [
+      {
+        "name": "Bexalite",
+        "rarity": "rare"
+      },
+      {
+        "name": "Ice",
+        "rarity": "common"
+      },
+      {
+        "name": "Iron",
+        "rarity": "common"
+      },
+      {
+        "name": "Lindinium",
+        "rarity": "epic"
+      },
+      {
+        "name": "Savrilium",
+        "rarity": "legendary"
+      },
+      {
+        "name": "Torite",
+        "rarity": "uncommon"
       }
     ],
     "HUR-L3": [],
@@ -3212,7 +3200,6 @@
     "Glaciem Ring": {
       "shipMineables": [
         "Ice",
-        "Aluminum",
         "Iron",
         "Lindinium",
         "Bexalite",
@@ -3229,7 +3216,6 @@
       "shipMineables": [
         "Ice",
         "Aluminum",
-        "Iron",
         "Lindinium",
         "Bexalite",
         "Savrilium",
