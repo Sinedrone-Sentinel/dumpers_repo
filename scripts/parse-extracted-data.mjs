@@ -3495,7 +3495,7 @@ function parseBlueprintDefinitions(localization = {}) {
     const ecLower = (entityClass || '').toLowerCase()
     // FPS weapon types
     if (category === 'FPSWeapons') {
-      for (const t of ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']) {
+      for (const t of ['crossbow', 'hmg', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']) {
         if (ecLower.includes(`_${t}_`) || ecLower.includes(`_${t}`)) {
           subtype = t
           break

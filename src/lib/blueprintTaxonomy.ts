@@ -1,5 +1,6 @@
 export const FPS_WEAPON_TYPE_OPTIONS = [
   'crossbow',
+  'hmg',
   'lmg',
   'pistol',
   'rifle',
@@ -184,6 +185,14 @@ export function getBlueprintSubType(bp: BlueprintTaxonomyInput): string | null {
 
   const subtype = bp.subtype?.trim()
   if (subtype && !ARMOR_SLOT_SUBTYPES.has(subtype)) return subtype
+
+  if (bp.categoryName === 'FPSWeapons') {
+    const fromInternal = getFpsWeaponTypeFromFilename(
+      (bp.internalName || bp.file || '').toLowerCase(),
+    )
+    if (fromInternal) return fromInternal
+  }
+
   return null
 }
 

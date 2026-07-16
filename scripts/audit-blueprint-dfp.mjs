@@ -99,7 +99,8 @@ function inferWeaponSubtype(bp) {
   if (n.includes('sniper')) return 'sniper'
   if (n.includes('shotgun')) return 'shotgun'
   if (n.includes('smg')) return 'smg'
-  if (n.includes('lmg') || n.includes('hmg')) return 'lmg'
+  if (n.includes('hmg')) return 'hmg'
+  if (n.includes('lmg')) return 'lmg'
   if (n.includes('crossbow')) return 'crossbow'
   return 'other'
 }

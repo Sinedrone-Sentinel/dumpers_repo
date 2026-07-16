@@ -26,6 +26,7 @@ import {
 } from '../lib/blueprintsUiState'
 import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 import {
+  FPS_WEAPON_TYPE_OPTIONS,
   formatSubtypeLabel,
   getArmorSlot as getArmorSlotFromPath,
   getArmorWeight as getArmorWeightFromTaxonomy,
@@ -43,8 +44,6 @@ import {
   isDefaultBlueprint,
   isDefaultBlueprintsCategory,
 } from '../lib/defaultBlueprints'
-
-const FPS_WEAPON_TYPE_OPTIONS = ['crossbow', 'lmg', 'pistol', 'rifle', 'shotgun', 'smg', 'sniper']
 
 const getSubType = (bp) => getBlueprintSubType(bp)
 
