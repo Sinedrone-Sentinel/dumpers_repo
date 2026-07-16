@@ -34,15 +34,9 @@ const ARMOR_SLOT_PATTERN = new RegExp(
   'i'
 )
 
-function stripWeaponVariantSuffix(internalName: string): string {
-  return internalName
-    .replace(/_tint\d+$/i, '')
-    .replace(/_xenothreat\d+$/i, '')
-    .replace(/_[a-z]+_[a-z]+\d+$/i, '')
-}
-
-function getWeaponDisplayBase(blueprintName: string): string {
-  return blueprintName.replace(/\s+"[^"]+"\s+/, ' ').trim()
+/** Strip quoted skin nicknames: `Devastator "Midnight" Shotgun` → `Devastator Shotgun`. */
+export function getWeaponDisplayBase(blueprintName: string): string {
+  return blueprintName.replace(/\s+"[^"]+"\s+/g, ' ').replace(/\s+/g, ' ').trim()
 }
 
 function getArmorProductLine(blueprintName: string): string | null {
@@ -60,12 +54,6 @@ export function getFpsVariantFamilyKey(bp: BlueprintVariantInput): string | null
     return line || null
   }
 
-  const internal = bp.internalName || ''
-  if (internal) {
-    const stripped = stripWeaponVariantSuffix(internal)
-    if (stripped) return stripped
-  }
-
   const displayBase = getWeaponDisplayBase(bp.blueprintName || '')
   return displayBase || null
 }
@@ -78,8 +66,7 @@ export function getFpsVariantFamilyLabel(
     return familyKey
   }
 
-  const displayBase = getWeaponDisplayBase(bp.blueprintName || '')
-  return displayBase || familyKey
+  return familyKey
 }
 
 function sortGroupMembers(members: BlueprintVariantInput[], categoryName: string): void {
