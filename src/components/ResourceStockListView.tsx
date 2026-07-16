@@ -1,4 +1,5 @@
 import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
+import { inventoryLineKey } from '../lib/inventoryStock'
 import { formatInventoryQualityLabel } from '../lib/qualityBands'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 
@@ -40,7 +41,7 @@ export default function ResourceStockListView({
 
             return (
               <tr
-                key={`${card.resource_key}::${card.quality}`}
+                key={inventoryLineKey(card.resource_key, card.quality, card.note)}
                 className={card.is_active ? 'text-slate-200' : 'text-slate-500 opacity-70'}
               >
                 <td className="px-4 py-2.5">

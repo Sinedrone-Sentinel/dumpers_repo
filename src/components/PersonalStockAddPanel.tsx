@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { getResourceLabel } from '../lib/blueprintResources'
+import { inventoryLineKey } from '../lib/inventoryStock'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
 import ResourceQuantityInput from './ResourceQuantityInput'
 import ResourceQualitySelect, { getDefaultQualityForResource } from './ResourceQualitySelect'
@@ -21,7 +22,7 @@ type PersonalStockAddPanelBaseProps = {
 type PersonalStockAddPanelProps = PersonalStockAddPanelBaseProps &
   (
     | { userId: string; onAdded: () => void; onAdd?: never }
-    | { onAdd: (resourceKey: string, quality: number, quantity: number) => void; userId?: never; onAdded?: never }
+    | { onAdd: (resourceKey: string, quality: number, quantity: number, note?: string | null) => void; userId?: never; onAdded?: never }
   )
 
 export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps) {
@@ -60,7 +61,8 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
     setQuality(getDefaultQualityForResource(resourceKey, selectedLabel))
   }, [resourceKey, selectedLabel])
 
-  const lineKey = resourceKey && quality ? `${resourceKey}::${quality}` : ''
+  const lineKey =
+    resourceKey && quality ? inventoryLineKey(resourceKey, Number(quality), note) : ''
   const lineExists = lineKey ? existingKeys.has(lineKey) : false
   const qualityLabel =
     resourceKey && quality
@@ -78,7 +80,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
     onError?.('')
 
     if (isGuestMode) {
-      props.onAdd(resourceKey, Number(quality), qty)
+      props.onAdd(resourceKey, Number(quality), qty, note.trim() || null)
       setSubmitting(false)
       setQuantity('0')
       return
@@ -167,17 +169,15 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
           className="sm:w-24 shrink-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
         />
 
-        {!isGuestMode && (
-          <input
-            type="text"
-            value={note}
-            onChange={(e) => setNote(e.target.value.slice(0, 64))}
-            placeholder="Note (optional)"
-            maxLength={64}
-            className="sm:flex-1 min-w-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500"
-            aria-label="Stock card note"
-          />
-        )}
+        <input
+          type="text"
+          value={note}
+          onChange={(e) => setNote(e.target.value.slice(0, 64))}
+          placeholder="Note (optional)"
+          maxLength={64}
+          className="sm:flex-1 min-w-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500"
+          aria-label="Stock card note"
+        />
       </div>
 
       {resourceKey && (

@@ -104,6 +104,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Log quantities and quality levels of resources you\'ve collected',
       'Track store-purchased refined materials at Purchased (Q0)',
       'Switch between Cards (edit quantities) and List (read-only overview with notes)',
+      'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding',
       'Filter by quality band on both views — each Q-tier stays on its own row',
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',
       'Salvage and trade goods use fixed Q0 tiers',

@@ -296,7 +296,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`120_bazaar_one_listing.sql`**
+   Apply migrations in numeric order through **`121_inventory_note_line_key.sql`**
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)

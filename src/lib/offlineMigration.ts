@@ -2,6 +2,7 @@ import { supabase } from './supabase'
 import { missionKey } from './missions'
 import { normalizeGuestBlueprintId } from './guestCatalog'
 import { fetchResourceCatalog } from './operations'
+import { normalizeStockNoteKey } from './inventoryStock'
 import {
   clearAllGuestLocalData,
   ensureGuestCacheSchema,
@@ -175,16 +176,24 @@ async function migrateResources(userId: string): Promise<MigrationSectionResult>
 
   if (batch.length === 0) return { migrated, skipped }
 
-  const inserts = batch.map((row) => ({
-    user_id: userId,
-    resource_key: row.resource_key,
-    quality: row.quality,
-    quantity: row.quantity,
-  }))
+  const inserts = batch.map((row) => {
+    const note = row.note ?? null
+    return {
+      user_id: userId,
+      resource_key: row.resource_key,
+      quality: row.quality,
+      quantity: row.quantity,
+      note,
+      note_key: normalizeStockNoteKey(note),
+    }
+  })
 
   const { error } = await supabase
     .from('personal_resource_inventory')
-    .upsert(inserts, { onConflict: 'user_id,resource_key,quality', ignoreDuplicates: true })
+    .upsert(inserts, {
+      onConflict: 'user_id,resource_key,quality,note_key',
+      ignoreDuplicates: true,
+    })
 
   if (error) {
     console.error('[offline-migration] resources failed:', error)

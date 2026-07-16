@@ -1,8 +1,18 @@
 import type { ResourceInventoryRow } from './operations'
 import { addResourceQuantities } from './resourceQuantity'
 
-export function inventoryLineKey(resourceKey: string, quality: number): string {
-  return `${resourceKey}::${quality}`
+/** Case-insensitive note identity for stock card merge / lookup. */
+export function normalizeStockNoteKey(note: string | null | undefined): string {
+  const trimmed = (note ?? '').trim()
+  return trimmed === '' ? '' : trimmed.toLowerCase()
+}
+
+export function inventoryLineKey(
+  resourceKey: string,
+  quality: number,
+  note?: string | null
+): string {
+  return `${resourceKey}::${quality}::${normalizeStockNoteKey(note)}`
 }
 
 export function buildStockTotalsByResource(

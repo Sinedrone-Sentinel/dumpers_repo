@@ -50,6 +50,7 @@ export interface GuestResourceEntry {
   resource_key: string
   quantity: number
   quality: number
+  note?: string | null
 }
 
 const MAX_RESOURCE_QUANTITY = 100000
@@ -350,10 +351,17 @@ export function sanitizeResourceEntry(entry: unknown): GuestResourceEntry | null
   const quality = Number(e.quality)
   if (!Number.isFinite(quality) || quality < MIN_QUALITY || quality > MAX_QUALITY) return null
 
+  let note: string | null = null
+  if (typeof e.note === 'string') {
+    const trimmed = e.note.trim().slice(0, 64)
+    note = trimmed === '' ? null : trimmed
+  }
+
   return {
     resource_key,
     quantity: Math.floor(quantity),
     quality: Math.floor(quality),
+    note,
   }
 }
 

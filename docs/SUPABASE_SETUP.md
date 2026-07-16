@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `120_bazaar_one_listing.sql` (Bazaar one-listing marketplace: merges pending orders into one WTS + one WTB listing per user, exact-DFP validation, append/partial-WTB/line-edit RPCs). Apply through `120` in numeric order if catching up.
+**Latest migration:** `121_inventory_note_line_key.sql` (Resource Tracker stock cards unique per resource + quality + note; case-insensitive note merge on add). Apply through `121` in numeric order if catching up.
 
 ---
 
@@ -151,6 +151,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 83 | `118_drop_game_data_mirror_tables.sql` | Drop `game_*` mirror tables — game catalogs ship bundled from parsed JSON |
 | 84 | `119_mining_ledger_close_payout_total.sql` | Ledger close records app-computed payout in site stats; skip zero-payout ledgers |
 | 85 | `120_bazaar_one_listing.sql` | Bazaar rework: one open WTS + WTB listing per user (pending orders merged), exact-DFP pricing, `append_to_my_listing` / `accept_wtb_partial` / listing line-edit RPCs, listing-aware limits and timeouts |
+| 86 | `121_inventory_note_line_key.sql` | Resource Tracker: stock cards unique per resource + quality + note (`note_key`); case-insensitive merge on add; note rename RPC takes current note key |
 
 ### pg_cron (migrations 054, 065–068)
 

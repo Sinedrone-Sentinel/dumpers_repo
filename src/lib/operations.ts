@@ -13,6 +13,7 @@ import {
   normalizeResourceQuantity,
   toMilliScu,
 } from './resourceQuantity'
+import { inventoryLineKey, normalizeStockNoteKey } from './inventoryStock'
 export type CustomOrderStatus =
   | 'pending'
   | 'accepted'
@@ -43,6 +44,7 @@ export interface ResourceInventoryRow {
   quality: number
   quantity: number
   note: string | null
+  note_key?: string
   updated_at: string
   updated_by: string | null
   user_id?: string
@@ -358,8 +360,8 @@ export async function fetchPersonalInventoryCards(
 
   const catalogByKey = new Map(catalogResult.data.map((r) => [r.resource_key, r]))
 
-  const lineKeys = inventoryResult.data.map(
-    (row) => `${row.resource_key}::${row.quality}`
+  const lineKeys = inventoryResult.data.map((row) =>
+    inventoryLineKey(row.resource_key, row.quality, row.note)
   )
 
   const data = inventoryResult.data
@@ -479,6 +481,7 @@ export async function addPersonalInventoryLine(input: {
   const trimmedNote = input.note?.trim()
     ? input.note.trim().slice(0, 64)
     : null
+  const noteKey = normalizeStockNoteKey(trimmedNote)
 
   const { data: existing, error: fetchError } = await supabase
     .from('personal_resource_inventory')
@@ -486,22 +489,19 @@ export async function addPersonalInventoryLine(input: {
     .eq('user_id', input.userId)
     .eq('resource_key', input.resourceKey)
     .eq('quality', input.quality)
+    .eq('note_key', noteKey)
     .maybeSingle()
 
   if (fetchError) return { error: fetchError.message }
 
   if (existing) {
     const nextQty = addResourceQuantities(Number(existing.quantity), qty)
-    const updatePayload: { quantity: number; updated_at: string; note?: string | null } = {
-      quantity: nextQty,
-      updated_at: now,
-    }
-    if (trimmedNote) {
-      updatePayload.note = trimmedNote
-    }
     const { error } = await supabase
       .from('personal_resource_inventory')
-      .update(updatePayload)
+      .update({
+        quantity: nextQty,
+        updated_at: now,
+      })
       .eq('id', existing.id)
 
     if (error) return { error: error.message }
@@ -514,6 +514,7 @@ export async function addPersonalInventoryLine(input: {
     quality: input.quality,
     quantity: qty,
     note: trimmedNote,
+    note_key: noteKey,
     updated_at: now,
   })
 
@@ -525,11 +526,14 @@ export async function adjustInventoryQuantity(
   ctx: InventoryContext,
   resourceKey: string,
   quality: number,
-  delta: number
+  delta: number,
+  note?: string | null
 ): Promise<{ error?: string }> {
   if (ctx.scope === 'site') {
     return { error: 'Site Total is read-only — update My Resources instead' }
   }
+
+  const noteKey = normalizeStockNoteKey(note)
 
   const { data: current, error: fetchError } = await supabase
     .from('personal_resource_inventory')
@@ -537,6 +541,7 @@ export async function adjustInventoryQuantity(
     .eq('user_id', ctx.userId)
     .eq('resource_key', resourceKey)
     .eq('quality', quality)
+    .eq('note_key', noteKey)
     .maybeSingle()
 
   if (fetchError) return { error: fetchError.message }
@@ -570,7 +575,8 @@ export async function setInventoryQuantity(
   ctx: InventoryContext,
   resourceKey: string,
   quality: number,
-  quantity: number
+  quantity: number,
+  note?: string | null
 ): Promise<{ error?: string }> {
   if (ctx.scope === 'site') {
     return { error: 'Site Total is read-only — update My Resources instead' }
@@ -578,6 +584,7 @@ export async function setInventoryQuantity(
 
   const nextQty = normalizeResourceQuantity(Math.max(0, quantity))
   const now = new Date().toISOString()
+  const noteKey = normalizeStockNoteKey(note)
 
   const { data: current, error: fetchError } = await supabase
     .from('personal_resource_inventory')
@@ -585,6 +592,7 @@ export async function setInventoryQuantity(
     .eq('user_id', ctx.userId)
     .eq('resource_key', resourceKey)
     .eq('quality', quality)
+    .eq('note_key', noteKey)
     .maybeSingle()
 
   if (fetchError) return { error: fetchError.message }
@@ -612,11 +620,13 @@ export async function updateInventoryNote(input: {
   userId: string
   resourceKey: string
   quality: number
+  currentNote?: string | null
   note: string | null
 }): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('update_inventory_note', {
     p_resource_key: input.resourceKey,
     p_quality: input.quality,
+    p_current_note_key: normalizeStockNoteKey(input.currentNote),
     p_note: input.note ?? '',
   })
 

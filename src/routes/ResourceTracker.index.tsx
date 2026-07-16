@@ -12,7 +12,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
-import { inventoryLineKey } from '../lib/inventoryStock'
+import { inventoryLineKey, normalizeStockNoteKey } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
   ensureGuestCacheSchema,
@@ -90,7 +90,7 @@ export default function ResourceTrackerRoute() {
     inventoryContext,
   })
 
-  // Build stock cards: guests mirror logged-in — one card per (resource_key, quality) row
+  // Build stock cards: guests mirror logged-in — one card per (resource_key, quality, note) row
   const stockCards = useMemo(() => {
     if (!isGuest) return catalogWithInventory
 
@@ -107,7 +107,7 @@ export default function ResourceTrackerRoute() {
           synced_at: catalogEntry?.synced_at ?? '',
           quantity: row.quantity,
           quality: row.quality,
-          note: null,
+          note: row.note ?? null,
         }
       })
       .sort((a, b) => {
@@ -119,7 +119,9 @@ export default function ResourceTrackerRoute() {
 
   const existingLineKeys = useMemo(() => {
     if (isGuest) {
-      return new Set(guestResources.map((r) => inventoryLineKey(r.resource_key, r.quality)))
+      return new Set(
+        guestResources.map((r) => inventoryLineKey(r.resource_key, r.quality, r.note))
+      )
     }
     return new Set(personalLineKeys)
   }, [isGuest, guestResources, personalLineKeys])
@@ -156,12 +158,19 @@ export default function ResourceTrackerRoute() {
 
   // Guest localStorage helpers
   const updateGuestResource = useCallback(
-    (resourceKey: string, quality: number, quantity: number) => {
+    (resourceKey: string, quality: number, quantity: number, note?: string | null) => {
+      const noteKey = normalizeStockNoteKey(note)
       const updated = guestResources.filter(
-        (r) => !(r.resource_key === resourceKey && r.quality === quality)
+        (r) =>
+          !(
+            r.resource_key === resourceKey &&
+            r.quality === quality &&
+            normalizeStockNoteKey(r.note) === noteKey
+          )
       )
       if (quantity > 0) {
-        updated.push({ resource_key: resourceKey, quality, quantity })
+        const trimmedNote = note?.trim() ? note.trim().slice(0, 64) : null
+        updated.push({ resource_key: resourceKey, quality, quantity, note: trimmedNote })
       }
       setGuestResources(updated)
       writeGuestResources(updated)
@@ -169,22 +178,37 @@ export default function ResourceTrackerRoute() {
     [guestResources]
   )
 
-  const handleAdjust = async (resourceKey: string, quality: number, delta: number) => {
+  const handleAdjust = async (
+    resourceKey: string,
+    quality: number,
+    delta: number,
+    note?: string | null
+  ) => {
     if (readOnly) return
 
     if (isGuest) {
+      const noteKey = normalizeStockNoteKey(note)
       const existing = guestResources.find(
-        (r) => r.resource_key === resourceKey && r.quality === quality
+        (r) =>
+          r.resource_key === resourceKey &&
+          r.quality === quality &&
+          normalizeStockNoteKey(r.note) === noteKey
       )
       const currentQty = existing?.quantity ?? 0
       const newQty = Math.max(0, currentQty + delta)
-      updateGuestResource(resourceKey, quality, newQty)
+      updateGuestResource(resourceKey, quality, newQty, note)
       setStockError(null)
       return
     }
 
     if (!inventoryContext) return
-    const result = await adjustInventoryQuantity(inventoryContext, resourceKey, quality, delta)
+    const result = await adjustInventoryQuantity(
+      inventoryContext,
+      resourceKey,
+      quality,
+      delta,
+      note
+    )
     if (result.error) {
       setStockError(result.error)
       return
@@ -193,13 +217,17 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
-  const handleSaveEdit = async (resourceKey: string, quality: number) => {
+  const handleSaveEdit = async (
+    resourceKey: string,
+    quality: number,
+    note?: string | null
+  ) => {
     if (readOnly) return
     const qty = parseQuantityForResource(resourceKey, editValue)
     if (qty == null) return
 
     if (isGuest) {
-      updateGuestResource(resourceKey, quality, qty)
+      updateGuestResource(resourceKey, quality, qty, note)
       setEditingKey(null)
       setEditValue('')
       setStockError(null)
@@ -207,7 +235,13 @@ export default function ResourceTrackerRoute() {
     }
 
     if (!inventoryContext) return
-    const result = await setInventoryQuantity(inventoryContext, resourceKey, quality, qty)
+    const result = await setInventoryQuantity(
+      inventoryContext,
+      resourceKey,
+      quality,
+      qty,
+      note
+    )
     if (result.error) {
       setStockError(result.error)
       return
@@ -219,7 +253,11 @@ export default function ResourceTrackerRoute() {
     await refresh()
   }
 
-  const handleSaveNote = async (resourceKey: string, quality: number) => {
+  const handleSaveNote = async (
+    resourceKey: string,
+    quality: number,
+    currentNote?: string | null
+  ) => {
     if (readOnly || isGuest) return
     if (!user?.id) return
 
@@ -227,6 +265,7 @@ export default function ResourceTrackerRoute() {
       userId: user.id,
       resourceKey,
       quality,
+      currentNote,
       note: noteValue.trim() || null,
     })
 
@@ -243,12 +282,16 @@ export default function ResourceTrackerRoute() {
 
   // Guest add resource handler — adds to existing card quantity like logged-in flow
   const handleGuestAddResource = useCallback(
-    (resourceKey: string, quality: number, quantity: number) => {
+    (resourceKey: string, quality: number, quantity: number, note?: string | null) => {
+      const noteKey = normalizeStockNoteKey(note)
       const existing = guestResources.find(
-        (r) => r.resource_key === resourceKey && r.quality === quality
+        (r) =>
+          r.resource_key === resourceKey &&
+          r.quality === quality &&
+          normalizeStockNoteKey(r.note) === noteKey
       )
       const newQty = addResourceQuantities(existing?.quantity ?? 0, quantity)
-      updateGuestResource(resourceKey, quality, newQty)
+      updateGuestResource(resourceKey, quality, newQty, note)
       setStockError(null)
     },
     [guestResources, updateGuestResource]
@@ -444,7 +487,7 @@ export default function ResourceTrackerRoute() {
             const qualityLabel = formatInventoryQualityLabel(card.resource_key, quality)
             const qtyUnit = resourceQuantityUnitLabel(card.resource_key)
             const adjustSteps = adjustStepsForResource(card.resource_key)
-            const lineKey = inventoryLineKey(card.resource_key, quality)
+            const lineKey = inventoryLineKey(card.resource_key, quality, card.note)
             const isEditing = editingKey === lineKey
 
             return (
@@ -487,7 +530,7 @@ export default function ResourceTrackerRoute() {
                       />
                       <span className="text-slate-500 text-xs">{qtyUnit}</span>
                       <button
-                        onClick={() => void handleSaveEdit(card.resource_key, quality)}
+                        onClick={() => void handleSaveEdit(card.resource_key, quality, card.note)}
                         className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
                       >
                         Save
@@ -530,7 +573,7 @@ export default function ResourceTrackerRoute() {
                         <div key={step} className="flex gap-1 min-w-0">
                           <button
                             onClick={() =>
-                              void handleAdjust(card.resource_key, quality, -step)
+                              void handleAdjust(card.resource_key, quality, -step, card.note)
                             }
                             className="flex-1 min-w-0 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded tabular-nums"
                           >
@@ -538,7 +581,7 @@ export default function ResourceTrackerRoute() {
                           </button>
                           <button
                             onClick={() =>
-                              void handleAdjust(card.resource_key, quality, step)
+                              void handleAdjust(card.resource_key, quality, step, card.note)
                             }
                             className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
                           >
@@ -549,6 +592,12 @@ export default function ResourceTrackerRoute() {
                     </div>
                   )}
                 </div>
+
+                {isPersonalTab && isGuest && card.note && (
+                  <div className="mt-3 pt-3 border-t border-slate-700/50">
+                    <p className="text-xs text-slate-400 italic">&quot;{card.note}&quot;</p>
+                  </div>
+                )}
 
                 {isPersonalTab && !isGuest && (
                   <div className="mt-3 pt-3 border-t border-slate-700/50">
@@ -564,7 +613,7 @@ export default function ResourceTrackerRoute() {
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                              void handleSaveNote(card.resource_key, quality)
+                              void handleSaveNote(card.resource_key, quality, card.note)
                             } else if (e.key === 'Escape') {
                               setEditingNoteKey(null)
                               setNoteValue('')
@@ -572,7 +621,7 @@ export default function ResourceTrackerRoute() {
                           }}
                         />
                         <button
-                          onClick={() => void handleSaveNote(card.resource_key, quality)}
+                          onClick={() => void handleSaveNote(card.resource_key, quality, card.note)}
                           className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded shrink-0"
                         >
                           Save
