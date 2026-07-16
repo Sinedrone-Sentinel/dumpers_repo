@@ -305,6 +305,10 @@ function inferSystemFromContractSignals(contractSignals) {
     return 'Pyro'
   }
 
+  // Stanton-based operators whose contract signals carry no explicit system.
+  if (lower.includes('rayari')) return 'Stanton'
+  if (lower.includes('superheavy') || lower.includes('soo2') || lower.includes('northrock')) return 'Stanton'
+
   return null
 }
 
@@ -335,6 +339,20 @@ function stripMissionTemplatePlaceholders(title) {
     .replace(/\s+/g, ' ')
     .replace(/\s+at\s*$/i, '')
     .trim()
+}
+
+/**
+ * Recover a mission's intent from an unresolved `~mission(Namespace|SomeTitle)`
+ * token, e.g. `~mission(Contractor|RecoverItemTitle)` -> "Recover Item".
+ */
+function extractMissionTokenIntent(raw) {
+  const match = (raw || '').match(/~mission\s*\(([^)]*)\)/i)
+  if (!match) return null
+  let inner = match[1].split('|').pop() ?? ''
+  inner = inner.replace(/Title.*$/i, '')
+  inner = inner.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ').trim()
+  if (inner.length < 3) return null
+  return inner.charAt(0).toUpperCase() + inner.slice(1)
 }
 
 function resolveContractDisplayTitle({ title, titleKey, debugName, localization, category, system }) {
@@ -381,10 +399,14 @@ function resolveContractDisplayTitle({ title, titleKey, debugName, localization,
   }
 
   if (title?.includes('~mission')) {
-    const cleaned = stripMissionTemplatePlaceholders(title)
-    if (cleaned.length > 8 && !/^verified bounty:?$/i.test(cleaned)) {
-      return cleaned.replace(/:\s*$/, '').trim()
+    const cleaned = stripMissionTemplatePlaceholders(title).replace(/:\s*$/, '').trim()
+    if (cleaned.length >= 3 && !/^verified bounty:?$/i.test(cleaned) && !cleaned.includes('~mission')) {
+      return cleaned.charAt(0).toUpperCase() + cleaned.slice(1)
     }
+    // Nothing usable survived stripping (pure token) — recover intent, then
+    // fall back to localization / humanized debugName below.
+    const tokenIntent = extractMissionTokenIntent(title)
+    if (tokenIntent) return tokenIntent
   }
 
   if (!title || title === debugName || isUnresolvedDisplayName(title)) {
@@ -1382,6 +1404,21 @@ function parseContractGenerators(localization, reputationCaches = {}) {
     ) {
       factionKey = 'wikelo'
       factionName = factionNames.factionreputation_wikelo || 'Wikelo Emporium'
+    } else if (
+      (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) &&
+      (contractSignals.includes('scenarioprogress') || contractSignals.includes('xenothreat') || contractSignals.includes('clearair'))
+    ) {
+      // XenoThreat "Clear Air" scenario-progress reward tiers (Orison event) —
+      // event content with no faction rep binding, not a real "Unknown" faction.
+      factionKey = 'xenothreat'
+      factionName = 'XenoThreat'
+    } else if (
+      (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) &&
+      (contractSignals.includes('ors_cr_') || contractSignals.includes('orison relief') || contractSignals.includes('fabricationorder'))
+    ) {
+      // Orison Relief fabrication orders — Crusader-run relief effort.
+      factionKey = 'crusader_industries'
+      factionName = 'Crusader Industries'
     } else if (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) {
       const inferredName = inferFactionFromPath(generatorFile, `${generatorDebugName || ''} ${contractDebugName || ''}`)
       if (inferredName) {

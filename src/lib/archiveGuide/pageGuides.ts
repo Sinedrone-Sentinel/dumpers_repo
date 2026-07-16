@@ -54,6 +54,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Browse Missions: pick a faction, then browse its mission pools',
       'Missions with multiple regional pools are grouped under one title with location rows underneath',
       'Faction cards show which star systems that faction appears in',
+      'Filter Browse Missions by star system (Stanton / Pyro / Nyx) — faction cards and mission lists update to match',
+      'Every contract with blueprint rewards is shown — nothing is hidden once you have collected all of a mission\'s blueprints (the count just turns green)',
       'See X/X progress (owned vs total) for each mission location',
       'Add unowned blueprints to your tracker directly from the browse view',
       'Use Missions on a blueprint card to list every contract that rewards it and jump to that mission',

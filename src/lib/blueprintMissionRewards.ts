@@ -382,8 +382,11 @@ export interface ContractMissionBrowseEntry {
 }
 
 function isValidBrowseContract(contract: ContractEntry): boolean {
-  const displayTitle = contractDisplayTitle(contract)
-  return isValidBrowseMissionTitle(displayTitle) && isValidBrowseMissionTitle(contract.title)
+  // Only the member-facing display title must be valid. The raw game title is
+  // sometimes an unresolved @key / "<= UNINITIALIZED =>" even when a clean
+  // humanized display title exists — hiding those would drop real contracts
+  // (and their blueprints) from Browse for no member-visible reason.
+  return isValidBrowseMissionTitle(contractDisplayTitle(contract))
 }
 
 function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {

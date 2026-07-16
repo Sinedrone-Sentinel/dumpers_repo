@@ -52,6 +52,10 @@ const SYSTEM_LABELS: Record<BrowseSystem, string> = {
   unknown: 'Unknown Location',
 }
 
+const SYSTEM_FILTER_ORDER: BrowseSystem[] = ['stanton', 'pyro', 'nyx', 'unknown']
+
+type SystemFilter = BrowseSystem | 'all'
+
 const SYSTEM_COLORS: Record<BrowseSystem, { bg: string; border: string; text: string }> = {
   stanton: { bg: 'bg-blue-950/50', border: 'border-blue-500/40', text: 'text-blue-300' },
   pyro: { bg: 'bg-orange-950/50', border: 'border-orange-500/40', text: 'text-orange-300' },
@@ -98,12 +102,20 @@ interface BrowseMissionsViewProps {
   isOnTargetList: (blueprintId: string) => boolean
 }
 
-function getMissionBrowseSystems(mission: Pick<MissionDisplay, 'poolKeys' | 'system' | 'region'>): BrowseSystem[] {
+function getMissionBrowseSystems(
+  mission: Pick<MissionDisplay, 'poolKeys' | 'system' | 'region' | 'locality'>
+): BrowseSystem[] {
   return getBrowseSystemsForMission({
     poolKey: mission.poolKeys[0] ?? '',
     system: mission.system,
     subRegion: mission.region,
+    localitySystems: mission.locality?.systems,
   })
+}
+
+function missionMatchesSystem(mission: MissionDisplay, systemFilter: SystemFilter): boolean {
+  if (systemFilter === 'all') return true
+  return getMissionBrowseSystems(mission).includes(systemFilter)
 }
 
 function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
@@ -152,6 +164,7 @@ export default function BrowseMissionsView({
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
   const [lawfulFilter, setLawfulFilter] = useState<LawfulFilter>('all')
+  const [systemFilter, setSystemFilter] = useState<SystemFilter>('all')
   const [missionsModalBlueprint, setMissionsModalBlueprint] = useState<{
     id: string
     name: string
@@ -199,6 +212,14 @@ export default function BrowseMissionsView({
     return map
   }, [missions])
 
+  const availableSystems = useMemo(() => {
+    const present = new Set<BrowseSystem>()
+    for (const data of Object.values(missionsByFaction)) {
+      for (const system of data.systems) present.add(system)
+    }
+    return SYSTEM_FILTER_ORDER.filter((system) => present.has(system))
+  }, [missionsByFaction])
+
   const selectedMission = useMemo(() => {
     if (!selectedMissionKey) return null
     return missions.find((mission) => makeBrowseMissionKey(mission) === selectedMissionKey) ?? null
@@ -224,7 +245,11 @@ export default function BrowseMissionsView({
     : false
 
   const filteredFactionList = useMemo(() => {
-    const entries = Object.entries(missionsByFaction)
+    let entries = Object.entries(missionsByFaction)
+
+    if (systemFilter !== 'all') {
+      entries = entries.filter(([, data]) => data.systems.has(systemFilter))
+    }
 
     if (!searchTerm) return entries
 
@@ -233,20 +258,23 @@ export default function BrowseMissionsView({
       faction.toLowerCase().includes(term) ||
       data.missions.some((m) => missionMatchesSearch(m, term))
     )
-  }, [missionsByFaction, searchTerm])
+  }, [missionsByFaction, searchTerm, systemFilter])
 
   const selectedFactionMissionGroups = useMemo((): MissionGroup[] => {
     if (!selectedFaction) return []
     const factionMissions = missionsByFaction[selectedFaction]?.missions || []
 
     let filtered = factionMissions
+    if (systemFilter !== 'all') {
+      filtered = filtered.filter((m) => missionMatchesSystem(m, systemFilter))
+    }
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
-      filtered = factionMissions.filter((m) => missionMatchesSearch(m, term))
+      filtered = filtered.filter((m) => missionMatchesSearch(m, term))
     }
 
     return groupMissionsByTitle(filtered)
-  }, [selectedFaction, missionsByFaction, searchTerm])
+  }, [selectedFaction, missionsByFaction, searchTerm, systemFilter])
 
   const lawfulMissionGroups = useMemo(
     () => selectedFactionMissionGroups.filter((group) => group.isLawful),
@@ -384,6 +412,7 @@ export default function BrowseMissionsView({
           subRegion={mission.region}
           system={mission.system}
           poolKey={mission.poolKeys[0]}
+          localitySystems={mission.locality?.systems}
         />
         <MissionLocalityTag locality={mission.locality} />
         {standingLabel && (
@@ -526,6 +555,40 @@ export default function BrowseMissionsView({
     )
   }
 
+  const renderSystemFilter = () => {
+    if (availableSystems.length <= 1) return null
+
+    const buttonClass = (active: boolean) =>
+      active
+        ? 'site-filter-selected-orange'
+        : 'text-slate-400 hover:text-white'
+
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">System</span>
+        <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-800/50 rounded-lg w-fit">
+          <button
+            type="button"
+            onClick={() => setSystemFilter('all')}
+            className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${buttonClass(systemFilter === 'all')}`}
+          >
+            All
+          </button>
+          {availableSystems.map((system) => (
+            <button
+              key={system}
+              type="button"
+              onClick={() => setSystemFilter(system)}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${buttonClass(systemFilter === system)}`}
+            >
+              {SYSTEM_LABELS[system]}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   const renderLawfulFilterToggle = () => {
     if (!isMixedFaction) return null
 
@@ -599,14 +662,27 @@ export default function BrowseMissionsView({
             </svg>
           </div>
 
+          {renderSystemFilter()}
+
+          {filteredFactionList.length === 0 && (
+            <p className="text-sm text-slate-500 py-6 text-center">
+              No factions have missions{systemFilter !== 'all' ? ` in ${SYSTEM_LABELS[systemFilter]}` : ''}.
+            </p>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredFactionList
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
+                const displayMissions =
+                  systemFilter === 'all'
+                    ? data.missions
+                    : data.missions.filter((m) => missionMatchesSystem(m, systemFilter))
                 const status = factionLawfulStatus(data)
-                const typeCounts = countMissionTypesByLawful(data.missions)
-                const contractCount = data.missions.length
-                const systemsArray = Array.from(data.systems)
+                const typeCounts = countMissionTypesByLawful(displayMissions)
+                const contractCount = displayMissions.length
+                const systemsArray =
+                  systemFilter === 'all' ? Array.from(data.systems) : [systemFilter]
                 const cardClass =
                   status === 'mixed'
                     ? 'bg-slate-900/70 border-slate-600/80 hover:border-slate-500'
@@ -683,7 +759,10 @@ export default function BrowseMissionsView({
             </svg>
           </div>
 
-          {renderLawfulFilterToggle()}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {renderSystemFilter()}
+            {renderLawfulFilterToggle()}
+          </div>
 
           {isMixedFaction && lawfulFilter === 'all' ? (
             lawfulMissionGroups.length === 0 && illegalMissionGroups.length === 0 ? (

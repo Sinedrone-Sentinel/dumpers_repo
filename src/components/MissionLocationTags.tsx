@@ -10,6 +10,7 @@ interface MissionLocationTagsProps {
   subRegion?: string | null
   system?: string | null
   poolKey?: string | null
+  localitySystems?: (string | null)[] | null
   className?: string
 }
 
@@ -18,9 +19,10 @@ export default function MissionLocationTags({
   subRegion,
   system,
   poolKey,
+  localitySystems,
   className = '',
 }: MissionLocationTagsProps) {
-  const tags = buildMissionLocationTags({ regions, subRegion, system, poolKey })
+  const tags = buildMissionLocationTags({ regions, subRegion, system, poolKey, localitySystems })
 
   return (
     <>

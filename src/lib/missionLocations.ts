@@ -124,6 +124,10 @@ function inferSystemFromPoolKey(poolKey: string): MissionStarSystem | null {
   if (/_paf(?:_|$)/.test(lower) || /_olp(?:_|$)/.test(lower)) return 'stanton'
   if (isHathorPafOlpSignal(lower)) return 'stanton'
 
+  // Stanton-based operators whose reward pools carry no system marker.
+  if (lower.includes('rayari')) return 'stanton'
+  if (lower.includes('superheavy')) return 'stanton'
+
   if (!/region[a-d]/i.test(lower)) return null
 
   // Pyro regional contract pools (CFP outposts, Headhunters mercenary, etc.)
@@ -163,8 +167,10 @@ export function buildMissionLocationTags(options: {
   subRegion?: string | null
   system?: string | null
   poolKey?: string | null
+  /** Systems from the mission's locality gate — used when `system` is Unknown. */
+  localitySystems?: (string | null)[] | null
 }): MissionLocationTag[] {
-  const { regions = [], subRegion, system, poolKey } = options
+  const { regions = [], subRegion, system, poolKey, localitySystems } = options
   const regionCode = normalizeRegionCode(subRegion)
   const poolRegionCodes = poolKey ? parseRegionCodesFromPoolKey(poolKey) : []
 
@@ -180,6 +186,17 @@ export function buildMissionLocationTags(options: {
   if (systems.length === 0 && poolKey) {
     const inferred = inferSystemFromPoolKey(poolKey)
     if (inferred) systems = [inferred]
+  }
+
+  // Fall back to the locality gate (e.g. "Anywhere in Stanton or Nyx") when the
+  // contract's own system field is Unknown.
+  if (systems.length === 0 && localitySystems?.length) {
+    const fromLocality = localitySystems
+      .map((s) => normalizeSystem(s))
+      .filter((s): s is MissionStarSystem => s !== null)
+    if (fromLocality.length > 0) {
+      systems = [...new Set(fromLocality)]
+    }
   }
 
   if (systems.length === 0) {
@@ -215,6 +232,7 @@ export function getBrowseSystemsForMission(options: {
   subRegion?: string | null
   system?: string | null
   poolKey?: string | null
+  localitySystems?: (string | null)[] | null
 }): MissionBrowseSystem[] {
   const tags = buildMissionLocationTags(options)
 

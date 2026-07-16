@@ -135,7 +135,7 @@ function MissionMetaLine({
         </span>
       )}
       <MissionCategoryBadge category={category} />
-      <MissionLocationTags regions={regions} subRegion={subRegion} system={system} />
+      <MissionLocationTags regions={regions} subRegion={subRegion} system={system} localitySystems={locality?.systems} />
       <MissionLocalityTag locality={locality} />
       <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} repCareerLabel={repCareerLabel} />
       <MissionPrereqTag prereqMissions={prereqMissions} missionTitle={missionTitle} />

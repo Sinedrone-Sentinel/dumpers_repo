@@ -75,6 +75,7 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 
 - **My Tracker** — personal wishlist of blueprints you are grinding toward
 - **Browse Missions** — pick a faction, browse mission pools with location/rep/category tags and X/X progress per location
+- **System filter** — narrow Browse Missions to Stanton / Pyro / Nyx (faction cards + mission lists follow the filter); every blueprint-reward contract stays visible even after all its blueprints are collected
 - **Rep effect tags** — completion gains plus any cross-faction losses per mission (from game contract data)
 - **🔒 Prerequisite chips** — gated contracts link to the intro/starter missions that unlock them
 - **📍 Locality tags** — where you must be for a contract to appear (game `MissionLocality` gates)

@@ -56,10 +56,61 @@ export interface MissionDisplayTitleInput {
   debugName?: string | null
 }
 
+/**
+ * Strip leftover template artifacts from an already-humanized title, e.g. the
+ * dangling "Rank -" left behind when the `~mission(ReputationRank) Rank` token
+ * is removed (Covalex hauling contracts).
+ */
+function cleanTitleArtifacts(title: string): string {
+  return title
+    .replace(/^\s*Rank\s*-\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function capitalizeFirst(value: string): string {
+  if (!value) return value
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
+/**
+ * Recover the mission's intent from an unresolved `~mission(Namespace|SomeTitle)`
+ * token when nothing else survives stripping, e.g.
+ * `~mission(Contractor|RecoverItemTitle)` -> "Recover Item".
+ */
+function extractTemplateTokenIntent(raw: string): string | null {
+  const match = raw.match(/~mission\s*\(([^)]*)\)/i)
+  if (!match) return null
+  let inner = match[1].split('|').pop() ?? ''
+  // Drop the trailing "Title" marker and any difficulty suffix after it.
+  inner = inner.replace(/Title.*$/i, '')
+  inner = inner.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/_/g, ' ').trim()
+  if (inner.length < 3) return null
+  return capitalizeFirst(inner)
+}
+
+/**
+ * Turn a title that still contains `~mission(...)` tokens into something
+ * member-facing. Returns null when nothing usable can be recovered.
+ */
+function resolveTemplateTitle(raw: string): string | null {
+  const stripped = cleanTitleArtifacts(stripMissionTemplatePlaceholders(raw)).replace(/:\s*$/, '').trim()
+  if (stripped.length >= 3 && !/^verified bounty:?$/i.test(stripped) && !stripped.includes('~mission')) {
+    return capitalizeFirst(stripped)
+  }
+  return extractTemplateTokenIntent(raw)
+}
+
 /** Member-facing mission title for browse cards and tracker rows. */
 export function formatMissionDisplayTitle(input: MissionDisplayTitleInput): string {
-  if (input.displayTitle?.trim()) {
-    return input.displayTitle.trim()
+  const displayTitle = input.displayTitle?.trim()
+  if (displayTitle) {
+    if (!displayTitle.includes('~mission') && !displayTitle.includes('~(')) {
+      return cleanTitleArtifacts(displayTitle)
+    }
+    // displayTitle still carries an unresolved template token — recover intent.
+    const recovered = resolveTemplateTitle(displayTitle)
+    if (recovered) return recovered
   }
 
   const title = (input.title || '').replace(/\\n/g, '').replace(/\n/g, '').trim()
@@ -91,10 +142,8 @@ export function formatMissionDisplayTitle(input: MissionDisplayTitleInput): stri
   }
 
   if (title.includes('~mission')) {
-    const cleaned = stripMissionTemplatePlaceholders(title)
-    if (cleaned.length > 8 && !/^verified bounty:?$/i.test(cleaned)) {
-      return cleaned.replace(/:\s*$/, '').trim()
-    }
+    const recovered = resolveTemplateTitle(title)
+    if (recovered) return recovered
   }
 
   if (!title || title === debugName || isUnresolvedDisplayName(title)) {
