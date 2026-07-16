@@ -27,6 +27,7 @@ const STEPS = [
   { script: 'audit-broad-mining-locations.mjs', label: 'Broad mining locations' },
   { script: 'validate-blueprints.mjs', label: 'Blueprint data validation' },
   { script: 'audit-blueprint-mission-rewards.mjs', label: 'Blueprint mission rewards' },
+  { script: 'verify-dfp-acquisition-premiums.mjs', label: 'DFP acquisition premiums (sibling build)' },
 
   // Raw-extract cross-checks (need extracted-data/ from extract-game-data.ps1)
   { script: 'audit-hpp-mining-locations.mjs', label: 'HPP mining locations', needsExtract: true },

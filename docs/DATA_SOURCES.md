@@ -138,10 +138,15 @@ When a new Star Citizen patch drops:
    verifiers, and the patch diff
    - New CIG misspellings surface here — add corrections to the typo handlers in
      `parse-extracted-data.mjs` (component names) or `src/data/mining-ore-aliases.json` (ores)
-6. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` → rebuild DFP engine in `dfp-engine-private`
-7. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`,
+6. **DFP engine (required when blueprints changed):** in sibling **`dfp-engine-private`** → `npm run build`
+   - Regenerates acquisition premiums for every reward blueprint, component metadata, commodity bases, and Wikelo ammo pricing from the parsed `game-blueprints.json`
+   - Writes `public/dfp-engine.js` + `public/dfp-version.json` here — commit both with the game-data commit
+   - `npm run patch-audit` includes `verify-dfp-acquisition-premiums.mjs` (fails if premiums/bundle are stale)
+   - **Pricing formulas live only in dfp-engine-private** — do not edit DFP math in this repo
+7. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` (Dumpers Repo) before step 6 when refreshing UEX Q0 prices
+8. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`,
    and `npm run sync-min-game-version` if the game major.minor changed
-8. **Deploy:** Commit updated `game-*.json` (and DFP bundle if changed), `npm run build`, deploy `dist/`
+9. **Deploy:** Commit updated `game-*.json` and DFP bundle, `npm run build`, deploy `dist/`
 
 No DB sync step: all game catalogs (mining guide, ordnance, components, blueprints) are bundled
 from the parsed `game-*.json` at build time — deploying the site updates everything at once.

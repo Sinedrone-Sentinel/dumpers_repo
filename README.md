@@ -336,6 +336,7 @@ Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_
 | `npm run audit-mining-aliases` | Mining alias consistency |
 | `npm run audit-ore-name-consistency` | Ore name cross-check |
 | `npm run fetch-commodity-bases` | Refresh UEX Q0 commodity DFP bases |
+| `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
 | `npm run sync-min-game-version` | Bake game major.minor into BP Dumper sources |
 | `npm run release:dumper` | Manual semantic-release for BP Dumper |
 
@@ -350,6 +351,7 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 npm run parse-game-data       # regenerate src/data/game-*.json from scratch
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
 npm run patch-audit           # full audit battery: data consistency + math verifiers + diff
+# After parse (when blueprints changed): npm run build in sibling dfp-engine-private, then commit public/dfp-engine.js + dfp-version.json
 npm run sync-min-game-version # optional: update dumper min game version in source
 ```
 
