@@ -12,7 +12,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
-import { inventoryLineKey, normalizeStockNoteKey } from '../lib/inventoryStock'
+import { inventoryLineKey, normalizeStockNoteKey, sumStockQuantityTotals } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
   ensureGuestCacheSchema,
@@ -151,10 +151,7 @@ export default function ResourceTrackerRoute() {
   })
 
   const cardCount = stockCards.length
-  const totalQty = stockCards.reduce(
-    (sum, c) => addResourceQuantities(sum, c.quantity),
-    0
-  )
+  const onHandTotals = useMemo(() => sumStockQuantityTotals(stockCards), [stockCards])
 
   // Guest localStorage helpers
   const updateGuestResource = useCallback(
@@ -385,10 +382,19 @@ export default function ResourceTrackerRoute() {
           <p className="text-2xl font-bold text-white mt-1">{cardCount}</p>
         </div>
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Total SCU</p>
-          <p className="text-2xl font-bold text-purple-400 mt-1 tabular-nums">
-            {formatResourceQuantity(totalQty)}
+          <p className="text-slate-500 text-xs uppercase tracking-wide">
+            {isPersonalTab ? 'On hand' : 'On hand (site-wide)'}
           </p>
+          <div className="mt-1 space-y-1">
+            <p className="text-2xl font-bold text-purple-400 tabular-nums leading-tight">
+              {formatResourceQuantity(onHandTotals.totalScu)}
+              <span className="ml-1.5 text-sm font-medium text-slate-400">SCU</span>
+            </p>
+            <p className="text-2xl font-bold text-purple-400 tabular-nums leading-tight">
+              {Math.trunc(onHandTotals.totalUnits).toLocaleString()}
+              <span className="ml-1.5 text-sm font-medium text-slate-400">units</span>
+            </p>
+          </div>
         </div>
       </div>
 

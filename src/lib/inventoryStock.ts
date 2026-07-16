@@ -1,4 +1,5 @@
 import type { ResourceInventoryRow } from './operations'
+import { isWholeUnitResource } from '../config/resourceTypes'
 import { addResourceQuantities } from './resourceQuantity'
 
 /** Case-insensitive note identity for stock card merge / lookup. */
@@ -13,6 +14,31 @@ export function inventoryLineKey(
   note?: string | null
 ): string {
   return `${resourceKey}::${quality}::${normalizeStockNoteKey(note)}`
+}
+
+export type StockQuantityTotals = {
+  totalScu: number
+  totalUnits: number
+}
+
+export function sumStockQuantityTotals(
+  rows: Pick<{ resource_key: string; quantity: number }, 'resource_key' | 'quantity'>[]
+): StockQuantityTotals {
+  let totalScu = 0
+  let totalUnits = 0
+
+  for (const row of rows) {
+    const qty = Number(row.quantity)
+    if (!Number.isFinite(qty) || qty <= 0) continue
+
+    if (isWholeUnitResource(row.resource_key)) {
+      totalUnits += Math.trunc(qty)
+    } else {
+      totalScu = addResourceQuantities(totalScu, qty)
+    }
+  }
+
+  return { totalScu, totalUnits }
 }
 
 export function buildStockTotalsByResource(
