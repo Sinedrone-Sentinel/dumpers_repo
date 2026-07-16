@@ -150,7 +150,7 @@ export default function VirtualizedBlueprintGrid({
                 columnGap: `${gridGap}px`,
                 gridTemplateColumns: isExpandedGroupRow
                   ? 'minmax(0, 1fr)'
-                  : `repeat(${Math.min(columnCount, rowItems.length)}, minmax(0, 1fr))`,
+                  : `repeat(${columnCount}, minmax(0, 1fr))`,
               }}
             >
               {rowItems.map((item) => (
