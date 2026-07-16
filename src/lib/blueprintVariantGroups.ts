@@ -34,9 +34,17 @@ const ARMOR_SLOT_PATTERN = new RegExp(
   'i'
 )
 
-/** Strip quoted skin nicknames: `Devastator "Midnight" Shotgun` → `Devastator Shotgun`. */
-export function getWeaponDisplayBase(blueprintName: string): string {
-  return blueprintName.replace(/\s+"[^"]+"\s+/g, ' ').replace(/\s+/g, ' ').trim()
+/** Collapse NBSP and repeated spaces from CIG display names. */
+export function normalizeDisplayName(blueprintName: string): string {
+  return blueprintName.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+/** First token before the first space — family key for FPS weapon/armor variant groups. */
+export function getDisplayNameFirstWord(blueprintName: string): string {
+  const normalized = normalizeDisplayName(blueprintName)
+  if (!normalized) return ''
+  const spaceIdx = normalized.indexOf(' ')
+  return spaceIdx === -1 ? normalized : normalized.slice(0, spaceIdx)
 }
 
 function getArmorProductLine(blueprintName: string): string | null {
@@ -49,23 +57,14 @@ function getArmorProductLine(blueprintName: string): string | null {
 export function getFpsVariantFamilyKey(bp: BlueprintVariantInput): string | null {
   if (!bp.categoryName || !FPS_VARIANT_CATEGORIES.has(bp.categoryName)) return null
 
-  if (bp.categoryName === 'FPSArmours') {
-    const line = getArmorProductLine(bp.blueprintName || '')
-    return line || null
-  }
-
-  const displayBase = getWeaponDisplayBase(bp.blueprintName || '')
-  return displayBase || null
+  const firstWord = getDisplayNameFirstWord(bp.blueprintName || '')
+  return firstWord || null
 }
 
 export function getFpsVariantFamilyLabel(
-  bp: BlueprintVariantInput,
+  _bp: BlueprintVariantInput,
   familyKey: string
 ): string {
-  if (bp.categoryName === 'FPSArmours') {
-    return familyKey
-  }
-
   return familyKey
 }
 
@@ -82,12 +81,11 @@ function sortGroupMembers(members: BlueprintVariantInput[], categoryName: string
     return
   }
 
-  members.sort((a, b) => {
-    const baseA = getWeaponDisplayBase(a.blueprintName || '')
-    const baseB = getWeaponDisplayBase(b.blueprintName || '')
-    if (baseA.length !== baseB.length) return baseA.length - baseB.length
-    return baseA.localeCompare(baseB)
-  })
+  members.sort((a, b) =>
+    normalizeDisplayName(a.blueprintName || '').localeCompare(
+      normalizeDisplayName(b.blueprintName || '')
+    )
+  )
 }
 
 function isArmorBaseMember(bp: BlueprintVariantInput): boolean {
