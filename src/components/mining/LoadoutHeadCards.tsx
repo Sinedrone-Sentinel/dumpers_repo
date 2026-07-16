@@ -360,6 +360,78 @@ function EffectiveTotalsCard({
   )
 }
 
+function CraftSlotsPanel({
+  blueprint,
+  resolvedQualities,
+  onQualityChange,
+  effective,
+}: {
+  blueprint: NonNullable<ReturnType<typeof getBlueprintForLaser>>
+  resolvedQualities: Record<number, number>
+  onQualityChange: (bpSlotIndex: number, quality: number) => void
+  effective: ReturnType<typeof computeEffectiveLaserStats>
+}) {
+  const [expanded, setExpanded] = useState(true)
+  const slotCount = blueprint.slots?.length ?? 0
+
+  if (!slotCount) return null
+
+  return (
+    <div className="rounded-lg border border-orange-900/35 bg-slate-900/55 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setExpanded((prev) => !prev)}
+        className="w-full flex items-center justify-between gap-2 px-2 py-1.5 text-left hover:bg-slate-900/60 transition-colors border-b border-orange-900/20"
+        aria-expanded={expanded}
+      >
+        <span className="text-[10px] font-bold uppercase tracking-wide text-orange-300/90">
+          Craft slots
+          <span className="ml-1.5 font-normal normal-case tracking-normal text-slate-500">
+            ({slotCount} {slotCount === 1 ? 'slot' : 'slots'})
+          </span>
+        </span>
+        <svg
+          className={`w-3.5 h-3.5 text-slate-500 shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {expanded ? (
+        <div className="p-2 space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 min-w-0">
+            {blueprint.slots!.map((bpSlot, bpIdx) => {
+              const quality = resolvedQualities[bpIdx]
+              const modifiers = bpSlot.options?.[0]?.modifiers
+              const modifierResults = calculateSlotModifiers(quality, modifiers)
+              return (
+                <BlueprintSlotQualityCard
+                  key={bpIdx}
+                  slot={bpSlot}
+                  slotIndex={bpIdx}
+                  quality={quality}
+                  onQualityChange={onQualityChange}
+                  modifierResults={modifierResults}
+                  compact
+                />
+              )
+            })}
+          </div>
+          {effective && effective.powerMultiplier !== 1 ? (
+            <p className="text-[9px] text-slate-500 px-0.5">
+              Craft power: {effective.powerMultiplier >= 1 ? '+' : ''}
+              {Math.round((effective.powerMultiplier - 1) * 100)}%
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 interface HeadSlotCardsProps {
   slotIndex: number
   slot: MiningLaserSlotConfig
@@ -499,30 +571,12 @@ function HeadSlotCards({
 
   const craftBody =
     showCraftedHead && blueprint?.slots?.length ? (
-      <div className="space-y-1 pb-1 border-b border-slate-800/80">
-        {blueprint.slots.map((bpSlot, bpIdx) => {
-          const quality = resolvedQualities[bpIdx]
-          const modifiers = bpSlot.options?.[0]?.modifiers
-          const modifierResults = calculateSlotModifiers(quality, modifiers)
-          return (
-            <BlueprintSlotQualityCard
-              key={bpIdx}
-              slot={bpSlot}
-              slotIndex={bpIdx}
-              quality={quality}
-              onQualityChange={handleQualityChange}
-              modifierResults={modifierResults}
-              compact
-            />
-          )
-        })}
-        {effective && effective.powerMultiplier !== 1 ? (
-          <p className="text-[9px] text-slate-500">
-            Craft: {effective.powerMultiplier >= 1 ? '+' : ''}
-            {Math.round((effective.powerMultiplier - 1) * 100)}%
-          </p>
-        ) : null}
-      </div>
+      <CraftSlotsPanel
+        blueprint={blueprint}
+        resolvedQualities={resolvedQualities}
+        onQualityChange={handleQualityChange}
+        effective={effective}
+      />
     ) : null
 
   const rowSlotCount = moduleSlots > 0 ? 1 + moduleSlots : 2
@@ -537,7 +591,6 @@ function HeadSlotCards({
           header={headHeader}
           badge={powerBadge}
         >
-          {craftBody}
           {breakdown ? (
             <StockStatsBody lines={breakdown.stock} />
           ) : (
@@ -597,6 +650,8 @@ function HeadSlotCards({
           </LoadoutCard>
         )}
       </div>
+
+      {craftBody}
 
       {breakdown ? (
         <EffectiveTotalsCard
