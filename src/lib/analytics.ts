@@ -259,6 +259,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   mission_tracker: 'Mission Tracker',
   resource_tracker: 'Resource Tracker',
   mining_tracker: 'Mining Tracker',
+  commodity_lookup: 'Commodity Lookup',
   custom_orders: 'Custom Orders',
   fulfillment: 'Fulfillment',
   archive: 'Info Archive',

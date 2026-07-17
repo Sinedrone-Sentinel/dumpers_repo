@@ -112,7 +112,7 @@ function aggregateToolUsage(rows: ToolUsageRow[], audience: AudienceFilter): Too
       map.set(key, {
         tool_id: row.tool_id,
         sub_tool_id: row.sub_tool_id,
-        is_guest: row.is_guest,
+        is_guest: audience === 'guest',
         unique_visitors: row.unique_visitors,
         total_seconds: row.total_seconds,
         avg_seconds: row.avg_seconds,
@@ -518,7 +518,9 @@ export default function AnalyticsRoute() {
               <h2 className="text-sm font-semibold text-slate-200">Tool usage & active time</h2>
               <p className="text-xs text-slate-500 mt-1">
                 Active time counts only while the tab is visible.
-                {audience !== 'all' && ' Showing the selected audience only.'}
+                {audience === 'all'
+                  ? ' Combined view: one row per tool (guest + signed-in totals). Unique visitors may overlap if the same browser used both modes.'
+                  : ' Showing the selected audience only.'}
               </p>
             </div>
             {filteredToolUsage.length === 0 ? (
@@ -529,28 +531,20 @@ export default function AnalyticsRoute() {
                   <thead>
                     <tr className="text-left text-slate-500 border-b border-slate-700">
                       <th className="px-4 py-2 font-medium">Tool</th>
-                      {audience === 'all' && (
-                        <th className="px-4 py-2 font-medium">Audience</th>
-                      )}
                       <th className="px-4 py-2 font-medium text-right">Unique visitors</th>
                       <th className="px-4 py-2 font-medium text-right">Total active time</th>
                       <th className="px-4 py-2 font-medium text-right">Avg per visitor</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {(audience === 'all' ? summary.tool_usage : filteredToolUsage).map((row) => (
+                    {filteredToolUsage.map((row) => (
                       <tr
-                        key={`${row.tool_id}:${row.sub_tool_id}:${row.is_guest}`}
+                        key={`${row.tool_id}:${row.sub_tool_id}`}
                         className="border-b border-slate-800/80"
                       >
                         <td className="px-4 py-2.5 text-slate-200">
                           {formatToolLabel(row.tool_id, row.sub_tool_id)}
                         </td>
-                        {audience === 'all' && (
-                          <td className="px-4 py-2.5">
-                            <AudienceBadge isGuest={row.is_guest} />
-                          </td>
-                        )}
                         <td className="px-4 py-2.5 text-right text-slate-300 tabular-nums">
                           {row.unique_visitors}
                         </td>
@@ -586,22 +580,6 @@ function StatCard({ label, value }: { label: string; value: number }) {
       <p className="text-slate-500 text-xs uppercase tracking-wide">{label}</p>
       <p className="text-2xl font-bold text-white mt-1 tabular-nums">{value.toLocaleString()}</p>
     </div>
-  )
-}
-
-function AudienceBadge({ isGuest }: { isGuest: boolean }) {
-  if (isGuest) {
-    return (
-      <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-amber-950/50 text-amber-300 border border-amber-500/30">
-        Offline / Guest
-      </span>
-    )
-  }
-
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-green-950/50 text-green-300 border border-green-500/30">
-      Signed in
-    </span>
   )
 }
 
