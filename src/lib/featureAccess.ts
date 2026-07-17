@@ -17,6 +17,7 @@ export type FeatureId =
   | 'support_dashboard'
   | 'site_analytics'
   | 'mining_tracker'
+  | 'commodity_lookup'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -60,7 +61,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'mining_tracker' ||
       featureId === 'target_bp_list' ||
       featureId === 'resource_tracker' ||
-      featureId === 'fulfillment'
+      featureId === 'fulfillment' ||
+      featureId === 'commodity_lookup'
     )
   }
 
@@ -108,6 +110,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return ctx.isSuperAdmin
 
     case 'mining_tracker':
+      return !!ctx.role
+
+    case 'commodity_lookup':
       return !!ctx.role
 
     default:

@@ -12,6 +12,7 @@ import ArchiveRoute from './Archive.index'
 import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
 import MiningTrackerRoute from './MiningTracker.index'
+import CommodityLookupRoute from './CommodityLookup.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import AnalyticsRoute from './Analytics.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
@@ -53,6 +54,16 @@ const miningTrackerRoute = createRoute({
           : search.view === 'tracker'
             ? 'tracker'
             : undefined,
+  }),
+})
+
+const commodityLookupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/commodity-lookup',
+  component: CommodityLookupRoute,
+  beforeLoad: requireFeature('commodity_lookup'),
+  validateSearch: (search: Record<string, unknown>) => ({
+    commodity: typeof search.commodity === 'string' ? search.commodity : undefined,
   }),
 })
 
@@ -140,6 +151,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   wikeloRoute,
   miningTrackerRoute,
+  commodityLookupRoute,
   targetsRoute,
   targetsLiveRoute,
   resourceTrackerRoute,

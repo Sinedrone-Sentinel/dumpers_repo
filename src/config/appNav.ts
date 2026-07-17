@@ -64,6 +64,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     minRole: 'member',
   },
   {
+    id: 'commodity-lookup',
+    label: 'Commodity Lookup',
+    path: '/commodity-lookup',
+    icon: 'shop',
+    featureId: 'commodity_lookup',
+    minRole: 'member',
+  },
+  {
     id: 'custom-orders',
     label: 'My Listings',
     path: '/orders',
@@ -104,7 +112,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['custom-orders', 'fulfillment'],
+    itemIds: ['commodity-lookup', 'custom-orders', 'fulfillment'],
   },
   {
     id: 'reference',

@@ -1,4 +1,5 @@
 import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
+import UexLookupButton from './shop/UexLookupButton'
 import { inventoryLineKey } from '../lib/inventoryStock'
 import { formatInventoryQualityLabel } from '../lib/qualityBands'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
@@ -45,12 +46,15 @@ export default function ResourceStockListView({
                 className={card.is_active ? 'text-slate-200' : 'text-slate-500 opacity-70'}
               >
                 <td className="px-4 py-2.5">
-                  <span className={`font-medium ${resourceLabelClassName(card.resource_key)}`}>
-                    {card.label}
-                  </span>
-                  {!card.is_active && (
-                    <span className="ml-2 text-[10px] uppercase text-slate-600">Retired</span>
-                  )}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`font-medium ${resourceLabelClassName(card.resource_key)}`}>
+                      {card.label}
+                    </span>
+                    {!card.is_active && (
+                      <span className="text-[10px] uppercase text-slate-600">Retired</span>
+                    )}
+                    <UexLookupButton commodityName={card.label} emphasis="sell" />
+                  </div>
                 </td>
                 <td className="px-4 py-2.5 text-amber-200/90">{qualityLabel}</td>
                 <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">

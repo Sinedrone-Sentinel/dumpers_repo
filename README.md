@@ -38,6 +38,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/targets/live` | Live Mission Tracker | Members (BP Dumper watch mode) |
 | `/resources` | Resource Tracker | Offline + members |
 | `/mining-tracker` | Mining Tracker | Offline + members |
+| `/commodity-lookup` | Commodity Lookup | Offline + members |
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
@@ -123,6 +124,18 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - Lifetime **site totals** for closed crew ledgers
 
 Game mining data is bundled with the site (see [Game data](#game-data)).
+
+A blue **UEX** chip on tracked ore cards, the ore detail popup, and ledger rows opens the Commodity Lookup popup for that ore (see below).
+
+### Commodity Lookup (`/commodity-lookup`)
+
+Find every terminal where you can **sell** or **buy** a commodity, plus the SCU box (container) sizes offered — **Powered by [UEX](https://uexcorp.space)**.
+
+- Search/filter commodities by kind; pick one to see **Sell to** (turn ore into aUEC) and **Buy from** terminals grouped by star system
+- Full location breadcrumb down to planet-side kiosks (e.g. ArcCorp Mining Area 045), plus a **Refinery** badge and per-terminal SCU box sizes
+- Covers Stanton, Pyro, and Nyx commodity terminals; live prices are intentionally omitted
+- The same lookup is available as a **UEX** chip popup on Mining Tracker (ore cards, ore detail, ledger rows) and Resource Tracker (cards + list)
+- Data is baked from the UEX API by `npm run fetch-shop-data` (see [npm scripts](#npm-scripts)); the chip auto-hides for non-commodity items
 
 ### My Listings (`/orders`)
 
@@ -337,6 +350,7 @@ Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_
 | `npm run audit-mining-aliases` | Mining alias consistency |
 | `npm run audit-ore-name-consistency` | Ore name cross-check |
 | `npm run fetch-commodity-bases` | Refresh UEX Q0 commodity DFP bases |
+| `npm run fetch-shop-data` | Refresh UEX commodity buy/sell locations for Commodity Lookup (`src/data/shop-commodity-index.json`) |
 | `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
 | `npm run sync-min-game-version` | Bake game major.minor into BP Dumper sources |
 | `npm run release:dumper` | Manual semantic-release for BP Dumper |
@@ -379,6 +393,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-quality-bands.json` | Crafting quality curves |
 | `game-lore.json` | Archive resource/item lore |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
+| `shop-commodity-index.json` | UEX-backed commodity buy/sell locations + box sizes (Commodity Lookup) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
 The **DB Actions** modal shows super-admins the extract → parse → deploy runbook for reference; the steps themselves run locally in a terminal on a machine with the game files and this repo.

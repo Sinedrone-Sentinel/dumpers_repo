@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import SiteTooltip from '../SiteTooltip'
+import UexLookupButton from '../shop/UexLookupButton'
 import { useAuth } from '../../contexts/AuthContext'
 import { useResourceCatalog } from '../../hooks/useResourceCatalog'
 import { useMiningLedger } from '../../hooks/useMiningLedger'
@@ -481,14 +482,17 @@ function LedgerMiningRunsTable({
                     {calc ? formatLedgerMoney(calc.profitActual) : '—'}
                   </td>
                   <td className="py-1">
-                    <button
-                      type="button"
-                      onClick={() => onRemoveRow(row.id)}
-                      className="text-slate-500 hover:text-red-400"
-                      aria-label="Remove row"
-                    >
-                      ×
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <UexLookupButton commodityName={row.resourceLabel} emphasis="sell" />
+                      <button
+                        type="button"
+                        onClick={() => onRemoveRow(row.id)}
+                        className="text-slate-500 hover:text-red-400"
+                        aria-label="Remove row"
+                      >
+                        ×
+                      </button>
+                    </div>
                   </td>
                 </tr>
               )

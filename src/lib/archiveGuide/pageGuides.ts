@@ -112,9 +112,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',
       'Salvage and trade goods use fixed Q0 tiers',
       'Perfect for tracking what you have available for crafting or trading',
+      'Each stock card and list row shows a blue **UEX** chip (on commodities) — click it to see every terminal that buys or sells that material, with SCU box sizes, in a popup. Powered by UEX',
       'Offline Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],
-    relatesTo: ['Blueprints', 'Mining Tracker'],
+    relatesTo: ['Blueprints', 'Mining Tracker', 'Commodity Lookup'],
   },
   {
     id: 'mining-tracker',
@@ -160,6 +161,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Some regions use an **Overall** summary (e.g. broad asteroid cluster families) instead of listing every vague bucket as its own site',
       'Hand-mineable **gems** show cave vs surface availability per planet. Gems and hand mineables are guide reference only — they are not in the RS signature grid yet',
       'Compare in-game cluster readings: cluster RS ≈ node count × base RS on your reference card',
+      'A blue **UEX** chip appears on tracked ore cards, the ore detail popup, and each ledger row (for tradable commodities) — click it to see every terminal that buys/sells that ore plus SCU box sizes, without leaving the page. Powered by UEX',
       '**Ledgers** (RSI-verified): create a book for a mining run, add rows per ore/gem with quantity and quality tier — matching ore + quality merges into one line',
       'Assign **crew** with RSI handles (green = verified member here, yellow = valid RSI not on site, red = fix before paying). Split by shares; **0 shares** members can get alternate compensation instead of pool aUEC',
       'Track deductibles and other profits, record **Paid so far** for partial payouts, mark crew **paid** when settled. Click payout or outstanding amounts to copy aUEC to clipboard',
@@ -168,7 +170,22 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Closed crew ledgers contribute to **lifetime site totals** shown on the Ledgers tab',
       'Signed-in members sync tracker cards and loadouts. **Offline Mode** still lets you browse RS reference and the Mining Guide locally',
     ],
-    relatesTo: ['Resource Tracker', 'My Listings'],
+    relatesTo: ['Resource Tracker', 'My Listings', 'Commodity Lookup'],
+  },
+  {
+    id: 'commodity-lookup',
+    title: 'Commodity Lookup',
+    description:
+      'Find every terminal where you can sell or buy a commodity, plus the SCU box sizes offered. Powered by UEX.',
+    details: [
+      'Search or filter commodities by kind (Metal, Mineral, Gas, etc.), then click one to see where to trade it',
+      '**Sell to** lists every terminal that buys the commodity from you (turn refined ore into aUEC); **Buy from** lists terminals that sell it to you',
+      'Locations are grouped by star system (Stanton, Pyro, Nyx) and show the full breadcrumb down to the outpost, station, or city — including planet-side TDD kiosks like ArcCorp Mining Area 045',
+      'Each location shows the **SCU box (container) sizes** available for that commodity at that terminal',
+      'A **Refinery** badge marks terminals with a refinery on-site',
+      'Buy/sell locations and box sizes are crowdsourced by **UEX**; live prices vary in-game and are intentionally not shown',
+    ],
+    relatesTo: ['Mining Tracker', 'Resource Tracker'],
   },
   {
     id: 'orders',

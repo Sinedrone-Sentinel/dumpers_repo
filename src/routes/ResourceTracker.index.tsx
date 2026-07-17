@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import ResourceStockListView from '../components/ResourceStockListView'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import UexLookupButton from '../components/shop/UexLookupButton'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import {
   resourceLabelClassName,
@@ -522,6 +523,7 @@ export default function ResourceTrackerRoute() {
                         {qualityLabel}
                       </span>
                     )}
+                    <UexLookupButton commodityName={card.label} emphasis="sell" />
                   </div>
                 </div>
 

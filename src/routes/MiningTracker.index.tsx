@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import UexLookupButton from '../components/shop/UexLookupButton'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
@@ -655,6 +656,9 @@ export default function MiningTrackerRoute() {
                             </div>
                           ) : null}
                           <div className="text-[11px] text-slate-500 mt-1">{subtitle}</div>
+                          <div className="mt-1.5">
+                            <UexLookupButton commodityName={entry.oreName} emphasis="sell" />
+                          </div>
                         </div>
 
                         {display ? (
@@ -1314,6 +1318,7 @@ function GuideOreModal({
                     At {guideLocationName}
                   </span>
                 )}
+                <UexLookupButton commodityName={ore.ore_name} emphasis="sell" size="sm" />
               </div>
               {elementStatsBlock && (
                 <div className="mt-1.5 text-xs">{elementStatsBlock}</div>
