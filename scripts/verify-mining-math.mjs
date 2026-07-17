@@ -20,6 +20,7 @@ const modules = [
   'src/lib/miningModules.ts',
   'src/lib/miningLoadoutCompare.ts',
   'src/lib/moleLoadoutStrategy.ts',
+  'src/lib/miningActiveModuleAdvice.ts',
   'src/lib/miningGadgetRecommendations.ts',
   'src/lib/miningSlowCrack.ts',
   'src/lib/miningGadgets.ts',
@@ -45,6 +46,7 @@ const laserStats = await import(pathToFileURL(path.join(outDir, 'miningLaserStat
 const miningModules = await import(pathToFileURL(path.join(outDir, 'miningModules.mjs')).href)
 const loadoutCompare = await import(pathToFileURL(path.join(outDir, 'miningLoadoutCompare.mjs')).href)
 const moleStrategy = await import(pathToFileURL(path.join(outDir, 'moleLoadoutStrategy.mjs')).href)
+const activeAdvice = await import(pathToFileURL(path.join(outDir, 'miningActiveModuleAdvice.mjs')).href)
 const gadgetRecs = await import(pathToFileURL(path.join(outDir, 'miningGadgetRecommendations.mjs')).href)
 const slowCrack = await import(pathToFileURL(path.join(outDir, 'miningSlowCrack.mjs')).href)
 const gadgets = await import(pathToFileURL(path.join(outDir, 'miningGadgets.mjs')).href)
@@ -120,6 +122,13 @@ const HELIX_RIEGER = {
   laserName: 'Mining_Laser_THCN_Helix_S2',
   mode: 'stock',
   modules: [RIEGER_MK3, null, null],
+}
+
+// Active module + passive: all installed actives run at once, so both fold in.
+const HELIX_SURGE_FOCUS = {
+  laserName: 'Mining_Laser_THCN_Helix_S2',
+  mode: 'stock',
+  modules: [SURGE, FOCUS_MK3, null],
 }
 
 // Test rocks
@@ -199,15 +208,33 @@ section('2. Laser Stats Composition')
 
 // 2.1 Module modifier stacking
 console.log('\n2.1 Module modifier stacking')
-const emptyModules = miningModules.combineModuleModifiers([null, null, null])
+const emptyModules = miningModules.combineEquippedModuleModifiers([null, null, null])
 assert(emptyModules.powerChangeSum === 0, 'Empty modules → 0 power change')
 assert(emptyModules.resistanceModifier === 0, 'Empty modules → 0 resistance mod')
 
-const focusPair = miningModules.combineModuleModifiers([FOCUS_MK3, FOCUS_MK3, null])
+const focusPair = miningModules.combineEquippedModuleModifiers([FOCUS_MK3, FOCUS_MK3, null])
 assertApprox(focusPair.powerChangeSum, -0.10, 0.01, 'Two Focus III → −10% power change')
 
-const riegerMods = miningModules.combineModuleModifiers([RIEGER_MK3, null, null])
+const riegerMods = miningModules.combineEquippedModuleModifiers([RIEGER_MK3, null, null])
 assertApprox(riegerMods.powerChangeSum, 0.25, 0.01, 'One Rieger MK3 → +25% power change')
+
+// Active modules are OFF in the passive baseline — only the passive Focus III counts.
+const surgeFocusPassive = miningModules.combinePassiveModuleModifiers([SURGE, FOCUS_MK3, null])
+assertApprox(surgeFocusPassive.powerChangeSum, -0.05, 0.01, 'Surge OFF baseline → only Focus III −5% power')
+assertApprox(surgeFocusPassive.resistanceModifier, 0, 0.01, 'Surge OFF baseline → 0 resistance (active off)')
+assertApprox(surgeFocusPassive.instabilityModifier, 0, 0.01, 'Surge OFF baseline → 0 instability (active off)')
+
+// All installed actives on → Surge folds in on top of the passive Focus III.
+const surgeFocus = miningModules.combineEquippedModuleModifiers([SURGE, FOCUS_MK3, null])
+assertApprox(surgeFocus.powerChangeSum, 0.45, 0.01, 'Surge ON + Focus III → +45% power change')
+assertApprox(surgeFocus.resistanceModifier, -15.5, 0.01, 'Surge ON + Focus III → −15.5% resistance')
+assertApprox(surgeFocus.instabilityModifier, 10, 0.01, 'Surge ON + Focus III → +10% instability')
+
+// Per-port control: only the active at port 0 (Surge) is on.
+const surgePortOnly = miningModules.combineModuleModifiers([SURGE, FOCUS_MK3, null], new Set([0]))
+assertApprox(surgePortOnly.powerChangeSum, 0.45, 0.01, 'combineModuleModifiers port 0 on → Surge + Focus III +45%')
+const surgePortOff = miningModules.combineModuleModifiers([SURGE, FOCUS_MK3, null], new Set())
+assertApprox(surgePortOff.powerChangeSum, -0.05, 0.01, 'combineModuleModifiers empty set → Surge off, only Focus III')
 
 // 2.2 Effective power multiplier (head craft + modules)
 console.log('\n2.2 Effective power multiplier')
@@ -233,6 +260,16 @@ assert(helixFocusPair.laserPower === 4437, `Helix + 2× Focus III = 4,437 MW (go
 
 const helixRieger = laserStats.computeEffectiveLaserStats(HELIX_RIEGER)
 assert(helixRieger.laserPower === 6163, `Helix + Rieger MK3 = 6,163 MW (got ${helixRieger?.laserPower})`)
+
+// Passive baseline: Surge is OFF, only Focus III (−5% power) counts.
+const helixSurgeFocus = laserStats.computeEffectiveLaserStats(HELIX_SURGE_FOCUS)
+assert(helixSurgeFocus.laserPower === 4684, `Helix + Focus III baseline (Surge off) = 4,684 MW (got ${helixSurgeFocus?.laserPower})`)
+assert(helixSurgeFocus.resistanceModifier === -30, `Baseline resistance −30% (Surge off, got ${helixSurgeFocus?.resistanceModifier})`)
+
+// Surge switched on (port 0) folds in: +50% power, −15.5% resistance on top of Focus III.
+const helixSurgeOn = laserStats.computeEffectiveLaserStats(HELIX_SURGE_FOCUS, new Set([0]))
+assert(helixSurgeOn.laserPower === 7149, `Helix + Surge ON + Focus III = 7,149 MW (got ${helixSurgeOn?.laserPower})`)
+assert(helixSurgeOn.resistanceModifier === -45.5, `Surge ON resistance −45.5% (got ${helixSurgeOn?.resistanceModifier})`)
 
 // 2.4 Resistance multiplier conversion
 console.log('\n2.4 laserResistanceMultiplier')
@@ -390,6 +427,57 @@ assert(focusProfile?.laserPower === 4437, `Focus-pair Helix = 4,437 MW (got ${fo
 
 const riegerProfile = moleStrategy.buildMoleHeadProfile(HELIX_RIEGER, 0)
 assert(riegerProfile?.laserPower === 6163, `Rieger Helix = 6,163 MW (got ${riegerProfile?.laserPower})`)
+
+// 5.5 Active module recommendation (per head)
+console.log('\n5.5 Active module recommendation')
+const HELIX_SURGE = { laserName: 'Mining_Laser_THCN_Helix_S2', mode: 'stock', modules: [SURGE, null, null] }
+
+const easyActiveAdvice = activeAdvice.recommendActiveModulesForHead(HELIX_SURGE, 0, EASY_ROCK)
+assert(easyActiveAdvice?.cracksOnPassive === true, 'Easy rock cracks on passive — no actives needed')
+assert(easyActiveAdvice?.recommendedModuleNames.length === 0, 'Easy rock → recommend zero actives (minimal)')
+
+// Scan for a rock band where passive fails but switching Surge on cracks it.
+let bandRock = null
+let bandAdvice = null
+for (let mass = 6000; mass <= 80000; mass += 500) {
+  const rock = { scannerMass: mass, resistancePercent: 55, instability: 400 }
+  const a = activeAdvice.recommendActiveModulesForHead(HELIX_SURGE, 0, rock)
+  if (a && !a.cracksOnPassive && a.cracksWithRecommended) {
+    bandAdvice = a
+    bandRock = rock
+    break
+  }
+}
+assert(bandAdvice != null, 'Found a rock where passive fails but Surge cracks')
+assert(bandAdvice?.recommendedModuleNames.includes('Surge Module'), 'Recommends switching Surge on to crack')
+console.log(`  → Band rock ${bandRock?.scannerMass} mass: turn on ${bandAdvice?.recommendedModuleNames.join(', ')} @ ${bandAdvice?.throttlePercent}%`)
+
+// Minimality: two Surges installed but one is enough for the same band rock.
+const HELIX_DOUBLE_SURGE = { laserName: 'Mining_Laser_THCN_Helix_S2', mode: 'stock', modules: [SURGE, SURGE, null] }
+const doubleAdvice = activeAdvice.recommendActiveModulesForHead(HELIX_DOUBLE_SURGE, 0, bandRock)
+assert(doubleAdvice?.recommendedModuleNames.length === 1, 'Minimal: one Surge is enough — do not recommend both')
+
+// Huge rock: even Surge cannot crack.
+const hugeActiveAdvice = activeAdvice.recommendActiveModulesForHead(HELIX_SURGE, 0, HUGE_ROCK)
+assert(hugeActiveAdvice?.cracksWithRecommended === false, 'Huge rock cannot crack even with Surge on')
+
+// Strategy-level: easy rock needs no actives; fields present.
+assert(Array.isArray(easySoloStrategy.recommendedActives), 'Strategy carries recommendedActives array')
+assert(easySoloStrategy.recommendedActives.length === 0, 'Easy solo rock: no actives required')
+assert(easySoloStrategy.activesRequiredToCrack === false, 'Easy solo rock: actives not required')
+
+// Strategy-level: solo Mole where a head only cracks the band rock with Surge on.
+// All heads are Helix variants weaker-or-equal to the Surge head's passive baseline,
+// so only switching Surge on can crack it.
+const surgeSoloLoadout = [HELIX_SURGE, HELIX_S2, HELIX_FOCUS_PAIR]
+const surgeSoloStrategy = moleStrategy.findBestMoleLoadoutStrategy(surgeSoloLoadout, bandRock, { soloMining: true })
+assert(surgeSoloStrategy?.canBreak === true, 'Solo plan cracks the band rock using actives')
+assert(surgeSoloStrategy?.activesRequiredToCrack === true, 'Band rock solo plan flags actives required')
+assert(
+  surgeSoloStrategy?.recommendedActives.some((r) => r.moduleNames.includes('Surge Module')),
+  'Solo plan recommends switching Surge on'
+)
+console.log(`  → Solo band plan: ${surgeSoloStrategy?.summary}`)
 
 // ============================================================================
 // 6. THROTTLE AND MIN-POWER WARNINGS

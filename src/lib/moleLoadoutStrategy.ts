@@ -10,7 +10,12 @@ import {
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
 import { getOreWindowProfile } from './mineableElementStats'
-import { combinePassiveModuleModifiers, normalizeModuleSelection } from './miningModules'
+import {
+  combineModuleModifiers,
+  describeActiveModuleNames,
+  getActivePortIndices,
+  normalizeModuleSelection,
+} from './miningModules'
 import type { RockBreakabilityTarget } from './miningLoadoutCompare'
 import { formatSignedPercent } from './miningLoadoutStatSemantics'
 import { assessMinPowerWarningForSlot, type MinPowerWarning } from './miningMinPowerWarning'
@@ -63,6 +68,14 @@ export interface MoleHeadAssignment {
   windowModifierPercent: number
 }
 
+/** Which equipped active modules to turn ON for a head to help crack the rock. */
+export interface MoleActiveRecommendation {
+  slotIndex: number
+  headLabel: string
+  /** Display names of the active modules to activate on this head. */
+  moduleNames: string[]
+}
+
 export interface MoleLoadoutStrategy {
   assignments: MoleHeadAssignment[]
   canBreak: boolean
@@ -72,6 +85,14 @@ export interface MoleLoadoutStrategy {
   summary: string
   soloMining: boolean
   minPowerWarnings: MinPowerWarning[]
+  /**
+   * Active modules the plan turns on to crack the rock (minimal set). Empty when the
+   * loadout cracks on its passive baseline — actives are left off to avoid extra drain
+   * and instability.
+   */
+  recommendedActives: MoleActiveRecommendation[]
+  /** True when the plan only cracks with the recommended actives on. */
+  activesRequiredToCrack: boolean
 }
 
 interface CandidateStrategy {
@@ -89,13 +110,17 @@ interface CandidateStrategy {
 
 export function buildMoleHeadProfile(
   slot: MiningLaserSlotConfig,
-  slotIndex: number
+  slotIndex: number,
+  activePortsOn?: ReadonlySet<number>
 ): MoleHeadProfile | null {
   const laser = getMiningLaserByName(slot.laserName)
-  const effective = computeEffectiveLaserStats(slot)
+  const effective = computeEffectiveLaserStats(slot, activePortsOn)
   if (!laser || !effective) return null
 
-  const moduleMods = combinePassiveModuleModifiers(normalizeModuleSelection(slot.laserName, slot.modules))
+  const moduleMods = combineModuleModifiers(
+    normalizeModuleSelection(slot.laserName, slot.modules),
+    activePortsOn
+  )
   const throttleMinimumFraction = laser.throttleMinimum
   const throttleMinimumPercent = displayMinThrottlePercent(throttleMinimumFraction)
   const label =
@@ -831,7 +856,8 @@ function crewMinPowerWarnings(
   lasers: MiningLaserSlotConfig[],
   assignments: MoleHeadAssignment[],
   equalizingPower: number,
-  underPercent: number
+  underPercent: number,
+  activePortsBySlot?: ReadonlyMap<number, ReadonlySet<number>>
 ): MinPowerWarning[] {
   const warnings: MinPowerWarning[] = []
 
@@ -839,7 +865,7 @@ function crewMinPowerWarnings(
     if (assignment.role !== 'primary') continue
     const slot = lasers[assignment.slotIndex]
     if (!slot) continue
-    const profile = buildMoleHeadProfile(slot, assignment.slotIndex)
+    const profile = buildMoleHeadProfile(slot, assignment.slotIndex, activePortsBySlot?.get(assignment.slotIndex))
     if (!profile) continue
 
     const targetMw = Math.round(equalizingPower * (1 - underPercent / 100))
@@ -899,6 +925,8 @@ function buildUncrackableCrewStrategy(
     summary,
     soloMining: false,
     minPowerWarnings: [],
+    recommendedActives: [],
+    activesRequiredToCrack: false,
   }
 }
 
@@ -958,15 +986,16 @@ function tryAddBenefitSeat(
   return null
 }
 
-export function findBestMoleLoadoutStrategy(
+function findBestMoleLoadoutStrategyForPorts(
   lasers: MiningLaserSlotConfig[],
   target: RockBreakabilityTarget,
-  options: MoleStrategyOptions
+  options: MoleStrategyOptions,
+  activePortsBySlot?: ReadonlyMap<number, ReadonlySet<number>>
 ): MoleLoadoutStrategy | null {
   if (target.scannerMass == null || target.resistancePercent == null) return null
 
   const profiles = lasers
-    .map((slot, slotIndex) => buildMoleHeadProfile(slot, slotIndex))
+    .map((slot, slotIndex) => buildMoleHeadProfile(slot, slotIndex, activePortsBySlot?.get(slotIndex)))
     .filter((profile): profile is MoleHeadProfile => profile != null)
 
   if (!profiles.length) return null
@@ -1088,7 +1117,118 @@ export function findBestMoleLoadoutStrategy(
     summary: best.summary,
     soloMining: options.soloMining,
     minPowerWarnings: options.soloMining
-      ? crewMinPowerWarnings(lasers, best.assignments, planEqualizer, SOLO_UNDER_EQUALIZER_IDEAL_PERCENT)
-      : crewMinPowerWarnings(lasers, best.assignments, planEqualizer, crewUnder),
+      ? crewMinPowerWarnings(lasers, best.assignments, planEqualizer, SOLO_UNDER_EQUALIZER_IDEAL_PERCENT, activePortsBySlot)
+      : crewMinPowerWarnings(lasers, best.assignments, planEqualizer, crewUnder, activePortsBySlot),
+    recommendedActives: [],
+    activesRequiredToCrack: false,
+  }
+}
+
+/** All equipped active ports, keyed by slot index (only slots that have actives). */
+function allActivePortsBySlot(
+  lasers: MiningLaserSlotConfig[]
+): Map<number, Set<number>> {
+  const map = new Map<number, Set<number>>()
+  lasers.forEach((slot, slotIndex) => {
+    const ports = getActivePortIndices(normalizeModuleSelection(slot.laserName, slot.modules))
+    if (ports.length) map.set(slotIndex, new Set(ports))
+  })
+  return map
+}
+
+function cloneActiveMap(
+  map: ReadonlyMap<number, ReadonlySet<number>>
+): Map<number, Set<number>> {
+  const next = new Map<number, Set<number>>()
+  for (const [slotIndex, ports] of map) next.set(slotIndex, new Set(ports))
+  return next
+}
+
+/**
+ * Greedily drop actives (one port at a time) while the plan still cracks, so the
+ * recommendation is the fewest actives needed. Higher-instability actives are dropped
+ * first (they cost the most to run), then the rest.
+ */
+function minimizeActivePorts(
+  lasers: MiningLaserSlotConfig[],
+  target: RockBreakabilityTarget,
+  options: MoleStrategyOptions,
+  fullMap: ReadonlyMap<number, ReadonlySet<number>>
+): Map<number, Set<number>> {
+  const current = cloneActiveMap(fullMap)
+  const flatPorts: { slotIndex: number; port: number }[] = []
+  for (const [slotIndex, ports] of current) {
+    for (const port of ports) flatPorts.push({ slotIndex, port })
+  }
+
+  for (const { slotIndex, port } of flatPorts) {
+    const trial = cloneActiveMap(current)
+    const trialPorts = trial.get(slotIndex)
+    if (!trialPorts) continue
+    trialPorts.delete(port)
+    if (trialPorts.size === 0) trial.delete(slotIndex)
+
+    const plan = findBestMoleLoadoutStrategyForPorts(lasers, target, options, trial)
+    if (plan?.canBreak) {
+      current.delete(slotIndex)
+      if (trialPorts.size > 0) current.set(slotIndex, trialPorts)
+    }
+  }
+
+  return current
+}
+
+function recommendationsFromMap(
+  lasers: MiningLaserSlotConfig[],
+  map: ReadonlyMap<number, ReadonlySet<number>>
+): MoleActiveRecommendation[] {
+  const recs: MoleActiveRecommendation[] = []
+  for (const [slotIndex, ports] of map) {
+    if (!ports.size) continue
+    const slot = lasers[slotIndex]
+    if (!slot) continue
+    const moduleNames = describeActiveModuleNames(
+      normalizeModuleSelection(slot.laserName, slot.modules),
+      ports
+    )
+    if (!moduleNames.length) continue
+    const laser = getMiningLaserByName(slot.laserName)
+    recs.push({ slotIndex, headLabel: describeLaserHead(slot, laser), moduleNames })
+  }
+  return recs.sort((a, b) => a.slotIndex - b.slotIndex)
+}
+
+/**
+ * Rock-aware head plan (SHP / CHP) that also recommends which equipped active modules
+ * to switch on.
+ *
+ * Actives are OFF by default (passive baseline). Only when the loadout cannot crack the
+ * rock on passives do we search the equipped actives, find the fewest needed to crack,
+ * and return that plan with `recommendedActives` populated.
+ */
+export function findBestMoleLoadoutStrategy(
+  lasers: MiningLaserSlotConfig[],
+  target: RockBreakabilityTarget,
+  options: MoleStrategyOptions
+): MoleLoadoutStrategy | null {
+  const passivePlan = findBestMoleLoadoutStrategyForPorts(lasers, target, options)
+  if (!passivePlan) return null
+
+  const fullMap = allActivePortsBySlot(lasers)
+  // Passive already cracks, or there are no actives to help → keep actives off.
+  if (passivePlan.canBreak || fullMap.size === 0) return passivePlan
+
+  const allOnPlan = findBestMoleLoadoutStrategyForPorts(lasers, target, options, fullMap)
+  // Even with every active on it still can't crack → show the passive cannot-crack plan.
+  if (!allOnPlan?.canBreak) return passivePlan
+
+  const minimalMap = minimizeActivePorts(lasers, target, options, fullMap)
+  const finalPlan =
+    findBestMoleLoadoutStrategyForPorts(lasers, target, options, minimalMap) ?? allOnPlan
+
+  return {
+    ...finalPlan,
+    recommendedActives: recommendationsFromMap(lasers, minimalMap),
+    activesRequiredToCrack: true,
   }
 }

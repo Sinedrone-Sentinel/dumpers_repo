@@ -20,6 +20,23 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
         Head plan{strategy.soloMining ? ' · solo' : ' · crew'}
       </p>
       <p className="text-[11px] text-slate-400 leading-snug">{strategy.summary}</p>
+      {strategy.recommendedActives.length > 0 ? (
+        <div className="rounded-md border border-sky-800/50 bg-sky-950/25 px-2.5 py-2 space-y-0.5">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-sky-300/90">
+            Switch on active modules to crack
+          </p>
+          {strategy.recommendedActives.map((rec) => (
+            <p key={`active-${rec.slotIndex}`} className="text-[11px] text-sky-200/90 leading-snug">
+              <span className="text-sky-300/90">Head {rec.slotIndex + 1}</span> · turn on{' '}
+              {rec.moduleNames.join(' + ')}
+            </p>
+          ))}
+          <p className="text-[10px] text-sky-500/80 leading-snug">
+            Fewest actives needed for this rock — leave the rest off to save charge and avoid extra
+            instability.
+          </p>
+        </div>
+      ) : null}
       {!strategy.canBreak ? (
         <p className="text-xs text-red-400/90">
           {strategy.soloMining

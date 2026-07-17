@@ -5,7 +5,7 @@ import {
   type BlueprintForEffectiveStats,
 } from './blueprintEffectiveStats'
 import {
-  combinePassiveModuleModifiers,
+  combineModuleModifiers,
   effectivePowerMultiplierFromBase,
   normalizeModuleSelection,
 } from './miningModules'
@@ -75,8 +75,15 @@ export function laserResistanceMultiplier(laserResistanceModifierPercent: number
   return 1 + laserResistanceModifierPercent / 100
 }
 
+/**
+ * Effective head stats. Defaults to the PASSIVE baseline (all active modules off).
+ * Pass `activePortsOn` (port indices holding actives to turn on) to fold specific
+ * active modules into the result — e.g. for the "actives on" overlay or the
+ * minimal-active crack recommendation.
+ */
 export function computeEffectiveLaserStats(
-  slot: MiningLaserSlotConfig
+  slot: MiningLaserSlotConfig,
+  activePortsOn?: ReadonlySet<number>
 ): EffectiveMiningLaserStats | null {
   const laser = getMiningLaserByName(slot.laserName)
   if (!laser) return null
@@ -88,8 +95,8 @@ export function computeEffectiveLaserStats(
     : 1
 
   const moduleNames = normalizeModuleSelection(slot.laserName, slot.modules)
-  const moduleMods = combinePassiveModuleModifiers(moduleNames)
-  const powerMultiplier = effectivePowerMultiplierFromBase(headMultiplier, moduleNames)
+  const moduleMods = combineModuleModifiers(moduleNames, activePortsOn)
+  const powerMultiplier = effectivePowerMultiplierFromBase(headMultiplier, moduleNames, activePortsOn)
   const effectiveResistance = laser.resistanceModifier + moduleMods.resistanceModifier
 
   return {

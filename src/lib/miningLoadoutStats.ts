@@ -5,7 +5,9 @@ import {
   type MiningLaserSlotConfig,
 } from './miningLaserStats'
 import {
+  combineModuleModifiers,
   combinePassiveModuleModifiers,
+  getActivePortIndices,
   getMiningModuleByName,
   normalizeModuleSelection,
 } from './miningModules'
@@ -24,8 +26,14 @@ function headPowerMultiplier(slot: MiningLaserSlotConfig): number {
 export interface ModifierStatLine {
   key: string
   label: string
-  /** Formatted display value */
+  /** Formatted display value (passive baseline — active modules off) */
   value: string
+  /**
+   * Formatted display value with every equipped active module turned on.
+   * Only set when the head has active modules that change this stat, so the UI
+   * can show "passive / actives-on" (actives-on rendered in blue).
+   */
+  activeValue?: string
   /** Whether this stat feeds rock fracture math in the loadout compare */
   affectsCracking: boolean
 }
@@ -140,15 +148,29 @@ function effectiveHeadLines(
   slot: MiningLaserSlotConfig,
   effective: NonNullable<ReturnType<typeof computeEffectiveLaserStats>>
 ): ModifierStatLine[] {
-  const moduleMods = combinePassiveModuleModifiers(normalizeModuleSelection(slot.laserName, slot.modules))
+  const moduleNames = normalizeModuleSelection(slot.laserName, slot.modules)
+  const passiveMods = combinePassiveModuleModifiers(moduleNames)
+  const activePorts = new Set(getActivePortIndices(moduleNames))
+  const hasActives = activePorts.size > 0
+  const activeMods = hasActives ? combineModuleModifiers(moduleNames, activePorts) : passiveMods
+  const activeEffective = hasActives ? computeEffectiveLaserStats(slot, activePorts) : null
   const craftMult = headPowerMultiplier(slot)
   const craftPowerPct = (craftMult - 1) * 100
 
+  /** activeValue set only when actives change the stat vs the passive baseline. */
+  const activeOverlay = (passiveDisplay: string, activeDisplay: string): string | undefined =>
+    hasActives && activeDisplay !== passiveDisplay ? activeDisplay : undefined
+
+  const powerValue = `${effective.laserPower.toLocaleString()} MW`
   const lines: ModifierStatLine[] = [
     {
       key: 'power',
       label: 'Laser power',
-      value: `${effective.laserPower.toLocaleString()} MW`,
+      value: powerValue,
+      activeValue:
+        activeEffective
+          ? activeOverlay(powerValue, `${activeEffective.laserPower.toLocaleString()} MW`)
+          : undefined,
       affectsCracking: true,
     },
   ]
@@ -162,49 +184,61 @@ function effectiveHeadLines(
     })
   }
 
-  if (moduleMods.powerChangeSum !== 0) {
+  if (passiveMods.powerChangeSum !== 0 || (hasActives && activeMods.powerChangeSum !== 0)) {
+    const passivePower = formatSignedPercent(passiveMods.powerChangeSum * 100)
     lines.push({
       key: 'module-power',
       label: 'Module power (from base)',
-      value: formatSignedPercent(moduleMods.powerChangeSum * 100),
+      value: passivePower,
+      activeValue: activeOverlay(passivePower, formatSignedPercent(activeMods.powerChangeSum * 100)),
       affectsCracking: true,
     })
   }
 
-  const effectiveResistance = laser.resistanceModifier + moduleMods.resistanceModifier
-  const effectiveWindow = laser.optimalWindowModifier + moduleMods.optimalWindowModifier
-  const effectiveFilter = laser.filterModifier + moduleMods.filterModifier
-  const effectiveInstability = laser.instabilityModifier + moduleMods.instabilityModifier
+  const resistanceOf = (mods: typeof passiveMods) =>
+    formatSignedPercent(laser.resistanceModifier + mods.resistanceModifier)
+  const windowOf = (mods: typeof passiveMods) =>
+    formatSignedPercent(laser.optimalWindowModifier + mods.optimalWindowModifier)
+  const filterOf = (mods: typeof passiveMods) =>
+    formatSignedPercent(laser.filterModifier + mods.filterModifier)
+  const instabilityOf = (mods: typeof passiveMods) =>
+    formatSignedPercent(laser.instabilityModifier + mods.instabilityModifier)
+  const shatterOf = (mods: typeof passiveMods) => formatSignedPercent(mods.shatterDamageModifier)
 
   lines.push(
     {
       key: 'resistance',
       label: 'Resistance',
-      value: formatSignedPercent(effectiveResistance),
+      value: resistanceOf(passiveMods),
+      activeValue: activeOverlay(resistanceOf(passiveMods), resistanceOf(activeMods)),
       affectsCracking: true,
     },
     {
       key: 'window',
       label: 'Optimal charge window',
-      value: formatSignedPercent(effectiveWindow),
+      value: windowOf(passiveMods),
+      activeValue: activeOverlay(windowOf(passiveMods), windowOf(activeMods)),
       affectsCracking: false,
     },
     {
       key: 'filter',
       label: 'Inert filter',
-      value: formatSignedPercent(effectiveFilter),
+      value: filterOf(passiveMods),
+      activeValue: activeOverlay(filterOf(passiveMods), filterOf(activeMods)),
       affectsCracking: false,
     },
     {
       key: 'instability',
       label: 'Laser instability',
-      value: formatSignedPercent(effectiveInstability),
+      value: instabilityOf(passiveMods),
+      activeValue: activeOverlay(instabilityOf(passiveMods), instabilityOf(activeMods)),
       affectsCracking: true,
     },
     {
       key: 'shatter',
       label: 'Shatter damage',
-      value: formatSignedPercent(moduleMods.shatterDamageModifier),
+      value: shatterOf(passiveMods),
+      activeValue: activeOverlay(shatterOf(passiveMods), shatterOf(activeMods)),
       affectsCracking: false,
     }
   )

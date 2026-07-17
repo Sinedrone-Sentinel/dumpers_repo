@@ -3,6 +3,7 @@ import { laserResistanceMultiplier, type MiningLaserSlotConfig } from './miningL
 import type { RockBreakabilityTarget } from './miningLoadoutCompare'
 import { isRockBreakabilityTargetReady } from './miningLoadoutCompare'
 import { formatSignedPercent } from './miningLoadoutStatSemantics'
+import { recommendActiveModulesForHeads } from './miningActiveModuleAdvice'
 import { getMiningModuleByName, listPassiveModules, normalizeModuleSelection } from './miningModules'
 import { throttlePercentFromMw } from './miningThrottleDisplay'
 import {
@@ -77,7 +78,8 @@ function trySwapsForHead(
 
   for (let port = 0; port < currentModules.length; port++) {
     const existing = currentModules[port]
-    // Leave active modules alone — they are situational boosts the player toggles.
+    // Leave active ports alone — actives are toggled, not swapped, and the active-module
+    // plan handles which ones to switch on. Swap advice only rearranges passive modules.
     if (existing && getMiningModuleByName(existing)?.kind === 'active') continue
 
     for (const candidate of passives) {
@@ -152,8 +154,9 @@ function bestPerHead(candidates: SwapCandidate[]): ModuleSwapSuggestion[] {
  * On-the-fly module swap suggestions for the current rock.
  * Modules can be swapped at the head any time, so when the equipped set
  * leaves every head blocked or the best head marginal, we search every
- * single-module swap (passive modules only, active ports untouched) and
- * suggest ones that actually fix the problem:
+ * single-module swap (passive modules only — active ports are toggled, not
+ * swapped, and are handled by the active-module plan) and suggest ones that
+ * actually fix the problem:
  *
  *  - unlock:   no head can crack → a swap makes one crackable (never suggested
  *              when no swap gets a head over the line)
@@ -183,8 +186,13 @@ export function suggestModuleSwaps(
 
   const crackableHeads = verdicts.filter((v) => v.verdict.canCrack)
 
-  // Case 1: nothing can crack — look for unlock swaps. Silence if none exist.
+  // Case 1: nothing can crack. If switching on equipped actives would crack a head,
+  // defer to the active-module plan and stay quiet here. Otherwise look for unlock swaps.
   if (crackableHeads.length === 0) {
+    const activesCanCrack = recommendActiveModulesForHeads(lasers, target).some(
+      (advice) => advice.cracksWithRecommended && advice.recommendedModuleNames.length > 0
+    )
+    if (activesCanCrack) return []
     const candidates = verdicts.flatMap((v) =>
       trySwapsForHead(v.slot, v.slotIndex, v.verdict, mass, resistancePercent, instability, 'unlock')
     )

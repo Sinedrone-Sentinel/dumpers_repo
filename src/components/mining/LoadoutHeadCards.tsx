@@ -146,10 +146,16 @@ function EffectiveStatTile({ line }: { line: ModifierStatLine }) {
           </span>
         ) : null}
       </div>
-      <span
-        className={`font-mono tabular-nums leading-none ${statValueColorClass(line.key, line.value, true)}`}
-      >
-        {line.value}
+      <span className="font-mono tabular-nums leading-none">
+        <span className={statValueColorClass(line.key, line.value, true)}>{line.value}</span>
+        {line.activeValue ? (
+          <>
+            <span className="text-slate-600"> / </span>
+            <SiteTooltip content="With every equipped active module turned on." side="top">
+              <span className="text-sky-400 cursor-help">{line.activeValue}</span>
+            </SiteTooltip>
+          </>
+        ) : null}
       </span>
     </div>
   )
@@ -341,7 +347,7 @@ function EffectiveTotalsCard({
       <div className="px-2 py-1.5 border-b border-slate-700/60 bg-slate-800/50 rounded-t-lg">
         <StatLabel
           title="Effective totals"
-          hint="Combined head + craft + modules — used for breakability vs your rock."
+          hint="Combined head + craft + passive modules — used for breakability vs your rock. A blue value after the / shows the stat with all active modules turned on."
         />
       </div>
       <div className="p-2 grid grid-cols-3 sm:grid-cols-6 gap-1.5">
@@ -611,7 +617,7 @@ function HeadSlotCards({
                 titleHint={
                   modMeta
                     ? modMeta.kind === 'active'
-                      ? 'Active module — bonuses while the laser runs.'
+                      ? 'Active module — off by default; switch it on when you need it. Every installed active can run at once. Effective totals show its bonus as the blue value.'
                       : 'Passive module — always on for this head.'
                     : 'No module equipped in this slot.'
                 }

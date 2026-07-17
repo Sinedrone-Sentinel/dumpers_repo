@@ -52,6 +52,30 @@ export function getEquippedActiveModules(moduleNames: (string | null)[]): string
   return moduleNames.filter((name): name is string => name != null && isActiveModule(name))
 }
 
+/** Port indices (into a normalized module array) that hold an active module. */
+export function getActivePortIndices(moduleNames: (string | null)[]): number[] {
+  const ports: number[] = []
+  for (let i = 0; i < moduleNames.length; i++) {
+    const name = moduleNames[i]
+    if (name && isActiveModule(name)) ports.push(i)
+  }
+  return ports
+}
+
+/** Display names for the modules at the given port indices (in ascending port order). */
+export function describeActiveModuleNames(
+  moduleNames: (string | null)[],
+  ports: Iterable<number>
+): string[] {
+  const out: string[] = []
+  for (const port of [...ports].sort((a, b) => a - b)) {
+    const name = moduleNames[port]
+    if (!name) continue
+    out.push(modulesByName.get(name)?.displayName ?? name)
+  }
+  return out
+}
+
 export interface CombinedModuleModifiers {
   /**
    * Sum of per-module power deltas (multiplier − 1). SC stacks module power % additively
@@ -84,80 +108,56 @@ function addModuleToModifiers(result: CombinedModuleModifiers, mod: MiningModule
 }
 
 /**
- * Combine PASSIVE module effects only. Active modules must be activated one-at-a-time
- * and should be calculated separately via `getActiveModuleModifiers`.
+ * Combine module effects. Passive modules are ALWAYS on. Active modules are only
+ * folded in when their port index is present in `activePortsOn`.
+ *
+ * In-game an active module gives its bonus only while triggered, but every installed
+ * active can run at the same time (up to the head's module-slot count). The passive
+ * baseline (no `activePortsOn`, or an empty set) is the "actives off" resting state;
+ * pass a port set to model specific actives being turned on.
  */
-export function combinePassiveModuleModifiers(moduleNames: (string | null)[]): CombinedModuleModifiers {
+export function combineModuleModifiers(
+  moduleNames: (string | null)[],
+  activePortsOn?: ReadonlySet<number>
+): CombinedModuleModifiers {
   const result = { ...NEUTRAL_MODIFIERS }
 
-  for (const name of moduleNames) {
-    if (!name) continue
-    const mod = modulesByName.get(name)
-    if (!mod || mod.kind === 'active') continue
-    addModuleToModifiers(result, mod)
-  }
-
-  return result
-}
-
-/**
- * Get the modifiers for a single active module. Only ONE active can run at a time in-game.
- * Returns neutral modifiers if the module is not found or is passive.
- */
-export function getActiveModuleModifiers(moduleName: string | null): CombinedModuleModifiers {
-  const result = { ...NEUTRAL_MODIFIERS }
-  if (!moduleName) return result
-
-  const mod = modulesByName.get(moduleName)
-  if (!mod || mod.kind !== 'active') return result
-
-  addModuleToModifiers(result, mod)
-  return result
-}
-
-/**
- * @deprecated Use combinePassiveModuleModifiers for base calculation,
- * then add getActiveModuleModifiers for active boost scenarios.
- * This legacy function combines ALL modules (passive + active) which is incorrect
- * since only one active can run at a time.
- */
-export function combineModuleModifiers(moduleNames: (string | null)[]): CombinedModuleModifiers {
-  const result = { ...NEUTRAL_MODIFIERS }
-
-  for (const name of moduleNames) {
+  for (let i = 0; i < moduleNames.length; i++) {
+    const name = moduleNames[i]
     if (!name) continue
     const mod = modulesByName.get(name)
     if (!mod) continue
+    if (mod.kind === 'active' && !(activePortsOn?.has(i) ?? false)) continue
     addModuleToModifiers(result, mod)
   }
 
   return result
 }
 
-/**
- * Effective power multiplier from stock base using PASSIVE modules only.
- * Formula: 1 + craftDelta + sum(passiveModuleDeltas)
- */
-export function effectivePowerMultiplierFromBase(
-  headMultiplier: number,
+/** Passive-only baseline (all actives off). */
+export function combinePassiveModuleModifiers(
   moduleNames: (string | null)[]
-): number {
-  const headChange = headMultiplier - 1
-  const passiveChange = combinePassiveModuleModifiers(moduleNames).powerChangeSum
-  return 1 + headChange + passiveChange
+): CombinedModuleModifiers {
+  return combineModuleModifiers(moduleNames)
+}
+
+/** All equipped modules with every installed active turned on (for the "actives on" overlay). */
+export function combineEquippedModuleModifiers(
+  moduleNames: (string | null)[]
+): CombinedModuleModifiers {
+  return combineModuleModifiers(moduleNames, new Set(getActivePortIndices(moduleNames)))
 }
 
 /**
- * Effective power multiplier with an active module boost.
- * Formula: 1 + craftDelta + sum(passiveModuleDeltas) + activeModuleDelta
+ * Effective power multiplier from stock base.
+ * Formula: 1 + craftDelta + sum(passiveDeltas) + sum(activeDeltas for ports turned on)
  */
-export function effectivePowerMultiplierWithActive(
+export function effectivePowerMultiplierFromBase(
   headMultiplier: number,
   moduleNames: (string | null)[],
-  activeModuleName: string | null
+  activePortsOn?: ReadonlySet<number>
 ): number {
-  const base = effectivePowerMultiplierFromBase(headMultiplier, moduleNames)
-  if (!activeModuleName) return base
-  const activeChange = getActiveModuleModifiers(activeModuleName).powerChangeSum
-  return base + activeChange
+  const headChange = headMultiplier - 1
+  const moduleChange = combineModuleModifiers(moduleNames, activePortsOn).powerChangeSum
+  return 1 + headChange + moduleChange
 }
