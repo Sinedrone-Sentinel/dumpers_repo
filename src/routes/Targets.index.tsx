@@ -212,11 +212,10 @@ function MissionChecklistGroups({
           </div>
           <ul className="divide-y divide-slate-800">
             {group.missions.map((mission) => {
-              const hasKnownRepLevel = mission.minReputation != null || mission.minStandingName != null
               return (
                 <li
                   key={mission.missionKey}
-                  className={`px-4 py-3 ${hasKnownRepLevel ? 'bg-amber-900/20' : ''}`}
+                  className="px-4 py-3"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
@@ -650,7 +649,6 @@ export default function TargetsRoute() {
                         <ul className="divide-y divide-slate-800/80">
                           {missions.map((m) => {
                             const onChecklist = isMissionOnChecklist(m.missionKey)
-                            const hasKnownRepLevel = m.minReputation != null || m.minStandingName != null
                             return (
                               <li key={m.missionKey}>
                                 <button
@@ -660,9 +658,7 @@ export default function TargetsRoute() {
                                   className={`w-full text-left px-3 py-2.5 transition-colors ${
                                     onChecklist
                                       ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
-                                      : hasKnownRepLevel
-                                        ? 'bg-amber-900/20 hover:bg-amber-800/30 cursor-pointer'
-                                        : 'hover:bg-slate-800/50 cursor-pointer'
+                                      : 'hover:bg-slate-800/50 cursor-pointer'
                                   }`}
                                   title={
                                     onChecklist
