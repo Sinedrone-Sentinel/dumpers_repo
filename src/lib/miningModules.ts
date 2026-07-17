@@ -150,14 +150,23 @@ export function combineEquippedModuleModifiers(
 
 /**
  * Effective power multiplier from stock base.
- * Formula: 1 + craftDelta + sum(passiveDeltas) + sum(activeDeltas for ports turned on)
+ *
+ * Craft quality raises the head's BASE power FIRST (a crafted head literally has a
+ * higher base stat), and module power % then stacks on that crafted base:
+ *
+ *   effectivePower = stockBase × craftMultiplier × (1 + sumModuleDeltas)
+ *
+ * so the returned multiplier (relative to stock base) is:
+ *   craftMultiplier × (1 + sum(passiveDeltas) + sum(activeDeltas for ports turned on))
+ *
+ * Module deltas still stack additively among themselves; the change here is that they
+ * apply to the crafted base rather than the stock base.
  */
 export function effectivePowerMultiplierFromBase(
   headMultiplier: number,
   moduleNames: (string | null)[],
   activePortsOn?: ReadonlySet<number>
 ): number {
-  const headChange = headMultiplier - 1
   const moduleChange = combineModuleModifiers(moduleNames, activePortsOn).powerChangeSum
-  return 1 + headChange + moduleChange
+  return headMultiplier * (1 + moduleChange)
 }

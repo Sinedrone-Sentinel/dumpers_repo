@@ -247,6 +247,23 @@ assertApprox(focusPairMultiplier, 0.90, 0.01, 'Stock head + 2× Focus III → 0.
 const riegerMultiplier = miningModules.effectivePowerMultiplierFromBase(1.0, [RIEGER_MK3, null, null])
 assertApprox(riegerMultiplier, 1.25, 0.01, 'Stock head + Rieger MK3 → 1.25× multiplier')
 
+// Craft raises BASE power FIRST, then module % stacks on the crafted base.
+// (Surges are active, so turn their ports on to include them.)
+const craftSurge3 = miningModules.effectivePowerMultiplierFromBase(1.2156, [SURGE, SURGE, SURGE], new Set([0, 1, 2]))
+assertApprox(craftSurge3, 1.2156 * 2.5, 0.001, 'Craft 21.56% then 3× Surge → craftMult × (1 + 1.5), not additive')
+assertApprox(4930 * craftSurge3, 14982, 1, 'Helix crafted 21.56% + 3× Surge = 14,982 MW (craft base first)')
+
+const craftFocus = miningModules.effectivePowerMultiplierFromBase(1.2156, [FOCUS_MK3, null, null])
+assertApprox(craftFocus, 1.2156 * 0.95, 0.001, 'Craft 21.56% then Focus III → craftMult × (1 − 0.05)')
+
+// Sanity: with no modules, craft-first equals the plain craft multiplier.
+assertApprox(
+  miningModules.effectivePowerMultiplierFromBase(1.2156, [null, null, null]),
+  1.2156,
+  0.001,
+  'Craft only (no modules) → craft multiplier unchanged'
+)
+
 // 2.3 Compute effective laser stats
 console.log('\n2.3 computeEffectiveLaserStats')
 const helixStock = laserStats.computeEffectiveLaserStats(HELIX_S2)
