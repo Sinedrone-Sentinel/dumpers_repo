@@ -1,0 +1,40 @@
+---
+description: Keep DB Actions patch-day command list synced with docs/DATA_SOURCES.md
+globs: src/components/DbActionsModal.tsx,docs/DATA_SOURCES.md,package.json
+alwaysApply: false
+---
+
+# DB Actions Patch-Day Runbook Sync
+
+The super-admin **Game Data Update Process** in `src/components/DbActionsModal.tsx` must stay aligned with **`docs/DATA_SOURCES.md`** → section **Data Update Process** (`#data-update-process`).
+
+## Source of truth
+
+| Artifact | Role |
+|----------|------|
+| `docs/DATA_SOURCES.md` | Canonical patch-day runbook (prose + step order) |
+| `DbActionsModal.tsx` → `PATCH_DAY_STEPS` | UI mirror: numbered steps, copy-paste commands, optional flags |
+| `package.json` scripts | Every `npm run …` in the runbook must exist here |
+
+## When to update both
+
+Update **DATA_SOURCES.md and `PATCH_DAY_STEPS` in the same change** when:
+
+- Adding, removing, or reordering patch-day steps
+- Adding or renaming npm scripts used on patch day (`parse-game-data`, `patch-audit`, `fetch-shop-data`, etc.)
+- Changing optional vs required steps (UEX refresh, BP Dumper, DFP engine)
+- Moving sync/build/deploy ordering
+
+## Checklist
+
+- [ ] Step **numbers and order** match between doc and `PATCH_DAY_STEPS`
+- [ ] Each doc step with a command has the same **`npm run …`** or **`.\\scripts\\…`** string in `commands[]`
+- [ ] **Optional** steps are marked `optional: true` in UI and labeled optional in the doc
+- [ ] Manual steps (verify removals, sync catalog button, commit/deploy) have **empty `commands`** but matching descriptions
+- [ ] New npm scripts added to `package.json` and documented in DATA_SOURCES scripts table when relevant
+- [ ] Footnote commands (e.g. `rebuild-mission-rewards`) mentioned in both places if patch-day troubleshooting changes
+
+## Do not
+
+- Drift the UI runbook from the doc — officers rely on DB Actions for patch day
+- Duplicate the full runbook in README; link to `docs/DATA_SOURCES.md` instead

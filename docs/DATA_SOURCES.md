@@ -110,6 +110,7 @@ Located in `/scripts/`:
 | `audit-ore-name-consistency.mjs` | Cross-check ore names across mining JSON outputs |
 | `audit-alias-tables.mjs` | Report which manual alias/rarity tables are still required |
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
+| `fetch-shop-commodity-data.mjs` | Refresh UEX commodity buy/sell locations → `shop-commodity-index.json` (`npm run fetch-shop-data`) |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
 | `verify-dfp-spotcheck.mjs` | Spot-check DFP engine output against catalog |
 | `audit-blueprint-names.mjs` | Dev utility for catalog name audits |
@@ -118,7 +119,9 @@ Located in `/scripts/`:
 
 ## Data Update Process
 
-When a new Star Citizen patch drops:
+When a new Star Citizen patch drops, follow these steps locally. The super-admin **DB Actions** modal
+(`src/components/DbActionsModal.tsx` → `PATCH_DAY_STEPS`) mirrors this runbook for copy-paste commands —
+**keep both in sync** (see `.cursor/rules/db-actions-patch-runbook.mdc`).
 
 1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`)
 2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch)
@@ -138,15 +141,18 @@ When a new Star Citizen patch drops:
    verifiers, and the patch diff
    - New CIG misspellings surface here — add corrections to the typo handlers in
      `parse-extracted-data.mjs` (component names) or `src/data/mining-ore-aliases.json` (ores)
-6. **DFP engine (required when blueprints changed):** in sibling **`dfp-engine-private`** → `npm run build`
+6. **Optional UEX refresh (Dumpers Repo):** run before step 7 when updating crowdsourced commodity data:
+   - `npm run fetch-commodity-bases` — DFP Q0 bases → `dfp-commodity-bases.json`
+   - `npm run fetch-shop-data` — Commodity Lookup terminals/listings → `shop-commodity-index.json`
+7. **DFP engine (required when blueprints changed):** in sibling **`dfp-engine-private`** → `npm run build`
    - Regenerates acquisition premiums for every reward blueprint, component metadata, commodity bases, and Wikelo ammo pricing from the parsed `game-blueprints.json`
    - Writes `public/dfp-engine.js` + `public/dfp-version.json` here — commit both with the game-data commit
    - `npm run patch-audit` includes `verify-dfp-acquisition-premiums.mjs` (fails if premiums/bundle are stale)
    - **Pricing formulas live only in dfp-engine-private** — do not edit DFP math in this repo
-7. **Optional DFP commodity bases:** `npm run fetch-commodity-bases` (Dumpers Repo) before step 6 when refreshing UEX Q0 prices
 8. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`,
    and `npm run sync-min-game-version` if the game major.minor changed
-9. **Deploy:** Commit updated `game-*.json` and DFP bundle, `npm run build`, deploy `dist/`
+9. **Sync resource catalog:** use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials appeared after parse
+10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
 
 No DB sync step: all game catalogs (mining guide, ordnance, components, blueprints) are bundled
 from the parsed `game-*.json` at build time — deploying the site updates everything at once.

@@ -4,6 +4,200 @@ import { supabase } from '../lib/supabase'
 import { useBlueprintData } from '../routes/blueprints'
 import AppModal from './layout/AppModal'
 
+/** Patch-day command runbook — keep in sync with docs/DATA_SOURCES.md#data-update-process (.cursor/rules/db-actions-patch-runbook.mdc) */
+type PatchDayStep = {
+  step: number
+  title: string
+  description: string
+  commands: string[]
+  optional?: boolean
+}
+
+const PATCH_DAY_STEPS: PatchDayStep[] = [
+  {
+    step: 1,
+    title: 'Extract game data',
+    description:
+      'StarBreaker: full DataForge DCB + localization into extracted-data/ (wipes prior extract). Optional shop socpaks: add -IncludeShopData',
+    commands: ['.\\scripts\\extract-game-data.ps1'],
+  },
+  {
+    step: 2,
+    title: 'Parse extracted data',
+    description:
+      'Regenerates all src/data/game-*.json (blueprints, mining, components, lore, etc.) from scratch',
+    commands: ['npm run parse-game-data'],
+  },
+  {
+    step: 3,
+    title: 'Review patch diff',
+    description:
+      'Compare fresh parse vs last commit — ADDED / REMOVED / RENAMED-MOVED / CHANGED per file. Use --full or --file game-mining.json as needed',
+    commands: ['npm run diff-game-data'],
+  },
+  {
+    step: 4,
+    title: 'Verify removals are real',
+    description:
+      'CIG often moves records between directories. Check _extraction-validation.json for missing paths; rg the new extract before treating REMOVED as deleted. Update EXPECTED_PATHS in parse-extracted-data.mjs if a directory moved',
+    commands: [],
+  },
+  {
+    step: 5,
+    title: 'Audit + validate',
+    description:
+      'Full battery: mining aliases, ore names, blueprint sanity, mission rewards, HPP/alias coverage (needs extract), mining math + mole strategy verifiers, DFP premium check, patch diff. Fix typos in parse-extracted-data.mjs or mining-ore-aliases.json as needed',
+    commands: ['npm run patch-audit'],
+  },
+  {
+    step: 6,
+    title: 'UEX Q0 commodity bases',
+    description: "Refresh DFP Q0 bases for Resource Tracker commodities → dfp-commodity-bases.json. Run before DFP engine build when refreshing UEX prices",
+    commands: ['npm run fetch-commodity-bases'],
+    optional: true,
+  },
+  {
+    step: 7,
+    title: 'UEX commodity buy/sell locations',
+    description:
+      'Refresh Commodity Lookup index (terminals, buy/sell listings, SCU box sizes) → shop-commodity-index.json. Powered by UEX',
+    commands: ['npm run fetch-shop-data'],
+    optional: true,
+  },
+  {
+    step: 8,
+    title: 'DFP engine build',
+    description:
+      'Required when blueprints changed. Regenerates acquisition premiums, component metadata, commodity bases, Wikelo ammo pricing. Writes public/dfp-engine.js + public/dfp-version.json here — commit both. Pricing formulas live only in dfp-engine-private',
+    commands: ['cd ..\\dfp-engine-private', 'npm run build'],
+  },
+  {
+    step: 9,
+    title: 'BP Dumper name lookup',
+    description: 'Only if blueprints changed — refreshes blueprint-name-lookup.json for Game.log / webhook resolution',
+    commands: ['npm run generate-dumper-mappings', 'npm run copy-blueprint-lookup'],
+    optional: true,
+  },
+  {
+    step: 10,
+    title: 'BP Dumper min game version',
+    description: 'Only if game major.minor changed — bakes version into BP Dumper sources from game-build-version.json',
+    commands: ['npm run sync-min-game-version'],
+    optional: true,
+  },
+  {
+    step: 11,
+    title: 'Sync resource catalog',
+    description:
+      'Push blueprint materials + extra commodities to Supabase blueprint_resources (use Sync from Blueprints button below). Run after parse when new craft materials appeared',
+    commands: [],
+  },
+  {
+    step: 12,
+    title: 'Production build',
+    description: 'Vite build + version stamp + archive guide regeneration → dist/',
+    commands: ['npm run build'],
+  },
+  {
+    step: 13,
+    title: 'Commit & deploy',
+    description:
+      'Commit game-*.json, DFP bundle, shop/commodity data, and generated lookup files; deploy dist/. No other DB sync — catalogs bundle at build time',
+    commands: [],
+  },
+]
+
+function PatchDayCommandList() {
+  return (
+    <div className="max-h-[min(52vh,28rem)] overflow-y-auto overscroll-contain space-y-2 pr-0.5">
+      {PATCH_DAY_STEPS.map((item) => (
+        <div key={item.step} className="flex items-start gap-2.5 p-2 bg-slate-800/50 rounded-lg">
+          <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full mt-0.5">
+            {item.step}
+          </span>
+          <div className="flex-1 min-w-0 space-y-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-xs text-white font-medium">{item.title}</p>
+              {item.optional && (
+                <span className="text-[9px] font-semibold uppercase tracking-wide rounded bg-slate-700/80 text-slate-400 border border-slate-600 px-1 py-0.5">
+                  optional
+                </span>
+              )}
+            </div>
+            <p className="text-[10px] text-slate-500 leading-snug">{item.description}</p>
+            {item.commands.length > 0 && (
+              <div className="flex flex-col gap-1 pt-0.5">
+                {item.commands.map((cmd) => (
+                  <code
+                    key={cmd}
+                    className="block px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all break-all"
+                  >
+                    {cmd}
+                  </code>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function PatchDayRunbookSection() {
+  const [expanded, setExpanded] = useState(false)
+  const commandStepCount = PATCH_DAY_STEPS.filter((s) => s.commands.length > 0).length
+
+  return (
+    <div className="p-3 sm:p-4 rounded-xl border border-orange-500/30 bg-orange-950/20 space-y-3">
+      <button
+        type="button"
+        onClick={() => setExpanded((open) => !open)}
+        aria-expanded={expanded}
+        className="w-full flex items-start justify-between gap-3 text-left group"
+      >
+        <div className="flex-1 min-w-0">
+          <h3 className="text-white font-medium text-sm">Game Data Update Process</h3>
+          <p className="text-xs text-slate-400 mt-1">
+            Patch-day runbook ({PATCH_DAY_STEPS.length} steps, {commandStepCount} commands) — mirrors{' '}
+            <code className="text-violet-400">docs/DATA_SOURCES.md</code>
+          </p>
+          {!expanded && (
+            <p className="text-[10px] text-slate-500 mt-1.5">
+              Expand for extract → parse → diff → audit → UEX/DFP → BP Dumper → build → deploy
+            </p>
+          )}
+        </div>
+        <span
+          className={`shrink-0 mt-0.5 p-1 rounded-lg text-slate-400 group-hover:text-slate-200 group-hover:bg-slate-800/60 transition-transform ${
+            expanded ? 'rotate-180' : ''
+          }`}
+          aria-hidden
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </button>
+
+      {expanded && (
+        <>
+          <PatchDayCommandList />
+          <p className="text-[10px] text-slate-600 italic pt-1">
+            Steps 1–12 run locally in terminal (PowerShell for extract). All game catalogs bundle from
+            parsed game-*.json at build time — no Supabase sync for blueprints/mining/components.
+          </p>
+          <p className="text-[10px] text-amber-400/70">
+            If parse or patch-audit reports validation issues, game data structure may have changed — see
+            docs/DATA_SOURCES.md. Mission rewards broken?{' '}
+            <code className="text-amber-300/80">npm run rebuild-mission-rewards</code>
+          </p>
+        </>
+      )}
+    </div>
+  )
+}
+
 export default function DbActionsModal({ onClose }: { onClose: () => void }) {
   const { data: blueprints } = useBlueprintData()
 
@@ -176,7 +370,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
       title="DB Actions"
       subtitle="Super-admin database operations"
       onClose={onClose}
-      size="sm"
+      size="lg"
       zIndex={70}
       footer={
         <button
@@ -201,62 +395,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
       )}
 
       <div className="space-y-4">
-        {/* Game Data Update Process */}
-        <div className="p-3 sm:p-4 rounded-xl border border-orange-500/30 bg-orange-950/20 space-y-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-white font-medium text-sm">Game Data Update Process</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Extract and parse data directly from Star Citizen game files when a new patch drops.
-              Blueprint catalog ships in <code className="text-violet-400">game-blueprints.json</code>.
-            </p>
-          </div>
-
-          {/* Step-by-step game data update process */}
-          <div className="mt-3 space-y-2">
-            {/* Step 1: Extract Game Data */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">1</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Extract Game Data</p>
-                <p className="text-[10px] text-slate-500">StarBreaker: DataForge, localization, shop socpaks, ShopInventories JSON</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
-                .\scripts\extract-game-data.ps1
-              </code>
-            </div>
-
-            {/* Step 2: Parse Extracted Data */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">2</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Parse Extracted Data</p>
-                <p className="text-[10px] text-slate-500">Generates game-*.json files (blueprints, mining, weapons, lore, etc.)</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
-                node scripts/parse-extracted-data.mjs
-              </code>
-            </div>
-
-            {/* Step 3: Deploy */}
-            <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg">
-              <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full">3</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white font-medium">Commit &amp; Deploy</p>
-                <p className="text-[10px] text-slate-500">Commit game-*.json changes, then build and deploy</p>
-              </div>
-              <code className="shrink-0 px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all">
-                npm run build
-              </code>
-            </div>
-
-            <p className="text-[10px] text-slate-600 italic pt-1">
-              Steps 1–2 run locally in terminal. All game catalogs (blueprints, mining, ordnance, components) are bundled from the parsed game-*.json at build time — no DB sync needed.
-            </p>
-            <p className="text-[10px] text-amber-400/70 pt-1">
-              If Step 2 reports validation issues, game data structure may have changed.
-            </p>
-          </div>
-        </div>
+        <PatchDayRunbookSection />
 
         {/* Resource Catalog Sync */}
         <div className="p-3 sm:p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/20 space-y-3">
