@@ -436,6 +436,13 @@ export default function AppUserMenu({
                 >
                   Site Analytics
                 </Link>
+                <Link
+                  to="/support-dashboard"
+                  onClick={close}
+                  className="block w-full px-4 py-2 text-left text-blue-400 hover:bg-slate-700 transition-colors"
+                >
+                  Support Dashboard
+                </Link>
                 {showAdminPanelButton && (
                   <button
                     type="button"
