@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import AppModal from '../layout/AppModal'
-import CommodityTradePanels from './CommodityTradePanels'
+import CommodityTradePanels, { ShopSystemFilter } from './CommodityTradePanels'
 import {
   SHOP_INDEX_META,
   findCommodityByName,
@@ -22,10 +22,15 @@ export default function CommodityLookupModal({
   onClose,
 }: CommodityLookupModalProps) {
   const navigate = useNavigate()
+  const [systemFilter, setSystemFilter] = React.useState<string | null>(null)
 
   const result = React.useMemo(() => {
     const commodity = findCommodityByName(commodityName)
     return commodity ? getCommodityTradeInfo(commodity.id) : null
+  }, [commodityName])
+
+  React.useEffect(() => {
+    setSystemFilter(null)
   }, [commodityName])
 
   const openFullPage = React.useCallback(() => {
@@ -63,7 +68,10 @@ export default function CommodityLookupModal({
       }
     >
       {result ? (
-        <CommodityTradePanels result={result} emphasis={emphasis} />
+        <>
+          <ShopSystemFilter result={result} value={systemFilter} onChange={setSystemFilter} />
+          <CommodityTradePanels result={result} emphasis={emphasis} systemFilter={systemFilter} />
+        </>
       ) : (
         <div className="text-center py-10">
           <div className="text-4xl mb-3">🔍</div>
