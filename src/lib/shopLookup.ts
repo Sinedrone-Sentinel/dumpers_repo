@@ -48,6 +48,10 @@ export interface ShopListing {
   buy: boolean
   sell: boolean
   box: string | null
+  /** aUEC/SCU when the player sells here (UEX price_sell). */
+  ps?: number
+  /** aUEC/SCU when the player buys here (UEX price_buy). */
+  pb?: number
 }
 
 export interface ShopIndexMeta {
@@ -65,6 +69,10 @@ export interface TradeLocation {
   terminal: ShopTerminal
   /** SCU box (container) sizes offered, e.g. [1, 2, 4, 8, 16, 24, 32]. */
   boxSizes: number[]
+  /** aUEC per SCU when the player sells here. */
+  sellPricePerScu: number | null
+  /** aUEC per SCU when the player buys here. */
+  buyPricePerScu: number | null
 }
 
 export interface CommodityTradeResult {
@@ -139,6 +147,12 @@ export function terminalPath(t: ShopTerminal): string {
   return out.join(' › ')
 }
 
+/** Format UEX per-SCU price for display. */
+export function formatShopPricePerScu(price: number | null | undefined): string | null {
+  if (price == null || !Number.isFinite(price) || price <= 0) return null
+  return `${Math.round(price).toLocaleString()} aUEC/SCU`
+}
+
 export function getCommodityTradeInfo(commodityId: number): CommodityTradeResult | null {
   const commodity = raw.commodities.find((c) => c.id === commodityId)
   if (!commodity) return null
@@ -148,7 +162,12 @@ export function getCommodityTradeInfo(commodityId: number): CommodityTradeResult
   for (const l of listings) {
     const terminal = terminalById.get(l.t)
     if (!terminal) continue
-    const location: TradeLocation = { terminal, boxSizes: parseBoxSizes(l.box) }
+    const location: TradeLocation = {
+      terminal,
+      boxSizes: parseBoxSizes(l.box),
+      sellPricePerScu: l.ps ?? null,
+      buyPricePerScu: l.pb ?? null,
+    }
     if (l.sell) sellAt.push(location)
     if (l.buy) buyAt.push(location)
   }

@@ -2,6 +2,7 @@ import React from 'react'
 import {
   terminalPath,
   terminalPlace,
+  formatShopPricePerScu,
   type CommodityTradeResult,
   type TradeLocation,
 } from '../../lib/shopLookup'
@@ -42,8 +43,17 @@ function groupBySystem(locations: TradeLocation[]): { system: string; items: Tra
     .map(([system, items]) => ({ system, items }))
 }
 
-function LocationRow({ loc }: { loc: TradeLocation }) {
+function LocationRow({
+  loc,
+  pricePerScu,
+  priceClassName,
+}: {
+  loc: TradeLocation
+  pricePerScu: number | null
+  priceClassName: string
+}) {
   const { terminal, boxSizes } = loc
+  const priceLabel = formatShopPricePerScu(pricePerScu)
   return (
     <li className="rounded-lg border border-slate-700/70 bg-slate-900/50 px-3 py-2">
       <div className="flex items-start justify-between gap-2">
@@ -51,11 +61,18 @@ function LocationRow({ loc }: { loc: TradeLocation }) {
           <p className="text-sm font-semibold text-slate-100 truncate">{terminalPlace(terminal)}</p>
           <p className="text-[11px] text-slate-500 truncate">{terminalPath(terminal)}</p>
         </div>
-        {terminal.isRefinery && (
-          <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5">
-            Refinery
-          </span>
-        )}
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          {priceLabel && (
+            <span className={`text-xs font-mono font-semibold tabular-nums ${priceClassName}`}>
+              {priceLabel}
+            </span>
+          )}
+          {terminal.isRefinery && (
+            <span className="text-[10px] font-medium uppercase tracking-wide rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5">
+              Refinery
+            </span>
+          )}
+        </div>
       </div>
       {boxSizes.length > 0 && (
         <div className="mt-1.5 flex items-center gap-1 flex-wrap">
@@ -79,11 +96,15 @@ function SystemGroup({
   system,
   items,
   forceExpanded,
+  priceField,
+  priceClassName,
 }: {
   system: string
   items: TradeLocation[]
   /** When filtering to this system, expand automatically. */
   forceExpanded: boolean
+  priceField: 'sellPricePerScu' | 'buyPricePerScu'
+  priceClassName: string
 }) {
   const [expanded, setExpanded] = React.useState(forceExpanded)
 
@@ -117,7 +138,12 @@ function SystemGroup({
       {expanded && (
         <ul className="space-y-1.5 mt-1">
           {items.map((loc) => (
-            <LocationRow key={loc.terminal.id} loc={loc} />
+            <LocationRow
+              key={loc.terminal.id}
+              loc={loc}
+              pricePerScu={loc[priceField]}
+              priceClassName={priceClassName}
+            />
           ))}
         </ul>
       )}
@@ -196,6 +222,8 @@ function TradeColumn({
     accent === 'sell'
       ? 'text-emerald-300 border-emerald-500/30 bg-emerald-950/30'
       : 'text-sky-300 border-sky-500/30 bg-sky-950/30'
+  const priceField = accent === 'sell' ? 'sellPricePerScu' : 'buyPricePerScu'
+  const priceClassName = accent === 'sell' ? 'text-emerald-300' : 'text-sky-300'
 
   return (
     <div className="flex flex-col min-w-0">
@@ -217,6 +245,8 @@ function TradeColumn({
                 system={group.system}
                 items={group.items}
                 forceExpanded={systemFilter === group.system}
+                priceField={priceField}
+                priceClassName={priceClassName}
               />
             ))}
           </div>
@@ -241,7 +271,7 @@ export default function CommodityTradePanels({
     <TradeColumn
       key="sell"
       title="Sell to"
-      hint="Turn this commodity into aUEC here"
+      hint="Turn this commodity into aUEC here (UEX avg price per SCU)"
       accent="sell"
       locations={result.sellAt}
       emptyLabel={systemFilter ? `No sell locations in ${systemFilter}.` : 'No known sell locations.'}
@@ -252,7 +282,7 @@ export default function CommodityTradePanels({
     <TradeColumn
       key="buy"
       title="Buy from"
-      hint="Purchase this commodity here"
+      hint="Purchase this commodity here (UEX avg price per SCU)"
       accent="buy"
       locations={result.buyAt}
       emptyLabel={systemFilter ? `No buy locations in ${systemFilter}.` : 'No known buy locations.'}

@@ -44,7 +44,7 @@ export default function CommodityLookupModal({
   return (
     <AppModal
       title={result ? result.commodity.name : commodityName}
-      subtitle="Where to buy & sell — Powered by UEX"
+      subtitle="Where to buy & sell — per-SCU prices Powered by UEX"
       onClose={onClose}
       size="xl"
       footer={

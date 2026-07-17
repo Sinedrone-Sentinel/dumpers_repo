@@ -129,11 +129,11 @@ A blue **UEX** chip on tracked ore cards, the ore detail popup, and ledger rows 
 
 ### Commodity Lookup (`/commodity-lookup`)
 
-Find every terminal where you can **sell** or **buy** a commodity, plus the SCU box (container) sizes offered — **Powered by [UEX](https://uexcorp.space)**.
+Find every terminal where you can **sell** or **buy** a commodity, with **UEX per-SCU prices** and SCU box (container) sizes — **Powered by [UEX](https://uexcorp.space)**.
 
 - Search/filter commodities by kind; pick one to see **Sell to** (turn ore into aUEC) and **Buy from** terminals grouped by star system
-- Full location breadcrumb down to planet-side kiosks (e.g. ArcCorp Mining Area 045), plus a **Refinery** badge and per-terminal SCU box sizes
-- Covers Stanton, Pyro, and Nyx commodity terminals; live prices are intentionally omitted
+- Full location breadcrumb down to planet-side kiosks (e.g. ArcCorp Mining Area 045), plus **Refinery** badge, **per-SCU price**, and box sizes per terminal
+- System filter and collapsible Stanton/Pyro/Nyx sections in the UEX popup; covers all three systems
 - The same lookup is available as a **UEX** chip popup on Mining Tracker (ore cards, ore detail, ledger rows) and Resource Tracker (cards + list)
 - Data is baked from the UEX API by `npm run fetch-shop-data` (see [npm scripts](#npm-scripts)); the chip auto-hides for non-commodity items
 
@@ -393,7 +393,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-quality-bands.json` | Crafting quality curves |
 | `game-lore.json` | Archive resource/item lore |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
-| `shop-commodity-index.json` | UEX-backed commodity buy/sell locations + box sizes (Commodity Lookup) |
+| `shop-commodity-index.json` | UEX-backed commodity buy/sell locations, per-SCU prices, and box sizes (Commodity Lookup) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
 The **DB Actions** modal shows super-admins the extract → parse → deploy runbook for reference; the steps themselves run locally in a terminal on a machine with the game files and this repo.

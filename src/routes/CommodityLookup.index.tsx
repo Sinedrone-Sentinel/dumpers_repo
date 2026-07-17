@@ -86,7 +86,7 @@ export default function CommodityLookupRoute() {
   return (
     <FeaturePageLayout
       title="Commodity Lookup"
-      subtitle="Where to buy & sell every commodity, plus SCU box sizes"
+      subtitle="Where to buy & sell every commodity, with UEX per-SCU prices and SCU box sizes"
       badge="UEX"
       meta={
         <>
@@ -183,7 +183,7 @@ export default function CommodityLookupRoute() {
               <p className="text-slate-300 font-medium">Select a commodity</p>
               <p className="text-slate-500 text-sm mt-1 max-w-sm">
                 Pick a commodity to see every terminal where you can sell it (turn ore into aUEC) or
-                buy it, along with the SCU box sizes offered.
+                buy it, with UEX per-SCU prices and SCU box sizes offered.
               </p>
             </div>
           )}
@@ -191,8 +191,8 @@ export default function CommodityLookupRoute() {
       </div>
 
       <p className="mt-6 text-center text-xs text-slate-500">
-        Buy/sell locations and box sizes crowdsourced by <UexAttribution />. Prices vary in-game and
-        are intentionally omitted.
+        Locations, per-SCU prices, and box sizes crowdsourced by <UexAttribution />. In-game prices
+        can differ from UEX averages.
       </p>
     </FeaturePageLayout>
   )

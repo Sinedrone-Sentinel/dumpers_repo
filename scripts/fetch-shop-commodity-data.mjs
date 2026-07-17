@@ -10,7 +10,7 @@
  *   - commodities: catalog (name, code, kind, refined/raw/mineral flags)
  *   - terminals:   commodity terminals with full location hierarchy + amenity flags
  *   - listings:    per (commodity, terminal) — can the player BUY and/or SELL here,
- *                  plus the container (SCU box) sizes offered
+ *                  per-SCU prices, plus container (SCU box) sizes offered
  *
  * UEX semantics (player perspective):
  *   - status_sell / price_sell  -> the player can SELL here (terminal buys from you)
@@ -44,6 +44,14 @@ function cleanName(v) {
   if (v == null) return null
   const s = String(v).trim()
   return s.length ? s : null
+}
+
+/** Prefer UEX avg price when present; otherwise spot. Returns null when no usable price. */
+function pricePerScu(spot, avg) {
+  const a = Number(avg) || 0
+  const s = Number(spot) || 0
+  const value = a > 0 ? a : s > 0 ? s : 0
+  return value > 0 ? Math.round(value) : null
 }
 
 async function main() {
@@ -110,12 +118,16 @@ async function main() {
     const canBuy = bool(p.status_buy) || (p.price_buy ?? 0) > 0
     const canSell = bool(p.status_sell) || (p.price_sell ?? 0) > 0
     if (!canBuy && !canSell) continue
+    const sellPrice = canSell ? pricePerScu(p.price_sell, p.price_sell_avg) : null
+    const buyPrice = canBuy ? pricePerScu(p.price_buy, p.price_buy_avg) : null
     listings.push({
       c: p.id_commodity,
       t: p.id_terminal,
       buy: canBuy,
       sell: canSell,
       box: cleanName(p.container_sizes),
+      ...(sellPrice != null ? { ps: sellPrice } : {}),
+      ...(buyPrice != null ? { pb: buyPrice } : {}),
     })
   }
 
@@ -135,7 +147,7 @@ async function main() {
     sourceUrl: 'https://uexcorp.space',
     attribution: 'Powered by UEX',
     endpoints: ['/2.0/commodities', '/2.0/terminals?type=commodity', '/2.0/commodities_prices_all'],
-    note: 'Commodity buy/sell locations and box (container) sizes crowdsourced by UEX Corp. Prices intentionally omitted; this index tracks WHERE you can buy/sell each commodity.',
+    note: 'Commodity buy/sell locations, per-SCU prices (UEX avg when available), and box sizes crowdsourced by UEX Corp.',
     commodityCount: commoditiesOut.length,
     terminalCount: terminalsOut.length,
     listingCount: listings.length,
