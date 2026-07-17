@@ -46,6 +46,34 @@ export function detectArmorSlotFromName(name: string, displayName = ''): string 
   return null
 }
 
+/**
+ * Combat-clothing garment types — armored apparel (Bellator, GYS, etc.) that is worn
+ * like clothing rather than the four combat-armor plate slots. These get a dedicated
+ * garment tag instead of the Core/Legs slot chip.
+ */
+export const COMBAT_CLOTHING_GARMENT_OPTIONS = ['shirt', 'jacket', 'pants', 'shoes', 'gloves'] as const
+
+/** Detect a combat-clothing garment type from an internal name / filename. */
+export function detectGarmentTypeFromName(name: string): string | null {
+  const filename = (name || '').toLowerCase()
+  if (!filename) return null
+  if (/_shirt(?:_|$)/.test(filename)) return 'shirt'
+  if (/_jacket(?:_|$)/.test(filename)) return 'jacket'
+  if (/_(?:pants|trousers?)(?:_|$)/.test(filename)) return 'pants'
+  if (/_shoes(?:_|$)/.test(filename)) return 'shoes'
+  if (/_gloves(?:_|$)/.test(filename)) return 'gloves'
+  return null
+}
+
+/**
+ * Combat-clothing garment for an FPS armour blueprint, or null for regular combat-armor
+ * plate. Detected from the internal name (garment tokens only appear on clothing makers).
+ */
+export function getCombatClothingGarment(bp: BlueprintTaxonomyInput): string | null {
+  if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
+  return detectGarmentTypeFromName(getArmorFilename(bp))
+}
+
 function getArmorFilename(bp: BlueprintTaxonomyInput): string {
   const raw = (bp.internalName || bp.file || '').trim()
   if (!raw) return ''
@@ -82,7 +110,7 @@ export function formatSubtypeLabel(sub: string | null | undefined): string | nul
   return sub.charAt(0).toUpperCase() + sub.slice(1).replace(/([A-Z])/g, ' $1')
 }
 
-export type BlueprintTagKind = 'category' | 'size' | 'armorWeight' | 'armorSlot' | 'subtype'
+export type BlueprintTagKind = 'category' | 'size' | 'armorWeight' | 'armorSlot' | 'subtype' | 'garment'
 
 export interface BlueprintDisplayTag {
   kind: BlueprintTagKind
@@ -96,6 +124,7 @@ export const BLUEPRINT_TAG_CHIP_CLASS: Record<BlueprintTagKind, string> = {
   armorWeight: 'bg-blue-950/50 text-blue-400 border-blue-500/30',
   armorSlot: 'bg-green-950/50 text-green-400 border-green-500/30',
   subtype: 'bg-orange-950/50 text-orange-400 border-orange-500/30',
+  garment: 'bg-violet-950/50 text-violet-300 border-violet-500/30',
 }
 
 /** Ordered taxonomy tags for blueprint cards and detail views. */
@@ -113,6 +142,15 @@ export function getBlueprintDisplayTags(bp: BlueprintTaxonomyInput): BlueprintDi
   }
 
   const isFpsArmor = bp.categoryName === 'FPSArmours'
+
+  // Combat clothing (armored apparel) shows a Combat Clothing family chip + garment type,
+  // not the combat-armor weight/slot chips.
+  const garment = isFpsArmor ? getCombatClothingGarment(bp) : null
+  if (garment) {
+    tags.push({ kind: 'subtype', label: 'Combat Clothing' })
+    tags.push({ kind: 'garment', label: formatSubtypeLabel(garment) ?? garment })
+    return tags
+  }
 
   if (isFpsArmor) {
     const armorWeight = getArmorWeight(bp)
@@ -138,6 +176,10 @@ export function getBlueprintDisplayTags(bp: BlueprintTaxonomyInput): BlueprintDi
 }
 
 export function getBlueprintSubType(bp: BlueprintTaxonomyInput): string | null {
+  // Combat clothing is filtered/grouped by garment type (shirt/jacket/pants/shoes/gloves).
+  const garment = getCombatClothingGarment(bp)
+  if (garment) return garment
+
   const pathKey = bp.file?.includes('\\') ? bp.file : null
   if (pathKey) {
     const parts = pathKey.split('\\')
@@ -230,6 +272,8 @@ function isFlightArmor(parts: string[], filename: string, blueprintName = ''): b
 
 export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
   if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
+  // Combat clothing isn't graded by armor weight class.
+  if (getCombatClothingGarment(bp)) return null
   if (bp.armorWeight) return bp.armorWeight
 
   const parts = getArmorPathParts(bp)
@@ -260,6 +304,8 @@ export function getArmorWeight(bp: BlueprintTaxonomyInput): string | null {
 
 export function getArmorSlot(bp: BlueprintTaxonomyInput): string | null {
   if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
+  // Combat clothing uses a garment tag instead of a combat-armor plate slot.
+  if (getCombatClothingGarment(bp)) return null
 
   const filename = getArmorFilename(bp)
   const displayName = bp.blueprintName || ''

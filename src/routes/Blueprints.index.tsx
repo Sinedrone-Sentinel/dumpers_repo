@@ -75,7 +75,19 @@ const VEHICLE_SIZE_OPTIONS = {
 const STATIC_SUBTYPE_OPTIONS = {
   'FPS Weapons': FPS_WEAPON_TYPE_OPTIONS,
   'Ammo': FPS_WEAPON_TYPE_OPTIONS,
-  'FPS Armour': ['standard', 'flightsuit', 'undersuit', 'explorer', 'salvager', 'stealth'],
+  'FPS Armour': [
+    'standard',
+    'flightsuit',
+    'undersuit',
+    'explorer',
+    'salvager',
+    'stealth',
+    'shirt',
+    'jacket',
+    'pants',
+    'shoes',
+    'gloves',
+  ],
 }
 
 const formatSubType = formatSubtypeLabel

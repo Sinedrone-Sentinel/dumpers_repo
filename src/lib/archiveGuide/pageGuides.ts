@@ -13,6 +13,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'The main hub for browsing all available crafting blueprints in Star Citizen.',
     details: [
       'Browse and filter blueprints by type, manufacturer, and availability',
+      'FPS Armour includes combat clothing (armored apparel like the Bellator set): these show a Combat Clothing tag plus a garment type (Shirt, Jacket, Pants, Shoes, Gloves) instead of an armor weight/slot, and you can filter by garment type',
       'Material filter (cyan): type or pick any crafting material to show blueprints that require it — runs before category filters',
       'Search, category, material, and acquisition filters are remembered when you return (per account in this browser; Offline Mode uses local guest storage)',
       'See what reputation level is required to unlock each blueprint',
