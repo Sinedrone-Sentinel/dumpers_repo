@@ -56,6 +56,12 @@ import { getMineableElementStatHints } from '../../lib/mineableElementStats'
 import { buildWindowBarModel } from '../../lib/miningWindowDisplay'
 import WindowSizeBar from './WindowSizeBar'
 import { formatRequiredPower } from '../../lib/miningBreakability'
+import {
+  applyGadgetsToRockStats,
+  formatGadgetModifierPercent,
+  getMiningGadgetsByNames,
+  listMiningGadgets,
+} from '../../lib/miningGadgets'
 import type { RockBreakabilityTarget } from '../../lib/miningLoadoutCompare'
 import SiteTooltip from '../SiteTooltip'
 import {
@@ -123,6 +129,8 @@ export default function RockCalculator({
   const [resistanceInput, setResistanceInput] = useState('')
   const [percentBySlot, setPercentBySlot] = useState<Record<string, string>>({})
   const [qualityBySlot, setQualityBySlot] = useState<Record<string, string>>({})
+  const [gadgetSlot1, setGadgetSlot1] = useState('')
+  const [gadgetSlot2, setGadgetSlot2] = useState('')
 
   const [ledgers, setLedgers] = useState<MiningLedgerListItem[]>([])
   const [selectedLedgerId, setSelectedLedgerId] = useState('')
@@ -171,7 +179,45 @@ export default function RockCalculator({
   const scannerMass = parseRockPropertyInput(scannerMassInput)
   const scannerResistance = parseRockPropertyInput(resistanceInput)
   const scannerInstability = parseRockPropertyInput(instabilityInput)
-  const requiredPowerLabel = formatRequiredPower(scannerMass, scannerResistance, scannerInstability)
+
+  const gadgetOptions = useMemo(() => listMiningGadgets(), [])
+  const selectedGadgets = useMemo(
+    () => getMiningGadgetsByNames([gadgetSlot1, gadgetSlot2]),
+    [gadgetSlot1, gadgetSlot2]
+  )
+  // Gadgets modify the rock's BASE stats before any head/module math applies.
+  const gadgetAdjusted = useMemo(
+    () =>
+      applyGadgetsToRockStats(
+        { resistancePercent: scannerResistance, instability: scannerInstability },
+        selectedGadgets
+      ),
+    [scannerResistance, scannerInstability, selectedGadgets]
+  )
+  const adjustedResistance = gadgetAdjusted.resistancePercent
+  const adjustedInstability = gadgetAdjusted.instability
+
+  const gadgetSummary = useMemo(() => {
+    if (!selectedGadgets.length) return null
+    const parts: string[] = []
+    if (
+      scannerResistance != null &&
+      adjustedResistance != null &&
+      Math.round(scannerResistance) !== Math.round(adjustedResistance)
+    ) {
+      parts.push(`Res ${Math.round(scannerResistance)}→${Math.round(adjustedResistance)}%`)
+    }
+    if (
+      scannerInstability != null &&
+      adjustedInstability != null &&
+      Math.round(scannerInstability) !== Math.round(adjustedInstability)
+    ) {
+      parts.push(`Inst ${Math.round(scannerInstability)}→${Math.round(adjustedInstability)}`)
+    }
+    return parts.length ? parts.join(' · ') : null
+  }, [selectedGadgets, scannerResistance, adjustedResistance, scannerInstability, adjustedInstability])
+
+  const requiredPowerLabel = formatRequiredPower(scannerMass, adjustedResistance, adjustedInstability)
   const windowBarModel = useMemo(() => (oreName ? buildWindowBarModel(oreName) : null), [oreName])
 
   useEffect(() => {
@@ -299,19 +345,23 @@ export default function RockCalculator({
 
     onRockTargetChange?.({
       scannerMass,
-      resistancePercent: scannerResistance,
-      instability: scannerInstability,
+      resistancePercent: adjustedResistance,
+      instability: adjustedInstability,
       oreName: oreName || null,
       totalScu,
       materials: valuableMaterials.length ? valuableMaterials : null,
+      selectedGadgetNames: selectedGadgets.length
+        ? selectedGadgets.map((gadget) => gadget.name)
+        : null,
     })
   }, [
     scannerMass,
-    scannerResistance,
-    scannerInstability,
+    adjustedResistance,
+    adjustedInstability,
     oreName,
     totalScu,
     materialRows,
+    selectedGadgets,
     onRockTargetChange,
   ])
 
@@ -627,9 +677,35 @@ export default function RockCalculator({
                 <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
                   Scanner rock stats
                 </label>
-                <p className="text-[10px] text-slate-500 mb-1">
-                  Enter values from a completed scan on the RESULTS panel (Mole pilot HUD).
-                </p>
+                <div className="mb-2">
+                  <div className="flex items-center justify-between gap-2 mb-0.5">
+                    <span className="text-[10px] text-slate-400">Gadgets in use</span>
+                    {gadgetSummary ? (
+                      <span
+                        className="text-[9px] text-cyan-300/90 tabular-nums truncate"
+                        title="Rock base stats after gadgets"
+                      >
+                        {gadgetSummary}
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="flex gap-1.5">
+                    <GadgetSelect
+                      value={gadgetSlot1}
+                      otherValue={gadgetSlot2}
+                      options={gadgetOptions}
+                      onChange={setGadgetSlot1}
+                      ariaLabel="First mining gadget"
+                    />
+                    <GadgetSelect
+                      value={gadgetSlot2}
+                      otherValue={gadgetSlot1}
+                      options={gadgetOptions}
+                      onChange={setGadgetSlot2}
+                      ariaLabel="Second mining gadget"
+                    />
+                  </div>
+                </div>
                 <span className="block text-[10px] text-slate-400 mb-0.5">Mass</span>
                 <input
                   type="number"
@@ -868,6 +944,52 @@ export default function RockCalculator({
         </div>
       </div>
     </aside>
+  )
+}
+
+function formatGadgetEffect(gadget: {
+  resistanceModifier: number
+  instabilityModifier: number
+}): string {
+  const parts: string[] = []
+  if (gadget.resistanceModifier !== 0) {
+    parts.push(`${formatGadgetModifierPercent(gadget.resistanceModifier)} resist`)
+  }
+  if (gadget.instabilityModifier !== 0) {
+    parts.push(`${formatGadgetModifierPercent(gadget.instabilityModifier)} instab`)
+  }
+  return parts.join(', ')
+}
+
+interface GadgetSelectProps {
+  value: string
+  otherValue: string
+  options: ReturnType<typeof listMiningGadgets>
+  onChange: (value: string) => void
+  ariaLabel: string
+}
+
+function GadgetSelect({ value, otherValue, options, onChange, ariaLabel }: GadgetSelectProps) {
+  const selected = options.find((gadget) => gadget.name === value)
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="site-input flex-1 min-w-0 px-1.5 py-1.5 text-xs truncate"
+      aria-label={ariaLabel}
+      title={selected ? `${selected.displayName}: ${formatGadgetEffect(selected)}` : 'No gadget'}
+    >
+      <option value="">None</option>
+      {options.map((gadget) => (
+        <option
+          key={gadget.name}
+          value={gadget.name}
+          disabled={gadget.name === otherValue && otherValue !== ''}
+        >
+          {gadget.displayName}
+        </option>
+      ))}
+    </select>
   )
 }
 

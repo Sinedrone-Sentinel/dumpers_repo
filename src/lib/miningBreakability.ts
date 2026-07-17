@@ -6,13 +6,29 @@ import { applyRockMultiplicativePercent } from './miningGadgets'
 export const MINING_MASS_COEFFICIENT = 0.2
 
 /**
- * Instability scaling factor for crackable power calculation (quadratic formula).
- * Instability effect is non-linear — gets exponentially worse at higher values.
- * Formula: margin = (instability / SCALE)²
- * At 500 instability: 2.0× equalization power needed
- * At 1000 instability: 5.0× equalization power needed
+ * @deprecated Superseded by the ±MW instability-assist model (see `crackablePower`).
+ * Kept only for reference; no longer used in fracture math.
  */
 export const INSTABILITY_QUADRATIC_SCALE = 500
+
+/**
+ * Instability behaves like a ±MW oscillation on the applied power (RNG per server
+ * tick): the effective power swings up AND down around your steady output. A wave
+ * *crest* can momentarily reach `power + assist`, letting you tag the fracture window
+ * on a rock you couldn't hold steadily — and a *trough* is what makes it easy to
+ * overshoot/stall. So higher instability WIDENS the crackable band; it does not raise
+ * the barrier. `assist` is the crest reach in MW: instability read straight off the
+ * scanner as an MW-equivalent amplitude, times this factor.
+ *
+ * Factor 1.0 = the absolute possibility boundary (only the highest crest helps, so the
+ * bottom of the band is a "risky/patient" crack, not a reliable one).
+ */
+export const INSTABILITY_ASSIST_FACTOR = 1
+
+/** Crest reach (MW) that instability adds on top of steady applied power. */
+export function instabilityAssistMw(instability: number): number {
+  return Math.max(0, instability) * INSTABILITY_ASSIST_FACTOR
+}
 
 export interface BreakabilityRange {
   min: number
@@ -76,18 +92,25 @@ export function equalizationPower(
 }
 
 /**
- * Crackable power (MW) — the actual power needed to fracture a rock.
- * This is equalization power PLUS margin for instability fluctuations.
- * Higher instability = exponentially more margin needed (quadratic scaling).
+ * Crackable power (MW) — the MINIMUM applied power that gives you a shot at fracturing
+ * a rock, accounting for the instability assist.
  *
- * Formula: crackablePower = equalizationPower × (1 + (instability / SCALE)²)
+ * The real barrier is the equalization (hold) point: at/above it you can drive the
+ * energy bar up into the fracture window. Instability adds a ±MW wave, so a crest can
+ * reach the barrier even when your steady power sits below it — BUT your steady power
+ * still has to overcome the equal-and-opposite trough (the "underswing"). That makes a
+ * band around equalization, half-width = the instability crest reach:
  *
- * Examples:
- *   100 inst → 1.04× equalization
- *   300 inst → 1.36× equalization
- *   500 inst → 2.00× equalization
- *   700 inst → 2.96× equalization
- *  1000 inst → 5.00× equalization
+ *   crackablePower (floor) = max(0, equalizationPower − instabilityAssistMw(instability))
+ *
+ * - power ≥ equalization + assist ......... clean crack (even troughs stay above the hold point)
+ * - floor ≤ power < equalization + assist   risky/patient crack (crests bridge, but you fight the trough)
+ * - power < floor ......................... impossible (even the highest crest can't reach)
+ *
+ * This is the reverse of the old quadratic model for the *floor* — higher instability
+ * LOWERS the minimum, matching that high-instability rocks are breakable even when they
+ * look "impossible" on base power. The underswing is why being near the floor is a grind,
+ * and overshoot risk (not a power requirement) is the cost of a big wave.
  */
 export function crackablePower(
   scannerMass: number,
@@ -97,9 +120,46 @@ export function crackablePower(
 ): number {
   const eqPower = equalizationPower(scannerMass, resistancePercent, resistanceModifier)
   if (!Number.isFinite(eqPower)) return eqPower
-  const normalized = Math.max(0, instability) / INSTABILITY_QUADRATIC_SCALE
-  const instabilityMargin = normalized * normalized
-  return eqPower * (1 + instabilityMargin)
+  return Math.max(0, eqPower - instabilityAssistMw(instability))
+}
+
+export type CrackZone = 'clean' | 'assisted' | 'impossible'
+
+export interface CrackZoneResult {
+  zone: CrackZone
+  /** Equalization / hold point (MW). */
+  equalization: number
+  /** Minimum power for a shot at cracking (equalization − instability assist). */
+  minimum: number
+  /** Clean-crack line (MW) — even the trough stays at/above equalization (equalization + assist). */
+  clean: number
+  /** Instability crest reach (MW) — half-width of the ± wave band. */
+  assist: number
+}
+
+/**
+ * Classify a loadout's power against a rock's fracture band.
+ * `power` is the applied laser power (MW); `resistanceModifier` is the laser/head
+ * resistance multiplier (0..1). "clean" requires overcoming the underswing (power at
+ * or above equalization + the instability crest reach).
+ */
+export function classifyCrackZone(
+  power: number,
+  scannerMass: number,
+  resistancePercent: number,
+  instability: number,
+  resistanceModifier = 1
+): CrackZoneResult {
+  const equalization = equalizationPower(scannerMass, resistancePercent, resistanceModifier)
+  const assist = instabilityAssistMw(instability)
+  const minimum = Math.max(0, equalization - assist)
+  const clean = equalization + assist
+  let zone: CrackZone
+  if (!Number.isFinite(equalization)) zone = 'impossible'
+  else if (power >= clean) zone = 'clean'
+  else if (power >= minimum) zone = 'assisted'
+  else zone = 'impossible'
+  return { zone, equalization, minimum, clean, assist }
 }
 
 /**
@@ -164,8 +224,9 @@ export function formatBreakabilityRange(range: BreakabilityRange | null): string
 }
 
 /**
- * Format the crackable power for display.
- * Includes instability margin when provided.
+ * Format the MINIMUM fracture power for display — equalization minus the instability
+ * assist (the least power that gives a shot at cracking). Shown as a plain number with
+ * no zone labels: a miner whose loadout sits above this reads it as comfortable margin.
  */
 export function formatRequiredPower(
   scannerMass: number | null,

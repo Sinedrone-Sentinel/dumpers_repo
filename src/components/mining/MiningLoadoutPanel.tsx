@@ -100,39 +100,16 @@ function SmartCrackerPanel({
   result: SmartCrackerResult
   oreName?: string | null
 }) {
-  const { gadgetSuggestions, moleStrategy, slowCrack } = result
+  const { gadgetSuggestions, moleStrategy } = result
   const hasGadget = gadgetSuggestions.length > 0
   const recommendedGadget = gadgetSuggestions.find((suggestion) => suggestion.recommended)
   const alternateGadgets = gadgetSuggestions.filter((suggestion) => !suggestion.recommended)
 
-  if (!hasGadget && !moleStrategy && !slowCrack) return null
+  if (!hasGadget && !moleStrategy) return null
 
   return (
     <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-3">
       {moleStrategy ? <MoleHeadPlanPanel strategy={moleStrategy} oreName={oreName} embedded /> : null}
-
-      {slowCrack ? (
-        <div
-          className={`rounded-md border px-2.5 py-2 space-y-1 ${
-            slowCrack.worthWaiting
-              ? 'border-amber-900/50 bg-amber-950/20'
-              : 'border-orange-900/50 bg-orange-950/20'
-          }`}
-        >
-          <p
-            className={`text-xs font-medium ${
-              slowCrack.worthWaiting ? 'text-amber-300' : 'text-orange-300'
-            }`}
-          >
-            {slowCrack.headline}
-          </p>
-          <p className="text-[11px] text-slate-400 leading-snug">{slowCrack.detail}</p>
-          <p className="text-[11px] font-mono tabular-nums text-slate-500">
-            Max output {slowCrack.deliveredMw.toLocaleString()} MW vs{' '}
-            {slowCrack.equalizingMw.toLocaleString()} MW needed to hold the charge
-          </p>
-        </div>
-      ) : null}
 
       {hasGadget ? (
         <div

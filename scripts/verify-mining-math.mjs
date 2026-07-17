@@ -22,7 +22,6 @@ const modules = [
   'src/lib/moleLoadoutStrategy.ts',
   'src/lib/miningActiveModuleAdvice.ts',
   'src/lib/miningGadgetRecommendations.ts',
-  'src/lib/miningSlowCrack.ts',
   'src/lib/miningGadgets.ts',
   'src/lib/miningThrottleDisplay.ts',
   'src/lib/miningMinPowerWarning.ts',
@@ -48,7 +47,6 @@ const loadoutCompare = await import(pathToFileURL(path.join(outDir, 'miningLoado
 const moleStrategy = await import(pathToFileURL(path.join(outDir, 'moleLoadoutStrategy.mjs')).href)
 const activeAdvice = await import(pathToFileURL(path.join(outDir, 'miningActiveModuleAdvice.mjs')).href)
 const gadgetRecs = await import(pathToFileURL(path.join(outDir, 'miningGadgetRecommendations.mjs')).href)
-const slowCrack = await import(pathToFileURL(path.join(outDir, 'miningSlowCrack.mjs')).href)
 const gadgets = await import(pathToFileURL(path.join(outDir, 'miningGadgets.mjs')).href)
 const throttleDisplay = await import(pathToFileURL(path.join(outDir, 'miningThrottleDisplay.mjs')).href)
 const minPowerWarning = await import(pathToFileURL(path.join(outDir, 'miningMinPowerWarning.mjs')).href)
@@ -180,26 +178,35 @@ assert(breakability.requiredLaserPower(0, 50) === 0, 'Zero mass → 0 MW')
 assert(!Number.isFinite(breakability.requiredLaserPower(10000, 100)), '100% RES → Infinity (impossible)')
 assert(breakability.requiredLaserPower(-100, 50) === 0, 'Negative mass → 0 MW')
 
-// 1.4 equalizationPower vs crackablePower (quadratic instability margin)
-console.log('\n1.4 equalizationPower / crackablePower')
-// crackablePower = equalizationPower × (1 + (instability / 500)²)
+// 1.4 equalizationPower vs crackablePower (±MW instability-assist model)
+console.log('\n1.4 equalizationPower / crackablePower (instability assist lowers the floor)')
+// crackablePower (floor) = max(0, equalizationPower − instabilityAssistMw(instability))
 const eq5k = breakability.equalizationPower(5000, 25)
-assert(breakability.crackablePower(5000, 25, 0) === eq5k, 'Zero instability → crackable = equalization')
-assertApprox(breakability.crackablePower(5000, 25, 500), eq5k * 2, 1, '500 inst → 2× equalization')
-assertApprox(breakability.crackablePower(5000, 25, 1000), eq5k * 5, 1, '1000 inst → 5× equalization')
-assertApprox(breakability.crackablePower(5000, 25, 100), eq5k * 1.04, 1, '100 inst → 1.04× equalization')
+assert(breakability.crackablePower(5000, 25, 0) === eq5k, 'Zero instability → floor = equalization')
+assertApprox(breakability.crackablePower(5000, 25, 500), eq5k - 500, 1, '500 inst → equalization − 500 (assist lowers floor)')
+assertApprox(breakability.crackablePower(5000, 25, 100), eq5k - 100, 1, '100 inst → equalization − 100')
+assert(breakability.crackablePower(5000, 25, 10000) === 0, 'Assist beyond equalization → floor clamps to 0')
 assert(!Number.isFinite(breakability.crackablePower(10000, 100, 300)), '100% RES → Infinity (impossible)')
 
-// 1.5 crackablePower with resistance modifier (user-verified Riccite scenario)
+// Three-zone band: clean requires overcoming the underswing (E + assist)
+const zClean = breakability.classifyCrackZone(eq5k + 600, 5000, 25, 500)
+assert(zClean.zone === 'clean', 'Power above E + assist → clean crack')
+const zRisky = breakability.classifyCrackZone(eq5k - 200, 5000, 25, 500)
+assert(zRisky.zone === 'assisted', 'Power between floor and E+assist → risky/assisted crack')
+const zImposs = breakability.classifyCrackZone(eq5k - 800, 5000, 25, 500)
+assert(zImposs.zone === 'impossible', 'Power below floor (E − assist) → impossible')
+
+// 1.5 crackablePower with resistance modifier (Riccite scenario, ±MW model)
 console.log('\n1.5 crackablePower with resistance modifier')
 // 10849 mass, 74% RES with Helix (-30% → 0.7), 515 instability
 // Equalization: (10849 × 0.2) / (1 - 0.518) ≈ 4,502 MW
-// Crackable: 4,502 × (1 + (515/500)²) ≈ 9,278 MW
+// Floor (min for a shot): 4,502 − 515 ≈ 3,987 MW (instability assist lowers it)
 const userEq = breakability.equalizationPower(10849, 74, 0.7)
 assertApprox(userEq, 4502, 10, 'User scenario equalization ≈ 4,502 MW')
 const userRequired = breakability.crackablePower(10849, 74, 515, 0.7)
-assertApprox(userRequired, 9278, 60, 'User scenario crackable with 515 inst ≈ 9,278 MW')
-console.log(`  → User scenario: ${userEq.toFixed(0)} MW to equalize, ${userRequired.toFixed(0)} MW to crack`)
+assertApprox(userRequired, userEq - 515, 5, 'User scenario floor = equalization − 515 instability assist')
+assert(userRequired < userEq, 'Instability lowers the minimum below equalization (not above)')
+console.log(`  → User scenario: ${userEq.toFixed(0)} MW to equalize, floor ${userRequired.toFixed(0)} MW for a shot`)
 
 // ============================================================================
 // 2. LASER STATS COMPOSITION
@@ -537,31 +544,6 @@ assertApprox(gadgets.applyRockMultiplicativePercent(50, 15), 57.5, 0.1, '50% × 
 assertApprox(gadgets.applyRockMultiplicativePercent(500, -20), 400, 0.1, '500 instability × (1 − 20%) = 400')
 
 // ============================================================================
-// 8. SLOW CRACK ASSESSMENT
-// ============================================================================
-section('8. Slow Crack Assessment')
-
-// 8.1 Margin tiers
-console.log('\n8.1 Slow crack margin tiers')
-// Create a scenario where we're barely over the equalizer
-const barelyOverRock = { ...MEDIUM_ROCK }
-const barelyOverLoadout = [HELIX_S2, IMPACT_S2, ARBOR_S2]
-const barelyOverComparison = loadoutCompare.compareLoadoutToRock(barelyOverLoadout, barelyOverRock)
-
-if (barelyOverComparison?.canBreak) {
-  const margin = barelyOverComparison.totalLaserPower / barelyOverComparison.requiredPower
-  console.log(`  → Power margin: ${(margin * 100).toFixed(1)}%`)
-  
-  const slowAssessment = slowCrack.assessSlowCrackFromComparison(barelyOverComparison, barelyOverRock)
-  if (slowAssessment) {
-    console.log(`  → Slow crack tier: ${slowAssessment.tier}`)
-    console.log(`  → Headline: ${slowAssessment.headline}`)
-  } else {
-    console.log(`  → No slow crack warning (margin comfortable)`)
-  }
-}
-
-// ============================================================================
 // 9. INTEGRATION TESTS
 // ============================================================================
 section('9. Integration Tests')
@@ -604,9 +586,11 @@ const prospectorSmartCracker = gadgetRecs.buildSmartCracker(
 )
 assert(prospectorSmartCracker.moleStrategy === null, 'Prospector should not have mole strategy')
 
-// 9.4 End-to-end: User's exact scenario (Helix II + 2× Focus III + Rieger, 74% rock, 515 instability)
-// This tests the critical bug: game shows IMPOSSIBLE but old math said CRACKABLE
-console.log('\n9.4 User scenario: Helix II + 2× Focus III + Rieger on 74%/515 rock')
+// 9.4 End-to-end: Helix II + 2× Focus III + Rieger on 74%/515 rock.
+// The game shows IMPOSSIBLE because it only checks the seat's BASE laser vs mass+resistance
+// — it can't know you'll fit modules/gadgets/crew. Our tool answers for the ACTUAL loadout,
+// and with the instability assist this rock is crackable.
+console.log('\n9.4 Loadout scenario: Helix II + 2× Focus III + Rieger on 74%/515 rock')
 const USER_HELIX_WITH_MODULES = {
   laserName: 'Mining_Laser_THCN_Helix_S2',
   mode: 'stock',
@@ -620,25 +604,19 @@ const userSoloStrategy = moleStrategy.findBestMoleLoadoutStrategy(userLoadoutAct
 const userHeadProfile = moleStrategy.buildMoleHeadProfile(USER_HELIX_WITH_MODULES, 0)
 assert(userHeadProfile?.laserPower === 5670, `User head: 4930 × 1.15 = 5,670 MW (got ${userHeadProfile?.laserPower})`)
 
-// Verify the required power calculations
+// Required power: equalization (hold point) vs floor (min for a shot, instability-assisted)
 const basePower = breakability.equalizationPower(10849, 74, 0.7)
-const adjustedPower = breakability.crackablePower(10849, 74, 515, 0.7)
-console.log(`  → User head power: ${userHeadProfile?.laserPower} MW`)
+const floorPower = breakability.crackablePower(10849, 74, 515, 0.7)
+console.log(`  → Head power: ${userHeadProfile?.laserPower} MW`)
 console.log(`  → Equalization (RES only): ${basePower.toFixed(0)} MW`)
-console.log(`  → Crackable (+515 inst margin): ${adjustedPower.toFixed(0)} MW`)
+console.log(`  → Floor (−515 inst assist): ${floorPower.toFixed(0)} MW`)
 console.log(`  → Can solo crack: ${userSoloStrategy?.canBreak}`)
 
-// THE KEY TEST: Without instability, 5670 > base = crackable (BUG!)
-// With instability: 5670 < adjusted = NOT crackable (CORRECT!)
-assert(userHeadProfile?.laserPower > basePower, 'Without instability, laser power exceeds base required (old bug)')
-assert(userHeadProfile?.laserPower < adjustedPower, 'With instability, laser power is insufficient (correct)')
-assert(!userSoloStrategy?.canBreak, 'User scenario must NOT be crackable solo (matches game IMPOSSIBLE)')
-
-// Verify the strategy reports instability in the summary
-assert(
-  userSoloStrategy?.summary?.includes('instability') || userSoloStrategy?.assignments[0]?.detail?.includes('inst'),
-  'Solo strategy should mention instability in notes'
-)
+// Instability LOWERS the minimum (floor below equalization), and the head clears both.
+assert(floorPower < basePower, 'Instability assist puts the floor below equalization')
+assert(userHeadProfile?.laserPower > basePower, 'Head power exceeds equalization (clean side of the band)')
+assert(userHeadProfile?.laserPower >= floorPower, 'Head power clears the instability-assisted floor → crackable')
+assert(userSoloStrategy?.canBreak, 'Tool finds this crackable with the actual loadout (game IMPOSSIBLE ignores modules)')
 console.log(`  → Summary: ${userSoloStrategy?.summary}`)
 
 // ============================================================================

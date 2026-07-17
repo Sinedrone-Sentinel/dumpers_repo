@@ -5,7 +5,6 @@ import {
   type RockBreakabilityTarget,
 } from './miningLoadoutCompare'
 import type { MiningLaserSlotConfig } from './miningLaserStats'
-import { assessSlowCrackFromComparison, type SlowCrackAssessment } from './miningSlowCrack'
 import type { MiningVesselId } from './miningVessels'
 import { findBestMoleLoadoutStrategy, type MoleLoadoutStrategy } from './moleLoadoutStrategy'
 import {
@@ -40,7 +39,6 @@ export interface SmartCrackerResult {
   shouldAdvise: boolean
   gadgetSuggestions: GadgetSuggestion[]
   moleStrategy: MoleLoadoutStrategy | null
-  slowCrack: SlowCrackAssessment | null
 }
 
 /** @deprecated Use SmartCrackerResult */
@@ -69,7 +67,6 @@ interface GadgetSuggestionContext {
   comparison: LoadoutBreakabilityComparison
   moleStrategy: MoleLoadoutStrategy | null
   soloMining: boolean
-  slowCrack: SlowCrackAssessment | null
 }
 
 function targetWithGadgetResistance(
@@ -148,11 +145,18 @@ function formatWindowGadgetReason(
   return `${gadget.displayName} widens the fracture charge window (${parts.join(', ')}) — easier to land a clean crack${highInstability}.`
 }
 
+/** Gadgets already placed on the rock (their effect is folded into target stats). */
+function equippedGadgetNames(ctx: GadgetSuggestionContext): ReadonlySet<string> {
+  return new Set(ctx.target.selectedGadgetNames ?? [])
+}
+
 function findResistanceGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCandidate[] {
   const candidates: GadgetCandidate[] = []
-  const { lasers, target, moleStrategy, soloMining, slowCrack } = ctx
+  const { lasers, target, moleStrategy, soloMining } = ctx
+  const equipped = equippedGadgetNames(ctx)
 
   for (const gadget of listMiningGadgets()) {
+    if (equipped.has(gadget.name)) continue
     if (gadget.resistanceModifier >= 0) continue
     const adjustedTarget = targetWithGadgetResistance(target, gadget)
     if (!adjustedTarget) continue
@@ -181,8 +185,6 @@ function findResistanceGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCan
     let reason: string
     if (!ctx.canBreak && makesCrackable) {
       reason = `${gadget.displayName} drops rock resistance to ${Math.round(adjustedResistance)}% (${formatGadgetModifierPercent(gadget.resistanceModifier)}) — makes this rock crackable on your loadout.`
-    } else if (slowCrack) {
-      reason = `${gadget.displayName} drops rock resistance to ${Math.round(adjustedResistance)}% (${formatGadgetModifierPercent(gadget.resistanceModifier)}) — adds fracture headroom so you are not stuck +${slowCrack.marginPercent}% over the equalizer on a long grind.`
     } else {
       reason = `${gadget.displayName} drops rock resistance to ${Math.round(adjustedResistance)}% (${formatGadgetModifierPercent(gadget.resistanceModifier)}) — ${margin.toLocaleString()} MW headroom after fracture math.`
     }
@@ -205,8 +207,10 @@ function findInstabilityGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCa
 
   const candidates: GadgetCandidate[] = []
   const { lasers, target, moleStrategy, soloMining } = ctx
+  const equipped = equippedGadgetNames(ctx)
 
   for (const gadget of listMiningGadgets()) {
+    if (equipped.has(gadget.name)) continue
     if (gadget.instabilityModifier >= 0) continue
     const adjustedTarget = targetWithGadgetResistance(target, gadget) ?? target
 
@@ -242,8 +246,10 @@ function findWindowGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCandida
   if (!ctx.needWindow) return []
 
   const candidates: GadgetCandidate[] = []
+  const equipped = equippedGadgetNames(ctx)
 
   for (const gadget of listMiningGadgets()) {
+    if (equipped.has(gadget.name)) continue
     const windowScore = gadget.optimalWindowModifier + gadget.optimalWindowRateModifier * 0.5
     if (windowScore <= 0) continue
 
@@ -261,10 +267,8 @@ function findWindowGadgetCandidates(ctx: GadgetSuggestionContext): GadgetCandida
 
 function pickPrimaryRole(ctx: GadgetSuggestionContext): GadgetSuggestionRole {
   if (!ctx.canBreak || ctx.needResistance) return 'resistance'
-  if (ctx.slowCrack && !ctx.slowCrack.worthWaiting) return 'resistance'
   if (ctx.needInstability) return 'instability'
   if (ctx.needWindow) return 'window'
-  if (ctx.slowCrack) return 'resistance'
   return 'resistance'
 }
 
@@ -285,7 +289,7 @@ function candidatesForRole(
 function shouldOfferRole(role: GadgetSuggestionRole, ctx: GadgetSuggestionContext): boolean {
   switch (role) {
     case 'resistance':
-      return ctx.needResistance || !ctx.canBreak || ctx.slowCrack != null
+      return ctx.needResistance || !ctx.canBreak
     case 'instability':
       return ctx.needInstability
     case 'window':
@@ -295,6 +299,10 @@ function shouldOfferRole(role: GadgetSuggestionRole, ctx: GadgetSuggestionContex
 
 function buildGadgetSuggestions(ctx: GadgetSuggestionContext): GadgetSuggestion[] {
   if (!ctx.needResistance && !ctx.needInstability && !ctx.needWindow) {
+    return []
+  }
+  // Both gadget ports are already filled — nothing left to suggest.
+  if ((ctx.target.selectedGadgetNames?.length ?? 0) >= 2) {
     return []
   }
 
@@ -344,8 +352,7 @@ function buildGadgetContext(
   target: RockBreakabilityTarget,
   lasers: MiningLaserSlotConfig[],
   moleStrategy: MoleLoadoutStrategy | null,
-  soloMining: boolean,
-  slowCrack: SlowCrackAssessment | null
+  soloMining: boolean
 ): GadgetSuggestionContext {
   const instability = target.instability ?? null
   const canBreak = moleStrategy?.canBreak ?? comparison.canBreak
@@ -358,10 +365,9 @@ function buildGadgetContext(
   const windowPressure =
     (instability != null && instability >= HIGH_INSTABILITY_THRESHOLD) ||
     (moleStrategy?.combinedWindowModifier ?? 0) < 0 ||
-    nearCapacity ||
-    slowCrack != null
+    nearCapacity
 
-  const needResistance = !canBreak || slowCrack != null || nearCapacity
+  const needResistance = !canBreak || nearCapacity
   const needInstability =
     canBreak && instability != null && instability >= HIGH_INSTABILITY_THRESHOLD && !easyCrack
   const needWindow = canBreak && windowPressure && !easyCrack
@@ -377,7 +383,6 @@ function buildGadgetContext(
     comparison,
     moleStrategy,
     soloMining,
-    slowCrack,
   }
 }
 
@@ -397,60 +402,40 @@ export function buildSmartCracker(
         shouldAdvise: false,
         gadgetSuggestions: [],
         moleStrategy: null,
-        slowCrack: null,
       }
     }
 
-    const slowCrack = assessSlowCrackFromComparison(
-      comparison,
-      target,
-      moleStrategy,
-      lasers
-    )
     const gadgetCtx = buildGadgetContext(
       comparison,
       target,
       lasers,
       moleStrategy,
-      moleSoloMining,
-      slowCrack
+      moleSoloMining
     )
     const gadgetSuggestions = buildGadgetSuggestions(gadgetCtx)
     const shouldAdvise =
       !moleStrategy.canBreak ||
       isNearCapacityFromMole(moleStrategy) ||
-      slowCrack != null ||
       gadgetSuggestions.length > 0
 
     return {
       shouldAdvise,
       gadgetSuggestions,
       moleStrategy,
-      slowCrack,
     }
   }
 
-  const slowCrack = assessSlowCrackFromComparison(comparison, target)
-  const gadgetCtx = buildGadgetContext(
-    comparison,
-    target,
-    lasers,
-    null,
-    true,
-    slowCrack
-  )
+  const gadgetCtx = buildGadgetContext(comparison, target, lasers, null, true)
   const gadgetSuggestions = buildGadgetSuggestions(gadgetCtx)
   const shouldAdvise =
     !comparison.canBreak ||
     isNearLoadoutCapacity(comparison) ||
-    slowCrack != null ||
     gadgetSuggestions.length > 0
 
   return {
     shouldAdvise,
     gadgetSuggestions,
     moleStrategy: null,
-    slowCrack,
   }
 }
 

@@ -209,8 +209,8 @@ function equalizationPowerForHeads(
 }
 
 /**
- * Crackable power for heads — actual power needed to fracture (includes instability margin).
- * Used for canBreak checks.
+ * Crackable power for heads — the minimum power for a shot at fracturing (equalization
+ * minus the instability assist). Used for canBreak checks.
  *
  * Head/module "Laser Instability" % modifies the rock's effective instability on that seat
  * MULTIPLICATIVELY, the same way the resistance modifier works (confirmed in-game: seat HUD
@@ -806,7 +806,7 @@ function evaluateSingleHeadOnly(
         primary,
         resistancePercent,
         crackableThreshold,
-        'needed with instability margin'
+        'minimum with instability assist'
       )
 
   const assignments = profiles.map((profile) => {
