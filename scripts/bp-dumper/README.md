@@ -14,7 +14,7 @@ Python BP Dumper versions are managed with [semantic-release](https://semantic-r
 2. semantic-release analyzes commits since the last `v*` tag. **Only `feat(dumper)` / `fix(dumper)` / `perf(dumper)` commits bump the version** — general repo commits do not.
 3. A release commit updates version files, creates a `vX.Y.Z` tag, and publishes GitHub release notes.
 4. semantic-release dispatches **Build Executables on Release**, which uploads:
-   - `DumperApps-X.Y.Z.exe` — **Windows portable exe** (self-extracting bundle with Python + BP Dumper scripts)
+   - `DumperApps-X.Y.Z.exe` — **single-file Windows exe** (PyInstaller, DR logo icon, bundled Python)
 
 Game-data parsing updates the canonical lookup at `src/data/blueprint-name-lookup.json` and copies it into Python/embed paths locally. That alone does **not** trigger a semver release — ship a new dumper build and redeploy `log-watcher-webhook` after a game patch.
 

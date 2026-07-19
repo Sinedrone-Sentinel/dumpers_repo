@@ -1,12 +1,12 @@
 name: Test Windows portable build
 
-# Manual smoke test for DumperApps portable exe (no GitHub Release upload).
+# Manual smoke test for DumperApps exe build (no GitHub Release upload).
 on:
   workflow_dispatch:
 
 jobs:
-  build-windows-portable:
-    name: Build Windows portable exe (test)
+  build-windows-exe:
+    name: Build Windows exe (test)
     runs-on: windows-latest
     timeout-minutes: 90
     steps:
@@ -16,9 +16,9 @@ jobs:
         with:
           node-version: 22
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-python@v5
         with:
-          go-version: '1.21'
+          python-version: '3.12'
 
       - name: Read dumper version
         id: version
@@ -30,26 +30,17 @@ jobs:
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
 
-      - name: Stage self-contained bundle
+      - name: Build single-file DumperApps exe
         shell: pwsh
         timeout-minutes: 45
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
-
-      - name: Install 7-Zip
-        run: choco install 7zip -y --no-progress
-
-      - name: Build portable self-extracting exe
-        shell: pwsh
-        timeout-minutes: 20
-        run: |
-          & "$env:GITHUB_WORKSPACE/scripts/installer/build-portable.ps1" -Version "${{ steps.version.outputs.version }}"
+          & "$env:GITHUB_WORKSPACE/scripts/installer/build-exe.ps1" -Version "${{ steps.version.outputs.version }}"
           Get-ChildItem "$env:GITHUB_WORKSPACE/scripts/installer/output" -Filter "DumperApps-*.exe" |
             ForEach-Object { Write-Host "Built $($_.Name) ($([math]::Round($_.Length / 1MB, 1)) MB)" }
 
-      - name: Upload portable artifact
+      - name: Upload exe artifact
         uses: actions/upload-artifact@v4
         with:
-          name: DumperApps-portable-test
+          name: DumperApps-exe-test
           path: scripts/installer/output/DumperApps-*.exe

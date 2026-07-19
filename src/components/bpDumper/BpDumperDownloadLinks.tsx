@@ -51,7 +51,7 @@ export default function BpDumperDownloadLinks() {
       </a>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows only today. Extract/run from any folder — blueprint sync and Live Mission Tracker start automatically.
+        Windows only today. Double-click the exe — blueprint sync and Live Mission Tracker start in a console window.
       </p>
     </div>
   )

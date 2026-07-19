@@ -19,7 +19,19 @@ import urllib.request
 from pathlib import Path
 from typing import Optional, Any
 
-_LOOKUP_PATH = Path(__file__).resolve().parent / "lookup.json"
+def _resource_dir() -> Path:
+    """Directory for read-only bundled files (lookup.json)."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS)
+    return Path(__file__).resolve().parent
+
+def _app_dir() -> Path:
+    """Directory for user-writable files (.env, cache) — next to the exe when frozen."""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).resolve().parent
+    return Path(__file__).resolve().parent
+
+_LOOKUP_PATH = _resource_dir() / "lookup.json"
 _cached: dict[str, Any] | None = None
 
 def _load_lookup() -> dict[str, Any]:
@@ -794,7 +806,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
     last_size = 0
     buffer = bytearray()
     first_open = True
-    cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+    cache_path = _app_dir() / ".dumper_cache.json"
 
     try:
         while True:
@@ -1144,7 +1156,7 @@ def main():
     args = parser.parse_args()
 
     # Load configuration from .env file
-    env_path = Path(__file__).resolve().parent / ".env"
+    env_path = _app_dir() / ".env"
     env_vars = load_env_file(env_path)
 
     # Resolve watch mode: default on; --no-watch or WATCH_MODE=false disables
@@ -1280,7 +1292,7 @@ def main():
     # Update script args.url with resolved URL for reference
     args.url = url
 
-    cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+    cache_path = _app_dir() / ".dumper_cache.json"
     acquired_blueprints = load_cache_file(cache_path)
 
     session = None
@@ -1601,7 +1613,7 @@ def main():
         return
 
     # Load local dumper cache
-    cache_path = Path(__file__).resolve().parent / ".dumper_cache.json"
+    cache_path = _app_dir() / ".dumper_cache.json"
     acquired_blueprints = load_cache_file(cache_path)
 
     # If running in non-dry-run mode, synchronize with the server

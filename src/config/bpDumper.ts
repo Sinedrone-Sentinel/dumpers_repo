@@ -36,7 +36,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     id: 'windows-portable',
     label: 'Windows portable exe',
     description:
-      'Download and run DumperApps.exe — it extracts beside itself and starts blueprint sync + Live Mission Tracker. Python is bundled; no install wizard.',
+      'Download and run DumperApps.exe — double-click to start blueprint sync and Live Mission Tracker. Python is bundled; no install wizard or zip extractor.',
     filename: getDumperAppsPortableFilename(),
   },
 ]

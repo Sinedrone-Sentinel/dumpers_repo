@@ -40,8 +40,8 @@ jobs:
           VERSION=$(node -p "require('./scripts/bp-dumper/version.json').version")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-  build-windows-portable:
-    name: Build Windows portable exe
+  build-windows-exe:
+    name: Build Windows exe
     needs: resolve-tag
     runs-on: windows-latest
     timeout-minutes: 90
@@ -52,39 +52,30 @@ jobs:
         with:
           node-version: 22
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-python@v5
         with:
-          go-version: '1.21'
+          python-version: '3.12'
 
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
 
-      - name: Stage self-contained bundle
+      - name: Build single-file DumperApps exe
         shell: pwsh
         timeout-minutes: 45
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-          & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
-
-      - name: Install 7-Zip
-        run: choco install 7zip -y --no-progress
-
-      - name: Build portable self-extracting exe
-        shell: pwsh
-        timeout-minutes: 20
-        run: |
           $version = "${{ needs.resolve-tag.outputs.version }}"
-          & "$env:GITHUB_WORKSPACE/scripts/installer/build-portable.ps1" -Version $version
+          & "$env:GITHUB_WORKSPACE/scripts/installer/build-exe.ps1" -Version $version
 
-      - name: Upload portable artifact
+      - name: Upload exe artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-portable
+          name: windows-exe
           path: scripts/installer/output/DumperApps-*.exe
 
   release:
     name: Upload GitHub Release assets
-    needs: [resolve-tag, build-windows-portable]
+    needs: [resolve-tag, build-windows-exe]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -94,10 +85,10 @@ jobs:
         with:
           path: artifacts
 
-      - name: Upload portable exe to GitHub Release
+      - name: Upload exe to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: artifacts/windows-portable/DumperApps-*.exe
+          files: artifacts/windows-exe/DumperApps-*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

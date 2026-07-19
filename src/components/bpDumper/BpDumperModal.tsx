@@ -107,8 +107,8 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
               Under <strong className="text-slate-300">Downloads</strong>, get{' '}
-              <strong className="text-slate-300">Windows portable exe</strong> and run it. It extracts
-              beside the download and opens a console window.
+              <strong className="text-slate-300">Windows portable exe</strong> and run it. A console
+              window opens for blueprint sync.
             </li>
             <li>
               Copy your <strong className="text-slate-300">API key</strong> below, then paste it when the
