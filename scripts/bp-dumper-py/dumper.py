@@ -449,7 +449,16 @@ PATTERN_MARKER = re.compile(
     r"CreateMarker.*missionId \[([^\]]+)\].*generator name \[([^\]]+)\].*contract \[([^\]]+)\]"
 )
 PATTERN_MARKER_DEF_ID = re.compile(r"contractDefinitionId\[([^\]]+)\]")
-PATTERN_ACCEPTED = re.compile(r'Added notification "Contract Accepted:.*?MissionId: \[([^\]]+)\]')
+PATTERN_MISSION_GENERATOR = re.compile(r"generator name \[([^\]]+)\]")
+PATTERN_MISSION_CONTRACT = re.compile(
+    r"missionId \[([^\]]+)\].*contract \[([^\]]+)\]"
+)
+PATTERN_ACCEPTED = re.compile(
+    r'Added notification "Contract Accepted:\s*(?P<title>.*?)\s*MissionId:\s*\[(?P<guid>[^\]]+)\]'
+)
+PATTERN_ACCEPTED_FALLBACK = re.compile(
+    r'Added notification "Contract Accepted:.*?MissionId:\s*\[(?P<guid>[^\]]+)\]'
+)
 PATTERN_END_MISSION = re.compile(
     r"<EndMission>.*MissionId\[([^\]]+)\].*CompletionType\[(\w+)\].*Reason\[([^\]]+)\]"
 )
@@ -491,16 +500,31 @@ class WatcherState:
         self.recent_lifecycle = deque(maxlen=32)
 
     def record_marker(self, guid: str, generator: str, contract: str, contract_definition_id=None) -> None:
-        if guid not in self.guid_map:
-            self.guid_map[guid] = MissionEntry(
-                debug_name=contract,
-                generator=generator,
-                contract_definition_id=contract_definition_id,
-            )
+        existing = self.guid_map.get(guid)
+        if existing:
+            if contract and existing.debug_name in ("", "Unknown"):
+                existing.debug_name = contract
+            if generator and existing.generator in ("", "Unknown"):
+                existing.generator = generator
+            if contract_definition_id and not existing.contract_definition_id:
+                existing.contract_definition_id = contract_definition_id
+            return
+        self.guid_map[guid] = MissionEntry(
+            debug_name=contract,
+            generator=generator,
+            contract_definition_id=contract_definition_id,
+        )
 
-    def record_accepted(self, guid: str, ts: float) -> ActiveMission:
+    def record_accepted(self, guid: str, ts: float, title: str | None = None) -> ActiveMission:
         entry = self.guid_map.get(guid)
-        debug_name = entry.debug_name if entry else "Unknown"
+        accept_title = (title or "").strip()
+        if accept_title:
+            if entry:
+                entry.debug_name = accept_title
+            else:
+                entry = MissionEntry(debug_name=accept_title, generator="", contract_definition_id=None)
+                self.guid_map[guid] = entry
+        debug_name = accept_title or (entry.debug_name if entry else "") or "Unknown"
         generator = entry.generator if entry else "Unknown"
         def_id = entry.contract_definition_id if entry else None
         active = ActiveMission(
@@ -664,13 +688,7 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
                     continue
                 ts = parse_log_timestamp(line) or 0.0
 
-                if m := PATTERN_MARKER.search(line):
-                    def_id_match = PATTERN_MARKER_DEF_ID.search(line)
-                    def_id = def_id_match.group(1) if def_id_match else None
-                    state.record_marker(m.group(1), m.group(2), m.group(3), def_id)
-
-                elif m := PATTERN_ACCEPTED.search(line):
-                    active = state.record_accepted(m.group(1), ts)
+                if active := apply_mission_log_line(line, state, ts):
                     ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts)) if ts else time.strftime("%Y-%m-%d %H:%M:%S")
                     print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
 
@@ -760,17 +778,30 @@ def save_cache_file(cache_path: Path, cache_set: set):
     except Exception:
         pass
 
+def apply_mission_log_line(line: str, state: WatcherState, ts: float) -> ActiveMission | None:
+    """Parse mission marker / accept / end lines. Returns active mission when accepted."""
+    if m := PATTERN_MISSION_CONTRACT.search(line):
+        gen_match = PATTERN_MISSION_GENERATOR.search(line)
+        generator = gen_match.group(1) if gen_match else ""
+        def_id_match = PATTERN_MARKER_DEF_ID.search(line)
+        def_id = def_id_match.group(1) if def_id_match else None
+        state.record_marker(m.group(1), generator, m.group(2), def_id)
+        return None
+
+    if m := PATTERN_ACCEPTED.search(line):
+        accept_title = (m.group("title") or "").strip() or None
+        return state.record_accepted(m.group("guid"), ts, title=accept_title)
+
+    if m := PATTERN_ACCEPTED_FALLBACK.search(line):
+        return state.record_accepted(m.group("guid"), ts)
+
+    return None
+
+
 def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTracker | None, ts: float) -> None:
     if session is not None:
         session.process_line(line, ts, state)
-    if m := PATTERN_MARKER.search(line):
-        def_id_match = PATTERN_MARKER_DEF_ID.search(line)
-        def_id = def_id_match.group(1) if def_id_match else None
-        state.record_marker(m.group(1), m.group(2), m.group(3), def_id)
-    elif m := PATTERN_ACCEPTED.search(line):
-        state.record_accepted(m.group(1), ts)
-    elif m := PATTERN_END_MISSION.search(line):
-        state.record_end(m.group(1), m.group(2), ts)
+    apply_mission_log_line(line, state, ts)
 
 
 def reconcile_active_missions_from_log(path: Path, state: WatcherState, session: SessionTracker | None = None) -> None:
@@ -948,13 +979,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             except Exception as e:
                                 print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
 
-                        if m := PATTERN_MARKER.search(line):
-                            def_id_match = PATTERN_MARKER_DEF_ID.search(line)
-                            def_id = def_id_match.group(1) if def_id_match else None
-                            state.record_marker(m.group(1), m.group(2), m.group(3), def_id)
-
-                        elif m := PATTERN_ACCEPTED.search(line):
-                            active = state.record_accepted(m.group(1), ts)
+                        if active := apply_mission_log_line(line, state, ts):
                             print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
                             if session and not args.dry_run:
                                 try:

@@ -32,6 +32,7 @@ export interface LiveMissionRow {
   system: string | null
   remainingCount: number
   hasZeroRemaining: boolean
+  hasBlueprintPool: boolean
 }
 
 export interface RemainingBlueprintRow {
@@ -71,9 +72,45 @@ export function poolInternalNamesForContract(
   return []
 }
 
+const REP_PROGRESS_SUFFIX_RE = /^(.+?)\s*\[(\d+)\s*\/\s*(\d+)\s*(?:rep|Rep|REP)?\]\s*$/
+const REP_AWARD_SUFFIX_RE = /^(.+?)\s*\[(\d+)\s*(?:rep|Rep|REP)\]\s*$/
+
+/** Parse mission title + rep suffix from Game.log accept notification or internal debug name. */
+export function parseLiveMissionLabel(raw: string | null | undefined): {
+  title: string
+  rewardText: string | null
+} {
+  const trimmed = (raw || '').trim()
+  if (!trimmed || trimmed.toLowerCase() === 'unknown') {
+    return { title: 'Unknown mission', rewardText: null }
+  }
+
+  const progress = trimmed.match(REP_PROGRESS_SUFFIX_RE)
+  if (progress) {
+    const awarded = Number(progress[2])
+    const tierTotal = Number(progress[3])
+    return {
+      title: progress[1].trim(),
+      rewardText: `${awarded.toLocaleString()} / ${tierTotal.toLocaleString()} rep`,
+    }
+  }
+
+  const awardedOnly = trimmed.match(REP_AWARD_SUFFIX_RE)
+  if (awardedOnly) {
+    const rep = Number(awardedOnly[2])
+    return {
+      title: awardedOnly[1].trim(),
+      rewardText: formatRepReward(rep, rep),
+    }
+  }
+
+  const title = formatMissionDisplayTitle({ debugName: trimmed, title: trimmed })
+  return { title, rewardText: null }
+}
+
 function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
   LiveMissionRow,
-  'missionGuid' | 'remainingCount' | 'hasZeroRemaining'
+  'missionGuid' | 'remainingCount' | 'hasZeroRemaining' | 'hasBlueprintPool'
 > {
   const contract = findContractForLiveMission(
     mission.contract_definition_id,
@@ -110,16 +147,16 @@ function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
     }
   }
 
-  const title = formatMissionDisplayTitle({
-    debugName: mission.debug_name,
-    title: mission.debug_name,
-  })
+  const parsed = parseLiveMissionLabel(mission.debug_name)
+  const displayLabel = parsed.rewardText
+    ? `${parsed.title} · ${parsed.rewardText}`
+    : parsed.title
 
   return {
-    displayLabel: title,
-    title,
+    displayLabel,
+    title: parsed.title,
     faction: null,
-    rewardText: null,
+    rewardText: parsed.rewardText,
     isLawful: true,
     category: null,
     regions: [],
@@ -140,6 +177,7 @@ export function computeLiveTrackerView(
       mission.contract_definition_id,
       mission.debug_name
     )
+    const hasBlueprintPool = pool.length > 0
     const unacquired = pool.filter((internalName) => !acquiredSet[internalName])
     const display = resolveLiveMissionDisplay(mission)
 
@@ -157,7 +195,8 @@ export function computeLiveTrackerView(
       missionGuid: mission.mission_guid,
       ...display,
       remainingCount: unacquired.length,
-      hasZeroRemaining: pool.length > 0 && unacquired.length === 0,
+      hasZeroRemaining: hasBlueprintPool && unacquired.length === 0,
+      hasBlueprintPool,
     }
   })
 

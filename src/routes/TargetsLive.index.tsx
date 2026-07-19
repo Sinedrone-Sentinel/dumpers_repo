@@ -104,8 +104,11 @@ export default function TargetsLiveRoute() {
                           </div>
                         )}
                         <p className="text-xs mt-1.5 text-slate-500">
-                          {mission.remainingCount} blueprint{mission.remainingCount === 1 ? '' : 's'}{' '}
-                          remaining in pool
+                          {mission.hasBlueprintPool
+                            ? `${mission.remainingCount} blueprint${mission.remainingCount === 1 ? '' : 's'} remaining in pool`
+                            : mission.rewardText
+                              ? `No blueprint pool · ${mission.rewardText}`
+                              : 'No blueprint pool · rep or aUEC rewards only'}
                         </p>
                       </li>
                     ))
