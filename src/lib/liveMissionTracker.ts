@@ -74,13 +74,33 @@ export function poolInternalNamesForContract(
 
 const REP_PROGRESS_SUFFIX_RE = /^(.+?)\s*\[(\d+)\s*\/\s*(\d+)\s*(?:rep|Rep|REP)?\]\s*$/
 const REP_AWARD_SUFFIX_RE = /^(.+?)\s*\[(\d+)\s*(?:rep|Rep|REP)\]\s*$/
+const LOG_NOISE_TAIL_RE = /\s:\s*"\s*\[\d+\]\s*To Queue|\[\d+\]\s*To Queue/i
+
+/** Strip HTML and Game.log queue noise from contract accept notification text. */
+export function sanitizeLiveMissionRawLabel(raw: string | null | undefined): string {
+  let text = (raw || '').trim()
+  if (!text) return ''
+
+  text = text.replace(/<[^>]+>/g, '')
+
+  const embeddedRep = text.match(/\[(\d+)\s*\/\s*(\d+)\s*(?:rep|Rep|REP)?\]/i)
+  if (embeddedRep && embeddedRep.index != null) {
+    const title = text.slice(0, embeddedRep.index).replace(/[\s:"']+$/g, '').trim()
+    if (title) {
+      return `${title} [${embeddedRep[1]}/${embeddedRep[2]} Rep]`
+    }
+  }
+
+  text = text.split(LOG_NOISE_TAIL_RE)[0].replace(/[\s:"',]+$/g, '').trim()
+  return text
+}
 
 /** Parse mission title + rep suffix from Game.log accept notification or internal debug name. */
 export function parseLiveMissionLabel(raw: string | null | undefined): {
   title: string
   rewardText: string | null
 } {
-  const trimmed = (raw || '').trim()
+  const trimmed = sanitizeLiveMissionRawLabel(raw)
   if (!trimmed || trimmed.toLowerCase() === 'unknown') {
     return { title: 'Unknown mission', rewardText: null }
   }

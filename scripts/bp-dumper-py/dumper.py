@@ -471,6 +471,24 @@ CRASH_RECOVERY_WINDOW_SEC = 3600.0
 
 BLUEPRINT_CORRELATION_WINDOW_SEC = 5.0
 
+REP_IN_TITLE_RE = re.compile(r"\[(\d+)\s*/\s*(\d+)\s*(?:rep|Rep|REP)?\]", re.I)
+LOG_NOISE_TAIL_RE = re.compile(r'\s:\s*"\s*\[\d+\]\s*To Queue|\[\d+\]\s*To Queue', re.I)
+
+
+def normalize_accept_notification_title(raw: str | None) -> str | None:
+    """Keep mission name + rep bracket; drop HTML and engine queue noise from Game.log."""
+    if not raw:
+        return None
+    text = re.sub(r"<[^>]+>", "", raw.strip())
+    rep = REP_IN_TITLE_RE.search(text)
+    if rep:
+        before = text[: rep.start()].strip().rstrip(':"\' ')
+        if before:
+            return f"{before} [{rep.group(1)}/{rep.group(2)} Rep]"
+    text = LOG_NOISE_TAIL_RE.split(text, maxsplit=1)[0].strip().rstrip(':"\' ,')
+    return text or None
+
+
 class MissionEntry:
     def __init__(self, debug_name: str, generator: str, contract_definition_id=None):
         self.debug_name = debug_name
@@ -802,7 +820,7 @@ def apply_mission_log_line(line: str, state: WatcherState, ts: float) -> ActiveM
         return None
 
     if m := PATTERN_ACCEPTED.search(line):
-        accept_title = (m.group("title") or "").strip() or None
+        accept_title = normalize_accept_notification_title(m.group("title"))
         return state.record_accepted(m.group("guid"), ts, title=accept_title)
 
     if m := PATTERN_ACCEPTED_FALLBACK.search(line):
