@@ -45,7 +45,11 @@ python -m pip install --upgrade pip --quiet
 python -m pip install -r (Join-Path $bpDir "requirements.txt") pyinstaller pillow --quiet
 
 Write-Step "Building single-file DumperApps exe"
-$addData = "$lookupPath;."
+$versionJson = Join-Path $RepoRoot "scripts/bp-dumper/version.json"
+$bundledVersionJson = Join-Path $bpDir "dumper-version.json"
+Copy-Item $versionJson $bundledVersionJson -Force
+$addLookup = "$lookupPath;."
+$addVersion = "$bundledVersionJson;."
 python -m PyInstaller `
     --noconfirm `
     --clean `
@@ -58,7 +62,8 @@ python -m PyInstaller `
     --specpath $workDir `
     --hidden-import "_version" `
     --hidden-import "_min_game_version" `
-    --add-data $addData `
+    --add-data $addLookup `
+    --add-data $addVersion `
     (Join-Path $bpDir "dumper.py")
 
 if (-not (Test-Path $exePath)) {

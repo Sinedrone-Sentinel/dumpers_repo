@@ -5,6 +5,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { resolveBlueprintInput } from './resolveBlueprint.ts'
+import dumperVersionData from './dumper-version.json' with { type: 'json' }
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -224,7 +225,8 @@ serve(async (req) => {
       }
 
       const list = bpsData.map((row: { blueprint_id: string }) => row.blueprint_id)
-      const latestDumperVersion = Deno.env.get('LATEST_DUMPER_VERSION') ?? '1.1.2'
+      const latestDumperVersion =
+        Deno.env.get('LATEST_DUMPER_VERSION')?.trim() || dumperVersionData.version
       return new Response(JSON.stringify({ success: true, blueprints: list, latestDumperVersion }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })

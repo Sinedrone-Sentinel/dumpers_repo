@@ -283,13 +283,55 @@ try:
     from _min_game_version import MIN_GAME_VERSION
 except ImportError:
     MIN_GAME_VERSION = "4.8"
-try:
-    from _version import __version__ as DUMPER_VERSION
-except ImportError:
-    DUMPER_VERSION = "dev"
-DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 
+def _load_dumper_version() -> str:
+    try:
+        from _version import __version__ as ver
+        if ver:
+            return str(ver)
+    except ImportError:
+        pass
+    for name in ("dumper-version.json", "version.json"):
+        path = _resource_dir() / name
+        if path.is_file():
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                ver = data.get("version")
+                if ver:
+                    return str(ver)
+            except (OSError, json.JSONDecodeError, TypeError, ValueError):
+                pass
+    return "unknown"
+
+def _parse_semver(version: str) -> tuple[int, ...]:
+    cleaned = version.strip().lower().lstrip("v")
+    parts: list[int] = []
+    for piece in re.split(r"[.+_-]", cleaned):
+        if not piece:
+            continue
+        digits = ""
+        for ch in piece:
+            if ch.isdigit():
+                digits += ch
+            else:
+                break
+        if not digits:
+            break
+        parts.append(int(digits))
+    return tuple(parts or [0])
+
+def _is_newer_version(latest: str, current: str) -> bool:
+    return _parse_semver(latest) > _parse_semver(current)
+
+DUMPER_VERSION = _load_dumper_version()
+DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 DEFAULT_RELEASES_URL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
+
+def _maybe_print_update_notice(latest_ver: str) -> None:
+    if not latest_ver or not _is_newer_version(latest_ver, DUMPER_VERSION):
+        return
+    print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
+    print(f"{Colors.YELLOW}Download the latest release from: {DEFAULT_RELEASES_URL}{Colors.RESET}\n")
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (
@@ -1321,9 +1363,7 @@ def main():
                     print(f"Synced {len(server_bps)} blueprints from account.")
 
                     latest_ver = response_json.get("latestDumperVersion", "")
-                    if latest_ver and latest_ver != DUMPER_VERSION:
-                        print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
-                        print(f"{Colors.YELLOW}Download the latest release from: {DEFAULT_RELEASES_URL}{Colors.RESET}\n")
+                    _maybe_print_update_notice(latest_ver)
             else:
                 print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
         except Exception as e:

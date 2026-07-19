@@ -9,6 +9,7 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+import { copyDumperVersionTargets } from './lib/blueprintNameLookup.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -43,5 +44,7 @@ writeFileSync(
 )
 
 writeFileSync(APP_VERSION_FILE, `${JSON.stringify({ version }, null, 2)}\n`)
+
+copyDumperVersionTargets(ROOT)
 
 console.log(`BP Dumper version synced to ${version}`)

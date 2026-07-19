@@ -85,12 +85,31 @@ const LOOKUP_COPY_TARGETS = [
   'supabase/functions/log-watcher-webhook/lookup.json',
 ]
 
+const DUMPER_VERSION_SOURCE = 'scripts/bp-dumper/version.json'
+
+const DUMPER_VERSION_COPY_TARGETS = [
+  'scripts/bp-dumper-py/dumper-version.json',
+  'supabase/functions/log-watcher-webhook/dumper-version.json',
+]
+
 export function copyBlueprintLookupTargets(rootDir = repoRoot) {
   const source = join(rootDir, CANONICAL_LOOKUP)
   if (!existsSync(source)) {
     throw new Error(`Missing canonical lookup: ${source}`)
   }
   for (const rel of LOOKUP_COPY_TARGETS) {
+    const dest = join(rootDir, rel)
+    mkdirSync(dirname(dest), { recursive: true })
+    copyFileSync(source, dest)
+  }
+}
+
+export function copyDumperVersionTargets(rootDir = repoRoot) {
+  const source = join(rootDir, DUMPER_VERSION_SOURCE)
+  if (!existsSync(source)) {
+    throw new Error(`Missing dumper version file: ${source}`)
+  }
+  for (const rel of DUMPER_VERSION_COPY_TARGETS) {
     const dest = join(rootDir, rel)
     mkdirSync(dirname(dest), { recursive: true })
     copyFileSync(source, dest)
