@@ -356,14 +356,14 @@ serve(async (req) => {
     const eventType = typeof payload.type === 'string' ? payload.type.trim() : ''
 
     if (eventType === 'session_start') {
-      await setGameStatus(supabase, userId, 'tracking', true)
+      await setGameStatus(supabase, userId, 'tracking', false)
       await touchApiKey(supabase, apiKey)
       await cleanupStaleDumperSessions(supabase)
       return jsonResponse({ success: true, event: 'session_start' })
     }
 
     if (eventType === 'game_exit_menu') {
-      await setGameStatus(supabase, userId, 'exit_menu', true)
+      await setGameStatus(supabase, userId, 'exit_menu', false)
       await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_exit_menu' })
     }
@@ -387,7 +387,7 @@ serve(async (req) => {
     }
 
     if (eventType === 'game_tracking') {
-      await setGameStatus(supabase, userId, 'tracking', true)
+      await setGameStatus(supabase, userId, 'tracking', false)
       await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_tracking' })
     }

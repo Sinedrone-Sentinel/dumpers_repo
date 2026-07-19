@@ -608,6 +608,12 @@ class SessionTracker:
         self.pending_status = "quit_game"
         self.last_log_ts = None
 
+    def on_mission_accepted(self) -> None:
+        """Accepting a contract implies the player is in the PU — override stale menu state."""
+        self.pending_status = "tracking"
+        self.paused_reason = ""
+        self.crash_at = None
+
     def process_line(self, line: str, ts: float, state: "WatcherState") -> str:
         if PATTERN_EXIT_MENU.search(line):
             state.clear_all_active()
@@ -639,11 +645,18 @@ class SessionTracker:
             self.crash_at = None
             return ""
         mapping = {
+            "tracking": "game_tracking",
             "exit_menu": "game_exit_menu",
             "quit_game": "game_quit",
             "crash_waiting": "game_crash",
         }
         return mapping.get(self.pending_status, "")
+
+    def resolve_startup_game_status(self, state: "WatcherState") -> str:
+        """After log replay, prefer tracking when accepted missions are still open."""
+        if state.active:
+            return "game_tracking"
+        return self.pending_status_event()
 
     def _is_crash_recovery_expired(self, now: float) -> bool:
         return self.crash_at is not None and now - self.crash_at > CRASH_RECOVERY_WINDOW_SEC
@@ -798,10 +811,13 @@ def apply_mission_log_line(line: str, state: WatcherState, ts: float) -> ActiveM
     return None
 
 
-def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTracker | None, ts: float) -> None:
+def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTracker | None, ts: float) -> ActiveMission | None:
     if session is not None:
         session.process_line(line, ts, state)
-    apply_mission_log_line(line, state, ts)
+    active = apply_mission_log_line(line, state, ts)
+    if active and session is not None:
+        session.on_mission_accepted()
+    return active
 
 
 def reconcile_active_missions_from_log(path: Path, state: WatcherState, session: SessionTracker | None = None) -> None:
@@ -825,6 +841,8 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState, session:
 
     if session is not None:
         session.finalize_after_reconcile(state)
+        if state.active:
+            session.on_mission_accepted()
 
 
 def post_game_session_event(session, url: str, event_type: str) -> None:
@@ -864,10 +882,6 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
     session_tracker = SessionTracker()
 
     if session and not args.dry_run:
-        try:
-            post_dumper_event(session, args.url, "session_start")
-        except Exception as e:
-            print(f"{Colors.YELLOW}⚠ Failed to notify session start:{Colors.RESET} {e}")
         ping_thread = threading.Thread(
             target=start_session_ping_loop,
             args=(session, args.url, ping_stop),
@@ -921,10 +935,11 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                     reconcile_active_missions_from_log(path, state, session_tracker)
                     if session and not args.dry_run:
                         try:
+                            post_dumper_event(session, args.url, "session_start")
                             sync_active_missions_to_server(session, args.url, state)
-                            pending = session_tracker.pending_status_event()
-                            if pending:
-                                post_game_session_event(session, args.url, pending)
+                            startup_status = session_tracker.resolve_startup_game_status(state)
+                            if startup_status:
+                                post_game_session_event(session, args.url, startup_status)
                         except Exception as e:
                             print(f"{Colors.YELLOW}⚠ Could not sync active missions:{Colors.RESET} {e}")
                 except OSError as e:
@@ -980,6 +995,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                 print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
 
                         if active := apply_mission_log_line(line, state, ts):
+                            session_tracker.on_mission_accepted()
                             print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
                             if session and not args.dry_run:
                                 try:
