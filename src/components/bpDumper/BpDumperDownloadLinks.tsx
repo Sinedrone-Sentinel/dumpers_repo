@@ -7,7 +7,7 @@ const WINDOWS_PORTABLE = BP_DUMPER_DOWNLOADS[0]
 
 export default function BpDumperDownloadLinks() {
   const { release, loading, error } = useBpDumperRelease()
-  const downloadUrl = release.downloadUrlFor(WINDOWS_PORTABLE.filename)
+  const { name: downloadFilename, url: downloadUrl } = release.primaryDownload
 
   return (
     <div className="space-y-3">
@@ -47,7 +47,7 @@ export default function BpDumperDownloadLinks() {
           </span>
         </span>
         <span className="text-xs text-slate-400 leading-relaxed">{WINDOWS_PORTABLE.description}</span>
-        <span className="text-[11px] text-slate-500 font-mono truncate">{WINDOWS_PORTABLE.filename}</span>
+        <span className="text-[11px] text-slate-500 font-mono truncate">{downloadFilename}</span>
       </a>
 
       <p className="text-xs text-slate-500 leading-relaxed">
