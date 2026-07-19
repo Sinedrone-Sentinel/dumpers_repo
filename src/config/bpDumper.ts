@@ -8,9 +8,12 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
+/** Stable Windows download filename — no version suffix so browsers overwrite on re-download. */
+export const DUMPER_APPS_EXE_FILENAME = 'DumperApps.exe' as const
+
 /** Windows portable asset name for the current bundled dumper version. */
-export function getDumperAppsPortableFilename(version: string = BP_DUMPER_VERSION): string {
-  return `DumperApps-${version}.exe`
+export function getDumperAppsPortableFilename(_version: string = BP_DUMPER_VERSION): string {
+  return DUMPER_APPS_EXE_FILENAME
 }
 
 /** @deprecated Use getDumperAppsPortableFilename — kept for older release links. */

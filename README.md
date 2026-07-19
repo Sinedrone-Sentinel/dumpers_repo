@@ -266,7 +266,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 | Item | Detail |
 |------|--------|
-| **Downloads** | GitHub releases — **`DumperApps-X.Y.Z.exe`** (single-file Windows exe, DR logo icon) |
+| **Downloads** | GitHub releases — **`DumperApps.exe`** (single-file Windows exe, DR logo icon) |
 | **Member setup** | Run portable exe → paste API key when prompted |
 | **Source** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/installer/`](scripts/installer/) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |

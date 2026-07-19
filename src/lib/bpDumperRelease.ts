@@ -53,6 +53,7 @@ function pickReleaseWithAssets(releases: GitHubRelease[]): GitHubRelease | null 
 function pickPrimaryWindowsAsset(release: GitHubRelease): GitHubReleaseAsset | null {
   const version = stripVersionPrefix(release.tag_name)
   const preferredNames = [
+    'DumperApps.exe',
     `DumperApps-${version}.exe`,
     `DumperApps-Setup-${version}.exe`,
   ]

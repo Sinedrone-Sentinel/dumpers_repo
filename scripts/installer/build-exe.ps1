@@ -21,7 +21,7 @@ $bpDir = Join-Path $RepoRoot "scripts/bp-dumper-py"
 $lookupPath = Join-Path $bpDir "lookup.json"
 $iconPath = Join-Path $PSScriptRoot "dumper-apps.ico"
 $workDir = Join-Path $PSScriptRoot "pyinstaller-work"
-$exeName = "DumperApps-$Version.exe"
+$exeName = "DumperApps.exe"
 $exePath = Join-Path $OutputDir $exeName
 
 if (-not (Test-Path $lookupPath)) {
@@ -37,12 +37,12 @@ if (Test-Path $exePath) {
     Remove-Item -Force $exePath
 }
 
-Write-Step "Generating DR logo icon"
-& (Join-Path $PSScriptRoot "generate-icon.ps1") -RepoRoot $RepoRoot
-
 Write-Step "Installing build dependencies"
 python -m pip install --upgrade pip --quiet
 python -m pip install -r (Join-Path $bpDir "requirements.txt") pyinstaller pillow --quiet
+
+Write-Step "Generating DR logo icon"
+& (Join-Path $PSScriptRoot "generate-icon.ps1") -RepoRoot $RepoRoot
 
 Write-Step "Building single-file DumperApps exe"
 $versionJson = Join-Path $RepoRoot "scripts/bp-dumper/version.json"
@@ -55,7 +55,7 @@ python -m PyInstaller `
     --clean `
     --onefile `
     --console `
-    --name "DumperApps-$Version" `
+    --name "DumperApps" `
     --icon $iconPath `
     --distpath $OutputDir `
     --workpath $workDir `

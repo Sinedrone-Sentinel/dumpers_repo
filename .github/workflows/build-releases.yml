@@ -71,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-exe
-          path: scripts/installer/output/DumperApps-*.exe
+          path: scripts/installer/output/DumperApps.exe
 
   release:
     name: Upload GitHub Release assets
@@ -89,6 +89,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: artifacts/windows-exe/DumperApps-*.exe
+          files: artifacts/windows-exe/DumperApps.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

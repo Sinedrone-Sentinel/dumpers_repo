@@ -36,11 +36,11 @@ jobs:
         run: |
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           & "$env:GITHUB_WORKSPACE/scripts/installer/build-exe.ps1" -Version "${{ steps.version.outputs.version }}"
-          Get-ChildItem "$env:GITHUB_WORKSPACE/scripts/installer/output" -Filter "DumperApps-*.exe" |
+          Get-ChildItem "$env:GITHUB_WORKSPACE/scripts/installer/output/DumperApps.exe" |
             ForEach-Object { Write-Host "Built $($_.Name) ($([math]::Round($_.Length / 1MB, 1)) MB)" }
 
       - name: Upload exe artifact
         uses: actions/upload-artifact@v4
         with:
           name: DumperApps-exe-test
-          path: scripts/installer/output/DumperApps-*.exe
+          path: scripts/installer/output/DumperApps.exe
