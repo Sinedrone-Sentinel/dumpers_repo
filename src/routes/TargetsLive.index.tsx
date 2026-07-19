@@ -89,7 +89,7 @@ export default function TargetsLiveRoute() {
                         >
                           {mission.displayLabel}
                         </p>
-                        {(mission.category || mission.regions.length > 0 || mission.rewardText) && (
+                        {(mission.category || mission.regions.length > 0) && (
                           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
                             {mission.category && (
                               <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40">
@@ -103,13 +103,12 @@ export default function TargetsLiveRoute() {
                             />
                           </div>
                         )}
-                        <p className="text-xs mt-1.5 text-slate-500">
-                          {mission.hasBlueprintPool
-                            ? `${mission.remainingCount} blueprint${mission.remainingCount === 1 ? '' : 's'} remaining in pool`
-                            : mission.rewardText
-                              ? `No blueprint pool · ${mission.rewardText}`
-                              : 'No blueprint pool · rep or aUEC rewards only'}
-                        </p>
+                        {mission.hasBlueprintPool && (
+                          <p className="text-xs mt-1.5 text-slate-500">
+                            {mission.remainingCount} blueprint{mission.remainingCount === 1 ? '' : 's'}{' '}
+                            remaining in pool
+                          </p>
+                        )}
                       </li>
                     ))
                   )}

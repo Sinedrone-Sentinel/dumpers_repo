@@ -349,6 +349,92 @@ export function getContractMissionLabel(contract: ContractEntry): string {
   return contractMissionLabel(contract)
 }
 
+export type MissionCatalogHint = {
+  faction: string
+  factionKey?: string
+  category: string | null
+  system: string | null
+  region: string | null
+  isLawful: boolean
+}
+
+function buildMissionTitleHintIndex(): Map<string, MissionCatalogHint> {
+  const index = new Map<string, MissionCatalogHint>()
+
+  const register = (title: string | null | undefined, hint: MissionCatalogHint) => {
+    const key = _normalizeMissionTitle(title || '').toLowerCase()
+    if (!key || index.has(key)) return
+    index.set(key, hint)
+  }
+
+  const hintFrom = (source: {
+    faction: string
+    factionKey?: string
+    category?: string | null
+    system?: string | null
+    region?: string | null
+    isLawful?: boolean
+    debugName?: string
+  }): MissionCatalogHint => ({
+    faction: source.faction,
+    factionKey: source.factionKey,
+    category: source.category ?? null,
+    system: source.system ?? null,
+    region: source.region ?? null,
+    isLawful:
+      source.isLawful ??
+      resolveMissionIsLawful({
+        factionKey: source.factionKey,
+        factionName: source.faction,
+        debugName: source.debugName,
+      }),
+  })
+
+  for (const contract of contracts) {
+    const hint = hintFrom(contract)
+    register(contract.title, hint)
+    register(contractDisplayTitle(contract), hint)
+    for (const prereq of contract.prereqMissions ?? []) {
+      for (const mission of prereq.missions ?? []) {
+        register(mission.title, hintFrom(mission))
+      }
+    }
+  }
+
+  const missionsByPool = blueprintMissionData.missionsByPool as Record<
+    string,
+    Array<{
+      title: string
+      displayTitle?: string
+      faction: string
+      factionKey?: string
+      system?: string | null
+      region?: string | null
+      category?: string | null
+      isLawful?: boolean
+      debugName?: string
+    }>
+  >
+
+  for (const entries of Object.values(missionsByPool ?? {})) {
+    for (const mission of entries) {
+      register(mission.title, hintFrom(mission))
+      register(mission.displayTitle, hintFrom(mission))
+    }
+  }
+
+  return index
+}
+
+const missionTitleHintIndex = buildMissionTitleHintIndex()
+
+/** Resolve faction/location metadata for rep-only missions missing from the contracts catalog. */
+export function findMissionHintByTitle(title: string): MissionCatalogHint | null {
+  const key = _normalizeMissionTitle(title).toLowerCase()
+  if (!key) return null
+  return missionTitleHintIndex.get(key) ?? null
+}
+
 export interface ContractBlueprintDrop {
   name: string
   dropChance: number

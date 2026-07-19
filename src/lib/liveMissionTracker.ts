@@ -1,6 +1,7 @@
 import lookupData from '../data/blueprint-name-lookup.json'
 import {
   findContractForLiveMission,
+  findMissionHintByTitle,
   getContractMissionLabel,
 } from './blueprintMissionRewards'
 import { formatMissionDisplayTitle } from './missionDisplay'
@@ -168,20 +169,20 @@ function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
   }
 
   const parsed = parseLiveMissionLabel(mission.debug_name)
-  const displayLabel = parsed.rewardText
-    ? `${parsed.title} · ${parsed.rewardText}`
-    : parsed.title
+  const hint = findMissionHintByTitle(parsed.title)
+  const missionLabel = hint ? `${hint.faction}: ${parsed.title}` : parsed.title
+  const displayLabel = parsed.rewardText ? `${missionLabel} · ${parsed.rewardText}` : missionLabel
 
   return {
     displayLabel,
     title: parsed.title,
-    faction: null,
+    faction: hint?.faction ?? null,
     rewardText: parsed.rewardText,
-    isLawful: true,
-    category: null,
-    regions: [],
-    subRegion: null,
-    system: null,
+    isLawful: hint?.isLawful ?? true,
+    category: hint?.category ?? null,
+    regions: categorizeRegions(hint?.system ? [hint.system] : []),
+    subRegion: hint?.region ?? null,
+    system: hint?.system || null,
   }
 }
 
