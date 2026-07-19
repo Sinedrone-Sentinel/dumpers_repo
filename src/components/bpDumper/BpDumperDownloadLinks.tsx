@@ -3,11 +3,11 @@ import { GITHUB_RELEASES_PAGE } from '../../config/bpDumper'
 import { BP_DUMPER_DOWNLOADS } from '../../lib/bpDumperRelease'
 import { useBpDumperRelease } from '../../hooks/useBpDumperRelease'
 
-const WINDOWS_INSTALLER = BP_DUMPER_DOWNLOADS[0]
+const WINDOWS_PORTABLE = BP_DUMPER_DOWNLOADS[0]
 
 export default function BpDumperDownloadLinks() {
   const { release, loading, error } = useBpDumperRelease()
-  const downloadUrl = release.downloadUrlFor(WINDOWS_INSTALLER.filename)
+  const downloadUrl = release.downloadUrlFor(WINDOWS_PORTABLE.filename)
 
   return (
     <div className="space-y-3">
@@ -41,17 +41,17 @@ export default function BpDumperDownloadLinks() {
         className="flex flex-col gap-0.5 rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 transition-colors hover:border-amber-400/70 hover:bg-amber-500/15"
       >
         <span className="text-sm font-medium text-white">
-          {WINDOWS_INSTALLER.label}
+          {WINDOWS_PORTABLE.label}
           <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
             Start here
           </span>
         </span>
-        <span className="text-xs text-slate-400 leading-relaxed">{WINDOWS_INSTALLER.description}</span>
-        <span className="text-[11px] text-slate-500 font-mono truncate">{WINDOWS_INSTALLER.filename}</span>
+        <span className="text-xs text-slate-400 leading-relaxed">{WINDOWS_PORTABLE.description}</span>
+        <span className="text-[11px] text-slate-500 font-mono truncate">{WINDOWS_PORTABLE.filename}</span>
       </a>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows only today. Blueprint sync and Live Mission Tracker run from the installed desktop app.
+        Windows only today. Extract/run from any folder — blueprint sync and Live Mission Tracker start automatically.
       </p>
     </div>
   )

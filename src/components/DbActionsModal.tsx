@@ -74,8 +74,13 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
   {
     step: 9,
     title: 'BP Dumper name lookup',
-    description: 'Only if blueprints changed — refreshes blueprint-name-lookup.json for Game.log / webhook resolution',
-    commands: ['npm run generate-dumper-mappings', 'npm run copy-blueprint-lookup'],
+    description:
+      'Only if blueprints changed — refreshes blueprint-name-lookup.json for Game.log / webhook resolution, then redeploy log-watcher-webhook',
+    commands: [
+      'npm run generate-dumper-mappings',
+      'npm run copy-blueprint-lookup',
+      'npx supabase functions deploy log-watcher-webhook --no-verify-jwt',
+    ],
     optional: true,
   },
   {

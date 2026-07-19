@@ -40,8 +40,8 @@ jobs:
           VERSION=$(node -p "require('./scripts/bp-dumper/version.json').version")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-  build-windows-installer:
-    name: Build Windows installer
+  build-windows-portable:
+    name: Build Windows portable exe
     needs: resolve-tag
     runs-on: windows-latest
     timeout-minutes: 90
@@ -51,6 +51,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
 
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
@@ -62,27 +66,25 @@ jobs:
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
 
-      - name: Install Inno Setup
-        run: choco install innosetup -y --no-progress
+      - name: Install 7-Zip
+        run: choco install 7zip -y --no-progress
 
-      - name: Compile installer
+      - name: Build portable self-extracting exe
         shell: pwsh
-        timeout-minutes: 30
+        timeout-minutes: 20
         run: |
           $version = "${{ needs.resolve-tag.outputs.version }}"
-          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-          if (-not (Test-Path $iscc)) { throw "ISCC not found at $iscc" }
-          & $iscc "/DAppVersion=$version" "$env:GITHUB_WORKSPACE/scripts/installer/dumper-apps.iss"
+          & "$env:GITHUB_WORKSPACE/scripts/installer/build-portable.ps1" -Version $version
 
-      - name: Upload installer artifact
+      - name: Upload portable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-installer
-          path: scripts/installer/output/DumperApps-Setup-*.exe
+          name: windows-portable
+          path: scripts/installer/output/DumperApps-*.exe
 
   release:
     name: Upload GitHub Release assets
-    needs: [resolve-tag, build-windows-installer]
+    needs: [resolve-tag, build-windows-portable]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -92,10 +94,10 @@ jobs:
         with:
           path: artifacts
 
-      - name: Upload installer to GitHub Release
+      - name: Upload portable exe to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: artifacts/windows-installer/DumperApps-Setup-*.exe
+          files: artifacts/windows-portable/DumperApps-*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

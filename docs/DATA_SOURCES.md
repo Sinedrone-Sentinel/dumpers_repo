@@ -149,8 +149,7 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
    - Writes `public/dfp-engine.js` + `public/dfp-version.json` here — commit both with the game-data commit
    - `npm run patch-audit` includes `verify-dfp-acquisition-premiums.mjs` (fails if premiums/bundle are stale)
    - **Pricing formulas live only in dfp-engine-private** — do not edit DFP math in this repo
-8. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`,
-   and `npm run sync-min-game-version` if the game major.minor changed
+8. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`, then `npx supabase functions deploy log-watcher-webhook --no-verify-jwt`; run `npm run sync-min-game-version` if the game major.minor changed
 9. **Sync resource catalog:** use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials appeared after parse
 10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
 

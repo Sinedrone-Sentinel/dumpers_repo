@@ -1,12 +1,12 @@
-name: Test Windows Installer Build
+name: Test Windows portable build
 
-# Manual smoke test for DumperApps-Setup build (no GitHub Release upload).
+# Manual smoke test for DumperApps portable exe (no GitHub Release upload).
 on:
   workflow_dispatch:
 
 jobs:
-  build-windows-installer:
-    name: Build Windows installer (test)
+  build-windows-portable:
+    name: Build Windows portable exe (test)
     runs-on: windows-latest
     timeout-minutes: 90
     steps:
@@ -16,12 +16,16 @@ jobs:
         with:
           node-version: 22
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
       - name: Read dumper version
         id: version
         shell: pwsh
         run: |
           $version = node -p "require('./scripts/bp-dumper/version.json').version"
-          "version=$version" >> $env:GITHUB_OUTPUT
+          echo "version=$version" >> $env:GITHUB_OUTPUT
 
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
@@ -33,23 +37,19 @@ jobs:
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           & "$env:GITHUB_WORKSPACE/scripts/installer/prepare-bundle.ps1"
 
-      - name: Install Inno Setup
-        run: choco install innosetup -y --no-progress
+      - name: Install 7-Zip
+        run: choco install 7zip -y --no-progress
 
-      - name: Compile installer
+      - name: Build portable self-extracting exe
         shell: pwsh
-        timeout-minutes: 30
+        timeout-minutes: 20
         run: |
-          $version = "${{ steps.version.outputs.version }}"
-          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-          if (-not (Test-Path $iscc)) { throw "ISCC not found at $iscc" }
-          & $iscc "/DAppVersion=$version" "$env:GITHUB_WORKSPACE/scripts/installer/dumper-apps.iss"
-          Get-ChildItem "$env:GITHUB_WORKSPACE/scripts/installer/output" -Filter "DumperApps-Setup-*.exe" |
-            ForEach-Object { Write-Host "Built $($_.FullName) ($([math]::Round($_.Length/1MB, 1)) MB)" }
+          & "$env:GITHUB_WORKSPACE/scripts/installer/build-portable.ps1" -Version "${{ steps.version.outputs.version }}"
+          Get-ChildItem "$env:GITHUB_WORKSPACE/scripts/installer/output" -Filter "DumperApps-*.exe" |
+            ForEach-Object { Write-Host "Built $($_.Name) ($([math]::Round($_.Length / 1MB, 1)) MB)" }
 
-      - name: Upload installer artifact
+      - name: Upload portable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: DumperApps-Setup-test
-          path: scripts/installer/output/DumperApps-Setup-*.exe
-          retention-days: 7
+          name: DumperApps-portable-test
+          path: scripts/installer/output/DumperApps-*.exe

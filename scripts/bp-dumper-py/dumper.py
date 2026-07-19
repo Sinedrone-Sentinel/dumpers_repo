@@ -238,7 +238,14 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
     except Exception:
         pass
     internal_name = body.get("blueprint") or (local["internal_name"] if local.get("ok") else None)
-    return res.status_code, body.get("duplicate", False), internal_name
+    error_msg = None
+    if res.status_code == 400:
+        err = body.get("error", "Unknown blueprint")
+        error_msg = f'{err} (posted: "{post_value}")'
+    elif res.status_code >= 400 and res.status_code != 202:
+        err = body.get("error", f"HTTP {res.status_code}")
+        error_msg = f"{err} (posted: \"{post_value}\")"
+    return res.status_code, body.get("duplicate", False), internal_name, error_msg
 
 
 def post_dumper_event(session, url: str, event_type: str, fields: dict | None = None):
@@ -947,7 +954,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                 continue
 
                             try:
-                                status, is_duplicate, internal_name = post_blueprint_event(
+                                status, is_duplicate, internal_name, error_msg = post_blueprint_event(
                                     session, args.url, product_name, contract_def_id
                                 )
                                 if status == 200:
@@ -960,6 +967,8 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                         save_cache_file(cache_path, acquired_blueprints)
                                 elif status == 202:
                                     print(f"  [Live] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {product_name}")
+                                elif error_msg:
+                                    print(f"  [Live] {Colors.RED}✗ {error_msg}{Colors.RESET}")
                                 else:
                                     print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {status})")
                             except Exception as e:
@@ -1384,7 +1393,7 @@ def main():
                                 print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {label}")
                             else:
                                 try:
-                                    status, is_duplicate, internal_name = post_blueprint_event(session, url, bp_id)
+                                    status, is_duplicate, internal_name, error_msg = post_blueprint_event(session, url, bp_id)
                                     if status == 200:
                                         if is_duplicate:
                                             dupe_count += 1
@@ -1398,9 +1407,9 @@ def main():
                                     elif status == 202:
                                         success_count += 1
                                         print(f"  [{idx}/{len(to_send)}] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {bp_id}")
-                                    elif status == 400:
+                                    elif error_msg:
                                         fail_count += 1
-                                        print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Unknown blueprint:{Colors.RESET} {bp_id}")
+                                        print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ {error_msg}{Colors.RESET}")
                                     else:
                                         fail_count += 1
                                         print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} (HTTP {status})")
@@ -1656,7 +1665,7 @@ def main():
     else:
         for idx, bp_id in enumerate(to_import, 1):
             try:
-                status, is_duplicate, internal_name = post_blueprint_event(session, args.url, bp_id)
+                status, is_duplicate, internal_name, error_msg = post_blueprint_event(session, args.url, bp_id)
                 if status == 200:
                     if is_duplicate:
                         dupe_count += 1
@@ -1670,9 +1679,9 @@ def main():
                 elif status == 202:
                     success_count += 1
                     print(f"  [{idx}/{len(to_import)}] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {bp_id}")
-                elif status == 400:
+                elif error_msg:
                     fail_count += 1
-                    print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Unknown blueprint:{Colors.RESET} {bp_id}")
+                    print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ {error_msg}{Colors.RESET}")
                 else:
                     fail_count += 1
                     print(f"  [{idx}/{len(to_import)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} (HTTP {status})")

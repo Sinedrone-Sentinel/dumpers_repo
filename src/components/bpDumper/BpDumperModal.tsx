@@ -107,13 +107,12 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
               Under <strong className="text-slate-300">Downloads</strong>, get{' '}
-              <strong className="text-slate-300">Windows installer</strong> and run it. Use the default
-              options in the setup wizard.
+              <strong className="text-slate-300">Windows portable exe</strong> and run it. It extracts
+              beside the download and opens a console window.
             </li>
             <li>
-              Copy your <strong className="text-slate-300">API key</strong> below, then open{' '}
-              <strong className="text-slate-300">Dumper Apps</strong> from the Start Menu. Paste the key
-              when the black window asks for it.
+              Copy your <strong className="text-slate-300">API key</strong> below, then paste it when the
+              black window asks for it on first run.
             </li>
             <li>
               Leave the window open while playing — blueprint unlocks sync to your account

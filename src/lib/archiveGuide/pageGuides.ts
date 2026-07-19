@@ -292,7 +292,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Desktop log watcher that automatically syncs blueprint unlocks to your account.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
-      '**Windows only:** download **Windows installer**, run the setup wizard, then open **Dumper Apps** from the Start Menu',
+      '**Windows only:** download **Windows portable exe**, run it, then paste your API key when prompted',
       'Copy your API key from this page and paste it when Dumper Apps asks on first run',
       'Regenerate your API key if compromised; the old key stops working immediately',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',

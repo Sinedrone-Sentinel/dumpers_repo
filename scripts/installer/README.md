@@ -1,25 +1,28 @@
-# Dumper Apps Windows installer
+# Dumper Apps Windows portable build
 
-Builds **`DumperApps-Setup-X.Y.Z.exe`** — a self-contained install with bundled Python and the BP Dumper (blueprint log watcher + Live Mission Tracker).
+Builds **`DumperApps-X.Y.Z.exe`** — a self-extracting portable bundle (bundled Python + BP Dumper scripts + `DumperApps.exe` launcher). No install wizard.
 
-Members: download from **Dumper Apps** on the site → run the installer → paste API key → done.
+Members: download from **Dumper Apps** on the site → run the exe → paste API key → done.
 
-## Local build (maintainers)
-
-Requires **Windows**, **Inno Setup 6**, **git**, and network.
-
-**CI and local builds** download embeddable Python and install deps into the staging folder via `prepare-bundle.ps1` (portable — no machine-specific venv paths).
+## Local build
 
 ```powershell
-cd "Dumpers Repo"
 node scripts/copy-blueprint-lookup.mjs
 pwsh scripts/installer/prepare-bundle.ps1
-& "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DAppVersion=1.5.0 scripts/installer/dumper-apps.iss
+choco install 7zip -y   # if needed
+pwsh scripts/installer/build-portable.ps1
 ```
 
-Output: `scripts/installer/output/DumperApps-Setup-1.5.0.exe`
+Output: `scripts/installer/output/DumperApps-1.5.0.exe`
 
 ## CI
 
-- **Smoke test (no release):** Actions → **Test Windows Installer Build** → Run workflow. Downloads the `DumperApps-Setup-test` artifact when green.
-- **Release build:** `.github/workflows/build-releases.yml` job **`build-windows-installer`** on tag / workflow_dispatch.
+- **Smoke test (no release):** Actions → **Test Windows portable build** → Run workflow.
+- **Release build:** `.github/workflows/build-releases.yml` job **`build-windows-portable`** on tag / workflow_dispatch.
+
+After changing blueprint lookup data, redeploy the webhook:
+
+```bash
+npm run copy-blueprint-lookup
+npx supabase functions deploy log-watcher-webhook --no-verify-jwt
+```

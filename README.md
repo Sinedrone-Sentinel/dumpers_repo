@@ -266,8 +266,8 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 | Item | Detail |
 |------|--------|
-| **Downloads** | GitHub releases — **`DumperApps-Setup-X.Y.Z.exe`** (Windows installer only) |
-| **Member setup** | Run installer → Start Menu **Dumper Apps** → paste API key |
+| **Downloads** | GitHub releases — **`DumperApps-X.Y.Z.exe`** (Windows portable exe) |
+| **Member setup** | Run portable exe → paste API key when prompted |
 | **Source** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/installer/`](scripts/installer/) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
@@ -335,7 +335,7 @@ Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_
 | [ci.yml](.github/workflows/ci.yml) | PRs to `main` | Lint + build (no deploy) |
 | [deploy.yml](.github/workflows/deploy.yml) | Push to `main` | Build + GitHub Pages deploy (reference instance) |
 | [release-dumper.yml](.github/workflows/release-dumper.yml) | Dumper source changes on `main` | semantic-release version + tag |
-| [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags | Upload Windows installer to GitHub Release |
+| [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags | Upload Windows portable exe to GitHub Release |
 
 ### npm scripts
 

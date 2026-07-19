@@ -5,10 +5,10 @@ Desktop log watcher for Star Citizen — syncs blueprint unlocks and powers Live
 ## Members (Windows)
 
 1. Open **Dumper Apps** on the site (avatar menu or Mission Tracker).
-2. Download **Windows installer** and run the setup wizard.
-3. Open **Dumper Apps** from the Start Menu and paste your API key when prompted.
+2. Download **Windows portable exe** and run it.
+3. Paste your API key when the console window asks on first run.
 
-The installer bundles Python and the scripts in this folder — no separate Python install required.
+The portable bundle includes Python and the scripts in this folder — no separate Python install required.
 
 ## Developer setup
 

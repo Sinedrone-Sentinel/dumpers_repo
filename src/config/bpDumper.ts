@@ -8,9 +8,14 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
-/** Windows Inno Setup asset name for the current bundled dumper version. */
+/** Windows portable asset name for the current bundled dumper version. */
+export function getDumperAppsPortableFilename(version: string = BP_DUMPER_VERSION): string {
+  return `DumperApps-${version}.exe`
+}
+
+/** @deprecated Use getDumperAppsPortableFilename — kept for older release links. */
 export function getDumperAppsInstallerFilename(version: string = BP_DUMPER_VERSION): string {
-  return `DumperApps-Setup-${version}.exe`
+  return getDumperAppsPortableFilename(version)
 }
 
 /** Member-facing name for desktop tools (blueprint log watcher + Live Mission Tracker). */
@@ -25,14 +30,14 @@ export type BpDumperDownloadOption = {
   filename: string
 }
 
-/** Windows installer — the only member-facing BP Dumper download. */
+/** Windows portable exe — the only member-facing BP Dumper download. */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
-    id: 'windows-installer',
-    label: 'Windows installer',
+    id: 'windows-portable',
+    label: 'Windows portable exe',
     description:
-      'Recommended for Windows. Run the setup wizard, then open Dumper Apps from the Start Menu. Python is bundled — nothing else to install.',
-    filename: getDumperAppsInstallerFilename(),
+      'Download and run DumperApps.exe — it extracts beside itself and starts blueprint sync + Live Mission Tracker. Python is bundled; no install wizard.',
+    filename: getDumperAppsPortableFilename(),
   },
 ]
 

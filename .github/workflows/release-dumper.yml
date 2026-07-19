@@ -7,6 +7,7 @@ on:
     paths:
       - 'scripts/bp-dumper-py/**'
       - 'scripts/bp-dumper/**'
+      - 'scripts/bp-dumper-launcher/**'
       - 'scripts/installer/**'
       - 'scripts/sync-dumper-version.mjs'
       - 'scripts/lib/syncDumperMinGameVersion.mjs'

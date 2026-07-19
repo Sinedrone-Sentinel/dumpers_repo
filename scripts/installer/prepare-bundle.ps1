@@ -1,4 +1,4 @@
-# Stage a self-contained Dumper Apps tree for the Windows Inno Setup installer.
+# Stage a self-contained Dumper Apps tree for the Windows portable exe build.
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path,
     [string]$OutDir = (Join-Path $PSScriptRoot "staging"),
@@ -36,6 +36,23 @@ foreach ($name in $bpFiles) {
 }
 
 Copy-Item (Join-Path $PSScriptRoot "Launch-DumperApps.bat") (Join-Path $OutDir "Launch-DumperApps.bat")
+
+Write-Step "Building DumperApps.exe launcher"
+$launcherDir = Join-Path $RepoRoot "scripts/bp-dumper-launcher"
+$launcherExe = Join-Path $OutDir "DumperApps.exe"
+$goCmd = Get-Command go -ErrorAction SilentlyContinue
+if (-not $goCmd) {
+    throw "Go is required to build DumperApps.exe (install Go 1.21+ on the build machine)"
+}
+Push-Location $launcherDir
+try {
+    & go build -ldflags="-s -w" -o $launcherExe .
+    if (-not (Test-Path $launcherExe)) {
+        throw "Go build did not produce DumperApps.exe"
+    }
+} finally {
+    Pop-Location
+}
 
 Write-Step "Downloading Python $PythonVersion embeddable"
 $pyZip = Join-Path $env:TEMP "python-embed.zip"
