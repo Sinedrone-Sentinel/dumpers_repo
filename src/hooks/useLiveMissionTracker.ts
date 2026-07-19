@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import {
@@ -19,6 +19,8 @@ export function useLiveMissionTracker() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [connectionTick, setConnectionTick] = useState(0)
+  const [displayConnected, setDisplayConnected] = useState(false)
+  const wasConnectedRef = useRef(false)
 
   useEffect(() => {
     if (!watchActive) return
@@ -26,11 +28,28 @@ export function useLiveMissionTracker() {
     return () => window.clearInterval(id)
   }, [watchActive])
 
-  const isConnected = useMemo(
+  const rawConnected = useMemo(
     () => isDumperWatchConnected(watchActive, lastPingAt),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- connectionTick forces re-check on interval
     [watchActive, lastPingAt, connectionTick]
   )
+
+  /** Debounce brief disconnect flicker when pings race the stale-session cleanup. */
+  useEffect(() => {
+    if (rawConnected) {
+      wasConnectedRef.current = true
+      setDisplayConnected(true)
+      return
+    }
+    if (!wasConnectedRef.current) {
+      setDisplayConnected(false)
+      return
+    }
+    const timer = window.setTimeout(() => setDisplayConnected(false), 8_000)
+    return () => window.clearTimeout(timer)
+  }, [rawConnected])
+
+  const isConnected = displayConnected
 
   const statusBar = useMemo(
     () => getLiveTrackerStatusBar(gameStatus, gameStatusAt, Date.now()),

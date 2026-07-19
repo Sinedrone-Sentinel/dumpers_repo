@@ -173,7 +173,10 @@ export function computeLiveTrackerView(
 /** Crash recovery window mirrors in-game save-state retention (~1 hour). */
 export const CRASH_RECOVERY_WINDOW_MS = 60 * 60 * 1000
 
-/** Client-side stale check mirrors server 90s timeout (small buffer). */
+/** Server clears watch sessions after this window (see cleanup_stale_dumper_sessions). */
+export const DUMPER_WATCH_STALE_MS = 125_000
+
+/** Client-side stale check — slightly above server timeout (small buffer). */
 export function isDumperWatchConnected(
   watchActive: boolean,
   lastPingAt: string | null | undefined
@@ -182,7 +185,7 @@ export function isDumperWatchConnected(
   if (!lastPingAt) return true
   const pingMs = Date.parse(lastPingAt)
   if (Number.isNaN(pingMs)) return watchActive
-  return Date.now() - pingMs <= 95_000
+  return Date.now() - pingMs <= DUMPER_WATCH_STALE_MS
 }
 
 export type DumperGameStatus =

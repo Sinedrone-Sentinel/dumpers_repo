@@ -270,7 +270,8 @@ def post_dumper_event(session, url: str, event_type: str, fields: dict | None = 
 
 
 def start_session_ping_loop(session, url: str, stop_event: threading.Event):
-    while not stop_event.wait(90.0):
+    # Keep well under the server stale timeout (90s) so cron does not flip watch_active off between pings.
+    while not stop_event.wait(30.0):
         try:
             post_dumper_event(session, url, "session_ping")
         except Exception as e:
