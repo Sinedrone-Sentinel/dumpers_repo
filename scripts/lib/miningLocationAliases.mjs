@@ -501,7 +501,7 @@ export function buildNavHints(localization) {
 
   nav['Pyro Deepspaceasteroids'] = {
     navHint:
-      'Wandering clusters between planets — QT to RAB / RMB markers (full list in the location view)',
+      'Wandering clusters between planets — QT to RAB/RMB markers (click this location for the full list)',
     navMarkers: pyroRegionGroups(localization),
   }
 
