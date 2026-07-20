@@ -8,6 +8,7 @@ import BlueprintVariantGroupCard from '../BlueprintVariantGroupCard'
 import VirtualizedBlueprintGrid from '../VirtualizedBlueprintGrid'
 import { useAuth } from '../../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../../hooks/useBlueprintOrderOverrides'
+import { useBlueprintCraftTracker } from '../../hooks/useBlueprintCraftTracker'
 import { useTargetList } from '../../hooks/useTargetList'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { matchesCanCraftTabBlueprint, canCraftBlueprint, isNearlyCraftableBlueprint } from '../../lib/canCraft'
@@ -124,6 +125,13 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
 
   const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
+  const {
+    addMaterialsFromBlueprint,
+    isPendingForBlueprint,
+    hasRsTrackableMaterials,
+    lastMessage: craftTrackerMessage,
+    clearLastMessage: clearCraftTrackerMessage,
+  } = useBlueprintCraftTracker()
 
   const [closeNoCigar, setCloseNoCigar] = React.useState(
     () => readResourceTrackerUiState(uiScope).closeNoCigar
@@ -495,6 +503,9 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
           onToggleOrderable={(next) => void setOrderable(bp.internalName, next, catalogReward)}
           ownerCount={blueprintOwnerCounts[bp.internalName]}
           dfpDisplayEnabled={dfpDisplayEnabled}
+          showCraftTrackerControl={hasRsTrackableMaterials(bp)}
+          onAddToCraftTracker={() => void addMaterialsFromBlueprint(bp)}
+          craftTrackerPending={isPendingForBlueprint(bp.internalName)}
         />
       )
     },
@@ -512,6 +523,9 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
       setOrderable,
       blueprintOwnerCounts,
       dfpDisplayEnabled,
+      addMaterialsFromBlueprint,
+      isPendingForBlueprint,
+      hasRsTrackableMaterials,
     ]
   )
 
@@ -644,11 +658,25 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
         <span>
           <span className="font-medium text-slate-200">Close, no Cigar</span>
           <span className="block text-xs text-slate-500 mt-0.5 leading-relaxed">
-            Also show acquired blueprints missing one untracked material, or within 30% on at
-            least one required material.
+            Also show acquired blueprints where every required material is at least 70% on hand in
+            your My Resources, or where every material is fully stocked except one (that one may
+            be missing entirely).
           </span>
         </span>
       </label>
+
+      {craftTrackerMessage && (
+        <div className="mb-4 p-3 rounded-lg bg-purple-900/25 border border-purple-500/35 text-purple-100 text-sm flex items-start justify-between gap-3">
+          <span>{craftTrackerMessage}</span>
+          <button
+            type="button"
+            onClick={clearCraftTrackerMessage}
+            className="text-purple-300/80 hover:text-purple-100 text-xs shrink-0"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       <div className="space-y-3 mb-6 w-full min-w-0">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -880,6 +908,14 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
             !!displayAcquiredBlueprints[selectedBlueprint.internalName] ||
             isDefaultBlueprint(selectedBlueprint.internalName)
           }
+          isOnTarget={isOnTargetList(selectedBlueprint.internalName)}
+          effectiveIsOrderable={resolveIsOrderable(selectedBlueprint, overridesMap)}
+          canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
+          onToggleTarget={() => toggleTarget(selectedBlueprint.internalName)}
+          ownerCount={blueprintOwnerCounts[selectedBlueprint.internalName]}
+          onAddToCraftTracker={() => void addMaterialsFromBlueprint(selectedBlueprint)}
+          craftTrackerPending={isPendingForBlueprint(selectedBlueprint.internalName)}
+          showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}
         />
       )}
 

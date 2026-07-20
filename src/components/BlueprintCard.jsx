@@ -20,6 +20,9 @@ export default function BlueprintCard({
   isPending = false,
   showTargetControl = false,
   showMissionsControl = false,
+  showCraftTrackerControl = false,
+  onAddToCraftTracker,
+  craftTrackerPending = false,
   isOnTargetList = false,
   onToggleTarget,
   onOpenMissions,
@@ -73,6 +76,13 @@ export default function BlueprintCard({
     }
   }
 
+  const handleCraftTrackerClick = (e) => {
+    e.stopPropagation()
+    if (showCraftTrackerControl && onAddToCraftTracker && !craftTrackerPending) {
+      onAddToCraftTracker()
+    }
+  }
+
   const handleOrderableToggle = (e) => {
     e.stopPropagation()
     if (isSuperAdmin && onToggleOrderable) {
@@ -84,7 +94,11 @@ export default function BlueprintCard({
   const hasCategoryTags = categoryTags.length > 0
   const hasRewardLabel =
     isStarterBlueprint || typeof blueprint.isReward === 'boolean' || isSuperAdmin
-  const showActionFooter = showTargetControl || showMissionsControl || hasRewardLabel
+  const showActionFooter =
+    showTargetControl ||
+    showMissionsControl ||
+    showCraftTrackerControl ||
+    hasRewardLabel
   const acquiredLocked = isStarterBlueprint || isAcquired
 
   return (
@@ -253,9 +267,23 @@ export default function BlueprintCard({
                   </label>
                 ) : null}
               </div>
-              <div className="flex items-center justify-end gap-1 self-end justify-self-end">
-                {(showTargetControl || showMissionsControl) && (
+              <div className="flex items-center justify-end gap-1 self-end justify-self-end flex-wrap">
+                {(showTargetControl || showMissionsControl || showCraftTrackerControl) && (
                   <>
+                    {showCraftTrackerControl && (
+                      <button
+                        onClick={handleCraftTrackerClick}
+                        disabled={craftTrackerPending}
+                        className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
+                          craftTrackerPending
+                            ? 'bg-slate-700/50 text-slate-500 cursor-wait'
+                            : 'bg-slate-700/50 text-slate-400 hover:bg-purple-600/20 hover:text-purple-300'
+                        }`}
+                        title="Add blueprint ores to Mining Tracker RS Tracker"
+                      >
+                        {craftTrackerPending ? 'Adding…' : 'RS Track'}
+                      </button>
+                    )}
                     {showTargetControl && !isOnTargetList && (
                       <button
                         onClick={handleTargetClick}

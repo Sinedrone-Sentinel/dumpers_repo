@@ -84,6 +84,12 @@ export default function ResourceTrackerRoute() {
     }
   }, [isGuest, user?.id, activeTab])
 
+  /** Can Craft always uses the signed-in member's My Resources — never Site Total. */
+  const personalInventoryContext = useMemo(() => {
+    if (isGuest || !user?.id) return null
+    return { scope: 'personal' as const, userId: user.id }
+  }, [isGuest, user?.id])
+
   const readOnly = activeTab === 'site'
   const isPersonalTab = activeTab === 'personal'
   const isCanCraftTab = activeTab === 'can_craft'
@@ -101,6 +107,20 @@ export default function ResourceTrackerRoute() {
     withInventory: !isGuest,
     inventoryContext,
   })
+
+  const { catalogWithInventory: personalInventoryForCanCraft, refresh: refreshPersonalInventory } =
+    useResourceCatalog({
+      includeInactive: showInactive,
+      withInventory: !isGuest,
+      inventoryContext: personalInventoryContext,
+    })
+
+  const refreshInventoryViews = useCallback(async () => {
+    await refresh()
+    if (!isGuest) {
+      await refreshPersonalInventory()
+    }
+  }, [refresh, refreshPersonalInventory, isGuest])
 
   // Build stock cards: guests mirror logged-in — one card per (resource_key, quality, note) row
   const stockCards = useMemo(() => {
@@ -170,6 +190,20 @@ export default function ResourceTrackerRoute() {
     [quantityByKey]
   )
 
+  const canCraftStockCards = useMemo(() => {
+    if (isGuest) return stockCards
+    return personalInventoryForCanCraft
+  }, [isGuest, stockCards, personalInventoryForCanCraft])
+
+  const canCraftQuantityByKey = useMemo(
+    () => buildStockTotalsByResource(canCraftStockCards),
+    [canCraftStockCards]
+  )
+  const canCraftHasTrackedStock = useMemo(
+    () => Object.values(canCraftQuantityByKey).some((qty) => qty > 0),
+    [canCraftQuantityByKey]
+  )
+
   // Guest localStorage helpers
   const updateGuestResource = useCallback(
     (resourceKey: string, quality: number, quantity: number, note?: string | null) => {
@@ -228,7 +262,7 @@ export default function ResourceTrackerRoute() {
       return
     }
     setStockError(null)
-    await refresh()
+    await refreshInventoryViews()
   }
 
   const handleSaveEdit = async (
@@ -264,7 +298,7 @@ export default function ResourceTrackerRoute() {
     setEditingKey(null)
     setEditValue('')
     setStockError(null)
-    await refresh()
+    await refreshInventoryViews()
   }
 
   const handleSaveNote = async (
@@ -291,7 +325,7 @@ export default function ResourceTrackerRoute() {
     setEditingNoteKey(null)
     setNoteValue('')
     setStockError(null)
-    await refresh()
+    await refreshInventoryViews()
   }
 
   // Guest add resource handler — adds to existing card quantity like logged-in flow
@@ -309,6 +343,196 @@ export default function ResourceTrackerRoute() {
       setStockError(null)
     },
     [guestResources, updateGuestResource]
+  )
+
+  const renderStockCard = useCallback(
+    (card: (typeof stockCards)[number]) => {
+      const quality = card.quality ?? DEFAULT_STOCK_QUALITY
+      const qualityLabel = formatInventoryQualityLabel(card.resource_key, quality)
+      const qtyUnit = resourceQuantityUnitLabel(card.resource_key)
+      const adjustSteps = adjustStepsForResource(card.resource_key)
+      const lineKey = inventoryLineKey(card.resource_key, quality, card.note)
+      const isEditing = editingKey === lineKey
+
+      return (
+        <div
+          key={lineKey}
+          className={`min-w-0 bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
+            card.is_active ? 'border-slate-700' : 'border-slate-800 opacity-70'
+          }`}
+        >
+          <div className="flex items-start justify-between gap-2 min-w-0">
+            <div className="min-w-0 flex-1">
+              <h3 className={`font-medium truncate ${resourceLabelClassName(card.resource_key)}`}>
+                {card.label}
+              </h3>
+              <p className="text-slate-500 text-xs mt-0.5">
+                {card.is_active
+                  ? isPersonalTab
+                    ? `${qualityLabel} · ${qtyUnit} on hand`
+                    : `${qtyUnit} site-wide total`
+                  : 'Retired — no longer in blueprints'}
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-1 shrink-0">
+              {isPersonalTab && (
+                <span className="px-2 py-0.5 rounded text-xs border font-medium bg-amber-950/40 text-amber-200 border-amber-500/30">
+                  {qualityLabel}
+                </span>
+              )}
+              <UexLookupButton commodityName={card.label} emphasis="sell" />
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 flex-wrap">
+            {isEditing && !readOnly ? (
+              <>
+                <ResourceQuantityInput
+                  resourceKey={card.resource_key}
+                  value={editValue}
+                  onValueChange={setEditValue}
+                  className="w-28 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm tabular-nums"
+                />
+                <span className="text-slate-500 text-xs">{qtyUnit}</span>
+                <button
+                  onClick={() => void handleSaveEdit(card.resource_key, quality, card.note)}
+                  className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => {
+                    setEditingKey(null)
+                    setEditValue('')
+                  }}
+                  className="px-2 py-1 text-xs text-slate-400"
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="text-2xl font-bold text-white tabular-nums">
+                  {formatQuantityForResource(card.resource_key, card.quantity)}
+                </span>
+                <span className="text-slate-500 text-sm">{qtyUnit}</span>
+                {!readOnly && (
+                  <button
+                    onClick={() => {
+                      setEditingKey(lineKey)
+                      setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
+                    }}
+                    className="text-xs text-slate-400 hover:text-white ml-1"
+                  >
+                    Set
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+
+          <div className="mt-3 min-h-[6.75rem]">
+            {card.is_active && !readOnly && (
+              <div className="grid grid-cols-2 gap-1.5 min-w-0">
+                {adjustSteps.map((step) => (
+                  <div key={step} className="flex gap-1 min-w-0">
+                    <button
+                      onClick={() =>
+                        void handleAdjust(card.resource_key, quality, -step, card.note)
+                      }
+                      className="flex-1 min-w-0 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded tabular-nums"
+                    >
+                      −{step}
+                    </button>
+                    <button
+                      onClick={() =>
+                        void handleAdjust(card.resource_key, quality, step, card.note)
+                      }
+                      className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
+                    >
+                      +{step}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {isPersonalTab && isGuest && card.note && (
+            <div className="mt-3 pt-3 border-t border-slate-700/50">
+              <p className="text-xs text-slate-400 italic">&quot;{card.note}&quot;</p>
+            </div>
+          )}
+
+          {isPersonalTab && !isGuest && (
+            <div className="mt-3 pt-3 border-t border-slate-700/50">
+              {editingNoteKey === lineKey ? (
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={noteValue}
+                    onChange={(e) => setNoteValue(e.target.value.slice(0, 64))}
+                    placeholder="Add note (64 chars max)"
+                    maxLength={64}
+                    className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs placeholder-slate-500"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        void handleSaveNote(card.resource_key, quality, card.note)
+                      } else if (e.key === 'Escape') {
+                        setEditingNoteKey(null)
+                        setNoteValue('')
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={() => void handleSaveNote(card.resource_key, quality, card.note)}
+                    className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded shrink-0"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingNoteKey(null)
+                      setNoteValue('')
+                    }}
+                    className="px-2 py-1 text-xs text-slate-400 shrink-0"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setEditingNoteKey(lineKey)
+                    setNoteValue(card.note ?? '')
+                  }}
+                  className="w-full text-left text-xs"
+                  disabled={readOnly}
+                >
+                  {card.note ? (
+                    <span className="text-slate-400 italic">&quot;{card.note}&quot;</span>
+                  ) : (
+                    <span className="text-slate-600 hover:text-slate-400">+ Add note</span>
+                  )}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )
+    },
+    [
+      editingKey,
+      editValue,
+      readOnly,
+      isPersonalTab,
+      handleSaveEdit,
+      handleAdjust,
+      handleSaveNote,
+      editingNoteKey,
+      noteValue,
+    ]
   )
 
   const tabLabel = activeTab === 'personal' ? 'My stock cards' : activeTab === 'can_craft' ? 'Can craft' : 'Site Total'
@@ -365,7 +589,10 @@ export default function ResourceTrackerRoute() {
       </div>
 
       {isCanCraftTab ? (
-        <CanCraftTab quantityByKey={quantityByKey} hasTrackedStock={hasTrackedStock} />
+        <CanCraftTab
+          quantityByKey={canCraftQuantityByKey}
+          hasTrackedStock={canCraftHasTrackedStock}
+        />
       ) : (
         <>
       <div className="mb-6 min-h-[11.5rem] w-full min-w-0">
@@ -376,7 +603,7 @@ export default function ResourceTrackerRoute() {
               catalog={catalog}
               labelMap={labelMap}
               existingKeys={existingLineKeys}
-              onAdded={() => void refresh()}
+              onAdded={() => void refreshInventoryViews()}
               onError={setStockError}
             />
           ) : (
@@ -520,184 +747,7 @@ export default function ResourceTrackerRoute() {
         <ResourceStockListView cards={filteredCards} isPersonalTab={isPersonalTab} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 w-full min-w-0">
-          {filteredCards.map((card) => {
-            const quality = card.quality ?? DEFAULT_STOCK_QUALITY
-            const qualityLabel = formatInventoryQualityLabel(card.resource_key, quality)
-            const qtyUnit = resourceQuantityUnitLabel(card.resource_key)
-            const adjustSteps = adjustStepsForResource(card.resource_key)
-            const lineKey = inventoryLineKey(card.resource_key, quality, card.note)
-            const isEditing = editingKey === lineKey
-
-            return (
-              <div
-                key={lineKey}
-                className={`min-w-0 bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
-                  card.is_active ? 'border-slate-700' : 'border-slate-800 opacity-70'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-2 min-w-0">
-                  <div className="min-w-0 flex-1">
-                    <h3 className={`font-medium truncate ${resourceLabelClassName(card.resource_key)}`}>
-                      {card.label}
-                    </h3>
-                    <p className="text-slate-500 text-xs mt-0.5">
-                      {card.is_active
-                        ? isPersonalTab
-                          ? `${qualityLabel} · ${qtyUnit} on hand`
-                          : `${qtyUnit} site-wide total`
-                        : 'Retired — no longer in blueprints'}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    {isPersonalTab && (
-                      <span className="px-2 py-0.5 rounded text-xs border font-medium bg-amber-950/40 text-amber-200 border-amber-500/30">
-                        {qualityLabel}
-                      </span>
-                    )}
-                    <UexLookupButton commodityName={card.label} emphasis="sell" />
-                  </div>
-                </div>
-
-                <div className="mt-4 flex items-center gap-2 flex-wrap">
-                  {isEditing && !readOnly ? (
-                    <>
-                      <ResourceQuantityInput
-                        resourceKey={card.resource_key}
-                        value={editValue}
-                        onValueChange={setEditValue}
-                        className="w-28 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm tabular-nums"
-                      />
-                      <span className="text-slate-500 text-xs">{qtyUnit}</span>
-                      <button
-                        onClick={() => void handleSaveEdit(card.resource_key, quality, card.note)}
-                        className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditingKey(null)
-                          setEditValue('')
-                        }}
-                        className="px-2 py-1 text-xs text-slate-400"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-2xl font-bold text-white tabular-nums">
-                        {formatQuantityForResource(card.resource_key, card.quantity)}
-                      </span>
-                      <span className="text-slate-500 text-sm">{qtyUnit}</span>
-                      {!readOnly && (
-                        <button
-                          onClick={() => {
-                            setEditingKey(lineKey)
-                            setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
-                          }}
-                          className="text-xs text-slate-400 hover:text-white ml-1"
-                        >
-                          Set
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-
-                <div className="mt-3 min-h-[6.75rem]">
-                  {card.is_active && !readOnly && (
-                    <div className="grid grid-cols-2 gap-1.5 min-w-0">
-                      {adjustSteps.map((step) => (
-                        <div key={step} className="flex gap-1 min-w-0">
-                          <button
-                            onClick={() =>
-                              void handleAdjust(card.resource_key, quality, -step, card.note)
-                            }
-                            className="flex-1 min-w-0 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded tabular-nums"
-                          >
-                            −{step}
-                          </button>
-                          <button
-                            onClick={() =>
-                              void handleAdjust(card.resource_key, quality, step, card.note)
-                            }
-                            className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
-                          >
-                            +{step}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {isPersonalTab && isGuest && card.note && (
-                  <div className="mt-3 pt-3 border-t border-slate-700/50">
-                    <p className="text-xs text-slate-400 italic">&quot;{card.note}&quot;</p>
-                  </div>
-                )}
-
-                {isPersonalTab && !isGuest && (
-                  <div className="mt-3 pt-3 border-t border-slate-700/50">
-                    {editingNoteKey === lineKey ? (
-                      <div className="flex gap-2 items-center">
-                        <input
-                          type="text"
-                          value={noteValue}
-                          onChange={(e) => setNoteValue(e.target.value.slice(0, 64))}
-                          placeholder="Add note (64 chars max)"
-                          maxLength={64}
-                          className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs placeholder-slate-500"
-                          autoFocus
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              void handleSaveNote(card.resource_key, quality, card.note)
-                            } else if (e.key === 'Escape') {
-                              setEditingNoteKey(null)
-                              setNoteValue('')
-                            }
-                          }}
-                        />
-                        <button
-                          onClick={() => void handleSaveNote(card.resource_key, quality, card.note)}
-                          className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded shrink-0"
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={() => {
-                            setEditingNoteKey(null)
-                            setNoteValue('')
-                          }}
-                          className="px-2 py-1 text-xs text-slate-400 shrink-0"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setEditingNoteKey(lineKey)
-                          setNoteValue(card.note ?? '')
-                        }}
-                        className="w-full text-left text-xs"
-                        disabled={readOnly}
-                      >
-                        {card.note ? (
-                          <span className="text-slate-400 italic">"{card.note}"</span>
-                        ) : (
-                          <span className="text-slate-600 hover:text-slate-400">
-                            + Add note
-                          </span>
-                        )}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+          {filteredCards.map((card) => renderStockCard(card))}
         </div>
       )}
       {loading && stockCards.length > 0 && (

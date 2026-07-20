@@ -10,6 +10,7 @@ import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
+import { useBlueprintCraftTracker } from '../hooks/useBlueprintCraftTracker'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { fetchBlueprintOwnerCounts } from '../lib/operations'
@@ -114,6 +115,13 @@ export default function BlueprintsRoute() {
 
   const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
+  const {
+    addMaterialsFromBlueprint,
+    isPendingForBlueprint,
+    hasRsTrackableMaterials,
+    lastMessage: craftTrackerMessage,
+    clearLastMessage: clearCraftTrackerMessage,
+  } = useBlueprintCraftTracker()
 
   const [searchTerm, setSearchTerm] = React.useState(
     () => readBlueprintsUiState(uiScope).searchTerm
@@ -532,6 +540,9 @@ export default function BlueprintsRoute() {
           }
           ownerCount={blueprintOwnerCounts[bp.internalName]}
           dfpDisplayEnabled={dfpDisplayEnabled}
+          showCraftTrackerControl={hasRsTrackableMaterials(bp)}
+          onAddToCraftTracker={() => void addMaterialsFromBlueprint(bp)}
+          craftTrackerPending={isPendingForBlueprint(bp.internalName)}
         />
       )
     },
@@ -549,6 +560,9 @@ export default function BlueprintsRoute() {
       setOrderable,
       blueprintOwnerCounts,
       dfpDisplayEnabled,
+      addMaterialsFromBlueprint,
+      isPendingForBlueprint,
+      hasRsTrackableMaterials,
     ]
   )
 
@@ -669,6 +683,19 @@ export default function BlueprintsRoute() {
         <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
           <strong className="text-amber-100">Offline Mode</strong> — Your "Acquired" marks are saved locally in this browser.
           Sign in to sync them to your account.
+        </div>
+      )}
+
+      {craftTrackerMessage && (
+        <div className="mb-4 p-3 rounded-lg bg-purple-900/25 border border-purple-500/35 text-purple-100 text-sm flex items-start justify-between gap-3">
+          <span>{craftTrackerMessage}</span>
+          <button
+            type="button"
+            onClick={clearCraftTrackerMessage}
+            className="text-purple-300/80 hover:text-purple-100 text-xs shrink-0"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 
@@ -926,6 +953,9 @@ export default function BlueprintsRoute() {
           onToggleTarget={() => toggleTarget(selectedBlueprint.internalName)}
           canAddToOrder={!isGuest && isApproved && canAddBlueprintToOrder(selectedBlueprint, overridesMap)}
           ownerCount={blueprintOwnerCounts[selectedBlueprint.internalName]}
+          onAddToCraftTracker={() => void addMaterialsFromBlueprint(selectedBlueprint)}
+          craftTrackerPending={isPendingForBlueprint(selectedBlueprint.internalName)}
+          showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}
         />
       )}
 

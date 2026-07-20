@@ -85,6 +85,9 @@ interface BlueprintDetailsModalProps {
   onToggleTarget?: () => void
   canAddToOrder?: boolean
   ownerCount?: number
+  onAddToCraftTracker?: () => void
+  craftTrackerPending?: boolean
+  showCraftTrackerControl?: boolean
 }
 
 export default function BlueprintDetailsModal({
@@ -100,6 +103,9 @@ export default function BlueprintDetailsModal({
   onToggleTarget,
   canAddToOrder = false,
   ownerCount,
+  onAddToCraftTracker,
+  craftTrackerPending = false,
+  showCraftTrackerControl = false,
 }: BlueprintDetailsModalProps) {
   const navigate = useNavigate()
   const [slotQualities, setSlotQualities] = useState<Record<number, number>>({})
@@ -115,6 +121,14 @@ export default function BlueprintDetailsModal({
   const hasRewardMissions = rewardMissions.length > 0
   const canBrowseMissions = isApproved || isGuest
   const isStarterBlueprint = isDefaultBlueprint(blueprint.internalName || blueprint.file)
+  const showTargetControl =
+    !isStarterBlueprint &&
+    canBrowseMissions &&
+    !isAcquired &&
+    canAddToTargetList
+  const showMissionsControl = canBrowseMissions && hasRewardMissions
+  const showActionFooter =
+    showTargetControl || showMissionsControl || showCraftTrackerControl
 
   useEffect(() => {
     setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
@@ -311,26 +325,6 @@ export default function BlueprintDetailsModal({
                 Track this blueprint or open Missions to jump to a rewarding contract in Browse Missions.
               </p>
             )}
-            {canBrowseMissions && (
-              <div className="flex items-center gap-2 mt-3">
-                {canAddToTargetList && !isAcquired && !isOnTarget && (
-                  <button
-                    type="button"
-                    onClick={onToggleTarget}
-                    className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
-                  >
-                    Track
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setMissionsModalOpen(true)}
-                  className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-sky-600/30 text-sky-300 hover:bg-sky-600/40"
-                >
-                  Missions
-                </button>
-              </div>
-            )}
           </div>
         )}
 
@@ -392,6 +386,56 @@ export default function BlueprintDetailsModal({
                 )}
               </div>
             </div>
+          </div>
+        )}
+
+        {showActionFooter && (
+          <div className="pt-3 mt-1 border-t border-slate-700 flex items-center justify-end gap-2 flex-wrap">
+            {showCraftTrackerControl && onAddToCraftTracker && (
+              <button
+                type="button"
+                onClick={onAddToCraftTracker}
+                disabled={craftTrackerPending}
+                className={`text-xs font-semibold uppercase px-2 py-1 rounded transition-colors ${
+                  craftTrackerPending
+                    ? 'bg-slate-700/50 text-slate-500 cursor-wait'
+                    : 'bg-slate-700/50 text-slate-400 hover:bg-purple-600/20 hover:text-purple-300'
+                }`}
+                title="Add blueprint ores to Mining Tracker RS Tracker"
+              >
+                {craftTrackerPending ? 'Adding…' : 'RS Track'}
+              </button>
+            )}
+            {showTargetControl && !isOnTarget && onToggleTarget && (
+              <button
+                type="button"
+                onClick={onToggleTarget}
+                className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300"
+                title="Add to Mission Tracker"
+              >
+                Track
+              </button>
+            )}
+            {showMissionsControl && (
+              <button
+                type="button"
+                onClick={() => setMissionsModalOpen(true)}
+                className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
+                title="View missions that reward this blueprint"
+              >
+                Missions
+              </button>
+            )}
+            {showTargetControl && isOnTarget && onToggleTarget && (
+              <button
+                type="button"
+                onClick={onToggleTarget}
+                className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
+                title="Remove from Mission Tracker"
+              >
+                Tracked
+              </button>
+            )}
           </div>
         )}
       </div>

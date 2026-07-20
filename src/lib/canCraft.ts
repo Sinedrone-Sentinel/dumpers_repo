@@ -49,13 +49,6 @@ function stockRatio(resourceKey: string, need: number, have: number): number {
   return have / need
 }
 
-function isMissingEntirely(resourceKey: string, have: number): boolean {
-  if (isWholeUnitResource(resourceKey)) {
-    return Math.trunc(have) <= 0
-  }
-  return have <= 0
-}
-
 /** Best OR choice per slot — option with the highest have÷need ratio. */
 function aggregateBestSlotRequirements(
   blueprint: BlueprintWithSlots,
@@ -125,8 +118,9 @@ export function canCraftBlueprint(
 }
 
 /**
- * "Close, no cigar" — not fully craftable, but either a required material is untracked
- * or at least one required material is within 30% of the recipe amount (≥70% stocked).
+ * "Close, no cigar" — not fully craftable, but nearly there:
+ * 1. Every required material is at least 70% on hand, or
+ * 2. Every required material is fully stocked except exactly one (that one may be any amount, including 0%).
  */
 export function isNearlyCraftableBlueprint(
   blueprint: BlueprintWithSlots,
@@ -138,24 +132,19 @@ export function isNearlyCraftableBlueprint(
   const requirements = aggregateBestSlotRequirements(blueprint, quantityByKey, craftQuantity)
   if (!requirements) return false
 
-  let hasMissingResource = false
-  let hasWithinThirtyPercent = false
-
+  const ratios: number[] = []
   for (const [resourceKey, { need, have }] of requirements.entries()) {
     if (need <= 0) continue
-
-    if (isMissingEntirely(resourceKey, have)) {
-      hasMissingResource = true
-      continue
-    }
-
-    const ratio = stockRatio(resourceKey, need, have)
-    if (ratio >= NEARLY_CRAFTABLE_MIN_RATIO && ratio < 1 - 1e-9) {
-      hasWithinThirtyPercent = true
-    }
+    ratios.push(stockRatio(resourceKey, need, have))
   }
 
-  return hasMissingResource || hasWithinThirtyPercent
+  if (ratios.length === 0) return false
+
+  const minRatio = Math.min(...ratios)
+  if (minRatio >= NEARLY_CRAFTABLE_MIN_RATIO - 1e-9) return true
+
+  const belowFullCount = ratios.filter((ratio) => ratio < 1 - 1e-9).length
+  return belowFullCount === 1
 }
 
 export function matchesCanCraftTabBlueprint(
