@@ -1,0 +1,53 @@
+---
+description: Wire new pages and tabs into site analytics (tool + sub-tool tracking)
+alwaysApply: true
+---
+
+# Site Analytics Integration
+
+Any new **member-facing route (page)** or **in-page tab/section** that changes what the user is doing must be wired into site analytics so `/analytics` reports accurate tool time.
+
+Analytics is **active time only** (visible tab, heartbeat pings). It must never block UI or throw.
+
+## New route / page
+
+1. Register the path in `pathToTool()` inside `src/lib/analytics.ts`.
+   - Use `pathname.startsWith('/your-path')` for routes with sub-paths.
+   - Pick a stable snake_case `tool_id` (max 64 chars).
+2. Add a human label in `ANALYTICS_TOOL_LABELS` in the same file.
+3. Add the route in `src/routes/root.tsx` (if not already present).
+
+`AnalyticsTracker` in `Layout` calls `trackAnalyticsRoute(pathname)` automatically — no extra hookup on the page unless it has tabs.
+
+### Intentionally untracked routes
+
+Add to `SKIP_PATH_PREFIXES` in `analytics.ts` only for **officer/admin/signup** surfaces (e.g. `/analytics`, `/support-dashboard`, `/discord-subscribe`). Do not skip member tools.
+
+## New tab or major section (same route)
+
+When a page has tabs, view modes, or archive-style sections that members switch between:
+
+1. Call `setAnalyticsSubTool(subToolId)` whenever the active tab/section changes (typically in a `useEffect` on tab state or URL search param).
+2. Use a stable snake_case `sub_tool_id` (max 64 chars).
+3. Add a label in `ANALYTICS_SUB_TOOL_LABELS` in `analytics.ts`.
+
+Examples already wired:
+- Resource Tracker: `my_resources`, `site_total`, `can_craft`
+- Mining Tracker: `rs_tracker`, `mining_guide`, `ledger`
+- Mission Tracker: `my_tracker`, `browse_missions`, `live_tracker`
+- My Listings: `active`, `completed`, `archive`
+- The Bazaar: `fulfillment`, `store`
+- Info Archive: section ids (`welcome`, `components`, …)
+
+## Checklist before finishing
+
+- [ ] New route maps in `pathToTool()` (or is explicitly skipped with reason)
+- [ ] `ANALYTICS_TOOL_LABELS` updated for new tools
+- [ ] Every member-visible tab/section calls `setAnalyticsSubTool` on change
+- [ ] `ANALYTICS_SUB_TOOL_LABELS` updated for new sub-tools
+- [ ] Sub-route pages (e.g. `/targets/live`) still resolve to the parent tool via prefix matching
+
+## Do not
+
+- Invent CIG/game limits or duplicate analytics in README unless the feature is user-facing setup docs
+- Break the app if Supabase ping fails (existing code swallows errors — keep that pattern)
