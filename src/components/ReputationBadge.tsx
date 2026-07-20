@@ -84,7 +84,7 @@ export default function ReputationBadge({ label, reputation, className = '', typ
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-400">•</span>
-                    <span>Total order value capped at <strong>1,000,000 aUEC</strong></span>
+                    <span>Total active buyer-side value capped at <strong>1,000,000 aUEC</strong> (site limit while reputation is pending)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-amber-400">•</span>

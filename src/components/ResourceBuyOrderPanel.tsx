@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import BlueprintTypeahead from './BlueprintTypeahead'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
-import AuecTransferLimitModal from './AuecTransferLimitModal'
 import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import {
   isHarvestResource,
@@ -33,7 +32,6 @@ import {
 import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
 import CartBlueprintLineEditor from './CartBlueprintLineEditor'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
-import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
   formatDfpAuec,
@@ -172,7 +170,6 @@ export default function ResourceBuyOrderPanel({
   const [showNoOwnerWarning, setShowNoOwnerWarning] = useState(false)
   const [noOwnerBlueprints, setNoOwnerBlueprints] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
-  const [showTransferModal, setShowTransferModal] = useState(false)
   const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
   const [expandedCartKey, setExpandedCartKey] = useState<string | null>(null)
 
@@ -542,11 +539,6 @@ export default function ResourceBuyOrderPanel({
       return
     }
 
-    if (exceedsSingleTransferLimit(cartTotalDfp)) {
-      setPendingListingType(listingType)
-      setShowTransferModal(true)
-      return
-    }
     void submitOrder(listingType)
   }
 
@@ -556,10 +548,6 @@ export default function ResourceBuyOrderPanel({
 
   const handleConfirmNoOwnerWarning = () => {
     setShowNoOwnerWarning(false)
-    if (exceedsSingleTransferLimit(cartTotalDfp)) {
-      setShowTransferModal(true)
-      return
-    }
     void submitOrder(pendingListingType)
   }
 
@@ -898,12 +886,6 @@ export default function ResourceBuyOrderPanel({
           </div>
         )}
 
-        {dfpDisplayEnabled && exceedsSingleTransferLimit(cartTotalDfp) && (
-          <p className="text-orange-300/90 text-xs">
-            Over 1M DFP — confirm in-game payment limits before submitting.
-          </p>
-        )}
-
         <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-2">
           <label htmlFor="min-fulfiller-rep" className="text-slate-300 text-sm font-medium">
             Min fulfiller reputation
@@ -994,15 +976,6 @@ export default function ResourceBuyOrderPanel({
           )}
         </div>
       </form>
-
-      {showTransferModal && (
-        <AuecTransferLimitModal
-          totalAuec={cartTotalDfp}
-          onConfirm={() => void submitOrder(pendingListingType)}
-          onCancel={() => setShowTransferModal(false)}
-          confirming={submitting}
-        />
-      )}
 
       {showNoOwnerWarning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">

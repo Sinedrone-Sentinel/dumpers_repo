@@ -141,7 +141,7 @@ export const PENDING_REP_SECTION = {
     items: [
       'Applies when you are the **buyer** — WTB transactions in progress and WTS purchases',
       'Maximum of 2 active buyer-side transactions at a time',
-      'Total buyer-side value capped at 1,000,000 aUEC',
+      'Total buyer-side value capped at 1,000,000 aUEC (site limit while reputation is pending)',
       'Your open WTB/WTS **listings** do not count — only transactions someone has started',
       'Limits lift after 5 completed transactions as a buyer',
     ],
@@ -191,7 +191,7 @@ export const ORDER_RULES_SECTION = {
   pendingRep: {
     title: 'Pending Rep Requirements',
     items: [
-      '**Buyer limits:** Max 2 active buyer-side transactions / 1M aUEC (WTB fulfillments in progress + WTS purchases)',
+      '**Buyer limits:** Max 2 active buyer-side transactions / 1M aUEC total (WTB fulfillments in progress + WTS purchases)',
       '**Seller limits:** Max 1 active seller-side job (WTB fulfillment or WTS sale in progress; each transaction counts)',
       'Open WTB/WTS **listings** do not count toward these caps — only started transactions do',
     ],

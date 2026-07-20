@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, getRouteApi } from '@tanstack/react-router'
-import AuecTransferLimitNotice from '../components/AuecTransferLimitNotice'
 import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import OrderArchiveCallout from '../components/OrderArchiveCallout'
 import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRatingModal'
@@ -12,7 +11,6 @@ import MyListingCard from '../components/MyListingCard'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import AppModal from '../components/layout/AppModal'
-import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec } from '../lib/dfp'
 import { SITE_SLOGAN } from '../config/site'
@@ -770,12 +768,6 @@ export default function CustomOrdersRoute() {
                         />
                       )}
                     {order.notes && <p className="text-slate-400 text-sm mt-2">{order.notes}</p>}
-
-                    {dfpDisplayEnabled && exceedsSingleTransferLimit(totalDfp) && (
-                      <div className="mt-3">
-                        <AuecTransferLimitNotice totalAuec={totalDfp} context="customer" compact />
-                      </div>
-                    )}
 
                     <div className="mt-3">
                       <OrderRequestLines

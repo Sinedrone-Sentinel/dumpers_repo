@@ -1,13 +1,11 @@
 import React from 'react'
 import { Link } from '@tanstack/react-router'
-import AuecTransferLimitNotice from './AuecTransferLimitNotice'
 import ListingTypeBadge from './ListingTypeBadge'
 import OrderDeadlineNotice from './OrderDeadlineNotice'
 import OrderNextStepCallout from './OrderNextStepCallout'
 import OrderRequestLines from './OrderRequestLines'
 import ReputationBadge from './ReputationBadge'
 import TradeContactChip from './TradeContactChip'
-import { exceedsSingleTransferLimit } from '../lib/auecTransferLimits'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import { formatDfpAuec } from '../lib/dfp'
 import { resourceQuantityUnitLabel } from '../config/resourceTypes'
@@ -99,10 +97,6 @@ export default function AssignedOrderCard({
         label="Buyer rep"
         reputation={buyerReputationFromRow(reputations[order.requester_id])}
       />
-
-      {dfpDisplayEnabled && exceedsSingleTransferLimit(totalDfp) && (
-        <AuecTransferLimitNotice totalAuec={totalDfp} context="fulfiller" compact />
-      )}
 
       <OrderDeadlineNotice order={order} role="fulfiller" />
       <OrderNextStepCallout order={order} context="wtb_fulfiller" />

@@ -558,11 +558,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
               <h4 className="text-sm font-medium text-emerald-400 mb-2">Pending Buyer Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Applies when you are the <strong className="text-slate-300">buyer</strong> — WTB transactions in progress and WTS purchases</li>
-                <li>• Maximum of 2 active buyer-side transactions at a time</li>
-                <li>• Total buyer-side value capped at 1,000,000 aUEC</li>
-                <li>• Your open <strong className="text-amber-300">WTB</strong>/<strong className="text-cyan-300">WTS</strong> listings do not count — only transactions someone has started</li>
-                <li>• Limits lift after 5 completed transactions as a buyer</li>
+                {PENDING_REP_SECTION.buyerLimits.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
             
@@ -637,9 +635,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 Pending Rep Requirements
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• <strong className="text-slate-300">Buyer limits:</strong> Max 2 active buyer-side transactions / 1M aUEC (WTB fulfillments in progress + WTS purchases)</li>
-                <li>• <strong className="text-slate-300">Seller limits:</strong> Max 1 active seller-side job (WTB fulfillment or WTS sale in progress; each transaction counts)</li>
-                <li>• Open WTB/WTS <strong className="text-slate-300">listings</strong> do not count toward these caps — only started transactions do</li>
+                {ORDER_RULES_SECTION.pendingRep.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
 
