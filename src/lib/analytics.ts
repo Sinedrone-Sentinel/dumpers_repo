@@ -94,28 +94,18 @@ function pathToTool(pathname: string): string | null {
     return null
   }
 
-  switch (pathname) {
-    case '/':
-      return 'blueprints'
-    case '/targets':
-      return 'mission_tracker'
-    case '/resources':
-      return 'resource_tracker'
-    case '/mining-tracker':
-      return 'mining_tracker'
-    case '/commodity-lookup':
-      return 'commodity_lookup'
-    case '/orders':
-      return 'custom_orders'
-    case '/bazaar':
-      return 'fulfillment'
-    case '/archive':
-      return 'archive'
-    case '/guest-locked':
-      return 'guest_locked'
-    default:
-      return null
-  }
+  if (pathname === '/') return 'blueprints'
+  if (pathname.startsWith('/wikelo')) return 'wikelo'
+  if (pathname.startsWith('/targets')) return 'mission_tracker'
+  if (pathname.startsWith('/resources')) return 'resource_tracker'
+  if (pathname.startsWith('/mining-tracker')) return 'mining_tracker'
+  if (pathname.startsWith('/commodity-lookup')) return 'commodity_lookup'
+  if (pathname.startsWith('/orders')) return 'custom_orders'
+  if (pathname.startsWith('/bazaar')) return 'fulfillment'
+  if (pathname.startsWith('/archive')) return 'archive'
+  if (pathname.startsWith('/guest-locked')) return 'guest_locked'
+
+  return null
 }
 
 function accumulateVisibleTime() {
@@ -256,12 +246,13 @@ export function initAnalytics(getContext: () => AnalyticsContext) {
 
 export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   blueprints: 'Blueprints',
+  wikelo: 'Wikelo',
   mission_tracker: 'Mission Tracker',
   resource_tracker: 'Resource Tracker',
   mining_tracker: 'Mining Tracker',
   commodity_lookup: 'Commodity Lookup',
-  custom_orders: 'Custom Orders',
-  fulfillment: 'Fulfillment',
+  custom_orders: 'My Listings',
+  fulfillment: 'The Bazaar',
   archive: 'Info Archive',
   guest_locked: 'Guest Locked',
 }
@@ -269,14 +260,18 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
 export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   my_tracker: 'My Tracker',
   browse_missions: 'Browse Missions',
+  live_tracker: 'Live Tracker',
   my_resources: 'My Resources',
+  can_craft: 'Can Craft',
   site_total: 'Site Total',
   rs_tracker: 'RS Tracker',
   mining_guide: 'Mining Guide',
-  ledger: 'Ledger',
+  ledger: 'Ledgers',
   active: 'Active Orders',
   completed: 'Completed Orders',
   archive: 'Archived Orders',
+  fulfillment: 'WTB Fulfillment',
+  store: 'WTS Store',
   welcome: 'Overview',
   components: 'Components',
   ordnance: 'Ordnance',

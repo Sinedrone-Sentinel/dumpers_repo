@@ -11,6 +11,7 @@ import WtsSaleOrderCard from '../components/WtsSaleOrderCard'
 import { type WtsLineSelection } from '../components/WtsPartialPurchasePanel'
 import ReputationBadge from '../components/ReputationBadge'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { setAnalyticsSubTool } from '../lib/analytics'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { SITE_SLOGAN } from '../config/site'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
@@ -145,6 +146,11 @@ export default function BazaarRoute() {
   const [guestPendingCount, setGuestPendingCount] = useState<number | null>(null)
   const [activeTab, setActiveTab] = useState<BazaarTab>('fulfillment')
   const [searchText, setSearchText] = useState('')
+
+  useEffect(() => {
+    setAnalyticsSubTool(activeTab)
+  }, [activeTab])
+
   const [minBandFilter, setMinBandFilter] = useState('')
   const [expandedPendingOrderId, setExpandedPendingOrderId] = useState<string | null>(null)
   const [flashOrderId, setFlashOrderId] = useState<string | null>(null)

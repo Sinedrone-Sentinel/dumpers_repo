@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import { setAnalyticsSubTool } from '../lib/analytics'
 import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
 import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
@@ -9,6 +10,10 @@ export default function TargetsLiveRoute() {
   const { openBpDumperModal } = useBpDumperModal()
   const { loading, error, isConnected, statusBar, hideMissionLists, missions, remaining } =
     useLiveMissionTracker()
+
+  useEffect(() => {
+    setAnalyticsSubTool('live_tracker')
+  }, [])
 
   return (
     <FeaturePageLayout
