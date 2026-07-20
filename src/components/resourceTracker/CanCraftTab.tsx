@@ -1,45 +1,45 @@
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import BlueprintCard from './BlueprintCard'
-import BlueprintDetailsModal from './BlueprintDetailsModal'
-import BlueprintMaterialFilter from './BlueprintMaterialFilter'
-import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
-import BlueprintVariantGroupCard from './BlueprintVariantGroupCard'
-import VirtualizedBlueprintGrid from './VirtualizedBlueprintGrid'
-import { useAuth } from '../contexts/AuthContext'
-import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
-import { useTargetList } from '../hooks/useTargetList'
-import { useAsyncEffect } from '../hooks/useAsyncEffect'
-import { matchesCanCraftTabBlueprint, canCraftBlueprint, isNearlyCraftableBlueprint } from '../lib/canCraft'
+import BlueprintCard from '../BlueprintCard'
+import BlueprintDetailsModal from '../BlueprintDetailsModal'
+import BlueprintMaterialFilter from '../BlueprintMaterialFilter'
+import BlueprintRewardMissionsModal from '../BlueprintRewardMissionsModal'
+import BlueprintVariantGroupCard from '../BlueprintVariantGroupCard'
+import VirtualizedBlueprintGrid from '../VirtualizedBlueprintGrid'
+import { useAuth } from '../../contexts/AuthContext'
+import { useBlueprintOrderOverrides } from '../../hooks/useBlueprintOrderOverrides'
+import { useTargetList } from '../../hooks/useTargetList'
+import { useAsyncEffect } from '../../hooks/useAsyncEffect'
+import { matchesCanCraftTabBlueprint, canCraftBlueprint, isNearlyCraftableBlueprint } from '../../lib/canCraft'
 import {
   getResourceTrackerUiScope,
   readResourceTrackerUiState,
   writeResourceTrackerUiState,
-} from '../lib/resourceTrackerUiState'
+} from '../../lib/resourceTrackerUiState'
 import {
   canAddBlueprintToOrder,
   canAddBlueprintToTargetList,
   resolveIsOrderable,
-} from '../lib/blueprintOrderable'
-import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
-import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
+} from '../../lib/blueprintOrderable'
+import { getRewardMissionsForBlueprint } from '../../lib/blueprintMissionRewards'
+import { stashBrowseMissionFromReward } from '../../lib/missionTrackerUiState'
 import {
   FPS_WEAPON_TYPE_OPTIONS,
   formatSubtypeLabel,
   getArmorSlot as getArmorSlotFromPath,
   getArmorWeight as getArmorWeightFromTaxonomy,
   getBlueprintSubType,
-} from '../lib/blueprintTaxonomy'
-import { blueprintUsesMaterial, extractBlueprintResources } from '../lib/blueprintResources'
-import { buildBlueprintGridItems, type BlueprintGridItem } from '../lib/blueprintVariantGroups'
+} from '../../lib/blueprintTaxonomy'
+import { blueprintUsesMaterial, extractBlueprintResources } from '../../lib/blueprintResources'
+import { buildBlueprintGridItems, type BlueprintGridItem } from '../../lib/blueprintVariantGroups'
 import {
   DEFAULT_BLUEPRINTS_CATEGORY,
   isBlueprintListable,
   isDefaultBlueprint,
   isDefaultBlueprintsCategory,
-} from '../lib/defaultBlueprints'
-import { fetchBlueprintOwnerCounts } from '../lib/operations'
-import { useBlueprintData } from '../routes/blueprints'
+} from '../../lib/defaultBlueprints'
+import { fetchBlueprintOwnerCounts } from '../../lib/operations'
+import { useBlueprintData } from '../../routes/blueprints'
 
 const getSubType = (bp: { categoryName?: string; subCategoryName?: string }) =>
   getBlueprintSubType(bp)
