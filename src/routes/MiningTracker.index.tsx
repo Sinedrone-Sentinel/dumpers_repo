@@ -6,7 +6,12 @@ import { setAnalyticsSubTool } from '../lib/analytics'
 import { useMiningData, type MiningData } from '../hooks/useArchiveData'
 import { useMiningTracker } from '../hooks/useMiningTracker'
 import { useAuth } from '../contexts/AuthContext'
-import { findOreByName, countGuideRarityBucket, buildLocationOresMap } from '../lib/miningDataHelpers'
+import {
+  findOreByName,
+  countGuideRarityBucket,
+  buildLocationOresMap,
+  canOpenGuideLocationModal,
+} from '../lib/miningDataHelpers'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import {
   LOCATION_SYSTEMS,
@@ -879,6 +884,7 @@ export default function MiningTrackerRoute() {
                   <GuideOreCard
                     key={item.id}
                     item={item}
+                    locationOresMap={locationOresMap}
                     onLocationClick={setSelectedLocation}
                     depositFilter={guideDepositFilter}
                   />
@@ -970,10 +976,12 @@ function depositTypesForOreAtGuideLocation(
 
 function GuideOreCard({
   item,
+  locationOresMap,
   onLocationClick,
   depositFilter,
 }: {
   item: MiningData
+  locationOresMap: Record<string, MiningData[]>
   onLocationClick: (loc: string) => void
   depositFilter: GuideDepositFilter
 }) {
@@ -1010,6 +1018,7 @@ function GuideOreCard({
 
     for (const location of item.locations ?? []) {
       if (isBroadGuideLocation(location)) {
+        if (!canOpenGuideLocationModal(location, locationOresMap)) continue
         for (const depositType of getDepositTypes(item.ore_name)) {
           if (!getOverallProfile(item.ore_name, depositType)) continue
           const tag = getOverallSpawnTag(item.ore_name, depositType)
@@ -1026,6 +1035,7 @@ function GuideOreCard({
       }
       const profiles = getGuideLocationProfiles(item.ore_name, location)
       if (profiles.length === 0) {
+        if (!canOpenGuideLocationModal(location, locationOresMap)) continue
         chips.push({
           location,
           depositType: 'surface',
@@ -1057,7 +1067,7 @@ function GuideOreCard({
     const surface = chips.filter((c) => c.depositType === 'surface').sort(chipSort)
     const asteroid = chips.filter((c) => c.depositType === 'asteroid').sort(chipSort)
     return { surface, asteroid }
-  }, [item.ore_name, item.locations, locationListOnly])
+  }, [item.ore_name, item.locations, locationListOnly, locationOresMap])
 
   const renderChip = (chip: {
     location: string
@@ -1082,6 +1092,7 @@ function GuideOreCard({
         side="top"
       >
         <button
+          type="button"
           onClick={() => onLocationClick(chip.location)}
           className={`text-xs px-2 py-1 rounded bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer text-left ${
             chip.spawnTier === 'trace' ? 'opacity-50 hover:opacity-90' : ''

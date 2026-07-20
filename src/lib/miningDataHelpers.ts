@@ -112,6 +112,15 @@ export function buildLocationOresMap(data: MiningData[]): Record<string, MiningD
   return map
 }
 
+/** Hide location chips that would open an empty location modal. */
+export function canOpenGuideLocationModal(
+  location: string,
+  locationOresMap: Record<string, MiningData[]>
+): boolean {
+  if (isNonSiteBroadGuideLocation(location)) return false
+  return (locationOresMap[location]?.length ?? 0) > 0
+}
+
 export function getSortedLocations(locationOresMap: Record<string, MiningData[]>): string[] {
   return Object.keys(locationOresMap).sort((a, b) => {
     const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
