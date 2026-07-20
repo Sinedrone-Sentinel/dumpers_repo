@@ -10,7 +10,14 @@ export interface BlueprintTrackableOre {
   oreName: string
   label: string
   rarity: string
-  depositTypes: DepositType[]
+  depositType: DepositType
+}
+
+/** Prefer asteroid RS card; fall back to surface when asteroid data is absent. */
+export function pickRsTrackerDepositType(depositTypes: DepositType[]): DepositType | null {
+  if (depositTypes.includes('asteroid')) return 'asteroid'
+  if (depositTypes.includes('surface')) return 'surface'
+  return null
 }
 
 /** Unique RS-trackable ores referenced by a blueprint's resource slots. */
@@ -34,15 +41,15 @@ export function extractBlueprintTrackableOres(
       const resourceKey = slugifyResourceName(label)
       if (!resourceKey || byKey.has(resourceKey)) continue
 
-      const depositTypes = getDepositTypes(oreName)
-      if (depositTypes.length === 0) continue
+      const depositType = pickRsTrackerDepositType(getDepositTypes(oreName))
+      if (!depositType) continue
 
       const catalogRow = findOreByName(miningCatalog, oreName)
       byKey.set(resourceKey, {
         oreName,
         label,
         rarity: catalogRow?.rarity ?? 'common',
-        depositTypes,
+        depositType,
       })
     }
   }

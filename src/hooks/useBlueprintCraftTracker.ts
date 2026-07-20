@@ -47,26 +47,24 @@ export function useBlueprintCraftTracker() {
 
       try {
         for (const ore of ores) {
-          for (const depositType of ore.depositTypes) {
-            if (isTracked(ore.oreName, depositType)) {
-              skipped.push({ oreName: ore.oreName, depositType })
-              continue
-            }
+          if (isTracked(ore.oreName, ore.depositType)) {
+            skipped.push({ oreName: ore.oreName, depositType: ore.depositType })
+            continue
+          }
 
-            const ok = await addEntry(ore.oreName, ore.rarity, {
-              depositType,
-              profileMode: 'overall',
-            })
-            if (ok) {
-              added.push({ oreName: ore.oreName, depositType })
-            }
+          const ok = await addEntry(ore.oreName, ore.rarity, {
+            depositType: ore.depositType,
+            profileMode: 'overall',
+          })
+          if (ok) {
+            added.push({ oreName: ore.oreName, depositType: ore.depositType })
           }
         }
 
         const message =
           added.length === 0
             ? 'Those ores are already on your RS Tracker.'
-            : `Added ${added.length} ore entr${added.length === 1 ? 'y' : 'ies'} to RS Tracker.`
+            : `Added ${added.length} ore${added.length === 1 ? '' : 's'} to RS Tracker.`
         setLastMessage(message)
         return { added, skipped }
       } finally {
