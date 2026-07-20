@@ -108,7 +108,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Log quantities and quality levels of resources you\'ve collected',
       'Track store-purchased refined materials at Purchased (Q0)',
       '**Can Craft** tab lists acquired blueprints you can make right now from your My Resources stock (same blueprint cards and filters as the Blueprints page)',
-      'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand, or every material fully stocked except one (that one may be missing)',
+      'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand; for two or more materials, also those fully stocked except one (that one may be missing)',
       'Switch between Cards (edit quantities) and List (read-only overview with notes)',
       'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding',
       'Filter by quality band on both views — each Q-tier stays on its own row',

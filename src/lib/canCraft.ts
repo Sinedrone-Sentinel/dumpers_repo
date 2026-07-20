@@ -120,7 +120,9 @@ export function canCraftBlueprint(
 /**
  * "Close, no cigar" — not fully craftable, but nearly there:
  * 1. Every required material is at least 70% on hand, or
- * 2. Every required material is fully stocked except exactly one (that one may be any amount, including 0%).
+ * 2. (2+ materials) Every required material is fully stocked except exactly one
+ *    (that one may be any amount, including 0%).
+ * Single-material recipes must satisfy rule 1 only.
  */
 export function isNearlyCraftableBlueprint(
   blueprint: BlueprintWithSlots,
@@ -142,6 +144,8 @@ export function isNearlyCraftableBlueprint(
 
   const minRatio = Math.min(...ratios)
   if (minRatio >= NEARLY_CRAFTABLE_MIN_RATIO - 1e-9) return true
+
+  if (ratios.length === 1) return false
 
   const belowFullCount = ratios.filter((ratio) => ratio < 1 - 1e-9).length
   return belowFullCount === 1

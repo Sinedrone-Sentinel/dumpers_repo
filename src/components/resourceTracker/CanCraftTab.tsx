@@ -659,8 +659,8 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
           <span className="font-medium text-slate-200">Close, no Cigar</span>
           <span className="block text-xs text-slate-500 mt-0.5 leading-relaxed">
             Also show acquired blueprints where every required material is at least 70% on hand in
-            your My Resources, or where every material is fully stocked except one (that one may
-            be missing entirely).
+            your My Resources. For recipes with two or more materials, also include those where
+            every material is fully stocked except one (that one may be missing entirely).
           </span>
         </span>
       </label>
