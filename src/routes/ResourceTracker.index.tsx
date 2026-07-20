@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import ResourceStockListView from '../components/ResourceStockListView'
+import CanCraftTab from '../components/resourceTracker/CanCraftTab'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import UexLookupButton from '../components/shop/UexLookupButton'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
@@ -13,7 +14,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
-import { inventoryLineKey, normalizeStockNoteKey, sumStockQuantityTotals } from '../lib/inventoryStock'
+import { inventoryLineKey, normalizeStockNoteKey, sumStockQuantityTotals, buildStockTotalsByResource } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
   ensureGuestCacheSchema,
@@ -32,12 +33,14 @@ import {
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
 
+type ResourceTrackerTab = InventoryScope | 'can_craft'
+
 export default function ResourceTrackerRoute() {
   const { user, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
   const isGuest = !user && isGuestPreview
   const canViewSiteTotal = !isGuest && canUseFeature('site_total', visibilityContext)
 
-  const [activeTab, setActiveTab] = useState<InventoryScope>('personal')
+  const [activeTab, setActiveTab] = useState<ResourceTrackerTab>('personal')
   const [stockError, setStockError] = useState<string | null>(null)
   const [guestResources, setGuestResources] = useState<GuestResourceEntry[]>([])
 
@@ -46,7 +49,13 @@ export default function ResourceTrackerRoute() {
   }, [isGuest, activeTab])
 
   useEffect(() => {
-    setAnalyticsSubTool(activeTab === 'site' ? 'site_total' : 'my_resources')
+    setAnalyticsSubTool(
+      activeTab === 'site'
+        ? 'site_total'
+        : activeTab === 'can_craft'
+          ? 'can_craft'
+          : 'my_resources'
+    )
   }, [activeTab])
 
   // Load guest resources from localStorage on mount / guest enter
@@ -68,14 +77,16 @@ export default function ResourceTrackerRoute() {
 
   const inventoryContext = useMemo(() => {
     if (isGuest || !user?.id) return null
+    const scope: InventoryScope = activeTab === 'site' ? 'site' : 'personal'
     return {
-      scope: activeTab,
+      scope,
       userId: user.id,
     }
   }, [isGuest, user?.id, activeTab])
 
   const readOnly = activeTab === 'site'
   const isPersonalTab = activeTab === 'personal'
+  const isCanCraftTab = activeTab === 'can_craft'
 
   const {
     catalog,
@@ -153,6 +164,11 @@ export default function ResourceTrackerRoute() {
 
   const cardCount = stockCards.length
   const onHandTotals = useMemo(() => sumStockQuantityTotals(stockCards), [stockCards])
+  const quantityByKey = useMemo(() => buildStockTotalsByResource(stockCards), [stockCards])
+  const hasTrackedStock = useMemo(
+    () => Object.values(quantityByKey).some((qty) => qty > 0),
+    [quantityByKey]
+  )
 
   // Guest localStorage helpers
   const updateGuestResource = useCallback(
@@ -295,7 +311,7 @@ export default function ResourceTrackerRoute() {
     [guestResources, updateGuestResource]
   )
 
-  const tabLabel = activeTab === 'personal' ? 'My stock cards' : 'Site Total'
+  const tabLabel = activeTab === 'personal' ? 'My stock cards' : activeTab === 'can_craft' ? 'Can craft' : 'Site Total'
 
   return (
     <FeaturePageLayout
@@ -335,8 +351,23 @@ export default function ResourceTrackerRoute() {
             Site Total
           </button>
         )}
+        <button
+          type="button"
+          onClick={() => setActiveTab('can_craft')}
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
+            activeTab === 'can_craft'
+              ? 'site-filter-selected-red shadow-lg shadow-red-500/10'
+              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+          }`}
+        >
+          Can Craft
+        </button>
       </div>
 
+      {isCanCraftTab ? (
+        <CanCraftTab quantityByKey={quantityByKey} hasTrackedStock={hasTrackedStock} />
+      ) : (
+        <>
       <div className="mb-6 min-h-[11.5rem] w-full min-w-0">
         {isPersonalTab && (user?.id || isGuest) ? (
           user?.id ? (
@@ -678,6 +709,9 @@ export default function ResourceTrackerRoute() {
         </div>
       )}
       </div>
+
+        </>
+      )}
 
       </div>
     </FeaturePageLayout>
