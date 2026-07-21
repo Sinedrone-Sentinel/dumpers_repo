@@ -230,8 +230,8 @@ export function computeLiveTrackerView(
   return { missions: missionRows, remaining }
 }
 
-/** Crash recovery window mirrors in-game save-state retention (~1 hour). */
-export const CRASH_RECOVERY_WINDOW_MS = 60 * 60 * 1000
+/** Crash recovery window mirrors in-game save-state retention (30 minutes). */
+export const CRASH_RECOVERY_WINDOW_MS = 30 * 60 * 1000
 
 /** Server clears watch sessions after this window (see cleanup_stale_dumper_sessions). */
 export const DUMPER_WATCH_STALE_MS = 125_000
@@ -288,7 +288,7 @@ const STATUS_BAR: Record<DumperGameStatus, Omit<LiveTrackerStatusBar, 'status'>>
   crash_waiting: {
     message: 'Game crash detected — waiting for you to reconnect',
     subMessage:
-      'BP Dumper is still watching your log. Missions may restore if you rejoin within one hour.',
+      'BP Dumper is still watching your log. Missions may restore if you rejoin within 30 minutes.',
     dotClass: 'bg-orange-400 animate-pulse',
     barClass: 'border-orange-500/30 bg-orange-950/30',
     textClass: 'text-orange-100',

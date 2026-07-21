@@ -476,7 +476,9 @@ PATTERN_PU_ENTERED = re.compile(
     r'taskname="OnClientEnteredGame".*gamerules="SC_(?!Frontend)\w+"',
 )
 
-CRASH_RECOVERY_WINDOW_SEC = 3600.0
+# A crash (Alt+F4 / game crash) preserves missions server-side, but only if the
+# player reconnects within this window. Exit-to-menu, by contrast, clears missions.
+CRASH_RECOVERY_WINDOW_SEC = 1800.0
 
 BLUEPRINT_CORRELATION_WINDOW_SEC = 5.0
 
@@ -668,6 +670,8 @@ class SessionTracker:
             self.pending_status = "quit_game"
             return "game_quit"
         if PATTERN_EXIT_MENU.search(line):
+            # Returning to the menu abandons all in-progress missions server-side.
+            state.clear_all_active()
             self.paused_reason = "exit_menu"
             self.crash_at = None
             self.pending_status = "exit_menu"
@@ -870,19 +874,34 @@ def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTr
 
 
 def reconcile_active_missions_from_log(path: Path, state: WatcherState, session: SessionTracker | None = None) -> None:
-    """Replay Game.log for mission accept/end lines only (ignore menu/PU session markers)."""
+    """Rebuild active missions from Game.log, honoring PU session boundaries.
+
+    A mission is only active if it was accepted (and not ended) within the current
+    PU session. Exit-to-menu / quit clears all active missions; a crash preserves
+    them unless the reconnect (or end of log) is more than CRASH_RECOVERY_WINDOW_SEC
+    after the crash. This prevents ghost missions that were lost to a menu boot or a
+    stale crash from being resurrected on every full-log replay.
+    """
     state.active.clear()
     state.guid_map.clear()
     state.recent_lifecycle.clear()
 
-    ts_session = SessionTracker()
+    replay = SessionTracker()
     with open(path, "r", encoding="utf-8", errors="replace") as log_file:
         for line in log_file:
             line = line.rstrip("\r\n")
             if not line:
                 continue
-            ts = ts_session.resolve_timestamp(line)
-            apply_mission_log_line(line, state, ts)
+            ts = replay.resolve_timestamp(line)
+            # Process session transitions first so menu/quit clears land before any
+            # accept on the same line (accept lines are not session lines, so order
+            # is safe), then record mission accept/marker/end.
+            replay.process_line(line, ts, state)
+            if apply_mission_log_line(line, state, ts):
+                replay.on_mission_accepted()
+
+    # If the log ended mid-crash and the window has elapsed, drop the stale missions.
+    replay.finalize_after_reconcile(state)
 
     if session is not None and state.active:
         session.on_mission_accepted()
@@ -898,8 +917,14 @@ def ensure_awaiting_pu(session_tracker: SessionTracker) -> None:
 
 
 def seed_session_tracker_from_log(path: Path, session_tracker: SessionTracker, state: WatcherState) -> None:
-    """Replay session markers so startup reflects the latest menu/PU phase in Game.log."""
+    """Replay session markers so startup reflects the latest menu/PU phase in Game.log.
+
+    Uses a throwaway mission state so it only computes the final session status and
+    never clobbers the active missions already reconciled by
+    reconcile_active_missions_from_log (process_line clears active on menu/quit).
+    """
     session_tracker.reset()
+    scratch = WatcherState()
     ts_session = SessionTracker()
     with open(path, "r", encoding="utf-8", errors="replace") as log_file:
         for line in log_file:
@@ -907,8 +932,8 @@ def seed_session_tracker_from_log(path: Path, session_tracker: SessionTracker, s
             if not line:
                 continue
             ts = ts_session.resolve_timestamp(line)
-            session_tracker.process_line(line, ts, state)
-    session_tracker.finalize_after_reconcile(state)
+            session_tracker.process_line(line, ts, scratch)
+    session_tracker.finalize_after_reconcile(scratch)
 
 
 def is_live_mission_sync_ready(session_tracker: SessionTracker) -> bool:
