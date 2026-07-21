@@ -1,3 +1,5 @@
+## [1.7.15](https://github.com/Sinedrone-Sentinel/dumpers_repo/compare/v1.7.14...v1.7.15) (2026-07-21)
+
 ## [1.7.14](https://github.com/Sinedrone-Sentinel/dumpers_repo/compare/v1.7.13...v1.7.14) (2026-07-21)
 
 ## [1.7.13](https://github.com/Sinedrone-Sentinel/dumpers_repo/compare/v1.7.12...v1.7.13) (2026-07-21)
