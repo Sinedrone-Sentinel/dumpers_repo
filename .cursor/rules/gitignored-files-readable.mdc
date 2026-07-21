@@ -1,0 +1,26 @@
+---
+description: Gitignored files and folders are readable — use them for context
+alwaysApply: true
+---
+
+# Gitignored Areas Are Readable
+
+Files and folders listed in `.gitignore` are **still present on disk and fully readable**. Being gitignored only means Git does not track/commit them — it does **not** hide them from you.
+
+When looking for information, freely read gitignored paths with `Read`, `Glob`, and `Grep`. Do **not** claim you "can't access" or "don't have visibility into" a file just because it is gitignored, and do not ask the user to paste its contents.
+
+## Key gitignored areas in this repo (read them directly)
+
+- `extracted-data/` — direct Star Citizen game-file extraction (blueprints, mining, shops, localization). Primary data source per `sc-data-sources.mdc`.
+- `scripts/bp-dumper-py/lookup.json` and `supabase/functions/log-watcher-webhook/lookup.json` — build artifacts copied from `src/data/blueprint-name-lookup.json`. Verify their on-disk contents directly instead of assuming they weren't updated.
+- `.env` / secrets — you may read these for debugging, but never commit them or print secret values back.
+
+## Do
+
+- Read gitignored files whenever they hold data you need.
+- If `git status` doesn't list an expected file, check `.gitignore` — it's likely an intentional build artifact; confirm by reading the file on disk.
+
+## Don't
+
+- Don't say "I can't read this because it's gitignored."
+- Don't stage/commit gitignored files (they are ignored on purpose).
