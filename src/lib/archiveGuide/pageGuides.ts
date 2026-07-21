@@ -91,6 +91,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Left column: missions you accepted in-game right now',
       'Right column: pool blueprints from those missions you have not acquired yet',
       'Updates instantly when you accept missions, finish them, or receive blueprints',
+      'ReSync button (header, shown while connected) re-pulls your active missions if the page shows connected but a mission is missing',
       'Color-coded status bar: connected in the PU, quit to menu, game closed, crash recovery, or back online',
       'Quit to menu or closing Star Citizen clears active missions until you load back into the PU',
       'After a crash, the bar waits for reconnect — missions may restore only if you rejoin within one hour',

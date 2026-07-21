@@ -17,10 +17,12 @@ export function useLiveMissionTracker() {
   const [gameStatus, setGameStatus] = useState<string | null>(null)
   const [gameStatusAt, setGameStatusAt] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [connectionTick, setConnectionTick] = useState(0)
   const [displayConnected, setDisplayConnected] = useState(false)
   const wasConnectedRef = useRef(false)
+  const initialLoadedRef = useRef(false)
 
   useEffect(() => {
     if (!watchActive) return
@@ -65,10 +67,16 @@ export function useLiveMissionTracker() {
       setGameStatus(null)
       setGameStatusAt(null)
       setLoading(false)
+      initialLoadedRef.current = true
       return
     }
 
-    setLoading(true)
+    // Only the first load blanks the page; later re-syncs are non-disruptive.
+    if (initialLoadedRef.current) {
+      setRefreshing(true)
+    } else {
+      setLoading(true)
+    }
     setError(null)
 
     try {
@@ -103,6 +111,8 @@ export function useLiveMissionTracker() {
       setGameStatusAt(null)
     } finally {
       setLoading(false)
+      setRefreshing(false)
+      initialLoadedRef.current = true
     }
   }, [user?.id])
 
@@ -224,6 +234,7 @@ export function useLiveMissionTracker() {
 
   return {
     loading,
+    refreshing,
     error,
     isConnected,
     statusBar,

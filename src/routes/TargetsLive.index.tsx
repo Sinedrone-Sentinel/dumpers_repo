@@ -8,7 +8,7 @@ import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
 
 export default function TargetsLiveRoute() {
   const { openBpDumperModal } = useBpDumperModal()
-  const { loading, error, isConnected, statusBar, hideMissionLists, missions, remaining } =
+  const { loading, refreshing, error, isConnected, statusBar, hideMissionLists, missions, remaining, refresh } =
     useLiveMissionTracker()
 
   useEffect(() => {
@@ -20,12 +20,25 @@ export default function TargetsLiveRoute() {
       title="Live Mission Tracker"
       subtitle="Active in-game missions and pool blueprints still to acquire"
       actions={
-        <Link
-          to="/targets"
-          className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
-        >
-          Mission Tracker
-        </Link>
+        <div className="flex items-center gap-2">
+          {isConnected && (
+            <button
+              type="button"
+              onClick={() => void refresh()}
+              disabled={refreshing}
+              className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 disabled:opacity-60 disabled:cursor-not-allowed text-slate-300 border border-slate-600 rounded-lg transition-colors"
+              title="Re-pull active missions and blueprints from the server"
+            >
+              {refreshing ? 'Syncing…' : 'ReSync'}
+            </button>
+          )}
+          <Link
+            to="/targets"
+            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
+          >
+            Mission Tracker
+          </Link>
+        </div>
       }
     >
       {error && (
