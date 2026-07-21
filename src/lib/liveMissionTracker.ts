@@ -272,7 +272,7 @@ const STATUS_BAR: Record<DumperGameStatus, Omit<LiveTrackerStatusBar, 'status'>>
     textClass: 'text-emerald-100',
   },
   exit_menu: {
-    message: 'Quit to menu — active missions cleared',
+    message: 'Quit to menu — live lists paused',
     subMessage: 'Mission lists resume when you load back into the PU.',
     dotClass: 'bg-amber-400',
     barClass: 'border-amber-500/30 bg-amber-950/30',

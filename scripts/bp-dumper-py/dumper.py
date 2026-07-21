@@ -465,7 +465,11 @@ PATTERN_END_MISSION = re.compile(
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
 PATTERN_EXIT_MENU = re.compile(r"Requesting game mode Frontend_Main/SC_Frontend")
 PATTERN_CRASH = re.compile(r"Cloud Imperium Games public crash handler taking over")
-PATTERN_LOADING_PU = re.compile(r"Loading screen for pu")
+# PU load uses system name (Pyro, Stanton, …) — not the legacy "pu" string.
+PATTERN_LOADING_PU = re.compile(
+    r"Loading screen for (?!Frontend_Main\b)[^:]+ : SC_Frontend closed",
+    re.IGNORECASE,
+)
 
 CRASH_RECOVERY_WINDOW_SEC = 3600.0
 
@@ -632,9 +636,22 @@ class SessionTracker:
         self.paused_reason = ""
         self.crash_at = None
 
+    def mark_back_in_pu(self, state: "WatcherState", ts: float) -> None:
+        if self.crash_at is not None and ts - self.crash_at > CRASH_RECOVERY_WINDOW_SEC:
+            state.clear_all_active()
+        self.paused_reason = ""
+        self.crash_at = None
+        self.pending_status = "tracking"
+
+    def resume_from_pause(self, state: "WatcherState", ts: float) -> str:
+        """Player left menu/crash-wait and is back in the PU."""
+        if not self.paused_reason and self.crash_at is None:
+            return ""
+        self.mark_back_in_pu(state, ts)
+        return "game_reconnected"
+
     def process_line(self, line: str, ts: float, state: "WatcherState") -> str:
         if PATTERN_EXIT_MENU.search(line):
-            state.clear_all_active()
             self.paused_reason = "exit_menu"
             self.crash_at = None
             self.pending_status = "exit_menu"
@@ -647,13 +664,7 @@ class SessionTracker:
             self.pending_status = "crash_waiting"
             return "game_crash"
         if PATTERN_LOADING_PU.search(line):
-            if self.paused_reason or self.crash_at is not None:
-                if self.crash_at is not None and ts - self.crash_at > CRASH_RECOVERY_WINDOW_SEC:
-                    state.clear_all_active()
-                self.paused_reason = ""
-                self.crash_at = None
-                self.pending_status = "tracking"
-                return "game_reconnected"
+            return self.resume_from_pause(state, ts)
         return ""
 
     def pending_status_event(self, now: float | None = None) -> str:
@@ -843,28 +854,63 @@ def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTr
 
 
 def reconcile_active_missions_from_log(path: Path, state: WatcherState, session: SessionTracker | None = None) -> None:
-    """Replay Game.log to find missions still active (accepted, not ended)."""
+    """Replay Game.log for mission accept/end lines only (ignore menu/PU session markers)."""
     state.active.clear()
     state.guid_map.clear()
     state.recent_lifecycle.clear()
 
-    if session is None:
-        session = SessionTracker()
-    else:
-        session.reset()
-
+    ts_session = SessionTracker()
     with open(path, "r", encoding="utf-8", errors="replace") as log_file:
         for line in log_file:
             line = line.rstrip("\r\n")
             if not line:
                 continue
-            ts = session.resolve_timestamp(line)
-            apply_watch_line_to_state(line, state, session, ts)
+            ts = ts_session.resolve_timestamp(line)
+            apply_mission_log_line(line, state, ts)
 
-    if session is not None:
-        session.finalize_after_reconcile(state)
-        if state.active:
-            session.on_mission_accepted()
+    if session is not None and state.active:
+        session.on_mission_accepted()
+
+
+def seed_session_tracker_from_log(path: Path, session_tracker: SessionTracker, state: WatcherState) -> None:
+    """Replay session markers so startup reflects the latest menu/PU phase in Game.log."""
+    session_tracker.reset()
+    ts_session = SessionTracker()
+    with open(path, "r", encoding="utf-8", errors="replace") as log_file:
+        for line in log_file:
+            line = line.rstrip("\r\n")
+            if not line:
+                continue
+            ts = ts_session.resolve_timestamp(line)
+            session_tracker.process_line(line, ts, state)
+    session_tracker.finalize_after_reconcile(state)
+
+
+def is_live_mission_sync_ready(session_tracker: SessionTracker) -> bool:
+    """Only push mission lists while the player is in the PU — not at menu or waiting on crash."""
+    if session_tracker.pending_status in ("exit_menu", "quit_game", "crash_waiting"):
+        return False
+    if session_tracker.paused_reason in ("exit_menu", "quit_game"):
+        return False
+    return True
+
+
+def publish_live_tracker_state(
+    session,
+    url: str,
+    state: WatcherState,
+    session_tracker: SessionTracker,
+) -> None:
+    """Push game status always; mission snapshot only when log says we're in the PU."""
+    status_event = session_tracker.pending_status_event()
+    if not is_live_mission_sync_ready(session_tracker):
+        if status_event:
+            post_game_session_event(session, url, status_event)
+        print(f"{Colors.CYAN}Live tracker waiting — not in PU yet (no mission sync){Colors.RESET}")
+        return
+
+    sync_active_missions_to_server(session, url, state)
+    post_game_session_event(session, url, status_event or "game_tracking")
 
 
 def post_game_session_event(session, url: str, event_type: str) -> None:
@@ -899,6 +945,12 @@ def sync_active_missions_to_server(session, url: str, state: WatcherState) -> No
         print(f"{Colors.CYAN}Synced {len(missions)} active mission(s) from Game.log{Colors.RESET}")
     else:
         print(f"{Colors.CYAN}Live missions cleared — none active in Game.log{Colors.RESET}")
+
+
+def sync_reconnect_missions(session, url: str, path: Path, state: WatcherState, session_tracker: SessionTracker) -> None:
+    reconcile_active_missions_from_log(path, state, session_tracker)
+    sync_active_missions_to_server(session, url, state)
+    post_game_session_event(session, url, "game_reconnected")
 
 
 def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, args, session=None):
@@ -958,16 +1010,14 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                     state.guid_map.clear()
                     state.recent_lifecycle.clear()
                 try:
-                    reconcile_active_missions_from_log(path, state, session_tracker)
+                    reconcile_active_missions_from_log(path, state)
+                    seed_session_tracker_from_log(path, session_tracker, state)
                     if session and not args.dry_run:
                         try:
                             post_dumper_event(session, args.url, "session_start")
-                            sync_active_missions_to_server(session, args.url, state)
-                            startup_status = session_tracker.resolve_startup_game_status(state)
-                            if startup_status:
-                                post_game_session_event(session, args.url, startup_status)
+                            publish_live_tracker_state(session, args.url, state, session_tracker)
                         except Exception as e:
-                            print(f"{Colors.YELLOW}⚠ Could not sync active missions:{Colors.RESET} {e}")
+                            print(f"{Colors.YELLOW}⚠ Could not sync live tracker:{Colors.RESET} {e}")
                 except OSError as e:
                     print(f"{Colors.YELLOW}⚠ Could not reconcile active missions:{Colors.RESET} {e}")
                 try:
@@ -1012,24 +1062,34 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         line = raw.decode("utf-8", errors="replace")
                         ts = session_tracker.resolve_timestamp(line)
                         ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
+                        was_paused = bool(session_tracker.paused_reason or session_tracker.crash_at is not None)
 
                         game_event = session_tracker.process_line(line, ts, state)
                         if game_event == "game_reconnected" and session and not args.dry_run:
                             try:
-                                reconcile_active_missions_from_log(path, state, session_tracker)
-                                sync_active_missions_to_server(session, args.url, state)
+                                sync_reconnect_missions(session, args.url, path, state, session_tracker)
                             except Exception as e:
                                 print(f"  [Live] {Colors.YELLOW}⚠ Could not resync missions after reconnect:{Colors.RESET} {e}")
-                        if game_event and session and not args.dry_run:
+                                game_event = ""
+                        elif game_event == "game_exit_menu" and session and not args.dry_run:
+                            try:
+                                post_game_session_event(session, args.url, game_event)
+                            except Exception as e:
+                                print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
+                        elif game_event and session and not args.dry_run:
                             try:
                                 post_game_session_event(session, args.url, game_event)
                             except Exception as e:
                                 print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
 
-                        if active := apply_mission_log_line(line, state, ts):
+                        active = apply_mission_log_line(line, state, ts)
+                        mission_end = PATTERN_END_MISSION.search(line)
+                        blueprint_hit = PATTERN_BLUEPRINT.search(line)
+
+                        if active:
                             session_tracker.on_mission_accepted()
                             print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
-                            if session and not args.dry_run:
+                            if session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
                                 try:
                                     post_dumper_event(session, args.url, "mission_started", {
                                         "missionGuid": active.guid,
@@ -1039,11 +1099,11 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                 except Exception as e:
                                     print(f"  [Live] {Colors.RED}✗ Mission sync failed:{Colors.RESET} {e}")
 
-                        elif m := PATTERN_END_MISSION.search(line):
-                            guid, completion, reason = m.group(1), m.group(2), m.group(3)
-                            active = state.record_end(guid, completion, ts)
+                        elif mission_end:
+                            guid, completion, reason = mission_end.group(1), mission_end.group(2), mission_end.group(3)
+                            ended = state.record_end(guid, completion, ts)
                             entry = state.guid_map.get(guid)
-                            debug_name = active.debug_name if active else (entry.debug_name if entry else "Unknown")
+                            debug_name = ended.debug_name if ended else (entry.debug_name if entry else "Unknown")
                             
                             if completion == "Complete":
                                 print(f"  [{ts_str}] [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
@@ -1054,7 +1114,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             else:
                                 print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
 
-                            if session and not args.dry_run:
+                            if session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
                                 try:
                                     post_dumper_event(session, args.url, "mission_ended", {
                                         "missionGuid": guid,
@@ -1063,8 +1123,8 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                 except Exception as e:
                                     print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
 
-                        elif m := PATTERN_BLUEPRINT.search(line):
-                            product_name = m.group(1).strip()
+                        elif blueprint_hit:
+                            product_name = blueprint_hit.group(1).strip()
                             corr = state.correlate_blueprint(ts)
                             if corr:
                                 print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
@@ -1101,6 +1161,19 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                     print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {status})")
                             except Exception as e:
                                 print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
+
+                        if (
+                            was_paused
+                            and not game_event
+                            and session
+                            and not args.dry_run
+                            and (active or mission_end or blueprint_hit)
+                        ):
+                            session_tracker.mark_back_in_pu(state, ts)
+                            try:
+                                sync_reconnect_missions(session, args.url, path, state, session_tracker)
+                            except Exception as e:
+                                print(f"  [Live] {Colors.YELLOW}⚠ Could not resync after PU activity:{Colors.RESET} {e}")
                 last_size = st.st_size
             else:
                 time.sleep(0.5)
