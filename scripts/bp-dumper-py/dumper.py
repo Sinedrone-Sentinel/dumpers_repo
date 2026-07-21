@@ -956,6 +956,109 @@ def post_game_session_event(session, url: str, event_type: str) -> None:
         print(f"  [Live] {Colors.RED}✗ Game status sync failed ({label}):{Colors.RESET} {e}")
 
 
+def import_discovered_blueprint(
+    product_name: str,
+    ts: float,
+    state: WatcherState,
+    log_name: str,
+    session,
+    url: str,
+    acquired_blueprints: set,
+    cache_path: Path,
+    *,
+    dry_run: bool = False,
+    live_prefix: str = "[Live]",
+) -> bool:
+    """Post a blueprint award if not already cached. Returns True when newly imported."""
+    corr = state.correlate_blueprint(ts)
+    ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts)) if ts else time.strftime("%Y-%m-%d %H:%M:%S")
+    if corr:
+        print(
+            f"  [{ts_str}] [{log_name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}"
+            f"{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}"
+        )
+    else:
+        print(
+            f"  [{ts_str}] [{log_name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}"
+            f"{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}"
+        )
+
+    contract_def_id = corr.contract_definition_id if corr else None
+    cache_key = cache_key_for_input(product_name)
+    if cache_key in acquired_blueprints or product_name in acquired_blueprints or is_blueprint_acquired(acquired_blueprints, product_name):
+        return False
+
+    if dry_run:
+        print(f"  {live_prefix} {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {product_name}")
+        return False
+
+    try:
+        status, is_duplicate, internal_name, error_msg = post_blueprint_event(
+            session, url, product_name, contract_def_id
+        )
+        if status == 200:
+            if is_duplicate:
+                print(f"  {live_prefix} {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {product_name}")
+            else:
+                print(f"  {live_prefix} {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {product_name}")
+            if internal_name:
+                acquired_blueprints.add(internal_name)
+                save_cache_file(cache_path, acquired_blueprints)
+            return not is_duplicate
+        if status == 202:
+            print(f"  {live_prefix} {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {product_name}")
+            return True
+        if error_msg:
+            print(f"  {live_prefix} {Colors.RED}✗ {error_msg}{Colors.RESET}")
+        else:
+            print(f"  {live_prefix} {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {status})")
+    except Exception as e:
+        print(f"  {live_prefix} {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
+    return False
+
+
+def sync_blueprints_from_log(
+    path: Path,
+    session,
+    url: str,
+    acquired_blueprints: set,
+    cache_path: Path,
+    *,
+    dry_run: bool = False,
+) -> int:
+    """Import blueprint awards already written to Game.log before watch mode tails from EOF."""
+    imported = 0
+    state = WatcherState()
+    try:
+        with open(path, "r", encoding="utf-8", errors="replace") as log_file:
+            for line in log_file:
+                line = line.rstrip("\r\n")
+                if not line:
+                    continue
+                ts = parse_log_timestamp(line) or 0.0
+                apply_mission_log_line(line, state, ts)
+                if m := PATTERN_BLUEPRINT.search(line):
+                    product_name = m.group(1).strip()
+                    if import_discovered_blueprint(
+                        product_name,
+                        ts,
+                        state,
+                        path.name,
+                        session,
+                        url,
+                        acquired_blueprints,
+                        cache_path,
+                        dry_run=dry_run,
+                        live_prefix="[Startup]",
+                    ):
+                        imported += 1
+    except OSError as e:
+        print(f"{Colors.YELLOW}⚠ Could not scan {path.name} for blueprints:{Colors.RESET} {e}")
+    if imported:
+        print(f"{Colors.CYAN}Startup sync: imported {imported} blueprint(s) from current Game.log{Colors.RESET}")
+    return imported
+
+
 def sync_active_missions_to_server(session, url: str, state: WatcherState) -> None:
     missions = [
         {
@@ -1040,6 +1143,9 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                     ensure_awaiting_pu(session_tracker)
                     if session and not args.dry_run:
                         try:
+                            sync_blueprints_from_log(
+                                path, session, args.url, acquired_blueprints, cache_path
+                            )
                             post_dumper_event(session, args.url, "session_start")
                             publish_live_tracker_state(session, args.url, state, session_tracker)
                         except Exception as e:
@@ -1150,43 +1256,17 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                     print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
 
                         elif blueprint_hit:
-                            product_name = blueprint_hit.group(1).strip()
-                            corr = state.correlate_blueprint(ts)
-                            if corr:
-                                print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (from {corr.debug_name} on {corr.trigger}){Colors.RESET}")
-                            else:
-                                print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
-                            
-                            contract_def_id = corr.contract_definition_id if corr else None
-
-                            cache_key = cache_key_for_input(product_name)
-                            if cache_key in acquired_blueprints or product_name in acquired_blueprints or is_blueprint_acquired(acquired_blueprints, product_name):
-                                continue
-
-                            if args.dry_run:
-                                print(f"  [Live] {Colors.GREEN}★ Would Import (Dry Run):{Colors.RESET} {product_name}")
-                                continue
-
-                            try:
-                                status, is_duplicate, internal_name, error_msg = post_blueprint_event(
-                                    session, args.url, product_name, contract_def_id
-                                )
-                                if status == 200:
-                                    if is_duplicate:
-                                        print(f"  [Live] {Colors.YELLOW}↻ Already Acquired (Sync):{Colors.RESET} {product_name}")
-                                    else:
-                                        print(f"  [Live] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {product_name}")
-                                    if internal_name:
-                                        acquired_blueprints.add(internal_name)
-                                        save_cache_file(cache_path, acquired_blueprints)
-                                elif status == 202:
-                                    print(f"  [Live] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {product_name}")
-                                elif error_msg:
-                                    print(f"  [Live] {Colors.RED}✗ {error_msg}{Colors.RESET}")
-                                else:
-                                    print(f"  [Live] {Colors.RED}✗ Failed to import:{Colors.RESET} {product_name} (HTTP {status})")
-                            except Exception as e:
-                                print(f"  [Live] {Colors.RED}✗ Connection Error:{Colors.RESET} {product_name} ({e})")
+                            import_discovered_blueprint(
+                                blueprint_hit.group(1).strip(),
+                                ts,
+                                state,
+                                path.name,
+                                session,
+                                args.url,
+                                acquired_blueprints,
+                                cache_path,
+                                dry_run=args.dry_run,
+                            )
 
                         if (
                             was_paused

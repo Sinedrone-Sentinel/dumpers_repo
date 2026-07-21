@@ -110,6 +110,15 @@ export function useLiveMissionTracker() {
     void loadInitial()
   }, [loadInitial])
 
+  /** Catch profile updates that land before realtime SUBSCRIBED or if postgres_changes is missed. */
+  useEffect(() => {
+    if (!user?.id || isConnected) return
+    const id = window.setInterval(() => {
+      void loadInitial()
+    }, 10_000)
+    return () => window.clearInterval(id)
+  }, [user?.id, isConnected, loadInitial])
+
   useEffect(() => {
     if (!user?.id) return
 
@@ -193,12 +202,16 @@ export function useLiveMissionTracker() {
           void refreshAcquiredBlueprints()
         }
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          void loadInitial()
+        }
+      })
 
     return () => {
       void supabase.removeChannel(channel)
     }
-  }, [user?.id, refreshAcquiredBlueprints])
+  }, [user?.id, refreshAcquiredBlueprints, loadInitial])
 
   const hideMissionLists = shouldHideLiveMissionLists(statusBar.status)
 
