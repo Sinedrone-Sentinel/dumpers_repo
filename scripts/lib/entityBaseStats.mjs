@@ -4,7 +4,7 @@
  */
 
 import { existsSync, readFileSync, readdirSync } from 'fs'
-import { join, basename, dirname, normalize } from 'path'
+import { join, basename, dirname, normalize, sep } from 'path'
 
 function readJson(path) {
   try {
@@ -24,10 +24,23 @@ function walkJsonFiles(dir, acc = []) {
   return acc
 }
 
-/** entityClass basename (lowercase) → absolute file path */
+/**
+ * entityClass basename (lowercase) → absolute file path.
+ *
+ * Indexes the full entities/ tree (not just entities/scitem/) so records stored
+ * directly under entities/ — e.g. craftable fuel nozzles at
+ * entities/fuel_nozzle_misc_nozzlestandard.json — are resolvable for name/base-stat
+ * lookups. scitem/ records win on basename collisions (authoritative SCItem defs).
+ */
 export function buildEntityClassPathIndex(extractedDataRoot) {
-  const scitemDir = join(extractedDataRoot, 'libs/foundry/records/entities/scitem')
+  const entitiesDir = join(extractedDataRoot, 'libs/foundry/records/entities')
+  const scitemDir = join(entitiesDir, 'scitem')
   const index = new Map()
+  // Non-scitem entity records first, then overlay scitem so scitem takes priority.
+  for (const file of walkJsonFiles(entitiesDir)) {
+    if (file.toLowerCase().includes(`${sep}scitem${sep}`)) continue
+    index.set(basename(file, '.json').toLowerCase(), file)
+  }
   for (const file of walkJsonFiles(scitemDir)) {
     index.set(basename(file, '.json').toLowerCase(), file)
   }

@@ -1,6 +1,6 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-16T04:38:45.908Z",
+  "_extracted": "2026-07-21T18:21:11.960Z",
   "stats": {
     "internalNames": 1597,
     "displayNames": 1581,
@@ -205,7 +205,7 @@
       "categoryName": "FPSArmours"
     },
     "cds_armor_heavy_helmet_01_01_01": {
-      "blueprintName": "ADP-mk4 Helmet",
+      "blueprintName": "ADP-mk4 Helmet Woodland",
       "categoryName": "FPSArmours"
     },
     "cds_armor_heavy_legs_01_01_01": {
@@ -1633,7 +1633,7 @@
       "categoryName": "FPSArmours"
     },
     "cds_legacy_armor_medium_helmet_01_01_01": {
-      "blueprintName": "G-2 Helmet",
+      "blueprintName": "G-2 Helmet Woodland",
       "categoryName": "FPSArmours"
     },
     "cds_legacy_armor_medium_helmet_01_01_02": {
@@ -1833,7 +1833,7 @@
       "categoryName": "FPSArmours"
     },
     "doom_armor_medium_helmet_02_01_01": {
-      "blueprintName": "Sticher Helmet",
+      "blueprintName": "The Butcher Helmet",
       "categoryName": "FPSArmours"
     },
     "doom_combat_medium_backpack_01_01_01": {
@@ -2033,7 +2033,7 @@
       "categoryName": "FPSArmours"
     },
     "rsi_deckcrew_armor_light_helmet_01_01_01": {
-      "blueprintName": "Horizon Helmet Base",
+      "blueprintName": "Horizon Helmet",
       "categoryName": "FPSArmours"
     },
     "rsi_deckcrew_armor_light_legs_01_01_01": {
@@ -2241,7 +2241,7 @@
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_core_01_01_01": {
-      "blueprintName": "Lynx Core Base",
+      "blueprintName": "Lynx Core",
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_core_01_01_11": {
@@ -2249,7 +2249,7 @@
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_helmet_01_01_01": {
-      "blueprintName": "Oracle Helmet",
+      "blueprintName": "Oracle Helmet",
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_helmet_01_01_11": {
@@ -2257,7 +2257,7 @@
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_legs_01_01_01": {
-      "blueprintName": "Lynx Legs Base",
+      "blueprintName": "Lynx Legs",
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_light_legs_01_01_11": {
@@ -2265,7 +2265,7 @@
       "categoryName": "FPSArmours"
     },
     "vgl_armor_light_arms_01_01_01": {
-      "blueprintName": "TrueDef-Pro Arms Base",
+      "blueprintName": "TrueDef-Pro Arms",
       "categoryName": "FPSArmours"
     },
     "vgl_armor_light_arms_01_01_02": {
@@ -2421,7 +2421,7 @@
       "categoryName": "FPSArmours"
     },
     "vgl_armor_light_helmet_01_01_01": {
-      "blueprintName": "Argus Helmet Base",
+      "blueprintName": "Argus Helmet",
       "categoryName": "FPSArmours"
     },
     "vgl_armor_light_helmet_01_01_02": {
@@ -2505,7 +2505,7 @@
       "categoryName": "FPSArmours"
     },
     "vgl_armor_light_legs_01_01_01": {
-      "blueprintName": "TrueDef-Pro Legs Base",
+      "blueprintName": "TrueDef-Pro Legs",
       "categoryName": "FPSArmours"
     },
     "vgl_armor_light_legs_01_01_02": {
@@ -2761,7 +2761,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_13": {
-      "blueprintName": "Antium Helmet Jet Arms",
+      "blueprintName": "Antium Helmet Jet",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_15": {
@@ -2813,7 +2813,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_helmet_01_01_12": {
-      "blueprintName": "Antium Core Jet Helmet",
+      "blueprintName": "Antium Core Jet",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_helmet_01_01_13": {
@@ -3149,7 +3149,7 @@
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_medium_core_01_01_21": {
-      "blueprintName": "Inquisitor Core Scorched",
+      "blueprintName": "Inquisitor Core Olive",
       "categoryName": "FPSArmours"
     },
     "outlaw_legacy_armor_medium_legs_01_01_01": {
@@ -3625,7 +3625,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_arms_01_03_01": {
-      "blueprintName": "Antium Arms Midnight Sun",
+      "blueprintName": "Artimex Arms Elysium",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_arms_01_9tails_01": {
@@ -3665,7 +3665,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_core_01_03_01": {
-      "blueprintName": "Antium Core Midnight Sun",
+      "blueprintName": "Artimex Core Elysium",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_core_01_9tails_01": {
@@ -3705,7 +3705,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_helmet_01_03_01": {
-      "blueprintName": "Antium Helmet Midnight Sun",
+      "blueprintName": "Artimex Helmet Elysium",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_helmet_02_01_01": {
@@ -3741,7 +3741,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_legs_01_03_01": {
-      "blueprintName": "Antium Legs Midnight Sun",
+      "blueprintName": "Artimex Legs Elysium",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_medium_legs_02_01_01": {
@@ -3749,7 +3749,7 @@
       "categoryName": "FPSArmours"
     },
     "cds_undersuit_01_01_01": {
-      "blueprintName": "TCS-4 Undersuit Woodland",
+      "blueprintName": "TCS-4 Undersuit",
       "categoryName": "FPSArmours"
     },
     "cds_undersuit_01_02_02": {
@@ -3757,7 +3757,7 @@
       "categoryName": "FPSArmours"
     },
     "cds_undersuit_helmet_01_01_01": {
-      "blueprintName": "TCS-4 Undersuit Woodland Helmet",
+      "blueprintName": "A23 Flight Helmet Woodland",
       "categoryName": "FPSArmours"
     },
     "clda_undersuit_01_01_01": {
@@ -3789,7 +3789,7 @@
       "categoryName": "FPSArmours"
     },
     "rsi_deckcrew_undersuit_01_01_01": {
-      "blueprintName": "Beacon Undersuit Grey Multi",
+      "blueprintName": "Beacon Undersuit",
       "categoryName": "FPSArmours"
     },
     "rsi_explorer_undersuit_01_01_01": {
@@ -3797,11 +3797,11 @@
       "categoryName": "FPSArmours"
     },
     "rsi_odyssey_undersuit_01_01_01": {
-      "blueprintName": "Odyssey II Undersuit Woodland",
+      "blueprintName": "Odyssey II Undersuit Alpha",
       "categoryName": "FPSArmours"
     },
     "rsi_odyssey_undersuit_helmet_01_01_01": {
-      "blueprintName": "Odyssey II Undersuit Woodland Helmet",
+      "blueprintName": "Odyssey II Racing Helmet Alpha",
       "categoryName": "FPSArmours"
     },
     "srvl_undersuit_01_01_01": {
@@ -4601,7 +4601,7 @@
       "categoryName": "Veh. Comp. S3"
     },
     "cool_aegs_s04_idris": {
-      "blueprintName": "Idris",
+      "blueprintName": "Exotherm",
       "categoryName": "Veh. Comp. S4"
     },
     "cool_aegs_s04_javelin": {
@@ -4661,7 +4661,7 @@
       "categoryName": "Veh. Comp. S3"
     },
     "cool_just_s01_ecoflow": {
-      "blueprintName": "EcoFlow",
+      "blueprintName": "Eco-Flow",
       "categoryName": "Veh. Comp. S1"
     },
     "cool_just_s01_hydrocel": {
@@ -4749,7 +4749,7 @@
       "categoryName": "Veh. Comp. S4"
     },
     "cool_rsi_s04_polaris": {
-      "blueprintName": "Polaris",
+      "blueprintName": "Serac",
       "categoryName": "Veh. Comp. S4"
     },
     "cool_s04_cnou_pioneer": {
@@ -4853,7 +4853,7 @@
       "categoryName": "Veh. Comp. S2"
     },
     "mining_laser_shin_hofstede_s0": {
-      "blueprintName": "Hofstede-SV Mining Laser",
+      "blueprintName": "S00 Hofstede",
       "categoryName": "Veh. Comp. S0"
     },
     "mining_laser_shin_hofstede_s1": {
@@ -4865,7 +4865,7 @@
       "categoryName": "Veh. Comp. S2"
     },
     "mining_laser_shin_klein_s0": {
-      "blueprintName": "Klein-SV Mining Laser",
+      "blueprintName": "Lawson Mining Laser",
       "categoryName": "Veh. Comp. S0"
     },
     "mining_laser_shin_klein_s1": {
@@ -4877,7 +4877,7 @@
       "categoryName": "Veh. Comp. S2"
     },
     "mining_laser_thcn_helix_s0": {
-      "blueprintName": "Helix S Mining Laser",
+      "blueprintName": "S0 Helix",
       "categoryName": "Veh. Comp. S0"
     },
     "mining_laser_thcn_helix_s1": {
@@ -4905,7 +4905,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "powr_acom_s01_sunflare": {
-      "blueprintName": "Sunflare",
+      "blueprintName": "SunFlare",
       "categoryName": "Veh. Comp. S1"
     },
     "powr_acom_s02_luxcore": {
@@ -4969,11 +4969,11 @@
       "categoryName": "Veh. Comp. S3"
     },
     "powr_aegs_s04_idris": {
-      "blueprintName": "Idris",
+      "blueprintName": "Main Powerplant",
       "categoryName": "Veh. Comp. S4"
     },
     "powr_aegs_s04_reclaimer": {
-      "blueprintName": "Reclaimer",
+      "blueprintName": "Main Powerplant",
       "categoryName": "Veh. Comp. S4"
     },
     "powr_amrs_s01_dynaflux": {
@@ -5133,7 +5133,7 @@
       "categoryName": "Veh. Comp. S4"
     },
     "powr_rsi_s04_polaris": {
-      "blueprintName": "Polaris",
+      "blueprintName": "Stellate",
       "categoryName": "Veh. Comp. S4"
     },
     "powr_sasu_s01_lightblossom": {
@@ -5149,7 +5149,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "powr_sasu_s02_daybreak": {
-      "blueprintName": "DayBreak",
+      "blueprintName": "FullForce",
       "categoryName": "Veh. Comp. S2"
     },
     "powr_sasu_s02_lotus": {
@@ -5197,11 +5197,11 @@
       "categoryName": "Veh. Comp. S2"
     },
     "qdrv_acas_s01_foxfire": {
-      "blueprintName": "Foxfire",
+      "blueprintName": "FoxFire",
       "categoryName": "Veh. Comp. S1"
     },
     "qdrv_acas_s01_lightfire": {
-      "blueprintName": "Lightfire",
+      "blueprintName": "LightFire",
       "categoryName": "Veh. Comp. S1"
     },
     "qdrv_arcc_s01_burst": {
@@ -5221,7 +5221,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "qdrv_just_s01_goliath": {
-      "blueprintName": "Goliath",
+      "blueprintName": "FoxFire",
       "categoryName": "Veh. Comp. S1"
     },
     "qdrv_just_s01_vulcan": {
@@ -5421,7 +5421,7 @@
       "categoryName": "Veh. Comp. S4"
     },
     "qdrv_wetk_s04_idris_temp": {
-      "blueprintName": "Idris_temp",
+      "blueprintName": "Frontline",
       "categoryName": "Veh. Comp. S4"
     },
     "radr_bltr_s01_hunter": {
@@ -5473,7 +5473,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "radr_chco_s02_broadspec_lite": {
-      "blueprintName": "Broadspec-Lite",
+      "blueprintName": "BroadSpec",
       "categoryName": "Veh. Comp. S2"
     },
     "radr_chco_s02_fullspec": {
@@ -5597,7 +5597,7 @@
       "categoryName": "Veh. Comp. S2"
     },
     "radr_nave_s02_sns_r6x": {
-      "blueprintName": "Sns_r6x",
+      "blueprintName": "SNS-R6x",
       "categoryName": "Veh. Comp. S2"
     },
     "radr_rsi_s04_polaris": {
@@ -5625,7 +5625,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "radr_wlop_s01_capstan": {
-      "blueprintName": "Capstan",
+      "blueprintName": "Capston",
       "categoryName": "Veh. Comp. S1"
     },
     "radr_wlop_s01_fleming": {
@@ -5665,7 +5665,7 @@
       "categoryName": "Veh. Comp. S3"
     },
     "nozzle_fuelgiver_grin_nozzlefast": {
-      "blueprintName": "Greycat Fast Nozzle",
+      "blueprintName": "Norfield",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzlesecure": {
@@ -5677,11 +5677,11 @@
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_grin_nozzleverysecure": {
-      "blueprintName": "Greycat Very Secure Nozzle",
+      "blueprintName": "Harkin",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_misc_nozzlestandard": {
-      "blueprintName": "MISC Standard Nozzle",
+      "blueprintName": "RN-7s",
       "categoryName": "Veh. Comp. S0"
     },
     "nozzle_fuelgiver_shin_nozzleexpensivefast": {
@@ -5705,7 +5705,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "salvage_modifier_scraper_salvation_medium": {
-      "blueprintName": "Abrade Scraper Module",
+      "blueprintName": "Cinch Scraper Module",
       "categoryName": "Veh. Comp. S1"
     },
     "salvage_modifier_scraper_salvation_small": {
@@ -5809,11 +5809,11 @@
       "categoryName": "Veh. Comp. S1"
     },
     "shld_behr_s01_6sa": {
-      "blueprintName": "6SA",
+      "blueprintName": "6SA 'Arbiter'",
       "categoryName": "Veh. Comp. S1"
     },
     "shld_behr_s01_7sa": {
-      "blueprintName": "7SA",
+      "blueprintName": "7SA 'Concord'",
       "categoryName": "Veh. Comp. S1"
     },
     "shld_behr_s02_5ma": {
@@ -5965,19 +5965,19 @@
       "categoryName": "Veh. Comp. S2"
     },
     "grin_tractorbeam_s1": {
-      "blueprintName": "SureGrip TH1 Tractor Beam",
+      "blueprintName": "SureGrip S1 Tractor Beam",
       "categoryName": "Veh. Comp. S1"
     },
     "grin_tractorbeam_s2": {
-      "blueprintName": "SureGrip TH2 Tractor Beam",
+      "blueprintName": "SureGrip S2 Tractor Beam",
       "categoryName": "Veh. Comp. S2"
     },
     "grin_tractorbeam_s3": {
-      "blueprintName": "SureGrip TH3 Tractor Beam",
+      "blueprintName": "SureGrip S3 Tractor Beam",
       "categoryName": "Veh. Comp. S3"
     },
     "wep_tractorbeam_s1_military_1": {
-      "blueprintName": "SureGrip S1 Tractor Beam",
+      "blueprintName": "ViseLock S1 Tractor Beam",
       "categoryName": "Veh. Comp. S1"
     },
     "wep_tractorbeam_s1_utility_1": {
@@ -5989,7 +5989,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "wep_tractorbeam_s2_military_1": {
-      "blueprintName": "SureGrip S2 Tractor Beam",
+      "blueprintName": "ViseLock S2 Tractor Beam",
       "categoryName": "Veh. Comp. S2"
     },
     "wep_tractorbeam_s2_utility_1": {
@@ -6001,7 +6001,7 @@
       "categoryName": "Veh. Comp. S2"
     },
     "wep_tractorbeam_s3_military_1": {
-      "blueprintName": "SureGrip S3 Tractor Beam",
+      "blueprintName": "ViseLock S3 Tractor Beam",
       "categoryName": "Veh. Comp. S3"
     },
     "wep_tractorbeam_s3_utility_1": {
@@ -6594,9 +6594,9 @@
       "internalName": "cds_armor_heavy_core_01_01_01",
       "blueprintName": "ADP-mk4 Core Woodland"
     },
-    "adp-mk4 helmet": {
+    "adp-mk4 helmet woodland": {
       "internalName": "cds_armor_heavy_helmet_01_01_01",
-      "blueprintName": "ADP-mk4 Helmet"
+      "blueprintName": "ADP-mk4 Helmet Woodland"
     },
     "adp-mk4 legs woodland": {
       "internalName": "cds_armor_heavy_legs_01_01_01",
@@ -8022,9 +8022,9 @@
       "internalName": "cds_legacy_armor_medium_core_01_crus01_01",
       "blueprintName": "ORC-mkV Core Crusader Edition"
     },
-    "g-2 helmet": {
+    "g-2 helmet woodland": {
       "internalName": "cds_legacy_armor_medium_helmet_01_01_01",
-      "blueprintName": "G-2 Helmet"
+      "blueprintName": "G-2 Helmet Woodland"
     },
     "g-2 helmet red": {
       "internalName": "cds_legacy_armor_medium_helmet_01_01_02",
@@ -8222,9 +8222,9 @@
       "internalName": "cds_legacy_armor_medium_legs_01_crus01_01",
       "blueprintName": "ORC-mkV Legs Crusader Edition"
     },
-    "sticher helmet": {
+    "the butcher helmet": {
       "internalName": "doom_armor_medium_helmet_02_01_01",
-      "blueprintName": "Sticher Helmet"
+      "blueprintName": "The Butcher Helmet"
     },
     "sinkhole backpack": {
       "internalName": "doom_combat_medium_backpack_01_01_01",
@@ -8430,9 +8430,9 @@
       "internalName": "rsi_deckcrew_armor_light_core_01_01_01",
       "blueprintName": "MacFlex Core"
     },
-    "horizon helmet base": {
+    "horizon helmet": {
       "internalName": "rsi_deckcrew_armor_light_helmet_01_01_01",
-      "blueprintName": "Horizon Helmet Base"
+      "blueprintName": "Horizon Helmet"
     },
     "macflex legs": {
       "internalName": "rsi_deckcrew_armor_light_legs_01_01_01",
@@ -8638,33 +8638,33 @@
       "internalName": "outlaw_legacy_armor_light_arms_01_01_11",
       "blueprintName": "Lynx Arms Cold Steel"
     },
-    "lynx core base": {
+    "lynx core": {
       "internalName": "outlaw_legacy_armor_light_core_01_01_01",
-      "blueprintName": "Lynx Core Base"
+      "blueprintName": "Lynx Core"
     },
     "lynx core cold steel": {
       "internalName": "outlaw_legacy_armor_light_core_01_01_11",
       "blueprintName": "Lynx Core Cold Steel"
     },
-    "oracle helmet": {
+    "oracle helmet": {
       "internalName": "outlaw_legacy_armor_light_helmet_01_01_01",
-      "blueprintName": "Oracle Helmet"
+      "blueprintName": "Oracle Helmet"
     },
     "oracle helmet cold steel": {
       "internalName": "outlaw_legacy_armor_light_helmet_01_01_11",
       "blueprintName": "Oracle Helmet Cold Steel"
     },
-    "lynx legs base": {
+    "lynx legs": {
       "internalName": "outlaw_legacy_armor_light_legs_01_01_01",
-      "blueprintName": "Lynx Legs Base"
+      "blueprintName": "Lynx Legs"
     },
     "lynx legs cold steel": {
       "internalName": "outlaw_legacy_armor_light_legs_01_01_11",
       "blueprintName": "Lynx Legs Cold Steel"
     },
-    "truedef-pro arms base": {
+    "truedef-pro arms": {
       "internalName": "vgl_armor_light_arms_01_01_01",
-      "blueprintName": "TrueDef-Pro Arms Base"
+      "blueprintName": "TrueDef-Pro Arms"
     },
     "truedef-pro arms red/silver": {
       "internalName": "vgl_armor_light_arms_01_01_02",
@@ -8834,9 +8834,9 @@
       "internalName": "vgl_armor_light_core_01_01_19",
       "blueprintName": "TrueDef-Pro Core Black/Silver/Yellow"
     },
-    "argus helmet base": {
+    "argus helmet": {
       "internalName": "vgl_armor_light_helmet_01_01_01",
-      "blueprintName": "Argus Helmet Base"
+      "blueprintName": "Argus Helmet"
     },
     "argus helmet red/silver": {
       "internalName": "vgl_armor_light_helmet_01_01_02",
@@ -8926,9 +8926,9 @@
       "internalName": "vgl_armor_light_helmet_01_01_21",
       "blueprintName": "Argus Helmet Scorched"
     },
-    "truedef-pro legs base": {
+    "truedef-pro legs": {
       "internalName": "vgl_armor_light_legs_01_01_01",
-      "blueprintName": "TrueDef-Pro Legs Base"
+      "blueprintName": "TrueDef-Pro Legs"
     },
     "truedef-pro legs red/silver": {
       "internalName": "vgl_armor_light_legs_01_01_02",
@@ -9190,9 +9190,9 @@
       "internalName": "qrt_specialist_heavy_arms_01_01_12",
       "blueprintName": "Antium Arms Jet"
     },
-    "antium helmet jet arms": {
+    "antium helmet jet": {
       "internalName": "qrt_specialist_heavy_arms_01_01_13",
-      "blueprintName": "Antium Helmet Jet Arms"
+      "blueprintName": "Antium Helmet Jet"
     },
     "antium arms sand": {
       "internalName": "qrt_specialist_heavy_arms_01_01_15",
@@ -9203,20 +9203,8 @@
       "blueprintName": "Antium Arms Moss Camo"
     },
     "antium arms midnight sun": {
-      "ambiguous": true,
-      "displayName": "Antium Arms Midnight Sun",
-      "candidates": [
-        {
-          "internalName": "qrt_specialist_heavy_arms_01_03_01",
-          "blueprintName": "Antium Arms Midnight Sun",
-          "categoryName": "FPSArmours"
-        },
-        {
-          "internalName": "qrt_specialist_medium_arms_01_03_01",
-          "blueprintName": "Antium Arms Midnight Sun",
-          "categoryName": "FPSArmours"
-        }
-      ]
+      "internalName": "qrt_specialist_heavy_arms_01_03_01",
+      "blueprintName": "Antium Arms Midnight Sun"
     },
     "antium core": {
       "internalName": "qrt_specialist_heavy_core_01_01_01",
@@ -9227,8 +9215,20 @@
       "blueprintName": "Antium Core Storm"
     },
     "antium core jet": {
-      "internalName": "qrt_specialist_heavy_core_01_01_12",
-      "blueprintName": "Antium Core Jet"
+      "ambiguous": true,
+      "displayName": "Antium Core Jet",
+      "candidates": [
+        {
+          "internalName": "qrt_specialist_heavy_core_01_01_12",
+          "blueprintName": "Antium Core Jet",
+          "categoryName": "FPSArmours"
+        },
+        {
+          "internalName": "qrt_specialist_heavy_helmet_01_01_12",
+          "blueprintName": "Antium Core Jet",
+          "categoryName": "FPSArmours"
+        }
+      ]
     },
     "antium core maroon": {
       "internalName": "qrt_specialist_heavy_core_01_01_13",
@@ -9243,20 +9243,8 @@
       "blueprintName": "Antium Core Moss Camo"
     },
     "antium core midnight sun": {
-      "ambiguous": true,
-      "displayName": "Antium Core Midnight Sun",
-      "candidates": [
-        {
-          "internalName": "qrt_specialist_heavy_core_01_03_01",
-          "blueprintName": "Antium Core Midnight Sun",
-          "categoryName": "FPSArmours"
-        },
-        {
-          "internalName": "qrt_specialist_medium_core_01_03_01",
-          "blueprintName": "Antium Core Midnight Sun",
-          "categoryName": "FPSArmours"
-        }
-      ]
+      "internalName": "qrt_specialist_heavy_core_01_03_01",
+      "blueprintName": "Antium Core Midnight Sun"
     },
     "antium helmet": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_01",
@@ -9265,10 +9253,6 @@
     "antium helmet storm": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_10",
       "blueprintName": "Antium Helmet Storm"
-    },
-    "antium core jet helmet": {
-      "internalName": "qrt_specialist_heavy_helmet_01_01_12",
-      "blueprintName": "Antium Core Jet Helmet"
     },
     "antium helmet maroon": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_13",
@@ -9283,20 +9267,8 @@
       "blueprintName": "Antium Helmet Moss Camo"
     },
     "antium helmet midnight sun": {
-      "ambiguous": true,
-      "displayName": "Antium Helmet Midnight Sun",
-      "candidates": [
-        {
-          "internalName": "qrt_specialist_heavy_helmet_01_03_01",
-          "blueprintName": "Antium Helmet Midnight Sun",
-          "categoryName": "FPSArmours"
-        },
-        {
-          "internalName": "qrt_specialist_medium_helmet_01_03_01",
-          "blueprintName": "Antium Helmet Midnight Sun",
-          "categoryName": "FPSArmours"
-        }
-      ]
+      "internalName": "qrt_specialist_heavy_helmet_01_03_01",
+      "blueprintName": "Antium Helmet Midnight Sun"
     },
     "antium legs": {
       "internalName": "qrt_specialist_heavy_legs_01_01_01",
@@ -9323,20 +9295,8 @@
       "blueprintName": "Antium Legs Moss Camo"
     },
     "antium legs midnight sun": {
-      "ambiguous": true,
-      "displayName": "Antium Legs Midnight Sun",
-      "candidates": [
-        {
-          "internalName": "qrt_specialist_heavy_legs_01_03_01",
-          "blueprintName": "Antium Legs Midnight Sun",
-          "categoryName": "FPSArmours"
-        },
-        {
-          "internalName": "qrt_specialist_medium_legs_01_03_01",
-          "blueprintName": "Antium Legs Midnight Sun",
-          "categoryName": "FPSArmours"
-        }
-      ]
+      "internalName": "qrt_specialist_heavy_legs_01_03_01",
+      "blueprintName": "Antium Legs Midnight Sun"
     },
     "morozov-ch backpack": {
       "internalName": "rrs_combat_heavy_backpack_01_01_01",
@@ -9623,12 +9583,20 @@
       "blueprintName": "Inquisitor Core Imperial"
     },
     "inquisitor core olive": {
-      "internalName": "outlaw_legacy_armor_medium_core_01_01_20",
-      "blueprintName": "Inquisitor Core Olive"
-    },
-    "inquisitor core scorched": {
-      "internalName": "outlaw_legacy_armor_medium_core_01_01_21",
-      "blueprintName": "Inquisitor Core Scorched"
+      "ambiguous": true,
+      "displayName": "Inquisitor Core Olive",
+      "candidates": [
+        {
+          "internalName": "outlaw_legacy_armor_medium_core_01_01_20",
+          "blueprintName": "Inquisitor Core Olive",
+          "categoryName": "FPSArmours"
+        },
+        {
+          "internalName": "outlaw_legacy_armor_medium_core_01_01_21",
+          "blueprintName": "Inquisitor Core Olive",
+          "categoryName": "FPSArmours"
+        }
+      ]
     },
     "inquisitor legs base": {
       "internalName": "outlaw_legacy_armor_medium_legs_01_01_01",
@@ -10102,6 +10070,10 @@
       "internalName": "qrt_specialist_medium_arms_01_01_iae2024",
       "blueprintName": "Artimex Arms Starchaser"
     },
+    "artimex arms elysium": {
+      "internalName": "qrt_specialist_medium_arms_01_03_01",
+      "blueprintName": "Artimex Arms Elysium"
+    },
     "artimex arms (modified)": {
       "internalName": "qrt_specialist_medium_arms_01_9tails_01",
       "blueprintName": "Artimex Arms (Modified)"
@@ -10137,6 +10109,10 @@
     "artimex core starchaser": {
       "internalName": "qrt_specialist_medium_core_01_01_iae2024",
       "blueprintName": "Artimex Core Starchaser"
+    },
+    "artimex core elysium": {
+      "internalName": "qrt_specialist_medium_core_01_03_01",
+      "blueprintName": "Artimex Core Elysium"
     },
     "artimex core (modified)": {
       "internalName": "qrt_specialist_medium_core_01_9tails_01",
@@ -10174,6 +10150,10 @@
       "internalName": "qrt_specialist_medium_helmet_01_01_iae2024",
       "blueprintName": "Artimex Helmet Starchaser"
     },
+    "artimex helmet elysium": {
+      "internalName": "qrt_specialist_medium_helmet_01_03_01",
+      "blueprintName": "Artimex Helmet Elysium"
+    },
     "artimex helmet hurston dynamics executive security": {
       "internalName": "qrt_specialist_medium_helmet_02_01_01",
       "blueprintName": "Artimex Helmet Hurston Dynamics Executive Security"
@@ -10206,21 +10186,25 @@
       "internalName": "qrt_specialist_medium_legs_01_01_iae2024",
       "blueprintName": "Artimex Legs Starchaser"
     },
+    "artimex legs elysium": {
+      "internalName": "qrt_specialist_medium_legs_01_03_01",
+      "blueprintName": "Artimex Legs Elysium"
+    },
     "artimex legs hurston dynamics executive security": {
       "internalName": "qrt_specialist_medium_legs_02_01_01",
       "blueprintName": "Artimex Legs Hurston Dynamics Executive Security"
     },
-    "tcs-4 undersuit woodland": {
+    "tcs-4 undersuit": {
       "internalName": "cds_undersuit_01_01_01",
-      "blueprintName": "TCS-4 Undersuit Woodland"
+      "blueprintName": "TCS-4 Undersuit"
     },
     "fbl-8u undersuit secondwind": {
       "internalName": "cds_undersuit_01_02_02",
       "blueprintName": "FBL-8u Undersuit SecondWind"
     },
-    "tcs-4 undersuit woodland helmet": {
+    "a23 flight helmet woodland": {
       "internalName": "cds_undersuit_helmet_01_01_01",
-      "blueprintName": "TCS-4 Undersuit Woodland Helmet"
+      "blueprintName": "A23 Flight Helmet Woodland"
     },
     "levin undersuit (refurbished)": {
       "internalName": "clda_undersuit_01_01_01",
@@ -10250,21 +10234,21 @@
       "internalName": "qrt_mantis_undersuit_helmet_01_01_01",
       "blueprintName": "Calva Racing Helmet"
     },
-    "beacon undersuit grey multi": {
+    "beacon undersuit": {
       "internalName": "rsi_deckcrew_undersuit_01_01_01",
-      "blueprintName": "Beacon Undersuit Grey Multi"
+      "blueprintName": "Beacon Undersuit"
     },
     "venture undersuit base": {
       "internalName": "rsi_explorer_undersuit_01_01_01",
       "blueprintName": "Venture Undersuit Base"
     },
-    "odyssey ii undersuit woodland": {
+    "odyssey ii undersuit alpha": {
       "internalName": "rsi_odyssey_undersuit_01_01_01",
-      "blueprintName": "Odyssey II Undersuit Woodland"
+      "blueprintName": "Odyssey II Undersuit Alpha"
     },
-    "odyssey ii undersuit woodland helmet": {
+    "odyssey ii racing helmet alpha": {
       "internalName": "rsi_odyssey_undersuit_helmet_01_01_01",
-      "blueprintName": "Odyssey II Undersuit Woodland Helmet"
+      "blueprintName": "Odyssey II Racing Helmet Alpha"
     },
     "second life undersuit": {
       "internalName": "srvl_undersuit_01_01_01",
@@ -11062,21 +11046,9 @@
       "internalName": "cool_aegs_s03_tempest",
       "blueprintName": "Tempest"
     },
-    "idris": {
-      "ambiguous": true,
-      "displayName": "Idris",
-      "candidates": [
-        {
-          "internalName": "cool_aegs_s04_idris",
-          "blueprintName": "Idris",
-          "categoryName": "Veh. Comp. S4"
-        },
-        {
-          "internalName": "powr_aegs_s04_idris",
-          "blueprintName": "Idris",
-          "categoryName": "Veh. Comp. S4"
-        }
-      ]
+    "exotherm": {
+      "internalName": "cool_aegs_s04_idris",
+      "blueprintName": "Exotherm"
     },
     "javelin": {
       "internalName": "cool_aegs_s04_javelin",
@@ -11134,9 +11106,9 @@
       "internalName": "cool_jspn_s03_winterstarxl",
       "blueprintName": "Winter-Star XL"
     },
-    "ecoflow": {
+    "eco-flow": {
       "internalName": "cool_just_s01_ecoflow",
-      "blueprintName": "EcoFlow"
+      "blueprintName": "Eco-Flow"
     },
     "hydrocel": {
       "internalName": "cool_just_s01_hydrocel",
@@ -11219,26 +11191,17 @@
       "blueprintName": "FrostBurn"
     },
     "serac": {
-      "internalName": "cool_orig_s04_890j",
-      "blueprintName": "Serac"
-    },
-    "polaris": {
       "ambiguous": true,
-      "displayName": "Polaris",
+      "displayName": "Serac",
       "candidates": [
         {
+          "internalName": "cool_orig_s04_890j",
+          "blueprintName": "Serac",
+          "categoryName": "Veh. Comp. S4"
+        },
+        {
           "internalName": "cool_rsi_s04_polaris",
-          "blueprintName": "Polaris",
-          "categoryName": "Veh. Comp. S4"
-        },
-        {
-          "internalName": "powr_rsi_s04_polaris",
-          "blueprintName": "Polaris",
-          "categoryName": "Veh. Comp. S4"
-        },
-        {
-          "internalName": "radr_rsi_s04_polaris",
-          "blueprintName": "Polaris",
+          "blueprintName": "Serac",
           "categoryName": "Veh. Comp. S4"
         }
       ]
@@ -11343,9 +11306,9 @@
       "internalName": "mining_laser_grin_lancet_s2",
       "blueprintName": "Lancet MH2 Mining Laser"
     },
-    "hofstede-sv mining laser": {
+    "s00 hofstede": {
       "internalName": "mining_laser_shin_hofstede_s0",
-      "blueprintName": "Hofstede-SV Mining Laser"
+      "blueprintName": "S00 Hofstede"
     },
     "hofstede-s1 mining laser": {
       "internalName": "mining_laser_shin_hofstede_s1",
@@ -11355,9 +11318,9 @@
       "internalName": "mining_laser_shin_hofstede_s2",
       "blueprintName": "Hofstede-S2 Mining Laser"
     },
-    "klein-sv mining laser": {
+    "lawson mining laser": {
       "internalName": "mining_laser_shin_klein_s0",
-      "blueprintName": "Klein-SV Mining Laser"
+      "blueprintName": "Lawson Mining Laser"
     },
     "klein-s1 mining laser": {
       "internalName": "mining_laser_shin_klein_s1",
@@ -11367,9 +11330,9 @@
       "internalName": "mining_laser_shin_klein_s2",
       "blueprintName": "Klein-S2 Mining Laser"
     },
-    "helix s mining laser": {
+    "s0 helix": {
       "internalName": "mining_laser_thcn_helix_s0",
-      "blueprintName": "Helix S Mining Laser"
+      "blueprintName": "S0 Helix"
     },
     "helix i mining laser": {
       "internalName": "mining_laser_thcn_helix_s1",
@@ -11397,7 +11360,7 @@
     },
     "sunflare": {
       "internalName": "powr_acom_s01_sunflare",
-      "blueprintName": "Sunflare"
+      "blueprintName": "SunFlare"
     },
     "luxcore": {
       "internalName": "powr_acom_s02_luxcore",
@@ -11459,9 +11422,21 @@
       "internalName": "powr_aegs_s03_quadracellmx",
       "blueprintName": "QuadraCell MX"
     },
-    "reclaimer": {
-      "internalName": "powr_aegs_s04_reclaimer",
-      "blueprintName": "Reclaimer"
+    "main powerplant": {
+      "ambiguous": true,
+      "displayName": "Main Powerplant",
+      "candidates": [
+        {
+          "internalName": "powr_aegs_s04_idris",
+          "blueprintName": "Main Powerplant",
+          "categoryName": "Veh. Comp. S4"
+        },
+        {
+          "internalName": "powr_aegs_s04_reclaimer",
+          "blueprintName": "Main Powerplant",
+          "categoryName": "Veh. Comp. S4"
+        }
+      ]
     },
     "dynaflux": {
       "internalName": "powr_amrs_s01_dynaflux",
@@ -11592,8 +11567,20 @@
       "blueprintName": "ZapJet"
     },
     "fullforce": {
-      "internalName": "powr_lplt_s02_fullforce",
-      "blueprintName": "FullForce"
+      "ambiguous": true,
+      "displayName": "FullForce",
+      "candidates": [
+        {
+          "internalName": "powr_lplt_s02_fullforce",
+          "blueprintName": "FullForce",
+          "categoryName": "Veh. Comp. S2"
+        },
+        {
+          "internalName": "powr_sasu_s02_daybreak",
+          "blueprintName": "FullForce",
+          "categoryName": "Veh. Comp. S2"
+        }
+      ]
     },
     "ionsurge": {
       "internalName": "powr_lplt_s02_ionsurge",
@@ -11616,8 +11603,20 @@
       "blueprintName": "SparkJet Pro"
     },
     "stellate": {
-      "internalName": "powr_orig_s04_890j",
-      "blueprintName": "Stellate"
+      "ambiguous": true,
+      "displayName": "Stellate",
+      "candidates": [
+        {
+          "internalName": "powr_orig_s04_890j",
+          "blueprintName": "Stellate",
+          "categoryName": "Veh. Comp. S4"
+        },
+        {
+          "internalName": "powr_rsi_s04_polaris",
+          "blueprintName": "Stellate",
+          "categoryName": "Veh. Comp. S4"
+        }
+      ]
     },
     "lightblossom": {
       "internalName": "powr_sasu_s01_lightblossom",
@@ -11630,10 +11629,6 @@
     "whiterose": {
       "internalName": "powr_sasu_s01_whiterose",
       "blueprintName": "WhiteRose"
-    },
-    "daybreak": {
-      "internalName": "powr_sasu_s02_daybreak",
-      "blueprintName": "DayBreak"
     },
     "lotus": {
       "internalName": "powr_sasu_s02_lotus",
@@ -11680,12 +11675,24 @@
       "blueprintName": "GammaMax"
     },
     "foxfire": {
-      "internalName": "qdrv_acas_s01_foxfire",
-      "blueprintName": "Foxfire"
+      "ambiguous": true,
+      "displayName": "FoxFire",
+      "candidates": [
+        {
+          "internalName": "qdrv_acas_s01_foxfire",
+          "blueprintName": "FoxFire",
+          "categoryName": "Veh. Comp. S1"
+        },
+        {
+          "internalName": "qdrv_just_s01_goliath",
+          "blueprintName": "FoxFire",
+          "categoryName": "Veh. Comp. S1"
+        }
+      ]
     },
     "lightfire": {
       "internalName": "qdrv_acas_s01_lightfire",
-      "blueprintName": "Lightfire"
+      "blueprintName": "LightFire"
     },
     "burst": {
       "internalName": "qdrv_arcc_s01_burst",
@@ -11702,10 +11709,6 @@
     "colossus": {
       "internalName": "qdrv_just_s01_colossus",
       "blueprintName": "Colossus"
-    },
-    "goliath": {
-      "internalName": "qdrv_just_s01_goliath",
-      "blueprintName": "Goliath"
     },
     "vulcan": {
       "internalName": "qdrv_just_s01_vulcan",
@@ -11903,21 +11906,9 @@
       "internalName": "qdrv_orig_s04_890j",
       "blueprintName": "Allegro"
     },
-    "idris_temp": {
-      "ambiguous": true,
-      "displayName": "Idris_temp",
-      "candidates": [
-        {
-          "internalName": "qdrv_wetk_s04_idris_temp",
-          "blueprintName": "Idris_temp",
-          "categoryName": "Veh. Comp. S4"
-        },
-        {
-          "internalName": "radr_gnrp_s03_idris_temp",
-          "blueprintName": "Idris_temp",
-          "categoryName": "Veh. Comp. S3"
-        }
-      ]
+    "frontline": {
+      "internalName": "qdrv_wetk_s04_idris_temp",
+      "blueprintName": "Frontline"
     },
     "hunter": {
       "internalName": "radr_bltr_s01_hunter",
@@ -11967,9 +11958,21 @@
       "internalName": "radr_chco_s01_surveyorlite",
       "blueprintName": "Surveyor-Lite"
     },
-    "broadspec-lite": {
-      "internalName": "radr_chco_s02_broadspec_lite",
-      "blueprintName": "Broadspec-Lite"
+    "broadspec": {
+      "ambiguous": true,
+      "displayName": "BroadSpec",
+      "candidates": [
+        {
+          "internalName": "radr_chco_s02_broadspec_lite",
+          "blueprintName": "BroadSpec",
+          "categoryName": "Veh. Comp. S2"
+        },
+        {
+          "internalName": "radr_chco_s03_broudspec",
+          "blueprintName": "BroadSpec",
+          "categoryName": "Veh. Comp. S3"
+        }
+      ]
     },
     "fullspec": {
       "internalName": "radr_chco_s02_fullspec",
@@ -11982,10 +11985,6 @@
     "surveyor": {
       "internalName": "radr_chco_s02_surveyor",
       "blueprintName": "Surveyor"
-    },
-    "broadspec": {
-      "internalName": "radr_chco_s03_broudspec",
-      "blueprintName": "BroadSpec"
     },
     "fullspec-max": {
       "internalName": "radr_chco_s03_fullspecmax",
@@ -12002,6 +12001,10 @@
     "broadspec-max": {
       "internalName": "radr_chco_s04_broadspecmax",
       "blueprintName": "BroadSpec-Max"
+    },
+    "idris_temp": {
+      "internalName": "radr_gnrp_s03_idris_temp",
+      "blueprintName": "Idris_temp"
     },
     "agure": {
       "internalName": "radr_grno_s00_agure",
@@ -12087,9 +12090,13 @@
       "internalName": "radr_nave_s02_snsr7x",
       "blueprintName": "SNS-R7x"
     },
-    "sns_r6x": {
+    "sns-r6x": {
       "internalName": "radr_nave_s02_sns_r6x",
-      "blueprintName": "Sns_r6x"
+      "blueprintName": "SNS-R6x"
+    },
+    "polaris": {
+      "internalName": "radr_rsi_s04_polaris",
+      "blueprintName": "Polaris"
     },
     "denning": {
       "internalName": "radr_wlop_s00_denning",
@@ -12111,9 +12118,9 @@
       "internalName": "radr_wlop_s01_backlund",
       "blueprintName": "Backlund"
     },
-    "capstan": {
+    "capston": {
       "internalName": "radr_wlop_s01_capstan",
-      "blueprintName": "Capstan"
+      "blueprintName": "Capston"
     },
     "fleming": {
       "internalName": "radr_wlop_s01_fleming",
@@ -12151,9 +12158,9 @@
       "internalName": "radr_wlop_s03_socoria",
       "blueprintName": "Socoria"
     },
-    "greycat fast nozzle": {
+    "norfield": {
       "internalName": "nozzle_fuelgiver_grin_nozzlefast",
-      "blueprintName": "Greycat Fast Nozzle"
+      "blueprintName": "Norfield"
     },
     "marlin": {
       "internalName": "nozzle_fuelgiver_grin_nozzlesecure",
@@ -12163,13 +12170,13 @@
       "internalName": "nozzle_fuelgiver_grin_nozzleveryfast",
       "blueprintName": "Lindstrom"
     },
-    "greycat very secure nozzle": {
+    "harkin": {
       "internalName": "nozzle_fuelgiver_grin_nozzleverysecure",
-      "blueprintName": "Greycat Very Secure Nozzle"
+      "blueprintName": "Harkin"
     },
-    "misc standard nozzle": {
+    "rn-7s": {
       "internalName": "nozzle_fuelgiver_misc_nozzlestandard",
-      "blueprintName": "MISC Standard Nozzle"
+      "blueprintName": "RN-7s"
     },
     "bendix": {
       "internalName": "nozzle_fuelgiver_shin_nozzleexpensivefast",
@@ -12188,25 +12195,18 @@
       "blueprintName": "Trawler Scraper Module"
     },
     "abrade scraper module": {
-      "ambiguous": true,
-      "displayName": "Abrade Scraper Module",
-      "candidates": [
-        {
-          "internalName": "salvage_modifier_scraper_medium",
-          "blueprintName": "Abrade Scraper Module",
-          "categoryName": "Veh. Comp. S1"
-        },
-        {
-          "internalName": "salvage_modifier_scraper_salvation_medium",
-          "blueprintName": "Abrade Scraper Module",
-          "categoryName": "Veh. Comp. S1"
-        }
-      ]
+      "internalName": "salvage_modifier_scraper_medium",
+      "blueprintName": "Abrade Scraper Module"
     },
     "cinch scraper module": {
       "ambiguous": true,
       "displayName": "Cinch Scraper Module",
       "candidates": [
+        {
+          "internalName": "salvage_modifier_scraper_salvation_medium",
+          "blueprintName": "Cinch Scraper Module",
+          "categoryName": "Veh. Comp. S1"
+        },
         {
           "internalName": "salvage_modifier_scraper_salvation_small",
           "blueprintName": "Cinch Scraper Module",
@@ -12311,13 +12311,13 @@
       "internalName": "shld_behr_s01_5sa",
       "blueprintName": "5SA 'Rhada'"
     },
-    "6sa": {
+    "6sa 'arbiter'": {
       "internalName": "shld_behr_s01_6sa",
-      "blueprintName": "6SA"
+      "blueprintName": "6SA 'Arbiter'"
     },
-    "7sa": {
+    "7sa 'concord'": {
       "internalName": "shld_behr_s01_7sa",
-      "blueprintName": "7SA"
+      "blueprintName": "7SA 'Concord'"
     },
     "5ma 'chimalli'": {
       "internalName": "shld_behr_s02_5ma",
@@ -12475,21 +12475,21 @@
       "internalName": "shld_yorm_s02_trenta",
       "blueprintName": "Trenta"
     },
-    "suregrip th1 tractor beam": {
-      "internalName": "grin_tractorbeam_s1",
-      "blueprintName": "SureGrip TH1 Tractor Beam"
-    },
-    "suregrip th2 tractor beam": {
-      "internalName": "grin_tractorbeam_s2",
-      "blueprintName": "SureGrip TH2 Tractor Beam"
-    },
-    "suregrip th3 tractor beam": {
-      "internalName": "grin_tractorbeam_s3",
-      "blueprintName": "SureGrip TH3 Tractor Beam"
-    },
     "suregrip s1 tractor beam": {
-      "internalName": "wep_tractorbeam_s1_military_1",
+      "internalName": "grin_tractorbeam_s1",
       "blueprintName": "SureGrip S1 Tractor Beam"
+    },
+    "suregrip s2 tractor beam": {
+      "internalName": "grin_tractorbeam_s2",
+      "blueprintName": "SureGrip S2 Tractor Beam"
+    },
+    "suregrip s3 tractor beam": {
+      "internalName": "grin_tractorbeam_s3",
+      "blueprintName": "SureGrip S3 Tractor Beam"
+    },
+    "viselock s1 tractor beam": {
+      "internalName": "wep_tractorbeam_s1_military_1",
+      "blueprintName": "ViseLock S1 Tractor Beam"
     },
     "suregrip hv-s1 tractor beam": {
       "internalName": "wep_tractorbeam_s1_utility_1",
@@ -12499,9 +12499,9 @@
       "internalName": "wep_tractorbeam_s1_utility_2",
       "blueprintName": "SureGrip PR-S1 Tractor Beam"
     },
-    "suregrip s2 tractor beam": {
+    "viselock s2 tractor beam": {
       "internalName": "wep_tractorbeam_s2_military_1",
-      "blueprintName": "SureGrip S2 Tractor Beam"
+      "blueprintName": "ViseLock S2 Tractor Beam"
     },
     "suregrip hv-s2 tractor beam": {
       "internalName": "wep_tractorbeam_s2_utility_1",
@@ -12511,9 +12511,9 @@
       "internalName": "wep_tractorbeam_s2_utility_2",
       "blueprintName": "SureGrip PR-S2 Tractor Beam"
     },
-    "suregrip s3 tractor beam": {
+    "viselock s3 tractor beam": {
       "internalName": "wep_tractorbeam_s3_military_1",
-      "blueprintName": "SureGrip S3 Tractor Beam"
+      "blueprintName": "ViseLock S3 Tractor Beam"
     },
     "suregrip hv-s3 tractor beam": {
       "internalName": "wep_tractorbeam_s3_utility_1",

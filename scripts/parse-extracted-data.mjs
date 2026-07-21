@@ -179,6 +179,28 @@ function resolveLocalization(key, localization) {
   return key
 }
 
+/**
+ * Authoritative crafted-item display name: read the SCItem's own
+ * AttachDef.Localization.Name and resolve it via localization. Returns null when
+ * the entity record is missing or carries only a placeholder name, so callers can
+ * fall back to heuristic name derivation.
+ */
+function resolveEntityDisplayName(entityClass, entityPathIndex, localization) {
+  if (!entityClass) return null
+  const entityFile = resolveEntityFile(entityClass, entityPathIndex)
+  const entityJson = entityFile ? readJson(entityFile) : null
+  const attachComp = (entityJson?._RecordValue_?.Components ?? []).find(
+    (comp) => comp?._Type_ === 'SAttachableComponentParams'
+  )
+  const nameKey = attachComp?.AttachDef?.Localization?.Name
+  if (!nameKey || nameKey === '@LOC_PLACEHOLDER' || nameKey === '@LOC_EMPTY' || nameKey === '@LOC_UNINITIALIZED') {
+    return null
+  }
+  const resolved = resolveLocalization(nameKey, localization)
+  if (!resolved || resolved.startsWith('@')) return null
+  return resolved
+}
+
 const FACTION_NAME_OVERRIDES = {
   foxwell: 'Foxwell Enforcement',
   bountyhuntersguild: 'Bounty Hunters Guild',
@@ -2758,9 +2780,15 @@ function parseBlueprintDefinitions(localization = {}) {
       .replace(/_scitem$/i, '')
       .toLowerCase()
     
-    // Look up display name from localization
-    // Slot-aware armor names first — prevents cross-slot localization bleed (core name on helmet, etc.)
-    let blueprintName = resolveArmorBlueprintName(internalName, localization)
+    // Authoritative name FIRST: the crafted item's own SCItem display name
+    // (AttachDef.Localization.Name). This is exactly what the game writes to
+    // Game.log ("Received Blueprint: X"), so adopting it guarantees BP Dumper's
+    // logged name resolves to this blueprint. Heuristic guessing below only runs
+    // when the entity record has no usable name (null entityClass, placeholder).
+    let blueprintName = resolveEntityDisplayName(entityClass || internalName, entityPathIndex, localization)
+
+    // Slot-aware armor names next — prevents cross-slot localization bleed (core name on helmet, etc.)
+    if (!blueprintName) blueprintName = resolveArmorBlueprintName(internalName, localization)
     const namesToTry = [...new Set(
       [internalName, entityClass]
         .filter(Boolean)
