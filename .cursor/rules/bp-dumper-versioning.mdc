@@ -1,0 +1,39 @@
+---
+description: BP Dumper releases are auto-versioned via semantic-release — never bump manually
+alwaysApply: true
+---
+
+# BP Dumper Versioning is Automated
+
+BP Dumper versions are cut by **semantic-release** on pushes to `main`
+(`release.config.js` + `.github/workflows/release-dumper.yml`). It computes the
+next version from Conventional Commit messages, runs `sync-dumper-version.mjs`,
+updates the changelog, tags `vX.Y.Z`, and triggers `build-releases.yml` to build
+the exe.
+
+## Never do these by hand
+
+- Do **not** run `node scripts/sync-dumper-version.mjs <version>`.
+- Do **not** edit version/manifest files — semantic-release owns them:
+  - `scripts/bp-dumper/version.json`, `scripts/bp-dumper/package.json`
+  - `scripts/bp-dumper-py/_version.py`, `scripts/bp-dumper-py/_min_game_version.py`
+  - `src/data/bp-dumper-version.json`
+  - `scripts/bp-dumper/CHANGELOG.md`
+- Do **not** create git tags or trigger the build workflow manually.
+
+## How to ship a dumper change
+
+Commit dumper changes with a Conventional Commit **scoped to `dumper`**:
+
+| Message | Release |
+|---|---|
+| `fix(dumper): ...` | patch |
+| `feat(dumper): ...` | minor |
+| `perf(dumper): ...` / `refactor(dumper): ...` | patch |
+| `feat(dumper)!: ...` or `BREAKING CHANGE:` footer | major |
+
+- A release is cut **only** when files under the dumper paths change (see the
+  workflow `paths:`) **and** a `dumper`-scoped commit is present. Other scopes
+  cut no dumper release.
+- Keep dumper logic changes and unrelated site changes in separate commits so
+  the scope stays accurate.
