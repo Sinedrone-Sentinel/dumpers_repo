@@ -363,7 +363,7 @@ serve(async (req) => {
     }
 
     if (eventType === 'game_exit_menu') {
-      await setGameStatus(supabase, userId, 'exit_menu', false)
+      await setGameStatus(supabase, userId, 'exit_menu', true)
       await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_exit_menu' })
     }
@@ -408,6 +408,64 @@ serve(async (req) => {
       await touchApiKey(supabase, apiKey)
       await cleanupStaleDumperSessions(supabase)
       return jsonResponse({ success: true, event: 'session_ping' })
+    }
+
+    if (eventType === 'missions_snapshot') {
+      const rawMissions = payload.missions
+      if (!Array.isArray(rawMissions)) {
+        return jsonResponse({ error: 'Invalid missions payload' }, 400)
+      }
+      if (rawMissions.length > 20) {
+        return jsonResponse({ error: 'Too many missions in snapshot' }, 400)
+      }
+
+      await clearActiveMissions(supabase, userId)
+
+      const rows = rawMissions
+        .map((entry) => {
+          if (!entry || typeof entry !== 'object') return null
+          const missionGuid = 'missionGuid' in entry ? String(entry.missionGuid).trim() : ''
+          if (!missionGuid || missionGuid.length > 128) return null
+          const contractDefinitionId =
+            'contractDefinitionId' in entry && entry.contractDefinitionId
+              ? String(entry.contractDefinitionId).trim()
+              : null
+          const debugName =
+            'debugName' in entry && entry.debugName
+              ? String(entry.debugName).trim().slice(0, 500)
+              : 'Unknown'
+          return {
+            user_id: userId,
+            mission_guid: missionGuid,
+            contract_definition_id: contractDefinitionId,
+            debug_name: debugName || 'Unknown',
+            started_at: new Date().toISOString(),
+          }
+        })
+        .filter((row): row is NonNullable<typeof row> => row !== null)
+
+      if (rows.length > 0) {
+        const { error: upsertError } = await supabase
+          .from('dumper_active_missions')
+          .upsert(rows, { onConflict: 'user_id,mission_guid' })
+        if (upsertError) throw upsertError
+      }
+
+      await supabase
+        .from('profiles')
+        .update({
+          dumper_watch_active: true,
+          dumper_last_ping_at: new Date().toISOString(),
+          dumper_game_status: 'tracking',
+          dumper_game_status_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
+      await touchApiKey(supabase, apiKey)
+      return jsonResponse({
+        success: true,
+        event: 'missions_snapshot',
+        missionCount: rows.length,
+      })
     }
 
     if (eventType === 'mission_started') {

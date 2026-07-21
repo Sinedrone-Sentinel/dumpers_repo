@@ -263,7 +263,7 @@ def post_blueprint_event(session, url: str, blueprint_input: str, contract_defin
 def post_dumper_event(session, url: str, event_type: str, fields: dict | None = None):
     payload = {"type": event_type}
     if fields:
-        payload.update({k: v for k, v in fields.items() if v})
+        payload.update({k: v for k, v in fields.items() if v is not None})
     res = session.post(url, json=payload, timeout=15)
     if res.status_code >= 400:
         raise RuntimeError(f"HTTP {res.status_code}")
@@ -826,6 +826,10 @@ def apply_mission_log_line(line: str, state: WatcherState, ts: float) -> ActiveM
     if m := PATTERN_ACCEPTED_FALLBACK.search(line):
         return state.record_accepted(m.group("guid"), ts)
 
+    if m := PATTERN_END_MISSION.search(line):
+        state.record_end(m.group(1), m.group(2), ts)
+        return None
+
     return None
 
 
@@ -882,15 +886,19 @@ def post_game_session_event(session, url: str, event_type: str) -> None:
 
 
 def sync_active_missions_to_server(session, url: str, state: WatcherState) -> None:
-    snapshot = list(state.active.values())
-    for active in snapshot:
-        post_dumper_event(session, url, "mission_started", {
+    missions = [
+        {
             "missionGuid": active.guid,
             "contractDefinitionId": active.contract_definition_id or "",
             "debugName": active.debug_name,
-        })
-    if snapshot:
-        print(f"{Colors.CYAN}Synced {len(snapshot)} active mission(s) already in Game.log{Colors.RESET}")
+        }
+        for active in state.active.values()
+    ]
+    post_dumper_event(session, url, "missions_snapshot", {"missions": missions})
+    if missions:
+        print(f"{Colors.CYAN}Synced {len(missions)} active mission(s) from Game.log{Colors.RESET}")
+    else:
+        print(f"{Colors.CYAN}Live missions cleared — none active in Game.log{Colors.RESET}")
 
 
 def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, args, session=None):
@@ -1006,6 +1014,12 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
 
                         game_event = session_tracker.process_line(line, ts, state)
+                        if game_event == "game_reconnected" and session and not args.dry_run:
+                            try:
+                                reconcile_active_missions_from_log(path, state, session_tracker)
+                                sync_active_missions_to_server(session, args.url, state)
+                            except Exception as e:
+                                print(f"  [Live] {Colors.YELLOW}⚠ Could not resync missions after reconnect:{Colors.RESET} {e}")
                         if game_event and session and not args.dry_run:
                             try:
                                 post_game_session_event(session, args.url, game_event)
