@@ -465,10 +465,15 @@ PATTERN_END_MISSION = re.compile(
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
 PATTERN_EXIT_MENU = re.compile(r"Requesting game mode Frontend_Main/SC_Frontend")
 PATTERN_CRASH = re.compile(r"Cloud Imperium Games public crash handler taking over")
-# PU load uses system name (Pyro, Stanton, …) — not the legacy "pu" string.
+PATTERN_LOG_STARTED = re.compile(r"Log started on")
+# PU load: system name in log (Pyro, Nyx, pu, Stanton, …) with any SC_* gamerules tag.
 PATTERN_LOADING_PU = re.compile(
-    r"Loading screen for (?!Frontend_Main\b)[^:]+ : SC_Frontend closed",
+    r"Loading screen for (?!Frontend_Main\b)[^:\n]+ : SC_\w+ closed",
     re.IGNORECASE,
+)
+# Fresh launch / relaunch sometimes reaches PU via SC_Default before the loading-screen line.
+PATTERN_PU_ENTERED = re.compile(
+    r'taskname="OnClientEnteredGame".*gamerules="SC_(?!Frontend)\w+"',
 )
 
 CRASH_RECOVERY_WINDOW_SEC = 3600.0
@@ -491,6 +496,11 @@ def normalize_accept_notification_title(raw: str | None) -> str | None:
             return f"{before} [{rep.group(1)}/{rep.group(2)} Rep]"
     text = LOG_NOISE_TAIL_RE.split(text, maxsplit=1)[0].strip().rstrip(':"\' ,')
     return text or None
+
+
+def is_pu_entry_line(line: str) -> bool:
+    """True when Game.log indicates the player finished loading into the PU."""
+    return bool(PATTERN_LOADING_PU.search(line) or PATTERN_PU_ENTERED.search(line))
 
 
 class MissionEntry:
@@ -651,6 +661,12 @@ class SessionTracker:
         return "game_reconnected"
 
     def process_line(self, line: str, ts: float, state: "WatcherState") -> str:
+        if PATTERN_LOG_STARTED.search(line):
+            state.clear_all_active()
+            self.paused_reason = "quit_game"
+            self.crash_at = None
+            self.pending_status = "quit_game"
+            return "game_quit"
         if PATTERN_EXIT_MENU.search(line):
             self.paused_reason = "exit_menu"
             self.crash_at = None
@@ -663,7 +679,7 @@ class SessionTracker:
                 return ""
             self.pending_status = "crash_waiting"
             return "game_crash"
-        if PATTERN_LOADING_PU.search(line):
+        if is_pu_entry_line(line):
             return self.resume_from_pause(state, ts)
         return ""
 
@@ -872,6 +888,15 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState, session:
         session.on_mission_accepted()
 
 
+def ensure_awaiting_pu(session_tracker: SessionTracker) -> None:
+    """After a new/rotated log with no PU markers yet, stay paused until entry lines arrive."""
+    if is_live_mission_sync_ready(session_tracker):
+        return
+    if not session_tracker.paused_reason and not session_tracker.pending_status:
+        session_tracker.paused_reason = "quit_game"
+        session_tracker.pending_status = "quit_game"
+
+
 def seed_session_tracker_from_log(path: Path, session_tracker: SessionTracker, state: WatcherState) -> None:
     """Replay session markers so startup reflects the latest menu/PU phase in Game.log."""
     session_tracker.reset()
@@ -1012,6 +1037,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                 try:
                     reconcile_active_missions_from_log(path, state)
                     seed_session_tracker_from_log(path, session_tracker, state)
+                    ensure_awaiting_pu(session_tracker)
                     if session and not args.dry_run:
                         try:
                             post_dumper_event(session, args.url, "session_start")
@@ -1071,7 +1097,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                             except Exception as e:
                                 print(f"  [Live] {Colors.YELLOW}⚠ Could not resync missions after reconnect:{Colors.RESET} {e}")
                                 game_event = ""
-                        elif game_event == "game_exit_menu" and session and not args.dry_run:
+                        elif game_event in ("game_exit_menu", "game_quit") and session and not args.dry_run:
                             try:
                                 post_game_session_event(session, args.url, game_event)
                             except Exception as e:
