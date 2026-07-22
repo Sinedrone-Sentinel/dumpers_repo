@@ -1,6 +1,12 @@
-import { resourceLabelClassName } from '../config/resourceTypes'
+import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
-import { getResourceBands, getQualityTier, getQualityTierColor } from '../lib/qualityBands'
+import {
+  formatInventoryQualityLabel,
+  getResourceBands,
+  getQualityTier,
+  getQualityTierColor,
+} from '../lib/qualityBands'
+import { formatQuantityForResource } from '../lib/resourceQuantity'
 import {
   formatSlotModifierDisplay,
   getSlotModifierColorClass,
@@ -33,6 +39,13 @@ export interface BlueprintSlotQualityCardProps {
   compact?: boolean
   /** `q-values` shows Q847-style labels; default `bands` keeps Band N: Q847 (orders UI). */
   qualityDisplay?: 'bands' | 'q-values'
+  /** Craft mode restricts the quality picker to tiers the member actually holds. */
+  craftMode?: boolean
+  craftResourceKey?: string
+  craftAvailableQualities?: number[]
+  craftHave?: number
+  craftNeeded?: number
+  craftEnough?: boolean
 }
 
 export default function BlueprintSlotQualityCard({
@@ -43,6 +56,12 @@ export default function BlueprintSlotQualityCard({
   modifierResults = [],
   compact = false,
   qualityDisplay = 'bands',
+  craftMode = false,
+  craftResourceKey,
+  craftAvailableQualities,
+  craftHave,
+  craftNeeded,
+  craftEnough,
 }: BlueprintSlotQualityCardProps) {
   const option = slot.options?.[0]
   const resourceName =
@@ -56,6 +75,9 @@ export default function BlueprintSlotQualityCard({
   const isMineable = (option?.standardCargoUnits ?? 0) > 0
   const isItem = option?.type === 'item'
   const showQualitySelector = hasModifiers || (isMineable && !isItem)
+  const craftResKey = craftResourceKey ?? slugifyResourceName(resourceName)
+  const craftUnit = resourceQuantityUnitLabel(craftResKey)
+  const craftQualityOptions = craftAvailableQualities ?? []
 
   return (
     <div
@@ -98,7 +120,40 @@ export default function BlueprintSlotQualityCard({
         </div>
       )}
 
-      {showQualitySelector && (
+      {craftMode && (
+        <div className="mt-3 pt-3 border-t border-slate-700/50">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1.5 min-w-0">
+            <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
+              Use quality
+            </label>
+            {craftQualityOptions.length > 0 ? (
+              <select
+                value={quality}
+                onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
+                className="w-full min-w-0 sm:flex-1 px-2 py-1 bg-slate-700/80 border border-slate-500 rounded text-sm font-mono text-white cursor-pointer hover:bg-slate-600/80 focus:border-orange-500/50 focus:outline-none"
+              >
+                {craftQualityOptions.map((q) => (
+                  <option key={q} value={q}>
+                    {formatInventoryQualityLabel(craftResKey, q)}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <span className="text-xs text-red-400 font-medium">None in stock</span>
+            )}
+          </div>
+          <div className="flex items-center justify-between gap-2 text-xs">
+            <span className="text-slate-500">
+              Need {formatQuantityForResource(craftResKey, craftNeeded ?? 0)} {craftUnit}
+            </span>
+            <span className={craftEnough ? 'text-green-400' : 'text-red-400'}>
+              Have {formatQuantityForResource(craftResKey, craftHave ?? 0)} {craftUnit}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {!craftMode && showQualitySelector && (
         <div className={`mt-3 pt-3 border-t border-slate-700/50 ${compact ? 'mt-2 pt-2' : ''}`}>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2 min-w-0">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">

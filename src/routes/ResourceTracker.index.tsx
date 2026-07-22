@@ -6,6 +6,7 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import UexLookupButton from '../components/shop/UexLookupButton'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
 import {
+  isWholeUnitResource,
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
@@ -30,8 +31,11 @@ import {
   adjustStepsForResource,
   formatQuantityForResource,
   formatResourceQuantity,
+  fromMilliScu,
   parseQuantityForResource,
+  toMilliScu,
 } from '../lib/resourceQuantity'
+import type { CraftPlanReduction, CraftStockCardLite } from '../lib/craftFromStock'
 
 type ResourceTrackerTab = InventoryScope | 'can_craft'
 
@@ -204,6 +208,17 @@ export default function ResourceTrackerRoute() {
     [canCraftQuantityByKey]
   )
 
+  const craftStockCards = useMemo<CraftStockCardLite[]>(
+    () =>
+      canCraftStockCards.map((card) => ({
+        resource_key: card.resource_key,
+        quality: card.quality ?? DEFAULT_STOCK_QUALITY,
+        note: card.note ?? null,
+        quantity: card.quantity,
+      })),
+    [canCraftStockCards]
+  )
+
   // Guest localStorage helpers
   const updateGuestResource = useCallback(
     (resourceKey: string, quality: number, quantity: number, note?: string | null) => {
@@ -343,6 +358,64 @@ export default function ResourceTrackerRoute() {
       setStockError(null)
     },
     [guestResources, updateGuestResource]
+  )
+
+  // Deduct crafted materials from My Resources at the exact quality tiers chosen
+  // in the blueprint modal. Runs against the signed-in member's stock (or the
+  // guest cache) and refreshes the Can Craft views so craftability re-validates.
+  const handleCraft = useCallback(
+    async (reductions: CraftPlanReduction[]): Promise<{ error?: string }> => {
+      if (reductions.length === 0) return {}
+
+      if (isGuest) {
+        const working = [...guestResources]
+        for (const reduction of reductions) {
+          const noteKey = normalizeStockNoteKey(reduction.note)
+          const idx = working.findIndex(
+            (row) =>
+              row.resource_key === reduction.resource_key &&
+              row.quality === reduction.quality &&
+              normalizeStockNoteKey(row.note) === noteKey
+          )
+          if (idx < 0) continue
+          const current = working[idx]
+          const nextQty = isWholeUnitResource(reduction.resource_key)
+            ? Math.max(0, Math.trunc(current.quantity) - Math.trunc(reduction.delta))
+            : fromMilliScu(Math.max(0, toMilliScu(current.quantity) - toMilliScu(reduction.delta)))
+          if (nextQty > 0) {
+            working[idx] = { ...current, quantity: nextQty }
+          } else {
+            working.splice(idx, 1)
+          }
+        }
+        setGuestResources(working)
+        writeGuestResources(working)
+        setStockError(null)
+        return {}
+      }
+
+      if (!personalInventoryContext) return { error: 'Sign in to craft from your resources.' }
+
+      for (const reduction of reductions) {
+        const result = await adjustInventoryQuantity(
+          personalInventoryContext,
+          reduction.resource_key,
+          reduction.quality,
+          -Math.abs(reduction.delta),
+          reduction.note
+        )
+        if (result.error) {
+          await refreshInventoryViews()
+          setStockError(result.error)
+          return result
+        }
+      }
+
+      await refreshInventoryViews()
+      setStockError(null)
+      return {}
+    },
+    [isGuest, guestResources, personalInventoryContext, refreshInventoryViews]
   )
 
   const renderStockCard = useCallback(
@@ -592,6 +665,8 @@ export default function ResourceTrackerRoute() {
         <CanCraftTab
           quantityByKey={canCraftQuantityByKey}
           hasTrackedStock={canCraftHasTrackedStock}
+          stockCardsForCraft={craftStockCards}
+          onCraft={handleCraft}
         />
       ) : (
         <>

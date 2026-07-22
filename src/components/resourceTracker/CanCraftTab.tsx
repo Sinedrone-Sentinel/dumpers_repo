@@ -13,6 +13,11 @@ import { useTargetList } from '../../hooks/useTargetList'
 import { useAsyncEffect } from '../../hooks/useAsyncEffect'
 import { matchesCanCraftTabBlueprint, canCraftBlueprint, isNearlyCraftableBlueprint } from '../../lib/canCraft'
 import {
+  buildOwnedStockIndex,
+  type CraftPlanReduction,
+  type CraftStockCardLite,
+} from '../../lib/craftFromStock'
+import {
   getResourceTrackerUiScope,
   readResourceTrackerUiState,
   writeResourceTrackerUiState,
@@ -104,9 +109,17 @@ const formatSubType = formatSubtypeLabel
 type CanCraftTabProps = {
   quantityByKey: Record<string, number>
   hasTrackedStock: boolean
+  /** Per-(resource, quality, note) stock lines used to power the CRAFT button. */
+  stockCardsForCraft: CraftStockCardLite[]
+  onCraft: (reductions: CraftPlanReduction[]) => Promise<{ error?: string }>
 }
 
-export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraftTabProps) {
+export default function CanCraftTab({
+  quantityByKey,
+  hasTrackedStock,
+  stockCardsForCraft,
+  onCraft,
+}: CanCraftTabProps) {
   const navigate = useNavigate()
   const {
     acquiredBlueprints: myAcquiredBlueprints,
@@ -154,6 +167,11 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
 
   const { data: blueprints, isLoading } = useBlueprintData()
   const displayAcquiredBlueprints = myAcquiredBlueprints
+
+  const ownedStockIndex = React.useMemo(
+    () => buildOwnedStockIndex(stockCardsForCraft),
+    [stockCardsForCraft]
+  )
 
   React.useEffect(() => {
     if (!uiScope) return
@@ -916,6 +934,11 @@ export default function CanCraftTab({ quantityByKey, hasTrackedStock }: CanCraft
           onAddToCraftTracker={() => void addMaterialsFromBlueprint(selectedBlueprint)}
           craftTrackerPending={isPendingForBlueprint(selectedBlueprint.internalName)}
           showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}
+          craftContext={{
+            owned: ownedStockIndex,
+            ready: canCraftBlueprint(selectedBlueprint, quantityByKey, 1),
+            onCraft,
+          }}
         />
       )}
 

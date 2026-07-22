@@ -17,6 +17,14 @@ import {
   minSlotQuality,
 } from '../lib/blueprintQuality'
 import { pricingForBlueprintLine } from '../lib/orderPricing'
+import {
+  buildCraftSlotRequirements,
+  defaultCraftQuality,
+  resolveCraftPlan,
+  type CraftPlanReduction,
+  type CraftSlotStatus,
+  type OwnedStockIndex,
+} from '../lib/craftFromStock'
 import { formatDfpAuec } from '../lib/dfp'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import BlueprintCategoryTags from './BlueprintCategoryTags'
@@ -88,6 +96,15 @@ interface BlueprintDetailsModalProps {
   onAddToCraftTracker?: () => void
   craftTrackerPending?: boolean
   showCraftTrackerControl?: boolean
+  /** Present only from the Can Craft tab — enables the CRAFT-from-stock button. */
+  craftContext?: CraftContext
+}
+
+interface CraftContext {
+  owned: OwnedStockIndex
+  /** True only when the blueprint is fully craftable from tracked totals. */
+  ready: boolean
+  onCraft: (reductions: CraftPlanReduction[]) => Promise<{ error?: string }>
 }
 
 export default function BlueprintDetailsModal({
@@ -106,12 +123,17 @@ export default function BlueprintDetailsModal({
   onAddToCraftTracker,
   craftTrackerPending = false,
   showCraftTrackerControl = false,
+  craftContext,
 }: BlueprintDetailsModalProps) {
   const navigate = useNavigate()
   const [slotQualities, setSlotQualities] = useState<Record<number, number>>({})
   const [addedToOrder, setAddedToOrder] = useState(false)
   const [missionsModalOpen, setMissionsModalOpen] = useState(false)
+  const [crafting, setCrafting] = useState(false)
+  const [craftError, setCraftError] = useState<string | null>(null)
   const { addToDraft, draftCount } = useOrderDraft()
+
+  const craftReady = !!craftContext?.ready
 
   const blueprintWithSlots = blueprint as BlueprintWithSlots
   const rewardMissions = useMemo(
@@ -131,14 +153,65 @@ export default function BlueprintDetailsModal({
     showTargetControl || showMissionsControl || showCraftTrackerControl
 
   useEffect(() => {
-    setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset only when blueprint identity changes
-  }, [blueprint.internalName])
+    setCrafting(false)
+    setCraftError(null)
+    if (craftReady && craftContext) {
+      const reqs = buildCraftSlotRequirements(blueprintWithSlots, craftContext.owned)
+      const init: Record<number, number> = {}
+      for (const req of reqs) {
+        const q = defaultCraftQuality(req, craftContext.owned)
+        if (q != null) init[req.slotIndex] = q
+      }
+      setSlotQualities(init)
+    } else {
+      setSlotQualities(buildDefaultSlotQualities(blueprintWithSlots))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset only when blueprint identity / craft mode changes
+  }, [blueprint.internalName, craftReady])
 
   const effectiveSlotQualities = useMemo(
     () => mergeSlotQualities(blueprintWithSlots, slotQualities),
     [blueprintWithSlots, slotQualities]
   )
+
+  const craftRequirements = useMemo(
+    () =>
+      craftReady && craftContext
+        ? buildCraftSlotRequirements(blueprintWithSlots, craftContext.owned)
+        : [],
+    [craftReady, craftContext, blueprintWithSlots]
+  )
+
+  /** Selection sanitized to tiers the member still holds (owned stock can shift). */
+  const craftSelectedQualities = useMemo(() => {
+    if (!craftReady || !craftContext) return null
+    const out: Record<number, number | undefined> = {}
+    for (const req of craftRequirements) {
+      const current = slotQualities[req.slotIndex]
+      out[req.slotIndex] =
+        current != null && req.availableQualities.includes(current)
+          ? current
+          : defaultCraftQuality(req, craftContext.owned) ?? undefined
+    }
+    return out
+  }, [craftReady, craftContext, craftRequirements, slotQualities])
+
+  const craftPlan = useMemo(() => {
+    if (!craftReady || !craftContext || !craftSelectedQualities) return null
+    return resolveCraftPlan(craftRequirements, craftSelectedQualities, craftContext.owned)
+  }, [craftReady, craftContext, craftRequirements, craftSelectedQualities])
+
+  const craftStatusBySlot = useMemo(() => {
+    const map = new Map<number, CraftSlotStatus>()
+    if (craftPlan) for (const slot of craftPlan.slots) map.set(slot.slotIndex, slot)
+    return map
+  }, [craftPlan])
+
+  /** Qualities used for the slot cards + stat simulation (owned tiers in craft mode). */
+  const displaySlotQualities = useMemo(() => {
+    if (!craftReady || !craftSelectedQualities) return effectiveSlotQualities
+    return { ...effectiveSlotQualities, ...craftSelectedQualities }
+  }, [craftReady, craftSelectedQualities, effectiveSlotQualities])
 
   // Check if any slot has modifiers
   const hasModifiers = useMemo(() => {
@@ -168,11 +241,11 @@ export default function BlueprintDetailsModal({
     if (!blueprint.slots) return []
     
     return blueprint.slots.map((slot, idx) => {
-      const quality = effectiveSlotQualities[idx] ?? buildDefaultSlotQualities(blueprintWithSlots)[idx]
+      const quality = displaySlotQualities[idx] ?? buildDefaultSlotQualities(blueprintWithSlots)[idx]
       const modifiers = slot.options?.[0]?.modifiers
       return calculateSlotModifiers(quality, modifiers)
     })
-  }, [blueprint.slots, effectiveSlotQualities, blueprintWithSlots])
+  }, [blueprint.slots, displaySlotQualities, blueprintWithSlots])
 
   // Aggregate all modifiers across slots
   const aggregatedModifiers = useMemo(() => {
@@ -182,6 +255,20 @@ export default function BlueprintDetailsModal({
 
   const handleQualityChange = (slotIndex: number, quality: number) => {
     setSlotQualities(prev => ({ ...prev, [slotIndex]: quality }))
+  }
+
+  const handleCraft = async () => {
+    if (!craftContext || !craftPlan || !craftPlan.ok || crafting) return
+    setCrafting(true)
+    setCraftError(null)
+    try {
+      const result = await craftContext.onCraft(craftPlan.reductions)
+      if (result?.error) setCraftError(result.error)
+    } catch (err) {
+      setCraftError(err instanceof Error ? err.message : 'Craft failed')
+    }
+    // Keep the button locked briefly to prevent accidental double-crafts.
+    setTimeout(() => setCrafting(false), 2500)
   }
 
   const minSlotQualityValue = useMemo(
@@ -277,17 +364,54 @@ export default function BlueprintDetailsModal({
           <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
             <h3 className="text-slate-400 text-sm mb-3">Required Resources</h3>
             <div className="space-y-3">
-              {blueprint.slots.map((slot, idx) => (
-                <BlueprintSlotQualityCard
-                  key={idx}
-                  slot={slot}
-                  slotIndex={idx}
-                  quality={effectiveSlotQualities[idx]}
-                  onQualityChange={handleQualityChange}
-                  modifierResults={allSlotModifiers[idx] ?? []}
-                />
-              ))}
+              {blueprint.slots.map((slot, idx) => {
+                const craftStatus = craftStatusBySlot.get(idx)
+                return (
+                  <BlueprintSlotQualityCard
+                    key={idx}
+                    slot={slot}
+                    slotIndex={idx}
+                    quality={displaySlotQualities[idx] ?? effectiveSlotQualities[idx]}
+                    onQualityChange={handleQualityChange}
+                    modifierResults={allSlotModifiers[idx] ?? []}
+                    craftMode={craftReady}
+                    craftResourceKey={craftStatus?.resourceKey}
+                    craftAvailableQualities={craftStatus?.availableQualities}
+                    craftHave={craftStatus?.have}
+                    craftNeeded={craftStatus?.needed}
+                    craftEnough={craftStatus?.enough}
+                  />
+                )
+              })}
             </div>
+
+            {craftReady && craftPlan && (
+              <div className="mt-4 pt-4 border-t border-slate-700/60">
+                {!craftPlan.ok && (
+                  <p className="text-xs text-amber-400/90 mb-2">
+                    Pick a quality you have enough of for every material to craft this blueprint.
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void handleCraft()}
+                  disabled={!craftPlan.ok || crafting}
+                  className={`w-full py-2.5 rounded-lg text-sm font-semibold uppercase tracking-wide transition-colors ${
+                    !craftPlan.ok || crafting
+                      ? 'bg-slate-700/50 text-slate-500 cursor-not-allowed'
+                      : 'bg-green-600/80 hover:bg-green-600 text-white shadow-lg shadow-green-500/20'
+                  }`}
+                  title="Craft once and deduct the selected materials from My Resources"
+                >
+                  {crafting ? 'Crafting…' : 'Craft'}
+                </button>
+                {craftError && <p className="text-xs text-red-400 mt-2">{craftError}</p>}
+                <p className="text-[10px] text-slate-500 mt-2">
+                  Deducts the exact amount at the quality selected for each material from your My
+                  Resources stock.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
