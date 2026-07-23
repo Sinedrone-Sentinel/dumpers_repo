@@ -16,6 +16,56 @@ export function normalizeLocationSearch(value: string | null | undefined): strin
   return (value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '')
 }
 
+/** Stock cards with no usable note (Empty chip). */
+export const EMPTY_LOCATION_KEY = '__empty__'
+
+/** Can Craft / filters: no location restriction. */
+export const ALL_LOCATION_KEY = 'all'
+
+export type LocationFilterOption = {
+  key: string
+  label: string
+  count: number
+}
+
+export function locationKeyForNote(note: string | null | undefined): string {
+  return normalizeLocationSearch(note) || EMPTY_LOCATION_KEY
+}
+
+/** Unique note locations from stock cards (Empty first, then A–Z by label). */
+export function buildLocationFilterOptions(
+  cards: { note?: string | null }[]
+): LocationFilterOption[] {
+  const byKey = new Map<string, { label: string; count: number }>()
+  for (const card of cards) {
+    const key = locationKeyForNote(card.note)
+    const existing = byKey.get(key)
+    if (existing) {
+      existing.count += 1
+    } else {
+      byKey.set(key, {
+        label: key === EMPTY_LOCATION_KEY ? 'Empty' : (card.note ?? '').trim(),
+        count: 1,
+      })
+    }
+  }
+  return [...byKey.entries()]
+    .map(([key, meta]) => ({ key, label: meta.label, count: meta.count }))
+    .sort((a, b) => {
+      if (a.key === EMPTY_LOCATION_KEY) return -1
+      if (b.key === EMPTY_LOCATION_KEY) return 1
+      return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
+    })
+}
+
+export function cardMatchesLocationFilter(
+  note: string | null | undefined,
+  filterKey: string | null | undefined
+): boolean {
+  if (!filterKey || filterKey === ALL_LOCATION_KEY) return true
+  return locationKeyForNote(note) === filterKey
+}
+
 export function inventoryLineKey(
   resourceKey: string,
   quality: number,

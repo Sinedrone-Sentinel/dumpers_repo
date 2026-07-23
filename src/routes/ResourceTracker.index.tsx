@@ -21,6 +21,8 @@ import {
   normalizeStockNoteKey,
   sumStockQuantityTotals,
   buildStockTotalsByResource,
+  buildLocationFilterOptions,
+  cardMatchesLocationFilter,
 } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
@@ -44,9 +46,6 @@ import {
 import type { CraftPlanReduction, CraftStockCardLite } from '../lib/craftFromStock'
 
 type ResourceTrackerTab = InventoryScope | 'can_craft'
-
-/** Sentinel key for stock cards with no note (shown as the "Empty" chip). */
-const EMPTY_LOCATION_KEY = '__empty__'
 
 export default function ResourceTrackerRoute() {
   const { user, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
@@ -186,26 +185,7 @@ export default function ResourceTrackerRoute() {
    */
   const locationFilterOptions = useMemo(() => {
     if (!isPersonalTab) return []
-    const byKey = new Map<string, { label: string; count: number }>()
-    for (const card of stockCards) {
-      const key = normalizeLocationSearch(card.note) || EMPTY_LOCATION_KEY
-      const existing = byKey.get(key)
-      if (existing) {
-        existing.count += 1
-      } else {
-        byKey.set(key, {
-          label: key === EMPTY_LOCATION_KEY ? 'Empty' : (card.note ?? '').trim(),
-          count: 1,
-        })
-      }
-    }
-    return [...byKey.entries()]
-      .map(([key, meta]) => ({ key, label: meta.label, count: meta.count }))
-      .sort((a, b) => {
-        if (a.key === EMPTY_LOCATION_KEY) return -1
-        if (b.key === EMPTY_LOCATION_KEY) return 1
-        return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
-      })
+    return buildLocationFilterOptions(stockCards)
   }, [isPersonalTab, stockCards])
 
   useEffect(() => {
@@ -228,9 +208,7 @@ export default function ResourceTrackerRoute() {
       (card.quality != null && `q${card.quality}`.includes(q)) ||
       (isPersonalTab &&
         normalizeLocationSearch(card.note).includes(normalizeLocationSearch(search)))
-    const cardLocationKey = normalizeLocationSearch(card.note) || EMPTY_LOCATION_KEY
-    const matchesLocation =
-      locationFilter == null || cardLocationKey === locationFilter
+    const matchesLocation = cardMatchesLocationFilter(card.note, locationFilter)
     const matchesQuality =
       qualityFilter === '' || quality === Number(qualityFilter)
     return matchesSearch && matchesLocation && matchesQuality
@@ -249,13 +227,9 @@ export default function ResourceTrackerRoute() {
     return personalInventoryForCanCraft
   }, [isGuest, stockCards, personalInventoryForCanCraft])
 
-  const canCraftQuantityByKey = useMemo(
-    () => buildStockTotalsByResource(canCraftStockCards),
-    [canCraftStockCards]
-  )
   const canCraftHasTrackedStock = useMemo(
-    () => Object.values(canCraftQuantityByKey).some((qty) => qty > 0),
-    [canCraftQuantityByKey]
+    () => canCraftStockCards.some((card) => Number(card.quantity) > 0),
+    [canCraftStockCards]
   )
 
   const craftStockCards = useMemo<CraftStockCardLite[]>(
@@ -711,7 +685,6 @@ export default function ResourceTrackerRoute() {
 
       {isCanCraftTab ? (
         <CanCraftTab
-          quantityByKey={canCraftQuantityByKey}
           hasTrackedStock={canCraftHasTrackedStock}
           stockCardsForCraft={craftStockCards}
           onCraft={handleCraft}

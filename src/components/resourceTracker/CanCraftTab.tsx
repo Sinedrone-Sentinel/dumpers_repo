@@ -18,6 +18,12 @@ import {
   type CraftStockCardLite,
 } from '../../lib/craftFromStock'
 import {
+  ALL_LOCATION_KEY,
+  buildLocationFilterOptions,
+  buildStockTotalsByResource,
+  cardMatchesLocationFilter,
+} from '../../lib/inventoryStock'
+import {
   getResourceTrackerUiScope,
   readResourceTrackerUiState,
   writeResourceTrackerUiState,
@@ -107,15 +113,13 @@ const STATIC_SUBTYPE_OPTIONS: Record<string, string[]> = {
 const formatSubType = formatSubtypeLabel
 
 type CanCraftTabProps = {
-  quantityByKey: Record<string, number>
   hasTrackedStock: boolean
-  /** Per-(resource, quality, note) stock lines used to power the CRAFT button. */
+  /** Per-(resource, quality, note) stock lines used to power craftability + CRAFT. */
   stockCardsForCraft: CraftStockCardLite[]
   onCraft: (reductions: CraftPlanReduction[]) => Promise<{ error?: string }>
 }
 
 export default function CanCraftTab({
-  quantityByKey,
   hasTrackedStock,
   stockCardsForCraft,
   onCraft,
@@ -164,13 +168,42 @@ export default function CanCraftTab({
     id: string
     name: string
   } | null>(null)
+  /** Single-select note scope; ALL = every My Resources card (default). */
+  const [locationFilter, setLocationFilter] = React.useState(ALL_LOCATION_KEY)
 
   const { data: blueprints, isLoading } = useBlueprintData()
   const displayAcquiredBlueprints = myAcquiredBlueprints
 
-  const ownedStockIndex = React.useMemo(
-    () => buildOwnedStockIndex(stockCardsForCraft),
+  const locationFilterOptions = React.useMemo(
+    () => buildLocationFilterOptions(stockCardsForCraft),
     [stockCardsForCraft]
+  )
+
+  React.useEffect(() => {
+    if (
+      locationFilter !== ALL_LOCATION_KEY &&
+      !locationFilterOptions.some((opt) => opt.key === locationFilter)
+    ) {
+      setLocationFilter(ALL_LOCATION_KEY)
+    }
+  }, [locationFilter, locationFilterOptions])
+
+  const scopedStockCards = React.useMemo(
+    () =>
+      stockCardsForCraft.filter((card) =>
+        cardMatchesLocationFilter(card.note, locationFilter)
+      ),
+    [stockCardsForCraft, locationFilter]
+  )
+
+  const quantityByKey = React.useMemo(
+    () => buildStockTotalsByResource(scopedStockCards),
+    [scopedStockCards]
+  )
+
+  const ownedStockIndex = React.useMemo(
+    () => buildOwnedStockIndex(scopedStockCards),
+    [scopedStockCards]
   )
 
   React.useEffect(() => {
@@ -663,8 +696,43 @@ export default function CanCraftTab({
       <p className="mb-4 text-sm text-slate-400 leading-relaxed">
         Acquired blueprints you can craft right now from your tracked{' '}
         <span className="text-slate-300">My Resources</span> stock (any quality tier counts
-        toward the total).
+        toward the total). Use a note chip below to limit craftability and deductions to one
+        location; <span className="text-slate-300">ALL</span> uses every stock card.
       </p>
+
+      {locationFilterOptions.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          <button
+            type="button"
+            onClick={() => setLocationFilter(ALL_LOCATION_KEY)}
+            className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
+              locationFilter === ALL_LOCATION_KEY
+                ? 'site-filter-selected-cyan'
+                : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
+            }`}
+            title="Use stock from every note"
+          >
+            ALL
+            <span className="opacity-70 ml-0.5">({stockCardsForCraft.length})</span>
+          </button>
+          {locationFilterOptions.map((opt) => (
+            <button
+              key={opt.key}
+              type="button"
+              onClick={() => setLocationFilter(opt.key)}
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
+                locationFilter === opt.key
+                  ? 'site-filter-selected-cyan'
+                  : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
+              }`}
+              title={`Normalized as ${opt.key}`}
+            >
+              {opt.label}
+              <span className="opacity-70 ml-0.5">({opt.count})</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       <label className="mb-4 flex items-start gap-2.5 px-3 py-2.5 rounded-lg border border-slate-700/80 bg-slate-900/50 text-sm text-slate-300 cursor-pointer w-fit max-w-full">
         <input
