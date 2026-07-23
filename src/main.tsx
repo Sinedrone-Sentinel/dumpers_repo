@@ -8,15 +8,15 @@ import { MiningLoadoutProvider } from './contexts/MiningLoadoutContext'
 import RouterApp from './components/RouterApp'
 import DfpInitGate from './components/DfpInitGate'
 import './index.css'
-import { setupCacheBusting, checkAppVersion } from './lib/appVersion'
+import { setupCacheBusting } from './lib/appVersion'
 
 const appElement = document.getElementById('root')
 
 if (appElement) {
   const root = ReactDOM.createRoot(appElement)
 
+  // bfcache restore still hard-reloads; deploy mismatch shows UpdateAvailableBanner in AppChrome.
   setupCacheBusting()
-  void checkAppVersion()
 
   root.render(
     <React.StrictMode>

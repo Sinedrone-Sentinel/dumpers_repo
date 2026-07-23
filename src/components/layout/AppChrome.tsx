@@ -9,7 +9,9 @@ import AppSidebar from './AppSidebar'
 import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
+import UpdateAvailableBanner from './UpdateAvailableBanner'
 import SignInMenu from '../auth/SignInMenu'
+import { useAppUpdateAvailable } from '../../hooks/useAppUpdateAvailable'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -55,6 +57,7 @@ export default function AppChrome({
   onExitGuestPreview: _onExitGuestPreview,
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const updateAvailable = useAppUpdateAvailable()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -98,6 +101,7 @@ export default function AppChrome({
       </header>
 
       <div className="site-header-offset flex-1 flex flex-col">
+        {updateAvailable && <UpdateAvailableBanner />}
         {isGuestPreview && <GuestPreviewBanner />}
         {children}
       </div>

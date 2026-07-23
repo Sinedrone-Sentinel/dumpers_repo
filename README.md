@@ -317,7 +317,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
 5. Local dev: `npm run dev` → `http://localhost:5173`
-6. Production build: `npm run build` → `dist/` (also writes `dist/version.json` and regenerates `public/archive-guide.html`)
+6. Production build: `npm run build` → `dist/` (also writes `dist/version.json` for the in-app “site update available” banner, and regenerates `public/archive-guide.html`)
 
 ### Environment variables
 
@@ -325,7 +325,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 |----------|----------|---------|
 | `VITE_SUPABASE_URL` | Yes | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | Yes | Public anon key (frontend only) |
-| `VITE_BUILD_ID` | CI only | Cache busting (set to `GITHUB_SHA` in deploy workflow) |
+| `VITE_BUILD_ID` | CI only | Build id baked into the client; compared to `version.json` so stale tabs show a refresh banner (set to `GITHUB_SHA` in deploy) |
 | `VITE_DFP_ENGINE_BASE_URL` | Dev only | Override DFP host — **not for production franchises** |
 
 Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_KEY` automatically in Supabase.
