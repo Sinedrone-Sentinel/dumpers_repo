@@ -93,8 +93,9 @@ Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**,
 
 ### Resource Tracker (`/resources`)
 
-- Log personal stock by resource and **quality band** (SCU); optional per-row notes
+- Log personal stock by resource and **quality band** (SCU); optional per-row notes (e.g. hangar / ship location)
 - **Cards** view (edit quantities) and **List** view (read-only overview)
+- **Match locations** — when checked, search also matches notes as locations (ignores case, spaces, and punctuation so `arcL1` / `Arc l1` / `ARC-l1` all match)
 - Mined/refined ore uses bands Q500–Q1000; salvage and trade goods use fixed **Purchased (Q0)** tiers
 - **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown
 - **Site Total** rollup (officers and super-admins only) — org-wide inventory aggregate

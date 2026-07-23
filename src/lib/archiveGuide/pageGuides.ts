@@ -114,6 +114,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand; for two or more materials, also those fully stocked except one (that one may be missing). These do not get a Craft button until you have enough',
       'Switch between Cards (edit quantities) and List (read-only overview with notes)',
       'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding',
+      'Check **Match locations** to also search by note/location — ignores case, spaces, and punctuation (`arcL1`, `Arc l1`, and `ARC-l1` all match the same)',
       'Filter by quality band on both views — each Q-tier stays on its own row',
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',
       'Salvage and trade goods use fixed Q0 tiers',

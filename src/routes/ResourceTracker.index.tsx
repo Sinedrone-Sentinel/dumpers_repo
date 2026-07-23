@@ -15,7 +15,13 @@ import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
-import { inventoryLineKey, normalizeStockNoteKey, sumStockQuantityTotals, buildStockTotalsByResource } from '../lib/inventoryStock'
+import {
+  inventoryLineKey,
+  normalizeLocationSearch,
+  normalizeStockNoteKey,
+  sumStockQuantityTotals,
+  buildStockTotalsByResource,
+} from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
   ensureGuestCacheSchema,
@@ -71,7 +77,7 @@ export default function ResourceTrackerRoute() {
   }, [isGuest])
 
   const [search, setSearch] = useState('')
-  const [showInactive, setShowInactive] = useState(false)
+  const [matchLocations, setMatchLocations] = useState(false)
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
   const [qualityFilter, setQualityFilter] = useState<string>('')
   const [editingKey, setEditingKey] = useState<string | null>(null)
@@ -107,14 +113,12 @@ export default function ResourceTrackerRoute() {
     error,
     refresh,
   } = useResourceCatalog({
-    includeInactive: showInactive,
     withInventory: !isGuest,
     inventoryContext,
   })
 
   const { catalogWithInventory: personalInventoryForCanCraft, refresh: refreshPersonalInventory } =
     useResourceCatalog({
-      includeInactive: showInactive,
       withInventory: !isGuest,
       inventoryContext: personalInventoryContext,
     })
@@ -139,7 +143,6 @@ export default function ResourceTrackerRoute() {
         return {
           resource_key: row.resource_key,
           label: catalogEntry?.label ?? row.resource_key,
-          is_active: catalogEntry?.is_active ?? true,
           synced_at: catalogEntry?.synced_at ?? '',
           quantity: row.quantity,
           quality: row.quality,
@@ -175,15 +178,21 @@ export default function ResourceTrackerRoute() {
 
   const filteredCards = stockCards.filter((card) => {
     const quality = card.quality ?? DEFAULT_STOCK_QUALITY
-    const matchesSearch =
-      search === '' ||
-      card.label.toLowerCase().includes(search.toLowerCase()) ||
-      card.resource_key.toLowerCase().includes(search.toLowerCase()) ||
-      (card.quality != null && `q${card.quality}`.includes(search.toLowerCase()))
-    const matchesActive = showInactive || card.is_active
+    const q = search.trim().toLowerCase()
+    const matchesName =
+      q === '' ||
+      card.label.toLowerCase().includes(q) ||
+      card.resource_key.toLowerCase().includes(q) ||
+      (card.quality != null && `q${card.quality}`.includes(q))
+    const locationQuery = normalizeLocationSearch(search)
+    const matchesLocation =
+      matchLocations &&
+      locationQuery !== '' &&
+      normalizeLocationSearch(card.note).includes(locationQuery)
+    const matchesSearch = q === '' || matchesName || matchesLocation
     const matchesQuality =
       qualityFilter === '' || quality === Number(qualityFilter)
-    return matchesSearch && matchesActive && matchesQuality
+    return matchesSearch && matchesQuality
   })
 
   const cardCount = stockCards.length
@@ -430,9 +439,7 @@ export default function ResourceTrackerRoute() {
       return (
         <div
           key={lineKey}
-          className={`min-w-0 bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-4 ${
-            card.is_active ? 'border-slate-700' : 'border-slate-800 opacity-70'
-          }`}
+          className="min-w-0 bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 rounded-xl p-4"
         >
           <div className="flex items-start justify-between gap-2 min-w-0">
             <div className="min-w-0 flex-1">
@@ -440,11 +447,9 @@ export default function ResourceTrackerRoute() {
                 {card.label}
               </h3>
               <p className="text-slate-500 text-xs mt-0.5">
-                {card.is_active
-                  ? isPersonalTab
-                    ? `${qualityLabel} · ${qtyUnit} on hand`
-                    : `${qtyUnit} site-wide total`
-                  : 'Retired — no longer in blueprints'}
+                {isPersonalTab
+                  ? `${qualityLabel} · ${qtyUnit} on hand`
+                  : `${qtyUnit} site-wide total`}
               </p>
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
@@ -505,7 +510,7 @@ export default function ResourceTrackerRoute() {
           </div>
 
           <div className="mt-3 min-h-[6.75rem]">
-            {card.is_active && !readOnly && (
+            {!readOnly && (
               <div className="grid grid-cols-2 gap-1.5 min-w-0">
                 {adjustSteps.map((step) => (
                   <div key={step} className="flex gap-1 min-w-0">
@@ -762,7 +767,11 @@ export default function ResourceTrackerRoute() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={
-            isPersonalTab ? 'Search your stock cards...' : 'Search site totals...'
+            isPersonalTab
+              ? matchLocations
+                ? 'Search stock or locations...'
+                : 'Search your stock cards...'
+              : 'Search site totals...'
           }
           className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
         />
@@ -781,15 +790,20 @@ export default function ResourceTrackerRoute() {
             ))}
           </select>
         )}
-        <label className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer shrink-0">
-          <input
-            type="checkbox"
-            checked={showInactive}
-            onChange={(e) => setShowInactive(e.target.checked)}
-            className="rounded border-slate-500"
-          />
-          Show retired
-        </label>
+        {isPersonalTab && (
+          <label
+            className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer shrink-0"
+            title="Also match stock notes as locations (ignores case, spaces, and punctuation)"
+          >
+            <input
+              type="checkbox"
+              checked={matchLocations}
+              onChange={(e) => setMatchLocations(e.target.checked)}
+              className="rounded border-slate-500"
+            />
+            Match locations
+          </label>
+        )}
       </div>
 
       <div className="relative w-full min-w-0 min-h-[24rem]">

@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `123_market_edit_digest.sql` (marketplace: listing edits post one held, diff-only Discord digest instead of a full-listing re-dump on every save). Apply through `123` in numeric order if catching up.
+**Latest migration:** `124_drop_resource_is_active.sql` (drop unused `blueprint_resources.is_active` / retired-resources flag). Apply through `124` in numeric order if catching up.
 
 ---
 
@@ -154,6 +154,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 86 | `121_inventory_note_line_key.sql` | Resource Tracker: stock cards unique per resource + quality + note (`note_key`); case-insensitive merge on add; note rename RPC takes current note key |
 | 87 | `122_dumper_session_stale_timeout.sql` | BP Dumper live tracker: stale session cleanup after 120s (avoids flicker between 30s pings) |
 | 88 | `123_market_edit_digest.sql` | Marketplace: listing edits (add items / change or remove a line) coalesce into one held, diff-only "Listing Updated" Discord digest; net-zero edits (add then remove) send nothing; new listings still post one full announcement |
+| 89 | `124_drop_resource_is_active.sql` | Drop `blueprint_resources.is_active` and its partial index — resources are never retired from game files |
 
 ### pg_cron (migrations 054, 065–068)
 

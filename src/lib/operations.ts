@@ -1,6 +1,6 @@
 import type { MemberReputationRow } from './reputation'
 import { supabase } from './supabase'
-import { EXTRA_CATALOG_RESOURCE_KEYS, EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
+import { EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
 import {
   extractBlueprintResources,
   type BlueprintWithSlots,
@@ -27,7 +27,6 @@ export type CustomOrderStatus =
 export interface BlueprintResourceRow {
   resource_key: string
   label: string
-  is_active: boolean
   synced_at: string
 }
 
@@ -63,7 +62,6 @@ export interface PersonalInventoryCard {
   quantity: number
   note: string | null
   label: string
-  is_active: boolean
 }
 
 export interface CustomOrderItem {
@@ -177,9 +175,7 @@ export interface OrderFulfillment {
 
 export interface ResourceCatalogSyncResult {
   added: number
-  reactivated: number
-  deactivated: number
-  totalActive: number
+  total: number
 }
 
 export interface CustomOrderResourceLine {
@@ -217,14 +213,12 @@ export async function syncBlueprintResourceCatalog(
   for (const r of EXTRA_CATALOG_RESOURCES) byKey.set(r.resourceKey, r)
 
   const extracted = [...byKey.values()]
-  const activeKeys = new Set(extracted.map((r) => r.resourceKey))
   const now = new Date().toISOString()
 
   if (extracted.length > 0) {
     const payload = extracted.map((resource) => ({
       resource_key: resource.resourceKey,
       label: resource.label,
-      is_active: true,
       synced_at: now,
     }))
 
@@ -240,41 +234,17 @@ export async function syncBlueprintResourceCatalog(
 
   const { data: existing, error: fetchError } = await supabase
     .from('blueprint_resources')
-    .select('resource_key, is_active')
+    .select('resource_key')
 
   if (fetchError) return { error: fetchError.message }
 
-  const toDeactivate = (existing ?? [])
-    .filter(
-      (row) =>
-        row.is_active &&
-        !activeKeys.has(row.resource_key) &&
-        !EXTRA_CATALOG_RESOURCE_KEYS.has(row.resource_key)
-    )
-    .map((row) => row.resource_key)
-
-  if (toDeactivate.length > 0) {
-    const { error: deactivateError } = await supabase
-      .from('blueprint_resources')
-      .update({ is_active: false, synced_at: now })
-      .in('resource_key', toDeactivate)
-
-    if (deactivateError) return { error: deactivateError.message }
-  }
-
   const priorKeys = new Set((existing ?? []).map((row) => row.resource_key))
   const added = extracted.filter((r) => !priorKeys.has(r.resourceKey)).length
-  const reactivated = extracted.filter((r) => {
-    const row = (existing ?? []).find((e) => e.resource_key === r.resourceKey)
-    return row && !row.is_active
-  }).length
 
   return {
     result: {
       added,
-      reactivated,
-      deactivated: toDeactivate.length,
-      totalActive: extracted.length,
+      total: extracted.length,
     },
   }
 }
@@ -312,46 +282,32 @@ export async function fetchPendingCustomOrderCount(): Promise<{
   return { count: Number(data ?? 0) }
 }
 
-export async function fetchResourceCatalog(options?: {
-  includeInactive?: boolean
-}): Promise<{ data: BlueprintResourceRow[]; error?: string }> {
-  let query = supabase
+export async function fetchResourceCatalog(): Promise<{
+  data: BlueprintResourceRow[]
+  error?: string
+}> {
+  const { data, error } = await supabase
     .from('blueprint_resources')
     .select('*')
     .order('label')
-
-  if (!options?.includeInactive) {
-    query = query.eq('is_active', true)
-  }
-
-  const { data, error } = await query
 
   if (error) {
     console.error('[fetchResourceCatalog] Error:', error)
     return { data: [], error: error.message }
   }
 
-  console.log('[fetchResourceCatalog] Fetched', data?.length ?? 0, 'resources')
-
-  // Check for specific items
-  const yormandi = data?.find((r) => r.resource_key === 'yormandi_tongue')
-  const wikelo = data?.find((r) => r.resource_key === 'wikelo_favor')
-  console.log('[fetchResourceCatalog] yormandi_tongue in results:', !!yormandi)
-  console.log('[fetchResourceCatalog] wikelo_favor in results:', !!wikelo)
-
   return { data: (data ?? []) as BlueprintResourceRow[] }
 }
 
 export async function fetchPersonalInventoryCards(
-  ctx: InventoryContext,
-  options?: { includeInactive?: boolean }
+  ctx: InventoryContext
 ): Promise<{ data: PersonalInventoryCard[]; lineKeys: string[]; error?: string }> {
   if (ctx.scope !== 'personal') {
     return { data: [], lineKeys: [], error: 'Personal inventory only' }
   }
 
   const [catalogResult, inventoryResult] = await Promise.all([
-    fetchResourceCatalog(options),
+    fetchResourceCatalog(),
     fetchInventory(ctx),
   ])
 
@@ -375,7 +331,6 @@ export async function fetchPersonalInventoryCards(
         quantity: normalizeResourceQuantity(Number(row.quantity)),
         note: row.note ?? null,
         label: catalog?.label ?? row.resource_key,
-        is_active: catalog?.is_active ?? true,
       }
     })
     .sort((a, b) => {
@@ -388,28 +343,25 @@ export async function fetchPersonalInventoryCards(
 }
 
 export async function fetchResourceCatalogWithInventory(
-  ctx: InventoryContext,
-  options?: {
-    includeInactive?: boolean
-  }
+  ctx: InventoryContext
 ): Promise<{ data: ResourceCatalogEntry[]; error?: string }> {
   if (ctx.scope === 'personal') {
-    const cards = await fetchPersonalInventoryCards(ctx, options)
+    const cards = await fetchPersonalInventoryCards(ctx)
     if (cards.error) return { data: [], error: cards.error }
     return {
       data: cards.data.map((card) => ({
         resource_key: card.resource_key,
         label: card.label,
-        is_active: card.is_active,
         synced_at: '',
         quantity: card.quantity,
         quality: card.quality,
+        note: card.note,
       })),
     }
   }
 
   const [catalogResult, inventoryResult] = await Promise.all([
-    fetchResourceCatalog(options),
+    fetchResourceCatalog(),
     fetchInventory(ctx),
   ])
 
@@ -425,7 +377,6 @@ export async function fetchResourceCatalogWithInventory(
       return {
         resource_key: row.resource_key,
         label: catalog?.label ?? row.resource_key,
-        is_active: catalog?.is_active ?? true,
         synced_at: catalog?.synced_at ?? '',
         quantity: normalizeResourceQuantity(Number(row.quantity)),
       }

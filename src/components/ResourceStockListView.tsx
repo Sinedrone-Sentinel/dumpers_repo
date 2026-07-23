@@ -10,7 +10,6 @@ export type ResourceStockListRow = {
   quality: number
   quantity: number
   note: string | null
-  is_active: boolean
 }
 
 interface ResourceStockListViewProps {
@@ -43,16 +42,13 @@ export default function ResourceStockListView({
             return (
               <tr
                 key={inventoryLineKey(card.resource_key, card.quality, card.note)}
-                className={card.is_active ? 'text-slate-200' : 'text-slate-500 opacity-70'}
+                className="text-slate-200"
               >
                 <td className="px-4 py-2.5">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`font-medium ${resourceLabelClassName(card.resource_key)}`}>
                       {card.label}
                     </span>
-                    {!card.is_active && (
-                      <span className="text-[10px] uppercase text-slate-600">Retired</span>
-                    )}
                     <UexLookupButton commodityName={card.label} emphasis="sell" />
                   </div>
                 </td>

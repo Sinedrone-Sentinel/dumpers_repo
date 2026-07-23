@@ -37,7 +37,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
   const [submitting, setSubmitting] = useState(false)
 
   const activeCatalog = useMemo(
-    () => [...catalog].filter((r) => r.is_active).sort((a, b) => a.label.localeCompare(b.label)),
+    () => [...catalog].sort((a, b) => a.label.localeCompare(b.label)),
     [catalog]
   )
 

@@ -8,6 +8,14 @@ export function normalizeStockNoteKey(note: string | null | undefined): string {
   return trimmed === '' ? '' : trimmed.toLowerCase()
 }
 
+/**
+ * Location-style note search: case-insensitive, ignore whitespace and
+ * punctuation so "arcL1", "Arc l1", "ARC-l1", and "arc_L1" all match "arcl1".
+ */
+export function normalizeLocationSearch(value: string | null | undefined): string {
+  return (value ?? '').toLowerCase().replace(/[^a-z0-9]/g, '')
+}
+
 export function inventoryLineKey(
   resourceKey: string,
   quality: number,

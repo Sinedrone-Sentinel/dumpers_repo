@@ -17,7 +17,6 @@ import {
 interface UseResourceCatalogOptions {
   /** Super-admin only: sync blueprint_resources from game data */
   enableCatalogSync?: boolean
-  includeInactive?: boolean
   withInventory?: boolean
   inventoryContext?: InventoryContext | null
 }
@@ -25,7 +24,6 @@ interface UseResourceCatalogOptions {
 export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
   const {
     enableCatalogSync = false,
-    includeInactive = false,
     withInventory = false,
     inventoryContext = null,
   } = options
@@ -66,19 +64,18 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
     setError(null)
 
     if (withInventory && ctx) {
-      const catalogResult = await fetchResourceCatalog({ includeInactive })
+      const catalogResult = await fetchResourceCatalog()
       if (catalogResult.error) setError(catalogResult.error)
       setCatalog(catalogResult.data)
 
       if (ctx.scope === 'personal') {
-        const cardsResult = await fetchPersonalInventoryCards(ctx, { includeInactive })
+        const cardsResult = await fetchPersonalInventoryCards(ctx)
         if (cardsResult.error && !catalogResult.error) setError(cardsResult.error)
         setPersonalLineKeys(cardsResult.lineKeys)
         setCatalogWithInventory(
           cardsResult.data.map((card) => ({
             resource_key: card.resource_key,
             label: card.label,
-            is_active: card.is_active,
             synced_at: '',
             quantity: card.quantity,
             quality: card.quality,
@@ -87,14 +84,12 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
         )
       } else {
         setPersonalLineKeys([])
-        const { data, error: fetchError } = await fetchResourceCatalogWithInventory(ctx, {
-          includeInactive,
-        })
+        const { data, error: fetchError } = await fetchResourceCatalogWithInventory(ctx)
         if (fetchError && !catalogResult.error) setError(fetchError)
         setCatalogWithInventory(data)
       }
     } else {
-      const { data, error: fetchError } = await fetchResourceCatalog({ includeInactive })
+      const { data, error: fetchError } = await fetchResourceCatalog()
       if (fetchError) setError(fetchError)
       setCatalog(data)
       setCatalogWithInventory([])
@@ -103,7 +98,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
     setLoading(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps -- catalog lengths used for loading state only
-  }, [buildInventoryContext, withInventory, includeInactive])
+  }, [buildInventoryContext, withInventory])
 
   const refresh = useCallback(async () => {
     await loadCatalog()
@@ -140,7 +135,7 @@ export function useResourceCatalog(options: UseResourceCatalogOptions = {}) {
 
     if (cancelled) return
     await loadCatalog()
-  }, [blueprints, enableCatalogSync, inventoryScope, inventoryUserId, withInventory, includeInactive])
+  }, [blueprints, enableCatalogSync, inventoryScope, inventoryUserId, withInventory])
 
   useEffect(() => {
     const onWiped = () => {

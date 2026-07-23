@@ -21,7 +21,6 @@ export const LEDGER_SALVAGE_CATALOG_ENTRIES: BlueprintResourceRow[] = EXTRA_CATA
 ).map((row) => ({
   resource_key: row.resourceKey,
   label: row.label,
-  is_active: true,
   synced_at: '',
 }))
 

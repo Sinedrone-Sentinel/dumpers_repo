@@ -246,7 +246,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
     setSyncResult(result.result ?? null)
     setMessage({
       type: 'success',
-      text: `Catalog synced: ${result.result?.totalActive ?? 0} active resources`,
+      text: `Catalog synced: ${result.result?.total ?? 0} resources`,
     })
   }
 
@@ -413,10 +413,8 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
           </div>
           {syncResult && (
             <div className="text-xs text-emerald-400 bg-emerald-900/30 p-2 rounded-lg">
-              Last sync: {syncResult.totalActive} active
+              Last sync: {syncResult.total} resources
               {syncResult.added > 0 && ` · ${syncResult.added} new`}
-              {syncResult.reactivated > 0 && ` · ${syncResult.reactivated} reactivated`}
-              {syncResult.deactivated > 0 && ` · ${syncResult.deactivated} deactivated`}
             </div>
           )}
           <button
