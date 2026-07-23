@@ -114,7 +114,7 @@ export function quantityStepForResource(resourceKey: string): number {
 }
 
 export function adjustStepsForResource(resourceKey: string): readonly number[] {
-  return isWholeUnitResource(resourceKey) ? [1] : [0.001, 0.01, 0.1, 1]
+  return isWholeUnitResource(resourceKey) ? [1, 5] : [0.001, 0.01, 0.1, 1]
 }
 
 export function parseQuantityForResource(resourceKey: string, input: string): number | null {
