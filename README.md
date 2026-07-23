@@ -188,7 +188,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 ### Discord Webhooks (`/discord-subscribe`)
 
 - **My activity** — your deals moving forward (requires verified RSI Handle)
-- **Marketplace activity** (opt-in) — new/changed listings from other members; coalesced digests for post/cancel bursts
+- **Marketplace activity** (opt-in) — new/changed listings from other members; coalesced digests for post/cancel bursts, and listing edits post one held, diff-only "Listing Updated" (only the changed lines, never a full re-dump)
 - **Support** — staff replies and resolved tickets
 - Per-event URLs; no self-echo on your own posts
 - Super-admins configure org-wide Discord queue, coalesce window, and manual drain from the **Discord** admin modal
