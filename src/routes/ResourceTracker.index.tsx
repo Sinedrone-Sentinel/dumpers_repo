@@ -535,7 +535,7 @@ export default function ResourceTrackerRoute() {
                       onClick={() =>
                         void handleAdjust(card.resource_key, quality, -step, card.note)
                       }
-                      className="flex-1 min-w-0 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded tabular-nums"
+                      className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
                     >
                       −{step}
                     </button>
@@ -543,7 +543,7 @@ export default function ResourceTrackerRoute() {
                       onClick={() =>
                         void handleAdjust(card.resource_key, quality, step, card.note)
                       }
-                      className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
+                      className="flex-1 min-w-0 py-1 text-xs bg-green-950/50 hover:bg-green-900/50 text-green-300 border border-green-500/30 rounded tabular-nums"
                     >
                       +{step}
                     </button>
