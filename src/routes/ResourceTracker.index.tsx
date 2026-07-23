@@ -537,11 +537,13 @@ export default function ResourceTrackerRoute() {
                 <span className="text-slate-500 text-sm">{qtyUnit}</span>
                 {!readOnly && (
                   <button
+                    type="button"
                     onClick={() => {
                       setEditingKey(lineKey)
                       setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
                     }}
-                    className="text-xs text-slate-400 hover:text-white ml-1"
+                    title="Manually set quantity"
+                    className="ml-1 px-2 py-0.5 text-xs font-medium rounded border bg-orange-950/50 text-orange-300 border-orange-500/40 hover:bg-orange-900/60 hover:text-orange-200 transition-colors"
                   >
                     Set
                   </button>

@@ -1,6 +1,10 @@
 import type { MiningData } from '../hooks/useArchiveData'
 import type { BlueprintWithSlots } from './blueprintResources'
-import { slugifyResourceName } from './blueprintResources'
+import {
+  craftMaterialLabel,
+  craftMaterialOptionsForSlot,
+  craftMaterialResourceKey,
+} from './blueprintResources'
 import { findOreByName } from './miningDataHelpers'
 import { getDepositTypes } from './miningClusterProfiles'
 import { isRsTrackerOre, normalizeMiningOreName } from './miningOreCanonical'
@@ -28,17 +32,14 @@ export function extractBlueprintTrackableOres(
   const byKey = new Map<string, BlueprintTrackableOre>()
 
   for (const slot of blueprint.slots ?? []) {
-    for (const option of slot.options ?? []) {
-      if (option.type && option.type !== 'resource') continue
-
-      const label =
-        option.resourceName || option.entityName || option.displayName || option.itemName
+    for (const option of craftMaterialOptionsForSlot(slot)) {
+      const label = craftMaterialLabel(option)
       if (!label) continue
 
       const oreName = normalizeMiningOreName(label)
       if (!isRsTrackerOre(oreName)) continue
 
-      const resourceKey = slugifyResourceName(label)
+      const resourceKey = craftMaterialResourceKey(option)
       if (!resourceKey || byKey.has(resourceKey)) continue
 
       const depositType = pickRsTrackerDepositType(getDepositTypes(oreName))

@@ -108,7 +108,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Log quantities and quality levels of resources you\'ve collected',
       'Track store-purchased refined materials at Purchased (Q0)',
-      '**Can Craft** tab lists acquired blueprints you can make right now from your My Resources stock (same blueprint cards and filters as the Blueprints page)',
+      '**Can Craft** tab lists acquired blueprints you can make right now from your My Resources stock — including recipes that need gems or other whole-unit harvestables (same blueprint cards and filters as the Blueprints page)',
       'Open any ready-to-craft blueprint in the Can Craft tab to find a green **Craft** button under its materials — pick the quality tier to use for each material (only the tiers you actually hold are shown), then craft to deduct the exact amounts from My Resources',
       'The Craft button greys out if the quality you picked for a material doesn\'t have enough on hand, and locks for a couple of seconds after each craft to prevent accidental double-clicks',
       'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand; for two or more materials, also those fully stocked except one (that one may be missing). These do not get a Craft button until you have enough',

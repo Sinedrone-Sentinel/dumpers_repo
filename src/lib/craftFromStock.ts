@@ -4,7 +4,11 @@ import type {
   BlueprintSlot,
   BlueprintWithSlots,
 } from './blueprintResources'
-import { slugifyResourceName } from './blueprintResources'
+import {
+  craftMaterialLabel,
+  craftMaterialOptionsForSlot,
+  craftMaterialResourceKey,
+} from './blueprintResources'
 import { fromMilliScu, toMilliScu } from './resourceQuantity'
 
 /**
@@ -93,17 +97,9 @@ export function buildOwnedStockIndex(cards: CraftStockCardLite[]): OwnedStockInd
   return index
 }
 
-function optionLabel(option: BlueprintRequirementOption): string | null {
-  return (
-    option.resourceName || option.entityName || option.displayName || option.itemName || null
-  )
-}
-
-function resourceOptionForSlot(slot: BlueprintSlot): BlueprintRequirementOption | null {
-  const options = (slot.options ?? []).filter(
-    (option) => !option.type || option.type === 'resource'
-  )
-  return options[0] ?? null
+function materialOptionForSlot(slot: BlueprintSlot): BlueprintRequirementOption | null {
+  // Game blueprints use a single material option per slot today (resource or item/gem).
+  return craftMaterialOptionsForSlot(slot)[0] ?? null
 }
 
 function neededForOption(
@@ -139,11 +135,11 @@ export function buildCraftSlotRequirements(
   const requirements: CraftSlotRequirement[] = []
 
   slots.forEach((slot, slotIndex) => {
-    const option = resourceOptionForSlot(slot)
+    const option = materialOptionForSlot(slot)
     if (!option) return
-    const label = optionLabel(option)
+    const label = craftMaterialLabel(option)
     if (!label) return
-    const resourceKey = slugifyResourceName(label)
+    const resourceKey = craftMaterialResourceKey(option)
     if (!resourceKey) return
 
     const slotCount = slot.requiredCount ?? 1

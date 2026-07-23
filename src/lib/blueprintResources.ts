@@ -37,6 +37,39 @@ export function slugifyResourceName(name: string | null | undefined): string {
     .replace(/^_|_$/g, '')
 }
 
+/**
+ * Crafting options that consume tracked stock.
+ * Game data marks SCU ores/gases as `resource` and gems / harvestables as `item`
+ * (e.g. harvestable_mineral_1h_hadanite) — both are inventory materials.
+ */
+export function isCraftMaterialOption(option: BlueprintRequirementOption): boolean {
+  const t = option.type
+  return !t || t === 'resource' || t === 'item'
+}
+
+export function craftMaterialLabel(option: BlueprintRequirementOption): string | null {
+  return option.resourceName || option.entityName || option.displayName || option.itemName || null
+}
+
+/** Display-name slug → catalog / inventory key when they diverge. */
+const CRAFT_MATERIAL_KEY_ALIASES: Record<string, string> = {
+  // Item options use displayName "Saldynium"; catalog / whole-unit key is saldynium_ore.
+  saldynium: 'saldynium_ore',
+}
+
+export function craftMaterialResourceKey(option: BlueprintRequirementOption): string {
+  const label = craftMaterialLabel(option)
+  const key = slugifyResourceName(label)
+  if (!key) return ''
+  return CRAFT_MATERIAL_KEY_ALIASES[key] ?? key
+}
+
+export function craftMaterialOptionsForSlot(
+  slot: BlueprintSlot
+): BlueprintRequirementOption[] {
+  return (slot.options ?? []).filter(isCraftMaterialOption)
+}
+
 export function extractBlueprintResources(
   blueprints: BlueprintWithSlots[]
 ): ExtractedBlueprintResource[] {
@@ -44,11 +77,11 @@ export function extractBlueprintResources(
 
   for (const blueprint of blueprints) {
     for (const slot of blueprint.slots ?? []) {
-      for (const option of slot.options ?? []) {
-        const label = option.resourceName || option.entityName || option.displayName || option.itemName
+      for (const option of craftMaterialOptionsForSlot(slot)) {
+        const label = craftMaterialLabel(option)
         if (!label) continue
 
-        const resourceKey = slugifyResourceName(label)
+        const resourceKey = craftMaterialResourceKey(option)
         if (!resourceKey) continue
 
         if (!byKey.has(resourceKey)) {
@@ -124,13 +157,11 @@ export function extractOrderLineItemsFromBlueprint(
 
   for (const slot of blueprint.slots ?? []) {
     const slotCount = slot.requiredCount ?? 1
-    for (const option of slot.options ?? []) {
-      if (option.type && option.type !== 'resource') continue
-
-      const label = option.resourceName || option.entityName || option.displayName || option.itemName
+    for (const option of craftMaterialOptionsForSlot(slot)) {
+      const label = craftMaterialLabel(option)
       if (!label) continue
 
-      const resourceKey = slugifyResourceName(label)
+      const resourceKey = craftMaterialResourceKey(option)
       if (!resourceKey) continue
 
       const add = quantityPerCraftForOption(option, slotCount, resourceKey) * craftQty

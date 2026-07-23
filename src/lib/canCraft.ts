@@ -1,10 +1,13 @@
 import { isWholeUnitResource } from '../config/resourceTypes'
 import type {
   BlueprintRequirementOption,
-  BlueprintSlot,
   BlueprintWithSlots,
 } from './blueprintResources'
-import { slugifyResourceName } from './blueprintResources'
+import {
+  craftMaterialLabel,
+  craftMaterialOptionsForSlot,
+  craftMaterialResourceKey,
+} from './blueprintResources'
 import { fromMilliScu, toMilliScu } from './resourceQuantity'
 
 /** Minimum stock ratio (have ÷ need) to count as "within 30% of enough". */
@@ -21,14 +24,6 @@ function quantityPerCraftForOption(
   }
   const units = option.standardCargoUnits ?? option.quantity ?? 0
   return fromMilliScu(toMilliScu(units) * slotCount)
-}
-
-function resourceOptionsForSlot(slot: BlueprintSlot): BlueprintRequirementOption[] {
-  return (slot.options ?? []).filter((option) => !option.type || option.type === 'resource')
-}
-
-function optionLabel(option: BlueprintRequirementOption): string | null {
-  return option.resourceName || option.entityName || option.displayName || option.itemName || null
 }
 
 function hasEnoughStock(resourceKey: string, need: number, have: number): boolean {
@@ -62,17 +57,17 @@ function aggregateBestSlotRequirements(
   const totals = new Map<string, { need: number; have: number }>()
 
   for (const slot of slots) {
-    const resourceOptions = resourceOptionsForSlot(slot)
-    if (resourceOptions.length === 0) return null
+    const materialOptions = craftMaterialOptionsForSlot(slot)
+    if (materialOptions.length === 0) return null
 
     const slotCount = slot.requiredCount ?? 1
     let best: { resourceKey: string; need: number; have: number; ratio: number } | null = null
 
-    for (const option of resourceOptions) {
-      const label = optionLabel(option)
+    for (const option of materialOptions) {
+      const label = craftMaterialLabel(option)
       if (!label) continue
 
-      const resourceKey = slugifyResourceName(label)
+      const resourceKey = craftMaterialResourceKey(option)
       if (!resourceKey) continue
 
       const need = quantityPerCraftForOption(option, slotCount, resourceKey) * craftQty
@@ -101,7 +96,7 @@ function aggregateBestSlotRequirements(
   return totals
 }
 
-/** True when every slot has a resource option the tracked inventory can satisfy (OR per slot). */
+/** True when every slot has a material option the tracked inventory can satisfy (OR per slot). */
 export function canCraftBlueprint(
   blueprint: BlueprintWithSlots,
   quantityByKey: Record<string, number>,
