@@ -16,14 +16,18 @@
     @apply bg-slate-900/98 border-b border-orange-500/20 shadow-lg shadow-orange-950/20;
   }
 
-  /* h-14 header height */
+  /* Fixed header stack height (nav h-14, plus optional update banner). */
+  :root {
+    --site-header-height: 3.5rem;
+  }
+
   .site-header-offset {
-    padding-top: 3.5rem;
+    padding-top: var(--site-header-height);
   }
 
   /* Legacy offset for any remaining usage */
   .site-main-offset {
-    padding-top: 3.5rem;
+    padding-top: var(--site-header-height);
   }
 
   /*

@@ -112,7 +112,8 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       <div
         ref={sidebarRef}
         className={`
-          fixed top-14 left-0 w-64 max-h-[calc(100vh-4.5rem)] bg-slate-900 border border-slate-700 
+          fixed top-[var(--site-header-height,3.5rem)] left-0 w-64
+          max-h-[calc(100vh-var(--site-header-height,3.5rem)-0.5rem)] bg-slate-900 border border-slate-700
           rounded-r-xl shadow-2xl z-[80] transition-transform duration-200 ease-out overflow-hidden
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
