@@ -45,6 +45,9 @@ import type { CraftPlanReduction, CraftStockCardLite } from '../lib/craftFromSto
 
 type ResourceTrackerTab = InventoryScope | 'can_craft'
 
+/** Sentinel key for stock cards with no note (shown as the "Empty" chip). */
+const EMPTY_LOCATION_KEY = '__empty__'
+
 export default function ResourceTrackerRoute() {
   const { user, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
   const isGuest = !user && isGuestPreview
@@ -77,7 +80,6 @@ export default function ResourceTrackerRoute() {
   }, [isGuest])
 
   const [search, setSearch] = useState('')
-  const [matchLocations, setMatchLocations] = useState(false)
   const [locationFilter, setLocationFilter] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
   const [qualityFilter, setQualityFilter] = useState<string>('')
@@ -177,33 +179,44 @@ export default function ResourceTrackerRoute() {
     return [...seen.entries()].sort((a, b) => a[0] - b[0])
   }, [stockCards])
 
-  /** Unique note locations (normalized key → display label + card count). */
+  /**
+   * Unique note locations from current stock cards. Recomputed whenever stock
+   * loads or a card is added/edited/removed (stockCards changes). Cards with
+   * no note group under an "Empty" chip.
+   */
   const locationFilterOptions = useMemo(() => {
+    if (!isPersonalTab) return []
     const byKey = new Map<string, { label: string; count: number }>()
     for (const card of stockCards) {
-      const key = normalizeLocationSearch(card.note)
-      if (!key) continue
+      const key = normalizeLocationSearch(card.note) || EMPTY_LOCATION_KEY
       const existing = byKey.get(key)
       if (existing) {
         existing.count += 1
       } else {
-        byKey.set(key, { label: (card.note ?? '').trim(), count: 1 })
+        byKey.set(key, {
+          label: key === EMPTY_LOCATION_KEY ? 'Empty' : (card.note ?? '').trim(),
+          count: 1,
+        })
       }
     }
     return [...byKey.entries()]
       .map(([key, meta]) => ({ key, label: meta.label, count: meta.count }))
-      .sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: 'base' }))
-  }, [stockCards])
+      .sort((a, b) => {
+        if (a.key === EMPTY_LOCATION_KEY) return -1
+        if (b.key === EMPTY_LOCATION_KEY) return 1
+        return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
+      })
+  }, [isPersonalTab, stockCards])
 
   useEffect(() => {
-    if (!matchLocations) {
+    if (!isPersonalTab) {
       setLocationFilter(null)
       return
     }
     if (locationFilter && !locationFilterOptions.some((opt) => opt.key === locationFilter)) {
       setLocationFilter(null)
     }
-  }, [matchLocations, locationFilter, locationFilterOptions])
+  }, [isPersonalTab, locationFilter, locationFilterOptions])
 
   const filteredCards = stockCards.filter((card) => {
     const quality = card.quality ?? DEFAULT_STOCK_QUALITY
@@ -213,12 +226,11 @@ export default function ResourceTrackerRoute() {
       card.label.toLowerCase().includes(q) ||
       card.resource_key.toLowerCase().includes(q) ||
       (card.quality != null && `q${card.quality}`.includes(q)) ||
-      (matchLocations &&
+      (isPersonalTab &&
         normalizeLocationSearch(card.note).includes(normalizeLocationSearch(search)))
+    const cardLocationKey = normalizeLocationSearch(card.note) || EMPTY_LOCATION_KEY
     const matchesLocation =
-      !matchLocations ||
-      locationFilter == null ||
-      normalizeLocationSearch(card.note) === locationFilter
+      locationFilter == null || cardLocationKey === locationFilter
     const matchesQuality =
       qualityFilter === '' || quality === Number(qualityFilter)
     return matchesSearch && matchesLocation && matchesQuality
@@ -796,11 +808,7 @@ export default function ResourceTrackerRoute() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={
-            isPersonalTab
-              ? matchLocations
-                ? 'Search stock or locations...'
-                : 'Search your stock cards...'
-              : 'Search site totals...'
+            isPersonalTab ? 'Search stock or locations...' : 'Search site totals...'
           }
           className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
         />
@@ -819,48 +827,28 @@ export default function ResourceTrackerRoute() {
             ))}
           </select>
         )}
-        {isPersonalTab && (
-          <label
-            className="flex items-center gap-2 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-slate-300 text-sm cursor-pointer shrink-0"
-            title="Show filter buttons for each unique stock note (locations). Variants like Arc L1 / arc-l1 count as one."
-          >
-            <input
-              type="checkbox"
-              checked={matchLocations}
-              onChange={(e) => setMatchLocations(e.target.checked)}
-              className="rounded border-slate-500"
-            />
-            Match locations
-          </label>
-        )}
       </div>
 
-      {isPersonalTab && matchLocations && (
+      {isPersonalTab && locationFilterOptions.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-4">
-          {locationFilterOptions.length === 0 ? (
-            <p className="text-slate-500 text-xs">
-              No location notes yet — add a note on a stock card to filter by it here.
-            </p>
-          ) : (
-            locationFilterOptions.map((opt) => (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() =>
-                  setLocationFilter(locationFilter === opt.key ? null : opt.key)
-                }
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
-                  locationFilter === opt.key
-                    ? 'site-filter-selected-cyan'
-                    : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
-                }`}
-                title={`Normalized as ${opt.key}`}
-              >
-                {opt.label}
-                <span className="opacity-70 ml-0.5">({opt.count})</span>
-              </button>
-            ))
-          )}
+          {locationFilterOptions.map((opt) => (
+            <button
+              key={opt.key}
+              type="button"
+              onClick={() =>
+                setLocationFilter(locationFilter === opt.key ? null : opt.key)
+              }
+              className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
+                locationFilter === opt.key
+                  ? 'site-filter-selected-cyan'
+                  : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
+              }`}
+              title={`Normalized as ${opt.key}`}
+            >
+              {opt.label}
+              <span className="opacity-70 ml-0.5">({opt.count})</span>
+            </button>
+          ))}
         </div>
       )}
 
