@@ -172,7 +172,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
     setView('responses')
   }
 
-  const save = async () => {
+  const saveDraft = async (opts?: { quiet?: boolean }): Promise<string | null> => {
     setLoading(true)
     setMessage(null)
     const result = await adminSaveQuestionnaire({
@@ -186,29 +186,43 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       availability_unit: editor.availability_unit,
       questions: editor.questions,
     })
-    setLoading(false)
     if (result.error) {
+      setLoading(false)
       setMessage({ type: 'err', text: result.error })
-      return
+      return null
     }
-    setMessage({ type: 'ok', text: 'Saved draft' })
-    setEditor((e) => ({ ...e, id: result.id ?? e.id, status: 'draft' }))
-    await refreshList()
+    const id = result.id ?? editor.id
+    if (!id) {
+      setLoading(false)
+      setMessage({ type: 'err', text: 'Save failed — no questionnaire id returned' })
+      return null
+    }
+    setEditor((e) => ({ ...e, id, status: 'draft' }))
+    if (!opts?.quiet) {
+      setMessage({ type: 'ok', text: 'Saved draft' })
+      setLoading(false)
+      await refreshList()
+    }
+    return id
+  }
+
+  const save = async () => {
+    await saveDraft()
   }
 
   const activate = async () => {
-    if (!editor.id) {
-      setMessage({ type: 'err', text: 'Save the draft first' })
-      return
-    }
-    setLoading(true)
-    const result = await adminActivateQuestionnaire(editor.id)
+    // Persist current editor state first (new drafts or unsaved edits).
+    const id = await saveDraft({ quiet: true })
+    if (!id) return
+
+    const result = await adminActivateQuestionnaire(id)
     setLoading(false)
     if (result.error) {
       setMessage({ type: 'err', text: result.error })
+      await refreshList()
       return
     }
-    setMessage({ type: 'ok', text: 'Activated — eligible users notified' })
+    setMessage({ type: 'ok', text: 'Saved, activated, and notified eligible users' })
     setView('list')
     await refreshList()
   }
@@ -663,8 +677,9 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                 </button>
                 <button
                   type="button"
-                  disabled={loading || !editor.id}
+                  disabled={loading}
                   onClick={() => void activate()}
+                  title="Saves the current form, then activates and notifies eligible users"
                   className="px-3 py-2 text-sm rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white disabled:opacity-50"
                 >
                   Activate & notify
