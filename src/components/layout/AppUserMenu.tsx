@@ -20,6 +20,7 @@ interface AppUserMenuProps {
   onOpenDbActions: () => void
   onOpenDiscord: () => void
   onOpenAdmin: () => void
+  onOpenQuestionnairesAdmin?: () => void
   onOpenSupport: () => void
   onSignOut: () => void
 }
@@ -50,6 +51,7 @@ export default function AppUserMenu({
   onOpenDbActions,
   onOpenDiscord,
   onOpenAdmin,
+  onOpenQuestionnairesAdmin,
   onOpenSupport,
   onSignOut,
 }: AppUserMenuProps) {
@@ -465,6 +467,18 @@ export default function AppUserMenu({
                 >
                   Discord
                 </button>
+                {onOpenQuestionnairesAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenQuestionnairesAdmin()
+                    }}
+                    className="w-full px-4 py-2 text-left text-cyan-300 hover:bg-slate-700 transition-colors"
+                  >
+                    Questionnaires
+                  </button>
+                )}
                 {showDbActionsButton && (
                   <button
                     type="button"

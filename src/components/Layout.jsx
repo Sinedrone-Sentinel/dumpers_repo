@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Outlet } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import { BpDumperModalProvider, useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { UiOverlayProvider } from '../contexts/UiOverlayContext'
 import { getVisibleNavGroups } from '../config/appNav'
 import { supabase } from '../lib/supabase'
+import {
+  declineQuestionnaire,
+  listPendingQuestionnaires,
+} from '../lib/questionnaires'
 import Login from './Login'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
@@ -13,6 +17,8 @@ import DbActionsModal from './DbActionsModal'
 import DiscordSettingsModal from './DiscordSettingsModal'
 import WelcomeModal from './WelcomeModal'
 import SupportTicketsModal from './SupportTicketsModal'
+import QuestionnairesAdminModal from './questionnaires/QuestionnairesAdminModal'
+import QuestionnaireModal from './questionnaires/QuestionnaireModal'
 import MarketplaceBottomStack from './marketplace/MarketplaceBottomStack'
 import AppChrome from './layout/AppChrome'
 import AnalyticsTracker from './AnalyticsTracker'
@@ -44,8 +50,23 @@ function LayoutContent({
   setShowSupportModal,
   showWelcomeModal,
   setShowWelcomeModal,
+  showQuestionnairesAdmin,
+  setShowQuestionnairesAdmin,
+  fillQuestionnaireId,
+  setFillQuestionnaireId,
+  guestPending,
+  refreshPendingQuestionnaires,
 }) {
   const { openBpDumperModal } = useBpDumperModal()
+
+  const handleDeclineGuest = async () => {
+    if (!guestPending?.id) return
+    const result = await declineQuestionnaire(guestPending.id, true)
+    if (!result.error) {
+      setFillQuestionnaireId(null)
+      void refreshPendingQuestionnaires()
+    }
+  }
 
   return (
     <>
@@ -61,6 +82,19 @@ function LayoutContent({
         showSettingsButton={showSettingsButton}
         showDbActionsButton={showDbActionsButton}
         showAdminPanelButton={showAdminPanelButton}
+        guestQuestionnaireBanner={
+          isGuestPreview && guestPending
+            ? { title: guestPending.title }
+            : null
+        }
+        onOpenGuestQuestionnaire={() => {
+          if (guestPending?.id) setFillQuestionnaireId(guestPending.id)
+        }}
+        onDeclineGuestQuestionnaire={() => void handleDeclineGuest()}
+        onOpenQuestionnaire={(id) => setFillQuestionnaireId(id)}
+        onOpenQuestionnairesAdmin={
+          isSuperAdmin ? () => setShowQuestionnairesAdmin(true) : undefined
+        }
         onOpenSettings={() => setShowProfileSettings(true)}
         onOpenBpDumper={openBpDumperModal}
         onOpenDbActions={() => setShowDbActions(true)}
@@ -86,6 +120,19 @@ function LayoutContent({
       )}
       {!isGuestPreview && showWelcomeModal && (
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
+      )}
+      {!isGuestPreview && isSuperAdmin && showQuestionnairesAdmin && (
+        <QuestionnairesAdminModal onClose={() => setShowQuestionnairesAdmin(false)} />
+      )}
+      {fillQuestionnaireId && (
+        <QuestionnaireModal
+          questionnaireId={fillQuestionnaireId}
+          isGuest={isGuestPreview}
+          onClose={() => setFillQuestionnaireId(null)}
+          onResolved={() => {
+            void refreshPendingQuestionnaires()
+          }}
+        />
       )}
 
       {isApproved && !isGuestPreview && (
@@ -124,7 +171,27 @@ export default function Layout() {
   const [showDiscordSettings, setShowDiscordSettings] = useState(false)
   const [showWelcomeModal, setShowWelcomeModal] = useState(false)
   const [showSupportModal, setShowSupportModal] = useState(false)
+  const [showQuestionnairesAdmin, setShowQuestionnairesAdmin] = useState(false)
+  const [fillQuestionnaireId, setFillQuestionnaireId] = useState(null)
+  const [guestPending, setGuestPending] = useState(null)
   const [welcomeChecked, setWelcomeChecked] = useState(false)
+
+  const refreshPendingQuestionnaires = useCallback(async () => {
+    if (!isGuestPreview && !user) {
+      setGuestPending(null)
+      return
+    }
+    const result = await listPendingQuestionnaires(Boolean(isGuestPreview))
+    if (result.error) {
+      setGuestPending(null)
+      return
+    }
+    setGuestPending(isGuestPreview ? result.data[0] ?? null : null)
+  }, [isGuestPreview, user])
+
+  useEffect(() => {
+    void refreshPendingQuestionnaires()
+  }, [refreshPendingQuestionnaires])
 
   useEffect(() => {
     if (!user || !isApproved || isGuestPreview || welcomeChecked) return
@@ -186,6 +253,12 @@ export default function Layout() {
           setShowSupportModal={setShowSupportModal}
           showWelcomeModal={showWelcomeModal}
           setShowWelcomeModal={setShowWelcomeModal}
+          showQuestionnairesAdmin={showQuestionnairesAdmin}
+          setShowQuestionnairesAdmin={setShowQuestionnairesAdmin}
+          fillQuestionnaireId={fillQuestionnaireId}
+          setFillQuestionnaireId={setFillQuestionnaireId}
+          guestPending={guestPending}
+          refreshPendingQuestionnaires={refreshPendingQuestionnaires}
         />
       </BpDumperModalProvider>
     </UiOverlayProvider>

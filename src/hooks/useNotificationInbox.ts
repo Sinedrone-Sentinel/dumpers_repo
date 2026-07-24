@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchUserNotifications, type UserNotification } from '../lib/operations'
+import { syncQuestionnaireNotificationsForMe } from '../lib/questionnaires'
 import { useAsyncEffect } from './useAsyncEffect'
 
 const POLL_MS = 30_000
@@ -33,12 +34,17 @@ export function useNotificationInbox(disabled: boolean) {
   }, [])
 
   const refresh = useCallback(async () => {
+    // Keep questionnaire bell items accurate (drop stale; add for late joiners).
+    await syncQuestionnaireNotificationsForMe()
     const result = await fetchUserNotifications()
     if (!result.error) applyNotifications(result.data)
   }, [applyNotifications])
 
   useAsyncEffect(async (controls) => {
     if (disabled || !tabVisible) return
+
+    await syncQuestionnaireNotificationsForMe()
+    if (controls.cancelled) return
 
     const result = await fetchUserNotifications()
     if (controls.cancelled || result.error) return

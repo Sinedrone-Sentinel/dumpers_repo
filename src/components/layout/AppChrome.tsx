@@ -10,6 +10,7 @@ import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
 import UpdateAvailableBanner from './UpdateAvailableBanner'
+import QuestionnaireAvailableBanner from './QuestionnaireAvailableBanner'
 import SignInMenu from '../auth/SignInMenu'
 import { useAppUpdateAvailable } from '../../hooks/useAppUpdateAvailable'
 
@@ -25,6 +26,11 @@ interface AppChromeProps {
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
+  guestQuestionnaireBanner?: { title: string } | null
+  onOpenGuestQuestionnaire?: () => void
+  onDeclineGuestQuestionnaire?: () => void
+  onOpenQuestionnaire?: (questionnaireId: string) => void
+  onOpenQuestionnairesAdmin?: () => void
   onOpenSettings: () => void
   onOpenBpDumper: () => void
   onOpenDbActions: () => void
@@ -47,6 +53,11 @@ export default function AppChrome({
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
+  guestQuestionnaireBanner = null,
+  onOpenGuestQuestionnaire,
+  onDeclineGuestQuestionnaire,
+  onOpenQuestionnaire,
+  onOpenQuestionnairesAdmin,
   onOpenSettings,
   onOpenBpDumper,
   onOpenDbActions,
@@ -59,6 +70,9 @@ export default function AppChrome({
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const updateAvailable = useAppUpdateAvailable()
   const headerRef = useRef<HTMLElement>(null)
+  const showGuestQuestionnaireBanner = Boolean(
+    isGuestPreview && guestQuestionnaireBanner && onOpenGuestQuestionnaire && onDeclineGuestQuestionnaire
+  )
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -82,7 +96,7 @@ export default function AppChrome({
       observer.disconnect()
       document.documentElement.style.removeProperty('--site-header-height')
     }
-  }, [updateAvailable])
+  }, [updateAvailable, showGuestQuestionnaireBanner])
 
   return (
     <div className="site-page-bg min-h-screen flex flex-col">
@@ -91,6 +105,13 @@ export default function AppChrome({
         className="fixed top-0 inset-x-0 z-40 flex flex-col overflow-visible"
       >
         {updateAvailable && <UpdateAvailableBanner />}
+        {showGuestQuestionnaireBanner && guestQuestionnaireBanner && (
+          <QuestionnaireAvailableBanner
+            title={guestQuestionnaireBanner.title}
+            onOpen={() => onOpenGuestQuestionnaire?.()}
+            onDecline={() => onDeclineGuestQuestionnaire?.()}
+          />
+        )}
         <div className="site-app-header">
           <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
             <AppSidebar groups={navGroups} />
@@ -102,7 +123,10 @@ export default function AppChrome({
                 <SignInMenu />
               ) : (
                 <>
-                  <AppNotificationBell disabled={isPending} />
+                  <AppNotificationBell
+                    disabled={isPending}
+                    onOpenQuestionnaire={onOpenQuestionnaire}
+                  />
                   <AppUserMenu
                     displayName={displayName}
                     profile={profile}
@@ -117,6 +141,7 @@ export default function AppChrome({
                     onOpenDbActions={onOpenDbActions}
                     onOpenDiscord={onOpenDiscord}
                     onOpenAdmin={onOpenAdmin}
+                    onOpenQuestionnairesAdmin={onOpenQuestionnairesAdmin}
                     onOpenSupport={onOpenSupport}
                     onSignOut={onSignOut}
                   />

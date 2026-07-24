@@ -1,0 +1,766 @@
+import React, { useCallback, useEffect, useState } from 'react'
+import AppModal from '../layout/AppModal'
+import QuestionnaireModal from './QuestionnaireModal'
+import {
+  type AnonymousResponseRow,
+  type AvailabilityUnit,
+  type QuestionnaireListItem,
+  type QuestionnaireQuestion,
+  type QuestionType,
+  adminActivateQuestionnaire,
+  adminArchiveQuestionnaire,
+  adminDeleteQuestionnaire,
+  adminGetQuestionnaire,
+  adminListQuestionnaireResponses,
+  adminListQuestionnaires,
+  adminSaveQuestionnaire,
+} from '../../lib/questionnaires'
+
+type View = 'list' | 'edit' | 'responses'
+
+type EditorState = {
+  id: string | null
+  title: string
+  description: string
+  audience_guest: boolean
+  audience_registered: boolean
+  audience_rsi_verified: boolean
+  availability_value: number
+  availability_unit: AvailabilityUnit
+  questions: QuestionnaireQuestion[]
+  status?: string
+}
+
+function emptyEditor(): EditorState {
+  return {
+    id: null,
+    title: '',
+    description: '',
+    audience_guest: false,
+    audience_registered: true,
+    audience_rsi_verified: false,
+    availability_value: 7,
+    availability_unit: 'days',
+    questions: [
+      {
+        prompt: '',
+        required: true,
+        question_type: 'text',
+        config: { minLength: 0, maxLength: 500 },
+      },
+    ],
+  }
+}
+
+type OptionTally = {
+  questionId: string
+  prompt: string
+  questionType: 'radio' | 'checkbox'
+  counts: Array<{ option: string; count: number }>
+}
+
+function buildOptionTallies(rows: AnonymousResponseRow[]): OptionTally[] {
+  const byQuestion = new Map<
+    string,
+    { prompt: string; questionType: 'radio' | 'checkbox'; counts: Map<string, number> }
+  >()
+
+  for (const row of rows) {
+    for (const answer of row.answers) {
+      if (answer.question_type !== 'radio' && answer.question_type !== 'checkbox') continue
+      let entry = byQuestion.get(answer.question_id)
+      if (!entry) {
+        entry = {
+          prompt: answer.prompt,
+          questionType: answer.question_type,
+          counts: new Map(),
+        }
+        byQuestion.set(answer.question_id, entry)
+      }
+      if (answer.question_type === 'radio') {
+        const opt = String(answer.value.option ?? '')
+        if (!opt) continue
+        entry.counts.set(opt, (entry.counts.get(opt) ?? 0) + 1)
+      } else {
+        const opts = Array.isArray(answer.value.options)
+          ? (answer.value.options as string[])
+          : []
+        for (const opt of opts) {
+          entry.counts.set(opt, (entry.counts.get(opt) ?? 0) + 1)
+        }
+      }
+    }
+  }
+
+  return [...byQuestion.entries()].map(([questionId, entry]) => ({
+    questionId,
+    prompt: entry.prompt,
+    questionType: entry.questionType,
+    counts: [...entry.counts.entries()]
+      .map(([option, count]) => ({ option, count }))
+      .sort((a, b) => b.count - a.count || a.option.localeCompare(b.option)),
+  }))
+}
+
+export default function QuestionnairesAdminModal({ onClose }: { onClose: () => void }) {
+  const [view, setView] = useState<View>('list')
+  const [items, setItems] = useState<QuestionnaireListItem[]>([])
+  const [editor, setEditor] = useState<EditorState>(emptyEditor)
+  const [responses, setResponses] = useState<AnonymousResponseRow[]>([])
+  const [responsesTitle, setResponsesTitle] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
+  const [previewId, setPreviewId] = useState<string | null>(null)
+
+  const refreshList = useCallback(async () => {
+    setLoading(true)
+    const result = await adminListQuestionnaires()
+    setLoading(false)
+    if (result.error) {
+      setMessage({ type: 'err', text: result.error })
+      return
+    }
+    setItems(result.data)
+  }, [])
+
+  useEffect(() => {
+    void refreshList()
+  }, [refreshList])
+
+  const openNew = () => {
+    setEditor(emptyEditor())
+    setView('edit')
+    setMessage(null)
+  }
+
+  const openEdit = async (id: string) => {
+    setLoading(true)
+    const result = await adminGetQuestionnaire(id)
+    setLoading(false)
+    if (result.error || !result.data) {
+      setMessage({ type: 'err', text: result.error || 'Failed to load' })
+      return
+    }
+    const d = result.data
+    setEditor({
+      id: d.id,
+      title: d.title,
+      description: d.description,
+      audience_guest: d.audience_guest,
+      audience_registered: d.audience_registered,
+      audience_rsi_verified: d.audience_rsi_verified,
+      availability_value: d.availability_value,
+      availability_unit: d.availability_unit,
+      questions: d.questions.length
+        ? d.questions
+        : emptyEditor().questions,
+      status: d.status,
+    })
+    setView('edit')
+  }
+
+  const openResponses = async (item: QuestionnaireListItem) => {
+    setLoading(true)
+    setResponsesTitle(item.title)
+    const result = await adminListQuestionnaireResponses(item.id)
+    setLoading(false)
+    if (result.error) {
+      setMessage({ type: 'err', text: result.error })
+      return
+    }
+    setResponses(result.data)
+    setView('responses')
+  }
+
+  const save = async () => {
+    setLoading(true)
+    setMessage(null)
+    const result = await adminSaveQuestionnaire({
+      id: editor.id,
+      title: editor.title,
+      description: editor.description,
+      audience_guest: editor.audience_guest,
+      audience_registered: editor.audience_registered,
+      audience_rsi_verified: editor.audience_rsi_verified,
+      availability_value: editor.availability_value,
+      availability_unit: editor.availability_unit,
+      questions: editor.questions,
+    })
+    setLoading(false)
+    if (result.error) {
+      setMessage({ type: 'err', text: result.error })
+      return
+    }
+    setMessage({ type: 'ok', text: 'Saved draft' })
+    setEditor((e) => ({ ...e, id: result.id ?? e.id, status: 'draft' }))
+    await refreshList()
+  }
+
+  const activate = async () => {
+    if (!editor.id) {
+      setMessage({ type: 'err', text: 'Save the draft first' })
+      return
+    }
+    setLoading(true)
+    const result = await adminActivateQuestionnaire(editor.id)
+    setLoading(false)
+    if (result.error) {
+      setMessage({ type: 'err', text: result.error })
+      return
+    }
+    setMessage({ type: 'ok', text: 'Activated — eligible users notified' })
+    setView('list')
+    await refreshList()
+  }
+
+  const updateQuestion = (index: number, patch: Partial<QuestionnaireQuestion>) => {
+    setEditor((prev) => {
+      const questions = [...prev.questions]
+      questions[index] = { ...questions[index], ...patch }
+      return { ...prev, questions }
+    })
+  }
+
+  const moveQuestion = (index: number, dir: -1 | 1) => {
+    setEditor((prev) => {
+      const next = index + dir
+      if (next < 0 || next >= prev.questions.length) return prev
+      const questions = [...prev.questions]
+      const tmp = questions[index]
+      questions[index] = questions[next]
+      questions[next] = tmp
+      return { ...prev, questions }
+    })
+  }
+
+  return (
+    <AppModal
+      title="Questionnaires"
+      subtitle="Super-admin · responses are anonymous"
+      onClose={onClose}
+      size="3xl"
+      zIndex={70}
+      headerExtra={
+        view !== 'list' ? (
+          <button
+            type="button"
+            onClick={() => {
+              setView('list')
+              setMessage(null)
+              void refreshList()
+            }}
+            className="text-xs text-cyan-300 hover:text-cyan-200"
+          >
+            ← Back to list
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={openNew}
+            className="px-2.5 py-1 text-xs rounded-lg bg-red-800/80 hover:bg-red-700 text-white"
+          >
+            New
+          </button>
+        )
+      }
+    >
+      {message && (
+        <div
+          className={`mb-3 p-2 rounded-lg text-sm border ${
+            message.type === 'ok'
+              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200'
+              : 'bg-red-950/40 border-red-500/40 text-red-200'
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
+
+      {view === 'list' && (
+        <div className="space-y-2">
+          {loading && items.length === 0 ? (
+            <p className="text-slate-400 text-sm">Loading…</p>
+          ) : items.length === 0 ? (
+            <p className="text-slate-400 text-sm">No questionnaires yet.</p>
+          ) : (
+            items.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-lg border border-slate-700 bg-slate-900/50 p-3 flex flex-wrap gap-2 justify-between"
+              >
+                <div className="min-w-0">
+                  <p className="text-slate-100 font-medium">{item.title}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {item.status}
+                    {' · '}
+                    {item.availability_value} {item.availability_unit}
+                    {item.available_until
+                      ? ` · until ${new Date(item.available_until).toLocaleString()}`
+                      : ''}
+                    {' · '}
+                    {item.question_count} q · {item.response_count} anon responses ·{' '}
+                    {item.declined_count} declined
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Audience:{' '}
+                    {[
+                      item.audience_guest ? 'guest' : null,
+                      item.audience_registered ? 'registered' : null,
+                      item.audience_rsi_verified ? 'RSI verified' : null,
+                    ]
+                      .filter(Boolean)
+                      .join(', ')}
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-1.5 items-start">
+                  {item.status !== 'active' && (
+                    <button
+                      type="button"
+                      className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300"
+                      onClick={() => void openEdit(item.id)}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="px-2 py-1 text-xs rounded border border-cyan-700 text-cyan-200"
+                    onClick={() => setPreviewId(item.id)}
+                  >
+                    Preview
+                  </button>
+                  <button
+                    type="button"
+                    className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300"
+                    onClick={() => void openResponses(item)}
+                  >
+                    Responses
+                  </button>
+                  {item.status === 'active' && (
+                    <button
+                      type="button"
+                      className="px-2 py-1 text-xs rounded border border-amber-700 text-amber-200"
+                      onClick={async () => {
+                        const r = await adminArchiveQuestionnaire(item.id)
+                        if (r.error) setMessage({ type: 'err', text: r.error })
+                        else void refreshList()
+                      }}
+                    >
+                      Archive
+                    </button>
+                  )}
+                  {item.status !== 'active' && (
+                    <button
+                      type="button"
+                      className="px-2 py-1 text-xs rounded border border-red-800 text-red-300"
+                      onClick={async () => {
+                        if (!confirm('Delete this questionnaire?')) return
+                        const r = await adminDeleteQuestionnaire(item.id)
+                        if (r.error) setMessage({ type: 'err', text: r.error })
+                        else void refreshList()
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {view === 'edit' && (
+        <div className="space-y-4">
+          {editor.status === 'active' && (
+            <p className="text-amber-200 text-sm">Active questionnaires cannot be edited.</p>
+          )}
+          <label className="block text-sm text-slate-300">
+            Title
+            <input
+              value={editor.title}
+              disabled={editor.status === 'active'}
+              onChange={(e) => setEditor((p) => ({ ...p, title: e.target.value }))}
+              className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-600 text-white"
+            />
+          </label>
+          <label className="block text-sm text-slate-300">
+            Description
+            <textarea
+              value={editor.description}
+              disabled={editor.status === 'active'}
+              onChange={(e) => setEditor((p) => ({ ...p, description: e.target.value }))}
+              rows={2}
+              className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-600 text-white"
+            />
+          </label>
+          <div className="flex flex-wrap gap-4 text-sm text-slate-300">
+            {(
+              [
+                ['audience_guest', 'Guests'],
+                ['audience_registered', 'Registered'],
+                ['audience_rsi_verified', 'RSI verified'],
+              ] as const
+            ).map(([key, label]) => (
+              <label key={key} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  disabled={editor.status === 'active'}
+                  checked={editor[key]}
+                  onChange={(e) => setEditor((p) => ({ ...p, [key]: e.target.checked }))}
+                />
+                {label}
+              </label>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-end gap-2 text-sm text-slate-300">
+            <label>
+              Available for
+              <input
+                type="number"
+                min={1}
+                max={3650}
+                disabled={editor.status === 'active'}
+                value={editor.availability_value}
+                onChange={(e) =>
+                  setEditor((p) => ({
+                    ...p,
+                    availability_value: Math.max(1, Number(e.target.value) || 1),
+                  }))
+                }
+                className="mt-1 block w-24 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-600 text-white"
+              />
+            </label>
+            <select
+              disabled={editor.status === 'active'}
+              value={editor.availability_unit}
+              onChange={(e) =>
+                setEditor((p) => ({
+                  ...p,
+                  availability_unit: e.target.value as AvailabilityUnit,
+                }))
+              }
+              className="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-600 text-white"
+            >
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+            </select>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-slate-200">Questions</p>
+              {editor.status !== 'active' && (
+                <button
+                  type="button"
+                  className="text-xs text-cyan-300"
+                  onClick={() =>
+                    setEditor((p) => ({
+                      ...p,
+                      questions: [
+                        ...p.questions,
+                        {
+                          prompt: '',
+                          required: true,
+                          question_type: 'text',
+                          config: { minLength: 0, maxLength: 500 },
+                        },
+                      ],
+                    }))
+                  }
+                >
+                  + Add question
+                </button>
+              )}
+            </div>
+            {editor.questions.map((q, index) => (
+              <div
+                key={index}
+                className="rounded-lg border border-slate-700 p-3 space-y-2 bg-slate-900/40"
+              >
+                <div className="flex flex-wrap gap-2 items-center">
+                  <select
+                    disabled={editor.status === 'active'}
+                    value={q.question_type}
+                    onChange={(e) => {
+                      const question_type = e.target.value as QuestionType
+                      const config =
+                        question_type === 'text'
+                          ? { minLength: 0, maxLength: 500 }
+                          : question_type === 'checkbox'
+                            ? { options: ['Option A', 'Option B'], minSelected: 1, maxSelected: 10 }
+                            : { options: ['Option A', 'Option B'] }
+                      updateQuestion(index, { question_type, config })
+                    }}
+                    className="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-600 text-white"
+                  >
+                    <option value="text">Text</option>
+                    <option value="radio">Radio (one)</option>
+                    <option value="checkbox">Checkbox (multi)</option>
+                  </select>
+                  <label className="flex items-center gap-1 text-xs text-slate-400">
+                    <input
+                      type="checkbox"
+                      disabled={editor.status === 'active'}
+                      checked={q.required}
+                      onChange={(e) => updateQuestion(index, { required: e.target.checked })}
+                    />
+                    Required
+                  </label>
+                  <button
+                    type="button"
+                    className="text-xs text-slate-400"
+                    disabled={editor.status === 'active'}
+                    onClick={() => moveQuestion(index, -1)}
+                  >
+                    Up
+                  </button>
+                  <button
+                    type="button"
+                    className="text-xs text-slate-400"
+                    disabled={editor.status === 'active'}
+                    onClick={() => moveQuestion(index, 1)}
+                  >
+                    Down
+                  </button>
+                  <button
+                    type="button"
+                    className="text-xs text-red-400 ml-auto"
+                    disabled={editor.status === 'active' || editor.questions.length <= 1}
+                    onClick={() =>
+                      setEditor((p) => ({
+                        ...p,
+                        questions: p.questions.filter((_, i) => i !== index),
+                      }))
+                    }
+                  >
+                    Remove
+                  </button>
+                </div>
+                <input
+                  disabled={editor.status === 'active'}
+                  value={q.prompt}
+                  onChange={(e) => updateQuestion(index, { prompt: e.target.value })}
+                  placeholder="Question prompt"
+                  className="w-full px-2 py-1.5 rounded bg-slate-950 border border-slate-600 text-white text-sm"
+                />
+                {q.question_type === 'text' && (
+                  <div className="flex flex-wrap gap-3 text-xs text-slate-400">
+                    <label>
+                      Min chars
+                      <input
+                        type="number"
+                        min={0}
+                        disabled={editor.status === 'active'}
+                        value={q.config.minLength ?? 0}
+                        onChange={(e) =>
+                          updateQuestion(index, {
+                            config: {
+                              ...q.config,
+                              minLength: Math.max(0, Number(e.target.value) || 0),
+                            },
+                          })
+                        }
+                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                      />
+                    </label>
+                    <label>
+                      Max chars
+                      <input
+                        type="number"
+                        min={1}
+                        disabled={editor.status === 'active'}
+                        value={q.config.maxLength ?? 500}
+                        onChange={(e) =>
+                          updateQuestion(index, {
+                            config: {
+                              ...q.config,
+                              maxLength: Math.max(1, Number(e.target.value) || 1),
+                            },
+                          })
+                        }
+                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                      />
+                    </label>
+                  </div>
+                )}
+                {(q.question_type === 'radio' || q.question_type === 'checkbox') && (
+                  <label className="block text-xs text-slate-400">
+                    Options (one per line)
+                    <textarea
+                      disabled={editor.status === 'active'}
+                      rows={3}
+                      value={(q.config.options ?? []).join('\n')}
+                      onChange={(e) =>
+                        updateQuestion(index, {
+                          config: {
+                            ...q.config,
+                            options: e.target.value
+                              .split('\n')
+                              .map((s) => s.trim())
+                              .filter(Boolean),
+                          },
+                        })
+                      }
+                      className="mt-1 w-full px-2 py-1.5 rounded bg-slate-950 border border-slate-600 text-white text-sm"
+                    />
+                  </label>
+                )}
+                {q.question_type === 'checkbox' && (
+                  <div className="flex flex-wrap gap-3 text-xs text-slate-400">
+                    <label>
+                      Min selected
+                      <input
+                        type="number"
+                        min={0}
+                        disabled={editor.status === 'active'}
+                        value={q.config.minSelected ?? (q.required ? 1 : 0)}
+                        onChange={(e) =>
+                          updateQuestion(index, {
+                            config: {
+                              ...q.config,
+                              minSelected: Math.max(0, Number(e.target.value) || 0),
+                            },
+                          })
+                        }
+                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                      />
+                    </label>
+                    <label>
+                      Max selected
+                      <input
+                        type="number"
+                        min={1}
+                        disabled={editor.status === 'active'}
+                        value={q.config.maxSelected ?? 10}
+                        onChange={(e) =>
+                          updateQuestion(index, {
+                            config: {
+                              ...q.config,
+                              maxSelected: Math.max(1, Number(e.target.value) || 1),
+                            },
+                          })
+                        }
+                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {editor.status !== 'active' && (
+              <>
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={() => void save()}
+                  className="px-3 py-2 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white"
+                >
+                  Save draft
+                </button>
+                <button
+                  type="button"
+                  disabled={loading || !editor.id}
+                  onClick={() => void activate()}
+                  className="px-3 py-2 text-sm rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white disabled:opacity-50"
+                >
+                  Activate & notify
+                </button>
+              </>
+            )}
+            {editor.id && (
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => setPreviewId(editor.id)}
+                className="px-3 py-2 text-sm rounded-lg border border-cyan-700 text-cyan-200 hover:bg-cyan-950/50"
+              >
+                Preview as user
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {view === 'responses' && (
+        <div className="space-y-3">
+          <p className="text-sm text-slate-300">
+            Anonymous responses for <span className="text-white font-medium">{responsesTitle}</span>
+          </p>
+          <p className="text-xs text-slate-500">Responses are anonymous — no user identity is shown.</p>
+          {responses.length === 0 ? (
+            <p className="text-slate-500 text-sm">No responses yet.</p>
+          ) : (
+            <ResponsesWithTallies responses={responses} />
+          )}
+        </div>
+      )}
+
+      {previewId && (
+        <QuestionnaireModal
+          questionnaireId={previewId}
+          isGuest={false}
+          previewMode
+          onClose={() => setPreviewId(null)}
+        />
+      )}
+    </AppModal>
+  )
+}
+
+function ResponsesWithTallies({ responses }: { responses: AnonymousResponseRow[] }) {
+  const tallies = buildOptionTallies(responses)
+  return (
+    <>
+      {tallies.length > 0 && (
+        <div className="rounded-lg border border-slate-700 p-3 bg-slate-900/60 space-y-3">
+          <p className="text-sm font-medium text-slate-200">Option tallies</p>
+          {tallies.map((tally) => (
+            <div key={tally.questionId}>
+              <p className="text-xs text-slate-400 mb-1">
+                {tally.prompt}{' '}
+                <span className="text-slate-600">({tally.questionType})</span>
+              </p>
+              <ul className="space-y-0.5">
+                {tally.counts.map((row) => (
+                  <li
+                    key={row.option}
+                    className="flex justify-between gap-3 text-sm text-slate-200"
+                  >
+                    <span className="truncate">{row.option}</span>
+                    <span className="tabular-nums text-slate-400 shrink-0">{row.count}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+      {responses.map((r, i) => (
+        <div key={r.id} className="rounded-lg border border-slate-700 p-3 bg-slate-900/40">
+          <p className="text-xs text-slate-500 mb-2">
+            Response #{responses.length - i} · {new Date(r.submitted_at).toLocaleString()}
+          </p>
+          <ul className="space-y-2">
+            {r.answers.map((a) => (
+              <li key={a.question_id} className="text-sm">
+                <p className="text-slate-400">{a.prompt}</p>
+                <p className="text-slate-100">
+                  {a.question_type === 'text' && String(a.value.text ?? '')}
+                  {a.question_type === 'radio' && String(a.value.option ?? '')}
+                  {a.question_type === 'checkbox' &&
+                    (Array.isArray(a.value.options)
+                      ? (a.value.options as string[]).join(', ')
+                      : '')}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </>
+  )
+}

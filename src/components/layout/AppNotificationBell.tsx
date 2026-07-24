@@ -16,9 +16,13 @@ import {
 
 interface AppNotificationBellProps {
   disabled?: boolean
+  onOpenQuestionnaire?: (questionnaireId: string) => void
 }
 
-export default function AppNotificationBell({ disabled = false }: AppNotificationBellProps) {
+export default function AppNotificationBell({
+  disabled = false,
+  onOpenQuestionnaire,
+}: AppNotificationBellProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -191,7 +195,11 @@ export default function AppNotificationBell({ disabled = false }: AppNotificatio
                                   {visual && <NotificationStatusIcon variant={visual} />}
                                   <div className="min-w-0">
                                     <p className="font-medium text-slate-200">{notification.title}</p>
-                                    <NotificationBody notification={notification} onNavigate={close} />
+                                    <NotificationBody
+                                      notification={notification}
+                                      onNavigate={close}
+                                      onOpenQuestionnaire={onOpenQuestionnaire}
+                                    />
                                   </div>
                                 </div>
                                 <button
