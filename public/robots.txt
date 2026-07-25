@@ -1,0 +1,20 @@
+# Dumper's Repo — public tools are crawlable; staff surfaces stay private.
+User-agent: *
+Allow: /
+Allow: /wikelo
+Allow: /targets
+Allow: /resources
+Allow: /mining-tracker
+Allow: /commodity-lookup
+Allow: /archive
+Allow: /bazaar
+Allow: /archive-guide.html
+
+Disallow: /analytics
+Disallow: /support-dashboard
+Disallow: /discord-subscribe
+Disallow: /orders
+Disallow: /targets/live
+Disallow: /guest-locked
+
+Sitemap: https://dumpers-repo.com/sitemap.xml

@@ -32,7 +32,8 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 
 | Route | Page | Access |
 |-------|------|--------|
-| `/` | Blueprints | Offline + members |
+| `/` (signed out) | Public SEO landing | Everyone — Sign in or Browse tools offline |
+| `/` (offline / signed in) | Blueprints | Offline + members |
 | `/wikelo` | Wikelo | Offline + members |
 | `/targets` | Mission Tracker | Offline + members |
 | `/targets/live` | Live Mission Tracker | Members (BP Dumper watch mode) |
@@ -250,7 +251,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 ## Offline Mode
 
-Works without an account in the browser:
+Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**) to use tools in the browser without an account:
 
 - Blueprints (acquired marks), Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), Archive, Bazaar listing-count teaser
 
@@ -317,7 +318,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
 5. Local dev: `npm run dev` → `http://localhost:5173`
-6. Production build: `npm run build` → `dist/` (also writes `dist/version.json` for the in-app “site update available” banner, and regenerates `public/archive-guide.html`)
+6. Production build: `npm run build` → `dist/` (injects SEO meta, prerenders public routes for crawlers, writes `sitemap.xml` + `version.json`, regenerates `public/archive-guide.html`). First-time Playwright setup: `npx playwright install chromium`
 
 ### Environment variables
 
@@ -344,7 +345,9 @@ Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_
 | Script | Purpose |
 |--------|---------|
 | `npm run dev` | Vite dev server |
-| `npm run build` | Production build + version stamp + archive guide |
+| `npm run build` | Production build + SEO prerender/sitemap + version stamp + archive guide |
+| `npm run prerender-seo` | Re-prerender public routes into `dist/` (after `vite build`) |
+| `npm run generate-sitemap` | Write `dist/sitemap.xml` |
 | `npm run lint` | ESLint on `src/` |
 | `npm run generate-archive-guide` | Regenerate `public/archive-guide.html` |
 | `npm run validate-blueprints` | Catalog validation after parse |

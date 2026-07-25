@@ -19,7 +19,7 @@ export const OFFLINE_MODE_SECTION = {
   id: 'offline-mode',
   title: 'Offline Mode',
   intro:
-    'Want to try out the tools before signing up? **Offline Mode** lets you explore most features without creating an account.',
+    'Want to try out the tools before signing up? From the public home page, choose **Browse tools offline** (or **Continue in Offline Mode**). Offline Mode lets you explore most features without creating an account.',
   worksOffline: [
     'Browse all blueprints and archive data',
     'Mark blueprints as acquired (local only)',

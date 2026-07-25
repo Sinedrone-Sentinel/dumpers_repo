@@ -82,9 +82,10 @@ Franchises may customize these values in `src/config/site.ts`:
 
 | Constant | Purpose | Customizable |
 |----------|---------|--------------|
-| `SITE_URL` | Canonical URL for SEO | Yes |
-| `SITE_TITLE` | Browser title, meta tags | Yes |
-| `SITE_DESCRIPTION` | Meta description | Yes |
+| `SITE_URL` | Canonical URL for SEO (apex preferred; redirect www→apex at the host) | Yes |
+| `SITE_TITLE` | Default browser title / OG fallback (per-route titles in `src/config/seo.ts`) | Yes |
+| `SITE_DESCRIPTION` | Default meta description / OG fallback | Yes |
+| `SEO_GOOGLE_SITE_VERIFICATION` | Optional Search Console HTML-tag token (`src/config/seo.ts`) | Yes |
 | `SITE_COPYRIGHT` | Footer copyright text | Yes (per TRADEMARK.md) |
 | `SITE_SLOGAN` | Tagline displayed in UI | Yes |
 | `SITE_BRAND_*` | Dumper's Repo header colors, fonts, product mark | No (see LICENSE) |
@@ -112,6 +113,16 @@ Also update `index.html` for:
 - `og:*` meta tags
 - `twitter:*` meta tags
 - Canonical URL
+
+`npm run build` also:
+- Injects `SITE_*` into `index.html` / `dist/index.html`
+- Prerenders public/offline routes (Playwright Chromium) so crawlers see real HTML
+- Writes `dist/sitemap.xml` (see `public/robots.txt`)
+- Copies the SPA shell to `dist/404.html` for GitHub Pages deep links
+
+Install browsers once locally: `npx playwright install chromium`. CI does this in the deploy workflow.
+
+After go-live: verify the property in Google Search Console, set `SEO_GOOGLE_SITE_VERIFICATION` if using the meta-tag method, and submit `https://YOUR_DOMAIN/sitemap.xml`. Prefer a single canonical host (apex **or** www) with a 301 redirect for the other.
 
 ## DFP Engine (Important)
 

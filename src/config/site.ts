@@ -14,17 +14,18 @@ export const SITE_OG_IMAGE_PATH = '/og-image.png' as const
 // =============================================================================
 /** Your franchise's canonical URL (used for SEO, og:url) — must match the host GitHub Pages serves without redirect (apex, not www). */
 export const SITE_URL = 'https://dumpers-repo.com' as const
-/** Browser tab title and og:title */
-export const SITE_TITLE = "Dumper's Repo — Buy. Craft. Sell." as const
+/** Browser tab title and og:title (hub / fallback; per-route overrides in seo.ts) */
+export const SITE_TITLE =
+  "Dumper's Repo — Star Citizen Tools for Blueprints, Crafting & Orgs" as const
 /** Meta description and og:description */
 export const SITE_DESCRIPTION =
-  "Dumper's Repo — Buy. Craft. Sell. Blueprint tracking, mining tools, custom orders, resource coordination, and member marketplace for Star Citizen." as const
+  "Free Star Citizen tools hub: crafting blueprints, mission rewards, mining and resource trackers, Dumper's Fair-Value Price (DFP), and an org member marketplace. Explore offline — no account required." as const
 export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 /** Tagline shown in UI */
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
 /** Footer copyright - customize with your org name per TRADEMARK.md */
 export const SITE_COPYRIGHT =
-  '© 2026 Black Star - All Blueprints Subject to Change Every Patch' as const
+  '© 2026 Black Star - All data is subject to change every patch' as const
 
 // =============================================================================
 // DFP CONFIGURATION - DO NOT MODIFY (required per LICENSE)

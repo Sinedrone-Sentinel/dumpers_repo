@@ -9,7 +9,8 @@ import {
   declineQuestionnaire,
   listPendingQuestionnaires,
 } from '../lib/questionnaires'
-import Login from './Login'
+import PublicSeoLanding from './seo/PublicSeoLanding'
+import SeoHead from './seo/SeoHead'
 import BannedAccount from './BannedAccount'
 import AdminPanel from './AdminPanel'
 import ProfileSettings from './ProfileSettings'
@@ -159,6 +160,7 @@ export default function Layout() {
     canUseFeature,
     isSuperAdmin,
     isGuestPreview,
+    enterGuestPreview,
     exitGuestPreview,
   } = useAuth()
   const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
@@ -221,11 +223,17 @@ export default function Layout() {
   }
 
   if (!user && !isGuestPreview) {
-    return <Login />
+    return (
+      <>
+        <SeoHead />
+        <PublicSeoLanding onBrowseOffline={enterGuestPreview} />
+      </>
+    )
   }
 
   return (
     <UiOverlayProvider>
+      <SeoHead />
       <BpDumperModalProvider>
         <LayoutContent
           navGroups={navGroups}
