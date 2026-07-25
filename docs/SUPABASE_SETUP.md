@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `127_questionnaire_exclude_creator.sql` (creators never get participant prompts for their own questionnaires). Apply through `127` in numeric order if catching up.
+**Latest migration:** `128_discord_market_webhook_url_dedupe.sql` (Discord delivery: one POST per unique webhook URL for market/personal/legacy lookups). Apply through `128` in numeric order if catching up.
 
 ---
 
@@ -158,6 +158,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 90 | `125_questionnaires.sql` | Custom questionnaires: super-admin builder, audience targeting, availability window, anonymous answers, submit/decline dispositions, notify fan-out |
 | 91 | `126_questionnaire_notification_sync.sql` | `sync_questionnaire_notifications_for_me` — remove stale questionnaire bell items; create missing ones for late-eligible users |
 | 92 | `127_questionnaire_exclude_creator.sql` | Exclude questionnaire `created_by` from activate fan-out, pending list, sync, and fill/decline |
+| 93 | `128_discord_market_webhook_url_dedupe.sql` | Deduplicate market/personal/legacy Discord webhook lookups by `webhook_url` (fixes coalesced marketplace triple-posts when WTB/WTS/cancel share one channel) |
 
 ### pg_cron (migrations 054, 065–068)
 

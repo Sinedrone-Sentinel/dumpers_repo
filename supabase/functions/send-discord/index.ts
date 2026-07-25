@@ -185,6 +185,18 @@ async function sendToWebhook(
   }
 }
 
+/** One POST per unique webhook URL (per-event rows often share a channel URL). */
+function uniqueWebhooksByUrl(webhooks: Webhook[]): Webhook[] {
+  const seen = new Set<string>()
+  const unique: Webhook[] = []
+  for (const webhook of webhooks) {
+    if (seen.has(webhook.webhook_url)) continue
+    seen.add(webhook.webhook_url)
+    unique.push(webhook)
+  }
+  return unique
+}
+
 async function deliverToWebhooks(
   supabase: ReturnType<typeof createClient>,
   webhooks: Webhook[],
@@ -193,8 +205,9 @@ async function deliverToWebhooks(
   let sent = 0
   let lastError: string | undefined
   const safeEmbed = sanitizeEmbed(embed)
+  const targets = uniqueWebhooksByUrl(webhooks)
 
-  for (const webhook of webhooks) {
+  for (const webhook of targets) {
     const result = await sendToWebhook(webhook.webhook_url, safeEmbed, webhook.webhook_name)
 
     await supabase.rpc('record_discord_webhook_result', {
@@ -210,7 +223,7 @@ async function deliverToWebhooks(
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
-  return { sent, attempted: webhooks.length, lastError }
+  return { sent, attempted: targets.length, lastError }
 }
 
 serve(async (req) => {
