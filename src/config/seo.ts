@@ -36,9 +36,9 @@ export const SEO_SITEMAP_PATHS = [
 
 const pages: Record<string, SeoPageConfig> = {
   '/': {
-    title: "Dumper's Repo — Star Citizen Tools for Blueprints, Crafting & Orgs",
+    title: "Dumper's Repo — Star Citizen Tools for Blueprints, Crafting & Trade",
     description:
-      "Free Star Citizen tools hub: browse crafting blueprints and mission rewards, track resources and mining, plan with Dumper's Fair-Value Price (DFP), and run an org member marketplace. Works offline — no account required to explore.",
+      "Free Star Citizen tools hub: browse crafting blueprints and mission rewards, track resources and mining, plan with Dumper's Fair-Value Price (DFP), and use a community marketplace. Works offline — no account required to explore.",
     canonicalPath: '/',
   },
   '/wikelo': {
@@ -62,7 +62,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/mining-tracker': {
     title: "Mining Tracker — Star Citizen Ore Guide & Ledgers | Dumper's Repo",
     description:
-      'Star Citizen mining tools: ore properties, location guidance, RS tracking, and crew mining ledgers for org operations.',
+      'Star Citizen mining tools: ore properties, location guidance, RS tracking, and crew mining ledgers.',
     canonicalPath: '/mining-tracker',
   },
   '/commodity-lookup': {
@@ -78,9 +78,9 @@ const pages: Record<string, SeoPageConfig> = {
     canonicalPath: '/archive',
   },
   '/bazaar': {
-    title: "The Bazaar — Org Member Marketplace | Dumper's Repo",
+    title: "The Bazaar — Community Marketplace | Dumper's Repo",
     description:
-      'Shop and fulfill Star Citizen org member WTB and WTS listings. Sign in to trade crafted gear and blueprints with your franchise.',
+      'Shop and fulfill Star Citizen member WTB and WTS listings. Sign in to trade crafted gear and blueprints with your community.',
     canonicalPath: '/bazaar',
   },
   '/orders': {
@@ -142,7 +142,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
         url,
         logo: absoluteUrl('/favicon.png'),
         description:
-          'Star Citizen org tools for crafting blueprints, mining, resources, and member marketplace.',
+          'Star Citizen tools for crafting blueprints, mining, resources, and a community marketplace.',
       },
       {
         '@type': 'SoftwareApplication',
@@ -162,7 +162,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           'Mission reward and blueprint tracker',
           'Resource and mining trackers',
           "Dumper's Fair-Value Price (DFP)",
-          'Org member WTB/WTS marketplace',
+          'Community WTB/WTS marketplace',
           'BP Dumper Game.log sync',
         ],
       },

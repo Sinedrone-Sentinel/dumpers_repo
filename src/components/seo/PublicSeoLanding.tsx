@@ -7,47 +7,67 @@ import { buildJsonLdGraph } from '../../config/seo'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 
-const FEATURES = [
+type FeatureCard = {
+  title: string
+  body: string
+  href?: string
+  /** Offline tools vs sign-in for member-only features like the marketplace */
+  action: 'offline' | 'signin'
+  cta: string
+}
+
+const FEATURES: FeatureCard[] = [
   {
     title: 'Crafting blueprints',
-    body: 'Browse Star Citizen craftable items, materials, quality bands, and Dumper\'s Fair-Value Price (DFP) estimates — filter by type, manufacturer, and acquisition.',
+    body: "Browse Star Citizen craftable items, materials, quality bands, and Dumper's Fair-Value Price (DFP) estimates — filter by type, manufacturer, and acquisition.",
     href: '/',
+    action: 'offline',
+    cta: 'Open in Offline Mode →',
   },
   {
     title: 'Blueprint missions',
     body: 'Look up which reputation contracts reward crafting blueprints, build a wishlist, and sync unlocks with BP Dumper watch mode.',
     href: '/targets',
+    action: 'offline',
+    cta: 'Open in Offline Mode →',
   },
   {
     title: 'Wikelo Emporium',
     body: 'Every Wikelo barter trade in one place — hand-ins, rewards, customer rank, and blueprint tags.',
     href: '/wikelo',
+    action: 'offline',
+    cta: 'Open in Offline Mode →',
   },
   {
     title: 'Mining & resources',
     body: 'Ore guidance, RS tracking, crew mining ledgers, and a personal resource stock tracker for fabricator planning.',
     href: '/mining-tracker',
+    action: 'offline',
+    cta: 'Open in Offline Mode →',
   },
   {
     title: 'Commodity lookup',
     body: 'Quick commodity reference with DFP bases for trading and crafting cost context.',
     href: '/commodity-lookup',
+    action: 'offline',
+    cta: 'Open in Offline Mode →',
   },
   {
-    title: 'Org marketplace',
-    body: 'Member WTB/WTS listings and The Bazaar for your franchise — craft, list, and fulfill inside the org.',
-    href: '/bazaar',
+    title: 'Community marketplace',
+    body: 'Member WTB/WTS listings and The Bazaar — craft, list, and fulfill with your community after you sign in.',
+    action: 'signin',
+    cta: 'Sign in to use the marketplace →',
   },
-] as const
+]
 
 const FAQS = [
   {
     q: 'Do I need an account to use Star Citizen tools here?',
-    a: 'No. Choose Browse tools offline to explore blueprints, missions, mining, resources, Wikelo, and the archive in this browser. Sign in when you want cloud sync, marketplace, and BP Dumper.',
+    a: 'No. Choose Browse tools offline to explore blueprints, missions, mining, resources, Wikelo, and the archive in this browser. Sign in when you want cloud sync, the community marketplace, and BP Dumper.',
   },
   {
-    q: 'What is Dumper\'s Fair-Value Price (DFP)?',
-    a: 'DFP is a proprietary fair-value estimate for crafted gear and materials so org members can price WTB/WTS listings consistently. It is shown on blueprint and resource tools when enabled by the franchise.',
+    q: "What is Dumper's Fair-Value Price (DFP)?",
+    a: "DFP is a proprietary fair-value estimate for crafted gear and materials so members can price WTB/WTS listings consistently. It is shown on blueprint and resource tools when enabled on this site.",
   },
   {
     q: 'How do crafting blueprints unlock in Star Citizen?',
@@ -58,8 +78,8 @@ const FAQS = [
     a: 'BP Dumper is a desktop Game.log watcher that syncs newly acquired blueprints to your account and powers the Live Mission Tracker while you play.',
   },
   {
-    q: 'Is this only for one organization?',
-    a: 'Dumper\'s Repo is franchise software. This deployment serves its host org; other orgs can run their own instance. Tools like the blueprint browser work in Offline Mode for anyone visiting.',
+    q: 'Who is this site for?',
+    a: "Anyone can browse the tools in Offline Mode. Signed-in members get sync, BP Dumper, and the community marketplace on this deployment.",
   },
 ] as const
 
@@ -105,6 +125,14 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
     void navigate({ to: path as never })
   }
 
+  const onFeatureClick = (feature: FeatureCard) => {
+    if (feature.action === 'signin') {
+      document.getElementById('sign-in')?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    goOffline(feature.href ?? '/')
+  }
+
   return (
     <div className="site-page-bg min-h-screen text-slate-200">
       <div className="relative overflow-hidden">
@@ -120,12 +148,11 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
         <header className="relative mx-auto max-w-6xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14">
           <SiteBrandTitle size="hero" layout="stacked" slogan={SITE_SLOGAN} titleAs="p" />
           <h1 className="mx-auto mt-8 max-w-3xl text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl">
-            Star Citizen tools for blueprints, crafting missions, mining, and org trade
+            Star Citizen tools for blueprints, crafting missions, mining, and community trade
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
-            One franchise hub to browse craftable items, track blueprint unlocks, plan resources, and
-            run a member marketplace — with Offline Mode for instant access and sign-in when you want
-            sync.
+            Browse craftable items, track blueprint unlocks, plan resources, and use a member
+            marketplace — with Offline Mode for instant access and sign-in when you want sync.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
@@ -146,22 +173,22 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
 
         <section className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="features-heading">
           <h2 id="features-heading" className="text-center text-xl font-semibold text-white sm:text-2xl">
-            What you can do
+            Some of what you can do
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-slate-400">
-            Built for pilots who craft, mine, and trade with their org — not a generic wiki clone.
+            Practical tools for crafting, mining, missions, and community trade — ready when you are.
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((feature) => (
               <li key={feature.title}>
                 <button
                   type="button"
-                  onClick={() => goOffline(feature.href)}
+                  onClick={() => onFeatureClick(feature)}
                   className="flex h-full w-full flex-col rounded-2xl border border-slate-700/80 bg-slate-900/50 p-5 text-left transition hover:border-orange-500/40 hover:bg-slate-900/80"
                 >
                   <span className="text-base font-semibold text-white">{feature.title}</span>
                   <span className="mt-2 text-sm leading-relaxed text-slate-400">{feature.body}</span>
-                  <span className="mt-4 text-xs font-medium text-orange-400">Open in Offline Mode →</span>
+                  <span className="mt-4 text-xs font-medium text-orange-400">{feature.cta}</span>
                 </button>
               </li>
             ))}

@@ -16,10 +16,10 @@ export const SITE_OG_IMAGE_PATH = '/og-image.png' as const
 export const SITE_URL = 'https://dumpers-repo.com' as const
 /** Browser tab title and og:title (hub / fallback; per-route overrides in seo.ts) */
 export const SITE_TITLE =
-  "Dumper's Repo — Star Citizen Tools for Blueprints, Crafting & Orgs" as const
+  "Dumper's Repo — Star Citizen Tools for Blueprints, Crafting & Trade" as const
 /** Meta description and og:description */
 export const SITE_DESCRIPTION =
-  "Free Star Citizen tools hub: crafting blueprints, mission rewards, mining and resource trackers, Dumper's Fair-Value Price (DFP), and an org member marketplace. Explore offline — no account required." as const
+  "Free Star Citizen tools hub: crafting blueprints, mission rewards, mining and resource trackers, Dumper's Fair-Value Price (DFP), and a community marketplace. Explore offline — no account required." as const
 export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 /** Tagline shown in UI */
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
