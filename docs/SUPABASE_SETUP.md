@@ -9,7 +9,7 @@ Use this guide when standing up a **new** Dumper's Repo franchise database, or w
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `126_questionnaire_notification_sync.sql` (sync questionnaire bell items: drop stale, create for late joiners). Apply through `126` in numeric order if catching up.
+**Latest migration:** `127_questionnaire_exclude_creator.sql` (creators never get participant prompts for their own questionnaires). Apply through `127` in numeric order if catching up.
 
 ---
 
@@ -157,6 +157,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 89 | `124_drop_resource_is_active.sql` | Drop `blueprint_resources.is_active` and its partial index — resources are never retired from game files |
 | 90 | `125_questionnaires.sql` | Custom questionnaires: super-admin builder, audience targeting, availability window, anonymous answers, submit/decline dispositions, notify fan-out |
 | 91 | `126_questionnaire_notification_sync.sql` | `sync_questionnaire_notifications_for_me` — remove stale questionnaire bell items; create missing ones for late-eligible users |
+| 92 | `127_questionnaire_exclude_creator.sql` | Exclude questionnaire `created_by` from activate fan-out, pending list, sync, and fill/decline |
 
 ### pg_cron (migrations 054, 065–068)
 
