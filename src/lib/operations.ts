@@ -1207,7 +1207,9 @@ export async function deleteUserNotification(notificationId: string): Promise<{ 
   return {}
 }
 
-/** Dismiss all unread notifications — deletes rows (no read history kept). */
+/** Dismiss all unread notifications — deletes rows (no read history kept).
+ * Questionnaire prompts are excluded; those must be opened and submitted or declined.
+ */
 export async function deleteAllUserNotifications(): Promise<{ error?: string }> {
   const {
     data: { user },
@@ -1220,6 +1222,7 @@ export async function deleteAllUserNotifications(): Promise<{ error?: string }> 
     .delete()
     .eq('user_id', user.id)
     .is('read_at', null)
+    .neq('type', 'questionnaire_available')
 
   if (error) return { error: error.message }
   return {}

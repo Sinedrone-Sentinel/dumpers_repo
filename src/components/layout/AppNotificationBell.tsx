@@ -27,7 +27,7 @@ export default function AppNotificationBell({
   const [loading, setLoading] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const collapsedInitializedRef = useRef(false)
-  const { notifications, unreadCount, refresh, clearAll, removeOne } = useNotificationInbox(disabled)
+  const { notifications, unreadCount, refresh, removeOne } = useNotificationInbox(disabled)
   const routerLocation = useRouterState({ select: (s) => s.location })
   const groupedNotifications = useMemo(
     () => groupNotificationsByCategory(notifications),
@@ -74,8 +74,11 @@ export default function AppNotificationBell({
     setLoading(true)
     const result = await deleteAllUserNotifications()
     setLoading(false)
-    if (!result.error) clearAll()
+    // Server skips questionnaire_available; refresh so local list matches.
+    if (!result.error) void refresh()
   }
+
+  const clearableCount = notifications.filter((n) => n.type !== 'questionnaire_available').length
 
   const triggerClass = disabled
     ? 'border-slate-700/80 bg-slate-900/50 opacity-50 cursor-not-allowed'
@@ -125,12 +128,13 @@ export default function AppNotificationBell({
         <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden border border-slate-700">
           <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-700">
             <p className="text-white font-medium text-sm">Notifications</p>
-            {unreadCount > 0 && (
+            {clearableCount > 0 && (
               <button
                 type="button"
                 disabled={loading}
                 onClick={() => void handleDismissAll()}
                 className="text-xs text-slate-400 hover:text-white disabled:opacity-50"
+                title="Does not clear questionnaire prompts"
               >
                 Clear all
               </button>
@@ -185,6 +189,7 @@ export default function AppNotificationBell({
                       <ul>
                         {items.map((notification) => {
                           const visual = getNotificationVisual(notification.type)
+                          const isQuestionnaire = notification.type === 'questionnaire_available'
                           return (
                             <li
                               key={notification.id}
@@ -202,13 +207,15 @@ export default function AppNotificationBell({
                                     />
                                   </div>
                                 </div>
-                                <button
-                                  type="button"
-                                  onClick={() => void handleDismiss(notification.id)}
-                                  className="shrink-0 text-xs text-purple-300 hover:text-purple-200"
-                                >
-                                  Clear
-                                </button>
+                                {!isQuestionnaire && (
+                                  <button
+                                    type="button"
+                                    onClick={() => void handleDismiss(notification.id)}
+                                    className="shrink-0 text-xs text-purple-300 hover:text-purple-200"
+                                  >
+                                    Clear
+                                  </button>
+                                )}
                               </div>
                             </li>
                           )
