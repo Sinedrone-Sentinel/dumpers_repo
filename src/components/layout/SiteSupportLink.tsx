@@ -11,7 +11,7 @@ export default function SiteSupportLink({ className = '' }: { className?: string
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-slate-500 underline-offset-2 transition hover:text-slate-300 hover:underline"
+        className="text-amber-400 underline-offset-2 transition hover:text-amber-300 hover:underline"
       >
         {SITE_SUPPORT_LABEL}
       </a>
