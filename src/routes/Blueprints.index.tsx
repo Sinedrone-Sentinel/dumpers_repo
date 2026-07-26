@@ -178,16 +178,18 @@ export default function BlueprintsRoute() {
   }, [uiScope])
 
   // Notification / deep links: /?q=Lindstrom focuses the Blueprints search box.
+  // Category filters use null = "no filter"; the string "all" is truthy and matches nothing.
   React.useEffect(() => {
     if (!searchFromUrl || appliedUrlSearchRef.current === searchFromUrl) return
     appliedUrlSearchRef.current = searchFromUrl
     setSearchTerm(searchFromUrl)
     setSelectedMaterial(null)
-    setSelectedMainCategory('all')
-    setSelectedSubCategory('all')
-    setSelectedSize('all')
-    setSelectedArmorWeight('all')
-    setSelectedArmorSlot('all')
+    setSelectedMainCategory(null)
+    setSelectedSubCategory(null)
+    setSelectedSize(null)
+    setSelectedArmorWeight(null)
+    setSelectedArmorSlot(null)
+    setShowOnlyRewards(false)
     setAcquisitionFilter('all')
   }, [searchFromUrl])
 
