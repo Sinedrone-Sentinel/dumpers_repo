@@ -7,14 +7,15 @@ export default {
       '@semantic-release/commit-analyzer',
       {
         preset: 'conventionalcommits',
+        // First match wins. Deny-by-default so unscoped feat/fix never bump the dumper.
         releaseRules: [
           { type: 'feat', scope: 'dumper', release: 'minor' },
           { type: 'fix', scope: 'dumper', release: 'patch' },
           { type: 'perf', scope: 'dumper', release: 'patch' },
           { type: 'refactor', scope: 'dumper', release: 'patch' },
+          { type: 'style', scope: 'dumper', release: 'patch' },
           { breaking: true, scope: 'dumper', release: 'major' },
-          { scope: '!dumper', release: false },
-          { type: '*', scope: '!dumper', release: false },
+          { release: false },
         ],
       },
     ],
