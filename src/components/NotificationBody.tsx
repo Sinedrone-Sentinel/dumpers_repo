@@ -1,19 +1,24 @@
 import React from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import type { UserNotification } from '../lib/operations'
 import { getNotificationActionLink } from '../lib/notificationLinks'
+import { requestBlueprintFocus } from '../lib/blueprintFocusRequest'
 
 interface NotificationBodyProps {
   notification: UserNotification
   onNavigate?: () => void
+  /** Clear this notification after following its action link. */
+  onDismissAfterNavigate?: () => void
   onOpenQuestionnaire?: (questionnaireId: string) => void
 }
 
 export default function NotificationBody({
   notification,
   onNavigate,
+  onDismissAfterNavigate,
   onOpenQuestionnaire,
 }: NotificationBodyProps) {
+  const navigate = useNavigate()
   const link = getNotificationActionLink(notification)
   const questionnaireId =
     notification.type === 'questionnaire_available' &&
@@ -22,6 +27,11 @@ export default function NotificationBody({
       : null
 
   if (!notification.body && !link && !questionnaireId) return null
+
+  const finishNavigate = () => {
+    onNavigate?.()
+    onDismissAfterNavigate?.()
+  }
 
   return (
     <p className="text-xs mt-0.5 text-slate-400 leading-relaxed">
@@ -42,14 +52,22 @@ export default function NotificationBody({
       {link && (
         <Link
           to={link.to}
-          search={link.search}
-          onClick={onNavigate}
+          search={link.blueprintFocus ? undefined : link.search}
+          onClick={(event) => {
+            if (link.blueprintFocus) {
+              event.preventDefault()
+              requestBlueprintFocus(link.blueprintFocus)
+              void navigate({ to: link.to })
+              finishNavigate()
+              return
+            }
+            finishNavigate()
+          }}
           className="text-cyan-400 hover:text-cyan-300 underline font-medium"
         >
           {link.label}
         </Link>
       )}
-
     </p>
   )
 }

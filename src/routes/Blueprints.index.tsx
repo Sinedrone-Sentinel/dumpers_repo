@@ -1,5 +1,9 @@
 import React from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import {
+  consumeBlueprintFocusRequest,
+  subscribeBlueprintFocus,
+} from '../lib/blueprintFocusRequest'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
@@ -113,7 +117,6 @@ export default function BlueprintsRoute() {
   const uiScope = getBlueprintsUiScope(user?.id, isGuestPreview)
   const hydratedUiScopeRef = React.useRef<string | null | undefined>(undefined)
   const skipPersistRef = React.useRef(true)
-  const appliedUrlSearchRef = React.useRef<string | undefined>(undefined)
 
   const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
@@ -177,12 +180,10 @@ export default function BlueprintsRoute() {
     setAcquisitionFilter(saved.acquisitionFilter)
   }, [uiScope])
 
-  // Notification / deep links: /?q=Lindstrom focuses the Blueprints search box.
-  // Category filters use null = "no filter"; the string "all" is truthy and matches nothing.
-  React.useEffect(() => {
-    if (!searchFromUrl || appliedUrlSearchRef.current === searchFromUrl) return
-    appliedUrlSearchRef.current = searchFromUrl
-    setSearchTerm(searchFromUrl)
+  const applyBlueprintFocus = React.useCallback((query: string) => {
+    const q = query.trim()
+    if (!q) return
+    setSearchTerm(q)
     setSelectedMaterial(null)
     setSelectedMainCategory(null)
     setSelectedSubCategory(null)
@@ -191,7 +192,21 @@ export default function BlueprintsRoute() {
     setSelectedArmorSlot(null)
     setShowOnlyRewards(false)
     setAcquisitionFilter('all')
-  }, [searchFromUrl])
+  }, [])
+
+  // Notification "View Blueprints" uses a one-shot focus request (not sticky ?q=).
+  React.useEffect(() => {
+    const pending = consumeBlueprintFocusRequest()
+    if (pending) applyBlueprintFocus(pending)
+    return subscribeBlueprintFocus(applyBlueprintFocus)
+  }, [applyBlueprintFocus])
+
+  // Legacy ?q= links: apply once, then strip the query so it does not stick in the address bar.
+  React.useEffect(() => {
+    if (!searchFromUrl) return
+    applyBlueprintFocus(searchFromUrl)
+    void navigate({ to: '/', search: { q: undefined }, replace: true })
+  }, [searchFromUrl, applyBlueprintFocus, navigate])
 
   React.useEffect(() => {
     if (!uiScope) return

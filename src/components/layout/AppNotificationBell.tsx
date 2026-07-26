@@ -203,6 +203,11 @@ export default function AppNotificationBell({
                                     <NotificationBody
                                       notification={notification}
                                       onNavigate={close}
+                                      onDismissAfterNavigate={
+                                        isQuestionnaire
+                                          ? undefined
+                                          : () => void handleDismiss(notification.id)
+                                      }
                                       onOpenQuestionnaire={onOpenQuestionnaire}
                                     />
                                   </div>

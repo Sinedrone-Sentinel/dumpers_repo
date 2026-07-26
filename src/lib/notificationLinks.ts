@@ -5,6 +5,8 @@ export interface NotificationActionLink {
   to: string
   label: string
   search?: Record<string, string | undefined>
+  /** Apply Blueprints search via one-shot focus (not a sticky ?q= URL). */
+  blueprintFocus?: string
 }
 
 const ORDER_TYPES = new Set([
@@ -39,16 +41,24 @@ function blueprintSearchFromPayload(payload: Record<string, unknown>): string | 
   return undefined
 }
 
+function blueprintHomeLink(
+  label: string,
+  payload: Record<string, unknown>
+): NotificationActionLink {
+  const focus = blueprintSearchFromPayload(payload)
+  return focus ? { to: '/', label, blueprintFocus: focus } : { to: '/', label }
+}
+
 /** Blueprints live at `/`; rewrite legacy `/blueprints` deep links. */
-function normalizeAppPath(to: string, payload: Record<string, unknown>): {
-  to: string
-  search?: Record<string, string | undefined>
-} {
+function normalizeAppPath(to: string, payload: Record<string, unknown>): NotificationActionLink {
   if (to === '/blueprints' || to.startsWith('/blueprints?')) {
-    const q = blueprintSearchFromPayload(payload)
-    return q ? { to: '/', search: { q } } : { to: '/' }
+    return blueprintHomeLink('Open', payload)
   }
-  return { to }
+  if (to === '/' || to.startsWith('/?')) {
+    const focus = blueprintSearchFromPayload(payload)
+    if (focus) return { to: '/', label: 'Open', blueprintFocus: focus }
+  }
+  return { to, label: 'Open' }
 }
 
 function explicitLink(payload: Record<string, unknown>): NotificationActionLink | null {
@@ -57,14 +67,7 @@ function explicitLink(payload: Record<string, unknown>): NotificationActionLink 
 
   const label = typeof payload.link_label === 'string' ? payload.link_label : 'Open'
   const normalized = normalizeAppPath(raw, payload)
-  const { to } = normalized
-  // Webhook often sends link_to: '/' — still deep-link to the named blueprint.
-  let search = normalized.search
-  if (to === '/' && !search) {
-    const q = blueprintSearchFromPayload(payload)
-    if (q) search = { q }
-  }
-  return search ? { to, label, search } : { to, label }
+  return { ...normalized, label }
 }
 
 function blueprintDumperLink(
@@ -72,20 +75,10 @@ function blueprintDumperLink(
 ): NotificationActionLink | null {
   const { type, payload } = notification
   if (type === 'log_watcher_blueprint_acquired') {
-    const q = blueprintSearchFromPayload(payload)
-    return {
-      to: '/',
-      label: 'View Blueprints',
-      ...(q ? { search: { q } } : {}),
-    }
+    return blueprintHomeLink('View Blueprints', payload)
   }
   if (type === 'log_watcher_ambiguous_blueprint') {
-    const q = blueprintSearchFromPayload(payload)
-    return {
-      to: '/',
-      label: 'Mark on Blueprints',
-      ...(q ? { search: { q } } : {}),
-    }
+    return blueprintHomeLink('Mark on Blueprints', payload)
   }
   return null
 }
