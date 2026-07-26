@@ -1,22 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="DR">
   <defs>
-    <linearGradient id="drGrad" x1="72" y1="256" x2="440" y2="256" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#ef4444"/>
+    <linearGradient id="drGrad" x1="72" y1="120" x2="440" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#facc15"/>
       <stop offset="45%" stop-color="#f97316"/>
-      <stop offset="100%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#ea580c"/>
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="5" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
 
-  <rect width="512" height="512" rx="88" fill="#0f172a"/>
-
-  <g fill="url(#drGrad)" filter="url(#glow)">
+  <!-- Transparent background — DR mark only -->
+  <g fill="url(#drGrad)">
     <!-- D: square top-left / bottom-left; straight left edge; stencil gap -->
     <path d="M108 148h60v66h-60zM108 298h60v66h-60z"/>
     <path d="M168 148h56l28 28v44l-28 28h-56V244h48l16-16v-32l-16-16H168V148z"/>
