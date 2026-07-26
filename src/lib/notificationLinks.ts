@@ -4,6 +4,7 @@ import type { OrderListTab } from './orderArchive'
 export interface NotificationActionLink {
   to: string
   label: string
+  search?: Record<string, string | undefined>
 }
 
 const ORDER_TYPES = new Set([
@@ -30,12 +31,61 @@ function listingTypeFromPayload(payload: Record<string, unknown>): 'wts' | 'wtb'
   return value === 'wts' || value === 'wtb' ? value : undefined
 }
 
+function blueprintSearchFromPayload(payload: Record<string, unknown>): string | undefined {
+  for (const key of ['blueprintName', 'displayName'] as const) {
+    const value = payload[key]
+    if (typeof value === 'string' && value.trim()) return value.trim()
+  }
+  return undefined
+}
+
+/** Blueprints live at `/`; rewrite legacy `/blueprints` deep links. */
+function normalizeAppPath(to: string, payload: Record<string, unknown>): {
+  to: string
+  search?: Record<string, string | undefined>
+} {
+  if (to === '/blueprints' || to.startsWith('/blueprints?')) {
+    const q = blueprintSearchFromPayload(payload)
+    return q ? { to: '/', search: { q } } : { to: '/' }
+  }
+  return { to }
+}
+
 function explicitLink(payload: Record<string, unknown>): NotificationActionLink | null {
-  const to = payload.link_to
-  if (typeof to !== 'string' || !to.startsWith('/')) return null
+  const raw = payload.link_to
+  if (typeof raw !== 'string' || !raw.startsWith('/')) return null
 
   const label = typeof payload.link_label === 'string' ? payload.link_label : 'Open'
-  return { to, label }
+  let { to, search } = normalizeAppPath(raw, payload)
+  // Webhook often sends link_to: '/' — still deep-link to the named blueprint.
+  if (to === '/' && !search) {
+    const q = blueprintSearchFromPayload(payload)
+    if (q) search = { q }
+  }
+  return search ? { to, label, search } : { to, label }
+}
+
+function blueprintDumperLink(
+  notification: UserNotification
+): NotificationActionLink | null {
+  const { type, payload } = notification
+  if (type === 'log_watcher_blueprint_acquired') {
+    const q = blueprintSearchFromPayload(payload)
+    return {
+      to: '/',
+      label: 'View Blueprints',
+      ...(q ? { search: { q } } : {}),
+    }
+  }
+  if (type === 'log_watcher_ambiguous_blueprint') {
+    const q = blueprintSearchFromPayload(payload)
+    return {
+      to: '/',
+      label: 'Mark on Blueprints',
+      ...(q ? { search: { q } } : {}),
+    }
+  }
+  return null
 }
 
 export function getNotificationActionLink(
@@ -45,6 +95,9 @@ export function getNotificationActionLink(
 
   const explicit = explicitLink(payload)
   if (explicit) return explicit
+
+  const dumperLink = blueprintDumperLink(notification)
+  if (dumperLink) return dumperLink
 
   if (!ORDER_TYPES.has(type)) return null
 

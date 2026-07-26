@@ -278,7 +278,7 @@ serve(async (req) => {
               displayName,
               rawInput: resolved.rawInput,
               candidates: (resolved.candidates ?? []).map((c) => c.internalName),
-              link_to: '/blueprints',
+              link_to: '/',
               link_label: 'Mark on Blueprints',
             }
           )
@@ -328,7 +328,7 @@ serve(async (req) => {
           {
             blueprintName,
             internalName: blueprintId,
-            link_to: '/blueprints',
+            link_to: '/',
             link_label: 'View Blueprints',
           }
         )

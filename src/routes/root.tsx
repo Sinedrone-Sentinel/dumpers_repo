@@ -28,6 +28,9 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: BlueprintsRoute,
+  validateSearch: (search: Record<string, unknown>) => ({
+    q: typeof search.q === 'string' && search.q.trim() ? search.q.trim() : undefined,
+  }),
 })
 
 const wikeloRoute = createRoute({

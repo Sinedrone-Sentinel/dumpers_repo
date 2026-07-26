@@ -307,6 +307,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAcquiredBlueprints(acquired)
   }, [user?.id, fetchAcquiredBlueprints])
 
+  // Site-wide: BP Dumper (and other tabs) can insert/delete while the member
+  // is on any page — not only Live Tracker.
+  useEffect(() => {
+    if (!user?.id) return
+
+    const channel = supabase
+      .channel(`acquired-blueprints-${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'acquired_blueprints',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          void refreshAcquiredBlueprints()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      void supabase.removeChannel(channel)
+    }
+  }, [user?.id, refreshAcquiredBlueprints])
+
   const profileRef = useRef(profile)
   profileRef.current = profile
 
@@ -679,18 +705,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           delete updated[blueprintId]
           return updated
         })
+      } else {
+        console.error('Error removing acquired blueprint:', error)
       }
     } else {
       const { error } = await supabase
         .from('acquired_blueprints')
         .insert({ user_id: activeUser.id, blueprint_id: blueprintId })
 
-      if (!error) {
+      // 23505 = already acquired (e.g. BP Dumper wrote it while local state was stale)
+      if (!error || error.code === '23505') {
         setAcquiredBlueprints(prev => ({
           ...prev,
           [blueprintId]: true,
         }))
-        await removeTargetBlueprint(activeUser.id, blueprintId)
+        if (!error) {
+          await removeTargetBlueprint(activeUser.id, blueprintId)
+        }
+      } else {
+        console.error('Error acquiring blueprint:', error)
       }
     }
   }, [])

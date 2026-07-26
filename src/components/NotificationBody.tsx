@@ -42,12 +42,14 @@ export default function NotificationBody({
       {link && (
         <Link
           to={link.to}
+          search={link.search}
           onClick={onNavigate}
           className="text-cyan-400 hover:text-cyan-300 underline font-medium"
         >
           {link.label}
         </Link>
       )}
+
     </p>
   )
 }

@@ -10,7 +10,7 @@ import {
 } from '../lib/liveMissionTracker'
 
 export function useLiveMissionTracker() {
-  const { user, acquiredBlueprints, refreshAcquiredBlueprints } = useAuth()
+  const { user, acquiredBlueprints } = useAuth()
   const [activeMissions, setActiveMissions] = useState<DumperActiveMission[]>([])
   const [watchActive, setWatchActive] = useState(false)
   const [lastPingAt, setLastPingAt] = useState<string | null>(null)
@@ -200,18 +200,6 @@ export function useLiveMissionTracker() {
           }
         }
       )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'acquired_blueprints',
-          filter: `user_id=eq.${user.id}`,
-        },
-        () => {
-          void refreshAcquiredBlueprints()
-        }
-      )
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
           void loadInitial()
@@ -221,7 +209,7 @@ export function useLiveMissionTracker() {
     return () => {
       void supabase.removeChannel(channel)
     }
-  }, [user?.id, refreshAcquiredBlueprints, loadInitial])
+  }, [user?.id, loadInitial])
 
   const hideMissionLists = shouldHideLiveMissionLists(statusBar.status)
 

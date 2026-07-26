@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { blueprintDataVersion, useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
@@ -95,6 +95,7 @@ const formatSubType = formatSubtypeLabel
 
 export default function BlueprintsRoute() {
   const navigate = useNavigate()
+  const { q: searchFromUrl } = useSearch({ from: '/' })
   const {
     acquiredBlueprints: myAcquiredBlueprints, 
     toggleAcquired, 
@@ -112,6 +113,7 @@ export default function BlueprintsRoute() {
   const uiScope = getBlueprintsUiScope(user?.id, isGuestPreview)
   const hydratedUiScopeRef = React.useRef<string | null | undefined>(undefined)
   const skipPersistRef = React.useRef(true)
+  const appliedUrlSearchRef = React.useRef<string | undefined>(undefined)
 
   const { overridesMap, setOrderable } = useBlueprintOrderOverrides()
   const { isOnTargetList, toggleTarget } = useTargetList(overridesMap)
@@ -174,6 +176,20 @@ export default function BlueprintsRoute() {
     setShowOnlyRewards(saved.showOnlyRewards)
     setAcquisitionFilter(saved.acquisitionFilter)
   }, [uiScope])
+
+  // Notification / deep links: /?q=Lindstrom focuses the Blueprints search box.
+  React.useEffect(() => {
+    if (!searchFromUrl || appliedUrlSearchRef.current === searchFromUrl) return
+    appliedUrlSearchRef.current = searchFromUrl
+    setSearchTerm(searchFromUrl)
+    setSelectedMaterial(null)
+    setSelectedMainCategory('all')
+    setSelectedSubCategory('all')
+    setSelectedSize('all')
+    setSelectedArmorWeight('all')
+    setSelectedArmorSlot('all')
+    setAcquisitionFilter('all')
+  }, [searchFromUrl])
 
   React.useEffect(() => {
     if (!uiScope) return
