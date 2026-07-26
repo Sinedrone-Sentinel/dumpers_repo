@@ -24,13 +24,13 @@ export const SEO_PRERENDER_PATHS = [
 
 export const SEO_SITEMAP_PATHS = [
   '/',
-  '/wikelo',
-  '/targets',
-  '/resources',
-  '/mining-tracker',
-  '/commodity-lookup',
-  '/archive',
-  '/bazaar',
+  '/wikelo/',
+  '/targets/',
+  '/resources/',
+  '/mining-tracker/',
+  '/commodity-lookup/',
+  '/archive/',
+  '/bazaar/',
   '/archive-guide.html',
 ] as const
 
@@ -45,49 +45,50 @@ const pages: Record<string, SeoPageConfig> = {
     title: "Wikelo Emporium Trades — Star Citizen Barter Guide | Dumper's Repo",
     description:
       'Browse every Wikelo Emporium barter trade in Star Citizen — hand-ins, rewards, reputation, and blueprint drops. Filter by ships, armor, weapons, and gear.',
-    canonicalPath: '/wikelo',
+    // Trailing slash matches GitHub Pages 200 (folder index); bare path 301s.
+    canonicalPath: '/wikelo/',
   },
   '/targets': {
     title: "Mission Tracker — Star Citizen Blueprint Missions | Dumper's Repo",
     description:
       'Track Star Citizen crafting blueprint unlocks and browse reputation missions that reward blueprints. Build a personal wishlist and sync with BP Dumper.',
-    canonicalPath: '/targets',
+    canonicalPath: '/targets/',
   },
   '/resources': {
     title: "Resource Tracker — Star Citizen Crafting Materials | Dumper's Repo",
     description:
       'Track mined and refined Star Citizen crafting resources, notes, and stock for fabricator planning. Pair with blueprints and Dumper\'s Fair-Value Price (DFP).',
-    canonicalPath: '/resources',
+    canonicalPath: '/resources/',
   },
   '/mining-tracker': {
     title: "Mining Tracker — Star Citizen Ore Guide & Ledgers | Dumper's Repo",
     description:
       'Star Citizen mining tools: ore properties, location guidance, RS tracking, and crew mining ledgers.',
-    canonicalPath: '/mining-tracker',
+    canonicalPath: '/mining-tracker/',
   },
   '/commodity-lookup': {
     title: "Commodity Lookup — Star Citizen Trade Reference | Dumper's Repo",
     description:
       'Look up Star Citizen commodities and Dumper\'s Fair-Value Price (DFP) bases for trading and crafting planning.',
-    canonicalPath: '/commodity-lookup',
+    canonicalPath: '/commodity-lookup/',
   },
   '/archive': {
     title: "Information Archive — Star Citizen Guides & Lore | Dumper's Repo",
     description:
       'Member guides, tips, faction reference, component database, and lore for Star Citizen tools on Dumper\'s Repo.',
-    canonicalPath: '/archive',
+    canonicalPath: '/archive/',
   },
   '/bazaar': {
     title: "The Bazaar — Community Marketplace | Dumper's Repo",
     description:
       'Shop and fulfill Star Citizen member WTB and WTS listings. Sign in to trade crafted gear and blueprints with your community.',
-    canonicalPath: '/bazaar',
+    canonicalPath: '/bazaar/',
   },
   '/orders': {
     title: "My Listings — WTB & WTS Orders | Dumper's Repo",
     description:
       'Manage your Star Citizen WTB and WTS listings, fulfillments, and marketplace history on Dumper\'s Repo.',
-    canonicalPath: '/orders',
+    canonicalPath: '/orders/',
   },
 }
 
@@ -106,7 +107,8 @@ export function absoluteUrl(path: string): string {
   if (path.startsWith('http://') || path.startsWith('https://')) return path
   const base = SITE_URL.replace(/\/$/, '')
   if (!path || path === '/') return `${base}/`
-  return `${base}${path.startsWith('/') ? path : `/${path}`}`
+  const withSlash = path.startsWith('/') ? path : `/${path}`
+  return `${base}${withSlash}`
 }
 
 export function resolveOgImage(seo: SeoPageConfig): string {

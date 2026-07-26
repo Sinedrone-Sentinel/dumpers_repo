@@ -28,9 +28,17 @@ const extraSitemap = [...seoTs.matchAll(/SEO_SITEMAP_PATHS[\s\S]*?'(\/[^']+\.htm
 const paths = [...new Set([...prerenderPaths, ...extraSitemap, '/archive-guide.html'])]
 const today = new Date().toISOString().slice(0, 10)
 
+/** GitHub Pages serves prerendered dirs as /path/ (200). Bare /path 301s — avoid that in <loc>. */
+function sitemapLoc(path) {
+  if (path === '/') return `${siteUrl}/`
+  if (path.endsWith('.html')) return `${siteUrl}${path}`
+  const bare = path.endsWith('/') ? path.slice(0, -1) : path
+  return `${siteUrl}${bare}/`
+}
+
 const urls = paths
   .map((path) => {
-    const loc = path === '/' ? `${siteUrl}/` : `${siteUrl}${path}`
+    const loc = sitemapLoc(path)
     const priority = path === '/' ? '1.0' : path.endsWith('.html') ? '0.6' : '0.8'
     const changefreq = 'weekly'
     return `  <url>
