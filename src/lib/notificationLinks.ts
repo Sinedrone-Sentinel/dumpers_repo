@@ -56,8 +56,10 @@ function explicitLink(payload: Record<string, unknown>): NotificationActionLink 
   if (typeof raw !== 'string' || !raw.startsWith('/')) return null
 
   const label = typeof payload.link_label === 'string' ? payload.link_label : 'Open'
-  let { to, search } = normalizeAppPath(raw, payload)
+  const normalized = normalizeAppPath(raw, payload)
+  const { to } = normalized
   // Webhook often sends link_to: '/' — still deep-link to the named blueprint.
+  let search = normalized.search
   if (to === '/' && !search) {
     const q = blueprintSearchFromPayload(payload)
     if (q) search = { q }
