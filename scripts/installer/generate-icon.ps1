@@ -1,4 +1,4 @@
-# Build dumper-apps.ico from the site DR favicon (public/favicon.png).
+# Build dumper-apps.ico + tray.ico from the site DR favicon (public/favicon.png).
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
 )
@@ -12,7 +12,9 @@ if (-not (Test-Path $pngPath)) {
 
 python -m pip install pillow --quiet
 python (Join-Path $PSScriptRoot "generate_icon.py")
-$iconPath = Join-Path $PSScriptRoot "dumper-apps.ico"
-if (-not (Test-Path $iconPath)) {
-    throw "Icon generation failed"
+foreach ($name in @("dumper-apps.ico", "tray.ico")) {
+    $iconPath = Join-Path $PSScriptRoot $name
+    if (-not (Test-Path $iconPath)) {
+        throw "Icon generation failed: $iconPath"
+    }
 }
