@@ -54,7 +54,7 @@ export default function OrgLogoUploadField() {
   }
 
   const handleRemove = async () => {
-    if (!window.confirm('Remove the org logo from this franchise instance?')) return
+    if (!window.confirm('Remove the org logo from this site?')) return
 
     setRemoving(true)
     const result = await removeOrgLogo()
@@ -91,7 +91,7 @@ export default function OrgLogoUploadField() {
           {previewSrc && !previewError ? (
             <img
               src={previewSrc ?? ORG_LOGO_DEFAULT_PATH}
-              alt={orgLogoConfigured ? 'Current org logo preview' : 'Default franchise org logo'}
+              alt={orgLogoConfigured ? 'Current org logo preview' : 'Default org logo'}
               className="max-w-full max-h-full object-contain"
               onError={() => setPreviewError(true)}
             />

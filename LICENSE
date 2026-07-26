@@ -1,66 +1,38 @@
-Dumper's Repo Franchise License
+Dumper's Repo Proprietary License
 
 Copyright (c) Michael Linzenmeyer
 
-Permission is hereby granted by Michael Linzenmeyer, the sole licensor of
-Dumper's Repo, to any person obtaining a copy of this software and associated
-documentation files (the "Software"), to use, copy, modify, and deploy the
-Software subject to the franchise conditions below. This permission does not
-transfer copyright and does not grant the right to sublicense on different
-terms.
+All rights reserved.
 
-## Franchise conditions
+Dumper's Repo is the exclusive product of Michael Linzenmeyer, operated at
+dumpers-repo.com (and authorized mirrors of that official deployment only).
 
-You may operate a Dumper's Repo franchise instance only if you comply with
-ALL of the following:
+## Grant
 
-1. **Branding** — The primary application header must continue to identify the
-   product as "Dumper's Repo" (including the Buy. Craft. Sell. slogan or
-   equivalent brand treatment required by the reference deployment). You may
-   upload your **org logo** (PNG) for blueprint modal animations via super-admin
-   Settings; that logo must not replace or obscure the Dumper's Repo product
-   identity in the header.
+No license is granted to copy, modify, distribute, sublicense, host, or operate
+Dumper's Repo (or a derivative) as a public or private service for others,
+except with prior written permission from the copyright holder.
 
-2. **No monetization** — You must not charge any fee for access to the
-   Software, for hosting the franchise, or for using Dumper's Repo features.
-   Membership approval and org privacy rules are allowed; paywalls for app
-   access are not.
+Viewing this repository for personal study or contributing changes back to the
+copyright holder does not grant deployment or redistribution rights.
 
-3. **Dumpers Fair-Value Pricing (DFP)** — DFP is a proprietary formula and
-   trade secret of Michael Linzenmeyer. You must use the official DFP engine
-   loaded from the canonical URL published by the licensor (currently
-   dumpers-repo.com or raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo public DFP files). You
-   may not tamper with, reverse-engineer for reuse, replace, circumvent, or
-   self-host an alternate DFP engine in production.
+## Official site
 
-   **Display opt-out (permitted):** A super-admin may disable DFP display for
-   their instance. If DFP values are hidden from the UI, every page must
-   display this notice in the site footer:
+The only authorized public deployment is the official Dumper's Repo instance
+controlled by Michael Linzenmeyer (currently dumpers-repo.com). Other hosts,
+mirrors, or “white-label” copies are not permitted without written authorization.
 
-   "This franchise has opted out of using/displaying Dumpers Fair-Value
-   Pricing (DFP)."
+## Dumpers Fair-Value Pricing (DFP)
 
-   Hiding DFP without this notice is a license violation.
+DFP is a proprietary formula and trade secret of Michael Linzenmeyer. You may
+not tamper with, reverse-engineer for reuse, replace, circumvent, rehost, or
+redistribute the DFP engine except as part of the official deployment.
 
-4. **Distribution** — You must include unmodified copies of this LICENSE and
-   TRADEMARK.md with any fork or deployment, and identify the deployment as a
-   Dumper's Repo franchise instance (not the official dumpers-repo.com unless
-   authorized).
+## Branding
 
-## Prohibited conduct
-
-- Removing or replacing Dumper's Repo as the product identity
-- Implying official endorsement by dumpers-repo.com without permission
-- Charging fees for access or franchise hosting
-- Tampering with, modifying, or circumventing DFP
-- Using Dumper's Repo brand marks on unrelated software
-
-## Termination
-
-Any violation of these franchise conditions terminates your license to use
-and deploy the Software immediately. Upon termination you must cease deployment
-and destroy proprietary DFP materials in your possession except as required
-by law.
+Dumper's Repo, Buy. Craft. Sell., and related marks are owned by Michael
+Linzenmeyer. See TRADEMARK.md. Unauthorized use of the brand on other software
+or sites is prohibited.
 
 ## Disclaimer
 

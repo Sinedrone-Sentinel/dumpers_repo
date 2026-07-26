@@ -1,6 +1,6 @@
 # Supabase setup
 
-Use this guide when standing up a **new** Dumper's Repo franchise database, or when catching up an **existing** database with new migrations.
+Use this guide when standing up or catching up the **official** Dumper's Repo Supabase database with migrations.
 
 ## If you already have a live database
 
@@ -111,7 +111,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 43 | `078_order_listing_type.sql` | WTB/WTS `listing_type`, semantic buyer/seller RPCs |
 | 44 | `079_drop_synced_blueprints.sql` | Drop legacy `synced_blueprints` (sccrafter era) |
 | 45 | `080_discord_personal_routing.sql` | Personal + marketplace Discord routing, server-side triggers |
-| 46 | `081_rsi_org_schema.sql` | *(Historical)* RSI multi-org tables — dropped by `114` (not franchise org logo / Discord admin) |
+| 46 | `081_rsi_org_schema.sql` | *(Historical)* RSI multi-org tables — dropped by `114` (not site org logo / Discord admin) |
 | 47 | `082_discord_market_coalesce.sql` | Marketplace listing churn coalesce + admin quiet-period setting |
 | 48 | `083_discord_per_event_webhooks.sql` | Remove webhook cap; per-event sync RPC; return URLs to owner |
 | 49 | `084_discord_rsi_personal_webhooks.sql` | Require RSI verification for `my_order_*` webhook registration |
@@ -276,7 +276,7 @@ VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-Optional (production franchises must use the canonical DFP host per LICENSE):
+Optional (production uses the official DFP host — see LICENSE):
 
 ```env
 # Dev only — local public/ copy from dfp-engine-private build
@@ -296,14 +296,14 @@ Deploy `dist/` to your static host. See [docs/SELF_HOSTING.md](SELF_HOSTING.md).
 
 ---
 
-## 8. DFP canonical hosting
+## 8. DFP hosting
 
-Franchise production apps load DFP from **https://www.dumpers-repo.com**:
+Production loads DFP from **https://www.dumpers-repo.com** (or same-origin on that host):
 
 - `/dfp-engine.js`
 - `/dfp-version.json`
 
-Configure **CORS** on the reference host so franchise origins can fetch these files.
+Do not rehost the engine on other public sites.
 
 ---
 
@@ -332,7 +332,7 @@ SELECT to_regclass('public.synced_blueprints');  -- should be NULL
 SELECT column_name FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'discord_message_queue' AND column_name = 'target_user_id';
 
--- 081 + 114: RSI multi-org schema removed (not franchise org logo / Discord admin)
+-- 081 + 114: RSI multi-org schema removed (not site org logo / Discord admin)
 SELECT to_regclass('public.user_rsi_org_affiliations');  -- should be NULL after 114
 
 -- 114: ghost_mode and game_components retired

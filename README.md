@@ -2,7 +2,7 @@
 
 **Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen.
 
-**Reference deployment:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`). Other hosts running this codebase are separate franchise instances.
+**Official site:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`). This is the only authorized public deployment — see [LICENSE](LICENSE).
 
 ## Contents
 
@@ -15,7 +15,7 @@
 - [Dumper's Fair-Value Price (DFP)](#dumpers-fair-value-price-dfp)
 - [For developers](#for-developers)
 - [Documentation](#documentation)
-- [Franchise policy](#franchise-policy)
+- [Ownership](#ownership)
 - [Disclaimer](#disclaimer)
 
 ---
@@ -219,7 +219,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 - Enable **marketplace ads** (WTS/WTB) and **purchase toasts** site-wide
 - **Auto-approve** new sign-ups
 - **Welcome modal** always-show (testing)
-- Upload **org logo** (`ORG_LOGO.png` in Supabase Storage) — franchise branding, not git
+- Upload **org logo** (`ORG_LOGO.png` in Supabase Storage) — community branding for card flips, not git
 
 ### Administration
 
@@ -283,7 +283,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 ## Dumper's Fair-Value Price (DFP)
 
-**Dumper's Fair-Value Price (DFP)** is **proprietary** to Michael Linzenmeyer. Production franchises must load the official engine from `https://www.dumpers-repo.com` (`dfp-engine.js` + `dfp-version.json`). Do not tamper with or replace the engine.
+**Dumper's Fair-Value Price (DFP)** is **proprietary** to Michael Linzenmeyer. Production loads the official engine from `https://www.dumpers-repo.com` (`dfp-engine.js` + `dfp-version.json`). Do not tamper with, rehost, or replace the engine.
 
 - Built from the private **dfp-engine-private** repository; this repo ships the pre-built bundle in `public/`
 - Commodity/salvage Q0 bases refreshed via UEX Corp API (`npm run fetch-commodity-bases`)
@@ -327,7 +327,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 | `VITE_SUPABASE_URL` | Yes | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | Yes | Public anon key (frontend only) |
 | `VITE_BUILD_ID` | CI only | Build id baked into the client; compared to `version.json` so stale tabs show a refresh banner (set to `GITHUB_SHA` in deploy) |
-| `VITE_DFP_ENGINE_BASE_URL` | Dev only | Override DFP host — **not for production franchises** |
+| `VITE_DFP_ENGINE_BASE_URL` | Dev only | Override DFP host — **not for production** |
 
 Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_KEY` automatically in Supabase.
 
@@ -336,7 +336,7 @@ Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
 | [ci.yml](.github/workflows/ci.yml) | PRs to `main` | Lint + build (no deploy) |
-| [deploy.yml](.github/workflows/deploy.yml) | Push to `main` | Build + GitHub Pages deploy (reference instance) |
+| [deploy.yml](.github/workflows/deploy.yml) | Push to `main` | Build + GitHub Pages deploy (official site) |
 | [release-dumper.yml](.github/workflows/release-dumper.yml) | Dumper source changes on `main` | semantic-release version + tag |
 | [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags | Upload Windows portable exe to GitHub Release |
 
@@ -416,9 +416,7 @@ dist/          Production build output (gitignored in dev; CI artifact)
 
 ### Hosting
 
-Host `dist/` on any static provider with SPA fallback (`index.html` for unknown paths). GitHub Actions deploys the reference instance to GitHub Pages only.
-
-Franchise hosts: see [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) for Cloudflare, nginx, S3, secrets, and org logo upload.
+Host `dist/` with SPA fallback (`index.html` for unknown paths). GitHub Actions deploys the official site to GitHub Pages. Operator deploy notes: [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md).
 
 ---
 
@@ -426,27 +424,20 @@ Franchise hosts: see [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) for Cloudflare
 
 | Doc | Audience | Topic |
 |-----|----------|-------|
-| [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Hosts | Migrations, Edge Functions, OAuth, BP Dumper API |
-| [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) | Hosts | Deploy `dist/`, branding, env secrets |
+| [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Maintainers | Migrations, Edge Functions, OAuth, BP Dumper API |
+| [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) | Maintainers | Deploy `dist/`, branding, env secrets |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Maintainers | Game extraction paths and generated JSON |
 | [scripts/bp-dumper/README.md](scripts/bp-dumper/README.md) | Maintainers | BP Dumper release process |
-| [LICENSE](LICENSE) | Hosts | Franchise terms |
-| [TRADEMARK.md](TRADEMARK.md) | Hosts | Brand usage |
+| [LICENSE](LICENSE) | Everyone | Proprietary terms — official site only |
+| [TRADEMARK.md](TRADEMARK.md) | Everyone | Brand usage |
 
 Internal/historical notes also exist under `docs/` (Discord migration notes, stack revert playbook).
 
 ---
 
-## Franchise policy
+## Ownership
 
-Dumper's Repo is owned and licensed by **Michael Linzenmeyer** (RSI: Sinedrone_Sentinel). You may run a **free** franchise for your org under [LICENSE](LICENSE):
-
-- Keep the **Dumper's Repo** header
-- **Do not charge** members to use the app
-- **Do not tamper with** DFP
-- Ship unmodified [LICENSE](LICENSE) and [TRADEMARK.md](TRADEMARK.md)
-
-See [TRADEMARK.md](TRADEMARK.md) for brand rules.
+Dumper's Repo is owned by **Michael Linzenmeyer** (RSI: Sinedrone_Sentinel). The only authorized public deployment is [dumpers-repo.com](https://www.dumpers-repo.com). See [LICENSE](LICENSE) and [TRADEMARK.md](TRADEMARK.md).
 
 ---
 

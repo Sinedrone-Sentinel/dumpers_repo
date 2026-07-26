@@ -309,7 +309,7 @@ export const DATA_SOURCES = [
   {
     title: 'DFP pricing',
     content:
-      "Dumper's Fair-Value Price (DFP) is a proprietary pricing engine loaded from the official franchise bundle. The site does not pull live prices from third-party market APIs.",
+      "Dumper's Fair-Value Price (DFP) is a proprietary pricing engine loaded from the official site bundle. The site does not pull live prices from third-party market APIs.",
   },
   {
     title: 'Not included here',

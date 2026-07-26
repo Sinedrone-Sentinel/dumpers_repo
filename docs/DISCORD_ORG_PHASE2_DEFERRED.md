@@ -37,7 +37,7 @@ Registration flow:
 3. Re-scrape org public roster → find handle → read rank + stars
 4. Compare to `rsi_org_ranks` for that org (Founder always allowed; officer tier by stars/name)
 5. Pass → allow webhook URL for that `org_sid` only
-6. Fail (hidden member, ambiguous rank) → `org_webhook_registration_requests` → franchise staff approves with RSI links
+6. Fail (hidden member, ambiguous rank) → `org_webhook_registration_requests` → site staff approves with RSI links
 
 Leadership in org A does **not** grant org B.
 

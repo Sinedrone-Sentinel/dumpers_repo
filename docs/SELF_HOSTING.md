@@ -1,6 +1,6 @@
-# Self-Hosting Guide
+# Operator deploy guide
 
-This guide covers deploying your own Dumper's Repo franchise instance.
+Deploy notes for the **official** Dumper's Repo site ([dumpers-repo.com](https://dumpers-repo.com)). Unauthorized public copies are not permitted — see [LICENSE](../LICENSE).
 
 ## Prerequisites
 
@@ -76,21 +76,20 @@ server {
 
 Both platforms detect Vite projects automatically and handle SPA routing. Just connect your repository and set environment variables.
 
-## Branding Customization
+## Site config (`src/config/site.ts`)
 
-Franchises may customize these values in `src/config/site.ts`:
-
-| Constant | Purpose | Customizable |
-|----------|---------|--------------|
-| `SITE_URL` | Canonical URL for SEO (apex preferred; redirect www→apex at the host) | Yes |
-| `SITE_TITLE` | Default browser title / OG fallback (per-route titles in `src/config/seo.ts`) | Yes |
-| `SITE_DESCRIPTION` | Default meta description / OG fallback | Yes |
-| `SEO_GOOGLE_SITE_VERIFICATION` | Optional Search Console HTML-tag token (`src/config/seo.ts`) | Yes |
-| `SITE_COPYRIGHT` | Footer copyright text | Yes (per TRADEMARK.md) |
-| `SITE_SLOGAN` | Tagline displayed in UI | Yes |
-| `SITE_BRAND_*` | Dumper's Repo header colors, fonts, product mark | No (see LICENSE) |
-| `DFP_OFFICIAL_HOSTS` | Reference deployment hosts | No |
-| `DFP_CANONICAL_BASE_URL` | DFP engine source | No |
+| Constant | Purpose |
+|----------|---------|
+| `SITE_URL` | Canonical URL for SEO (apex preferred; redirect www→apex at the host) |
+| `SITE_TITLE` | Default browser title / OG fallback (per-route titles in `src/config/seo.ts`) |
+| `SITE_DESCRIPTION` | Default meta description / OG fallback |
+| `SEO_GOOGLE_SITE_VERIFICATION` | Optional Search Console HTML-tag token (`src/config/seo.ts`) |
+| `SITE_COPYRIGHT` | Footer copyright text |
+| `SITE_SUPPORT_URL` / `SITE_SUPPORT_LABEL` | Optional quiet footer tip link (e.g. Ko-fi); clear URL to hide |
+| `SITE_SLOGAN` | Tagline displayed in UI |
+| `SITE_BRAND_*` | Dumper's Repo header colors, fonts, product mark |
+| `DFP_OFFICIAL_HOSTS` | Official production hostnames |
+| `DFP_CANONICAL_BASE_URL` | DFP engine source for non-official hosts (dev / protected) |
 
 ### Org logo (blueprint modal flip)
 
@@ -104,9 +103,8 @@ Apply migration **`089_org_logo.sql`** before using upload. Until then, members 
 shipped default at `public/org-logo-default.svg` (Dumper's Repo + slogan). Your
 custom PNG replaces that default after upload.
 
-**Reference deployment only:** you may keep a gitignored `public/ORG_LOGO.png`
-for local dev (see `.gitignore`). Production should use the Settings upload so
-the logo is not bundled in `dist/` for franchisees who clone the repo.
+For local dev you may keep a gitignored `public/ORG_LOGO.png` (see `.gitignore`).
+Production should use the Settings upload so the logo is not baked into `dist/`.
 
 Also update `index.html` for:
 - `<title>` tag
@@ -122,11 +120,11 @@ Also update `index.html` for:
 
 Install browsers once locally: `npx playwright install chromium`. CI does this in the deploy workflow.
 
-After go-live: verify the property in Google Search Console, set `SEO_GOOGLE_SITE_VERIFICATION` if using the meta-tag method, and submit `https://YOUR_DOMAIN/sitemap.xml`. Prefer a single canonical host (apex **or** www) with a 301 redirect for the other.
+After go-live: verify the property in Google Search Console, set `SEO_GOOGLE_SITE_VERIFICATION` if using the meta-tag method, and submit `https://dumpers-repo.com/sitemap.xml`. Prefer a single canonical host (apex **or** www) with a 301 redirect for the other.
 
 ## DFP Engine (Important)
 
-Per the LICENSE, franchise deployments **must** load the DFP engine from the canonical host (`https://www.dumpers-repo.com`). Do not bundle or self-host the DFP engine in production.
+Production loads DFP from the official host (`https://www.dumpers-repo.com` / same-origin). Do not rehost or replace the engine.
 
 The `VITE_DFP_ENGINE_BASE_URL` environment variable is for **local development only**.
 
@@ -145,7 +143,7 @@ The `VITE_DFP_ENGINE_BASE_URL` environment variable is for **local development o
 Your host isn't configured for SPA routing. All paths need to serve `index.html`.
 
 ### CORS errors loading DFP
-The canonical DFP host (`https://www.dumpers-repo.com`) must allow your franchise origin. If you see CORS errors, verify you are loading from the canonical host and contact the licensor to have your origin allowed.
+Prefer same-origin DFP on dumpers-repo.com / www. If you override `VITE_DFP_ENGINE_BASE_URL` in local dev, ensure that host allows your origin.
 
 ### Edge Functions not working
 1. Verify functions are deployed: `npx supabase functions list`

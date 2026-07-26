@@ -6,6 +6,7 @@ import { SITE_COPYRIGHT, SITE_SLOGAN } from '../../config/site'
 import { buildJsonLdGraph } from '../../config/seo'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
+import SiteSupportLink from '../layout/SiteSupportLink'
 
 type FeatureCard = {
   title: string
@@ -286,8 +287,9 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
           </p>
         </section>
 
-        <footer className="relative border-t border-slate-800/80 px-4 py-8 text-center text-sm text-slate-500">
-          {SITE_COPYRIGHT}
+        <footer className="relative space-y-2 border-t border-slate-800/80 px-4 py-8 text-center text-sm text-slate-500">
+          <p>{SITE_COPYRIGHT}</p>
+          <SiteSupportLink />
         </footer>
       </div>
     </div>

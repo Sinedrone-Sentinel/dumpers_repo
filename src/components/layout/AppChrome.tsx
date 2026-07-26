@@ -3,6 +3,7 @@ import { useRouterState } from '@tanstack/react-router'
 import SiteBrandTitle from '../SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../../config/site'
 import DfpOptOutFooter from './DfpOptOutFooter'
+import SiteSupportLink from './SiteSupportLink'
 import type { NavGroup } from '../../config/appNav'
 import type { Profile } from '../../lib/supabase'
 import AppSidebar from './AppSidebar'
@@ -159,6 +160,7 @@ export default function AppChrome({
 
       <footer className="site-footer site-shell mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
+        <SiteSupportLink className="text-xs" />
         <p className="text-xs text-slate-600">
           Anonymous usage metrics (tool visits and active time) help improve the site.
         </p>

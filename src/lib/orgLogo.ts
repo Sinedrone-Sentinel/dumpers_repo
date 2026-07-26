@@ -1,9 +1,9 @@
 import { supabase } from './supabase'
 
-/** Fixed storage object name — one PNG per franchise instance. */
+/** Fixed storage object name — one PNG for this site. */
 export const ORG_LOGO_OBJECT_NAME = 'ORG_LOGO.png' as const
 export const ORG_LOGO_BUCKET = 'org-logo' as const
-/** Shipped default for franchises before a custom org logo is uploaded. */
+/** Shipped default before a custom org logo is uploaded. */
 export const ORG_LOGO_DEFAULT_PATH = '/org-logo-default.svg' as const
 /** Optional local override for reference/dev installs (gitignored, not shipped). */
 export const ORG_LOGO_LOCAL_PATH = '/ORG_LOGO.png' as const

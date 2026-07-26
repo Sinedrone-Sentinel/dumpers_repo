@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "dfpEngineVersion": "1.4.0-commodity-bases",
-  "license": "LicenseRef-Dumpers-Repo-Franchise",
+  "license": "LicenseRef-Dumpers-Repo-Proprietary",
   "type": "module",
   "engines": {
     "node": ">=22",

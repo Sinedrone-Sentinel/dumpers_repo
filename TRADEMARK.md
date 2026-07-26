@@ -9,32 +9,27 @@
 - Application header branding and logo treatment shipped with this repository (the **Dumper's Repo** product mark)
 
 Registration with a trademark office is not required for these guidelines to
-apply. The name is used in commerce by the reference deployment at
+apply. The name is used in commerce by the official site at
 [dumpers-repo.com](https://www.dumpers-repo.com).
 
-## Franchise deployments
+## Official deployment only
 
-Licensed franchises **must**:
+Dumper's Repo is a **single official product**. Unauthorized copies, mirrors,
+or rebranded deployments are not permitted. See [LICENSE](LICENSE).
 
-- Keep "Dumper's Repo" visible in the primary app header
-- Ship this file and the LICENSE unchanged
-- Not imply they are the official dumpers-repo.com instance unless authorized
-
-Franchises **may** customize footer copyright, domain, Supabase backend,
-member-approval workflows, and **org logo** (the PNG shown on blueprint detail
-card flip animations). Upload your org logo in **Settings → Site** (super-admin)
-after running migration `089_org_logo.sql`. Do not commit your org logo PNG to
-the franchise repo — it is stored in your Supabase project, not in git.
+Org logo (PNG) on blueprint detail card flip animations is configured in
+**Settings → Site** (super-admin) for the official instance. Do not treat that
+upload as permission to run a separate public site under the Dumper's Repo name.
 
 ## Dumper's Fair-Value Price (DFP)
 
-DFP is proprietary to Michael Linzenmeyer. Franchises must use the official
-canonical DFP engine URL in production. Do not publish, document, or
-reimplement the formula.
+DFP is proprietary to Michael Linzenmeyer. Do not publish, document, or
+reimplement the formula. Do not rehost or redistribute the DFP engine outside
+the official deployment.
 
-Super-admins may hide DFP prices in the UI only with the mandatory footer
-notice defined in LICENSE.
+Super-admins on the official site may hide DFP prices in the UI; when hidden,
+the site footer shows the opt-out notice defined in `src/config/site.ts`.
 
 ## Questions
 
-Contact the licensor through the official Dumper's Repo deployment.
+Contact the owner through the official Dumper's Repo site.

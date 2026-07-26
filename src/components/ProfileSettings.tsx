@@ -527,7 +527,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           {isSuperAdmin && (
             <SettingsSection
               title="Site"
-              description="Franchise-wide instance settings"
+              description="Site-wide settings"
             >
               <OrgLogoUploadField />
               <SettingsToggle

@@ -38,4 +38,4 @@ Before `git commit`:
 
 ## README Focus
 
-Write for **developers and franchise hosts**, not in-app member help. Keep feature lists scannable; link to `docs/` for deep setup detail.
+Write for **developers and site maintainers**, not in-app member help. Keep feature lists scannable; link to `docs/` for deep setup detail.

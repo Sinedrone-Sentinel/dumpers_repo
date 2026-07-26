@@ -1,7 +1,7 @@
 // =============================================================================
-// BRAND ASSETS - DO NOT MODIFY (required per LICENSE)
+// BRAND ASSETS
 // =============================================================================
-/** Franchise-required branding — do not remove or replace in licensed forks. */
+/** Official product branding — keep the Dumper's Repo header treatment. */
 export const SITE_BRAND_FONT = "'Orbitron', sans-serif" as const
 export const SITE_BRAND_REPO_GRADIENT =
   'linear-gradient(90deg, #ea580c 0%, #f97316 45%, #facc15 100%)' as const
@@ -10,9 +10,9 @@ export const SITE_BRAND_LOGO = '/favicon.svg' as const
 export const SITE_OG_IMAGE_PATH = '/og-image.png' as const
 
 // =============================================================================
-// FRANCHISE CUSTOMIZABLE - Update these for your deployment
+// SITE CONFIG — official dumpers-repo.com deployment
 // =============================================================================
-/** Your franchise's canonical URL (used for SEO, og:url) — must match the host GitHub Pages serves without redirect (apex, not www). */
+/** Canonical URL for SEO, og:url — must match the host GitHub Pages serves without redirect (apex, not www). */
 export const SITE_URL = 'https://dumpers-repo.com' as const
 /** Browser tab title and og:title (hub / fallback; per-route overrides in seo.ts) */
 export const SITE_TITLE =
@@ -23,24 +23,29 @@ export const SITE_DESCRIPTION =
 export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 /** Tagline shown in UI */
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
-/** Footer copyright - customize with your org name per TRADEMARK.md */
+/** Footer copyright */
 export const SITE_COPYRIGHT =
   '© 2026 Black Star - All data is subject to change every patch' as const
+/**
+ * Optional support / tip page (e.g. Ko-fi). Shown as a quiet footer link when set.
+ * Clear to hide the link.
+ */
+export const SITE_SUPPORT_URL = 'https://ko-fi.com/dumpers_repo' as const
+export const SITE_SUPPORT_LABEL = 'Support this site' as const
 
 // =============================================================================
-// DFP CONFIGURATION - DO NOT MODIFY (required per LICENSE)
+// DFP CONFIGURATION
 // =============================================================================
 /** Official deployment hostnames — load DFP same-origin (avoids apex/www CORS issues). */
 export const DFP_OFFICIAL_HOSTS = ['dumpers-repo.com', 'www.dumpers-repo.com'] as const
 
 /**
- * Canonical DFP base for franchise forks (cross-origin).
- * raw.githubusercontent.com serves ACAO:* so forks can fetch the engine.
- * Franchises MUST load DFP from this URL per LICENSE - do not self-host.
+ * Canonical DFP base (cross-origin fallback for local/dev when not on an official host).
+ * Do not rehost or replace the engine on other public sites — see LICENSE.
  */
 export const DFP_CANONICAL_BASE_URL =
   'https://raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo/main/public' as const
 
 /** Shown site-wide via AppChrome footer when DFP display is disabled (see DfpOptOutFooter). */
 export const DFP_OPT_OUT_NOTICE =
-  'This franchise has opted out of using/displaying Dumper\'s Fair-Value Price (DFP).' as const
+  'This site has opted out of using/displaying Dumper\'s Fair-Value Price (DFP).' as const
