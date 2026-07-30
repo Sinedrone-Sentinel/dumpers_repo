@@ -172,9 +172,33 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
     setView('responses')
   }
 
+  /** Drop blank choice labels before save; require at least two for radio/checkbox. */
+  const questionsForSave = (): QuestionnaireQuestion[] | null => {
+    const cleaned = editor.questions.map((q) => {
+      if (q.question_type !== 'radio' && q.question_type !== 'checkbox') return q
+      const options = (q.config.options ?? []).map((o) => o.trim()).filter(Boolean)
+      return { ...q, config: { ...q.config, options } }
+    })
+    for (const q of cleaned) {
+      if (
+        (q.question_type === 'radio' || q.question_type === 'checkbox') &&
+        (q.config.options?.length ?? 0) < 2
+      ) {
+        setMessage({
+          type: 'err',
+          text: `“${q.prompt || 'Untitled question'}” needs at least two choices.`,
+        })
+        return null
+      }
+    }
+    return cleaned
+  }
+
   const saveDraft = async (opts?: { quiet?: boolean }): Promise<string | null> => {
-    setLoading(true)
     setMessage(null)
+    const questions = questionsForSave()
+    if (!questions) return null
+    setLoading(true)
     const result = await adminSaveQuestionnaire({
       id: editor.id,
       title: editor.title,
@@ -184,7 +208,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       audience_rsi_verified: editor.audience_rsi_verified,
       availability_value: editor.availability_value,
       availability_unit: editor.availability_unit,
-      questions: editor.questions,
+      questions,
     })
     if (result.error) {
       setLoading(false)
@@ -197,7 +221,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       setMessage({ type: 'err', text: 'Save failed — no questionnaire id returned' })
       return null
     }
-    setEditor((e) => ({ ...e, id, status: 'draft' }))
+    setEditor((e) => ({ ...e, id, status: 'draft', questions }))
     if (!opts?.quiet) {
       setMessage({ type: 'ok', text: 'Saved draft' })
       setLoading(false)
@@ -231,6 +255,40 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
     setEditor((prev) => {
       const questions = [...prev.questions]
       questions[index] = { ...questions[index], ...patch }
+      return { ...prev, questions }
+    })
+  }
+
+  const updateChoiceOption = (questionIndex: number, optionIndex: number, value: string) => {
+    setEditor((prev) => {
+      const questions = [...prev.questions]
+      const q = questions[questionIndex]
+      const options = [...(q.config.options ?? [])]
+      options[optionIndex] = value
+      questions[questionIndex] = { ...q, config: { ...q.config, options } }
+      return { ...prev, questions }
+    })
+  }
+
+  const addChoiceOption = (questionIndex: number) => {
+    setEditor((prev) => {
+      const questions = [...prev.questions]
+      const q = questions[questionIndex]
+      const options = [...(q.config.options ?? []), '']
+      questions[questionIndex] = { ...q, config: { ...q.config, options } }
+      return { ...prev, questions }
+    })
+  }
+
+  const removeChoiceOption = (questionIndex: number, optionIndex: number) => {
+    setEditor((prev) => {
+      const questions = [...prev.questions]
+      const q = questions[questionIndex]
+      const options = (q.config.options ?? []).filter((_, i) => i !== optionIndex)
+      questions[questionIndex] = {
+        ...q,
+        config: { ...q.config, options: options.length > 0 ? options : [''] },
+      }
       return { ...prev, questions }
     })
   }
@@ -502,8 +560,8 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                         question_type === 'text'
                           ? { minLength: 0, maxLength: 500 }
                           : question_type === 'checkbox'
-                            ? { options: ['Option A', 'Option B'], minSelected: 1, maxSelected: 10 }
-                            : { options: ['Option A', 'Option B'] }
+                            ? { options: ['', ''], minSelected: 1, maxSelected: 10 }
+                            : { options: ['', ''] }
                       updateQuestion(index, { question_type, config })
                     }}
                     className="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-600 text-white"
@@ -599,26 +657,54 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   </div>
                 )}
                 {(q.question_type === 'radio' || q.question_type === 'checkbox') && (
-                  <label className="block text-xs text-slate-400">
-                    Options (one per line)
-                    <textarea
-                      disabled={editor.status === 'active'}
-                      rows={3}
-                      value={(q.config.options ?? []).join('\n')}
-                      onChange={(e) =>
-                        updateQuestion(index, {
-                          config: {
-                            ...q.config,
-                            options: e.target.value
-                              .split('\n')
-                              .map((s) => s.trim())
-                              .filter(Boolean),
-                          },
-                        })
-                      }
-                      className="mt-1 w-full px-2 py-1.5 rounded bg-slate-950 border border-slate-600 text-white text-sm"
-                    />
-                  </label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs text-slate-400">
+                        Choices ({q.question_type === 'radio' ? 'pick one' : 'pick many'})
+                      </p>
+                      {editor.status !== 'active' && (
+                        <button
+                          type="button"
+                          className="text-xs text-cyan-300 hover:text-cyan-200"
+                          onClick={() => addChoiceOption(index)}
+                        >
+                          + Add choice
+                        </button>
+                      )}
+                    </div>
+                    <ul className="space-y-1.5">
+                      {(q.config.options ?? ['']).map((opt, optIndex) => (
+                        <li key={optIndex} className="flex items-center gap-2">
+                          <input
+                            type={q.question_type === 'radio' ? 'radio' : 'checkbox'}
+                            disabled
+                            tabIndex={-1}
+                            aria-hidden
+                            className="shrink-0 opacity-60"
+                          />
+                          <input
+                            type="text"
+                            disabled={editor.status === 'active'}
+                            value={opt}
+                            onChange={(e) => updateChoiceOption(index, optIndex, e.target.value)}
+                            placeholder={`Choice ${optIndex + 1}`}
+                            className="min-w-0 flex-1 px-2 py-1.5 rounded bg-slate-950 border border-slate-600 text-white text-sm"
+                          />
+                          {editor.status !== 'active' && (
+                            <button
+                              type="button"
+                              className="shrink-0 text-xs text-red-400 hover:text-red-300 disabled:opacity-40"
+                              disabled={(q.config.options?.length ?? 0) <= 1}
+                              onClick={() => removeChoiceOption(index, optIndex)}
+                              title="Remove choice"
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 {q.question_type === 'checkbox' && (
                   <div className="flex flex-wrap gap-3 text-xs text-slate-400">

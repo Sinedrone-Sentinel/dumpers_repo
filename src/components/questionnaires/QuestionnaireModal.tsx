@@ -225,8 +225,11 @@ export default function QuestionnaireModal({
                 )}
                 {q.question_type === 'radio' && (
                   <div className="space-y-1.5">
-                    {options.map((opt) => (
-                      <label key={opt} className="flex items-center gap-2 text-sm text-slate-300">
+                    {options.map((opt, optIndex) => (
+                      <label
+                        key={`${qid}-r-${optIndex}`}
+                        className="flex items-center gap-2 text-sm text-slate-300"
+                      >
                         <input
                           type="radio"
                           name={`q-${qid}`}
@@ -245,11 +248,14 @@ export default function QuestionnaireModal({
                 )}
                 {q.question_type === 'checkbox' && (
                   <div className="space-y-1.5">
-                    {options.map((opt) => {
+                    {options.map((opt, optIndex) => {
                       const selected = answers[qid]?.options ?? []
                       const checked = selected.includes(opt)
                       return (
-                        <label key={opt} className="flex items-center gap-2 text-sm text-slate-300">
+                        <label
+                          key={`${qid}-c-${optIndex}`}
+                          className="flex items-center gap-2 text-sm text-slate-300"
+                        >
                           <input
                             type="checkbox"
                             checked={checked}
