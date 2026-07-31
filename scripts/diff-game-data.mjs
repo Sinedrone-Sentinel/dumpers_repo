@@ -11,9 +11,10 @@
  *   node scripts/diff-game-data.mjs --write       # also write game-whats-new.json
  *
  * Reports per file: ADDED / REMOVED / RENAMED-MOVED / CHANGED records.
- * Rename/move detection: a "removed" record whose stable id matches an "added"
- * record is reported as renamed/moved, NOT removed — CIG moves records around
- * between patches, so never trust a bare removal without checking this report.
+ * Rename/move detection: a "removed" record whose identity key (idKey) matches an
+ * "added" record is reported as renamed/moved, NOT removed — e.g. blueprint UUID
+ * moves, or mission contract UUID reissues paired by debugName. Never trust a
+ * bare removal without checking this report.
  */
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -67,7 +68,7 @@ function printCollection(col) {
 
   printRecords('ADDED', col.added, (a) => `+ ${labelOf(a.rec, a.key)}`)
   printRecords('REMOVED (verify not moved!)', col.removed, (r) => `- ${labelOf(r.rec, r.key)}`)
-  printRecords('RENAMED/MOVED (same id)', col.renamed, (r) => `~ ${r.oldKey} → ${r.newKey}`)
+  printRecords('RENAMED/MOVED (same identity key)', col.renamed, (r) => `~ ${r.oldKey} → ${r.newKey}`)
   printRecords('CHANGED', col.changed, (c) => {
     const fieldSummary = c.fields
       .slice(0, MAX_FIELDS_PER_RECORD)

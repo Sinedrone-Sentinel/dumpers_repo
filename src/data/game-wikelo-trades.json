@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (TheCollector contract generator)",
-  "_extracted": "2026-07-31T01:46:24.790Z",
+  "_extracted": "2026-07-31T02:44:31.824Z",
   "trades": [
     {
       "id": "5bf19672-f057-4ccf-bdd4-d309edfeea15",
@@ -143,8 +143,8 @@
           "amount": 1
         },
         {
-          "resourceName": "Quantanium",
-          "name": "Quantanium",
+          "resourceName": "Quantainium",
+          "name": "Quantainium",
           "scu": 36
         },
         {
@@ -4512,8 +4512,8 @@
       "subCategory": "favor",
       "costs": [
         {
-          "resourceName": "Quantanium",
-          "name": "Quantanium",
+          "resourceName": "Quantainium",
+          "name": "Quantainium",
           "scu": 24
         }
       ],

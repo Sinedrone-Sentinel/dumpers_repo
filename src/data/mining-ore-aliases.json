@@ -1,5 +1,5 @@
 {
-  "_comment": "Known CIG localization / planet-desc typos → canonical ore spellings. Compendium (Journal_General_Mining_Compendium) is the master list; desc strings are matched here first, then fuzzy-matched to compendium names. Scanner OCR misreads are handled only by resolveOcrOreName fuzzy matching — not this file.",
+  "_comment": "Resolution map: raw labels → canonical ore spellings. Used when parsing game localization / mineables. Scanner OCR misreads use resolveOcrOreName fuzzy matching only — not this file.",
   "aliases": {
     "Aluminium": "Aluminum",
     "Alumium": "Aluminum",
@@ -13,5 +13,7 @@
     "Hephestanite": "Hephaestanite",
     "Quantanium": "Quantainium",
     "Sileron": "Stileron"
-  }
+  },
+  "_legacyAliasKeysComment": "Kept for matching old tables / StarStrings short forms. Never treated as CIG misspellings in the Updates ticker. BP Dumper / OCR paths must not feed the ticker.",
+  "legacyAliasKeys": ["Heph"]
 }

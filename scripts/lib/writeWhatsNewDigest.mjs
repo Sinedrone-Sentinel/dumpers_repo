@@ -10,8 +10,9 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync, unlinkSync, mk
 import { join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { config as loadDotenv } from 'dotenv'
-import { diffGameDataFiles, fmtValue, readGitJson } from './diffGameData.mjs'
+import { diffGameDataFiles, fmtValue } from './diffGameData.mjs'
 import { getAppliedSpellingCorrections } from './spellingCorrections.mjs'
+import aliasData from '../../src/data/mining-ore-aliases.json' with { type: 'json' }
 
 const MAX_SUMMARY_FIELDS = 4
 
@@ -64,38 +65,34 @@ function pendingPath(projectRoot) {
   return join(projectRoot, 'extracted-data', 'whats-new-pending.jsonl')
 }
 
-function newAliasMisspellings(projectRoot, gitRef) {
-  const rel = 'src/data/mining-ore-aliases.json'
-  const current = readJsonSafe(join(projectRoot, rel))
-  const previous = readGitJson(projectRoot, gitRef, rel)
-  const curAliases = current?.aliases ?? {}
-  const prevAliases = previous?.aliases ?? {}
-  const items = []
-  for (const [from, to] of Object.entries(curAliases)) {
-    if (prevAliases[from] !== to) {
-      items.push({
-        key: from,
-        label: `"${from}" → "${to}"`,
-        summary: previous ? 'New / updated alias map' : 'Ore / localization alias',
-      })
-    }
-  }
-  return items
-}
-
-function buildMisspellingsEntry(version, detectedAt, projectRoot, gitRef) {
+/**
+ * Misspellings ticker = curated CIG/game-localization typos from mining-ore-aliases.json
+ * (plus any exact corrections applied during this parse).
+ * Excludes legacyAliasKeys (StarStrings/MrKraken short forms like Heph).
+ * No fuzzy matching. BP Dumper / client OCR never feed this.
+ */
+function buildMisspellingsEntry(version, detectedAt) {
+  const legacy = new Set(aliasData.legacyAliasKeys ?? [])
   const byKey = new Map()
+
+  for (const [from, to] of Object.entries(aliasData.aliases ?? {})) {
+    if (legacy.has(from) || !from || from === to) continue
+    byKey.set(`${from}\0${to}`, {
+      key: from,
+      label: `"${from}" → "${to}"`,
+      summary: 'Ore / game localization',
+    })
+  }
+
   for (const c of getAppliedSpellingCorrections()) {
+    if (legacy.has(c.from)) continue
     byKey.set(`${c.from}\0${c.to}`, {
       key: c.from,
       label: `"${c.from}" → "${c.to}"`,
-      summary: c.context || 'localization',
+      summary: c.context || 'Ore / game localization',
     })
   }
-  for (const item of newAliasMisspellings(projectRoot, gitRef)) {
-    const to = item.label.match(/→\s*"([^"]+)"/)?.[1] ?? item.label
-    byKey.set(`${item.key}\0${to}`, item)
-  }
+
   const items = [...byKey.values()]
   if (!items.length) return null
 
@@ -168,7 +165,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       version,
       category,
       action,
-      headline: `WHAT'S NEW: ${n} ${category} ${verb} in ${version}`,
+      headline: `${n} ${category} ${verb} in ${version}`,
       detectedAt,
       items: unique,
     })
@@ -281,9 +278,9 @@ export async function writeWhatsNewDigest(options = {}) {
     detectedAt,
   })
 
-  const aliasOnly = newAliasMisspellings(projectRoot, gitRef)
-  if (freshEntries.length > 0 || aliasOnly.length > 0) {
-    const misspellings = buildMisspellingsEntry(version, detectedAt, projectRoot, gitRef)
+  // Curated CIG/game typos (legacy StarStrings keys excluded).
+  if (freshEntries.length > 0) {
+    const misspellings = buildMisspellingsEntry(version, detectedAt)
     if (misspellings) freshEntries.push(misspellings)
   }
 

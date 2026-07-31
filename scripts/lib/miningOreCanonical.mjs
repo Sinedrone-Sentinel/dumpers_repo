@@ -11,6 +11,9 @@ import { recordSpellingCorrection } from './spellingCorrections.mjs'
 /** @type {Record<string, string>} */
 export const ORE_SPELLING_ALIASES = { ...aliasData.aliases }
 
+/** Legacy / non-game short forms (e.g. old StarStrings) — resolve, but never ticker-roast. */
+export const LEGACY_ORE_ALIAS_KEYS = new Set(aliasData.legacyAliasKeys ?? [])
+
 /** Ship-mining rarity tiers — duplicated here to avoid circular imports with miningOreRarity. */
 const ORE_RARITY_TIER_LIST = {
   legendary: ['Quantainium', 'Savrilium', 'Stileron'],
@@ -76,8 +79,9 @@ export function resolveCanonicalOreName(rawName, masterList = null) {
 
   if (ORE_SPELLING_ALIASES[label]) {
     const canonical = ORE_SPELLING_ALIASES[label]
-    if (canonical !== label) {
-      recordSpellingCorrection(label, canonical, 'Ore / localization alias')
+    // Only roast CIG/game-localization hits — never legacy StarStrings / MrKraken short forms
+    if (canonical !== label && !LEGACY_ORE_ALIAS_KEYS.has(label)) {
+      recordSpellingCorrection(label, canonical, 'Ore / game localization')
     }
     return canonical
   }
@@ -107,7 +111,8 @@ export function resolveCanonicalOreName(rawName, masterList = null) {
   }
 
   if (best != null && bestDist > 0 && bestDist <= 2 && label.length >= 4) {
-    recordSpellingCorrection(label, best, 'Ore / fuzzy match')
+    // Fuzzy match is for resolution only — do NOT feed the Misspellings ticker
+    // (too many false positives from unrelated localization tokens).
     return best
   }
 

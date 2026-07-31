@@ -15,6 +15,14 @@
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, basename } from 'node:path'
+import { ORE_SPELLING_ALIASES } from './miningOreCanonical.mjs'
+
+/** Canonicalize ResourceType names (Quantanium → Quantainium, etc.). */
+function canonicalizeResourceName(raw) {
+  const name = String(raw || '').trim()
+  if (!name) return name
+  return ORE_SPELLING_ALIASES[name] || name
+}
 
 const GENERATOR_PATH = 'libs/foundry/records/contracts/contractgenerator/thecollector.json'
 const TEMPLATES_DIR = 'libs/foundry/records/contracts/contracttemplates'
@@ -192,7 +200,7 @@ function extractCostsFromOrders(orders, resolveEntity) {
       costs.push({ entityClass, name: entity.name, amount })
     } else if (order._Type_ === 'HaulingOrderContent_Resource' || order._Type_ === 'HaulingOrder_Resource') {
       const recordName = order.resource?._RecordName_ ?? ''
-      const resourceName = String(recordName).replace(/^ResourceType\./, '')
+      const resourceName = canonicalizeResourceName(String(recordName).replace(/^ResourceType\./, ''))
       const scu = Math.max(order.minSCU ?? 0, order.maxSCU ?? 0)
       if (!resourceName || scu <= 0) continue
       costs.push({ resourceName, name: resourceName, scu })

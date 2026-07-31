@@ -22,26 +22,27 @@ export const COLLECTIONS = {
     },
   ],
   'game-mining.json': [
+    // Ores / harvestables only — mining gear is equipment (Components).
     { path: 'mineableElements', key: 'name', idKey: 'id', category: 'Resources', label: (r) => r.name },
     {
       path: 'miningLasers',
       key: 'name',
       idKey: 'id',
-      category: 'Resources',
+      category: 'Components',
       label: (r) => r.displayName || r.name,
     },
     {
       path: 'miningModules',
       key: 'name',
       idKey: 'id',
-      category: 'Resources',
+      category: 'Components',
       label: (r) => r.displayName || r.name,
     },
     {
       path: 'miningGadgets',
       key: 'name',
       idKey: 'id',
-      category: 'Resources',
+      category: 'Components',
       label: (r) => r.displayName || r.name,
     },
   ],
@@ -74,9 +75,14 @@ export const COLLECTIONS = {
   'game-blueprint-missions.json': [
     {
       path: 'contracts',
+      // Primary key = contract UUID. CIG often reissues the same mission under a new
+      // UUID; debugName is the stable identity used to pair that churn as rename
+      // (then gameplay field diffs become "changed", not fake add+remove).
       key: 'id',
+      idKey: 'debugName',
       category: 'Missions',
-      label: (r) => r.displayTitle || r.title || r.debugName || r.id,
+      // Player titles are heavily reused (refuel ranks, etc.) — disambiguate in ticker.
+      label: (r) => formatMissionTickerLabel(r),
     },
   ],
   'game-salvage-modules.json': [
@@ -96,6 +102,41 @@ export const COLLECTIONS = {
       label: (r) => r.title || r.debugName || r.id,
     },
   ],
+}
+
+/**
+ * Mission contracts reuse the same displayTitle across ranks/systems/loadouts.
+ * Build a member-facing label that separates those variants.
+ */
+export function formatMissionTickerLabel(r) {
+  const title = r?.displayTitle || r?.title || r?.debugName || r?.id || 'Mission'
+  const parts = [String(title)]
+  if (r?.system) parts.push(String(r.system))
+  const debugName = String(r?.debugName || '')
+  const rank = debugName.match(/_Rank(\d+)/i)?.[1]
+  if (rank) parts.push(`Rank ${rank}`)
+  const variant = missionVariantHint(debugName, r?.system)
+  if (variant) parts.push(variant)
+  else if (r?.faction) parts.push(String(r.faction))
+  return parts.join(' · ')
+}
+
+/** Strip system/rank prefixes from debugName → short loadout/variant hint. */
+function missionVariantHint(debugName, system) {
+  if (!debugName) return null
+  let s = String(debugName)
+  s = s.replace(/^Refueling_/i, '')
+  if (system) {
+    const sys = String(system).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    s = s.replace(new RegExp(`^${sys}_?`, 'i'), '')
+    // Multi-system tokens like PyroNyx
+    s = s.replace(new RegExp(`^[A-Za-z]*${sys}[A-Za-z]*_?`, 'i'), '')
+  }
+  s = s.replace(/_Rank\d+$/i, '')
+  s = s.replace(/_/g, ' ').replace(/\s+/g, ' ').trim()
+  if (!s || /^rank\s*\d+$/i.test(s)) return null
+  if (s.length > 48) s = `${s.slice(0, 45)}…`
+  return s
 }
 
 /** Top-level keys ignored for generic map diffs. */
@@ -122,12 +163,18 @@ export const COSMETIC_FIELD_NAMES = new Set([
   'name', // label-only when not the collection key (stripped via stripForGameplayDiff)
 ])
 
+/**
+ * Parser / release-metadata fields that appear across patches without meaningful
+ * member-facing gameplay change (also suppresses schema-add noise on backfills).
+ */
+export const NON_GAMEPLAY_FIELD_NAMES = new Set(['frequency', 'notForRelease'])
+
 export function stripMeta(value) {
   if (Array.isArray(value)) return value.map(stripMeta)
   if (value && typeof value === 'object') {
     const out = {}
     for (const k of Object.keys(value)) {
-      if (k === '_extracted') continue
+      if (k === '_extracted' || k.startsWith('__')) continue
       out[k] = stripMeta(value[k])
     }
     return out
@@ -138,11 +185,14 @@ export function stripMeta(value) {
 /** Strip cosmetic leaves so name-only churn does not count as a gameplay change. */
 export function stripForGameplayDiff(value, options = {}) {
   const keepName = options.keepName === true
+  const omitKeys = options.omitKeys instanceof Set ? options.omitKeys : null
   if (Array.isArray(value)) return value.map((v) => stripForGameplayDiff(v, options))
   if (value && typeof value === 'object') {
     const out = {}
     for (const k of Object.keys(value)) {
-      if (k === '_extracted') continue
+      if (k === '_extracted' || k.startsWith('__')) continue
+      if (omitKeys?.has(k)) continue
+      if (NON_GAMEPLAY_FIELD_NAMES.has(k)) continue
       if (COSMETIC_FIELD_NAMES.has(k) && !(keepName && k === 'name')) continue
       out[k] = stripForGameplayDiff(value[k], options)
     }
@@ -232,32 +282,53 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
 
   const renamed = []
   if (spec.idKey) {
-    const addedById = new Map(
-      added.filter((a) => a.rec?.[spec.idKey]).map((a) => [a.rec[spec.idKey], a])
-    )
+    const addedById = new Map()
+    for (const a of added) {
+      const id = a.rec?.[spec.idKey]
+      if (id == null || id === '') continue
+      // 1:1 pairing only — duplicate identity keys stay as add/remove noise
+      if (!addedById.has(String(id))) addedById.set(String(id), a)
+    }
     for (let i = removed.length - 1; i >= 0; i--) {
-      const id = removed[i].rec?.[spec.idKey]
-      if (id && addedById.has(id)) {
-        const match = addedById.get(id)
-        renamed.push({ oldKey: removed[i].key, newKey: match.key, id })
-        removed.splice(i, 1)
-        added.splice(added.indexOf(match), 1)
-      }
+      const idRaw = removed[i].rec?.[spec.idKey]
+      if (idRaw == null || idRaw === '') continue
+      const id = String(idRaw)
+      if (!addedById.has(id)) continue
+      const match = addedById.get(id)
+      const oldRec = removed[i].rec
+      const newRec = match.rec
+      renamed.push({ oldKey: removed[i].key, newKey: match.key, id, oldRec, newRec })
+      removed.splice(i, 1)
+      const addIdx = added.indexOf(match)
+      if (addIdx >= 0) added.splice(addIdx, 1)
+      addedById.delete(id)
     }
   }
 
   const keepName = spec.key === 'name'
-  for (const [key, newRec] of newByKey) {
-    const oldRec = oldByKey.get(key)
-    if (!oldRec) continue
+  const pushChanged = (key, oldRec, newRec, extraOmit = null) => {
+    const omitKeys = extraOmit
     const oldCmp = ignoreCosmetic
-      ? stripForGameplayDiff(stripMeta(oldRec), { keepName })
+      ? stripForGameplayDiff(stripMeta(oldRec), { keepName, omitKeys })
       : stripMeta(oldRec)
     const newCmp = ignoreCosmetic
-      ? stripForGameplayDiff(stripMeta(newRec), { keepName })
+      ? stripForGameplayDiff(stripMeta(newRec), { keepName, omitKeys })
       : stripMeta(newRec)
     const fields = changedFields(oldCmp, newCmp)
     if (fields.length) changed.push({ key, rec: newRec, fields })
+  }
+
+  for (const [key, newRec] of newByKey) {
+    const oldRec = oldByKey.get(key)
+    if (!oldRec) continue
+    pushChanged(key, oldRec, newRec)
+  }
+
+  // Identity-key churn (e.g. mission UUID reissue): omit primary key from the
+  // field diff so the new UUID itself is not reported as a gameplay change.
+  const renameOmit = new Set([spec.key])
+  for (const r of renamed) {
+    if (r.oldRec && r.newRec) pushChanged(r.newKey, r.oldRec, r.newRec, renameOmit)
   }
 
   if (!added.length && !removed.length && !renamed.length && !changed.length) return null
