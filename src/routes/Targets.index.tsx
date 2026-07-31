@@ -128,10 +128,10 @@ function MissionMetaLine({
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
-      {/* Lawful/Illegal indicator */}
+      {/* Verified/Unverified indicator */}
       {!isLawful && (
         <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-red-950/50 text-red-400 border-red-500/40">
-          Illegal
+          Unverified
         </span>
       )}
       <MissionCategoryBadge category={category} />
@@ -323,6 +323,8 @@ export default function TargetsRoute() {
     const entry = findBrowseMissionEntry(mission.mission, {
       faction: mission.giver,
       system: mission.system,
+      region: mission.subRegion,
+      localityKey: mission.locality?.key,
     })
     if (!entry) return
 

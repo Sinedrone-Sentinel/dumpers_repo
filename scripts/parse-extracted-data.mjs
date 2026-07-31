@@ -377,6 +377,99 @@ function extractMissionTokenIntent(raw) {
   return inner.charAt(0).toUpperCase() + inner.slice(1)
 }
 
+/** Normalize missiontype/pu/*.json basename → mobiGlas MissionType label. */
+function formatMissionTypeLabel(rawSlug) {
+  if (!rawSlug) return null
+  let catName = String(rawSlug).replace(/_/g, ' ')
+  catName = catName
+    // MissionType.BountyHunter → "Bounty Hunter" (NOT the BHG contractor faction)
+    .replace(/bountyhunter/i, 'Bounty Hunter')
+    .replace(/shipmining/i, 'Ship Mining')
+    .replace(/groundmining/i, 'Ground Vehicle Mining')
+    .replace(/fpsmining/i, 'Hand Mining')
+    .replace(/hauling interstellar/i, 'Hauling Interstellar')
+    .replace(/hauling local/i, 'Hauling Local')
+    .replace(/hauling planetary/i, 'Hauling Planetary')
+    .replace(/hauling solar/i, 'Hauling Solar')
+    .replace(/combat support/i, 'Combat Support')
+    .replace(/search.?rescue/i, 'Search & Rescue')
+    .replace(/security escort/i, 'Security Escort')
+    .replace(/cargo recovery/i, 'Cargo Recovery')
+    .replace(/wikelo smallitems/i, 'Wikelo Small Items')
+    .replace(/wikelo ships/i, 'Wikelo Ships')
+  if (!/[A-Z]/.test(catName)) {
+    catName = catName.split(' ').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  }
+  return catName
+}
+
+function extractMissionTypeSlugFromPath(filePath) {
+  if (!filePath) return null
+  const match = String(filePath).match(/missiontype\/pu\/([^/\\]+)\.json$/i)
+  return match ? match[1] : null
+}
+
+/**
+ * Resolve mobiGlas MissionType category (Bounty Hunter, Mercenary, …).
+ *
+ * Source of truth: missionTypeOverride / missiontype/pu/*.json only.
+ * Never use title/description/localization text — contractors like Bounty Hunters
+ * Guild offer multiple MissionTypes (e.g. Bounty Hunter), and text is unreliable.
+ * Bounty Hunters Guild is the faction/contractor, not a MissionType label.
+ */
+function resolveMissionMenuCategory({
+  missionTypeFile,
+  generatorFile = '',
+  generatorDebugName = '',
+  generatorType = '',
+  templatePath = '',
+  debugName = '',
+  poolKeys = '',
+}) {
+  const fromOverride = extractMissionTypeSlugFromPath(missionTypeFile)
+  if (fromOverride) return formatMissionTypeLabel(fromOverride)
+
+  const fromTemplate = extractMissionTypeSlugFromPath(templatePath)
+  if (fromTemplate) return formatMissionTypeLabel(fromTemplate)
+
+  // Structural fallbacks only (paths / record filenames) — never mission copy.
+  const blob = [generatorFile, generatorDebugName, generatorType, poolKeys, debugName, templatePath]
+    .join(' ')
+    .toLowerCase()
+    .replace(/\\/g, '/')
+
+  const embeddedType = blob.match(/missiontype\/pu\/([a-z0-9_]+)/i)
+  if (embeddedType) return formatMissionTypeLabel(embeddedType[1])
+
+  // Generator folder careers (not contractor names like bountyhunterguild).
+  if (blob.includes('shipmining') || blob.includes('ship_mining')) return 'Ship Mining'
+  if (blob.includes('groundmining') || blob.includes('ground_mining')) return 'Ground Vehicle Mining'
+  if (blob.includes('fpsmining') || blob.includes('handmin')) return 'Hand Mining'
+  if (blob.includes('hauling_interstellar') || blob.includes('hauling interstellar')) {
+    return 'Hauling Interstellar'
+  }
+  if (blob.includes('hauling')) return 'Hauling'
+  if (blob.includes('/investigation') || blob.includes('missiontype/pu/investigation')) {
+    return 'Investigation'
+  }
+  if (blob.includes('salvage')) return 'Salvage'
+  if (blob.includes('collection') || blob.includes('missiontype/pu/collection')) return 'Collection'
+  // BHG generators live under mercenary_guild/ but use MissionType.BountyHunter —
+  // never infer Mercenary from that folder alone.
+  const underBhgContractor =
+    blob.includes('bountyhunterguild') || blob.includes('bountyhuntersguild')
+  if (
+    !underBhgContractor &&
+    (blob.includes('mercenary_guild') ||
+      blob.includes('/mercenary/') ||
+      blob.includes('missiontype/pu/mercenary'))
+  ) {
+    return 'Mercenary'
+  }
+
+  return null
+}
+
 function resolveContractDisplayTitle({ title, titleKey, debugName, localization, category, system }) {
   const debugLower = (debugName || '').toLowerCase()
   const titleLower = (title || '').toLowerCase()
@@ -411,7 +504,12 @@ function resolveContractDisplayTitle({ title, titleKey, debugName, localization,
     return 'Verified Bounty · ASD Facility'
   }
 
-  if (debugLower.includes('rockcracker') || titleLower.includes('qv breaker station')) {
+  // Only BHG Rockcracker bounties use the Verified Bounty title — Vaughn/HH/CFP
+  // share the Rockcracker location under Unverified (or other) contractors.
+  const isBhgRockcracker =
+    (debugLower.includes('bhg_') || debugLower.includes('bountyhuntersguild')) &&
+    (debugLower.includes('rockcracker') || titleLower.includes('qv breaker station'))
+  if (isBhgRockcracker) {
     if (titleLower.includes('high-risk')) return 'High-Risk Bounty · QV Breaker Station'
     return 'Verified Bounty · QV Breaker Station'
   }
@@ -1277,13 +1375,9 @@ function buildBlueprintRewardMissionsFromContracts(internalName, missionBlueprin
  * - aUEC rewards
  * - Rep points awarded
  */
-function resolveContractIsLawful(factionKey, debugName) {
+/** Verified (true) vs Unverified (false) — contractor factionReputation key. */
+function resolveContractIsLawful(factionKey, _debugName) {
   const key = String(factionKey || '').toLowerCase()
-  const debug = String(debugName || '')
-
-  // Generic board escort/defend templates are lawful work even when offered
-  // under an unlawful faction's generator (e.g. Headhunters site defense).
-  if (/_(defendentitiesandescort|defenddestructibleentities)_/i.test(debug)) return true
 
   if (key.startsWith('unlawful_')) return false
   if (key.startsWith('lawful_')) return true
@@ -1636,96 +1730,21 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           if (localityRegion) region = localityRegion[1].toUpperCase()
         }
         
-        // Extract mission category from missionTypeOverride or paramOverrides
-        let category = null
-        const missionTypeFile = contract.paramOverrides?.missionTypeOverride || contract.missionTypeOverride
-        if (missionTypeFile) {
-          const catMatch = missionTypeFile.match(/missiontype\/pu\/([^/]+)\.json$/i)
-          if (catMatch) {
-            let catName = catMatch[1].replace(/_/g, ' ')
-            // Handle compound words (bountyhunter -> Bounty Hunter, shipmining -> Ship Mining)
-            catName = catName
-              .replace(/bountyhunter/i, 'Bounty Hunter')
-              .replace(/shipmining/i, 'Ship Mining')
-              .replace(/groundmining/i, 'Ground Vehicle Mining')
-              .replace(/fpsmining/i, 'Hand Mining')
-              .replace(/hauling interstellar/i, 'Hauling - Interstellar')
-              .replace(/hauling local/i, 'Hauling - Local')
-              .replace(/hauling planetary/i, 'Hauling - Planetary')
-              .replace(/hauling solar/i, 'Hauling - Solar')
-            // Capitalize first letter of each word if not already handled
-            if (!/[A-Z]/.test(catName)) {
-              catName = catName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-            }
-            category = catName
-          }
-        }
-        const templateLower = templatePath.toLowerCase()
-        const titleLower = title.toLowerCase()
-        const poolKeys = blueprintPools.map(pool => pool.key).join(' ')
-
-        // Fallback: infer from contract signals
-        if (!category) {
-          const pathLower = (contract.__path || '').toLowerCase()
-          if (
-            templateLower.includes('asdfacilitydelve') ||
-            debugLower.includes('hockrow_facilitydelve') ||
-            titleLower.includes('jorrit dossier') ||
-            /\basd[23][a-z]?\b/.test(poolKeys)
-          ) {
-            category = 'Investigation'
-          } else if (
-            templateLower.includes('itemresourcegathering_thecollector') ||
-            debugLower.startsWith('thecollector_') ||
-            blueprintPools.some(pool => pool.path.toLowerCase().includes('collectorwikelo'))
-          ) {
-            category = 'Collection'
-          } else if (pathLower.includes('bountyhunter') || debugLower.includes('bhg_') || debugLower.includes('bounty')) {
-            category = 'Bounty Hunter'
-          } else if (pathLower.includes('mercenary') || debugLower.includes('merc')) {
-            category = 'Mercenary'
-          } else if (pathLower.includes('salvage') || debugLower.includes('salvage')) {
-            category = 'Salvage'
-          } else if (pathLower.includes('shipmining') || debugLower.includes('shipmining')) {
-            category = 'Ship Mining'
-          } else if (pathLower.includes('groundmining') || debugLower.includes('groundmining')) {
-            category = 'Ground Vehicle Mining'
-          } else if (pathLower.includes('fpsmining') || debugLower.includes('handmin')) {
-            category = 'Hand Mining'
-          } else if (pathLower.includes('hauling') || debugLower.includes('hauling')) {
-            category = 'Hauling'
-          } else if (pathLower.includes('investigation') || debugLower.includes('investigation')) {
-            category = 'Investigation'
-          }
-        }
-        
-        // Second fallback: infer from mission title
-        if (!category && title) {
-          // Combat/Elimination missions
-          if (titleLower.includes('bounty') || titleLower.includes('hunt')) {
-            category = 'Bounty Hunter'
-          } else if (titleLower.includes('destroy') || titleLower.includes('eliminate') || titleLower.includes('kill')) {
-            category = 'Combat'
-          } else if (titleLower.includes('disable') || titleLower.includes('intercept')) {
-            category = 'Combat'
-          // Protection/Escort missions
-          } else if (titleLower.includes('escort') || titleLower.includes('protect') || titleLower.includes('defend')) {
-            category = 'Security Escort'
-          // Cargo/Recovery missions
-          } else if (titleLower.includes('recover') || titleLower.includes('cargo') || titleLower.includes('retrieve')) {
-            category = 'Cargo Recovery'
-          } else if (titleLower.includes('deliver') || titleLower.includes('transport') || titleLower.includes('supply')) {
-            category = 'Delivery'
-          // Support missions
-          } else if (titleLower.includes('distress') || titleLower.includes('rescue') || titleLower.includes('aid') || titleLower.includes('save')) {
-            category = 'Search & Rescue'
-          } else if (titleLower.includes('support') || titleLower.includes('assist')) {
-            category = 'Combat Support'
-          // Attack missions
-          } else if (titleLower.includes('attack') || titleLower.includes('assault') || titleLower.includes('raid')) {
-            category = 'Mercenary'
-          }
-        }
+        const missionTypeFile =
+          contract.paramOverrides?.missionTypeOverride ||
+          contract.missionTypeOverride ||
+          generator.contractParams?.missionTypeOverride ||
+          null
+        const poolKeys = blueprintPools.map((pool) => pool.key).join(' ')
+        const category = resolveMissionMenuCategory({
+          missionTypeFile,
+          generatorFile: file,
+          generatorDebugName: generator.debugName || '',
+          generatorType: generator._Type_ || '',
+          templatePath,
+          debugName,
+          poolKeys,
+        })
         
         // Register completion tags this contract emits on success (prereq chain sources)
         const emittedTagIds = extractContractCompletionTagIds(contract)

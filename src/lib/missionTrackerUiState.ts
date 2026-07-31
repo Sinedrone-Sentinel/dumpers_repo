@@ -85,10 +85,18 @@ export function stashBrowseMissionFromReward(reward: {
   mission: string
   faction: string
   system?: string | null
+  region?: string | null
+  poolKey?: string | null
+  debugName?: string | null
+  locality?: { key?: string | null } | null
 }): boolean {
   const entry = findBrowseMissionEntry(reward.mission, {
     faction: reward.faction,
     system: reward.system,
+    region: reward.region,
+    poolKey: reward.poolKey,
+    debugName: reward.debugName,
+    localityKey: reward.locality?.key,
   })
   if (!entry) return false
 

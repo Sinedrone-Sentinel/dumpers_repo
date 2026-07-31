@@ -1,15 +1,12 @@
 /**
- * Lawful vs illegal mission classification.
+ * Verified vs Unverified contract type (legal vs illegal board).
  *
- * Use game factionKey (lawful_/unlawful_ prefix) — not display faction name or
- * mission category (e.g. "Bounty Hunter" is a category many lawful factions share).
+ * In-game Contracts app: Verified = meets UEE/local law; Unverified = may violate law.
+ * We map that to isLawful from the contractor's faction reputation key
+ * (lawful_* / unlawful_*) — not mission category (Bounty Hunter, Mercenary, etc.).
  *
- * unknown factionKey = generic board / contractor template without unlawful rep binding.
+ * unknown/non-prefixed factionKey = generic board without unlawful rep → Verified.
  */
-
-/** Board escort/defend templates (Foxwell, Headhunters reward line, etc.). */
-const LAWFUL_BOARD_ESCORT_DEBUG =
-  /_(defendentitiesandescort|defenddestructibleentities)_/i
 
 export interface MissionLawfulInput {
   factionKey?: string | null
@@ -19,16 +16,11 @@ export interface MissionLawfulInput {
 
 export function resolveMissionIsLawful(input: MissionLawfulInput): boolean {
   const factionKey = (input.factionKey || '').toLowerCase()
-  const debugName = input.debugName || ''
-
-  // Board escort/defend templates are lawful work even when offered under an
-  // unlawful faction's generator (e.g. Headhunters site defense).
-  if (LAWFUL_BOARD_ESCORT_DEBUG.test(debugName)) return true
 
   if (factionKey.startsWith('unlawful_')) return false
   if (factionKey.startsWith('lawful_')) return true
 
-  // unknown/non-prefixed keys (generic board work, wikelo) default to lawful.
+  // unknown/non-prefixed keys (generic board work, wikelo) default to Verified.
   return true
 }
 

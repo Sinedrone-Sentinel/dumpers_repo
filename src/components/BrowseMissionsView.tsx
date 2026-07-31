@@ -395,11 +395,11 @@ export default function BrowseMissionsView({
       <>
         {mission.isLawful ? (
           <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
-            Lawful
+            Verified
           </span>
         ) : (
           <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
-            Illegal
+            Unverified
           </span>
         )}
         {mission.category && (
@@ -613,14 +613,14 @@ export default function BrowseMissionsView({
           onClick={() => setLawfulFilter('lawful')}
           className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'lawful', 'lawful')}`}
         >
-          Lawful ({lawfulMissionGroups.length})
+          Verified ({lawfulMissionGroups.length})
         </button>
         <button
           type="button"
           onClick={() => setLawfulFilter('illegal')}
           className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'illegal', 'illegal')}`}
         >
-          Illegal ({illegalMissionGroups.length})
+          Unverified ({illegalMissionGroups.length})
         </button>
       </div>
     )
@@ -715,10 +715,10 @@ export default function BrowseMissionsView({
                     {status === 'mixed' && (
                       <div className="flex flex-wrap items-center gap-1.5 mt-1 pl-1">
                         <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
-                          {typeCounts.lawful} lawful
+                          {typeCounts.lawful} verified
                         </span>
                         <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
-                          {typeCounts.illegal} illegal
+                          {typeCounts.illegal} unverified
                         </span>
                       </div>
                     )}
@@ -771,8 +771,8 @@ export default function BrowseMissionsView({
               </p>
             ) : (
               <div className="space-y-6">
-                {renderMissionSection('Lawful missions', 'lawful', lawfulMissionGroups)}
-                {renderMissionSection('Illegal missions', 'illegal', illegalMissionGroups)}
+                {renderMissionSection('Verified missions', 'lawful', lawfulMissionGroups)}
+                {renderMissionSection('Unverified missions', 'illegal', illegalMissionGroups)}
               </div>
             )
           ) : (
@@ -783,7 +783,7 @@ export default function BrowseMissionsView({
 
           {(!isMixedFaction || lawfulFilter !== 'all') && visibleMissionGroups.length === 0 && (
             <p className="text-sm text-slate-500 py-6 text-center">
-              No missions match your search{isMixedFaction && lawfulFilter !== 'all' ? ` in ${lawfulFilter} contracts` : ''}.
+              No missions match your search{isMixedFaction && lawfulFilter !== 'all' ? ` in ${lawfulFilter === 'lawful' ? 'Verified' : 'Unverified'} contracts` : ''}.
             </p>
           )}
         </>

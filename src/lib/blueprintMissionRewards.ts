@@ -214,15 +214,20 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
 const blueprintRewardIndex = buildBlueprintRewardIndex()
 
 function rewardGroupKey(reward: BlueprintRewardMission): string {
+  // Keep regional / pool variants distinct — merging only by mission+standing
+  // made SnowBlind (Region D) navigate to Needs stomping Region A in Browse.
   return [
     reward.mission,
     reward.minReputation ?? 'null',
     reward.maxReputation ?? 'null',
     reward.scenarioPointsRequired ?? 'null',
+    reward.region ?? 'null',
+    reward.poolKey || 'null',
+    reward.locality?.key ?? 'null',
   ].join('|')
 }
 
-/** Merge contract variants that share mission label + standing lock into one row with combined locations. */
+/** One row per mission variant (region/pool/locality), sorted for the reward modal. */
 export function getRewardMissionsForBlueprint(blueprintId: string): BlueprintRewardMission[] {
   const internalName = resolveBlueprintInternalName(blueprintId)
   if (!internalName) return []
@@ -237,7 +242,6 @@ export function getRewardMissionsForBlueprint(blueprintId: string): BlueprintRew
       grouped.set(key, {
         ...reward,
         locations: [...reward.locations],
-        // Keep the highest per-roll chance when multiple regional variants share a tier.
         chance: reward.chance,
       })
       continue
@@ -252,6 +256,8 @@ export function getRewardMissionsForBlueprint(blueprintId: string): BlueprintRew
   return [...grouped.values()].sort((a, b) => {
     const repDiff = (a.minReputation ?? 0) - (b.minReputation ?? 0)
     if (repDiff !== 0) return repDiff
+    const regionDiff = (a.region || '').localeCompare(b.region || '')
+    if (regionDiff !== 0) return regionDiff
     return a.mission.localeCompare(b.mission)
   })
 }
@@ -554,11 +560,26 @@ export function getContractMissionBrowseCatalog(): ContractMissionBrowseEntry[] 
 
 export function findBrowseMissionEntry(
   missionLabel: string,
-  options?: { system?: string | null; faction?: string | null }
+  options?: {
+    system?: string | null
+    faction?: string | null
+    region?: string | null
+    poolKey?: string | null
+    debugName?: string | null
+    localityKey?: string | null
+  }
 ): ContractMissionBrowseEntry | null {
   const catalog = getContractMissionBrowseCatalog()
   const trimmed = missionLabel.trim()
   if (!trimmed) return null
+
+  // Prefer exact contract debugName when the reward row carries it.
+  if (options?.debugName) {
+    const byDebug = catalog.find(
+      (entry) => entry.debugName?.toLowerCase() === options.debugName!.toLowerCase()
+    )
+    if (byDebug) return byDebug
+  }
 
   let matches = catalog.filter((entry) => entry.mission === trimmed)
 
@@ -589,6 +610,28 @@ export function findBrowseMissionEntry(
       (entry) => entry.system?.toLowerCase() === options.system!.toLowerCase()
     )
     if (bySystem.length > 0) matches = bySystem
+  }
+
+  if (options?.region && matches.length > 1) {
+    const want = options.region.toUpperCase()
+    const byRegion = matches.filter((entry) => (entry.region || '').toUpperCase() === want)
+    if (byRegion.length > 0) matches = byRegion
+  }
+
+  if (options?.poolKey && matches.length > 1) {
+    const want = options.poolKey.toLowerCase()
+    const byPool = matches.filter((entry) =>
+      entry.poolKeys.some((key) => key.toLowerCase() === want)
+    )
+    if (byPool.length > 0) matches = byPool
+  }
+
+  if (options?.localityKey && matches.length > 1) {
+    const want = options.localityKey.toLowerCase()
+    const byLocality = matches.filter(
+      (entry) => (entry.locality?.key || '').toLowerCase() === want
+    )
+    if (byLocality.length > 0) matches = byLocality
   }
 
   return matches[0] ?? null

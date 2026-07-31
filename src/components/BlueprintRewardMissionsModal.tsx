@@ -45,12 +45,20 @@ export default function BlueprintRewardMissionsModal({
             const canNavigate = findBrowseMissionEntry(mission.mission, {
               faction: mission.faction,
               system: mission.system,
+              region: mission.region,
+              poolKey: mission.poolKey,
+              debugName: mission.debugName,
+              localityKey: mission.locality?.key,
             }) != null
             const rowKey = [
               mission.mission,
               mission.minReputation ?? 'null',
               mission.maxReputation ?? 'null',
               mission.system ?? 'unknown',
+              mission.region ?? 'null',
+              mission.poolKey || 'null',
+              mission.locality?.key ?? 'null',
+              mission.debugName || '',
             ].join('|')
 
             return (

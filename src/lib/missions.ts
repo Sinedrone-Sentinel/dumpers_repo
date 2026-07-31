@@ -225,9 +225,20 @@ function missionTierKey(reward: {
   minReputation?: number | null
   maxReputation?: number | null
   scenarioPointsRequired?: number | null
+  region?: string | null
+  poolKey?: string | null
+  locality?: { key?: string | null } | null
 }): string {
   return missionKey(
-    `${reward.mission}|${reward.minReputation ?? ''}|${reward.maxReputation ?? ''}|${reward.scenarioPointsRequired ?? ''}`
+    [
+      reward.mission,
+      reward.minReputation ?? '',
+      reward.maxReputation ?? '',
+      reward.scenarioPointsRequired ?? '',
+      reward.region ?? '',
+      reward.poolKey ?? '',
+      reward.locality?.key ?? '',
+    ].join('|')
   )
 }
 

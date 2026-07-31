@@ -132,7 +132,12 @@ export function formatMissionDisplayTitle(input: MissionDisplayTitleInput): stri
     return 'Verified Bounty · ASD Facility'
   }
 
-  if (debugLower.includes('rockcracker') || titleLower.includes('qv breaker station')) {
+  // Only BHG Rockcracker bounties use the Verified Bounty title — Vaughn/HH/CFP
+  // share the Rockcracker location under Unverified (or other) contractors.
+  const isBhgRockcracker =
+    (debugLower.includes('bhg_') || debugLower.includes('bountyhuntersguild')) &&
+    (debugLower.includes('rockcracker') || titleLower.includes('qv breaker station'))
+  if (isBhgRockcracker) {
     if (titleLower.includes('high-risk')) return 'High-Risk Bounty · QV Breaker Station'
     return 'Verified Bounty · QV Breaker Station'
   }

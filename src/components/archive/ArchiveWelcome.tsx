@@ -116,10 +116,11 @@ function MissionTagLegend() {
           <TagSample label="Cargo Recovery" className="bg-amber-950/50 text-amber-300 border-amber-500/40" />
           <TagSample label="Security · Jr. Security Contractor (5,000 rep)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
           <TagSample label="Standing · Neutral (0 rep)" className="bg-slate-800/60 text-slate-400 border-slate-600/40" />
-          <TagSample label="Illegal" className="bg-red-950/50 text-red-400 border-red-500/40" />
+          <TagSample label="Verified" className="bg-green-950/50 text-green-300 border-green-500/40" />
+          <TagSample label="Unverified" className="bg-red-950/50 text-red-400 border-red-500/40" />
         </div>
         <p className="text-[11px] text-slate-500 mt-2">
-          Amber = contract category · Cyan = rep required (career path prefix when known) · Grey = neutral/no rep gate · Red = unlawful faction
+          Amber = contract board category · Cyan = rep required (career path prefix when known) · Grey = neutral/no rep gate · Green/Red = Verified vs Unverified (legal vs illegal contracts)
         </p>
       </div>
 

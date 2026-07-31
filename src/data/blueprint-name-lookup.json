@@ -1,10 +1,10 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-21T18:21:11.960Z",
+  "_extracted": "2026-07-30T23:51:40.437Z",
   "stats": {
     "internalNames": 1597,
-    "displayNames": 1581,
-    "ambiguousDisplayNames": 15,
+    "displayNames": 1582,
+    "ambiguousDisplayNames": 14,
     "contractDefinitions": 1546
   },
   "byInternalName": {
@@ -1633,7 +1633,7 @@
       "categoryName": "FPSArmours"
     },
     "cds_legacy_armor_medium_helmet_01_01_01": {
-      "blueprintName": "G-2 Helmet Woodland",
+      "blueprintName": "G-2 Helmet",
       "categoryName": "FPSArmours"
     },
     "cds_legacy_armor_medium_helmet_01_01_02": {
@@ -2761,7 +2761,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_13": {
-      "blueprintName": "Antium Helmet Jet",
+      "blueprintName": "Antium Helmet Jet Arms",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_15": {
@@ -2813,7 +2813,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_helmet_01_01_12": {
-      "blueprintName": "Antium Core Jet",
+      "blueprintName": "Antium Core Jet Helmet",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_helmet_01_01_13": {
@@ -8022,9 +8022,9 @@
       "internalName": "cds_legacy_armor_medium_core_01_crus01_01",
       "blueprintName": "ORC-mkV Core Crusader Edition"
     },
-    "g-2 helmet woodland": {
+    "g-2 helmet": {
       "internalName": "cds_legacy_armor_medium_helmet_01_01_01",
-      "blueprintName": "G-2 Helmet Woodland"
+      "blueprintName": "G-2 Helmet"
     },
     "g-2 helmet red": {
       "internalName": "cds_legacy_armor_medium_helmet_01_01_02",
@@ -9190,9 +9190,9 @@
       "internalName": "qrt_specialist_heavy_arms_01_01_12",
       "blueprintName": "Antium Arms Jet"
     },
-    "antium helmet jet": {
+    "antium helmet jet arms": {
       "internalName": "qrt_specialist_heavy_arms_01_01_13",
-      "blueprintName": "Antium Helmet Jet"
+      "blueprintName": "Antium Helmet Jet Arms"
     },
     "antium arms sand": {
       "internalName": "qrt_specialist_heavy_arms_01_01_15",
@@ -9215,20 +9215,8 @@
       "blueprintName": "Antium Core Storm"
     },
     "antium core jet": {
-      "ambiguous": true,
-      "displayName": "Antium Core Jet",
-      "candidates": [
-        {
-          "internalName": "qrt_specialist_heavy_core_01_01_12",
-          "blueprintName": "Antium Core Jet",
-          "categoryName": "FPSArmours"
-        },
-        {
-          "internalName": "qrt_specialist_heavy_helmet_01_01_12",
-          "blueprintName": "Antium Core Jet",
-          "categoryName": "FPSArmours"
-        }
-      ]
+      "internalName": "qrt_specialist_heavy_core_01_01_12",
+      "blueprintName": "Antium Core Jet"
     },
     "antium core maroon": {
       "internalName": "qrt_specialist_heavy_core_01_01_13",
@@ -9253,6 +9241,10 @@
     "antium helmet storm": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_10",
       "blueprintName": "Antium Helmet Storm"
+    },
+    "antium core jet helmet": {
+      "internalName": "qrt_specialist_heavy_helmet_01_01_12",
+      "blueprintName": "Antium Core Jet Helmet"
     },
     "antium helmet maroon": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_13",
