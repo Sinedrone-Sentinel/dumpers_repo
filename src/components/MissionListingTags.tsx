@@ -16,6 +16,7 @@ import MissionLocationTags from './MissionLocationTags'
 import MissionLocalityTag from './MissionLocalityTag'
 import MissionPrereqTag from './MissionPrereqInfo'
 import MissionRepEffectTags from './MissionRepEffectTags'
+import NotForReleaseTag from './NotForReleaseTag'
 
 /** Muted yellow/brown — board refresh / offer cadence ("Time"). */
 const TIME_TAG_CLASS =
@@ -73,6 +74,8 @@ export interface MissionListingTagsProps {
   /** Per-blueprint drop chance when listing under a BP (Tracker). */
   dropChance?: number | null
   frequency?: MissionFrequency | null
+  /** CIG notForRelease — show NFR chip with tooltip. */
+  notForRelease?: boolean
   className?: string
 }
 
@@ -117,6 +120,7 @@ export default function MissionListingTags({
   poolRollChance,
   dropChance,
   frequency,
+  notForRelease = false,
   className = 'flex flex-col gap-1',
 }: MissionListingTagsProps) {
   const isOverview = layout === 'overview'
@@ -218,6 +222,7 @@ export default function MissionListingTags({
         ) : null}
 
         {/* Extras */}
+        {notForRelease ? <NotForReleaseTag /> : null}
         <MissionPrereqTag prereqMissions={prereqMissions} missionTitle={missionTitle} />
         {poolRollText ? <span className="text-[10px] text-amber-400/80">{poolRollText}</span> : null}
         {dropText ? <span className="text-[10px] text-amber-400/80">{dropText}</span> : null}

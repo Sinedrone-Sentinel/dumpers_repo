@@ -1878,6 +1878,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             repEffects,
             locality,
             frequency,
+            /** true = CIG marked notForRelease — still listed; UI shows an NFR tag. */
+            notForRelease: contract.notForRelease === true,
             isLawful: resolveContractIsLawful(factionKey, contract.debugName),
             __minStandingPath: repPrereq?.minStandingPath ?? null,
             __maxStandingPath: repPrereq?.maxStandingPath ?? null,

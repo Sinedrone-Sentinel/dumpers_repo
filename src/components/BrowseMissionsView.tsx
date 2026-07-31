@@ -12,6 +12,7 @@ import {
   type BlueprintRewardMission,
   type ContractMissionBrowseEntry,
 } from '../lib/blueprintMissionRewards'
+import { formatStandingRange } from '../lib/missionAcquisition'
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
@@ -59,7 +60,146 @@ const SYSTEM_COLORS: Record<BrowseSystem, { bg: string; border: string; text: st
   unknown: { bg: 'bg-slate-800/50', border: 'border-slate-600/40', text: 'text-slate-400' },
 }
 
-type LawfulFilter = 'all' | 'lawful' | 'illegal'
+/** Filter chips shown beside System — excludes system/location and time/frequency tags. */
+type BrowseTagKind =
+  | 'lawful'
+  | 'category'
+  | 'career'
+  | 'standing'
+  | 'prereq'
+  | 'nfr'
+  | 'poolRoll'
+
+interface BrowseTagFilter {
+  id: string
+  kind: BrowseTagKind
+  label: string
+  className: string
+}
+
+const TAG_KIND_ORDER: BrowseTagKind[] = [
+  'lawful',
+  'category',
+  'career',
+  'standing',
+  'prereq',
+  'nfr',
+  'poolRoll',
+]
+
+const TAG_CHIP_CLASS: Record<BrowseTagKind, string> = {
+  lawful: 'bg-green-950/50 text-green-300 border-green-500/40',
+  category: 'bg-amber-950/50 text-amber-300 border-amber-500/40',
+  career: 'bg-indigo-950/50 text-indigo-300 border-indigo-500/40',
+  standing: 'bg-cyan-950/50 text-cyan-300 border-cyan-500/40',
+  prereq: 'bg-purple-950/50 text-purple-300 border-purple-500/40',
+  nfr: 'bg-rose-950/50 text-rose-300 border-rose-500/45',
+  poolRoll: 'bg-amber-950/40 text-amber-400/90 border-amber-500/30',
+}
+
+function collectMissionBrowseTags(mission: MissionDisplay): BrowseTagFilter[] {
+  const tags: BrowseTagFilter[] = []
+
+  if (mission.isLawful) {
+    tags.push({
+      id: 'lawful:verified',
+      kind: 'lawful',
+      label: 'Verified',
+      className: TAG_CHIP_CLASS.lawful,
+    })
+  } else {
+    tags.push({
+      id: 'lawful:unverified',
+      kind: 'lawful',
+      label: 'Unverified',
+      className: 'bg-red-950/50 text-red-400 border-red-500/40',
+    })
+  }
+
+  if (mission.category?.trim()) {
+    const label = mission.category.trim()
+    tags.push({
+      id: `category:${label.toLowerCase()}`,
+      kind: 'category',
+      label,
+      className: TAG_CHIP_CLASS.category,
+    })
+  }
+
+  const career = mission.repCareerLabel?.trim()
+  if (career) {
+    tags.push({
+      id: `career:${career.toLowerCase()}`,
+      kind: 'career',
+      label: career,
+      className: TAG_CHIP_CLASS.career,
+    })
+  }
+
+  const standing = formatStandingRange(mission.minStanding, mission.maxStanding)
+  if (standing) {
+    tags.push({
+      id: `standing:${standing.toLowerCase()}`,
+      kind: 'standing',
+      label: standing,
+      className:
+        mission.minStanding?.minReputation === 0
+          ? 'bg-slate-800/60 text-slate-400 border-slate-600/40'
+          : TAG_CHIP_CLASS.standing,
+    })
+  }
+
+  if (mission.prereqMissions?.length) {
+    tags.push({
+      id: 'prereq:prior',
+      kind: 'prereq',
+      label: 'Unlocked by prior mission',
+      className: TAG_CHIP_CLASS.prereq,
+    })
+  }
+
+  if (mission.notForRelease) {
+    tags.push({
+      id: 'nfr:flag',
+      kind: 'nfr',
+      label: 'NFR',
+      className: TAG_CHIP_CLASS.nfr,
+    })
+  }
+
+  if (mission.hasPartialPoolRoll) {
+    tags.push({
+      id: 'poolRoll:partial',
+      kind: 'poolRoll',
+      label: 'Partial pool roll',
+      className: TAG_CHIP_CLASS.poolRoll,
+    })
+  }
+
+  return tags
+}
+
+/** Selected tags: OR within the same kind, AND across kinds. */
+function missionMatchesBrowseTags(
+  mission: MissionDisplay,
+  selectedIds: Set<string>,
+  tagById: Map<string, BrowseTagFilter>
+): boolean {
+  if (selectedIds.size === 0) return true
+  const missionIds = new Set(collectMissionBrowseTags(mission).map((tag) => tag.id))
+  const selectedByKind = new Map<BrowseTagKind, string[]>()
+  for (const id of selectedIds) {
+    const tag = tagById.get(id)
+    if (!tag) continue
+    const list = selectedByKind.get(tag.kind) ?? []
+    list.push(id)
+    selectedByKind.set(tag.kind, list)
+  }
+  for (const ids of selectedByKind.values()) {
+    if (!ids.some((id) => missionIds.has(id))) return false
+  }
+  return true
+}
 
 interface MissionGroup {
   title: string
@@ -159,8 +299,8 @@ export default function BrowseMissionsView({
     () => readMissionTrackerUiState().browse.selectedMissionKey
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
-  const [lawfulFilter, setLawfulFilter] = useState<LawfulFilter>('all')
   const [systemFilter, setSystemFilter] = useState<SystemFilter>('all')
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [missionsModalBlueprint, setMissionsModalBlueprint] = useState<{
     id: string
     name: string
@@ -232,7 +372,7 @@ export default function BrowseMissionsView({
   }, [selectedFaction, selectedMissionKey, searchTerm])
 
   useEffect(() => {
-    setLawfulFilter('all')
+    setSelectedTagIds([])
   }, [selectedFaction])
 
   const selectedFactionData = selectedFaction ? missionsByFaction[selectedFaction] : null
@@ -256,6 +396,46 @@ export default function BrowseMissionsView({
     )
   }, [missionsByFaction, searchTerm, systemFilter])
 
+  const availableFactionTags = useMemo((): BrowseTagFilter[] => {
+    if (!selectedFaction) return []
+    const factionMissions = missionsByFaction[selectedFaction]?.missions || []
+    const pool =
+      systemFilter === 'all'
+        ? factionMissions
+        : factionMissions.filter((m) => missionMatchesSystem(m, systemFilter))
+
+    const byId = new Map<string, BrowseTagFilter>()
+    for (const mission of pool) {
+      for (const tag of collectMissionBrowseTags(mission)) {
+        if (!byId.has(tag.id)) byId.set(tag.id, tag)
+      }
+    }
+
+    return Array.from(byId.values()).sort((a, b) => {
+      const kindDiff = TAG_KIND_ORDER.indexOf(a.kind) - TAG_KIND_ORDER.indexOf(b.kind)
+      if (kindDiff !== 0) return kindDiff
+      return a.label.localeCompare(b.label)
+    })
+  }, [selectedFaction, missionsByFaction, systemFilter])
+
+  const availableFactionTagById = useMemo(() => {
+    const map = new Map<string, BrowseTagFilter>()
+    for (const tag of availableFactionTags) map.set(tag.id, tag)
+    return map
+  }, [availableFactionTags])
+
+  // Drop tag selections that vanish when the system filter changes
+  useEffect(() => {
+    setSelectedTagIds((prev) => {
+      if (prev.length === 0) return prev
+      const allowed = new Set(availableFactionTags.map((tag) => tag.id))
+      const next = prev.filter((id) => allowed.has(id))
+      return next.length === prev.length ? prev : next
+    })
+  }, [availableFactionTags])
+
+  const selectedTagIdSet = useMemo(() => new Set(selectedTagIds), [selectedTagIds])
+
   const selectedFactionMissionGroups = useMemo((): MissionGroup[] => {
     if (!selectedFaction) return []
     const factionMissions = missionsByFaction[selectedFaction]?.missions || []
@@ -268,9 +448,21 @@ export default function BrowseMissionsView({
       const term = searchTerm.toLowerCase()
       filtered = filtered.filter((m) => missionMatchesSearch(m, term))
     }
+    if (selectedTagIdSet.size > 0) {
+      filtered = filtered.filter((m) =>
+        missionMatchesBrowseTags(m, selectedTagIdSet, availableFactionTagById)
+      )
+    }
 
     return groupMissionsByTitle(filtered)
-  }, [selectedFaction, missionsByFaction, searchTerm, systemFilter])
+  }, [
+    selectedFaction,
+    missionsByFaction,
+    searchTerm,
+    systemFilter,
+    selectedTagIdSet,
+    availableFactionTagById,
+  ])
 
   const lawfulMissionGroups = useMemo(
     () => selectedFactionMissionGroups.filter((group) => group.isLawful),
@@ -281,18 +473,6 @@ export default function BrowseMissionsView({
     () => selectedFactionMissionGroups.filter((group) => !group.isLawful),
     [selectedFactionMissionGroups]
   )
-
-  const visibleMissionGroups = useMemo(() => {
-    if (!isMixedFaction || lawfulFilter === 'all') return selectedFactionMissionGroups
-    if (lawfulFilter === 'lawful') return lawfulMissionGroups
-    return illegalMissionGroups
-  }, [
-    isMixedFaction,
-    lawfulFilter,
-    selectedFactionMissionGroups,
-    lawfulMissionGroups,
-    illegalMissionGroups,
-  ])
 
   const getMissionBlueprintStats = (mission: MissionDisplay) => {
     const acquiredCount = mission.blueprints.filter((bp) => {
@@ -401,6 +581,7 @@ export default function BrowseMissionsView({
         prereqMissions={mission.prereqMissions}
         poolRollChance={mission.hasPartialPoolRoll ? mission.minPoolChance : null}
         frequency={mission.frequency}
+        notForRelease={mission.notForRelease}
       />
     )
   }
@@ -561,39 +742,53 @@ export default function BrowseMissionsView({
     )
   }
 
-  const renderLawfulFilterToggle = () => {
-    if (!isMixedFaction) return null
+  const toggleTagFilter = (tagId: string) => {
+    setSelectedTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    )
+  }
 
-    const filterButtonClass = (active: boolean, tone: 'neutral' | 'lawful' | 'illegal') => {
-      if (!active) return 'text-slate-400 hover:text-white'
-      if (tone === 'lawful') return 'bg-green-950/60 text-green-300 border border-green-500/40'
-      if (tone === 'illegal') return 'bg-red-950/60 text-red-300 border border-red-500/40'
-      return 'site-filter-selected-orange'
-    }
+  const renderFactionTagFilters = () => {
+    if (availableFactionTags.length === 0) return null
 
     return (
-      <div className="flex flex-wrap items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
-        <button
-          type="button"
-          onClick={() => setLawfulFilter('all')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'all', 'neutral')}`}
-        >
-          All
-        </button>
-        <button
-          type="button"
-          onClick={() => setLawfulFilter('lawful')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'lawful', 'lawful')}`}
-        >
-          Verified ({lawfulMissionGroups.length})
-        </button>
-        <button
-          type="button"
-          onClick={() => setLawfulFilter('illegal')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${filterButtonClass(lawfulFilter === 'illegal', 'illegal')}`}
-        >
-          Unverified ({illegalMissionGroups.length})
-        </button>
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
+        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide shrink-0">
+          Tags
+        </span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {availableFactionTags.map((tag) => {
+            const active = selectedTagIdSet.has(tag.id)
+            return (
+              <button
+                key={tag.id}
+                type="button"
+                onClick={() => toggleTagFilter(tag.id)}
+                className={`text-[10px] px-1.5 py-0.5 rounded border transition-colors site-btn-shimmer ${
+                  active
+                    ? `${tag.className} ring-1 ring-orange-400/70`
+                    : 'bg-slate-800/40 text-slate-500 border-slate-600/40 hover:text-slate-300 hover:border-slate-500/50'
+                }`}
+                title={
+                  active
+                    ? `Remove filter: ${tag.label}`
+                    : `Filter by: ${tag.label}`
+                }
+              >
+                {tag.label}
+              </button>
+            )
+          })}
+          {selectedTagIds.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setSelectedTagIds([])}
+              className="text-[10px] px-1.5 py-0.5 rounded border border-slate-600/40 text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              Clear tags
+            </button>
+          )}
+        </div>
       </div>
     )
   }
@@ -733,30 +928,23 @@ export default function BrowseMissionsView({
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {renderSystemFilter()}
-            {renderLawfulFilterToggle()}
+            {renderFactionTagFilters()}
           </div>
 
-          {isMixedFaction && lawfulFilter === 'all' ? (
-            lawfulMissionGroups.length === 0 && illegalMissionGroups.length === 0 ? (
-              <p className="text-sm text-slate-500 py-6 text-center">
-                No missions match your search.
-              </p>
-            ) : (
-              <div className="space-y-6">
-                {renderMissionSection('Verified missions', 'lawful', lawfulMissionGroups)}
-                {renderMissionSection('Unverified missions', 'illegal', illegalMissionGroups)}
-              </div>
-            )
+          {selectedFactionMissionGroups.length === 0 ? (
+            <p className="text-sm text-slate-500 py-6 text-center">
+              No missions match your search
+              {selectedTagIds.length > 0 ? ' or selected tags' : ''}.
+            </p>
+          ) : isMixedFaction ? (
+            <div className="space-y-6">
+              {renderMissionSection('Verified missions', 'lawful', lawfulMissionGroups)}
+              {renderMissionSection('Unverified missions', 'illegal', illegalMissionGroups)}
+            </div>
           ) : (
             <div className="space-y-2">
-              {visibleMissionGroups.map((group) => renderMissionGroup(group))}
+              {selectedFactionMissionGroups.map((group) => renderMissionGroup(group))}
             </div>
-          )}
-
-          {(!isMixedFaction || lawfulFilter !== 'all') && visibleMissionGroups.length === 0 && (
-            <p className="text-sm text-slate-500 py-6 text-center">
-              No missions match your search{isMixedFaction && lawfulFilter !== 'all' ? ` in ${lawfulFilter === 'lawful' ? 'Verified' : 'Unverified'} contracts` : ''}.
-            </p>
           )}
         </>
       )}

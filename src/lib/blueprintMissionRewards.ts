@@ -81,6 +81,8 @@ export interface BlueprintRewardMission {
   locality: MissionLocality | null
   /** Offer count / board refresh (and related cooldown fields). */
   frequency: MissionFrequency | null
+  /** CIG notForRelease flag — listed with an NFR tag when true. */
+  notForRelease?: boolean
 }
 
 type MissionPoolBlueprint = {
@@ -118,6 +120,7 @@ type ContractEntry = {
   prereqMissions?: MissionPrereq[]
   locality?: MissionLocality | null
   frequency?: MissionFrequency | null
+  notForRelease?: boolean
 }
 
 const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
@@ -191,6 +194,7 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           prereqMissions: contract.prereqMissions ?? [],
           locality: contract.locality ?? null,
           frequency: contract.frequency ?? null,
+          notForRelease: contract.notForRelease === true,
           minReputation: contract.minStanding?.minReputation ?? null,
           maxReputation: contract.maxStanding?.minReputation ?? null,
           standingName: contract.minStanding?.name ?? null,
@@ -475,6 +479,7 @@ export interface ContractMissionBrowseEntry {
   prereqMissions: MissionPrereq[]
   locality: MissionLocality | null
   frequency: MissionFrequency | null
+  notForRelease?: boolean
   poolKeys: string[]
   /** Lowest pool roll chance when any attached pool is < 100%. */
   minPoolChance: number
@@ -552,6 +557,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       prereqMissions: contract.prereqMissions ?? [],
       locality: contract.locality ?? null,
       frequency: contract.frequency ?? null,
+      notForRelease: contract.notForRelease === true,
       poolKeys,
       minPoolChance,
       hasPartialPoolRoll: minPoolChance < 1,

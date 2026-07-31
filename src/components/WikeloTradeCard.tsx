@@ -4,6 +4,7 @@ import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { wikeloRewardResourceKey } from '../config/wikeloItems'
 import type { WikeloTrade } from '../routes/wikelo'
+import NotForReleaseTag from './NotForReleaseTag'
 
 const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
 const HAND_IN_PANEL = 'relative rounded-lg border border-slate-600/40 bg-slate-950/20 p-2.5'
@@ -208,6 +209,7 @@ export default function WikeloTradeCard({
                 ★ Blueprint
               </span>
             )}
+            {trade.notForRelease ? <NotForReleaseTag /> : null}
           </div>
           <div className="flex items-center justify-between gap-2 min-h-[1.375rem]">
             <span className="text-xs text-slate-500">

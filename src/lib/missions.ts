@@ -64,6 +64,7 @@ export interface MissionListEntry {
   prereqMissions?: MissionPrereq[] | null
   locality?: MissionLocality | null
   frequency?: MissionFrequency | null
+  notForRelease?: boolean
   minReputation?: number | null
   minStandingName?: string | null
   repCareerLabel?: string | null
@@ -155,6 +156,7 @@ export function buildMissionList(
           prereqMissions: reward.prereqMissions,
           locality: reward.locality,
           frequency: reward.frequency,
+          notForRelease: reward.notForRelease,
           scenarioPointsRequired: reward.scenarioPointsRequired,
           scenarioProgressLabel: reward.scenarioProgressLabel,
           system: reward.system,
@@ -165,6 +167,7 @@ export function buildMissionList(
         missionMap.set(key, entry)
       } else {
         entry.regions = categorizeRegions([...missionLocations.get(key)!])
+        if (reward.notForRelease) entry.notForRelease = true
       }
 
       if (!entry.linkedBlueprintIds.includes(bp.blueprintId)) {
@@ -213,6 +216,7 @@ export interface TargetBlueprintMissionOption {
   prereqMissions?: MissionPrereq[] | null
   locality?: MissionLocality | null
   frequency?: MissionFrequency | null
+  notForRelease?: boolean
   minReputation?: number | null
   minStandingName?: string | null
   repCareerLabel?: string | null
@@ -264,6 +268,7 @@ function attachMissionRep<T extends { mission: string }>(
     prereqMissions?: MissionPrereq[] | null
     locality?: MissionLocality | null
     frequency?: MissionFrequency | null
+    notForRelease?: boolean
     scenarioPointsRequired?: number | null
     scenarioProgressLabel?: string | null
     system?: string | null
@@ -272,7 +277,7 @@ function attachMissionRep<T extends { mission: string }>(
     faction?: string | null
     isLawful?: boolean
   }
-): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'repEffects' | 'prereqMissions' | 'locality' | 'frequency' | 'minReputation' | 'minStandingName' | 'repCareerLabel' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
+): T & Pick<TargetBlueprintMissionOption, 'repMin' | 'repMax' | 'repEffects' | 'prereqMissions' | 'locality' | 'frequency' | 'notForRelease' | 'minReputation' | 'minStandingName' | 'repCareerLabel' | 'dropChance' | 'regions' | 'isLawful' | 'aUecMin' | 'aUecMax' | 'missionType' | 'subRegion' | 'system' | 'category' | 'scenarioPointsRequired'> {
   const fallbackRep = getMissionRepInfo(entry.mission)
   const rep = repOverride?.scenarioPointsRequired != null
     ? {
@@ -332,6 +337,7 @@ function attachMissionRep<T extends { mission: string }>(
     prereqMissions: repOverride?.prereqMissions ?? null,
     locality: repOverride?.locality ?? null,
     frequency: repOverride?.frequency ?? null,
+    notForRelease: repOverride?.notForRelease === true,
     minReputation: rep.minReputation,
     minStandingName: rep.minStandingName,
     repCareerLabel: rep.repCareerLabel ?? repOverride?.repCareerLabel ?? null,
@@ -398,6 +404,7 @@ export function getMissionsForBlueprint(
           prereqMissions: reward.prereqMissions,
           locality: reward.locality,
           frequency: reward.frequency,
+          notForRelease: reward.notForRelease,
           scenarioPointsRequired: reward.scenarioPointsRequired,
           scenarioProgressLabel: reward.scenarioProgressLabel,
           system: reward.system,

@@ -121,9 +121,10 @@ function MissionTagLegend() {
           <TagSample label="Jr. Contractor (800 rep)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
           <TagSample label="12,500 aUEC" className="bg-yellow-950/40 text-yellow-400/90 border-yellow-500/30" />
           <TagSample label="+50 rep" className="bg-emerald-950/40 text-emerald-400/90 border-emerald-500/30" />
+          <TagSample label="NFR" className="bg-rose-950/50 text-rose-300 border-rose-500/45" />
         </div>
         <p className="text-[11px] text-slate-500 mt-2">
-          Display order: Verified/Unverified → contract type → system/location → career path → standing tier → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %. When known, a second row shows offer count, board refresh cadence, and Solo when the contract cannot be party-shared.
+          Display order: Verified/Unverified → contract type → system/location → career path → standing tier → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %, NFR. When known, a second row shows offer count, board refresh cadence, and Solo when the contract cannot be party-shared. NFR = Not For Release in game files (allegedly not live).
         </p>
       </div>
 

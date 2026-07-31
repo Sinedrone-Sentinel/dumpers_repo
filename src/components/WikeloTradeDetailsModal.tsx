@@ -9,6 +9,7 @@ import {
   useAddWikeloTradeToCart,
   wikeloSubCategoryChipClass,
 } from './WikeloTradeCard'
+import NotForReleaseTag from './NotForReleaseTag'
 
 interface WikeloTradeDetailsModalProps {
   trade: WikeloTrade
@@ -49,10 +50,13 @@ export default function WikeloTradeDetailsModal({
       onClose={onClose}
       size="md"
       headerExtra={
-        <span
-          className={`text-[10px] px-1.5 py-0.5 rounded border ${wikeloSubCategoryChipClass(trade.subCategory)}`}
-        >
-          {WIKELO_SUBCATEGORY_LABELS[trade.subCategory] ?? trade.subCategory}
+        <span className="inline-flex items-center gap-1.5">
+          {trade.notForRelease ? <NotForReleaseTag /> : null}
+          <span
+            className={`text-[10px] px-1.5 py-0.5 rounded border ${wikeloSubCategoryChipClass(trade.subCategory)}`}
+          >
+            {WIKELO_SUBCATEGORY_LABELS[trade.subCategory] ?? trade.subCategory}
+          </span>
         </span>
       }
       footer={

@@ -112,6 +112,7 @@ export default function BlueprintRewardMissionsModal({
                     prereqMissions={mission.prereqMissions}
                     dropChance={mission.chance}
                     frequency={mission.frequency}
+                    notForRelease={mission.notForRelease}
                   />
                 </button>
               </li>

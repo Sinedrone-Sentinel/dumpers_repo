@@ -28,8 +28,8 @@ const ENTITY_DIRS = [
   'libs/foundry/records/actor/actors',
 ]
 
-/** Contracts CIG has retired or that are internal test flows. */
-const SKIP_DEBUG_NAME = /DO_NOT_USE|FlowTest/i
+/** Internal test flows only — DO_NOT_USE / NFR trades stay listed with an NFR tag. */
+const SKIP_DEBUG_NAME = /FlowTest/i
 
 /** Loot-run items whose game localization is an internal code (RCMBNT-*). */
 const ENTITY_DISPLAY_OVERRIDES = {
@@ -385,6 +385,8 @@ export function parseWikeloTrades({ extractedData, localization, repRewardAmount
       requiresIntro: requiresIntro && category !== 'intro',
       maxPerPlayer: contract.generationParams?.maxInstancesPerPlayer ?? null,
       isVehicleReward,
+      /** true = CIG marked notForRelease — still listed; UI shows an NFR tag. */
+      notForRelease: contract.notForRelease === true,
     })
   }
 

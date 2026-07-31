@@ -37,6 +37,7 @@ export interface WikeloTrade {
   requiresIntro: boolean
   maxPerPlayer: number | null
   isVehicleReward: boolean
+  notForRelease?: boolean
 }
 
 const trades = gameWikeloTrades.trades as WikeloTrade[]

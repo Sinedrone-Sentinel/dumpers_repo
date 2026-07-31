@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (TheCollector contract generator)",
-  "_extracted": "2026-07-31T01:14:21.213Z",
+  "_extracted": "2026-07-31T01:28:17.538Z",
   "trades": [
     {
       "id": "5bf19672-f057-4ccf-bdd4-d309edfeea15",
@@ -80,7 +80,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "2fba83a9-7652-40a7-b761-1cf8651bbc34",
@@ -120,7 +121,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "1a9c813d-f143-49e6-addf-5d068a456cc5",
@@ -175,7 +177,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "7649f7a6-e0e0-44b5-87bc-803d6052c9f8",
@@ -215,7 +218,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "0424e501-e57e-47cb-bada-79f849560b4e",
@@ -255,7 +259,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "41231c57-f186-4c5e-ae51-524fc1e1d9a3",
@@ -287,7 +292,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "d4d26850-d4f4-4549-a0af-a478ee0be480",
@@ -319,7 +325,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "eba10cd5-37dc-440a-8eff-18dbcc5e5d8c",
@@ -364,7 +371,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "1ef81be1-714c-4fea-9185-e7a4c2604256",
@@ -409,7 +417,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "7c5bdaa6-ad6a-44b3-a374-796b13ddd5e4",
@@ -444,7 +453,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "5712cdfc-84da-456f-97ed-697c9d04c026",
@@ -479,7 +489,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "684c9209-3dec-4519-a86c-7f49df47d14c",
@@ -524,7 +535,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "1af113f6-5650-4da9-abf3-9676dcaf8a91",
@@ -569,7 +581,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "ad595a7c-d314-442b-acce-ea140a56cffd",
@@ -619,7 +632,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "5dec704a-de79-4311-88d1-53f9d05db952",
@@ -659,7 +673,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "12926a62-afde-4984-8887-dbe564527192",
@@ -704,7 +719,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "7b7cd8d9-d3e4-4f48-b995-487933fd332e",
@@ -749,7 +765,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "99b90562-4e98-46d2-aa7e-0926bed3bdf8",
@@ -794,7 +811,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "3c839c32-d313-4c13-ade0-eb45b5bdea4b",
@@ -860,7 +878,8 @@
       },
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "5c494816-ebc0-46a6-a23c-d463d4b0330d",
@@ -920,7 +939,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "e05b8ffb-7455-4f24-bbcf-43e9dffc0cca",
@@ -1045,7 +1065,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "a033aab9-262e-44da-9213-35e225fc828a",
@@ -1075,7 +1096,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "ade95587-2c0d-433e-87c4-865e7dc80b0c",
@@ -1110,7 +1132,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "200def0f-c70b-4f05-918f-b3efa7f8590f",
@@ -1160,7 +1183,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "fec1ba32-a1bb-4cfb-adc9-8a2f792544e6",
@@ -1210,7 +1234,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "7304cb29-5e2a-4d01-80bb-2795b6e789d4",
@@ -1240,7 +1265,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "fec4c8e6-df2f-4775-b8c3-c0e3fb7c35e7",
@@ -1290,7 +1316,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "af13a863-6d63-4935-bec6-d55d73e44f83",
@@ -1325,7 +1352,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "71b27232-bb75-417e-8009-a8b5d9787e5a",
@@ -1375,7 +1403,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "6357945d-2e51-426f-b183-9c6f84c6a88b",
@@ -1420,7 +1449,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "da19d1a7-be72-4fea-803e-880d97ffdbe3",
@@ -1465,7 +1495,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "77fa8882-e82f-4c97-9cab-a7151758cb99",
@@ -1596,7 +1627,8 @@
       },
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "64f01a7a-62c6-42fa-8a62-6b537dfa3668",
@@ -1631,7 +1663,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "f7e6a331-3f4c-4400-a4cf-dbd75bffa102",
@@ -1676,7 +1709,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "3b698db0-7623-4210-9653-2025d491ab10",
@@ -1741,7 +1775,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "c55c9f61-84d9-4180-8715-eab2fe524deb",
@@ -1776,7 +1811,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "8d7849fe-85c5-4c63-9754-a71bae57792f",
@@ -1821,7 +1857,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "94bdfda2-a4d9-4d1a-877b-68518eedf320",
@@ -1861,7 +1898,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "758e6b6a-f89e-4721-ae9e-1ec27d7b2f97",
@@ -1906,7 +1944,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "c63d9c5a-5e25-49da-8254-b78706abea86",
@@ -1951,7 +1990,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "c3722ee0-4f40-4232-acab-6f254a1d0e25",
@@ -1996,7 +2036,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
     },
     {
       "id": "69db67eb-05b6-49cd-bf41-83831f993142",
@@ -2031,7 +2072,92 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": true
+      "isVehicleReward": true,
+      "notForRelease": false
+    },
+    {
+      "id": "956685c4-0324-4cf8-8a67-fed823254e61",
+      "debugName": "TheCollector_GG_VentureSuit(DO_NOT_USE_STORE_EXCLUSIVE)",
+      "title": "Adventure a A-Venture",
+      "description": "You like adventure, right? This armor good for it. Let you go dangerous places, but not too heavy. Stay light. Wikelo found these and will trade if you want. You win, Wikelo win. Bye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "rsi_explorer_armor_light_core_01_01_01",
+          "name": "Venture Core",
+          "amount": 1
+        },
+        {
+          "entityClass": "rsi_explorer_armor_light_helmet_01_01_01",
+          "name": "Venture Helmet White",
+          "amount": 1
+        },
+        {
+          "entityClass": "rsi_explorer_armor_light_legs_01_01_01",
+          "name": "Venture Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 30
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 1
+        },
+        {
+          "entityClass": "rsi_explorer_armor_light_arms_01_01_01",
+          "name": "Venture Arms",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "rsi_explorer_light_core_01_iae2023_01",
+          "name": "Venture Core Ascension",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "rsi_explorer_light_arms_01_iae2023_01",
+          "name": "Venture Arms Ascension",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "rsi_explorer_light_legs_01_iae2023_01",
+          "name": "Venture Legs Ascension",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "rsi_explorer_light_helmet_01_iae2023_01",
+          "name": "Venture Helmet Ascension",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "eda899b9-c58b-48df-88d9-6b34368af2f2",
@@ -2099,7 +2225,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "372b0eff-0e55-4654-a3ca-542058cb84cf",
@@ -2183,7 +2310,65 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "4df999a1-93ba-47a4-b498-cfaad7553da3",
+      "debugName": "TheCollector_GG_S71(DO_NOT_USE_STORE_EXCLUSIVE)",
+      "title": "Built on S71 rifle",
+      "description": "Universe is dangerous in human space. Good to have a good weapon to handle bad situation. Wikelo don't have many weapon, but can make useful ones more useful. If you want, bring stuff and I will do.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinitepure",
+          "name": "Carinite (Pure)",
+          "amount": 1
+        },
+        {
+          "entityClass": "gmni_rifle_ballistic_01",
+          "name": "S71 Rifle",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "gmni_rifle_ballistic_01_iae2023",
+          "name": "S71 \"Ascension\" Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "gmni_rifle_ballistic_01_mag",
+          "name": "S71 Rifle Magazine (30 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "bd341b1f-3a22-46f2-bedc-b5350b371b1f",
@@ -2221,7 +2406,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "9c4459ac-2527-4024-b8f1-a08081df252a",
@@ -2267,7 +2453,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "9d32ff6d-6b62-43d4-8b71-85d50e4154f5",
@@ -2361,7 +2548,106 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "314c16b2-fffd-445d-9bfd-fde1414286cd",
+      "debugName": "TheCollector_F55(DO_NOT_USE_NOW_LOOT)",
+      "title": "F55 Look Better",
+      "description": "Sometimes you shoot people, but if you are last thing they see before dead gun should look amazing, right? Wikelo will make your gun look much better. Bring me items I need and then I give you the gun. Bye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "gmni_lmg_ballistic_01",
+          "name": "F55 LMG",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_yormandi_eye",
+          "name": "Yormandi Eye",
+          "amount": 4
+        },
+        {
+          "entityClass": "carryable_2h_cy_yormandi_tongue",
+          "name": "Yormandi Tongue",
+          "amount": 2
+        },
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 20
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "gmni_lmg_ballistic_01_collector01",
+          "name": "F55 \"Mark I\" LMG",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "e186dc92-bac2-4298-b011-a68b4d058dc5",
+      "debugName": "TheCollector_GG_Coda(DO_NOT_USE_STORE_EXCLUSIVE)",
+      "title": "Fix up Coda gun",
+      "description": "Wikelo found crate of Coda pistols. Very strange reason, but will tell later if you want to hear. Anyway, after study have figured out nice way to make gun look better. Have a look, see if interested. Bye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 30
+        },
+        {
+          "entityClass": "ksar_pistol_ballistic_01",
+          "name": "Coda Pistol",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "ksar_pistol_ballistic_01_iae2023",
+          "name": "Coda \"Ascension\" Pistol",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "ksar_pistol_ballistic_01_mag",
+          "name": "Coda Pistol Magazine (6 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "31f004c2-9b77-4a0f-a500-89f89b606a96",
@@ -2417,7 +2703,65 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "557fcd28-3ab3-4a5d-84b7-e893b73bd8a4",
+      "debugName": "TheCollector_OrbVolt_KopTooth(DO_NOT_USE_NOW_LOOT)",
+      "title": "Fun Kopion Tooth Gun",
+      "description": "Hello. Can make fun change to gun if you want. If you no like saying it not baby skull, have other choice. Use kopion skin for pattern but use tooth instead dangle. Still effective and shoot better.\n\nBring parts to the Emporium and will make.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 30
+        },
+        {
+          "entityClass": "volt_rifle_energy_01",
+          "name": "Parallax Energy Assault Rifle",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_kopionhorn_tundra",
+          "name": "Tundra Kopion Horn",
+          "amount": 35
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 40
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_rifle_energy_01_collector01",
+          "name": "Parallax \"Fun Kopion Tooth\" Energy Assault Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_rifle_energy_01_mag",
+          "name": "Parallax Rifle Battery (80 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "4341c2d8-85b4-4623-8271-eff4480ec674",
@@ -2473,7 +2817,65 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "ba114637-1d33-46e5-b9ba-3834566add0f",
+      "debugName": "TheCollector_OrbVolt_MiltTooth(DO_NOT_USE_NOW_LOOT)",
+      "title": "Fun Military Tooth Gun",
+      "description": "Wikelo here with another way to play with type of gun. Make look like more of your soldier gun, but with kopion tooth dangle. Very nasty indeed.\n\nIf want, bring part to the Emporium and will make.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_mineral_1h_carinite",
+          "name": "Carinite",
+          "amount": 20
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 30
+        },
+        {
+          "entityClass": "volt_rifle_energy_01",
+          "name": "Parallax Energy Assault Rifle",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang",
+          "name": "Valakkar Fang (Juvenile)",
+          "amount": 35
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 40
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_rifle_energy_01_collector04",
+          "name": "Parallax \"Fun Military Tooth\" Energy Assault Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_rifle_energy_01_mag",
+          "name": "Parallax Rifle Battery (80 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "88bb3702-e20a-42e3-8ba3-328f2333e30c",
@@ -2515,7 +2917,65 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "ab52c274-a29e-4730-a311-917a27191416",
+      "debugName": "TheCollector_Nov_LotsOfZipZap(DO_NOT_USE_NOW_LOOT)",
+      "title": "Heavy VOLT Zapper",
+      "description": "You need useful weapon. Yes, yes, understand. Wikelo make useful weapon more beautiful too. You see things I need. You bring? I do.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "fps_consumable_harddrive_delving_hardened_asd_red",
+          "name": "ASD Secure Drive",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl1",
+          "name": "ASD Extract Module (XTL-1)",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl2",
+          "name": "ASD Extract Module (XTL-2)",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_tbo_asdreward_xtl3",
+          "name": "ASD Extract Module (XTL-3)",
+          "amount": 5
+        },
+        {
+          "entityClass": "volt_lmg_energy_01",
+          "name": "Fresnel Energy LMG",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_lmg_energy_01_collector01",
+          "name": "Fresnel \"Deepwater\" Energy LMG",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_lmg_energy_01_mag",
+          "name": "Fresnel Energy LMG Battery (165 Cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "9d32ff6d-6b62-43d4-8b71-85d50e413743",
@@ -2594,7 +3054,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "ba4e3db4-0f7d-4692-8b9d-8efe3085e84d",
@@ -2640,7 +3101,87 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "dbe950bb-885f-4c12-ad7d-878723bb251c",
+      "debugName": "TheCollector_SB_DesertArm(DO_NOT_USE_NOW_LOOT)",
+      "title": "Look at desert but don't see you",
+      "description": "You in hot desert doing things. Need to be sneaky. Don't want seen. Understand. Wikelo give you armor that make you sneaky in sand.\n\nBring things to the Emporium and I will make. Easy.\n\nBye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_advocacy_badge",
+          "name": "Advocacy Badge (Replica)",
+          "amount": 20
+        },
+        {
+          "entityClass": "cds_armor_heavy_core_01_01_01",
+          "name": "ADP-mk4 Core Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_arms_01_01_01",
+          "name": "ADP-mk4 Arms Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_legs_01_01_01",
+          "name": "ADP-mk4 Legs Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_helmet_01_01_01",
+          "name": "ADP-mk4 Helmet Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "cds_combat_heavy_helmet_03_01_01",
+          "name": "DCP Armor Helmet Hunter Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_core_03_01_01",
+          "name": "DCP Armor Core Hunter Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_arms_03_01_01",
+          "name": "DCP Armor Arms Hunter Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_legs_03_01_01",
+          "name": "DCP Armor Legs Hunter Camo",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "b4a0ba2d-a5f6-496b-bc04-5f0bce49067a",
@@ -2708,7 +3249,139 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "6472920a-5588-4378-89a1-b2c5bcbfc75c",
+      "debugName": "TheCollector_SB_Volt_Desert(DO_NOT_USE_NOW_LOOT)",
+      "title": "Make gun sandy",
+      "description": "Wikelo can make new VOLT gun look like sand mound. Very sneaky in desert.\n\nBring things to the Emporium and Wikelo will do.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_council_1",
+          "name": "Council Scrip",
+          "amount": 30
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "carryable_1h_cy_advocacy_badge",
+          "name": "Advocacy Badge (Replica)",
+          "amount": 10
+        },
+        {
+          "entityClass": "volt_smg_energy_01",
+          "name": "Quartz Energy SMG",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_smg_energy_01_collector02",
+          "name": "Quartz \"Hunter Camo\" Energy SMG",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_smg_energy_01_mag",
+          "name": "Quartz Energy SMG Battery (45 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "82d178e8-e7c1-4436-981c-c51dbaa87f3b",
+      "debugName": "TheCollector_SB_NavyArm(DO_NOT_USE_NOW_LOOT)",
+      "title": "Make space navy armor",
+      "description": "Know you humans like your navy. Wikelo understand. Very big ships. Powerful too. Wikelo can give armor set that look like navy color. Very easy to make.\n\nSee what Wikelo need, get and bring to the Emporium and it will be yours.\n\nWikelo",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_quasigrazeregg_grassland",
+          "name": "Grassland Quasi Grazer Egg",
+          "amount": 50
+        },
+        {
+          "entityClass": "cds_armor_heavy_core_01_01_01",
+          "name": "ADP-mk4 Core Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_arms_01_01_01",
+          "name": "ADP-mk4 Arms Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_legs_01_01_01",
+          "name": "ADP-mk4 Legs Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_helmet_01_01_01",
+          "name": "ADP-mk4 Helmet Woodland",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "cds_combat_heavy_helmet_03_02_01",
+          "name": "DCP Armor Helmet Cobalt Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_core_03_02_01",
+          "name": "DCP Armor Core Cobalt Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_arms_03_02_01",
+          "name": "DCP Armor Arms Cobalt Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_legs_03_02_01",
+          "name": "DCP Armor Legs Cobalt Camo",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "e404f6c6-997d-4195-8e48-1a8f859398c9",
@@ -2754,7 +3427,65 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "698c51c9-2a49-46c4-baf6-2d1abad7661e",
+      "debugName": "TheCollector_GG_Karna(DO_NOT_USE_STORE_EXCLUSIVE)",
+      "title": "Prettify Karna Gun",
+      "description": "Wikelo friend had to trade ship they found for credits. Wikelo surprised to find many crate of Karna guns inside. Friend must not have wanted. Anyway, Wikelo figure out how to make prettier. If you want, bring stuff. Bye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang_irradiated",
+          "name": "Irradiated Valakkar Fang (Juvenile)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_kopionhorn_irradiated",
+          "name": "Irradiated Kopion Horn",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkadultfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Adult)",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 1
+        },
+        {
+          "entityClass": "ksar_rifle_energy_01",
+          "name": "Karna Rifle",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "ksar_rifle_energy_01_iae2023",
+          "name": "Karna \"Ascension\" Rifle",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "ksar_rifle_energy_01_mag",
+          "name": "Karna Rifle Battery (35 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "05bb00fc-bb90-40a5-bcff-214ff876662b",
@@ -2838,7 +3569,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "cc80cd24-2ed0-4e9c-aa10-766e6bbdf3d1",
@@ -2884,7 +3616,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "9d32ff6d-6b62-43d4-8b71-85d50e413745",
@@ -2978,7 +3711,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "ab52c274-a29e-4730-a311-917a271917a8",
@@ -3019,7 +3753,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "eae3334f-310a-4213-88e5-b84d248cc083",
@@ -3073,7 +3808,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "318bc17e-1b97-4ba5-a527-0c81076ef811",
@@ -3157,7 +3893,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "a026b45d-6726-4a86-898c-e0207f2880c4",
@@ -3200,7 +3937,305 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "e44de29c-a2c3-49ef-864b-03eb7ae466db",
+      "debugName": "TheCollector_SB_Volt_Navy(DO_NOT_USE_NOW_LOOT)",
+      "title": "Volt gun more Navy-like",
+      "description": "Wikelo hearing about new energy weapon by VOLT souli. If you want, Wikelo can make gun look better. It found in storm, it shoot storm, but Wikelo make it better for people who like human navy.\n\nBring things to the Emporium and Wikelo will do.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 30
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_quasigrazeregg_grassland",
+          "name": "Grassland Quasi Grazer Egg",
+          "amount": 50
+        },
+        {
+          "entityClass": "volt_smg_energy_01",
+          "name": "Quartz Energy SMG",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_smg_energy_01_collector03",
+          "name": "Quartz \"Cobalt Camo\" Energy SMG",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_smg_energy_01_mag",
+          "name": "Quartz Energy SMG Battery (45 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "3d432269-ee32-4127-abda-60b30a5c3660",
+      "debugName": "TheCollector_GG_ExplorationSuit(DO_NOT_USE_STORE_EXCLUSIVE)",
+      "title": "Walk in danger. Look good.",
+      "description": "Maybe you like walking on planet that very hot. Or very cold. Or many rocks. Wikelo can make suit called Novikov from Human souli Caldera work better for you. Bring things if you want, then I make. Bye.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "clda_env_armor_heavy_helmet_01_01_01",
+          "name": "Novikov Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 30
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkadultfang_irradiated",
+          "name": "Irradiated Valakkar Fang (Adult)",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang_irradiated",
+          "name": "Irradiated Valakkar Fang (Juvenile)",
+          "amount": 20
+        },
+        {
+          "entityClass": "carryable_2h_fl_vlk_pearl_irradiated_super_01",
+          "name": "Irradiated Valakkar Pearl (Grade AAA)",
+          "amount": 1
+        },
+        {
+          "entityClass": "clda_env_armor_heavy_suit_01_01_01",
+          "name": "Novikov Exploration Suit",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "clda_env_heavy_unified_01_iae2023_01",
+          "name": "Novikov \"Ascension\" Exploration Suit",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "clda_env_heavy_helmet_01_iae2023_01",
+          "name": "Novikov \"Ascension\" Helmet",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "clda_env_heavy_backpack_01_iae2023_01",
+          "name": "Novikov \"Ascension\" Backpack",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "c4c7fa2d-91f5-4171-988b-9003841f4fcd",
+      "debugName": "TheCollector_SB_JungleArm(DO_NOT_USE_NOW_LOOT)",
+      "title": "Want armor look like tree?",
+      "description": "Hello. You walk in woods but not want people to know? Wikelo have armor for you.\n\nIf you bring to the Emporium, you can get.\n\nInterest?",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_vlkjuvenilefang",
+          "name": "Valakkar Fang (Juvenile)",
+          "amount": 50
+        },
+        {
+          "entityClass": "cds_armor_heavy_core_01_01_01",
+          "name": "ADP-mk4 Core Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_arms_01_01_01",
+          "name": "ADP-mk4 Arms Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_legs_01_01_01",
+          "name": "ADP-mk4 Legs Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "cds_armor_heavy_helmet_01_01_01",
+          "name": "ADP-mk4 Helmet Woodland",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 3
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "cds_combat_heavy_helmet_03_03_01",
+          "name": "DCP Armor Helmet Jungle Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_core_03_03_01",
+          "name": "DCP Armor Core Jungle Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_arms_03_03_01",
+          "name": "DCP Armor Arms Jungle Camo",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "cds_combat_heavy_legs_03_03_01",
+          "name": "DCP Armor Legs Jungle Camo",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "e7352f49-da6c-45c3-a7f7-6e897d788913",
+      "debugName": "TheCollector_ICanSee(DO_NOT_USE_NOW_LOOT)",
+      "title": "Want Better Eyes?",
+      "description": "Wikelo has best eyes for seeing far away. I give to you if you give me",
+      "category": "gear",
+      "subCategory": "gear",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_banu_favour_wikelo",
+          "name": "Wikelo Favor",
+          "amount": 1
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_yormandi_eye",
+          "name": "Yormandi Eye",
+          "amount": 2
+        },
+        {
+          "entityClass": "carryable_2h_cy_yormandi_tongue",
+          "name": "Yormandi Tongue",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "behr_binoculars_01_collector01",
+          "name": "XDL \"Mark I\" Monocular Rangefinder",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
+    },
+    {
+      "id": "2453dcac-761d-4f95-8783-d31106fcfe1e",
+      "debugName": "TheCollector_GG_XanthuleSuit(DO_NOT_USE_STORE_EXCLUSIVE)",
+      "title": "Xi'an Xanthule Suit made better",
+      "description": "Wikelo like Syang souli very much. Make very line-y flight suits that very useful. Can even make suits a little prettier if you want. Bring things, I do.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "syfb_flightsuit_helmet_01_01_01",
+          "name": "Xanthule Flight Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 10
+        },
+        {
+          "entityClass": "carryable_1h_cy_medal_1_pristine_c",
+          "name": "Tevarin War Service Marker (Pristine)",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 20
+        },
+        {
+          "entityClass": "syfb_flightsuit_suit_01_01_01",
+          "name": "Xanthule Flight Suit",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "syfb_flightsuit_01_iae2023_01",
+          "name": "Xanthule Ascension Flight Suit",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "syfb_flightsuit_helmet_01_iae2023_01",
+          "name": "Xanthule Ascension Flight Helmet",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "8df7d9a9-c887-4302-b93c-863788bdca01",
@@ -3240,7 +4275,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "dcc744eb-e9c5-4364-a1d2-9b39864baecf",
@@ -3288,7 +4324,60 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "f986a67a-76bb-4f19-9c84-d2d6db0bd755",
+      "debugName": "TheCollector_SB_Volt_Jungle(DO_NOT_USE_NOW_LOOT)",
+      "title": "Zappy gun more woodlike",
+      "description": "Wikelo hearing about new type of energy weapon by VOLT souli. Hit very hard. If you want, Wikelo can make gun look even better. It found in storm, it shoot storm, but Wikelo make it look woodier. Drop in forest? It gone.\n\nBring things to the Emporium and Wikelo will do.\n\nBye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "carryable_1h_cy_physical_currency_scrip_merc_1",
+          "name": "MG Scrip",
+          "amount": 30
+        },
+        {
+          "entityClass": "basl_combat_light_helmet_02_01_01",
+          "name": "Ace Interceptor Helmet",
+          "amount": 5
+        },
+        {
+          "entityClass": "harvestable_trophy_1h_kopionhorn_tundra",
+          "name": "Tundra Kopion Horn",
+          "amount": 35
+        },
+        {
+          "entityClass": "volt_smg_energy_01",
+          "name": "Quartz Energy SMG",
+          "amount": 1
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "volt_smg_energy_01_collector01",
+          "name": "Quartz \"Jungle Camo\" Energy SMG",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "volt_smg_energy_01_mag",
+          "name": "Quartz Energy SMG Battery (45 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [],
+      "repReward": 0,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": true
     },
     {
       "id": "7dfd619c-9977-4788-80bb-5671d221c342",
@@ -3318,7 +4407,8 @@
       "maxStanding": null,
       "requiresIntro": true,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "f6717a7c-115e-4e27-8efe-ec8e01b56487",
@@ -3348,7 +4438,8 @@
       "maxStanding": null,
       "requiresIntro": true,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "8743632c-fac2-4b7c-ae11-a48e683f11fa",
@@ -3378,7 +4469,8 @@
       "maxStanding": null,
       "requiresIntro": true,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "1141c381-b38d-47af-b8eb-9b8a35985a8e",
@@ -3408,7 +4500,8 @@
       "maxStanding": null,
       "requiresIntro": true,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "82a0d506-def3-4ab5-b0e0-8833c7102f34",
@@ -3438,7 +4531,8 @@
       "maxStanding": null,
       "requiresIntro": true,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "028d7a46-bd97-4e32-a5bf-0b1775f05e1c",
@@ -3466,7 +4560,8 @@
       "maxStanding": null,
       "requiresIntro": false,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     },
     {
       "id": "2597ef18-f1d5-4d97-bba4-8b6f900ded50",
@@ -3494,7 +4589,8 @@
       "maxStanding": null,
       "requiresIntro": true,
       "maxPerPlayer": 1,
-      "isVehicleReward": false
+      "isVehicleReward": false,
+      "notForRelease": false
     }
   ],
   "standings": {
@@ -3516,9 +4612,9 @@
     }
   },
   "summary": {
-    "totalTrades": 70,
+    "totalTrades": 87,
     "vehicleTrades": 42,
-    "gearTrades": 21,
+    "gearTrades": 38,
     "favorTrades": 5
   }
 }
