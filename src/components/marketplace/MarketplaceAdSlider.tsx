@@ -55,7 +55,7 @@ export default function MarketplaceAdSlider({
         visible && !closing ? 'translate-y-0' : 'translate-y-full'
       }`}
       style={{
-        bottom: 16,
+        bottom: 'calc(16px + var(--site-ticker-height, 0px))',
         transitionDuration: closing ? '200ms' : '300ms',
       }}
       role="dialog"

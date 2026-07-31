@@ -27,7 +27,7 @@ export default function MarketplacePurchaseToast({
         visible && !closing ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
       }`}
       style={{
-        bottom: bottomOffset,
+        bottom: `calc(16px + var(--site-ticker-height, 0px) + ${bottomOffset}px)`,
         transitionDuration: `${PURCHASE_TOAST_SLIDE_MS}ms`,
       }}
       role="status"

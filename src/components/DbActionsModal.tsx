@@ -25,15 +25,15 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 2,
     title: 'Parse extracted data',
     description:
-      'Regenerates all src/data/game-*.json (blueprints, mining, components, lore, etc.) from scratch',
+      'Regenerates all src/data/game-*.json (blueprints, mining, components, lore, etc.) from scratch. Also appends What\'s New lines and pushes to Supabase (needs SUPABASE_SERVICE_ROLE_KEY in .env); same issue+version is skipped so mid-patch re-parses do not duplicate',
     commands: ['npm run parse-game-data'],
   },
   {
     step: 3,
-    title: 'Review patch diff',
+    title: 'Review patch diff / retry What\'s New push',
     description:
-      'Compare fresh parse vs last commit — ADDED / REMOVED / RENAMED-MOVED / CHANGED per file. Use --full or --file game-mining.json as needed',
-    commands: ['npm run diff-game-data'],
+      'Compare fresh parse vs last commit — ADDED / REMOVED / RENAMED-MOVED / CHANGED per file. If parse could not reach Supabase, push pending ticker lines with push-whats-new (then the pending file is wiped)',
+    commands: ['npm run diff-game-data', 'npm run push-whats-new'],
   },
   {
     step: 4,

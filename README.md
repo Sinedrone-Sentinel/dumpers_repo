@@ -368,7 +368,8 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 
 ```powershell
 .\scripts\extract-game-data.ps1
-npm run parse-game-data       # regenerate src/data/game-*.json from scratch
+npm run parse-game-data       # regenerate src/data/game-*.json from scratch (+ What's New → Supabase)
+npm run push-whats-new        # retry pending What's New ingest if parse could not reach DB
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
 npm run patch-audit           # full audit battery: data consistency + math verifiers + diff
 # After parse (when blueprints changed): npm run build in sibling dfp-engine-private, then commit public/dfp-engine.js + dfp-version.json
@@ -400,6 +401,8 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
 | `shop-commodity-index.json` | UEX-backed commodity buy/sell locations, per-SCU prices, and box sizes (Commodity Lookup) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
+
+What's New ticker digests are **not** bundled JSON — parse appends `extracted-data/whats-new-pending.jsonl`, pushes via `ingest_whats_new_entries` (deduped by `issue_key` + `version`), then wipes the file. Rows expire after 7 days (`cleanup_expired_whats_new` daily cron). Apply migration `129_whats_new_ticker.sql`.
 
 The **DB Actions** modal shows super-admins the extract → parse → deploy runbook for reference; the steps themselves run locally in a terminal on a machine with the game files and this repo.
 

@@ -67,6 +67,8 @@ import { parseQualityBands } from './lib/parseQualityBands.mjs'
 import { parseMissionBrokerData } from './lib/parseMissionBroker.mjs'
 import { readGameBuildInfo } from './lib/gameBuildVersion.mjs'
 import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
+import { clearAppliedSpellingCorrections } from './lib/spellingCorrections.mjs'
+import { writeWhatsNewDigest } from './lib/writeWhatsNewDigest.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -4696,6 +4698,8 @@ async function main() {
   console.log('='.repeat(60))
   console.log('  Star Citizen Game Data Parser')
   console.log('='.repeat(60))
+
+  clearAppliedSpellingCorrections()
   
   // Validate extracted data exists
   if (!existsSync(EXTRACTED_DATA)) {
@@ -5138,6 +5142,30 @@ async function main() {
     console.log('✓ No validation issues detected')
   }
   
+  // What's New: append pending JSONL → push to Supabase (version-scoped dedupe) → wipe on success
+  try {
+    const digest = await writeWhatsNewDigest({
+      projectRoot: PROJECT_ROOT,
+      dataDir: OUTPUT_DIR,
+      version: gameBuildInfo?.launcherVersion || gameBuildInfo?.version || undefined,
+    })
+    console.log(
+      `\n✓ What's New: ${digest.entryCount} fresh entr${digest.entryCount === 1 ? 'y' : 'ies'} (+${digest.totals.added}/-${digest.totals.removed}/Δ${digest.totals.changed} vs git)`
+    )
+    if (digest.push?.skipped && digest.push?.reason) {
+      console.warn(`  ⚠ ${digest.push.reason}`)
+    } else if (digest.push?.ok && !digest.push?.empty) {
+      console.log(
+        `  ✓ DB ingest: inserted ${digest.push.inserted}, skipped ${digest.push.skipped} (same issue+version)`
+      )
+    } else if (digest.push?.error) {
+      console.warn(`  ⚠ DB ingest failed (pending kept): ${digest.push.error}`)
+      console.warn('    Retry: npm run push-whats-new')
+    }
+  } catch (err) {
+    console.warn(`\n⚠️  Could not build/push What's New: ${err?.message || err}`)
+  }
+
   console.log('\nOutput files written to: src/data/')
   console.log('')
 }

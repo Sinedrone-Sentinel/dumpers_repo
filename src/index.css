@@ -19,10 +19,52 @@
   /* Fixed header stack height (nav h-14, plus optional update banner). */
   :root {
     --site-header-height: 3.5rem;
+    --site-ticker-height: 0px;
   }
 
   .site-header-offset {
     padding-top: var(--site-header-height);
+  }
+
+  .site-ticker-offset {
+    padding-bottom: var(--site-ticker-height);
+  }
+
+  @keyframes site-ticker-scroll-in {
+    from {
+      transform: translateY(110%);
+      opacity: 0.35;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes site-ticker-scroll-out {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-110%);
+      opacity: 0.35;
+    }
+  }
+
+  .site-ticker-scroll-in {
+    animation: site-ticker-scroll-in 0.42s ease-out both;
+  }
+
+  .site-ticker-scroll-out {
+    animation: site-ticker-scroll-out 0.42s ease-in both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-ticker-scroll-in,
+    .site-ticker-scroll-out {
+      animation: none;
+    }
   }
 
   /* Legacy offset for any remaining usage */

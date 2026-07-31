@@ -208,6 +208,19 @@ Set these under **Project Settings → Edge Functions → Secrets** (or let sema
 
 BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into each release build**, not stored in Supabase. When game data is parsed (`parse-extracted-data.mjs`), `npm run sync-min-game-version` updates `scripts/bp-dumper-py/_min_game_version.py` from `src/data/game-build-version.json`.
 
+### What's New ticker (`129_whats_new_ticker.sql`)
+
+Apply migration `129_whats_new_ticker.sql` for the bottom Updates ticker.
+
+| Piece | Role |
+|-------|------|
+| `whats_new_entries` | Rows keyed by `issue_key` + `version` (RSI launcher string) |
+| `list_active_whats_new()` | Anon/authenticated read of rows newer than 7 days |
+| `ingest_whats_new_entries(jsonb)` | Super-admin or `service_role` insert; **skips** if same issue+version (or identical headline for that version) already exists |
+| `cleanup_expired_whats_new()` | Deletes `detected_at` older than 7 days — scheduled daily via pg_cron when available |
+
+Local parse flow: append `extracted-data/whats-new-pending.jsonl` → RPC ingest → wipe file. Put `SUPABASE_SERVICE_ROLE_KEY` in `.env` on the parse machine (never in the browser). Retry with `npm run push-whats-new`.
+
 ### BP Dumper webhook API
 
 Members copy a personal API key from the **BP Dumper** modal (avatar menu, or Blueprints / Mission Tracker callout). Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouterState } from '@tanstack/react-router'
 import SiteBrandTitle from '../SiteBrandTitle'
 import { SITE_COPYRIGHT } from '../../config/site'
@@ -11,10 +11,17 @@ import AppNotificationBell from './AppNotificationBell'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
 import UpdateAvailableBanner from './UpdateAvailableBanner'
-import QuestionnaireAvailableBanner from './QuestionnaireAvailableBanner'
 import SignInMenu from '../auth/SignInMenu'
 import { useAppUpdateAvailable } from '../../hooks/useAppUpdateAvailable'
 import { getLiveGameVersionLabel } from '../../lib/gameBuildVersion'
+import SiteTicker from './SiteTicker'
+import {
+  buildSiteTickerItems,
+  fetchActiveWhatsNewEntries,
+  type SiteTickerItem,
+  type WhatsNewEntry,
+} from '../../lib/whatsNew'
+import type { PendingQuestionnaire } from '../../lib/questionnaires'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -28,9 +35,7 @@ interface AppChromeProps {
   showSettingsButton: boolean
   showDbActionsButton: boolean
   showAdminPanelButton: boolean
-  guestQuestionnaireBanner?: { title: string } | null
-  onOpenGuestQuestionnaire?: () => void
-  onDeclineGuestQuestionnaire?: () => void
+  pendingQuestionnaires?: PendingQuestionnaire[]
   onOpenQuestionnaire?: (questionnaireId: string) => void
   onOpenQuestionnairesAdmin?: () => void
   onOpenSettings: () => void
@@ -55,9 +60,7 @@ export default function AppChrome({
   showSettingsButton,
   showDbActionsButton,
   showAdminPanelButton,
-  guestQuestionnaireBanner = null,
-  onOpenGuestQuestionnaire,
-  onDeclineGuestQuestionnaire,
+  pendingQuestionnaires = [],
   onOpenQuestionnaire,
   onOpenQuestionnairesAdmin,
   onOpenSettings,
@@ -73,16 +76,27 @@ export default function AppChrome({
   const updateAvailable = useAppUpdateAvailable()
   const liveGameVersion = getLiveGameVersionLabel()
   const headerRef = useRef<HTMLElement>(null)
-  const showGuestQuestionnaireBanner = Boolean(
-    isGuestPreview && guestQuestionnaireBanner && onOpenGuestQuestionnaire && onDeclineGuestQuestionnaire
-  )
+  const [whatsNew, setWhatsNew] = useState<WhatsNewEntry[]>([])
+  const [tickerItems, setTickerItems] = useState<SiteTickerItem[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    void fetchActiveWhatsNewEntries().then((rows) => {
+      if (!cancelled) setWhatsNew(rows)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    setTickerItems(buildSiteTickerItems(whatsNew, pendingQuestionnaires))
+  }, [whatsNew, pendingQuestionnaires])
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
 
-  // Keep content / sticky offsets in sync with the fixed header stack height
-  // (nav row + optional update banner).
   useEffect(() => {
     const el = headerRef.current
     if (!el) return
@@ -99,22 +113,15 @@ export default function AppChrome({
       observer.disconnect()
       document.documentElement.style.removeProperty('--site-header-height')
     }
-  }, [updateAvailable, showGuestQuestionnaireBanner])
+  }, [updateAvailable])
 
   return (
-    <div className="site-page-bg min-h-screen flex flex-col">
+    <div className="site-page-bg min-h-screen flex flex-col site-ticker-offset">
       <header
         ref={headerRef}
         className="fixed top-0 inset-x-0 z-40 flex flex-col overflow-visible"
       >
         {updateAvailable && <UpdateAvailableBanner />}
-        {showGuestQuestionnaireBanner && guestQuestionnaireBanner && (
-          <QuestionnaireAvailableBanner
-            title={guestQuestionnaireBanner.title}
-            onOpen={() => onOpenGuestQuestionnaire?.()}
-            onDecline={() => onDeclineGuestQuestionnaire?.()}
-          />
-        )}
         <div className="site-app-header">
           <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
             <AppSidebar groups={navGroups} />
@@ -176,6 +183,11 @@ export default function AppChrome({
         </p>
         <DfpOptOutFooter />
       </footer>
+
+      <SiteTicker
+        items={tickerItems}
+        onOpenQuestionnaire={(id) => onOpenQuestionnaire?.(id)}
+      />
     </div>
   )
 }

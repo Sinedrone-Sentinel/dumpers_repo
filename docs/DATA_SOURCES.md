@@ -124,7 +124,7 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
 **keep both in sync** (see `.cursor/rules/db-actions-patch-runbook.mdc`).
 
 1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`)
-2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch)
+2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
 3. **Review the patch diff:** `npm run diff-game-data`
    - Compares fresh parse output against the last commit (`--ref <ref>` for another baseline)
    - Reports **ADDED / REMOVED / RENAMED-MOVED / CHANGED** records per file, with field-level stat changes

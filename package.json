@@ -20,6 +20,7 @@
     "lint": "eslint src",
     "parse-game-data": "node scripts/parse-extracted-data.mjs",
     "diff-game-data": "node scripts/diff-game-data.mjs",
+    "push-whats-new": "node scripts/push-whats-new.mjs",
     "patch-audit": "node scripts/patch-audit.mjs",
     "validate-blueprints": "node scripts/validate-blueprints.mjs",
     "audit-mission-rewards": "node scripts/audit-blueprint-mission-rewards.mjs",

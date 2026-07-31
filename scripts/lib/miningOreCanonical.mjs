@@ -6,6 +6,7 @@
 
 import aliasData from '../../src/data/mining-ore-aliases.json' with { type: 'json' }
 import { GROUND_VEHICLE_GEMS, HAND_MINEABLE_ORES, stripMineableLabel } from './miningOreConsts.mjs'
+import { recordSpellingCorrection } from './spellingCorrections.mjs'
 
 /** @type {Record<string, string>} */
 export const ORE_SPELLING_ALIASES = { ...aliasData.aliases }
@@ -73,7 +74,13 @@ export function resolveCanonicalOreName(rawName, masterList = null) {
   const label = stripMineableLabel(rawName)
   if (!label) return label
 
-  if (ORE_SPELLING_ALIASES[label]) return ORE_SPELLING_ALIASES[label]
+  if (ORE_SPELLING_ALIASES[label]) {
+    const canonical = ORE_SPELLING_ALIASES[label]
+    if (canonical !== label) {
+      recordSpellingCorrection(label, canonical, 'Ore / localization alias')
+    }
+    return canonical
+  }
 
   const master =
     masterList == null
@@ -100,6 +107,7 @@ export function resolveCanonicalOreName(rawName, masterList = null) {
   }
 
   if (best != null && bestDist > 0 && bestDist <= 2 && label.length >= 4) {
+    recordSpellingCorrection(label, best, 'Ore / fuzzy match')
     return best
   }
 

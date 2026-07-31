@@ -6,7 +6,6 @@ import MarketplaceAdSlider from './MarketplaceAdSlider'
 import MarketplacePurchaseToast from './MarketplacePurchaseToast'
 
 const AD_GAP = 8
-const BASE_BOTTOM = 16
 
 interface StackContextValue {
   setAdHeight: (height: number) => void
@@ -60,8 +59,9 @@ export default function MarketplaceBottomStack({ onOpenSettings }: MarketplaceBo
     setAdClosing(ad.closing)
   }, [ad.visible, ad.closing])
 
-  const purchaseBottom =
-    adVisible && !adClosing ? BASE_BOTTOM + adHeight + AD_GAP : BASE_BOTTOM
+  // Extra offset above the fixed ticker (ticker height is CSS var --site-ticker-height)
+  const purchaseExtraBottom =
+    adVisible && !adClosing ? adHeight + AD_GAP : 0
 
   if (!adsEnabled && !purchaseEnabled) return null
 
@@ -86,7 +86,7 @@ export default function MarketplaceBottomStack({ onOpenSettings }: MarketplaceBo
           row={purchase.row}
           visible={purchase.visible}
           closing={purchase.closing}
-          bottomOffset={purchaseBottom}
+          bottomOffset={purchaseExtraBottom}
           onDismiss={purchase.onDismiss}
         />
       ) : null}
