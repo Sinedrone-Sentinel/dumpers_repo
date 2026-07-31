@@ -74,6 +74,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Jorrit Dossier is a linear story chain — complete each step to unlock the next; repeat runs drop blueprints',
       'Collection missions include Wikelo Emporium craft contracts in Stanton (turn in gathered items for blueprints)',
       'BHG Hathor PAF bounties (Verified Bounty · Hathor · Planetary Alignment Facility) resolve to Stanton — Daymar and Aberdeen platform sites',
+      'Scenario Progress rows (e.g. Orison Relief, Return of XenoThreat) are event contribution milestones with point thresholds — not Contracts-app mission titles',
       'Prioritize which factions to grind based on your goals',
       'Header buttons: BP Dumper (downloads + API key) and Live Tracker (active in-game missions while watching)',
       'Dismissible callout explains the BP Dumper + Live Tracker workflow',

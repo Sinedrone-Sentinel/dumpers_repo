@@ -2295,7 +2295,85 @@ function enrichContractStandingData(contractData, reputationSystem, localization
 }
 
 /**
- * Contract scenario progress (tiered blueprint pools), e.g. XenoThreat Clear Air.
+ * Resolve scenario-progress faction from a Faction or FactionReputation file URL.
+ * Orison Relief points at Faction.Faction_Lawful_CrusaderIndustries (not a reputation file).
+ */
+function resolveScenarioFaction(factionPath, factionNames, hints = '') {
+  const path = String(factionPath || '')
+
+  let keyMatch =
+    path.match(/factionreputation_([\w]+)\.json/i) ||
+    path.match(/faction_reputation_([\w]+)\.json/i)
+
+  if (!keyMatch) {
+    const baseMatch = path.match(/([^/\\]+)\.json$/i)
+    if (baseMatch) {
+      const factionAbs = join(
+        EXTRACTED_DATA,
+        'libs/foundry/records/factions',
+        `${baseMatch[1]}.json`
+      )
+      const factionJson = existsSync(factionAbs) ? readJson(factionAbs) : null
+      const repRef = factionJson?._RecordValue_?.factionReputationRef
+      if (typeof repRef === 'string') {
+        keyMatch =
+          repRef.match(/factionreputation_([\w]+)\.json/i) ||
+          repRef.match(/faction_reputation_([\w]+)\.json/i)
+      }
+      if (!keyMatch) {
+        const stripped = baseMatch[1]
+          .replace(/^faction_/i, '')
+          .replace(/^lawful_/i, '')
+          .replace(/^unlawful_/i, '')
+          .replace(/^reputation_/i, '')
+        if (stripped) keyMatch = [null, stripped]
+      }
+    }
+  }
+
+  const factionKey = keyMatch?.[1] ? String(keyMatch[1]).toLowerCase() : 'unknown'
+  const lookedUp =
+    factionNames[`factionreputation_${factionKey}`] ||
+    factionNames[factionKey] ||
+    null
+  const factionName =
+    lookedUp ||
+    resolveFactionDisplayName({
+      rawName: factionKey === 'unknown' ? null : factionKey,
+      factionKey: `factionreputation_${factionKey}`,
+      hints,
+    })
+
+  return { factionKey, factionName }
+}
+
+/**
+ * Event journal titles for scenario-progress reward tiers (not Contracts-app missions).
+ * progressionText is often a UI counter label like "Your Total:" — do not use as the title.
+ */
+function resolveScenarioEventMeta(scenarioKey, localization) {
+  const key = String(scenarioKey || '').toLowerCase()
+  if (key.startsWith('ors')) {
+    return {
+      eventLabel: localization.ORS_JournalTracker_Title || 'Orison Relief',
+      system: 'Stanton',
+    }
+  }
+  if (key.startsWith('rox') || key.includes('xenothreat')) {
+    return {
+      eventLabel: localization.X2_JournalTracker_Title || 'Return of XenoThreat',
+      system: 'Stanton',
+    }
+  }
+  return {
+    eventLabel: 'Scenario Progress',
+    system: null,
+  }
+}
+
+/**
+ * Contract scenario progress (tiered event blueprint pools).
+ * These are journal / event contribution milestones — not in-game Contracts titles.
  */
 function parseContractScenarios(localization, factionNames) {
   console.log('\n[CONTRACT SCENARIOS] Parsing scenario progress blueprint rewards...')
@@ -2312,34 +2390,17 @@ function parseContractScenarios(localization, factionNames) {
     const json = readJson(file)
     const recordName = json?._RecordName_ || basename(file, '.json')
     const scenarioKey = recordName.replace(/^ScenarioProgress\./i, '')
+    const { eventLabel, system } = resolveScenarioEventMeta(scenarioKey, localization)
     const tiers = json?._RecordValue_?.factionRewardTiers || []
 
     for (const factionTier of tiers) {
-      const factionPath = factionTier.faction || ''
-      const factionMatch = factionPath.match(/faction_reputation_(\w+)\.json/i)
-        || factionPath.match(/factionreputation_(\w+)\.json/i)
-      const factionKey = factionMatch ? factionMatch[1].toLowerCase() : 'unknown'
-      const factionName =
-        factionNames[`factionreputation_${factionKey}`]
-        || factionNames[factionKey]
-        || resolveFactionDisplayName({
-          rawName: factionKey,
-          factionKey: `factionreputation_${factionKey}`,
-          hints: file,
-        })
+      const { factionKey, factionName } = resolveScenarioFaction(
+        factionTier.faction || '',
+        factionNames,
+        `${file} ${scenarioKey}`
+      )
 
       for (const progression of factionTier.tierProgressions || []) {
-        const progressionTextKey = progression.progressionText?.startsWith('@')
-          ? progression.progressionText.slice(1)
-          : progression.progressionText
-        const progressionLabel =
-          (progressionTextKey && localization[progressionTextKey]
-            && !localization[progressionTextKey].includes('~mission')
-            && localization[progressionTextKey].trim().length > 3
-            && !/^your total:?$/i.test(localization[progressionTextKey].trim()))
-            ? localization[progressionTextKey].trim()
-          : 'Clear Air Scenario Progress'
-
         for (const tierReward of progression.tierRewards || []) {
           const poolPaths = tierReward.blueprintPool || []
           const blueprintPools = []
@@ -2351,24 +2412,25 @@ function parseContractScenarios(localization, factionNames) {
 
           const minPoints = tierReward.minPoints ?? 0
           const debugName = `${scenarioKey}_tier_${minPoints}`
-          const title = `XenoThreat ${progressionLabel} — ${minPoints.toLocaleString()} pts`
+          // Member-facing: event name + points threshold (not a fake Contracts title)
+          const title = `${eventLabel} — ${minPoints.toLocaleString()} pts`
 
           contracts.push({
             id: debugName,
             debugName,
             title,
             displayTitle: title,
-            titleKey: progressionTextKey || '',
+            titleKey: '',
             faction: factionName,
             factionKey,
-            system: 'Pyro',
+            system: system || 'Unknown',
             region: null,
             category: 'Scenario Progress',
             blueprintPools,
             minStanding: null,
             maxStanding: null,
             scenarioPointsRequired: minPoints,
-            scenarioProgressLabel: progressionLabel,
+            scenarioProgressLabel: eventLabel,
             repPoints: 0,
             repEffects: [],
             isLawful: resolveContractIsLawful(factionKey, debugName),
