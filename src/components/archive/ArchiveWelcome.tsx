@@ -117,12 +117,13 @@ function MissionTagLegend() {
           <TagSample label="Mercenary" className="bg-amber-950/50 text-amber-300 border-amber-500/40" />
           <TagSample label="Pyro A" className="bg-purple-950/50 text-purple-300 border-purple-500/40" />
           <TagSample label="Monox" className="bg-emerald-950/50 text-emerald-300 border-emerald-500/40" />
-          <TagSample label="Security · Jr. Security Contractor (5,000 rep)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
+          <TagSample label="Standing" className="bg-indigo-950/50 text-indigo-300 border-indigo-500/40" />
+          <TagSample label="Jr. Contractor (800 rep)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
           <TagSample label="12,500 aUEC" className="bg-yellow-950/40 text-yellow-400/90 border-yellow-500/30" />
           <TagSample label="+50 rep" className="bg-emerald-950/40 text-emerald-400/90 border-emerald-500/30" />
         </div>
         <p className="text-[11px] text-slate-500 mt-2">
-          Display order: Verified/Unverified → contract type → system/location → career path → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %. When known, a second row shows offer count, board refresh cadence, and Solo when the contract cannot be party-shared.
+          Display order: Verified/Unverified → contract type → system/location → career path → standing tier → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %. When known, a second row shows offer count, board refresh cadence, and Solo when the contract cannot be party-shared.
         </p>
       </div>
 

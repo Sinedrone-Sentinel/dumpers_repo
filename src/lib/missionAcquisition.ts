@@ -173,33 +173,26 @@ export function formatRepReward(repMin: number | null, repMax: number | null): s
   return `+${value.toLocaleString()} rep`
 }
 
+/** Standing tier gate only (e.g. "Jr. Contractor (800 rep)") — career path is a separate tag. */
 export function formatStandingRequirement(
   standingName: string | null,
   minReputation: number | null,
-  repCareerLabel?: string | null
 ): string | null {
   if (standingName == null && minReputation == null) return null
-  let standing: string | null
   if (minReputation === 0) {
-    standing = 'Neutral (0 rep)'
-  } else if (standingName && minReputation != null) {
-    standing = `${standingName} (${minReputation.toLocaleString()} rep)`
-  } else if (standingName) {
-    standing = standingName
-  } else if (minReputation != null) {
-    standing = `${minReputation.toLocaleString()} rep`
-  } else {
-    standing = null
+    return 'Neutral (0 rep)'
   }
-  if (!standing) return null
-  if (repCareerLabel) return `${repCareerLabel} · ${standing}`
-  return standing
+  if (standingName && minReputation != null) {
+    return `${standingName} (${minReputation.toLocaleString()} rep)`
+  }
+  if (standingName) return standingName
+  if (minReputation != null) return `${minReputation.toLocaleString()} rep`
+  return null
 }
 
 export function formatStandingRange(
   minStanding: { name: string; minReputation: number } | null | undefined,
   maxStanding: { name: string; minReputation: number } | null | undefined,
-  repCareerLabel?: string | null
 ): string | null {
   if (!minStanding && !maxStanding) return null
 
@@ -208,12 +201,11 @@ export function formatStandingRange(
     maxStanding &&
     minStanding.minReputation !== maxStanding.minReputation
   ) {
-    const range = `${minStanding.name} (${minStanding.minReputation.toLocaleString()}) – ${maxStanding.name} (${maxStanding.minReputation.toLocaleString()})`
-    return repCareerLabel ? `${repCareerLabel} · ${range}` : range
+    return `${minStanding.name} (${minStanding.minReputation.toLocaleString()}) – ${maxStanding.name} (${maxStanding.minReputation.toLocaleString()})`
   }
 
   const locked = minStanding ?? maxStanding
-  return formatStandingRequirement(locked?.name ?? null, locked?.minReputation ?? null, repCareerLabel)
+  return formatStandingRequirement(locked?.name ?? null, locked?.minReputation ?? null)
 }
 
 export function formatBlueprintDropChance(chance: number | null | undefined): string | null {

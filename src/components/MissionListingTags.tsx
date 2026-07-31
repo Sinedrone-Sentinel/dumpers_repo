@@ -34,7 +34,7 @@ export type MissionTagLayout = 'overview' | 'detail'
 
 /**
  * Site-wide mission tag order:
- * Row 1: [Verified/Unverified] [Contract Type] [location] [career path] [aUEC] [Rep Points]
+ * Row 1: [Verified/Unverified] [Contract Type] [location] [career path] [standing tier] [aUEC] [Rep Points]
  *         then optional: [Prerequisite] [pool roll / BP drop]
  * Row 2 (detail): [how many] [how often] [Solo]
  * Row 2 (overview): [Solo] only
@@ -120,13 +120,10 @@ export default function MissionListingTags({
   className = 'flex flex-col gap-1',
 }: MissionListingTagsProps) {
   const isOverview = layout === 'overview'
-  const standingFromRange = formatStandingRange(minStanding, maxStanding, repCareerLabel)
-  const standingFromGate = formatStandingRequirement(
-    minStandingName ?? null,
-    minReputation ?? null,
-    repCareerLabel
-  )
-  const standingLabel = standingFromRange || standingFromGate
+  const careerLabel = repCareerLabel?.trim() || null
+  const standingLabel =
+    formatStandingRange(minStanding, maxStanding) ||
+    formatStandingRequirement(minStandingName ?? null, minReputation ?? null)
   const aUecText = formatAuecReward(aUecMin, aUecMax)
   const poolRollText = formatPoolRoll(poolRollChance)
   const dropText = formatBlueprintDropChance(dropChance)
@@ -182,7 +179,14 @@ export default function MissionListingTags({
           />
         )}
 
-        {/* 4. Career path (standing gate) */}
+        {/* 4. Career path (mobiGlas rep track — e.g. Standing, Security, Bounty Hunting) */}
+        {careerLabel ? (
+          <span className="text-[10px] px-1.5 py-0.5 bg-indigo-950/50 text-indigo-300 border border-indigo-500/40 rounded">
+            {careerLabel}
+          </span>
+        ) : null}
+
+        {/* 5. Standing tier gate */}
         {standingLabel ? (
           <span
             className={`text-[10px] px-1.5 py-0.5 border rounded ${
@@ -199,10 +203,10 @@ export default function MissionListingTags({
           </span>
         ) : null}
 
-        {/* 5. aUEC */}
+        {/* 6. aUEC */}
         {aUecText ? <span className="text-[10px] text-yellow-400/90">{aUecText}</span> : null}
 
-        {/* 6. Rep Points */}
+        {/* 7. Rep Points */}
         {hasRepEffects ? (
           <MissionRepEffectTags
             repEffects={repEffects}
