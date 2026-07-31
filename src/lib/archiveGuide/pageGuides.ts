@@ -65,7 +65,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Mission rows use color-coded tags — see the legend below when this section is expanded',
       'Location tags: violet system/region tags plus green planet/moon tags (no tooltips)',
       'System-wide missions show only the system name (e.g. Pyro); region missions add Pyro A/B/C/D plus locations',
-      'Other tags: amber mobiGlas mission type (Bounty Hunter, Mercenary, …), cyan rep requirement, green Verified / red Unverified, purple unlock level under blueprint names',
+      'Mission tag order: Verified/Unverified → mobiGlas contract type → system/location → career path standing → aUEC → rep points (then prereq / drop % when relevant); a second row shows how many offers and how often the board refreshes when the game files list those values',
       'Rep reward tags: green +rep you earn on completion; if a mission also lowers another faction\'s rep (e.g. CFP raids on Head Hunters), a red −rep tag shows the loss',
       'Purple "🔒 Unlocked by prior mission" tag: the contract only appears after an intro/starter mission — click the tag to see which mission, its faction, and where it shows in the Contracts app',
       'Blue "📍" location tag: the contract only appears in your Contracts app while you\'re in that area (e.g. Hurston area, Pyro region B, Anywhere in Nyx)',

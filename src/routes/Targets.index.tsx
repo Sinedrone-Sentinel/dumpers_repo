@@ -9,143 +9,73 @@ import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useTargetList } from '../hooks/useTargetList'
 import { catalogIsReward } from '../lib/blueprintOrderable'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
-import { buildMissionList, getMissionsForBlueprint, missionKey, type MissionListEntry, type Region } from '../lib/missions'
-import { findBrowseMissionEntry, getRewardMissionsForBlueprint, type MissionLocality, type MissionPrereq, type MissionRepEffect } from '../lib/blueprintMissionRewards'
+import { buildMissionList, getMissionsForBlueprint, missionKey, type MissionListEntry } from '../lib/missions'
+import { findBrowseMissionEntry, getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import {
   formatBlueprintUnlockBadge,
-  formatBlueprintDropChance,
-  formatRepReward,
-  formatStandingRequirement,
   getBlueprintUnlockInfo,
   getPoolsForBlueprint,
 } from '../lib/missionAcquisition'
 import BrowseMissionsView from '../components/BrowseMissionsView'
 import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
-import MissionLocationTags from '../components/MissionLocationTags'
-import MissionRepEffectTags from '../components/MissionRepEffectTags'
-import MissionPrereqTag from '../components/MissionPrereqInfo'
-import MissionLocalityTag from '../components/MissionLocalityTag'
+import MissionListingTags from '../components/MissionListingTags'
 import { readMissionTrackerUiState, writeMissionTrackerUiState, makeBrowseMissionKey } from '../lib/missionTrackerUiState'
 import { setAnalyticsSubTool } from '../lib/analytics'
 
 type ViewMode = 'tracker' | 'browse'
 
-function formatDropChance(chance: number | null | undefined): string | null {
-  return formatBlueprintDropChance(chance)
-}
-
-function MissionCategoryBadge({ category }: { category?: string | null }) {
-  if (!category) return null
-
-  return (
-    <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-amber-950/50 text-amber-300 border-amber-500/40">
-      {category}
-    </span>
-  )
-}
-
-function MissionRepBadge({
-  minStandingName,
-  minReputation,
-  repCareerLabel,
-}: {
-  minStandingName?: string | null
-  minReputation?: number | null
-  repCareerLabel?: string | null
-}) {
-  if (minReputation == null && minStandingName == null) {
-    return (
-      <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-slate-800/60 text-slate-500 border-slate-600/40">
-        Rep unknown
-      </span>
-    )
-  }
-
-  const isNeutral = minReputation === 0
-  const label = formatStandingRequirement(minStandingName ?? null, minReputation ?? null, repCareerLabel)
-
-  return (
-    <span
-      className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border ${
-        isNeutral
-          ? 'bg-slate-800/60 text-slate-400 border-slate-600/40'
-          : 'bg-cyan-950/50 text-cyan-300 border-cyan-500/40'
-      }`}
-    >
-      {label}
-    </span>
-  )
-}
-
 function MissionMetaLine({
-  regions,
-  subRegion,
-  system,
-  category,
-  repMin,
-  repMax,
-  repEffects,
-  prereqMissions,
-  locality,
-  missionFaction,
-  missionTitle,
-  minStandingName,
-  minReputation,
-  repCareerLabel,
-  dropChance,
-  isLawful = true,
-  aUecMin = 0,
-  aUecMax = 0,
+  mission,
 }: {
-  regions: Region[]
-  subRegion?: string | null
-  system?: string | null
-  category?: string | null
-  repMin?: number | null
-  repMax?: number | null
-  repEffects?: MissionRepEffect[] | null
-  prereqMissions?: MissionPrereq[] | null
-  locality?: MissionLocality | null
-  missionFaction?: string | null
-  missionTitle?: string
-  minStandingName?: string | null
-  minReputation?: number | null
-  repCareerLabel?: string | null
-  dropChance?: number | null
-  isLawful?: boolean
-  aUecMin?: number
-  aUecMax?: number
+  mission: Pick<
+    MissionListEntry,
+    | 'regions'
+    | 'subRegion'
+    | 'system'
+    | 'category'
+    | 'repMin'
+    | 'repMax'
+    | 'repEffects'
+    | 'prereqMissions'
+    | 'locality'
+    | 'giver'
+    | 'title'
+    | 'mission'
+    | 'minStandingName'
+    | 'minReputation'
+    | 'repCareerLabel'
+    | 'dropChance'
+    | 'isLawful'
+    | 'aUecMin'
+    | 'aUecMax'
+    | 'frequency'
+  >
 }) {
-  const repText = repEffects?.length ? null : formatRepReward(repMin ?? null, repMax ?? null)
-  const dropText = formatDropChance(dropChance)
-  
-  // Format aUEC reward
-  const aUecText = aUecMin > 0 || aUecMax > 0
-    ? aUecMin === aUecMax || aUecMax === 0
-      ? `${aUecMin.toLocaleString()} aUEC`
-      : `${aUecMin.toLocaleString()}–${aUecMax.toLocaleString()} aUEC`
-    : null
-
   return (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-0.5">
-      {/* Verified/Unverified indicator */}
-      {!isLawful && (
-        <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded border bg-red-950/50 text-red-400 border-red-500/40">
-          Unverified
-        </span>
-      )}
-      <MissionCategoryBadge category={category} />
-      <MissionLocationTags regions={regions} subRegion={subRegion} system={system} localitySystems={locality?.systems} />
-      <MissionLocalityTag locality={locality} />
-      <MissionRepBadge minStandingName={minStandingName} minReputation={minReputation} repCareerLabel={repCareerLabel} />
-      <MissionPrereqTag prereqMissions={prereqMissions} missionTitle={missionTitle} />
-      {repEffects?.length ? (
-        <MissionRepEffectTags repEffects={repEffects} missionFaction={missionFaction} />
-      ) : null}
-      {repText && <span className="text-[10px] text-emerald-400/90">{repText}</span>}
-      {aUecText && <span className="text-[10px] text-yellow-400/90">{aUecText}</span>}
-      {dropText && <span className="text-[10px] text-amber-400/80">{dropText}</span>}
-    </div>
+    <MissionListingTags
+      className="flex flex-col gap-1 mt-0.5"
+      isLawful={mission.isLawful}
+      showVerifiedBadge
+      category={mission.category}
+      regions={mission.regions}
+      subRegion={mission.subRegion}
+      system={mission.system}
+      locality={mission.locality}
+      minStandingName={mission.minStandingName}
+      minReputation={mission.minReputation}
+      showRepUnknown
+      repCareerLabel={mission.repCareerLabel}
+      aUecMin={mission.aUecMin}
+      aUecMax={mission.aUecMax}
+      repEffects={mission.repEffects}
+      repMin={mission.repMin}
+      repMax={mission.repMax}
+      missionFaction={mission.giver}
+      missionTitle={mission.title || mission.mission}
+      prereqMissions={mission.prereqMissions}
+      dropChance={mission.dropChance}
+      frequency={mission.frequency}
+    />
   )
 }
 
@@ -233,26 +163,7 @@ function MissionChecklistGroups({
                       ) : (
                         <p className={`text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>{mission.title}</p>
                       )}
-                      <MissionMetaLine
-                        regions={mission.regions}
-                        subRegion={mission.subRegion}
-                        system={mission.system}
-                        category={mission.category}
-                        repMin={mission.repMin}
-                        repMax={mission.repMax}
-                        repEffects={mission.repEffects}
-                        prereqMissions={mission.prereqMissions}
-                        locality={mission.locality}
-                        missionFaction={mission.giver}
-                        missionTitle={mission.title}
-                        minStandingName={mission.minStandingName}
-                        minReputation={mission.minReputation}
-                        repCareerLabel={mission.repCareerLabel}
-                        dropChance={mission.dropChance}
-                        isLawful={mission.isLawful}
-                        aUecMin={mission.aUecMin}
-                        aUecMax={mission.aUecMax}
-                      />
+                      <MissionMetaLine mission={mission} />
                       <p className="text-xs text-slate-500 mt-1">
                         Waiting on: {mission.unacquiredBlueprintIds.length} blueprint
                         {mission.unacquiredBlueprintIds.length === 1 ? '' : 's'}
@@ -669,26 +580,7 @@ export default function TargetsRoute() {
                                   }
                                 >
                                   <p className={`text-xs leading-snug ${m.isLawful ? 'text-green-300' : 'text-red-400'}`}>{m.mission}</p>
-                                  <MissionMetaLine
-                                    regions={m.regions}
-                                    subRegion={m.subRegion}
-                                    system={m.system}
-                                    category={m.category}
-                                    repMin={m.repMin}
-                                    repMax={m.repMax}
-                                    repEffects={m.repEffects}
-                                    prereqMissions={m.prereqMissions}
-                                    locality={m.locality}
-                                    missionFaction={m.giver}
-                                    missionTitle={m.mission}
-                                    minStandingName={m.minStandingName}
-                                    minReputation={m.minReputation}
-                                    repCareerLabel={m.repCareerLabel}
-                                    dropChance={m.dropChance}
-                                    isLawful={m.isLawful}
-                                    aUecMin={m.aUecMin}
-                                    aUecMax={m.aUecMax}
-                                  />
+                                  <MissionMetaLine mission={m} />
                                 </button>
                               </li>
                             )

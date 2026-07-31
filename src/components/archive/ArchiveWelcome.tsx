@@ -113,14 +113,16 @@ function MissionTagLegend() {
           Other mission tags
         </h5>
         <div className="flex flex-wrap items-center gap-1.5">
-          <TagSample label="Cargo Recovery" className="bg-amber-950/50 text-amber-300 border-amber-500/40" />
-          <TagSample label="Security · Jr. Security Contractor (5,000 rep)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
-          <TagSample label="Standing · Neutral (0 rep)" className="bg-slate-800/60 text-slate-400 border-slate-600/40" />
           <TagSample label="Verified" className="bg-green-950/50 text-green-300 border-green-500/40" />
-          <TagSample label="Unverified" className="bg-red-950/50 text-red-400 border-red-500/40" />
+          <TagSample label="Mercenary" className="bg-amber-950/50 text-amber-300 border-amber-500/40" />
+          <TagSample label="Pyro A" className="bg-purple-950/50 text-purple-300 border-purple-500/40" />
+          <TagSample label="Monox" className="bg-emerald-950/50 text-emerald-300 border-emerald-500/40" />
+          <TagSample label="Security · Jr. Security Contractor (5,000 rep)" className="bg-cyan-950/50 text-cyan-300 border-cyan-500/40" />
+          <TagSample label="12,500 aUEC" className="bg-yellow-950/40 text-yellow-400/90 border-yellow-500/30" />
+          <TagSample label="+50 rep" className="bg-emerald-950/40 text-emerald-400/90 border-emerald-500/30" />
         </div>
         <p className="text-[11px] text-slate-500 mt-2">
-          Amber = contract board category · Cyan = rep required (career path prefix when known) · Grey = neutral/no rep gate · Green/Red = Verified vs Unverified (legal vs illegal contracts)
+          Display order: Verified/Unverified → contract type → system/location → career path → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %. When known, a second row shows offer count and board refresh cadence.
         </p>
       </div>
 

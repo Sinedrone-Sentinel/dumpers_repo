@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
-import MissionLocationTags from './MissionLocationTags'
-import MissionRepEffectTags from './MissionRepEffectTags'
-import MissionPrereqTag from './MissionPrereqInfo'
-import MissionLocalityTag from './MissionLocalityTag'
+import MissionListingTags from './MissionListingTags'
 import BlueprintMissionMeta from './BlueprintMissionMeta'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import { getBrowseSystemsForMission } from '../lib/missionLocations'
@@ -15,7 +12,6 @@ import {
   type BlueprintRewardMission,
   type ContractMissionBrowseEntry,
 } from '../lib/blueprintMissionRewards'
-import { formatStandingRange } from '../lib/missionAcquisition'
 import {
   makeBrowseMissionKey,
   readMissionTrackerUiState,
@@ -378,58 +374,38 @@ export default function BrowseMissionsView({
     return crumbs
   }, [selectedFaction, selectedMission])
 
-  const renderMissionTags = (mission: MissionDisplay) => {
+  const renderMissionTags = (
+    mission: MissionDisplay,
+    { showLocalityTag = true }: { showLocalityTag?: boolean } = {}
+  ) => {
     const systemRegion = mission.system?.toLowerCase()
     const regions: Region[] =
       systemRegion === 'stanton' || systemRegion === 'pyro' || systemRegion === 'nyx'
         ? [systemRegion]
         : []
 
-    const standingLabel = formatStandingRange(mission.minStanding, mission.maxStanding, mission.repCareerLabel)
-    const poolRollText =
-      mission.hasPartialPoolRoll && mission.minPoolChance < 1
-        ? `${Math.round(mission.minPoolChance * 100)}% pool roll`
-        : null
-
     return (
-      <>
-        {mission.isLawful ? (
-          <span className="text-[10px] px-1.5 py-0.5 bg-green-950/50 text-green-300 border border-green-500/40 rounded">
-            Verified
-          </span>
-        ) : (
-          <span className="text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/40 rounded">
-            Unverified
-          </span>
-        )}
-        {mission.category && (
-          <span className="text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
-            {mission.category}
-          </span>
-        )}
-        <MissionLocationTags
-          regions={regions}
-          subRegion={mission.region}
-          system={mission.system}
-          poolKey={mission.poolKeys[0]}
-          localitySystems={mission.locality?.systems}
-        />
-        <MissionLocalityTag locality={mission.locality} />
-        {standingLabel && (
-          <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
-            {standingLabel}
-          </span>
-        )}
-        <MissionPrereqTag prereqMissions={mission.prereqMissions} missionTitle={mission.title} />
-        <MissionRepEffectTags
-          repEffects={mission.repEffects}
-          repPoints={mission.repPoints}
-          missionFaction={mission.faction}
-        />
-        {poolRollText && (
-          <span className="text-[10px] text-amber-400/80">{poolRollText}</span>
-        )}
-      </>
+      <MissionListingTags
+        isLawful={mission.isLawful}
+        showVerifiedBadge
+        category={mission.category}
+        regions={regions}
+        subRegion={mission.region}
+        system={mission.system}
+        poolKey={mission.poolKeys[0]}
+        locality={mission.locality}
+        showLocalityTag={showLocalityTag}
+        minStanding={mission.minStanding}
+        maxStanding={mission.maxStanding}
+        repCareerLabel={mission.repCareerLabel}
+        repEffects={mission.repEffects}
+        repPoints={mission.repPoints}
+        missionFaction={mission.faction}
+        missionTitle={mission.title}
+        prereqMissions={mission.prereqMissions}
+        poolRollChance={mission.hasPartialPoolRoll ? mission.minPoolChance : null}
+        frequency={mission.frequency}
+      />
     )
   }
 
@@ -442,7 +418,7 @@ export default function BrowseMissionsView({
         onClick={() => setSelectedMissionKey(makeBrowseMissionKey(mission))}
         className="w-full px-3 py-2.5 text-left transition-all hover:bg-slate-800/50 flex items-start justify-between gap-3"
       >
-        <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+        <div className="min-w-0 flex-1">
           {renderMissionTags(mission)}
         </div>
         <div className="shrink-0 text-right">
@@ -477,7 +453,7 @@ export default function BrowseMissionsView({
               <h4 className={`font-medium text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>
                 {mission.title}
               </h4>
-              <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+              <div className="mt-1.5">
                 {renderMissionTags(mission)}
               </div>
             </div>
@@ -796,8 +772,8 @@ export default function BrowseMissionsView({
               <h3 className={`text-base font-semibold ${selectedMission.isLawful ? 'text-green-300' : 'text-red-400'}`}>
                 {selectedMission.title}
               </h3>
-              <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                {renderMissionTags(selectedMission)}
+              <div className="mt-2">
+                {renderMissionTags(selectedMission, { showLocalityTag: false })}
               </div>
               <p className="text-sm text-slate-400 mt-3">
                 Blueprint rewards from this contract

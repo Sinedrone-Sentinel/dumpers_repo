@@ -1,13 +1,20 @@
 import AppModal from './layout/AppModal'
 import type { BlueprintRewardMission } from '../lib/blueprintMissionRewards'
 import { findBrowseMissionEntry } from '../lib/blueprintMissionRewards'
+import type { Region } from '../lib/missions'
 import { collectUniquePrereqs, MissionPrereqList } from './MissionPrereqInfo'
+import MissionListingTags from './MissionListingTags'
 
 interface BlueprintRewardMissionsModalProps {
   blueprintName: string
   missions: BlueprintRewardMission[]
   onClose: () => void
   onSelectMission: (mission: BlueprintRewardMission) => void
+}
+
+function regionsForMission(system?: string | null): Region[] {
+  const key = system?.toLowerCase()
+  return key === 'stanton' || key === 'pyro' || key === 'nyx' ? [key] : []
 }
 
 export default function BlueprintRewardMissionsModal({
@@ -83,23 +90,28 @@ export default function BlueprintRewardMissionsModal({
                     <span className={mission.isLawful ? 'text-green-300' : 'text-red-400'}>
                       {mission.title}
                     </span>
-                    {(mission.prereqMissions?.length ?? 0) > 0 && (
-                      <span
-                        className="ml-1.5 text-[10px] text-purple-300/90"
-                        title="Requires a prerequisite mission first — see the list above"
-                      >
-                        🔒
-                      </span>
-                    )}
                   </p>
-                  {mission.locality?.label && (
-                    <p
-                      className="mt-0.5 text-[10px] text-sky-300/90"
-                      title="This contract only shows up in your Contracts app while you're in this area"
-                    >
-                      📍 {mission.locality.label}
-                    </p>
-                  )}
+                  <MissionListingTags
+                    className="flex flex-col gap-1 mt-1.5"
+                    isLawful={mission.isLawful}
+                    showVerifiedBadge
+                    category={mission.category}
+                    regions={regionsForMission(mission.system)}
+                    subRegion={mission.region}
+                    system={mission.system}
+                    poolKey={mission.poolKey}
+                    locality={mission.locality}
+                    minStandingName={mission.standingName}
+                    minReputation={mission.minReputation}
+                    repCareerLabel={mission.repCareerLabel}
+                    repEffects={mission.repEffects}
+                    repPoints={mission.repPoints}
+                    missionFaction={mission.faction}
+                    missionTitle={mission.title}
+                    prereqMissions={mission.prereqMissions}
+                    dropChance={mission.chance}
+                    frequency={mission.frequency}
+                  />
                 </button>
               </li>
             )

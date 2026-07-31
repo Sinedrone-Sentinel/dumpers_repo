@@ -1385,6 +1385,38 @@ function resolveContractIsLawful(factionKey, _debugName) {
   return true
 }
 
+/**
+ * Mission offer frequency / instance limits from contract generators.
+ * Units (confirmed via star-citizen.wiki field mapping):
+ * - generationParams.respawnTime / contractLifeTime.instanceLifeTime → minutes
+ * - defaultAvailability personal/abandoned cooldown → seconds
+ */
+function extractContractFrequency(contract, generator) {
+  const genParams = contract?.generationParams || {}
+  const life = contract?.contractLifeTime || {}
+  const avail = generator?.defaultAvailability || {}
+
+  const numOrNull = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null)
+  const boolOrNull = (v) => (typeof v === 'boolean' ? v : null)
+
+  return {
+    maxInstances: numOrNull(genParams.maxInstances),
+    maxInstancesPerPlayer: numOrNull(genParams.maxInstancesPerPlayer),
+    respawnTimeMinutes: numOrNull(genParams.respawnTime),
+    respawnTimeVariationMinutes: numOrNull(genParams.respawnTimeVariation),
+    instanceLifeTimeMinutes: numOrNull(life.instanceLifeTime),
+    instanceLifeTimeVariationMinutes: numOrNull(life.instanceLifeTimeVariation),
+    hasPersonalCooldown: boolOrNull(avail.hasPersonalCooldown),
+    personalCooldownSeconds: numOrNull(avail.personalCooldownTime),
+    personalCooldownVariationSeconds: numOrNull(avail.personalCooldownTimeVariation),
+    abandonedCooldownSeconds: numOrNull(avail.abandonedCooldownTime),
+    abandonedCooldownVariationSeconds: numOrNull(avail.abandonedCooldownTimeVariation),
+    onceOnly: boolOrNull(avail.onceOnly),
+    canReacceptAfterAbandoning: boolOrNull(avail.canReacceptAfterAbandoning),
+    canReacceptAfterFailing: boolOrNull(avail.canReacceptAfterFailing),
+  }
+}
+
 function parseContractGenerators(localization, reputationCaches = {}) {
   console.log('\n[CONTRACT PARSING] Parsing contract generators for mission data...')
   
@@ -1792,6 +1824,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             system,
           })
           
+          const frequency = extractContractFrequency(contract, generator)
+
           const contractData = {
             id: contract.id || contract.debugName,
             debugName: contract.debugName,
@@ -1809,6 +1843,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             repPoints,
             repEffects,
             locality,
+            frequency,
             isLawful: resolveContractIsLawful(factionKey, contract.debugName),
             __minStandingPath: repPrereq?.minStandingPath ?? null,
             __maxStandingPath: repPrereq?.maxStandingPath ?? null,
@@ -1843,7 +1878,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
               maxStanding,
               repPoints,
               repEffects,
-              locality
+              locality,
+              frequency,
             })
           }
         }
@@ -2177,6 +2213,7 @@ function indexContractInMissionsByPool(contract, missionsByPool) {
       repEffects: contract.repEffects ?? [],
       repCareerLabel: contract.repCareerLabel ?? null,
       repScopeKey: contract.repScopeKey ?? null,
+      frequency: contract.frequency ?? null,
     })
   }
 }

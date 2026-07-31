@@ -1,8 +1,10 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
 import { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
+import type { MissionFrequency } from './missionFrequency'
 import { resolveMissionIsLawful } from './missionLawfulStatus'
 
 export { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
+export type { MissionFrequency } from './missionFrequency'
 
 /** Reputation change on mission completion. Negative amounts are cross-faction losses. */
 export interface MissionRepEffect {
@@ -75,6 +77,8 @@ export interface BlueprintRewardMission {
   prereqMissions: MissionPrereq[]
   /** Locality gate: where you must be for this mission to appear. */
   locality: MissionLocality | null
+  /** Offer count / board refresh (and related cooldown fields). */
+  frequency: MissionFrequency | null
 }
 
 type MissionPoolBlueprint = {
@@ -111,6 +115,7 @@ type ContractEntry = {
   repEffects?: MissionRepEffect[]
   prereqMissions?: MissionPrereq[]
   locality?: MissionLocality | null
+  frequency?: MissionFrequency | null
 }
 
 const missionBlueprints = blueprintMissionData.missionBlueprints as Record<string, MissionPoolBlueprint[]>
@@ -183,6 +188,7 @@ function buildBlueprintRewardIndex(): Map<string, BlueprintRewardMission[]> {
           repEffects: contract.repEffects ?? [],
           prereqMissions: contract.prereqMissions ?? [],
           locality: contract.locality ?? null,
+          frequency: contract.frequency ?? null,
           minReputation: contract.minStanding?.minReputation ?? null,
           maxReputation: contract.maxStanding?.minReputation ?? null,
           standingName: contract.minStanding?.name ?? null,
@@ -466,6 +472,7 @@ export interface ContractMissionBrowseEntry {
   repEffects: MissionRepEffect[]
   prereqMissions: MissionPrereq[]
   locality: MissionLocality | null
+  frequency: MissionFrequency | null
   poolKeys: string[]
   /** Lowest pool roll chance when any attached pool is < 100%. */
   minPoolChance: number
@@ -542,6 +549,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       repEffects: contract.repEffects ?? [],
       prereqMissions: contract.prereqMissions ?? [],
       locality: contract.locality ?? null,
+      frequency: contract.frequency ?? null,
       poolKeys,
       minPoolChance,
       hasPartialPoolRoll: minPoolChance < 1,
