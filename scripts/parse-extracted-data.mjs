@@ -65,7 +65,7 @@ import {
 } from './lib/repRewardCache.mjs'
 import { parseQualityBands } from './lib/parseQualityBands.mjs'
 import { parseMissionBrokerData } from './lib/parseMissionBroker.mjs'
-import { readGameBuildVersion } from './lib/gameBuildVersion.mjs'
+import { readGameBuildInfo } from './lib/gameBuildVersion.mjs'
 import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -4802,10 +4802,14 @@ async function main() {
   // Parse quality bands
   const qualityData = parseQualityBands(EXTRACTED_DATA)
   
-  const gameBuildVersion = readGameBuildVersion({ extractedData: EXTRACTED_DATA })
-  if (gameBuildVersion) {
-    console.log(`\nGame build: ${gameBuildVersion}`)
-    saveJson('game-build-version.json', { version: gameBuildVersion })
+  const gameBuildInfo = readGameBuildInfo({ extractedData: EXTRACTED_DATA })
+  if (gameBuildInfo?.version || gameBuildInfo?.launcherVersion) {
+    const label = gameBuildInfo.launcherVersion || gameBuildInfo.version
+    console.log(`\nGame build: ${label}`)
+    saveJson('game-build-version.json', {
+      version: gameBuildInfo.version,
+      launcherVersion: gameBuildInfo.launcherVersion,
+    })
   } else {
     console.warn('\n⚠️  Could not determine game build version (game-build.json / build_manifest.id missing)')
   }
@@ -4959,7 +4963,7 @@ async function main() {
   saveJson('game-blueprints.json', {
     _source: 'Star Citizen Game Files (extracted)',
     _extracted: new Date().toISOString(),
-    version: gameBuildVersion ?? 'unknown',
+    version: gameBuildInfo?.version ?? 'unknown',
     blueprints: cleanedBlueprints,
     defaultBlueprintIds: [...defaultBlueprintIds].sort(),
     summary: {

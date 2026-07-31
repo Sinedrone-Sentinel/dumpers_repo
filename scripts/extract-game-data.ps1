@@ -98,6 +98,8 @@ if (Test-Path $BuildManifestPath) {
     try {
         $manifest = Get-Content $BuildManifestPath -Raw | ConvertFrom-Json
         $internalVersion = $manifest.Data.Version
+        $p4Change = $manifest.Data.RequestedP4ChangeNum
+        $branch = $manifest.Data.Branch
         $GameBuildVersion = $null
         if ($internalVersion -and $internalVersion -ne 'None') {
             $parts = $internalVersion -split '\.'
@@ -105,20 +107,36 @@ if (Test-Path $BuildManifestPath) {
                 $GameBuildVersion = "$($parts[0]).$($parts[1]).x"
             }
         }
-        if (-not $GameBuildVersion -and $manifest.Data.Branch -match '(\d+)\.(\d+)') {
+        if (-not $GameBuildVersion -and $branch -match '(\d+)\.(\d+)') {
             $GameBuildVersion = "$($Matches[1]).$($Matches[2]).x"
+        }
+        # RSI launcher label: "{semver}-live.{RequestedP4ChangeNum}" (e.g. 4.9.0-live.12344265)
+        $launcherVersion = $null
+        $semver = $null
+        if ($branch -match '(\d+)\.(\d+)\.(\d+)') {
+            $semver = "$($Matches[1]).$($Matches[2]).$($Matches[3])"
+        }
+        elseif ($branch -match '(\d+)\.(\d+)') {
+            $semver = "$($Matches[1]).$($Matches[2]).0"
+        }
+        elseif ($GameBuildVersion -match '^(\d+)\.(\d+)') {
+            $semver = "$($Matches[1]).$($Matches[2]).0"
+        }
+        if ($semver -and $p4Change) {
+            $launcherVersion = "$semver-live.$p4Change"
         }
         $gameBuild = @{
             version = $GameBuildVersion
+            launcherVersion = $launcherVersion
             internalVersion = $internalVersion
-            branch = $manifest.Data.Branch
-            p4Change = $manifest.Data.RequestedP4ChangeNum
+            branch = $branch
+            p4Change = $p4Change
             buildDate = $manifest.Data.BuildDateStamp
             extracted = (Get-Date).ToUniversalTime().ToString("o")
         }
         $gameBuildJson = $gameBuild | ConvertTo-Json -Depth 3
         Write-Utf8NoBom -Path (Join-Path $OutputPath "game-build.json") -Content $gameBuildJson
-        Write-Host "Game build: $GameBuildVersion ($($manifest.Data.Branch), internal $($internalVersion))" -ForegroundColor Gray
+        Write-Host "Game build: $launcherVersion ($GameBuildVersion, $($branch), internal $($internalVersion))" -ForegroundColor Gray
     }
     catch {
         Write-Host "WARNING: Could not read build_manifest.id: $_" -ForegroundColor Yellow

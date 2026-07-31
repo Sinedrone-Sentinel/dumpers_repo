@@ -14,6 +14,7 @@ import UpdateAvailableBanner from './UpdateAvailableBanner'
 import QuestionnaireAvailableBanner from './QuestionnaireAvailableBanner'
 import SignInMenu from '../auth/SignInMenu'
 import { useAppUpdateAvailable } from '../../hooks/useAppUpdateAvailable'
+import { getLiveGameVersionLabel } from '../../lib/gameBuildVersion'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -70,6 +71,7 @@ export default function AppChrome({
 }: AppChromeProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const updateAvailable = useAppUpdateAvailable()
+  const liveGameVersion = getLiveGameVersionLabel()
   const headerRef = useRef<HTMLElement>(null)
   const showGuestQuestionnaireBanner = Boolean(
     isGuestPreview && guestQuestionnaireBanner && onOpenGuestQuestionnaire && onDeclineGuestQuestionnaire
@@ -116,8 +118,16 @@ export default function AppChrome({
         <div className="site-app-header">
           <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
             <AppSidebar groups={navGroups} />
-            <div className="flex items-center min-w-0 flex-1 overflow-hidden">
+            <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
               <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
+              {liveGameVersion ? (
+                <span
+                  className="shrink-0 max-w-[42vw] sm:max-w-none truncate text-[10px] sm:text-xs font-semibold tabular-nums tracking-tight text-slate-500"
+                  title={`Star Citizen LIVE (RSI launcher): ${liveGameVersion}`}
+                >
+                  {liveGameVersion}
+                </span>
+              ) : null}
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {isGuestPreview ? (

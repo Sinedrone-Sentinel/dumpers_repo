@@ -393,7 +393,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-fps-weapons.json` | FPS weapon stats |
 | `game-salvage-modules.json` | Salvage modules |
 | `game-manufacturers.json` | Manufacturer names/codes |
-| `game-build-version.json` | Extracted game build version (feeds BP Dumper min version) |
+| `game-build-version.json` | Extracted build (`version` for BP Dumper min; `launcherVersion` for header, e.g. `4.9.0-live.…`) |
 | `game-reputation.json` | Faction standings and mission brokers |
 | `game-quality-bands.json` | Crafting quality curves |
 | `game-lore.json` | Archive resource/item lore |
