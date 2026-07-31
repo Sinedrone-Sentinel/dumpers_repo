@@ -374,10 +374,7 @@ export default function BrowseMissionsView({
     return crumbs
   }, [selectedFaction, selectedMission])
 
-  const renderMissionTags = (
-    mission: MissionDisplay,
-    { showLocalityTag = true }: { showLocalityTag?: boolean } = {}
-  ) => {
+  const renderMissionTags = (mission: MissionDisplay) => {
     const systemRegion = mission.system?.toLowerCase()
     const regions: Region[] =
       systemRegion === 'stanton' || systemRegion === 'pyro' || systemRegion === 'nyx'
@@ -394,7 +391,6 @@ export default function BrowseMissionsView({
         system={mission.system}
         poolKey={mission.poolKeys[0]}
         locality={mission.locality}
-        showLocalityTag={showLocalityTag}
         minStanding={mission.minStanding}
         maxStanding={mission.maxStanding}
         repCareerLabel={mission.repCareerLabel}
@@ -773,7 +769,7 @@ export default function BrowseMissionsView({
                 {selectedMission.title}
               </h3>
               <div className="mt-2">
-                {renderMissionTags(selectedMission, { showLocalityTag: false })}
+                {renderMissionTags(selectedMission)}
               </div>
               <p className="text-sm text-slate-400 mt-3">
                 Blueprint rewards from this contract

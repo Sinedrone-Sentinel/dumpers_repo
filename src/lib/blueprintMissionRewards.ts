@@ -23,12 +23,14 @@ export interface PrereqMissionRef {
   region?: string | null
   category?: string | null
   isLawful?: boolean
-  /** False = starter/intro mission with no blueprint reward of its own. */
+  /** False = starter/intro mission with no blueprint reward of its own. Still listed. */
   hasBlueprints?: boolean
   /** True = faction intro/invite mission (game's introContracts list). */
   isIntro?: boolean
   /** Where you must be for this prerequisite mission to appear. */
   locality?: MissionLocality | null
+  /** Offer/share settings — present even when this prereq is not a BP-reward contract. */
+  frequency?: MissionFrequency | null
 }
 
 /** One prerequisite group: complete `requiredCount` of the listed missions. */

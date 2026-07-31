@@ -122,7 +122,7 @@ function MissionTagLegend() {
           <TagSample label="+50 rep" className="bg-emerald-950/40 text-emerald-400/90 border-emerald-500/30" />
         </div>
         <p className="text-[11px] text-slate-500 mt-2">
-          Display order: Verified/Unverified → contract type → system/location → career path → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %. When known, a second row shows offer count and board refresh cadence.
+          Display order: Verified/Unverified → contract type → system/location → career path → aUEC → rep points. Optional extras after that: prerequisite unlock, pool roll / BP drop %. When known, a second row shows offer count, board refresh cadence, and Solo when the contract cannot be party-shared.
         </p>
       </div>
 

@@ -4,7 +4,7 @@ import type { MissionFrequency } from '../lib/missionFrequency'
 import {
   formatMissionHowMany,
   formatMissionHowOften,
-  hasMissionFrequencyTags,
+  formatMissionSolo,
 } from '../lib/missionFrequency'
 import type { Region } from '../lib/missions'
 import {
@@ -17,13 +17,31 @@ import MissionLocalityTag from './MissionLocalityTag'
 import MissionPrereqTag from './MissionPrereqInfo'
 import MissionRepEffectTags from './MissionRepEffectTags'
 
+/** Muted yellow/brown — board refresh / offer cadence ("Time"). */
+const TIME_TAG_CLASS =
+  'text-[10px] px-1.5 py-0.5 bg-yellow-950/45 text-yellow-200/75 border border-yellow-700/40 rounded'
+/** Same family for offer-count caps on the frequency row. */
+const COUNT_TAG_CLASS =
+  'text-[10px] px-1.5 py-0.5 bg-yellow-950/45 text-yellow-200/75 border border-yellow-700/40 rounded'
+const SOLO_TAG_CLASS =
+  'text-[10px] px-1.5 py-0.5 bg-red-950/50 text-red-400 border border-red-500/50 rounded font-medium'
+
+/**
+ * overview — at-a-glance lists/modals: locality flag + Solo; no location chips; no time/count.
+ * detail — Browse/tracker breakdowns: location chips + time/count + Solo; no locality flag.
+ */
+export type MissionTagLayout = 'overview' | 'detail'
+
 /**
  * Site-wide mission tag order:
- * Row 1: [Verified/Unverified] [Contract Type] [system/location] [career path] [aUEC] [Rep Points]
+ * Row 1: [Verified/Unverified] [Contract Type] [location] [career path] [aUEC] [Rep Points]
  *         then optional: [Prerequisite] [pool roll / BP drop]
- * Row 2: [how many] [how often] — only when game files provide the value
+ * Row 2 (detail): [how many] [how often] [Solo]
+ * Row 2 (overview): [Solo] only
  */
 export interface MissionListingTagsProps {
+  /** overview = flag + Solo; detail = location chips + time/count + Solo */
+  layout?: MissionTagLayout
   isLawful?: boolean
   /** Always show Verified/Unverified when true (Browse). Tracker historically hid Verified. */
   showVerifiedBadge?: boolean
@@ -33,11 +51,6 @@ export interface MissionListingTagsProps {
   system?: string | null
   poolKey?: string | null
   locality?: MissionLocality | null
-  /**
-   * Compact locality “flag” (e.g. near Terminus). Useful in overview lists;
-   * hide on full breakdowns that already show the individual location chips.
-   */
-  showLocalityTag?: boolean
   /** Browse-style standing window (min–max). */
   minStanding?: { name: string; minReputation: number } | null
   maxStanding?: { name: string; minReputation: number } | null
@@ -77,6 +90,7 @@ function formatPoolRoll(chance?: number | null): string | null {
 }
 
 export default function MissionListingTags({
+  layout = 'detail',
   isLawful = true,
   showVerifiedBadge = true,
   category,
@@ -85,7 +99,6 @@ export default function MissionListingTags({
   system,
   poolKey,
   locality,
-  showLocalityTag = true,
   minStanding,
   maxStanding,
   minStandingName,
@@ -106,6 +119,7 @@ export default function MissionListingTags({
   frequency,
   className = 'flex flex-col gap-1',
 }: MissionListingTagsProps) {
+  const isOverview = layout === 'overview'
   const standingFromRange = formatStandingRange(minStanding, maxStanding, repCareerLabel)
   const standingFromGate = formatStandingRequirement(
     minStandingName ?? null,
@@ -116,9 +130,10 @@ export default function MissionListingTags({
   const aUecText = formatAuecReward(aUecMin, aUecMax)
   const poolRollText = formatPoolRoll(poolRollChance)
   const dropText = formatBlueprintDropChance(dropChance)
-  const howManyText = formatMissionHowMany(frequency)
-  const howOftenText = formatMissionHowOften(frequency)
-  const showFrequencyRow = hasMissionFrequencyTags(frequency)
+  const howManyText = isOverview ? null : formatMissionHowMany(frequency)
+  const howOftenText = isOverview ? null : formatMissionHowOften(frequency)
+  const soloText = formatMissionSolo(frequency)
+  const showFrequencyRow = Boolean(howManyText || howOftenText || soloText)
   const hasRepEffects = Boolean(repEffects?.length || (repPoints != null && repPoints !== 0))
   const fallbackRepText =
     !hasRepEffects && (repMin != null || repMax != null)
@@ -154,15 +169,18 @@ export default function MissionListingTags({
           </span>
         ) : null}
 
-        {/* 3. System / location */}
-        <MissionLocationTags
-          regions={regions}
-          subRegion={subRegion}
-          system={system}
-          poolKey={poolKey}
-          localitySystems={locality?.systems}
-        />
-        {showLocalityTag ? <MissionLocalityTag locality={locality} /> : null}
+        {/* 3. Location — overview: flag only; detail: location chips only */}
+        {isOverview ? (
+          <MissionLocalityTag locality={locality} />
+        ) : (
+          <MissionLocationTags
+            regions={regions}
+            subRegion={subRegion}
+            system={system}
+            poolKey={poolKey}
+            localitySystems={locality?.systems}
+          />
+        )}
 
         {/* 4. Career path (standing gate) */}
         {standingLabel ? (
@@ -195,25 +213,17 @@ export default function MissionListingTags({
           <span className="text-[10px] text-emerald-400/90">{fallbackRepText}</span>
         ) : null}
 
-        {/* Extras (not in the core order, but already used site-wide) */}
+        {/* Extras */}
         <MissionPrereqTag prereqMissions={prereqMissions} missionTitle={missionTitle} />
         {poolRollText ? <span className="text-[10px] text-amber-400/80">{poolRollText}</span> : null}
         {dropText ? <span className="text-[10px] text-amber-400/80">{dropText}</span> : null}
       </div>
 
-      {/* Frequency: how many + how often only — skip missing fields */}
       {showFrequencyRow ? (
         <div className="flex flex-wrap items-center gap-1.5">
-          {howManyText ? (
-            <span className="text-[10px] px-1.5 py-0.5 bg-slate-800/60 text-slate-300 border border-slate-500/40 rounded">
-              {howManyText}
-            </span>
-          ) : null}
-          {howOftenText ? (
-            <span className="text-[10px] px-1.5 py-0.5 bg-slate-800/60 text-slate-300 border border-slate-500/40 rounded">
-              {howOftenText}
-            </span>
-          ) : null}
+          {howManyText ? <span className={COUNT_TAG_CLASS}>{howManyText}</span> : null}
+          {howOftenText ? <span className={TIME_TAG_CLASS}>{howOftenText}</span> : null}
+          {soloText ? <span className={SOLO_TAG_CLASS}>{soloText}</span> : null}
         </div>
       ) : null}
     </div>

@@ -1,6 +1,7 @@
 /**
  * Contract offer frequency / instance limits from game files.
  * Units: respawn / instance lifetime = minutes; personal/abandon cooldown = seconds.
+ * canBeShared comes from the contract template (false = not party-shareable).
  */
 export interface MissionFrequency {
   maxInstances: number | null
@@ -17,6 +18,8 @@ export interface MissionFrequency {
   onceOnly: boolean | null
   canReacceptAfterAbandoning: boolean | null
   canReacceptAfterFailing: boolean | null
+  /** false = cannot share with party (solo). null = unknown / not in files. */
+  canBeShared: boolean | null
 }
 
 /** How many concurrent offers — only when files give a positive instance cap. */
@@ -44,6 +47,16 @@ export function formatMissionHowOften(frequency?: MissionFrequency | null): stri
   return `Every ${formatMinutes(minutes)}`
 }
 
+/** Only when template explicitly sets canBeShared: false. */
+export function formatMissionSolo(frequency?: MissionFrequency | null): string | null {
+  if (frequency?.canBeShared !== false) return null
+  return 'Solo'
+}
+
 export function hasMissionFrequencyTags(frequency?: MissionFrequency | null): boolean {
-  return Boolean(formatMissionHowMany(frequency) || formatMissionHowOften(frequency))
+  return Boolean(
+    formatMissionHowMany(frequency) ||
+      formatMissionHowOften(frequency) ||
+      formatMissionSolo(frequency),
+  )
 }

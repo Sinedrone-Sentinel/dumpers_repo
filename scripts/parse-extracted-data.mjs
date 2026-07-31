@@ -1385,11 +1385,39 @@ function resolveContractIsLawful(factionKey, _debugName) {
   return true
 }
 
+/** Template basename → canBeShared (from ActiveContractSettings). */
+let contractTemplateShareCache = null
+
+function getContractTemplateShareCache() {
+  if (contractTemplateShareCache) return contractTemplateShareCache
+  contractTemplateShareCache = new Map()
+  const templateFiles = findJsonFiles('libs/foundry/records/contracts/contracttemplates')
+  for (const file of templateFiles) {
+    const json = readJson(file)
+    const value = json?._RecordValue_?.contractClass?.additionalParams?.canBeShared
+    if (typeof value === 'boolean') {
+      contractTemplateShareCache.set(basename(file).toLowerCase(), value)
+    }
+  }
+  return contractTemplateShareCache
+}
+
+/** Resolve party-share flag from the contract's template (intros often false). */
+function resolveContractCanBeShared(contract) {
+  const templateRef = contract?.template
+  if (!templateRef || typeof templateRef !== 'string') return null
+  const match = templateRef.match(/([^/\\]+\.json)$/i)
+  if (!match) return null
+  const cached = getContractTemplateShareCache().get(match[1].toLowerCase())
+  return typeof cached === 'boolean' ? cached : null
+}
+
 /**
  * Mission offer frequency / instance limits from contract generators.
  * Units (confirmed via star-citizen.wiki field mapping):
  * - generationParams.respawnTime / contractLifeTime.instanceLifeTime → minutes
  * - defaultAvailability personal/abandoned cooldown → seconds
+ * canBeShared comes from the linked contract template's ActiveContractSettings.
  */
 function extractContractFrequency(contract, generator) {
   const genParams = contract?.generationParams || {}
@@ -1414,6 +1442,7 @@ function extractContractFrequency(contract, generator) {
     onceOnly: boolOrNull(avail.onceOnly),
     canReacceptAfterAbandoning: boolOrNull(avail.canReacceptAfterAbandoning),
     canReacceptAfterFailing: boolOrNull(avail.canReacceptAfterFailing),
+    canBeShared: resolveContractCanBeShared(contract),
   }
 }
 
@@ -1778,7 +1807,13 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           poolKeys,
         })
         
-        // Register completion tags this contract emits on success (prereq chain sources)
+        // Frequency/Solo for this contract — kept even when there are no BP pools so
+        // prerequisite (intro/starter) rows can show Solo without being in `contracts`.
+        const frequency = extractContractFrequency(contract, generator)
+
+        // Register completion tags this contract emits on success (prereq chain sources).
+        // Intro / starter missions often have NO blueprint pools but still unlock later
+        // BP missions — always index them here; do not gate on blueprintPools.length.
         const emittedTagIds = extractContractCompletionTagIds(contract)
         if (emittedTagIds.length > 0) {
           let emitterTitle = resolveContractDisplayTitle({
@@ -1805,6 +1840,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             isLawful: resolveContractIsLawful(factionKey, contract.debugName),
             hasBlueprints: blueprintPools.length > 0,
             isIntro: introContractSet.has(contract),
+            frequency,
           }
           for (const tagId of emittedTagIds) {
             if (!completionTagEmitters.has(tagId)) completionTagEmitters.set(tagId, [])
@@ -1823,8 +1859,6 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             category,
             system,
           })
-          
-          const frequency = extractContractFrequency(contract, generator)
 
           const contractData = {
             id: contract.id || contract.debugName,
@@ -2076,7 +2110,11 @@ function combineTagPrereqDefs(contract, generatorPrereqDefs) {
   })
 }
 
-/** Resolve required tags to the missions that emit them (deduped by faction + title). */
+/**
+ * Resolve required tags to the missions that emit them (deduped by faction + title).
+ * Never drops emitters that lack blueprint pools — faction intro/starter missions
+ * frequently give no BP but are still the unlock gate for later BP contracts.
+ */
 function resolveContractPrereqMissions(prereqDefs, completionTagEmitters, ownDebugName) {
   const prereqMissions = []
 
@@ -2089,6 +2127,7 @@ function resolveContractPrereqMissions(prereqDefs, completionTagEmitters, ownDeb
       for (const emitter of completionTagEmitters.get(tagId) ?? []) {
         if (emitter.debugName === ownDebugName) continue
         totalEmitters++
+        // Dedupe display rows only — hasBlueprints is intentionally NOT a filter.
         const key = `${emitter.faction}|${emitter.title}`
         if (seen.has(key)) continue
         seen.add(key)
@@ -2104,11 +2143,22 @@ function resolveContractPrereqMissions(prereqDefs, completionTagEmitters, ownDeb
           isLawful: emitter.isLawful,
           hasBlueprints: emitter.hasBlueprints,
           isIntro: emitter.isIntro,
+          frequency: emitter.frequency ?? null,
         })
       }
     }
 
     if (missions.length === 0) continue
+
+    // Prefer intro / no-BP starters first so they survive the display cap and read as the unlock path.
+    missions.sort((a, b) => {
+      if (Boolean(a.isIntro) !== Boolean(b.isIntro)) return a.isIntro ? -1 : 1
+      if (Boolean(a.hasBlueprints) !== Boolean(b.hasBlueprints)) {
+        return a.hasBlueprints ? 1 : -1
+      }
+      return String(a.title || '').localeCompare(String(b.title || ''))
+    })
+
     prereqMissions.push({
       requiredCount: def.requiredCount,
       missions: missions.slice(0, 12),

@@ -92,6 +92,7 @@ export default function BlueprintRewardMissionsModal({
                     </span>
                   </p>
                   <MissionListingTags
+                    layout="overview"
                     className="flex flex-col gap-1 mt-1.5"
                     isLawful={mission.isLawful}
                     showVerifiedBadge
