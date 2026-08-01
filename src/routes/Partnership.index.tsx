@@ -4,6 +4,7 @@ import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import {
+  fetchDumperServicesBotInviteUrl,
   listMyPartnerApplications,
   listMyPartnerOrgs,
   listPendingPartnerApplications,
@@ -287,6 +288,11 @@ export default function PartnershipPage() {
                     {app.review_notes && (
                       <p className="text-xs text-slate-400 mt-2">Review: {app.review_notes}</p>
                     )}
+                    {app.status === 'approved' && (
+                      <div className="mt-3">
+                        <BotInvitePanel />
+                      </div>
+                    )}
                   </div>
                 ))
               )}
@@ -392,6 +398,81 @@ function Field({
       </span>
       {children}
     </label>
+  )
+}
+
+function BotInvitePanel() {
+  const [inviteUrl, setInviteUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      const url = await fetchDumperServicesBotInviteUrl()
+      if (!cancelled) {
+        setInviteUrl(url)
+        setLoading(false)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const copyUrl = async () => {
+    if (!inviteUrl) return
+    try {
+      await navigator.clipboard.writeText(inviteUrl)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      setCopied(false)
+    }
+  }
+
+  return (
+    <div className="text-xs text-amber-200/90 leading-relaxed rounded-lg border border-amber-500/20 bg-amber-950/15 px-3 py-3 space-y-2">
+      <p>
+        Invite the <strong className="text-amber-100">Dumper Services</strong> Discord bot into the
+        same server as each webhook channel (Send Messages + Embed Links +{' '}
+        <strong className="text-amber-100">Attach Files</strong>). Actionable services get Accept;
+        tip services (report salvage / pirate) get a screenshot post with no Accept. A webhook alone
+        is not enough.
+      </p>
+      {loading ? (
+        <p className="text-amber-200/60">Loading invite URL…</p>
+      ) : inviteUrl ? (
+        <>
+          <a
+            href={inviteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-orange-300 hover:text-orange-200"
+          >
+            Open bot invite →
+          </a>
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            <code className="flex-1 min-w-0 break-all rounded bg-slate-950/60 border border-slate-700/80 px-2 py-1.5 text-[11px] text-slate-300">
+              {inviteUrl}
+            </code>
+            <button
+              type="button"
+              onClick={() => void copyUrl()}
+              className="shrink-0 px-2.5 py-1.5 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
+            >
+              {copied ? 'Copied' : 'Copy invite URL'}
+            </button>
+          </div>
+        </>
+      ) : (
+        <p className="text-amber-200/70">
+          Could not load the bot invite URL. Confirm Edge secret{' '}
+          <code className="text-amber-100/90">DISCORD_SERVICES_APPLICATION_ID</code> is set and{' '}
+          <code className="text-amber-100/90">discord-services-bot-invite</code> is deployed.
+        </p>
+      )}
+    </div>
   )
 }
 
@@ -530,13 +611,7 @@ function ManageServices({
         keep it accurate. Webhooks here are <strong className="text-slate-300">only</strong> for
         Partnership alerts, not the personal Webhooks page.
       </p>
-      <p className="text-xs text-amber-200/80 leading-relaxed rounded-lg border border-amber-500/20 bg-amber-950/15 px-3 py-2">
-        Invite the <strong className="text-amber-100">Dumper Services</strong> Discord bot into the
-        same server as each webhook channel (Send Messages + Embed Links +{' '}
-        <strong className="text-amber-100">Attach Files</strong>). Actionable services get Accept;
-        tip services (report salvage / pirate) get a screenshot post with no Accept. A webhook alone
-        is not enough.
-      </p>
+      <BotInvitePanel />
       <div className="space-y-3">
         {serviceTypes.map((st) => {
           const existing = org.services.find((s) => s.service_type_id === st.id)

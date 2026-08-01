@@ -13,7 +13,7 @@ Harness tables: `dumper_services_bot_test_*` (migration `137`). Live tables: `se
 
 **Live flow:** site `request_service` → Edge `discord-services-dispatch` (resolve partner webhook → bot posts Accept) → Interactions `accept_service_request` (first-wins) → `service_request_accepted` notification with `org_name` + `pricing_label` + `service_label`.
 
-**Partner setup:** webhook URL on the service **and** invite the bot into that Discord server (**Send Messages + Embed Links + Attach Files**). Attach Files is required for salvage/pirate tip screenshots.
+**Partner setup:** webhook URL on the service **and** invite the bot into that Discord server (**Send Messages + Embed Links + Attach Files**). Attach Files is required for salvage/pirate tip screenshots. After approval, `/partnership` loads the invite URL from Edge `discord-services-bot-invite` (secret `DISCORD_SERVICES_APPLICATION_ID`).
 
 **Timers:** actionable Accept window **30 minutes** (then red Timed out on all copies); member cooldown **31 minutes** per service. Informative tips purge from DB after Discord delivery.
 
@@ -50,6 +50,7 @@ Project Settings → Edge Functions → Secrets:
 npx supabase functions deploy discord-services-interactions --no-verify-jwt
 npx supabase functions deploy discord-services-dispatch
 npx supabase functions deploy discord-services-expire --no-verify-jwt
+npx supabase functions deploy discord-services-bot-invite
 npx supabase functions deploy discord-services-post-test
 ```
 
@@ -79,3 +80,5 @@ https://discord.com/api/oauth2/authorize?client_id=<APPLICATION_ID>&permissions=
 ```
 
 `51200` = Send Messages (`2048`) + Embed Links (`16384`) + Attach Files (`32768`). Re-invite if the bot was added without Attach Files.
+
+Approved partners see Open / Copy invite on `/partnership` via Edge `discord-services-bot-invite` reading `DISCORD_SERVICES_APPLICATION_ID`.

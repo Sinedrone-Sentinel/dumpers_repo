@@ -3,6 +3,14 @@
 export const DISCORD_API = 'https://discord.com/api/v10'
 export const ACCEPT_CUSTOM_ID_PREFIX = 'ds_accept:'
 
+/** Send Messages + Embed Links + Attach Files */
+export const BOT_INVITE_PERMISSIONS = 51200
+
+export function buildBotInviteUrl(applicationId: string): string {
+  const clientId = applicationId.trim()
+  return `https://discord.com/api/oauth2/authorize?client_id=${encodeURIComponent(clientId)}&permissions=${BOT_INVITE_PERMISSIONS}&scope=bot`
+}
+
 export function hexToUint8Array(hex: string): Uint8Array {
   const clean = hex.trim()
   if (clean.length % 2 !== 0) throw new Error('Invalid hex length')

@@ -312,7 +312,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Apply with org SID, name, and RSI org link — officers review Spectrum/RSI evidence before approval',
       'Submitting creates a Partnership Application Support ticket (staff Discord support ping)',
       'After approval, manage which services you offer, pricing (default FREE), and a Discord webhook per service',
-      'Partner orgs must invite the Dumper Services bot (Send Messages, Embed Links, Attach Files) into the webhook’s Discord server',
+      'After approval, Partnership shows the Dumper Services bot invite URL — add it to the same Discord server as each webhook channel (Send Messages, Embed Links, Attach Files)',
       'Listed services and pricing must be transparent, honest, and upheld — bait pricing or refusing listed terms can revoke the partnership',
       'When an org Accepts your request, a modal shows that org’s name and the pricing they listed for that service',
       'Partnership webhooks are separate from personal Webhooks under Discord subscribe',

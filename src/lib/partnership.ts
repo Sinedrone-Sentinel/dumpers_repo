@@ -1,5 +1,32 @@
 import { supabase } from './supabase'
 
+/** Fetches bot invite URL from Edge secret DISCORD_SERVICES_APPLICATION_ID. */
+export async function fetchDumperServicesBotInviteUrl(): Promise<string | null> {
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (!session?.access_token) return null
+
+    const res = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/discord-services-bot-invite`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+      }
+    )
+    if (!res.ok) return null
+    const body = (await res.json()) as { invite_url?: string }
+    const url = String(body.invite_url || '').trim()
+    return url || null
+  } catch {
+    return null
+  }
+}
+
 export type ServiceKind = 'actionable' | 'informative'
 
 export type ServiceType = {

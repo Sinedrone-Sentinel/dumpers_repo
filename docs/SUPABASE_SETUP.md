@@ -201,6 +201,9 @@ npx supabase functions deploy send-discord
 npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 npx supabase functions deploy discord-services-interactions --no-verify-jwt
+npx supabase functions deploy discord-services-dispatch
+npx supabase functions deploy discord-services-expire --no-verify-jwt
+npx supabase functions deploy discord-services-bot-invite
 npx supabase functions deploy discord-services-post-test
 ```
 
@@ -212,9 +215,12 @@ npx supabase functions deploy discord-services-post-test
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 | `log-watcher-webhook` | Receives blueprint events from external tools; Bearer API key auth |
 | `discord-services-interactions` | Partnership Dumper Services bot (Accept buttons); Discord signature auth |
+| `discord-services-dispatch` | Fan-out service requests to partner Discord channels |
+| `discord-services-expire` | Expire open Accept windows + Timed out embeds |
+| `discord-services-bot-invite` | Returns bot OAuth invite URL from `DISCORD_SERVICES_APPLICATION_ID` |
 | `discord-services-post-test` | Super-admin harness: post N Accept messages for race testing |
 
-Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
+Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
 

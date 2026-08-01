@@ -20,3 +20,9 @@ entrypoint = "./functions/discord-services-dispatch/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/discord-services-expire/index.ts"
+
+# Approved partners fetch bot invite URL (reads DISCORD_SERVICES_APPLICATION_ID).
+[functions.discord-services-bot-invite]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/discord-services-bot-invite/index.ts"
