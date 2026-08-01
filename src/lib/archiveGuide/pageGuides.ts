@@ -309,7 +309,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Use Request Services (next to notifications) — only services offered by at least one partner org are listed; if none, you’ll see “Sorry, No Services are being offered at this time.”',
       'Actionable requests (medical, security, refuel, repair, CrimeStat, prison pickup, transport) need a short details note (max 250 chars); first Discord Accept wins within 30 minutes; 31-minute cooldown per service',
       'Intel tips (report salvage / report pirate) need details + a Ctrl+V starmap screenshot with r_DisplayInfo 3 — no Accept; tip data is deleted after Discord delivery',
-      'Apply with org SID, name, and RSI org link — staff check Spectrum/RSI evidence before approval',
+      'Apply with org SID (Spectrum short ID from your RSI org URL), name, and RSI org link — staff check Spectrum/RSI evidence before approval',
       'Submitting creates a Partnership Application Support ticket (staff Discord support ping)',
       'After approval, manage which services you offer, pricing (default FREE), and a Discord webhook per service',
       'After approval, Partnership shows the Dumper Services bot invite URL — add it to the same Discord server as each webhook channel (Send Messages, Embed Links, Attach Files)',

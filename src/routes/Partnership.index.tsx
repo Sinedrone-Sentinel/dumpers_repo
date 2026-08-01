@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import SiteTooltip from '../components/SiteTooltip'
 import { useAuth } from '../contexts/AuthContext'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import {
@@ -196,7 +197,11 @@ export default function PartnershipPage() {
                   Applications are checked against your RSI org page / Spectrum presence before
                   approval. Only apply if you can speak for the org on services and pricing.
                 </p>
-                <Field label="Org SID" required>
+                <Field
+                  label="Org SID"
+                  required
+                  tip="Your org’s short Spectrum ID — the slug in the RSI org URL (robertsspaceindustries.com/orgs/YOURSID). Example: dumpers."
+                >
                   <input
                     value={orgSid}
                     onChange={(e) => setOrgSid(e.target.value)}
@@ -205,7 +210,11 @@ export default function PartnershipPage() {
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
-                <Field label="Organization name" required>
+                <Field
+                  label="Organization name"
+                  required
+                  tip="The display name of your organization as members should see it (usually the same name shown on RSI)."
+                >
                   <input
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
@@ -213,7 +222,10 @@ export default function PartnershipPage() {
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
-                <Field label="RSI org page URL">
+                <Field
+                  label="RSI org page URL"
+                  tip="Full link to your org’s public RSI page. Helps staff confirm the org and that you belong there."
+                >
                   <input
                     value={orgUrl}
                     onChange={(e) => setOrgUrl(e.target.value)}
@@ -221,7 +233,10 @@ export default function PartnershipPage() {
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
-                <Field label="Your role in the org">
+                <Field
+                  label="Your role in the org"
+                  tip="Your rank or title in that org — used to check you can speak for services and pricing (Founder, Director, etc.)."
+                >
                   <input
                     value={roleClaim}
                     onChange={(e) => setRoleClaim(e.target.value)}
@@ -229,7 +244,10 @@ export default function PartnershipPage() {
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
-                <Field label="Additional notes (optional)">
+                <Field
+                  label="Additional notes (optional)"
+                  tip="Anything else that helps verify you represent the org — Spectrum links, Discord, or who else can vouch."
+                >
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
@@ -384,19 +402,32 @@ function PartnershipExplainer() {
 
 function Field({
   label,
+  tip,
   required,
   children,
 }: {
   label: string
+  tip?: string
   required?: boolean
   children: React.ReactNode
 }) {
+  const title = (
+    <>
+      {label}
+      {required ? ' *' : ''}
+    </>
+  )
   return (
     <label className="block space-y-1">
-      <span className="text-xs text-slate-400">
-        {label}
-        {required ? ' *' : ''}
-      </span>
+      {tip ? (
+        <SiteTooltip content={tip} side="top">
+          <span className="text-xs text-slate-400 cursor-help border-b border-dotted border-slate-600/80">
+            {title}
+          </span>
+        </SiteTooltip>
+      ) : (
+        <span className="text-xs text-slate-400">{title}</span>
+      )}
       {children}
     </label>
   )
@@ -694,7 +725,10 @@ function ServiceEditor({
           Offer this
         </label>
       </div>
-      <Field label="Pricing shown to members (default FREE)">
+      <Field
+        label="Pricing shown to members (default FREE)"
+        tip="Exact text members see when your org Accepts — FREE, aUEC amount, materials, etc. Do not list a teaser price you will not honor."
+      >
         <input
           value={pricing}
           onChange={(e) => setPricing(e.target.value)}
@@ -702,11 +736,10 @@ function ServiceEditor({
           className="site-input w-full px-3 py-2 text-sm"
         />
       </Field>
-      <p className="text-[11px] text-slate-500 leading-relaxed -mt-1">
-        Members see this exact label when your org Accepts their request. Do not list a teaser price
-        you will not honor.
-      </p>
-      <Field label={existing?.has_webhook ? 'Replace Discord webhook URL' : 'Discord webhook URL'}>
+      <Field
+        label={existing?.has_webhook ? 'Replace Discord webhook URL' : 'Discord webhook URL'}
+        tip="Channel webhook for this service. Create it in Discord (channel → Integrations → Webhooks). The Dumper Services bot must also be invited to that server."
+      >
         <input
           value={webhook}
           onChange={(e) => setWebhook(e.target.value)}
