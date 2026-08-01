@@ -65,3 +65,57 @@ RETURNS TABLE (id uuid, ore_name text, deposit_type text) ...
 
 - Unique constraints: `DROP CONSTRAINT IF EXISTS ...` before adding renamed constraint.
 - `ADD COLUMN IF NOT EXISTS` for idempotent column adds; use `DROP CONSTRAINT IF EXISTS` before check constraints that may already exist from a partial apply.
+
+## Security — do not undo 130–135
+
+Also follow always-apply rule `supabase-security.mdc`. When writing SQL:
+
+### RLS
+
+- Marketplace / order tables: keep **SELECT** (or tighter) for members. **No** `FOR ALL` / INSERT/UPDATE/DELETE policies that let PostgREST mutate rows.
+- Prefer `SECURITY DEFINER` RPCs that check `auth.uid()` (and role helpers) over broadening RLS.
+- Discord: **no** open INSERT on `discord_webhooks`; sync via existing DEFINER RPCs.
+
+### Privileged profile columns
+
+- Keep trigger `profiles_protect_privileged_columns`.
+- DEFINER paths that must set `role` / `approved_*` / `rsi_handle_verified*` must call `profiles_begin_privileged_update()` first.
+- Role changes for Admin Panel: `admin_set_user_role`, not officer FOR ALL on `profiles`.
+
+### EXECUTE grants
+
+| Function | Who may EXECUTE |
+|---|---|
+| Member-facing order/support RPCs | `authenticated` (after auth checks inside) |
+| `mark_rsi_handle_verified` | `service_role` only |
+| `queue_discord_message` | **not** `authenticated` — owner/DEFINER callers only |
+| `profiles_begin_privileged_update` | **not** `authenticated` |
+
+```sql
+-- ✅ Lock a privileged helper after create
+REVOKE ALL ON FUNCTION public.mark_rsi_handle_verified(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.mark_rsi_handle_verified(uuid) FROM authenticated;
+GRANT EXECUTE ON FUNCTION public.mark_rsi_handle_verified(uuid) TO service_role;
+```
+
+### New mutation RPC template
+
+```sql
+CREATE OR REPLACE FUNCTION public.my_feature_action(p_id uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'Not authenticated';
+  END IF;
+  -- ownership / role checks, then UPDATE/INSERT
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.my_feature_action(uuid) TO authenticated;
+```
+
+Do **not** add a parallel client table write “because the RPC is slower.”

@@ -1,0 +1,70 @@
+---
+description: Hard security rules for Supabase — RPC-only privileged writes, locked profiles, Discord, Edge auth
+alwaysApply: true
+---
+
+# Supabase Security (do not regress)
+
+The browser uses the **anon key**. Assume any authenticated member can call any PostgREST path their JWT allows. **RLS + revoked EXECUTE** are the real gates — never “security by UI.”
+
+Migrations **130–135** locked several holes. New features must **extend** those patterns, not reopen them.
+
+## Marketplace / orders (migration 135)
+
+Tables like `custom_orders`, `order_items`, `order_fulfillments`, `order_events` (and similar marketplace tables):
+
+| Allowed from client | Forbidden from client |
+|---|---|
+| `.from(...).select(...)` | `.insert` / `.update` / `.delete` / upsert |
+
+- Mutations go through existing **SECURITY DEFINER** RPCs (`create_custom_order`, `accept_*`, `cancel_custom_order_requester`, etc.).
+- New order/listing behavior → **new DEFINER RPC** (+ `GRANT EXECUTE` to `authenticated` only if members should call it). Do **not** add `FOR ALL` / write RLS for “convenience.”
+- Do **not** “temporarily” use client `.update({ status })` — that is exactly what 135 removed.
+
+```ts
+// ❌ BAD
+await supabase.from('custom_orders').update({ status: 'cancelled' }).eq('id', id)
+
+// ✅ GOOD
+await supabase.rpc('cancel_custom_order_requester', { p_order_id: id })
+```
+
+## Profiles — privileged columns (migration 132)
+
+Client may update **own** non-privileged prefs (`rsi_handle`, craft/ads toggles, etc.).
+
+**Never** set from the browser (or via a member-callable write policy):
+
+- `role`
+- `approved_at` / `approved_by`
+- `rsi_handle_verified` / `rsi_handle_verified_at`
+
+| Action | Path |
+|---|---|
+| Change member role | `admin_set_user_role` RPC (Admin Panel) |
+| Mark RSI verified | Edge `validate-rsi-handle` → `mark_rsi_handle_verified` (**service_role only**, mig 133) |
+| DEFINER SQL must set privileged cols | Call `profiles_begin_privileged_update()` in that transaction first |
+
+Do **not** restore broad officer `FOR ALL` on `profiles`.
+
+## Discord (migrations 130, 134)
+
+- **Never** call `queue_discord_message` from client JS — EXECUTE revoked for `authenticated`.
+- Queue Discord from **DEFINER RPCs / triggers** (e.g. support alerts inside `create_support_ticket`).
+- **Never** open INSERT RLS on `discord_webhooks`. Member subscribe/sync via RPCs (`sync_my_discord_event_webhooks`, etc.).
+- `official_webhook_url` stays masked except super-admin / `service_role`.
+- `send-discord` Edge: **service_role** Bearer (cron) or verified **super-admin** JWT only — not any logged-in member.
+
+## Edge Functions & secrets
+
+- **Never** put `SUPABASE_SERVICE_ROLE_KEY` (or staff webhook URLs) in frontend / `VITE_*` / committed samples.
+- Privileged server work stays in Edge Functions or DEFINER SQL with explicit `auth.uid()` / role checks.
+- New RPCs that are service-only: `REVOKE` from `PUBLIC` / `authenticated`; `GRANT` to `service_role` only.
+
+## Checklist before shipping a data-mutating feature
+
+1. Can a malicious member replay this with curl + their JWT? If yes and it should not work → wrong design.
+2. Writes on sensitive tables → DEFINER RPC with permission checks inside, not looser RLS.
+3. No new client `.rpc` to revoked/internal helpers (`queue_discord_message`, `mark_rsi_handle_verified`, `profiles_begin_privileged_update`).
+4. Migration grants: least privilege; document in `docs/SUPABASE_SETUP.md` when adding setup steps.
+5. Prefer extending an existing RPC over a second client write path to the same table.
