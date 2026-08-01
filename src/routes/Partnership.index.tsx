@@ -104,7 +104,7 @@ export default function PartnershipPage() {
     }
     setMessage({
       type: 'success',
-      text: 'Application submitted. Officers were notified via Support.',
+      text: 'Application submitted. Staff will review it via Support.',
     })
     setOrgSid('')
     setOrgName('')
@@ -128,7 +128,7 @@ export default function PartnershipPage() {
     return (
       <FeaturePageLayout
         title="Partnership"
-        subtitle="Org services for members · transparent pricing · officer-reviewed"
+        subtitle="Org services for members · transparent pricing · staff-reviewed"
       >
         <PartnershipExplainer />
         <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-5 space-y-3 max-w-xl">
@@ -148,7 +148,7 @@ export default function PartnershipPage() {
   return (
     <FeaturePageLayout
       title="Partnership"
-      subtitle="Org services for members · transparent pricing · officer-reviewed"
+      subtitle="Org services for members · transparent pricing · staff-reviewed"
     >
       {message && (
         <div
@@ -193,8 +193,8 @@ export default function PartnershipPage() {
               <form onSubmit={handleApply} className="space-y-3 rounded-xl border border-slate-700 bg-slate-900/50 p-4">
                 <h3 className="text-white font-medium text-sm">Apply Now</h3>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  Officers review your RSI/Spectrum evidence before approval. Only apply if you can
-                  speak for the org on services and pricing.
+                  Applications are checked against your RSI org page / Spectrum presence before
+                  approval. Only apply if you can speak for the org on services and pricing.
                 </p>
                 <Field label="Org SID" required>
                   <input
@@ -225,15 +225,16 @@ export default function PartnershipPage() {
                   <input
                     value={roleClaim}
                     onChange={(e) => setRoleClaim(e.target.value)}
-                    placeholder="Founder / Officer / …"
+                    placeholder="e.g. Founder, Director, Fleet Commander"
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
-                <Field label="Notes for reviewers">
+                <Field label="Additional notes (optional)">
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={3}
+                    placeholder="Links or context that help verify you speak for the org"
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
