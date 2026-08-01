@@ -2,7 +2,13 @@ import React, { useState } from 'react'
 import type { ArchiveSection } from '../../routes/Archive.index'
 import { MISSION_LOCATION_TAG_STYLES } from '../../lib/missionLocations'
 import { PAGE_GUIDES } from '../../lib/archiveGuide/pageGuides'
-import { ORDER_RULES_SECTION, ORDER_LIFECYCLE_SECTION, RATINGS_SECTION, PENDING_REP_SECTION } from '../../lib/archiveGuide/welcomeSections'
+import {
+  SITE_RULES_SECTION,
+  ORDER_RULES_SECTION,
+  ORDER_LIFECYCLE_SECTION,
+  RATINGS_SECTION,
+  PENDING_REP_SECTION,
+} from '../../lib/archiveGuide/welcomeSections'
 
 interface QuickLink {
   id: string
@@ -298,6 +304,34 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             The site is designed to be a one-stop shop for crafters, miners, and traders who want 
             transparency and fairness in their in-game economic activities.
           </p>
+        </div>
+      </section>
+
+      {/* Site Rules */}
+      <section id="site-rules" className="space-y-4">
+        <h3 className="text-lg font-semibold text-orange-400 flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          {SITE_RULES_SECTION.title}
+        </h3>
+        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+          <p className="text-sm text-slate-400 leading-relaxed">{renderRich(SITE_RULES_SECTION.intro)}</p>
+          <div className="space-y-3">
+            {SITE_RULES_SECTION.groups.map((group) => (
+              <div
+                key={group.id}
+                className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30"
+              >
+                <h4 className="text-sm font-medium text-white mb-2">{group.title}</h4>
+                <ul className="text-xs text-slate-400 space-y-1.5">
+                  {group.items.map((item) => (
+                    <li key={item}>• {renderRich(item)}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -607,10 +641,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           Order System Rules &amp; Expectations
         </h3>
         <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
-          <p className="text-sm text-slate-400 leading-relaxed">
-            The order system is built on <strong className="text-white">trust and fairness</strong>. To protect all members, 
-            we enforce the following rules — especially for users still building their reputation.
-          </p>
+          <p className="text-sm text-slate-400 leading-relaxed">{renderRich(ORDER_RULES_SECTION.intro)}</p>
 
           <div className="space-y-3">
             <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
@@ -631,11 +662,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 What's Not Allowed
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• Making artificially small <strong className="text-amber-300">WTB</strong> claims or purchases to farm reputation quickly</li>
-                <li>• Repeatedly trading with the same person to inflate ratings (WTB or WTS)</li>
-                <li>• Using multiple accounts to manipulate the marketplace</li>
-                <li>• Abandoning accepted jobs without good reason</li>
-                <li>• Refusing to rate completed WTB or WTS transactions</li>
+                {ORDER_RULES_SECTION.notAllowed.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
 

@@ -24,6 +24,7 @@ const content = await import(pathToFileURL(bundlePath).href)
 const {
   ARCHIVE_GUIDE_META,
   ABOUT_SECTION,
+  SITE_RULES_SECTION,
   OFFLINE_MODE_SECTION,
   DFP_SECTION,
   RATINGS_SECTION,
@@ -175,6 +176,15 @@ ${sectionWrap(
   ABOUT_SECTION.id,
   ABOUT_SECTION.title,
   ABOUT_SECTION.paragraphs.map((p) => `<p>${rich(p)}</p>`).join('\n    ')
+)}
+
+${sectionWrap(
+  SITE_RULES_SECTION.id,
+  SITE_RULES_SECTION.title,
+  `<p>${rich(SITE_RULES_SECTION.intro)}</p>
+    ${SITE_RULES_SECTION.groups
+      .map((group) => card(group.title, ul(group.items)))
+      .join('\n    ')}`
 )}
 
 ${sectionWrap(

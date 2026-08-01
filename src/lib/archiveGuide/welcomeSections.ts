@@ -160,11 +160,69 @@ export const PENDING_REP_SECTION = {
     'Everyone must **archive & rate** completed WTB and WTS transactions before starting new ones on The Bazaar. Until you do, those actions are paused — you can still browse listings and manage any trades already in progress. Open **My Listings → Completed** or **The Bazaar → Rate completed orders** and click the purple **Archive & rate** button on each finished deal.',
 }
 
+/** Site-wide usage rules (Archive Overview + WelcomeModal onboarding). */
+export const SITE_RULES_SECTION = {
+  id: 'site-rules',
+  title: 'Site Rules',
+  intro:
+    "Dumper's Repo is for fair industry play — crafting, mining, trading, and coordination. Using the site to harm players, abuse members, or attack the platform is banned. Marketplace detail still lives under **Order System Rules** below.",
+  groups: [
+    {
+      id: 'fair-play',
+      title: 'Fair play & in-game conduct',
+      items: [
+        "Do not use Dumper's Repo data, tools, listings, Discord alerts, member directories, or mission intel to locate, stalk, grief, pirate, pad-ram, or otherwise harm players in Star Citizen.",
+        'Do not use the site to organize or advertise piracy, scams, real-money trading (RMT), account selling, or other CIG/RSI Terms of Service violations.',
+        'RSI Handle verification is for accountability. Banned: claiming a handle you do not control; impersonating another citizen; **stealing, hijacking, or transferring another member\'s RSI verification** (including forcing a verify onto an account that does not own that handle, or displacing someone\'s verified handle through exploits or API abuse).',
+      ],
+    },
+    {
+      id: 'marketplace',
+      title: 'Marketplace integrity (WTB / WTS / fulfillment)',
+      items: [
+        'List **WTB** only for items you genuinely want; list **WTS** only for stock you actually have.',
+        'No fake, bait, or throwaway listings, claims, or purchases to farm ratings, clog The Bazaar, or harass members.',
+        '**Multiple site logins tied to different RSI-verified handles are allowed** (some players legitimately own more than one RSI account). What is banned: using those accounts (or any sockpuppets) to **inflate reputation, evade bans or strikes, self-deal, or otherwise abuse** the marketplace — for example trading with yourself across alts to farm stars.',
+        'No abandoning accepted jobs without cause; complete archive-and-rate after pickup.',
+        'Order System Rules (caps, deadlines, strikes) remain in force — see that section for marketplace detail.',
+      ],
+    },
+    {
+      id: 'support',
+      title: 'Support & reporting',
+      items: [
+        'Support is for real account or site issues **and for reporting members** who break these rules. Use it in good faith.',
+        '**False reporting is banned** — do not file Support tickets that knowingly invent or exaggerate misconduct against another member to harass them, tank their standing, or waste officer time.',
+        'No spam tickets, duplicate floods, bait tickets, or using Support to harass officers or the people you report.',
+        'Notifications, questionnaires, and site messaging are not for abuse, spam, or social engineering.',
+      ],
+    },
+    {
+      id: 'technical',
+      title: 'Technical misuse',
+      items: [
+        'No reverse-engineering, probing, or exploiting the site, Supabase APIs, Edge Functions, security gaps, or Discord integrations to hijack delivery, steal webhooks, spam members or staff channels, steal RSI verifications, or escalate privileges.',
+        'No scraping or redistributing member PII (emails, Discord webhook URLs, API keys, private order details).',
+        'BP Dumper API keys are personal credentials — do not share, publish, or use another member\'s key.',
+        'Do not attempt to bypass Offline Mode locks, role gates, or officer / super-admin controls.',
+      ],
+    },
+    {
+      id: 'enforcement',
+      title: 'Enforcement',
+      items: [
+        'Violations may result in reputation reset, marketplace locks, API-key revocation, Discord webhook removal, temporary suspension, or permanent ban.',
+        'Officers and super-admins may act immediately for severe abuse (piracy facilitation, Discord hijack, RSI-verification theft, false-report campaigns, privilege escalation).',
+      ],
+    },
+  ],
+}
+
 export const ORDER_RULES_SECTION = {
   id: 'order-rules',
   title: 'Order System Rules & Expectations',
   intro:
-    'The order system is built on **trust and fairness**. To protect all members, we enforce the following rules — especially for users still building their reputation.',
+    'The order system is built on **trust and fairness**. To protect all members, we enforce the following rules — especially for users still building their reputation. Site-wide conduct is covered under **Site Rules** above.',
   expected: {
     title: "What's Expected",
     items: [
@@ -183,7 +241,7 @@ export const ORDER_RULES_SECTION = {
     items: [
       'Making artificially small **WTB** claims or purchases to farm reputation quickly',
       'Repeatedly trading with the same person to inflate ratings (WTB or WTS)',
-      'Using multiple accounts to manipulate the marketplace',
+      'Using multiple RSI-verified (or unverified) accounts to manipulate the marketplace — alts are allowed when each is RSI-verified; self-dealing and rep farming across them is not',
       'Abandoning accepted jobs without good reason',
       'Refusing to rate completed WTB or WTS transactions',
     ],
@@ -336,6 +394,7 @@ export const ARCHIVE_DISCLAIMER =
 /** Table of contents for the printable guide (anchor ids + labels). */
 export const PRINTABLE_TOC = [
   { id: 'about', label: "What is Dumper's Repo?" },
+  { id: 'site-rules', label: 'Site Rules' },
   { id: 'offline-mode', label: 'Offline Mode' },
   { id: 'dfp', label: "Why Dumper's Fair-Value Price (DFP)?" },
   { id: 'order-lifecycle', label: 'How a Deal Finishes' },

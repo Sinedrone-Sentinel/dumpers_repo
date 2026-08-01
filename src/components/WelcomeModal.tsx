@@ -1,12 +1,27 @@
-import React, { useState, useId } from 'react'
+import React, { useState, useId, useRef, useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { useUiOverlayRegistration } from '../contexts/UiOverlayContext'
+import { SITE_RULES_SECTION } from '../lib/archiveGuide/welcomeSections'
 
 interface WelcomeModalProps {
   onClose: () => void
+}
+
+/** Lightweight **bold** markers → React nodes. */
+function renderRich(text: string): React.ReactNode {
+  const parts = text.split(/\*\*(.+?)\*\*/g)
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="text-slate-200">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  )
 }
 
 export default function WelcomeModal({ onClose }: WelcomeModalProps) {
@@ -19,9 +34,32 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [validating, setValidating] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
+  const [rulesScrolledToEnd, setRulesScrolledToEnd] = useState(false)
+  const rulesScrollRef = useRef<HTMLDivElement>(null)
 
-  const totalSteps = 3
+  const totalSteps = 4
+  const rulesStep = 2
   const isVerified = profile?.rsi_handle_verified ?? false
+
+  useEffect(() => {
+    if (step !== rulesStep) {
+      setRulesScrolledToEnd(false)
+      return
+    }
+
+    const el = rulesScrollRef.current
+    if (!el) return
+
+    const checkScroll = () => {
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 8
+      if (atBottom) setRulesScrolledToEnd(true)
+    }
+
+    // Content may fit without scrolling (tall viewports) — unlock immediately.
+    checkScroll()
+    el.addEventListener('scroll', checkScroll, { passive: true })
+    return () => el.removeEventListener('scroll', checkScroll)
+  }, [step])
 
   const handleValidateHandle = async () => {
     if (!rsiHandle.trim()) {
@@ -85,6 +123,9 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
     onClose()
     // Navigate handled by Link component
   }
+
+  const canAdvance =
+    step !== rulesStep || rulesScrolledToEnd
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -237,7 +278,34 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
             </div>
           )}
 
-          {step === 2 && (
+          {step === rulesStep && (
+            <div className="space-y-3">
+              <h3 className="text-white font-medium">{SITE_RULES_SECTION.title}</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                {renderRich(SITE_RULES_SECTION.intro)}
+              </p>
+              <div
+                ref={rulesScrollRef}
+                className="max-h-[220px] overflow-y-auto rounded-lg border border-slate-700/60 bg-slate-800/40 p-3 space-y-3"
+              >
+                {SITE_RULES_SECTION.groups.map((group) => (
+                  <div key={group.id}>
+                    <h4 className="text-xs font-semibold text-slate-200 mb-1.5">{group.title}</h4>
+                    <ul className="text-xs text-slate-400 space-y-1.5">
+                      {group.items.map((item) => (
+                        <li key={item}>• {renderRich(item)}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              {!rulesScrolledToEnd && (
+                <p className="text-xs text-amber-300/90">Scroll to the end to continue</p>
+              )}
+            </div>
+          )}
+
+          {step === 3 && (
             <div className="space-y-4">
               <h3 className="text-white font-medium">You're All Set!</h3>
               <p className="text-sm text-slate-400 leading-relaxed">
@@ -328,7 +396,8 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
           {step < totalSteps - 1 ? (
             <button
               onClick={() => setStep(step + 1)}
-              className="px-5 py-2 text-sm bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors"
+              disabled={!canAdvance}
+              className="px-5 py-2 text-sm bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-orange-600"
             >
               Next
             </button>
