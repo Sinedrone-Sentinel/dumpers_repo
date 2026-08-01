@@ -144,6 +144,75 @@ function tryStarStringsDisplayAlias(
 }
 
 /**
+ * Game.log sometimes awards skin-first names ("BlackFire Racing Flight Suit") while the
+ * catalog is manufacturer-first ("Neutrino Racing Flight Suit BlackFire"). If query tokens
+ * are a unique subset of exactly one display name (≤1 extra token, typically the brand),
+ * accept that match.
+ */
+function tryTokenSubsetDisplayResolve(
+  rawInput: string,
+  lookup: BlueprintLookupData
+): BlueprintResolveSuccess | null {
+  const queryTokens = normalizeDisplayKey(rawInput)
+    .split(/\s+/)
+    .filter(Boolean)
+  if (queryTokens.length < 3) return null
+  const querySet = new Set(queryTokens)
+
+  let bestDelta = Infinity
+  const matches: Array<{ internalName: string; blueprintName: string }> = []
+
+  for (const [key, entry] of Object.entries(lookup.byDisplayName)) {
+    if (
+      !entry ||
+      typeof entry !== 'object' ||
+      ('ambiguous' in entry && (entry as { ambiguous?: boolean }).ambiguous)
+    ) {
+      continue
+    }
+    const unique = entry as { internalName?: string; blueprintName?: string }
+    if (!unique.internalName) continue
+
+    const displayTokens = key.split(/\s+/).filter(Boolean)
+    if (displayTokens.length < queryTokens.length) continue
+
+    let subset = true
+    for (const t of querySet) {
+      if (!displayTokens.includes(t)) {
+        subset = false
+        break
+      }
+    }
+    if (!subset) continue
+
+    const delta = displayTokens.length - queryTokens.length
+    if (delta < 0 || delta > 1) continue
+
+    if (delta < bestDelta) {
+      bestDelta = delta
+      matches.length = 0
+      matches.push({
+        internalName: unique.internalName,
+        blueprintName: unique.blueprintName || unique.internalName,
+      })
+    } else if (delta === bestDelta) {
+      matches.push({
+        internalName: unique.internalName,
+        blueprintName: unique.blueprintName || unique.internalName,
+      })
+    }
+  }
+
+  if (matches.length !== 1) return null
+  return {
+    ok: true,
+    internalName: matches[0].internalName,
+    blueprintName: matches[0].blueprintName,
+    resolvedVia: 'display',
+  }
+}
+
+/**
  * 1. Match catalog internalName (client may send internalName directly).
  * 2. Else map Game.log display text via byDisplayName.
  * 3. Else contract-based disambiguation for ambiguous display names.
@@ -170,6 +239,8 @@ export function resolveBlueprintInput(
     if (aliasMatch) return aliasMatch
     const abbreviatedMatch = tryAbbreviatedMiningLaserResolve(rawInput, byInternal)
     if (abbreviatedMatch) return abbreviatedMatch
+    const subsetMatch = tryTokenSubsetDisplayResolve(rawInput, lookup)
+    if (subsetMatch) return subsetMatch
     return { ok: false, error: 'unknown_blueprint', rawInput }
   }
 

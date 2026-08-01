@@ -125,6 +125,47 @@ def _try_starstrings_display_alias(text: str, data: dict[str, Any]) -> dict[str,
         "blueprint_name": display_entry.get("blueprintName", text),
     }
 
+
+def _try_token_subset_display_resolve(text: str, data: dict[str, Any]) -> dict[str, Any] | None:
+    """Match skin-first Game.log names to manufacturer-first catalog display names.
+
+    Example: "BlackFire Racing Flight Suit" → "Neutrino Racing Flight Suit BlackFire"
+    when query tokens are a unique subset with at most one extra catalog token (brand).
+    """
+    query_tokens = [t for t in _normalize_display_key(text).split() if t]
+    if len(query_tokens) < 3:
+        return None
+    query_set = set(query_tokens)
+
+    best_delta = None
+    matches: list[dict[str, Any]] = []
+
+    for key, entry in (data.get("byDisplayName") or {}).items():
+        if not entry or entry.get("ambiguous") or not entry.get("internalName"):
+            continue
+        display_tokens = [t for t in str(key).split() if t]
+        if len(display_tokens) < len(query_tokens):
+            continue
+        if not query_set.issubset(display_tokens):
+            continue
+        delta = len(display_tokens) - len(query_tokens)
+        if delta < 0 or delta > 1:
+            continue
+        if best_delta is None or delta < best_delta:
+            best_delta = delta
+            matches = [entry]
+        elif delta == best_delta:
+            matches.append(entry)
+
+    if len(matches) != 1:
+        return None
+    entry = matches[0]
+    return {
+        "ok": True,
+        "internal_name": entry["internalName"],
+        "blueprint_name": entry.get("blueprintName", text),
+    }
+
 def resolve_blueprint_input(raw_input: str, contract_definition_id: str | None = None) -> dict[str, Any]:
     data = _load_lookup()
     text = raw_input.strip()
@@ -145,6 +186,9 @@ def resolve_blueprint_input(raw_input: str, contract_definition_id: str | None =
         abbreviated_match = _try_abbreviated_mining_laser_resolve(text, by_internal)
         if abbreviated_match:
             return abbreviated_match
+        subset_match = _try_token_subset_display_resolve(text, data)
+        if subset_match:
+            return subset_match
         return {"ok": False, "error": "unknown_blueprint", "display_name": text}
 
     if not display_entry.get("ambiguous"):
