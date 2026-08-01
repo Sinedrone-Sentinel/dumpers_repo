@@ -40,6 +40,8 @@ import {
 
 const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
 const BOOTSTRAP_FAILSAFE_MS = 45_000
+/** Extra wait when localStorage has a Supabase token but getSession is still null. */
+const SESSION_RESTORE_WAIT_MS = 2_500
 
 function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -56,6 +58,35 @@ function withTimeout<T>(promise: PromiseLike<T>, ms: number, label: string): Pro
         window.clearTimeout(timer)
         reject(err)
       })
+  })
+}
+
+/** True when a persisted Supabase auth payload exists (session may still be hydrating). */
+function peekStoredSupabaseAuth(): boolean {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (!key?.startsWith('sb-') || !key.includes('auth-token')) continue
+      const raw = localStorage.getItem(key)
+      if (raw && raw !== 'null' && raw.length > 20) return true
+    }
+  } catch {
+    // private mode / blocked storage
+  }
+  return false
+}
+
+function waitWithTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  return new Promise((resolve) => {
+    let settled = false
+    const finish = (value: T) => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timer)
+      resolve(value)
+    }
+    const timer = window.setTimeout(() => finish(fallback), ms)
+    void promise.then(finish, () => finish(fallback))
   })
 }
 
@@ -433,6 +464,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let cancelled = false
+    /** Latest session seen during bootstrap (listener may win the race vs getSession). */
+    let bootstrapSession: Session | null = null
+    let resolveInitialSession: ((session: Session | null) => void) | null = null
+    const initialSessionPromise = new Promise<Session | null>((resolve) => {
+      resolveInitialSession = resolve
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, nextSession) => {
+      // Capture auth while splash is up — getSession can race hydration and return null
+      // even though a persisted token (and INITIAL_SESSION) still exist.
+      if (!initialBootstrapDone.current) {
+        if (nextSession?.user) bootstrapSession = nextSession
+        if (event === 'INITIAL_SESSION' && resolveInitialSession) {
+          resolveInitialSession(nextSession)
+          resolveInitialSession = null
+        }
+        return
+      }
+
+      setSession(nextSession)
+      setUser(nextSession?.user ?? null)
+
+      if (nextSession?.user) {
+        await loadUserData(nextSession.user, event === 'SIGNED_IN')
+      } else if (!isBannedRef.current) {
+        setProfile(null)
+        setAcquiredBlueprints({})
+      }
+    })
 
     const bootstrapAuth = async () => {
       setLoading(true)
@@ -443,11 +503,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const isOAuthCallback = hash.includes('access_token')
 
         setStep('session', { status: 'active', progress: 15 })
-        const { data: { session }, error } = await withTimeout(
+        const { data: { session: getSessionResult }, error } = await withTimeout(
           supabase.auth.getSession(),
           AUTH_BOOTSTRAP_TIMEOUT_MS,
           'auth.getSession'
         )
+
+        let session = getSessionResult ?? null
+        if (bootstrapSession?.user) session = bootstrapSession
+
+        // Prefer INITIAL_SESSION when getSession is empty but storage still has a token
+        // (refresh / Strict Mode remount races).
+        if (!session?.user) {
+          const waitMs = peekStoredSupabaseAuth() || isOAuthCallback
+            ? SESSION_RESTORE_WAIT_MS
+            : 150
+          const fromEvent = await waitWithTimeout(initialSessionPromise, waitMs, null)
+          if (fromEvent?.user) session = fromEvent
+          else if (bootstrapSession?.user) session = bootstrapSession
+        } else if (resolveInitialSession) {
+          // Unblock the promise so it cannot hang if INITIAL_SESSION is late/missing.
+          resolveInitialSession(session)
+          resolveInitialSession = null
+        }
 
         if (isOAuthCallback && session && !error) {
           window.history.replaceState(null, '', window.location.pathname)
@@ -478,6 +556,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setBootstrapSteps((prev) => patchBootstrapStep(prev, 'dfp', { status: 'active', progress: 20 }))
         await ensureDfpEngine()
         if (cancelled) return
+
+        // Late restore while DFP was loading — adopt before dropping the splash.
+        if (!session?.user && bootstrapSession?.user) {
+          session = bootstrapSession
+          setSession(session)
+          setUser(session.user)
+          const ok = await loadUserDataWithProgress(session.user, isOAuthCallback)
+          if (!ok || cancelled) return
+        }
+
         setBootstrapSteps((prev) => patchBootstrapStep(prev, 'dfp', { status: 'done', progress: 100 }))
       } catch (err) {
         console.error('Auth bootstrap failed:', err)
@@ -500,22 +588,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     void bootstrapAuth()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!initialBootstrapDone.current) return
-
-      setSession(session)
-      setUser(session?.user ?? null)
-
-      if (session?.user) {
-        await loadUserData(session.user, event === 'SIGNED_IN')
-      } else if (!isBannedRef.current) {
-        setProfile(null)
-        setAcquiredBlueprints({})
-      }
-    })
-
     return () => {
       cancelled = true
+      if (resolveInitialSession) {
+        resolveInitialSession(null)
+        resolveInitialSession = null
+      }
       subscription.unsubscribe()
     }
   }, [loadUserData, loadUserDataWithProgress, setStep])

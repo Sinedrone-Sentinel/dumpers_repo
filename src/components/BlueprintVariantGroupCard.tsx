@@ -32,7 +32,7 @@ export default function BlueprintVariantGroupCard({
       className={`min-w-0 max-w-full rounded-xl border overflow-hidden transition-colors transition-shadow duration-200 ${
         expanded
           ? 'col-span-full border-red-500/30 ring-1 ring-red-500/10'
-          : 'border-slate-700 hover:border-red-500/30 hover:shadow-lg'
+          : 'h-full border-slate-700 hover:border-red-500/30 hover:shadow-lg'
       }`}
     >
       <button
@@ -60,8 +60,8 @@ export default function BlueprintVariantGroupCard({
           </div>
         </div>
 
-        <div className="px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-3">
-          <p className="text-sm text-slate-400">{summary}</p>
+        <div className="px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-3 min-w-0">
+          <p className="text-sm text-slate-400 min-w-0 truncate">{summary}</p>
           <div className="shrink-0 text-right">
             <span
               className={`text-sm font-medium tabular-nums ${

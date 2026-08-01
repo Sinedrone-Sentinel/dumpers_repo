@@ -89,10 +89,10 @@
     grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
   }
 
+  /* No content-visibility here — fights window virtualization + measureElement
+     and causes brief horizontal scrollbar flashes on mixed group/single rows. */
   .blueprint-card-fixed {
     @apply w-full min-w-0 max-w-full;
-    content-visibility: auto;
-    contain-intrinsic-size: auto 22rem;
   }
 
   .lore-entry-row {

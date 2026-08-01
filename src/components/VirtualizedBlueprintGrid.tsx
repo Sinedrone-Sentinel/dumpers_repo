@@ -6,6 +6,8 @@ const MIN_COL_PX = 280
 const GRID_GAP_SM_PX = 16
 const GRID_GAP_DEFAULT_PX = 12
 const DEFAULT_ROW_HEIGHT = 340
+/** Collapsed variant-group cards are much shorter than full BlueprintCards. */
+const COLLAPSED_GROUP_ROW_HEIGHT = 148
 const GROUP_HEADER_HEIGHT = 120
 const GROUP_BODY_PADDING = 32
 
@@ -121,6 +123,11 @@ export default function VirtualizedBlueprintGrid({
       if (lone?.kind === 'group' && isExpandedGroup(lone, expandedGroupKey)) {
         return estimateExpandedGroupHeight(lone.members.length, columnCount, gridGap)
       }
+      // Mixed rows (groups + LH86-style singles) still need full card height.
+      // All-collapsed-group rows are short — wrong estimate causes measure churn.
+      if (row.every((item) => item.kind === 'group')) {
+        return COLLAPSED_GROUP_ROW_HEIGHT
+      }
       return DEFAULT_ROW_HEIGHT
     },
     gap: gridGap,
@@ -129,9 +136,9 @@ export default function VirtualizedBlueprintGrid({
   })
 
   return (
-    <div ref={listRef} className="w-full min-w-0">
+    <div ref={listRef} className="w-full min-w-0 overflow-x-clip">
       <div
-        className="relative w-full"
+        className="relative w-full max-w-full overflow-x-clip"
         style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
@@ -144,7 +151,7 @@ export default function VirtualizedBlueprintGrid({
               key={virtualRow.key}
               data-index={virtualRow.index}
               ref={rowVirtualizer.measureElement}
-              className="absolute left-0 top-0 w-full grid items-stretch"
+              className="absolute left-0 top-0 w-full max-w-full grid items-stretch overflow-x-clip"
               style={{
                 transform: `translateY(${virtualRow.start - scrollMargin}px)`,
                 columnGap: `${gridGap}px`,
@@ -154,7 +161,7 @@ export default function VirtualizedBlueprintGrid({
               }}
             >
               {rowItems.map((item) => (
-                <div key={gridItemKey(item)} className="h-full min-h-0 min-w-0">
+                <div key={gridItemKey(item)} className="h-full min-h-0 min-w-0 max-w-full overflow-hidden">
                   {renderGridItem(item)}
                 </div>
               ))}
