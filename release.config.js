@@ -7,15 +7,19 @@ export default {
       '@semantic-release/commit-analyzer',
       {
         preset: 'conventionalcommits',
-        // First match wins. Deny-by-default so unscoped feat/fix never bump the dumper.
+        // Highest matching release type wins (not first-match). Never use a bare
+        // `{ release: false }` catch-all — it matches every commit and indexOf(false)
+        // beats minor/patch, so no version ever cuts. Deny non-dumper scopes explicitly.
         releaseRules: [
+          { breaking: true, scope: 'dumper', release: 'major' },
           { type: 'feat', scope: 'dumper', release: 'minor' },
           { type: 'fix', scope: 'dumper', release: 'patch' },
           { type: 'perf', scope: 'dumper', release: 'patch' },
           { type: 'refactor', scope: 'dumper', release: 'patch' },
           { type: 'style', scope: 'dumper', release: 'patch' },
-          { breaking: true, scope: 'dumper', release: 'major' },
-          { release: false },
+          { type: 'feat', scope: '!dumper', release: false },
+          { type: 'fix', scope: '!dumper', release: false },
+          { type: 'perf', scope: '!dumper', release: false },
         ],
       },
     ],

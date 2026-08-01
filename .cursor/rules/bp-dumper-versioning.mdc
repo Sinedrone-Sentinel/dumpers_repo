@@ -37,3 +37,5 @@ Commit dumper changes with a Conventional Commit **scoped to `dumper`**:
   cut no dumper release.
 - Keep dumper logic changes and unrelated site changes in separate commits so
   the scope stays accurate.
+- In `release.config.js`, do **not** add a bare `{ release: false }` catch-all —
+  it matches every commit and suppresses all bumps (including `feat(dumper)`).
