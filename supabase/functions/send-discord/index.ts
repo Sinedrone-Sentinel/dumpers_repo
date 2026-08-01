@@ -246,26 +246,43 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+    // Cron uses Bearer service_role; Discord settings modal uses a super-admin user JWT.
+    // Reject anon / member / missing auth — do not fall through into queue processing.
     const authHeader = req.headers.get('Authorization')
-    if (authHeader) {
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authorization required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim()
+    const isServiceRole = token.length > 0 && token === supabaseServiceKey
+
+    if (!isServiceRole) {
       const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
         global: { headers: { Authorization: authHeader } },
       })
       const { data: { user }, error: authError } = await userClient.auth.getUser()
 
-      if (!authError && user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single()
+      if (authError || !user) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid authorization' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
 
-        if (profile?.role !== 'super-admin') {
-          return new Response(
-            JSON.stringify({ error: 'Super-admin access required for manual trigger' }),
-            { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-          )
-        }
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.role !== 'super-admin') {
+        return new Response(
+          JSON.stringify({ error: 'Super-admin access required for manual trigger' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
       }
     }
 

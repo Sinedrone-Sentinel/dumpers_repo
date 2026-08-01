@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `128_discord_market_webhook_url_dedupe.sql` (Discord delivery: one POST per unique webhook URL for market/personal/legacy lookups). Apply through `128` in numeric order if catching up.
+**Latest migration:** `130_discord_webhook_hardening.sql` (close open webhook INSERT RLS; mask staff `official_webhook_url` from non–super-admin `get_discord_settings`). Apply through `130` in numeric order if catching up. Also redeploy `send-discord` after this change (auth no longer falls through for anon/member JWTs).
 
 ---
 
@@ -159,6 +159,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 91 | `126_questionnaire_notification_sync.sql` | `sync_questionnaire_notifications_for_me` — remove stale questionnaire bell items; create missing ones for late-eligible users |
 | 92 | `127_questionnaire_exclude_creator.sql` | Exclude questionnaire `created_by` from activate fan-out, pending list, sync, and fill/decline |
 | 93 | `128_discord_market_webhook_url_dedupe.sql` | Deduplicate market/personal/legacy Discord webhook lookups by `webhook_url` (fixes coalesced marketplace triple-posts when WTB/WTS/cancel share one channel) |
+| 94 | `129_whats_new_ticker.sql` | Site-wide Updates / What's New ticker (DB-backed) |
+| 95 | `130_discord_webhook_hardening.sql` | Drop open `discord_webhooks` INSERT RLS; `get_discord_settings` returns `official_webhook_url` only to super-admins and service_role |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -220,6 +222,22 @@ Apply migration `129_whats_new_ticker.sql` for the bottom Updates ticker.
 | `cleanup_expired_whats_new()` | Deletes `detected_at` older than 7 days — scheduled daily via pg_cron when available |
 
 Local parse flow: append `extracted-data/whats-new-pending.jsonl` → RPC ingest → wipe file. Put `SUPABASE_SERVICE_ROLE_KEY` in `.env` on the parse machine (never in the browser). Retry with `npm run push-whats-new`.
+
+### Discord webhook hardening (`130_discord_webhook_hardening.sql`)
+
+Apply migration `130`, then redeploy `send-discord`:
+
+```bash
+npx supabase functions deploy send-discord
+```
+
+| Change | Effect |
+|--------|--------|
+| Drop open INSERT RLS on `discord_webhooks` | Anon/members can no longer insert rows directly; `/discord-subscribe` still works via `sync_my_discord_event_webhooks` |
+| Mask `official_webhook_url` in `get_discord_settings` | Only super-admins and `service_role` receive the staff webhook URL |
+| `send-discord` auth | Requires service_role Bearer (cron) or a verified super-admin JWT (manual Process Queue) |
+
+Staff webhook **rotation** in Discord is optional after this — do it only if you suspect the URL was already pulled.
 
 ### BP Dumper webhook API
 
