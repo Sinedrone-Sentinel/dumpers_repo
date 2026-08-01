@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `135_marketplace_rls_rpc_only_writes.sql` (marketplace tables are SELECT for members; writes only via SECURITY DEFINER RPCs). Apply through `135` in numeric order if catching up. Also redeploy `send-discord` if you have not yet applied `130`.
+**Latest migration:** `136_rsi_bio_verify_challenge.sql` (RSI verify requires a short-lived code in the member’s public RSI bio). Apply through `136` in numeric order if catching up. Redeploy `validate-rsi-handle` after `136`. Also redeploy `send-discord` if you have not yet applied `130`.
 
 ---
 
@@ -166,6 +166,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 98 | `133_lock_mark_rsi_handle_verified.sql` | Revoke client execute on `mark_rsi_handle_verified`; service_role / `validate-rsi-handle` Edge Function only |
 | 99 | `134_lock_queue_discord_message.sql` | Queue support Discord from `create_support_ticket`; revoke authenticated execute on `queue_discord_message` |
 | 100 | `135_marketplace_rls_rpc_only_writes.sql` | Replace marketplace FOR ALL RLS with SELECT; `cancel_custom_order_requester` for former client status updates |
+| 101 | `136_rsi_bio_verify_challenge.sql` | Bio-code RSI verification (`issue_rsi_verify_challenge` / Edge scrape of public citizen Bio); officer `admin_force_rsi_handle_verified` escape hatch |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -199,7 +200,7 @@ npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 |----------|---------|
 | `ban-user` / `unban-user` | Admin user management |
 | `delete-account` | User self-service account deletion |
-| `validate-rsi-handle` | Validate RSI Handles against robertsspaceindustries.com |
+| `validate-rsi-handle` | Verify RSI Handles via public citizen Bio challenge code (after `issue_rsi_verify_challenge`) |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 | `log-watcher-webhook` | Receives blueprint events from external tools; Bearer API key auth |
 

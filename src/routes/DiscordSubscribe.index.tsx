@@ -275,7 +275,7 @@ export default function DiscordSubscribeRoute() {
                         </p>
                         <p className="text-amber-200/70 text-xs mt-2">
                           Go to <strong className="text-amber-300">Settings → Profile</strong> and
-                          click <strong className="text-cyan-400">Validate</strong> next to your RSI
+                          get a code, paste it into your public RSI Bio, then <strong className="text-cyan-400">Verify</strong> your RSI
                           Handle.
                         </p>
                       </div>

@@ -173,7 +173,7 @@ export const SITE_RULES_SECTION = {
       items: [
         "Do not use Dumper's Repo data, tools, listings, Discord alerts, member directories, or mission intel to locate, stalk, grief, pirate, pad-ram, or otherwise harm players in Star Citizen.",
         'Do not use the site to organize or advertise piracy, scams, real-money trading (RMT), account selling, or other CIG/RSI Terms of Service violations.',
-        'RSI Handle verification is for accountability. Banned: claiming a handle you do not control; impersonating another citizen; **stealing, hijacking, or transferring another member\'s RSI verification** (including forcing a verify onto an account that does not own that handle, or displacing someone\'s verified handle through exploits or API abuse).',
+        'RSI Handle verification is for accountability. You prove control by pasting a temporary site code into your **public RSI Bio**, then verifying. Banned: claiming a handle you do not control; impersonating another citizen; **stealing, hijacking, or transferring another member\'s RSI verification** (including forcing a verify onto an account that does not own that handle, or displacing someone\'s verified handle through exploits or API abuse).',
       ],
     },
     {

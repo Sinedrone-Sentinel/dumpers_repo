@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { useUiOverlayRegistration } from '../contexts/UiOverlayContext'
 import { SITE_RULES_SECTION } from '../lib/archiveGuide/welcomeSections'
+import RsiBioVerifyControls from './RsiBioVerifyControls'
 
 interface WelcomeModalProps {
   onClose: () => void
@@ -32,7 +33,6 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
   const { profile, refreshProfile } = useAuth()
   const [step, setStep] = useState(0)
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
-  const [validating, setValidating] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
   const [rulesScrolledToEnd, setRulesScrolledToEnd] = useState(false)
   const rulesScrollRef = useRef<HTMLDivElement>(null)
@@ -60,57 +60,6 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
     el.addEventListener('scroll', checkScroll, { passive: true })
     return () => el.removeEventListener('scroll', checkScroll)
   }, [step])
-
-  const handleValidateHandle = async () => {
-    if (!rsiHandle.trim()) {
-      setValidationError('Enter an RSI handle first.')
-      return
-    }
-
-    setValidating(true)
-    setValidationError(null)
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setValidationError('Your session has expired — please sign in again.')
-        setValidating(false)
-        return
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-rsi-handle`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ handle: rsiHandle.trim() })
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        setValidationError(result.error || 'Validation failed')
-      } else if (!result.valid) {
-        setValidationError(result.error || 'RSI Handle not found')
-        if (result.cleared) {
-          setRsiHandle('') // Clear local input
-          await refreshProfile() // Sync with DB
-        }
-      } else if (result.verified) {
-        await refreshProfile()
-      } else {
-        setValidationError(result.error || 'Verification failed')
-      }
-    } catch {
-      setValidationError('Network error during validation')
-    }
-
-    setValidating(false)
-  }
 
   const handleFinish = async () => {
     // Mark welcome as seen
@@ -207,6 +156,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Your RSI handle helps other players identify you when coordinating trades and crafting.
+                Verification proves you control that citizen page (temporary code in your public Bio).
               </p>
               <div className="mt-2 p-3 bg-amber-900/30 border border-amber-500/30 rounded-lg">
                 <p className="text-xs text-amber-300 flex items-start gap-2">
@@ -214,46 +164,29 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
                   <span>
-                    <strong>Note:</strong> An RSI Handle is <strong>required</strong> to create Custom Orders 
-                    or participate in Fulfillment. You can skip this for now but will need to set it later 
+                    <strong>Note:</strong> A verified RSI Handle is <strong>required</strong> to create Custom Orders
+                    or participate in Fulfillment. You can skip this for now but will need to complete it later
                     to access those features.
                   </span>
                 </p>
               </div>
               <div className="mt-4">
                 <label className="block text-sm text-slate-300 mb-2">RSI Handle</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={rsiHandle}
-                    onChange={(e) => setRsiHandle(e.target.value)}
-                    placeholder="Your Star Citizen username"
-                    disabled={isVerified}
-                    className={`flex-1 px-3 py-2 bg-slate-800 border rounded-lg text-white placeholder:text-slate-500 focus:outline-none transition-all ${
-                      isVerified
-                        ? 'border-slate-700 opacity-60 cursor-not-allowed'
-                        : 'border-slate-700 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30'
-                    }`}
-                  />
-                  {!isVerified && (
-                    <button
-                      onClick={handleValidateHandle}
-                      disabled={validating || !rsiHandle.trim()}
-                      className="shrink-0 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      title="Validate against RSI website"
-                    >
-                      {validating ? (
-                        <span className="flex items-center gap-1.5">
-                          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                          </svg>
-                        </span>
-                      ) : 'Validate'}
-                    </button>
-                  )}
-                </div>
-                
+                <RsiBioVerifyControls
+                  compact
+                  rsiHandle={rsiHandle}
+                  onRsiHandleChange={(value) => {
+                    setRsiHandle(value)
+                    setValidationError(null)
+                  }}
+                  isVerified={isVerified}
+                  onVerified={async () => {
+                    setValidationError(null)
+                    await refreshProfile()
+                  }}
+                  onError={setValidationError}
+                />
+
                 {validationError && (
                   <p className="mt-2 text-xs text-red-400 flex items-center gap-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -262,13 +195,13 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                     {validationError}
                   </p>
                 )}
-                
+
                 {isVerified && (
                   <p className="mt-2 text-xs text-cyan-400 flex items-center gap-1">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Verified on RSI
+                    Verified — you can remove the code from your RSI bio.
                   </p>
                 )}
               </div>

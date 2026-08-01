@@ -8,6 +8,7 @@ import SettingsToggle from './settings/SettingsToggle'
 import ConnectedAccountsSettings from './settings/ConnectedAccountsSettings'
 import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
+import RsiBioVerifyControls from './RsiBioVerifyControls'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const {
@@ -39,7 +40,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     refreshAcquiredBlueprints,
   } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
-  const [validatingRsi, setValidatingRsi] = useState(false)
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
   )
@@ -128,59 +128,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile?.craft_deduct_inventory,
     groupBlueprintVariants,
   ])
-
-  const handleValidateRsi = async () => {
-    if (!rsiHandle.trim()) {
-      setMessage({ type: 'error', text: 'Enter an RSI handle first.' })
-      return
-    }
-
-    setValidatingRsi(true)
-    setMessage(null)
-
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setMessage({ type: 'error', text: 'Your session has expired — please sign in again.' })
-        setValidatingRsi(false)
-        return
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/validate-rsi-handle`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ handle: rsiHandle.trim() })
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        setMessage({ type: 'error', text: result.error || 'Validation failed' })
-      } else if (!result.valid) {
-        // Validation failed - handle was cleared from DB
-        setMessage({ type: 'error', text: result.error || 'RSI Handle not found' })
-        if (result.cleared) {
-          setRsiHandle('') // Clear local input
-          refreshProfile() // Sync with DB
-        }
-      } else if (result.verified) {
-        setMessage({ type: 'success', text: 'RSI Handle verified successfully!' })
-        refreshProfile()
-      } else {
-        setMessage({ type: 'error', text: result.error || 'Verification failed' })
-      }
-    } catch {
-      setMessage({ type: 'error', text: 'Network error during validation' })
-    }
-
-    setValidatingRsi(false)
-  }
 
   const handleDfpDisplayChange = async (enabled: boolean) => {
     setSavingDfpDisplay(true)
@@ -424,41 +371,20 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   ? "You have active orders — clear them before changing your handle."
                   : isVerified
                     ? `Verified on ${profile?.rsi_handle_verified_at ? new Date(profile.rsi_handle_verified_at).toLocaleDateString() : 'RSI'}`
-                    : "Validate your handle against RSI to save it."
+                    : 'Get a code, paste it into your public RSI Bio, then Verify.'
               }
             >
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={rsiHandle}
-                  onChange={(e) => setRsiHandle(e.target.value)}
-                  placeholder="Enter your RSI handle..."
-                  disabled={(hasActiveOrders && isVerified) || isVerified}
-                  className={`flex-1 px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none transition-all text-sm ${
-                    (hasActiveOrders && isVerified) || isVerified
-                      ? 'border-slate-700 opacity-60 cursor-not-allowed'
-                      : 'border-slate-600 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
-                  }`}
-                />
-                {!isVerified && (
-                  <button
-                    onClick={handleValidateRsi}
-                    disabled={validatingRsi || !rsiHandle.trim()}
-                    className="shrink-0 px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Validate against RSI website"
-                  >
-                    {validatingRsi ? (
-                      <span className="flex items-center gap-1.5">
-                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Validating
-                      </span>
-                    ) : 'Validate'}
-                  </button>
-                )}
-              </div>
+              <RsiBioVerifyControls
+                rsiHandle={rsiHandle}
+                onRsiHandleChange={setRsiHandle}
+                isVerified={isVerified}
+                inputDisabled={hasActiveOrders && isVerified}
+                onVerified={async () => {
+                  await refreshProfile()
+                }}
+                onError={(text) => setMessage({ type: 'error', text })}
+                onSuccessMessage={(text) => setMessage({ type: 'success', text })}
+              />
             </SettingsField>
 
             <div className="mt-4 pt-4 border-t border-slate-700/50">
@@ -467,7 +393,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 description={
                   isVerified
                     ? "When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically."
-                    : "Validate your RSI Handle above to enable this feature."
+                    : 'Verify your RSI Handle above to enable this feature.'
                 }
                 checked={craftDeductInventory}
                 onChange={handleCraftDeductInventoryChange}

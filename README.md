@@ -205,7 +205,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **All approved members**
 
-- RSI Handle entry and validation against robertsspaceindustries.com
+- RSI Handle verification via temporary public-bio challenge code (robertsspaceindustries.com citizen page)
 - **Connected Accounts** — link Google and Discord (auto-merge when emails match)
 - **Deduct inventory on craft complete** — optional WTB fulfillment material deduct from Resource Tracker
 - **Group FPS blueprint variants** — Blueprints page display preference
@@ -245,7 +245,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **Sign-in:** Google or Discord OAuth. Enable **Manual Linking** in Supabase Auth settings so members can connect both providers from Settings.
 
-**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. Validated via the `validate-rsi-handle` Edge Function.
+**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. Members get a short-lived code (`issue_rsi_verify_challenge`), paste it into their public RSI Bio, then the `validate-rsi-handle` Edge Function confirms it.
 
 ---
 

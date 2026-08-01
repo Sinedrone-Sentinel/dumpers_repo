@@ -72,6 +72,6 @@ Org channel **includes** “member posted WTB” (unlike personal lane — org a
 
 ## Touchpoints (reference)
 
-- [`supabase/functions/validate-rsi-handle/index.ts`](../supabase/functions/validate-rsi-handle/index.ts) — today: handle existence only
+- [`supabase/functions/validate-rsi-handle/index.ts`](../supabase/functions/validate-rsi-handle/index.ts) — bio-code challenge (migration `136`); org affiliation scrape still deferred
 - [`src/routes/DiscordSubscribe.index.tsx`](../src/routes/DiscordSubscribe.index.tsx) — add org section later
 - [`supabase/functions/send-discord/index.ts`](../supabase/functions/send-discord/index.ts) — org fan-out branch
