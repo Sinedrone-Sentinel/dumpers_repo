@@ -9,6 +9,7 @@ const SKIP_PATH_PREFIXES = ['/analytics', '/support-dashboard', '/discord-subscr
 
 export type AnalyticsContext = {
   isGuest: boolean
+  isSuperAdmin?: boolean
 }
 
 type ToolSegment = {
@@ -16,7 +17,7 @@ type ToolSegment = {
   subToolId: string
 }
 
-let context: AnalyticsContext = { isGuest: false }
+let context: AnalyticsContext = { isGuest: false, isSuperAdmin: false }
 let currentSegment: ToolSegment | null = null
 let segmentStartedAt: number | null = null
 let pendingMs = 0
@@ -31,7 +32,7 @@ function isEnabled(): boolean {
 }
 
 function shouldTrack(): boolean {
-  return isEnabled()
+  return isEnabled() && !context.isSuperAdmin
 }
 
 export function getAnalyticsVisitorId(): string {

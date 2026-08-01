@@ -9,6 +9,8 @@ Any new **member-facing route (page)** or **in-page tab/section** that changes w
 
 Analytics is **active time only** (visible tab, heartbeat pings). It must never block UI or throw.
 
+**Super-admins are never tracked** (`AnalyticsContext.isSuperAdmin` → `shouldTrack()` is false). Do not special-case individual tools for that — exclusion is global.
+
 ## New route / page
 
 1. Register the path in `pathToTool()` inside `src/lib/analytics.ts`.
