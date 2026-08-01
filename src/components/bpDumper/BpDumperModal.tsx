@@ -76,12 +76,20 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <h3 className="text-sm font-semibold text-white">What you get</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-slate-400">
             <li>
-              <strong className="text-slate-300">Blueprint sync</strong> — new unlocks from your game log
-              go to your account automatically.
+              <strong className="text-slate-300">Blueprint sync</strong> — reads unlock lines from your
+              local <strong className="text-slate-300">Game.log</strong> / logbackups. It does{' '}
+              <strong className="text-slate-300">not</strong> pull your craft bench or inventory from CIG
+              servers.
+            </li>
+            <li>
+              <strong className="text-slate-300">Full history import</strong> — on first run (default Yes),
+              scans all local <code className="text-slate-300">.log</code> files once (including older
+              patches) to catch up awards still in those logs. Anything never written to a log you still
+              have must be marked manually.
             </li>
             <li>
               <strong className="text-slate-300">Live Mission Tracker</strong> — see active missions and
-              what is still in your pool.
+              what is still in your pool while watch mode runs.
             </li>
           </ul>
         </section>
@@ -112,11 +120,13 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
             </li>
             <li>
               Copy your <strong className="text-slate-300">API key</strong> below, then paste it when the
-              black window asks for it on first run.
+              black window asks for it on first run. Accept the one-time{' '}
+              <strong className="text-slate-300">full history import</strong> if you want to catch up from
+              existing logbackups (can take a while if those folders are large).
             </li>
             <li>
-              Leave the window open while playing — blueprint unlocks sync to your account
-              automatically.
+              Leave the window open while playing — new unlocks from the live Game.log sync
+              automatically after that.
             </li>
           </ol>
         </section>

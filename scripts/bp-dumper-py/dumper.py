@@ -785,14 +785,188 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
     return discovered
 
 def process_log_file(task_info):
-    """Worker function for a single thread to process one file."""
-    index, total, path = task_info
-    if not is_log_version_allowed(path, MIN_GAME_VERSION):
+    """Worker function for a single thread to process one file.
+
+    task_info: (index, total, path) or (index, total, path, skip_version_check)
+    """
+    if len(task_info) == 4:
+        index, total, path, skip_version_check = task_info
+    else:
+        index, total, path = task_info
+        skip_version_check = False
+    if not skip_version_check and not is_log_version_allowed(path, MIN_GAME_VERSION):
         print(f"  [{index:>3}/{total}] Skipping {path.name} (game version is below minimum {MIN_GAME_VERSION})")
         return []
     size_mb = path.stat().st_size / (1024 * 1024)
-    print(f"  [{index:>3}/{total}] Scanning {path.name} ({size_mb:.2f} MB)...")
+    version_note = " [no version filter]" if skip_version_check else ""
+    print(f"  [{index:>3}/{total}] Scanning {path.name} ({size_mb:.2f} MB){version_note}...")
     return parse_blueprints_from_log(path)
+
+
+def resolve_sc_channel_dir(args, env_vars: dict) -> Path | None:
+    """Best-effort LIVE (or first detected) channel directory for log scans."""
+    if args.log_dir and args.log_dir.is_dir():
+        return args.log_dir
+    if args.file_path:
+        if args.file_path.is_dir():
+            return args.file_path
+        if args.file_path.is_file():
+            return args.file_path.parent
+    backup_p = env_vars.get("BACKUP_PATH")
+    if backup_p:
+        return Path(backup_p).parent
+    installs = detect_sc_installs()
+    if installs:
+        chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+        return installs[chosen_channel]
+    fallback = Path(DEFAULT_WIN_PATH)
+    if fallback.is_dir():
+        live_dir = fallback / "LIVE"
+        if live_dir.is_dir():
+            return live_dir
+    return None
+
+
+def collect_log_files_for_import(log_dirs: list[Path], *, include_game_log: bool) -> list[Path]:
+    files: list[Path] = []
+    seen: set[Path] = set()
+    for d in log_dirs:
+        if not d.is_dir():
+            continue
+        for p in sorted(d.glob("*.log")):
+            if not include_game_log and p.name == "Game.log":
+                continue
+            try:
+                resolved = p.resolve()
+            except OSError:
+                resolved = p
+            if resolved in seen:
+                continue
+            seen.add(resolved)
+            files.append(p)
+    return files
+
+
+def upload_discovered_blueprints(
+    unique_bps: list[str],
+    *,
+    session,
+    url: str,
+    acquired_blueprints: set,
+    cache_path: Path,
+    dry_run: bool,
+    label: str = "blueprint",
+) -> None:
+    """Post unique product names not already acquired; updates local cache on success."""
+    to_send = [bp for bp in unique_bps if not is_blueprint_acquired(acquired_blueprints, bp)]
+    if not to_send:
+        print(f"All discovered {label}s already acquired.")
+        return
+
+    print(f"Uploading {len(to_send)} {label}(s)...")
+    success_count = 0
+    dupe_count = 0
+    fail_count = 0
+    for idx, bp_id in enumerate(to_send, 1):
+        if dry_run:
+            success_count += 1
+            resolved = resolve_blueprint_input(bp_id)
+            item_label = bp_id
+            if resolved.get("ok"):
+                item_label = f"{resolved['blueprint_name']} → {resolved['internal_name']}"
+            elif resolved.get("error") == "ambiguous_blueprint":
+                item_label = f"{bp_id} (ambiguous — would notify)"
+            print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {item_label}")
+            continue
+        try:
+            status, is_duplicate, internal_name, error_msg = post_blueprint_event(session, url, bp_id)
+            if status == 200:
+                if is_duplicate:
+                    dupe_count += 1
+                    print(f"  [{idx}/{len(to_send)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
+                else:
+                    success_count += 1
+                    print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
+                if internal_name:
+                    acquired_blueprints.add(internal_name)
+                    save_cache_file(cache_path, acquired_blueprints)
+            elif status == 202:
+                success_count += 1
+                print(f"  [{idx}/{len(to_send)}] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {bp_id}")
+            elif error_msg:
+                fail_count += 1
+                print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ {error_msg}{Colors.RESET}")
+            else:
+                fail_count += 1
+                print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} (HTTP {status})")
+        except Exception as e:
+            fail_count += 1
+            print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} ({e})")
+
+    print(
+        f"\nImport complete: {Colors.GREEN}{success_count} successfully imported{Colors.RESET}, "
+        f"{Colors.YELLOW}{dupe_count} already acquired{Colors.RESET}, "
+        f"{Colors.RED}{fail_count} failed{Colors.RESET}"
+    )
+
+
+def run_log_folder_blueprint_import(
+    log_dirs: list[Path],
+    *,
+    session,
+    url: str,
+    acquired_blueprints: set,
+    cache_path: Path,
+    dry_run: bool,
+    include_game_log: bool,
+    skip_version_check: bool,
+    banner: str,
+) -> bool:
+    """Scan .log files under log_dirs and upload discovered blueprints. Returns True if work ran."""
+    print(f"\n{Colors.CYAN}{banner}{Colors.RESET}")
+    files_to_scan = collect_log_files_for_import(log_dirs, include_game_log=include_game_log)
+    if not files_to_scan:
+        print("No historical logs to scan.")
+        return True
+
+    total_bytes = sum(p.stat().st_size for p in files_to_scan if p.is_file())
+    print(
+        f"Scanning {len(files_to_scan)} log file(s) "
+        f"({total_bytes / (1024 ** 3):.2f} GB total)"
+        f"{' — version filter OFF' if skip_version_check else f' — min game version {MIN_GAME_VERSION}'}..."
+    )
+
+    for d in log_dirs:
+        if d.is_dir():
+            local_loc_map = parse_local_localization(d)
+            if local_loc_map:
+                register_custom_translations(local_loc_map)
+
+    all_bps: list[str] = []
+    work_items = [
+        (i, len(files_to_scan), path, skip_version_check)
+        for i, path in enumerate(files_to_scan, 1)
+    ]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for res in executor.map(process_log_file, work_items):
+            all_bps.extend(res)
+
+    unique_old = sorted(set(all_bps))
+    if not unique_old:
+        print("No blueprints found in historical logs.")
+        return True
+
+    print(f"Found {len(unique_old)} unique blueprint award name(s) across scanned logs.")
+    upload_discovered_blueprints(
+        unique_old,
+        session=session,
+        url=url,
+        acquired_blueprints=acquired_blueprints,
+        cache_path=cache_path,
+        dry_run=dry_run,
+        label="historical blueprint",
+    )
+    return True
 
 def load_env_file(env_path: Path) -> dict:
     env = {}
@@ -1468,6 +1642,14 @@ def main():
         help="Directly scan a specific directory for log files instead of auto-detecting Star Citizen."
     )
     parser.add_argument(
+        "--full-history-import",
+        action="store_true",
+        help=(
+            "One-time catch-up: scan ALL .log files (including Game.log and older patches below "
+            f"min version {MIN_GAME_VERSION}), import every blueprint award found, then disable itself."
+        ),
+    )
+    parser.add_argument(
         "--configure", "-c",
         action="store_true",
         help="Force running the configuration wizard."
@@ -1477,6 +1659,7 @@ def main():
 
     # Load configuration from .env file
     env_path = _app_dir() / ".env"
+    env_existed_before_wizard = env_path.is_file()
     env_vars = load_env_file(env_path)
 
     # Resolve watch mode: default on; --no-watch or WATCH_MODE=false disables
@@ -1577,14 +1760,40 @@ def main():
             args.key = user_key
 
         try:
-            user_import_old = input("Import old logs on first run? (Y/N, Enter = Y): ").strip().lower()
+            user_import_old = input(
+                f"Import recent backup logs on first run (min version {MIN_GAME_VERSION}+ only)? (Y/N, Enter = Y): "
+            ).strip().lower()
         except (KeyboardInterrupt, EOFError):
             print("\nAborted.")
             sys.exit(0)
-            
+
         import_old_logs = "true"
         if user_import_old == "n":
             import_old_logs = "false"
+
+        # First launch (no .env yet): default Y so new users catch up from logbackups.
+        # Re-configure with an existing .env: default N (already ran or opted out).
+        full_history_enter_default = "Y" if not env_existed_before_wizard else "N"
+        try:
+            print()
+            print(
+                f"{Colors.YELLOW}Full history import{Colors.RESET} scans EVERY .log file "
+                f"(including older patches below {MIN_GAME_VERSION} and the current Game.log). "
+                "Use this once to catch up BPs from large logbackups. It can take a long time."
+            )
+            user_full_history = input(
+                f"Run one-time FULL history import now? (Y/N, Enter = {full_history_enter_default}): "
+            ).strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+
+        if user_full_history == "":
+            full_history_import = "true" if not env_existed_before_wizard else "false"
+        elif user_full_history == "y":
+            full_history_import = "true"
+        else:
+            full_history_import = "false"
 
         print()
 
@@ -1595,6 +1804,7 @@ def main():
             "SUPABASE_WEBHOOK_URL": resolved_url if not args.dry_run else "",
             "LOG_WATCHER_API_KEY": args.key if args.key else "",
             "IMPORT_OLD_LOGS": import_old_logs,
+            "FULL_HISTORY_IMPORT": full_history_import,
             "WATCH_MODE": "true" if args.watch else "false"
         }
         env_vars.update(new_env)
@@ -1647,125 +1857,71 @@ def main():
         except Exception as e:
             print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
 
-    # First run: Import old logs from backup paths if specified (runs before watch mode)
-    did_import_old_logs = False
-    if env_vars.get("IMPORT_OLD_LOGS") == "true":
-        did_import_old_logs = True
-        print(f"\n{Colors.CYAN}[First Run] Scanning historical logs in backup folder...{Colors.RESET}")
-        old_log_dirs = []
-        if args.log_dir:
-            old_log_dirs = [args.log_dir]
-        else:
-            cp = None
-            if args.file_path:
-                if args.file_path.is_dir():
-                    cp = args.file_path
-                else:
-                    cp = args.file_path.parent
-            if not cp:
-                backup_p = env_vars.get("BACKUP_PATH")
-                if backup_p:
-                    cp = Path(backup_p).parent
-            if not cp:
-                installs = detect_sc_installs()
-                if installs:
-                    chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
-                    cp = installs[chosen_channel]
-                else:
-                    fallback = Path(DEFAULT_WIN_PATH)
-                    if fallback.is_dir():
-                        cp = fallback / "LIVE"
-            if cp:
-                old_log_dirs = [cp, cp / "logbackups"]
+    # Optional one-shot log imports before watch mode
+    run_full_history = bool(getattr(args, "full_history_import", False)) or (
+        env_vars.get("FULL_HISTORY_IMPORT") == "true"
+    )
+    run_recent_history = env_vars.get("IMPORT_OLD_LOGS") == "true"
+    did_batch_import = False
 
-        if old_log_dirs:
-            files_to_scan = []
-            for d in old_log_dirs:
-                if d.is_dir():
-                    # Exclude active Game.log to prevent parsing lock or watch overlap
-                    for p in d.glob("*.log"):
-                        if p.name != "Game.log":
-                            files_to_scan.append(p)
+    if run_full_history or run_recent_history:
+        channel_dir = resolve_sc_channel_dir(args, env_vars)
+        log_dirs: list[Path] = []
+        if args.log_dir and args.log_dir.is_dir():
+            log_dirs = [args.log_dir]
+        elif channel_dir:
+            log_dirs = [channel_dir, channel_dir / "logbackups"]
 
-            if files_to_scan:
-                print(f"Scanning {len(files_to_scan)} historical log file(s)...")
-                # Merge local translations
-                for d in old_log_dirs:
-                    if d.is_dir():
-                        local_loc_map = parse_local_localization(d)
-                        if local_loc_map:
-                            register_custom_translations(local_loc_map)
-
-                all_bps = []
-                work_items = [(i, len(files_to_scan), path) for i, path in enumerate(files_to_scan, 1)]
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    for res in executor.map(process_log_file, work_items):
-                        all_bps.extend(res)
-
-                unique_old = sorted(list(set(all_bps)))
-                if unique_old:
-                    to_send = [bp for bp in unique_old if not is_blueprint_acquired(acquired_blueprints, bp)]
-
-                    if to_send:
-                        print(f"Uploading {len(to_send)} historical blueprints...")
-                        success_count = 0
-                        dupe_count = 0
-                        fail_count = 0
-                        for idx, bp_id in enumerate(to_send, 1):
-                            if args.dry_run:
-                                success_count += 1
-                                resolved = resolve_blueprint_input(bp_id)
-                                label = bp_id
-                                if resolved.get("ok"):
-                                    label = f"{resolved['blueprint_name']} → {resolved['internal_name']}"
-                                elif resolved.get("error") == "ambiguous_blueprint":
-                                    label = f"{bp_id} (ambiguous — would notify)"
-                                print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {label}")
-                            else:
-                                try:
-                                    status, is_duplicate, internal_name, error_msg = post_blueprint_event(session, url, bp_id)
-                                    if status == 200:
-                                        if is_duplicate:
-                                            dupe_count += 1
-                                            print(f"  [{idx}/{len(to_send)}] {Colors.YELLOW}↻ Already Acquired:{Colors.RESET} {bp_id}")
-                                        else:
-                                            success_count += 1
-                                            print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Successfully Imported:{Colors.RESET} {bp_id}")
-                                        if internal_name:
-                                            acquired_blueprints.add(internal_name)
-                                            save_cache_file(cache_path, acquired_blueprints)
-                                    elif status == 202:
-                                        success_count += 1
-                                        print(f"  [{idx}/{len(to_send)}] {Colors.YELLOW}⚠ Notification sent — mark manually:{Colors.RESET} {bp_id}")
-                                    elif error_msg:
-                                        fail_count += 1
-                                        print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ {error_msg}{Colors.RESET}")
-                                    else:
-                                        fail_count += 1
-                                        print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Failed:{Colors.RESET} {bp_id} (HTTP {status})")
-                                except Exception as e:
-                                    fail_count += 1
-                                    print(f"  [{idx}/{len(to_send)}] {Colors.RED}✗ Connection Error:{Colors.RESET} {bp_id} ({e})")
-                        
-                        print(f"\nImport complete: {Colors.GREEN}{success_count} successfully imported{Colors.RESET}, "
-                              f"{Colors.YELLOW}{dupe_count} already acquired{Colors.RESET}, "
-                              f"{Colors.RED}{fail_count} failed{Colors.RESET}")
-                    else:
-                        print("All historical blueprints already acquired.")
-                else:
-                    print("No blueprints found in historical logs.")
-            else:
-                print("No historical logs to scan.")
-
-        # Save disabled state
-        env_vars["IMPORT_OLD_LOGS"] = "false"
-        save_env_file(env_path, env_vars)
-        print(f"{Colors.GREEN}[First Run] Historical import complete. Disabling future auto-imports.{Colors.RESET}\n")
+        if run_full_history:
+            did_batch_import = True
+            run_log_folder_blueprint_import(
+                log_dirs,
+                session=session,
+                url=url,
+                acquired_blueprints=acquired_blueprints,
+                cache_path=cache_path,
+                dry_run=args.dry_run,
+                include_game_log=True,
+                skip_version_check=True,
+                banner=(
+                    "[Full History] Scanning ALL .log files (version filter OFF) — "
+                    "one-time catch-up for your account..."
+                ),
+            )
+            env_vars["FULL_HISTORY_IMPORT"] = "false"
+            # Full history already covers recent backups; don't run the limited pass too.
+            env_vars["IMPORT_OLD_LOGS"] = "false"
+            save_env_file(env_path, env_vars)
+            print(
+                f"{Colors.GREEN}[Full History] Import complete. "
+                f"FULL_HISTORY_IMPORT disabled for future launches.{Colors.RESET}\n"
+            )
+        elif run_recent_history:
+            did_batch_import = True
+            run_log_folder_blueprint_import(
+                log_dirs,
+                session=session,
+                url=url,
+                acquired_blueprints=acquired_blueprints,
+                cache_path=cache_path,
+                dry_run=args.dry_run,
+                include_game_log=False,
+                skip_version_check=False,
+                banner=(
+                    f"[First Run] Scanning backup logs (min version {MIN_GAME_VERSION}+)..."
+                ),
+            )
+            env_vars["IMPORT_OLD_LOGS"] = "false"
+            save_env_file(env_path, env_vars)
+            print(
+                f"{Colors.GREEN}[First Run] Recent-log import complete. "
+                f"Disabling future auto-imports.{Colors.RESET}\n"
+            )
 
     # Watch Mode execution (after optional historical import)
     if args.watch:
-        if did_import_old_logs:
-            print(f"{Colors.CYAN}[Watch Mode] Historical import finished. Tailing Game.log for new blueprints...{Colors.RESET}\n")
+        if did_batch_import:
+            print(f"{Colors.CYAN}[Watch Mode] Batch import finished. Tailing Game.log for new blueprints...{Colors.RESET}\n")
         watch_file = None
         if args.file_path:
             if args.file_path.is_file():

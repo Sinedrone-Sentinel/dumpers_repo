@@ -340,10 +340,14 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
   {
     id: 'bp-dumper',
     title: 'Dumper Apps',
-    description: 'Desktop log watcher that automatically syncs blueprint unlocks to your account.',
+    description:
+      'Desktop app that reads your local Star Citizen Game.log — not CIG servers — to sync blueprint unlocks and power Live Mission Tracker.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
       '**Windows only:** download **Windows portable exe**, run it, then paste your API key when prompted',
+      'Does **not** download your craft-bench / inventory from CIG — only blueprint award lines found in local log files',
+      'First run defaults to a one-time **full history import** of all local `.log` files (including older patches) so awards still in logbackups can sync; then watch mode tails the live Game.log for new unlocks',
+      'Blueprints earned before those logs existed, or after logs were deleted, will not appear — mark those manually on Blueprints',
       'Copy your API key from this page and paste it when Dumper Apps asks on first run',
       'Regenerate your API key if compromised; the old key stops working immediately',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',
