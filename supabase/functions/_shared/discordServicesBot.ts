@@ -1,7 +1,5 @@
 /** Shared helpers for the Partnership-only Dumper Services Discord bot. */
 
-import nacl from 'https://cdn.skypack.dev/tweetnacl@v1.0.3?dts'
-
 export const DISCORD_API = 'https://discord.com/api/v10'
 export const ACCEPT_CUSTOM_ID_PREFIX = 'ds_accept:'
 
@@ -15,6 +13,7 @@ export function hexToUint8Array(hex: string): Uint8Array {
   return arr
 }
 
+/** Discord Interactions ed25519 verify via Web Crypto (no CDN import). */
 export async function verifyDiscordSignature(
   request: Request,
   publicKeyHex: string
@@ -28,10 +27,18 @@ export async function verifyDiscordSignature(
   }
 
   try {
-    const valid = nacl.sign.detached.verify(
-      new TextEncoder().encode(timestamp + body),
+    const key = await crypto.subtle.importKey(
+      'raw',
+      hexToUint8Array(publicKeyHex),
+      { name: 'Ed25519' },
+      false,
+      ['verify']
+    )
+    const valid = await crypto.subtle.verify(
+      'Ed25519',
+      key,
       hexToUint8Array(signature),
-      hexToUint8Array(publicKeyHex)
+      new TextEncoder().encode(timestamp + body)
     )
     return { valid: Boolean(valid), body }
   } catch {
