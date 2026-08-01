@@ -83,6 +83,23 @@ export async function listServiceTypes(): Promise<ServiceType[]> {
   return (data as ServiceType[]) ?? []
 }
 
+/** Spectrum SID from an RSI org page URL (`…/orgs/YOURSID`). */
+export function parseOrgSidFromRsiUrl(url: string): string | null {
+  const raw = url.trim()
+  if (!raw) return null
+  try {
+    const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`
+    const u = new URL(withProtocol)
+    const host = u.hostname.replace(/^www\./i, '').toLowerCase()
+    if (host !== 'robertsspaceindustries.com') return null
+    const match = u.pathname.match(/\/orgs\/([A-Za-z0-9_-]+)/i)
+    const sid = match?.[1]?.trim()
+    return sid ? sid.toLowerCase() : null
+  } catch {
+    return null
+  }
+}
+
 export async function submitPartnerApplication(input: {
   orgSid: string
   orgName: string

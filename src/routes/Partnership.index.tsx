@@ -10,6 +10,7 @@ import {
   listMyPartnerOrgs,
   listPendingPartnerApplications,
   listServiceTypes,
+  parseOrgSidFromRsiUrl,
   reviewPartnerApplication,
   submitPartnerApplication,
   upsertPartnerOrgService,
@@ -89,12 +90,20 @@ export default function PartnershipPage() {
       })
       return
     }
+    const sidFromUrl = parseOrgSidFromRsiUrl(orgUrl)
+    if (!sidFromUrl) {
+      setMessage({
+        type: 'error',
+        text: 'Paste a valid RSI org page URL (robertsspaceindustries.com/orgs/…). Org SID fills in from that.',
+      })
+      return
+    }
     setSubmitting(true)
     setMessage(null)
     const result = await submitPartnerApplication({
-      orgSid,
+      orgSid: sidFromUrl,
       orgName,
-      orgUrl,
+      orgUrl: orgUrl.trim(),
       roleClaim,
       notes,
     })
@@ -198,16 +207,33 @@ export default function PartnershipPage() {
                   approval. Only apply if you can speak for the org on services and pricing.
                 </p>
                 <Field
-                  label="Org SID"
+                  label="RSI org page URL"
                   required
-                  tip="Your org’s short Spectrum ID — the slug in the RSI org URL (robertsspaceindustries.com/orgs/YOURSID). Example: dumpers."
+                  tip="Full link to your org’s public RSI page (robertsspaceindustries.com/orgs/…). Org SID is filled in automatically from this URL."
+                >
+                  <input
+                    value={orgUrl}
+                    onChange={(e) => {
+                      const next = e.target.value
+                      setOrgUrl(next)
+                      setOrgSid(parseOrgSidFromRsiUrl(next) || '')
+                    }}
+                    placeholder="https://robertsspaceindustries.com/orgs/..."
+                    required
+                    className="site-input w-full px-3 py-2 text-sm"
+                  />
+                </Field>
+                <Field
+                  label="Org SID"
+                  tip="Filled automatically from the RSI org URL — the short Spectrum ID after /orgs/ (e.g. dumpers)."
                 >
                   <input
                     value={orgSid}
-                    onChange={(e) => setOrgSid(e.target.value)}
-                    placeholder="e.g. dumpers"
-                    required
-                    className="site-input w-full px-3 py-2 text-sm"
+                    readOnly
+                    tabIndex={-1}
+                    placeholder="Paste the RSI org URL above"
+                    aria-readonly="true"
+                    className="site-input w-full px-3 py-2 text-sm opacity-80 cursor-default"
                   />
                 </Field>
                 <Field
@@ -219,17 +245,6 @@ export default function PartnershipPage() {
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
                     required
-                    className="site-input w-full px-3 py-2 text-sm"
-                  />
-                </Field>
-                <Field
-                  label="RSI org page URL"
-                  tip="Full link to your org’s public RSI page. Helps staff confirm the org and that you belong there."
-                >
-                  <input
-                    value={orgUrl}
-                    onChange={(e) => setOrgUrl(e.target.value)}
-                    placeholder="https://robertsspaceindustries.com/orgs/..."
                     className="site-input w-full px-3 py-2 text-sm"
                   />
                 </Field>
@@ -273,7 +288,7 @@ export default function PartnershipPage() {
                 </label>
                 <button
                   type="submit"
-                  disabled={submitting || !pledgeAccepted}
+                  disabled={submitting || !pledgeAccepted || !orgSid}
                   className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
                 >
                   {submitting ? 'Submitting…' : 'Submit application'}
