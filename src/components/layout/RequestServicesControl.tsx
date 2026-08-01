@@ -151,7 +151,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
             }. Tip data is not kept on the site after delivery.`
           : `Notified ${posted} partner channel${posted === 1 ? '' : 's'}${
               orgNames ? `: ${orgNames}` : ''
-            }. First Accept wins within 30 minutes — you’ll get a modal with their org and listed pricing.`,
+            }. First Accept wins — you’ll get a modal with their org and listed pricing.`,
     })
   }
 
@@ -187,7 +187,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
           <div className="px-3 py-2.5 border-b border-slate-800">
             <p className="text-sm font-medium text-white">Request Services</p>
             <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-              Only services offered by at least one partner. 30 min lifetime · 31 min cooldown.
+              Only services offered by at least one partner.
             </p>
           </div>
           <div className="max-h-72 overflow-y-auto">
@@ -237,7 +237,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
           subtitle={
             compose.service_kind === 'informative'
               ? 'Intel tip · no Accept · screenshot required'
-              : 'Partner Accept · 30 minute window'
+              : 'Partner Accept · first wins'
           }
           onClose={resetCompose}
           size="md"
