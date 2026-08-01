@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import { useAuth } from '../../contexts/AuthContext'
+import SiteTooltip from '../SiteTooltip'
 import AppModal from './AppModal'
 import {
   listRequestableServiceTypes,
   requestService,
   type RequestableServiceType,
 } from '../../lib/partnership'
+import { THIRD_PARTY_SERVICES, type ThirdPartyService } from '../../lib/thirdPartyServices'
 
 interface RequestServicesControlProps {
   disabled?: boolean
@@ -15,8 +17,9 @@ interface RequestServicesControlProps {
 const MAX_DETAILS = 250
 
 export default function RequestServicesControl({ disabled = false }: RequestServicesControlProps) {
-  const { profile, isApproved } = useAuth()
+  const { profile, isApproved, isGuestPreview } = useAuth()
   const verified = Boolean(profile?.rsi_handle_verified)
+  const canUsePartnerServices = Boolean(isApproved && verified && !isGuestPreview)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [services, setServices] = useState<RequestableServiceType[]>([])
@@ -53,7 +56,13 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
   }, [clearScreenshot])
 
   useEffect(() => {
-    if (!open || disabled || !verified || !isApproved) return
+    if (!open || disabled || !canUsePartnerServices) {
+      if (!canUsePartnerServices) {
+        setServices([])
+        setLoading(false)
+      }
+      return
+    }
     let cancelled = false
     setLoading(true)
     void listRequestableServiceTypes().then((rows) => {
@@ -65,7 +74,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
     return () => {
       cancelled = true
     }
-  }, [open, disabled, verified, isApproved])
+  }, [open, disabled, canUsePartnerServices])
 
   const takeImageBlob = (blob: Blob) => {
     if (!blob.type.startsWith('image/')) {
@@ -102,13 +111,15 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
     return () => el.removeEventListener('paste', onPaste)
   }, [compose])
 
-  if (!isApproved || !verified) return null
-
   const freeServices = services.filter((s) => s.pricing_tier === 'FREE')
   const feeServices = services.filter((s) => s.pricing_tier !== 'FREE')
+  const hasPartnerRows = freeServices.length > 0 || feeServices.length > 0
+  const thirdPartyFree = THIRD_PARTY_SERVICES.filter((s) => s.pricing_tier === 'FREE')
+  const thirdPartyFee = THIRD_PARTY_SERVICES.filter((s) => s.pricing_tier !== 'FREE')
+  const hasThirdParty = thirdPartyFree.length > 0 || thirdPartyFee.length > 0
 
   const onSubmitCompose = async () => {
-    if (!compose) return
+    if (!compose || !canUsePartnerServices) return
     setSubmitting(true)
     setFormError(null)
     const result = await requestService({
@@ -172,7 +183,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
             ? 'bg-orange-600/30 text-orange-200'
             : 'text-slate-400 hover:text-orange-300 hover:bg-slate-800/80'
         } disabled:opacity-40`}
-        aria-label="Request partner services"
+        aria-label="Request Services"
         title="Request Services"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -192,40 +203,59 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
             <p className="text-sm font-medium text-white">Request Services</p>
           </div>
           <div className="max-h-72 overflow-y-auto">
-            {loading ? (
-              <p className="px-3 py-4 text-xs text-slate-500">Loading services…</p>
-            ) : services.length === 0 ? (
+            {thirdPartyFree.length > 0 ? (
+              <ThirdPartySection title="3rd Party FREE" services={thirdPartyFree} />
+            ) : null}
+            {thirdPartyFee.length > 0 ? (
+              <ThirdPartySection title="3rd Party FEE" services={thirdPartyFee} />
+            ) : null}
+
+            {canUsePartnerServices ? (
+              loading ? (
+                <p className="px-3 py-4 text-xs text-slate-500">Loading partner services…</p>
+              ) : hasPartnerRows ? (
+                <div>
+                  {freeServices.length > 0 ? (
+                    <ServiceTierSection
+                      title="FREE SERVICES"
+                      services={freeServices}
+                      onPick={(s) => {
+                        setCompose(s)
+                        setDetails('')
+                        setFormError(null)
+                        clearScreenshot()
+                      }}
+                    />
+                  ) : null}
+                  {feeServices.length > 0 ? (
+                    <ServiceTierSection
+                      title="FEE SERVICES"
+                      services={feeServices}
+                      onPick={(s) => {
+                        setCompose(s)
+                        setDetails('')
+                        setFormError(null)
+                        clearScreenshot()
+                      }}
+                    />
+                  ) : null}
+                </div>
+              ) : (
+                <p className="px-3 py-3 text-xs text-slate-500 leading-relaxed text-center border-t border-slate-800">
+                  No partner org services are being offered right now.
+                </p>
+              )
+            ) : (
+              <p className="px-3 py-3 text-xs text-slate-500 leading-relaxed text-center border-t border-slate-800">
+                Sign in and verify your RSI Handle to request partner org services.
+              </p>
+            )}
+
+            {!hasThirdParty && !canUsePartnerServices ? (
               <p className="px-3 py-4 text-sm text-slate-300 leading-relaxed text-center">
                 Sorry, No Services are being offered at this time.
               </p>
-            ) : (
-              <div>
-                {freeServices.length > 0 ? (
-                  <ServiceTierSection
-                    title="FREE SERVICES"
-                    services={freeServices}
-                    onPick={(s) => {
-                      setCompose(s)
-                      setDetails('')
-                      setFormError(null)
-                      clearScreenshot()
-                    }}
-                  />
-                ) : null}
-                {feeServices.length > 0 ? (
-                  <ServiceTierSection
-                    title="FEE SERVICES"
-                    services={feeServices}
-                    onPick={(s) => {
-                      setCompose(s)
-                      setDetails('')
-                      setFormError(null)
-                      clearScreenshot()
-                    }}
-                  />
-                ) : null}
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       )}
@@ -353,6 +383,56 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
           <p className="text-sm text-slate-300 leading-relaxed">{deliveredModal.detail}</p>
         </AppModal>
       )}
+    </div>
+  )
+}
+
+function ThirdPartySection({
+  title,
+  services,
+}: {
+  title: string
+  services: ThirdPartyService[]
+}) {
+  const isFree = title.includes('FREE')
+  return (
+    <div>
+      <div
+        className={`px-3 py-1.5 border-t border-b border-slate-800 first:border-t-0 ${
+          isFree ? 'bg-emerald-950/40' : 'bg-slate-800/50'
+        }`}
+      >
+        <p
+          className={`text-[10px] font-semibold tracking-wide uppercase ${
+            isFree ? 'text-emerald-300/90' : 'text-orange-300/90'
+          }`}
+        >
+          {title}
+        </p>
+      </div>
+      <ul>
+        {services.map((s) => (
+          <li key={s.id} className="border-t border-slate-800 first:border-t-0">
+            <SiteTooltip content={s.tooltip} side="left" className="block w-full">
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-2.5 px-3 py-2.5 hover:bg-slate-800/80 transition-colors"
+              >
+                <img
+                  src={s.faviconSrc}
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded-sm object-cover shrink-0"
+                />
+                <span className="text-sm text-slate-100 font-medium">{s.label}</span>
+              </a>
+            </SiteTooltip>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

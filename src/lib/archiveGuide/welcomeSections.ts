@@ -191,8 +191,10 @@ export const SITE_RULES_SECTION = {
       id: 'partnership-services',
       title: 'Partnership services',
       items: [
-        'Partner orgs offer help and intel tips that members request via **Request Services** (next to notifications) — not a marketplace listing.',
-        'Members pick **FREE** or **FEE** for each service type; only orgs whose listed pricing matches that choice get the Discord ping (FREE = label FREE; anything else = FEE).',
+        '**Request Services** (next to notifications) is available in guest/offline preview too — **3rd Party FREE** / **3rd Party FEE** sit at the top (e.g. **Call Medrunner** is FREE → their portal; hover for what they offer).',
+        '3rd Party links open external sites in a new tab. They are not Discord Accept jobs; you may need an account on that org’s portal.',
+        'Signed-in members with a verified RSI Handle also see partner org **FREE** / **FEE** services — Discord ping, first Accept wins (not a marketplace listing).',
+        'Members pick **FREE** or **FEE** for each partner service type; only orgs whose listed pricing matches that choice get the Discord ping (FREE = label FREE; anything else = FEE).',
         'Actionable jobs use Discord **Accept** (first wins). Intel tips (salvage / pirate reports) post a screenshot with **no Accept**.',
         'Any service you enable and the **pricing label** you set must be **transparent, honest, and upheld** when you Accept a request.',
         'Default pricing is FREE unless you publish clear aUEC / materials / other terms. Bait pricing or refusing the listed terms can revoke the partnership.',

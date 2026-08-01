@@ -140,7 +140,10 @@ export default function AppChrome({
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {isGuestPreview ? (
-                <SignInMenu />
+                <>
+                  <RequestServicesControl disabled={false} />
+                  <SignInMenu />
+                </>
               ) : (
                 <>
                   <RequestServicesControl disabled={isPending} />
