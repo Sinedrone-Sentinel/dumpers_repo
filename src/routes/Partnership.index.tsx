@@ -359,8 +359,8 @@ function PartnershipExplainer() {
       <h2 className="text-white text-sm font-semibold">What Partnership means</h2>
       <p className="text-slate-400 text-sm leading-relaxed">
         Approved orgs can offer help to Dumper&apos;s Repo members — medical respawn/evac, stuck
-        lifts, security escort, ship salvage, and other catalog services. Members use the header{' '}
-        <strong className="text-slate-300">Request Services</strong> icon (left of the bell);
+        lifts, security escort, ship salvage, and other catalog services. Members tap{' '}
+        <strong className="text-slate-300">Request Services</strong> (next to notifications);
         partner Discord channels get the ping; the first org to Accept wins the job.
       </p>
       <p className="text-slate-400 text-sm leading-relaxed">

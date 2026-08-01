@@ -191,7 +191,7 @@ export const SITE_RULES_SECTION = {
       id: 'partnership-services',
       title: 'Partnership services',
       items: [
-        'Partner orgs offer help and intel tips that members request from the header **Request Services** control — not a marketplace listing.',
+        'Partner orgs offer help and intel tips that members request via **Request Services** (next to notifications) — not a marketplace listing.',
         'Actionable jobs use Discord **Accept** (first wins, 30 minutes). Intel tips (salvage / pirate reports) post a screenshot with **no Accept**.',
         'Any service you enable and the **pricing label** you set must be **transparent, honest, and upheld** when you Accept a request.',
         'Default pricing is FREE unless you publish clear aUEC / materials / other terms. Bait pricing or refusing the listed terms can revoke the partnership.',
