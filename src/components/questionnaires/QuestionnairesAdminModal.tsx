@@ -25,6 +25,8 @@ type EditorState = {
   audience_guest: boolean
   audience_registered: boolean
   audience_rsi_verified: boolean
+  public_results: boolean
+  results_published_at: string | null
   availability_value: number
   availability_unit: AvailabilityUnit
   questions: QuestionnaireQuestion[]
@@ -39,6 +41,8 @@ function emptyEditor(): EditorState {
     audience_guest: false,
     audience_registered: true,
     audience_rsi_verified: false,
+    public_results: false,
+    results_published_at: null,
     availability_value: 7,
     availability_unit: 'days',
     questions: [
@@ -149,6 +153,8 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       audience_guest: d.audience_guest,
       audience_registered: d.audience_registered,
       audience_rsi_verified: d.audience_rsi_verified,
+      public_results: d.public_results ?? false,
+      results_published_at: d.results_published_at ?? null,
       availability_value: d.availability_value,
       availability_unit: d.availability_unit,
       questions: d.questions.length
@@ -206,6 +212,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       audience_guest: editor.audience_guest,
       audience_registered: editor.audience_registered,
       audience_rsi_verified: editor.audience_rsi_verified,
+      public_results: editor.public_results,
       availability_value: editor.availability_value,
       availability_unit: editor.availability_unit,
       questions,
@@ -221,9 +228,17 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       setMessage({ type: 'err', text: 'Save failed — no questionnaire id returned' })
       return null
     }
-    setEditor((e) => ({ ...e, id, status: 'draft', questions }))
+    setEditor((e) => ({
+      ...e,
+      id,
+      status: e.status === 'active' ? 'active' : 'draft',
+      questions,
+    }))
     if (!opts?.quiet) {
-      setMessage({ type: 'ok', text: 'Saved draft' })
+      setMessage({
+        type: 'ok',
+        text: editor.status === 'active' ? 'Public poll setting saved' : 'Saved draft',
+      })
       setLoading(false)
       await refreshList()
     }
@@ -364,6 +379,8 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   <p className="text-slate-100 font-medium">{item.title}</p>
                   <p className="text-xs text-slate-500 mt-0.5">
                     {item.status}
+                    {item.public_results ? ' · public poll' : ''}
+                    {item.results_published_at ? ' · results on ticker' : ''}
                     {' · '}
                     {item.availability_value} {item.availability_unit}
                     {item.available_until
@@ -385,15 +402,13 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-1.5 items-start">
-                  {item.status !== 'active' && (
-                    <button
-                      type="button"
-                      className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300"
-                      onClick={() => void openEdit(item.id)}
-                    >
-                      Edit
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300"
+                    onClick={() => void openEdit(item.id)}
+                  >
+                    {item.status === 'active' ? 'Public flag' : 'Edit'}
+                  </button>
                   <button
                     type="button"
                     className="px-2 py-1 text-xs rounded border border-cyan-700 text-cyan-200"
@@ -413,9 +428,23 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                       type="button"
                       className="px-2 py-1 text-xs rounded border border-amber-700 text-amber-200"
                       onClick={async () => {
+                        const ok = confirm(
+                          item.public_results
+                            ? 'Archive this public poll? Option tallies will post to the Updates ticker.'
+                            : 'Archive this questionnaire? Members can no longer fill it.'
+                        )
+                        if (!ok) return
                         const r = await adminArchiveQuestionnaire(item.id)
                         if (r.error) setMessage({ type: 'err', text: r.error })
-                        else void refreshList()
+                        else {
+                          setMessage({
+                            type: 'ok',
+                            text: item.public_results
+                              ? 'Archived — results posted to the Updates ticker'
+                              : 'Archived',
+                          })
+                          void refreshList()
+                        }
                       }}
                     >
                       Archive
@@ -484,6 +513,29 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                 {label}
               </label>
             ))}
+          </div>
+          <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 px-3 py-2 space-y-1">
+            <label className="flex items-center gap-2 text-sm text-slate-300">
+              <input
+                type="checkbox"
+                disabled={Boolean(editor.results_published_at)}
+                checked={editor.public_results}
+                onChange={(e) =>
+                  setEditor((p) => ({ ...p, public_results: e.target.checked }))
+                }
+              />
+              Public poll
+            </label>
+            <p className="text-xs text-slate-500 pl-6">
+              When the window ends or you archive it, option tallies post to the Updates ticker.
+              Written answers stay private (counts only). Off by default.
+              {editor.status === 'active'
+                ? ' On an active poll you can still toggle this and Save draft — other fields stay locked.'
+                : ''}
+              {editor.results_published_at
+                ? ' Results already posted — Public can no longer change.'
+                : ''}
+            </p>
           </div>
           <div className="flex flex-wrap items-end gap-2 text-sm text-slate-300">
             <label>
@@ -771,6 +823,23 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   Activate & notify
                 </button>
               </>
+            )}
+            {editor.status === 'active' && (
+              <button
+                type="button"
+                disabled={loading || Boolean(editor.results_published_at)}
+                onClick={async () => {
+                  const id = await saveDraft()
+                  if (id) {
+                    setMessage({ type: 'ok', text: 'Public poll setting saved' })
+                    setView('list')
+                    await refreshList()
+                  }
+                }}
+                className="px-3 py-2 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white disabled:opacity-50"
+              >
+                Save Public setting
+              </button>
             )}
             {editor.id && (
               <button

@@ -29,6 +29,8 @@ export type QuestionnaireListItem = {
   audience_guest: boolean
   audience_registered: boolean
   audience_rsi_verified: boolean
+  public_results: boolean
+  results_published_at: string | null
   availability_value: number
   availability_unit: AvailabilityUnit
   activated_at: string | null
@@ -48,6 +50,8 @@ export type QuestionnaireDetail = {
   audience_guest: boolean
   audience_registered: boolean
   audience_rsi_verified: boolean
+  public_results: boolean
+  results_published_at: string | null
   availability_value: number
   availability_unit: AvailabilityUnit
   activated_at: string | null
@@ -132,6 +136,7 @@ export async function adminSaveQuestionnaire(input: {
   audience_guest: boolean
   audience_registered: boolean
   audience_rsi_verified: boolean
+  public_results: boolean
   availability_value: number
   availability_unit: AvailabilityUnit
   questions: QuestionnaireQuestion[]
@@ -143,6 +148,7 @@ export async function adminSaveQuestionnaire(input: {
     p_audience_guest: input.audience_guest,
     p_audience_registered: input.audience_registered,
     p_audience_rsi_verified: input.audience_rsi_verified,
+    p_public_results: input.public_results,
     p_availability_value: input.availability_value,
     p_availability_unit: input.availability_unit,
     p_questions: input.questions.map((q, i) => ({

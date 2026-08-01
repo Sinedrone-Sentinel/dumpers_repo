@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `130_discord_webhook_hardening.sql` (close open webhook INSERT RLS; mask staff `official_webhook_url` from non–super-admin `get_discord_settings`). Apply through `130` in numeric order if catching up. Also redeploy `send-discord` after this change (auth no longer falls through for anon/member JWTs).
+**Latest migration:** `131_questionnaire_public_poll_ticker.sql` (Public questionnaire polls publish option tallies to the Updates ticker on archive/expiry). Apply through `131` in numeric order if catching up. Also redeploy `send-discord` if you have not yet applied `130`.
 
 ---
 
@@ -161,6 +161,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 93 | `128_discord_market_webhook_url_dedupe.sql` | Deduplicate market/personal/legacy Discord webhook lookups by `webhook_url` (fixes coalesced marketplace triple-posts when WTB/WTS/cancel share one channel) |
 | 94 | `129_whats_new_ticker.sql` | Site-wide Updates / What's New ticker (DB-backed) |
 | 95 | `130_discord_webhook_hardening.sql` | Drop open `discord_webhooks` INSERT RLS; `get_discord_settings` returns `official_webhook_url` only to super-admins and service_role |
+| 96 | `131_questionnaire_public_poll_ticker.sql` | `public_results` on questionnaires; publish anonymous option tallies to What's New ticker on archive or soft expiry (hourly cron when pg_cron available) |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -238,6 +239,15 @@ npx supabase functions deploy send-discord
 | `send-discord` auth | Requires service_role Bearer (cron) or a verified super-admin JWT (manual Process Queue) |
 
 Staff webhook **rotation** in Discord is optional after this — do it only if you suspect the URL was already pulled.
+
+### Public questionnaire polls (`131_questionnaire_public_poll_ticker.sql`)
+
+Apply migration `131`. Super-admin questionnaire editor gains a **Public poll** checkbox (off by default). When checked:
+
+- **Archive** posts anonymous radio/checkbox tallies to the Updates ticker (`POLL RESULTS: …`)
+- Soft expiry (`available_until`) is swept hourly by `publish_due_public_questionnaire_results` (pg_cron when available) — archives the row and posts results
+- Free-text answers are counted only (bodies never go on the ticker)
+- Results stay on the ticker for the usual 7-day What's New TTL
 
 ### BP Dumper webhook API
 
