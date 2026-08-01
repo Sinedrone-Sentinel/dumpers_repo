@@ -1,0 +1,76 @@
+---
+description: After member-facing commits/pushes, propose Site Update ticker items for individual user approval before ingest
+alwaysApply: true
+---
+
+# Site Update / Updates Ticker Approval
+
+Member-facing changes that ship via **commit + push** must be considered for the **Updates ticker** (`whats_new_entries` / `ingest_whats_new_entries`). Game-data parse digests are separate (auto via parse / `push-whats-new`).
+
+## Hard rule
+
+**Never** ingest or push a Site Update to the ticker unless the user has **explicitly approved specific items** from your proposed list (by number/id). Silence is not approval. “Looks good” without selecting items is not approval — ask them to reply with e.g. `1, 3, 5` or `all` / `none`.
+
+## When to propose
+
+After **every commit/push** (or when finishing a batch about to push) that touches member-visible behavior:
+
+1. Scan the shipped diff / commits for **end-user** impact.
+2. Reply with a **Site Update candidate list** (even if the recommendation is “nothing to post”).
+3. Wait for per-item approval before calling ingest / writing pending JSONL / `npm run push-whats-new` for **site** entries.
+
+Skip proposing only for pure internals with zero member-visible effect (e.g. Cursor rules-only, lockfile-only, migration with no UI). Still say briefly: **Site Update: none recommended.**
+
+## What belongs on the ticker
+
+Include only what members **see or use**:
+
+- New pages, tabs, workflows, onboarding steps
+- Changed labels, requirements, or how a tool works
+- Visible polish that fixes a noticeable glitch (scroll jump, refresh flash of wrong screen)
+- Public poll / Archive / Blueprints / Bazaar / Mission Tracker behavior members notice
+
+**Do not** propose:
+
+- Security hardening, RLS, RPC locks, Edge auth (unless there is a clear member-facing side effect)
+- Officer/super-admin-only tooling with no member impact
+- Cursor rules, docs-only, deps, refactors, parser internals
+- Duplicate of an entry already on the ticker for this ship
+
+## List format (required)
+
+Present a numbered checklist the user can approve individually:
+
+```markdown
+### Site Update candidates (approve by number)
+
+**Proposed digest headline:** SITE UPDATE: …
+
+| # | Approve? | Item (detail row) | Why members care |
+|---|----------|-------------------|------------------|
+| 1 | [ ] | … | … |
+| 2 | [ ] | … | … |
+
+**Not recommended:** …
+Reply with numbers to send (e.g. `1, 2`), `all`, or `none`.
+```
+
+Keep detail **labels** short and plain (ticker modal). Optional one-line `summary` for context. Prefer **one digest entry** with approved items as `items[]` unless the user wants separate headlines.
+
+## After approval only
+
+1. Build JSON for `ingest_whats_new_entries`:
+   - `issueKey`: stable, e.g. `site:update` or `site:<slug>`
+   - `version`: ship id that won’t collide with game launcher versions, e.g. `site-YYYY-MM-DD` or `site-YYYY-MM-DD-<shortsha>`
+   - `category`: `Site`
+   - `action`: `updated` (or `added` for a wholly new surface)
+   - `headline`: `SITE UPDATE: …` (scannable, no internal jargon)
+   - `items`: `{ key, label, summary? }[]` — **only approved rows**
+2. Ingest (service role / super-admin RPC). Do not leave secrets in the chat.
+3. Confirm inserted vs skipped (dedupe is `issue_key` + `version`).
+
+## Tone
+
+- Member voice, not changelog voice (“You can…” / clear capability).
+- No migration numbers, RLS, or “we fixed a security hole” unless members must change behavior.
+- Match existing ticker energy (clear, slightly sharp) without dumping git commit subjects.
