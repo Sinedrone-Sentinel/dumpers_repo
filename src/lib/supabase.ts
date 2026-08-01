@@ -60,6 +60,27 @@ export interface BannedUser {
   reason: string | null
 }
 
+export async function adminSetUserRole(
+  userId: string,
+  role: Exclude<UserRole, 'super-admin'>
+): Promise<{ success: boolean; error?: string }> {
+  const { data, error } = await supabase.rpc('admin_set_user_role', {
+    p_user_id: userId,
+    p_role: role,
+  })
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  const result = data as { success?: boolean; error?: string } | null
+  if (result && result.success === false) {
+    return { success: false, error: result.error || 'Failed to update role' }
+  }
+
+  return { success: true }
+}
+
 export async function banUser(
   userId: string,
   reason?: string

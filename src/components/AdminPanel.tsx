@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { supabase, Profile, UserRole, BannedUser, banUser, unbanUser, getDisplayName } from '../lib/supabase'
+import {
+  supabase,
+  Profile,
+  UserRole,
+  BannedUser,
+  adminSetUserRole,
+  banUser,
+  unbanUser,
+  getDisplayName,
+} from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
 import RsiVerifiedBadge from './RsiVerifiedBadge'
@@ -107,26 +116,16 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     }
   }
 
-  const updateUserRole = async (userId: string, newRole: UserRole) => {
+  const updateUserRole = async (userId: string, newRole: Exclude<UserRole, 'super-admin'>) => {
     if (!currentUser) return
 
     setActionLoading(userId)
 
-    const updateData: Partial<Profile> = { role: newRole }
+    const result = await adminSetUserRole(userId, newRole)
 
-    if (newRole === 'member' || newRole === 'officer') {
-      updateData.approved_at = new Date().toISOString()
-      updateData.approved_by = currentUser.id
-    }
-
-    const { error } = await supabase
-      .from('profiles')
-      .update(updateData)
-      .eq('id', userId)
-
-    if (error) {
-      console.error('Error updating role:', error)
-      alert('Failed to update user role')
+    if (!result.success) {
+      console.error('Error updating role:', result.error)
+      alert(result.error || 'Failed to update user role')
       setActionLoading(null)
       return
     }
