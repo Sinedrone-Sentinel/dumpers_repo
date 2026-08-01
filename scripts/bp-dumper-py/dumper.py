@@ -42,10 +42,13 @@ def _load_lookup() -> dict[str, Any]:
     return _cached
 
 def _normalize_display_key(value: str) -> str:
+    """Strip grade prefix (Civ/1/C …) only. Keep quoted nicknames (e.g. 5SA 'Rhada')."""
     val = value.strip().lower()
     val = re.sub(r"^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+", "", val, flags=re.I)
-    val = re.sub(r"\s+'[^']+'\s*$", "", val)
     return val.strip()
+
+
+_GRADE_PREFIX_RE = re.compile(r"^(?:civ|ind|mil|ste|com)/[0-9]/[a-d]\s+", re.I)
 
 def normalize_internal_key(raw_input: str) -> str:
     normalized = raw_input.replace("\\", "/").strip().lower()
@@ -783,8 +786,9 @@ def parse_log_timestamp(line: str) -> Optional[float]:
     except ValueError:
         return None
 
-def parse_blueprints_from_log(path: Path) -> list[str]:
-    discovered = []
+def parse_blueprints_from_log(path: Path) -> list[tuple[str, str | None]]:
+    """Return (product_name, contract_definition_id) pairs for history import."""
+    discovered: list[tuple[str, str | None]] = []
     state = WatcherState()
     try:
         with open(path, "rb") as f:
@@ -823,10 +827,38 @@ def parse_blueprints_from_log(path: Path) -> list[str]:
                     else:
                         print(f"  [{ts_str}] [{path.name}] {Colors.MAGENTA}Blueprint received: {Colors.GREEN}{product_name}{Colors.RESET}{Colors.MAGENTA} (no recent mission to correlate){Colors.RESET}")
                     
-                    discovered.append(product_name)
+                    contract_id = corr.contract_definition_id if corr else None
+                    discovered.append((product_name, contract_id))
     except OSError as e:
         print(f"{Colors.YELLOW}Warning: Could not read log file {path.name} ({e}){Colors.RESET}")
     return discovered
+
+
+def coalesce_discovered_blueprints(
+    items: list[tuple[str, str | None]],
+) -> list[tuple[str, str | None]]:
+    """Dedupe discoveries; prefer graded names and keep a contract id when available."""
+    by_key: dict[str, tuple[str, str | None]] = {}
+    for name, contract_id in items:
+        key = _normalize_display_key(name)
+        if not key:
+            continue
+        prev = by_key.get(key)
+        if prev is None:
+            by_key[key] = (name, contract_id)
+            continue
+        prev_name, prev_contract = prev
+        has_grade = bool(_GRADE_PREFIX_RE.match(name.strip()))
+        prev_has_grade = bool(_GRADE_PREFIX_RE.match(prev_name.strip()))
+        if has_grade and not prev_has_grade:
+            pick_name = name
+        elif prev_has_grade and not has_grade:
+            pick_name = prev_name
+        else:
+            pick_name = prev_name
+        pick_contract = contract_id or prev_contract
+        by_key[key] = (pick_name, pick_contract)
+    return sorted(by_key.values(), key=lambda row: row[0].lower())
 
 def process_log_file(task_info):
     """Worker function for a single thread to process one file.
@@ -892,7 +924,7 @@ def collect_log_files_for_import(log_dirs: list[Path], *, include_game_log: bool
 
 
 def upload_discovered_blueprints(
-    unique_bps: list[str],
+    unique_bps: list[tuple[str, str | None]] | list[str],
     *,
     session,
     url: str,
@@ -902,7 +934,14 @@ def upload_discovered_blueprints(
     label: str = "blueprint",
 ) -> None:
     """Post unique product names not already acquired; updates local cache on success."""
-    to_send = [bp for bp in unique_bps if not is_blueprint_acquired(acquired_blueprints, bp)]
+    rows: list[tuple[str, str | None]] = []
+    for item in unique_bps:
+        if isinstance(item, tuple):
+            rows.append((item[0], item[1] if len(item) > 1 else None))
+        else:
+            rows.append((item, None))
+
+    to_send = [(bp, cid) for bp, cid in rows if not is_blueprint_acquired(acquired_blueprints, bp)]
     if not to_send:
         print(f"All discovered {label}s already acquired.")
         return
@@ -911,10 +950,10 @@ def upload_discovered_blueprints(
     success_count = 0
     dupe_count = 0
     fail_count = 0
-    for idx, bp_id in enumerate(to_send, 1):
+    for idx, (bp_id, contract_id) in enumerate(to_send, 1):
         if dry_run:
             success_count += 1
-            resolved = resolve_blueprint_input(bp_id)
+            resolved = resolve_blueprint_input(bp_id, contract_id)
             item_label = bp_id
             if resolved.get("ok"):
                 item_label = f"{resolved['blueprint_name']} → {resolved['internal_name']}"
@@ -923,7 +962,9 @@ def upload_discovered_blueprints(
             print(f"  [{idx}/{len(to_send)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {item_label}")
             continue
         try:
-            status, is_duplicate, internal_name, error_msg = post_blueprint_event(session, url, bp_id)
+            status, is_duplicate, internal_name, error_msg = post_blueprint_event(
+                session, url, bp_id, contract_id
+            )
             if status == 200:
                 if is_duplicate:
                     dupe_count += 1
@@ -986,7 +1027,7 @@ def run_log_folder_blueprint_import(
             if local_loc_map:
                 register_custom_translations(local_loc_map)
 
-    all_bps: list[str] = []
+    all_bps: list[tuple[str, str | None]] = []
     work_items = [
         (i, len(files_to_scan), path, skip_version_check)
         for i, path in enumerate(files_to_scan, 1)
@@ -995,7 +1036,7 @@ def run_log_folder_blueprint_import(
         for res in executor.map(process_log_file, work_items):
             all_bps.extend(res)
 
-    unique_old = sorted(set(all_bps))
+    unique_old = coalesce_discovered_blueprints(all_bps)
     if not unique_old:
         print("No blueprints found in historical logs.")
         return True
@@ -2003,7 +2044,7 @@ def main():
         watch_log_file(watch_file, state, acquired_blueprints, args, session)
         return
 
-    unique_blueprints = []
+    unique_blueprints: list[tuple[str, str | None]] = []
     source_name = ""
 
     # Mode 1: A path is provided
@@ -2015,9 +2056,12 @@ def main():
                     with open(args.file_path, "r", encoding="utf-8") as f:
                         data = json.load(f)
                     blueprints_list = data.get("blueprints", [])
-                    unique_blueprints = sorted(list(set(
+                    names = [
                         bp.get("productName") for bp in blueprints_list if bp.get("productName")
-                    )))
+                    ]
+                    unique_blueprints = coalesce_discovered_blueprints(
+                        [(name, None) for name in names]
+                    )
                     source_name = args.file_path.name
                 except Exception as e:
                     print(f"{Colors.RED}Error parsing JSON: {e}{Colors.RESET}", file=sys.stderr)
@@ -2035,7 +2079,7 @@ def main():
                     print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
                 all_bps = parse_blueprints_from_log(args.file_path)
-                unique_blueprints = sorted(list(set(all_bps)))
+                unique_blueprints = coalesce_discovered_blueprints(all_bps)
                 source_name = args.file_path.name
         elif args.file_path.is_dir():
             # Direct directory scan (e.g. logbackups folder)
@@ -2053,12 +2097,12 @@ def main():
                 print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
             print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name} (Multithreaded)...")
-            all_bps = []
+            all_bps: list[tuple[str, str | None]] = []
             work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 for res in executor.map(process_log_file, work_items):
                     all_bps.extend(res)
-            unique_blueprints = sorted(list(set(all_bps)))
+            unique_blueprints = coalesce_discovered_blueprints(all_bps)
             source_name = f"direct directory scan ({len(log_files)} file(s))"
         else:
             print(f"{Colors.RED}Error: Path not found: {args.file_path}{Colors.RESET}", file=sys.stderr)
@@ -2117,13 +2161,13 @@ def main():
             sys.exit(1)
 
         print(f"Scanning {len(log_files)} log file(s) (Multithreaded)...")
-        all_bps = []
+        all_bps: list[tuple[str, str | None]] = []
         work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for res in executor.map(process_log_file, work_items):
                 all_bps.extend(res)
         
-        unique_blueprints = sorted(list(set(all_bps)))
+        unique_blueprints = coalesce_discovered_blueprints(all_bps)
         source_name = f"direct log scan ({len(log_files)} file(s))"
 
     if not unique_blueprints:
@@ -2165,7 +2209,11 @@ def main():
             print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
 
     # Option 1: Local Cache Filter
-    to_import = [bp for bp in unique_blueprints if not is_blueprint_acquired(acquired_blueprints, bp)]
+    to_import = [
+        (bp, cid)
+        for bp, cid in unique_blueprints
+        if not is_blueprint_acquired(acquired_blueprints, bp)
+    ]
     skipped_count = len(unique_blueprints) - len(to_import)
 
     if skipped_count > 0:
@@ -2183,9 +2231,9 @@ def main():
     fail_count = 0
 
     if args.dry_run:
-        for idx, bp_id in enumerate(to_import, 1):
+        for idx, (bp_id, contract_id) in enumerate(to_import, 1):
             success_count += 1
-            resolved = resolve_blueprint_input(bp_id)
+            resolved = resolve_blueprint_input(bp_id, contract_id)
             label = bp_id
             if resolved.get("ok"):
                 label = f"{resolved['blueprint_name']} → {resolved['internal_name']}"
@@ -2193,9 +2241,11 @@ def main():
                 label = f"{bp_id} (ambiguous — would notify)"
             print(f"  [{idx}/{len(to_import)}] {Colors.GREEN}★ Would Import:{Colors.RESET} {label}")
     else:
-        for idx, bp_id in enumerate(to_import, 1):
+        for idx, (bp_id, contract_id) in enumerate(to_import, 1):
             try:
-                status, is_duplicate, internal_name, error_msg = post_blueprint_event(session, args.url, bp_id)
+                status, is_duplicate, internal_name, error_msg = post_blueprint_event(
+                    session, args.url, bp_id, contract_id
+                )
                 if status == 200:
                     if is_duplicate:
                         dupe_count += 1

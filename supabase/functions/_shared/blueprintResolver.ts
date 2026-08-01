@@ -31,10 +31,13 @@ export interface BlueprintResolveFailure {
 
 export type BlueprintResolveResult = BlueprintResolveSuccess | BlueprintResolveFailure
 
+/**
+ * Strip grade prefix (Civ/1/C …) only. Keep trailing quoted nicknames — they are part of
+ * catalog names (e.g. 5SA 'Rhada'), not optional flavor text.
+ */
 function normalizeDisplayKey(value: string): string {
   let val = value.trim().toLowerCase()
   val = val.replace(/^(?:civ|ind|mil|ste|com)\/[0-9]\/[a-d]\s+/i, '')
-  val = val.replace(/\s+'[^']+'\s*$/, '')
   return val.trim()
 }
 
