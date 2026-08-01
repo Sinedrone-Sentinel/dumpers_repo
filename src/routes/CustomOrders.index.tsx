@@ -49,7 +49,7 @@ import {
   fetchCustomOrders,
   fetchMemberReputations,
   fetchUserOrderLimits,
-  updateCustomOrderStatus,
+  cancelCustomOrderRequester,
   type CustomOrder,
   type CustomOrderStatus,
   type UserOrderLimits,
@@ -208,15 +208,6 @@ export default function CustomOrdersRoute() {
     if (search.tab) setListTab(search.tab)
   }, [search.tab])
 
-  const handleStatusChange = async (orderId: string, status: CustomOrderStatus) => {
-    const result = await updateCustomOrderStatus(orderId, status)
-    if (result.error) {
-      setError(result.error)
-      return
-    }
-    await loadOrders()
-  }
-
   const handleReleaseOrCancel = async (order: CustomOrder) => {
     if (shouldReleaseOrderToPool(order, userId)) {
       if (!window.confirm(releaseOrderConfirmMessage(order))) return
@@ -229,7 +220,12 @@ export default function CustomOrdersRoute() {
       return
     }
 
-    await handleStatusChange(order.id, 'cancelled')
+    const result = await cancelCustomOrderRequester(order.id)
+    if (result.error) {
+      setError(result.error)
+      return
+    }
+    await loadOrders()
   }
 
   const handleDeleteOrder = async (orderId: string) => {

@@ -1046,15 +1046,13 @@ export async function abandonCustomOrderFulfillment(
   return {}
 }
 
-export async function updateCustomOrderStatus(
-  orderId: string,
-  status: CustomOrderStatus
+/** Requester cancels a WTB deal that is past unaccepted-pending (uses RPC). */
+export async function cancelCustomOrderRequester(
+  orderId: string
 ): Promise<{ error?: string }> {
-  const { error } = await supabase
-    .from('custom_orders')
-    .update({ status, updated_at: new Date().toISOString() })
-    .eq('id', orderId)
-
+  const { error } = await supabase.rpc('cancel_custom_order_requester', {
+    p_order_id: orderId,
+  })
   if (error) return { error: error.message }
   return {}
 }
