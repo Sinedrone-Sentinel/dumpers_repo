@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { queueSupportEvent } from '../lib/discord'
 import AppModal from './layout/AppModal'
 import OfficerRatingModal from './OfficerRatingModal'
 import SupportTicketThread from './SupportTicketThread'
@@ -150,9 +149,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
         setMemberSearch('')
         setActiveTab('list')
         loadTickets()
-
-        // Queue Discord notification (fire and forget)
-        queueSupportEvent(data.ticket_id || 'unknown', category).catch(() => {})
+        // Discord staff alert is queued inside create_support_ticket (server-side).
       } else {
         throw new Error(data?.error || 'Failed to create ticket')
       }

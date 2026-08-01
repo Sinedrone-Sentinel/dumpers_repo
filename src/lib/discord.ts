@@ -120,36 +120,6 @@ export const DEFAULT_USER_DISCORD_EVENTS = [
   'my_support_resolved',
 ]
 
-export async function queueDiscordMessage(
-  eventType: DiscordEventType,
-  title: string,
-  description?: string,
-  color?: number,
-  fields?: DiscordField[],
-  targetUserId?: string | null,
-  actorUserId?: string | null
-): Promise<{ success: boolean; messageId?: string; error?: string }> {
-  try {
-    const { data, error } = await supabase.rpc('queue_discord_message', {
-      p_event_type: eventType,
-      p_title: title,
-      p_description: description ?? null,
-      p_color: color ?? DISCORD_COLORS[eventType as keyof typeof DISCORD_COLORS] ?? DISCORD_COLORS.info,
-      p_fields: fields ?? [],
-      p_target_user_id: targetUserId ?? null,
-      p_actor_user_id: actorUserId ?? null,
-    })
-
-    if (error) {
-      return { success: false, error: error.message }
-    }
-
-    return { success: true, messageId: data }
-  } catch (err) {
-    return { success: false, error: (err as Error).message }
-  }
-}
-
 export async function getDiscordSettings(): Promise<{
   success: boolean
   settings?: DiscordSettings
@@ -502,28 +472,3 @@ export async function processDiscordQueue(): Promise<{
   }
 }
 
-export async function queueSupportEvent(ticketId: string, category: string) {
-  return queueDiscordMessage(
-    'support',
-    'New Support Ticket',
-    'A new support ticket has been submitted',
-    DISCORD_COLORS.support,
-    [
-      { name: 'Category', value: category, inline: true },
-      { name: 'Ticket ID', value: ticketId.slice(0, 8), inline: true },
-    ]
-  )
-}
-
-export async function queueAdminEvent(
-  title: string,
-  description: string,
-  isError: boolean = false
-) {
-  return queueDiscordMessage(
-    'admin',
-    title,
-    description,
-    isError ? DISCORD_COLORS.error : DISCORD_COLORS.info
-  )
-}
