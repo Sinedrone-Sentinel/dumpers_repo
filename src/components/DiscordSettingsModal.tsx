@@ -12,6 +12,7 @@ import {
   DiscordWebhook,
   QueueStatus,
 } from '../lib/discord'
+import { postDumperServicesBotTest } from '../lib/dumperServicesBot'
 import AppModal from './layout/AppModal'
 
 export default function DiscordSettingsModal({ onClose }: { onClose: () => void }) {
@@ -27,6 +28,9 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
   const [officialUrl, setOfficialUrl] = useState('')
   const [officialName, setOfficialName] = useState('')
   const [coalesceMinutes, setCoalesceMinutes] = useState('15')
+  const [botTestChannelId, setBotTestChannelId] = useState('')
+  const [botTestCopyCount, setBotTestCopyCount] = useState('2')
+  const [postingBotTest, setPostingBotTest] = useState(false)
 
   useEffect(() => {
     fetchData()
@@ -513,6 +517,60 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Partnership bot smoke test — does not touch personal/market webhooks */}
+          <div className="rounded-xl border border-orange-500/30 bg-orange-950/20 p-4 space-y-3">
+            <div>
+              <h3 className="text-sm font-semibold text-orange-200">Dumper Services bot (test)</h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                Posts Accept-button messages for one harness request. Click Accept on one copy — others
+                should flip to Taken. See docs/DUMPER_SERVICES_BOT.md.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={botTestChannelId}
+                onChange={(e) => setBotTestChannelId(e.target.value)}
+                placeholder="Discord channel ID"
+                className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-orange-500/50"
+              />
+              <input
+                type="number"
+                min={1}
+                max={5}
+                value={botTestCopyCount}
+                onChange={(e) => setBotTestCopyCount(e.target.value)}
+                title="Message copies (simulated orgs)"
+                className="w-20 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-orange-500/50"
+              />
+              <button
+                type="button"
+                disabled={postingBotTest || !botTestChannelId.trim()}
+                onClick={async () => {
+                  setPostingBotTest(true)
+                  setMessage(null)
+                  const result = await postDumperServicesBotTest({
+                    channelId: botTestChannelId,
+                    copyCount: Number(botTestCopyCount) || 2,
+                    requesterLabel: 'sinedrone_sentinel',
+                  })
+                  if (result.success) {
+                    setMessage({
+                      type: 'success',
+                      text: `Posted ${result.posted_count} Accept message(s). request ${result.request_id}`,
+                    })
+                  } else {
+                    setMessage({ type: 'error', text: result.error || 'Bot test post failed' })
+                  }
+                  setPostingBotTest(false)
+                }}
+                className="shrink-0 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+              >
+                {postingBotTest ? 'Posting…' : 'Post test Accept'}
+              </button>
+            </div>
           </div>
         </div>
       )}

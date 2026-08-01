@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `136_rsi_bio_verify_challenge.sql` (RSI verify requires a short-lived code in the member’s public RSI bio). Apply through `136` in numeric order if catching up. Redeploy `validate-rsi-handle` after `136`. Also redeploy `send-discord` if you have not yet applied `130`.
+**Latest migration:** `137_dumper_services_bot_harness.sql` (Dumper Services Discord bot Accept harness). Apply through `137` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -167,6 +167,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 99 | `134_lock_queue_discord_message.sql` | Queue support Discord from `create_support_ticket`; revoke authenticated execute on `queue_discord_message` |
 | 100 | `135_marketplace_rls_rpc_only_writes.sql` | Replace marketplace FOR ALL RLS with SELECT; `cancel_custom_order_requester` for former client status updates |
 | 101 | `136_rsi_bio_verify_challenge.sql` | Bio-code RSI verification (`issue_rsi_verify_challenge` / Edge scrape of public citizen Bio); officer `admin_force_rsi_handle_verified` escape hatch |
+| 102 | `137_dumper_services_bot_harness.sql` | Partnership Discord bot test harness (first-wins Accept); does not touch personal/market webhooks |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -194,6 +195,8 @@ npx supabase functions deploy validate-rsi-handle
 npx supabase functions deploy send-discord
 npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
+npx supabase functions deploy discord-services-interactions --no-verify-jwt
+npx supabase functions deploy discord-services-post-test
 ```
 
 | Function | Purpose |
@@ -203,6 +206,10 @@ npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 | `validate-rsi-handle` | Verify RSI Handles via public citizen Bio challenge code (after `issue_rsi_verify_challenge`) |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 | `log-watcher-webhook` | Receives blueprint events from external tools; Bearer API key auth |
+| `discord-services-interactions` | Partnership Dumper Services bot (Accept buttons); Discord signature auth |
+| `discord-services-post-test` | Super-admin harness: post N Accept messages for race testing |
+
+Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
 Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
 

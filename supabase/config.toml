@@ -2,3 +2,9 @@
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/log-watcher-webhook/index.ts"
+
+# Discord POSTs interactions with ed25519 signatures (no Supabase JWT).
+[functions.discord-services-interactions]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/discord-services-interactions/index.ts"
