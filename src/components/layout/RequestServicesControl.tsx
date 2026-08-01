@@ -104,6 +104,9 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
 
   if (!isApproved || !verified) return null
 
+  const freeServices = services.filter((s) => s.pricing_tier === 'FREE')
+  const feeServices = services.filter((s) => s.pricing_tier !== 'FREE')
+
   const onSubmitCompose = async () => {
     if (!compose) return
     setSubmitting(true)
@@ -111,6 +114,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
     const result = await requestService({
       serviceTypeId: compose.id,
       details,
+      pricingTier: compose.pricing_tier === 'FREE' ? 'FREE' : 'FEE',
       screenshotFile: compose.service_kind === 'informative' ? screenshot?.blob : null,
       screenshotMime: screenshot?.mime,
     })
@@ -195,34 +199,32 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
                 Sorry, No Services are being offered at this time.
               </p>
             ) : (
-              <ul>
-                {services.map((s) => (
-                  <li key={s.id} className="border-t border-slate-800 first:border-t-0">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCompose(s)
-                        setDetails('')
-                        setFormError(null)
-                        clearScreenshot()
-                      }}
-                      className="w-full text-left px-3 py-2.5 hover:bg-slate-800/80 transition-colors"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm text-slate-100 font-medium">{s.label}</span>
-                        <span className="text-[10px] text-slate-500 tabular-nums">
-                          {s.service_kind === 'informative' ? 'tip' : 'accept'} · {s.partner_count}
-                        </span>
-                      </div>
-                      {s.description ? (
-                        <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-                          {s.description}
-                        </p>
-                      ) : null}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <div>
+                {freeServices.length > 0 ? (
+                  <ServiceTierSection
+                    title="FREE SERVICES"
+                    services={freeServices}
+                    onPick={(s) => {
+                      setCompose(s)
+                      setDetails('')
+                      setFormError(null)
+                      clearScreenshot()
+                    }}
+                  />
+                ) : null}
+                {feeServices.length > 0 ? (
+                  <ServiceTierSection
+                    title="FEE SERVICES"
+                    services={feeServices}
+                    onPick={(s) => {
+                      setCompose(s)
+                      setDetails('')
+                      setFormError(null)
+                      clearScreenshot()
+                    }}
+                  />
+                ) : null}
+              </div>
             )}
           </div>
         </div>
@@ -230,11 +232,15 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
 
       {compose && (
         <AppModal
-          title={compose.label}
+          title={`${compose.label} · ${compose.pricing_tier === 'FREE' ? 'FREE' : 'FEE'}`}
           subtitle={
             compose.service_kind === 'informative'
-              ? 'Intel tip · no Accept · screenshot required'
-              : 'Partner Accept · first wins'
+              ? compose.pricing_tier === 'FREE'
+                ? 'FREE tip · no Accept · screenshot required'
+                : 'FEE tip · no Accept · screenshot required'
+              : compose.pricing_tier === 'FREE'
+                ? 'FREE · partner Accept · first wins'
+                : 'FEE · partner Accept · first wins'
           }
           onClose={resetCompose}
           size="md"
@@ -347,6 +353,57 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
           <p className="text-sm text-slate-300 leading-relaxed">{deliveredModal.detail}</p>
         </AppModal>
       )}
+    </div>
+  )
+}
+
+function ServiceTierSection({
+  title,
+  services,
+  onPick,
+}: {
+  title: string
+  services: RequestableServiceType[]
+  onPick: (s: RequestableServiceType) => void
+}) {
+  const isFree = title.startsWith('FREE')
+  return (
+    <div>
+      <div
+        className={`px-3 py-1.5 border-t border-b border-slate-800 ${
+          isFree ? 'bg-emerald-950/40' : 'bg-slate-800/50'
+        }`}
+      >
+        <p
+          className={`text-[10px] font-semibold tracking-wide uppercase ${
+            isFree ? 'text-emerald-300/90' : 'text-orange-300/90'
+          }`}
+        >
+          {title}
+        </p>
+      </div>
+      <ul>
+        {services.map((s) => (
+          <li key={`${s.id}-${s.pricing_tier}`} className="border-t border-slate-800 first:border-t-0">
+            <button
+              type="button"
+              onClick={() => onPick(s)}
+              className="w-full text-left px-3 py-2.5 hover:bg-slate-800/80 transition-colors"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm text-slate-100 font-medium">{s.label}</span>
+                <span className="text-[10px] text-slate-500 tabular-nums">
+                  {s.pricing_tier === 'FREE' ? 'FREE' : 'FEE'} ·{' '}
+                  {s.service_kind === 'informative' ? 'tip' : 'accept'} · {s.partner_count}
+                </span>
+              </div>
+              {s.description ? (
+                <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{s.description}</p>
+              ) : null}
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

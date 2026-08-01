@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `142_service_catalog_kinds.sql` (Partnership service kinds, details, timers, tip screenshots). Apply through `142` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `143_service_request_pricing_tiers.sql` (FREE vs FEE Request Services routing). Apply through `143` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -173,6 +173,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 105 | `140_service_requests.sql` | Member service requests, delivery fan-out, first-wins Accept + requester notification (org + pricing) |
 | 106 | `141_support_other_and_new_service.sql` | Support ticket categories: Other, Add New Service Request |
 | 107 | `142_service_catalog_kinds.sql` | Service kinds (actionable/informative), catalog seeds, 30m/31m timers, tip screenshot storage |
+| 108 | `143_service_request_pricing_tiers.sql` | FREE vs FEE request tiers — list/notify split by partner pricing_label |
 
 ### pg_cron (migrations 054, 065–068)
 

@@ -71,17 +71,26 @@ export function parseAcceptCustomId(customId: string | undefined | null): string
   return id
 }
 
+export function pricingTierFromLabel(pricingLabel?: string | null): 'FREE' | 'FEE' {
+  const normalized = (pricingLabel || 'FREE').trim().toUpperCase()
+  return normalized === 'FREE' || normalized === '' ? 'FREE' : 'FEE'
+}
+
 export function buildAcceptMessagePayload(opts: {
   requestId: string
   serviceLabel: string
   requesterLabel: string
   pricingLabel?: string
+  /** Member-selected tier (FREE vs FEE). Derived from pricingLabel when omitted. */
+  pricingTier?: 'FREE' | 'FEE'
   orgName?: string
   details?: string
   footerNote?: string
 }): Record<string, unknown> {
+  const tier = opts.pricingTier || pricingTierFromLabel(opts.pricingLabel)
   const fields: Array<{ name: string; value: string; inline?: boolean }> = [
     { name: 'Service', value: opts.serviceLabel, inline: true },
+    { name: 'Request type', value: tier, inline: true },
     { name: 'Requester RSI', value: opts.requesterLabel, inline: true },
   ]
   if (opts.pricingLabel) {
@@ -99,9 +108,12 @@ export function buildAcceptMessagePayload(opts: {
     content: null,
     embeds: [
       {
-        title: 'Dumper Services — Service Request',
-        description: 'A member needs help. First org to **Accept** wins.',
-        color: 0xf97316,
+        title: `Dumper Services — Service Request · ${tier}`,
+        description:
+          tier === 'FREE'
+            ? 'A member requested **FREE** help. First org to **Accept** wins.'
+            : 'A member requested **FEE**-based help. First org to **Accept** wins.',
+        color: tier === 'FREE' ? 0x22c55e : 0xf97316,
         fields,
         footer: {
           text: opts.footerNote || "Dumper's Repo · Partnership bot",
@@ -213,9 +225,13 @@ export function buildTipMessagePayload(opts: {
   requesterLabel: string
   details: string
   orgName?: string
+  pricingLabel?: string
+  pricingTier?: 'FREE' | 'FEE'
 }): Record<string, unknown> {
+  const tier = opts.pricingTier || pricingTierFromLabel(opts.pricingLabel)
   const fields: Array<{ name: string; value: string; inline?: boolean }> = [
     { name: 'Tip type', value: opts.serviceLabel, inline: true },
+    { name: 'Request type', value: tier, inline: true },
     { name: 'Reporter RSI', value: opts.requesterLabel, inline: true },
   ]
   if (opts.orgName) {
@@ -230,10 +246,10 @@ export function buildTipMessagePayload(opts: {
     content: null,
     embeds: [
       {
-        title: 'Dumper Services — Intel tip',
+        title: `Dumper Services — Intel tip · ${tier}`,
         description:
           'Informational tip — **no Accept**. Use the screenshot (starmap + `r_DisplayInfo 3`) for shard/location.',
-        color: 0x38bdf8,
+        color: tier === 'FREE' ? 0x22c55e : 0x38bdf8,
         fields,
         footer: { text: "Dumper's Repo · Partnership tip" },
         timestamp: new Date().toISOString(),

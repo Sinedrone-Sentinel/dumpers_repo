@@ -177,6 +177,7 @@ serve(async (req) => {
             requesterLabel: requesterRsi,
             details,
             orgName,
+            pricingLabel,
           })
         : buildAcceptMessagePayload({
             requestId,

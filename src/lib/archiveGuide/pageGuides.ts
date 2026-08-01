@@ -306,8 +306,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Visible in the avatar menu (above Sign Out) only when your RSI Handle is verified',
       'Partnership means: members request a service from the site; partner Discord channels get the ping; first Accept wins',
-      'Use Request Services (next to notifications) — only services offered by at least one partner org are listed; if none, you’ll see “Sorry, No Services are being offered at this time.”',
-      'Actionable requests (medical, security, refuel, repair, CrimeStat, prison pickup, transport) need a short details note (max 250 chars); first Discord Accept wins within 30 minutes; 31-minute cooldown per service',
+      'Use Request Services (next to notifications) — services split into **FREE SERVICES** and **FEE SERVICES**; the same type (e.g. Medical) can appear in both when some orgs offer FREE and others charge',
+      'FREE requests only notify orgs that list that service as FREE; FEE requests only notify orgs that list a fee — Discord shows FREE or FEE for which option you clicked',
+      'If nothing is offered you’ll see “Sorry, No Services are being offered at this time.”',
+      'Actionable requests (medical, security, refuel, repair, CrimeStat, prison pickup, transport) need a short details note (max 250 chars); first Discord Accept wins; cooldown is per service × FREE/FEE',
       'Intel tips (report salvage / report pirate) need details + a Ctrl+V starmap screenshot with r_DisplayInfo 3 — no Accept; tip data is deleted after Discord delivery',
       'Apply with your RSI org page URL (Org SID fills in automatically), org name, and role — staff check Spectrum/RSI evidence before approval',
       'Submitting creates a Partnership Application Support ticket (staff Discord support ping)',

@@ -11,7 +11,7 @@ Partnership-only bot for **Accept** on service requests. Does **not** replace pe
 
 Harness tables: `dumper_services_bot_test_*` (migration `137`). Live tables: `service_requests` + `service_request_deliveries` (migration `140`).
 
-**Live flow:** site `request_service` → Edge `discord-services-dispatch` (resolve partner webhook → bot posts Accept) → Interactions `accept_service_request` (first-wins) → `service_request_accepted` notification with `org_name` + `pricing_label` + `service_label`.
+**Live flow:** site `request_service` (FREE or FEE tier) → Edge `discord-services-dispatch` (only matching-tier partner webhooks; embed shows **FREE**/**FEE**) → Interactions `accept_service_request` (first-wins) → `service_request_accepted` notification with `org_name` + `pricing_label` + `service_label`.
 
 **Partner setup:** webhook URL on the service **and** invite the bot into that Discord server (**Send Messages + Embed Links + Attach Files**). Attach Files is required for salvage/pirate tip screenshots. After approval, `/partnership` loads the invite URL from Edge `discord-services-bot-invite` (secret `DISCORD_SERVICES_APPLICATION_ID`).
 

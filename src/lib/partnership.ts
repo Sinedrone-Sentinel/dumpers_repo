@@ -182,10 +182,14 @@ export async function upsertPartnerOrgService(input: {
   return { success: true }
 }
 
+export type ServicePricingTier = 'FREE' | 'FEE'
+
 export type RequestableServiceType = ServiceType & {
   partner_count: number
   service_kind: ServiceKind
   details_hint?: string | null
+  /** FREE or FEE — same catalog type may appear once per tier. */
+  pricing_tier: ServicePricingTier
 }
 
 export type NotifiedPartnerOrg = {
@@ -197,7 +201,10 @@ export type NotifiedPartnerOrg = {
 export async function listRequestableServiceTypes(): Promise<RequestableServiceType[]> {
   const { data, error } = await supabase.rpc('list_requestable_service_types')
   if (error) return []
-  return (data as RequestableServiceType[]) ?? []
+  return ((data as RequestableServiceType[]) ?? []).map((row) => ({
+    ...row,
+    pricing_tier: row.pricing_tier === 'FREE' ? 'FREE' : 'FEE',
+  }))
 }
 
 const MAX_SCREENSHOT_BYTES = 8 * 1024 * 1024
@@ -211,6 +218,7 @@ function extForMime(mime: string): string {
 export async function requestService(input: {
   serviceTypeId: string
   details: string
+  pricingTier: ServicePricingTier
   screenshotFile?: File | Blob | null
   screenshotMime?: string
 }): Promise<{
@@ -220,6 +228,7 @@ export async function requestService(input: {
   request_id?: string
   service_label?: string
   service_kind?: ServiceKind
+  pricing_tier?: ServicePricingTier
   notified_orgs?: NotifiedPartnerOrg[]
   delivery_count?: number
   posted_count?: number
@@ -230,10 +239,12 @@ export async function requestService(input: {
   if (!details || details.length > 250) {
     return { success: false, error: 'Details required (1–250 characters)' }
   }
+  const pricingTier = input.pricingTier === 'FREE' ? 'FREE' : 'FEE'
 
   const { data, error } = await supabase.rpc('request_service', {
     p_service_type_id: input.serviceTypeId,
     p_details: details,
+    p_pricing_tier: pricingTier,
   })
   if (error) return { success: false, error: error.message }
   const row = data as {

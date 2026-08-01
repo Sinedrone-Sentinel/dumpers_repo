@@ -393,8 +393,9 @@ function PartnershipExplainer() {
       <p className="text-slate-400 text-sm leading-relaxed">
         Approved orgs can offer help to Dumper&apos;s Repo members — medical respawn/evac, stuck
         lifts, security escort, ship salvage, and other catalog services. Members tap{' '}
-        <strong className="text-slate-300">Request Services</strong> (next to notifications);
-        partner Discord channels get the ping; the first org to Accept wins the job.
+        <strong className="text-slate-300">Request Services</strong> (next to notifications) under{' '}
+        <strong className="text-slate-300">FREE</strong> or <strong className="text-slate-300">FEE</strong>{' '}
+        — only orgs whose listed pricing matches that choice get the ping; first Accept wins.
       </p>
       <p className="text-slate-400 text-sm leading-relaxed">
         When someone Accepts, the requester gets a site modal naming{' '}
