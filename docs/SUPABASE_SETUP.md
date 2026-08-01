@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `132_protect_profile_privileged_columns.sql` (block client updates to profile `role` / approval / RSI verified columns; Admin Panel uses `admin_set_user_role`). Apply through `132` in numeric order if catching up. Also redeploy `send-discord` if you have not yet applied `130`.
+**Latest migration:** `133_lock_mark_rsi_handle_verified.sql` (`mark_rsi_handle_verified` is service_role / Edge Function only). Apply through `133` in numeric order if catching up. Also redeploy `send-discord` if you have not yet applied `130`.
 
 ---
 
@@ -163,6 +163,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 95 | `130_discord_webhook_hardening.sql` | Drop open `discord_webhooks` INSERT RLS; `get_discord_settings` returns `official_webhook_url` only to super-admins and service_role |
 | 96 | `131_questionnaire_public_poll_ticker.sql` | `public_results` on questionnaires; publish anonymous option tallies to What's New ticker on archive or soft expiry (hourly cron when pg_cron available) |
 | 97 | `132_protect_profile_privileged_columns.sql` | Trigger blocks client UPDATE of `role` / `approved_*` / `rsi_handle_verified*`; drop officer FOR ALL profile policy; `admin_set_user_role` for Admin Panel |
+| 98 | `133_lock_mark_rsi_handle_verified.sql` | Revoke client execute on `mark_rsi_handle_verified`; service_role / `validate-rsi-handle` Edge Function only |
 
 ### pg_cron (migrations 054, 065–068)
 
