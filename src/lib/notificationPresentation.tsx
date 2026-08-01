@@ -3,6 +3,7 @@ export type NotificationVisualVariant = 'success' | 'error' | null
 const LOG_WATCHER_TYPES: Record<string, NotificationVisualVariant> = {
   log_watcher_blueprint_acquired: 'success',
   log_watcher_ambiguous_blueprint: 'error',
+  service_request_accepted: 'success',
 }
 
 export function getNotificationVisual(type: string): NotificationVisualVariant {

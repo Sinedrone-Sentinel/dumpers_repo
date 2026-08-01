@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `137_dumper_services_bot_harness.sql` (Dumper Services Discord bot Accept harness). Apply through `137` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `142_service_catalog_kinds.sql` (Partnership service kinds, details, timers, tip screenshots). Apply through `142` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -168,6 +168,11 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 100 | `135_marketplace_rls_rpc_only_writes.sql` | Replace marketplace FOR ALL RLS with SELECT; `cancel_custom_order_requester` for former client status updates |
 | 101 | `136_rsi_bio_verify_challenge.sql` | Bio-code RSI verification (`issue_rsi_verify_challenge` / Edge scrape of public citizen Bio); officer `admin_force_rsi_handle_verified` escape hatch |
 | 102 | `137_dumper_services_bot_harness.sql` | Partnership Discord bot test harness (first-wins Accept); does not touch personal/market webhooks |
+| 103 | `138_partnership_support_category.sql` | Adds `partnership_application` support ticket category |
+| 104 | `139_partner_org_services.sql` | Partner applications (support ticket + Discord notify), service_types catalog, partner org services/webhooks |
+| 105 | `140_service_requests.sql` | Member service requests, delivery fan-out, first-wins Accept + requester notification (org + pricing) |
+| 106 | `141_support_other_and_new_service.sql` | Support ticket categories: Other, Add New Service Request |
+| 107 | `142_service_catalog_kinds.sql` | Service kinds (actionable/informative), catalog seeds, 30m/31m timers, tip screenshot storage |
 
 ### pg_cron (migrations 054, 065–068)
 

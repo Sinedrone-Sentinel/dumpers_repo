@@ -9,6 +9,7 @@ export type NotificationCategoryId =
   | 'mining'
   | 'ratings'
   | 'questionnaires'
+  | 'services'
   | 'other'
 
 export interface NotificationCategoryDefinition {
@@ -25,6 +26,7 @@ export const NOTIFICATION_CATEGORIES: NotificationCategoryDefinition[] = [
   { id: 'mining', label: 'Mining Ledgers' },
   { id: 'ratings', label: 'Ratings' },
   { id: 'questionnaires', label: 'Questionnaires' },
+  { id: 'services', label: 'Partner Services' },
   { id: 'other', label: 'Other' },
 ]
 
@@ -68,6 +70,7 @@ export function getNotificationCategoryId(notification: UserNotification): Notif
   if (type.startsWith('mining_ledger')) return 'mining'
   if (type.startsWith('rating_')) return 'ratings'
   if (type === 'questionnaire_available') return 'questionnaires'
+  if (type === 'service_request_accepted' || type.startsWith('service_request_')) return 'services'
 
   if (ORDER_TYPES.has(type)) {
     return isWtsOrderNotification(notification) ? 'wts-listings' : 'wtb-orders'

@@ -8,6 +8,7 @@ import type { NavGroup } from '../../config/appNav'
 import type { Profile } from '../../lib/supabase'
 import AppSidebar from './AppSidebar'
 import AppNotificationBell from './AppNotificationBell'
+import RequestServicesControl from './RequestServicesControl'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
 import UpdateAvailableBanner from './UpdateAvailableBanner'
@@ -15,6 +16,7 @@ import SignInMenu from '../auth/SignInMenu'
 import { useAppUpdateAvailable } from '../../hooks/useAppUpdateAvailable'
 import { getLiveGameVersionLabel } from '../../lib/gameBuildVersion'
 import SiteTicker from './SiteTicker'
+import ServiceRequestAcceptedListener from '../ServiceRequestAcceptedListener'
 import {
   buildSiteTickerItems,
   fetchActiveWhatsNewEntries,
@@ -141,6 +143,7 @@ export default function AppChrome({
                 <SignInMenu />
               ) : (
                 <>
+                  <RequestServicesControl disabled={isPending} />
                   <AppNotificationBell
                     disabled={isPending}
                     onOpenQuestionnaire={onOpenQuestionnaire}
@@ -188,6 +191,7 @@ export default function AppChrome({
         items={tickerItems}
         onOpenQuestionnaire={(id) => onOpenQuestionnaire?.(id)}
       />
+      {!isGuestPreview && !isPending ? <ServiceRequestAcceptedListener /> : null}
     </div>
   )
 }

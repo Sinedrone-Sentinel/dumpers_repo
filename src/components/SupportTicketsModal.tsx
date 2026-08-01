@@ -5,7 +5,16 @@ import AppModal from './layout/AppModal'
 import OfficerRatingModal from './OfficerRatingModal'
 import SupportTicketThread from './SupportTicketThread'
 
-type TicketCategory = 'bug_report' | 'member_report' | 'rsi_verification'
+/** Categories members can pick when filing a new ticket (not system-only ones). */
+type MemberTicketCategory =
+  | 'bug_report'
+  | 'member_report'
+  | 'rsi_verification'
+  | 'add_new_service_request'
+  | 'other'
+
+/** Any category that may appear on an existing ticket (includes system-created). */
+type TicketCategory = MemberTicketCategory | 'partnership_application'
 type TicketStatus = 'open' | 'assigned' | 'pending_user' | 'resolved'
 type ResolvedBy = 'officer' | 'member' | null
 
@@ -32,12 +41,26 @@ const CATEGORY_LABELS: Record<TicketCategory, string> = {
   bug_report: 'Bug Report',
   member_report: 'Report Member',
   rsi_verification: 'RSI Verification Issue',
+  add_new_service_request: 'Add New Service Request',
+  other: 'Other',
+  partnership_application: 'Partnership Application',
 }
 
-const CATEGORY_DESCRIPTIONS: Record<TicketCategory, string> = {
+const MEMBER_NEW_CATEGORIES: MemberTicketCategory[] = [
+  'bug_report',
+  'member_report',
+  'rsi_verification',
+  'add_new_service_request',
+  'other',
+]
+
+const CATEGORY_DESCRIPTIONS: Record<MemberTicketCategory, string> = {
   bug_report: 'Report a bug or technical issue with the site.',
   member_report: 'Report inappropriate behavior from another member.',
   rsi_verification: 'Issues with RSI Handle verification (e.g., handle shows as already in use).',
+  add_new_service_request:
+    'Ask officers to add a new Partnership service type to the catalog (e.g. a service orgs cannot offer yet).',
+  other: 'Anything else that does not fit the categories above.',
 }
 
 const STATUS_STYLES: Record<TicketStatus, string> = {
@@ -63,7 +86,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
   const [ratingTicket, setRatingTicket] = useState<Ticket | null>(null)
   
   // New ticket form
-  const [category, setCategory] = useState<TicketCategory>('bug_report')
+  const [category, setCategory] = useState<MemberTicketCategory>('bug_report')
   const [subject, setSubject] = useState('')
   const [content, setContent] = useState('')
   const [reportedUserId, setReportedUserId] = useState<string | null>(null)
@@ -337,15 +360,15 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
             <select
               value={category}
               onChange={(e) => {
-                setCategory(e.target.value as TicketCategory)
+                setCategory(e.target.value as MemberTicketCategory)
                 setReportedUserId(null)
                 setMemberSearch('')
               }}
               className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-red-500/50"
             >
-              {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
+              {MEMBER_NEW_CATEGORIES.map((value) => (
                 <option key={value} value={value}>
-                  {label}
+                  {CATEGORY_LABELS[value]}
                 </option>
               ))}
             </select>

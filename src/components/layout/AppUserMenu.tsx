@@ -509,6 +509,15 @@ export default function AppUserMenu({
                 Support
               </button>
             )}
+            {profile?.rsi_handle_verified && !isPending && (
+              <Link
+                to="/partnership"
+                onClick={close}
+                className="block w-full px-4 py-2 text-left text-orange-300 hover:bg-slate-700 transition-colors"
+              >
+                Partnership
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => {

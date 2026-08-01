@@ -9,7 +9,15 @@ Partnership-only bot for **Accept** on service requests. Does **not** replace pe
 3. **First click wins** in Postgres; late clicks get “already taken”.
 4. Sibling Discord messages for the same request update to Accepted / Taken.
 
-Harness tables: `dumper_services_bot_test_*` (migration `137`). Real Partnership `service_requests` come later.
+Harness tables: `dumper_services_bot_test_*` (migration `137`). Live tables: `service_requests` + `service_request_deliveries` (migration `140`).
+
+**Live flow:** site `request_service` → Edge `discord-services-dispatch` (resolve partner webhook → bot posts Accept) → Interactions `accept_service_request` (first-wins) → `service_request_accepted` notification with `org_name` + `pricing_label` + `service_label`.
+
+**Partner setup:** webhook URL on the service **and** invite the bot into that Discord server (**Send Messages + Embed Links + Attach Files**). Attach Files is required for salvage/pirate tip screenshots.
+
+**Timers:** actionable Accept window **30 minutes** (then red Timed out on all copies); member cooldown **31 minutes** per service. Informative tips purge from DB after Discord delivery.
+
+**Expire cron (optional):** call Edge `discord-services-expire` with `Authorization: Bearer <SERVICE_ROLE_KEY>` on a schedule (e.g. every 5 min) so Timed out patches do not wait for a late Accept click.
 
 ## Discord Developer Portal (you)
 
@@ -37,9 +45,11 @@ Project Settings → Edge Functions → Secrets:
 ## Deploy
 
 ```bash
-# Apply migration 137 in SQL Editor first
+# Apply migrations 137 + 140 in SQL Editor first
 
 npx supabase functions deploy discord-services-interactions --no-verify-jwt
+npx supabase functions deploy discord-services-dispatch
+npx supabase functions deploy discord-services-expire --no-verify-jwt
 npx supabase functions deploy discord-services-post-test
 ```
 
@@ -65,7 +75,7 @@ If the Interactions URL fails validation in the portal, the public key secret or
 ## Invite URL (after Application ID is set)
 
 ```
-https://discord.com/api/oauth2/authorize?client_id=<APPLICATION_ID>&permissions=2048&scope=bot
+https://discord.com/api/oauth2/authorize?client_id=<APPLICATION_ID>&permissions=51200&scope=bot
 ```
 
-`2048` = Send Messages. Add `16384` (Embed Links) → `18432` if you prefer both.
+`51200` = Send Messages (`2048`) + Embed Links (`16384`) + Attach Files (`32768`). Re-invite if the bot was added without Attach Files.

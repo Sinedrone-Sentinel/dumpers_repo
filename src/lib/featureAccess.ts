@@ -18,6 +18,7 @@ export type FeatureId =
   | 'site_analytics'
   | 'mining_tracker'
   | 'commodity_lookup'
+  | 'partnership'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -114,6 +115,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'commodity_lookup':
       return !!ctx.role
+
+    case 'partnership':
+      return ctx.isApproved
 
     default:
       return false

@@ -67,7 +67,26 @@ export function buildAcceptMessagePayload(opts: {
   requestId: string
   serviceLabel: string
   requesterLabel: string
+  pricingLabel?: string
+  orgName?: string
+  details?: string
+  footerNote?: string
 }): Record<string, unknown> {
+  const fields: Array<{ name: string; value: string; inline?: boolean }> = [
+    { name: 'Service', value: opts.serviceLabel, inline: true },
+    { name: 'Requester RSI', value: opts.requesterLabel, inline: true },
+  ]
+  if (opts.pricingLabel) {
+    fields.push({ name: 'Your listed pricing', value: opts.pricingLabel, inline: true })
+  }
+  if (opts.orgName) {
+    fields.push({ name: 'Partner org', value: opts.orgName, inline: true })
+  }
+  if (opts.details) {
+    fields.push({ name: 'Details', value: opts.details.slice(0, 1024), inline: false })
+  }
+  fields.push({ name: 'Request ID', value: `\`${opts.requestId}\``, inline: false })
+
   return {
     content: null,
     embeds: [
@@ -75,12 +94,10 @@ export function buildAcceptMessagePayload(opts: {
         title: 'Dumper Services — Service Request',
         description: 'A member needs help. First org to **Accept** wins.',
         color: 0xf97316,
-        fields: [
-          { name: 'Service', value: opts.serviceLabel, inline: true },
-          { name: 'Requester RSI', value: opts.requesterLabel, inline: true },
-          { name: 'Request ID', value: `\`${opts.requestId}\``, inline: false },
-        ],
-        footer: { text: "Dumper's Repo · Partnership bot test" },
+        fields,
+        footer: {
+          text: opts.footerNote || "Dumper's Repo · Partnership bot",
+        },
         timestamp: new Date().toISOString(),
       },
     ],
@@ -97,6 +114,29 @@ export function buildAcceptMessagePayload(opts: {
         ],
       },
     ],
+  }
+}
+
+/** Resolve channel_id from a Discord incoming webhook URL. */
+export async function resolveWebhookChannel(
+  webhookUrl: string
+): Promise<{ channel_id: string; guild_id: string | null } | { error: string }> {
+  try {
+    const res = await fetch(webhookUrl)
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      return { error: data.message || `Webhook lookup failed (${res.status})` }
+    }
+    const channelId = String(data.channel_id || '')
+    if (!/^\d{5,30}$/.test(channelId)) {
+      return { error: 'Webhook has no channel_id' }
+    }
+    return {
+      channel_id: channelId,
+      guild_id: data.guild_id ? String(data.guild_id) : null,
+    }
+  } catch (err) {
+    return { error: (err as Error).message || 'Webhook lookup failed' }
   }
 }
 
@@ -144,6 +184,108 @@ function takenEmbed(acceptedByUsername: string, serviceLabel: string, requesterL
     ],
     footer: { text: "Dumper's Repo · Partnership bot" },
   }
+}
+
+export function timedOutEmbed(serviceLabel: string, requesterLabel: string) {
+  return {
+    title: 'Dumper Services — Timed out',
+    description: 'This request expired with **no Accept** (30 minutes).',
+    color: 0xef4444,
+    fields: [
+      { name: 'Service', value: serviceLabel, inline: true },
+      { name: 'Requester RSI', value: requesterLabel, inline: true },
+    ],
+    footer: { text: "Dumper's Repo · Partnership bot" },
+  }
+}
+
+/** Informative tip embed (no Accept button). */
+export function buildTipMessagePayload(opts: {
+  serviceLabel: string
+  requesterLabel: string
+  details: string
+  orgName?: string
+}): Record<string, unknown> {
+  const fields: Array<{ name: string; value: string; inline?: boolean }> = [
+    { name: 'Tip type', value: opts.serviceLabel, inline: true },
+    { name: 'Reporter RSI', value: opts.requesterLabel, inline: true },
+  ]
+  if (opts.orgName) {
+    fields.push({ name: 'Partner org', value: opts.orgName, inline: true })
+  }
+  fields.push({
+    name: 'Details',
+    value: opts.details.slice(0, 1024) || '—',
+    inline: false,
+  })
+  return {
+    content: null,
+    embeds: [
+      {
+        title: 'Dumper Services — Intel tip',
+        description:
+          'Informational tip — **no Accept**. Use the screenshot (starmap + `r_DisplayInfo 3`) for shard/location.',
+        color: 0x38bdf8,
+        fields,
+        footer: { text: "Dumper's Repo · Partnership tip" },
+        timestamp: new Date().toISOString(),
+      },
+    ],
+    components: [],
+  }
+}
+
+export async function markMessagesTimedOut(opts: {
+  botToken: string
+  serviceLabel: string
+  requesterLabel: string
+  messages: TestMessageRef[]
+}): Promise<void> {
+  const body = {
+    content: null,
+    embeds: [timedOutEmbed(opts.serviceLabel, opts.requesterLabel)],
+    components: [],
+  }
+  for (const msg of opts.messages) {
+    try {
+      await discordBotFetch(`/channels/${msg.channel_id}/messages/${msg.message_id}`, opts.botToken, {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      })
+    } catch (err) {
+      console.error('Failed to patch timed-out Discord message', msg, err)
+    }
+  }
+}
+
+/** Post JSON or multipart (file) message to a channel. */
+export async function discordBotPostMessage(
+  channelId: string,
+  botToken: string,
+  payload: Record<string, unknown>,
+  file?: { bytes: Uint8Array; filename: string; contentType: string }
+): Promise<Response> {
+  if (!file) {
+    return discordBotFetch(`/channels/${channelId}/messages`, botToken, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+  }
+
+  const form = new FormData()
+  form.append('payload_json', JSON.stringify(payload))
+  form.append(
+    'files[0]',
+    new Blob([file.bytes.buffer.slice(file.bytes.byteOffset, file.bytes.byteOffset + file.bytes.byteLength)], {
+      type: file.contentType,
+    }),
+    file.filename
+  )
+  return fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
+    method: 'POST',
+    headers: { Authorization: `Bot ${botToken}` },
+    body: form,
+  })
 }
 
 /** After first-wins: update winner message, strip/disable losers. */

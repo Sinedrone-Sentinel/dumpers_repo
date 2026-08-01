@@ -103,6 +103,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/orders')) return 'custom_orders'
   if (pathname.startsWith('/bazaar')) return 'fulfillment'
   if (pathname.startsWith('/archive')) return 'archive'
+  if (pathname.startsWith('/partnership')) return 'partnership'
   if (pathname.startsWith('/guest-locked')) return 'guest_locked'
 
   return null
@@ -254,6 +255,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   custom_orders: 'My Listings',
   fulfillment: 'The Bazaar',
   archive: 'Info Archive',
+  partnership: 'Partnership',
   guest_locked: 'Guest Locked',
 }
 
@@ -272,6 +274,10 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   archive: 'Archived Orders',
   fulfillment: 'WTB Fulfillment',
   store: 'WTS Store',
+  apply: 'Apply',
+  applications: 'Applications',
+  manage: 'Manage services',
+  officer_pending: 'Pending review',
   welcome: 'Overview',
   components: 'Components',
   ordnance: 'Ordnance',

@@ -44,11 +44,12 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
 | `/discord-subscribe` | Discord Webhooks | Signed-in members |
+| `/partnership` | Org Partnership | Approved members (RSI verified to apply/manage) |
 | `/support-dashboard` | Support Dashboard | Officers + super-admins |
 | `/analytics` | Site Analytics | Super-admins |
 | `/guest-locked` | Feature preview gate | Offline users (locked features) |
 
-Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**, **Sign out**. Officers also get **Admin Panel**; super-admins get **DB Actions** and **Discord** (queue/admin webhooks).
+Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**, **Partnership** (RSI verified), **Sign out**. Officers also get **Admin Panel**; super-admins get **DB Actions** and **Discord** (queue/admin webhooks).
 
 ---
 
@@ -197,9 +198,18 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 ### Support
 
-- Members file tickets from the avatar menu (bugs, behavior reports, RSI verification help)
+- Members file tickets from the avatar menu (bugs, behavior reports, RSI verification help, add new partnership service, other)
 - Officers use **Support Dashboard** (`/support-dashboard`) — respond, escalate, rate resolution
 - Ticket data is deleted after resolution
+
+### Partnership (`/partnership`)
+
+- RSI-verified members apply for their org to offer services (medical, lift, security, salvage, …)
+- Submit creates a **Partnership Application** support ticket (officer inbox + staff Discord support webhook)
+- Officers approve/deny on Partnership → Pending review; approved managers set per-service pricing (default FREE) and **separate** Discord webhooks
+- Listed services/pricing must be transparent, honest, and upheld; Accept shows the requester a modal with org + pricing
+- Header **Request Services** (left of bell, RSI verified): actionable jobs (Accept, 30 min / 31 min cooldown) and intel tips (screenshot, no Accept; purged after delivery)
+- Bot needs Send Messages + Embed Links + Attach Files
 
 ### Settings (avatar menu)
 

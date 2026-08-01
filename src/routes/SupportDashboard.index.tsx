@@ -4,7 +4,13 @@ import { supabase } from '../lib/supabase'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import SupportTicketThread from '../components/SupportTicketThread'
 
-type TicketCategory = 'bug_report' | 'member_report' | 'rsi_verification'
+type TicketCategory =
+  | 'bug_report'
+  | 'member_report'
+  | 'rsi_verification'
+  | 'partnership_application'
+  | 'add_new_service_request'
+  | 'other'
 type TicketStatus = 'open' | 'assigned' | 'pending_user' | 'resolved'
 
 interface OfficerTicket {
@@ -56,12 +62,18 @@ const CATEGORY_LABELS: Record<TicketCategory, string> = {
   bug_report: 'Bug Report',
   member_report: 'Member Report',
   rsi_verification: 'RSI Verification',
+  partnership_application: 'Partnership Application',
+  add_new_service_request: 'Add New Service Request',
+  other: 'Other',
 }
 
 const CATEGORY_STYLES: Record<TicketCategory, string> = {
   bug_report: 'bg-purple-950/50 text-purple-300 border-purple-500/30',
   member_report: 'bg-amber-950/50 text-amber-300 border-amber-500/30',
   rsi_verification: 'bg-cyan-950/50 text-cyan-300 border-cyan-500/30',
+  partnership_application: 'bg-orange-950/50 text-orange-300 border-orange-500/30',
+  add_new_service_request: 'bg-emerald-950/50 text-emerald-300 border-emerald-500/30',
+  other: 'bg-slate-800/50 text-slate-300 border-slate-500/30',
 }
 
 const STATUS_STYLES: Record<TicketStatus, string> = {

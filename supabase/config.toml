@@ -8,3 +8,15 @@ entrypoint = "./functions/log-watcher-webhook/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/discord-services-interactions/index.ts"
+
+# Member-triggered fan-out after request_service (JWT required).
+[functions.discord-services-dispatch]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/discord-services-dispatch/index.ts"
+
+# Cron / service_role: expire open requests + red Timed out Discord patches.
+[functions.discord-services-expire]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/discord-services-expire/index.ts"

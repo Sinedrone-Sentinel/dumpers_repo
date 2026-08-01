@@ -188,6 +188,18 @@ export const SITE_RULES_SECTION = {
       ],
     },
     {
+      id: 'partnership-services',
+      title: 'Partnership services',
+      items: [
+        'Partner orgs offer help and intel tips that members request from the header **Request Services** control — not a marketplace listing.',
+        'Actionable jobs use Discord **Accept** (first wins, 30 minutes). Intel tips (salvage / pirate reports) post a screenshot with **no Accept**.',
+        'Any service you enable and the **pricing label** you set must be **transparent, honest, and upheld** when you Accept a request.',
+        'Default pricing is FREE unless you publish clear aUEC / materials / other terms. Bait pricing or refusing the listed terms can revoke the partnership.',
+        'When a request is Accepted, the requester sees a modal with the accepting org and that service’s listed pricing — treat it as a commitment.',
+        '31-minute cooldown per member per service type after each request.',
+      ],
+    },
+    {
       id: 'support',
       title: 'Support & reporting',
       items: [

@@ -15,6 +15,7 @@ import MiningTrackerRoute from './MiningTracker.index'
 import CommodityLookupRoute from './CommodityLookup.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import AnalyticsRoute from './Analytics.index'
+import PartnershipRoute from './Partnership.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -150,6 +151,13 @@ const discordSubscribeRoute = createRoute({
   component: DiscordSubscribeRoute,
 })
 
+const partnershipRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/partnership',
+  component: PartnershipRoute,
+  beforeLoad: requireFeature('partnership'),
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   wikeloRoute,
@@ -165,6 +173,7 @@ export const routeTree = rootRoute.addChildren([
   guestLockedRoute,
   analyticsRoute,
   discordSubscribeRoute,
+  partnershipRoute,
 ])
 
 export default routeTree

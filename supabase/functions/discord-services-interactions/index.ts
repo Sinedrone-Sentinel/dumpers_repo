@@ -1,11 +1,13 @@
 // Dumper Services Discord bot — Interactions endpoint (Partnership only).
 // Deploy with verify_jwt = false. Auth = Discord ed25519 signature.
+// Tries live accept_service_request first; falls back to harness test RPC.
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import {
   jsonResponse,
   markAllTestMessagesTaken,
+  markMessagesTimedOut,
   parseAcceptCustomId,
   reconcileTestMessagesAfterAccept,
   verifyDiscordSignature,
@@ -17,6 +19,22 @@ const RESPONSE_PONG = 1
 const RESPONSE_CHANNEL_MESSAGE = 4
 const RESPONSE_UPDATE_MESSAGE = 7
 const FLAG_EPHEMERAL = 64
+
+type AcceptResult = {
+  success?: boolean
+  won?: boolean
+  live?: boolean
+  timed_out?: boolean
+  error?: string
+  code?: string
+  service_label?: string
+  requester_label?: string
+  accepted_by_discord_username?: string
+  accepted_by_discord_user_id?: string
+  org_name?: string
+  pricing_label?: string
+  messages?: Array<Record<string, string>>
+}
 
 serve(async (req) => {
   if (req.method === 'GET') {
@@ -51,7 +69,6 @@ serve(async (req) => {
 
   const type = Number(interaction.type || 0)
 
-  // Discord portal URL validation + health pings
   if (type === INTERACTION_PING) {
     return jsonResponse({ type: RESPONSE_PONG })
   }
@@ -102,21 +119,69 @@ serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   )
 
-  const { data: acceptResult, error: acceptError } = await supabase.rpc(
-    'accept_dumper_services_bot_test',
-    {
-      p_request_id: requestId,
-      p_discord_user_id: discordUserId,
-      p_discord_username: discordUsername,
-    }
-  )
+  const message = interaction.message as Record<string, unknown> | undefined
+  const channelId = String(interaction.channel_id || message?.channel_id || '')
+  const messageId = String(message?.id || '')
+  const botToken = Deno.env.get('DISCORD_SERVICES_BOT_TOKEN') || ''
 
-  if (acceptError) {
-    console.error('accept_dumper_services_bot_test failed', acceptError)
+  const { data: liveResult, error: liveError } = await supabase.rpc('accept_service_request', {
+    p_request_id: requestId,
+    p_discord_user_id: discordUserId,
+    p_discord_username: discordUsername,
+    p_channel_id: channelId || null,
+    p_message_id: messageId || null,
+  })
+
+  let acceptResult: AcceptResult | null = null
+
+  if (!liveError && liveResult?.success) {
+    acceptResult = liveResult as AcceptResult
+  } else if (!liveError && liveResult?.code === 'not_live') {
+    const { data: testResult, error: testError } = await supabase.rpc(
+      'accept_dumper_services_bot_test',
+      {
+        p_request_id: requestId,
+        p_discord_user_id: discordUserId,
+        p_discord_username: discordUsername,
+      }
+    )
+    if (testError) {
+      console.error('accept_dumper_services_bot_test failed', testError)
+      return jsonResponse({
+        type: RESPONSE_CHANNEL_MESSAGE,
+        data: {
+          content: 'Accept failed (server error). Try again or contact staff.',
+          flags: FLAG_EPHEMERAL,
+        },
+      })
+    }
+    acceptResult = testResult as AcceptResult
+  } else if (liveError) {
+    console.error('accept_service_request failed', liveError)
+    // Harness fallback if live RPC missing (migration not applied yet)
+    const { data: testResult, error: testError } = await supabase.rpc(
+      'accept_dumper_services_bot_test',
+      {
+        p_request_id: requestId,
+        p_discord_user_id: discordUserId,
+        p_discord_username: discordUsername,
+      }
+    )
+    if (testError || !testResult?.success) {
+      return jsonResponse({
+        type: RESPONSE_CHANNEL_MESSAGE,
+        data: {
+          content: 'Accept failed (server error). Try again or contact staff.',
+          flags: FLAG_EPHEMERAL,
+        },
+      })
+    }
+    acceptResult = testResult as AcceptResult
+  } else {
     return jsonResponse({
       type: RESPONSE_CHANNEL_MESSAGE,
       data: {
-        content: 'Accept failed (server error). Try again or contact staff.',
+        content: liveResult?.error || 'Accept failed.',
         flags: FLAG_EPHEMERAL,
       },
     })
@@ -132,23 +197,44 @@ serve(async (req) => {
     })
   }
 
-  const message = interaction.message as Record<string, unknown> | undefined
-  const channelId = String(interaction.channel_id || message?.channel_id || '')
-  const messageId = String(message?.id || '')
-  const botToken = Deno.env.get('DISCORD_SERVICES_BOT_TOKEN') || ''
+  const serviceLabel = String(acceptResult.service_label || 'Service')
+  const requesterLabel = String(acceptResult.requester_label || 'Requester')
+  const messages = acceptResult.messages || []
 
   if (!acceptResult.won) {
+    if (acceptResult.timed_out || acceptResult.error === 'Timed out') {
+      if (botToken && messages.length > 0) {
+        void markMessagesTimedOut({
+          botToken,
+          serviceLabel,
+          requesterLabel,
+          messages: messages.map((m) => ({
+            channel_id: m.channel_id,
+            message_id: m.message_id,
+            guild_id: m.guild_id,
+          })),
+        }).catch((err) => console.error('timeout patch failed', err))
+      }
+      return jsonResponse({
+        type: RESPONSE_CHANNEL_MESSAGE,
+        data: {
+          content: 'Too late — this request **timed out** (30 minutes, no Accept).',
+          flags: FLAG_EPHEMERAL,
+        },
+      })
+    }
+
     const takenBy =
       acceptResult.accepted_by_discord_username ||
+      acceptResult.org_name ||
       acceptResult.accepted_by_discord_user_id ||
       'another org'
-    const messages = (acceptResult.messages as Array<Record<string, string>> | undefined) || []
     if (botToken && messages.length > 0) {
       void markAllTestMessagesTaken({
         botToken,
         acceptedByUsername: String(takenBy),
-        serviceLabel: String(acceptResult.service_label || 'Service'),
-        requesterLabel: String(acceptResult.requester_label || 'Requester'),
+        serviceLabel,
+        requesterLabel,
         messages: messages.map((m) => ({
           channel_id: m.channel_id,
           message_id: m.message_id,
@@ -166,17 +252,17 @@ serve(async (req) => {
     })
   }
 
-  // Winner: update this message immediately via interaction response, then patch siblings.
-  const serviceLabel = String(acceptResult.service_label || 'Service')
-  const requesterLabel = String(acceptResult.requester_label || 'Requester')
-  const messages = (acceptResult.messages as Array<Record<string, string>> | undefined) || []
+  const winnerLabel =
+    acceptResult.live && acceptResult.org_name
+      ? `${acceptResult.org_name} (${discordUsername})`
+      : discordUsername
 
   if (botToken && messages.length > 0) {
     void reconcileTestMessagesAfterAccept({
       botToken,
       winnerChannelId: channelId,
       winnerMessageId: messageId,
-      acceptedByUsername: discordUsername,
+      acceptedByUsername: winnerLabel,
       serviceLabel,
       requesterLabel,
       messages: messages.map((m) => ({
@@ -187,6 +273,21 @@ serve(async (req) => {
     }).catch((err) => console.error('winner reconcile failed', err))
   }
 
+  const embedFields: Array<{ name: string; value: string; inline?: boolean }> = [
+    { name: 'Service', value: serviceLabel, inline: true },
+    { name: 'Requester RSI', value: requesterLabel, inline: true },
+  ]
+  if (acceptResult.live && acceptResult.org_name) {
+    embedFields.push({ name: 'Org', value: String(acceptResult.org_name), inline: true })
+  }
+  if (acceptResult.live && acceptResult.pricing_label) {
+    embedFields.push({
+      name: 'Listed pricing',
+      value: String(acceptResult.pricing_label),
+      inline: true,
+    })
+  }
+
   return jsonResponse({
     type: RESPONSE_UPDATE_MESSAGE,
     data: {
@@ -194,12 +295,9 @@ serve(async (req) => {
       embeds: [
         {
           title: 'Dumper Services — Accepted',
-          description: `**${discordUsername}** accepted this request.`,
+          description: `**${winnerLabel}** accepted this request.`,
           color: 0x22c55e,
-          fields: [
-            { name: 'Service', value: serviceLabel, inline: true },
-            { name: 'Requester RSI', value: requesterLabel, inline: true },
-          ],
+          fields: embedFields,
           footer: { text: "Dumper's Repo · Partnership bot" },
         },
       ],

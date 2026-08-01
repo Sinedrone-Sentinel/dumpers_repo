@@ -3,6 +3,11 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import type { UserNotification } from '../lib/operations'
 import { getNotificationActionLink } from '../lib/notificationLinks'
 import { requestBlueprintFocus } from '../lib/blueprintFocusRequest'
+import {
+  SERVICE_REQUEST_ACCEPTED_TYPE,
+  dispatchServiceRequestAccepted,
+  parseServiceRequestAcceptedPayload,
+} from '../lib/serviceRequestAccepted'
 
 interface NotificationBodyProps {
   notification: UserNotification
@@ -25,8 +30,12 @@ export default function NotificationBody({
     typeof notification.payload?.questionnaire_id === 'string'
       ? notification.payload.questionnaire_id
       : null
+  const acceptedDetail =
+    notification.type === SERVICE_REQUEST_ACCEPTED_TYPE
+      ? parseServiceRequestAcceptedPayload(notification.payload)
+      : null
 
-  if (!notification.body && !link && !questionnaireId) return null
+  if (!notification.body && !link && !questionnaireId && !acceptedDetail) return null
 
   const finishNavigate = () => {
     onNavigate?.()
@@ -36,7 +45,36 @@ export default function NotificationBody({
   return (
     <p className="text-xs mt-0.5 text-slate-400 leading-relaxed">
       {notification.body}
-      {notification.body && (link || questionnaireId) ? ' ' : null}
+      {acceptedDetail ? (
+        <>
+          {notification.body ? ' ' : null}
+          <span className="text-slate-300">
+            {acceptedDetail.orgName}
+            {acceptedDetail.orgSid ? ` (${acceptedDetail.orgSid})` : ''} —{' '}
+            <span className="text-orange-300 font-medium">{acceptedDetail.pricingLabel}</span>
+          </span>
+        </>
+      ) : null}
+      {notification.body || acceptedDetail
+        ? link || questionnaireId || acceptedDetail
+          ? ' '
+          : null
+        : null}
+      {acceptedDetail ? (
+        <button
+          type="button"
+          onClick={() => {
+            dispatchServiceRequestAccepted({
+              ...acceptedDetail,
+              notificationId: notification.id,
+            })
+            onNavigate?.()
+          }}
+          className="text-cyan-400 hover:text-cyan-300 underline font-medium"
+        >
+          View acceptance
+        </button>
+      ) : null}
       {questionnaireId && onOpenQuestionnaire ? (
         <button
           type="button"

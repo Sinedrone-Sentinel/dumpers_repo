@@ -4,7 +4,13 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
 
-type TicketCategory = 'bug_report' | 'member_report' | 'rsi_verification'
+type TicketCategory =
+  | 'bug_report'
+  | 'member_report'
+  | 'rsi_verification'
+  | 'partnership_application'
+  | 'add_new_service_request'
+  | 'other'
 type TicketStatus = 'open' | 'assigned' | 'pending_user' | 'resolved'
 type ResolvedBy = 'officer' | 'member' | null
 
@@ -55,6 +61,9 @@ const CATEGORY_LABELS: Record<TicketCategory, string> = {
   bug_report: 'Bug Report',
   member_report: 'Report Member',
   rsi_verification: 'RSI Verification Issue',
+  partnership_application: 'Partnership Application',
+  add_new_service_request: 'Add New Service Request',
+  other: 'Other',
 }
 
 const STATUS_STYLES: Record<TicketStatus, string> = {
