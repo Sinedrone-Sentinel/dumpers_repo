@@ -137,7 +137,7 @@ function takenEmbed(acceptedByUsername: string, serviceLabel: string, requesterL
   return {
     title: 'Dumper Services — Taken',
     description: `Already accepted by **${acceptedByUsername}**.`,
-    color: 0x64748b,
+    color: 0xef4444,
     fields: [
       { name: 'Service', value: serviceLabel, inline: true },
       { name: 'Requester RSI', value: requesterLabel, inline: true },
