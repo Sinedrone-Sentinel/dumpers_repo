@@ -29,6 +29,16 @@ Include only what members **see or use**:
 - Changed labels, requirements, or how a tool works
 - Visible polish that fixes a noticeable glitch (scroll jump, refresh flash of wrong screen)
 - Public poll / Archive / Blueprints / Bazaar / Mission Tracker behavior members notice
+- **New Request Services partners or 3rd Party orgs** (see below — always propose a showcase)
+
+### Partners & 3rd Party showcase (required)
+
+Whenever a **3rd Party** entry is added/updated in `src/lib/thirdPartyServices.ts`, or a **partner org** is approved / newly offering services in a way members will see on Request Services:
+
+1. **Always** include at least one Site Update candidate that **names the org/service** and what members get (FREE/FEE, portal vs Discord Accept).
+2. Prefer headline shape: `SITE UPDATE: <Org or service> (<FREE|FEE>)` or `SITE UPDATE: New partner — <Org>`.
+3. Do not treat this as “docs-only” or skip because the change looks small — recruitment/showcase is the point.
+4. Still wait for the user’s numbered approval (`1` / `all` / `none`) before ingest — unless they explicitly say to add/post that ticker item.
 
 **Do not** propose:
 
