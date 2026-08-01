@@ -186,9 +186,6 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
         <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-xl border border-slate-700 bg-slate-900 shadow-xl z-50 overflow-hidden">
           <div className="px-3 py-2.5 border-b border-slate-800">
             <p className="text-sm font-medium text-white">Request Services</p>
-            <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
-              Only services offered by at least one partner.
-            </p>
           </div>
           <div className="max-h-72 overflow-y-auto">
             {loading ? (
