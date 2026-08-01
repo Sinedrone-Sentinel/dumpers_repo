@@ -37,9 +37,36 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
   const [formError, setFormError] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const pasteBoxRef = useRef<HTMLDivElement>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const close = useCallback(() => setOpen(false), [])
   useClickOutside(containerRef, open && !disabled && !compose, close)
+
+  const clearCloseTimer = useCallback(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+  }, [])
+
+  const openMenu = useCallback(() => {
+    if (disabled) return
+    clearCloseTimer()
+    setOpen(true)
+  }, [disabled, clearCloseTimer])
+
+  const scheduleCloseMenu = useCallback(() => {
+    if (compose) return
+    clearCloseTimer()
+    closeTimerRef.current = setTimeout(() => {
+      setOpen(false)
+      closeTimerRef.current = null
+    }, 150)
+  }, [compose, clearCloseTimer])
+
+  useEffect(() => {
+    return () => clearCloseTimer()
+  }, [clearCloseTimer])
 
   const clearScreenshot = useCallback(() => {
     setScreenshot((prev) => {
@@ -171,11 +198,17 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
   }
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div
+      className="relative"
+      ref={containerRef}
+      onMouseEnter={openMenu}
+      onMouseLeave={scheduleCloseMenu}
+    >
       <button
         type="button"
         disabled={disabled}
         onClick={() => {
+          if (disabled) return
           setOpen((v) => !v)
         }}
         className={`relative p-2 rounded-lg transition-colors ${
@@ -184,6 +217,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
             : 'text-slate-400 hover:text-orange-300 hover:bg-slate-800/80'
         } disabled:opacity-40`}
         aria-label="Request Services"
+        aria-expanded={open}
         title="Request Services"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -198,7 +232,8 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
       </button>
 
       {open && !compose && (
-        <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-xl border border-slate-700 bg-slate-900 shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 top-full pt-2 w-72 sm:w-80 z-50">
+        <div className="rounded-xl border border-slate-700 bg-slate-900 shadow-xl overflow-hidden">
           <div className="px-3 py-2.5 border-b border-slate-800">
             <p className="text-sm font-medium text-white">Request Services</p>
           </div>
@@ -257,6 +292,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
               </p>
             ) : null}
           </div>
+        </div>
         </div>
       )}
 
