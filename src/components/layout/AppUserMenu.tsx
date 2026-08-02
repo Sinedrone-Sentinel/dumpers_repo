@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { useClickOutside } from '../../hooks/useClickOutside'
 import type { Profile } from '../../lib/supabase'
-import { supabase } from '../../lib/supabase'
 import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
 import RsiVerifiedBadge from '../RsiVerifiedBadge'
+import OfficerToolsModal from '../OfficerToolsModal'
 
 interface AppUserMenuProps {
   displayName: string
@@ -37,6 +37,9 @@ function MenuDivider() {
   return <div className="border-t border-slate-700 my-1" />
 }
 
+const menuItemClass =
+  'w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors'
+
 export default function AppUserMenu({
   displayName,
   profile,
@@ -56,27 +59,12 @@ export default function AppUserMenu({
   onSignOut,
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
+  const [showOfficerTools, setShowOfficerTools] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const routerLocation = useRouterState({ select: (s) => s.location })
-  const [showOfficerTools, setShowOfficerTools] = useState(false)
-  const [rsiHandleToRevoke, setRsiHandleToRevoke] = useState('')
-  const [alsoBanUser, setAlsoBanUser] = useState(false)
-  const [processing, setProcessing] = useState(false)
-  const [toolMessage, setToolMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [repResetHandle, setRepResetHandle] = useState('')
-  const [repResetUserId, setRepResetUserId] = useState<string | null>(null)
-  const [repResetUserName, setRepResetUserName] = useState('')
-  const [clearArchived, setClearArchived] = useState(false)
-  const [searchingUser, setSearchingUser] = useState(false)
 
   const close = useCallback(() => {
     setOpen(false)
-    setShowOfficerTools(false)
-    setToolMessage(null)
-    setRepResetHandle('')
-    setRepResetUserId(null)
-    setRepResetUserName('')
-    setClearArchived(false)
   }, [])
 
   useClickOutside(containerRef, open, close)
@@ -84,104 +72,6 @@ export default function AppUserMenu({
   useEffect(() => {
     close()
   }, [routerLocation.pathname, routerLocation.searchStr, close])
-
-  const handleRevokeVerification = async () => {
-    if (!rsiHandleToRevoke.trim()) return
-
-    setProcessing(true)
-    setToolMessage(null)
-
-    try {
-      const rpcName = alsoBanUser ? 'remove_rsi_verification_and_ban' : 'officer_revoke_rsi_verification'
-      const { data, error } = await supabase.rpc(rpcName, {
-        p_handle: rsiHandleToRevoke.trim(),
-        ...(alsoBanUser && { p_reason: 'Officer action via support tools' }),
-      })
-
-      if (error) throw error
-
-      if (data?.success) {
-        const action = alsoBanUser ? 'revoked and banned' : 'revoked'
-        setToolMessage({
-          type: 'success',
-          text: `RSI Handle verification ${action} for ${data.display_name || rsiHandleToRevoke}`,
-        })
-        setRsiHandleToRevoke('')
-        setAlsoBanUser(false)
-      } else {
-        setToolMessage({ type: 'error', text: data?.error || 'Failed to revoke verification' })
-      }
-    } catch (err) {
-      setToolMessage({ type: 'error', text: (err as Error).message })
-    }
-
-    setProcessing(false)
-  }
-
-  const handleSearchRepUser = async () => {
-    if (!repResetHandle.trim()) return
-
-    setSearchingUser(true)
-    setToolMessage(null)
-    setRepResetUserId(null)
-    setRepResetUserName('')
-
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, display_name, rsi_handle, email, role')
-        .ilike('rsi_handle', repResetHandle.trim())
-        .single()
-
-      if (error || !data) {
-        setToolMessage({ type: 'error', text: 'User not found with that RSI Handle' })
-      } else if (data.role === 'officer' || data.role === 'super-admin') {
-        setToolMessage({ type: 'error', text: 'Cannot reset reputation of officers or admins' })
-      } else {
-        setRepResetUserId(data.id)
-        setRepResetUserName(data.rsi_handle || data.display_name || data.email || 'Unknown')
-      }
-    } catch (err) {
-      setToolMessage({ type: 'error', text: (err as Error).message })
-    }
-
-    setSearchingUser(false)
-  }
-
-  const handleResetRep = async (type: 'buyer' | 'fulfiller') => {
-    if (!repResetUserId) return
-
-    setProcessing(true)
-    setToolMessage(null)
-
-    try {
-      const rpcName = type === 'buyer' ? 'reset_user_buyer_rep' : 'reset_user_fulfiller_rep'
-      const { data, error } = await supabase.rpc(rpcName, {
-        p_target_user_id: repResetUserId,
-        p_clear_archived: clearArchived,
-      })
-
-      if (error) throw error
-
-      if (data?.success) {
-        const archiveMsg = clearArchived ? ` and ${data.deleted_orders} archived orders` : ''
-        setToolMessage({
-          type: 'success',
-          text: `Reset ${type} rep for ${repResetUserName}. Deleted ${data.deleted_ratings} ratings${archiveMsg}.`,
-        })
-        setRepResetHandle('')
-        setRepResetUserId(null)
-        setRepResetUserName('')
-        setClearArchived(false)
-      } else {
-        setToolMessage({ type: 'error', text: data?.error || 'Failed to reset reputation' })
-      }
-    } catch (err) {
-      setToolMessage({ type: 'error', text: (err as Error).message })
-    }
-
-    setProcessing(false)
-  }
 
   if (isPending) {
     return (
@@ -219,318 +109,205 @@ export default function AppUserMenu({
         ? 'bg-blue-900/50 text-blue-400'
         : 'bg-green-900/50 text-green-400'
 
-  const showAccountSection = showSettingsButton
-  const showOfficerSection = isOfficerOrAbove && !isSuperAdmin
-  const showAdminSection = isSuperAdmin
-  const showSupportLink = !isSuperAdmin
+  const showAccount = showSettingsButton
+  const showHelp = !isSuperAdmin
+  const showOfficer = isOfficerOrAbove
+  const showSiteAdmin = isSuperAdmin
+  const showPartnership = !!profile?.rsi_handle_verified
 
   return (
-    <div ref={containerRef} className="relative shrink-0">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-2 py-1 border rounded-lg transition-colors shadow-md bg-slate-800/90 border-slate-600 hover:bg-slate-700"
-      >
-        {profile?.avatar_url ? (
-          <img src={profile.avatar_url} alt={displayName} className="w-6 h-6 rounded-full" />
-        ) : (
-          <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs">
-            {displayName[0]?.toUpperCase()}
-          </div>
-        )}
-        <span className="text-xs hidden sm:inline max-w-[100px] truncate text-white">{displayName}</span>
-        <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain">
-          <div className="p-3 border-b border-slate-700">
-            <p className="text-white font-medium truncate flex items-center gap-1.5">
-              <span>{displayName}</span>
-              {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
-            </p>
-            {profile?.rsi_handle && (
-              <p className="text-slate-500 text-xs truncate">({profile.display_name})</p>
-            )}
-            <p className="text-slate-400 text-sm truncate">{profile?.email}</p>
-            <p className="text-xs mt-1">
-              <span className={`px-1.5 py-0.5 rounded ${roleClass}`}>{roleLabel}</span>
-            </p>
-          </div>
-
-          {showAccountSection && (
-            <div className="py-1">
-              <MenuSectionLabel>Account</MenuSectionLabel>
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenSettings()
-                }}
-                className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-              >
-                Settings
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  close()
-                  onOpenBpDumper()
-                }}
-                className="w-full px-4 py-2 text-left text-amber-300 hover:bg-slate-700 transition-colors"
-              >
-                {DUMPER_APPS_DISPLAY_NAME}
-              </button>
-              <Link
-                to="/discord-subscribe"
-                onClick={close}
-                className="block w-full px-4 py-2 text-left text-indigo-400 hover:bg-slate-700 transition-colors"
-              >
-                Webhooks
-              </Link>
+    <>
+      <div ref={containerRef} className="relative shrink-0">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-1.5 px-2 py-1 border rounded-lg transition-colors shadow-md bg-slate-800/90 border-slate-600 hover:bg-slate-700"
+        >
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt={displayName} className="w-6 h-6 rounded-full" />
+          ) : (
+            <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs">
+              {displayName[0]?.toUpperCase()}
             </div>
           )}
+          <span className="text-xs hidden sm:inline max-w-[100px] truncate text-white">{displayName}</span>
+          <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
 
-          {showOfficerSection && (
-            <>
-              <MenuDivider />
+        {open && (
+          <div className="absolute right-0 top-full mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain">
+            <div className="p-3 border-b border-slate-700">
+              <p className="text-white font-medium truncate flex items-center gap-1.5">
+                <span>{displayName}</span>
+                {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+              </p>
+              {profile?.rsi_handle && (
+                <p className="text-slate-500 text-xs truncate">({profile.display_name})</p>
+              )}
+              <p className="text-slate-400 text-sm truncate">{profile?.email}</p>
+              <p className="text-xs mt-1">
+                <span className={`px-1.5 py-0.5 rounded ${roleClass}`}>{roleLabel}</span>
+              </p>
+            </div>
+
+            {showAccount && (
               <div className="py-1">
-                <MenuSectionLabel>Officer</MenuSectionLabel>
-                <Link
-                  to="/support-dashboard"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-blue-400 hover:bg-slate-700 transition-colors"
-                >
-                  Support Dashboard
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setShowOfficerTools(!showOfficerTools)}
-                  className="w-full px-4 py-2 text-left text-amber-400 hover:bg-slate-700 transition-colors flex items-center justify-between"
-                >
-                  <span>Officer Tools</span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${showOfficerTools ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {showOfficerTools && (
-                  <div className="px-4 py-3 bg-slate-900/50 border-t border-slate-700 space-y-4">
-                    {toolMessage && (
-                      <div
-                        className={`p-2 rounded text-xs ${
-                          toolMessage.type === 'success'
-                            ? 'bg-green-900/50 text-green-400 border border-green-500/30'
-                            : 'bg-red-900/50 text-red-400 border border-red-500/30'
-                        }`}
-                      >
-                        {toolMessage.text}
-                      </div>
-                    )}
-
-                    <div className="space-y-2">
-                      <label className="block text-xs text-slate-400 font-medium">Revoke RSI Handle</label>
-                      <input
-                        type="text"
-                        value={rsiHandleToRevoke}
-                        onChange={(e) => setRsiHandleToRevoke(e.target.value)}
-                        placeholder="Enter RSI Handle..."
-                        className="w-full px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
-                      />
-                      <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={alsoBanUser}
-                          onChange={(e) => setAlsoBanUser(e.target.checked)}
-                          className="rounded border-slate-500 bg-slate-800 text-red-500 focus:ring-red-500/40"
-                        />
-                        <span className={alsoBanUser ? 'text-red-400' : ''}>Also ban this user</span>
-                      </label>
-                      <button
-                        onClick={handleRevokeVerification}
-                        disabled={processing || !rsiHandleToRevoke.trim()}
-                        className={`w-full px-3 py-1.5 text-sm font-medium rounded transition-colors disabled:opacity-50 ${
-                          alsoBanUser
-                            ? 'bg-red-600 hover:bg-red-700 text-white'
-                            : 'bg-amber-600 hover:bg-amber-700 text-white'
-                        }`}
-                      >
-                        {processing ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
-                      </button>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-700 space-y-2">
-                      <label className="block text-xs text-slate-400 font-medium">Reset User Reputation</label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={repResetHandle}
-                          onChange={(e) => {
-                            setRepResetHandle(e.target.value)
-                            setRepResetUserId(null)
-                            setRepResetUserName('')
-                          }}
-                          placeholder="RSI Handle..."
-                          className="flex-1 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
-                        />
-                        <button
-                          onClick={handleSearchRepUser}
-                          disabled={searchingUser || !repResetHandle.trim()}
-                          className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded disabled:opacity-50"
-                        >
-                          {searchingUser ? '...' : 'Find'}
-                        </button>
-                      </div>
-                      {repResetUserId && (
-                        <div className="p-2 bg-slate-800 rounded border border-slate-600">
-                          <p className="text-sm text-white">
-                            Found: <strong>{repResetUserName}</strong>
-                          </p>
-                          <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer mt-2">
-                            <input
-                              type="checkbox"
-                              checked={clearArchived}
-                              onChange={(e) => setClearArchived(e.target.checked)}
-                              className="rounded border-slate-500 bg-slate-800 text-amber-500 focus:ring-amber-500/40"
-                            />
-                            <span>Also clear archived orders</span>
-                          </label>
-                          <div className="flex gap-2 mt-2">
-                            <button
-                              onClick={() => handleResetRep('buyer')}
-                              disabled={processing}
-                              className="flex-1 px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded disabled:opacity-50"
-                            >
-                              Reset Buyer Rep
-                            </button>
-                            <button
-                              onClick={() => handleResetRep('fulfiller')}
-                              disabled={processing}
-                              className="flex-1 px-2 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded disabled:opacity-50"
-                            >
-                              Reset Fulfiller Rep
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-
-          {showAdminSection && (
-            <>
-              <MenuDivider />
-              <div className="py-1">
-                <MenuSectionLabel>Administration</MenuSectionLabel>
-                <Link
-                  to="/analytics"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-violet-400 hover:bg-slate-700 transition-colors"
-                >
-                  Site Analytics
-                </Link>
-                <Link
-                  to="/support-dashboard"
-                  onClick={close}
-                  className="block w-full px-4 py-2 text-left text-blue-400 hover:bg-slate-700 transition-colors"
-                >
-                  Support Dashboard
-                </Link>
-                {showAdminPanelButton && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      close()
-                      onOpenAdmin()
-                    }}
-                    className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-                  >
-                    Admin Panel
-                  </button>
-                )}
+                <MenuSectionLabel>Account</MenuSectionLabel>
                 <button
                   type="button"
                   onClick={() => {
                     close()
-                    onOpenDiscord()
+                    onOpenSettings()
                   }}
-                  className="w-full px-4 py-2 text-left text-indigo-400 hover:bg-slate-700 transition-colors"
+                  className={menuItemClass}
                 >
-                  Discord
+                  Settings
                 </button>
-                {onOpenQuestionnairesAdmin && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      close()
-                      onOpenQuestionnairesAdmin()
-                    }}
-                    className="w-full px-4 py-2 text-left text-cyan-300 hover:bg-slate-700 transition-colors"
-                  >
-                    Questionnaires
-                  </button>
-                )}
-                {showDbActionsButton && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      close()
-                      onOpenDbActions()
-                    }}
-                    className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
-                  >
-                    DB Actions
-                  </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    close()
+                    onOpenBpDumper()
+                  }}
+                  className={menuItemClass}
+                >
+                  {DUMPER_APPS_DISPLAY_NAME}
+                </button>
+                <Link to="/discord-subscribe" onClick={close} className={`block ${menuItemClass}`}>
+                  Webhooks
+                </Link>
+                {showPartnership && (
+                  <Link to="/partnership" onClick={close} className={`block ${menuItemClass}`}>
+                    Partnership
+                  </Link>
                 )}
               </div>
-            </>
-          )}
+            )}
 
-          <MenuDivider />
-          <div className="py-1">
-            {showSupportLink && (
+            {showHelp && (
+              <>
+                <MenuDivider />
+                <div className="py-1">
+                  <MenuSectionLabel>Help</MenuSectionLabel>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenSupport()
+                    }}
+                    className={menuItemClass}
+                  >
+                    Support
+                  </button>
+                </div>
+              </>
+            )}
+
+            {showOfficer && (
+              <>
+                <MenuDivider />
+                <div className="py-1">
+                  <MenuSectionLabel>Officer</MenuSectionLabel>
+                  <Link to="/support-dashboard" onClick={close} className={`block ${menuItemClass}`}>
+                    Support Dashboard
+                  </Link>
+                  {showAdminPanelButton && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close()
+                        onOpenAdmin()
+                      }}
+                      className={menuItemClass}
+                    >
+                      Admin Panel
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      setShowOfficerTools(true)
+                    }}
+                    className={menuItemClass}
+                  >
+                    Officer Tools
+                  </button>
+                </div>
+              </>
+            )}
+
+            {showSiteAdmin && (
+              <>
+                <MenuDivider />
+                <div className="py-1">
+                  <MenuSectionLabel>Site admin</MenuSectionLabel>
+                  <Link to="/analytics" onClick={close} className={`block ${menuItemClass}`}>
+                    Site Analytics
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close()
+                      onOpenDiscord()
+                    }}
+                    className={menuItemClass}
+                  >
+                    Discord
+                  </button>
+                  {onOpenQuestionnairesAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close()
+                        onOpenQuestionnairesAdmin()
+                      }}
+                      className={menuItemClass}
+                    >
+                      Questionnaires
+                    </button>
+                  )}
+                  {showDbActionsButton && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close()
+                        onOpenDbActions()
+                      }}
+                      className={menuItemClass}
+                    >
+                      DB Actions
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+
+            <MenuDivider />
+            <div className="py-1">
               <button
                 type="button"
                 onClick={() => {
                   close()
-                  onOpenSupport()
+                  onSignOut()
                 }}
-                className="w-full px-4 py-2 text-left text-slate-300 hover:bg-slate-700 transition-colors"
+                className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-slate-700 transition-colors"
               >
-                Support
+                Sign Out
               </button>
-            )}
-            {profile?.rsi_handle_verified && !isPending && (
-              <Link
-                to="/partnership"
-                onClick={close}
-                className="block w-full px-4 py-2 text-left text-orange-300 hover:bg-slate-700 transition-colors"
-              >
-                Partnership
-              </Link>
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                close()
-                onSignOut()
-              }}
-              className="w-full px-4 py-2 text-left text-red-400 hover:bg-slate-700 transition-colors"
-            >
-              Sign Out
-            </button>
+            </div>
           </div>
-        </div>
+        )}
+      </div>
+
+      {showOfficerTools && (
+        <OfficerToolsModal
+          isSuperAdmin={isSuperAdmin}
+          onClose={() => setShowOfficerTools(false)}
+        />
       )}
-    </div>
+    </>
   )
 }

@@ -9,6 +9,8 @@ export type WhatsNewItem = {
   summary?: string | null
 }
 
+export type WhatsNewKind = 'game' | 'site'
+
 export type WhatsNewEntry = {
   id: string
   issueKey: string
@@ -19,6 +21,8 @@ export type WhatsNewEntry = {
   detectedAt: string
   expiresAt: string
   items: WhatsNewItem[]
+  /** site = 3-day TTL; game = 7-day TTL (default) */
+  kind?: WhatsNewKind
 }
 
 export type SiteTickerWhatsNew = {

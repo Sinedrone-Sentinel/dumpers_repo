@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `147_discord_cron_secret_apikey.sql` (Discord cron sends Secret API key on `apikey`). Apply through `147` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `149_whats_new_site_ttl.sql` (site ticker TTL 3 days; game digests 7 days). Apply through `149` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -178,6 +178,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 110 | `145_dumper_invoke_analytics.sql` | BP Dumper Edge invoke stats (30-day daily rows; daily `cleanup-dumper-invoke-daily` cron) + Site Analytics RPC |
 | 111 | `146_site_analytics_30day_retention.sql` | Purge site analytics daily/tool/visitor rows older than 30 days (daily cron + one-shot on apply) |
 | 112 | `147_discord_cron_secret_apikey.sql` | Discord cron uses `apikey` header (Secret API key / `sb_secret_…`) |
+| 113 | `148_officer_ban_members_only.sql` | Officers can ban pending/members only; cannot ban other officers |
+| 114 | `149_whats_new_site_ttl.sql` | Whats New `kind` game|site; site/poll TTL 3d, game TTL 7d; site announcements for Dumper Apps + avatar menu |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 

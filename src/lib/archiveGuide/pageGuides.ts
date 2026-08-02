@@ -292,7 +292,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'When something is new, a slim Updates bar sits at the true bottom of every page (it never covers page content)',
       'Headlines rotate automatically; long lines scroll sideways, then the next item scrolls up',
       'Click the bar to expand a drop-up list of everything currently active',
-      'Update lines summarize Blueprints, Missions, Resources, Components, Wikelo, Misspellings, and more from the latest parse — each stays for 7 days',
+      'Game-data lines summarize Blueprints, Missions, Resources, Components, Wikelo, Misspellings, and more from the latest parse — each stays for 7 days',
+      'Site update lines (app/UI announcements and public poll results) stay for 3 days',
       'Click an update line to see the full item list in a modal',
       'Questionnaire lines open the questionnaire modal (answers stay anonymous)',
       'If there is nothing to show, the ticker hides completely',
@@ -305,7 +306,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description:
       'Verified org leaders can apply so their org can offer help to members — medical, stuck lift, security, salvage, and more — with transparent pricing.',
     details: [
-      'Visible in the avatar menu (above Sign Out) only when your RSI Handle is verified',
+      'Visible under Account in the avatar menu only when your RSI Handle is verified',
       'Partnership means: members request a service from the site; partner Discord channels get the ping; first Accept wins',
       'Request Services (next to notifications, also available in guest/offline preview) lists **3rd Party FREE** / **3rd Party FEE** at the top — e.g. Call Medrunner (FREE) opens their client portal in a new tab (hover for a short description; their account may be required)',
       'Below that, signed-in members with a verified RSI Handle see partner **FREE SERVICES** and **FEE SERVICES**; the same type (e.g. Medical) can appear in both when some orgs offer FREE and others charge',
@@ -366,7 +367,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     title: 'Support',
     description: 'Report issues or get help from site staff.',
     details: [
-      'Access Support from your user menu (click your avatar)',
+      'Access Support from the Help section of your avatar menu',
       'Report bugs or technical issues with the site',
       'Report inappropriate behavior from other members',
       'Get help with RSI Handle verification issues',

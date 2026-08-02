@@ -183,6 +183,8 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     if (!isOfficerOrAbove) return false
     if (targetUser.id === currentUser?.id) return false
     if (targetUser.role === 'super-admin') return false
+    // Officers may ban pending/members; only super-admin may ban officers.
+    if (targetUser.role === 'officer' && !isSuperAdmin) return false
     return activeTab === 'pending' || activeTab === 'members' || activeTab === 'officers'
   }
 
@@ -193,10 +195,15 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     { id: 'pending', label: 'Pending' },
   ]
 
+  const panelSubtitle = isSuperAdmin
+    ? 'Approve members, manage roles and bans. RSI / reputation tools are under Officer Tools.'
+    : 'Approve members, promote to officer, and ban members. Demote / ban officers requires a super-admin.'
+
   return (
     <>
       <AppModal
         title="Admin Panel"
+        subtitle={panelSubtitle}
         onClose={onClose}
         size="lg"
         zIndex={70}
