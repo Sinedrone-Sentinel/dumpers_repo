@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, useRouterState } from '@tanstack/react-router'
 import { useAuth } from '../contexts/AuthContext'
 import { BpDumperModalProvider, useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { UiOverlayProvider } from '../contexts/UiOverlayContext'
@@ -22,6 +22,13 @@ import MarketplaceBottomStack from './marketplace/MarketplaceBottomStack'
 import AppChrome from './layout/AppChrome'
 import AnalyticsTracker from './AnalyticsTracker'
 import AppBootstrapScreen from './bootstrap/AppBootstrapScreen'
+
+/** Signed-out visitors may open these without Offline Mode (crawlable SEO surfaces). */
+function isPublicSeoPath(pathname) {
+  const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
+  const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
+  return normalized === '/blueprints'
+}
 
 function LayoutContent({
   navGroups,
@@ -150,6 +157,7 @@ export default function Layout() {
     enterGuestPreview,
     exitGuestPreview,
   } = useAuth()
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
   const navGroups = getVisibleNavGroups(visibilityContext, canAccess)
   const showAdminPanelButton = canUseFeature('admin_panel')
   const showSettingsButton = canUseFeature('settings')
@@ -209,6 +217,17 @@ export default function Layout() {
 
   if (isBanned) {
     return <BannedAccount />
+  }
+
+  // Public crawlable catalog — standalone shell for everyone (no app sidebar).
+  if (isPublicSeoPath(pathname)) {
+    return (
+      <>
+        <SeoHead />
+        <AnalyticsTracker />
+        <Outlet />
+      </>
+    )
   }
 
   if (!user && !isGuestPreview) {

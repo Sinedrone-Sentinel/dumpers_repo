@@ -12,8 +12,8 @@ type FeatureCard = {
   title: string
   body: string
   href?: string
-  /** Offline tools vs sign-in for member-only features like the marketplace */
-  action: 'offline' | 'signin'
+  /** Offline tools, public SEO page, or sign-in for member-only features */
+  action: 'offline' | 'public' | 'signin'
   cta: string
 }
 
@@ -21,9 +21,9 @@ const FEATURES: FeatureCard[] = [
   {
     title: 'Crafting blueprints',
     body: "Browse Star Citizen craftable items, materials, quality bands, and Dumper's Fair-Value Price (DFP) estimates — filter by type, manufacturer, and acquisition.",
-    href: '/',
-    action: 'offline',
-    cta: 'Open in Offline Mode →',
+    href: '/blueprints',
+    action: 'public',
+    cta: 'View blueprint database →',
   },
   {
     title: 'Blueprint missions',
@@ -129,6 +129,10 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
   const onFeatureClick = (feature: FeatureCard) => {
     if (feature.action === 'signin') {
       document.getElementById('sign-in')?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (feature.action === 'public') {
+      void navigate({ to: (feature.href ?? '/blueprints') as never })
       return
     }
     goOffline(feature.href ?? '/')

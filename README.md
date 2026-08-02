@@ -33,7 +33,8 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | Route | Page | Access |
 |-------|------|--------|
 | `/` (signed out) | Public SEO landing | Everyone — Sign in or Browse tools offline |
-| `/` (offline / signed in) | Blueprints | Offline + members |
+| `/blueprints` | Public crafting blueprint database (crawlable catalog) | Everyone (no account) |
+| `/` (offline / signed in) | Blueprints (full tracker UI) | Offline + members |
 | `/wikelo` | Wikelo | Offline + members |
 | `/targets` | Mission Tracker | Offline + members |
 | `/targets/live` | Live Mission Tracker | Members (BP Dumper watch mode) |

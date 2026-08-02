@@ -13,6 +13,7 @@ export const SEO_GOOGLE_SITE_VERIFICATION = '' as const
 
 export const SEO_PRERENDER_PATHS = [
   '/',
+  '/blueprints',
   '/wikelo',
   '/targets',
   '/resources',
@@ -24,6 +25,7 @@ export const SEO_PRERENDER_PATHS = [
 
 export const SEO_SITEMAP_PATHS = [
   '/',
+  '/blueprints/',
   '/wikelo/',
   '/targets/',
   '/resources/',
@@ -40,6 +42,12 @@ const pages: Record<string, SeoPageConfig> = {
     description:
       "Free Star Citizen tools hub: browse crafting blueprints and mission rewards, track resources and mining, plan with Dumper's Fair-Value Price (DFP), and use a community marketplace. Works offline — no account required to explore.",
     canonicalPath: '/',
+  },
+  '/blueprints': {
+    title: "Star Citizen Crafting Blueprint Database & Tracker | Dumper's Repo",
+    description:
+      'Free Star Citizen crafting blueprint database — browse craftable blueprint names by category from game data. Open Offline Mode for materials, mission rewards, and Dumper\'s Fair-Value Price (DFP).',
+    canonicalPath: '/blueprints/',
   },
   '/wikelo': {
     title: "Wikelo Emporium Trades — Star Citizen Barter Guide | Dumper's Repo",

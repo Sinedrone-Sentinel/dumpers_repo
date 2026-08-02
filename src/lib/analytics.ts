@@ -101,7 +101,7 @@ function pathToTool(pathname: string): string | null {
     return null
   }
 
-  if (pathname === '/') return 'blueprints'
+  if (pathname === '/' || pathname.startsWith('/blueprints')) return 'blueprints'
   if (pathname.startsWith('/wikelo')) return 'wikelo'
   if (pathname.startsWith('/targets')) return 'mission_tracker'
   if (pathname.startsWith('/resources')) return 'resource_tracker'

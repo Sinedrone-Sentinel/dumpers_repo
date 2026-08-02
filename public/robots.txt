@@ -1,6 +1,7 @@
 # Dumper's Repo — public tools are crawlable; staff surfaces stay private.
 User-agent: *
 Allow: /
+Allow: /blueprints
 Allow: /wikelo
 Allow: /targets
 Allow: /resources

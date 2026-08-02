@@ -91,7 +91,9 @@ function outFileForPath(urlPath) {
 
 async function prerenderPath(browser, baseUrl, urlPath) {
   const page = await browser.newPage()
-  const useGuest = urlPath !== '/'
+  // Public SEO catalog + marketing landing do not need guest preview.
+  // Other tool routes require Offline Mode so the SPA renders tool HTML.
+  const useGuest = urlPath !== '/' && urlPath !== '/blueprints'
   await page.addInitScript(
     ([key, value]) => {
       sessionStorage.setItem(key, value)
@@ -102,14 +104,26 @@ async function prerenderPath(browser, baseUrl, urlPath) {
   const target = `${baseUrl}${urlPath === '/' ? '/' : urlPath}`
   await page.goto(target, { waitUntil: 'networkidle', timeout: 120_000 })
 
-  // Landing or app chrome should be present
-  await page.waitForFunction(
-    () => {
-      const text = document.body?.innerText || ''
-      return text.length > 200 && !text.includes('Bootstrapping')
-    },
-    { timeout: 90_000 }
-  )
+  if (urlPath === '/blueprints') {
+    await page.waitForSelector('[data-seo="blueprints-catalog"]', { timeout: 90_000 })
+    await page.waitForFunction(
+      () => {
+        const root = document.querySelector('[data-seo="blueprints-catalog"]')
+        const text = root?.textContent || ''
+        return text.length > 400 && !text.includes('Loading blueprint catalog')
+      },
+      { timeout: 90_000 }
+    )
+  } else {
+    // Landing or app chrome should be present
+    await page.waitForFunction(
+      () => {
+        const text = document.body?.innerText || ''
+        return text.length > 200 && !text.includes('Bootstrapping')
+      },
+      { timeout: 90_000 }
+    )
+  }
 
   // Give route meta / paint a beat
   await page.waitForTimeout(500)

@@ -2,6 +2,7 @@ import { createRootRoute, createRoute } from '@tanstack/react-router'
 import Layout from '../components/Layout'
 import { RouteErrorPage, RouteNotFoundPage } from '../components/RouteErrorPage'
 import BlueprintsRoute from './Blueprints.index'
+import PublicBlueprintsCatalog from './PublicBlueprintsCatalog'
 import WikeloRoute from './Wikelo.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
@@ -32,6 +33,12 @@ const indexRoute = createRoute({
   validateSearch: (search: Record<string, unknown>) => ({
     q: typeof search.q === 'string' && search.q.trim() ? search.q.trim() : undefined,
   }),
+})
+
+const publicBlueprintsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blueprints',
+  component: PublicBlueprintsCatalog,
 })
 
 const wikeloRoute = createRoute({
@@ -160,6 +167,7 @@ const partnershipRoute = createRoute({
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
+  publicBlueprintsRoute,
   wikeloRoute,
   miningTrackerRoute,
   commodityLookupRoute,
