@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `145_dumper_invoke_analytics.sql` (BP Dumper Edge usage on Site Analytics). Apply through `145` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `146_site_analytics_30day_retention.sql` (purge site analytics older than 30 days). Apply through `146` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -176,6 +176,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 108 | `143_service_request_pricing_tiers.sql` | FREE vs FEE request tiers — list/notify split by partner pricing_label |
 | 109 | `144_discord_cron_ready_only.sql` | Discord cron skips coalesce-held queue rows (no empty wake every minute) |
 | 110 | `145_dumper_invoke_analytics.sql` | BP Dumper Edge invoke stats (30-day daily rows; daily `cleanup-dumper-invoke-daily` cron) + Site Analytics RPC |
+| 111 | `146_site_analytics_30day_retention.sql` | Purge site analytics daily/tool/visitor rows older than 30 days (daily cron + one-shot on apply) |
 
 ### pg_cron (migrations 054, 065–068)
 

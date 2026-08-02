@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import SiteTooltip from '../components/SiteTooltip'
 import {
   ANALYTICS_SUB_TOOL_LABELS,
   ANALYTICS_TOOL_LABELS,
@@ -86,7 +87,7 @@ type DumperUsageSummary = {
   top_users: DumperTopUser[]
 }
 
-const PERIOD_OPTIONS = [7, 30, 90] as const
+const PERIOD_OPTIONS = [1, 7, 30] as const
 
 const AUDIENCE_OPTIONS: { id: AudienceFilter; label: string; hint: string }[] = [
   { id: 'all', label: 'Combined', hint: 'Unique visitors across both audiences (may overlap same browser)' },
@@ -305,32 +306,127 @@ export default function AnalyticsRoute() {
   }, [summary])
 
   const statCards = useMemo(() => {
-    if (!summary) return []
+    if (!summary) return [] as Array<{ label: string; value: number; hint: string }>
 
     if (audience === 'guest') {
       return [
-        { label: 'Today (guest DAU)', value: summary.dau_guest_today ?? 0 },
-        { label: 'Last 7 days (guest WAU)', value: summary.wau_guest ?? 0 },
-        { label: 'Last 30 days (guest MAU)', value: summary.guest_mau ?? 0 },
+        {
+          label: 'Today (guest DAU)',
+          value: summary.dau_guest_today ?? 0,
+          hint: 'DAU = Daily Active Users. Unique Offline / Guest browsers that used the site today (UTC).',
+        },
+        {
+          label: 'Last 7 days (guest WAU)',
+          value: summary.wau_guest ?? 0,
+          hint: 'WAU = Weekly Active Users. Unique Offline / Guest browsers active in the last 7 days.',
+        },
+        {
+          label: 'Last 30 days (guest MAU)',
+          value: summary.guest_mau ?? 0,
+          hint: 'MAU = Monthly Active Users. Unique Offline / Guest browsers active in the last 30 days.',
+        },
       ]
     }
 
     if (audience === 'signed_in') {
       return [
-        { label: 'Today (signed-in DAU)', value: summary.dau_signed_in_today ?? 0 },
-        { label: 'Last 7 days (signed-in WAU)', value: summary.wau_signed_in ?? 0 },
-        { label: 'Last 30 days (signed-in MAU)', value: summary.signed_in_mau ?? 0 },
+        {
+          label: 'Today (signed-in DAU)',
+          value: summary.dau_signed_in_today ?? 0,
+          hint: 'DAU = Daily Active Users. Unique signed-in members who used the site today (UTC).',
+        },
+        {
+          label: 'Last 7 days (signed-in WAU)',
+          value: summary.wau_signed_in ?? 0,
+          hint: 'WAU = Weekly Active Users. Unique signed-in members active in the last 7 days.',
+        },
+        {
+          label: 'Last 30 days (signed-in MAU)',
+          value: summary.signed_in_mau ?? 0,
+          hint: 'MAU = Monthly Active Users. Unique signed-in members active in the last 30 days.',
+        },
       ]
     }
 
     return [
-      { label: 'Today (combined DAU)', value: summary.dau_today },
-      { label: 'Last 7 days (combined WAU)', value: summary.wau },
-      { label: 'Last 30 days (combined MAU)', value: summary.mau },
-      { label: 'Guest MAU', value: summary.guest_mau ?? 0 },
-      { label: 'Signed-in MAU', value: summary.signed_in_mau ?? 0 },
+      {
+        label: 'Today (combined DAU)',
+        value: summary.dau_today,
+        hint: 'DAU = Daily Active Users. Unique browsers (guest + signed-in) that used the site today. Same browser in both modes can count once in combined.',
+      },
+      {
+        label: 'Last 7 days (combined WAU)',
+        value: summary.wau,
+        hint: 'WAU = Weekly Active Users. Unique browsers active in the last 7 days across guest and signed-in.',
+      },
+      {
+        label: 'Last 30 days (combined MAU)',
+        value: summary.mau,
+        hint: 'MAU = Monthly Active Users. Unique browsers active in the last 30 days across guest and signed-in.',
+      },
+      {
+        label: 'Guest MAU',
+        value: summary.guest_mau ?? 0,
+        hint: 'Monthly Active Users who were Offline / Guest only (not signed in) during the last 30 days.',
+      },
+      {
+        label: 'Signed-in MAU',
+        value: summary.signed_in_mau ?? 0,
+        hint: 'Monthly Active Users who were signed in during the last 30 days. Different from registered account count.',
+      },
     ]
   }, [summary, audience])
+
+  const dumperStatCards = useMemo(() => {
+    if (!dumperUsage) return [] as Array<{ label: string; value: number; hint: string }>
+    return [
+      {
+        label: 'API keys issued',
+        value: dumperUsage.keys_issued,
+        hint: 'Members who generated a BP Dumper API key (does not mean they ran Dumper).',
+      },
+      {
+        label: 'Active Dumpers (period)',
+        value: dumperUsage.active_users,
+        hint: 'Distinct members whose Dumper successfully called the webhook at least once in this period (capped at 30 days).',
+      },
+      {
+        label: 'Watching now',
+        value: dumperUsage.watch_active_now,
+        hint: 'Members currently in BP Dumper watch mode (live session still pinging).',
+      },
+      {
+        label: 'Keys ever used',
+        value: dumperUsage.keys_ever_used,
+        hint: 'API keys that have successfully talked to the webhook at least once (any time).',
+      },
+      {
+        label: 'Edge invokes (period)',
+        value: dumperUsage.total_invokes,
+        hint: 'Accepted log-watcher-webhook Edge Function calls in this period. Watch mode alone is about 120/hour per running Dumper.',
+      },
+      {
+        label: 'Avg invokes / active Dumper',
+        value: Number(dumperUsage.avg_invokes_per_active_user ?? 0),
+        hint: 'Edge invokes in the period ÷ active Dumpers. Higher means longer/heavier watch use per person.',
+      },
+      {
+        label: 'Avg invokes / day',
+        value: Number(dumperUsage.avg_invokes_per_day ?? 0),
+        hint: 'Average Edge calls per day across the selected period.',
+      },
+      {
+        label: 'Projected monthly Edge',
+        value: Number(dumperUsage.projected_monthly_invokes ?? 0),
+        hint: 'If this pace continues: (avg invokes/day) × 30. Compare to Supabase Free ~500,000 Edge invocations / month.',
+      },
+      {
+        label: 'Est. watch-hours (period)',
+        value: Number(dumperUsage.est_watch_hours ?? 0),
+        hint: 'Rough watch time from invokes ÷ 120 (session_ping every 30 seconds). Blueprint events also count, so this is an estimate.',
+      },
+    ]
+  }, [dumperUsage])
 
   const audienceHint = AUDIENCE_OPTIONS.find((option) => option.id === audience)?.hint ?? ''
 
@@ -426,7 +522,12 @@ export default function AnalyticsRoute() {
             }`}
           >
             {statCards.map((card) => (
-              <StatCard key={card.label} label={card.label} value={card.value} />
+              <StatCard
+                key={card.label}
+                label={card.label}
+                value={card.value}
+                hint={card.hint}
+              />
             ))}
           </div>
 
@@ -438,7 +539,7 @@ export default function AnalyticsRoute() {
               Counts accepted <code className="text-slate-400">log-watcher-webhook</code> calls
               (watch pings, blueprint events, etc.). Rolling 30-day window — older daily rows are
               purged once per day by cron. Useful for Free-tier Edge planning (~500k Edge invocations /
-              month). This section never looks back more than 30 days.
+              month).
             </p>
             {!dumperUsage ? (
               <p className="text-sm text-slate-500">
@@ -449,27 +550,14 @@ export default function AnalyticsRoute() {
             ) : (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                  <StatCard label="API keys issued" value={dumperUsage.keys_issued} />
-                  <StatCard label="Active Dumpers (period)" value={dumperUsage.active_users} />
-                  <StatCard label="Watching now" value={dumperUsage.watch_active_now} />
-                  <StatCard label="Keys ever used" value={dumperUsage.keys_ever_used} />
-                  <StatCard label="Edge invokes (period)" value={dumperUsage.total_invokes} />
-                  <StatCard
-                    label="Avg invokes / active Dumper"
-                    value={Number(dumperUsage.avg_invokes_per_active_user ?? 0)}
-                  />
-                  <StatCard
-                    label="Avg invokes / day"
-                    value={Number(dumperUsage.avg_invokes_per_day ?? 0)}
-                  />
-                  <StatCard
-                    label="Projected monthly Edge"
-                    value={Number(dumperUsage.projected_monthly_invokes ?? 0)}
-                  />
-                  <StatCard
-                    label="Est. watch-hours (period)"
-                    value={Number(dumperUsage.est_watch_hours ?? 0)}
-                  />
+                  {dumperStatCards.map((card) => (
+                    <StatCard
+                      key={card.label}
+                      label={card.label}
+                      value={card.value}
+                      hint={card.hint}
+                    />
+                  ))}
                 </div>
                 {dumperUsage.top_users.length > 0 && (
                   <div>
@@ -546,8 +634,16 @@ export default function AnalyticsRoute() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-              <StatCard label="Visitors with location" value={geoStatCards.known} />
-              <StatCard label="Visitors without location" value={geoStatCards.unknown} />
+              <StatCard
+                label="Visitors with location"
+                value={geoStatCards.known}
+                hint="Unique visitors in this period whose first analytics ping resolved an approximate country/region/city from IP."
+              />
+              <StatCard
+                label="Visitors without location"
+                value={geoStatCards.unknown}
+                hint="Unique visitors with no geo yet — VPN/private IP, lookup failure, or they only pinged before geo was available."
+              />
             </div>
 
             {filteredGeoCountries.length === 0 ? (
@@ -673,14 +769,47 @@ export default function AnalyticsRoute() {
   )
 }
 
-function StatCard({ label, value }: { label: string; value: number }) {
+function StatCard({
+  label,
+  value,
+  hint,
+}: {
+  label: string
+  value: number
+  hint?: string
+}) {
   const display =
     Number.isFinite(value) && !Number.isInteger(value)
       ? value.toLocaleString(undefined, { maximumFractionDigits: 1 })
       : value.toLocaleString()
+
+  const labelRow = hint ? (
+    <SiteTooltip content={hint} side="top" className="inline-flex max-w-full">
+      <span className="inline-flex items-center gap-1 cursor-help border-b border-dotted border-slate-600 hover:border-slate-400">
+        <span className="text-slate-500 text-xs uppercase tracking-wide">{label}</span>
+        <svg
+          className="w-3.5 h-3.5 text-slate-500 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </span>
+    </SiteTooltip>
+  ) : (
+    <p className="text-slate-500 text-xs uppercase tracking-wide">{label}</p>
+  )
+
   return (
     <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
-      <p className="text-slate-500 text-xs uppercase tracking-wide">{label}</p>
+      {labelRow}
       <p className="text-2xl font-bold text-white mt-1 tabular-nums">{display}</p>
     </div>
   )
