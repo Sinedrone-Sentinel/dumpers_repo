@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `144_discord_cron_ready_only.sql` (Discord cron only wakes when messages are sendable). Apply through `144` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `145_dumper_invoke_analytics.sql` (BP Dumper Edge usage on Site Analytics). Apply through `145` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -175,6 +175,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 107 | `142_service_catalog_kinds.sql` | Service kinds (actionable/informative), catalog seeds, 30m/31m timers, tip screenshot storage |
 | 108 | `143_service_request_pricing_tiers.sql` | FREE vs FEE request tiers — list/notify split by partner pricing_label |
 | 109 | `144_discord_cron_ready_only.sql` | Discord cron skips coalesce-held queue rows (no empty wake every minute) |
+| 110 | `145_dumper_invoke_analytics.sql` | BP Dumper Edge invoke stats (30-day daily rows; daily `cleanup-dumper-invoke-daily` cron) + Site Analytics RPC |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -277,6 +278,13 @@ Apply migration `131`. Super-admin questionnaire editor gains a **Public poll** 
 ### BP Dumper webhook API
 
 Members copy a personal API key from the **BP Dumper** modal (avatar menu, or Blueprints / Mission Tracker callout). Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.
+
+After migration **145**, redeploy the webhook so Site Analytics can show per-user Edge invoke stats:
+
+```bash
+npm run copy-blueprint-lookup
+npx supabase functions deploy log-watcher-webhook --no-verify-jwt
+```
 
 **Base URL:** `https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook` (hardcoded in BP Dumper; members only need their API key)
 

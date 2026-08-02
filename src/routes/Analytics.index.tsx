@@ -66,6 +66,26 @@ type AnalyticsSummary = {
 
 type AudienceFilter = 'all' | 'guest' | 'signed_in'
 
+type DumperTopUser = {
+  user_id: string
+  label: string
+  invokes: number
+}
+
+type DumperUsageSummary = {
+  period_days: number
+  keys_issued: number
+  keys_ever_used: number
+  active_users: number
+  watch_active_now: number
+  total_invokes: number
+  avg_invokes_per_active_user: number
+  avg_invokes_per_day: number
+  projected_monthly_invokes: number
+  est_watch_hours: number
+  top_users: DumperTopUser[]
+}
+
 const PERIOD_OPTIONS = [7, 30, 90] as const
 
 const AUDIENCE_OPTIONS: { id: AudienceFilter; label: string; hint: string }[] = [
@@ -138,6 +158,7 @@ export default function AnalyticsRoute() {
   const [periodDays, setPeriodDays] = useState<number>(30)
   const [audience, setAudience] = useState<AudienceFilter>('all')
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null)
+  const [dumperUsage, setDumperUsage] = useState<DumperUsageSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -146,11 +167,12 @@ export default function AnalyticsRoute() {
     setError(null)
 
     try {
-      const { data, error: fetchError } = await supabase.rpc('get_site_analytics_summary', {
-        p_days: periodDays,
-      })
-      if (fetchError) throw fetchError
-      const raw = data as AnalyticsSummary
+      const [siteRes, dumperRes] = await Promise.all([
+        supabase.rpc('get_site_analytics_summary', { p_days: periodDays }),
+        supabase.rpc('get_dumper_usage_summary', { p_days: periodDays }),
+      ])
+      if (siteRes.error) throw siteRes.error
+      const raw = siteRes.data as AnalyticsSummary
       setSummary({
         ...raw,
         daily_visitors: (raw.daily_visitors ?? []).map((row) => ({
@@ -166,8 +188,23 @@ export default function AnalyticsRoute() {
         geo_regions: raw.geo_regions ?? [],
         geo_cities: raw.geo_cities ?? [],
       })
+
+      if (dumperRes.error) {
+        // Site analytics can still render if migration 145 is not applied yet.
+        setDumperUsage(null)
+        if (!dumperRes.error.message.includes('get_dumper_usage_summary')) {
+          console.warn('get_dumper_usage_summary:', dumperRes.error.message)
+        }
+      } else {
+        const dumper = dumperRes.data as DumperUsageSummary
+        setDumperUsage({
+          ...dumper,
+          top_users: dumper.top_users ?? [],
+        })
+      }
     } catch (err) {
       setSummary(null)
+      setDumperUsage(null)
       setError((err as Error).message)
     }
 
@@ -395,6 +432,68 @@ export default function AnalyticsRoute() {
 
           <section className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
             <h2 className="text-sm font-semibold text-slate-200 mb-1">
+              BP Dumper Edge usage ({periodDays} days)
+            </h2>
+            <p className="text-xs text-slate-500 mb-4">
+              Counts accepted <code className="text-slate-400">log-watcher-webhook</code> calls
+              (watch pings, blueprint events, etc.). Rolling 30-day window — older daily rows are
+              purged once per day by cron. Useful for Free-tier Edge planning (~500k Edge invocations /
+              month). This section never looks back more than 30 days.
+            </p>
+            {!dumperUsage ? (
+              <p className="text-sm text-slate-500">
+                No Dumper usage data yet. Apply migration{' '}
+                <code className="text-slate-400">145_dumper_invoke_analytics.sql</code> and redeploy{' '}
+                <code className="text-slate-400">log-watcher-webhook</code>.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  <StatCard label="API keys issued" value={dumperUsage.keys_issued} />
+                  <StatCard label="Active Dumpers (period)" value={dumperUsage.active_users} />
+                  <StatCard label="Watching now" value={dumperUsage.watch_active_now} />
+                  <StatCard label="Keys ever used" value={dumperUsage.keys_ever_used} />
+                  <StatCard label="Edge invokes (period)" value={dumperUsage.total_invokes} />
+                  <StatCard
+                    label="Avg invokes / active Dumper"
+                    value={Number(dumperUsage.avg_invokes_per_active_user ?? 0)}
+                  />
+                  <StatCard
+                    label="Avg invokes / day"
+                    value={Number(dumperUsage.avg_invokes_per_day ?? 0)}
+                  />
+                  <StatCard
+                    label="Projected monthly Edge"
+                    value={Number(dumperUsage.projected_monthly_invokes ?? 0)}
+                  />
+                  <StatCard
+                    label="Est. watch-hours (period)"
+                    value={Number(dumperUsage.est_watch_hours ?? 0)}
+                  />
+                </div>
+                {dumperUsage.top_users.length > 0 && (
+                  <div>
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                      Top Dumpers by Edge invokes
+                    </h3>
+                    <div className="space-y-2">
+                      {dumperUsage.top_users.map((row) => (
+                        <GeoBarRow
+                          key={row.user_id}
+                          label={row.label}
+                          count={Number(row.invokes)}
+                          maxCount={Number(dumperUsage.top_users[0]?.invokes ?? 1)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+
+          <section className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+            <h2 className="text-sm font-semibold text-slate-200 mb-1">
               Daily unique visitors ({summary.period_days} days)
             </h2>
             {audience === 'all' && (
@@ -575,10 +674,14 @@ export default function AnalyticsRoute() {
 }
 
 function StatCard({ label, value }: { label: string; value: number }) {
+  const display =
+    Number.isFinite(value) && !Number.isInteger(value)
+      ? value.toLocaleString(undefined, { maximumFractionDigits: 1 })
+      : value.toLocaleString()
   return (
     <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
       <p className="text-slate-500 text-xs uppercase tracking-wide">{label}</p>
-      <p className="text-2xl font-bold text-white mt-1 tabular-nums">{value.toLocaleString()}</p>
+      <p className="text-2xl font-bold text-white mt-1 tabular-nums">{display}</p>
     </div>
   )
 }

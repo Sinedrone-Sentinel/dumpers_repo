@@ -16,11 +16,13 @@ const AMBIGUOUS_DEDUPE_HOURS = 24
 
 type SupabaseAdmin = ReturnType<typeof createClient>
 
-async function touchApiKey(supabase: SupabaseAdmin, apiKey: string) {
-  await supabase
-    .from('user_api_keys')
-    .update({ last_used_at: new Date().toISOString() })
-    .eq('api_key', apiKey)
+/** Bump last_used_at + lifetime/daily invoke counters (Edge usage analytics). */
+async function recordApiInvoke(supabase: SupabaseAdmin, apiKey: string) {
+  const { error } = await supabase.rpc('record_dumper_api_invoke', { p_api_key: apiKey })
+  if (error) {
+    // Non-fatal — webhook should still process events if analytics RPC is missing.
+    console.warn('record_dumper_api_invoke failed:', error.message)
+  }
 }
 
 type DumperGameStatus =
@@ -214,6 +216,9 @@ serve(async (req) => {
       })
     }
 
+    // One count per accepted request (matches Supabase Edge invocation for this key).
+    await recordApiInvoke(supabase, apiKey)
+
     if (req.method === 'GET') {
       const { data: bpsData, error: bpsError } = await supabase
         .from('acquired_blueprints')
@@ -334,11 +339,6 @@ serve(async (req) => {
         )
       }
 
-      await supabase
-        .from('user_api_keys')
-        .update({ last_used_at: new Date().toISOString() })
-        .eq('api_key', apiKey)
-
       return new Response(
         JSON.stringify({
           success: true,
@@ -357,44 +357,37 @@ serve(async (req) => {
 
     if (eventType === 'session_start') {
       await setGameStatus(supabase, userId, 'tracking', false)
-      await touchApiKey(supabase, apiKey)
       await cleanupStaleDumperSessions(supabase)
       return jsonResponse({ success: true, event: 'session_start' })
     }
 
     if (eventType === 'game_exit_menu') {
       await setGameStatus(supabase, userId, 'exit_menu', false)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_exit_menu' })
     }
 
     if (eventType === 'game_quit') {
       await setGameStatus(supabase, userId, 'quit_game', true)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_quit' })
     }
 
     if (eventType === 'game_crash') {
       await setGameStatus(supabase, userId, 'crash_waiting', false)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_crash' })
     }
 
     if (eventType === 'game_reconnected') {
       await setGameStatus(supabase, userId, 'reconnected', false)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_reconnected' })
     }
 
     if (eventType === 'game_tracking') {
       await setGameStatus(supabase, userId, 'tracking', false)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'game_tracking' })
     }
 
     if (eventType === 'session_end') {
       await setWatchSession(supabase, userId, false)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'session_end' })
     }
 
@@ -405,7 +398,6 @@ serve(async (req) => {
         .update({ dumper_watch_active: true })
         .eq('id', userId)
         .eq('dumper_watch_active', false)
-      await touchApiKey(supabase, apiKey)
       await cleanupStaleDumperSessions(supabase)
       return jsonResponse({ success: true, event: 'session_ping' })
     }
@@ -460,7 +452,6 @@ serve(async (req) => {
           dumper_game_status_at: new Date().toISOString(),
         })
         .eq('id', userId)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({
         success: true,
         event: 'missions_snapshot',
@@ -502,7 +493,6 @@ serve(async (req) => {
           dumper_game_status_at: new Date().toISOString(),
         })
         .eq('id', userId)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'mission_started', missionGuid })
     }
 
@@ -520,7 +510,6 @@ serve(async (req) => {
       if (deleteError) throw deleteError
 
       await touchWatchPing(supabase, userId)
-      await touchApiKey(supabase, apiKey)
       return jsonResponse({ success: true, event: 'mission_ended', missionGuid })
     }
 
