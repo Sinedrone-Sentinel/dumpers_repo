@@ -104,10 +104,8 @@ export default function BlueprintCard({
   return (
     <div
       onClick={(e) => onClick(blueprint, e)}
-      className={`group relative flex flex-col h-full blueprint-card-fixed bg-gradient-to-br from-slate-900 to-slate-800 border rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-colors transition-shadow duration-200 overflow-hidden ${
-        acquiredLocked
-          ? 'border-green-500/50 ring-1 ring-green-500/20'
-          : 'border-slate-700 hover:border-red-500/30'
+      className={`group relative flex flex-col h-full blueprint-card-fixed site-card p-3 sm:p-4 cursor-pointer overflow-hidden ${
+        acquiredLocked ? 'site-card-acquired' : ''
       }`}
     >
       <div className="relative z-10 flex flex-col flex-1 min-h-0">

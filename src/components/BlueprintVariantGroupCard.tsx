@@ -29,18 +29,16 @@ export default function BlueprintVariantGroupCard({
 
   return (
     <div
-      className={`min-w-0 max-w-full rounded-xl border overflow-hidden transition-colors transition-shadow duration-200 ${
-        expanded
-          ? 'col-span-full border-red-500/30 ring-1 ring-red-500/10'
-          : 'h-full border-slate-700 hover:border-red-500/30 hover:shadow-lg'
+      className={`site-card min-w-0 max-w-full overflow-hidden ${
+        expanded ? 'col-span-full border-orange-400/40' : 'h-full'
       }`}
     >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
-        className={`w-full text-left bg-gradient-to-br from-slate-900 to-slate-800 transition-colors ${
-          expanded ? 'border-b border-slate-700/80' : 'hover:from-slate-900 hover:to-slate-800/90'
+        className={`w-full text-left transition-colors ${
+          expanded ? 'border-b border-orange-500/25' : ''
         }`}
       >
         <div className="px-3 sm:px-4 py-2.5 border-b border-red-500/20 bg-red-950/20">

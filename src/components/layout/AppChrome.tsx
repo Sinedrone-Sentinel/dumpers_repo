@@ -135,7 +135,7 @@ export default function AppChrome({
     <div className="site-page-bg min-h-screen flex flex-col site-ticker-offset">
       <header
         ref={headerRef}
-        className="fixed top-0 inset-x-0 z-40 flex flex-col overflow-visible"
+        className="fixed top-0 inset-x-0 z-40 flex flex-col overflow-visible isolate"
       >
         {updateAvailable && <UpdateAvailableBanner />}
         <div className="site-app-header">

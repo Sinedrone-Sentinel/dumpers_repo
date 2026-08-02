@@ -341,7 +341,7 @@ function BrandRevealAnimatedModal({
           }
         >
           <div
-            className={`relative bg-slate-900 border border-slate-700 rounded-2xl w-full h-full shadow-2xl flex flex-col min-w-0 overflow-hidden ${
+            className={`relative bg-slate-950/95 border border-orange-500/30 rounded-2xl w-full h-full shadow-2xl shadow-orange-950/40 flex flex-col min-w-0 overflow-hidden ${
               closing ? 'pointer-events-none' : ''
             }`}
             style={{
