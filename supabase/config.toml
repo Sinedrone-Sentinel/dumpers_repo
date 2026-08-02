@@ -1,3 +1,9 @@
+# pg_cron → send-discord uses service_role Bearer (not a user JWT).
+[functions.send-discord]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/send-discord/index.ts"
+
 [functions.log-watcher-webhook]
 enabled = true
 verify_jwt = false

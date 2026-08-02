@@ -42,6 +42,28 @@ const DISCORD_TITLE_LIMIT = 256
 const DISCORD_DESCRIPTION_LIMIT = 4096
 const DISCORD_MAX_FIELDS = 25
 
+/** Decode JWT payload without verifying — used only to avoid calling Auth getUser with API keys. */
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  try {
+    const parts = token.split('.')
+    if (parts.length < 2) return null
+    const b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
+    const padded = b64 + '='.repeat((4 - (b64.length % 4)) % 4)
+    return JSON.parse(atob(padded)) as Record<string, unknown>
+  } catch {
+    return null
+  }
+}
+
+/** True only when the bearer looks like a signed-in user access token (has sub). */
+function isUserAccessToken(token: string): boolean {
+  const payload = decodeJwtPayload(token)
+  if (!payload) return false
+  const role = typeof payload.role === 'string' ? payload.role : ''
+  if (role === 'anon' || role === 'service_role') return false
+  return typeof payload.sub === 'string' && payload.sub.length > 0
+}
+
 interface DiscordSettings {
   enabled: boolean
   orders_enabled: boolean
@@ -260,6 +282,19 @@ serve(async (req) => {
     const isServiceRole = token.length > 0 && token === supabaseServiceKey
 
     if (!isServiceRole) {
+      // Cron / misconfigured app_config often sends anon or service_role JWTs.
+      // Those have no `sub` — calling auth.getUser() spams Auth logs every minute with
+      // "403: invalid claim: missing sub claim". Reject locally instead.
+      if (!isUserAccessToken(token)) {
+        return new Response(
+          JSON.stringify({
+            error:
+              'Invalid authorization — expected service_role Bearer (cron) or a super-admin user JWT. Check app_config.supabase_service_key matches the Edge service_role secret.',
+          }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+
       const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
         global: { headers: { Authorization: authHeader } },
       })

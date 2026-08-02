@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `143_service_request_pricing_tiers.sql` (FREE vs FEE Request Services routing). Apply through `143` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `144_discord_cron_ready_only.sql` (Discord cron only wakes when messages are sendable). Apply through `144` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -174,6 +174,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 106 | `141_support_other_and_new_service.sql` | Support ticket categories: Other, Add New Service Request |
 | 107 | `142_service_catalog_kinds.sql` | Service kinds (actionable/informative), catalog seeds, 30m/31m timers, tip screenshot storage |
 | 108 | `143_service_request_pricing_tiers.sql` | FREE vs FEE request tiers — list/notify split by partner pricing_label |
+| 109 | `144_discord_cron_ready_only.sql` | Discord cron skips coalesce-held queue rows (no empty wake every minute) |
 
 ### pg_cron (migrations 054, 065–068)
 
@@ -198,7 +199,7 @@ npx supabase functions deploy ban-user
 npx supabase functions deploy unban-user
 npx supabase functions deploy delete-account
 npx supabase functions deploy validate-rsi-handle
-npx supabase functions deploy send-discord
+npx supabase functions deploy send-discord --no-verify-jwt
 npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 npx supabase functions deploy discord-services-interactions --no-verify-jwt
@@ -260,7 +261,7 @@ npx supabase functions deploy send-discord
 |--------|--------|
 | Drop open INSERT RLS on `discord_webhooks` | Anon/members can no longer insert rows directly; `/discord-subscribe` still works via `sync_my_discord_event_webhooks` |
 | Mask `official_webhook_url` in `get_discord_settings` | Only super-admins and `service_role` receive the staff webhook URL |
-| `send-discord` auth | Requires service_role Bearer (cron) or a verified super-admin JWT (manual Process Queue) |
+| `send-discord` auth | Requires service_role Bearer (cron) or a verified super-admin JWT (manual Process Queue). Deploy with `--no-verify-jwt` (cron is not a user JWT). If Auth logs show `GET /user` + `missing sub claim` every minute, `app_config.supabase_service_key` almost certainly does not match the Edge `SUPABASE_SERVICE_ROLE_KEY`. |
 
 Staff webhook **rotation** in Discord is optional after this — do it only if you suspect the URL was already pulled.
 
