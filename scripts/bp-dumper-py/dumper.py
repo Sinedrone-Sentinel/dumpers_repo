@@ -276,61 +276,14 @@ def is_blueprint_acquired(acquired: set, raw_input: str) -> bool:
     key = cache_key_for_input(raw_input)
     return key in acquired or raw_input in acquired
 
-def post_blueprint_event(session, url: str, blueprint_input: str, contract_definition_id: str | None = None):
-    """POST blueprint: resolve locally first (so local global.ini translations and prefix stripping work), fall back to raw."""
-    post_value = blueprint_input
-    local = resolve_blueprint_input(blueprint_input, contract_definition_id)
-    if local.get("ok"):
-        post_value = local["internal_name"]
+class DumperUpdateRequired(Exception):
+    """Server requires a newer BP Dumper build (HTTP 426)."""
 
-    payload = {
-        "type": "blueprint_received",
-        "blueprint": post_value,
-    }
-    if contract_definition_id:
-        payload["contractDefinitionId"] = contract_definition_id
+    def __init__(self, latest: str = "", download_url: str = ""):
+        self.latest = (latest or "").strip()
+        self.download_url = (download_url or "").strip()
+        super().__init__(f"update_required:{self.latest}")
 
-    res = session.post(url, json=payload, timeout=15)
-    body = {}
-    try:
-        body = res.json()
-    except Exception:
-        pass
-    internal_name = body.get("blueprint") or (local["internal_name"] if local.get("ok") else None)
-    error_msg = None
-    if res.status_code == 400:
-        err = body.get("error", "Unknown blueprint")
-        error_msg = f'{err} (posted: "{post_value}")'
-    elif res.status_code >= 400 and res.status_code != 202:
-        err = body.get("error", f"HTTP {res.status_code}")
-        error_msg = f"{err} (posted: \"{post_value}\")"
-    return res.status_code, body.get("duplicate", False), internal_name, error_msg
-
-
-def post_dumper_event(session, url: str, event_type: str, fields: dict | None = None):
-    payload = {"type": event_type}
-    if fields:
-        payload.update({k: v for k, v in fields.items() if v is not None})
-    res = session.post(url, json=payload, timeout=15)
-    if res.status_code >= 400:
-        raise RuntimeError(f"HTTP {res.status_code}")
-
-
-def start_session_ping_loop(session, url: str, stop_event: threading.Event):
-    # Keep well under the server stale timeout (90s) so cron does not flip watch_active off between pings.
-    while not stop_event.wait(30.0):
-        try:
-            post_dumper_event(session, url, "session_ping")
-        except Exception as e:
-            print(f"  [Live] {Colors.YELLOW}⚠ Session ping failed:{Colors.RESET} {e}")
-
-# Default Star Citizen path locations
-DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
-SCAN_MAX_DEPTH = 4
-try:
-    from _min_game_version import MIN_GAME_VERSION
-except ImportError:
-    MIN_GAME_VERSION = "4.8"
 
 def _load_dumper_version() -> str:
     try:
@@ -351,6 +304,7 @@ def _load_dumper_version() -> str:
                 pass
     return "unknown"
 
+
 def _parse_semver(version: str) -> tuple[int, ...]:
     cleaned = version.strip().lower().lstrip("v")
     parts: list[int] = []
@@ -368,18 +322,213 @@ def _parse_semver(version: str) -> tuple[int, ...]:
         parts.append(int(digits))
     return tuple(parts or [0])
 
+
 def _is_newer_version(latest: str, current: str) -> bool:
     return _parse_semver(latest) > _parse_semver(current)
+
 
 DUMPER_VERSION = _load_dumper_version()
 DEFAULT_WEBHOOK_URL = "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook"
 DEFAULT_RELEASES_URL = "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases"
+DEFAULT_DOWNLOAD_URL = (
+    "https://github.com/Sinedrone-Sentinel/dumpers_repo/releases/latest/download/DumperApps.exe"
+)
 
-def _maybe_print_update_notice(latest_ver: str) -> None:
-    if not latest_ver or not _is_newer_version(latest_ver, DUMPER_VERSION):
+# Default Star Citizen path locations
+DEFAULT_WIN_PATH = r"C:\Program Files\Roberts Space Industries\StarCitizen"
+SCAN_MAX_DEPTH = 4
+try:
+    from _min_game_version import MIN_GAME_VERSION
+except ImportError:
+    MIN_GAME_VERSION = "4.8"
+
+
+def _response_json(res) -> dict:
+    try:
+        body = res.json()
+        return body if isinstance(body, dict) else {}
+    except Exception:
+        return {}
+
+
+def raise_if_update_required(res) -> None:
+    if res.status_code != 426:
         return
-    print(f"{Colors.YELLOW}[Update] New dumper version available: {latest_ver} (You have {DUMPER_VERSION}).{Colors.RESET}")
-    print(f"{Colors.YELLOW}Download the latest release from: {DEFAULT_RELEASES_URL}{Colors.RESET}\n")
+    body = _response_json(res)
+    raise DumperUpdateRequired(
+        str(body.get("latestDumperVersion") or ""),
+        str(body.get("downloadUrl") or DEFAULT_DOWNLOAD_URL),
+    )
+
+
+def keep_app_up_to_date_enabled(env_vars: dict) -> bool:
+    """Default ON when unset — members must opt out explicitly."""
+    raw = (env_vars.get("KEEP_APP_UP_TO_DATE") or os.getenv("KEEP_APP_UP_TO_DATE") or "true").strip().lower()
+    return raw not in ("0", "false", "n", "no", "off")
+
+
+def perform_auto_update(latest_ver: str, download_url: str) -> None:
+    """Download latest DumperApps.exe next to this process and relaunch (frozen Windows builds)."""
+    url = (download_url or DEFAULT_DOWNLOAD_URL).strip() or DEFAULT_DOWNLOAD_URL
+    latest_label = latest_ver or "latest"
+    print(f"\n{Colors.CYAN}[Update] Downloading BP Dumper {latest_label}...{Colors.RESET}")
+    print(f"{Colors.DIM}{url}{Colors.RESET}")
+
+    if not getattr(sys, "frozen", False):
+        print(
+            f"{Colors.RED}[Update] Auto-update only works for the packaged DumperApps.exe. "
+            f"Update from: {DEFAULT_RELEASES_URL}{Colors.RESET}"
+        )
+        sys.exit(1)
+
+    exe_path = Path(sys.executable).resolve()
+    tmp_path = exe_path.with_name(exe_path.name + ".new")
+    try:
+        with urllib.request.urlopen(url, timeout=120) as resp:
+            data = resp.read()
+        if not data or len(data) < 1_000_000:
+            raise RuntimeError(f"Download too small ({len(data) if data else 0} bytes) — aborting replace")
+        tmp_path.write_bytes(data)
+    except Exception as e:
+        print(f"{Colors.RED}[Update] Download failed: {e}{Colors.RESET}")
+        print(f"{Colors.YELLOW}Download manually: {url}{Colors.RESET}")
+        sys.exit(1)
+
+    helper = exe_path.parent / "_dumper_update.cmd"
+    pid = os.getpid()
+    helper.write_text(
+        "\r\n".join(
+            [
+                "@echo off",
+                "setlocal",
+                f"set PID={pid}",
+                f'set EXE={exe_path}',
+                f'set NEW={tmp_path}',
+                ":wait",
+                "timeout /t 1 /nobreak >nul",
+                'tasklist /FI "PID eq %PID%" 2>nul | find "%PID%" >nul',
+                "if not errorlevel 1 goto wait",
+                'move /Y "%NEW%" "%EXE%" >nul',
+                'start "" "%EXE%"',
+                'del "%~f0"',
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    print(f"{Colors.GREEN}[Update] Restarting with {latest_label}...{Colors.RESET}")
+    subprocess.Popen(["cmd", "/c", str(helper)], close_fds=True)
+    sys.exit(0)
+
+
+def handle_update_required(err: DumperUpdateRequired, *, keep_up_to_date: bool) -> None:
+    latest = err.latest or "newer"
+    url = err.download_url or DEFAULT_DOWNLOAD_URL
+    print(
+        f"\n{Colors.RED}[Update required] This BP Dumper ({DUMPER_VERSION}) is outdated. "
+        f"Latest is {latest}.{Colors.RESET}"
+    )
+    if keep_up_to_date:
+        perform_auto_update(err.latest, url)
+    print(f"{Colors.YELLOW}Keep App Up to Date is off — download and run:{Colors.RESET}")
+    print(f"  {url}")
+    print(f"  Releases: {DEFAULT_RELEASES_URL}")
+    sys.exit(1)
+
+
+class SessionPingController:
+    """Pause idle session_ping without stopping BP/mission event POSTs."""
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._paused = True
+        self.update_required: DumperUpdateRequired | None = None
+
+    def pause(self, reason: str = "") -> None:
+        with self._lock:
+            was = self._paused
+            self._paused = True
+        if not was and reason:
+            print(f"  [Live] {Colors.DIM}Session ping paused ({reason}){Colors.RESET}")
+
+    def resume(self, reason: str = "") -> None:
+        with self._lock:
+            was = self._paused
+            self._paused = False
+        if was and reason:
+            print(f"  [Live] {Colors.DIM}Session ping resumed ({reason}){Colors.RESET}")
+
+    def is_paused(self) -> bool:
+        with self._lock:
+            return self._paused
+
+    def note_update_required(self, err: DumperUpdateRequired) -> None:
+        with self._lock:
+            self.update_required = err
+
+    def take_update_required(self) -> DumperUpdateRequired | None:
+        with self._lock:
+            err = self.update_required
+            self.update_required = None
+            return err
+
+
+def post_blueprint_event(session, url: str, blueprint_input: str, contract_definition_id: str | None = None):
+    """POST blueprint: resolve locally first (so local global.ini translations and prefix stripping work), fall back to raw."""
+    post_value = blueprint_input
+    local = resolve_blueprint_input(blueprint_input, contract_definition_id)
+    if local.get("ok"):
+        post_value = local["internal_name"]
+
+    payload = {
+        "type": "blueprint_received",
+        "blueprint": post_value,
+    }
+    if contract_definition_id:
+        payload["contractDefinitionId"] = contract_definition_id
+
+    res = session.post(url, json=payload, timeout=15)
+    raise_if_update_required(res)
+    body = _response_json(res)
+    internal_name = body.get("blueprint") or (local["internal_name"] if local.get("ok") else None)
+    error_msg = None
+    if res.status_code == 400:
+        err = body.get("error", "Unknown blueprint")
+        error_msg = f'{err} (posted: "{post_value}")'
+    elif res.status_code >= 400 and res.status_code != 202:
+        err = body.get("error", f"HTTP {res.status_code}")
+        error_msg = f"{err} (posted: \"{post_value}\")"
+    return res.status_code, body.get("duplicate", False), internal_name, error_msg
+
+
+def post_dumper_event(session, url: str, event_type: str, fields: dict | None = None):
+    payload = {"type": event_type}
+    if fields:
+        payload.update({k: v for k, v in fields.items() if v is not None})
+    res = session.post(url, json=payload, timeout=15)
+    raise_if_update_required(res)
+    if res.status_code >= 400:
+        raise RuntimeError(f"HTTP {res.status_code}")
+
+
+def start_session_ping_loop(
+    session,
+    url: str,
+    stop_event: threading.Event,
+    ping_ctrl: SessionPingController,
+):
+    # Keep well under the server stale timeout (~120s) while live in PU.
+    while not stop_event.wait(30.0):
+        if ping_ctrl.is_paused():
+            continue
+        try:
+            post_dumper_event(session, url, "session_ping")
+        except DumperUpdateRequired as e:
+            ping_ctrl.note_update_required(e)
+            ping_ctrl.pause("update required")
+            return
+        except Exception as e:
+            print(f"  [Live] {Colors.YELLOW}⚠ Session ping failed:{Colors.RESET} {e}")
 
 # Skip system/cache folders during drive scans
 SCAN_SKIP_DIRS = frozenset(name.lower() for name in (
@@ -1209,17 +1358,22 @@ def publish_live_tracker_state(
     url: str,
     state: WatcherState,
     session_tracker: SessionTracker,
+    ping_ctrl: SessionPingController | None = None,
 ) -> None:
     """Push game status always; mission snapshot only when log says we're in the PU."""
     status_event = session_tracker.pending_status_event()
     if not is_live_mission_sync_ready(session_tracker):
         if status_event:
             post_game_session_event(session, url, status_event)
+        if ping_ctrl:
+            ping_ctrl.pause("not in PU")
         print(f"{Colors.CYAN}Live tracker waiting — not in PU yet (no mission sync){Colors.RESET}")
         return
 
     sync_active_missions_to_server(session, url, state)
     post_game_session_event(session, url, status_event or "game_tracking")
+    if ping_ctrl:
+        ping_ctrl.resume("in PU")
 
 
 def post_game_session_event(session, url: str, event_type: str) -> None:
@@ -1365,16 +1519,25 @@ def sync_reconnect_missions(session, url: str, path: Path, state: WatcherState, 
     post_game_session_event(session, url, "game_reconnected")
 
 
-def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, args, session=None):
+def watch_log_file(
+    path: Path,
+    state: WatcherState,
+    acquired_blueprints: set,
+    args,
+    session=None,
+    *,
+    keep_up_to_date: bool = True,
+):
     print(f"{Colors.CYAN}Watching {path.name} for live events... (Press Ctrl+C to stop){Colors.RESET}")
     ping_stop = threading.Event()
+    ping_ctrl = SessionPingController()
     ping_thread = None
     session_tracker = SessionTracker()
 
     if session and not args.dry_run:
         ping_thread = threading.Thread(
             target=start_session_ping_loop,
-            args=(session, args.url, ping_stop),
+            args=(session, args.url, ping_stop, ping_ctrl),
             daemon=True,
         )
         ping_thread.start()
@@ -1386,8 +1549,14 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
     first_open = True
     cache_path = _app_dir() / ".dumper_cache.json"
 
+    def check_update_from_ping() -> None:
+        err = ping_ctrl.take_update_required()
+        if err:
+            handle_update_required(err, keep_up_to_date=keep_up_to_date)
+
     try:
         while True:
+            check_update_from_ping()
             try:
                 st = path.stat()
             except FileNotFoundError:
@@ -1397,6 +1566,7 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                     last_inode = None
                     buffer.clear()
                     print(f"{Colors.YELLOW}Game.log not found, waiting for it to appear...{Colors.RESET}")
+                ping_ctrl.pause("Game.log missing")
                 time.sleep(1.0)
                 continue
             except OSError:
@@ -1416,8 +1586,11 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                     if session and not args.dry_run:
                         try:
                             post_game_session_event(session, args.url, "game_quit")
+                        except DumperUpdateRequired as e:
+                            handle_update_required(e, keep_up_to_date=keep_up_to_date)
                         except Exception:
                             pass
+                        ping_ctrl.pause("log rotation / game closed")
                     fh.close()
                     state.guid_map.clear()
                     state.recent_lifecycle.clear()
@@ -1431,7 +1604,11 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                                 path, session, args.url, acquired_blueprints, cache_path
                             )
                             post_dumper_event(session, args.url, "session_start")
-                            publish_live_tracker_state(session, args.url, state, session_tracker)
+                            publish_live_tracker_state(
+                                session, args.url, state, session_tracker, ping_ctrl
+                            )
+                        except DumperUpdateRequired as e:
+                            handle_update_required(e, keep_up_to_date=keep_up_to_date)
                         except Exception as e:
                             print(f"{Colors.YELLOW}⚠ Could not sync live tracker:{Colors.RESET} {e}")
                 except OSError as e:
@@ -1457,8 +1634,19 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                 if expired:
                     try:
                         post_game_session_event(session, args.url, expired)
+                    except DumperUpdateRequired as e:
+                        handle_update_required(e, keep_up_to_date=keep_up_to_date)
                     except Exception:
                         pass
+                    if expired in ("game_quit", "game_exit_menu", "game_tracking"):
+                        if expired == "game_tracking":
+                            ping_ctrl.resume("crash wait ended")
+                        else:
+                            ping_ctrl.pause(expired)
+
+            if not fh:
+                time.sleep(0.5)
+                continue
 
             try:
                 chunk = fh.read()
@@ -1467,6 +1655,8 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                 continue
 
             if chunk:
+                # Prefer false "watching" over missed live state — any new log resumes pings.
+                ping_ctrl.resume("new log activity")
                 buffer.extend(chunk)
                 nl = buffer.rfind(b"\n")
                 if nl >= 0:
@@ -1480,95 +1670,104 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
                         ts_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(ts))
                         was_paused = bool(session_tracker.paused_reason or session_tracker.crash_at is not None)
 
-                        game_event = session_tracker.process_line(line, ts, state)
-                        if game_event == "game_reconnected" and session and not args.dry_run:
-                            try:
-                                sync_reconnect_missions(session, args.url, path, state, session_tracker)
-                            except Exception as e:
-                                print(f"  [Live] {Colors.YELLOW}⚠ Could not resync missions after reconnect:{Colors.RESET} {e}")
-                                game_event = ""
-                        elif game_event in ("game_exit_menu", "game_quit") and session and not args.dry_run:
-                            try:
-                                post_game_session_event(session, args.url, game_event)
-                            except Exception as e:
-                                print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
-                        elif game_event and session and not args.dry_run:
-                            try:
-                                post_game_session_event(session, args.url, game_event)
-                            except Exception as e:
-                                print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
-
-                        active = apply_mission_log_line(line, state, ts)
-                        mission_end = PATTERN_END_MISSION.search(line)
-                        blueprint_hit = PATTERN_BLUEPRINT.search(line)
-
-                        if active:
-                            session_tracker.on_mission_accepted()
-                            print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
-                            if session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
+                        try:
+                            game_event = session_tracker.process_line(line, ts, state)
+                            if game_event == "game_reconnected" and session and not args.dry_run:
                                 try:
-                                    post_dumper_event(session, args.url, "mission_started", {
-                                        "missionGuid": active.guid,
-                                        "contractDefinitionId": active.contract_definition_id or "",
-                                        "debugName": active.debug_name,
-                                    })
+                                    sync_reconnect_missions(session, args.url, path, state, session_tracker)
+                                    ping_ctrl.resume("reconnected")
                                 except Exception as e:
-                                    print(f"  [Live] {Colors.RED}✗ Mission sync failed:{Colors.RESET} {e}")
-
-                        elif mission_end:
-                            guid, completion, reason = mission_end.group(1), mission_end.group(2), mission_end.group(3)
-                            ended = state.record_end(guid, completion, ts)
-                            entry = state.guid_map.get(guid)
-                            debug_name = ended.debug_name if ended else (entry.debug_name if entry else "Unknown")
-                            
-                            if completion == "Complete":
-                                print(f"  [{ts_str}] [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
-                            elif completion == "Abandon":
-                                print(f"  [{ts_str}] [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
-                            elif completion == "Fail":
-                                print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
-                            else:
-                                print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
-
-                            if session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
+                                    print(f"  [Live] {Colors.YELLOW}⚠ Could not resync missions after reconnect:{Colors.RESET} {e}")
+                                    game_event = ""
+                            elif game_event in ("game_exit_menu", "game_quit") and session and not args.dry_run:
                                 try:
-                                    post_dumper_event(session, args.url, "mission_ended", {
-                                        "missionGuid": guid,
-                                        "completion": completion,
-                                    })
+                                    post_game_session_event(session, args.url, game_event)
                                 except Exception as e:
-                                    print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
+                                    print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
+                                ping_ctrl.pause(game_event)
+                            elif game_event and session and not args.dry_run:
+                                try:
+                                    post_game_session_event(session, args.url, game_event)
+                                except Exception as e:
+                                    print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
 
-                        elif blueprint_hit:
-                            import_discovered_blueprint(
-                                blueprint_hit.group(1).strip(),
-                                ts,
-                                state,
-                                path.name,
-                                session,
-                                args.url,
-                                acquired_blueprints,
-                                cache_path,
-                                dry_run=args.dry_run,
-                            )
+                            active = apply_mission_log_line(line, state, ts)
+                            mission_end = PATTERN_END_MISSION.search(line)
+                            blueprint_hit = PATTERN_BLUEPRINT.search(line)
 
-                        if (
-                            was_paused
-                            and not game_event
-                            and session
-                            and not args.dry_run
-                            and (active or mission_end or blueprint_hit)
-                        ):
-                            session_tracker.mark_back_in_pu(state, ts)
-                            try:
-                                sync_reconnect_missions(session, args.url, path, state, session_tracker)
-                            except Exception as e:
-                                print(f"  [Live] {Colors.YELLOW}⚠ Could not resync after PU activity:{Colors.RESET} {e}")
+                            if active:
+                                session_tracker.on_mission_accepted()
+                                print(f"  [{ts_str}] [{path.name}] {Colors.GREEN}Mission started: {active.debug_name} ({active.guid}){Colors.RESET}")
+                                if session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
+                                    try:
+                                        post_dumper_event(session, args.url, "mission_started", {
+                                            "missionGuid": active.guid,
+                                            "contractDefinitionId": active.contract_definition_id or "",
+                                            "debugName": active.debug_name,
+                                        })
+                                        ping_ctrl.resume("mission activity")
+                                    except Exception as e:
+                                        print(f"  [Live] {Colors.RED}✗ Mission sync failed:{Colors.RESET} {e}")
+
+                            elif mission_end:
+                                guid, completion, reason = mission_end.group(1), mission_end.group(2), mission_end.group(3)
+                                ended = state.record_end(guid, completion, ts)
+                                entry = state.guid_map.get(guid)
+                                debug_name = ended.debug_name if ended else (entry.debug_name if entry else "Unknown")
+
+                                if completion == "Complete":
+                                    print(f"  [{ts_str}] [{path.name}] {Colors.CYAN}Mission complete: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                elif completion == "Abandon":
+                                    print(f"  [{ts_str}] [{path.name}] {Colors.RED}Mission abandoned: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                elif completion == "Fail":
+                                    print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission failed: {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+                                else:
+                                    print(f"  [{ts_str}] [{path.name}] {Colors.YELLOW}Mission ended ({completion}): {debug_name} ({guid}) [{reason}]{Colors.RESET}")
+
+                                if session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
+                                    try:
+                                        post_dumper_event(session, args.url, "mission_ended", {
+                                            "missionGuid": guid,
+                                            "completion": completion,
+                                        })
+                                    except Exception as e:
+                                        print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
+
+                            elif blueprint_hit:
+                                import_discovered_blueprint(
+                                    blueprint_hit.group(1).strip(),
+                                    ts,
+                                    state,
+                                    path.name,
+                                    session,
+                                    args.url,
+                                    acquired_blueprints,
+                                    cache_path,
+                                    dry_run=args.dry_run,
+                                )
+
+                            if (
+                                was_paused
+                                and not game_event
+                                and session
+                                and not args.dry_run
+                                and (active or mission_end or blueprint_hit)
+                            ):
+                                session_tracker.mark_back_in_pu(state, ts)
+                                try:
+                                    sync_reconnect_missions(session, args.url, path, state, session_tracker)
+                                    ping_ctrl.resume("back in PU")
+                                except Exception as e:
+                                    print(f"  [Live] {Colors.YELLOW}⚠ Could not resync after PU activity:{Colors.RESET} {e}")
+                        except DumperUpdateRequired as e:
+                            handle_update_required(e, keep_up_to_date=keep_up_to_date)
                 last_size = st.st_size
             else:
                 time.sleep(0.5)
     except KeyboardInterrupt:
         print(f"\n{Colors.CYAN}Stopped watching.{Colors.RESET}")
+    except DumperUpdateRequired as e:
+        handle_update_required(e, keep_up_to_date=keep_up_to_date)
     finally:
         ping_stop.set()
         if ping_thread:
@@ -1576,6 +1775,8 @@ def watch_log_file(path: Path, state: WatcherState, acquired_blueprints: set, ar
         if session and not args.dry_run:
             try:
                 post_dumper_event(session, args.url, "session_end")
+            except DumperUpdateRequired:
+                pass
             except Exception as e:
                 print(f"{Colors.YELLOW}⚠ Failed to notify session end:{Colors.RESET} {e}")
         if fh:
@@ -1825,7 +2026,17 @@ def main():
         if user_watch == 'n':
             args.watch = False
 
-        # 4. Prompt Key (only if not dry run)
+        # Keep App Up to Date (default Y)
+        try:
+            user_keep_updated = input(
+                "Keep App Up to Date (auto-download new BP Dumper when released)? (Y/N, Enter = Y): "
+            ).strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+        keep_app_up_to_date = "false" if user_keep_updated == "n" else "true"
+
+        # Prompt Key (only if not dry run)
         if not args.dry_run:
             default_key = env_vars.get("LOG_WATCHER_API_KEY", "")
             key_prompt = "Enter your BP Dumper API key from Settings (e.g. dr_...)"
@@ -1890,7 +2101,8 @@ def main():
             "LOG_WATCHER_API_KEY": args.key if args.key else "",
             "IMPORT_OLD_LOGS": import_old_logs,
             "FULL_HISTORY_IMPORT": full_history_import,
-            "WATCH_MODE": "true" if args.watch else "false"
+            "WATCH_MODE": "true" if args.watch else "false",
+            "KEEP_APP_UP_TO_DATE": keep_app_up_to_date,
         }
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
@@ -1906,6 +2118,11 @@ def main():
 
     # Update script args.url with resolved URL for reference
     args.url = url
+    keep_up_to_date = keep_app_up_to_date_enabled(env_vars)
+    # Persist default for older .env files that never asked.
+    if "KEEP_APP_UP_TO_DATE" not in env_vars and env_path.is_file():
+        env_vars["KEEP_APP_UP_TO_DATE"] = "true" if keep_up_to_date else "false"
+        save_env_file(env_path, env_vars)
 
     cache_path = _app_dir() / ".dumper_cache.json"
     acquired_blueprints = load_cache_file(cache_path)
@@ -1921,26 +2138,40 @@ def main():
         session = requests.Session()
         session.headers.update({
             "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "X-Dumper-Version": DUMPER_VERSION,
         })
 
-        print(f"{Colors.DIM}Synchronizing blueprints list from server...{Colors.RESET}")
+        print(f"{Colors.DIM}Synchronizing blueprints list from server (dumper {DUMPER_VERSION})...{Colors.RESET}")
         try:
             res = session.get(args.url, timeout=15)
+            raise_if_update_required(res)
             if res.status_code == 200:
-                response_json = res.json()
+                response_json = _response_json(res)
                 if response_json.get("success"):
                     server_bps = response_json.get("blueprints", [])
                     acquired_blueprints.update(server_bps)
                     save_cache_file(cache_path, acquired_blueprints)
                     print(f"Synced {len(server_bps)} blueprints from account.")
 
-                    latest_ver = response_json.get("latestDumperVersion", "")
-                    _maybe_print_update_notice(latest_ver)
+                    latest_ver = str(response_json.get("latestDumperVersion") or "")
+                    if latest_ver and _is_newer_version(latest_ver, DUMPER_VERSION):
+                        # Soft path if Edge has not flipped hard gate yet — still force update policy.
+                        handle_update_required(
+                            DumperUpdateRequired(
+                                latest_ver,
+                                str(response_json.get("downloadUrl") or DEFAULT_DOWNLOAD_URL),
+                            ),
+                            keep_up_to_date=keep_up_to_date,
+                        )
             else:
-                print(f"{Colors.YELLOW}Warning: Server sync returned HTTP {res.status_code}. Using local cache only.{Colors.RESET}")
+                print(f"{Colors.RED}Error: Server sync returned HTTP {res.status_code}. Cannot continue.{Colors.RESET}")
+                sys.exit(1)
+        except DumperUpdateRequired as e:
+            handle_update_required(e, keep_up_to_date=keep_up_to_date)
         except Exception as e:
-            print(f"{Colors.YELLOW}Warning: Could not sync blueprints from server ({e}). Using local cache only.{Colors.RESET}")
+            print(f"{Colors.RED}Error: Could not sync with server ({e}).{Colors.RESET}")
+            sys.exit(1)
 
     # Optional one-shot log imports before watch mode
     run_full_history = bool(getattr(args, "full_history_import", False)) or (
@@ -2041,7 +2272,14 @@ def main():
             print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
         state = WatcherState()
-        watch_log_file(watch_file, state, acquired_blueprints, args, session)
+        watch_log_file(
+            watch_file,
+            state,
+            acquired_blueprints,
+            args,
+            session,
+            keep_up_to_date=keep_up_to_date,
+        )
         return
 
     unique_blueprints: list[tuple[str, str | None]] = []

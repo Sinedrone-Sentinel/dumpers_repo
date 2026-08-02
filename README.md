@@ -284,10 +284,13 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Source** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/installer/`](scripts/installer/) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
-| **Webhook** | `log-watcher-webhook` Edge Function — blueprint acquire, mission sync, watch ping, game status |
+| **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version`; outdated clients get HTTP `426` |
+| **Auto-update** | First-run **Keep App Up to Date** (default Yes) downloads `DumperApps.exe` from GitHub latest and relaunches |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
-**Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications.
+**Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications. `session_ping` runs every 30s while in the PU; idle/not-in-PU pauses those pings (event POSTs still fire).
+
+After cutting a dumper release, redeploy `log-watcher-webhook --no-verify-jwt` so the Edge hard version gate matches `LATEST_DUMPER_VERSION`.
 
 ---
 

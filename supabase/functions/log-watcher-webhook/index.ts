@@ -9,12 +9,49 @@ import dumperVersionData from './dumper-version.json' with { type: 'json' }
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type, x-dumper-version',
 }
 
 const AMBIGUOUS_DEDUPE_HOURS = 24
+const DUMPER_DOWNLOAD_URL =
+  'https://github.com/Sinedrone-Sentinel/dumpers_repo/releases/latest/download/DumperApps.exe'
 
 type SupabaseAdmin = ReturnType<typeof createClient>
+
+function parseSemver(version: string): number[] {
+  const cleaned = version.trim().toLowerCase().replace(/^v/, '')
+  const parts: number[] = []
+  for (const piece of cleaned.split(/[.+_-]/)) {
+    if (!piece) continue
+    let digits = ''
+    for (const ch of piece) {
+      if (ch >= '0' && ch <= '9') digits += ch
+      else break
+    }
+    if (!digits) break
+    parts.push(Number.parseInt(digits, 10))
+  }
+  return parts.length ? parts : [0]
+}
+
+/** True when `a` is strictly older than `b` (semver-ish major.minor.patch). */
+function isVersionLessThan(a: string, b: string): boolean {
+  const left = parseSemver(a)
+  const right = parseSemver(b)
+  const len = Math.max(left.length, right.length)
+  for (let i = 0; i < len; i++) {
+    const l = left[i] ?? 0
+    const r = right[i] ?? 0
+    if (l < r) return true
+    if (l > r) return false
+  }
+  return false
+}
+
+function latestDumperVersion(): string {
+  return Deno.env.get('LATEST_DUMPER_VERSION')?.trim() || dumperVersionData.version
+}
 
 /** Bump last_used_at + lifetime/daily invoke counters (Edge usage analytics). */
 async function recordApiInvoke(supabase: SupabaseAdmin, apiKey: string) {
@@ -216,6 +253,19 @@ serve(async (req) => {
       })
     }
 
+    const latest = latestDumperVersion()
+    const clientVersion = (req.headers.get('X-Dumper-Version') ?? '').trim()
+    if (!clientVersion || isVersionLessThan(clientVersion, latest)) {
+      return jsonResponse(
+        {
+          error: 'update_required',
+          latestDumperVersion: latest,
+          downloadUrl: DUMPER_DOWNLOAD_URL,
+        },
+        426
+      )
+    }
+
     // One count per accepted request (matches Supabase Edge invocation for this key).
     await recordApiInvoke(supabase, apiKey)
 
@@ -230,11 +280,17 @@ serve(async (req) => {
       }
 
       const list = bpsData.map((row: { blueprint_id: string }) => row.blueprint_id)
-      const latestDumperVersion =
-        Deno.env.get('LATEST_DUMPER_VERSION')?.trim() || dumperVersionData.version
-      return new Response(JSON.stringify({ success: true, blueprints: list, latestDumperVersion }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      return new Response(
+        JSON.stringify({
+          success: true,
+          blueprints: list,
+          latestDumperVersion: latest,
+          downloadUrl: DUMPER_DOWNLOAD_URL,
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      )
     }
 
     let payload

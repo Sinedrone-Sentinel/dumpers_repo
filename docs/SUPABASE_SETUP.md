@@ -220,7 +220,7 @@ npx supabase functions deploy discord-services-post-test
 | `delete-account` | User self-service account deletion |
 | `validate-rsi-handle` | Verify RSI Handles via public citizen Bio challenge code (after `issue_rsi_verify_challenge`) |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
-| `log-watcher-webhook` | Receives blueprint events from external tools; Bearer API key auth |
+| `log-watcher-webhook` | Receives blueprint events from BP Dumper; Bearer API key + required `X-Dumper-Version` (rejects outdated clients with HTTP 426) |
 | `discord-services-interactions` | Partnership Dumper Services bot (Accept buttons); Discord signature auth |
 | `discord-services-dispatch` | Fan-out service requests to partner Discord channels |
 | `discord-services-expire` | Expire open Accept windows + Timed out embeds |

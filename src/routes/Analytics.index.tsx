@@ -403,7 +403,7 @@ export default function AnalyticsRoute() {
       {
         label: 'Edge invokes (period)',
         value: dumperUsage.total_invokes,
-        hint: 'Accepted log-watcher-webhook Edge Function calls in this period. Watch mode alone is about 120/hour per running Dumper.',
+        hint: 'Accepted log-watcher-webhook Edge Function calls in this period. Live PU watch is about 120/hour per Dumper (session_ping every 30s); idle/not-in-PU pauses those pings on current Dumper builds.',
       },
       {
         label: 'Avg invokes / active Dumper',
@@ -423,7 +423,7 @@ export default function AnalyticsRoute() {
       {
         label: 'Est. watch-hours (period)',
         value: Number(dumperUsage.est_watch_hours ?? 0),
-        hint: 'Rough watch time from invokes ÷ 120 (session_ping every 30 seconds). Blueprint events also count, so this is an estimate.',
+        hint: 'Rough live watch time from invokes ÷ 120 (session_ping every 30s while in PU). Idle Dumpers and blueprint events skew this estimate.',
       },
     ]
   }, [dumperUsage])
