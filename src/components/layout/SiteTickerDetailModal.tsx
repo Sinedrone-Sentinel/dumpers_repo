@@ -1,6 +1,11 @@
 import AppModal from './AppModal'
 import type { SiteTickerWhatsNew } from '../../lib/whatsNew'
-import { cleanTickerHeadline, resolveTickerLayoutFromEntry, TICKER_LAYOUTS } from '../../lib/tickerLayout'
+import {
+  cleanTickerHeadline,
+  formatTickerMetaChips,
+  resolveTickerLayoutFromEntry,
+  TICKER_LAYOUTS,
+} from '../../lib/tickerLayout'
 
 type Props = {
   item: SiteTickerWhatsNew
@@ -10,26 +15,27 @@ type Props = {
 export default function SiteTickerDetailModal({ item, onClose }: Props) {
   const { entry } = item
   const layout = TICKER_LAYOUTS[resolveTickerLayoutFromEntry(entry)]
-  // Short title only — verbose copy belongs in items below.
   const title = cleanTickerHeadline(entry.headline)
-  const subtitle = [
-    layout.label,
-    entry.version && !String(entry.version).startsWith('site') && entry.version !== 'poll'
-      ? entry.version
-      : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
+  const chips = formatTickerMetaChips(entry)
 
   return (
-    <AppModal title={title} subtitle={subtitle} onClose={onClose} size="lg" zIndex={80}>
-      <div className="mb-4">
+    <AppModal title={title} onClose={onClose} size="lg" zIndex={80}>
+      <div className="flex flex-wrap items-center gap-1.5 mb-4">
         <span
           className={`inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${layout.badgeClass}`}
         >
           {layout.label}
         </span>
+        {chips.map((chip) => (
+          <span
+            key={chip}
+            className={`inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-semibold tracking-wide ${layout.badgeClass}`}
+          >
+            {chip}
+          </span>
+        ))}
       </div>
+
       {entry.items.length === 0 ? (
         <p className="text-sm text-slate-400">No extra detail for this update.</p>
       ) : (

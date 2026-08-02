@@ -90,3 +90,39 @@ export function resolveTickerLayout(item: SiteTickerItem): TickerLayoutKind {
 export function getTickerLayout(item: SiteTickerItem): TickerLayoutStyle {
   return TICKER_LAYOUTS[resolveTickerLayout(item)]
 }
+
+/**
+ * Uniform modal meta chips per layout kind.
+ * Badge already shows the type — chips add only type-specific context (no ship ids, no "added").
+ */
+export function formatTickerMetaChips(entry: WhatsNewEntry): string[] {
+  const kind = resolveTickerLayoutFromEntry(entry)
+  const n = entry.items?.length ?? 0
+  const details = n > 0 ? `${n} detail${n === 1 ? '' : 's'}` : null
+
+  switch (kind) {
+    case 'site':
+      return details ? [details] : []
+    case 'dumper_apps':
+      return ['Desktop app', ...(details ? [details] : [])]
+    case 'questionnaire': {
+      const isPoll =
+        (entry.version || '').toLowerCase() === 'poll' ||
+        (entry.action || '').toLowerCase() === 'results'
+      return [isPoll ? 'Poll results' : 'Open form', ...(details && isPoll ? [details] : [])]
+    }
+    case 'game': {
+      const cat = (entry.category || '').trim()
+      const ver = (entry.version || '').trim()
+      const chips: string[] = []
+      if (cat && !/^general$/i.test(cat)) chips.push(cat)
+      if (ver && !ver.toLowerCase().startsWith('site') && ver.toLowerCase() !== 'poll') {
+        chips.push(ver)
+      }
+      if (details) chips.push(details)
+      return chips
+    }
+    default:
+      return details ? [details] : []
+  }
+}
