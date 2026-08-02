@@ -203,19 +203,21 @@ INSERT INTO public.whats_new_entries (
 (
   'site:dumper-apps-auto-update',
   'site',
-  'Site',
+  'Dumper Apps',
   'added',
-  'Dumper Apps can keep itself up to date — leave Keep App Up to Date on (default Yes), or download the latest from Mission Tracker → BP Dumper',
+  'Dumper Apps auto-update',
   jsonb_build_array(
     jsonb_build_object(
       'key', 'auto-update',
       'label', 'Keep App Up to Date',
-      'summary', 'When a newer Dumper Apps build is available, the app can download it and restart for you.'
+      'summary',
+      'Leave this on (default Yes). When a newer Dumper Apps build is available, the app can download it and restart for you.'
     ),
     jsonb_build_object(
       'key', 'manual',
-      'label', 'Manual download',
-      'summary', 'If you still have an older copy, grab the latest Windows portable exe from Mission Tracker → BP Dumper.'
+      'label', 'Need the latest copy?',
+      'summary',
+      'Download the Windows portable exe from Mission Tracker → BP Dumper if you are still on an older build.'
     )
   ),
   now(),
@@ -226,7 +228,7 @@ INSERT INTO public.whats_new_entries (
   'site',
   'Site',
   'changed',
-  'Avatar menu refresh — clearer Account, Help, and role sections so tools are easier to find',
+  'Avatar menu layout',
   jsonb_build_array(
     jsonb_build_object(
       'key', 'account',
@@ -237,6 +239,12 @@ INSERT INTO public.whats_new_entries (
       'key', 'help',
       'label', 'Help',
       'summary', 'Support is under Help for members and officers.'
+    ),
+    jsonb_build_object(
+      'key', 'roles',
+      'label', 'Role sections',
+      'summary',
+      'Officer and Site admin tools appear in their own sections when your role includes them.'
     )
   ),
   now(),
