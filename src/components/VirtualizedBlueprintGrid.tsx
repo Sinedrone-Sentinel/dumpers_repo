@@ -151,7 +151,7 @@ export default function VirtualizedBlueprintGrid({
               key={virtualRow.key}
               data-index={virtualRow.index}
               ref={rowVirtualizer.measureElement}
-              className="absolute left-0 top-0 w-full max-w-full grid items-stretch overflow-x-clip"
+              className="absolute left-0 top-0 w-full max-w-full grid items-stretch overflow-x-clip overflow-y-visible"
               style={{
                 transform: `translateY(${virtualRow.start - scrollMargin}px)`,
                 columnGap: `${gridGap}px`,
@@ -161,7 +161,7 @@ export default function VirtualizedBlueprintGrid({
               }}
             >
               {rowItems.map((item) => (
-                <div key={gridItemKey(item)} className="h-full min-h-0 min-w-0 max-w-full overflow-hidden">
+                <div key={gridItemKey(item)} className="h-full min-h-0 min-w-0 max-w-full overflow-visible">
                   {renderGridItem(item)}
                 </div>
               ))}
