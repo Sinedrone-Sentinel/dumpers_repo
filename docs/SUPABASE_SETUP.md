@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `149_whats_new_site_ttl.sql` (site ticker TTL 3 days; game digests 7 days). Apply through `149` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `150_ticker_headline_cleanup.sql` (short ticker titles; strip SITE UPDATE prefixes). Apply through `150` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -180,6 +180,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 112 | `147_discord_cron_secret_apikey.sql` | Discord cron uses `apikey` header (Secret API key / `sb_secret_…`) |
 | 113 | `148_officer_ban_members_only.sql` | Officers can ban pending/members only; cannot ban other officers |
 | 114 | `149_whats_new_site_ttl.sql` | Whats New `kind` game|site; site/poll TTL 3d, game TTL 7d; site announcements for Dumper Apps + avatar menu |
+| 115 | `150_ticker_headline_cleanup.sql` | Short ticker titles; strip legacy prefixes; remove over-detailed site rows |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 

@@ -326,7 +326,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`149_whats_new_site_ttl.sql`**
+   Apply migrations in numeric order through **`150_ticker_headline_cleanup.sql`**
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt` and `send-discord --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain; set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Settings → API Keys → **Publishable and secret API keys**
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)

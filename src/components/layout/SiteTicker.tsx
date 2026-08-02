@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { SiteTickerItem, SiteTickerWhatsNew } from '../../lib/whatsNew'
+import { getTickerLayout } from '../../lib/tickerLayout'
 import SiteTickerDetailModal from './SiteTickerDetailModal'
 
 const HOLD_MS = 2500
@@ -15,6 +16,17 @@ type Props = {
 function prefersReducedMotion() {
   if (typeof window === 'undefined' || !window.matchMedia) return false
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function TickerTypeBadge({ item }: { item: SiteTickerItem }) {
+  const layout = getTickerLayout(item)
+  return (
+    <span
+      className={`shrink-0 inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${layout.badgeClass}`}
+    >
+      {layout.label}
+    </span>
+  )
 }
 
 export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
@@ -167,6 +179,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
   if (items.length === 0) return null
 
   const current = items[Math.min(index, items.length - 1)]
+  const currentLayout = getTickerLayout(current)
 
   const openItem = (item: SiteTickerItem) => {
     if (item.type === 'questionnaire') {
@@ -196,29 +209,41 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
       <div className="fixed inset-x-0 bottom-0 z-[49] flex flex-col justify-end pointer-events-none">
         {expanded ? (
           <div
-            className="pointer-events-auto mx-auto w-full max-w-[92vw] border border-b-0 border-orange-500/30 bg-slate-950/98 shadow-2xl shadow-black/50 rounded-t-xl overflow-hidden"
+            className="pointer-events-auto mx-auto w-full max-w-[92vw] border border-b-0 border-slate-600/60 bg-slate-950/98 shadow-2xl shadow-black/50 rounded-t-xl overflow-hidden"
             role="listbox"
             aria-label="Site updates"
           >
-            <div className="max-h-[min(50vh,22rem)] overflow-y-auto overscroll-contain divide-y divide-slate-800">
-              {items.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="option"
-                  className="w-full text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-slate-800/80 transition-colors"
-                  onClick={() => openItem(item)}
-                >
-                  <span className="font-medium">{item.headline}</span>
-                </button>
-              ))}
+            <div className="px-4 py-2 border-b border-slate-800 flex items-center justify-between gap-3">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Updates</p>
+              <p className="text-[10px] text-slate-500">{items.length} active</p>
+            </div>
+            <div className="max-h-[min(50vh,22rem)] overflow-y-auto overscroll-contain">
+              {items.map((item) => {
+                const layout = getTickerLayout(item)
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="option"
+                    className={`w-full text-left px-4 py-2.5 transition-colors ${layout.rowClass}`}
+                    onClick={() => openItem(item)}
+                  >
+                    <div className="flex items-start gap-2.5 min-w-0">
+                      <TickerTypeBadge item={item} />
+                      <span className={`text-sm font-medium leading-snug min-w-0 ${layout.textClass}`}>
+                        {item.headline}
+                      </span>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
           </div>
         ) : null}
 
         <div
           ref={barRef}
-          className="pointer-events-auto border-t border-orange-500/30 bg-slate-950/98"
+          className={`pointer-events-auto border-t bg-slate-950/98 transition-colors ${currentLayout.barAccentClass}`}
         >
           <div className="site-shell">
             <button
@@ -228,9 +253,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
               aria-expanded={expanded}
               aria-label={expanded ? 'Collapse site updates' : 'Expand site updates'}
             >
-              <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-orange-400/90">
-                Updates
-              </span>
+              <TickerTypeBadge item={current} />
               <div ref={viewportRef} className="relative min-w-0 flex-1 overflow-hidden h-5">
                 <div
                   className={`absolute left-0 top-0 w-full ${
@@ -243,7 +266,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                 >
                   <div
                     ref={textRef}
-                    className="whitespace-nowrap text-xs sm:text-sm text-slate-200 font-medium"
+                    className={`whitespace-nowrap text-xs sm:text-sm font-medium ${currentLayout.textClass}`}
                     style={
                       reduced
                         ? { maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }

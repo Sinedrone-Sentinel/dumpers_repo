@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import type { PendingQuestionnaire } from './questionnaires'
+import { cleanTickerHeadline } from './tickerLayout'
 
 export type WhatsNewAction = 'added' | 'removed' | 'changed' | 'corrected' | string
 
@@ -60,14 +61,14 @@ export function buildSiteTickerItems(
   const whatsNew: SiteTickerWhatsNew[] = (whatsNewEntries ?? []).map((entry) => ({
     type: 'whats_new',
     id: `wn:${entry.id}`,
-    headline: entry.headline,
+    headline: cleanTickerHeadline(entry.headline),
     entry,
   }))
 
   const questionnaires: SiteTickerQuestionnaire[] = (pendingQuestionnaires ?? []).map((q) => ({
     type: 'questionnaire',
     id: `q:${q.id}`,
-    headline: `QUESTIONNAIRE: ${q.title}`,
+    headline: cleanTickerHeadline(q.title),
     questionnaireId: q.id,
     title: q.title,
     description: q.description,
