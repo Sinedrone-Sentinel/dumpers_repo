@@ -68,7 +68,7 @@ export default function PublicBlueprintsCatalog() {
             <button
               type="button"
               onClick={openApp}
-              className="rounded-lg bg-gradient-to-r from-orange-600 to-amber-500 px-3 py-1.5 text-xs font-semibold text-white hover:from-orange-500 hover:to-amber-400"
+              className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-xs"
             >
               {user || isGuestPreview ? 'Open blueprint tracker' : 'Browse tools offline'}
             </button>
@@ -105,7 +105,7 @@ export default function PublicBlueprintsCatalog() {
           <button
             type="button"
             onClick={openApp}
-            className="rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-900/20 hover:from-orange-500 hover:to-amber-400"
+            className="site-btn-primary !px-5 !py-2.5"
           >
             Open full blueprint tracker offline
           </button>

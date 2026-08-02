@@ -7,8 +7,160 @@
 }
 
 @layer components {
+  /* Void + ember atmosphere — grid via ::before (paints under children) */
   .site-page-bg {
-    @apply bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950;
+    @apply relative;
+    background-color: #05070d;
+    background-image:
+      radial-gradient(ellipse 90% 55% at 50% -15%, rgba(249, 115, 22, 0.55), transparent 58%),
+      radial-gradient(ellipse 50% 40% at 90% 10%, rgba(250, 204, 21, 0.18), transparent 50%),
+      radial-gradient(ellipse 45% 35% at 8% 70%, rgba(234, 88, 12, 0.12), transparent 55%),
+      radial-gradient(ellipse 80% 70% at 50% 45%, transparent 42%, rgba(0, 0, 0, 0.45) 100%),
+      linear-gradient(180deg, #0a0e18 0%, #05070d 45%, #08060a 100%);
+  }
+
+  .site-page-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, black, transparent 75%);
+  }
+
+  .site-header-rule {
+    position: relative;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .site-header-rule::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      rgba(249, 115, 22, 0.95),
+      rgba(251, 191, 36, 0.55) 35%,
+      transparent 90%
+    );
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.55);
+  }
+
+  .site-panel {
+    @apply relative rounded-2xl border border-orange-500/25 bg-slate-950/70 p-5 text-left transition-all duration-200;
+    box-shadow:
+      0 0 0 1px rgba(249, 115, 22, 0.06),
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .site-panel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12%;
+    bottom: 12%;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, #f97316, #fbbf24);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.7);
+    opacity: 0.85;
+  }
+
+  .site-panel:hover {
+    @apply border-orange-400/50 bg-slate-900/85;
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(249, 115, 22, 0.18),
+      0 18px 48px rgba(0, 0, 0, 0.55),
+      0 0 32px rgba(249, 115, 22, 0.12);
+  }
+
+  .site-panel-lead {
+    @apply relative rounded-2xl border p-5 text-left transition-all duration-200;
+    border-color: rgba(249, 115, 22, 0.45);
+    background:
+      linear-gradient(135deg, rgba(249, 115, 22, 0.16), transparent 45%),
+      rgba(2, 6, 23, 0.85);
+    box-shadow:
+      0 0 0 1px rgba(249, 115, 22, 0.2),
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 48px rgba(249, 115, 22, 0.15);
+  }
+
+  .site-panel-lead::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, #fdba74, #f97316, #fbbf24);
+    box-shadow: 0 0 16px rgba(249, 115, 22, 0.85);
+  }
+
+  .site-panel-lead:hover {
+    transform: translateY(-2px);
+    border-color: rgba(251, 146, 60, 0.7);
+  }
+
+  .site-btn-primary {
+    @apply relative isolate overflow-hidden rounded-xl bg-gradient-to-r from-orange-600 via-orange-500 to-amber-400 px-6 py-3 text-sm font-bold tracking-wide text-white transition-transform duration-200;
+    box-shadow:
+      0 0 0 1px rgba(251, 191, 36, 0.35),
+      0 10px 36px rgba(234, 88, 12, 0.55),
+      0 0 40px rgba(249, 115, 22, 0.35);
+  }
+
+  .site-btn-primary:hover {
+    @apply from-orange-500 via-amber-400 to-yellow-300;
+    transform: translateY(-1px) scale(1.02);
+  }
+
+  .site-btn-primary:disabled {
+    @apply opacity-40 cursor-not-allowed;
+    transform: none;
+  }
+
+  .site-emphasis {
+    background: linear-gradient(105deg, #fb923c 0%, #fbbf24 45%, #fde68a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-style: italic;
+    font-weight: 700;
+    filter: drop-shadow(0 0 24px rgba(249, 115, 22, 0.45));
+  }
+
+  .site-stat-strip {
+    @apply flex flex-wrap items-center justify-center gap-x-8 gap-y-3 rounded-2xl border border-orange-500/25 bg-black/35 px-6 py-4 text-center backdrop-blur-sm;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 0 40px rgba(249, 115, 22, 0.08);
+  }
+
+  .site-stat-value {
+    @apply block font-[Orbitron,sans-serif] text-2xl font-black tracking-wide text-white sm:text-3xl;
+    text-shadow: 0 0 28px rgba(249, 115, 22, 0.45);
+  }
+
+  .site-stat-label {
+    @apply mt-0.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-300/80;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-panel:hover,
+    .site-panel-lead:hover,
+    .site-btn-primary:hover {
+      transform: none;
+    }
   }
 
   .site-app-header {
@@ -167,14 +319,16 @@
   .site-btn-shimmer,
   .site-btn-accent,
   .site-nav-link-active,
-  .site-nav-link-idle {
+  .site-nav-link-idle,
+  .site-btn-primary {
     @apply relative overflow-hidden isolate;
   }
 
   .site-btn-shimmer::after,
   .site-btn-accent::after,
   .site-nav-link-active::after,
-  .site-nav-link-idle::after {
+  .site-nav-link-idle::after,
+  .site-btn-primary::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -198,7 +352,9 @@
   .site-nav-link-active:not(:disabled):hover::after,
   .site-nav-link-active:not(:disabled):focus-visible::after,
   .site-nav-link-idle:not(:disabled):hover::after,
-  .site-nav-link-idle:not(:disabled):focus-visible::after {
+  .site-nav-link-idle:not(:disabled):focus-visible::after,
+  .site-btn-primary:not(:disabled):hover::after,
+  .site-btn-primary:not(:disabled):focus-visible::after {
     animation: site-btn-shimmer-sweep 0.6s ease forwards;
   }
 
@@ -255,7 +411,9 @@
     .site-nav-link-active:not(:disabled):hover::after,
     .site-nav-link-active:not(:disabled):focus-visible::after,
     .site-nav-link-idle:not(:disabled):hover::after,
-    .site-nav-link-idle:not(:disabled):focus-visible::after {
+    .site-nav-link-idle:not(:disabled):focus-visible::after,
+    .site-btn-primary:not(:disabled):hover::after,
+    .site-btn-primary:not(:disabled):focus-visible::after {
       animation: none;
     }
 

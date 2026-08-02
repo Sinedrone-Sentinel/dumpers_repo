@@ -355,7 +355,7 @@ export default function TargetsRoute() {
           </button>
           <Link
             to="/targets/live"
-            className="px-3 py-1.5 text-sm bg-orange-950/50 hover:bg-orange-900/50 text-orange-200 border border-orange-500/40 rounded-lg transition-colors"
+            className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-sm"
           >
             Live Tracker
           </Link>

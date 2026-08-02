@@ -951,7 +951,7 @@ export default function BrowseMissionsView({
       )}
 
       {selectedMission && (
-        <div className="space-y-4">
+        <div className="site-panel space-y-4 pl-6">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <h3 className={`text-base font-semibold ${selectedMission.isLawful ? 'text-green-300' : 'text-red-400'}`}>

@@ -40,7 +40,7 @@ export default function SignInMenu() {
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         disabled={signingIn}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-medium transition-colors disabled:opacity-50"
+        className="site-btn-primary inline-flex items-center gap-1.5 !rounded-lg !px-3 !py-1.5 text-xs font-medium"
         aria-expanded={open}
         aria-haspopup="menu"
       >

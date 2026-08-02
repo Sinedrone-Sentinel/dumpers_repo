@@ -21,8 +21,8 @@ export default function FeaturePageLayout({
   children,
 }: FeaturePageLayoutProps) {
   return (
-    <main className="site-shell py-6 min-w-0 w-full overflow-x-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4 pb-5 border-b border-slate-800/80">
+    <main className="site-shell relative z-10 py-6 min-w-0 w-full overflow-x-hidden">
+      <div className="site-header-rule flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="site-page-title">{title}</h1>

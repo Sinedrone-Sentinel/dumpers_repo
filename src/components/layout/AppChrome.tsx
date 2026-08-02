@@ -191,12 +191,12 @@ export default function AppChrome({
         </div>
       </header>
 
-      <div className="site-header-offset flex-1 flex flex-col">
+      <div className="site-header-offset relative z-10 flex-1 flex flex-col">
         {isGuestPreview && <GuestPreviewBanner />}
         {children}
       </div>
 
-      <footer className="site-footer site-shell mt-8 space-y-1">
+      <footer className="site-footer site-shell relative z-10 mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
         <SiteSupportLink className="text-xs" />
         <p className="text-xs text-slate-600">

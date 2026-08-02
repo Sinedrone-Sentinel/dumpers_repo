@@ -330,14 +330,14 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
             <button
               onClick={() => setStep(step + 1)}
               disabled={!canAdvance}
-              className="px-5 py-2 text-sm bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-orange-600"
+              className="site-btn-primary !rounded-lg !px-5 !py-2 text-sm"
             >
               Next
             </button>
           ) : (
             <button
               onClick={handleFinish}
-              className="px-5 py-2 text-sm bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors"
+              className="site-btn-primary !rounded-lg !px-5 !py-2 text-sm"
             >
               Get Started
             </button>

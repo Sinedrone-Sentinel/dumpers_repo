@@ -16,6 +16,7 @@ type FeatureCard = {
   /** Offline tools, public SEO page, or sign-in for member-only features */
   action: 'offline' | 'public' | 'signin'
   cta: string
+  featured?: boolean
 }
 
 const FEATURES: FeatureCard[] = [
@@ -25,6 +26,7 @@ const FEATURES: FeatureCard[] = [
     href: '/blueprints',
     action: 'public',
     cta: 'View blueprint database →',
+    featured: true,
   },
   {
     title: 'Blueprint missions',
@@ -118,61 +120,91 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
 
   return (
     <div className="site-page-bg min-h-screen text-slate-200">
-      <div className="relative overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-40"
-          style={{
-            background:
-              'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(249, 115, 22, 0.35), transparent 55%), radial-gradient(ellipse 60% 40% at 80% 20%, rgba(250, 204, 21, 0.12), transparent 50%)',
-          }}
-          aria-hidden
-        />
-
-        <header className="relative mx-auto max-w-6xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14">
+      <div className="relative z-10">
+        <header className="mx-auto max-w-6xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14">
           <SiteBrandTitle size="hero" layout="stacked" slogan={SITE_SLOGAN} titleAs="p" />
-          <h1 className="mx-auto mt-8 max-w-3xl text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl">
-            Star Citizen blueprint tracker, Wikelo guide, mining tools, and community trade
+          <h1 className="mx-auto mt-10 max-w-3xl text-center text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl md:leading-[1.15]">
+            Star Citizen <span className="site-emphasis">blueprint</span> tracker, Wikelo guide,
+            mining tools, and community trade
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
+          <p className="mx-auto mt-5 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
             Free crafting blueprint database, mission reward tracker, Wikelo favors and barter
             trades, mining RS reference, and a member marketplace — Offline Mode for instant access,
             sign-in when you want sync.
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
               type="button"
               onClick={() => goOffline('/')}
-              className="w-full max-w-xs rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-900/30 transition hover:from-orange-500 hover:to-amber-400 sm:w-auto"
+              className="site-btn-primary w-full max-w-xs sm:w-auto"
             >
               Browse tools offline
             </button>
             <a
               href="#sign-in"
-              className="w-full max-w-xs rounded-xl border border-slate-600 bg-slate-900/60 px-6 py-3 text-center text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800/80 sm:w-auto"
+              className="w-full max-w-xs rounded-xl border border-orange-500/30 bg-black/40 px-6 py-3 text-center text-sm font-medium text-slate-100 backdrop-blur-sm transition hover:border-orange-400/50 hover:bg-slate-900/60 sm:w-auto"
             >
               Sign in for sync & marketplace
             </a>
           </div>
+
+          <div className="site-stat-strip mx-auto mt-12 max-w-3xl">
+            <div>
+              <span className="site-stat-value">Offline</span>
+              <span className="site-stat-label">No account needed</span>
+            </div>
+            <div>
+              <span className="site-stat-value">DFP</span>
+              <span className="site-stat-label">Fair-value pricing</span>
+            </div>
+            <div>
+              <span className="site-stat-value">Live</span>
+              <span className="site-stat-label">Org ticker</span>
+            </div>
+          </div>
         </header>
 
-        <section className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="features-heading">
+        <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="features-heading">
           <h2 id="features-heading" className="text-center text-xl font-semibold text-white sm:text-2xl">
             Some of what you can do
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-slate-400">
             Practical tools for crafting, mining, missions, and community trade — ready when you are.
           </p>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {FEATURES.map((feature) => (
-              <li key={feature.title}>
+              <li
+                key={feature.title}
+                className={feature.featured ? 'sm:col-span-2' : undefined}
+              >
                 <button
                   type="button"
                   onClick={() => onFeatureClick(feature)}
-                  className="flex h-full w-full flex-col rounded-2xl border border-slate-700/80 bg-slate-900/50 p-5 text-left transition hover:border-orange-500/40 hover:bg-slate-900/80"
+                  className={
+                    feature.featured
+                      ? 'site-panel-lead flex h-full w-full flex-col pl-6'
+                      : 'site-panel flex h-full w-full flex-col pl-6'
+                  }
                 >
-                  <span className="text-base font-semibold text-white">{feature.title}</span>
-                  <span className="mt-2 text-sm leading-relaxed text-slate-400">{feature.body}</span>
-                  <span className="mt-4 text-xs font-medium text-orange-400">{feature.cta}</span>
+                  <span
+                    className={
+                      feature.featured
+                        ? 'font-[Orbitron,sans-serif] text-lg font-black uppercase tracking-wide text-white'
+                        : 'text-base font-semibold text-white'
+                    }
+                  >
+                    {feature.title}
+                  </span>
+                  <span
+                    className={
+                      feature.featured
+                        ? 'mt-3 max-w-2xl text-sm leading-relaxed text-slate-300'
+                        : 'mt-2 text-sm leading-relaxed text-slate-400'
+                    }
+                  >
+                    {feature.body}
+                  </span>
+                  <span className="mt-4 text-xs font-semibold text-orange-300">{feature.cta}</span>
                 </button>
               </li>
             ))}
@@ -181,10 +213,10 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
 
         <section
           id="sign-in"
-          className="relative mx-auto max-w-md px-4 py-10 sm:px-6"
+          className="mx-auto max-w-md px-4 py-10 sm:px-6"
           aria-labelledby="signin-heading"
         >
-          <div className="rounded-2xl border border-slate-700 bg-slate-900/80 p-8 shadow-2xl">
+          <div className="site-panel p-8 pl-8 shadow-2xl">
             <h2 id="signin-heading" className="text-center text-xl font-semibold text-white">
               Sign in
             </h2>
@@ -213,7 +245,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
                 <div className="w-full border-t border-slate-700" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-slate-900/80 px-2 text-slate-500">or</span>
+                <span className="bg-slate-950/80 px-2 text-slate-500">or</span>
               </div>
             </div>
 
@@ -227,7 +259,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
           </div>
         </section>
 
-        <section className="relative mx-auto max-w-3xl px-4 py-10 sm:px-6" aria-labelledby="faq-heading">
+        <section className="mx-auto max-w-3xl px-4 py-10 sm:px-6" aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="text-center text-xl font-semibold text-white sm:text-2xl">
             Common questions
           </h2>
@@ -235,10 +267,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             {SEO_LANDING_FAQS.map((faq, index) => {
               const open = openFaq === index
               return (
-                <div
-                  key={faq.q}
-                  className="rounded-xl border border-slate-700/80 bg-slate-900/40"
-                >
+                <div key={faq.q} className="site-panel !p-0 overflow-hidden">
                   <button
                     type="button"
                     aria-expanded={open}
@@ -270,7 +299,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
           </p>
         </section>
 
-        <footer className="relative space-y-2 border-t border-slate-800/80 px-4 py-8 text-center text-sm text-slate-500">
+        <footer className="space-y-2 border-t border-slate-800/80 px-4 py-8 text-center text-sm text-slate-500">
           <p>{SITE_COPYRIGHT}</p>
           <SiteSupportLink />
         </footer>
