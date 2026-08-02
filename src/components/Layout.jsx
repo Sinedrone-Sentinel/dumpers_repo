@@ -5,7 +5,10 @@ import { BpDumperModalProvider, useBpDumperModal } from '../contexts/BpDumperMod
 import { UiOverlayProvider } from '../contexts/UiOverlayContext'
 import { getVisibleNavGroups } from '../config/appNav'
 import { supabase } from '../lib/supabase'
-import { listPendingQuestionnaires } from '../lib/questionnaires'
+import {
+  listPendingQuestionnaires,
+  QUESTIONNAIRES_CHANGED_EVENT,
+} from '../lib/questionnaires'
 import PublicSeoLanding from './seo/PublicSeoLanding'
 import SeoHead from './seo/SeoHead'
 import BannedAccount from './BannedAccount'
@@ -27,7 +30,7 @@ import AppBootstrapScreen from './bootstrap/AppBootstrapScreen'
 function isPublicSeoPath(pathname) {
   const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
   const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
-  return normalized === '/blueprints'
+  return normalized === '/blueprints' || normalized.startsWith('/blueprints/')
 }
 
 function LayoutContent({
@@ -191,6 +194,26 @@ export default function Layout() {
   useEffect(() => {
     void refreshPendingQuestionnaires()
   }, [refreshPendingQuestionnaires])
+
+  useEffect(() => {
+    const onChanged = () => {
+      void refreshPendingQuestionnaires()
+    }
+    window.addEventListener(QUESTIONNAIRES_CHANGED_EVENT, onChanged)
+    return () => window.removeEventListener(QUESTIONNAIRES_CHANGED_EVENT, onChanged)
+  }, [refreshPendingQuestionnaires])
+
+  // SEO / deep links: /?q=Name must open Offline Mode instead of the marketing landing.
+  useEffect(() => {
+    if (loading || user || isGuestPreview) return
+    if (pathname !== '/') return
+    try {
+      const q = new URLSearchParams(window.location.search).get('q')
+      if (q && q.trim()) enterGuestPreview()
+    } catch {
+      /* ignore */
+    }
+  }, [loading, user, isGuestPreview, pathname, enterGuestPreview])
 
   useEffect(() => {
     if (!user || !isApproved || isGuestPreview || welcomeChecked) return

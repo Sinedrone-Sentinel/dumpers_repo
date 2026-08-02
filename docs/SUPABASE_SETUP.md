@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `150_ticker_headline_cleanup.sql` (short ticker titles; strip SITE UPDATE prefixes). Apply through `150` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `154_questionnaire_ticker_include_creator.sql` (live questionnaires appear on ticker for creators too). Apply through `154` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -184,6 +184,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 116 | `151_admin_whats_new_crud.sql` | Super-admin ticker CRUD; `ticker_categories` (labels/colors/TTL); delete blocked while active messages use a category |
 | 117 | `152_ticker_admin_purge_on_list.sql` | Admin ticker list purges expired rows on load (no “include expired” toggle) |
 | 118 | `153_ticker_category_ttl_days.sql` | Per-category TTL days (1–90); system categories protected; questionnaire active count includes open forms |
+| 119 | `154_questionnaire_ticker_include_creator.sql` | Creators see their own live questionnaires on the Updates ticker (can open/respond); activate fan-out still skips creator bell spam |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 

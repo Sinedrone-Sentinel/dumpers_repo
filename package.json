@@ -12,9 +12,10 @@
   "scripts": {
     "dev": "vite",
     "build-dfp": "echo DFP engine is built from the private dfp-engine-private repo. The pre-built public/dfp-engine.js is used.",
-    "build": "vite build && node scripts/inject-site-meta.mjs && node scripts/prerender-seo.mjs && node scripts/generate-sitemap.mjs && node scripts/write-build-version.mjs && node scripts/generate-archive-guide.mjs",
+    "build": "vite build && node scripts/inject-site-meta.mjs && node scripts/prerender-seo.mjs && node scripts/generate-blueprint-seo-pages.mjs && node scripts/generate-sitemap.mjs && node scripts/write-build-version.mjs && node scripts/generate-archive-guide.mjs",
     "generate-archive-guide": "node scripts/generate-archive-guide.mjs",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
+    "generate-blueprint-seo": "node scripts/generate-blueprint-seo-pages.mjs",
     "prerender-seo": "node scripts/prerender-seo.mjs",
     "preview": "vite preview",
     "lint": "eslint src",

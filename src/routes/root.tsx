@@ -3,6 +3,7 @@ import Layout from '../components/Layout'
 import { RouteErrorPage, RouteNotFoundPage } from '../components/RouteErrorPage'
 import BlueprintsRoute from './Blueprints.index'
 import PublicBlueprintsCatalog from './PublicBlueprintsCatalog'
+import PublicBlueprintPage from './PublicBlueprintPage'
 import WikeloRoute from './Wikelo.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
 import CustomOrdersRoute from './CustomOrders.index'
@@ -39,6 +40,12 @@ const publicBlueprintsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/blueprints',
   component: PublicBlueprintsCatalog,
+})
+
+const publicBlueprintPageRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blueprints/$slug',
+  component: PublicBlueprintPage,
 })
 
 const wikeloRoute = createRoute({
@@ -168,6 +175,7 @@ const partnershipRoute = createRoute({
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   publicBlueprintsRoute,
+  publicBlueprintPageRoute,
   wikeloRoute,
   miningTrackerRoute,
   commodityLookupRoute,

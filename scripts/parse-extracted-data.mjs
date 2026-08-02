@@ -5167,6 +5167,9 @@ async function main() {
   }
 
   console.log('\nOutput files written to: src/data/')
+  console.log(
+    'Note: public /blueprints/{slug}/ SEO HTML is regenerated on the next `npm run build` from game-blueprints.json (no hand-maintained page list).'
+  )
   console.log('')
 }
 

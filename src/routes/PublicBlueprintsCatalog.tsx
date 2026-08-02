@@ -4,12 +4,14 @@ import SiteBrandTitle from '../components/SiteBrandTitle'
 import { SITE_COPYRIGHT, SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintData } from './blueprints'
+import { getSeoSlugForInternalName } from '../lib/blueprintSeoContent'
 import SiteSupportLink from '../components/layout/SiteSupportLink'
 
 type CatalogRow = {
   name: string
   category: string
   internalName: string
+  slug: string | null
 }
 
 function hasEntityClass(bp: { entityClass?: string | null }): boolean {
@@ -24,11 +26,15 @@ export default function PublicBlueprintsCatalog() {
   const rows = useMemo(() => {
     const list: CatalogRow[] = (blueprints ?? [])
       .filter(hasEntityClass)
-      .map((bp) => ({
-        name: (bp.blueprintName || bp.internalName || bp.file || 'Blueprint').trim(),
-        category: (bp.categoryName || bp.category || 'General').trim(),
-        internalName: bp.internalName || bp.file || '',
-      }))
+      .map((bp) => {
+        const internalName = bp.internalName || bp.file || ''
+        return {
+          name: (bp.blueprintName || bp.internalName || bp.file || 'Blueprint').trim(),
+          category: (bp.categoryName || bp.category || 'General').trim(),
+          internalName,
+          slug: internalName ? getSeoSlugForInternalName(internalName) : null,
+        }
+      })
       .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
     return list
   }, [blueprints])
@@ -130,7 +136,17 @@ export default function PublicBlueprintsCatalog() {
                       key={row.internalName || row.name}
                       className="break-inside-avoid py-0.5 text-sm text-slate-300"
                     >
-                      {row.name}
+                      {row.slug ? (
+                        <Link
+                          to="/blueprints/$slug"
+                          params={{ slug: row.slug }}
+                          className="text-slate-300 hover:text-orange-300"
+                        >
+                          {row.name}
+                        </Link>
+                      ) : (
+                        row.name
+                      )}
                     </li>
                   ))}
                 </ul>

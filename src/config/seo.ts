@@ -1,5 +1,11 @@
 import { SITE_DESCRIPTION, SITE_OG_IMAGE, SITE_TITLE, SITE_URL } from './site'
 import { SEO_LANDING_FAQS } from './seoFaqs'
+import {
+  blueprintSeoDescription,
+  blueprintSeoTitle,
+  getBlueprintBySeoSlug,
+} from '../lib/blueprintSeoContent'
+import { blueprintSeoPath } from '../lib/blueprintSeoSlug'
 
 export type SeoPageConfig = {
   title: string
@@ -102,6 +108,20 @@ const pages: Record<string, SeoPageConfig> = {
 
 export function getSeoForPath(pathname: string): SeoPageConfig {
   const path = normalizePath(pathname)
+
+  const blueprintMatch = path.match(/^\/blueprints\/([^/]+)$/)
+  if (blueprintMatch) {
+    const slug = blueprintMatch[1]
+    const bp = getBlueprintBySeoSlug(slug)
+    if (bp) {
+      return {
+        title: blueprintSeoTitle(bp),
+        description: blueprintSeoDescription(bp),
+        canonicalPath: blueprintSeoPath(slug),
+      }
+    }
+  }
+
   return (
     pages[path] ?? {
       title: SITE_TITLE,

@@ -92,6 +92,14 @@ export type AnswerMap = Record<
 
 const GUEST_KEY_STORAGE = 'dumpers_questionnaire_guest_key'
 
+/** Fired when questionnaires are activated/archived so the ticker can refresh. */
+export const QUESTIONNAIRES_CHANGED_EVENT = 'dumpers:questionnaires-changed'
+
+export function notifyQuestionnairesChanged(): void {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(new Event(QUESTIONNAIRES_CHANGED_EVENT))
+}
+
 export function getOrCreateQuestionnaireGuestKey(): string {
   try {
     const existing = localStorage.getItem(GUEST_KEY_STORAGE)
@@ -165,11 +173,13 @@ export async function adminSaveQuestionnaire(input: {
 
 export async function adminActivateQuestionnaire(id: string): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('admin_activate_questionnaire', { p_id: id })
+  if (!error) notifyQuestionnairesChanged()
   return error ? { error: rpcError(error) } : {}
 }
 
 export async function adminArchiveQuestionnaire(id: string): Promise<{ error?: string }> {
   const { error } = await supabase.rpc('admin_archive_questionnaire', { p_id: id })
+  if (!error) notifyQuestionnairesChanged()
   return error ? { error: rpcError(error) } : {}
 }
 
@@ -220,6 +230,7 @@ export async function submitQuestionnaireResponse(
     p_answers: answers,
     p_guest_key: isGuest ? getOrCreateQuestionnaireGuestKey() : null,
   })
+  if (!error) notifyQuestionnairesChanged()
   return error ? { error: rpcError(error) } : {}
 }
 
@@ -231,6 +242,7 @@ export async function declineQuestionnaire(
     p_id: id,
     p_guest_key: isGuest ? getOrCreateQuestionnaireGuestKey() : null,
   })
+  if (!error) notifyQuestionnairesChanged()
   return error ? { error: rpcError(error) } : {}
 }
 

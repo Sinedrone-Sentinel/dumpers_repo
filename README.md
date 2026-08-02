@@ -34,6 +34,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 |-------|------|--------|
 | `/` (signed out) | Public SEO landing | Everyone — Sign in or Browse tools offline |
 | `/blueprints` | Public crafting blueprint database (crawlable catalog) | Everyone (no account) |
+| `/blueprints/{slug}` | Public per-blueprint fact sheet (materials + reward missions); CTAs open the live tracker | Everyone (no account) |
 | `/` (offline / signed in) | Blueprints (full tracker UI) | Offline + members |
 | `/wikelo` | Wikelo | Offline + members |
 | `/targets` | Mission Tracker | Offline + members |
@@ -328,12 +329,12 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`150_ticker_headline_cleanup.sql`**
+   Apply migrations in numeric order through **`154_questionnaire_ticker_include_creator.sql`**
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt` and `send-discord --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain; set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Settings → API Keys → **Publishable and secret API keys**
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
 5. Local dev: `npm run dev` → `http://localhost:5173`
-6. Production build: `npm run build` → `dist/` (injects SEO meta, prerenders public routes for crawlers, writes `sitemap.xml` + `version.json`, regenerates `public/archive-guide.html`). First-time Playwright setup: `npx playwright install chromium`
+6. Production build: `npm run build` → `dist/` (injects SEO meta, prerenders hub routes for crawlers, **generates per-blueprint SEO HTML from `game-blueprints.json`**, writes `sitemap.xml` + `version.json`, regenerates `public/archive-guide.html`). First-time Playwright setup: `npx playwright install chromium`
 
 ### Environment variables
 
@@ -360,9 +361,10 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | Script | Purpose |
 |--------|---------|
 | `npm run dev` | Vite dev server |
-| `npm run build` | Production build + SEO prerender/sitemap + version stamp + archive guide |
-| `npm run prerender-seo` | Re-prerender public routes into `dist/` (after `vite build`) |
-| `npm run generate-sitemap` | Write `dist/sitemap.xml` |
+| `npm run build` | Production build + SEO prerender + per-blueprint SEO pages + sitemap + version stamp + archive guide |
+| `npm run prerender-seo` | Re-prerender public hub routes into `dist/` (after `vite build`) |
+| `npm run generate-blueprint-seo` | Regenerate `dist/blueprints/{slug}/` HTML from current `game-blueprints.json` (after `vite build`) |
+| `npm run generate-sitemap` | Write `dist/sitemap.xml` (includes all blueprint SEO URLs) |
 | `npm run lint` | ESLint on `src/` |
 | `npm run generate-archive-guide` | Regenerate `public/archive-guide.html` |
 | `npm run validate-blueprints` | Catalog validation after parse |
@@ -392,6 +394,8 @@ npm run sync-min-game-version # optional: update dumper min game version in sour
 ```
 
 All game catalogs (mining guide, ordnance, components, blueprints) are bundled from the parsed `game-*.json` at build time — no Supabase sync step on patch day.
+
+**Blueprint SEO pages track the parser automatically:** `npm run parse-game-data` updates `game-blueprints.json`; the next `npm run build` (CI on `main`, or local) regenerates every `/blueprints/{slug}/` HTML file and the sitemap from that JSON. New/removed/renamed blueprints do not need a hand-maintained page list — do not commit `dist/` SEO HTML; it is build output only.
 
 Full patch-day runbook (including how to verify removals vs CIG moving records around): [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md#data-update-process).
 
