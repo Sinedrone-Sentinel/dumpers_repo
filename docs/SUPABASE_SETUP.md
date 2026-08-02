@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `146_site_analytics_30day_retention.sql` (purge site analytics older than 30 days). Apply through `146` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `147_discord_cron_secret_apikey.sql` (Discord cron sends Secret API key on `apikey`). Apply through `147` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -177,14 +177,17 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 109 | `144_discord_cron_ready_only.sql` | Discord cron skips coalesce-held queue rows (no empty wake every minute) |
 | 110 | `145_dumper_invoke_analytics.sql` | BP Dumper Edge invoke stats (30-day daily rows; daily `cleanup-dumper-invoke-daily` cron) + Site Analytics RPC |
 | 111 | `146_site_analytics_30day_retention.sql` | Purge site analytics daily/tool/visitor rows older than 30 days (daily cron + one-shot on apply) |
+| 112 | `147_discord_cron_secret_apikey.sql` | Discord cron uses `apikey` header (Secret API key / `sb_secret_…`) |
 
-### pg_cron (migrations 054, 065–068)
+### pg_cron (migrations 054, 065–068, 144, 147)
 
 Migrations **065–068** schedule a cron job that calls the `send-discord` Edge Function. On Supabase:
 
 1. Dashboard → **Database** → **Extensions** → enable **pg_cron** and **pg_net**
 2. Deploy the `send-discord` Edge Function (see below)
 3. Run migrations 065–068 if not already applied
+4. Set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Dashboard → Settings → API Keys → **Publishable and secret API keys** (the Legacy `service_role` JWT is the wrong value for cron once Edge prefers `SUPABASE_SECRET_KEYS`)
+5. Apply migration **147** so cron sends that secret on the `apikey` header (not `Authorization: Bearer`)
 
 If pg_cron is unavailable on your plan, Discord queue messages can still be processed manually from super-admin Discord settings (invoke `send-discord`).
 
@@ -226,7 +229,7 @@ npx supabase functions deploy discord-services-post-test
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
-Edge Functions use `SUPABASE_SERVICE_ROLE_KEY` automatically. **Never** expose service_role in frontend code.
+Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, plus deprecated `SUPABASE_SERVICE_ROLE_KEY`). **Never** expose secret / service_role keys in frontend code.
 
 ### Edge Function secrets
 
@@ -263,7 +266,7 @@ npx supabase functions deploy send-discord
 |--------|--------|
 | Drop open INSERT RLS on `discord_webhooks` | Anon/members can no longer insert rows directly; `/discord-subscribe` still works via `sync_my_discord_event_webhooks` |
 | Mask `official_webhook_url` in `get_discord_settings` | Only super-admins and `service_role` receive the staff webhook URL |
-| `send-discord` auth | Requires service_role Bearer (cron) or a verified super-admin JWT (manual Process Queue). Deploy with `--no-verify-jwt` (cron is not a user JWT). If Auth logs show `GET /user` + `missing sub claim` every minute, `app_config.supabase_service_key` almost certainly does not match the Edge `SUPABASE_SERVICE_ROLE_KEY`. |
+| `send-discord` auth | Cron: exact match of the project **Secret API key** (`sb_secret_…`) on the `apikey` header (migration `147`). Manual Process Queue: verified super-admin user JWT. Deploy with `--no-verify-jwt`. Set `app_config.supabase_service_key` from Dashboard → Settings → API Keys → **Publishable and secret API keys** (not the Legacy JWT tab). |
 
 Staff webhook **rotation** in Discord is optional after this — do it only if you suspect the URL was already pulled.
 

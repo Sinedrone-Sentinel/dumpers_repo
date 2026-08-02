@@ -323,9 +323,9 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`128_discord_market_webhook_url_dedupe.sql`**
-2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt`)
-3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain (migrations 065–068)
+   Apply migrations in numeric order through **`147_discord_cron_secret_apikey.sql`**
+2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt` and `send-discord --no-verify-jwt`)
+3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain; set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Settings → API Keys → **Publishable and secret API keys**
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
 5. Local dev: `npm run dev` → `http://localhost:5173`
 6. Production build: `npm run build` → `dist/` (injects SEO meta, prerenders public routes for crawlers, writes `sitemap.xml` + `version.json`, regenerates `public/archive-guide.html`). First-time Playwright setup: `npx playwright install chromium`
@@ -339,7 +339,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 | `VITE_BUILD_ID` | CI only | Build id baked into the client; compared to `version.json` so stale tabs show a refresh banner (set to `GITHUB_SHA` in deploy) |
 | `VITE_DFP_ENGINE_BASE_URL` | Dev only | Override DFP host — **not for production** |
 
-Never commit `service_role` keys. Edge Functions receive `SUPABASE_SERVICE_ROLE_KEY` automatically in Supabase.
+Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform secrets (`SUPABASE_SECRET_KEYS`, plus deprecated `SUPABASE_SERVICE_ROLE_KEY`) automatically in Supabase.
 
 ### CI/CD
 

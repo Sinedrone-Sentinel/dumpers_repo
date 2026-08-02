@@ -64,6 +64,65 @@ function isUserAccessToken(token: string): boolean {
   return typeof payload.sub === 'string' && payload.sub.length > 0
 }
 
+function parseKeyMap(envName: string): Record<string, string> {
+  const raw = Deno.env.get(envName)
+  if (!raw) return {}
+  try {
+    const parsed = JSON.parse(raw) as unknown
+    if (!parsed || typeof parsed !== 'object') return {}
+    const out: Record<string, string> = {}
+    for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+      if (typeof v === 'string' && v.length > 0) out[k] = v
+    }
+    return out
+  } catch {
+    return {}
+  }
+}
+
+/** Platform admin secret for createClient + exact-match cron auth (new keys preferred). */
+function getAdminSecretKey(): string {
+  const secretKeys = parseKeyMap('SUPABASE_SECRET_KEYS')
+  if (secretKeys.default) return secretKeys.default
+  return Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+}
+
+function getUserScopedApiKey(): string {
+  const publishable = parseKeyMap('SUPABASE_PUBLISHABLE_KEYS')
+  if (publishable.default) return publishable.default
+  return Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+}
+
+function keyKind(s: string): string {
+  if (s.startsWith('eyJ')) return 'jwt'
+  if (s.startsWith('sb_secret_')) return 'sb_secret'
+  if (s.startsWith('sb_publishable_')) return 'sb_publishable'
+  if (s.startsWith('sb_')) return 'sb_other'
+  return 'other'
+}
+
+async function sha12(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s))
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+    .slice(0, 12)
+}
+
+/**
+ * Exact string match against platform secrets only.
+ * Accepts new sb_secret (any named key in SUPABASE_SECRET_KEYS) or legacy service_role JWT.
+ */
+function isExactPlatformSecret(candidate: string): boolean {
+  if (!candidate) return false
+  const secretKeys = parseKeyMap('SUPABASE_SECRET_KEYS')
+  for (const value of Object.values(secretKeys)) {
+    if (candidate === value) return true
+  }
+  const legacy = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  return legacy.length > 0 && candidate === legacy
+}
+
 interface DiscordSettings {
   enabled: boolean
   orders_enabled: boolean
@@ -265,37 +324,48 @@ serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
-
-    // Cron uses Bearer service_role; Discord settings modal uses a super-admin user JWT.
-    // Reject anon / member / missing auth — do not fall through into queue processing.
-    const authHeader = req.headers.get('Authorization')
-    if (!authHeader) {
+    const supabaseServiceKey = getAdminSecretKey()
+    if (!supabaseServiceKey) {
       return new Response(
-        JSON.stringify({ error: 'Authorization required' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Server misconfigured: no admin secret key in Edge env' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    const token = authHeader.replace(/^Bearer\s+/i, '').trim()
-    const isServiceRole = token.length > 0 && token === supabaseServiceKey
+    // Cron: exact match of platform secret on `apikey` (preferred for sb_secret_*) or Bearer.
+    // Manual Process Now: super-admin user JWT on Authorization (verified via Auth).
+    // Never trust unverified JWT role claims.
+    const authHeader = req.headers.get('Authorization')
+    const apiKeyHeader = (req.headers.get('apikey') ?? '').trim()
+    const bearerToken = authHeader ? authHeader.replace(/^Bearer\s+/i, '').trim() : ''
+    const isCronSecret =
+      isExactPlatformSecret(apiKeyHeader) || isExactPlatformSecret(bearerToken)
 
-    if (!isServiceRole) {
-      // Cron / misconfigured app_config often sends anon or service_role JWTs.
-      // Those have no `sub` — calling auth.getUser() spams Auth logs every minute with
-      // "403: invalid claim: missing sub claim". Reject locally instead.
-      if (!isUserAccessToken(token)) {
+    if (!isCronSecret) {
+      if (!authHeader || !isUserAccessToken(bearerToken)) {
+        console.warn('send-discord cron auth mismatch', {
+          apiKeyKind: keyKind(apiKeyHeader),
+          apiKeyLen: apiKeyHeader.length,
+          apiKeySha12: apiKeyHeader ? await sha12(apiKeyHeader) : null,
+          bearerKind: keyKind(bearerToken),
+          bearerLen: bearerToken.length,
+          bearerSha12: bearerToken ? await sha12(bearerToken) : null,
+          envKind: keyKind(supabaseServiceKey),
+          envLen: supabaseServiceKey.length,
+          envSha12: await sha12(supabaseServiceKey),
+        })
         return new Response(
           JSON.stringify({
             error:
-              'Invalid authorization — expected service_role Bearer (cron) or a super-admin user JWT. Check app_config.supabase_service_key matches the Edge service_role secret.',
+              'Invalid authorization — expected exact Edge secret on apikey (cron) or a super-admin user JWT. Set app_config.supabase_service_key to the Secret API key (sb_secret_…), not the legacy JWT.',
           }),
           { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
       }
 
-      const userClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      const userApiKey = getUserScopedApiKey()
+      const userClient = createClient(supabaseUrl, userApiKey, {
         global: { headers: { Authorization: authHeader } },
       })
       const { data: { user }, error: authError } = await userClient.auth.getUser()
