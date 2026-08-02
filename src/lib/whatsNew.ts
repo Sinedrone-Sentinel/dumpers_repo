@@ -104,10 +104,9 @@ export function buildSiteTickerItems(
   return [...questionnaires, ...whatsNew]
 }
 
-export async function adminListWhatsNewEntries(includeExpired = true): Promise<WhatsNewEntry[]> {
-  const { data, error } = await supabase.rpc('admin_list_whats_new_entries', {
-    p_include_expired: includeExpired,
-  })
+/** Lists remaining ticker rows. Server purges expired first (same TTL as cron). */
+export async function adminListWhatsNewEntries(): Promise<WhatsNewEntry[]> {
+  const { data, error } = await supabase.rpc('admin_list_whats_new_entries')
   if (error) throw new Error(error.message)
   return (data as WhatsNewEntry[]) ?? []
 }
@@ -144,6 +143,7 @@ export async function adminUpsertTickerCategory(payload: {
   label: string
   accentHex: string
   entryKind: WhatsNewKind
+  ttlDays: number
   sortOrder?: number
 }): Promise<AdminMutationResult> {
   const { data, error } = await supabase.rpc('admin_upsert_ticker_category', {

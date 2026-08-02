@@ -13,6 +13,7 @@ import {
 } from '../../lib/whatsNew'
 import {
   fetchTickerCategories,
+  normalizeTickerCategoryRow,
   notifyWhatsNewChanged,
   type TickerCategory,
 } from '../../lib/tickerLayout'
@@ -40,6 +41,7 @@ type CategoryEditor = {
   label: string
   accentHex: string
   entryKind: WhatsNewKind
+  ttlDays: number
   sortOrder: number
 }
 
@@ -64,8 +66,20 @@ function emptyCategory(): CategoryEditor {
     label: '',
     accentHex: '#0EA5E9',
     entryKind: 'site',
+    ttlDays: 3,
     sortOrder: 100,
   }
+}
+
+function formatTtlDays(days: number | undefined): string {
+  const n = Math.floor(Number(days))
+  if (!Number.isFinite(n) || n < 1) return '? days'
+  return n === 1 ? '1 day' : `${n} days`
+}
+
+/** e.g. "Site Update · 3 days" */
+function formatCategoryOption(label: string, days: number | undefined): string {
+  return `${label} · ${formatTtlDays(days)}`
 }
 
 function toLocalInput(iso: string | undefined): string {
@@ -95,7 +109,6 @@ export default function TickerAdminModal({ onClose }: Props) {
   const [categoryView, setCategoryView] = useState<CategoryView>('list')
   const [entries, setEntries] = useState<WhatsNewEntry[]>([])
   const [categories, setCategories] = useState<TickerCategory[]>([])
-  const [includeExpired, setIncludeExpired] = useState(true)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -107,18 +120,22 @@ export default function TickerAdminModal({ onClose }: Props) {
     setError(null)
     try {
       const [entryRows, catRows] = await Promise.all([
-        adminListWhatsNewEntries(includeExpired),
-        adminListTickerCategories() as Promise<TickerCategory[]>,
+        adminListWhatsNewEntries(),
+        adminListTickerCategories() as Promise<Partial<TickerCategory>[]>,
       ])
       setEntries(entryRows)
-      setCategories(catRows)
+      setCategories(
+        (catRows ?? []).map((r) =>
+          normalizeTickerCategoryRow(r as Partial<TickerCategory> & { id: string; slug: string })
+        )
+      )
       await fetchTickerCategories()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load ticker admin data')
     } finally {
       setLoading(false)
     }
-  }, [includeExpired])
+  }, [])
 
   useEffect(() => {
     void refresh()
@@ -227,6 +244,7 @@ export default function TickerAdminModal({ onClose }: Props) {
       label: cat.label,
       accentHex: cat.accentHex,
       entryKind: cat.entryKind,
+      ttlDays: cat.ttlDays ?? 3,
       sortOrder: cat.sortOrder,
     })
     setCategoryView('edit')
@@ -245,6 +263,11 @@ export default function TickerAdminModal({ onClose }: Props) {
       setError('Label is required')
       return
     }
+    const ttlDays = Math.floor(Number(categoryEditor.ttlDays))
+    if (!Number.isFinite(ttlDays) || ttlDays < 1 || ttlDays > 90) {
+      setError('TTL must be between 1 and 90 days')
+      return
+    }
     setSaving(true)
     setError(null)
     try {
@@ -254,6 +277,7 @@ export default function TickerAdminModal({ onClose }: Props) {
         label: categoryEditor.label.trim(),
         accentHex: hex,
         entryKind: categoryEditor.entryKind,
+        ttlDays,
         sortOrder: categoryEditor.sortOrder,
       })
       if (!result.success) {
@@ -271,10 +295,16 @@ export default function TickerAdminModal({ onClose }: Props) {
   }
 
   const deleteCategory = async (cat: TickerCategory) => {
+    if (cat.isSystem) {
+      setError(
+        `Cannot remove “${cat.label}”: built-in categories are required by the ticker. You can still edit label, color, and TTL.`
+      )
+      return
+    }
     const active = cat.activeCount ?? 0
     if (active > 0) {
       setError(
-        `Cannot remove “${cat.label}”: ${active} active ticker message${active === 1 ? '' : 's'} currently use this category. Wait for them to expire, or edit those messages to a different category first.`
+        `Cannot remove “${cat.label}”: ${active} active ticker item${active === 1 ? '' : 's'} currently use this category. Wait for them to expire/close, or edit those messages to a different category first.`
       )
       return
     }
@@ -369,14 +399,6 @@ export default function TickerAdminModal({ onClose }: Props) {
               >
                 New message
               </button>
-              <label className="flex items-center gap-2 text-xs text-slate-400">
-                <input
-                  type="checkbox"
-                  checked={includeExpired}
-                  onChange={(e) => setIncludeExpired(e.target.checked)}
-                />
-                Include expired
-              </label>
             </div>
             {entries.length === 0 ? (
               <p className="text-sm text-slate-400">No ticker messages yet.</p>
@@ -395,13 +417,8 @@ export default function TickerAdminModal({ onClose }: Props) {
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-slate-100 font-medium truncate">{entry.headline}</p>
                         <p className="text-[11px] text-slate-500 mt-0.5">
-                          {entry.active ? (
-                            <span className="text-emerald-400">Active</span>
-                          ) : (
-                            <span className="text-slate-500">Expired</span>
-                          )}
-                          {' · '}
-                          expires {entry.expiresAt ? new Date(entry.expiresAt).toLocaleString() : '—'}
+                          Expires{' '}
+                          {entry.expiresAt ? new Date(entry.expiresAt).toLocaleString() : '—'}
                         </p>
                       </div>
                       <div className="flex gap-2 shrink-0">
@@ -453,7 +470,7 @@ export default function TickerAdminModal({ onClose }: Props) {
               >
                 {categories.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.label} ({c.entryKind === 'site' ? '3-day TTL' : '7-day TTL'})
+                    {formatCategoryOption(c.label, c.ttlDays)}
                   </option>
                 ))}
               </select>
@@ -462,7 +479,7 @@ export default function TickerAdminModal({ onClose }: Props) {
                   className="inline-flex mt-1 items-center px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider"
                   style={stylesFromAccentHex(selectedCat.accentHex).badgeStyle}
                 >
-                  {selectedCat.label}
+                  {formatCategoryOption(selectedCat.label, selectedCat.ttlDays)}
                 </span>
               ) : null}
             </label>
@@ -552,13 +569,16 @@ export default function TickerAdminModal({ onClose }: Props) {
             New category
           </button>
           <p className="text-xs text-slate-500">
-            Categories define badge label, accent color, and TTL kind (site = 3 days, game = 7 days).
-            You cannot remove a category while active messages use it.
+            Categories define badge label, accent color, and TTL days (1–90). Built-in categories
+            cannot be removed. Questionnaire active count includes open forms on the ticker (not
+            only poll-result messages).
           </p>
           <ul className="divide-y divide-slate-800 border border-slate-700/80 rounded-lg overflow-hidden">
             {categories.map((cat) => {
               const accent = stylesFromAccentHex(cat.accentHex)
               const active = cat.activeCount ?? 0
+              const openQ = cat.openQuestionnaireCount ?? 0
+              const removeBlocked = Boolean(cat.isSystem) || active > 0
               return (
                 <li key={cat.id} className="px-3 py-2.5 bg-slate-950/40 flex gap-3 items-center">
                   <span
@@ -575,13 +595,20 @@ export default function TickerAdminModal({ onClose }: Props) {
                   <div className="min-w-0 flex-1 text-[11px] text-slate-500">
                     <span className="font-mono text-slate-400">{cat.slug}</span>
                     {' · '}
-                    {cat.entryKind === 'site' ? '3-day' : '7-day'} TTL
+                    {formatTtlDays(cat.ttlDays)}
                     {' · '}
                     {active > 0 ? (
                       <span className="text-amber-300">{active} active</span>
                     ) : (
                       <span>0 active</span>
                     )}
+                    {openQ > 0 ? (
+                      <span className="text-violet-300">
+                        {' '}
+                        ({openQ} open form{openQ === 1 ? '' : 's'})
+                      </span>
+                    ) : null}
+                    {cat.isSystem ? <span className="text-slate-600"> · built-in</span> : null}
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button
@@ -594,16 +621,18 @@ export default function TickerAdminModal({ onClose }: Props) {
                     <button
                       type="button"
                       className={`text-xs ${
-                        active > 0
+                        removeBlocked
                           ? 'text-slate-600 cursor-not-allowed'
                           : 'text-red-400 hover:text-red-300'
                       }`}
                       onClick={() => void deleteCategory(cat)}
-                      disabled={saving || active > 0}
+                      disabled={saving || removeBlocked}
                       title={
-                        active > 0
-                          ? `Cannot remove: ${active} active message${active === 1 ? '' : 's'} use this category`
-                          : 'Remove category'
+                        cat.isSystem
+                          ? 'Built-in category — cannot remove'
+                          : active > 0
+                            ? `Cannot remove: ${active} active item${active === 1 ? '' : 's'} use this category`
+                            : 'Remove category'
                       }
                     >
                       Remove
@@ -635,8 +664,12 @@ export default function TickerAdminModal({ onClose }: Props) {
           <label className="block space-y-1">
             <span className="text-xs text-slate-400">Slug (stable id)</span>
             <input
-              className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 font-mono"
+              className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 font-mono disabled:opacity-60"
               value={categoryEditor.slug}
+              disabled={Boolean(
+                categoryEditor.id &&
+                  categories.find((c) => c.id === categoryEditor.id)?.isSystem
+              )}
               onChange={(e) =>
                 setCategoryEditor((s) => ({
                   ...s,
@@ -670,20 +703,28 @@ export default function TickerAdminModal({ onClose }: Props) {
               </div>
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">TTL kind</span>
-              <select
-                className="rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
-                value={categoryEditor.entryKind}
-                onChange={(e) =>
+              <span className="text-xs text-slate-400">TTL (whole days, 1–90)</span>
+              <input
+                type="number"
+                min={1}
+                max={90}
+                step={1}
+                inputMode="numeric"
+                className="w-28 rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                value={categoryEditor.ttlDays}
+                onChange={(e) => {
+                  const raw = e.target.value
+                  if (raw === '') {
+                    setCategoryEditor((s) => ({ ...s, ttlDays: 1 }))
+                    return
+                  }
+                  const n = Math.floor(Number(raw))
                   setCategoryEditor((s) => ({
                     ...s,
-                    entryKind: e.target.value as WhatsNewKind,
+                    ttlDays: Number.isFinite(n) ? Math.min(90, Math.max(1, n)) : 1,
                   }))
-                }
-              >
-                <option value="site">Site (3 days)</option>
-                <option value="game">Game (7 days)</option>
-              </select>
+                }}
+              />
             </label>
             <label className="block space-y-1">
               <span className="text-xs text-slate-400">Sort order</span>
@@ -700,6 +741,10 @@ export default function TickerAdminModal({ onClose }: Props) {
               />
             </label>
           </div>
+          <p className="text-[11px] text-slate-500">
+            TTL applies to ticker messages assigned to this category (and poll results for
+            Questionnaire). Open questionnaire prompts stay up until the form closes.
+          </p>
           <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 px-3 py-2">
             <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Preview</p>
             <span

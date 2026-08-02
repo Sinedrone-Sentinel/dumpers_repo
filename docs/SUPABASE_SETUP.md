@@ -182,6 +182,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 114 | `149_whats_new_site_ttl.sql` | Whats New `kind` game|site; site/poll TTL 3d, game TTL 7d; site announcements for Dumper Apps + avatar menu |
 | 115 | `150_ticker_headline_cleanup.sql` | Short ticker titles; strip legacy prefixes; remove over-detailed site rows |
 | 116 | `151_admin_whats_new_crud.sql` | Super-admin ticker CRUD; `ticker_categories` (labels/colors/TTL); delete blocked while active messages use a category |
+| 117 | `152_ticker_admin_purge_on_list.sql` | Admin ticker list purges expired rows on load (no “include expired” toggle) |
+| 118 | `153_ticker_category_ttl_days.sql` | Per-category TTL days (1–90); system categories protected; questionnaire active count includes open forms |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 
@@ -252,12 +254,12 @@ Apply migrations through `151_admin_whats_new_crud.sql` for the bottom Updates t
 | Piece | Role |
 |-------|------|
 | `whats_new_entries` | Rows keyed by `issue_key` + `version`; `kind` is `game` or `site`; optional `ticker_category_id` |
-| `ticker_categories` | Layout categories (slug, label, accent hex, entry_kind TTL); seeded Site / Game / Questionnaire / Dumper Apps |
+| `ticker_categories` | Layout categories (slug, label, accent hex, **ttl_days** 1–90); seeded Site / Game / Questionnaire / Dumper Apps |
 | `list_ticker_categories()` | Anon/authenticated read of layout categories for badge colors |
 | `list_active_whats_new()` | Anon/authenticated read — **game** rows 7 days, **site** rows 3 days (includes category layout fields) |
 | `ingest_whats_new_entries(jsonb)` | Super-admin or `service_role` insert; **skips** if same issue+version (or identical headline for that version) already exists; resolves `ticker_category_id` |
 | `cleanup_expired_whats_new()` | Deletes by kind TTL (site 3d / game 7d) — scheduled daily via pg_cron when available |
-| `admin_*_whats_new_*` / `admin_*_ticker_category*` | Super-admin only CRUD; category delete blocked while **active** messages use that category |
+| `admin_*_whats_new_*` / `admin_*_ticker_category*` | Super-admin only CRUD; category delete blocked while **active** messages use that category; admin list runs `cleanup_expired_whats_new` so expired rows are gone |
 
 Local parse flow: append `extracted-data/whats-new-pending.jsonl` → RPC ingest → wipe file. Put `SUPABASE_SERVICE_ROLE_KEY` in `.env` on the parse machine (never in the browser). Retry with `npm run push-whats-new`.
 

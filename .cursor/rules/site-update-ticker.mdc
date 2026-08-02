@@ -38,8 +38,12 @@ Headlines are **short titles** (a few words). Verbose explanation goes in `items
 
 ## TTL
 
-- **Site** (+ poll results): **3 days**
+Per **ticker category** (`ttl_days`, editable in Site admin → Updates Ticker → Categories), default seeds:
+
+- **Site** / **Questionnaire** / **Dumper Apps**: **3 days**
 - **Game** digests: **7 days**
+
+Open questionnaire prompts stay until the form closes (separate from poll-result message TTL).
 
 ## When to propose
 

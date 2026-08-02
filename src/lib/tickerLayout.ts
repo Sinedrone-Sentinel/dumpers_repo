@@ -8,8 +8,14 @@ export type TickerCategory = {
   label: string
   accentHex: string
   entryKind: 'game' | 'site'
+  /** Days messages in this category stay on the ticker (1–90). */
+  ttlDays: number
   sortOrder: number
+  /** Built-in layouts (site/game/questionnaire/dumper_apps) — not deletable. */
+  isSystem?: boolean
   activeCount?: number
+  /** Live open questionnaires (questionnaire slug only). */
+  openQuestionnaireCount?: number
   totalCount?: number
 }
 
@@ -19,18 +25,36 @@ export type TickerLayoutStyle = TickerAccentStyles & {
   label: string
   accentHex: string
   entryKind: 'game' | 'site'
+  ttlDays: number
 }
 
 /** Offline / pre-fetch fallbacks matching migration seed. */
 export const DEFAULT_TICKER_CATEGORIES: TickerCategory[] = [
-  { id: 'fallback-site', slug: 'site', label: 'Site Update', accentHex: '#0EA5E9', entryKind: 'site', sortOrder: 10 },
-  { id: 'fallback-game', slug: 'game', label: 'Game Update', accentHex: '#10B981', entryKind: 'game', sortOrder: 20 },
+  {
+    id: 'fallback-site',
+    slug: 'site',
+    label: 'Site Update',
+    accentHex: '#0EA5E9',
+    entryKind: 'site',
+    ttlDays: 3,
+    sortOrder: 10,
+  },
+  {
+    id: 'fallback-game',
+    slug: 'game',
+    label: 'Game Update',
+    accentHex: '#10B981',
+    entryKind: 'game',
+    ttlDays: 7,
+    sortOrder: 20,
+  },
   {
     id: 'fallback-questionnaire',
     slug: 'questionnaire',
     label: 'Questionnaire',
     accentHex: '#8B5CF6',
     entryKind: 'site',
+    ttlDays: 3,
     sortOrder: 30,
   },
   {
@@ -39,6 +63,7 @@ export const DEFAULT_TICKER_CATEGORIES: TickerCategory[] = [
     label: 'Dumper Apps',
     accentHex: '#F59E0B',
     entryKind: 'site',
+    ttlDays: 3,
     sortOrder: 40,
   },
 ]
@@ -53,6 +78,26 @@ export function setCachedTickerCategories(rows: TickerCategory[]): void {
   cachedCategories = rows.length > 0 ? rows : DEFAULT_TICKER_CATEGORIES
 }
 
+export function normalizeTickerCategoryRow(
+  row: Partial<TickerCategory> & { id: string; slug: string }
+): TickerCategory {
+  const fallback = DEFAULT_TICKER_CATEGORIES.find((c) => c.slug === row.slug)
+  const ttl = Number(row.ttlDays)
+  return {
+    id: row.id,
+    slug: row.slug,
+    label: row.label || fallback?.label || row.slug,
+    accentHex: row.accentHex || fallback?.accentHex || '#94A3B8',
+    entryKind: row.entryKind === 'game' ? 'game' : 'site',
+    ttlDays: Number.isFinite(ttl) && ttl >= 1 ? Math.min(90, Math.floor(ttl)) : fallback?.ttlDays ?? 3,
+    sortOrder: Number(row.sortOrder) || fallback?.sortOrder || 100,
+    isSystem: Boolean(row.isSystem),
+    activeCount: row.activeCount,
+    openQuestionnaireCount: row.openQuestionnaireCount,
+    totalCount: row.totalCount,
+  }
+}
+
 export async function fetchTickerCategories(): Promise<TickerCategory[]> {
   try {
     const { data, error } = await supabase.rpc('list_ticker_categories')
@@ -60,7 +105,9 @@ export async function fetchTickerCategories(): Promise<TickerCategory[]> {
       setCachedTickerCategories(DEFAULT_TICKER_CATEGORIES)
       return cachedCategories
     }
-    const rows = (data as TickerCategory[]) ?? []
+    const rows = ((data as Partial<TickerCategory>[]) ?? []).map((r) =>
+      normalizeTickerCategoryRow(r as Partial<TickerCategory> & { id: string; slug: string })
+    )
     setCachedTickerCategories(rows)
     return cachedCategories
   } catch {
@@ -83,6 +130,7 @@ function categoryToLayout(cat: TickerCategory): TickerLayoutStyle {
     label: cat.label,
     accentHex: cat.accentHex,
     entryKind: cat.entryKind,
+    ttlDays: cat.ttlDays,
     ...stylesFromAccentHex(cat.accentHex),
   }
 }
