@@ -103,6 +103,9 @@ type ContractEntry = {
   title: string
   displayTitle?: string
   titleKey?: string
+  /** In-game Contracts mission body text (localized). */
+  description?: string | null
+  descriptionKey?: string | null
   faction: string
   factionKey?: string
   system: string
@@ -463,6 +466,8 @@ export interface ContractMissionBrowseEntry {
   entryKey: string
   mission: string
   title: string
+  /** Localized Contracts mission body text, when available. */
+  description?: string | null
   faction: string
   factionKey?: string
   debugName?: string
@@ -537,6 +542,7 @@ function buildContractBrowseCatalog(): ContractMissionBrowseEntry[] {
       ].join('|'),
       mission: contractMissionLabel(contract),
       title: contractDisplayTitle(contract),
+      description: contract.description?.trim() || null,
       faction: contract.faction,
       factionKey: contract.factionKey,
       debugName: contract.debugName,

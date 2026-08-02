@@ -55,6 +55,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Track blueprints from the main Blueprints page',
       'Browse Missions: pick a faction, then browse its mission pools',
+      'Open a contract to read its in-game Mission text (Contracts body copy) above the blueprint rewards',
       'Missions with multiple regional pools are grouped under one title with location rows underneath',
       'Faction cards show which star systems that faction appears in',
       'Filter Browse Missions by star system (Stanton / Pyro / Nyx) — faction cards and mission lists update to match',

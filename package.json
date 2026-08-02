@@ -20,6 +20,7 @@
     "preview": "vite preview",
     "lint": "eslint src",
     "parse-game-data": "node scripts/parse-extracted-data.mjs",
+    "enrich-mission-descriptions": "node scripts/enrich-mission-descriptions.mjs",
     "diff-game-data": "node scripts/diff-game-data.mjs",
     "push-whats-new": "node scripts/push-whats-new.mjs",
     "patch-audit": "node scripts/patch-audit.mjs",

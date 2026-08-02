@@ -959,6 +959,16 @@ export default function BrowseMissionsView({
               <div className="mt-2">
                 {renderMissionTags(selectedMission)}
               </div>
+              {selectedMission.description ? (
+                <div className="mt-3 rounded-lg border border-slate-800/80 bg-slate-900/40 px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
+                    Mission text
+                  </p>
+                  <p className="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
+                    {selectedMission.description}
+                  </p>
+                </div>
+              ) : null}
               <p className="text-sm text-slate-400 mt-3">
                 Blueprint rewards from this contract
               </p>

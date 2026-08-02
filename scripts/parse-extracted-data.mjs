@@ -1669,9 +1669,11 @@ function parseContractGenerators(localization, reputationCaches = {}) {
         const debugLower = debugName.toLowerCase()
         const templatePath = contract.template || ''
 
-        // Extract title from paramOverrides
+        // Extract title + mission body text from paramOverrides
         let titleKey = ''
         let title = debugName || 'Unknown Mission'
+        let descriptionKey = ''
+        let description = ''
         if (contract.paramOverrides?.stringParamOverrides) {
           const titleParam = contract.paramOverrides.stringParamOverrides.find(
             p => p.param === 'Title'
@@ -1684,10 +1686,25 @@ function parseContractGenerators(localization, reputationCaches = {}) {
               title = titleKey
             }
           }
+          const descParam = contract.paramOverrides.stringParamOverrides.find(
+            p => p.param === 'Description'
+          )
+          if (descParam?.value) {
+            descriptionKey = descParam.value
+            if (descriptionKey.startsWith('@')) {
+              description = localization[descriptionKey.substring(1)] || ''
+            } else {
+              description = descriptionKey
+            }
+          }
         }
         if (title === debugName && debugLower.includes('hockrow_facilitydelve_p3mm')) {
           titleKey = '@Hockrow_FacilityDelve_P3M1_title'
           title = localization.Hockrow_FacilityDelve_P3M1_title || title
+        }
+        // Normalize localization escapes for UI (keep paragraph breaks).
+        if (description) {
+          description = String(description).replace(/\\n/g, '\n').trim()
         }
         
         // Extract blueprint pools from contractResults
@@ -1868,6 +1885,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             title,
             displayTitle,
             titleKey,
+            description,
+            descriptionKey: descriptionKey || null,
             faction: factionName,
             factionKey,
             system,
