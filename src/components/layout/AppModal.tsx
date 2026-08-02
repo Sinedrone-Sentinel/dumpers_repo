@@ -31,7 +31,7 @@ const zIndexClasses: Record<AppModalZIndex, string> = {
 
 interface AppModalProps {
   title: string
-  subtitle?: string
+  subtitle?: React.ReactNode
   onClose: () => void
   size?: AppModalSize
   zIndex?: AppModalZIndex
@@ -82,7 +82,13 @@ export default function AppModal({
             <h2 id={titleId} className="text-lg font-bold text-white leading-snug">
               {title}
             </h2>
-            {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+            {subtitle ? (
+              typeof subtitle === 'string' ? (
+                <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+              ) : (
+                <div className="mt-1.5">{subtitle}</div>
+              )
+            ) : null}
           </div>
           <button
             type="button"
