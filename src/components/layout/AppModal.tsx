@@ -1,4 +1,5 @@
 import React, { useId } from 'react'
+import { createPortal } from 'react-dom'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
 
@@ -65,10 +66,16 @@ export default function AppModal({
   useBodyScrollLock(true)
   useUiOverlayRegistration(overlayId, true)
 
-  return (
+  // Portal to body — page content uses z-10 under the fixed header (z-40); a
+  // fixed z-70 modal inside that shell still paints below the header.
+  if (typeof document === 'undefined') return null
+
+  return createPortal(
     <div
       className={`fixed inset-0 bg-black/70 backdrop-blur-[2px] ${zIndexClasses[zIndex]} flex items-center justify-center p-3 sm:p-4`}
-      style={{ paddingBottom: 'max(0.75rem, calc(var(--site-ticker-height, 0px) + 0.75rem))' }}
+      style={{
+        paddingBottom: 'max(0.75rem, calc(var(--site-ticker-height, 0px) + 0.75rem))',
+      }}
       onClick={closeOnBackdrop ? onClose : undefined}
       role="dialog"
       aria-modal="true"
@@ -115,6 +122,7 @@ export default function AppModal({
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
@@ -88,9 +89,17 @@ function readTickerHeightPx(): number {
   return Number.isFinite(n) ? n : 0
 }
 
+function readHeaderHeightPx(): number {
+  if (typeof document === 'undefined') return 56
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--site-header-height')
+  const n = Number.parseFloat(raw)
+  return Number.isFinite(n) && n > 0 ? n : 56
+}
+
 function computeTargetRect(size: AppModalSize) {
   const marginX = 16
-  const marginTop = Math.max(12, window.innerHeight * MODAL_TOP_VH)
+  const header = readHeaderHeightPx()
+  const marginTop = Math.max(12, header + 8, window.innerHeight * MODAL_TOP_VH)
   const ticker = readTickerHeightPx()
   const marginBottom = Math.max(16, ticker + 12)
   const maxW = sizeMaxWidth[size] ?? 576
@@ -258,7 +267,9 @@ function BrandRevealAnimatedModal({
 
   const flipCardBox = stage === 'flip' ? originBox : targetRect
 
-  return (
+  if (typeof document === 'undefined') return null
+
+  return createPortal(
     <div
       className={`fixed inset-0 ${zIndexClasses[zIndex ?? 70]} flex items-start justify-center overflow-hidden p-4`}
       role="dialog"
@@ -417,6 +428,7 @@ function BrandRevealAnimatedModal({
           </div>
         </motion.div>
       )}
-    </div>
+    </div>,
+    document.body,
   )
 }
