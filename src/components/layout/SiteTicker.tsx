@@ -210,15 +210,15 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
       <div className="fixed inset-x-0 bottom-0 z-[49] flex flex-col justify-end pointer-events-none">
         {expanded ? (
           <div
-            className="site-glass pointer-events-auto mx-3 sm:mx-auto w-[calc(100%-1.5rem)] sm:w-full max-w-[min(92vw,42rem)] border-b-0 rounded-t-2xl overflow-hidden"
+            className="site-glass-ticker pointer-events-auto w-full max-w-[92vw] mx-auto border-b-0 rounded-t-2xl overflow-hidden"
             role="listbox"
             aria-label="Site updates"
           >
-            <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between gap-3 bg-white/[0.03]">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-300">Updates</p>
+            <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between gap-3 bg-black/25">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-200">Updates</p>
               <p className="text-[10px] text-slate-400">{items.length} active</p>
             </div>
-            <div className="max-h-[min(42dvh,20rem)] overflow-y-auto overscroll-contain">
+            <div className="max-h-[min(50vh,22rem)] overflow-y-auto overscroll-contain bg-slate-950/40">
               {items.map((item) => {
                 const layout = getTickerLayout(item)
                 return (
@@ -226,7 +226,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                     key={item.id}
                     type="button"
                     role="option"
-                    className="w-full text-left px-4 py-2.5 transition-colors hover:bg-white/[0.06]"
+                    className="w-full text-left px-4 py-2.5 transition-colors hover:bg-white/[0.08]"
                     style={layout.rowStyle}
                     onClick={() => openItem(item)}
                   >
@@ -248,7 +248,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
 
         <div
           ref={barRef}
-          className="site-glass pointer-events-auto border-t border-white/10 rounded-none"
+          className="site-glass-ticker pointer-events-auto border-t border-white/10 rounded-none"
           style={currentLayout.barAccentStyle}
         >
           <div className="site-shell">
