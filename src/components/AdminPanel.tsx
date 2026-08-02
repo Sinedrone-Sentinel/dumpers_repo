@@ -20,7 +20,7 @@ const UNVERIFIED_FILTER = 'rsi_handle_verified.is.null,rsi_handle_verified.eq.fa
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const { profile: currentUser, isOfficerOrAbove, isSuperAdmin } = useAuth()
-  const [activeTab, setActiveTab] = useState<TabType>('pending')
+  const [activeTab, setActiveTab] = useState<TabType>('members')
   const [memberFilter, setMemberFilter] = useState<MemberFilter>('verified')
   const [users, setUsers] = useState<Profile[]>([])
   const [bannedUsers, setBannedUsers] = useState<BannedUser[]>([])
@@ -187,10 +187,10 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
   }
 
   const tabs: { id: TabType; label: string }[] = [
-    { id: 'pending', label: 'Pending' },
     { id: 'members', label: 'Members' },
     { id: 'officers', label: 'Officers' },
     { id: 'banned', label: 'Banned' },
+    { id: 'pending', label: 'Pending' },
   ]
 
   return (
