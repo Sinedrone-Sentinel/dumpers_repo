@@ -52,6 +52,26 @@ function markVisitorGeoLookupAttempted(visitorId: string): void {
   localStorage.setItem(GEO_RESOLVED_STORAGE_KEY, visitorId)
 }
 
+async function recordAnalyticsPingRpc(payload: {
+  visitor_id: string
+  tool_id: string
+  sub_tool_id: string
+  active_seconds: number
+  is_guest: boolean
+}): Promise<void> {
+  await supabase.rpc('record_analytics_ping', {
+    p_visitor_id: payload.visitor_id,
+    p_tool_id: payload.tool_id,
+    p_sub_tool_id: payload.sub_tool_id,
+    p_active_seconds: payload.active_seconds,
+    p_is_guest: payload.is_guest,
+  })
+}
+
+/**
+ * Routine pings use PostgREST RPC (not Edge). Edge is only for the one-time
+ * geo lookup per visitor — IP is available on the function request, not via RPC.
+ */
 async function recordAnalyticsPing(payload: {
   visitor_id: string
   tool_id: string
@@ -60,30 +80,16 @@ async function recordAnalyticsPing(payload: {
   is_guest: boolean
   needs_geo: boolean
 }): Promise<void> {
-  const { data, error } = await supabase.functions.invoke('record-analytics-ping', {
-    body: payload,
-  })
-
-  if (!error) {
-    if (payload.needs_geo) {
-      markVisitorGeoLookupAttempted(payload.visitor_id)
-    }
-    return
-  }
-
-  await supabase.rpc('record_analytics_ping', {
-    p_visitor_id: payload.visitor_id,
-    p_tool_id: payload.tool_id,
-    p_sub_tool_id: payload.sub_tool_id,
-    p_active_seconds: payload.active_seconds,
-    p_is_guest: payload.is_guest,
-  })
-
   if (payload.needs_geo) {
+    const { error } = await supabase.functions.invoke('record-analytics-ping', {
+      body: payload,
+    })
+    // Always mark attempted so a failing Edge path cannot spam invocations every minute.
     markVisitorGeoLookupAttempted(payload.visitor_id)
+    if (!error) return
   }
 
-  void data
+  await recordAnalyticsPingRpc(payload)
 }
 
 function normalizeSubTool(subToolId?: string): string {
