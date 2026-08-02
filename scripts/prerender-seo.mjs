@@ -104,6 +104,16 @@ async function prerenderPath(browser, baseUrl, urlPath) {
   const target = `${baseUrl}${urlPath === '/' ? '/' : urlPath}`
   await page.goto(target, { waitUntil: 'networkidle', timeout: 120_000 })
 
+  const toolIntroPaths = new Set([
+    '/wikelo',
+    '/targets',
+    '/resources',
+    '/mining-tracker',
+    '/commodity-lookup',
+    '/archive',
+    '/bazaar',
+  ])
+
   if (urlPath === '/blueprints') {
     await page.waitForSelector('[data-seo="blueprints-catalog"]', { timeout: 90_000 })
     await page.waitForFunction(
@@ -111,6 +121,16 @@ async function prerenderPath(browser, baseUrl, urlPath) {
         const root = document.querySelector('[data-seo="blueprints-catalog"]')
         const text = root?.textContent || ''
         return text.length > 400 && !text.includes('Loading blueprint catalog')
+      },
+      { timeout: 90_000 }
+    )
+  } else if (toolIntroPaths.has(urlPath)) {
+    await page.waitForSelector('[data-seo="tool-intro"]', { timeout: 90_000 })
+    await page.waitForFunction(
+      () => {
+        const text = document.body?.innerText || ''
+        const intro = document.querySelector('[data-seo="tool-intro"]')?.textContent || ''
+        return text.length > 200 && intro.length > 40 && !text.includes('Bootstrapping')
       },
       { timeout: 90_000 }
     )

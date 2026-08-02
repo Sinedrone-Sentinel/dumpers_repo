@@ -4,6 +4,7 @@ import SiteBrandTitle from '../SiteBrandTitle'
 import OAuthSignInButtons from '../auth/OAuthSignInButtons'
 import { SITE_COPYRIGHT, SITE_SLOGAN } from '../../config/site'
 import { buildJsonLdGraph } from '../../config/seo'
+import { SEO_LANDING_FAQS } from '../../config/seoFaqs'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 import SiteSupportLink from '../layout/SiteSupportLink'
@@ -33,25 +34,25 @@ const FEATURES: FeatureCard[] = [
     cta: 'Open in Offline Mode →',
   },
   {
-    title: 'Wikelo Emporium',
-    body: 'Every Wikelo barter trade in one place — hand-ins, rewards, customer rank, and blueprint tags.',
+    title: 'Wikelo favors & barter',
+    body: 'Every Wikelo Emporium trade — favors, reputation, hand-ins, rewards, customer rank, ships, armor, weapons, and gear.',
     href: '/wikelo',
     action: 'offline',
-    cta: 'Open in Offline Mode →',
+    cta: 'Open Wikelo guide offline →',
   },
   {
-    title: 'Mining & resources',
-    body: 'Ore guidance, RS tracking, crew mining ledgers, and a personal resource stock tracker for fabricator planning.',
+    title: 'Mining tracker',
+    body: 'Ore guide, cluster RS reference, spawn chances, and crew mining ledgers — plus a personal resource stock tracker.',
     href: '/mining-tracker',
     action: 'offline',
-    cta: 'Open in Offline Mode →',
+    cta: 'Open mining tracker offline →',
   },
   {
     title: 'Commodity lookup',
-    body: 'Quick commodity reference with DFP bases for trading and crafting cost context.',
+    body: 'Where to buy and sell commodities, UEX per-SCU prices, box sizes, and DFP bases for trade planning.',
     href: '/commodity-lookup',
     action: 'offline',
-    cta: 'Open in Offline Mode →',
+    cta: 'Open commodity lookup offline →',
   },
   {
     title: 'Community marketplace',
@@ -60,29 +61,6 @@ const FEATURES: FeatureCard[] = [
     cta: 'Sign in to use the marketplace →',
   },
 ]
-
-const FAQS = [
-  {
-    q: 'Do I need an account to use Star Citizen tools here?',
-    a: 'No. Choose Browse tools offline to explore blueprints, missions, mining, resources, Wikelo, and the archive in this browser. Sign in when you want cloud sync, the community marketplace, and BP Dumper.',
-  },
-  {
-    q: "What is Dumper's Fair-Value Price (DFP)?",
-    a: "DFP is a proprietary fair-value estimate for crafted gear and materials so members can price WTB/WTS listings consistently. It is shown on blueprint and resource tools when enabled on this site.",
-  },
-  {
-    q: 'How do crafting blueprints unlock in Star Citizen?',
-    a: 'Many blueprints drop from reputation missions, faction progression, or related activities. Use Mission Tracker and blueprint detail views here to see which contracts reward each recipe.',
-  },
-  {
-    q: 'What is BP Dumper?',
-    a: 'BP Dumper is a desktop Game.log watcher that syncs newly acquired blueprints to your account and powers the Live Mission Tracker while you play.',
-  },
-  {
-    q: 'Who is this site for?',
-    a: "Anyone can browse the tools in Offline Mode. Signed-in members get sync, BP Dumper, and the community marketplace on this deployment.",
-  },
-] as const
 
 type PublicSeoLandingProps = {
   onBrowseOffline: () => void
@@ -153,11 +131,12 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
         <header className="relative mx-auto max-w-6xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14">
           <SiteBrandTitle size="hero" layout="stacked" slogan={SITE_SLOGAN} titleAs="p" />
           <h1 className="mx-auto mt-8 max-w-3xl text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl">
-            Star Citizen tools for blueprints, crafting missions, mining, and community trade
+            Star Citizen blueprint tracker, Wikelo guide, mining tools, and community trade
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
-            Browse craftable items, track blueprint unlocks, plan resources, and use a member
-            marketplace — with Offline Mode for instant access and sign-in when you want sync.
+            Free crafting blueprint database, mission reward tracker, Wikelo favors and barter
+            trades, mining RS reference, and a member marketplace — Offline Mode for instant access,
+            sign-in when you want sync.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
@@ -253,7 +232,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             Common questions
           </h2>
           <div className="mt-6 space-y-2">
-            {FAQS.map((faq, index) => {
+            {SEO_LANDING_FAQS.map((faq, index) => {
               const open = openFaq === index
               return (
                 <div

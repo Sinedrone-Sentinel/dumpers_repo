@@ -329,7 +329,8 @@ export default function TargetsRoute() {
     return (
       <FeaturePageLayout
         title="Mission Tracker"
-        subtitle="Track blueprints and the missions that reward them"
+        subtitle="Star Citizen blueprint mission tracker"
+        seoIntro="Track which reputation missions reward crafting blueprints, build a wishlist of recipes you still need, and browse faction contracts by location and standing. Sync unlocks with BP Dumper while you play."
       >
         <div className="text-center py-16 text-slate-400">
           Available after your account is approved.
@@ -341,7 +342,8 @@ export default function TargetsRoute() {
   return (
     <FeaturePageLayout
       title="Mission Tracker"
-      subtitle="Track blueprints and the missions that reward them"
+      subtitle="Star Citizen blueprint mission tracker"
+      seoIntro="Track which reputation missions reward crafting blueprints, build a wishlist of recipes you still need, and browse faction contracts by location and standing. Sync unlocks with BP Dumper while you play."
       actions={
         <div className="flex items-center gap-2 flex-wrap">
           <button

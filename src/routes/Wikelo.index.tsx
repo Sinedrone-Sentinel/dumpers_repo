@@ -74,7 +74,8 @@ export default function WikeloRoute() {
   return (
     <FeaturePageLayout
       title="Wikelo"
-      subtitle="Wikelo Emporium Barter Trades — Hand-In Costs, Rewards & Reputation"
+      subtitle="Wikelo Emporium barter trades — favors, rep, hand-ins & rewards"
+      seoIntro="Star Citizen Wikelo Emporium barter guide: look up favors, reputation (rep) requirements, hand-in costs, and rewards for every trade — including ships, ground vehicles, armor, weapons, gear, and favor contracts. Search by trade title, hand-in item, or reward."
       meta={
         <>
           <span>LIVE {blueprintDataVersion}</span>

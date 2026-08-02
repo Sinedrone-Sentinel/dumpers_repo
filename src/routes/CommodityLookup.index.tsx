@@ -87,6 +87,7 @@ export default function CommodityLookupRoute() {
     <FeaturePageLayout
       title="Commodity Lookup"
       subtitle="Where to buy & sell every commodity, with UEX per-SCU prices and SCU box sizes"
+      seoIntro="Star Citizen commodity lookup — find buy and sell terminals, UEX per-SCU prices, SCU box sizes, and Dumper's Fair-Value Price (DFP) bases to plan trade and crafting runs."
       badge="UEX"
       meta={
         <>

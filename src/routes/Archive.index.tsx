@@ -85,7 +85,12 @@ export default function ArchivePage() {
       {/* Page header */}
       <header className="mb-6">
         <h1 className="site-page-title">{sectionTitle}</h1>
-        <p className="site-page-subtitle">Star Citizen Reference Data</p>
+        <p className="site-page-subtitle">Star Citizen guides, components &amp; lore</p>
+        <p data-seo="tool-intro" className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-400">
+          Star Citizen information archive — member how-tos, faction standings, ship component
+          database, ordnance reference, and resource lore that pairs with Dumper&apos;s Repo
+          blueprint, mining, and mission tools.
+        </p>
       </header>
 
       {/* Content */}

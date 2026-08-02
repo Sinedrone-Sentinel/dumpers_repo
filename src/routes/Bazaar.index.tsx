@@ -578,7 +578,11 @@ export default function BazaarRoute() {
   // Guest teaser view
   if (isGuest) {
     return (
-      <FeaturePageLayout title="The Bazaar" subtitle={SITE_SLOGAN}>
+      <FeaturePageLayout
+        title="The Bazaar"
+        subtitle="Star Citizen community WTB & WTS marketplace"
+        seoIntro="The Bazaar is a Star Citizen member marketplace for WTB craft requests and WTS stock listings — browse open trades, fulfill by item and quantity, and build buyer/seller reputation. Sign in to participate."
+      >
         <div className="max-w-2xl mx-auto py-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 mb-6">
             <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -631,7 +635,8 @@ export default function BazaarRoute() {
   return (
     <FeaturePageLayout
       title="The Bazaar"
-      subtitle={SITE_SLOGAN}
+      subtitle="Star Citizen community WTB & WTS marketplace"
+      seoIntro="The Bazaar is a Star Citizen member marketplace for WTB craft requests and WTS stock listings — browse open trades, fulfill by item and quantity, and build buyer/seller reputation."
       actions={
         <Link
           to="/orders"

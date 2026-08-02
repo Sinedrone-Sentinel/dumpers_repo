@@ -53,11 +53,11 @@ After **every commit/push** (or when finishing a batch about to push) that touch
 2. Reply with a **Site Update candidate list** (even if the recommendation is “nothing to post”).
 3. Wait for per-item approval before calling ingest / writing pending JSONL / `npm run push-whats-new` for **site** entries.
 
-Skip proposing only for pure internals with zero member-visible effect (e.g. Cursor rules-only, lockfile-only, migration with no UI). Still say briefly: **Site Update: none recommended.**
+Skip proposing for pure internals **and** for work members do not care about (SEO, metrics, efficiency — see below). Still say briefly: **Site Update: none recommended.**
 
 ## What belongs on the ticker
 
-Include only what members **see or use**:
+Include only what members **see or use** as a product capability:
 
 - New pages, tabs, workflows, onboarding steps (member-facing wording)
 - Changed labels, requirements, or how a tool works
@@ -74,12 +74,17 @@ Whenever a **3rd Party** entry is added/updated in `src/lib/thirdPartyServices.t
 3. Put portal vs Discord Accept detail in `items[]`.
 4. Wait for numbered approval before ingest.
 
-**Do not** propose:
+**Do not** propose (members do not care):
 
+- **SEO / discoverability** — crawlable catalogs, sitemap, prerender, meta/titles, robots, Search Console, JSON-LD, “so Google can find us”
+- **Metrics / tracking / analytics** — site analytics, pings, tool-time, dashboards, instrumentation
+- **Site maintenance & efficiency** — perf, refactors, cleanup, build pipeline, dependency bumps, dead-code removal, hosting/CDN tweaks with no new member capability
 - Security hardening, RLS, RPC locks, Edge auth
 - Officer/super-admin-only tooling with no member impact
-- Cursor rules, docs-only, deps, refactors, parser internals
+- Cursor rules, docs-only, deps, parser internals
 - Duplicate of an entry already on the ticker for this ship
+
+Exception: if the same commit also ships a **real member-facing workflow** (e.g. a new tool tab members use), propose **that** capability only — never the SEO/metrics/maintenance angle.
 
 ## List format (required)
 

@@ -1,4 +1,5 @@
 import { SITE_DESCRIPTION, SITE_OG_IMAGE, SITE_TITLE, SITE_URL } from './site'
+import { SEO_LANDING_FAQS } from './seoFaqs'
 
 export type SeoPageConfig = {
   title: string
@@ -38,58 +39,57 @@ export const SEO_SITEMAP_PATHS = [
 
 const pages: Record<string, SeoPageConfig> = {
   '/': {
-    title: "Dumper's Repo — Star Citizen Tools for Blueprints, Crafting & Trade",
+    title: "Star Citizen Blueprint Tracker & Crafting Tools | Dumper's Repo",
     description:
-      "Free Star Citizen tools hub: browse crafting blueprints and mission rewards, track resources and mining, plan with Dumper's Fair-Value Price (DFP), and use a community marketplace. Works offline — no account required to explore.",
+      "Free Star Citizen blueprint tracker and crafting tools: blueprint database, mission rewards, Wikelo barter guide, mining tracker, resources, and a community marketplace. Works offline — no account required.",
     canonicalPath: '/',
   },
   '/blueprints': {
     title: "Star Citizen Crafting Blueprint Database & Tracker | Dumper's Repo",
     description:
-      'Free Star Citizen crafting blueprint database — browse craftable blueprint names by category from game data. Open Offline Mode for materials, mission rewards, and Dumper\'s Fair-Value Price (DFP).',
+      'Free Star Citizen crafting blueprint database — browse craftable blueprint names by category from game data. Open Offline Mode for the full blueprint tracker with materials, mission rewards, and Dumper\'s Fair-Value Price (DFP).',
     canonicalPath: '/blueprints/',
   },
   '/wikelo': {
-    title: "Wikelo Emporium Trades — Star Citizen Barter Guide | Dumper's Repo",
+    title: "Wikelo Favors, Rep & Barter Trades Guide — Star Citizen | Dumper's Repo",
     description:
-      'Browse every Wikelo Emporium barter trade in Star Citizen — hand-ins, rewards, reputation, and blueprint drops. Filter by ships, armor, weapons, and gear.',
-    // Trailing slash matches GitHub Pages 200 (folder index); bare path 301s.
+      'Complete Wikelo Emporium barter guide for Star Citizen — favors, reputation (rep), hand-in costs, rewards, customer rank, ships, armor, weapons, and gear. Search every trade in one place.',
     canonicalPath: '/wikelo/',
   },
   '/targets': {
-    title: "Mission Tracker — Star Citizen Blueprint Missions | Dumper's Repo",
+    title: "Star Citizen Blueprint Mission Tracker | Dumper's Repo",
     description:
-      'Track Star Citizen crafting blueprint unlocks and browse reputation missions that reward blueprints. Build a personal wishlist and sync with BP Dumper.',
+      'Star Citizen blueprint mission tracker — find which reputation contracts reward crafting blueprints, build a wishlist, track unlock progress, and sync with BP Dumper Live Tracker.',
     canonicalPath: '/targets/',
   },
   '/resources': {
-    title: "Resource Tracker — Star Citizen Crafting Materials | Dumper's Repo",
+    title: "Star Citizen Resource Tracker — Crafting Materials Stock | Dumper's Repo",
     description:
-      'Track mined and refined Star Citizen crafting resources, notes, and stock for fabricator planning. Pair with blueprints and Dumper\'s Fair-Value Price (DFP).',
+      'Track Star Citizen crafting resources and materials for fabricator planning — personal stock, notes, and can-craft views paired with blueprints and Dumper\'s Fair-Value Price (DFP).',
     canonicalPath: '/resources/',
   },
   '/mining-tracker': {
-    title: "Mining Tracker — Star Citizen Ore Guide & Ledgers | Dumper's Repo",
+    title: "Star Citizen Mining Tracker — Ore Guide, RS & Ledgers | Dumper's Repo",
     description:
-      'Star Citizen mining tools: ore properties, location guidance, RS tracking, and crew mining ledgers.',
+      'Star Citizen mining tracker with ore properties, location guide, cluster RS reference, spawn-weighted chances, and crew mining ledgers for share payouts.',
     canonicalPath: '/mining-tracker/',
   },
   '/commodity-lookup': {
-    title: "Commodity Lookup — Star Citizen Trade Reference | Dumper's Repo",
+    title: "Star Citizen Commodity Lookup — Buy & Sell Locations | Dumper's Repo",
     description:
-      'Look up Star Citizen commodities and Dumper\'s Fair-Value Price (DFP) bases for trading and crafting planning.',
+      'Look up Star Citizen commodities — where to buy and sell, UEX per-SCU prices, SCU box sizes, and Dumper\'s Fair-Value Price (DFP) bases for trade planning.',
     canonicalPath: '/commodity-lookup/',
   },
   '/archive': {
-    title: "Information Archive — Star Citizen Guides & Lore | Dumper's Repo",
+    title: "Star Citizen Guides, Components & Lore Archive | Dumper's Repo",
     description:
-      'Member guides, tips, faction reference, component database, and lore for Star Citizen tools on Dumper\'s Repo.',
+      'Star Citizen information archive — member guides, faction standings, component database, ordnance reference, and resource lore for Dumper\'s Repo tools.',
     canonicalPath: '/archive/',
   },
   '/bazaar': {
-    title: "The Bazaar — Community Marketplace | Dumper's Repo",
+    title: "Star Citizen Community Marketplace — WTB & WTS | Dumper's Repo",
     description:
-      'Shop and fulfill Star Citizen member WTB and WTS listings. Sign in to trade crafted gear and blueprints with your community.',
+      'The Bazaar — Star Citizen member WTB and WTS marketplace for crafted gear and blueprints. Sign in to shop, list, and fulfill with your community.',
     canonicalPath: '/bazaar/',
   },
   '/orders': {
@@ -152,7 +152,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
         url,
         logo: absoluteUrl('/favicon.png'),
         description:
-          'Star Citizen tools for crafting blueprints, mining, resources, and a community marketplace.',
+          'Star Citizen blueprint tracker, Wikelo barter guide, mining tools, and community marketplace.',
       },
       {
         '@type': 'SoftwareApplication',
@@ -168,13 +168,27 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           priceCurrency: 'USD',
         },
         featureList: [
-          'Star Citizen crafting blueprint database',
-          'Mission reward and blueprint tracker',
-          'Resource and mining trackers',
+          'Star Citizen crafting blueprint database and tracker',
+          'Blueprint mission tracker and reputation rewards',
+          'Wikelo favors, reputation, and barter trade guide',
+          'Mining tracker with ore guide and RS reference',
+          'Resource tracker for crafting materials',
           "Dumper's Fair-Value Price (DFP)",
           'Community WTB/WTS marketplace',
           'BP Dumper Game.log sync',
         ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${url}#faq`,
+        mainEntity: SEO_LANDING_FAQS.map((faq) => ({
+          '@type': 'Question',
+          name: faq.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.a,
+          },
+        })),
       },
     ],
   }

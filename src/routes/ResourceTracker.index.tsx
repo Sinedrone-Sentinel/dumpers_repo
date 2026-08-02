@@ -10,7 +10,6 @@ import {
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
-import { SITE_SLOGAN } from '../config/site'
 import { useAuth } from '../contexts/AuthContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
@@ -635,7 +634,8 @@ export default function ResourceTrackerRoute() {
   return (
     <FeaturePageLayout
       title="Resource Tracker"
-      subtitle={SITE_SLOGAN}
+      subtitle="Star Citizen crafting materials stock tracker"
+      seoIntro="Track mined and refined Star Citizen crafting resources for fabricator planning — personal stock cards, notes, can-craft views, and Dumper's Fair-Value Price (DFP) context when enabled."
     >
       {isGuest && (
         <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">

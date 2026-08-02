@@ -419,6 +419,7 @@ export default function MiningTrackerRoute() {
             ? 'Browse all ores by rarity or find ores at specific locations.'
             : 'Track mining crew shares, payouts, and paid status for your runs.'
       }
+      seoIntro="Star Citizen mining tracker: ore properties and locations, cluster RS reference with spawn-weighted chances, and crew mining ledgers for share payouts. Use the guide to find ores, then track signatures while you hunt."
       badge={isGuestPreview ? 'Local only' : undefined}
       meta={
         viewMode === 'tracker' ? (

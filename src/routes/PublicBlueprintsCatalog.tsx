@@ -83,12 +83,12 @@ export default function PublicBlueprintsCatalog() {
           Free Star Citizen reference
         </p>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-          Star Citizen Crafting Blueprint Database
+          Star Citizen Crafting Blueprint Database &amp; Tracker
         </h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300 sm:text-base">
-          Browse craftable Star Citizen blueprint names from game data — a public crafting blueprint
-          database and tracker companion for Dumper&apos;s Repo. Use Offline Mode for filters,
-          materials, mission rewards, and Dumper&apos;s Fair-Value Price (DFP) on each item.
+          Free Star Citizen crafting blueprint database — browse craftable blueprint names by
+          category from game data. Open Offline Mode for the full blueprint tracker with materials,
+          mission rewards, and Dumper&apos;s Fair-Value Price (DFP).
         </p>
         <p className="mt-2 text-sm text-slate-500">
           {rows.length.toLocaleString()} blueprints listed
