@@ -243,16 +243,16 @@ Set these under **Project Settings → Edge Functions → Secrets** (or let sema
 
 BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into each release build**, not stored in Supabase. When game data is parsed (`parse-extracted-data.mjs`), `npm run sync-min-game-version` updates `scripts/bp-dumper-py/_min_game_version.py` from `src/data/game-build-version.json`.
 
-### What's New ticker (`129_whats_new_ticker.sql`)
+### What's New ticker (`129` + `149`)
 
-Apply migration `129_whats_new_ticker.sql` for the bottom Updates ticker.
+Apply migrations `129_whats_new_ticker.sql` and `149_whats_new_site_ttl.sql` for the bottom Updates ticker.
 
 | Piece | Role |
 |-------|------|
-| `whats_new_entries` | Rows keyed by `issue_key` + `version` (RSI launcher string) |
-| `list_active_whats_new()` | Anon/authenticated read of rows newer than 7 days |
+| `whats_new_entries` | Rows keyed by `issue_key` + `version`; `kind` is `game` or `site` |
+| `list_active_whats_new()` | Anon/authenticated read — **game** rows 7 days, **site** rows 3 days |
 | `ingest_whats_new_entries(jsonb)` | Super-admin or `service_role` insert; **skips** if same issue+version (or identical headline for that version) already exists |
-| `cleanup_expired_whats_new()` | Deletes `detected_at` older than 7 days — scheduled daily via pg_cron when available |
+| `cleanup_expired_whats_new()` | Deletes by kind TTL (site 3d / game 7d) — scheduled daily via pg_cron when available |
 
 Local parse flow: append `extracted-data/whats-new-pending.jsonl` → RPC ingest → wipe file. Put `SUPABASE_SERVICE_ROLE_KEY` in `.env` on the parse machine (never in the browser). Retry with `npm run push-whats-new`.
 
@@ -279,7 +279,7 @@ Apply migration `131`. Super-admin questionnaire editor gains a **Public poll** 
 - **Archive** posts anonymous radio/checkbox tallies to the Updates ticker (`POLL RESULTS: …`)
 - Soft expiry (`available_until`) is swept hourly by `publish_due_public_questionnaire_results` (pg_cron when available) — archives the row and posts results
 - Free-text answers are counted only (bodies never go on the ticker)
-- Results stay on the ticker for the usual 7-day What's New TTL
+- Results stay on the ticker for the **site** What's New TTL (3 days)
 
 ### BP Dumper webhook API
 
