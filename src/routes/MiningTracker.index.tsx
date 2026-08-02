@@ -778,10 +778,10 @@ export default function MiningTrackerRoute() {
       {!loading && !error && data && viewMode === 'guide' && (
         <div className="space-y-6">
           {/* Guide view mode toggle */}
-          <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
+          <div className="site-chip-strip w-fit">
             <button
               onClick={() => setGuideViewMode('ores')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
                 guideViewMode === 'ores' 
                   ? 'site-filter-selected-slate' 
                   : 'text-slate-400 hover:text-white'
@@ -791,7 +791,7 @@ export default function MiningTrackerRoute() {
             </button>
             <button
               onClick={() => setGuideViewMode('locations')}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
                 guideViewMode === 'locations' 
                   ? 'site-filter-selected-slate' 
                   : 'text-slate-400 hover:text-white'
@@ -815,13 +815,13 @@ export default function MiningTrackerRoute() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <div className="flex items-center gap-1 p-1 bg-slate-800/50 rounded-lg self-start shrink-0">
+            <div className="site-chip-strip self-start shrink-0">
               {(['all', 'surface', 'asteroid'] as const).map((mode) => (
                 <SiteTooltip key={mode} content={GUIDE_DEPOSIT_FILTER_TOOLTIPS[mode]} side="bottom">
                   <button
                     type="button"
                     onClick={() => setGuideDepositFilter(mode)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors site-btn-shimmer ${
+                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors site-btn-shimmer ${
                       guideDepositFilter === mode
                         ? 'site-filter-selected-slate'
                         : 'text-slate-400 hover:text-white'
