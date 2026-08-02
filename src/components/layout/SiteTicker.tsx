@@ -22,7 +22,8 @@ function TickerTypeBadge({ item }: { item: SiteTickerItem }) {
   const layout = getTickerLayout(item)
   return (
     <span
-      className={`shrink-0 inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${layout.badgeClass}`}
+      className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider"
+      style={layout.badgeStyle}
     >
       {layout.label}
     </span>
@@ -225,12 +226,16 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                     key={item.id}
                     type="button"
                     role="option"
-                    className={`w-full text-left px-4 py-2.5 transition-colors ${layout.rowClass}`}
+                    className="w-full text-left px-4 py-2.5 transition-colors hover:bg-slate-900/80"
+                    style={layout.rowStyle}
                     onClick={() => openItem(item)}
                   >
                     <div className="flex items-start gap-2.5 min-w-0">
                       <TickerTypeBadge item={item} />
-                      <span className={`text-sm font-medium leading-snug min-w-0 ${layout.textClass}`}>
+                      <span
+                        className="text-sm font-medium leading-snug min-w-0"
+                        style={layout.textStyle}
+                      >
                         {item.headline}
                       </span>
                     </div>
@@ -243,7 +248,8 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
 
         <div
           ref={barRef}
-          className={`pointer-events-auto border-t bg-slate-950/98 transition-colors ${currentLayout.barAccentClass}`}
+          className="pointer-events-auto border-t bg-slate-950/98 transition-colors"
+          style={currentLayout.barAccentStyle}
         >
           <div className="site-shell">
             <button
@@ -266,15 +272,16 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                 >
                   <div
                     ref={textRef}
-                    className={`whitespace-nowrap text-xs sm:text-sm font-medium ${currentLayout.textClass}`}
-                    style={
-                      reduced
+                    className="whitespace-nowrap text-xs sm:text-sm font-medium"
+                    style={{
+                      ...currentLayout.textStyle,
+                      ...(reduced
                         ? { maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }
                         : {
                             transform: `translateX(${xOffset}px)`,
                             transition: `transform ${marqueeDuration} linear`,
-                          }
-                    }
+                          }),
+                    }}
                     title={current.headline}
                   >
                     {current.headline}

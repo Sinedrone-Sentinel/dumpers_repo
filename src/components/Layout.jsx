@@ -17,6 +17,7 @@ import WelcomeModal from './WelcomeModal'
 import SupportTicketsModal from './SupportTicketsModal'
 import QuestionnairesAdminModal from './questionnaires/QuestionnairesAdminModal'
 import QuestionnaireModal from './questionnaires/QuestionnaireModal'
+import TickerAdminModal from './layout/TickerAdminModal'
 import MarketplaceBottomStack from './marketplace/MarketplaceBottomStack'
 import AppChrome from './layout/AppChrome'
 import AnalyticsTracker from './AnalyticsTracker'
@@ -50,6 +51,8 @@ function LayoutContent({
   setShowWelcomeModal,
   showQuestionnairesAdmin,
   setShowQuestionnairesAdmin,
+  showTickerAdmin,
+  setShowTickerAdmin,
   fillQuestionnaireId,
   setFillQuestionnaireId,
   pendingQuestionnaires,
@@ -76,6 +79,7 @@ function LayoutContent({
         onOpenQuestionnairesAdmin={
           isSuperAdmin ? () => setShowQuestionnairesAdmin(true) : undefined
         }
+        onOpenTickerAdmin={isSuperAdmin ? () => setShowTickerAdmin(true) : undefined}
         onOpenSettings={() => setShowProfileSettings(true)}
         onOpenBpDumper={openBpDumperModal}
         onOpenDbActions={() => setShowDbActions(true)}
@@ -104,6 +108,9 @@ function LayoutContent({
       )}
       {!isGuestPreview && isSuperAdmin && showQuestionnairesAdmin && (
         <QuestionnairesAdminModal onClose={() => setShowQuestionnairesAdmin(false)} />
+      )}
+      {!isGuestPreview && isSuperAdmin && showTickerAdmin && (
+        <TickerAdminModal onClose={() => setShowTickerAdmin(false)} />
       )}
       {fillQuestionnaireId && (
         <QuestionnaireModal
@@ -154,6 +161,7 @@ export default function Layout() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false)
   const [showSupportModal, setShowSupportModal] = useState(false)
   const [showQuestionnairesAdmin, setShowQuestionnairesAdmin] = useState(false)
+  const [showTickerAdmin, setShowTickerAdmin] = useState(false)
   const [fillQuestionnaireId, setFillQuestionnaireId] = useState(null)
   const [pendingQuestionnaires, setPendingQuestionnaires] = useState([])
   const [welcomeChecked, setWelcomeChecked] = useState(false)
@@ -244,6 +252,8 @@ export default function Layout() {
           setShowWelcomeModal={setShowWelcomeModal}
           showQuestionnairesAdmin={showQuestionnairesAdmin}
           setShowQuestionnairesAdmin={setShowQuestionnairesAdmin}
+          showTickerAdmin={showTickerAdmin}
+          setShowTickerAdmin={setShowTickerAdmin}
           fillQuestionnaireId={fillQuestionnaireId}
           setFillQuestionnaireId={setFillQuestionnaireId}
           pendingQuestionnaires={pendingQuestionnaires}

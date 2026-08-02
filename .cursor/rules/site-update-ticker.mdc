@@ -19,14 +19,18 @@ Guests/offline users see ticker headlines **and** modal detail. **Never** put in
 - Officer/super-admin-only workflows or internal tool names beyond what members already see
 - Implementation jargon (“full history import”, “catch-up”, “RPC”, “webhook hardening”)
 
-## Layout kinds (UI badges — do not prefix headlines)
+## Layout categories (UI badges — do not prefix headlines)
 
-| Kind | When | Badge color |
-|------|------|-------------|
-| **Site Update** | Product/UI announcements (`kind: site`, category `Site`) | Sky |
-| **Game Update** | Parse digests (`kind: game`) | Emerald |
-| **Questionnaire** | Open questionnaires + poll results | Violet |
-| **Dumper Apps** | Desktop app announcements (`category: Dumper Apps` or dumper issue keys) | Amber |
+Seeded defaults (editable by super-admin under **Site admin → Updates Ticker → Categories**):
+
+| Slug | When | Default accent |
+|------|------|----------------|
+| `site` | Product/UI announcements | Sky `#0EA5E9` |
+| `game` | Parse digests | Emerald `#10B981` |
+| `questionnaire` | Open questionnaires + poll results | Violet `#8B5CF6` |
+| `dumper_apps` | Desktop app announcements | Amber `#F59E0B` |
+
+Categories live in `ticker_categories` (label, accent hex, `entry_kind` for TTL). Entries reference `ticker_category_id`. Super-admin can create/edit/remove categories and change colors; **removal is blocked** while any **active** ticker message uses that category.
 
 Headlines are **short titles** (a few words). Verbose explanation goes in `items[].label` / `items[].summary` (modal body only).
 

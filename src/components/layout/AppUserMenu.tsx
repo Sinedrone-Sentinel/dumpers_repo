@@ -21,6 +21,7 @@ interface AppUserMenuProps {
   onOpenDiscord: () => void
   onOpenAdmin: () => void
   onOpenQuestionnairesAdmin?: () => void
+  onOpenTickerAdmin?: () => void
   onOpenSupport: () => void
   onSignOut: () => void
 }
@@ -55,6 +56,7 @@ export default function AppUserMenu({
   onOpenDiscord,
   onOpenAdmin,
   onOpenQuestionnairesAdmin,
+  onOpenTickerAdmin,
   onOpenSupport,
   onSignOut,
 }: AppUserMenuProps) {
@@ -267,6 +269,18 @@ export default function AppUserMenu({
                       className={menuItemClass}
                     >
                       Questionnaires
+                    </button>
+                  )}
+                  {onOpenTickerAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close()
+                        onOpenTickerAdmin()
+                      }}
+                      className={menuItemClass}
+                    >
+                      Updates Ticker
                     </button>
                   )}
                   {showDbActionsButton && (

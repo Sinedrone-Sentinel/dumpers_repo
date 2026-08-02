@@ -4,7 +4,6 @@ import {
   cleanTickerHeadline,
   formatTickerMetaChips,
   resolveTickerLayoutFromEntry,
-  TICKER_LAYOUTS,
 } from '../../lib/tickerLayout'
 
 type Props = {
@@ -14,21 +13,23 @@ type Props = {
 
 export default function SiteTickerDetailModal({ item, onClose }: Props) {
   const { entry } = item
-  const layout = TICKER_LAYOUTS[resolveTickerLayoutFromEntry(entry)]
+  const layout = resolveTickerLayoutFromEntry(entry)
   const title = cleanTickerHeadline(entry.headline)
   const chips = formatTickerMetaChips(entry)
 
   const headerChips = (
     <div className="flex flex-wrap items-center gap-1.5">
       <span
-        className={`inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${layout.badgeClass}`}
+        className="inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider"
+        style={layout.badgeStyle}
       >
         {layout.label}
       </span>
       {chips.map((chip) => (
         <span
           key={chip}
-          className={`inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-semibold tracking-wide ${layout.badgeClass}`}
+          className="inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-semibold tracking-wide"
+          style={layout.badgeStyle}
         >
           {chip}
         </span>
@@ -45,7 +46,8 @@ export default function SiteTickerDetailModal({ item, onClose }: Props) {
           {entry.items.map((row) => (
             <li
               key={row.key}
-              className={`rounded-lg border border-slate-700/80 bg-slate-950/50 px-3 py-2 ${layout.rowClass}`}
+              className="rounded-lg border border-slate-700/80 bg-slate-950/50 px-3 py-2"
+              style={layout.rowStyle}
             >
               <p className="text-sm text-slate-100 font-medium">{row.label}</p>
               {row.summary ? (

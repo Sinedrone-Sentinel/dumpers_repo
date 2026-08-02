@@ -23,6 +23,10 @@ import {
   type SiteTickerItem,
   type WhatsNewEntry,
 } from '../../lib/whatsNew'
+import {
+  fetchTickerCategories,
+  WHATS_NEW_CHANGED_EVENT,
+} from '../../lib/tickerLayout'
 import type { PendingQuestionnaire } from '../../lib/questionnaires'
 
 interface AppChromeProps {
@@ -40,6 +44,7 @@ interface AppChromeProps {
   pendingQuestionnaires?: PendingQuestionnaire[]
   onOpenQuestionnaire?: (questionnaireId: string) => void
   onOpenQuestionnairesAdmin?: () => void
+  onOpenTickerAdmin?: () => void
   onOpenSettings: () => void
   onOpenBpDumper: () => void
   onOpenDbActions: () => void
@@ -65,6 +70,7 @@ export default function AppChrome({
   pendingQuestionnaires = [],
   onOpenQuestionnaire,
   onOpenQuestionnairesAdmin,
+  onOpenTickerAdmin,
   onOpenSettings,
   onOpenBpDumper,
   onOpenDbActions,
@@ -83,11 +89,19 @@ export default function AppChrome({
 
   useEffect(() => {
     let cancelled = false
-    void fetchActiveWhatsNewEntries().then((rows) => {
-      if (!cancelled) setWhatsNew(rows)
-    })
+    const load = () => {
+      void Promise.all([fetchTickerCategories(), fetchActiveWhatsNewEntries()]).then(
+        ([, rows]) => {
+          if (!cancelled) setWhatsNew(rows)
+        }
+      )
+    }
+    load()
+    const onChanged = () => load()
+    window.addEventListener(WHATS_NEW_CHANGED_EVENT, onChanged)
     return () => {
       cancelled = true
+      window.removeEventListener(WHATS_NEW_CHANGED_EVENT, onChanged)
     }
   }, [])
 
@@ -166,6 +180,7 @@ export default function AppChrome({
                     onOpenDiscord={onOpenDiscord}
                     onOpenAdmin={onOpenAdmin}
                     onOpenQuestionnairesAdmin={onOpenQuestionnairesAdmin}
+                    onOpenTickerAdmin={onOpenTickerAdmin}
                     onOpenSupport={onOpenSupport}
                     onSignOut={onSignOut}
                   />

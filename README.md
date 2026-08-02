@@ -49,7 +49,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/analytics` | Site Analytics | Super-admins |
 | `/guest-locked` | Feature preview gate | Offline users (locked features) |
 
-Avatar menu (signed-in): **Settings**, **BP Dumper**, **Webhooks**, **Support**, **Partnership** (RSI verified), **Sign out**. Officers also get **Admin Panel**; super-admins get **DB Actions** and **Discord** (queue/admin webhooks).
+Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnership when RSI verified), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions).
 
 ---
 
@@ -240,6 +240,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 | **Site Analytics** (`/analytics`) | Super-admins | Visitors, tool-time, guest vs signed-in split, geo |
 | **DB Actions** | Super-admins | Game-data update runbook reference; wipe all personal inventory; revoke RSI verification; reset buyer/fulfiller rep |
 | **Discord** (modal) | Super-admins | Official webhook, queue status, coalesce minutes, manual send |
+| **Updates Ticker** (modal) | Super-admins | Create/edit/delete ticker messages; manage layout categories (label, accent color, TTL kind) |
 
 ---
 
@@ -251,7 +252,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 | **pending** | Signed in, awaiting officer approval; no marketplace or notifications |
 | **member** | Full marketplace, BP Dumper, mining ledgers (with RSI verification), Discord webhooks |
 | **officer** | Admin Panel, Support Dashboard, Site Total on Resource Tracker |
-| **super-admin** | DB Actions, Analytics, Discord admin, site settings, org logo |
+| **super-admin** | DB Actions, Analytics, Discord admin, Questionnaires, Updates Ticker, site settings, org logo |
 
 **Sign-in:** Google or Discord OAuth. Enable **Manual Linking** in Supabase Auth settings so members can connect both providers from Settings.
 
@@ -415,7 +416,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `shop-commodity-index.json` | UEX-backed commodity buy/sell locations, per-SCU prices, and box sizes (Commodity Lookup) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |
 
-What's New ticker digests are **not** bundled JSON — parse appends `extracted-data/whats-new-pending.jsonl`, pushes via `ingest_whats_new_entries` (deduped by `issue_key` + `version`), then wipes the file. Rows expire after 7 days (`cleanup_expired_whats_new` daily cron). Apply migration `129_whats_new_ticker.sql`.
+What's New ticker digests are **not** bundled JSON — parse appends `extracted-data/whats-new-pending.jsonl`, pushes via `ingest_whats_new_entries` (deduped by `issue_key` + `version`), then wipes the file. **Game** rows expire after 7 days; **site** (and poll) rows after 3 days (`cleanup_expired_whats_new` daily cron). Layout categories/colors live in `ticker_categories` (super-admin **Updates Ticker** modal). Apply migrations through `151_admin_whats_new_crud.sql` (see `docs/SUPABASE_SETUP.md`).
 
 The **DB Actions** modal shows super-admins the extract → parse → deploy runbook for reference; the steps themselves run locally in a terminal on a machine with the game files and this repo.
 
