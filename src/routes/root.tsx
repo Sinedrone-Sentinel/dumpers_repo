@@ -18,6 +18,7 @@ import CommodityLookupRoute from './CommodityLookup.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import AnalyticsRoute from './Analytics.index'
 import PartnershipRoute from './Partnership.index'
+import ThemePreviewRoute from './ThemePreview.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -172,6 +173,13 @@ const partnershipRoute = createRoute({
   beforeLoad: requireFeature('partnership'),
 })
 
+/** Temporary theme gallery — remove before relying on prod if undesired */
+const themePreviewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/theme-preview',
+  component: ThemePreviewRoute,
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   publicBlueprintsRoute,
@@ -190,6 +198,7 @@ export const routeTree = rootRoute.addChildren([
   analyticsRoute,
   discordSubscribeRoute,
   partnershipRoute,
+  themePreviewRoute,
 ])
 
 export default routeTree

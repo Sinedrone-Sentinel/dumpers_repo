@@ -81,7 +81,7 @@ export default function BlueprintSlotQualityCard({
 
   return (
     <div
-      className={`bg-slate-900/50 rounded-lg border border-slate-700 min-w-0 ${
+      className={`site-surface min-w-0 ${
         compact ? 'p-2' : 'p-3'
       }`}
     >
@@ -121,7 +121,7 @@ export default function BlueprintSlotQualityCard({
       )}
 
       {craftMode && (
-        <div className="mt-3 pt-3 border-t border-slate-700/50">
+        <div className="mt-3 pt-3 site-divider">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1.5 min-w-0">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
               Use quality
@@ -130,7 +130,7 @@ export default function BlueprintSlotQualityCard({
               <select
                 value={quality}
                 onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                className="w-full min-w-0 sm:flex-1 px-2 py-1 bg-slate-700/80 border border-slate-500 rounded text-sm font-mono text-white cursor-pointer hover:bg-slate-600/80 focus:border-orange-500/50 focus:outline-none"
+                className="site-input w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono cursor-pointer"
               >
                 {craftQualityOptions.map((q) => (
                   <option key={q} value={q}>
@@ -154,7 +154,7 @@ export default function BlueprintSlotQualityCard({
       )}
 
       {!craftMode && showQualitySelector && (
-        <div className={`mt-3 pt-3 border-t border-slate-700/50 ${compact ? 'mt-2 pt-2' : ''}`}>
+        <div className={`mt-3 pt-3 site-divider ${compact ? 'mt-2 pt-2' : ''}`}>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2 min-w-0">
             <label className="text-xs text-slate-500 uppercase tracking-wide shrink-0">
               {qualityDisplay === 'q-values' ? 'Quality' : 'Quality Band'}
@@ -163,7 +163,7 @@ export default function BlueprintSlotQualityCard({
               <select
                 value={quality}
                 onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                className="w-full min-w-0 sm:flex-1 px-2 py-1 bg-slate-700/80 border border-slate-500 rounded text-sm font-mono text-white cursor-pointer hover:bg-slate-600/80 focus:border-orange-500/50 focus:outline-none"
+                className="site-input w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono cursor-pointer"
               >
                 {bands.map((bandValue, idx) => {
                   const tier = getQualityTier(bandValue)
@@ -187,7 +187,7 @@ export default function BlueprintSlotQualityCard({
                   step={1}
                   value={quality}
                   onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                  className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                  className="site-range flex-1"
                 />
                 <input
                   type="number"
@@ -200,7 +200,7 @@ export default function BlueprintSlotQualityCard({
                       onQualityChange(slotIndex, val)
                     }
                   }}
-                  className="w-16 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
+                  className="site-input w-16 px-2 py-1 text-sm text-orange-400 font-mono text-center"
                 />
               </>
             )}

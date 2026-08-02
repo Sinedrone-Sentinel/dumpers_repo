@@ -101,19 +101,15 @@ export default function RsiBioVerifyControls({
   }
 
   const inputClass = compact
-    ? `flex-1 px-3 py-2 bg-slate-800 border rounded-lg text-white placeholder:text-slate-500 focus:outline-none transition-all ${
-        isVerified || inputDisabled
-          ? 'border-slate-700 opacity-60 cursor-not-allowed'
-          : 'border-slate-700 focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/30'
+    ? `site-input flex-1 px-3 py-2 ${
+        isVerified || inputDisabled ? 'opacity-60 cursor-not-allowed' : ''
       }`
-    : `flex-1 px-4 py-2.5 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none transition-all text-sm ${
-        isVerified || inputDisabled
-          ? 'border-slate-700 opacity-60 cursor-not-allowed'
-          : 'border-slate-600 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+    : `site-input flex-1 px-4 py-2.5 text-sm ${
+        isVerified || inputDisabled ? 'opacity-60 cursor-not-allowed' : ''
       }`
 
   const btnClass =
-    'shrink-0 px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+    'site-btn-accent shrink-0 px-4 py-2.5 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed'
 
   return (
     <div className="space-y-3">
@@ -143,14 +139,14 @@ export default function RsiBioVerifyControls({
       </div>
 
       {!isVerified && challenge && (
-        <div className="rounded-lg border border-cyan-500/30 bg-cyan-950/30 px-3 py-3 space-y-2">
+        <div className="site-banner-info px-3 py-3 space-y-2">
           <p className="text-xs text-slate-300 leading-relaxed">
             Paste this code into your <strong className="text-cyan-300">public RSI Bio</strong> on
             your citizen page, save, then click Verify. Code expires around{' '}
             <strong className="text-white">{formatChallengeExpiry(challenge.expiresAt)}</strong>.
           </p>
           <div className="flex flex-wrap items-center gap-2">
-            <code className="px-2.5 py-1.5 rounded bg-slate-950 border border-cyan-500/40 text-cyan-300 font-mono text-sm tracking-wider select-all">
+            <code className="site-surface px-2.5 py-1.5 border-cyan-500/40 text-cyan-300 font-mono text-sm tracking-wider select-all">
               {challenge.code}
             </code>
             <a
@@ -166,7 +162,7 @@ export default function RsiBioVerifyControls({
             type="button"
             onClick={handleVerify}
             disabled={verifying || issuing || inputDisabled}
-            className="w-full sm:w-auto px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="site-btn-primary w-full sm:w-auto px-4 py-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {verifying ? 'Checking bio…' : 'Verify'}
           </button>

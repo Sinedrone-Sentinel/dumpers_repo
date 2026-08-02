@@ -233,23 +233,23 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
       size="lg"
       zIndex={70}
       headerExtra={
-        <div className="flex border-b border-slate-700 shrink-0">
+        <div className="site-chip-strip w-full rounded-none border-x-0 border-t-0 shrink-0">
           <button
             onClick={() => setActiveTab('list')}
-            className={`flex-1 px-4 py-2.5 text-sm font-medium transition-colors ${
+            className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
               activeTab === 'list'
-                ? 'bg-slate-800 text-white border-b-2 border-red-500'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                ? 'site-filter-selected-red'
+                : 'site-filter-idle'
             }`}
           >
             My Tickets
           </button>
           <button
             onClick={() => setActiveTab('new')}
-            className={`flex-1 px-4 py-2.5 text-sm font-medium transition-colors ${
+            className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
               activeTab === 'new'
-                ? 'bg-slate-800 text-white border-b-2 border-red-500'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                ? 'site-filter-selected-red'
+                : 'site-filter-idle'
             }`}
           >
             New Ticket
@@ -259,10 +259,10 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
     >
       {message && (
         <div
-          className={`mb-4 p-3 rounded-lg text-sm ${
+          className={`mb-4 ${
             message.type === 'success'
-              ? 'bg-green-900/50 border border-green-500/50 text-green-400'
-              : 'bg-red-900/50 border border-red-500/50 text-red-400'
+              ? 'site-banner-success'
+              : 'site-banner-error'
           }`}
         >
           {message.text}
@@ -276,7 +276,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
               <div className="w-8 h-8 border-t-2 border-red-500 rounded-full animate-spin mx-auto" />
             </div>
           ) : tickets.length === 0 ? (
-            <div className="text-center py-8 text-slate-400">
+            <div className="site-empty !py-8">
               <svg
                 className="w-12 h-12 mx-auto mb-3 text-slate-600"
                 fill="none"
@@ -291,7 +291,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
                 />
               </svg>
               <p>No open tickets</p>
-              <p className="text-xs text-slate-500 mt-1">Create a new ticket to report an issue</p>
+              <p className="site-hint !mt-1">Create a new ticket to report an issue</p>
             </div>
           ) : (
             tickets.map((ticket) => (
@@ -301,14 +301,14 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
                 className={`w-full text-left p-4 border rounded-xl transition-colors ${
                   ticket.pending_rating
                     ? 'bg-amber-900/20 hover:bg-amber-900/30 border-amber-500/40 hover:border-amber-500/60'
-                    : 'bg-slate-800/50 hover:bg-slate-800 border-slate-700 hover:border-slate-600'
+                    : 'site-card hover:border-orange-500/35'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       {ticket.pending_rating ? (
-                        <span className="px-2 py-0.5 text-xs font-medium rounded border bg-amber-600/30 text-amber-300 border-amber-500/50">
+                        <span className="site-badge-amber">
                           Pending Your Rating
                         </span>
                       ) : (
@@ -356,7 +356,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
       {activeTab === 'new' && (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-slate-300 mb-2">Category</label>
+            <label className="site-label">Category</label>
             <select
               value={category}
               onChange={(e) => {
@@ -364,7 +364,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
                 setReportedUserId(null)
                 setMemberSearch('')
               }}
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-red-500/50"
+              className="site-input w-full px-3 py-2"
             >
               {MEMBER_NEW_CATEGORIES.map((value) => (
                 <option key={value} value={value}>
@@ -372,21 +372,21 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
                 </option>
               ))}
             </select>
-            <p className="mt-1 text-xs text-slate-500">{CATEGORY_DESCRIPTIONS[category]}</p>
+            <p className="site-hint">{CATEGORY_DESCRIPTIONS[category]}</p>
           </div>
 
           {category === 'member_report' && (
             <div>
-              <label className="block text-sm text-slate-300 mb-2">Member to Report</label>
+              <label className="site-label">Member to Report</label>
               <input
                 type="text"
                 value={memberSearch}
                 onChange={(e) => setMemberSearch(e.target.value)}
                 placeholder="Search by RSI Handle or name..."
-                className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
+                className="site-input w-full px-3 py-2"
               />
               {memberOptions.length > 0 && (
-                <div className="mt-2 border border-slate-700 rounded-lg overflow-hidden">
+                <div className="site-dropdown-list !relative mt-2 max-h-none">
                   {memberOptions.map((member) => (
                     <button
                       key={member.id}
@@ -395,7 +395,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
                         setMemberSearch(member.name)
                         setMemberOptions([])
                       }}
-                      className="w-full px-3 py-2 text-left text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+                      className="site-dropdown-item"
                     >
                       {member.name}
                     </button>
@@ -411,32 +411,32 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
           )}
 
           <div>
-            <label className="block text-sm text-slate-300 mb-2">Subject</label>
+            <label className="site-label">Subject</label>
             <input
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Brief description of the issue..."
               maxLength={100}
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50"
+              className="site-input w-full px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-slate-300 mb-2">Description</label>
+            <label className="site-label">Description</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Provide details about the issue..."
               rows={5}
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none"
+              className="site-textarea w-full px-3 py-2 !resize-none"
             />
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={submitting || !subject.trim() || !content.trim()}
-            className="w-full px-4 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+            className="site-btn-danger w-full !py-2.5 font-medium"
           >
             {submitting ? 'Submitting...' : 'Submit Ticket'}
           </button>

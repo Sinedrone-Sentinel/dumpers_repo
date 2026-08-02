@@ -120,7 +120,7 @@ export default function GeneralArchiveSection() {
           {TIPS.map((tip) => (
             <div
               key={tip.title}
-              className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+              className="p-3 site-surface"
             >
               <h4 className="text-sm font-medium text-orange-300 mb-1">{tip.title}</h4>
               <p className="text-xs text-slate-400 leading-relaxed">{tip.content}</p>
@@ -138,7 +138,7 @@ export default function GeneralArchiveSection() {
           {DATA_SOURCES.map((source) => (
             <div
               key={source.title}
-              className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+              className="p-3 site-surface"
             >
               <h4 className="text-sm font-medium text-orange-300 mb-1">{source.title}</h4>
               <p className="text-xs text-slate-400 leading-relaxed">{source.content}</p>
@@ -160,9 +160,9 @@ export default function GeneralArchiveSection() {
             href="https://robertsspaceindustries.com/en/community/orgs"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-start gap-3 p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 hover:border-orange-500/30 hover:bg-slate-800/60 transition-all"
+            className="group flex items-start gap-3 p-3 site-card hover:border-orange-500/30 transition-all"
           >
-            <div className="shrink-0 p-2 rounded-lg bg-slate-700/50 text-slate-400 group-hover:text-orange-400 transition-colors">
+            <div className="shrink-0 p-2 rounded-lg site-surface text-slate-400 group-hover:text-orange-400 transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
@@ -215,9 +215,9 @@ export default function GeneralArchiveSection() {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-start gap-3 p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 hover:border-orange-500/30 hover:bg-slate-800/60 transition-all"
+              className="group flex items-start gap-3 p-3 site-card hover:border-orange-500/30 transition-all"
             >
-              <div className="shrink-0 p-2 rounded-lg bg-slate-700/50 text-slate-400 group-hover:text-orange-400 transition-colors">
+              <div className="shrink-0 p-2 rounded-lg site-surface text-slate-400 group-hover:text-orange-400 transition-colors">
                 {link.icon}
               </div>
               <div className="min-w-0">
@@ -235,7 +235,7 @@ export default function GeneralArchiveSection() {
       </section>
 
       {/* Disclaimer */}
-      <section className="p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
+      <section className="p-4 site-surface">
         <p className="text-[10px] text-slate-500">
           This site is not affiliated with Cloud Imperium Games or Roberts Space Industries.
           All game content and materials are trademarks and copyrights of their respective owners.

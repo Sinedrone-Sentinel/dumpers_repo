@@ -57,7 +57,7 @@ export default function OrderRatingModal({
             type="button"
             onClick={onCancel}
             disabled={confirming}
-            className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-200 rounded-lg text-sm font-medium border border-slate-600"
+            className="flex-1 py-2.5 site-btn-secondary"
           >
             Cancel
           </button>
@@ -82,7 +82,7 @@ export default function OrderRatingModal({
         </div>
 
         <div>
-          <p className="text-slate-400 text-xs uppercase tracking-wide mb-2">Star rating</p>
+          <p className="site-label mb-2">Star rating</p>
           <div className="flex gap-1" role="group" aria-label="Star rating from 1 to 5">
             {[1, 2, 3, 4, 5].map((value) => (
               <button
@@ -113,7 +113,7 @@ export default function OrderRatingModal({
         </div>
 
         <div>
-          <label htmlFor="order-rating-comment" className="text-slate-400 text-xs uppercase tracking-wide">
+          <label htmlFor="order-rating-comment" className="site-label">
             Comment (optional)
           </label>
           <textarea
@@ -122,7 +122,7 @@ export default function OrderRatingModal({
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             placeholder="How did it go?"
-            className="mt-2 w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+            className="mt-2 w-full px-3 py-2 site-input text-white text-sm"
           />
         </div>
       </div>

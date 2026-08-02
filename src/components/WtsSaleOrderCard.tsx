@@ -41,7 +41,7 @@ export default function WtsSaleOrderCard({
   const canAct = order.status === 'accepted' || order.status === 'in_progress'
 
   return (
-    <div className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3">
+    <div className="p-4 site-surface space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-white font-medium">{order.title}</span>
         <ListingTypeBadge order={order} />
@@ -52,7 +52,7 @@ export default function WtsSaleOrderCard({
         )}
         <span
           className={`px-2 py-0.5 rounded text-xs border ${
-            STATUS_STYLES[order.status] ?? 'bg-slate-800 text-slate-300 border-slate-600'
+            STATUS_STYLES[order.status] ?? 'site-badge-slate'
           }`}
         >
           {order.status.replace(/_/g, ' ')}
@@ -75,7 +75,7 @@ export default function WtsSaleOrderCard({
       <OrderNextStepCallout order={order} context="wts_seller" />
 
       {canAct && (
-        <div className="pt-3 border-t border-slate-700 space-y-2">
+        <div className="pt-3 site-divider space-y-2">
           {order.status === 'accepted' && (
             <button
               type="button"
@@ -98,7 +98,7 @@ export default function WtsSaleOrderCard({
             type="button"
             onClick={onAbandon}
             disabled={submitting}
-            className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm"
+            className="site-btn-secondary w-full py-2 text-sm"
           >
             {submitting ? 'Working...' : releaseOrderButtonLabel(order, userId)}
           </button>

@@ -117,7 +117,7 @@ export default function CommodityLookupRoute() {
               className={`px-2 py-0.5 rounded text-xs font-medium transition-all site-btn-shimmer ${
                 selectedKind === null
                   ? 'site-btn-accent'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                  : 'site-filter-idle'
               }`}
             >
               All
@@ -129,7 +129,7 @@ export default function CommodityLookupRoute() {
                 className={`px-2 py-0.5 rounded text-xs font-medium transition-all site-btn-shimmer ${
                   selectedKind === kind
                     ? 'site-btn-accent'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                    : 'site-filter-idle'
                 }`}
               >
                 {kind}
@@ -137,7 +137,7 @@ export default function CommodityLookupRoute() {
             ))}
           </div>
           <div className="text-xs text-slate-500">{filtered.length} shown</div>
-          <div className="rounded-xl border border-slate-700/70 bg-slate-900/30 overflow-hidden">
+          <div className="site-surface overflow-hidden">
             <ul className="max-h-[60vh] overflow-y-auto overscroll-contain divide-y divide-slate-800/70">
               {filtered.map((c) => (
                 <li key={c.id}>
@@ -146,7 +146,7 @@ export default function CommodityLookupRoute() {
                     className={`w-full text-left px-3 py-2 flex items-center justify-between gap-2 transition-colors ${
                       selectedId === c.id
                         ? 'bg-orange-600/20 text-orange-100'
-                        : 'text-slate-300 hover:bg-slate-800/60'
+                        : 'site-dropdown-item'
                     }`}
                   >
                     <span className="truncate text-sm">{c.name}</span>
@@ -179,7 +179,7 @@ export default function CommodityLookupRoute() {
               <CommodityTradePanels result={selected} />
             </div>
           ) : (
-            <div className="h-full min-h-[16rem] flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed border-slate-700 bg-slate-900/30 p-8">
+            <div className="site-empty h-full min-h-[16rem] flex flex-col items-center justify-center text-center p-8">
               <div className="text-5xl mb-3">🛰️</div>
               <p className="text-slate-300 font-medium">Select a commodity</p>
               <p className="text-slate-500 text-sm mt-1 max-w-sm">

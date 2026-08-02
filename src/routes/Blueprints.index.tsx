@@ -713,7 +713,7 @@ export default function BlueprintsRoute() {
       }
     >
       {isGuest && (
-        <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
+        <div className="mb-4 site-banner-warn">
           <strong className="text-amber-100">Offline Mode</strong> — Your "Acquired" marks are saved locally in this browser.
           Sign in to sync them to your account.
         </div>
@@ -746,7 +746,7 @@ export default function BlueprintsRoute() {
             className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap shrink-0 site-btn-shimmer ${
               showOnlyRewards
                 ? 'site-filter-selected-amber'
-                : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 border border-slate-600'
+                : 'site-filter-idle'
             }`}
           >
             ★ Rewards
@@ -782,8 +782,8 @@ export default function BlueprintsRoute() {
                     selectedMainCategory === cat
                       ? 'site-btn-accent shadow-lg'
                       : count === 0
-                        ? 'bg-slate-800/50 text-slate-600 border border-slate-700 cursor-not-allowed'
-                        : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-600/80'
+                        ? 'site-filter-idle opacity-40 cursor-not-allowed'
+                        : 'site-filter-idle'
                   }`}
                 >
                   <span className="hidden md:inline">{cat}</span>
@@ -796,7 +796,7 @@ export default function BlueprintsRoute() {
 
           {/* Sub-Category Tags (shown when main category selected) */}
           {hasSubFilters && (
-            <div className="flex flex-wrap gap-1.5 lg:gap-2 pt-2 border-t border-slate-700/50">
+            <div className="flex flex-wrap gap-1.5 lg:gap-2 pt-2 site-divider">
               {/* Size filters for Vehicle categories */}
               {showVehicleSizes && (
                 <>
@@ -937,7 +937,7 @@ export default function BlueprintsRoute() {
 
       <section className="mt-4 w-full min-w-0">
         {filteredBlueprints.length === 0 ? (
-          <div className="text-center py-24 bg-slate-900/30 rounded-3xl border-2 border-dashed border-slate-700">
+          <div className="site-empty py-24">
             <div className="text-6xl mb-4 animate-bounce">🔍</div>
             <p className="text-slate-400 text-xl font-medium mb-4">No blueprints found</p>
             <button

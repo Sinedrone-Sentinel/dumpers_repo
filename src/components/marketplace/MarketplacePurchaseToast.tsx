@@ -33,14 +33,14 @@ export default function MarketplacePurchaseToast({
       role="status"
       aria-live="polite"
     >
-      <div className="relative overflow-hidden rounded-xl border border-slate-600/50 bg-slate-900/80 px-3 py-2.5 shadow-xl backdrop-blur-md">
+      <div className="site-surface relative overflow-hidden px-3 py-2.5">
         <MarketplaceAdGhostMark />
         <div className="relative z-10 flex items-start justify-between gap-2">
           <p className="text-sm leading-snug text-slate-100">{buildPurchaseToastMessage(row)}</p>
           <button
             type="button"
             onClick={onDismiss}
-            className="shrink-0 rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+            className="site-btn-icon shrink-0 !p-1"
             aria-label="Dismiss"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

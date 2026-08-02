@@ -452,7 +452,7 @@ export default function AnalyticsRoute() {
               className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
                 periodDays === days
                   ? 'site-filter-selected-orange border-orange-500/40'
-                  : 'bg-slate-800 text-slate-400 border-slate-600 hover:text-white'
+                  : 'site-filter-idle'
               }`}
             >
               {days}d
@@ -461,7 +461,7 @@ export default function AnalyticsRoute() {
           <button
             type="button"
             onClick={() => void loadSummary()}
-            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg"
+            className="site-btn-secondary px-3 py-1.5 text-sm"
           >
             Refresh
           </button>
@@ -481,7 +481,7 @@ export default function AnalyticsRoute() {
                   : option.id === 'signed_in'
                     ? 'site-filter-selected-green border-green-500/40'
                     : 'site-filter-selected-orange border-orange-500/40'
-                : 'bg-slate-800 text-slate-400 border-slate-600 hover:text-white'
+                : 'site-filter-idle'
             }`}
           >
             {option.label}
@@ -498,7 +498,7 @@ export default function AnalyticsRoute() {
       )}
 
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {error}
           {error.includes('get_site_analytics_summary') && (
             <p className="mt-2 text-red-200/80">
@@ -531,7 +531,7 @@ export default function AnalyticsRoute() {
             ))}
           </div>
 
-          <section className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+          <section className="site-surface p-4">
             <h2 className="text-sm font-semibold text-slate-200 mb-1">
               BP Dumper Edge usage ({periodDays} days)
             </h2>
@@ -580,7 +580,7 @@ export default function AnalyticsRoute() {
             )}
           </section>
 
-          <section className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+          <section className="site-surface p-4">
             <h2 className="text-sm font-semibold text-slate-200 mb-1">
               Daily unique visitors ({summary.period_days} days)
             </h2>
@@ -607,7 +607,7 @@ export default function AnalyticsRoute() {
                 {filteredDailyVisitors.map((row) => (
                   <div key={row.date} className="flex items-center gap-3 text-sm">
                     <span className="w-24 shrink-0 text-slate-500 tabular-nums">{row.date}</span>
-                    <div className="flex-1 h-5 bg-slate-800 rounded overflow-hidden">
+                    <div className="flex-1 site-progress h-5">
                       <div
                         className={`h-full rounded ${
                           audience === 'guest' ? 'bg-amber-500/70' : 'bg-green-500/70'
@@ -624,7 +624,7 @@ export default function AnalyticsRoute() {
             )}
           </section>
 
-          <section className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+          <section className="site-surface p-4">
             <h2 className="text-sm font-semibold text-slate-200 mb-1">
               Geography ({summary.period_days} days)
             </h2>
@@ -708,8 +708,8 @@ export default function AnalyticsRoute() {
             )}
           </section>
 
-          <section className="bg-slate-900/60 border border-slate-700 rounded-xl overflow-hidden">
-            <div className="px-4 py-3 border-b border-slate-700">
+          <section className="site-table-wrap overflow-hidden">
+            <div className="px-4 py-3 site-divider">
               <h2 className="text-sm font-semibold text-slate-200">Tool usage & active time</h2>
               <p className="text-xs text-slate-500 mt-1">
                 Active time counts only while the tab is visible.
@@ -722,9 +722,9 @@ export default function AnalyticsRoute() {
               <p className="text-sm text-slate-500 p-4">No tool usage recorded yet.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="site-table">
                   <thead>
-                    <tr className="text-left text-slate-500 border-b border-slate-700">
+                    <tr className="text-left text-slate-500">
                       <th className="px-4 py-2 font-medium">Tool</th>
                       <th className="px-4 py-2 font-medium text-right">Unique visitors</th>
                       <th className="px-4 py-2 font-medium text-right">Total active time</th>
@@ -735,7 +735,7 @@ export default function AnalyticsRoute() {
                     {filteredToolUsage.map((row) => (
                       <tr
                         key={`${row.tool_id}:${row.sub_tool_id}`}
-                        className="border-b border-slate-800/80"
+                        className=""
                       >
                         <td className="px-4 py-2.5 text-slate-200">
                           {formatToolLabel(row.tool_id, row.sub_tool_id)}
@@ -808,7 +808,7 @@ function StatCard({
   )
 
   return (
-    <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+    <div className="site-surface p-4">
       {labelRow}
       <p className="text-2xl font-bold text-white mt-1 tabular-nums">{display}</p>
     </div>
@@ -834,7 +834,7 @@ function DailyVisitorStackedBar({
       <span className="w-24 shrink-0 text-slate-500 tabular-nums">{row.date}</span>
       <div className="flex-1 space-y-1">
         <div className="flex items-center gap-2">
-          <div className="flex-1 h-2.5 bg-slate-800 rounded overflow-hidden">
+          <div className="flex-1 site-progress h-2.5">
             <div className="h-full bg-amber-500/70 rounded" style={{ width: `${guestWidth}%` }} />
           </div>
           <span className="w-8 shrink-0 text-right text-amber-300/90 tabular-nums text-xs">
@@ -842,7 +842,7 @@ function DailyVisitorStackedBar({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex-1 h-2.5 bg-slate-800 rounded overflow-hidden">
+          <div className="flex-1 site-progress h-2.5">
             <div className="h-full bg-green-500/70 rounded" style={{ width: `${signedInWidth}%` }} />
           </div>
           <span className="w-8 shrink-0 text-right text-green-300/90 tabular-nums text-xs">
@@ -871,7 +871,7 @@ function GeoBarRow({
       <span className="w-40 sm:w-56 shrink-0 text-slate-300 truncate" title={label}>
         {label}
       </span>
-      <div className="flex-1 h-4 bg-slate-800 rounded overflow-hidden">
+      <div className="flex-1 site-progress h-4">
         <div
           className="h-full bg-sky-500/70 rounded"
           style={{ width: `${Math.max(count > 0 ? 4 : 0, (count / maxCount) * 100)}%` }}

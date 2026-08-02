@@ -145,7 +145,7 @@ export default function CartBlueprintLineEditor({
           min={1}
           value={line.quantity}
           onChange={(e) => handleQuantityChange(e.target.value)}
-          className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
+          className="site-input w-20 px-2 py-1 text-sm"
         />
       </div>
     </div>

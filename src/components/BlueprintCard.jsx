@@ -230,7 +230,7 @@ export default function BlueprintCard({
         </div>
 
         {showActionFooter && (
-          <div className="mt-auto pt-2.5 border-t border-slate-700 shrink-0">
+          <div className="mt-auto pt-2.5 site-divider shrink-0">
             {hasRewardLabel && (
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1.5 min-h-[1rem]">
                 <span className="text-xs text-slate-500">
@@ -259,7 +259,7 @@ export default function BlueprintCard({
                       checked={effectiveIsOrderable}
                       onChange={handleOrderableToggle}
                       onClick={(e) => e.stopPropagation()}
-                      className="rounded border-slate-600 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
+                      className="site-checkbox text-purple-500 focus:ring-purple-500/40"
                     />
                     Orderable
                   </label>
@@ -274,8 +274,8 @@ export default function BlueprintCard({
                         disabled={craftTrackerPending}
                         className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
                           craftTrackerPending
-                            ? 'bg-slate-700/50 text-slate-500 cursor-wait'
-                            : 'bg-slate-700/50 text-slate-400 hover:bg-purple-600/20 hover:text-purple-300'
+                            ? 'site-filter-idle opacity-60 cursor-wait'
+                            : 'site-filter-idle hover:bg-purple-600/20 hover:text-purple-300 hover:border-purple-500/30'
                         }`}
                         title="Add blueprint ores to Mining Tracker RS Tracker"
                       >
@@ -285,7 +285,7 @@ export default function BlueprintCard({
                     {showTargetControl && !isOnTargetList && (
                       <button
                         onClick={handleTargetClick}
-                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300"
+                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors site-filter-idle hover:bg-orange-600/20 hover:text-orange-300 hover:border-orange-500/30"
                         title="Add to Mission Tracker"
                       >
                         Track
@@ -294,7 +294,7 @@ export default function BlueprintCard({
                     {showMissionsControl && (
                       <button
                         onClick={handleMissionsClick}
-                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
+                        className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors site-filter-idle hover:bg-sky-600/20 hover:text-sky-300 hover:border-sky-500/30"
                         title="View missions that reward this blueprint"
                       >
                         Missions

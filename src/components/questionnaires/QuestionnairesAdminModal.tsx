@@ -344,7 +344,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
           <button
             type="button"
             onClick={openNew}
-            className="px-2.5 py-1 text-xs rounded-lg bg-red-800/80 hover:bg-red-700 text-white"
+            className="site-btn-danger !px-2.5 !py-1 text-xs"
           >
             New
           </button>
@@ -353,10 +353,10 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
     >
       {message && (
         <div
-          className={`mb-3 p-2 rounded-lg text-sm border ${
+          className={`mb-3 ${
             message.type === 'ok'
-              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-200'
-              : 'bg-red-950/40 border-red-500/40 text-red-200'
+              ? 'site-banner-success'
+              : 'site-banner-error'
           }`}
         >
           {message.text}
@@ -373,7 +373,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
             items.map((item) => (
               <div
                 key={item.id}
-                className="rounded-lg border border-slate-700 bg-slate-900/50 p-3 flex flex-wrap gap-2 justify-between"
+                className="site-surface p-3 flex flex-wrap gap-2 justify-between"
               >
                 <div className="min-w-0">
                   <p className="text-slate-100 font-medium">{item.title}</p>
@@ -404,21 +404,21 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                 <div className="flex flex-wrap gap-1.5 items-start">
                   <button
                     type="button"
-                    className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300"
+                    className="site-btn-secondary !px-2 !py-1 text-xs"
                     onClick={() => void openEdit(item.id)}
                   >
                     {item.status === 'active' ? 'Public flag' : 'Edit'}
                   </button>
                   <button
                     type="button"
-                    className="px-2 py-1 text-xs rounded border border-cyan-700 text-cyan-200"
+                    className="site-btn-accent !px-2 !py-1 text-xs !text-cyan-200 !border-cyan-700/50"
                     onClick={() => setPreviewId(item.id)}
                   >
                     Preview
                   </button>
                   <button
                     type="button"
-                    className="px-2 py-1 text-xs rounded border border-slate-600 text-slate-300"
+                    className="site-btn-secondary !px-2 !py-1 text-xs"
                     onClick={() => void openResponses(item)}
                   >
                     Responses
@@ -426,7 +426,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   {item.status === 'active' && (
                     <button
                       type="button"
-                      className="px-2 py-1 text-xs rounded border border-amber-700 text-amber-200"
+                      className="site-btn-secondary !px-2 !py-1 text-xs !text-amber-200 !border-amber-700/50"
                       onClick={async () => {
                         const ok = confirm(
                           item.public_results
@@ -453,7 +453,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   {item.status !== 'active' && (
                     <button
                       type="button"
-                      className="px-2 py-1 text-xs rounded border border-red-800 text-red-300"
+                      className="site-btn-danger !px-2 !py-1 text-xs"
                       onClick={async () => {
                         if (!confirm('Delete this questionnaire?')) return
                         const r = await adminDeleteQuestionnaire(item.id)
@@ -474,25 +474,25 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
       {view === 'edit' && (
         <div className="space-y-4">
           {editor.status === 'active' && (
-            <p className="text-amber-200 text-sm">Active questionnaires cannot be edited.</p>
+            <p className="site-banner-warn">Active questionnaires cannot be edited.</p>
           )}
-          <label className="block text-sm text-slate-300">
-            Title
+          <label className="block">
+            <span className="site-label">Title</span>
             <input
               value={editor.title}
               disabled={editor.status === 'active'}
               onChange={(e) => setEditor((p) => ({ ...p, title: e.target.value }))}
-              className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-600 text-white"
+              className="site-input w-full px-3 py-2"
             />
           </label>
-          <label className="block text-sm text-slate-300">
-            Description
+          <label className="block">
+            <span className="site-label">Description</span>
             <textarea
               value={editor.description}
               disabled={editor.status === 'active'}
               onChange={(e) => setEditor((p) => ({ ...p, description: e.target.value }))}
               rows={2}
-              className="mt-1 w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-600 text-white"
+              className="site-textarea w-full px-3 py-2"
             />
           </label>
           <div className="flex flex-wrap gap-4 text-sm text-slate-300">
@@ -506,6 +506,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
               <label key={key} className="flex items-center gap-2">
                 <input
                   type="checkbox"
+                  className="site-checkbox"
                   disabled={editor.status === 'active'}
                   checked={editor[key]}
                   onChange={(e) => setEditor((p) => ({ ...p, [key]: e.target.checked }))}
@@ -514,10 +515,11 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
               </label>
             ))}
           </div>
-          <div className="rounded-lg border border-slate-700/60 bg-slate-950/40 px-3 py-2 space-y-1">
+          <div className="site-surface px-3 py-2 space-y-1">
             <label className="flex items-center gap-2 text-sm text-slate-300">
               <input
                 type="checkbox"
+                className="site-checkbox"
                 disabled={Boolean(editor.results_published_at)}
                 checked={editor.public_results}
                 onChange={(e) =>
@@ -526,7 +528,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
               />
               Public poll
             </label>
-            <p className="text-xs text-slate-500 pl-6">
+            <p className="site-hint !mt-0 pl-6">
               When the window ends or you archive it, option tallies post to the Updates ticker.
               Written answers stay private (counts only). Off by default.
               {editor.status === 'active'
@@ -552,7 +554,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                     availability_value: Math.max(1, Number(e.target.value) || 1),
                   }))
                 }
-                className="mt-1 block w-24 px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-600 text-white"
+                className="site-input mt-1 block w-24 px-2 py-1.5"
               />
             </label>
             <select
@@ -564,7 +566,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   availability_unit: e.target.value as AvailabilityUnit,
                 }))
               }
-              className="px-2 py-1.5 rounded-lg bg-slate-950 border border-slate-600 text-white"
+              className="site-input px-2 py-1.5"
             >
               <option value="days">Days</option>
               <option value="weeks">Weeks</option>
@@ -600,7 +602,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
             {editor.questions.map((q, index) => (
               <div
                 key={index}
-                className="rounded-lg border border-slate-700 p-3 space-y-2 bg-slate-900/40"
+                className="site-surface p-3 space-y-2"
               >
                 <div className="flex flex-wrap gap-2 items-center">
                   <select
@@ -616,7 +618,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             : { options: ['', ''] }
                       updateQuestion(index, { question_type, config })
                     }}
-                    className="px-2 py-1 text-xs rounded bg-slate-950 border border-slate-600 text-white"
+                    className="site-input px-2 py-1 text-xs"
                   >
                     <option value="text">Text</option>
                     <option value="radio">Radio (one)</option>
@@ -625,6 +627,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   <label className="flex items-center gap-1 text-xs text-slate-400">
                     <input
                       type="checkbox"
+                      className="site-checkbox"
                       disabled={editor.status === 'active'}
                       checked={q.required}
                       onChange={(e) => updateQuestion(index, { required: e.target.checked })}
@@ -666,7 +669,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   value={q.prompt}
                   onChange={(e) => updateQuestion(index, { prompt: e.target.value })}
                   placeholder="Question prompt"
-                  className="w-full px-2 py-1.5 rounded bg-slate-950 border border-slate-600 text-white text-sm"
+                  className="site-input w-full px-2 py-1.5 text-sm"
                 />
                 {q.question_type === 'text' && (
                   <div className="flex flex-wrap gap-3 text-xs text-slate-400">
@@ -685,7 +688,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             },
                           })
                         }
-                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                        className="site-input ml-1 w-20 px-1 py-0.5"
                       />
                     </label>
                     <label>
@@ -703,7 +706,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             },
                           })
                         }
-                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                        className="site-input ml-1 w-20 px-1 py-0.5"
                       />
                     </label>
                   </div>
@@ -732,7 +735,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             disabled
                             tabIndex={-1}
                             aria-hidden
-                            className="shrink-0 opacity-60"
+                            className={`shrink-0 opacity-60 ${q.question_type === 'radio' ? 'site-radio' : 'site-checkbox'}`}
                           />
                           <input
                             type="text"
@@ -740,12 +743,12 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             value={opt}
                             onChange={(e) => updateChoiceOption(index, optIndex, e.target.value)}
                             placeholder={`Choice ${optIndex + 1}`}
-                            className="min-w-0 flex-1 px-2 py-1.5 rounded bg-slate-950 border border-slate-600 text-white text-sm"
+                            className="site-input min-w-0 flex-1 px-2 py-1.5 text-sm"
                           />
                           {editor.status !== 'active' && (
                             <button
                               type="button"
-                              className="shrink-0 text-xs text-red-400 hover:text-red-300 disabled:opacity-40"
+                              className="site-btn-ghost shrink-0 !px-1 !py-0.5 text-xs text-red-400 hover:text-red-300"
                               disabled={(q.config.options?.length ?? 0) <= 1}
                               onClick={() => removeChoiceOption(index, optIndex)}
                               title="Remove choice"
@@ -775,7 +778,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             },
                           })
                         }
-                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                        className="site-input ml-1 w-20 px-1 py-0.5"
                       />
                     </label>
                     <label>
@@ -793,7 +796,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             },
                           })
                         }
-                        className="ml-1 w-20 px-1 py-0.5 rounded bg-slate-950 border border-slate-600 text-white"
+                        className="site-input ml-1 w-20 px-1 py-0.5"
                       />
                     </label>
                   </div>
@@ -809,7 +812,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   type="button"
                   disabled={loading}
                   onClick={() => void save()}
-                  className="px-3 py-2 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white"
+                  className="site-btn-secondary"
                 >
                   Save draft
                 </button>
@@ -818,7 +821,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                   disabled={loading}
                   onClick={() => void activate()}
                   title="Saves the current form, then activates and notifies eligible users"
-                  className="px-3 py-2 text-sm rounded-lg bg-emerald-800 hover:bg-emerald-700 text-white disabled:opacity-50"
+                  className="site-btn-success"
                 >
                   Activate & notify
                 </button>
@@ -836,7 +839,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                     await refreshList()
                   }
                 }}
-                className="px-3 py-2 text-sm rounded-lg bg-slate-700 hover:bg-slate-600 text-white disabled:opacity-50"
+                className="site-btn-secondary"
               >
                 Save Public setting
               </button>
@@ -846,7 +849,7 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                 type="button"
                 disabled={loading}
                 onClick={() => setPreviewId(editor.id)}
-                className="px-3 py-2 text-sm rounded-lg border border-cyan-700 text-cyan-200 hover:bg-cyan-950/50"
+                className="site-btn-accent !text-cyan-200 !border-cyan-700/50"
               >
                 Preview as user
               </button>
@@ -886,7 +889,7 @@ function ResponsesWithTallies({ responses }: { responses: AnonymousResponseRow[]
   return (
     <>
       {tallies.length > 0 && (
-        <div className="rounded-lg border border-slate-700 p-3 bg-slate-900/60 space-y-3">
+        <div className="site-surface p-3 space-y-3">
           <p className="text-sm font-medium text-slate-200">Option tallies</p>
           {tallies.map((tally) => (
             <div key={tally.questionId}>
@@ -910,7 +913,7 @@ function ResponsesWithTallies({ responses }: { responses: AnonymousResponseRow[]
         </div>
       )}
       {responses.map((r, i) => (
-        <div key={r.id} className="rounded-lg border border-slate-700 p-3 bg-slate-900/40">
+        <div key={r.id} className="site-surface p-3">
           <p className="text-xs text-slate-500 mb-2">
             Response #{responses.length - i} · {new Date(r.submitted_at).toLocaleString()}
           </p>

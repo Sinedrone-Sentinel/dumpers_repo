@@ -87,7 +87,7 @@ export default function OrgLogoUploadField() {
       }
     >
       <div className="flex flex-col sm:flex-row gap-4 items-start">
-        <div className="w-28 h-28 rounded-xl border border-slate-600 bg-slate-900/80 flex items-center justify-center overflow-hidden shrink-0">
+        <div className="w-28 h-28 rounded-xl site-surface flex items-center justify-center overflow-hidden shrink-0">
           {previewSrc && !previewError ? (
             <img
               src={previewSrc ?? ORG_LOGO_DEFAULT_PATH}
@@ -114,7 +114,7 @@ export default function OrgLogoUploadField() {
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={uploading || removing}
-            className="px-4 py-2 text-sm bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white rounded-lg font-medium transition-colors w-fit"
+            className="site-btn-secondary w-fit"
           >
             {uploading ? 'Uploading…' : orgLogoConfigured ? 'Replace org logo' : 'Upload org logo'}
           </button>

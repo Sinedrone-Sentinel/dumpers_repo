@@ -1,0 +1,50 @@
+---
+description: Use universal site-* theme tokens for member-app UI controls
+alwaysApply: true
+---
+
+# Site Theme Tokens
+
+Member-app UI look is owned by **`src/index.css`** (`.site-*` classes). Catalog/constants: **`src/lib/siteTheme.ts`**.
+
+When adding or restyling controls, **use theme tokens** — do not invent one-off `bg-slate-800 border-slate-600` chrome.
+
+## Do not theme (yet)
+
+- Prerender / SEO landing (`PublicSeoLanding` and related) — handled separately
+- Specialty accents with meaning (UEX sky, reputation colors, mining rarity)
+
+## Control → token map
+
+| Control | Class |
+|---|---|
+| Text / select | `site-input` (+ `px-3 py-2` as needed) |
+| Textarea | `site-textarea` |
+| Label / hint / error | `site-label` / `site-hint` / `site-error-text` |
+| Primary CTA | `site-btn-primary` |
+| Secondary | `site-btn-secondary` |
+| Danger / success | `site-btn-danger` / `site-btn-success` |
+| Accent / ghost / icon | `site-btn-accent` / `site-btn-ghost` / `site-btn-icon` |
+| Header chrome chip | `site-chrome-control` |
+| Panel / card | `site-surface` / `site-card` |
+| Section block | `site-section` + `site-section-header` + `site-section-body` |
+| Chip strip | `site-chip-strip` |
+| Idle / selected filter | `site-filter-idle` / `site-filter-selected-*` |
+| Checkbox / radio / range | `site-checkbox` / `site-radio` / `site-range` |
+| Toggle | `site-toggle` + `data-on="true\|false"` |
+| Dropdown list | `site-dropdown-list` + `site-dropdown-item` |
+| Menu / modal | `site-menu-panel` / `site-menu-item` (+ `-active` / `-locked`) / `site-modal-shell` / `site-modal-backdrop` |
+| Menu section header | `site-menu-section` |
+| Divider | `site-divider` |
+| Table | `site-table-wrap` + `site-table` |
+| Banner / badge | `site-banner-*` / `site-badge-*` |
+| Empty state | `site-empty` |
+| Tooltip | `site-tooltip-panel` (via `SiteTooltip`) |
+
+Optional hover shimmer: add `site-btn-shimmer`.
+
+## Changing the look later
+
+Edit **only** `src/index.css` token definitions. Call sites should keep using the same class names.
+
+Bulk helper (safe recipes): `node scripts/migrate-site-theme.mjs` (dry-run) / `--write`.

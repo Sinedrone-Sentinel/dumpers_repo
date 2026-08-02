@@ -36,7 +36,7 @@ export default function TradeContactChip({
   if (inline) {
     return (
       <span
-        className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-600 bg-slate-800/70 text-xs ${className}`}
+        className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded site-badge-slate text-xs ${className}`}
       >
         <span className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">
           {ROLE_LABELS[role]}
@@ -50,7 +50,7 @@ export default function TradeContactChip({
 
   return (
     <div
-      className={`inline-flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-slate-800/60 border border-slate-600 ${className}`}
+      className={`inline-flex flex-col gap-0.5 px-3 py-2 rounded-lg site-surface ${className}`}
     >
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-[10px] uppercase tracking-wide text-slate-500 font-medium">

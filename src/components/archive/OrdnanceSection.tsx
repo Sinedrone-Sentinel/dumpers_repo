@@ -98,22 +98,22 @@ export default function OrdnanceSection() {
     <div className="w-full space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 text-center">
+        <div className="p-3 site-surface text-center">
           <span className="text-xl font-bold text-white">{stats.missiles}</span>
           <span className="block text-[10px] text-slate-500 uppercase tracking-wider">Missiles</span>
         </div>
-        <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 text-center">
+        <div className="p-3 site-surface text-center">
           <span className="text-xl font-bold text-white">{stats.torpedoes}</span>
           <span className="block text-[10px] text-slate-500 uppercase tracking-wider">Torpedoes</span>
         </div>
-        <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50 text-center">
+        <div className="p-3 site-surface text-center">
           <span className="text-xl font-bold text-white">{stats.gimbal}</span>
           <span className="block text-[10px] text-slate-500 uppercase tracking-wider">Gimbal</span>
         </div>
       </div>
 
       {/* Guidance type legend */}
-      <div className="p-4 rounded-lg bg-slate-800/30 border border-slate-700/50">
+      <div className="p-4 site-surface">
         <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Guidance Types</h3>
         <div className="grid gap-2 sm:grid-cols-3">
           {Object.entries(GUIDANCE_DESCRIPTIONS).map(([type, desc]) => {
@@ -172,7 +172,7 @@ export default function OrdnanceSection() {
             type="checkbox"
             checked={showTorpedoesOnly}
             onChange={(e) => setShowTorpedoesOnly(e.target.checked)}
-            className="rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/20"
+            className="site-checkbox focus:ring-orange-500/20"
           />
           Torpedoes only
         </label>
@@ -268,7 +268,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
         </svg>
       </div>
       <p className="text-slate-400 mb-4">{message}</p>
-      <button onClick={onRetry} className="px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">
+      <button onClick={onRetry} className="site-btn-secondary text-sm">
         Try Again
       </button>
     </div>
@@ -278,7 +278,7 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px]">
-      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-800/50 border border-slate-700/50 mb-4">
+      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full site-surface mb-4">
         <svg className="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>

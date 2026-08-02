@@ -87,7 +87,7 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       {/* Hamburger button - visible on all screen sizes */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors ${className}`}
+        className={`site-chrome-control p-2 ${className}`}
         aria-label="Toggle navigation menu"
         aria-expanded={isOpen}
       >
@@ -112,18 +112,18 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
       <div
         ref={sidebarRef}
         className={`
-          fixed top-[var(--site-header-height,3.5rem)] left-0 w-64
-          max-h-[calc(100vh-var(--site-header-height,3.5rem)-0.5rem)] bg-slate-900 border border-slate-700
-          rounded-r-xl shadow-2xl z-[80] transition-transform duration-200 ease-out overflow-hidden
+          site-menu-panel fixed top-[var(--site-header-height,3.5rem)] left-0 w-64
+          max-h-[calc(100vh-var(--site-header-height,3.5rem)-0.5rem)]
+          rounded-l-none rounded-r-xl z-[80] transition-transform duration-200 ease-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
         {/* Sidebar header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700">
-          <span className="text-sm font-semibold text-orange-400 uppercase tracking-wider">Navigation</span>
+        <div className="flex items-center justify-between px-4 py-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/40 to-transparent">
+          <span className="text-sm font-semibold text-amber-200/90 uppercase tracking-wider">Navigation</span>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
+            className="site-chrome-control p-1.5"
             aria-label="Close menu"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -202,13 +202,7 @@ function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCo
       <li>
         <button
           onClick={onToggleExpand}
-          className={`
-            w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
-            ${isChildActive
-              ? 'bg-slate-800/40 text-slate-200'
-              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'
-            }
-          `}
+          className={`site-menu-item ${isChildActive ? 'site-menu-item-active' : ''}`}
         >
           {item.icon && <NavIcon name={item.icon} className="w-4 h-4 shrink-0" />}
           <span className="flex-1 text-left">{item.label}</span>
@@ -223,7 +217,7 @@ function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCo
         </button>
         
         {showExpanded && (
-          <ul className="mt-1 ml-4 pl-3 border-l border-slate-700 space-y-0.5">
+          <ul className="site-menu-child-rail">
             {item.children!.map(child => (
               <ChildNavItem key={child.id} item={child} pathname={pathname} search={search} onNavigate={onNavigate} />
             ))}
@@ -239,15 +233,9 @@ function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCo
         to={item.path}
         onClick={onNavigate}
         title={isLocked ? 'Sign in to access this feature' : undefined}
-        className={`
-          flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
-          ${isActive
-            ? 'bg-orange-600/20 text-orange-200 border border-orange-500/40 shadow-sm shadow-orange-500/10'
-            : isLocked
-              ? 'text-slate-500 hover:bg-slate-800/40 hover:text-slate-400 border border-dashed border-slate-700/60'
-              : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent'
-          }
-        `}
+        className={`site-menu-item ${
+          isActive ? 'site-menu-item-active' : isLocked ? 'site-menu-item-locked' : ''
+        }`}
       >
         {item.icon && <NavIcon name={item.icon} className={`w-4 h-4 shrink-0 ${isLocked ? 'opacity-50' : ''}`} />}
         <span className="flex-1">{item.label}</span>
@@ -280,13 +268,7 @@ function ChildNavItem({ item, pathname, search, onNavigate }: ChildNavItemProps)
       <Link
         to={item.path}
         onClick={onNavigate}
-        className={`
-          flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all
-          ${isActive
-            ? 'bg-orange-600/20 text-orange-200 border border-orange-500/40'
-            : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 border border-transparent'
-          }
-        `}
+        className={`site-menu-item py-2 gap-2 ${isActive ? 'site-menu-item-active' : ''}`}
       >
         {item.icon && <NavIcon name={item.icon} className="w-3.5 h-3.5 shrink-0 opacity-70" />}
         <span>{item.label}</span>

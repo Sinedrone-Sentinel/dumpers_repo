@@ -209,15 +209,15 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
         zIndex={70}
         headerExtra={
           <div className="shrink-0">
-            <div className="flex border-b border-slate-700">
+            <div className="flex site-divider">
               {tabs.map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => changeTab(tab.id)}
                   className={`flex-1 px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors ${
                     activeTab === tab.id
-                      ? 'bg-slate-800 text-white border-b-2 border-red-500'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      ? 'site-filter-selected-red border-b-2'
+                      : 'site-filter-idle border-transparent'
                   }`}
                 >
                   {tab.label}
@@ -225,7 +225,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               ))}
             </div>
             {activeTab === 'members' && (
-              <div className="flex items-center gap-2 px-3 py-2 bg-slate-900/60 border-b border-slate-700">
+              <div className="flex items-center gap-2 px-3 py-2 site-surface site-divider">
                 {(['verified', 'unverified'] as MemberFilter[]).map(filter => {
                   const active = memberFilter === filter
                   const count = filter === 'verified' ? memberCounts.verified : memberCounts.unverified
@@ -237,8 +237,8 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         active
                           ? filter === 'verified'
                             ? 'bg-emerald-900/40 text-emerald-300 border-emerald-500/50'
-                            : 'bg-slate-700 text-white border-slate-500'
-                          : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-800/60'
+                            : 'site-filter-selected-slate'
+                          : 'site-filter-idle border-transparent'
                       }`}
                     >
                       {filter === 'verified' ? (
@@ -249,7 +249,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                       ) : (
                         'Unverified'
                       )}
-                      <span className={`px-1.5 py-0.5 rounded-full text-[10px] ${active ? 'bg-black/30' : 'bg-slate-800 text-slate-500'}`}>
+                      <span className={`site-badge-slate px-1.5 py-0.5 rounded-full text-[10px] ${active ? 'bg-black/30' : ''}`}>
                         {count}
                       </span>
                     </button>
@@ -265,7 +265,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               <button
                 onClick={() => setPage(p => Math.max(0, p - 1))}
                 disabled={page === 0 || loading}
-                className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="site-btn-secondary !px-3 !py-1.5"
               >
                 ← Prev
               </button>
@@ -275,7 +275,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               <button
                 onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                 disabled={page >= totalPages - 1 || loading}
-                className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="site-btn-secondary !px-3 !py-1.5"
               >
                 Next →
               </button>
@@ -298,7 +298,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                 {bannedUsers.map(banned => (
                   <div
                     key={banned.id}
-                    className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"
+                    className="site-card p-4"
                   >
                     <div className="flex items-center gap-4">
                       {banned.avatar_url ? (
@@ -308,7 +308,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                           className="w-12 h-12 rounded-full"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-slate-400">
+                        <div className="w-12 h-12 rounded-full site-surface flex items-center justify-center text-slate-400">
                           {(banned.display_name || banned.email || '?')[0].toUpperCase()}
                         </div>
                       )}
@@ -352,7 +352,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               {users.map(user => (
                 <div
                   key={user.id}
-                  className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"
+                  className="site-card p-4"
                 >
                   <div className="flex items-center gap-4">
                     {user.avatar_url ? (
@@ -362,7 +362,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         className="w-12 h-12 rounded-full"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-slate-400">
+                      <div className="w-12 h-12 rounded-full site-surface flex items-center justify-center text-slate-400">
                         {(user.display_name || user.email || '?')[0].toUpperCase()}
                       </div>
                     )}
@@ -399,7 +399,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         <button
                           onClick={() => updateUserRole(user.id, 'member')}
                           disabled={actionLoading === user.id}
-                          className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                          className="site-btn-success !px-3 !py-1.5 text-sm"
                         >
                           {actionLoading === user.id ? '...' : 'Approve'}
                         </button>
@@ -429,7 +429,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         <button
                           onClick={() => setBanTarget(user)}
                           disabled={actionLoading === user.id}
-                          className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                          className="site-btn-danger !px-3 !py-1.5 text-sm"
                         >
                           Ban
                         </button>
@@ -458,14 +458,14 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                   setBanTarget(null)
                   setBanReason('')
                 }}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm"
+                className="site-btn-secondary flex-1 text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleBan}
                 disabled={actionLoading === banTarget.id}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50 text-sm"
+                className="site-btn-danger flex-1 text-sm"
               >
                 {actionLoading === banTarget.id ? 'Banning...' : 'Confirm Ban'}
               </button>
@@ -482,7 +482,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
             value={banReason}
             onChange={(e) => setBanReason(e.target.value)}
             placeholder="Reason for ban..."
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+            className="w-full px-3 py-2 site-input text-white text-sm"
           />
         </AppModal>
       )}
@@ -497,7 +497,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
             <div className="flex gap-3">
               <button
                 onClick={() => setUnbanTarget(null)}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm"
+                className="site-btn-secondary flex-1 text-sm"
               >
                 Cancel
               </button>

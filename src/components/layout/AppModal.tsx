@@ -72,7 +72,7 @@ export default function AppModal({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-[2px] ${zIndexClasses[zIndex]} flex items-center justify-center p-3 sm:p-4`}
+      className={`site-modal-backdrop ${zIndexClasses[zIndex]} flex items-center justify-center p-3 sm:p-4`}
       style={{
         paddingBottom: 'max(0.75rem, calc(var(--site-ticker-height, 0px) + 0.75rem))',
       }}
@@ -85,14 +85,14 @@ export default function AppModal({
         className={`site-modal-shell w-full max-w-[min(96vw,100%)] ${sizeClasses[size]} ${shellClassName || modalShellClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-orange-500/15 shrink-0">
+        <div className="flex items-start justify-between gap-3 p-3 sm:p-4 shrink-0 bg-gradient-to-r from-orange-950/45 via-orange-950/20 to-transparent border-b border-orange-500/20">
           <div className="min-w-0">
-            <h2 id={titleId} className="text-lg font-bold text-white leading-snug">
+            <h2 id={titleId} className="text-lg font-bold text-amber-50 leading-snug tracking-wide">
               {title}
             </h2>
             {subtitle ? (
               typeof subtitle === 'string' ? (
-                <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
+                <p className="text-xs text-amber-200/45 mt-0.5">{subtitle}</p>
               ) : (
                 <div className="mt-1.5">{subtitle}</div>
               )
@@ -101,7 +101,7 @@ export default function AppModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-slate-400 hover:text-white text-xl leading-none shrink-0"
+            className="site-chrome-control w-8 h-8 text-lg leading-none shrink-0"
             aria-label="Close"
           >
             ×

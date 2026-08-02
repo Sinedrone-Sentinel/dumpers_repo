@@ -124,7 +124,7 @@ export default function WtsPartialPurchasePanel({
         <p className="text-cyan-200 text-xs font-medium">
           {isFulfill ? 'Select items to fulfill' : 'Partial purchase available'}
         </p>
-        <p className="text-slate-400 text-[11px] mt-0.5">
+        <p className="site-hint text-[11px] !mt-0.5">
           {isFulfill
             ? 'Check the items you will craft and set quantities. The rest stays open for other fulfillers.'
             : 'Check the items you want and set quantities. Unsold stock stays listed.'}
@@ -140,8 +140,8 @@ export default function WtsPartialPurchasePanel({
               key={line.lineId}
               className={`rounded-lg border p-2.5 ${
                 isOn
-                  ? 'border-cyan-500/40 bg-slate-900/50'
-                  : 'border-slate-700 bg-slate-900/30'
+                  ? 'border-cyan-500/40 site-surface'
+                  : 'site-surface'
               } ${!selectable ? 'opacity-60' : ''}`}
             >
               <label className={`flex items-start gap-2 ${selectable ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
@@ -150,7 +150,7 @@ export default function WtsPartialPurchasePanel({
                   checked={isOn}
                   disabled={!selectable}
                   onChange={() => toggleLine(line.lineId, 1)}
-                  className="mt-1 accent-cyan-500"
+                  className="site-checkbox mt-1 accent-cyan-500"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -180,7 +180,7 @@ export default function WtsPartialPurchasePanel({
                         onChange={(e) =>
                           setQuantities((q) => ({ ...q, [line.lineId]: e.target.value }))
                         }
-                        className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
+                        className="site-input w-20 px-2 py-1 text-sm"
                       />
                       <span className="text-slate-500 text-xs">of {line.available}</span>
                     </div>
@@ -197,7 +197,7 @@ export default function WtsPartialPurchasePanel({
             <div
               key={line.lineId}
               className={`rounded-lg border p-2.5 ${
-                isOn ? 'border-cyan-500/40 bg-slate-900/50' : 'border-slate-700 bg-slate-900/30'
+                isOn ? 'border-cyan-500/40 site-surface' : 'site-surface'
               }`}
             >
               <label className="flex items-start gap-2 cursor-pointer">
@@ -205,7 +205,7 @@ export default function WtsPartialPurchasePanel({
                   type="checkbox"
                   checked={isOn}
                   onChange={() => toggleLine(line.lineId, line.available)}
-                  className="mt-1 accent-cyan-500"
+                  className="site-checkbox mt-1 accent-cyan-500"
                 />
                 <div className="flex-1">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -231,7 +231,7 @@ export default function WtsPartialPurchasePanel({
                         onChange={(e) =>
                           setQuantities((q) => ({ ...q, [line.lineId]: e.target.value }))
                         }
-                        className="w-24 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm"
+                        className="site-input w-24 px-2 py-1 text-sm"
                       />
                     </div>
                   )}

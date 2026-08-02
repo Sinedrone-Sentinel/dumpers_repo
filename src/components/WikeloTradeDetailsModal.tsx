@@ -111,19 +111,19 @@ export default function WikeloTradeDetailsModal({
             </span>
           )}
           {trade.requiresIntro && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-slate-800/70 text-slate-300 border border-slate-500/40 rounded">
+            <span className="site-badge-slate text-[10px] px-1.5 py-0.5 rounded">
               Complete “Wikelo Arrive to System” first
             </span>
           )}
         </div>
 
         <section>
-          <h4 className="text-xs uppercase tracking-wide text-slate-400 mb-2">Hand in</h4>
+          <h4 className="site-label mb-2">Hand in</h4>
           <ul className="space-y-1">
             {trade.costs.map((cost, idx) => (
               <li
                 key={idx}
-                className="flex items-center justify-between gap-3 px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/60 text-sm"
+                className="flex items-center justify-between gap-3 px-2.5 py-1.5 rounded-lg site-surface text-sm"
               >
                 <span className="min-w-0 text-slate-200">
                   <span className="text-amber-300/90 tabular-nums mr-1.5">{formatWikeloCostAmount(cost)}</span>
@@ -145,7 +145,7 @@ export default function WikeloTradeDetailsModal({
         </section>
 
         <section>
-          <h4 className="text-xs uppercase tracking-wide text-slate-400 mb-2">You receive</h4>
+          <h4 className="site-label mb-2">You receive</h4>
           <ul className="space-y-1">
             {trade.rewards.map((reward, idx) => (
               <li
@@ -168,7 +168,7 @@ export default function WikeloTradeDetailsModal({
               </li>
             )}
             {trade.rewards.length === 0 && trade.blueprintPools.length === 0 && (
-              <li className="px-2.5 py-1.5 rounded-lg bg-slate-800/50 border border-slate-700/60 text-sm text-slate-400">
+              <li className="px-2.5 py-1.5 rounded-lg site-surface text-sm text-slate-400">
                 Wikelo reputation only
               </li>
             )}

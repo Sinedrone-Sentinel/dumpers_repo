@@ -116,7 +116,7 @@ function PatchDayCommandList() {
   return (
     <div className="max-h-[min(52vh,28rem)] overflow-y-auto overscroll-contain space-y-2 pr-0.5">
       {PATCH_DAY_STEPS.map((item) => (
-        <div key={item.step} className="flex items-start gap-2.5 p-2 bg-slate-800/50 rounded-lg">
+        <div key={item.step} className="flex items-start gap-2.5 p-2 site-surface rounded-lg">
           <span className="shrink-0 w-6 h-6 flex items-center justify-center bg-violet-600 text-white text-xs font-bold rounded-full mt-0.5">
             {item.step}
           </span>
@@ -124,7 +124,7 @@ function PatchDayCommandList() {
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-xs text-white font-medium">{item.title}</p>
               {item.optional && (
-                <span className="text-[9px] font-semibold uppercase tracking-wide rounded bg-slate-700/80 text-slate-400 border border-slate-600 px-1 py-0.5">
+                <span className="site-badge-slate text-[9px] font-semibold uppercase tracking-wide px-1 py-0.5">
                   optional
                 </span>
               )}
@@ -135,7 +135,7 @@ function PatchDayCommandList() {
                 {item.commands.map((cmd) => (
                   <code
                     key={cmd}
-                    className="block px-2 py-1 bg-slate-900 text-violet-400 text-[10px] font-mono rounded select-all break-all"
+                    className="block px-2 py-1 site-surface text-violet-400 text-[10px] font-mono rounded select-all break-all"
                   >
                     {cmd}
                   </code>
@@ -174,7 +174,7 @@ function PatchDayRunbookSection() {
           )}
         </div>
         <span
-          className={`shrink-0 mt-0.5 p-1 rounded-lg text-slate-400 group-hover:text-slate-200 group-hover:bg-slate-800/60 transition-transform ${
+          className={`shrink-0 mt-0.5 p-1 site-btn-icon transition-transform ${
             expanded ? 'rotate-180' : ''
           }`}
           aria-hidden
@@ -381,7 +381,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           onClick={onClose}
-          className="w-full px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
+          className="site-btn-secondary w-full"
         >
           Close
         </button>
@@ -389,10 +389,8 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
     >
       {message && (
         <div
-          className={`mb-4 p-3 rounded-lg text-sm ${
-            message.type === 'success'
-              ? 'bg-green-900/50 border border-green-500/50 text-green-400'
-              : 'bg-red-900/50 border border-red-500/50 text-red-400'
+          className={`mb-4 ${
+            message.type === 'success' ? 'site-banner-success' : 'site-banner-error'
           }`}
         >
           {message.text}
@@ -440,14 +438,14 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             value={rsiHandleToRevoke}
             onChange={(e) => setRsiHandleToRevoke(e.target.value)}
             placeholder="Enter RSI Handle to revoke..."
-            className="w-full px-3 py-2 bg-slate-800 border border-amber-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 text-sm"
+            className="site-input w-full px-3 py-2 text-sm border-amber-500/30"
           />
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               checked={alsoBanUser}
               onChange={(e) => setAlsoBanUser(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-red-500 focus:ring-red-500/20"
+              className="site-checkbox w-4 h-4 text-red-500"
             />
             <span className="text-sm text-red-400">Also ban this user</span>
           </label>
@@ -455,10 +453,10 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => void handleRevokeVerification()}
             disabled={revoking || !rsiHandleToRevoke.trim()}
-            className={`w-full px-4 py-2.5 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 ${
+            className={`w-full ${
               alsoBanUser 
-                ? 'bg-red-600 hover:bg-red-700' 
-                : 'bg-amber-600 hover:bg-amber-700'
+                ? 'site-btn-danger' 
+                : 'px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50'
             }`}
           >
             {revoking ? 'Processing...' : alsoBanUser ? 'Revoke & Ban' : 'Revoke Verification'}
@@ -483,25 +481,25 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
                 setRepResetUserName('')
               }}
               placeholder="RSI Handle..."
-              className="flex-1 px-3 py-2 bg-slate-800 border border-blue-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/50 text-sm"
+              className="site-input flex-1 px-3 py-2 text-sm border-blue-500/30"
             />
             <button
               onClick={() => void handleSearchRepUser()}
               disabled={searchingUser || !repResetHandle.trim()}
-              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+              className="site-btn-secondary"
             >
               {searchingUser ? '...' : 'Find'}
             </button>
           </div>
           {repResetUserId && (
-            <div className="p-3 bg-slate-800/50 rounded-lg border border-blue-500/20">
+            <div className="p-3 site-surface border-blue-500/20">
               <p className="text-sm text-white mb-2">Found: <strong>{repResetUserName}</strong></p>
               <label className="flex items-center gap-2 cursor-pointer mb-3">
                 <input
                   type="checkbox"
                   checked={clearArchived}
                   onChange={(e) => setClearArchived(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-amber-500 focus:ring-amber-500/20"
+                  className="site-checkbox w-4 h-4 text-amber-500"
                 />
                 <span className="text-sm text-slate-400">Also clear archived orders/fulfillments</span>
               </label>
@@ -539,13 +537,13 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
             placeholder="Type WIPE to confirm"
-            className="w-full px-3 py-2 bg-slate-800 border border-red-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 text-sm"
+            className="site-input w-full px-3 py-2 text-sm border-red-500/30"
           />
           <button
             type="button"
             onClick={() => void handleWipe()}
             disabled={wiping || confirmText !== 'WIPE'}
-            className="w-full px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+            className="site-btn-danger w-full"
           >
             {wiping ? 'Wiping...' : 'Wipe all personal stock'}
           </button>

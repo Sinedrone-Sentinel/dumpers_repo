@@ -38,7 +38,7 @@ export default function GuestLockedRoute() {
 
         <p className="text-slate-300 leading-relaxed">{copy.description}</p>
 
-        <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/80">
+        <div className="p-4 site-surface rounded-xl">
           <h2 className="text-sm font-semibold text-orange-400 uppercase tracking-wide mb-3">
             Included with your free member account
           </h2>
@@ -69,7 +69,7 @@ export default function GuestLockedRoute() {
           <OAuthSignInButtons layout="row" onError={setError} />
           <Link
             to="/"
-            className="px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 text-sm transition-colors"
+            className="site-btn-secondary text-sm"
           >
             Back to Blueprints
           </Link>

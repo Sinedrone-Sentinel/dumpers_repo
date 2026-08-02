@@ -347,11 +347,11 @@ export default function SupportTicketThread({
         size="lg"
         zIndex={70}
       >
-        <div className="text-center py-8 text-slate-400">
+        <div className="site-empty !py-8 rounded-xl">
           <p>This ticket could not be found or you don't have access.</p>
           <button
             onClick={onBack}
-            className="mt-4 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-white transition-colors"
+            className="mt-4 site-btn-secondary"
           >
             Go Back
           </button>
@@ -368,10 +368,10 @@ export default function SupportTicketThread({
       size="lg"
       zIndex={70}
       headerExtra={
-        <div className="flex items-center gap-3 px-4 py-2 border-b border-slate-700 text-sm">
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-orange-500/15 text-sm">
           <button
             onClick={onBack}
-            className="p-1 hover:bg-slate-700 rounded transition-colors"
+            className="site-btn-ghost p-1"
           >
             <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -412,7 +412,7 @@ export default function SupportTicketThread({
                 </p>
               )}
               {ticket.escalation_reason && (
-                <div className="mt-2 p-2 bg-slate-800/50 rounded text-sm text-slate-300">
+                <div className="mt-2 p-2 site-surface rounded text-sm text-slate-300">
                   <span className="text-slate-500">Escalation reason:</span> {ticket.escalation_reason}
                 </div>
               )}
@@ -423,7 +423,7 @@ export default function SupportTicketThread({
 
       {/* Officer Actions */}
       {isOfficer && !ticket.is_escalated && (
-        <div className="flex items-center gap-3 mb-4 p-3 bg-slate-800/50 border border-slate-700 rounded-lg">
+        <div className="flex items-center gap-3 mb-4 p-3 site-surface">
           {!ticket.assignee_id && (
             <button
               onClick={handleAssignToSelf}
@@ -441,7 +441,7 @@ export default function SupportTicketThread({
             value={status}
             onChange={(e) => handleStatusChange(e.target.value as TicketStatus)}
             disabled={updatingStatus || ticket.pending_rating}
-            className="ml-auto px-2 py-1.5 bg-slate-700 border border-slate-600 rounded text-sm text-white focus:outline-none focus:border-red-500/50 disabled:opacity-50"
+            className="site-input ml-auto px-2 py-1.5 text-sm"
           >
             <option value="open">Open</option>
             <option value="assigned">Assigned</option>
@@ -459,7 +459,7 @@ export default function SupportTicketThread({
               <button
                 onClick={() => void handleResolveDispute('cancel')}
                 disabled={resolvingDispute}
-                className="px-3 py-1.5 bg-slate-600 hover:bg-slate-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+                className="site-btn-secondary !px-3 !py-1.5 text-sm"
               >
                 Cancel order
               </button>
@@ -472,7 +472,7 @@ export default function SupportTicketThread({
           ) : (
             <button
               onClick={() => setShowResolveConfirm(true)}
-              className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
+              className="site-btn-success !px-3 !py-1.5 text-sm"
             >
               Resolve Ticket
             </button>
@@ -480,7 +480,7 @@ export default function SupportTicketThread({
           {isSystemGenerated && (
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+              className="site-btn-danger !px-3 !py-1.5 text-sm"
             >
               Dismiss
             </button>
@@ -490,13 +490,13 @@ export default function SupportTicketThread({
 
       {/* Super-Admin Actions for Escalated Tickets */}
       {ticket.is_escalated && isSuperAdmin && (
-        <div className="flex items-center gap-3 mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+        <div className="flex items-center gap-3 mb-4 site-banner-error">
           <span className="text-sm text-red-300">
             Final resolution required
           </span>
           <button
             onClick={() => setShowResolveConfirm(true)}
-            className="ml-auto px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors"
+            className="site-btn-danger ml-auto !px-3 !py-1.5 text-sm"
           >
             Resolve Escalation
           </button>
@@ -505,14 +505,14 @@ export default function SupportTicketThread({
 
       {/* Member Actions */}
       {!isOfficer && ticket.assignee_id && !ticket.pending_rating && !ticket.is_escalated && (
-        <div className="flex items-center gap-3 mb-4 p-3 bg-slate-800/50 border border-slate-700 rounded-lg">
+        <div className="flex items-center gap-3 mb-4 p-3 site-surface">
           <span className="text-sm text-slate-400">
             Issue resolved? You can mark this ticket as resolved.
           </span>
           <button
             onClick={handleMemberResolve}
             disabled={memberResolving}
-            className="ml-auto px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
+            className="site-btn-success ml-auto !px-3 !py-1.5 text-sm"
           >
             {memberResolving ? 'Marking...' : 'Mark as Resolved'}
           </button>
@@ -530,7 +530,7 @@ export default function SupportTicketThread({
               className={`max-w-[80%] p-3 rounded-xl ${
                 msg.is_staff
                   ? 'bg-blue-600/20 border border-blue-500/30'
-                  : 'bg-slate-800 border border-slate-700'
+                  : 'site-surface'
               }`}
             >
               <div className="flex items-center gap-2 mb-1">
@@ -558,7 +558,7 @@ export default function SupportTicketThread({
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type your response..."
           rows={2}
-          className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none"
+          className="site-textarea flex-1 px-3 py-2 min-h-0 resize-none"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
@@ -569,7 +569,7 @@ export default function SupportTicketThread({
         <button
           onClick={handleSendMessage}
           disabled={sending || !newMessage.trim()}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors self-end"
+          className="site-btn-danger self-end"
         >
           {sending ? '...' : 'Send'}
         </button>
@@ -578,7 +578,7 @@ export default function SupportTicketThread({
       {/* Resolve Confirmation Modal (Officer or Super-Admin) */}
       {showResolveConfirm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80]">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-lg mx-4">
+          <div className="site-menu-panel p-6 max-w-lg mx-4">
             <h3 className="text-lg font-semibold text-white mb-2">
               {ticket.is_escalated ? 'Resolve Escalated Ticket' : 'Resolve Ticket'}
             </h3>
@@ -592,7 +592,7 @@ export default function SupportTicketThread({
               onChange={(e) => setResolutionMessage(e.target.value)}
               placeholder="e.g., Your issue has been resolved. The RSI Handle was cleared and is now available for re-verification."
               rows={3}
-              className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none text-sm"
+              className="site-textarea w-full px-3 py-2 mb-4 min-h-0 resize-none text-sm"
             />
             {!ticket.is_escalated && (
               <p className="text-xs text-blue-400 mb-4">
@@ -605,18 +605,14 @@ export default function SupportTicketThread({
                   setShowResolveConfirm(false)
                   setResolutionMessage('')
                 }}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                className="site-btn-secondary"
               >
                 Cancel
               </button>
               <button
                 onClick={ticket.is_escalated ? handleSuperAdminResolve : handleOfficerResolve}
                 disabled={resolving || !resolutionMessage.trim()}
-                className={`px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors ${
-                  ticket.is_escalated
-                    ? 'bg-red-600 hover:bg-red-700'
-                    : 'bg-green-600 hover:bg-green-700'
-                }`}
+                className={ticket.is_escalated ? 'site-btn-danger' : 'site-btn-success'}
               >
                 {resolving ? 'Resolving...' : 'Resolve'}
               </button>
@@ -628,7 +624,7 @@ export default function SupportTicketThread({
       {/* Delete Confirmation Modal (System-generated tickets only) */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[80]">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-lg mx-4">
+          <div className="site-menu-panel p-6 max-w-lg mx-4">
             <h3 className="text-lg font-semibold text-white mb-2">
               Dismiss System Report
             </h3>
@@ -646,7 +642,7 @@ export default function SupportTicketThread({
                   setShowDeleteConfirm(false)
                   setResolutionMessage('')
                 }}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                className="site-btn-secondary"
               >
                 Cancel
               </button>

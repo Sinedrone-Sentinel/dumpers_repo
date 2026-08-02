@@ -139,8 +139,8 @@ export default function OfficerToolsModal({
           <div
             className={`p-3 rounded-lg text-sm ${
               toolMessage.type === 'success'
-                ? 'bg-green-900/40 text-green-300 border border-green-500/30'
-                : 'bg-red-900/40 text-red-300 border border-red-500/30'
+                ? 'site-banner-success'
+                : 'site-banner-error'
             }`}
           >
             {toolMessage.text}
@@ -159,7 +159,7 @@ export default function OfficerToolsModal({
             value={rsiHandleToRevoke}
             onChange={(e) => setRsiHandleToRevoke(e.target.value)}
             placeholder="RSI Handle…"
-            className="w-full px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
+            className="site-input w-full px-3 py-2 text-sm"
           />
           {isSuperAdmin && (
             <label className="flex items-center gap-2 text-sm text-slate-400 cursor-pointer">
@@ -167,7 +167,7 @@ export default function OfficerToolsModal({
                 type="checkbox"
                 checked={alsoBanUser}
                 onChange={(e) => setAlsoBanUser(e.target.checked)}
-                className="rounded border-slate-500 bg-slate-800 text-red-500 focus:ring-red-500/40"
+                className="site-checkbox text-red-500"
               />
               <span className={alsoBanUser ? 'text-red-400' : ''}>Also ban this user</span>
             </label>
@@ -176,10 +176,10 @@ export default function OfficerToolsModal({
             type="button"
             onClick={handleRevokeVerification}
             disabled={processing || !rsiHandleToRevoke.trim()}
-            className={`w-full px-3 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 ${
+            className={`w-full ${
               isSuperAdmin && alsoBanUser
-                ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-amber-600 hover:bg-amber-700 text-white'
+                ? 'site-btn-danger'
+                : 'px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50'
             }`}
           >
             {processing
@@ -190,7 +190,7 @@ export default function OfficerToolsModal({
           </button>
         </section>
 
-        <div className="border-t border-slate-700" />
+        <div className="site-divider" />
 
         <section className="space-y-3">
           <div>
@@ -209,19 +209,19 @@ export default function OfficerToolsModal({
                 setRepResetUserName('')
               }}
               placeholder="RSI Handle…"
-              className="flex-1 px-3 py-2 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50"
+              className="site-input flex-1 px-3 py-2 text-sm"
             />
             <button
               type="button"
               onClick={handleSearchRepUser}
               disabled={searchingUser || !repResetHandle.trim()}
-              className="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg disabled:opacity-50"
+              className="site-btn-secondary !px-3"
             >
               {searchingUser ? '…' : 'Find'}
             </button>
           </div>
           {repResetUserId && (
-            <div className="p-3 bg-slate-900 rounded-lg border border-slate-600 space-y-3">
+            <div className="p-3 site-surface space-y-3">
               <p className="text-sm text-white">
                 Found: <strong>{repResetUserName}</strong>
               </p>
@@ -230,7 +230,7 @@ export default function OfficerToolsModal({
                   type="checkbox"
                   checked={clearArchived}
                   onChange={(e) => setClearArchived(e.target.checked)}
-                  className="rounded border-slate-500 bg-slate-800 text-amber-500 focus:ring-amber-500/40"
+                  className="site-checkbox text-amber-500"
                 />
                 <span>Also clear archived orders</span>
               </label>

@@ -72,7 +72,7 @@ function TagSample({
 
 function MissionTagLegend() {
   return (
-    <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 space-y-4">
+    <div className="site-surface p-4 space-y-4">
       <div>
         <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
           Location tags
@@ -114,7 +114,7 @@ function MissionTagLegend() {
         </ul>
       </div>
 
-      <div className="pt-3 border-t border-slate-700/40">
+      <div className="pt-3 site-divider">
         <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
           Other mission tags
         </h5>
@@ -134,7 +134,7 @@ function MissionTagLegend() {
         </p>
       </div>
 
-      <div className="pt-3 border-t border-slate-700/40">
+      <div className="pt-3 site-divider">
         <h5 className="text-xs font-semibold text-slate-300 uppercase tracking-wide mb-2">
           Blueprint unlock badge
         </h5>
@@ -275,7 +275,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
   return (
     <div className="space-y-10">
       {/* Hero section */}
-      <div className="text-center pb-6 border-b border-slate-800/60">
+      <div className="text-center pb-6 site-divider">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-orange-600/20 border border-orange-500/30 mb-4">
           <svg className="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -295,7 +295,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           What is Dumper's Repo?
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-3">
+        <div className="p-4 site-surface space-y-3">
           <p className="text-sm text-slate-300 leading-relaxed">
             <strong className="text-white">Dumper's Repo</strong> is a comprehensive toolkit for Star Citizen players 
             who want to engage with the game's crafting and economy systems without getting ripped off.
@@ -320,13 +320,13 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           {SITE_RULES_SECTION.title}
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">{renderRich(SITE_RULES_SECTION.intro)}</p>
           <div className="space-y-3">
             {SITE_RULES_SECTION.groups.map((group) => (
               <div
                 key={group.id}
-                className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30"
+                className="p-3 site-surface"
               >
                 <h4 className="text-sm font-medium text-white mb-2">{group.title}</h4>
                 <ul className="text-xs text-slate-400 space-y-1.5">
@@ -349,14 +349,14 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Offline Mode
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-300 leading-relaxed">
             Want to try out the tools before signing up? <strong className="text-white">Offline Mode</strong> lets 
             you explore most features without creating an account.
           </p>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-green-500/20">
+            <div className="p-3 site-surface border-green-500/20">
               <h4 className="text-sm font-medium text-green-400 mb-2">What Works Offline</h4>
               <ul className="text-xs text-slate-400 space-y-1">
                 <li>• Browse all blueprints and archive data</li>
@@ -368,7 +368,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </ul>
             </div>
             
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
+            <div className="p-3 site-surface border-amber-500/20">
               <h4 className="text-sm font-medium text-amber-400 mb-2">Members-Only Features</h4>
               <ul className="text-xs text-slate-400 space-y-1">
                 <li>• My Listings — keep one WTB buy listing and one WTS sell listing (always item-by-item)</li>
@@ -379,7 +379,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </div>
           </div>
 
-          <div className="p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+          <div className="site-banner-info p-3">
             <h4 className="text-sm font-medium text-blue-300 mb-1 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -410,7 +410,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Why Dumper's Fair-Value Price (DFP)?
         </h3>
-        <div className="p-4 bg-gradient-to-br from-slate-800/60 to-slate-900/40 rounded-lg border border-orange-500/20 space-y-4">
+        <div className="p-4 site-surface border-orange-500/20 space-y-4">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-lg bg-red-500/20 text-red-400 shrink-0">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -486,17 +486,17 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           {ORDER_LIFECYCLE_SECTION.title}
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">{renderRich(ORDER_LIFECYCLE_SECTION.intro)}</p>
           <div className="space-y-3">
             {ORDER_LIFECYCLE_SECTION.steps.map((step) => (
-              <div key={step.title} className="p-3 bg-blue-900/20 rounded-lg border border-blue-500/20">
+              <div key={step.title} className="p-3 site-surface border-blue-500/20">
                 <h4 className="text-sm font-medium text-blue-300 mb-1">{step.title}</h4>
                 <p className="text-xs text-slate-400 leading-relaxed">{renderRich(step.body)}</p>
               </div>
             ))}
           </div>
-          <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+          <div className="p-3 site-surface">
             <h4 className="text-sm font-medium text-white mb-2">Reminders</h4>
             <ul className="text-xs text-slate-400 space-y-1.5">
               {ORDER_LIFECYCLE_SECTION.reminders.map((item) => (
@@ -515,7 +515,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Buyer &amp; Fulfiller Ratings
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
             My Listings and The Bazaar use one <strong className="text-white">reputation rating system</strong> for
             both <strong className="text-amber-300">WTB</strong> (want to buy) and{' '}
@@ -523,7 +523,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             the same 1–5 star archive flow and buyer/fulfiller scores apply to both tags.
           </p>
 
-          <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+          <div className="p-3 site-surface">
             <h4 className="text-sm font-medium text-white mb-2">WTB vs WTS — who is the buyer?</h4>
             <ul className="text-xs text-slate-400 space-y-1.5">
               <li>
@@ -545,7 +545,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </div>
           
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <div className="p-3 site-surface">
               <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -559,7 +559,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </ul>
             </div>
             
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <div className="p-3 site-surface">
               <h4 className="text-sm font-medium text-purple-400 mb-2 flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -574,7 +574,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </div>
           </div>
 
-          <div className="p-3 bg-amber-900/20 border border-amber-500/20 rounded-lg">
+          <div className="site-banner-warn p-3">
             <p className="text-xs text-amber-300 flex items-start gap-2">
               <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -596,7 +596,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Building Your Reputation
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
             New members start with <strong className="text-white">"Pending" reputation</strong> until they complete
             5 successful marketplace transactions (as buyer or seller/fulfiller, on either WTB or WTS). During this
@@ -604,7 +604,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </p>
           
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <div className="p-3 site-surface">
               <h4 className="text-sm font-medium text-emerald-400 mb-2">Pending Buyer Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
                 {PENDING_REP_SECTION.buyerLimits.items.map((item) => (
@@ -613,7 +613,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </ul>
             </div>
             
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <div className="p-3 site-surface">
               <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Seller / Fulfiller Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
                 <li>• Applies when you are the <strong className="text-slate-300">seller</strong> — WTB fulfillment claims and active WTS sales (each child transaction counts)</li>
@@ -624,7 +624,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </div>
           </div>
 
-          <div className="p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+          <div className="site-banner-info p-3">
             <p className="text-xs text-blue-300 flex items-start gap-2">
               <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -645,11 +645,11 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Order System Rules &amp; Expectations
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">{renderRich(ORDER_RULES_SECTION.intro)}</p>
 
           <div className="space-y-3">
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-slate-700/30">
+            <div className="p-3 site-surface">
               <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
                 <span className="text-emerald-400">✓</span>
                 What's Expected
@@ -661,7 +661,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </ul>
             </div>
 
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-red-500/20">
+            <div className="p-3 site-surface border-red-500/20">
               <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
                 <span className="text-red-400">✗</span>
                 What's Not Allowed
@@ -673,7 +673,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </ul>
             </div>
 
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-amber-500/20">
+            <div className="p-3 site-surface border-amber-500/20">
               <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
                 <span className="text-amber-400">⚠</span>
                 Pending Rep Requirements
@@ -685,7 +685,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </ul>
             </div>
 
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-blue-500/20">
+            <div className="p-3 site-surface border-blue-500/20">
               <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-2">
                 <span className="text-blue-400">⏱</span>
                 Time Limits
@@ -700,7 +700,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </div>
           </div>
 
-          <div className="p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+          <div className="site-banner-error p-3">
             <h4 className="text-sm font-medium text-red-400 mb-2 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -727,7 +727,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Best Ordering Practices
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-4">
+        <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
             These tips focus on <strong className="text-amber-300">WTB</strong> buy listings (Add to my WTB listing).
             See the My Listings page guide for the item builder and line management.
@@ -742,7 +742,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </p>
 
           <div className="space-y-3">
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+            <div className="p-3 site-surface border-emerald-500/20">
               <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
                 <span>✓</span> Use Live Stat Preview
               </h4>
@@ -752,7 +752,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </p>
             </div>
 
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+            <div className="p-3 site-surface border-emerald-500/20">
               <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
                 <span>✓</span> Fulfillers Pick Line by Line
               </h4>
@@ -763,7 +763,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </p>
             </div>
 
-            <div className="p-3 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+            <div className="p-3 site-surface border-emerald-500/20">
               <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
                 <span>✓</span> Check Blueprint Ownership
               </h4>
@@ -775,7 +775,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </div>
           </div>
 
-          <div className="p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
+          <div className="site-banner-info p-3">
             <p className="text-xs text-blue-300 flex items-start gap-2">
               <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -797,7 +797,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </svg>
           Protecting Yourself in Trades
         </h3>
-        <div className="p-4 bg-slate-800/40 rounded-lg border border-slate-700/50 space-y-3">
+        <div className="p-4 site-surface space-y-3">
           <p className="text-sm text-slate-400 leading-relaxed">
             In-game trades happen outside the site. Keep your own records so disputes can be resolved fairly.
           </p>
@@ -830,13 +830,13 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           {PAGE_GUIDES.map((guide) => (
             <div
               key={guide.id}
-              className="rounded-lg border border-slate-700/50 overflow-hidden"
+              className="site-section"
             >
               <button
                 onClick={() => setExpandedGuide(expandedGuide === guide.id ? null : guide.id)}
-                className="w-full flex items-center gap-3 p-3 bg-slate-800/40 hover:bg-slate-800/60 transition-colors text-left"
+                className="site-section-header w-full flex items-center gap-3 transition-colors text-left"
               >
-                <div className="p-2 rounded-lg bg-slate-700/50 text-orange-400 shrink-0">
+                <div className="p-2 rounded-lg site-surface text-orange-400 shrink-0">
                   {PAGE_GUIDE_ICONS[guide.id]}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -854,7 +854,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </button>
               
               {expandedGuide === guide.id && (
-                <div className="p-4 bg-slate-900/40 border-t border-slate-700/50 space-y-3">
+                <div className="site-section-body site-divider space-y-3">
                   <ul className="space-y-2">
                     {guide.details.map((detail, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
@@ -865,7 +865,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                   </ul>
                   {guide.id === 'targets' && <MissionTagLegend />}
                   {guide.relatesTo.length > 0 && (
-                    <div className="pt-2 border-t border-slate-700/30">
+                    <div className="pt-2 site-divider">
                       <p className="text-xs text-slate-500">
                         <span className="text-slate-400">Related to:</span>{' '}
                         {guide.relatesTo.join(' • ')}
@@ -904,10 +904,10 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             href="https://robertsspaceindustries.com/en/community/orgs"
             target="_blank"
             rel="noopener noreferrer"
-            className="group text-left p-4 rounded-lg bg-slate-800/40 border border-slate-700/50 hover:border-orange-500/30 hover:bg-slate-800/60 transition-all"
+            className="group text-left p-4 site-card hover:border-orange-500/30 transition-all"
           >
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-slate-700/50 text-orange-400 shrink-0">
+              <div className="p-2 rounded-lg site-surface text-orange-400 shrink-0">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -979,7 +979,7 @@ function QuickLinkCard({ label, description, section, onNavigate }: QuickLinkCar
   return (
     <button
       onClick={handleClick}
-      className="group text-left p-4 rounded-lg bg-slate-800/40 border border-slate-700/50 hover:border-orange-500/30 hover:bg-slate-800/60 transition-all"
+      className="group text-left p-4 site-card hover:border-orange-500/30 transition-all"
     >
       <h4 className="text-sm font-medium text-slate-200 group-hover:text-orange-300 transition-colors">
         {label}

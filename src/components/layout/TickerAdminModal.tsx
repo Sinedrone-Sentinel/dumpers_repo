@@ -338,13 +338,13 @@ export default function TickerAdminModal({ onClose }: Props) {
       size="xl"
       zIndex={70}
     >
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="site-chip-strip mb-4 w-full">
         <button
           type="button"
-          className={`px-3 py-1.5 text-sm rounded border ${
+          className={`px-3 py-1.5 text-sm rounded-lg ${
             tab === 'messages'
-              ? 'bg-sky-600/30 border-sky-500/50 text-sky-100'
-              : 'border-slate-600 text-slate-300 hover:bg-slate-800'
+              ? 'site-filter-selected-blue'
+              : 'site-filter-idle'
           }`}
           onClick={() => {
             setTab('messages')
@@ -356,10 +356,10 @@ export default function TickerAdminModal({ onClose }: Props) {
         </button>
         <button
           type="button"
-          className={`px-3 py-1.5 text-sm rounded border ${
+          className={`px-3 py-1.5 text-sm rounded-lg ${
             tab === 'categories'
-              ? 'bg-sky-600/30 border-sky-500/50 text-sky-100'
-              : 'border-slate-600 text-slate-300 hover:bg-slate-800'
+              ? 'site-filter-selected-blue'
+              : 'site-filter-idle'
           }`}
           onClick={() => {
             setTab('categories')
@@ -371,7 +371,7 @@ export default function TickerAdminModal({ onClose }: Props) {
         </button>
         <button
           type="button"
-          className="ml-auto px-3 py-1.5 text-sm rounded border border-slate-600 text-slate-300 hover:bg-slate-800"
+          className="site-btn-secondary !px-3 !py-1.5 text-sm ml-auto"
           onClick={() => void refresh()}
           disabled={loading || saving}
         >
@@ -380,7 +380,7 @@ export default function TickerAdminModal({ onClose }: Props) {
       </div>
 
       {error ? (
-        <div className="mb-3 rounded-lg border border-amber-500/40 bg-amber-950/40 px-3 py-2 text-sm text-amber-100">
+        <div className="site-banner-warn mb-3">
           {error}
         </div>
       ) : null}
@@ -393,7 +393,7 @@ export default function TickerAdminModal({ onClose }: Props) {
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                className="px-3 py-1.5 text-sm rounded bg-sky-600 text-white hover:bg-sky-500 disabled:opacity-50"
+                className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-sm"
                 onClick={openNewMessage}
                 disabled={!defaultCategoryId}
               >
@@ -403,11 +403,11 @@ export default function TickerAdminModal({ onClose }: Props) {
             {entries.length === 0 ? (
               <p className="text-sm text-slate-400">No ticker messages yet.</p>
             ) : (
-              <ul className="divide-y divide-slate-800 border border-slate-700/80 rounded-lg overflow-hidden">
+              <ul className="site-table-wrap divide-y divide-slate-800">
                 {entries.map((entry) => {
                   const accent = stylesFromAccentHex(entry.accentHex)
                   return (
-                    <li key={entry.id} className="px-3 py-2.5 bg-slate-950/40 flex gap-3 items-start">
+                    <li key={entry.id} className="px-3 py-2.5 site-list-row flex gap-3 items-start border-b-0">
                       <span
                         className="mt-0.5 shrink-0 inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider"
                         style={accent.badgeStyle}
@@ -451,18 +451,18 @@ export default function TickerAdminModal({ onClose }: Props) {
               copy only — no ops/security jargon.
             </p>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Headline</span>
+              <span className="site-label !mb-0">Headline</span>
               <input
-                className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-full px-3 py-2 text-sm"
                 value={messageEditor.headline}
                 maxLength={160}
                 onChange={(e) => setMessageEditor((s) => ({ ...s, headline: e.target.value }))}
               />
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Layout category</span>
+              <span className="site-label !mb-0">Layout category</span>
               <select
-                className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-full px-3 py-2 text-sm"
                 value={messageEditor.tickerCategoryId}
                 onChange={(e) =>
                   setMessageEditor((s) => ({ ...s, tickerCategoryId: e.target.value }))
@@ -484,26 +484,26 @@ export default function TickerAdminModal({ onClose }: Props) {
               ) : null}
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Topic tag (optional, game digests)</span>
+              <span className="site-label !mb-0">Topic tag (optional, game digests)</span>
               <input
-                className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-full px-3 py-2 text-sm"
                 value={messageEditor.topic}
                 placeholder="e.g. Blueprints"
                 onChange={(e) => setMessageEditor((s) => ({ ...s, topic: e.target.value }))}
               />
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Detail label (modal)</span>
+              <span className="site-label !mb-0">Detail label (modal)</span>
               <input
-                className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-full px-3 py-2 text-sm"
                 value={messageEditor.detailLabel}
                 onChange={(e) => setMessageEditor((s) => ({ ...s, detailLabel: e.target.value }))}
               />
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Detail summary (modal)</span>
+              <span className="site-label !mb-0">Detail summary (modal)</span>
               <textarea
-                className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 min-h-[4.5rem]"
+                className="site-textarea w-full px-3 py-2 text-sm"
                 value={messageEditor.detailSummary}
                 onChange={(e) =>
                   setMessageEditor((s) => ({ ...s, detailSummary: e.target.value }))
@@ -511,10 +511,10 @@ export default function TickerAdminModal({ onClose }: Props) {
               />
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Detected at (starts TTL clock)</span>
+              <span className="site-label !mb-0">Detected at (starts TTL clock)</span>
               <input
                 type="datetime-local"
-                className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-full px-3 py-2 text-sm"
                 value={messageEditor.detectedAt}
                 onChange={(e) => setMessageEditor((s) => ({ ...s, detectedAt: e.target.value }))}
               />
@@ -523,13 +523,13 @@ export default function TickerAdminModal({ onClose }: Props) {
               <summary className="cursor-pointer text-slate-400">Advanced keys</summary>
               <div className="mt-2 space-y-2">
                 <input
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                  className="site-input w-full px-3 py-2 text-sm"
                   placeholder="issue key (auto if empty)"
                   value={messageEditor.issueKey}
                   onChange={(e) => setMessageEditor((s) => ({ ...s, issueKey: e.target.value }))}
                 />
                 <input
-                  className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                  className="site-input w-full px-3 py-2 text-sm"
                   placeholder="version (auto if empty)"
                   value={messageEditor.version}
                   onChange={(e) => setMessageEditor((s) => ({ ...s, version: e.target.value }))}
@@ -539,7 +539,7 @@ export default function TickerAdminModal({ onClose }: Props) {
             <div className="flex gap-2 pt-2">
               <button
                 type="button"
-                className="px-3 py-1.5 text-sm rounded bg-sky-600 text-white hover:bg-sky-500 disabled:opacity-50"
+                className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-sm"
                 onClick={() => void saveMessage()}
                 disabled={saving}
               >
@@ -547,7 +547,7 @@ export default function TickerAdminModal({ onClose }: Props) {
               </button>
               <button
                 type="button"
-                className="px-3 py-1.5 text-sm rounded border border-slate-600 text-slate-300"
+                className="site-btn-secondary !px-3 !py-1.5 text-sm"
                 onClick={() => {
                   setMessageView('list')
                   setError(null)
@@ -563,7 +563,7 @@ export default function TickerAdminModal({ onClose }: Props) {
         <div className="space-y-3">
           <button
             type="button"
-            className="px-3 py-1.5 text-sm rounded bg-sky-600 text-white hover:bg-sky-500"
+            className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-sm"
             onClick={openNewCategory}
           >
             New category
@@ -573,14 +573,14 @@ export default function TickerAdminModal({ onClose }: Props) {
             cannot be removed. Questionnaire active count includes open forms on the ticker (not
             only poll-result messages).
           </p>
-          <ul className="divide-y divide-slate-800 border border-slate-700/80 rounded-lg overflow-hidden">
+          <ul className="site-table-wrap divide-y divide-slate-800">
             {categories.map((cat) => {
               const accent = stylesFromAccentHex(cat.accentHex)
               const active = cat.activeCount ?? 0
               const openQ = cat.openQuestionnaireCount ?? 0
               const removeBlocked = Boolean(cat.isSystem) || active > 0
               return (
-                <li key={cat.id} className="px-3 py-2.5 bg-slate-950/40 flex gap-3 items-center">
+                <li key={cat.id} className="px-3 py-2.5 site-list-row flex gap-3 items-center border-b-0">
                   <span
                     className="w-4 h-4 rounded-sm border border-white/20 shrink-0"
                     style={accent.swatchStyle}
@@ -646,9 +646,9 @@ export default function TickerAdminModal({ onClose }: Props) {
       ) : (
         <div className="space-y-3">
           <label className="block space-y-1">
-            <span className="text-xs text-slate-400">Label (badge text)</span>
+            <span className="site-label !mb-0">Label (badge text)</span>
             <input
-              className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+              className="site-input w-full px-3 py-2 text-sm"
               value={categoryEditor.label}
               maxLength={64}
               onChange={(e) => {
@@ -662,9 +662,9 @@ export default function TickerAdminModal({ onClose }: Props) {
             />
           </label>
           <label className="block space-y-1">
-            <span className="text-xs text-slate-400">Slug (stable id)</span>
+            <span className="site-label !mb-0">Slug (stable id)</span>
             <input
-              className="w-full rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 font-mono disabled:opacity-60"
+              className="site-input w-full px-3 py-2 text-sm font-mono"
               value={categoryEditor.slug}
               disabled={Boolean(
                 categoryEditor.id &&
@@ -680,11 +680,11 @@ export default function TickerAdminModal({ onClose }: Props) {
           </label>
           <div className="flex flex-wrap gap-4 items-end">
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Accent color</span>
+              <span className="site-label !mb-0">Accent color</span>
               <div className="flex items-center gap-2">
                 <input
                   type="color"
-                  className="h-9 w-12 rounded border border-slate-600 bg-slate-900 cursor-pointer"
+                  className="site-input h-9 w-12 cursor-pointer"
                   value={normalizeAccentHex(categoryEditor.accentHex) ?? '#0EA5E9'}
                   onChange={(e) =>
                     setCategoryEditor((s) => ({
@@ -694,7 +694,7 @@ export default function TickerAdminModal({ onClose }: Props) {
                   }
                 />
                 <input
-                  className="w-28 rounded border border-slate-600 bg-slate-900 px-2 py-2 text-sm text-slate-100 font-mono"
+                  className="site-input w-28 px-2 py-2 text-sm font-mono"
                   value={categoryEditor.accentHex}
                   onChange={(e) =>
                     setCategoryEditor((s) => ({ ...s, accentHex: e.target.value.toUpperCase() }))
@@ -703,14 +703,14 @@ export default function TickerAdminModal({ onClose }: Props) {
               </div>
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">TTL (whole days, 1–90)</span>
+              <span className="site-label !mb-0">TTL (whole days, 1–90)</span>
               <input
                 type="number"
                 min={1}
                 max={90}
                 step={1}
                 inputMode="numeric"
-                className="w-28 rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-28 px-3 py-2 text-sm"
                 value={categoryEditor.ttlDays}
                 onChange={(e) => {
                   const raw = e.target.value
@@ -727,10 +727,10 @@ export default function TickerAdminModal({ onClose }: Props) {
               />
             </label>
             <label className="block space-y-1">
-              <span className="text-xs text-slate-400">Sort order</span>
+              <span className="site-label !mb-0">Sort order</span>
               <input
                 type="number"
-                className="w-24 rounded border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100"
+                className="site-input w-24 px-3 py-2 text-sm"
                 value={categoryEditor.sortOrder}
                 onChange={(e) =>
                   setCategoryEditor((s) => ({
@@ -745,7 +745,7 @@ export default function TickerAdminModal({ onClose }: Props) {
             TTL applies to ticker messages assigned to this category (and poll results for
             Questionnaire). Open questionnaire prompts stay up until the form closes.
           </p>
-          <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 px-3 py-2">
+          <div className="site-surface px-3 py-2">
             <p className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Preview</p>
             <span
               className="inline-flex items-center px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider"
@@ -757,7 +757,7 @@ export default function TickerAdminModal({ onClose }: Props) {
           <div className="flex gap-2 pt-2">
             <button
               type="button"
-              className="px-3 py-1.5 text-sm rounded bg-sky-600 text-white hover:bg-sky-500 disabled:opacity-50"
+              className="site-btn-primary !rounded-lg !px-3 !py-1.5 text-sm"
               onClick={() => void saveCategory()}
               disabled={saving}
             >
@@ -765,7 +765,7 @@ export default function TickerAdminModal({ onClose }: Props) {
             </button>
             <button
               type="button"
-              className="px-3 py-1.5 text-sm rounded border border-slate-600 text-slate-300"
+              className="site-btn-secondary !px-3 !py-1.5 text-sm"
               onClick={() => {
                 setCategoryView('list')
                 setError(null)

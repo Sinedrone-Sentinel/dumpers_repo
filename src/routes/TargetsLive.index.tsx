@@ -26,7 +26,7 @@ export default function TargetsLiveRoute() {
               type="button"
               onClick={() => void refresh()}
               disabled={refreshing}
-              className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 disabled:opacity-60 disabled:cursor-not-allowed text-slate-300 border border-slate-600 rounded-lg transition-colors"
+              className="site-btn-secondary px-3 py-1.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
               title="Re-pull active missions and blueprints from the server"
             >
               {refreshing ? 'Syncing…' : 'ReSync'}
@@ -34,7 +34,7 @@ export default function TargetsLiveRoute() {
           )}
           <Link
             to="/targets"
-            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
+            className="site-btn-secondary px-3 py-1.5 text-sm"
           >
             Mission Tracker
           </Link>
@@ -42,7 +42,7 @@ export default function TargetsLiveRoute() {
       }
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {error}
         </div>
       )}
@@ -73,15 +73,15 @@ export default function TargetsLiveRoute() {
           </div>
 
           {hideMissionLists ? (
-            <div className="rounded-xl border border-slate-700/80 bg-slate-900/40 px-6 py-12 text-center">
+            <div className="site-empty px-6 py-12">
               <p className="text-sm text-slate-500">
                 Mission and blueprint lists are hidden until you are back in the Persistent Universe.
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[320px]">
-              <section className="rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col">
-                <header className="px-4 py-3 border-b border-slate-700/80 bg-slate-800/40">
+              <section className="site-section flex flex-col">
+                <header className="site-section-header px-4 py-3">
                   <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                     Active missions ({missions.length})
                   </h2>
@@ -118,8 +118,8 @@ export default function TargetsLiveRoute() {
                 </ul>
               </section>
 
-              <section className="rounded-xl border border-slate-700 bg-slate-900/60 overflow-hidden flex flex-col">
-                <header className="px-4 py-3 border-b border-slate-700/80 bg-slate-800/40">
+              <section className="site-section flex flex-col">
+                <header className="site-section-header px-4 py-3">
                   <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                     Remaining to acquire ({remaining.length})
                   </h2>
@@ -147,7 +147,7 @@ export default function TargetsLiveRoute() {
           )}
         </>
       ) : (
-        <div className="rounded-xl border border-slate-700 bg-slate-900/60 px-6 py-10 text-center max-w-lg mx-auto">
+        <div className="site-surface px-6 py-10 text-center max-w-lg mx-auto">
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-slate-500" aria-hidden />
             <p className="text-base font-medium text-slate-200">{DUMPER_APPS_DISPLAY_NAME} not connected</p>
@@ -159,7 +159,7 @@ export default function TargetsLiveRoute() {
           <button
             type="button"
             onClick={openBpDumperModal}
-            className="mt-6 px-4 py-2 text-sm font-medium rounded-lg bg-orange-600 hover:bg-orange-500 text-white transition-colors"
+            className="mt-6 site-btn-primary px-4 py-2 text-sm font-medium"
           >
             Open {DUMPER_APPS_DISPLAY_NAME}
           </button>

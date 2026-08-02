@@ -13,7 +13,7 @@ export default function BannedAccount() {
           <SiteBrandTitle size="hero" />
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+        <div className="site-surface rounded-2xl p-8 shadow-2xl">
           <div className="text-center space-y-6">
             <div className="w-20 h-20 mx-auto bg-red-500/20 rounded-full flex items-center justify-center">
               <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,7 +34,7 @@ export default function BannedAccount() {
 
             <button
               onClick={signOut}
-              className="w-full px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors"
+              className="site-btn-secondary w-full px-6 py-3 rounded-xl font-medium"
             >
               Sign Out
             </button>

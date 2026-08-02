@@ -61,7 +61,7 @@ export default function MarketplaceAdSlider({
       role="dialog"
       aria-label="Marketplace listing"
     >
-      <div className="relative overflow-hidden rounded-xl border border-slate-600/50 bg-slate-900/80 p-3 shadow-xl backdrop-blur-md">
+      <div className="site-glass relative overflow-hidden rounded-xl p-3 shadow-xl backdrop-blur-md">
         <MarketplaceAdGhostMark />
 
         <div className="relative z-10">
@@ -69,7 +69,7 @@ export default function MarketplaceAdSlider({
             <button
               type="button"
               onClick={onOpenSettings}
-              className="rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              className="site-btn-icon rounded p-1 text-slate-400"
               aria-label="Marketplace settings"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@ export default function MarketplaceAdSlider({
             <button
               type="button"
               onClick={onClose}
-              className="rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+              className="site-btn-icon rounded p-1 text-slate-400"
               aria-label="Close"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ export default function MarketplaceAdSlider({
             <button
               type="button"
               onClick={onNotInterested}
-              className="rounded-full border border-slate-600/60 bg-slate-800/80 px-2.5 py-1 text-xs text-slate-300 hover:border-slate-500"
+              className="site-filter-idle rounded-full px-2.5 py-1 text-xs"
             >
               Not interested
             </button>
@@ -121,7 +121,7 @@ export default function MarketplaceAdSlider({
             <button
               type="button"
               onClick={onDontShowAgain}
-              className="rounded-full border border-slate-600/60 bg-slate-800/80 px-2.5 py-1 text-xs text-slate-300 hover:border-slate-500"
+              className="site-filter-idle rounded-full px-2.5 py-1 text-xs"
             >
               Don&apos;t Show Again
             </button>

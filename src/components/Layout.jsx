@@ -33,6 +33,13 @@ function isPublicSeoPath(pathname) {
   return normalized === '/blueprints' || normalized.startsWith('/blueprints/')
 }
 
+/** Temporary theme gallery — always reachable without auth / Offline Mode. */
+function isThemePreviewPath(pathname) {
+  const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
+  const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
+  return normalized === '/theme-preview'
+}
+
 function LayoutContent({
   navGroups,
   displayName,
@@ -250,6 +257,18 @@ export default function Layout() {
         <AnalyticsTracker />
         <Outlet />
       </>
+    )
+  }
+
+  // Theme token gallery — no auth gate (dev review before commit).
+  if (isThemePreviewPath(pathname)) {
+    return (
+      <UiOverlayProvider>
+        <SeoHead />
+        <div className="site-page-bg min-h-screen text-slate-100">
+          <Outlet />
+        </div>
+      </UiOverlayProvider>
     )
   }
 

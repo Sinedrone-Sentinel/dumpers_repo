@@ -38,7 +38,7 @@ export default function ErrorLandingPage({ statusCode, onRetry }: ErrorLandingPa
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Link
           to="/"
-          className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors"
+          className="px-5 py-2.5 site-btn-danger text-sm font-medium transition-colors"
         >
           Return to base
         </Link>
@@ -46,7 +46,7 @@ export default function ErrorLandingPage({ statusCode, onRetry }: ErrorLandingPa
           <button
             type="button"
             onClick={onRetry}
-            className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded-lg text-sm font-medium transition-colors"
+            className="site-btn-secondary text-sm font-medium"
           >
             Try again
           </button>

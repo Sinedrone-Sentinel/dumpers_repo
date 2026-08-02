@@ -444,7 +444,7 @@ export default function MiningTrackerRoute() {
             <button
               type="button"
               onClick={clearAll}
-              className="text-xs px-3 py-1.5 rounded-lg border border-slate-600/50 text-slate-400 hover:text-red-400 hover:border-red-500/40 transition-colors"
+              className="site-btn-ghost text-xs !px-3 !py-1.5 hover:text-red-400"
             >
               Clear all
             </button>
@@ -460,7 +460,7 @@ export default function MiningTrackerRoute() {
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               viewMode === 'tracker' 
                 ? 'site-filter-selected-orange' 
-                : 'text-slate-400 hover:text-white'
+                : 'site-filter-idle'
             }`}
           >
             RS Tracker
@@ -470,7 +470,7 @@ export default function MiningTrackerRoute() {
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               viewMode === 'guide' 
                 ? 'site-filter-selected-orange' 
-                : 'text-slate-400 hover:text-white'
+                : 'site-filter-idle'
             }`}
           >
             Mining Guide
@@ -480,7 +480,7 @@ export default function MiningTrackerRoute() {
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               viewMode === 'ledger'
                 ? 'site-filter-selected-orange'
-                : 'text-slate-400 hover:text-white'
+                : 'site-filter-idle'
             }`}
           >
             Ledgers
@@ -504,7 +504,7 @@ export default function MiningTrackerRoute() {
           <button
             type="button"
             onClick={refetch}
-            className="px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-lg"
+            className="site-btn-secondary"
           >
             Try again
           </button>
@@ -580,7 +580,7 @@ export default function MiningTrackerRoute() {
             </div>
 
             {sortedEntries.length === 0 ? (
-              <div className="text-center py-6 rounded-lg border border-dashed border-slate-700/50">
+              <div className="site-empty !py-6">
                 <p className="text-slate-500 text-sm">
                   {entries.length === 0 ? (
                     <>
@@ -641,7 +641,7 @@ export default function MiningTrackerRoute() {
                             e.stopPropagation()
                             removeEntry(entry.id)
                           }}
-                          className="absolute top-2 right-2 p-1 text-slate-500 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors"
+                          className="site-btn-icon absolute top-2 right-2 !p-1 text-slate-500 hover:text-red-400"
                           aria-label="Remove"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -784,7 +784,7 @@ export default function MiningTrackerRoute() {
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
                 guideViewMode === 'ores' 
                   ? 'site-filter-selected-slate' 
-                  : 'text-slate-400 hover:text-white'
+                  : 'site-filter-idle'
               }`}
             >
               By Ore
@@ -794,7 +794,7 @@ export default function MiningTrackerRoute() {
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
                 guideViewMode === 'locations' 
                   ? 'site-filter-selected-slate' 
-                  : 'text-slate-400 hover:text-white'
+                  : 'site-filter-idle'
               }`}
             >
               By Location
@@ -824,7 +824,7 @@ export default function MiningTrackerRoute() {
                     className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors site-btn-shimmer ${
                       guideDepositFilter === mode
                         ? 'site-filter-selected-slate'
-                        : 'text-slate-400 hover:text-white'
+                        : 'site-filter-idle'
                     }`}
                   >
                     {GUIDE_DEPOSIT_FILTER_LABELS[mode]}
@@ -860,7 +860,7 @@ export default function MiningTrackerRoute() {
                     onClick={() => setGuideRarityFilter(guideRarityFilter === rarity ? null : rarity)}
                     className={`
                       p-2 rounded-lg border text-center transition-all site-btn-shimmer
-                      ${guideRarityFilter === rarity ? colors.bg + ' ' + colors.border + ' site-btn-burn' : 'bg-slate-800/40 border-slate-700/50 hover:border-slate-600'}
+                      ${guideRarityFilter === rarity ? colors.bg + ' ' + colors.border + ' site-btn-burn' : 'site-filter-idle'}
                     `}
                   >
                     <span className={`text-lg font-bold ${guideRarityFilter === rarity ? colors.text : 'text-white'}`}>
@@ -1095,7 +1095,7 @@ function GuideOreCard({
         <button
           type="button"
           onClick={() => onLocationClick(chip.location)}
-          className={`text-xs px-2 py-1 rounded bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white transition-colors cursor-pointer text-left ${
+          className={`site-filter-idle text-xs px-2 py-1 rounded cursor-pointer text-left ${
             chip.spawnTier === 'trace' ? 'opacity-50 hover:opacity-90' : ''
           }`}
         >
@@ -1145,7 +1145,7 @@ function GuideOreCard({
           {signature && (
             <TrackOreButtons oreName={item.ore_name} rarity={item.rarity} compact />
           )}
-          <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+          <span className="site-badge-slate text-xs px-2 py-1">
             {getOreLocations(item).length} location{getOreLocations(item).length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -1166,7 +1166,7 @@ function GuideOreCard({
             </div>
           )}
           {depositFilter !== 'surface' && locationChips.asteroid.length > 0 && (
-            <div className={`mt-3 ${depositFilter !== 'asteroid' && locationChips.surface.length > 0 ? 'pt-3 border-t border-slate-700/40' : ''}`}>
+            <div className={`mt-3 ${depositFilter !== 'asteroid' && locationChips.surface.length > 0 ? 'pt-3 site-divider' : ''}`}>
               <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Asteroid</div>
               <div className="flex flex-wrap gap-1.5">{locationChips.asteroid.map(renderChip)}</div>
             </div>
@@ -1206,7 +1206,7 @@ function GuideLocationCard({
   })
   
   return (
-    <div className="p-4 rounded-lg border bg-slate-800/30 border-slate-700/50">
+    <div className="site-surface p-4">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
@@ -1228,7 +1228,7 @@ function GuideLocationCard({
             )}
           </div>
         </div>
-        <span className="text-xs text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+        <span className="site-badge-slate text-xs px-2 py-1">
           {sortedOres.length} ore{sortedOres.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -1310,9 +1310,9 @@ function GuideOreModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full max-h-[80vh] flex flex-col shadow-2xl">
-        <div className="p-4 border-b border-slate-800 shrink-0">
+      <div className="site-modal-backdrop" onClick={onClose} />
+      <div className="site-modal-shell relative max-w-md w-full max-h-[80vh]">
+        <div className="p-4 border-b border-orange-500/15 shrink-0">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <h2 className={`text-lg font-semibold ${colors.text}`}>{ore.ore_name}</h2>
@@ -1338,7 +1338,7 @@ function GuideOreModal({
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0"
+              className="site-btn-icon shrink-0 !p-1.5"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1346,7 +1346,7 @@ function GuideOreModal({
             </button>
           </div>
           {signature && (
-            <div className="mt-3 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+            <div className="mt-3 pt-3 site-divider flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
               {guideLocationName && locationProfiles.length > 0 ? (
                 <TrackOreButtons
                   oreName={ore.ore_name}
@@ -1386,7 +1386,7 @@ function GuideOreModal({
                 return (
                   <div
                     key={location}
-                    className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                    className="site-surface p-3"
                   >
                     <span className="font-medium text-white">{location}</span>
                     {system && (
@@ -1412,7 +1412,7 @@ function GuideOreModal({
                       side="top"
                       className="block w-full"
                     >
-                      <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+                      <div className="site-surface p-3">
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <span className="font-medium text-white">{location}</span>
@@ -1437,7 +1437,7 @@ function GuideOreModal({
                 return (
                   <div
                     key={location}
-                    className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50"
+                    className="site-surface p-3"
                   >
                     <span className="font-medium text-white">{location}</span>
                     {system && (
@@ -1454,7 +1454,7 @@ function GuideOreModal({
                   side="top"
                   className="block w-full"
                 >
-                  <div className="p-3 rounded-lg bg-slate-800/40 border border-slate-700/50">
+                  <div className="site-surface p-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <span className="font-medium text-white">{location}</span>
@@ -1505,7 +1505,7 @@ function NavMarkerPanel({ groups }: { groups: NavMarkerGroup[] }) {
               {group.markers.map((marker) => (
                 <span
                   key={marker}
-                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800/70 text-slate-300 border border-slate-700/50 whitespace-nowrap"
+                  className="site-badge-slate text-[10px] font-mono px-1.5 py-0.5 whitespace-nowrap"
                 >
                   {marker}
                 </span>
@@ -1532,9 +1532,9 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-slate-900 border border-slate-700 rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
-        <div className="p-4 border-b border-slate-800 flex items-start justify-between gap-4">
+      <div className="site-modal-backdrop" onClick={onClose} />
+      <div className="site-modal-shell relative max-w-md w-full max-h-[80vh]">
+        <div className="p-4 border-b border-orange-500/15 flex items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
               <h2 className="text-lg font-semibold text-white">{location}</h2>
@@ -1548,7 +1548,7 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            className="site-btn-icon !p-1.5"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

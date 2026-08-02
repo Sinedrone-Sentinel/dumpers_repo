@@ -58,7 +58,7 @@ export default function AssignedOrderCard({
     : []
 
   return (
-    <div className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3">
+    <div className="p-4 site-surface space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <span className="text-white font-medium flex items-center gap-2 flex-wrap">
           {order.title}
@@ -119,7 +119,7 @@ export default function AssignedOrderCard({
               return (
                 <div
                   key={item.resourceKey}
-                  className="flex items-center justify-between text-sm bg-slate-800/50 rounded-lg px-3 py-2"
+                  className="flex items-center justify-between text-sm site-surface px-3 py-2"
                 >
                   <span className="text-slate-300">
                     {getResourceLabel(item.resourceKey, labelMap)}
@@ -160,12 +160,12 @@ export default function AssignedOrderCard({
         </p>
       )}
 
-      <div className="pt-3 border-t border-slate-700 space-y-2">
+      <div className="pt-3 site-divider space-y-2">
         <button
           type="button"
           onClick={onAbandon}
           disabled={submitting}
-          className="w-full py-2 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-300 border border-slate-600 rounded-lg text-sm font-medium"
+          className="site-btn-secondary w-full"
         >
           {submitting ? 'Releasing...' : 'Abandon job — return to pool'}
         </button>
@@ -188,14 +188,14 @@ export default function AssignedOrderCard({
               onChange={(e) => onNotesChange(e.target.value)}
               placeholder="Craft notes (optional)"
               rows={2}
-              className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+              className="site-textarea w-full px-3 py-2 text-sm min-h-0"
             />
 
             <button
               type="button"
               onClick={onCompleteCraft}
               disabled={(craftDeductInventory && !stockCheck.canFulfill) || submitting}
-              className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium"
+              className="site-btn-success w-full"
             >
               {submitting ? 'Completing...' : 'Complete craft & mark ready for pickup'}
             </button>

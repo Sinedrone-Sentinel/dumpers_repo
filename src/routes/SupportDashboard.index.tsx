@@ -73,14 +73,14 @@ const CATEGORY_STYLES: Record<TicketCategory, string> = {
   rsi_verification: 'bg-cyan-950/50 text-cyan-300 border-cyan-500/30',
   partnership_application: 'bg-orange-950/50 text-orange-300 border-orange-500/30',
   add_new_service_request: 'bg-emerald-950/50 text-emerald-300 border-emerald-500/30',
-  other: 'bg-slate-800/50 text-slate-300 border-slate-500/30',
+  other: 'site-badge-slate',
 }
 
 const STATUS_STYLES: Record<TicketStatus, string> = {
   open: 'bg-green-950/50 text-green-300 border-green-500/30',
   assigned: 'bg-blue-950/50 text-blue-300 border-blue-500/30',
   pending_user: 'bg-amber-950/50 text-amber-300 border-amber-500/30',
-  resolved: 'bg-slate-800/50 text-slate-400 border-slate-500/30',
+  resolved: 'site-badge-slate text-slate-400',
 }
 
 const STATUS_LABELS: Record<TicketStatus, string> = {
@@ -248,7 +248,7 @@ export default function SupportDashboardRoute() {
       subtitle="Manage member support tickets"
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {error}
         </div>
       )}
@@ -260,7 +260,7 @@ export default function SupportDashboardRoute() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value as TicketCategory | '')}
-            className="px-2 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-red-500/50"
+            className="site-input px-2 py-1.5 text-sm"
           >
             <option value="">All</option>
             {Object.entries(CATEGORY_LABELS).map(([value, label]) => (
@@ -273,7 +273,7 @@ export default function SupportDashboardRoute() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as TicketStatus | '')}
-            className="px-2 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-red-500/50"
+            className="site-input px-2 py-1.5 text-sm"
           >
             <option value="">All</option>
             {Object.entries(STATUS_LABELS).filter(([key]) => key !== 'resolved').map(([value, label]) => (
@@ -287,7 +287,7 @@ export default function SupportDashboardRoute() {
             className={`px-3 py-1.5 border rounded-lg text-sm transition-colors ${
               showPerformance
                 ? 'bg-amber-600/20 border-amber-500/40 text-amber-300'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+                : 'site-filter-idle'
             }`}
           >
             Officer Stats
@@ -296,7 +296,7 @@ export default function SupportDashboardRoute() {
         <button
           onClick={() => reloadAll()}
           disabled={loading}
-          className="ml-auto px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-sm transition-colors disabled:opacity-50"
+          className="ml-auto site-btn-secondary px-3 py-1.5 text-sm disabled:opacity-50"
         >
           {loading ? 'Loading...' : 'Refresh'}
         </button>
@@ -320,7 +320,7 @@ export default function SupportDashboardRoute() {
               <button
                 key={ticket.id}
                 onClick={() => setSelectedTicketId(ticket.id)}
-                className="w-full text-left p-4 bg-slate-900/60 border border-red-500/30 rounded-xl hover:border-red-500/60 transition-colors"
+                className="w-full text-left p-4 site-surface border-red-500/30 hover:border-red-500/60 transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -370,7 +370,7 @@ export default function SupportDashboardRoute() {
 
       {/* Officer Performance Section - Super Admin Only */}
       {isSuperAdmin && showPerformance && (
-        <section className="mb-6 p-4 bg-slate-900/60 border border-amber-500/30 rounded-xl">
+        <section className="mb-6 p-4 site-surface border-amber-500/30">
           <h2 className="text-amber-300 font-semibold mb-4 flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -383,10 +383,10 @@ export default function SupportDashboardRoute() {
               No ratings recorded yet.
             </p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="site-table-wrap">
+              <table className="site-table">
                 <thead>
-                  <tr className="border-b border-slate-700">
+                  <tr>
                     <th className="text-left py-2 px-3 text-slate-400 font-medium">Officer</th>
                     <th className="text-center py-2 px-3 text-slate-400 font-medium">Avg Rating</th>
                     <th className="text-center py-2 px-3 text-slate-400 font-medium">Total</th>
@@ -396,7 +396,7 @@ export default function SupportDashboardRoute() {
                 </thead>
                 <tbody>
                   {officerPerformance.map((officer) => (
-                    <tr key={officer.officer_id} className="border-b border-slate-800 hover:bg-slate-800/50">
+                    <tr key={officer.officer_id}>
                       <td className="py-3 px-3 text-white font-medium">{officer.officer_name}</td>
                       <td className="py-3 px-3 text-center">
                         {officer.avg_rating ? (
@@ -459,7 +459,7 @@ export default function SupportDashboardRoute() {
               </h2>
 
               {unassignedTickets.length === 0 ? (
-                <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm text-center">
+                <div className="site-empty p-6 text-sm">
                   No unassigned tickets
                 </div>
               ) : (
@@ -467,7 +467,7 @@ export default function SupportDashboardRoute() {
                   {unassignedTickets.map((ticket) => (
                     <div
                       key={ticket.id}
-                      className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl hover:border-slate-600 transition-colors"
+                      className="p-4 site-surface transition-colors"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
@@ -513,7 +513,7 @@ export default function SupportDashboardRoute() {
                           </button>
                           <button
                             onClick={() => setSelectedTicketId(ticket.id)}
-                            className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-medium rounded-lg transition-colors"
+                            className="site-btn-secondary px-3 py-1.5 text-xs font-medium"
                           >
                             View
                           </button>
@@ -542,7 +542,7 @@ export default function SupportDashboardRoute() {
               </h2>
 
               {myAssignedTickets.length === 0 ? (
-                <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm text-center">
+                <div className="site-empty p-6 text-sm">
                   No tickets assigned to you
                 </div>
               ) : (
@@ -551,7 +551,7 @@ export default function SupportDashboardRoute() {
                     <button
                       key={ticket.id}
                       onClick={() => setSelectedTicketId(ticket.id)}
-                      className="w-full text-left p-4 bg-slate-900/60 border border-slate-700 rounded-xl hover:border-blue-500/40 transition-colors"
+                      className="w-full text-left p-4 site-surface hover:border-blue-500/40 transition-colors"
                     >
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className={`px-2 py-0.5 text-xs font-medium rounded border ${CATEGORY_STYLES[ticket.category]}`}>
@@ -586,7 +586,7 @@ export default function SupportDashboardRoute() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   Other Assigned Tickets
-                  <span className="px-2 py-0.5 bg-slate-800 text-slate-400 text-xs font-medium rounded-full">
+                  <span className="site-badge-slate px-2 py-0.5 text-xs font-medium rounded-full">
                     {allAssignedTickets.length}
                   </span>
                 </h2>
@@ -596,7 +596,7 @@ export default function SupportDashboardRoute() {
                     <button
                       key={ticket.id}
                       onClick={() => setSelectedTicketId(ticket.id)}
-                      className="w-full text-left p-4 bg-slate-900/60 border border-slate-700 rounded-xl hover:border-slate-600 transition-colors"
+                      className="w-full text-left p-4 site-surface transition-colors"
                     >
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className={`px-2 py-0.5 text-xs font-medium rounded border ${CATEGORY_STYLES[ticket.category]}`}>

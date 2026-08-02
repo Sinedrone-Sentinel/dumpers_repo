@@ -12,10 +12,8 @@ interface CopyFeedbackButtonProps {
 }
 
 const variantClasses: Record<CopyFeedbackButtonVariant, string> = {
-  primary:
-    'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 disabled:opacity-50',
-  danger:
-    'bg-red-950/50 hover:bg-red-900/50 text-red-400 border border-red-500/30 disabled:opacity-50',
+  primary: 'site-btn-secondary',
+  danger: 'site-btn-danger',
 }
 
 export default function CopyFeedbackButton({
@@ -62,7 +60,7 @@ export default function CopyFeedbackButton({
       type="button"
       onClick={() => void handleClick()}
       disabled={disabled || loading}
-      className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${variantClasses[variant]} ${className}`}
+      className={`${variantClasses[variant]} py-2.5 ${className}`}
     >
       {copied ? copiedLabel : label}
     </button>

@@ -78,7 +78,7 @@ export default function ResourceTypeahead({
   return (
     <div ref={containerRef} className="space-y-2">
       {selectedResource && (
-        <div className="flex items-center justify-between gap-2 px-3 py-2 bg-slate-800/80 border border-slate-600 rounded-lg">
+        <div className="site-surface flex items-center justify-between gap-2 px-3 py-2">
           <span className="text-slate-200 text-sm truncate">
             Selected: {selectedResource.label}
           </span>
@@ -89,7 +89,7 @@ export default function ResourceTypeahead({
               inputRef.current?.focus()
               setOpen(true)
             }}
-            className="text-xs text-slate-400 hover:text-white shrink-0"
+            className="site-btn-ghost text-xs shrink-0"
           >
             Change
           </button>
@@ -108,18 +108,18 @@ export default function ResourceTypeahead({
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Type to search commodities…"
-          className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+          className="site-input w-full px-3 py-2 text-sm"
           autoComplete="off"
         />
 
         {open && (
-          <div className="absolute z-20 mt-1 w-full max-h-56 overflow-y-auto bg-slate-900 border border-slate-600 rounded-lg shadow-xl">
+          <div className="site-dropdown-list">
             {results.length === 0 ? (
               <p className="px-3 py-2 text-slate-500 text-xs">No matches for &quot;{query.trim()}&quot;</p>
             ) : (
               <>
                 {totalMatches > MAX_RESULTS && (
-                  <p className="px-3 py-1.5 text-slate-500 text-[10px] border-b border-slate-700">
+                  <p className="px-3 py-1.5 text-slate-500 text-[10px] border-b border-orange-500/15">
                     Showing {MAX_RESULTS} of {totalMatches} — type to filter
                   </p>
                 )}
@@ -130,11 +130,11 @@ export default function ResourceTypeahead({
                         type="button"
                         onMouseEnter={() => setHighlightIndex(index)}
                         onClick={() => handleSelect(r)}
-                        className={`w-full text-left px-3 py-2 text-sm transition-colors ${
+                        className={
                           index === highlightIndex
-                            ? 'bg-amber-950/50 text-amber-100'
-                            : 'text-slate-300 hover:bg-slate-800'
-                        }`}
+                            ? 'site-dropdown-item site-dropdown-item-active'
+                            : 'site-dropdown-item'
+                        }
                       >
                         {r.label}
                       </button>

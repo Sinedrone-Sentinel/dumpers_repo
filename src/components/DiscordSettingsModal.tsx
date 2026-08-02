@@ -212,7 +212,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
         <button
           type="button"
           onClick={onClose}
-          className="w-full px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
+          className="site-btn-secondary w-full"
         >
           Close
         </button>
@@ -220,10 +220,8 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
     >
       {message && (
         <div
-          className={`mb-4 p-3 rounded-lg text-sm ${
-            message.type === 'success'
-              ? 'bg-green-900/50 border border-green-500/50 text-green-400'
-              : 'bg-red-900/50 border border-red-500/50 text-red-400'
+          className={`mb-4 ${
+            message.type === 'success' ? 'site-banner-success' : 'site-banner-error'
           }`}
         >
           {message.text}
@@ -263,7 +261,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
           </div>
 
           {/* Event Type Toggles */}
-          <div className="p-4 rounded-xl border border-slate-700 bg-slate-800/30 space-y-3">
+          <div className="p-4 site-surface space-y-3">
             <h3 className="text-white font-medium text-sm mb-3">Marketplace Feed (global)</h3>
 
             <div className="pl-2 border-l-2 border-green-500/50 space-y-2">
@@ -293,7 +291,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               />
             </div>
 
-            <div className="pt-3 border-t border-slate-700/50 space-y-2">
+            <div className="pt-3 site-divider space-y-2">
               <ToggleRow
                 label="Coalesce listing churn"
                 description="Group rapid post/cancel bursts from the same member into one ping"
@@ -318,7 +316,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                     onChange={(e) => setCoalesceMinutes(e.target.value)}
                     onBlur={() => void handleSaveCoalesceMinutes()}
                     disabled={saving || !(settings?.market_coalesce_enabled ?? true)}
-                    className="w-16 px-2 py-1 text-sm bg-slate-800 border border-slate-600 rounded text-white text-center disabled:opacity-50"
+                    className="site-input w-16 px-2 py-1 text-sm text-center"
                   />
                 </div>
               </div>
@@ -375,14 +373,14 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               value={officialName}
               onChange={(e) => setOfficialName(e.target.value)}
               placeholder="Channel name (e.g., #bot-alerts)"
-              className="w-full px-3 py-2 bg-slate-800 border border-purple-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500/50 text-sm"
+              className="site-input w-full px-3 py-2 text-sm border-purple-500/30"
             />
             <input
               type="text"
               value={officialUrl}
               onChange={(e) => setOfficialUrl(e.target.value)}
               placeholder="https://discord.com/api/webhooks/..."
-              className="w-full px-3 py-2 bg-slate-800 border border-purple-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500/50 text-sm font-mono text-xs"
+              className="site-input w-full px-3 py-2 text-sm font-mono text-xs border-purple-500/30"
             />
             <button
               onClick={handleSaveOfficialWebhook}
@@ -433,14 +431,14 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               <button
                 onClick={() => handleClearQueue(true)}
                 disabled={processing}
-                className="flex-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+                className="site-btn-secondary flex-1 !px-3 !py-1.5 text-xs"
               >
                 Clear Processed
               </button>
               <button
                 onClick={() => handleClearQueue(false)}
                 disabled={processing}
-                className="flex-1 px-3 py-1.5 bg-red-600/50 hover:bg-red-600 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+                className="site-btn-danger flex-1 !px-3 !py-1.5 text-xs"
               >
                 Clear All
               </button>
@@ -457,7 +455,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
           </div>
 
           {/* Registered Webhooks */}
-          <div className="p-4 rounded-xl border border-slate-700 bg-slate-800/30 space-y-3">
+          <div className="p-4 site-surface space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-white font-medium text-sm">Registered Webhooks</h3>
               <span className="text-xs text-slate-500">{webhooks.length} total</span>
@@ -472,7 +470,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                     key={webhook.id}
                     className={`p-2 rounded-lg border ${
                       webhook.active
-                        ? 'border-slate-600 bg-slate-800/50'
+                        ? 'site-surface'
                         : 'border-red-500/30 bg-red-950/20'
                     }`}
                   >
@@ -534,7 +532,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 value={botTestChannelId}
                 onChange={(e) => setBotTestChannelId(e.target.value)}
                 placeholder="Discord channel ID"
-                className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-orange-500/50"
+                className="site-input flex-1 px-3 py-2 text-sm"
               />
               <input
                 type="number"
@@ -543,7 +541,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 value={botTestCopyCount}
                 onChange={(e) => setBotTestCopyCount(e.target.value)}
                 title="Message copies (simulated orgs)"
-                className="w-20 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-orange-500/50"
+                className="site-input w-20 px-3 py-2 text-sm"
               />
               <button
                 type="button"

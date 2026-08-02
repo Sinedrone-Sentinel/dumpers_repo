@@ -8,94 +8,173 @@
 
 @layer components {
   /*
-   * Void + ember atmosphere.
-   * Fixed glow stays at the top of the viewport so tool pages don't look
-   * like a flat slate slab once you scroll past the title.
+   * Void + ember atmosphere — absolute to the page shell (not viewport-fixed)
+   * so filter reflows / grid changes don't make cards slide under a fixed glow
+   * (reads as the page "lighting" shifting on chip clicks).
    */
   .site-page-bg {
-    @apply relative;
+    @apply relative isolate;
     background-color: #070a12;
     background-image: linear-gradient(180deg, #0c101c 0%, #070a12 40%, #06080f 100%);
   }
 
   .site-page-bg::before {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(ellipse 90% 42% at 50% -18%, rgba(249, 115, 22, 0.22), transparent 60%),
-      radial-gradient(ellipse 40% 28% at 92% 0%, rgba(250, 204, 21, 0.06), transparent 55%),
-      radial-gradient(ellipse 35% 25% at 6% 80%, rgba(234, 88, 12, 0.05), transparent 55%);
+      radial-gradient(ellipse 85% 28% at 50% -8%, rgba(249, 115, 22, 0.16), transparent 58%),
+      radial-gradient(ellipse 36% 18% at 94% 0%, rgba(250, 204, 21, 0.05), transparent 55%);
   }
 
   .site-page-bg::after {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.18;
+    opacity: 0.14;
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 70% 45% at 50% 0%, black, transparent 72%);
+    mask-image: radial-gradient(ellipse 65% 32% at 50% 0%, black, transparent 70%);
   }
 
-  /* Frosted glass — ticker, modals, elevated panels */
+  /* Frosted glass — dropdowns, elevated panels */
   .site-glass {
-    background: rgba(8, 12, 22, 0.72);
+    background: rgba(8, 12, 22, 0.78);
     backdrop-filter: blur(18px) saturate(1.2);
     -webkit-backdrop-filter: blur(18px) saturate(1.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow:
-      0 12px 40px rgba(0, 0, 0, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  }
-
-  /* Ticker bar + Updates sheet — frosted but still readable over busy grids */
-  .site-glass-ticker {
-    background: rgba(6, 10, 18, 0.92);
-    backdrop-filter: blur(22px) saturate(1.25);
-    -webkit-backdrop-filter: blur(22px) saturate(1.25);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow:
-      0 -8px 40px rgba(0, 0, 0, 0.55),
+      0 16px 48px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(249, 115, 22, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
-  .site-modal-shell {
-    @apply relative rounded-2xl border border-orange-500/30 flex flex-col min-w-0 overflow-hidden;
-    background: rgba(8, 12, 22, 0.92);
-    backdrop-filter: blur(20px) saturate(1.15);
-    -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  /* Updates list sheet — frosted; slightly less opaque than the golden bar */
+  .site-glass-ticker {
+    background: rgba(8, 12, 22, 0.94);
+    backdrop-filter: blur(24px) saturate(1.25);
+    -webkit-backdrop-filter: blur(24px) saturate(1.25);
+    border: 1px solid rgba(251, 191, 36, 0.22);
     box-shadow:
-      0 24px 64px rgba(0, 0, 0, 0.65),
-      0 0 0 1px rgba(249, 115, 22, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      0 -12px 48px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(249, 115, 22, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  /* Collapsed ticker bar — golden header chrome, more opaque than the list */
+  .site-ticker-bar {
+    background:
+      linear-gradient(180deg, rgba(42, 28, 12, 0.98) 0%, rgba(14, 12, 18, 0.97) 100%);
+    backdrop-filter: blur(14px) saturate(1.15);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+    border-top: 1px solid rgba(251, 191, 36, 0.42);
+    box-shadow:
+      0 -10px 36px rgba(0, 0, 0, 0.65),
+      0 -1px 24px rgba(249, 115, 22, 0.18),
+      inset 0 1px 0 rgba(253, 230, 138, 0.14);
+  }
+
+  .site-modal-shell {
+    @apply relative rounded-2xl border border-orange-500/40 flex flex-col min-w-0 overflow-hidden;
+    background:
+      linear-gradient(165deg, rgba(32, 24, 14, 0.98) 0%, rgba(8, 12, 22, 0.98) 42%, rgba(6, 10, 18, 0.99) 100%);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 12px 28px rgba(0, 0, 0, 0.55),
+      0 36px 72px rgba(0, 0, 0, 0.75),
+      0 64px 120px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(249, 115, 22, 0.28),
+      0 0 56px rgba(249, 115, 22, 0.16),
+      inset 0 1px 0 rgba(253, 230, 138, 0.2),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+    transform: translateZ(0);
+  }
+
+  .site-modal-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent 4%,
+      rgba(249, 115, 22, 0.85) 30%,
+      rgba(251, 191, 36, 0.9) 55%,
+      transparent 96%
+    );
+    box-shadow: 0 0 16px rgba(249, 115, 22, 0.55);
   }
 
   .site-surface {
-    @apply rounded-xl border border-orange-500/20 bg-slate-950/70;
+    @apply rounded-xl border border-orange-500/25 bg-slate-950/75;
     box-shadow:
-      0 10px 32px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      0 12px 36px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(249, 115, 22, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .site-chip-strip {
-    @apply flex flex-wrap items-center gap-1 p-1 rounded-xl border border-slate-700/70 bg-slate-950/50;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    @apply flex flex-wrap items-center gap-1 p-1 rounded-xl border border-orange-500/20 bg-slate-950/55;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Header / menu trigger chips */
+  .site-chrome-control {
+    @apply relative flex items-center justify-center rounded-lg border border-orange-500/30 bg-slate-950/70 text-slate-300 shadow-md transition-colors;
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-chrome-control:hover:not(:disabled) {
+    @apply border-orange-400/45 bg-slate-900/90 text-white;
+  }
+
+  .site-chrome-control:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .site-menu-panel {
+    @apply rounded-xl border border-orange-500/25 overflow-hidden;
+    background: rgba(8, 12, 22, 0.96);
+    box-shadow:
+      0 18px 48px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(249, 115, 22, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .site-glass,
     .site-glass-ticker,
+    .site-ticker-bar,
     .site-modal-shell {
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
-      background: rgba(8, 12, 22, 0.96);
+    }
+
+    .site-glass,
+    .site-modal-shell,
+    .site-menu-panel {
+      background: rgba(8, 12, 22, 0.98);
+    }
+
+    .site-glass-ticker {
+      background: rgba(8, 12, 22, 0.98);
+    }
+
+    .site-ticker-bar {
+      background: rgba(28, 20, 12, 0.98);
     }
   }
 
@@ -267,8 +346,14 @@
   }
 
   .site-app-header {
-    /* Faux glass — opaque fill avoids live backdrop blur on every scroll frame */
-    @apply bg-slate-900/98 border-b border-orange-500/20 shadow-lg shadow-orange-950/20;
+    /* Golden chrome bar — opaque enough to avoid scroll-blur cost */
+    background:
+      linear-gradient(180deg, rgba(28, 20, 12, 0.98) 0%, rgba(10, 12, 20, 0.98) 100%);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.28);
+    box-shadow:
+      0 8px 28px rgba(0, 0, 0, 0.45),
+      0 1px 18px rgba(249, 115, 22, 0.12),
+      inset 0 1px 0 rgba(253, 230, 138, 0.1);
   }
 
   /* Fixed header stack height (nav h-14, plus optional update banner). */
@@ -366,11 +451,316 @@
   }
 
   .site-input {
-    @apply bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20 transition-colors;
+    @apply rounded-lg text-white placeholder-slate-500 focus:outline-none transition-colors;
+    background: rgba(2, 6, 23, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .site-input:hover:not(:disabled) {
+    border-color: rgba(249, 115, 22, 0.35);
+  }
+
+  .site-input:focus {
+    border-color: rgba(249, 115, 22, 0.55);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(249, 115, 22, 0.25),
+      0 0 16px rgba(249, 115, 22, 0.12);
+  }
+
+  .site-input:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Textarea — same chrome as input, taller default */
+  .site-textarea {
+    @apply min-h-[5.5rem] resize-y rounded-lg text-white placeholder-slate-500 focus:outline-none transition-colors;
+    background: rgba(2, 6, 23, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .site-textarea:hover:not(:disabled) {
+    border-color: rgba(249, 115, 22, 0.35);
+  }
+
+  .site-textarea:focus {
+    border-color: rgba(249, 115, 22, 0.55);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(249, 115, 22, 0.25),
+      0 0 16px rgba(249, 115, 22, 0.12);
+  }
+
+  .site-textarea:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .site-label {
+    @apply block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1;
+  }
+
+  .site-hint {
+    @apply text-xs text-slate-500 mt-1 leading-relaxed;
+  }
+
+  .site-error-text {
+    @apply text-xs text-red-300 mt-1;
+  }
+
+  /*
+   * Buttons — use these instead of raw slate/red/green fills.
+   * Pair with site-btn-shimmer for hover sweep when desired.
+   */
+  .site-btn-secondary,
+  .site-btn-danger,
+  .site-btn-success,
+  .site-btn-ghost,
+  .site-btn-icon {
+    @apply relative isolate overflow-hidden inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .site-btn-secondary {
+    @apply px-4 py-2 text-slate-100 border border-orange-500/25 bg-slate-950/80;
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .site-btn-secondary:hover:not(:disabled) {
+    @apply border-orange-400/40 bg-slate-900 text-white;
+  }
+
+  .site-btn-danger {
+    @apply px-4 py-2 text-red-100 border border-red-500/40 bg-red-950/70;
+    box-shadow:
+      0 4px 14px rgba(127, 29, 29, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .site-btn-danger:hover:not(:disabled) {
+    @apply bg-red-900/80 border-red-400/50 text-white;
+  }
+
+  .site-btn-success {
+    @apply px-4 py-2 text-green-100 border border-green-500/40 bg-green-950/70;
+    box-shadow:
+      0 4px 14px rgba(20, 83, 45, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .site-btn-success:hover:not(:disabled) {
+    @apply bg-green-900/80 border-green-400/50 text-white;
+  }
+
+  .site-btn-ghost {
+    @apply px-3 py-1.5 text-slate-400 border border-transparent bg-transparent;
+  }
+
+  .site-btn-ghost:hover:not(:disabled) {
+    @apply text-white bg-white/5;
+  }
+
+  .site-btn-icon {
+    @apply p-2 text-slate-300 border border-orange-500/25 bg-slate-950/70;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .site-btn-icon:hover:not(:disabled) {
+    @apply text-white border-orange-400/40 bg-slate-900;
   }
 
   .site-btn-accent {
     @apply bg-orange-950/80 text-orange-200 border border-orange-500/45 hover:bg-orange-900/75 hover:text-orange-100 transition-colors;
+  }
+
+  /* Idle filter / tab chip (pair with site-filter-selected-*) */
+  .site-filter-idle {
+    @apply bg-slate-950/55 text-slate-400 border border-slate-600/70 hover:text-slate-100 hover:bg-slate-900/70 hover:border-orange-500/25 transition-colors;
+  }
+
+  /* Native checkbox / radio accent */
+  .site-checkbox,
+  .site-radio {
+    @apply rounded border-slate-500 bg-slate-950 text-orange-500 focus:ring-orange-500/40 focus:ring-offset-0;
+    accent-color: #f97316;
+  }
+
+  .site-radio {
+    @apply rounded-full;
+  }
+
+  /* Toggle switch track + thumb (SettingsToggle) */
+  .site-toggle {
+    @apply relative shrink-0 w-10 h-5 rounded-full border transition-colors;
+  }
+
+  .site-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    transition: transform 0.2s ease;
+    background: #e2e8f0;
+  }
+
+  .site-toggle[data-on='false'],
+  .site-toggle-off {
+    @apply bg-slate-800 border-slate-600;
+  }
+
+  .site-toggle[data-on='true'],
+  .site-toggle-on {
+    @apply bg-orange-600 border-orange-500/50;
+  }
+
+  .site-toggle[data-on='true']::after,
+  .site-toggle-on::after {
+    transform: translateX(1.25rem);
+    background: #fff;
+  }
+
+  /* Range slider */
+  .site-range {
+    @apply w-full h-1.5 rounded-lg appearance-none cursor-pointer bg-slate-800;
+    accent-color: #f97316;
+  }
+
+  /* Typeahead / combobox dropdown list */
+  .site-dropdown-list {
+    @apply absolute z-20 mt-1 w-full max-h-56 overflow-y-auto rounded-lg border border-orange-500/25;
+    background: rgba(8, 12, 22, 0.97);
+    box-shadow:
+      0 16px 40px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .site-dropdown-item {
+    @apply w-full text-left px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-orange-950/40 hover:text-amber-100;
+  }
+
+  .site-dropdown-item-active {
+    @apply bg-orange-950/55 text-amber-100;
+  }
+
+  .site-tooltip-panel {
+    @apply text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 rounded-lg;
+    background: rgba(8, 12, 22, 0.96);
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    box-shadow:
+      0 16px 40px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(249, 115, 22, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-modal-backdrop {
+    @apply fixed inset-0 bg-black/70 backdrop-blur-[2px];
+  }
+
+  /* Tables */
+  .site-table-wrap {
+    @apply overflow-x-auto rounded-xl border border-orange-500/20;
+    background: rgba(2, 6, 23, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .site-table {
+    @apply w-full text-sm text-slate-200;
+  }
+
+  .site-table thead tr {
+    @apply border-b border-orange-500/15 text-left text-xs uppercase tracking-wide text-slate-500;
+  }
+
+  .site-table th {
+    @apply px-4 py-3 font-medium;
+  }
+
+  .site-table tbody {
+    @apply divide-y divide-slate-800/80;
+  }
+
+  .site-table td {
+    @apply px-4 py-2.5;
+  }
+
+  .site-table tbody tr:hover {
+    background: rgba(249, 115, 22, 0.04);
+  }
+
+  /* List rows / empty / banners / badges */
+  .site-list-row {
+    @apply border-b border-slate-800/80 transition-colors hover:bg-orange-950/20;
+  }
+
+  .site-empty {
+    @apply text-center py-16 rounded-2xl border border-dashed border-orange-500/20 bg-slate-950/40 text-slate-400;
+  }
+
+  .site-banner-warn {
+    @apply rounded-lg border px-3 py-2.5 text-sm bg-amber-950/30 border-amber-500/35 text-amber-100;
+  }
+
+  .site-banner-error {
+    @apply rounded-lg border px-3 py-2.5 text-sm bg-red-950/35 border-red-500/40 text-red-200;
+  }
+
+  .site-banner-info {
+    @apply rounded-lg border px-3 py-2.5 text-sm bg-sky-950/30 border-sky-500/35 text-sky-100;
+  }
+
+  .site-banner-success {
+    @apply rounded-lg border px-3 py-2.5 text-sm bg-green-950/30 border-green-500/35 text-green-100;
+  }
+
+  .site-badge-amber {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-amber-950/40 text-amber-200 border-amber-500/30;
+  }
+
+  .site-badge-orange {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-orange-950/40 text-orange-200 border-orange-500/35;
+  }
+
+  .site-badge-green {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-green-950/40 text-green-200 border-green-500/30;
+  }
+
+  .site-badge-red {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-red-950/40 text-red-200 border-red-500/30;
+  }
+
+  .site-badge-slate {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-slate-900/70 text-slate-300 border-slate-600/50;
+  }
+
+  .site-progress {
+    @apply h-1.5 w-full overflow-hidden rounded-full bg-slate-800;
+  }
+
+  .site-progress-bar {
+    @apply h-full rounded-full bg-gradient-to-r from-orange-600 to-amber-400;
+  }
+
+  .site-section {
+    @apply rounded-xl border border-orange-500/20 overflow-hidden;
+    background: rgba(8, 12, 22, 0.55);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .site-section-header {
+    @apply px-4 py-3 border-b border-orange-500/15 bg-gradient-to-r from-orange-950/35 to-transparent;
+  }
+
+  .site-section-body {
+    @apply p-4 space-y-4;
   }
 
   .site-nav-link {
@@ -383,6 +773,35 @@
 
   .site-nav-link-idle {
     @apply bg-slate-800/40 text-slate-400 border-slate-700/80 hover:bg-slate-800 hover:text-slate-200;
+  }
+
+  /* Sidebar / avatar menu rows */
+  .site-menu-item {
+    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border border-transparent text-slate-400;
+  }
+
+  .site-menu-item:hover {
+    @apply bg-orange-950/35 text-amber-100;
+  }
+
+  .site-menu-item-active {
+    @apply bg-orange-950/55 text-orange-200 border-orange-500/40 shadow-sm shadow-orange-500/10;
+  }
+
+  .site-menu-item-locked {
+    @apply text-slate-500 border-dashed border-slate-600/50 hover:bg-orange-950/20 hover:text-slate-300;
+  }
+
+  .site-menu-child-rail {
+    @apply mt-1 ml-4 pl-3 border-l border-orange-500/20 space-y-0.5;
+  }
+
+  .site-menu-section {
+    @apply px-4 py-2.5 border-b border-orange-500/15 bg-gradient-to-r from-orange-950/40 to-transparent;
+  }
+
+  .site-divider {
+    @apply border-t border-orange-500/15;
   }
 
   /* Muted selected fills — lets ember glow read against the button */
@@ -421,6 +840,9 @@
   /* Hover shimmer sweep — v4 cannot @apply custom component classes; use shared selectors */
   .site-btn-shimmer,
   .site-btn-accent,
+  .site-btn-secondary,
+  .site-btn-danger,
+  .site-btn-success,
   .site-nav-link-active,
   .site-nav-link-idle,
   .site-btn-primary {
@@ -429,6 +851,9 @@
 
   .site-btn-shimmer::after,
   .site-btn-accent::after,
+  .site-btn-secondary::after,
+  .site-btn-danger::after,
+  .site-btn-success::after,
   .site-nav-link-active::after,
   .site-nav-link-idle::after,
   .site-btn-primary::after {
@@ -452,6 +877,12 @@
   .site-btn-shimmer:not(:disabled):focus-visible::after,
   .site-btn-accent:not(:disabled):hover::after,
   .site-btn-accent:not(:disabled):focus-visible::after,
+  .site-btn-secondary:not(:disabled):hover::after,
+  .site-btn-secondary:not(:disabled):focus-visible::after,
+  .site-btn-danger:not(:disabled):hover::after,
+  .site-btn-danger:not(:disabled):focus-visible::after,
+  .site-btn-success:not(:disabled):hover::after,
+  .site-btn-success:not(:disabled):focus-visible::after,
   .site-nav-link-active:not(:disabled):hover::after,
   .site-nav-link-active:not(:disabled):focus-visible::after,
   .site-nav-link-idle:not(:disabled):hover::after,
@@ -461,18 +892,14 @@
     animation: site-btn-shimmer-sweep 0.6s ease forwards;
   }
 
-  /* Ember glow for selected / active buttons — static outer glow; animate ::before only */
+  /*
+   * Ember burn — only for primary chrome (accent / nav).
+   * Filter chips use static color-matched glows below so toggling chips
+   * doesn't pulse orange light across the page.
+   */
   .site-btn-burn,
   .site-btn-accent,
-  .site-nav-link-active,
-  .site-filter-selected-orange,
-  .site-filter-selected-blue,
-  .site-filter-selected-green,
-  .site-filter-selected-amber,
-  .site-filter-selected-red,
-  .site-filter-selected-purple,
-  .site-filter-selected-cyan,
-  .site-filter-selected-slate {
+  .site-nav-link-active {
     @apply relative isolate;
     box-shadow:
       0 0 12px rgba(249, 115, 22, 0.58),
@@ -482,15 +909,7 @@
 
   .site-btn-burn::before,
   .site-btn-accent::before,
-  .site-nav-link-active::before,
-  .site-filter-selected-orange::before,
-  .site-filter-selected-blue::before,
-  .site-filter-selected-green::before,
-  .site-filter-selected-amber::before,
-  .site-filter-selected-red::before,
-  .site-filter-selected-purple::before,
-  .site-filter-selected-cyan::before,
-  .site-filter-selected-slate::before {
+  .site-nav-link-active::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -504,6 +923,54 @@
     pointer-events: none;
     transform-origin: center bottom;
     animation: site-btn-burn-ember 1.8s ease-in-out infinite alternate;
+  }
+
+  .site-filter-selected-orange {
+    box-shadow:
+      0 0 10px rgba(249, 115, 22, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-blue {
+    box-shadow:
+      0 0 10px rgba(59, 130, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-green {
+    box-shadow:
+      0 0 10px rgba(34, 197, 94, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-amber {
+    box-shadow:
+      0 0 10px rgba(245, 158, 11, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-red {
+    box-shadow:
+      0 0 10px rgba(239, 68, 68, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-purple {
+    box-shadow:
+      0 0 10px rgba(168, 85, 247, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-cyan {
+    box-shadow:
+      0 0 10px rgba(34, 211, 238, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .site-filter-selected-slate {
+    box-shadow:
+      0 0 10px rgba(148, 163, 184, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -522,15 +989,7 @@
 
     .site-btn-burn,
     .site-btn-accent,
-    .site-nav-link-active,
-    .site-filter-selected-orange,
-    .site-filter-selected-blue,
-    .site-filter-selected-green,
-    .site-filter-selected-amber,
-    .site-filter-selected-red,
-    .site-filter-selected-purple,
-    .site-filter-selected-cyan,
-    .site-filter-selected-slate {
+    .site-nav-link-active {
       animation: none;
       box-shadow:
         0 0 16px rgba(249, 115, 22, 0.55),
@@ -540,14 +999,7 @@
 
     .site-btn-burn::before,
     .site-btn-accent::before,
-    .site-nav-link-active::before,
-    .site-filter-selected-orange::before,
-    .site-filter-selected-blue::before,
-    .site-filter-selected-green::before,
-    .site-filter-selected-amber::before,
-    .site-filter-selected-red::before,
-    .site-filter-selected-purple::before,
-    .site-filter-selected-slate::before {
+    .site-nav-link-active::before {
       animation: none;
       opacity: 0.65;
     }

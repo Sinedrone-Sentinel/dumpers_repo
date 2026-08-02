@@ -81,14 +81,14 @@ export default function OfficerRatingModal({
     >
       <div className="space-y-6">
         {resolutionMessage && (
-          <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+          <div className="p-4 site-surface">
             <p className="text-xs text-slate-500 mb-1">Resolution message:</p>
             <p className="text-sm text-slate-300">{resolutionMessage}</p>
           </div>
         )}
 
         {resolvedBy === 'member' && (
-          <div className="p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
+          <div className="site-banner-info">
             <p className="text-sm text-blue-300">
               You marked this ticket as resolved. Please rate how well the officer handled your request.
             </p>
@@ -146,18 +146,18 @@ export default function OfficerRatingModal({
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share any feedback about your experience..."
             rows={3}
-            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 resize-none text-sm"
+            className="site-textarea w-full px-3 py-2 min-h-0 resize-none text-sm"
           />
         </div>
 
         {canEscalate && (
-          <div className="p-4 bg-red-900/20 border border-red-500/30 rounded-lg space-y-3">
+          <div className="p-4 site-banner-error space-y-3">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={wantToEscalate}
                 onChange={(e) => setWantToEscalate(e.target.checked)}
-                className="mt-1 rounded border-slate-500 bg-slate-800 text-red-500 focus:ring-red-500/40"
+                className="site-checkbox mt-1 text-red-500"
               />
               <div>
                 <span className="text-sm font-medium text-red-300">
@@ -179,7 +179,7 @@ export default function OfficerRatingModal({
                   onChange={(e) => setEscalationReason(e.target.value)}
                   placeholder="Explain why you believe this ticket needs further review..."
                   rows={3}
-                  className="w-full px-3 py-2 bg-slate-800 border border-red-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500 resize-none text-sm"
+                  className="site-textarea w-full px-3 py-2 min-h-0 resize-none text-sm border-red-500/40"
                 />
               </div>
             )}
@@ -187,7 +187,7 @@ export default function OfficerRatingModal({
         )}
 
         {error && (
-          <div className="p-3 bg-red-900/50 border border-red-500/50 rounded-lg text-sm text-red-400">
+          <div className="site-banner-error text-sm">
             {error}
           </div>
         )}
@@ -196,7 +196,7 @@ export default function OfficerRatingModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+            className="site-btn-secondary flex-1"
           >
             Cancel
           </button>
@@ -204,10 +204,10 @@ export default function OfficerRatingModal({
             type="button"
             onClick={handleSubmit}
             disabled={submitting || stars === 0}
-            className={`flex-1 px-4 py-2.5 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+            className={`flex-1 ${
               wantToEscalate
-                ? 'bg-red-600 hover:bg-red-700 text-white'
-                : 'bg-green-600 hover:bg-green-700 text-white'
+                ? 'site-btn-danger'
+                : 'site-btn-success'
             }`}
           >
             {submitting

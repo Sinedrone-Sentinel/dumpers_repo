@@ -20,7 +20,7 @@ const PRO_TIP_SECTION_STYLES: Record<
     outcome: 'text-amber-100/80',
   },
   cause: {
-    container: 'border-slate-600/50 bg-slate-800/45',
+    container: 'site-surface',
     label: 'text-slate-300',
     outcome: 'text-slate-400',
   },
@@ -45,7 +45,7 @@ const PRO_TIP_SECTION_STYLES: Record<
     outcome: 'text-indigo-200/80',
   },
   fallback: {
-    container: 'border-slate-600/45 bg-slate-900/50',
+    container: 'site-surface',
     label: 'text-slate-300',
     outcome: 'text-slate-400',
   },
@@ -73,7 +73,7 @@ function ProTipSectionBar({ section }: { section: LoadoutProTipSection }) {
 
 function ProTipBlock({ tip }: { tip: LoadoutProTip }) {
   return (
-    <div className="rounded-lg border border-amber-900/40 bg-slate-950/40 p-2 space-y-1.5">
+    <div className="rounded-lg border border-amber-900/40 site-surface p-2 space-y-1.5">
       <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90 px-0.5">
         Pro-tip · {tip.statLabel}
       </p>
@@ -114,7 +114,7 @@ export default function LoadoutProTipsList({
 
   if (headTips.length === 0) {
     return (
-      <p className="text-[11px] text-slate-500 leading-snug rounded-md border border-slate-700/60 bg-slate-900/40 px-2.5 py-2">
+      <p className="site-hint text-[11px] leading-snug site-surface px-2.5 py-2 !mt-0">
         No module or head suggestions for this loadout right now.
       </p>
     )

@@ -55,9 +55,9 @@ export default function SignInMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-2 w-52 bg-slate-800 rounded-xl shadow-xl z-[60] border border-slate-700 py-1"
+          className="site-menu-panel absolute right-0 top-full mt-2 w-52 z-[60] py-1"
         >
-          <p className="px-3 py-2 text-[11px] uppercase tracking-wide text-slate-500 border-b border-slate-700">
+          <p className="px-3 py-2 text-[11px] uppercase tracking-wide text-slate-500 border-b border-orange-500/15">
             Choose provider
           </p>
           {OAUTH_PROVIDERS.map((provider) => (
@@ -66,7 +66,7 @@ export default function SignInMenu() {
               type="button"
               role="menuitem"
               onClick={() => void handleSignIn(provider)}
-              className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-slate-200 hover:bg-slate-700/60 transition-colors"
+              className="site-dropdown-item flex items-center gap-3 px-3 py-2.5"
             >
               <AuthProviderIcon provider={provider} className="w-4 h-4 shrink-0" />
               <span>{OAUTH_PROVIDER_LABELS[provider]}</span>

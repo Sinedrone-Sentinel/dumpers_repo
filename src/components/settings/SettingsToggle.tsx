@@ -41,13 +41,8 @@ export default function SettingsToggle({
       }`}
     >
       <div
-        className={`mt-0.5 shrink-0 w-10 h-5 rounded-full border transition-colors relative
-          after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:w-4 after:h-4 after:rounded-full
-          after:transition-transform after:duration-200 ${
-            checked
-              ? 'bg-purple-600 border-purple-500/50 after:translate-x-5 after:bg-white'
-              : 'bg-slate-700 border-slate-600 after:bg-slate-200'
-          }`}
+        className="site-toggle mt-0.5"
+        data-on={checked ? 'true' : 'false'}
         aria-hidden
       />
       <div className="flex-1 min-w-0">

@@ -35,11 +35,11 @@ function MenuSectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 function MenuDivider() {
-  return <div className="border-t border-slate-700 my-1" />
+  return <div className="border-t border-orange-500/15 my-1" />
 }
 
 const menuItemClass =
-  'w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors'
+  'w-full px-4 py-2 text-left text-sm text-slate-300 hover:bg-orange-950/40 hover:text-amber-100 transition-colors'
 
 export default function AppUserMenu({
   displayName,
@@ -123,24 +123,24 @@ export default function AppUserMenu({
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="flex items-center gap-1.5 px-2 py-1 border rounded-lg transition-colors shadow-md bg-slate-800/90 border-slate-600 hover:bg-slate-700"
+          className="site-chrome-control gap-1.5 px-2 py-1"
         >
           {profile?.avatar_url ? (
-            <img src={profile.avatar_url} alt={displayName} className="w-6 h-6 rounded-full" />
+            <img src={profile.avatar_url} alt={displayName} className="w-6 h-6 rounded-full ring-1 ring-orange-500/30" />
           ) : (
-            <div className="w-6 h-6 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs">
+            <div className="w-6 h-6 rounded-full bg-orange-950/80 border border-orange-500/40 flex items-center justify-center text-amber-100 text-xs">
               {displayName[0]?.toUpperCase()}
             </div>
           )}
-          <span className="text-xs hidden sm:inline max-w-[100px] truncate text-white">{displayName}</span>
-          <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span className="text-xs hidden sm:inline max-w-[100px] truncate text-slate-100">{displayName}</span>
+          <svg className="w-3 h-3 text-amber-200/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         {open && (
-          <div className="absolute right-0 top-full mt-2 w-56 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain">
-            <div className="p-3 border-b border-slate-700">
+          <div className="site-menu-panel absolute right-0 top-full mt-2 w-56 z-[60] max-h-[min(70dvh,24rem)] overflow-y-auto overscroll-contain">
+            <div className="p-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/35 to-transparent">
               <p className="text-white font-medium truncate flex items-center gap-1.5">
                 <span>{displayName}</span>
                 {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
@@ -307,7 +307,7 @@ export default function AppUserMenu({
                   close()
                   onSignOut()
                 }}
-                className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-slate-700 transition-colors"
+                className="w-full px-4 py-2 text-left text-sm text-red-300 hover:bg-red-950/40 hover:text-red-100 transition-colors"
               >
                 Sign Out
               </button>

@@ -129,7 +129,7 @@ export default function MyListingCard({
           value={draftFor(lineId, current)}
           onChange={(e) => setDraft(lineId, e.target.value)}
           disabled={busy}
-          className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs text-right"
+          className="site-input w-20 px-2 py-1 text-xs text-right"
         />
         {dirty && (
           <button
@@ -146,7 +146,7 @@ export default function MyListingCard({
           onClick={() => void handleRemoveLine(lineId, kind)}
           disabled={busy}
           title="Remove from listing"
-          className="px-2 py-1 text-xs bg-red-950/50 text-red-300 border border-red-500/30 rounded disabled:opacity-50"
+          className="site-btn-danger !px-2 !py-1 text-xs"
         >
           Remove
         </button>
@@ -157,7 +157,7 @@ export default function MyListingCard({
   const renderBlueprintLine = (line: CustomOrderBlueprint) => (
     <div
       key={line.id}
-      className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-slate-800/40 border border-slate-700/60 rounded-lg"
+      className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 site-surface"
     >
       <div className="min-w-0">
         <p className="text-white text-sm truncate">
@@ -175,7 +175,7 @@ export default function MyListingCard({
   const renderResourceLine = (line: CustomOrderResourceLine) => (
     <div
       key={line.id}
-      className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-slate-800/40 border border-slate-700/60 rounded-lg"
+      className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 site-surface"
     >
       <div className="min-w-0">
         <p className="text-white text-sm truncate">{line.resource_label}</p>

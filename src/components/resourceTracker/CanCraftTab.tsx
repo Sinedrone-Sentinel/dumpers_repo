@@ -644,8 +644,8 @@ export default function CanCraftTab({
 
   if (!hasTrackedStock) {
     return (
-      <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
-        <p className="text-slate-400">
+      <div className="site-empty">
+        <p>
           No tracked materials yet. Add stock under{' '}
           <span className="text-slate-200 font-medium">My Resources</span>, then come back here
           to see what you can craft.
@@ -708,7 +708,7 @@ export default function CanCraftTab({
             className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
               locationFilter === ALL_LOCATION_KEY
                 ? 'site-filter-selected-cyan'
-                : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
+                : 'site-filter-idle'
             }`}
             title="Use stock from every note"
           >
@@ -723,7 +723,7 @@ export default function CanCraftTab({
               className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
                 locationFilter === opt.key
                   ? 'site-filter-selected-cyan'
-                  : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
+                  : 'site-filter-idle'
               }`}
               title={`Normalized as ${opt.key}`}
             >
@@ -734,12 +734,12 @@ export default function CanCraftTab({
         </div>
       )}
 
-      <label className="mb-4 flex items-start gap-2.5 px-3 py-2.5 rounded-lg border border-slate-700/80 bg-slate-900/50 text-sm text-slate-300 cursor-pointer w-fit max-w-full">
+      <label className="mb-4 flex items-start gap-2.5 px-3 py-2.5 site-surface text-sm text-slate-300 cursor-pointer w-fit max-w-full">
         <input
           type="checkbox"
           checked={closeNoCigar}
           onChange={(e) => handleCloseNoCigarChange(e.target.checked)}
-          className="mt-0.5 rounded border-slate-500"
+          className="site-checkbox mt-0.5"
         />
         <span>
           <span className="font-medium text-slate-200">Close, no Cigar</span>
@@ -792,10 +792,10 @@ export default function CanCraftTab({
                 disabled={count === 0}
                 className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all site-btn-shimmer ${
                   selectedMainCategory === cat
-                    ? 'site-btn-accent shadow-lg'
+                    ? 'site-filter-selected-orange'
                     : count === 0
-                      ? 'bg-slate-800/50 text-slate-600 border border-slate-700 cursor-not-allowed'
-                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                      ? 'site-filter-idle opacity-40 cursor-not-allowed'
+                      : 'site-filter-idle'
                 }`}
               >
                 <span className="hidden md:inline">{cat}</span>
@@ -814,7 +814,7 @@ export default function CanCraftTab({
         </div>
 
         {hasSubFilters && (
-          <div className="flex flex-wrap gap-1.5 lg:gap-2 pt-2 border-t border-slate-700/50">
+          <div className="flex flex-wrap gap-1.5 lg:gap-2 pt-2 site-divider">
             {showVehicleSizes &&
               sizeOptions.map((size) => {
                 const count = currentSizes[size] || 0
@@ -938,7 +938,7 @@ export default function CanCraftTab({
 
       <section className="w-full min-w-0">
         {filteredBlueprints.length === 0 ? (
-          <div className="text-center py-24 bg-slate-900/30 rounded-3xl border-2 border-dashed border-slate-700">
+          <div className="site-empty py-24">
             <p className="text-slate-400 text-xl font-medium mb-2">Nothing craftable yet</p>
             <p className="text-slate-500 text-sm max-w-md mx-auto">
               {craftableBlueprints.length === 0

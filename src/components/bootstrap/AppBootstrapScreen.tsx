@@ -87,12 +87,12 @@ function BootstrapStepRow({ step }: { step: BootstrapStep }) {
         </span>
         <StepStatusMark status={step.status} />
       </div>
-      <div className="relative h-2 rounded-full bg-slate-800/90 border border-slate-700/80 overflow-hidden">
+      <div className="relative site-progress h-2">
         <div
-          className={`absolute inset-y-0 left-0 rounded-full transition-all duration-500 ease-out ${
+          className={`h-full rounded-full transition-all duration-500 ease-out ${
             step.status === 'error'
               ? 'bg-gradient-to-r from-amber-700 to-amber-500'
-              : 'bg-gradient-to-r from-orange-700 via-orange-500 to-orange-300'
+              : 'site-progress-bar'
           }`}
           style={{ width: `${fill}%` }}
         />
@@ -137,9 +137,9 @@ export default function AppBootstrapScreen({ steps }: AppBootstrapScreenProps) {
         </div>
 
         <div className="relative pt-2 pb-1">
-          <div className="h-1 rounded-full bg-slate-800 border border-slate-700/70 overflow-hidden">
+          <div className="site-progress h-1">
             <div
-              className="h-full bg-gradient-to-r from-orange-700 via-orange-500 to-orange-300 transition-all duration-500 ease-out"
+              className="site-progress-bar transition-all duration-500 ease-out"
               style={{ width: `${overall}%` }}
             />
           </div>
@@ -154,7 +154,7 @@ export default function AppBootstrapScreen({ steps }: AppBootstrapScreenProps) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-700/60 bg-slate-900/50 backdrop-blur-sm p-5 sm:p-6 space-y-5 shadow-xl shadow-black/30">
+        <div className="site-surface backdrop-blur-sm p-5 sm:p-6 space-y-5 shadow-xl shadow-black/30">
           {steps.map((step) => (
             <BootstrapStepRow key={step.id} step={step} />
           ))}

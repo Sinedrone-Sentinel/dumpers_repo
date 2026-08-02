@@ -7,7 +7,7 @@ import type { WikeloTrade } from '../routes/wikelo'
 import NotForReleaseTag from './NotForReleaseTag'
 
 const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
-const HAND_IN_PANEL = 'relative rounded-lg border border-slate-600/40 bg-slate-950/20 p-2.5'
+const HAND_IN_PANEL = 'relative site-surface p-2.5'
 
 /** True when the trade awards a crafting blueprint — use blueprint paper. */
 function wikeloTradeUsesBlueprintPaper(trade: WikeloTrade): boolean {
@@ -130,7 +130,7 @@ export default function WikeloTradeCard({
   return (
     <div
       onClick={(e) => onClick(trade, e)}
-      className="group relative flex flex-col h-full blueprint-card-fixed bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 hover:border-amber-500/40 rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-colors transition-shadow duration-200 overflow-hidden"
+      className="group relative flex flex-col h-full blueprint-card-fixed site-card hover:border-amber-500/40 rounded-xl p-3 sm:p-4 cursor-pointer hover:shadow-xl transition-colors transition-shadow duration-200 overflow-hidden"
     >
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         <div className="flex items-start justify-between gap-2 mb-1 shrink-0">
@@ -187,7 +187,7 @@ export default function WikeloTradeCard({
           </div>
         </div>
 
-        <div className="mt-auto pt-2.5 border-t border-slate-700 shrink-0">
+        <div className="mt-auto pt-2.5 site-divider shrink-0">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1.5 min-h-[1rem]">
             {trade.repReward > 0 && (
               <span className="text-[10px] px-1.5 py-0.5 bg-cyan-950/50 text-cyan-300 border border-cyan-500/40 rounded">
@@ -200,7 +200,7 @@ export default function WikeloTradeCard({
               </span>
             )}
             {trade.requiresIntro && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-slate-800/70 text-slate-300 border border-slate-500/40 rounded" title="Complete “Wikelo Arrive to System” first">
+              <span className="site-badge-slate text-[10px] px-1.5 py-0.5" title="Complete “Wikelo Arrive to System” first">
                 Intro required
               </span>
             )}
@@ -225,7 +225,7 @@ export default function WikeloTradeCard({
                   className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
                     added
                       ? 'bg-green-600/30 text-green-300'
-                      : 'bg-slate-700/50 text-slate-400 hover:bg-red-600/20 hover:text-red-300'
+                      : 'site-btn-ghost text-[10px] hover:text-red-300'
                   }`}
                   title="Add this trade's reward items to your listing cart"
                 >
@@ -234,7 +234,7 @@ export default function WikeloTradeCard({
               )}
               <button
                 onClick={handleMissionClick}
-                className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
+                className="site-btn-ghost text-[10px] font-semibold uppercase px-1.5 py-0.5 hover:text-sky-300"
                 title="View this trade in the Mission Tracker"
               >
                 Mission

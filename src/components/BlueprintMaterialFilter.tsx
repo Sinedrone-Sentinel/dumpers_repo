@@ -105,7 +105,7 @@ export default function BlueprintMaterialFilter({
         className={`flex items-stretch rounded-md border transition-all site-btn-shimmer ${
           hasSelection
             ? 'site-filter-selected-cyan border-cyan-500/45'
-            : 'border-slate-600 bg-slate-800'
+            : 'site-filter-idle'
         }`}
       >
         <input
@@ -144,7 +144,7 @@ export default function BlueprintMaterialFilter({
           className={`px-2 border-l ${
             hasSelection
               ? 'border-cyan-500/30 text-cyan-300 hover:text-cyan-100'
-              : 'border-slate-600 text-slate-400 hover:text-slate-200'
+              : 'border-orange-500/15 text-slate-400 hover:text-slate-200'
           }`}
           aria-label={open ? 'Close material list' : 'Show all materials'}
         >
@@ -155,9 +155,9 @@ export default function BlueprintMaterialFilter({
       </div>
 
       {open && (
-        <div className="absolute z-30 mt-1 w-full max-h-60 overflow-y-auto bg-slate-900 border border-slate-600 rounded-lg shadow-xl">
+        <div className="site-dropdown-list z-30 max-h-60">
           {options.length === 0 ? (
-            <p className="px-3 py-2 text-slate-500 text-xs">
+            <p className="site-hint px-3 py-2 !mt-0">
               {query.trim() ? `No material matches "${query.trim()}"` : 'No materials found'}
             </p>
           ) : (
@@ -169,12 +169,12 @@ export default function BlueprintMaterialFilter({
                     onMouseDown={(e) => e.preventDefault()}
                     onMouseEnter={() => setHighlightIndex(index)}
                     onClick={() => handleSelect(material.label)}
-                    className={`w-full text-left px-3 py-1.5 text-xs sm:text-sm transition-colors ${
+                    className={`site-dropdown-item text-xs sm:text-sm !py-1.5 ${
                       material.label === selectedMaterial
-                        ? 'bg-cyan-950/60 text-cyan-100'
+                        ? 'site-dropdown-item-active text-cyan-100'
                         : index === highlightIndex
-                          ? 'bg-slate-800 text-slate-100'
-                          : 'text-slate-300 hover:bg-slate-800/80'
+                          ? 'site-dropdown-item-active'
+                          : ''
                     }`}
                   >
                     {material.label}

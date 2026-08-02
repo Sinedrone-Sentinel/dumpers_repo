@@ -577,12 +577,12 @@ export default function ResourceBuyOrderPanel({
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex gap-2 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit">
+        <div className="flex gap-2 p-1 site-surface w-fit">
           <button
             type="button"
             onClick={() => setMode('blueprint')}
-            className={`px-3 py-1.5 text-sm rounded-lg ${
-              mode === 'blueprint' ? 'bg-red-600 text-white' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 text-sm rounded-lg site-btn-shimmer ${
+              mode === 'blueprint' ? 'site-filter-selected-red' : 'site-filter-idle'
             }`}
           >
             Add Item
@@ -590,8 +590,8 @@ export default function ResourceBuyOrderPanel({
           <button
             type="button"
             onClick={() => setMode('resource')}
-            className={`px-3 py-1.5 text-sm rounded-lg ${
-              mode === 'resource' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 text-sm rounded-lg site-btn-shimmer ${
+              mode === 'resource' ? 'site-filter-selected-amber' : 'site-filter-idle'
             }`}
           >
             Add Commodity
@@ -599,7 +599,7 @@ export default function ResourceBuyOrderPanel({
         </div>
 
         {mode === 'blueprint' ? (
-          <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">
+          <div className="site-surface p-4 space-y-3">
             <BlueprintTypeahead
               blueprints={blueprints}
               selectedBlueprint={selectedBlueprint}
@@ -643,13 +643,13 @@ export default function ResourceBuyOrderPanel({
                     value={bpQty}
                     onChange={(e) => setBpQty(e.target.value)}
                     placeholder="Qty"
-                    className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                    className="px-3 py-2 site-input text-white text-sm"
                   />
                   <button
                     type="button"
                     onClick={addBlueprint}
                     disabled={!selectedCanOrder}
-                    className="py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-lg text-sm"
+                    className="site-btn-secondary py-2 disabled:opacity-40"
                   >
                     Add
                   </button>
@@ -664,7 +664,7 @@ export default function ResourceBuyOrderPanel({
             )}
           </div>
         ) : (
-          <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3">
+          <div className="site-surface p-4 space-y-3">
             <ResourceTypeahead
               resources={activeCatalog}
               selectedResource={selectedResource ?? null}
@@ -688,7 +688,7 @@ export default function ResourceBuyOrderPanel({
                   <select
                     value={resQuality}
                     onChange={(e) => setResQuality(e.target.value)}
-                    className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                    className="px-3 py-2 site-input text-white text-sm"
                     aria-label="Quality band"
                   >
                     {showPurchasedQuality && (
@@ -712,7 +712,7 @@ export default function ResourceBuyOrderPanel({
                       step={1}
                       value={resQuality}
                       onChange={(e) => setResQuality(e.target.value)}
-                      className="flex-1 min-w-0 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                      className="site-range flex-1 min-w-0"
                       aria-label="Quality slider"
                     />
                     <input
@@ -726,7 +726,7 @@ export default function ResourceBuyOrderPanel({
                           setResQuality(String(val))
                         }
                       }}
-                      className="w-16 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center shrink-0"
+                      className="site-input w-16 px-2 py-1.5 text-sm text-orange-400 font-mono text-center shrink-0"
                       aria-label="Quality value"
                     />
                   </div>
@@ -737,13 +737,13 @@ export default function ResourceBuyOrderPanel({
                 value={resQty}
                 onValueChange={setResQty}
                 placeholder={selectedResQtyUnit}
-                className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
+                className="px-3 py-2 site-input text-white text-sm tabular-nums"
               />
               <button
                 type="button"
                 onClick={addResource}
                 disabled={!selectedResource}
-                className="py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white rounded-lg text-sm"
+                className="site-btn-secondary py-2"
               >
                 Add
               </button>
@@ -774,13 +774,13 @@ export default function ResourceBuyOrderPanel({
         )}
 
         {(bpCart.length > 0 || resCart.length > 0) && (
-          <div className="border border-slate-700 rounded-xl overflow-hidden">
-            <div className="px-3 py-2 bg-slate-900/60 border-b border-slate-800">
-              <p className="text-slate-400 text-xs font-medium uppercase tracking-wide">
+          <div className="site-surface overflow-hidden">
+            <div className="site-section-header px-3 py-2">
+              <p className="text-amber-100/80 text-xs font-medium uppercase tracking-wide">
                 {isEditing ? 'Order lines' : 'Items to add'} ({bpCart.length + resCart.length})
               </p>
             </div>
-            <ul className="divide-y divide-slate-800 p-2 space-y-2">
+            <ul className="divide-y divide-orange-500/10 p-2 space-y-2">
               {bpCart.map((line) => {
                 const blueprint = blueprintById.get(line.blueprintId)
                 const isExpanded = expandedCartKey === line.cartKey
@@ -804,7 +804,7 @@ export default function ResourceBuyOrderPanel({
                 return (
                   <li
                     key={line.cartKey}
-                    className="px-3 py-2 text-sm bg-slate-900/40 rounded-lg space-y-2"
+                    className="px-3 py-2 text-sm site-card space-y-2"
                   >
                     <div className="flex justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -844,7 +844,7 @@ export default function ResourceBuyOrderPanel({
               {resCart.map((line) => (
                 <li
                   key={line.cartKey}
-                  className="px-3 py-2 text-sm bg-slate-900/40 rounded-lg space-y-2"
+                  className="px-3 py-2 text-sm site-card space-y-2"
                 >
                   <div className="flex justify-between gap-2">
                     <span className="text-white">
@@ -886,7 +886,7 @@ export default function ResourceBuyOrderPanel({
           </div>
         )}
 
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-2">
+        <div className="site-surface p-4 space-y-2">
           <label htmlFor="min-fulfiller-rep" className="text-slate-300 text-sm font-medium">
             Min fulfiller reputation
           </label>
@@ -898,7 +898,7 @@ export default function ResourceBuyOrderPanel({
             id="min-fulfiller-rep"
             value={minFulfillerRep}
             onChange={(e) => setMinFulfillerRep(e.target.value)}
-            className="w-full sm:w-48 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+            className="w-full sm:w-48 px-3 py-2 site-input text-white text-sm"
           >
             <option value="">No minimum</option>
             {REPUTATION_STAR_OPTIONS.map((tier) => (
@@ -914,7 +914,7 @@ export default function ResourceBuyOrderPanel({
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Notes (optional)"
           rows={2}
-          className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+          className="w-full px-3 py-2 site-input text-white text-sm"
         />
 
         {fulfillmentPreview.length > 0 && (
@@ -937,7 +937,7 @@ export default function ResourceBuyOrderPanel({
               type="button"
               onClick={() => initiateSubmit(editOrder?.listing_type === 'wts' ? 'wts' : 'wtb')}
               disabled={buyDisabled}
-              className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              className="px-4 py-2 site-btn-danger text-sm font-medium"
             >
               {submitting
                 ? 'Saving...'
@@ -951,7 +951,7 @@ export default function ResourceBuyOrderPanel({
                 type="button"
                 onClick={() => initiateSubmit('wtb')}
                 disabled={buyDisabled}
-                className="px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+                className="px-4 py-2 site-btn-danger text-sm font-medium"
               >
                 {submitting ? 'Submitting...' : `Add to my WTB listing${dfpSuffix}`}
               </button>
@@ -969,7 +969,7 @@ export default function ResourceBuyOrderPanel({
             <button
               type="button"
               onClick={onCancelEdit}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg text-sm"
+              className="site-btn-secondary"
             >
               Cancel edit
             </button>
@@ -979,7 +979,7 @@ export default function ResourceBuyOrderPanel({
 
       {showNoOwnerWarning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-amber-500/40 rounded-xl p-6 max-w-md mx-4 shadow-xl">
+          <div className="site-menu-panel border-amber-500/40 p-6 max-w-md mx-4">
             <h3 className="text-lg font-semibold text-amber-400 mb-3 flex items-center gap-2">
               <span>⚠️</span> No Owners Found
             </h3>
@@ -1006,13 +1006,13 @@ export default function ResourceBuyOrderPanel({
             <div className="flex gap-3">
               <button
                 onClick={() => setShowNoOwnerWarning(false)}
-                className="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium"
+                className="site-btn-secondary flex-1"
               >
                 Go Back
               </button>
               <button
                 onClick={handleConfirmNoOwnerWarning}
-                className="flex-1 px-4 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg font-medium"
+                className="flex-1 site-btn-primary site-btn-shimmer"
               >
                 Submit Anyway
               </button>

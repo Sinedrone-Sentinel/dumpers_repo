@@ -76,8 +76,8 @@ export default function BlueprintRewardMissionsModal({
                   onClick={() => onSelectMission(mission)}
                   className={`w-full text-left px-3 py-2.5 rounded-lg border transition-colors ${
                     canNavigate
-                      ? 'border-slate-700/80 hover:border-orange-500/40 hover:bg-slate-800/60 cursor-pointer'
-                      : 'border-slate-800/60 opacity-50 cursor-not-allowed'
+                      ? 'site-filter-idle hover:border-orange-500/40 cursor-pointer'
+                      : 'site-filter-idle opacity-50 cursor-not-allowed'
                   }`}
                   title={
                     canNavigate

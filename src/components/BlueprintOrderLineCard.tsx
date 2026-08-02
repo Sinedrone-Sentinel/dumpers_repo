@@ -45,7 +45,7 @@ export default function BlueprintOrderLineCard({
   const slotSummary = line.lineSnapshot?.slotSummary
 
   return (
-    <div className="rounded-lg border border-slate-700/80 bg-slate-900/40 p-2.5 space-y-2">
+    <div className="site-surface p-2.5 space-y-2">
       <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
         <span className="text-slate-200 text-xs font-medium">
           {line.blueprintTitle} × {line.quantity}
@@ -57,7 +57,7 @@ export default function BlueprintOrderLineCard({
 
       {(slotSummary || slotDetails.length > 0) && (
         <div className="space-y-0.5">
-          <p className="text-[10px] uppercase tracking-wide text-slate-500">Materials</p>
+          <p className="site-label !mb-0 text-[10px]">Materials</p>
           {slotSummary ? (
             <p className="text-[11px] text-slate-400 leading-relaxed">{slotSummary}</p>
           ) : (
@@ -76,7 +76,7 @@ export default function BlueprintOrderLineCard({
 
       {(useSnapshotStats || computedModifiers.length > 0) && (
         <div className="space-y-0.5">
-          <p className="text-[10px] uppercase tracking-wide text-slate-500">Resulting stats</p>
+          <p className="site-label !mb-0 text-[10px]">Resulting stats</p>
           {useSnapshotStats ? (
             <ul className="space-y-0.5">
               {snapshotStats.map((stat) => (

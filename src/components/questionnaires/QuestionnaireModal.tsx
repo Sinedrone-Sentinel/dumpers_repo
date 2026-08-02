@@ -160,7 +160,7 @@ export default function QuestionnaireModal({
             type="button"
             disabled={saving || loading}
             onClick={() => setConfirmDecline(true)}
-            className="px-3 py-2 text-sm rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 disabled:opacity-50"
+            className="site-btn-ghost px-3 py-2 text-sm disabled:opacity-50"
           >
             Decline
           </button>
@@ -168,7 +168,7 @@ export default function QuestionnaireModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-2 text-sm rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
+              className="site-btn-secondary px-3 py-2 text-sm"
             >
               {previewMode ? 'Close preview' : 'Close'}
             </button>
@@ -176,7 +176,7 @@ export default function QuestionnaireModal({
               type="button"
               disabled={saving || loading || !data}
               onClick={() => void handleSubmit()}
-              className="px-4 py-2 text-sm rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white disabled:opacity-50"
+              className="site-btn-success px-4 py-2 text-sm disabled:opacity-50"
             >
               {saving ? 'Saving…' : previewMode ? 'Try Submit' : 'Submit'}
             </button>
@@ -186,7 +186,7 @@ export default function QuestionnaireModal({
     >
       {loading && <p className="text-slate-400 text-sm">Loading…</p>}
       {error && (
-        <div className="mb-3 p-2 rounded-lg bg-red-950/40 border border-red-500/40 text-red-200 text-sm">
+        <div className="mb-3 site-banner-error p-2 text-sm">
           {error}
         </div>
       )}
@@ -204,7 +204,7 @@ export default function QuestionnaireModal({
             const qid = q.id!
             const options = q.config.options ?? []
             return (
-              <div key={qid} className="rounded-lg border border-slate-700/80 bg-slate-900/40 p-3">
+              <div key={qid} className="site-surface p-3">
                 <p className="text-sm text-slate-100 font-medium mb-2">
                   {q.prompt}
                   {q.required ? <span className="text-red-400 ml-1">*</span> : null}
@@ -220,7 +220,7 @@ export default function QuestionnaireModal({
                     }
                     rows={3}
                     maxLength={q.config.maxLength ?? 5000}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-600 text-white text-sm"
+                    className="site-textarea w-full px-3 py-2 text-sm"
                   />
                 )}
                 {q.question_type === 'radio' && (
@@ -283,7 +283,7 @@ export default function QuestionnaireModal({
 
       {confirmDecline && (
         <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-4">
-          <div className="max-w-md w-full rounded-xl border border-slate-600 bg-slate-900 p-4 space-y-3">
+          <div className="site-modal-shell max-w-md w-full p-4 space-y-3">
             <p className="text-slate-100 font-medium">Decline this questionnaire?</p>
             <p className="text-sm text-slate-400">
               You will not be asked about this questionnaire again.
@@ -291,7 +291,7 @@ export default function QuestionnaireModal({
             <div className="flex justify-end gap-2">
               <button
                 type="button"
-                className="px-3 py-1.5 text-sm rounded-lg border border-slate-600 text-slate-300"
+                className="site-btn-secondary px-3 py-1.5 text-sm"
                 onClick={() => setConfirmDecline(false)}
               >
                 Cancel
@@ -299,7 +299,7 @@ export default function QuestionnaireModal({
               <button
                 type="button"
                 disabled={saving}
-                className="px-3 py-1.5 text-sm rounded-lg bg-red-800 hover:bg-red-700 text-white disabled:opacity-50"
+                className="site-btn-danger px-3 py-1.5 text-sm disabled:opacity-50"
                 onClick={() => void handleDecline()}
               >
                 Decline

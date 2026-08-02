@@ -115,7 +115,7 @@ function StatValueRow({ line }: { line: ModifierStatLine }) {
   const copy = statCopy(line)
 
   return (
-    <div className="flex items-center justify-between gap-1 rounded border border-slate-800/80 bg-slate-950/40 px-1.5 py-0.5 min-w-0">
+    <div className="site-surface flex items-center justify-between gap-1 rounded px-1.5 py-0.5 min-w-0">
       <div className="flex items-center gap-0.5 min-w-0">
         <StatLabel title={copy.title} hint={copy.hint} />
         {line.affectsCracking ? (
@@ -137,7 +137,7 @@ function EffectiveStatTile({ line }: { line: ModifierStatLine }) {
   const copy = statCopy(line)
 
   return (
-    <div className="rounded border border-slate-800/80 bg-slate-950/40 px-2 py-1.5 flex flex-col items-center justify-center gap-0.5 min-w-0 text-center">
+    <div className="site-surface rounded px-2 py-1.5 flex flex-col items-center justify-center gap-0.5 min-w-0 text-center">
       <div className="flex items-center gap-1">
         <StatLabel title={copy.title} hint={copy.hint} />
         {line.affectsCracking ? (
@@ -175,15 +175,15 @@ function LoadoutCard({
   badge?: React.ReactNode
 }) {
   return (
-    <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 flex flex-col min-w-0">
-      <div className="px-2 py-1.5 border-b border-slate-700/60 bg-slate-800/50 rounded-t-lg space-y-1 shrink-0">
+    <div className="site-section flex flex-col min-w-0">
+      <div className="site-section-header !px-2 !py-1.5 space-y-1 shrink-0">
         <div className="flex items-center justify-between gap-1">
           <StatLabel title={title} hint={titleHint} />
           {badge}
         </div>
         {header}
       </div>
-      <div className="p-1.5 flex-1 flex flex-col gap-0.5 min-w-0">{children}</div>
+      <div className="site-section-body !p-1.5 flex-1 flex flex-col gap-0.5 min-w-0">{children}</div>
     </div>
   )
 }
@@ -219,7 +219,7 @@ const PRO_TIP_SECTION_STYLES: Record<
     outcome: 'text-amber-100/80',
   },
   cause: {
-    container: 'border-slate-600/50 bg-slate-800/45',
+    container: 'site-surface',
     label: 'text-slate-300',
     outcome: 'text-slate-400',
   },
@@ -244,7 +244,7 @@ const PRO_TIP_SECTION_STYLES: Record<
     outcome: 'text-indigo-200/80',
   },
   fallback: {
-    container: 'border-slate-600/45 bg-slate-900/50',
+    container: 'site-surface',
     label: 'text-slate-300',
     outcome: 'text-slate-400',
   },
@@ -281,7 +281,7 @@ function ProTipBlock({
 
   if (!collapsible) {
     return (
-      <div className="rounded-lg border border-amber-900/40 bg-slate-950/40 p-2 space-y-1.5">
+      <div className="site-surface border-amber-900/40 p-2 space-y-1.5">
         <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90 px-0.5">
           Pro-tip · {tip.statLabel}
         </p>
@@ -293,11 +293,11 @@ function ProTipBlock({
   }
 
   return (
-    <div className="rounded-lg border border-amber-900/40 bg-slate-950/40 overflow-hidden">
+    <div className="site-section border-amber-900/40 overflow-hidden">
       <button
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full flex items-center justify-between gap-2 px-2 py-1.5 text-left hover:bg-slate-900/60 transition-colors"
+        className="site-section-header w-full flex items-center justify-between gap-2 !px-2 !py-1.5 text-left transition-colors"
         aria-expanded={expanded}
       >
         <span className="text-[10px] font-bold uppercase tracking-wide text-amber-300/90">
@@ -343,8 +343,8 @@ function EffectiveTotalsCard({
   const collapsibleProTips = vesselId === 'mole'
 
   return (
-    <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 col-span-full">
-      <div className="px-2 py-1.5 border-b border-slate-700/60 bg-slate-800/50 rounded-t-lg">
+    <div className="site-section col-span-full">
+      <div className="site-section-header !px-2 !py-1.5">
         <StatLabel
           title="Effective totals"
           hint="Combined head + craft + passive modules — used for breakability vs your rock. A blue value after the / shows the stat with all active modules turned on."
@@ -383,11 +383,11 @@ function CraftSlotsPanel({
   if (!slotCount) return null
 
   return (
-    <div className="rounded-lg border border-orange-900/35 bg-slate-900/55 overflow-hidden">
+    <div className="site-section border-orange-900/35 overflow-hidden">
       <button
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full flex items-center justify-between gap-2 px-2 py-1.5 text-left hover:bg-slate-900/60 transition-colors border-b border-orange-900/20"
+        className="site-section-header w-full flex items-center justify-between gap-2 !px-2 !py-1.5 text-left transition-colors border-b border-orange-900/20"
         aria-expanded={expanded}
       >
         <span className="text-[10px] font-bold uppercase tracking-wide text-orange-300/90">
@@ -557,7 +557,7 @@ function HeadSlotCards({
                 ? enableCustomHead()
                 : onChange({ ...slot, mode: 'stock', slotQualities: undefined })
             }
-            className="rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
+            className="site-checkbox focus:ring-orange-500/40"
           />
           <span className="text-[10px] text-slate-300">Crafted head</span>
         </label>
@@ -667,7 +667,7 @@ function HeadSlotCards({
           moleSoloMining={moleSoloMining}
         />
       ) : (
-        <div className="rounded-lg border border-slate-700/70 bg-slate-900/55 px-2 py-1.5">
+        <div className="site-surface px-2 py-1.5">
           <p className="text-[10px] text-slate-500">Effective totals unavailable</p>
         </div>
       )}

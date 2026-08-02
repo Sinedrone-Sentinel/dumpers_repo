@@ -570,12 +570,12 @@ export default function RockCalculator({
                   autoComplete="off"
                 />
                 {searchOpen && searchOptions.length > 0 && (
-                  <ul className="absolute z-50 left-0 right-0 mt-1 rounded-lg border border-slate-600 bg-slate-900 shadow-xl max-h-48 overflow-y-auto overscroll-contain">
+                  <ul className="site-dropdown-list left-0 right-0 w-auto max-h-48 overscroll-contain">
                     {searchOptions.map((name) => (
                       <li key={name}>
                         <button
                           type="button"
-                          className="w-full px-2 py-1.5 text-left text-sm hover:bg-slate-800 text-slate-200"
+                          className="site-dropdown-item px-2 py-1.5"
                           onMouseDown={(e) => e.preventDefault()}
                           onClick={() => handleSelectOre(name)}
                         >
@@ -652,7 +652,7 @@ export default function RockCalculator({
               <label className="block text-[10px] uppercase tracking-wide text-slate-500 mb-1">
                 Deposit type
               </label>
-              <div className="flex gap-1 p-0.5 bg-slate-800/60 rounded-lg">
+              <div className="site-chip-strip gap-1 p-0.5">
                 {availableDepositTypes.map((type) => (
                   <button
                     key={type}
@@ -660,8 +660,8 @@ export default function RockCalculator({
                     onClick={() => handleDepositTypeChange(type)}
                     className={`flex-1 px-2 py-1 text-xs font-medium rounded-md transition-colors ${
                       depositType === type
-                        ? 'bg-orange-600/90 text-white'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                        ? 'site-filter-selected-orange'
+                        : 'site-filter-idle'
                     }`}
                   >
                     {depositTypeLabel(type)}
@@ -994,10 +994,10 @@ function GadgetSelect({ value, otherValue, options, onChange, ariaLabel }: Gadge
 }
 
 const MATERIAL_QUALITY_SELECT_CLASS =
-  'w-full min-w-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+  'site-input w-full min-w-0 px-1 py-1 text-[10px] font-mono text-center tabular-nums'
 
 const MATERIAL_QUALITY_INPUT_CLASS =
-  'w-full min-w-0 px-1 py-1 bg-slate-800 border border-slate-600 rounded text-[10px] text-white font-mono text-center tabular-nums'
+  'site-input w-full min-w-0 px-1 py-1 text-[10px] font-mono text-center tabular-nums'
 
 interface MaterialQualitySelectProps {
   elementName: string

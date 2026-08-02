@@ -211,10 +211,10 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
           if (disabled) return
           setOpen((v) => !v)
         }}
-        className={`relative p-2 rounded-lg transition-colors ${
+        className={`site-chrome-control relative p-2 ${
           open
-            ? 'bg-orange-600/30 text-orange-200'
-            : 'text-slate-400 hover:text-orange-300 hover:bg-slate-800/80'
+            ? 'border-orange-400/45 bg-orange-600/30 text-orange-200'
+            : ''
         } disabled:opacity-40`}
         aria-label="Request Services"
         aria-expanded={open}
@@ -233,8 +233,8 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
 
       {open && !compose && (
         <div className="absolute right-0 top-full pt-2 w-72 sm:w-80 z-50">
-        <div className="rounded-xl border border-slate-700 bg-slate-900 shadow-xl overflow-hidden">
-          <div className="px-3 py-2.5 border-b border-slate-800">
+        <div className="site-menu-panel">
+          <div className="px-3 py-2.5 border-b border-orange-500/15">
             <p className="text-sm font-medium text-white">Request Services</p>
           </div>
           <div className="max-h-72 overflow-y-auto">
@@ -276,12 +276,12 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
                   ) : null}
                 </div>
               ) : (
-                <p className="px-3 py-3 text-xs text-slate-500 leading-relaxed text-center border-t border-slate-800">
+                <p className="px-3 py-3 text-xs text-slate-500 leading-relaxed text-center site-divider">
                   No partner org services are being offered right now.
                 </p>
               )
             ) : (
-              <p className="px-3 py-3 text-xs text-slate-500 leading-relaxed text-center border-t border-slate-800">
+              <p className="px-3 py-3 text-xs text-slate-500 leading-relaxed text-center site-divider">
                 Sign in and verify your RSI Handle to request partner org services.
               </p>
             )}
@@ -316,7 +316,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
               <button
                 type="button"
                 onClick={resetCompose}
-                className="px-3 py-2 text-sm text-slate-300 hover:text-white"
+                className="site-btn-ghost"
               >
                 Cancel
               </button>
@@ -324,7 +324,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
                 type="button"
                 disabled={submitting}
                 onClick={() => void onSubmitCompose()}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+                className="site-btn-primary !rounded-lg !px-4 !py-2 text-sm"
               >
                 {submitting ? 'Sending…' : 'Send'}
               </button>
@@ -341,7 +341,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
                 onChange={(e) => setDetails(e.target.value.slice(0, MAX_DETAILS))}
                 rows={4}
                 placeholder={compose.details_hint || 'Describe your situation…'}
-                className="site-input w-full px-3 py-2 text-sm"
+                className="site-textarea w-full px-3 py-2 text-sm min-h-0"
               />
             </label>
 
@@ -354,7 +354,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
                 <div
                   ref={pasteBoxRef}
                   tabIndex={0}
-                  className="rounded-xl border border-dashed border-slate-600 bg-slate-950/50 min-h-[120px] p-3 outline-none focus:border-cyan-500/50"
+                  className="site-empty rounded-xl min-h-[120px] p-3 outline-none focus:border-cyan-500/50"
                   onClick={() => pasteBoxRef.current?.focus()}
                 >
                   {screenshot ? (
@@ -410,7 +410,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
             <button
               type="button"
               onClick={() => setDeliveredModal(null)}
-              className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg"
+              className="site-btn-primary px-4 py-2 text-sm font-medium"
             >
               Close
             </button>
@@ -434,8 +434,8 @@ function ThirdPartySection({
   return (
     <div>
       <div
-        className={`px-3 py-1.5 border-t border-b border-slate-800 first:border-t-0 ${
-          isFree ? 'bg-emerald-950/40' : 'bg-slate-800/50'
+        className={`px-3 py-1.5 site-menu-section first:border-t-0 ${
+          isFree ? 'bg-emerald-950/40' : 'site-surface'
         }`}
       >
         <p
@@ -448,13 +448,13 @@ function ThirdPartySection({
       </div>
       <ul>
         {services.map((s) => (
-          <li key={s.id} className="border-t border-slate-800 first:border-t-0">
+          <li key={s.id} className="site-divider first:border-t-0">
             <SiteTooltip content={s.tooltip} side="left" className="block w-full">
               <a
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center gap-2.5 px-3 py-2.5 hover:bg-slate-800/80 transition-colors"
+                className="site-dropdown-item flex w-full items-center gap-2.5 px-3 py-2.5"
               >
                 <img
                   src={s.faviconSrc}
@@ -486,8 +486,8 @@ function ServiceTierSection({
   return (
     <div>
       <div
-        className={`px-3 py-1.5 border-t border-b border-slate-800 ${
-          isFree ? 'bg-emerald-950/40' : 'bg-slate-800/50'
+        className={`px-3 py-1.5 site-menu-section ${
+          isFree ? 'bg-emerald-950/40' : 'site-surface'
         }`}
       >
         <p
@@ -500,11 +500,11 @@ function ServiceTierSection({
       </div>
       <ul>
         {services.map((s) => (
-          <li key={`${s.id}-${s.pricing_tier}`} className="border-t border-slate-800 first:border-t-0">
+          <li key={`${s.id}-${s.pricing_tier}`} className="site-divider first:border-t-0">
             <button
               type="button"
               onClick={() => onPick(s)}
-              className="w-full text-left px-3 py-2.5 hover:bg-slate-800/80 transition-colors"
+              className="site-dropdown-item w-full px-3 py-2.5"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm text-slate-100 font-medium">{s.label}</span>

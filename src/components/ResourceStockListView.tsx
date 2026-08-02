@@ -22,29 +22,24 @@ export default function ResourceStockListView({
   isPersonalTab,
 }: ResourceStockListViewProps) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-700 bg-slate-900/40">
-      <table className="w-full min-w-[32rem] text-sm">
+    <div className="site-table-wrap">
+      <table className="site-table min-w-[32rem]">
         <thead>
-          <tr className="border-b border-slate-700 text-left text-xs uppercase tracking-wide text-slate-500">
-            <th className="px-4 py-3 font-medium">Material</th>
-            <th className="px-4 py-3 font-medium w-36">Quality</th>
-            <th className="px-4 py-3 font-medium w-32 text-right">Quantity</th>
-            {isPersonalTab && (
-              <th className="px-4 py-3 font-medium">Note</th>
-            )}
+          <tr>
+            <th>Material</th>
+            <th className="w-36">Quality</th>
+            <th className="w-32 text-right">Quantity</th>
+            {isPersonalTab && <th>Note</th>}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-800/80">
+        <tbody>
           {cards.map((card) => {
             const qtyUnit = resourceQuantityUnitLabel(card.resource_key)
             const qualityLabel = formatInventoryQualityLabel(card.resource_key, card.quality)
 
             return (
-              <tr
-                key={inventoryLineKey(card.resource_key, card.quality, card.note)}
-                className="text-slate-200"
-              >
-                <td className="px-4 py-2.5">
+              <tr key={inventoryLineKey(card.resource_key, card.quality, card.note)}>
+                <td>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className={`font-medium ${resourceLabelClassName(card.resource_key)}`}>
                       {card.label}
@@ -52,15 +47,15 @@ export default function ResourceStockListView({
                     <UexLookupButton commodityName={card.label} emphasis="sell" />
                   </div>
                 </td>
-                <td className="px-4 py-2.5 text-amber-200/90">{qualityLabel}</td>
-                <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                <td className="text-amber-200/90">{qualityLabel}</td>
+                <td className="text-right tabular-nums whitespace-nowrap">
                   <span className="font-semibold text-white">
                     {formatQuantityForResource(card.resource_key, card.quantity)}
                   </span>
                   <span className="text-slate-500 ml-1 text-xs">{qtyUnit}</span>
                 </td>
                 {isPersonalTab && (
-                  <td className="px-4 py-2.5 text-slate-400 text-xs max-w-[14rem] truncate" title={card.note ?? undefined}>
+                  <td className="text-slate-400 text-xs max-w-[14rem] truncate" title={card.note ?? undefined}>
                     {card.note ? `"${card.note}"` : '—'}
                   </td>
                 )}

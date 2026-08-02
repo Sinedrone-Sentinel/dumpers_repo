@@ -31,7 +31,7 @@ export default function ResourceQualitySelect({
 
   if (selectedIsSalvage) {
     return (
-      <div className="w-full h-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-300 text-sm">
+      <div className="site-input w-full h-full px-3 py-2 text-slate-300 text-sm">
         Q0 (no quality)
       </div>
     )
@@ -42,7 +42,7 @@ export default function ResourceQualitySelect({
       <select
         value={quality}
         onChange={(e) => onQualityChange(e.target.value)}
-        className="w-full min-w-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+        className="site-input w-full min-w-0 px-3 py-2 text-sm"
         aria-label="Quality band"
       >
         {showPurchased && (
@@ -69,7 +69,7 @@ export default function ResourceQualitySelect({
         step={1}
         value={quality}
         onChange={(e) => onQualityChange(e.target.value)}
-        className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+        className="site-range flex-1"
         aria-label="Quality slider"
       />
       <input
@@ -84,7 +84,7 @@ export default function ResourceQualitySelect({
             onQualityChange(e.target.value)
           }
         }}
-        className="w-16 px-2 py-1.5 bg-slate-800 border border-slate-600 rounded text-sm text-orange-400 font-mono text-center"
+        className="site-input w-16 px-2 py-1.5 text-sm text-orange-400 font-mono text-center"
         aria-label="Quality value"
       />
     </div>

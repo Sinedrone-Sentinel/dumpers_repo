@@ -55,7 +55,7 @@ function LocationRow({
   const { terminal, boxSizes } = loc
   const priceLabel = formatShopPricePerScu(pricePerScu)
   return (
-    <li className="rounded-lg border border-slate-700/70 bg-slate-900/50 px-3 py-2">
+    <li className="site-surface px-3 py-2">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-slate-100 truncate">{terminalPlace(terminal)}</p>
@@ -80,7 +80,7 @@ function LocationRow({
           {boxSizes.map((n) => (
             <span
               key={n}
-              className="text-[10px] font-mono rounded bg-slate-800 text-slate-300 border border-slate-700 px-1 py-0.5"
+              className="site-badge-slate text-[10px] font-mono px-1 py-0.5"
             >
               {n}
             </span>
@@ -118,7 +118,7 @@ function SystemGroup({
         type="button"
         onClick={() => setExpanded((open) => !open)}
         aria-expanded={expanded}
-        className="w-full flex items-center justify-between gap-2 px-1 py-1 rounded-md hover:bg-slate-800/50 text-left group"
+        className="site-dropdown-item w-full flex items-center justify-between gap-2 px-1 py-1 text-left group"
       >
         <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
           {system}
@@ -171,7 +171,7 @@ export function ShopSystemFilter({
         className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all site-btn-shimmer ${
           value === null
             ? 'site-btn-accent'
-            : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+            : 'site-filter-idle'
         }`}
       >
         All systems
@@ -184,7 +184,7 @@ export function ShopSystemFilter({
           className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all site-btn-shimmer ${
             value === system
               ? 'site-btn-accent'
-              : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+              : 'site-filter-idle'
           }`}
         >
           {system}
@@ -234,7 +234,7 @@ function TradeColumn({
         </div>
         <p className="text-[11px] opacity-80">{hint}</p>
       </div>
-      <div className="rounded-b-xl border border-t-0 border-slate-700/70 bg-slate-900/30 p-2 flex-1">
+      <div className="site-section-body rounded-b-xl border border-t-0 border-orange-500/20 p-2 flex-1">
         {groups.length === 0 ? (
           <p className="text-sm text-slate-500 px-2 py-6 text-center">{emptyLabel}</p>
         ) : (

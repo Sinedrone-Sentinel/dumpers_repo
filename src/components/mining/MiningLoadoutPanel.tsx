@@ -77,12 +77,12 @@ function MoleSoloMiningToggle({
   onChange: (solo: boolean) => void
 }) {
   return (
-    <label className="flex items-start gap-2.5 rounded-md border border-slate-700/60 bg-slate-900/50 px-2.5 py-2 cursor-pointer">
+    <label className="site-surface flex items-start gap-2.5 rounded-md px-2.5 py-2 cursor-pointer">
       <input
         type="checkbox"
         checked={solo}
         onChange={(event) => onChange(event.target.checked)}
-        className="mt-0.5 rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
+        className="mt-0.5 site-checkbox focus:ring-orange-500/40"
       />
       <span className="text-xs text-slate-400 leading-snug">
         <span className="text-slate-200">Solo mining</span> — one laser only, same as a Prospector.
@@ -108,12 +108,12 @@ function SmartCrackerPanel({
   if (!hasGadget && !moleStrategy) return null
 
   return (
-    <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-3">
+    <div className="site-surface p-3 space-y-3">
       {moleStrategy ? <MoleHeadPlanPanel strategy={moleStrategy} oreName={oreName} embedded /> : null}
 
       {hasGadget ? (
         <div
-          className={`space-y-2 ${moleStrategy ? 'pt-2 border-t border-slate-700/60' : ''}`}
+          className={`space-y-2 ${moleStrategy ? 'pt-2 site-divider' : ''}`}
         >
           <p className="text-[10px] uppercase tracking-wide text-slate-500">Gadget options</p>
           <p className="text-[11px] text-slate-600 leading-snug">
@@ -149,7 +149,7 @@ function SmartCrackerPanel({
               {alternateGadgets.map((suggestion) => (
                 <div
                   key={suggestion.gadget.name}
-                  className="rounded-md border border-slate-700/70 bg-slate-900/40 p-2 space-y-1"
+                  className="site-surface rounded-md p-2 space-y-1"
                 >
                   <p className="text-xs font-medium text-slate-300">
                     Also consider — {suggestion.gadget.displayName}
@@ -175,7 +175,7 @@ function SmartCrackerPanel({
           ) : null}
         </div>
       ) : moleStrategy?.canBreak ? (
-        <p className="text-[11px] text-slate-600 pt-1 border-t border-slate-700/60">
+        <p className="text-[11px] text-slate-600 pt-1 site-divider">
           No gadget needed for this rock at the current head plan.
         </p>
       ) : null}
@@ -194,7 +194,7 @@ function ComparisonPanel({
   const hasMinPowerWarnings = comparison.minPowerWarnings.length > 0
 
   return (
-    <div className="rounded-lg border border-slate-700/80 bg-slate-950/50 p-3 space-y-2">
+    <div className="site-surface p-3 space-y-2">
       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
         Rock breakability
       </p>
@@ -222,7 +222,7 @@ function ComparisonPanel({
       </div>
 
       {hasMinPowerWarnings ? (
-        <div className="pt-2 border-t border-slate-700/60 space-y-2">
+        <div className="pt-2 site-divider space-y-2">
           <p className="text-[10px] uppercase tracking-wide text-slate-500">Minimum throttle</p>
           {comparison.minPowerWarnings.map((warning) => (
             <div
@@ -241,7 +241,7 @@ function ComparisonPanel({
       ) : null}
 
       {multiLaser && !suppressPerLaserDetail ? (
-        <div className="pt-2 border-t border-slate-700/60 space-y-2">
+        <div className="pt-2 site-divider space-y-2">
           <p className="text-[10px] uppercase tracking-wide text-slate-500">Per laser</p>
           {comparison.lasers.map((row) => (
             <div key={row.slotIndex} className="text-xs space-y-0.5">
@@ -263,7 +263,7 @@ function ComparisonPanel({
           ))}
         </div>
       ) : suppressPerLaserDetail ? (
-        <p className="text-[10px] text-slate-500 pt-2 border-t border-slate-700/60 leading-snug">
+        <p className="text-[10px] text-slate-500 pt-2 site-divider leading-snug">
           The crew head plan above gives each head its own throttle, so an equal per-laser split is
           not shown here.
         </p>
@@ -292,8 +292,8 @@ function LoadoutSignInGate({ embedded = false }: { embedded?: boolean }) {
 
   return (
     <div className="w-full shrink-0">
-      <div className="rounded-xl border border-slate-700 bg-slate-900/70">
-        <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 rounded-t-xl">
+      <div className="site-surface overflow-hidden">
+        <div className="px-3 py-2.5 bg-orange-950/20 border-b border-orange-500/15">
           <p className="text-[10px] font-bold uppercase tracking-wider text-orange-400/90">
             Smart Cracker
           </p>
@@ -414,7 +414,7 @@ export default function MiningLoadoutPanel({
     )
     if (embedded) return spinner
     return (
-      <div className="w-full shrink-0 rounded-xl border border-slate-700 bg-slate-900/70">
+      <div className="w-full shrink-0 site-surface overflow-hidden">
         {spinner}
       </div>
     )
@@ -423,7 +423,7 @@ export default function MiningLoadoutPanel({
   const panelBody = (
     <>
       {saveError ? (
-        <p className="text-xs text-red-400/90 bg-red-950/20 border border-red-900/40 rounded-lg px-2 py-1.5">
+        <p className="site-banner-error text-xs px-2 py-1.5">
           {saveError}
         </p>
       ) : null}
@@ -496,7 +496,7 @@ export default function MiningLoadoutPanel({
             type="button"
             onClick={handleSaveLoadout}
             disabled={!isDirty || saving || !draftLasers}
-            className="flex-1 min-w-[7rem] px-2 py-1.5 text-xs rounded-lg border border-orange-700/60 bg-orange-950/30 text-orange-200 hover:bg-orange-950/50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="site-btn-accent flex-1 min-w-[7rem] !px-2 !py-1.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Save
           </button>
@@ -505,7 +505,7 @@ export default function MiningLoadoutPanel({
           type="button"
           onClick={handleCreateLoadout}
           disabled={!canCreateMoreLoadouts(store, vesselId) || saving || !draftLasers}
-          className="flex-1 min-w-[7rem] px-2 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800/80 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="site-btn-secondary flex-1 min-w-[7rem] !px-2 !py-1.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Save as New
         </button>
@@ -514,7 +514,7 @@ export default function MiningLoadoutPanel({
             type="button"
             onClick={handleDeleteLoadout}
             disabled={saving}
-            className="flex-1 min-w-[7rem] px-2 py-1.5 text-xs rounded-lg border border-red-900/60 text-red-400/90 hover:bg-red-950/40 transition-colors disabled:opacity-40"
+            className="site-btn-danger flex-1 min-w-[7rem] !px-2 !py-1.5 text-xs disabled:opacity-40"
           >
             Delete
           </button>
@@ -571,8 +571,8 @@ export default function MiningLoadoutPanel({
 
   return (
     <div className="w-full shrink-0">
-      <div className="rounded-xl border border-slate-700 bg-slate-900/70">
-        <div className="px-3 py-2.5 bg-slate-800/90 border-b border-slate-700 rounded-t-xl">
+      <div className="site-surface overflow-hidden">
+        <div className="px-3 py-2.5 bg-orange-950/20 border-b border-orange-500/15">
           <p className="text-[10px] font-bold uppercase tracking-wider text-orange-400/90">
             Smart Cracker
           </p>

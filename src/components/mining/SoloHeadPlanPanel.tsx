@@ -101,7 +101,7 @@ export default function SoloHeadPlanPanel({
         {soloRockPlan ? (
           <MoleHeadPlanPanel strategy={soloRockPlan} oreName={rockTarget?.oreName} />
         ) : (
-            <p className="text-[11px] text-slate-500 leading-snug rounded-md border border-slate-700/60 bg-slate-900/40 px-2.5 py-2">
+            <p className="site-hint text-[11px] leading-snug site-surface px-2.5 py-2 !mt-0">
               Enter the <strong className="text-slate-300">mass</strong> and{' '}
               <strong className="text-slate-300">resistance</strong> from your pilot-seat scan into the
               Rock Calculator. The plan then adjusts resistance for each head&apos;s modules — a 74%

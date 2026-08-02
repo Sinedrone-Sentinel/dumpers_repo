@@ -318,19 +318,19 @@ export default function BlueprintDetailsModal({
           ) : effectiveIsOrderable ? (
             <span className="px-2.5 py-1 bg-amber-900/50 text-amber-400 rounded-lg">★ Reward</span>
           ) : (
-            <span className="px-2.5 py-1 bg-slate-800 text-slate-400 rounded-lg">🔶 Standard</span>
+            <span className="px-2.5 py-1 site-badge-slate rounded-lg">🔶 Standard</span>
           )}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+          <div className="site-surface rounded-xl p-3 sm:p-4">
             <h3 className="text-slate-400 text-sm mb-2">Craft Time</h3>
             <p className="text-white text-base font-mono">
               {blueprint.craftTime?.hours || 0}h {blueprint.craftTime?.minutes || 0}m{' '}
               {blueprint.craftTime?.seconds || 0}s
             </p>
           </div>
-          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+          <div className="site-surface rounded-xl p-3 sm:p-4">
             <h3 className="text-slate-400 text-sm mb-2">Members Own</h3>
             {ownerCount !== undefined ? (
               <p className={`text-base font-semibold ${ownerCount === 0 ? 'text-amber-400' : 'text-white'}`}>
@@ -347,7 +347,7 @@ export default function BlueprintDetailsModal({
 
         {/* Display base stats for components (mining lasers, etc.) */}
         {Object.keys(mergedBaseStats).length > 0 && (
-          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+          <div className="site-surface rounded-xl p-3 sm:p-4">
             <h3 className="text-slate-400 text-sm mb-3">Base Specifications</h3>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(mergedBaseStats).map(([key, value]) => (
@@ -361,7 +361,7 @@ export default function BlueprintDetailsModal({
         )}
 
         {blueprint.slots && blueprint.slots.length > 0 && (
-          <div className="bg-slate-800/50 rounded-xl p-3 sm:p-4">
+          <div className="site-surface rounded-xl p-3 sm:p-4">
             <h3 className="text-slate-400 text-sm mb-3">Required Resources</h3>
             <div className="space-y-3">
               {blueprint.slots.map((slot, idx) => {
@@ -386,7 +386,7 @@ export default function BlueprintDetailsModal({
             </div>
 
             {craftReady && craftPlan && (
-              <div className="mt-4 pt-4 border-t border-slate-700/60">
+              <div className="mt-4 pt-4 site-divider">
                 {!craftPlan.ok && (
                   <p className="text-xs text-amber-400/90 mb-2">
                     Pick a quality you have enough of for every material to craft this blueprint.
@@ -398,8 +398,8 @@ export default function BlueprintDetailsModal({
                   disabled={!craftPlan.ok || crafting}
                   className={`w-full py-2.5 rounded-lg text-sm font-semibold uppercase tracking-wide transition-colors ${
                     !craftPlan.ok || crafting
-                      ? 'bg-slate-700/50 text-slate-500 cursor-not-allowed'
-                      : 'bg-green-600/80 hover:bg-green-600 text-white shadow-lg shadow-green-500/20'
+                      ? 'site-btn-secondary opacity-50 cursor-not-allowed'
+                      : 'site-btn-success shadow-lg shadow-green-500/20'
                   }`}
                   title="Craft once and deduct the selected materials from My Resources"
                 >
@@ -463,7 +463,7 @@ export default function BlueprintDetailsModal({
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span className="text-slate-400">Quality:</span>
-                <span className="px-2 py-0.5 bg-slate-800 rounded text-orange-300 font-mono">
+                <span className="site-badge-slate px-2 py-0.5 rounded text-orange-300 font-mono">
                   {formatSlotQualitySummary(effectiveSlotQualities)}
                 </span>
                 <span className="text-slate-500">·</span>
@@ -514,16 +514,16 @@ export default function BlueprintDetailsModal({
         )}
 
         {showActionFooter && (
-          <div className="pt-3 mt-1 border-t border-slate-700 flex items-center justify-end gap-2 flex-wrap">
+          <div className="pt-3 mt-1 site-divider flex items-center justify-end gap-2 flex-wrap">
             {showCraftTrackerControl && onAddToCraftTracker && (
               <button
                 type="button"
                 onClick={onAddToCraftTracker}
                 disabled={craftTrackerPending}
-                className={`text-xs font-semibold uppercase px-2 py-1 rounded transition-colors ${
+                className={`site-btn-ghost text-xs font-semibold uppercase px-2 py-1 ${
                   craftTrackerPending
-                    ? 'bg-slate-700/50 text-slate-500 cursor-wait'
-                    : 'bg-slate-700/50 text-slate-400 hover:bg-purple-600/20 hover:text-purple-300'
+                    ? 'opacity-50 cursor-wait'
+                    : 'hover:text-purple-300'
                 }`}
                 title="Add blueprint ores to Mining Tracker RS Tracker"
               >
@@ -534,7 +534,7 @@ export default function BlueprintDetailsModal({
               <button
                 type="button"
                 onClick={onToggleTarget}
-                className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-orange-600/20 hover:text-orange-300"
+                className="site-btn-ghost text-xs font-semibold uppercase px-2 py-1 hover:text-orange-300"
                 title="Add to Mission Tracker"
               >
                 Track
@@ -544,7 +544,7 @@ export default function BlueprintDetailsModal({
               <button
                 type="button"
                 onClick={() => setMissionsModalOpen(true)}
-                className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-slate-700/50 text-slate-400 hover:bg-sky-600/20 hover:text-sky-300"
+                className="site-btn-ghost text-xs font-semibold uppercase px-2 py-1 hover:text-sky-300"
                 title="View missions that reward this blueprint"
               >
                 Missions
@@ -600,7 +600,7 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
         {modifiers.map((mod, idx) => (
           <div
             key={idx}
-            className="py-2 border-b border-slate-700/30 last:border-0"
+            className="py-2 site-divider last:border-0"
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
               <span className="text-slate-300 text-sm font-medium">{mod.propertyLabel}</span>

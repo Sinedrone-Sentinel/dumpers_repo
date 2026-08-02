@@ -111,7 +111,7 @@ export default function FactionsSection() {
 
   return (
     <div className="space-y-6">
-      <div className="p-4 bg-slate-800/30 rounded-lg border border-slate-700/50">
+      <div className="p-4 site-surface">
         <h3 className="text-sm font-semibold text-slate-300 mb-2">Understanding Reputation</h3>
         <p className="text-xs text-slate-400 leading-relaxed">
           Each faction tracks your reputation separately. Completing contracts and missions 
@@ -179,10 +179,10 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
   const maxRep = activeStandings[activeStandings.length - 1]?.minReputation || 0
 
   return (
-    <div className="rounded-lg border border-slate-700/50 overflow-hidden">
+    <div className="site-section">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-3 bg-slate-800/40 hover:bg-slate-800/60 transition-colors"
+        className="site-section-header w-full flex items-center justify-between transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-600/30 to-amber-600/30 border border-orange-500/30 flex items-center justify-center">
@@ -209,7 +209,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
       </button>
 
       {isExpanded && (
-        <div className="p-3 border-t border-slate-700/50 bg-slate-900/40">
+        <div className="site-section-body site-divider">
           {hasMultipleCareers && (
             <div className="mb-4">
               <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-2 block">
@@ -221,7 +221,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                   className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors site-btn-shimmer ${
                     selectedCareer === null
                       ? 'site-filter-selected-orange'
-                      : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
+                      : 'site-filter-idle'
                   }`}
                 >
                   Default
@@ -233,7 +233,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                     className={`px-2 py-1 rounded text-[10px] font-medium border transition-colors site-btn-shimmer ${
                       selectedCareer === key
                         ? 'site-filter-selected-orange'
-                        : 'bg-slate-700/50 text-slate-400 border-slate-600/50 hover:border-slate-500/50'
+                        : 'site-filter-idle'
                     }`}
                   >
                     {faction.careers![key].name}
@@ -248,7 +248,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
               <span>0 Rep</span>
               <span>{maxRep.toLocaleString()} Rep</span>
             </div>
-            <div className="h-2 bg-slate-800 rounded-full overflow-hidden flex">
+            <div className="h-2 site-surface rounded-full overflow-hidden flex">
               {activeStandings.map((standing, idx) => {
                 const prevRep = idx > 0 ? activeStandings[idx - 1].minReputation : 0
                 const width = maxRep > 0 ? ((standing.minReputation - prevRep) / maxRep) * 100 : 0
@@ -278,7 +278,7 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                 const prevRep = idx > 0 ? activeStandings[idx - 1].minReputation : 0
                 const repNeeded = standing.minReputation - prevRep
                 return (
-                  <tr key={standing.name} className="border-t border-slate-800/50">
+                  <tr key={standing.name} className="site-divider">
                     <td className="py-1.5">
                       <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium border ${getStandingColor(standing.name, idx, activeStandings.length)}`}>
                         {standing.name}

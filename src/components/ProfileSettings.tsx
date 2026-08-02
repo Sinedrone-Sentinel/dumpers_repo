@@ -331,7 +331,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
       footer={
         <button
           onClick={onClose}
-          className="w-full px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors"
+          className="site-btn-secondary w-full"
         >
           Close
         </button>
@@ -339,11 +339,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     >
       <div className="space-y-4">
           {message && (
-            <div className={`p-3 rounded-lg text-sm ${
-              message.type === 'success'
-                ? 'bg-green-900/50 border border-green-500/50 text-green-400'
-                : 'bg-red-900/50 border border-red-500/50 text-red-400'
-            }`}>
+            <div className={message.type === 'success' ? 'site-banner-success' : 'site-banner-error'}>
               {message.text}
             </div>
           )}
@@ -387,7 +383,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               />
             </SettingsField>
 
-            <div className="mt-4 pt-4 border-t border-slate-700/50">
+            <div className="mt-4 pt-4 site-divider">
               <SettingsToggle
                 label="Deduct inventory on craft complete"
                 description={
@@ -527,7 +523,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 {!showBlueprintWipeConfirm ? (
                   <button
                     onClick={() => setShowBlueprintWipeConfirm(true)}
-                    className="w-full px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 border border-red-500/30 text-sm font-medium rounded-lg transition-colors"
+                    className="site-btn-danger w-full"
                   >
                     Clear Collected Blueprints
                   </button>
@@ -536,14 +532,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                     <button
                       onClick={() => setShowBlueprintWipeConfirm(false)}
                       disabled={wipingBlueprints}
-                      className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                      className="site-btn-secondary flex-1"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleWipeBlueprints}
                       disabled={wipingBlueprints}
-                      className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                      className="site-btn-danger flex-1"
                     >
                       {wipingBlueprints ? 'Clearing...' : 'Confirm Clear'}
                     </button>
@@ -551,14 +547,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 )}
               </div>
 
-              <div className="pt-4 border-t border-slate-700/50">
+              <div className="pt-4 site-divider">
                 <p className="text-sm text-slate-400 mb-2">
                   Remove all quantities and notes from My Resources in the Resource Tracker.
                 </p>
                 {!showResourceWipeConfirm ? (
                   <button
                     onClick={() => setShowResourceWipeConfirm(true)}
-                    className="w-full px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 border border-red-500/30 text-sm font-medium rounded-lg transition-colors"
+                    className="site-btn-danger w-full"
                   >
                     Clear Tracked Resources
                   </button>
@@ -567,14 +563,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                     <button
                       onClick={() => setShowResourceWipeConfirm(false)}
                       disabled={wipingResources}
-                      className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                      className="site-btn-secondary flex-1"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleWipeResources}
                       disabled={wipingResources}
-                      className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                      className="site-btn-danger flex-1"
                     >
                       {wipingResources ? 'Clearing...' : 'Confirm Clear'}
                     </button>
@@ -600,7 +596,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 </p>
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="w-full px-4 py-2.5 bg-red-950/50 hover:bg-red-900/50 text-red-400 border border-red-500/30 text-sm font-medium rounded-lg transition-colors"
+                  className="site-btn-danger w-full"
                 >
                   Delete My Account
                 </button>
@@ -615,7 +611,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   value={deleteConfirmText}
                   onChange={(e) => setDeleteConfirmText(e.target.value)}
                   placeholder="Type DELETE"
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-red-500/30 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 text-sm"
+                  className="site-input w-full px-4 py-2.5 text-sm border-red-500/30"
                 />
                 <div className="flex gap-3">
                   <button
@@ -624,14 +620,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                       setDeleteConfirmText('')
                     }}
                     disabled={deleting}
-                    className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                    className="site-btn-secondary flex-1"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleDeleteAccount}
                     disabled={deleting || deleteConfirmText !== 'DELETE'}
-                    className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+                    className="site-btn-danger flex-1"
                   >
                     {deleting ? 'Deleting...' : 'Confirm Delete'}
                   </button>

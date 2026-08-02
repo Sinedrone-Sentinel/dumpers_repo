@@ -65,7 +65,7 @@ const LEDGER_SECTION_HEAD =
   'flex flex-wrap items-start justify-between gap-2 mb-2'
 
 const LEDGER_SECTION =
-  'rounded-lg border border-slate-700/45 bg-slate-900/35 p-3 sm:p-4'
+  'site-surface p-3 sm:p-4'
 
 const LEDGER_SECTION_TITLE =
   'text-base font-semibold text-white tracking-tight flex items-center gap-2'
@@ -74,13 +74,13 @@ const LEDGER_SECTION_ACCENT =
   'w-1 h-4 rounded-full bg-orange-500/75 shrink-0'
 
 const LEDGER_INFO_TEXT =
-  'text-xs text-slate-400 leading-relaxed mb-3 pl-3 border-l-2 border-slate-600/60'
+  'text-xs text-slate-400 leading-relaxed mb-3 pl-3 border-l-2 border-orange-500/20'
 
 const LEDGER_TABLE_HEAD =
   'text-[10px] uppercase tracking-wider text-slate-400 font-semibold'
 
 const LEDGER_SUMMARY_CARD =
-  'p-3 rounded-lg border border-slate-700/50 bg-slate-800/40 min-w-[7.5rem]'
+  'site-surface p-3 min-w-[7.5rem]'
 
 const LEDGER_SUMMARY_LABEL =
   'text-[10px] uppercase tracking-wider text-slate-400 font-medium block mb-1'
@@ -96,10 +96,10 @@ const LEDGER_ESTIMATE = 'font-mono text-slate-400 tabular-nums'
 const LEDGER_MONEY = 'font-mono text-amber-300 tabular-nums font-medium'
 
 const LEDGER_ADD_BTN =
-  'inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-md border border-orange-500/45 bg-orange-950/40 text-orange-200 hover:bg-orange-500/15 hover:border-orange-400/55 transition-colors disabled:opacity-40 disabled:cursor-not-allowed'
+  'site-btn-accent inline-flex items-center px-2.5 py-1 text-[11px] font-semibold rounded-md disabled:opacity-40 disabled:cursor-not-allowed'
 
 /** Horizontal scroll for wide tables only — no vertical clipping inside sections. */
-const LEDGER_TABLE_SCROLL = 'overflow-x-auto overflow-y-visible'
+const LEDGER_TABLE_SCROLL = 'site-table-wrap overflow-y-visible'
 
 type SortDir = 'asc' | 'desc'
 type MiningRunSortKey = 'resource' | 'quality'
@@ -298,12 +298,12 @@ function MiningResourceField({
         autoComplete="off"
       />
       {open && options.length > 0 && (
-        <ul className="relative z-30 mt-1 w-[8.5rem] max-w-[8.5rem] rounded-lg border border-slate-600 bg-slate-900 shadow-lg max-h-48 overflow-y-auto">
+        <ul className="site-dropdown-list relative z-30 mt-1 w-[8.5rem] max-w-[8.5rem] max-h-48">
           {options.map((entry) => (
             <li key={entry.resource_key}>
               <button
                 type="button"
-                className={`w-full px-2 py-1.5 text-left text-xs hover:bg-slate-800 truncate ${resourceLabelClassName(entry.resource_key)}`}
+                className={`site-dropdown-item !px-2 !py-1.5 text-xs truncate ${resourceLabelClassName(entry.resource_key)}`}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(entry)}
               >
@@ -346,7 +346,7 @@ function LedgerMiningRunsTable({
   return (
     <div className={LEDGER_TABLE_SCROLL}>
       <table
-        className={`w-full text-xs table-fixed ${showQualityColumn ? 'min-w-[52rem]' : 'min-w-[44rem]'}`}
+        className={`site-table w-full text-xs table-fixed ${showQualityColumn ? 'min-w-[52rem]' : 'min-w-[44rem]'}`}
       >
         <colgroup>
           <col style={{ width: '9rem' }} />
@@ -359,7 +359,7 @@ function LedgerMiningRunsTable({
           <col style={{ width: '2rem' }} />
         </colgroup>
         <thead>
-          <tr className="text-left border-b border-slate-600/50">
+          <tr className="text-left">
             <LedgerSortHeader
               label="Resource"
               active={miningRunSort?.key === 'resource'}
@@ -396,7 +396,7 @@ function LedgerMiningRunsTable({
               const showYield = ledgerRowShowsYield(row.resourceKey)
               const amountUnit = ledgerAmountUnitLabel(row.resourceKey)
               return (
-                <tr key={row.id} className="border-b border-slate-800/60">
+                <tr key={row.id}>
                   <td className="py-1 pr-2">
                     <MiningResourceField
                       resourceKey={row.resourceKey}
@@ -487,7 +487,7 @@ function LedgerMiningRunsTable({
                       <button
                         type="button"
                         onClick={() => onRemoveRow(row.id)}
-                        className="text-slate-500 hover:text-red-400"
+                        className="site-btn-ghost !p-1 text-slate-500 hover:text-red-400"
                         aria-label="Remove row"
                       >
                         ×
@@ -720,14 +720,14 @@ function CrewPlayerNameField({
         <CrewRsiAlertIcon state={alertState} />
       </div>
       {open && options.length > 0 && (
-        <ul className="relative z-30 mt-1 w-44 max-w-44 rounded-lg border border-slate-600 bg-slate-900 shadow-lg">
+        <ul className="site-dropdown-list relative z-30 mt-1 w-44 max-w-44">
           {options.map((member) => {
             const label = member.rsi_handle || member.display_name || 'Unknown'
             return (
               <li key={member.id}>
                 <button
                   type="button"
-                  className="w-full px-2 py-1.5 text-left text-xs hover:bg-slate-800 text-white truncate"
+                  className="site-dropdown-item !px-2 !py-1.5 text-xs truncate"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
                     skipValidationRef.current = true
@@ -798,23 +798,23 @@ function ImportedLedgerViewModal({
     >
       <div className="space-y-4 text-xs">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className="site-surface p-2">
             <span className="text-slate-400 block mb-0.5">Pool (actual)</span>
             <span className="text-white font-mono tabular-nums">
               {formatLedgerMoney(computed.poolActual)}
             </span>
           </div>
-          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className="site-surface p-2">
             <span className="text-slate-400 block mb-0.5">Total payout</span>
             <span className="text-amber-300 font-mono tabular-nums">
               {formatLedgerMoney(computed.totalPayout)}
             </span>
           </div>
-          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className="site-surface p-2">
             <span className="text-slate-400 block mb-0.5">Splitting shares</span>
             <span className="text-white font-mono tabular-nums">{computed.splittingShares}</span>
           </div>
-          <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700/50">
+          <div className="site-surface p-2">
             <span className="text-slate-400 block mb-0.5">Ore pricing</span>
             <span className="text-slate-200 text-[11px] leading-snug">
               Purchased (Q0) DFP
@@ -825,9 +825,9 @@ function ImportedLedgerViewModal({
         {computed.miningRows.some((row) => isLedgerSalvageRowKey(row.resourceKey)) && (
           <section>
             <h3 className="text-sm font-semibold text-white mb-1">Salvage</h3>
-            <table className="w-full text-xs">
+            <table className="site-table w-full text-xs">
               <thead>
-                <tr className="text-slate-400 text-left border-b border-slate-700/50">
+                <tr className="text-slate-400 text-left border-b border-orange-500/10">
                   <th className="py-1 pr-2 font-medium">Resource</th>
                   <th className="py-1 pr-2 font-medium">Amount</th>
                   <th className="py-1 pr-2 font-medium">Profit act.</th>
@@ -837,7 +837,7 @@ function ImportedLedgerViewModal({
                 {computed.miningRows
                   .filter((row) => isLedgerSalvageRowKey(row.resourceKey))
                   .map((row) => (
-                    <tr key={row.id} className="border-b border-slate-800/60">
+                    <tr key={row.id}>
                       <td className={`py-1.5 pr-2 ${resourceLabelClassName(row.resourceKey)}`}>
                         {row.resourceLabel}
                       </td>
@@ -857,9 +857,9 @@ function ImportedLedgerViewModal({
         {computed.miningRows.some((row) => !isLedgerSalvageRowKey(row.resourceKey)) && (
           <section>
             <h3 className="text-sm font-semibold text-white mb-1">Ore / gems</h3>
-            <table className="w-full text-xs">
+            <table className="site-table w-full text-xs">
               <thead>
-                <tr className="text-slate-400 text-left border-b border-slate-700/50">
+                <tr className="text-slate-400 text-left border-b border-orange-500/10">
                   <th className="py-1 pr-2 font-medium">Resource</th>
                   <th className="py-1 pr-2 font-medium">Q</th>
                   <th className="py-1 pr-2 font-medium">Amount</th>
@@ -870,7 +870,7 @@ function ImportedLedgerViewModal({
                 {computed.miningRows
                   .filter((row) => !isLedgerSalvageRowKey(row.resourceKey))
                   .map((row) => (
-                    <tr key={row.id} className="border-b border-slate-800/60">
+                    <tr key={row.id}>
                       <td className={`py-1.5 pr-2 ${resourceLabelClassName(row.resourceKey)}`}>
                         {row.resourceLabel}
                       </td>
@@ -925,9 +925,9 @@ function ImportedLedgerViewModal({
         {computed.crew.length > 0 && (
           <section>
             <h3 className="text-sm font-semibold text-white mb-1">Crew</h3>
-            <table className="w-full text-xs">
+            <table className="site-table w-full text-xs">
               <thead>
-                <tr className="text-slate-400 text-left border-b border-slate-700/50">
+                <tr className="text-slate-400 text-left border-b border-orange-500/10">
                   <th className="py-1 pr-2 font-medium">Member</th>
                   <th className="py-1 pr-2 font-medium">Shares</th>
                   <th className="py-1 pr-2 font-medium">Role</th>
@@ -943,7 +943,7 @@ function ImportedLedgerViewModal({
                     | undefined
                   const alternate = crewRow?.alternateCompensation?.trim()
                   return (
-                    <tr key={member.id} className="border-b border-slate-800/60">
+                    <tr key={member.id}>
                       <td className="py-1.5 pr-2 text-slate-100">{member.playerName || '—'}</td>
                       <td className="py-1.5 pr-2 font-mono tabular-nums text-slate-200">
                         {member.shares}
@@ -1228,7 +1228,7 @@ export default function MiningLedgerTab({
 
   if (isGuestPreview) {
     return (
-      <div className="text-center py-12 rounded-lg border border-dashed border-slate-700/50">
+      <div className="site-empty">
         <p className="text-slate-400 text-sm max-w-md mx-auto">
           Mining crew ledgers require a signed-in account with a verified RSI Handle. Sign in and
           verify your handle in Settings to create ledgers and track crew payouts.
@@ -1239,7 +1239,7 @@ export default function MiningLedgerTab({
 
   if (!isRsiVerified) {
     return (
-      <div className="text-center py-12 rounded-lg border border-dashed border-amber-500/30 bg-amber-950/10">
+      <div className="site-banner-warn !py-12 text-center">
         <p className="text-slate-300 text-sm max-w-md mx-auto">
           Mining crew ledgers are available to members with a{' '}
           <strong className="text-amber-300/90">verified RSI Handle</strong> on Dumper&apos;s Repo.
@@ -1261,9 +1261,9 @@ export default function MiningLedgerTab({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-end gap-3 pb-3 border-b border-slate-700/40">
+      <div className="flex flex-wrap items-end gap-3 pb-3 site-divider">
         <div className="min-w-[200px]">
-          <label className={`${LEDGER_SUMMARY_LABEL} mb-1.5`}>
+          <label className="site-label">
             Ledgers
           </label>
           <select
@@ -1284,7 +1284,7 @@ export default function MiningLedgerTab({
           </select>
         </div>
         <div className="flex-1 min-w-[160px] max-w-xs">
-          <label className={`${LEDGER_SUMMARY_LABEL} mb-1.5`}>
+          <label className="site-label">
             Display name
           </label>
           <input
@@ -1299,14 +1299,14 @@ export default function MiningLedgerTab({
         <button
           type="button"
           onClick={() => setShowNewModal(true)}
-          className="px-3 py-1.5 text-xs rounded-lg border border-orange-500/40 text-orange-300 hover:bg-orange-500/10"
+          className="site-btn-accent !px-3 !py-1.5 text-xs rounded-lg"
         >
           New ledger
         </button>
         <button
           type="button"
           onClick={() => importJsonInputRef.current?.click()}
-          className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
+          className="site-btn-secondary !px-3 !py-1.5 text-xs"
         >
           View JSON export
         </button>
@@ -1323,7 +1323,7 @@ export default function MiningLedgerTab({
               <button
                 type="button"
                 onClick={() => setShowAccessModal(true)}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
+                className="site-btn-secondary !px-3 !py-1.5 text-xs"
               >
                 Manage access
               </button>
@@ -1331,14 +1331,14 @@ export default function MiningLedgerTab({
             <button
               type="button"
               onClick={handleExport}
-              className="px-3 py-1.5 text-xs rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800"
+              className="site-btn-secondary !px-3 !py-1.5 text-xs"
             >
               Export JSON
             </button>
             <button
               type="button"
               onClick={() => setShowDeleteModal(true)}
-              className="px-3 py-1.5 text-xs rounded-lg border border-red-500/40 text-red-400 hover:bg-red-500/10"
+              className="site-btn-danger !px-3 !py-1.5 text-xs"
             >
               Delete ledger
             </button>
@@ -1348,7 +1348,7 @@ export default function MiningLedgerTab({
       </div>
 
       {error && (
-        <p className="text-sm text-red-400 bg-red-950/30 border border-red-500/30 rounded-lg px-3 py-2">
+        <p className="site-banner-error">
           {error}
         </p>
       )}
@@ -1358,12 +1358,12 @@ export default function MiningLedgerTab({
       )}
 
       {!activeId ? (
-        <div className="text-center py-10 rounded-lg border border-dashed border-slate-700/50">
+        <div className="site-empty !py-10">
           <p className="text-slate-500 text-sm mb-3">No ledger selected. Create one to get started.</p>
           <button
             type="button"
             onClick={() => setShowNewModal(true)}
-            className="px-4 py-2 text-sm rounded-lg bg-orange-600/80 hover:bg-orange-600 text-white"
+            className="site-btn-primary !rounded-lg !px-4 !py-2 text-sm"
           >
             Create ledger
           </button>
@@ -1535,7 +1535,7 @@ export default function MiningLedgerTab({
               </button>
             </div>
             <div className={LEDGER_TABLE_SCROLL}>
-            <table className="w-full min-w-[62rem] text-xs table-fixed">
+            <table className="site-table w-full min-w-[62rem] text-xs table-fixed">
               <colgroup>
                 <col style={{ width: '11rem' }} />
                 <col style={{ width: '4rem' }} />
@@ -1548,7 +1548,7 @@ export default function MiningLedgerTab({
                 <col style={{ width: '2rem' }} />
               </colgroup>
               <thead>
-                <tr className="text-left border-b border-slate-600/50">
+                <tr className="text-left">
                   <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Member</th>
                   <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Shares</th>
                   <th className={`py-1.5 pr-2 ${LEDGER_TABLE_HEAD}`}>Role</th>
@@ -1565,7 +1565,7 @@ export default function MiningLedgerTab({
                   const row = data.crew.find((c) => c.id === member.id)
                   if (!row) return null
                   return (
-                    <tr key={member.id} className="border-b border-slate-800/60 align-top">
+                    <tr key={member.id} className="align-top">
                       <td className="py-1 pr-2 w-44 max-w-44 align-top">
                         <CrewPlayerNameField
                           value={row.playerName}
@@ -1730,7 +1730,7 @@ export default function MiningLedgerTab({
                                   patchCrew(row.id, { isPaid: false })
                                 }
                               }}
-                              className="rounded border-slate-600 disabled:opacity-40 disabled:cursor-not-allowed"
+                              className="site-checkbox disabled:opacity-40 disabled:cursor-not-allowed"
                               aria-label={
                                 blockPaid
                                   ? 'Cannot mark paid — invalid RSI handle'
@@ -1757,7 +1757,7 @@ export default function MiningLedgerTab({
                               crew: prev.crew.filter((c) => c.id !== row.id),
                             }))
                           }
-                          className="text-slate-500 hover:text-red-400"
+                          className="site-btn-ghost !p-1 text-slate-500 hover:text-red-400"
                           aria-label="Remove member"
                         >
                           ×
@@ -1832,7 +1832,7 @@ export default function MiningLedgerTab({
                         deductibles: prev.deductibles.filter((d) => d.id !== row.id),
                       }))
                     }
-                    className="text-slate-500 hover:text-red-400 shrink-0 px-1"
+                    className="site-btn-ghost !px-1 !py-0.5 text-slate-500 hover:text-red-400 shrink-0"
                     aria-label="Remove deductible"
                   >
                     ×
@@ -1899,7 +1899,7 @@ export default function MiningLedgerTab({
                         otherProfits: prev.otherProfits.filter((d) => d.id !== row.id),
                       }))
                     }
-                    className="text-slate-500 hover:text-red-400 shrink-0 px-1"
+                    className="site-btn-ghost !px-1 !py-0.5 text-slate-500 hover:text-red-400 shrink-0"
                     aria-label="Remove extra profit"
                   >
                     ×
@@ -1931,9 +1931,9 @@ export default function MiningLedgerTab({
               × per-gem DFP. Override any row manually, or Reset from catalog if values look 100×
               too high.
             </p>
-            <table className="w-full text-xs">
+            <table className="site-table w-full text-xs">
               <thead>
-                <tr className="text-left border-b border-slate-600/50">
+                <tr className="text-left">
                   <th className={`py-1.5 ${LEDGER_TABLE_HEAD}`}>Resource</th>
                   <th className={`py-1.5 ${LEDGER_TABLE_HEAD}`}>Price</th>
                 </tr>
@@ -1949,7 +1949,7 @@ export default function MiningLedgerTab({
                       ? row.pricePer100
                       : defaultPrice
                   return (
-                    <tr key={row.resourceKey} className="border-b border-slate-800/40">
+                    <tr key={row.resourceKey}>
                       <td className={`py-1.5 pr-2 font-medium text-slate-200 ${resourceLabelClassName(row.resourceKey)}`}>
                         {row.resourceLabel}
                       </td>
@@ -2003,7 +2003,7 @@ export default function MiningLedgerTab({
 
       {showNewModal && (
         <AppModal title="New ledger" onClose={() => setShowNewModal(false)} size="sm">
-          <label className="text-xs text-slate-400 block mb-1">Ledger name</label>
+          <label className="site-label">Ledger name</label>
           <input
             type="text"
             value={newLedgerName}
@@ -2017,14 +2017,14 @@ export default function MiningLedgerTab({
             <button
               type="button"
               onClick={() => setShowNewModal(false)}
-              className="px-3 py-1.5 text-sm text-slate-400"
+              className="site-btn-ghost"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={() => void handleCreateLedger()}
-              className="px-4 py-1.5 text-sm rounded-lg bg-orange-600 hover:bg-orange-500 text-white"
+              className="site-btn-primary !rounded-lg !px-4 !py-1.5 text-sm"
             >
               Create
             </button>
@@ -2047,14 +2047,14 @@ export default function MiningLedgerTab({
             <button
               type="button"
               onClick={() => setShowDeleteModal(false)}
-              className="px-3 py-1.5 text-sm text-slate-400"
+              className="site-btn-ghost"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={() => void handleDeleteLedger()}
-              className="px-4 py-1.5 text-sm rounded-lg bg-red-600 hover:bg-red-500 text-white"
+              className="site-btn-danger !px-4 !py-1.5 text-sm"
             >
               Delete ledger
             </button>
@@ -2083,14 +2083,14 @@ export default function MiningLedgerTab({
                 setShowCloseModal(false)
                 setCloseModalDismissed(true)
               }}
-              className="px-3 py-1.5 text-sm text-slate-400"
+              className="site-btn-ghost"
             >
               Not yet
             </button>
             <button
               type="button"
               onClick={() => void handleCloseConfirm()}
-              className="px-4 py-1.5 text-sm rounded-lg bg-orange-600 hover:bg-orange-500 text-white"
+              className="site-btn-primary !rounded-lg !px-4 !py-1.5 text-sm"
             >
               OK
             </button>
@@ -2112,7 +2112,7 @@ export default function MiningLedgerTab({
             Collaborators can view, edit, and close this ledger. Access does not apply to other
             ledgers.
           </p>
-          <label className="text-xs text-slate-400 block mb-1">Add RSI-verified member</label>
+          <label className="site-label">Add RSI-verified member</label>
           <input
             type="text"
             value={collabSearch}
@@ -2121,7 +2121,7 @@ export default function MiningLedgerTab({
             className="site-input w-full px-3 py-2 text-sm mb-2"
           />
           {collabOptions.length > 0 && (
-            <ul className="mb-4 border border-slate-700/50 rounded-lg overflow-hidden">
+            <ul className="site-dropdown-list !relative mb-4 max-h-none">
               {collabOptions.map((member) => {
                 const label = member.rsi_handle || member.display_name || 'Unknown'
                 const already = detail.collaborators.some((c) => c.user_id === member.id)
@@ -2140,7 +2140,7 @@ export default function MiningLedgerTab({
                         updateData((prev) => seedCrewMemberOnce(prev, member.id, label))
                         setCollabSearch('')
                       }}
-                      className="w-full px-3 py-2 text-left text-sm text-slate-100 hover:bg-slate-700/80 hover:text-white disabled:text-slate-400 disabled:hover:bg-transparent"
+                      className="site-dropdown-item disabled:opacity-50 disabled:hover:bg-transparent"
                     >
                       <span className={already ? 'text-slate-400' : 'text-white'}>{label}</span>
                       {already ? (

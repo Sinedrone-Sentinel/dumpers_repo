@@ -16,7 +16,7 @@ export default function MoleCrewModeCheckbox({
         type="checkbox"
         checked={crewMode}
         onChange={(event) => onCrewModeChange(event.target.checked)}
-        className="rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500/40"
+        className="site-checkbox"
       />
       <span className="text-xs text-slate-300">Crew</span>
     </label>

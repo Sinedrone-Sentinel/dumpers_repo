@@ -233,7 +233,7 @@ export default function DiscordSubscribeRoute() {
             unregister that alert. Highlighted rows are active.
           </p>
 
-          <div className="mb-4 p-3 bg-slate-800/50 rounded-lg">
+          <div className="mb-4 p-3 site-surface rounded-lg">
             <p className="text-xs text-slate-400 mb-2">
               <strong className="text-slate-300">To create a webhook:</strong>
             </p>
@@ -299,7 +299,7 @@ export default function DiscordSubscribeRoute() {
                             className={`p-3 rounded-lg border transition-colors ${
                               active
                                 ? 'border-indigo-500/50 bg-indigo-950/30'
-                                : 'border-slate-700 bg-slate-800/30'
+                                : 'site-surface'
                             } ${!event.enabled ? 'opacity-50' : ''}`}
                           >
                             <div className="mb-3">
@@ -312,7 +312,7 @@ export default function DiscordSubscribeRoute() {
 
                             <div className="space-y-2">
                               <div>
-                                <label className="block text-xs font-medium text-slate-400 mb-1">
+                                <label className="site-label mb-1">
                                   Channel name
                                 </label>
                                 <input
@@ -323,11 +323,11 @@ export default function DiscordSubscribeRoute() {
                                   }
                                   placeholder="e.g., #my-deal-alerts"
                                   disabled={inputsDisabled}
-                                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm disabled:opacity-60"
+                                  className="w-full px-3 py-2 site-input text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm disabled:opacity-60"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-medium text-slate-400 mb-1">
+                                <label className="site-label mb-1">
                                   Webhook URL
                                 </label>
                                 <input
@@ -338,7 +338,7 @@ export default function DiscordSubscribeRoute() {
                                   }
                                   placeholder="https://discord.com/api/webhooks/..."
                                   disabled={inputsDisabled}
-                                  className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm font-mono disabled:opacity-60"
+                                  className="w-full px-3 py-2 site-input text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm font-mono disabled:opacity-60"
                                 />
                               </div>
                             </div>
@@ -364,7 +364,7 @@ export default function DiscordSubscribeRoute() {
         <div className="pt-2">
           <Link
             to="/"
-            className="text-sm text-slate-400 hover:text-slate-300 transition-colors"
+            className="site-btn-ghost text-sm"
           >
             ← Back to Blueprints
           </Link>

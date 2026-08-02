@@ -131,7 +131,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           </ol>
         </section>
 
-        <section className="space-y-3 rounded-lg border border-slate-700 bg-slate-800/30 p-4">
+        <section className="site-surface space-y-3 p-4">
           <div>
             <h3 className="text-sm font-semibold text-white">Your API key</h3>
             <p className="text-xs text-slate-500 mt-1">
@@ -142,7 +142,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           {canManageApiKey ? (
             <>
               <div className="flex gap-2 items-stretch">
-                <div className="flex-1 min-w-0 rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2.5 font-mono text-sm text-slate-200 break-all">
+                <div className="flex-1 min-w-0 site-surface px-3 py-2.5 font-mono text-sm text-slate-200 break-all">
                   {loadingKey && !apiKey
                     ? 'Loading…'
                     : showKey && apiKey
@@ -155,7 +155,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
                   <button
                     type="button"
                     onClick={() => setShowKey((v) => !v)}
-                    className="shrink-0 px-3 py-2 text-xs font-medium rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    className="site-btn-secondary shrink-0 px-3 py-2 text-xs font-medium"
                   >
                     {showKey ? 'Hide' : 'Show'}
                   </button>

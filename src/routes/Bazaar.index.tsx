@@ -591,7 +591,7 @@ export default function BazaarRoute() {
           </div>
           <h2 className="text-2xl font-bold text-white mb-3">The Bazaar</h2>
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm max-w-md mx-auto">
+            <div className="mb-4 site-banner-error max-w-md mx-auto">
               {error}
             </div>
           )}
@@ -615,7 +615,7 @@ export default function BazaarRoute() {
             and quantities they want to fulfill or buy. Build reputation and earn aUEC — sign in to
             participate.
           </p>
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-700 text-left max-w-md mx-auto">
+          <div className="p-4 site-surface text-left max-w-md mx-auto">
             <h3 className="text-white font-medium mb-2">What members can do:</h3>
             <ul className="text-sm text-slate-400 space-y-1">
               <li>• Fulfill WTB craft requests that match your acquired blueprints</li>
@@ -641,14 +641,14 @@ export default function BazaarRoute() {
         <Link
           to="/orders"
           search={{ tab: undefined }}
-          className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
+          className="site-btn-secondary !px-3 !py-1.5 text-sm"
         >
           My Listings
         </Link>
       }
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {error}
         </div>
       )}
@@ -726,7 +726,7 @@ export default function BazaarRoute() {
             {orderLimits?.has_pending_fulfiller_rep && (
               <>
                 <span className="text-slate-500">·</span>
-                <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
+                <span className="site-badge-slate text-xs">
                   {orderLimits.fulfillment_count}/{orderLimits.fulfiller_order_limit} active
                 </span>
                 <a
@@ -767,7 +767,7 @@ export default function BazaarRoute() {
                         ? tab.id === 'store'
                           ? 'bg-cyan-950/50 text-cyan-200 border-cyan-500/40'
                           : 'bg-red-950/50 text-red-200 border-red-500/40'
-                        : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
+                        : 'site-filter-idle'
                     }`}
                   >
                     {tab.label}
@@ -785,14 +785,14 @@ export default function BazaarRoute() {
                       ? 'Search items for sale (e.g. Killshot, Quantainium)…'
                       : 'Search wanted items (e.g. Killshot, Quantainium)…'
                   }
-                  className="flex-1 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500"
+                  className="flex-1 px-3 py-2 site-input text-white text-sm placeholder-slate-500"
                 />
                 <label className="flex items-center gap-2 text-xs text-slate-400 shrink-0">
                   <span>Min Q-band</span>
                   <select
                     value={minBandFilter}
                     onChange={(e) => setMinBandFilter(e.target.value)}
-                    className="px-2 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                    className="px-2 py-2 site-input text-white text-sm"
                   >
                     <option value="">Any</option>
                     {QUALITY_BAND_OPTIONS.map((band) => (
@@ -811,7 +811,7 @@ export default function BazaarRoute() {
                       type="checkbox"
                       checked={onlyMyBlueprintOrders}
                       onChange={(e) => setOnlyMyBlueprintOrders(e.target.checked)}
-                      className="rounded border-slate-500 bg-slate-800 text-purple-500 focus:ring-purple-500/40"
+                      className="site-checkbox text-purple-500"
                     />
                     <span>Only listings with my blueprints</span>
                   </label>
@@ -820,7 +820,7 @@ export default function BazaarRoute() {
                     <select
                       value={minBuyerRepFilter}
                       onChange={(e) => setMinBuyerRepFilter(e.target.value)}
-                      className="px-2 py-1 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+                      className="px-2 py-1 site-input text-white text-sm"
                     >
                       <option value="">All buyers</option>
                       {REPUTATION_STAR_OPTIONS.map((tier) => (
@@ -841,7 +841,7 @@ export default function BazaarRoute() {
               )}
 
               {visiblePendingListings.length === 0 ? (
-                <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                <div className="site-empty !py-6 text-sm">
                   {activeTab === 'store'
                     ? 'No sell listings match your search.'
                     : 'No buy listings match your search.'}
@@ -891,7 +891,7 @@ export default function BazaarRoute() {
                 <div>
                   <h2 className="text-white font-medium mb-3">My assigned orders</h2>
                   {myAssignedOrders.length === 0 ? (
-                    <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    <div className="site-empty !py-6 text-sm">
                       No orders assigned to you. Claim items from a buy listing above.
                     </div>
                   ) : (
@@ -933,7 +933,7 @@ export default function BazaarRoute() {
                 <div>
                   <h2 className="text-white font-medium mb-3">My WTS sales</h2>
                   {myWtsSales.length === 0 ? (
-                    <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    <div className="site-empty !py-6 text-sm">
                       No active sales from your sell listing yet.
                     </div>
                   ) : (
@@ -974,7 +974,7 @@ export default function BazaarRoute() {
                       return (
                         <div
                           key={order.id}
-                          className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-2"
+                          className="p-4 site-surface space-y-2"
                         >
                           <p className="text-white text-sm font-medium">{order.title}</p>
                           <p className="text-slate-500 text-xs">
@@ -1046,7 +1046,7 @@ export default function BazaarRoute() {
                   <>
                     <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
                     {myFinishedOrders.length === 0 ? (
-                      <div className="p-6 mb-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                      <div className="site-empty !py-6 mb-6 text-sm">
                         No WTB orders waiting on customer pickup confirmation.
                       </div>
                     ) : (
@@ -1057,7 +1057,7 @@ export default function BazaarRoute() {
                           return (
                             <div
                               key={order.id}
-                              className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl space-y-3"
+                              className="p-4 site-surface space-y-3"
                             >
                               <div>
                                 <p className="text-white text-sm font-medium">{order.title}</p>
@@ -1094,7 +1094,7 @@ export default function BazaarRoute() {
                 <div>
                   <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
                   {fulfillments.length === 0 ? (
-                    <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+                    <div className="site-empty !py-6 text-sm">
                       No fulfillments yet.
                     </div>
                   ) : (
@@ -1102,7 +1102,7 @@ export default function BazaarRoute() {
                       {fulfillments.map((entry) => (
                         <div
                           key={entry.id}
-                          className="p-4 bg-slate-900/60 border border-slate-700 rounded-xl"
+                          className="p-4 site-surface"
                         >
                           <p className="text-white text-sm font-medium">
                             {entry.order?.title ?? 'Order'}
@@ -1123,7 +1123,7 @@ export default function BazaarRoute() {
                               {entry.items.map((item, idx) => (
                                 <span
                                   key={`${entry.id}-${idx}`}
-                                  className="px-2 py-0.5 bg-slate-800 text-slate-300 text-xs rounded border border-slate-600"
+                                  className="site-badge-slate"
                                 >
                                   {getResourceLabel(item.resource_key, labelMap)} −
                                   {formatQuantityForResource(item.resource_key, Number(item.quantity))}{' '}

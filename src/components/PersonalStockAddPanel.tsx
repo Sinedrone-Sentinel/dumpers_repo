@@ -106,7 +106,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
   }
 
   return (
-    <div className="w-full min-w-0 bg-slate-900/60 border border-slate-700 rounded-xl p-4 space-y-3 overflow-hidden">
+    <div className="site-surface w-full min-w-0 p-4 space-y-3 overflow-hidden">
       <div>
         <h2 className="text-white font-medium text-sm">Add material stock</h2>
         <p className="text-slate-500 text-xs mt-1">
@@ -129,14 +129,14 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search catalog to add..."
-        className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm"
+        className="site-input w-full px-3 py-2 text-sm"
       />
 
       <div className="flex flex-col sm:flex-row gap-2 min-w-0 items-stretch">
         <select
           value={resourceKey}
           onChange={(e) => setResourceKey(e.target.value)}
-          className="sm:flex-[1.2] w-full min-w-0 max-w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm truncate"
+          className="site-input sm:flex-[1.2] w-full min-w-0 max-w-full px-3 py-2 text-sm truncate"
         >
           <option value="">Select resource</option>
           {filtered.map((r) => (
@@ -155,7 +155,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
               onQualityChange={setQuality}
             />
           ) : (
-            <div className="h-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-slate-500 text-sm">
+            <div className="site-input h-full px-3 py-2 text-slate-500 text-sm">
               Quality
             </div>
           )}
@@ -166,7 +166,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
           value={quantity}
           onValueChange={setQuantity}
           placeholder={qtyUnit}
-          className="sm:w-24 shrink-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm tabular-nums"
+          className="site-input sm:w-24 shrink-0 px-3 py-2 text-sm tabular-nums"
         />
 
         <input
@@ -175,7 +175,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
           onChange={(e) => setNote(e.target.value.slice(0, 64))}
           placeholder="Note (optional)"
           maxLength={64}
-          className="sm:flex-1 min-w-0 px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500"
+          className="site-input sm:flex-1 min-w-0 px-3 py-2 text-sm"
           aria-label="Stock card note"
         />
       </div>
@@ -192,7 +192,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
         type="button"
         onClick={() => void handleAdd()}
         disabled={submitting || !resourceKey}
-        className="w-full max-w-full px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium truncate"
+        className="site-btn-primary site-btn-shimmer w-full max-w-full truncate"
       >
         {submitting
           ? 'Adding...'

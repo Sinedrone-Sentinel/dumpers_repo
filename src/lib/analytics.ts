@@ -5,7 +5,12 @@ const GEO_RESOLVED_STORAGE_KEY = 'dumpers_analytics_geo_resolved_v1'
 const HEARTBEAT_MS = 60_000
 const MAX_PING_SECONDS = 300
 
-const SKIP_PATH_PREFIXES = ['/analytics', '/support-dashboard', '/discord-subscribe']
+const SKIP_PATH_PREFIXES = [
+  '/analytics',
+  '/support-dashboard',
+  '/discord-subscribe',
+  '/theme-preview',
+]
 
 export type AnalyticsContext = {
   isGuest: boolean

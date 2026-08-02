@@ -123,7 +123,7 @@ export function trackerCardTooltip(entry: MiningTrackerEntry): React.ReactNode {
         ) : null
       })()}
       {display && (
-        <div className="text-slate-400 pt-1 border-t border-slate-700/50">
+        <div className="text-slate-400 pt-1 site-divider">
           Base RS {formatRsReading(display.baseRs)}
         </div>
       )}

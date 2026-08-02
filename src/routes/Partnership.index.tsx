@@ -162,10 +162,10 @@ export default function PartnershipPage() {
     >
       {message && (
         <div
-          className={`mb-4 rounded-lg border px-3 py-2 text-sm ${
+          className={`mb-4 text-sm ${
             message.type === 'success'
-              ? 'border-green-500/30 bg-green-950/30 text-green-300'
-              : 'border-red-500/30 bg-red-950/30 text-red-300'
+              ? 'site-banner-success'
+              : 'site-banner-error'
           }`}
         >
           {message.text}
@@ -183,8 +183,8 @@ export default function PartnershipPage() {
               onClick={() => setTab(t.id)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 tab === t.id
-                  ? 'bg-orange-600 text-white'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'
+                  ? 'site-filter-selected-orange'
+                  : 'site-filter-idle'
               }`}
             >
               {t.label}
@@ -200,7 +200,7 @@ export default function PartnershipPage() {
         <>
           {tab === 'apply' && (
             <div className="max-w-xl space-y-4">
-              <form onSubmit={handleApply} className="space-y-3 rounded-xl border border-slate-700 bg-slate-900/50 p-4">
+              <form onSubmit={handleApply} className="space-y-3 site-surface p-4">
                 <h3 className="text-white font-medium text-sm">Apply Now</h3>
                 <p className="text-xs text-slate-500 leading-relaxed">
                   Applications are checked against your RSI org page / Spectrum presence before
@@ -268,7 +268,7 @@ export default function PartnershipPage() {
                     onChange={(e) => setNotes(e.target.value)}
                     rows={3}
                     placeholder="Links or context that help verify you speak for the org"
-                    className="site-input w-full px-3 py-2 text-sm"
+                    className="site-textarea w-full px-3 py-2 text-sm"
                   />
                 </Field>
                 <label className="flex items-start gap-2.5 rounded-lg border border-amber-500/25 bg-amber-950/15 px-3 py-2.5 cursor-pointer">
@@ -289,7 +289,7 @@ export default function PartnershipPage() {
                 <button
                   type="submit"
                   disabled={submitting || !pledgeAccepted || !orgSid}
-                  className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
+                  className="site-btn-primary px-4 py-2 text-sm font-medium disabled:opacity-50"
                 >
                   {submitting ? 'Submitting…' : 'Submit application'}
                 </button>
@@ -305,7 +305,7 @@ export default function PartnershipPage() {
                 myApps.map((app) => (
                   <div
                     key={app.id}
-                    className="rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-3"
+                    className="site-surface px-4 py-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -388,7 +388,7 @@ export default function PartnershipPage() {
 
 function PartnershipExplainer() {
   return (
-    <div className="mb-6 max-w-2xl rounded-xl border border-slate-700 bg-slate-900/40 px-4 py-4 space-y-3">
+    <div className="mb-6 max-w-2xl site-surface px-4 py-4 space-y-3">
       <h2 className="text-white text-sm font-semibold">What Partnership means</h2>
       <p className="text-slate-400 text-sm leading-relaxed">
         Approved orgs can offer help to Dumper&apos;s Repo members — medical respawn/evac, stuck
@@ -480,7 +480,7 @@ function BotInvitePanel() {
   }
 
   return (
-    <div className="text-xs text-amber-200/90 leading-relaxed rounded-lg border border-amber-500/20 bg-amber-950/15 px-3 py-3 space-y-2">
+    <div className="site-banner-warn text-xs leading-relaxed px-3 py-3 space-y-2">
       <p>
         Invite the <strong className="text-amber-100">Dumper Services</strong> Discord bot into the
         same server as each webhook channel (Send Messages + Embed Links +{' '}
@@ -501,13 +501,13 @@ function BotInvitePanel() {
             Open bot invite →
           </a>
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-            <code className="flex-1 min-w-0 break-all rounded bg-slate-950/60 border border-slate-700/80 px-2 py-1.5 text-[11px] text-slate-300">
+            <code className="flex-1 min-w-0 break-all site-surface px-2 py-1.5 text-[11px] text-slate-300">
               {inviteUrl}
             </code>
             <button
               type="button"
               onClick={() => void copyUrl()}
-              className="shrink-0 px-2.5 py-1.5 rounded border border-slate-600 text-slate-200 hover:bg-slate-800"
+              className="site-btn-secondary shrink-0 px-2.5 py-1.5"
             >
               {copied ? 'Copied' : 'Copy invite URL'}
             </button>
@@ -529,7 +529,7 @@ function StatusBadge({ status }: { status: string }) {
     pending: 'bg-amber-950/50 text-amber-300 border-amber-500/30',
     approved: 'bg-green-950/50 text-green-300 border-green-500/30',
     denied: 'bg-red-950/50 text-red-300 border-red-500/30',
-    withdrawn: 'bg-slate-800 text-slate-400 border-slate-600',
+    withdrawn: 'site-badge-slate text-slate-400',
   }
   return (
     <span className={`text-[10px] uppercase tracking-wide px-2 py-0.5 rounded border ${styles[status] || styles.pending}`}>
@@ -562,7 +562,7 @@ function OfficerAppCard({
   }
 
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-3 space-y-3">
+    <div className="site-surface px-4 py-3 space-y-3">
       <div className="flex justify-between gap-2">
         <div>
           <p className="text-white text-sm font-medium">
@@ -597,7 +597,7 @@ function OfficerAppCard({
           type="button"
           disabled={busy}
           onClick={() => void review(true)}
-          className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg disabled:opacity-50"
+          className="site-btn-success px-3 py-1.5 text-sm disabled:opacity-50"
         >
           Approve
         </button>
@@ -605,7 +605,7 @@ function OfficerAppCard({
           type="button"
           disabled={busy}
           onClick={() => void review(false)}
-          className="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 text-white text-sm rounded-lg disabled:opacity-50"
+          className="site-btn-danger px-3 py-1.5 text-sm disabled:opacity-50"
         >
           Deny
         </button>
@@ -721,7 +721,7 @@ function ServiceEditor({
   }
 
   return (
-    <div className="rounded-xl border border-slate-700 bg-slate-900/50 p-4 space-y-3">
+    <div className="site-surface p-4 space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-white text-sm font-medium">{serviceType.label}</p>

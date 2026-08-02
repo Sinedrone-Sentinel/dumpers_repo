@@ -29,7 +29,7 @@ export default function Login() {
           <SiteBrandTitle size="hero" layout="stacked" slogan={SITE_SLOGAN} />
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+        <div className="site-modal-shell p-8 shadow-2xl">
           <div className="space-y-6">
             <div className="text-center">
               <h2 className="text-xl font-semibold text-white mb-2">Welcome</h2>
@@ -39,7 +39,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="bg-red-900/50 border border-red-500/50 rounded-lg p-3 text-red-400 text-sm">
+              <div className="site-banner-error p-3 text-sm">
                 {error}
               </div>
             )}
@@ -54,17 +54,17 @@ export default function Login() {
 
             <div className="relative py-2">
               <div className="absolute inset-0 flex items-center" aria-hidden>
-                <div className="w-full border-t border-slate-700" />
+                <div className="w-full site-divider" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-slate-900/80 px-2 text-slate-500">or</span>
+                <span className="site-page-bg px-2 text-slate-500">or</span>
               </div>
             </div>
 
             <button
               type="button"
               onClick={enterGuestPreview}
-              className="w-full px-6 py-3 rounded-xl border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 hover:bg-slate-800/60 text-sm font-medium transition-all"
+              className="site-btn-secondary w-full px-6 py-3 rounded-xl text-sm font-medium"
             >
               Continue in Offline Mode
             </button>

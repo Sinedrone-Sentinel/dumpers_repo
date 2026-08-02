@@ -170,7 +170,7 @@ export default function SiteTooltip({
           ? { position: 'fixed', top: position.top, left: position.left, zIndex: 9999 }
           : { position: 'fixed', top: -9999, left: -9999, visibility: 'hidden', zIndex: 9999 }
       }
-      className={`site-tooltip-panel pointer-events-none text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 bg-slate-900 border border-orange-500/30 rounded-lg shadow-xl ${panelClassName}`}
+      className={`site-tooltip-panel pointer-events-none ${panelClassName}`}
     >
       {content}
     </span>

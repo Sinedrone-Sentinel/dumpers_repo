@@ -68,8 +68,8 @@ const STATUS_STYLES: Record<string, string> = {
   ready_for_pickup: 'bg-cyan-950/50 text-cyan-300 border-cyan-500/30',
   fulfilled: 'bg-green-950/50 text-green-300 border-green-500/30',
   completed: 'bg-green-950/50 text-green-300 border-green-500/30',
-  archived: 'bg-slate-800/80 text-slate-400 border-slate-600',
-  cancelled: 'bg-slate-800 text-slate-400 border-slate-600',
+  archived: 'site-badge-slate text-slate-400',
+  cancelled: 'site-badge-slate text-slate-400',
 }
 
 const LIST_TABS: { id: OrderListTab; label: string }[] = [
@@ -433,7 +433,7 @@ export default function CustomOrdersRoute() {
                 orderLimits.can_create_order ||
                 orderLimits.can_create_sell_order)
                 ? 'bg-red-950/50 hover:bg-red-900/50 text-red-300 border-red-500/30'
-                : 'bg-slate-800/50 text-slate-500 border-slate-700 cursor-not-allowed'
+                : 'site-filter-idle opacity-50 cursor-not-allowed'
             }`}
             title={
               !isRsiVerified
@@ -453,7 +453,7 @@ export default function CustomOrdersRoute() {
       }
     >
       {error && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {error}
         </div>
       )}
@@ -512,10 +512,10 @@ export default function CustomOrdersRoute() {
           {orderLimits?.has_pending_buyer_rep && (
             <>
               <span className="text-slate-500">·</span>
-              <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
+              <span className="site-badge-slate text-xs">
                 {orderLimits.buyer_order_count}/{orderLimits.buyer_order_limit} orders
               </span>
-              <span className="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700 text-slate-400">
+              <span className="site-badge-slate text-xs">
                 {(orderLimits.buyer_order_total / 1000).toFixed(0)}k / {(orderLimits.buyer_auec_limit / 1000000).toFixed(0)}M aUEC
               </span>
               <a
@@ -570,7 +570,7 @@ export default function CustomOrdersRoute() {
         <div className="mb-6 space-y-3">
           <h2 className="text-white font-medium">My open listings</h2>
           {myListings.length === 0 ? (
-            <div className="p-6 bg-slate-900/30 border border-dashed border-slate-700 rounded-xl text-slate-400 text-sm">
+            <div className="site-empty !py-6 text-sm">
               No open listings. Click <strong className="text-slate-300">Post items</strong> to
               start your WTB or WTS listing on the Bazaar.
             </div>
@@ -594,16 +594,16 @@ export default function CustomOrdersRoute() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+        <div className="site-surface p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Active transactions</p>
           <p className="text-2xl font-bold text-amber-300 mt-1">{openOrderCount}</p>
         </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+        <div className="site-surface p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Completed</p>
           <p className="text-2xl font-bold text-cyan-300 mt-1">{completedOrderCount}</p>
           <p className="text-slate-500 text-[10px] mt-1">Ready for pickup or awaiting archive</p>
         </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+        <div className="site-surface p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">Total transactions</p>
           <p className="text-2xl font-bold text-white mt-1">{totalOrderCount}</p>
         </div>
@@ -626,7 +626,7 @@ export default function CustomOrdersRoute() {
               className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
                 listTab === tab.id
                   ? 'bg-red-950/50 text-red-200 border-red-500/40'
-                  : 'bg-slate-900/60 text-slate-400 border-slate-700 hover:border-slate-600'
+                  : 'site-filter-idle'
               }`}
             >
               {tab.label}
@@ -639,7 +639,7 @@ export default function CustomOrdersRoute() {
       </div>
 
       {showForm && user?.id && !editingOrderId && (
-        <div className="mb-6 bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+        <div className="mb-6 site-surface p-4">
           <h2 className="text-white font-medium mb-2">Post items</h2>
           <p className="text-slate-500 text-xs mb-4">
             Items post under {getDisplayName(profile)} and are added to your open WTB or WTS
@@ -666,7 +666,7 @@ export default function CustomOrdersRoute() {
       )}
 
       {editingOrderId && user?.id && (
-        <div className="mb-6 bg-slate-900/60 border border-orange-500/30 rounded-xl p-4">
+        <div className="mb-6 site-surface border-orange-500/30 p-4">
           <h2 className="text-white font-medium mb-2">Edit order</h2>
           <p className="text-slate-500 text-xs mb-4">
             Only pending orders with no fulfiller yet can be changed.
@@ -694,8 +694,8 @@ export default function CustomOrdersRoute() {
           <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
         </div>
       ) : visibleOrders.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
-          <p className="text-slate-400">
+        <div className="site-empty">
+          <p>
             {listTab === 'active' && 'No active transactions.'}
             {listTab === 'completed' &&
               'No completed orders. After pickup is confirmed, orders appear here for Archive & rate.'}
@@ -709,7 +709,7 @@ export default function CustomOrdersRoute() {
             return (
               <div
                 key={order.id}
-                className="bg-slate-900/60 border border-slate-700 rounded-xl p-4"
+                className="site-surface p-4"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div className="flex-1">
@@ -734,7 +734,7 @@ export default function CustomOrdersRoute() {
                         </span>
                       )}
                       {order.min_fulfiller_reputation != null && (
-                        <span className="px-2 py-0.5 rounded text-xs border bg-slate-800 text-slate-300 border-slate-600">
+                        <span className="site-badge-slate">
                           Min fulfiller rep {order.min_fulfiller_reputation}+
                         </span>
                       )}
@@ -835,7 +835,7 @@ export default function CustomOrdersRoute() {
                           order.listing_type !== 'wts')) && (
                         <button
                           onClick={() => void handleReleaseOrCancel(order)}
-                          className="px-2 py-1 text-xs bg-slate-800 text-slate-400 border border-slate-600 rounded"
+                          className="site-btn-secondary !px-2 !py-1 text-xs"
                         >
                           {releaseOrderButtonLabel(order, userId)}
                         </button>
@@ -890,7 +890,7 @@ export default function CustomOrdersRoute() {
               type="button"
               onClick={() => void handleDeleteOrder(deleteModalOrder.id)}
               disabled={deleteSubmitting}
-              className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              className="flex-1 px-4 py-2 site-btn-danger text-sm font-medium"
             >
               {deleteSubmitting ? 'Deleting…' : 'Delete'}
             </button>
@@ -910,7 +910,7 @@ export default function CustomOrdersRoute() {
               type="button"
               onClick={() => setDeleteModalOrder(null)}
               disabled={deleteSubmitting}
-              className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+              className="site-btn-secondary flex-1 text-sm"
             >
               Nevermind, I&apos;ll keep it
             </button>
@@ -920,7 +920,7 @@ export default function CustomOrdersRoute() {
 
       {disputeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-amber-500/40 rounded-xl p-6 max-w-md mx-4 shadow-xl w-full">
+          <div className="site-menu-panel border-amber-500/40 p-6 max-w-md mx-4 w-full">
             <h3 className="text-lg font-semibold text-amber-400 mb-2">Report Problem</h3>
             <p className="text-slate-400 text-sm mb-3">
               {disputeModal.orderTitle} — describe the issue. This pauses the pickup timer and alerts
@@ -932,7 +932,7 @@ export default function CustomOrdersRoute() {
               onChange={(e) => setDisputeDescription(e.target.value)}
               placeholder="e.g. Items were not ready, wrong quality, fulfiller not at location..."
               rows={4}
-              className="w-full px-3 py-2 mb-4 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 resize-none text-sm"
+              className="site-textarea w-full px-3 py-2 mb-4 min-h-0 resize-none text-sm"
             />
             <div className="flex gap-3 justify-end">
               <button
@@ -941,7 +941,7 @@ export default function CustomOrdersRoute() {
                   setDisputeModal(null)
                   setDisputeDescription('')
                 }}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
+                className="site-btn-secondary text-sm"
               >
                 Cancel
               </button>

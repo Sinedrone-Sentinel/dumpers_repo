@@ -41,10 +41,8 @@ function SimilarComponents({
           key={c.id}
           onClick={() => onSelect(c)}
           disabled={c.id === currentId}
-          className={`w-full flex items-center justify-between py-1.5 px-2 rounded text-left transition-colors ${
-            c.id === currentId
-              ? 'bg-slate-700/50 cursor-default'
-              : 'hover:bg-slate-700/30'
+          className={`site-menu-item w-full justify-between py-1.5 px-2 ${
+            c.id === currentId ? 'site-menu-item-active cursor-default' : ''
           }`}
         >
           <span className="text-sm text-white">{c.display_name}</span>
@@ -88,7 +86,7 @@ function UpgradePath({
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
               c.grade === currentGrade
                 ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300'
-                : 'bg-slate-700/50 border border-slate-600/50 text-slate-300 hover:bg-slate-700 hover:text-white'
+                : 'site-filter-idle'
             }`}
           >
             Grade {c.grade}
@@ -176,7 +174,7 @@ export default function ComponentDetailModal({
               </svg>
               Upgrade Path ({displayComponent.class})
             </h3>
-            <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+            <div className="p-3 site-surface">
               <UpgradePath
                 components={upgradePathComponents}
                 currentGrade={displayComponent.grade}
@@ -195,7 +193,7 @@ export default function ComponentDetailModal({
               </svg>
               Similar Components (Size {displayComponent.size} {displayComponent.component_type})
             </h3>
-            <div className="p-3 rounded-lg bg-slate-800/50 border border-slate-700/50 max-h-[200px] overflow-y-auto">
+            <div className="p-3 site-surface max-h-[200px] overflow-y-auto">
               <SimilarComponents
                 components={similarComponents}
                 currentId={displayComponent.id}
@@ -206,7 +204,7 @@ export default function ComponentDetailModal({
         )}
 
         {/* Full label / internal ID */}
-        <div className="pt-2 border-t border-slate-700/50">
+        <div className="pt-2 site-divider">
           <div className="text-xs text-slate-600">
             Internal: {displayComponent.internal_id}
           </div>

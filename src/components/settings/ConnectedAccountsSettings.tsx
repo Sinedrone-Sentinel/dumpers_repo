@@ -117,7 +117,7 @@ export default function ConnectedAccountsSettings({
             return (
               <div
                 key={provider}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-700/80 bg-slate-800/40 px-4 py-3"
+                className="flex flex-wrap items-center justify-between gap-3 site-surface px-4 py-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <AuthProviderIcon provider={provider} />
@@ -145,7 +145,7 @@ export default function ConnectedAccountsSettings({
                         ? `Disconnect ${OAUTH_PROVIDER_LABELS[provider]}`
                         : 'Keep at least one sign-in method connected'
                     }
-                    className="shrink-0 px-3 py-1.5 text-sm font-medium rounded-lg border border-slate-600 text-slate-300 hover:text-white hover:border-slate-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="site-btn-secondary shrink-0 !px-3 !py-1.5 text-sm disabled:cursor-not-allowed"
                   >
                     {isBusy ? 'Working…' : 'Disconnect'}
                   </button>
@@ -154,7 +154,7 @@ export default function ConnectedAccountsSettings({
                     type="button"
                     onClick={() => void handleLink(provider)}
                     disabled={isBusy || loading}
-                    className="shrink-0 px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="site-btn-secondary shrink-0 !px-3 !py-1.5 text-sm disabled:cursor-not-allowed"
                   >
                     {isBusy ? 'Redirecting…' : 'Connect'}
                   </button>

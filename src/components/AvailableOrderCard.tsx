@@ -65,12 +65,10 @@ export default function AvailableOrderCard({
   return (
     <div
       id={`fulfillment-order-${order.id}`}
-      className={`rounded-xl border bg-slate-900/60 transition-colors scroll-mt-24 ${
+      className={`site-card transition-colors scroll-mt-24 ${
         highlighted
           ? 'border-orange-400/70 ring-2 ring-orange-400/50'
-          : expanded
-            ? 'border-slate-600'
-            : 'border-slate-700'
+          : ''
       }`}
     >
       <div className="flex items-start gap-2 px-3 py-2">
@@ -133,7 +131,7 @@ export default function AvailableOrderCard({
             ) : null}
 
             {order.min_fulfiller_reputation != null ? (
-              <span className="px-2 py-0.5 rounded text-[10px] border bg-slate-800 text-slate-400 border-slate-600">
+              <span className="site-badge-slate text-[10px]">
                 Requires {isWts ? 'buyer' : 'fulfiller'} {order.min_fulfiller_reputation}+
               </span>
             ) : null}
@@ -143,7 +141,7 @@ export default function AvailableOrderCard({
       </div>
 
       {expanded ? (
-        <div className="px-3 pb-3 pt-1 border-t border-slate-700/80 space-y-2">
+        <div className="px-3 pb-3 pt-1 site-divider space-y-2">
           {!meetsMinRep ? (
             <p className="text-amber-400/90 text-xs">
               Your {isWts ? 'buyer' : 'fulfiller'} reputation is below this order&apos;s minimum.

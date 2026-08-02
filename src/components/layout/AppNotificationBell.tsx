@@ -80,10 +80,6 @@ export default function AppNotificationBell({
 
   const clearableCount = notifications.filter((n) => n.type !== 'questionnaire_available').length
 
-  const triggerClass = disabled
-    ? 'border-slate-700/80 bg-slate-900/50 opacity-50 cursor-not-allowed'
-    : 'border-slate-600 bg-slate-800/90 hover:bg-slate-700 transition-colors'
-
   return (
     <div ref={containerRef} className="relative shrink-0">
       <button
@@ -100,7 +96,7 @@ export default function AppNotificationBell({
               : 'Notifications'
         }
         aria-expanded={open}
-        className={`relative flex items-center justify-center px-2 py-1 rounded-lg border shadow-md ${triggerClass}`}
+        className="site-chrome-control relative px-2 py-1"
       >
         <svg
           className={`w-6 h-6 ${disabled ? 'text-slate-500' : 'text-slate-300'}`}
@@ -118,15 +114,15 @@ export default function AppNotificationBell({
         </svg>
         {!disabled && unreadCount > 0 && (
           <span
-            className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-slate-800"
+            className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-orange-500 ring-2 ring-slate-950"
             aria-hidden
           />
         )}
       </button>
 
       {open && !disabled && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-slate-800 rounded-xl shadow-xl z-[60] overflow-hidden border border-slate-700">
-          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-700">
+        <div className="site-menu-panel absolute right-0 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] z-[60]">
+          <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/35 to-transparent">
             <p className="text-white font-medium text-sm">Notifications</p>
             {clearableCount > 0 && (
               <button
@@ -147,12 +143,12 @@ export default function AppNotificationBell({
               const isCollapsed = collapsedCategories.has(category.id)
 
               return (
-                <section key={category.id} className="border-b border-slate-700/80 last:border-b-0">
+                <section key={category.id} className="border-b border-orange-500/15 last:border-b-0">
                   <button
                     type="button"
                     onClick={() => toggleCategory(category.id)}
                     aria-expanded={!isCollapsed}
-                    className="w-full flex items-center justify-between gap-2 px-4 py-2.5 bg-slate-800/60 hover:bg-slate-800 transition-colors text-left"
+                    className="site-menu-section w-full flex items-center justify-between gap-2 text-left hover:from-orange-950/55 transition-colors"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <svg
@@ -193,7 +189,7 @@ export default function AppNotificationBell({
                           return (
                             <li
                               key={notification.id}
-                              className="border-t border-slate-700/50 px-4 py-3 text-sm"
+                              className="site-list-row px-4 py-3 text-sm"
                             >
                               <div className="flex items-start justify-between gap-2">
                                 <div className="min-w-0 flex gap-2">

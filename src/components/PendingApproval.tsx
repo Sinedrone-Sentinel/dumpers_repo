@@ -13,7 +13,7 @@ export default function PendingApproval() {
           <SiteBrandTitle size="hero" />
         </div>
 
-        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+        <div className="site-surface rounded-2xl p-8 shadow-2xl">
           <div className="text-center space-y-6">
             <div className="w-20 h-20 mx-auto bg-amber-500/20 rounded-full flex items-center justify-center">
               <svg className="w-10 h-10 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@ export default function PendingApproval() {
             </div>
 
             {profile && (
-              <div className="bg-slate-800/50 rounded-xl p-4 text-left">
+              <div className="site-surface rounded-xl p-4 text-left">
                 <p className="text-slate-500 text-sm mb-1">Signed in as</p>
                 <p className="text-white font-medium">{profile.display_name || profile.email}</p>
                 <p className="text-slate-400 text-sm">{profile.email}</p>
@@ -42,7 +42,7 @@ export default function PendingApproval() {
 
             <button
               onClick={signOut}
-              className="w-full px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl transition-colors"
+              className="site-btn-secondary w-full px-6 py-3 rounded-xl font-medium"
             >
               Sign Out
             </button>

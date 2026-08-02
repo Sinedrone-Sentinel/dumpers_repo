@@ -107,8 +107,8 @@ export default function WikeloRoute() {
                   selectedCategory === id
                     ? 'site-btn-accent shadow-lg'
                     : count === 0
-                      ? 'bg-slate-800/50 text-slate-600 border border-slate-700 cursor-not-allowed'
-                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                      ? 'site-filter-idle opacity-40 cursor-not-allowed'
+                      : 'site-filter-idle'
                 }`}
               >
                 {label}
@@ -126,7 +126,7 @@ export default function WikeloRoute() {
 
       <section className="mt-4 w-full min-w-0">
         {filteredTrades.length === 0 ? (
-          <div className="text-center py-24 bg-slate-900/30 rounded-3xl border-2 border-dashed border-slate-700">
+          <div className="site-empty py-24">
             <div className="text-6xl mb-4 animate-bounce">🔍</div>
             <p className="text-slate-400 text-xl font-medium mb-4">No trades found</p>
             <button

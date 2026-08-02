@@ -453,7 +453,7 @@ export default function ResourceTrackerRoute() {
       return (
         <div
           key={lineKey}
-          className="min-w-0 bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 rounded-xl p-4"
+          className="site-card min-w-0 p-4 overflow-visible"
         >
           <div className="flex items-start justify-between gap-2 min-w-0">
             <div className="min-w-0 flex-1">
@@ -468,7 +468,7 @@ export default function ResourceTrackerRoute() {
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
               {isPersonalTab && (
-                <span className="px-2 py-0.5 rounded text-xs border font-medium bg-amber-950/40 text-amber-200 border-amber-500/30">
+                <span className="site-badge-amber">
                   {qualityLabel}
                 </span>
               )}
@@ -483,12 +483,12 @@ export default function ResourceTrackerRoute() {
                   resourceKey={card.resource_key}
                   value={editValue}
                   onValueChange={setEditValue}
-                  className="w-28 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-sm tabular-nums"
+                  className="site-input w-28 px-2 py-1 text-sm tabular-nums"
                 />
                 <span className="text-slate-500 text-xs">{qtyUnit}</span>
                 <button
                   onClick={() => void handleSaveEdit(card.resource_key, quality, card.note)}
-                  className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded"
+                  className="px-2 py-1 text-xs site-btn-success text-xs"
                 >
                   Save
                 </button>
@@ -516,7 +516,7 @@ export default function ResourceTrackerRoute() {
                       setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
                     }}
                     title="Manually set quantity"
-                    className="ml-1 px-2 py-0.5 text-xs font-medium rounded border bg-orange-950/50 text-orange-300 border-orange-500/40 hover:bg-orange-900/60 hover:text-orange-200 transition-colors"
+                    className="ml-1 px-2 py-0.5 text-xs site-btn-accent site-btn-shimmer"
                   >
                     Set
                   </button>
@@ -534,7 +534,7 @@ export default function ResourceTrackerRoute() {
                       onClick={() =>
                         void handleAdjust(card.resource_key, quality, -step, card.note)
                       }
-                      className="flex-1 min-w-0 py-1 text-xs bg-red-950/50 hover:bg-red-900/50 text-red-300 border border-red-500/30 rounded tabular-nums"
+                      className="site-btn-danger flex-1 min-w-0 !px-1 py-1 text-xs tabular-nums"
                     >
                       −{step}
                     </button>
@@ -542,7 +542,7 @@ export default function ResourceTrackerRoute() {
                       onClick={() =>
                         void handleAdjust(card.resource_key, quality, step, card.note)
                       }
-                      className="flex-1 min-w-0 py-1 text-xs bg-green-950/50 hover:bg-green-900/50 text-green-300 border border-green-500/30 rounded tabular-nums"
+                      className="site-btn-success flex-1 min-w-0 !px-1 py-1 text-xs tabular-nums"
                     >
                       +{step}
                     </button>
@@ -553,13 +553,13 @@ export default function ResourceTrackerRoute() {
           </div>
 
           {isPersonalTab && isGuest && card.note && (
-            <div className="mt-3 pt-3 border-t border-slate-700/50">
+            <div className="mt-3 pt-3 site-divider">
               <p className="text-xs text-slate-400 italic">&quot;{card.note}&quot;</p>
             </div>
           )}
 
           {isPersonalTab && !isGuest && (
-            <div className="mt-3 pt-3 border-t border-slate-700/50">
+            <div className="mt-3 pt-3 site-divider">
               {editingNoteKey === lineKey ? (
                 <div className="flex gap-2 items-center">
                   <input
@@ -568,7 +568,7 @@ export default function ResourceTrackerRoute() {
                     onChange={(e) => setNoteValue(e.target.value.slice(0, 64))}
                     placeholder="Add note (64 chars max)"
                     maxLength={64}
-                    className="flex-1 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-white text-xs placeholder-slate-500"
+                    className="site-input flex-1 px-2 py-1 text-xs"
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
@@ -581,7 +581,7 @@ export default function ResourceTrackerRoute() {
                   />
                   <button
                     onClick={() => void handleSaveNote(card.resource_key, quality, card.note)}
-                    className="px-2 py-1 text-xs bg-green-900/50 text-green-300 border border-green-500/30 rounded shrink-0"
+                    className="px-2 py-1 text-xs site-btn-success text-xs shrink-0"
                   >
                     Save
                   </button>
@@ -638,21 +638,19 @@ export default function ResourceTrackerRoute() {
       seoIntro="Track mined and refined Star Citizen crafting resources for fabricator planning — personal stock cards, notes, can-craft views, and Dumper's Fair-Value Price (DFP) context when enabled."
     >
       {isGuest && (
-        <div className="mb-4 p-3 rounded-lg bg-amber-900/20 border border-amber-500/30 text-amber-200 text-sm">
+        <div className="mb-4 site-banner-warn">
           <strong className="text-amber-100">Offline Mode</strong> — Your resource inventory is saved locally in this browser.
           Sign in to sync it to your account.
         </div>
       )}
 
       <div className="w-full min-w-0 overflow-x-hidden">
-      <div className="flex flex-wrap gap-2 mb-6 p-1 bg-slate-900/60 border border-slate-700 rounded-xl w-fit max-w-full">
+      <div className="site-chip-strip mb-6 w-fit max-w-full">
         <button
           type="button"
           onClick={() => setActiveTab('personal')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
-            activeTab === 'personal'
-              ? 'site-filter-selected-red shadow-lg shadow-red-500/10'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+          className={`px-4 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+            activeTab === 'personal' ? 'site-filter-selected-orange' : 'site-filter-idle'
           }`}
         >
           My Resources
@@ -661,10 +659,8 @@ export default function ResourceTrackerRoute() {
           <button
             type="button"
             onClick={() => setActiveTab('site')}
-            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
-              activeTab === 'site'
-                ? 'site-filter-selected-purple shadow-lg shadow-purple-500/10'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            className={`px-4 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+              activeTab === 'site' ? 'site-filter-selected-orange' : 'site-filter-idle'
             }`}
           >
             Site Total
@@ -673,10 +669,8 @@ export default function ResourceTrackerRoute() {
         <button
           type="button"
           onClick={() => setActiveTab('can_craft')}
-          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
-            activeTab === 'can_craft'
-              ? 'site-filter-selected-red shadow-lg shadow-red-500/10'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+          className={`px-4 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+            activeTab === 'can_craft' ? 'site-filter-selected-orange' : 'site-filter-idle'
           }`}
         >
           Can Craft
@@ -712,7 +706,7 @@ export default function ResourceTrackerRoute() {
             />
           )
         ) : readOnly ? (
-          <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 text-slate-400 text-sm">
+          <div className="site-banner-info">
             Site Total is a read-only rollup — summed from every approved member&apos;s My
             Resources (excluding banned accounts). Update your own quantities under My
             Resources.
@@ -721,7 +715,7 @@ export default function ResourceTrackerRoute() {
       </div>
 
       {(error || stockError) && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {stockError ?? error}
           {(stockError ?? error)?.includes('get_site_total_inventory') && (
             <p className="mt-2 text-red-200/80">
@@ -732,20 +726,20 @@ export default function ResourceTrackerRoute() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 w-full min-w-0">
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+        <div className="site-surface p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">{tabLabel}</p>
           <p className="text-2xl font-bold text-white mt-1">{cardCount}</p>
         </div>
-        <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+        <div className="site-surface p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">
             {isPersonalTab ? 'On hand' : 'On hand (site-wide)'}
           </p>
           <div className="mt-1 space-y-1">
-            <p className="text-2xl font-bold text-purple-400 tabular-nums leading-tight">
+            <p className="text-2xl font-bold text-orange-300 tabular-nums leading-tight">
               {formatResourceQuantity(onHandTotals.totalScu)}
               <span className="ml-1.5 text-sm font-medium text-slate-400">SCU</span>
             </p>
-            <p className="text-2xl font-bold text-purple-400 tabular-nums leading-tight">
+            <p className="text-2xl font-bold text-amber-200/90 tabular-nums leading-tight">
               {Math.trunc(onHandTotals.totalUnits).toLocaleString()}
               <span className="ml-1.5 text-sm font-medium text-slate-400">units</span>
             </p>
@@ -754,14 +748,12 @@ export default function ResourceTrackerRoute() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-3 mb-4">
-        <div className="flex rounded-lg border border-slate-600 overflow-hidden shrink-0 w-fit">
+        <div className="site-chip-strip shrink-0 w-fit">
           <button
             type="button"
             onClick={() => setViewMode('cards')}
-            className={`px-3 py-2 text-sm font-medium transition-colors site-btn-shimmer ${
-              viewMode === 'cards'
-                ? 'site-filter-selected-red'
-                : 'bg-slate-900/70 text-slate-400 hover:text-white'
+            className={`px-3 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+              viewMode === 'cards' ? 'site-filter-selected-orange' : 'site-filter-idle'
             }`}
           >
             Cards
@@ -769,10 +761,8 @@ export default function ResourceTrackerRoute() {
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            className={`px-3 py-2 text-sm font-medium transition-colors border-l border-slate-600 site-btn-shimmer ${
-              viewMode === 'list'
-                ? 'site-filter-selected-red'
-                : 'bg-slate-900/70 text-slate-400 hover:text-white'
+            className={`px-3 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+              viewMode === 'list' ? 'site-filter-selected-orange' : 'site-filter-idle'
             }`}
           >
             List
@@ -785,13 +775,13 @@ export default function ResourceTrackerRoute() {
           placeholder={
             isPersonalTab ? 'Search stock or locations...' : 'Search site totals...'
           }
-          className="flex-1 px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20"
+          className="site-input flex-1 px-3 py-2"
         />
         {qualityFilterOptions.length > 0 && (
           <select
             value={qualityFilter}
             onChange={(e) => setQualityFilter(e.target.value)}
-            className="px-3 py-2 bg-slate-900/70 border border-slate-600 rounded-lg text-white text-sm min-w-[10rem]"
+            className="site-input px-3 py-2 text-sm min-w-[10rem]"
             aria-label="Filter by quality"
           >
             <option value="">All qualities</option>
@@ -805,7 +795,7 @@ export default function ResourceTrackerRoute() {
       </div>
 
       {isPersonalTab && locationFilterOptions.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div className="site-chip-strip mb-4">
           {locationFilterOptions.map((opt) => (
             <button
               key={opt.key}
@@ -813,10 +803,10 @@ export default function ResourceTrackerRoute() {
               onClick={() =>
                 setLocationFilter(locationFilter === opt.key ? null : opt.key)
               }
-              className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium site-btn-shimmer ${
                 locationFilter === opt.key
                   ? 'site-filter-selected-cyan'
-                  : 'bg-cyan-950/50 text-cyan-300 hover:bg-cyan-900/50 border border-cyan-800/50'
+                  : 'site-filter-idle'
               }`}
               title={`Normalized as ${opt.key}`}
             >
@@ -830,12 +820,12 @@ export default function ResourceTrackerRoute() {
       <div className="relative w-full min-w-0 min-h-[24rem]">
       {loading && stockCards.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-12 h-12 border-t-2 border-b-2 border-red-500 rounded-full animate-spin mx-auto" />
+          <div className="w-12 h-12 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin mx-auto" />
           <p className="text-slate-400 mt-4">Loading resources...</p>
         </div>
       ) : filteredCards.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
-          <p className="text-slate-400">
+        <div className="site-empty">
+          <p>
             {isPersonalTab ? (
               <>
                 No stock cards yet. Use <span className="text-slate-300 font-medium">Add Material Stock</span> above to create your first Q-tier entry.{' '}
@@ -862,10 +852,10 @@ export default function ResourceTrackerRoute() {
       )}
       {loading && stockCards.length > 0 && (
         <div
-          className="absolute inset-0 flex items-center justify-center bg-slate-950/40 rounded-2xl"
+          className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[1px] rounded-2xl"
           aria-busy="true"
         >
-          <div className="w-10 h-10 border-t-2 border-b-2 border-red-500 rounded-full animate-spin" />
+          <div className="w-10 h-10 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin" />
         </div>
       )}
       </div>

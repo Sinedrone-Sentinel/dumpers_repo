@@ -98,7 +98,7 @@ function BlueprintUnlockBadge({
       className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded border ${
         known
           ? 'text-purple-300 border-purple-500/40 bg-purple-950/30'
-          : 'text-slate-500 border-slate-600/40 bg-slate-900/40'
+          : 'site-badge-slate text-slate-500'
       }`}
     >
       {label}
@@ -125,7 +125,7 @@ function MissionChecklistGroups({
 }) {
   if (groups.length === 0) {
     return (
-      <p className="text-slate-500 text-sm bg-slate-900/40 rounded-xl p-4 border border-slate-800">
+      <p className="text-slate-500 text-sm site-surface p-4">
         No missions on your checklist yet. Add missions from your targets on the left, or use{' '}
         <strong className="text-amber-300/90">Add all</strong> per blueprint.
       </p>
@@ -137,9 +137,9 @@ function MissionChecklistGroups({
       {groups.map((group) => (
         <div
           key={group.giver}
-          className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden"
+          className="site-section overflow-hidden"
         >
-          <div className="px-4 py-2 bg-slate-800/80 border-b border-slate-700">
+          <div className="site-section-header px-4 py-2">
             <h3 className="text-sm font-semibold text-purple-300">{group.giver}</h3>
           </div>
           <ul className="divide-y divide-slate-800">
@@ -349,7 +349,7 @@ export default function TargetsRoute() {
           <button
             type="button"
             onClick={openBpDumperModal}
-            className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-600 rounded-lg transition-colors"
+            className="site-btn-secondary px-3 py-1.5 text-sm text-amber-300"
           >
             {DUMPER_APPS_DISPLAY_NAME}
           </button>
@@ -362,7 +362,7 @@ export default function TargetsRoute() {
           {viewMode === 'tracker' && (
             <button
               onClick={() => void refresh()}
-              className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded-lg transition-colors"
+              className="site-btn-secondary px-3 py-1.5 text-sm"
             >
               Refresh
             </button>
@@ -397,14 +397,14 @@ export default function TargetsRoute() {
       <BpDumperCallout onOpenModal={openBpDumperModal} />
 
       {isGuest && viewMode === 'tracker' && (
-        <div className="mb-4 px-3 py-2 rounded-lg border border-amber-500/30 bg-amber-950/30 text-xs text-amber-200/90">
+        <div className="mb-4 site-banner-warn text-xs text-amber-200/90">
           <strong className="text-amber-100">Offline Mode</strong> — Your tracked missions save in this browser only. 
           Sign in to sync across devices.
         </div>
       )}
 
       {error && viewMode === 'tracker' && (
-        <div className="mb-4 p-3 rounded-lg bg-red-900/30 border border-red-500/40 text-red-300 text-sm">
+        <div className="mb-4 site-banner-error">
           {error}
           {error.includes('relation') && (
             <p className="mt-2 text-red-200/80">
@@ -428,11 +428,11 @@ export default function TargetsRoute() {
       {viewMode === 'tracker' && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+            <div className="site-surface p-4">
               <p className="text-slate-500 text-xs uppercase tracking-wide">Targets</p>
               <p className="text-2xl font-bold text-white mt-1">{targetCount}</p>
             </div>
-            <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-4">
+            <div className="site-surface p-4">
               <p className="text-slate-500 text-xs uppercase tracking-wide">On checklist</p>
               <p className="text-2xl font-bold text-amber-400 mt-1">{activeMissionCount}</p>
             </div>
@@ -441,7 +441,7 @@ export default function TargetsRoute() {
           {loading ? (
             <div className="text-center py-12 text-slate-400">Loading tracked blueprints…</div>
           ) : targetCount === 0 ? (
-            <div className="text-center py-16 bg-slate-900/30 rounded-2xl border border-dashed border-slate-700">
+            <div className="site-empty">
               <p className="text-slate-400 text-lg mb-2">No tracked blueprints yet</p>
               <p className="text-slate-500 text-sm">
                 Use the <strong className="text-amber-400">Track</strong> button on a blueprint card or inside the blueprint details,
@@ -458,7 +458,7 @@ export default function TargetsRoute() {
                   <button
                     type="button"
                     onClick={() => setCollapsedIds(new Set(targetBlueprintRecords.map(bp => bp.internalName)))}
-                    className="px-2 py-1 text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded transition-colors"
+                    className="site-btn-ghost px-2 py-1 text-xs"
                   >
                     Close All
                   </button>
@@ -467,7 +467,7 @@ export default function TargetsRoute() {
                   <button
                     type="button"
                     onClick={() => setCollapsedIds(new Set())}
-                    className="px-2 py-1 text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-500 rounded transition-colors"
+                    className="site-btn-ghost px-2 py-1 text-xs"
                   >
                     Open All
                   </button>
@@ -489,9 +489,9 @@ export default function TargetsRoute() {
                 return (
                   <div
                     key={bp.internalName}
-                    className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden"
+                    className="site-section overflow-hidden"
                   >
-                    <div className="px-3 py-2.5 bg-slate-800/80 border-b border-slate-700 flex items-start justify-between gap-2">
+                    <div className="site-section-header px-3 py-2.5 flex items-start justify-between gap-2">
                       <button
                         type="button"
                         onClick={() => toggleCollapsed(bp.internalName)}
@@ -575,7 +575,7 @@ export default function TargetsRoute() {
                                   className={`w-full text-left px-3 py-2.5 transition-colors ${
                                     onChecklist
                                       ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
-                                      : 'hover:bg-slate-800/50 cursor-pointer'
+                                      : 'hover:bg-orange-950/20 cursor-pointer'
                                   }`}
                                   title={
                                     onChecklist
