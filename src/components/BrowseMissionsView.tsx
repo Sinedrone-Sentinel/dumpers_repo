@@ -20,6 +20,7 @@ import {
   writeMissionTrackerUiState,
   type BrowseSystem,
 } from '../lib/missionTrackerUiState'
+import { MissionDescriptionText } from '../lib/missionDescriptionFormat'
 
 type BlueprintRecord = {
   file: string
@@ -960,14 +961,25 @@ export default function BrowseMissionsView({
                 {renderMissionTags(selectedMission)}
               </div>
               {selectedMission.description ? (
-                <div className="mt-3 rounded-lg border border-slate-800/80 bg-slate-900/40 px-3 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-                    Mission text
-                  </p>
-                  <p className="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
-                    {selectedMission.description}
-                  </p>
-                </div>
+                <details
+                  key={selectedMission.entryKey}
+                  className="mt-3 rounded-lg border border-slate-800/80 bg-slate-900/40 px-3 py-2 group"
+                >
+                  <summary className="cursor-pointer list-none flex items-center justify-between gap-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400 hover:text-slate-200 [&::-webkit-details-marker]:hidden">
+                    <span>Mission text</span>
+                    <span className="text-slate-500 font-normal normal-case tracking-normal text-xs">
+                      <span className="group-open:hidden">Show</span>
+                      <span className="hidden group-open:inline">Hide</span>
+                    </span>
+                  </summary>
+                  <div className="pb-2 pt-1 border-t border-slate-800/80 mt-1">
+                    <MissionDescriptionText text={selectedMission.description} />
+                    <p className="mt-2 text-[11px] text-slate-500">
+                      Violet chips are filled in by the game when you take the contract (location,
+                      destination, amounts, etc.).
+                    </p>
+                  </div>
+                </details>
               ) : null}
               <p className="text-sm text-slate-400 mt-3">
                 Blueprint rewards from this contract
