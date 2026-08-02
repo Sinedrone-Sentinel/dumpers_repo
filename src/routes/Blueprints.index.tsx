@@ -764,7 +764,7 @@ export default function BlueprintsRoute() {
         </div>
 
         {/* Main Category Tags */}
-        <div className="flex flex-wrap gap-1.5 lg:gap-2 items-center">
+        <div className="site-chip-strip gap-1.5 lg:gap-2">
             <BlueprintMaterialFilter
               materials={allBlueprintMaterials}
               selectedMaterial={selectedMaterial}
@@ -778,12 +778,12 @@ export default function BlueprintsRoute() {
                   key={cat}
                   onClick={() => handleMainCategoryClick(cat)}
                   disabled={count === 0}
-                  className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all site-btn-shimmer ${
+                  className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all site-btn-shimmer ${
                     selectedMainCategory === cat
                       ? 'site-btn-accent shadow-lg'
                       : count === 0
                         ? 'bg-slate-800/50 text-slate-600 border border-slate-700 cursor-not-allowed'
-                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-600'
+                        : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-600/80'
                   }`}
                 >
                   <span className="hidden md:inline">{cat}</span>

@@ -65,7 +65,8 @@ export function stylesFromAccentHex(hex: string | null | undefined): TickerAccen
       color: lightenHex(accent, 0.55),
     },
     barAccentStyle: {
-      borderTopColor: rgba(accent, 0.45),
+      borderTopColor: rgba(accent, 0.55),
+      boxShadow: `inset 0 1px 0 ${rgba(accent, 0.12)}`,
     },
     swatchStyle: {
       backgroundColor: accent,

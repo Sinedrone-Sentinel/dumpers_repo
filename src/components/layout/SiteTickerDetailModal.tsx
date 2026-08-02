@@ -46,7 +46,7 @@ export default function SiteTickerDetailModal({ item, onClose }: Props) {
           {entry.items.map((row) => (
             <li
               key={row.key}
-              className="rounded-lg border border-slate-700/80 bg-slate-950/50 px-3 py-2"
+              className="site-surface px-3 py-2"
               style={layout.rowStyle}
             >
               <p className="text-sm text-slate-100 font-medium">{row.label}</p>

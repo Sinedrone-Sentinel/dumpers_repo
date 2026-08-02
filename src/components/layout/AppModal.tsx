@@ -15,12 +15,12 @@ const sizeClasses: Record<AppModalSize, string> = {
 }
 
 const modalShellClasses: Record<AppModalSize, string> = {
-  sm: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
-  md: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
-  lg: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
-  xl: 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
-  '2xl': 'max-h-[min(90dvh,calc(100dvh-2rem))] overflow-hidden',
-  '3xl': 'max-h-[min(86dvh,calc(100dvh-3rem))] overflow-hidden',
+  sm: 'max-h-[min(88dvh,calc(100dvh-var(--site-ticker-height,0px)-2rem))] overflow-hidden',
+  md: 'max-h-[min(88dvh,calc(100dvh-var(--site-ticker-height,0px)-2rem))] overflow-hidden',
+  lg: 'max-h-[min(88dvh,calc(100dvh-var(--site-ticker-height,0px)-2rem))] overflow-hidden',
+  xl: 'max-h-[min(88dvh,calc(100dvh-var(--site-ticker-height,0px)-2rem))] overflow-hidden',
+  '2xl': 'max-h-[min(88dvh,calc(100dvh-var(--site-ticker-height,0px)-2rem))] overflow-hidden',
+  '3xl': 'max-h-[min(86dvh,calc(100dvh-var(--site-ticker-height,0px)-2.5rem))] overflow-hidden',
 }
 
 const zIndexClasses: Record<AppModalZIndex, string> = {
@@ -67,17 +67,18 @@ export default function AppModal({
 
   return (
     <div
-      className={`fixed inset-0 bg-black/85 ${zIndexClasses[zIndex]} flex items-center justify-center p-4`}
+      className={`fixed inset-0 bg-black/70 backdrop-blur-[2px] ${zIndexClasses[zIndex]} flex items-center justify-center p-3 sm:p-4`}
+      style={{ paddingBottom: 'max(0.75rem, calc(var(--site-ticker-height, 0px) + 0.75rem))' }}
       onClick={closeOnBackdrop ? onClose : undefined}
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
     >
       <div
-        className={`bg-slate-900 border border-slate-700 rounded-2xl w-full shadow-2xl flex flex-col min-w-0 ${sizeClasses[size]} ${shellClassName || modalShellClasses[size]}`}
+        className={`site-modal-shell w-full max-w-[min(96vw,100%)] ${sizeClasses[size]} ${shellClassName || modalShellClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">
+        <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-orange-500/15 shrink-0">
           <div className="min-w-0">
             <h2 id={titleId} className="text-lg font-bold text-white leading-snug">
               {title}
@@ -103,13 +104,15 @@ export default function AppModal({
         {headerExtra}
 
         <div
-          className={`p-3 sm:p-4 overflow-y-auto overscroll-contain flex-1 min-h-0 min-w-0 ${bodyClassName}`.trim()}
+          className={`p-3 sm:p-4 overflow-y-auto overflow-x-auto overscroll-contain flex-1 min-h-0 min-w-0 ${bodyClassName}`.trim()}
         >
           {children}
         </div>
 
         {footer && (
-          <div className="p-3 sm:p-4 border-t border-slate-700 shrink-0">{footer}</div>
+          <div className="p-3 sm:p-4 border-t border-orange-500/15 shrink-0 bg-black/20">
+            {footer}
+          </div>
         )}
       </div>
     </div>

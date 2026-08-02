@@ -454,10 +454,10 @@ export default function MiningTrackerRoute() {
     >
       {/* View Mode Switcher */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
-        <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit">
+        <div className="site-chip-strip w-fit">
           <button
             onClick={() => setViewMode('tracker')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               viewMode === 'tracker' 
                 ? 'site-filter-selected-orange' 
                 : 'text-slate-400 hover:text-white'
@@ -467,7 +467,7 @@ export default function MiningTrackerRoute() {
           </button>
           <button
             onClick={() => setViewMode('guide')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               viewMode === 'guide' 
                 ? 'site-filter-selected-orange' 
                 : 'text-slate-400 hover:text-white'
@@ -477,7 +477,7 @@ export default function MiningTrackerRoute() {
           </button>
           <button
             onClick={() => setViewMode('ledger')}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
               viewMode === 'ledger'
                 ? 'site-filter-selected-orange'
                 : 'text-slate-400 hover:text-white'
@@ -512,7 +512,7 @@ export default function MiningTrackerRoute() {
       )}
 
       {!loading && !error && data && viewMode === 'tracker' && (
-        <div className="flex gap-6 items-start min-w-[760px]">
+        <div className="flex flex-col xl:flex-row gap-6 items-stretch xl:items-start min-w-0">
           <div className="flex-1 min-w-0 space-y-6">
           <section className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
@@ -710,7 +710,7 @@ export default function MiningTrackerRoute() {
           </section>
           </div>
 
-          <div className="sticky top-[var(--site-header-height,3.5rem)] self-start w-[320px] shrink-0 flex flex-col gap-2">
+          <div className="w-full xl:w-[320px] xl:sticky xl:top-[var(--site-header-height,3.5rem)] self-start shrink-0 flex flex-col gap-2 min-w-0">
             {canUseLoadouts ? (
               <SiteTooltip content={SELECTED_LOADOUT_TOOLTIP} side="bottom" className="block w-full">
                 <p className="text-xs text-center text-slate-400 w-full px-1">

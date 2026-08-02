@@ -11,6 +11,9 @@ const sizeMaxWidth: Record<AppModalSize, number> = {
   sm: 448,
   md: 512,
   lg: 576,
+  xl: 1024,
+  '2xl': 896,
+  '3xl': 1280,
 }
 
 const zIndexClasses: Record<AppModalZIndex, string> = {
@@ -78,12 +81,25 @@ export interface BrandRevealModalShellProps {
   titleId?: string
 }
 
+function readTickerHeightPx(): number {
+  if (typeof document === 'undefined') return 0
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--site-ticker-height')
+  const n = Number.parseFloat(raw)
+  return Number.isFinite(n) ? n : 0
+}
+
 function computeTargetRect(size: AppModalSize) {
-  const width = Math.min(sizeMaxWidth[size], window.innerWidth - 32)
-  const left = (window.innerWidth - width) / 2
-  const top = Math.max(16, window.innerHeight * MODAL_TOP_VH)
-  const height = Math.max(280, window.innerHeight * MODAL_HEIGHT_VH - top - 16)
-  return { top, left, width, height }
+  const marginX = 16
+  const marginTop = Math.max(12, window.innerHeight * MODAL_TOP_VH)
+  const ticker = readTickerHeightPx()
+  const marginBottom = Math.max(16, ticker + 12)
+  const maxW = sizeMaxWidth[size] ?? 576
+  const width = Math.min(maxW, window.innerWidth - marginX * 2)
+  const left = Math.max(marginX, (window.innerWidth - width) / 2)
+  const available = window.innerHeight - marginTop - marginBottom
+  const ideal = window.innerHeight * MODAL_HEIGHT_VH
+  const height = Math.max(240, Math.min(ideal, available))
+  return { top: marginTop, left, width, height }
 }
 
 function pickRandomWormholeTarget(rect: { top: number; left: number; width: number; height: number }) {
@@ -341,9 +357,7 @@ function BrandRevealAnimatedModal({
           }
         >
           <div
-            className={`relative bg-slate-950/95 border border-orange-500/30 rounded-2xl w-full h-full shadow-2xl shadow-orange-950/40 flex flex-col min-w-0 overflow-hidden ${
-              closing ? 'pointer-events-none' : ''
-            }`}
+            className={`site-modal-shell w-full h-full ${closing ? 'pointer-events-none' : ''}`}
             style={{
               height: targetRect.height,
               maxHeight: targetRect.height,
@@ -351,7 +365,7 @@ function BrandRevealAnimatedModal({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative flex flex-col flex-1 min-h-0 min-w-0">
-              <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-slate-700 shrink-0">
+              <div className="flex items-start justify-between gap-3 p-3 sm:p-4 border-b border-orange-500/15 shrink-0">
                 <div className="min-w-0">
                   <h2 id={titleId} className="text-lg font-bold text-white leading-snug">
                     {title}
@@ -371,12 +385,14 @@ function BrandRevealAnimatedModal({
 
               {headerExtra}
 
-              <div className="p-3 sm:p-4 overflow-y-auto overscroll-contain flex-1 min-h-0 min-w-0">
+              <div className="p-3 sm:p-4 overflow-y-auto overflow-x-auto overscroll-contain flex-1 min-h-0 min-w-0">
                 {children}
               </div>
 
               {footer && (
-                <div className="p-3 sm:p-4 border-t border-slate-700 shrink-0">{footer}</div>
+                <div className="p-3 sm:p-4 border-t border-orange-500/15 shrink-0 bg-black/20">
+                  {footer}
+                </div>
               )}
 
               {showBlinds && (

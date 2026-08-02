@@ -371,10 +371,10 @@ export default function TargetsRoute() {
       }
     >
       {/* View Mode Toggle */}
-      <div className="flex items-center gap-2 p-1 bg-slate-800/50 rounded-lg w-fit mb-6">
+      <div className="site-chip-strip w-fit mb-6">
         <button
           onClick={() => setViewMode('tracker')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
             viewMode === 'tracker'
               ? 'site-filter-selected-orange'
               : 'text-slate-400 hover:text-white'
@@ -384,7 +384,7 @@ export default function TargetsRoute() {
         </button>
         <button
           onClick={() => setViewMode('browse')}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${
+          className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors site-btn-shimmer ${
             viewMode === 'browse'
               ? 'site-filter-selected-orange'
               : 'text-slate-400 hover:text-white'
