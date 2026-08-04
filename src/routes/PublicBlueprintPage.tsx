@@ -195,9 +195,14 @@ export default function PublicBlueprintPage() {
 
       <footer className="mx-auto max-w-3xl space-y-1 px-4 py-8 text-xs text-slate-600 sm:px-6">
         <p>{SITE_COPYRIGHT}</p>
-        <SitePrivacyLink className="text-xs" />
         <p>{SITE_SLOGAN}</p>
-        <SiteSupportLink className="text-xs" />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          <SitePrivacyLink />
+          <span className="text-slate-500" aria-hidden>
+            ·
+          </span>
+          <SiteSupportLink />
+        </div>
       </footer>
     </div>
   )

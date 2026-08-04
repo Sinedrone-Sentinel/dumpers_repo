@@ -329,7 +329,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Manage your profile and account from your avatar menu.',
     details: [
       'Verify your RSI Handle: get a short code, paste it into your public RSI citizen Bio, then Verify (proves you control that page)',
-      'After verifying you can remove the code from your RSI bio; changing handle clears verification and requires a new code',
+      'Handle is only saved after Verify succeeds — Get code alone does not set it; Change clears your handle until you verify a new (or re-verify the old) one',
+      'After verifying you can remove the code from your RSI bio',
       'Deduct inventory on craft complete: when enabled, finishing a WTB fulfillment deducts materials from My Resources (requires verified RSI Handle)',
       'Connect Google or Discord from Connected Accounts to sign in with either method on one account',
       'When provider emails match, sign-in automatically merges into your existing account',

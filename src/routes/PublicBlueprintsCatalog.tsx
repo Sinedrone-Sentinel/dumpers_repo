@@ -164,8 +164,13 @@ export default function PublicBlueprintsCatalog() {
       <footer className="mx-auto max-w-5xl space-y-1 px-4 py-8 text-xs text-slate-600 sm:px-6">
         <p>{SITE_COPYRIGHT}</p>
         <p>{SITE_SLOGAN}</p>
-        <SitePrivacyLink className="text-xs" />
-        <SiteSupportLink className="text-xs" />
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          <SitePrivacyLink />
+          <span className="text-slate-500" aria-hidden>
+            ·
+          </span>
+          <SiteSupportLink />
+        </div>
       </footer>
     </div>
   )

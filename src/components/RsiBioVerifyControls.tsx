@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
+  clearMyRsiHandle,
   formatChallengeExpiry,
   getMyRsiVerifyChallenge,
   issueRsiVerifyChallenge,
@@ -33,6 +34,7 @@ export default function RsiBioVerifyControls({
   const [challenge, setChallenge] = useState<RsiChallenge | null>(null)
   const [issuing, setIssuing] = useState(false)
   const [verifying, setVerifying] = useState(false)
+  const [clearing, setClearing] = useState(false)
   const [localError, setLocalError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -71,10 +73,29 @@ export default function RsiBioVerifyControls({
       return
     }
 
+    // Issuing a code for a different handle clears any prior verified handle server-side.
+    await onVerified()
     setChallenge(result.challenge)
     if (result.challenge.handle !== rsiHandle.trim()) {
       onRsiHandleChange(result.challenge.handle)
     }
+  }
+
+  const handleChangeHandle = async () => {
+    setClearing(true)
+    setLocalError(null)
+    const result = await clearMyRsiHandle()
+    setClearing(false)
+    if (!result.ok) {
+      reportError(result.error)
+      return
+    }
+    setChallenge(null)
+    onRsiHandleChange('')
+    onSuccessMessage?.(
+      'RSI handle cleared. Enter a handle, get a code, and verify before it is saved again.',
+    )
+    await onVerified()
   }
 
   const handleVerify = async () => {
@@ -129,11 +150,22 @@ export default function RsiBioVerifyControls({
           <button
             type="button"
             onClick={handleIssueCode}
-            disabled={issuing || verifying || !rsiHandle.trim() || inputDisabled}
+            disabled={issuing || verifying || clearing || !rsiHandle.trim() || inputDisabled}
             className={btnClass}
             title="Get a temporary code to paste into your RSI bio"
           >
             {issuing ? 'Getting…' : challenge ? 'New code' : 'Get code'}
+          </button>
+        )}
+        {isVerified && (
+          <button
+            type="button"
+            onClick={handleChangeHandle}
+            disabled={clearing || issuing || verifying || inputDisabled}
+            className="site-btn-secondary shrink-0 px-4 py-2.5 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Clears your current handle until you verify a new one (or re-verify the old one)"
+          >
+            {clearing ? 'Clearing…' : 'Change'}
           </button>
         )}
       </div>

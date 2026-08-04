@@ -156,7 +156,7 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
                 Your RSI handle helps other players identify you when coordinating trades and crafting.
-                Verification proves you control that citizen page (temporary code in your public Bio).
+                It is only saved after Verify succeeds — typing a handle or getting a code alone does not set it.
               </p>
               <div className="mt-2 p-3 bg-amber-900/30 border border-amber-500/30 rounded-lg">
                 <p className="text-xs text-amber-300 flex items-start gap-2">

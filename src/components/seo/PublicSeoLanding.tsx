@@ -302,8 +302,13 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
 
         <footer className="space-y-2 border-t border-slate-800/80 px-4 py-8 text-center text-sm text-slate-500">
           <p>{SITE_COPYRIGHT}</p>
-          <SitePrivacyLink />
-          <SiteSupportLink />
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <SitePrivacyLink />
+            <span className="text-slate-600" aria-hidden>
+              ·
+            </span>
+            <SiteSupportLink />
+          </div>
         </footer>
       </div>
     </div>

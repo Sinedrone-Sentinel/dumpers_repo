@@ -367,7 +367,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   ? "You have active orders — clear them before changing your handle."
                   : isVerified
                     ? `Verified on ${profile?.rsi_handle_verified_at ? new Date(profile.rsi_handle_verified_at).toLocaleDateString() : 'RSI'}`
-                    : 'Get a code, paste it into your public RSI Bio, then Verify.'
+                    : 'Your handle is only saved after Verify succeeds. Change clears it until you verify again.'
               }
             >
               <RsiBioVerifyControls

@@ -806,22 +806,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  /** RSI handles are verified-only — clients cannot set a handle string directly. */
   const updateRsiHandle = useCallback(async (handle: string): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) return false
 
-    const trimmedHandle = handle.trim() || null
-    const { error } = await supabase
-      .from('profiles')
-      .update({ rsi_handle: trimmedHandle })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating RSI handle:', error)
+    const trimmedHandle = handle.trim()
+    if (trimmedHandle) {
+      console.error('RSI handle can only be set via bio verification')
       return false
     }
 
-    setProfile(prev => prev ? { ...prev, rsi_handle: trimmedHandle } : null)
+    const { data, error } = await supabase.rpc('clear_my_rsi_handle')
+    if (error || !(data as { success?: boolean } | null)?.success) {
+      console.error('Error clearing RSI handle:', error)
+      return false
+    }
+
+    setProfile((prev) =>
+      prev
+        ? {
+            ...prev,
+            rsi_handle: null,
+            rsi_handle_verified: false,
+            rsi_handle_verified_at: null,
+          }
+        : null,
+    )
     return true
   }, [])
 

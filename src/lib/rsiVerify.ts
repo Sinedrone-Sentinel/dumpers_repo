@@ -24,6 +24,19 @@ function parseChallengePayload(data: Record<string, unknown> | null): RsiChallen
   }
 }
 
+/** Clears verified/unverified handle so the member can verify a new one (or re-verify). */
+export async function clearMyRsiHandle(): Promise<{ ok: true } | { ok: false; error: string }> {
+  const { data, error } = await supabase.rpc('clear_my_rsi_handle')
+  if (error) {
+    return { ok: false, error: error.message || 'Failed to clear RSI handle' }
+  }
+  const row = (data ?? null) as Record<string, unknown> | null
+  if (!row?.success) {
+    return { ok: false, error: String(row?.error || 'Failed to clear RSI handle') }
+  }
+  return { ok: true }
+}
+
 export async function issueRsiVerifyChallenge(handle: string): Promise<IssueRsiChallengeResult> {
   const trimmed = handle.trim()
   if (!trimmed) return { ok: false, error: 'Enter an RSI handle first.' }

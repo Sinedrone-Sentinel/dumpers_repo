@@ -6,15 +6,13 @@ export default function SiteSupportLink({ className = '' }: { className?: string
   if (!url) return null
 
   return (
-    <p className={className}>
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-amber-400 underline-offset-2 transition hover:text-amber-300 hover:underline"
-      >
-        {SITE_SUPPORT_LABEL}
-      </a>
-    </p>
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`text-amber-400 underline-offset-2 transition hover:text-amber-300 hover:underline ${className}`}
+    >
+      {SITE_SUPPORT_LABEL}
+    </a>
   )
 }

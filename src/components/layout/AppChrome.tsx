@@ -199,8 +199,13 @@ export default function AppChrome({
 
       <footer className="site-footer site-shell relative z-10 mt-8 space-y-1">
         <p>{SITE_COPYRIGHT}</p>
-        <SitePrivacyLink className="text-xs" />
-        <SiteSupportLink className="text-xs" />
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
+          <SitePrivacyLink />
+          <span className="text-slate-600" aria-hidden>
+            ·
+          </span>
+          <SiteSupportLink />
+        </div>
         <p className="text-xs text-slate-600">
           Anonymous usage metrics (tool visits and active time) help improve the site.
         </p>
