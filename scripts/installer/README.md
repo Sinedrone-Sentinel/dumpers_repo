@@ -4,6 +4,13 @@ Builds **`DumperApps.exe`** — a single-file Windows app (PyInstaller). No inst
 
 Members: download from **Dumper Apps** on the site → run the exe → paste API key → done.
 
+## App icon
+
+Source art: `scripts/installer/bp-dumper-icon.png` (custom BP Dumper mark — not the site DR favicon).
+
+- `generate-icon.ps1` / `generate_icon.py` → `dumper-apps.ico` + `tray.ico` (GitHub portable exe)
+- `msix/generate-msix-assets.py` → Store/MSIX tile logos (local MSIX only)
+
 ## Local build (portable exe)
 
 ```powershell
@@ -32,7 +39,8 @@ Partner Center identity (locked in `msix/AppxManifest.xml.template`):
 | Field | Value |
 |---|---|
 | Identity Name | `SinedroneSentinel.BPDumper` |
-| Publisher | `CN=B80FF4F0-83D8-4581-AB1F-92981A9DA66B` |
+| Publisher | `CN=BB0EF4E0-83D8-4581-AB1E-92981A9DA66B` |
+| Package Family Name | `SinedroneSentinel.BPDumper_fvbh2q0x73pq6` |
 | DisplayName | `BP Dumper` |
 | Store ID | `9PMR8CPSB04K` |
 

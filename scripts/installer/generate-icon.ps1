@@ -1,13 +1,13 @@
-# Build dumper-apps.ico + tray.ico from the site DR favicon (public/favicon.png).
+# Build dumper-apps.ico + tray.ico from scripts/installer/bp-dumper-icon.png.
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path
 )
 
 $ErrorActionPreference = "Stop"
 
-$pngPath = Join-Path $RepoRoot "public/favicon.png"
+$pngPath = Join-Path $PSScriptRoot "bp-dumper-icon.png"
 if (-not (Test-Path $pngPath)) {
-    throw "Missing favicon source: $pngPath"
+    throw "Missing BP Dumper icon source: $pngPath"
 }
 
 python -m pip install pillow --quiet

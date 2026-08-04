@@ -1,14 +1,14 @@
-"""Generate BP Dumper .ico files from public/favicon.png (transparent DR mark).
+"""Generate BP Dumper .ico files from scripts/installer/bp-dumper-icon.png.
 
-Crops the letterboxed favicon to the DR glyph, then centers it on a square
-transparent canvas with padding so 16–256px Windows icons stay readable.
+Centers the custom-shaped mark on a transparent square so 16–256px Windows
+icons stay readable (exe + tray / shortcuts).
 """
 from pathlib import Path
 
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
-PNG = ROOT / "public" / "favicon.png"
+PNG = Path(__file__).resolve().parent / "bp-dumper-icon.png"
 INSTALLER = Path(__file__).resolve().parent
 OUTPUTS = (
     INSTALLER / "dumper-apps.ico",  # PyInstaller exe icon
@@ -18,7 +18,7 @@ OUTPUTS = (
 # Master canvas + Windows ICO sizes (Pillow skips sizes larger than the source
 # image, so we always build from a 256px master).
 MASTER = 256
-PADDING = 0.14  # fraction of canvas kept as transparent margin
+PADDING = 0.06  # icon art already has transparent margin
 SIZES = [(256, 256), (128, 128), (64, 64), (48, 48), (32, 32), (16, 16)]
 
 
@@ -52,7 +52,7 @@ def write_ico(master: Image.Image, dest: Path) -> None:
 
 def main() -> None:
     if not PNG.is_file():
-        raise SystemExit(f"Missing favicon source: {PNG}")
+        raise SystemExit(f"Missing BP Dumper icon source: {PNG}")
     master = build_master(Image.open(PNG))
     for ico in OUTPUTS:
         write_ico(master, ico)

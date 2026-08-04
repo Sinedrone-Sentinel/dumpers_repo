@@ -41,7 +41,7 @@ Write-Step "Installing build dependencies"
 python -m pip install --upgrade pip --quiet
 python -m pip install -r (Join-Path $bpDir "requirements.txt") pyinstaller pillow --quiet
 
-Write-Step "Generating DR logo icon"
+Write-Step "Generating BP Dumper icon"
 & (Join-Path $PSScriptRoot "generate-icon.ps1") -RepoRoot $RepoRoot
 
 Write-Step "Building single-file DumperApps exe"
