@@ -1,6 +1,6 @@
 {
   "name": "bp-dumper",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "private": true,
   "description": "BP Dumper release version (managed by semantic-release)"
 }
