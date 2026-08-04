@@ -6,19 +6,20 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap uap10 rescap">
   <!--
-    Identity MUST match Partner Center Product Identity exactly.
+    Identity MUST match Partner Center Product Identity exactly
+    (Partner Center Packages validation Expected values).
     Store ID: 9PMR8CPSB04K
-    Package Family Name: SinedroneSentinel.BPDumper_fvbhhzq0x73pq
+    Package Family Name: SinedroneSentinel.BPDumper_fvbh2q0x73pq6
   -->
   <Identity
     Name="SinedroneSentinel.BPDumper"
-    Publisher="CN=B80FF4F0-83D8-4581-AB1F-92981A9DA66B"
+    Publisher="CN=BB0EF4E0-83D8-4581-AB1E-92981A9DA66B"
     Version="{{VERSION}}"
     ProcessorArchitecture="x64" />
   <Properties>
     <DisplayName>BP Dumper</DisplayName>
     <PublisherDisplayName>Sinedrone Sentinel</PublisherDisplayName>
-    <Description>Star Citizen blueprint log watcher for Dumper's Repo — syncs unlocks and powers Live Mission Tracker.</Description>
+    <Description>Star Citizen blueprint log watcher for Dumper's Repo - syncs unlocks and powers Live Mission Tracker.</Description>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Resources>
