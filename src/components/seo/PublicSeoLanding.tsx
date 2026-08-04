@@ -8,6 +8,7 @@ import { SEO_LANDING_FAQS } from '../../config/seoFaqs'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 import SiteSupportLink from '../layout/SiteSupportLink'
+import SitePrivacyLink from '../layout/SitePrivacyLink'
 
 type FeatureCard = {
   title: string
@@ -301,6 +302,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
 
         <footer className="space-y-2 border-t border-slate-800/80 px-4 py-8 text-center text-sm text-slate-500">
           <p>{SITE_COPYRIGHT}</p>
+          <SitePrivacyLink />
           <SiteSupportLink />
         </footer>
       </div>

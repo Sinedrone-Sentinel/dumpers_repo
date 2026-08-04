@@ -15,6 +15,7 @@ import {
 import { blueprintDisplayName, blueprintSeoPath } from '../lib/blueprintSeoSlug'
 import { absoluteUrl } from '../config/seo'
 import SiteSupportLink from '../components/layout/SiteSupportLink'
+import SitePrivacyLink from '../components/layout/SitePrivacyLink'
 
 export default function PublicBlueprintPage() {
   const { slug: rawSlug } = useParams({ strict: false }) as { slug?: string }
@@ -194,6 +195,7 @@ export default function PublicBlueprintPage() {
 
       <footer className="mx-auto max-w-3xl space-y-1 px-4 py-8 text-xs text-slate-600 sm:px-6">
         <p>{SITE_COPYRIGHT}</p>
+        <SitePrivacyLink className="text-xs" />
         <p>{SITE_SLOGAN}</p>
         <SiteSupportLink className="text-xs" />
       </footer>

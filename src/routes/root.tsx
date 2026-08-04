@@ -19,6 +19,7 @@ import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import AnalyticsRoute from './Analytics.index'
 import PartnershipRoute from './Partnership.index'
 import ThemePreviewRoute from './ThemePreview.index'
+import PrivacyRoute from './Privacy.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -180,10 +181,18 @@ const themePreviewRoute = createRoute({
   component: ThemePreviewRoute,
 })
 
+/** Public Privacy Policy — no auth / Offline Mode required (Store + footer links). */
+const privacyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/privacy',
+  component: PrivacyRoute,
+})
+
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   publicBlueprintsRoute,
   publicBlueprintPageRoute,
+  privacyRoute,
   wikeloRoute,
   miningTrackerRoute,
   commodityLookupRoute,

@@ -10,6 +10,7 @@ const SKIP_PATH_PREFIXES = [
   '/support-dashboard',
   '/discord-subscribe',
   '/theme-preview',
+  '/privacy',
 ]
 
 export type AnalyticsContext = {

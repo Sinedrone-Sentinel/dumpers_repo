@@ -10,6 +10,7 @@ Allow: /commodity-lookup
 Allow: /archive
 Allow: /bazaar
 Allow: /archive-guide.html
+Allow: /privacy
 
 Disallow: /analytics
 Disallow: /support-dashboard

@@ -41,6 +41,7 @@ export const SEO_SITEMAP_PATHS = [
   '/archive/',
   '/bazaar/',
   '/archive-guide.html',
+  '/privacy/',
 ] as const
 
 const pages: Record<string, SeoPageConfig> = {
@@ -103,6 +104,12 @@ const pages: Record<string, SeoPageConfig> = {
     description:
       'Manage your Star Citizen WTB and WTS listings, fulfillments, and marketplace history on Dumper\'s Repo.',
     canonicalPath: '/orders/',
+  },
+  '/privacy': {
+    title: "Privacy Policy | Dumper's Repo",
+    description:
+      "Privacy Policy for Dumper's Repo — how we collect, use, and share account, analytics, marketplace, and BP Dumper data.",
+    canonicalPath: '/privacy/',
   },
 }
 

@@ -30,7 +30,11 @@ import AppBootstrapScreen from './bootstrap/AppBootstrapScreen'
 function isPublicSeoPath(pathname) {
   const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
   const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
-  return normalized === '/blueprints' || normalized.startsWith('/blueprints/')
+  return (
+    normalized === '/blueprints' ||
+    normalized.startsWith('/blueprints/') ||
+    normalized === '/privacy'
+  )
 }
 
 /** Temporary theme gallery — always reachable without auth / Offline Mode. */

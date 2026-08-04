@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBlueprintData } from './blueprints'
 import { getSeoSlugForInternalName } from '../lib/blueprintSeoContent'
 import SiteSupportLink from '../components/layout/SiteSupportLink'
+import SitePrivacyLink from '../components/layout/SitePrivacyLink'
 
 type CatalogRow = {
   name: string
@@ -163,6 +164,7 @@ export default function PublicBlueprintsCatalog() {
       <footer className="mx-auto max-w-5xl space-y-1 px-4 py-8 text-xs text-slate-600 sm:px-6">
         <p>{SITE_COPYRIGHT}</p>
         <p>{SITE_SLOGAN}</p>
+        <SitePrivacyLink className="text-xs" />
         <SiteSupportLink className="text-xs" />
       </footer>
     </div>

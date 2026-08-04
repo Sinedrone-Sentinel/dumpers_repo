@@ -235,6 +235,18 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               {!rulesScrolledToEnd && (
                 <p className="text-xs text-amber-300/90">Scroll to the end to continue</p>
               )}
+              <p className="text-xs text-slate-500">
+                By continuing you acknowledge our{' '}
+                <a
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sky-400 underline-offset-2 hover:text-sky-300 hover:underline"
+                >
+                  Privacy Policy
+                </a>
+                .
+              </p>
             </div>
           )}
 
