@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap10 rescap">
+  <!--
+    Identity MUST match Partner Center Product Identity exactly.
+    Store ID: 9PMR8CPSB04K
+    Package Family Name: SinedroneSentinel.BPDumper_fvbhhzq0x73pq
+  -->
+  <Identity
+    Name="SinedroneSentinel.BPDumper"
+    Publisher="CN=B80FF4F0-83D8-4581-AB1F-92981A9DA66B"
+    Version="{{VERSION}}"
+    ProcessorArchitecture="x64" />
+  <Properties>
+    <DisplayName>BP Dumper</DisplayName>
+    <PublisherDisplayName>Sinedrone Sentinel</PublisherDisplayName>
+    <Description>Star Citizen blueprint log watcher for Dumper's Repo — syncs unlocks and powers Live Mission Tracker.</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+  <Capabilities>
+    <!-- Full-trust Win32: reads Star Citizen Game.log / logbackups under the install path; POSTs to org webhook. -->
+    <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient" />
+  </Capabilities>
+  <Applications>
+    <Application
+      Id="BPDumper"
+      Executable="DumperApps.exe"
+      EntryPoint="Windows.FullTrustApplication"
+      uap10:RuntimeBehavior="packagedClassicApp"
+      uap10:TrustLevel="mediumIL">
+      <uap:VisualElements
+        DisplayName="BP Dumper"
+        Description="Star Citizen blueprint log watcher for Dumper's Repo"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Square71x71Logo="Assets\Square71x71Logo.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+</Package>

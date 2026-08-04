@@ -25,8 +25,32 @@ def _resource_dir() -> Path:
         return Path(sys._MEIPASS)
     return Path(__file__).resolve().parent
 
+
+def _is_msix_packaged() -> bool:
+    """True when running as a Microsoft Store / MSIX install (not portable exe)."""
+    if sys.platform != "win32":
+        return False
+    if os.environ.get("PACKAGE_FAMILY_NAME") or os.environ.get("MsixPackageFamilyName"):
+        return True
+    try:
+        parts = [p.lower() for p in Path(sys.executable).resolve().parts]
+        return "windowsapps" in parts
+    except OSError:
+        return False
+
+
 def _app_dir() -> Path:
-    """Directory for user-writable files (.env, cache) — next to the exe when frozen."""
+    """Directory for user-writable files (.env, cache).
+
+    Portable frozen exe: next to the exe.
+    MSIX / Store install: %LOCALAPPDATA%\\BP Dumper (WindowsApps is not writable).
+    Script checkout: next to dumper.py.
+    """
+    if _is_msix_packaged():
+        base = Path(os.environ.get("LOCALAPPDATA") or (Path.home() / "AppData" / "Local"))
+        path = base / "BP Dumper"
+        path.mkdir(parents=True, exist_ok=True)
+        return path
     if getattr(sys, "frozen", False):
         return Path(sys.executable).resolve().parent
     return Path(__file__).resolve().parent
@@ -362,13 +386,22 @@ def raise_if_update_required(res) -> None:
 
 
 def keep_app_up_to_date_enabled(env_vars: dict) -> bool:
-    """Default ON when unset — members must opt out explicitly."""
+    """Default ON when unset — members must opt out explicitly. Store/MSIX never auto-updates from GitHub."""
+    if _is_msix_packaged():
+        return False
     raw = (env_vars.get("KEEP_APP_UP_TO_DATE") or os.getenv("KEEP_APP_UP_TO_DATE") or "true").strip().lower()
     return raw not in ("0", "false", "n", "no", "off")
 
 
 def perform_auto_update(latest_ver: str, download_url: str) -> None:
-    """Download latest DumperApps.exe next to this process and relaunch (frozen Windows builds)."""
+    """Download latest DumperApps.exe next to this process and relaunch (portable frozen Windows builds)."""
+    if _is_msix_packaged():
+        print(
+            f"{Colors.YELLOW}[Update] Microsoft Store installs update through the Store — "
+            f"not via GitHub auto-download.{Colors.RESET}"
+        )
+        sys.exit(1)
+
     url = (download_url or DEFAULT_DOWNLOAD_URL).strip() or DEFAULT_DOWNLOAD_URL
     latest_label = latest_ver or "latest"
     print(f"\n{Colors.CYAN}[Update] Downloading BP Dumper {latest_label}...{Colors.RESET}")
@@ -376,7 +409,7 @@ def perform_auto_update(latest_ver: str, download_url: str) -> None:
 
     if not getattr(sys, "frozen", False):
         print(
-            f"{Colors.RED}[Update] Auto-update only works for the packaged DumperApps.exe. "
+            f"{Colors.RED}[Update] Auto-update only works for the portable DumperApps.exe. "
             f"Update from: {DEFAULT_RELEASES_URL}{Colors.RESET}"
         )
         sys.exit(1)
@@ -428,6 +461,12 @@ def handle_update_required(err: DumperUpdateRequired, *, keep_up_to_date: bool) 
         f"\n{Colors.RED}[Update required] This BP Dumper ({DUMPER_VERSION}) is outdated. "
         f"Latest is {latest}.{Colors.RESET}"
     )
+    if _is_msix_packaged():
+        print(
+            f"{Colors.YELLOW}Open Microsoft Store → Library (or the BP Dumper product page) "
+            f"and install the update.{Colors.RESET}"
+        )
+        sys.exit(1)
     if keep_up_to_date:
         perform_auto_update(err.latest, url)
     print(f"{Colors.YELLOW}Keep App Up to Date is off — download and run:{Colors.RESET}")
@@ -2026,15 +2065,22 @@ def main():
         if user_watch == 'n':
             args.watch = False
 
-        # Keep App Up to Date (default Y)
-        try:
-            user_keep_updated = input(
-                "Keep App Up to Date (auto-download new BP Dumper when released)? (Y/N, Enter = Y): "
-            ).strip().lower()
-        except (KeyboardInterrupt, EOFError):
-            print("\nAborted.")
-            sys.exit(0)
-        keep_app_up_to_date = "false" if user_keep_updated == "n" else "true"
+        # Keep App Up to Date (default Y) — Store/MSIX updates via Microsoft Store only
+        if _is_msix_packaged():
+            keep_app_up_to_date = "false"
+            print(
+                f"{Colors.DIM}Microsoft Store build — updates come from the Store "
+                f"(GitHub auto-update disabled).{Colors.RESET}"
+            )
+        else:
+            try:
+                user_keep_updated = input(
+                    "Keep App Up to Date (auto-download new BP Dumper when released)? (Y/N, Enter = Y): "
+                ).strip().lower()
+            except (KeyboardInterrupt, EOFError):
+                print("\nAborted.")
+                sys.exit(0)
+            keep_app_up_to_date = "false" if user_keep_updated == "n" else "true"
 
         # Prompt Key (only if not dry run)
         if not args.dry_run:

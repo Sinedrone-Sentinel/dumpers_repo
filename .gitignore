@@ -56,6 +56,11 @@ scripts/bp-dumper-py/dist/
 scripts/bp-dumper-py/build/
 scripts/bp-dumper-py/*.spec
 
+# Windows installer / Store MSIX outputs (MSIX is Store-only — never publish to GitHub Releases)
+scripts/installer/output/
+scripts/installer/pyinstaller-work/
+scripts/installer/msix/Assets/
+
 # Generated blueprint lookup copies (canonical: src/data/blueprint-name-lookup.json)
 scripts/bp-dumper-go/lookup.json
 scripts/bp-dumper-py/lookup.json

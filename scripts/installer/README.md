@@ -4,19 +4,46 @@ Builds **`DumperApps.exe`** — a single-file Windows app (PyInstaller). No inst
 
 Members: download from **Dumper Apps** on the site → run the exe → paste API key → done.
 
-## Local build
+## Local build (portable exe)
 
 ```powershell
 node scripts/copy-blueprint-lookup.mjs
 pwsh scripts/installer/build-exe.ps1
 ```
 
-Output: `scripts/installer/output/DumperApps.exe`
+Output: `scripts/installer/output/DumperApps.exe` (gitignored)
+
+## Microsoft Store MSIX (local / private only)
+
+**Do not** attach `BPDumper.msix` to GitHub Releases or public workflow artifacts. Upload only via Partner Center (product **BP Dumper**, Store ID `9PMR8CPSB04K`).
+
+Requires Windows 10/11 SDK (`MakeAppx.exe` on PATH or under `Windows Kits\10\bin`).
+
+```powershell
+node scripts/copy-blueprint-lookup.mjs
+pwsh scripts/installer/build-exe.ps1
+pwsh scripts/installer/build-msix.ps1
+```
+
+Output: `scripts/installer/output/BPDumper.msix` (gitignored)
+
+Partner Center identity (locked in `msix/AppxManifest.xml.template`):
+
+| Field | Value |
+|---|---|
+| Identity Name | `SinedroneSentinel.BPDumper` |
+| Publisher | `CN=B80FF4F0-83D8-4581-AB1F-92981A9DA66B` |
+| DisplayName | `BP Dumper` |
+| Store ID | `9PMR8CPSB04K` |
+
+On submission, explain **runFullTrust**: Win32 console tool that reads Star Citizen `Game.log` / `logbackups` under the user install path and POSTs unlock events to the org webhook.
+
+Store installs write `.env` / cache under `%LOCALAPPDATA%\BP Dumper` and update via the Store (not GitHub auto-update).
 
 ## CI
 
 - **Smoke test:** Actions → **Test Windows portable build** → Run workflow.
-- **Release build:** `.github/workflows/build-releases.yml` on tag / workflow_dispatch.
+- **Release build:** `.github/workflows/build-releases.yml` on tag / workflow_dispatch — publishes **exe only** (no MSIX).
 
 After changing blueprint lookup data, redeploy the webhook:
 

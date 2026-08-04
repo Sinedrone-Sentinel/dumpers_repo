@@ -3,11 +3,9 @@ import { GITHUB_RELEASES_PAGE } from '../../config/bpDumper'
 import { BP_DUMPER_DOWNLOADS } from '../../lib/bpDumperRelease'
 import { useBpDumperRelease } from '../../hooks/useBpDumperRelease'
 
-const WINDOWS_PORTABLE = BP_DUMPER_DOWNLOADS[0]
-
 export default function BpDumperDownloadLinks() {
   const { release, loading, error } = useBpDumperRelease()
-  const { name: downloadFilename, url: downloadUrl } = release.primaryDownload
+  const { name: downloadFilename, url: exeDownloadUrl } = release.primaryDownload
 
   return (
     <div className="space-y-3">
@@ -30,28 +28,47 @@ export default function BpDumperDownloadLinks() {
 
       {error && (
         <p className="text-xs text-slate-500">
-          {error}. Showing bundled version; download link still points at GitHub.
+          {error}. Showing bundled version; Windows exe link still points at GitHub.
         </p>
       )}
 
-      <a
-        href={downloadUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex flex-col gap-0.5 rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 transition-colors hover:border-amber-400/70 hover:bg-amber-500/15"
-      >
-        <span className="text-sm font-medium text-white">
-          {WINDOWS_PORTABLE.label}
-          <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
-            Start here
-          </span>
-        </span>
-        <span className="text-xs text-slate-400 leading-relaxed">{WINDOWS_PORTABLE.description}</span>
-        <span className="text-[11px] text-slate-500 font-mono truncate">{downloadFilename}</span>
-      </a>
+      <div className="space-y-2">
+        {BP_DUMPER_DOWNLOADS.map((opt) => {
+          const href =
+            opt.kind === 'release-asset' ? exeDownloadUrl : (opt.url ?? GITHUB_RELEASES_PAGE)
+          const isPrimary = opt.id === 'windows-portable'
+          return (
+            <a
+              key={opt.id}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={
+                isPrimary
+                  ? 'flex flex-col gap-0.5 rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 transition-colors hover:border-amber-400/70 hover:bg-amber-500/15'
+                  : 'flex flex-col gap-0.5 rounded-lg border border-orange-500/25 bg-slate-950/40 px-4 py-3 transition-colors hover:border-orange-400/40 hover:bg-slate-900/50'
+              }
+            >
+              <span className="text-sm font-medium text-white">
+                {opt.label}
+                {isPrimary && (
+                  <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
+                    Windows
+                  </span>
+                )}
+              </span>
+              <span className="text-xs text-slate-400 leading-relaxed">{opt.description}</span>
+              {opt.kind === 'release-asset' && (
+                <span className="text-[11px] text-slate-500 font-mono truncate">{downloadFilename}</span>
+              )}
+            </a>
+          )
+        })}
+      </div>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows only today. Double-click the exe — blueprint sync and Live Mission Tracker start in a console window.
+        Windows: use the portable exe. macOS / Linux: use the Python scripts (Python 3 +{' '}
+        <span className="font-mono">requirements.txt</span>).
       </p>
     </div>
   )

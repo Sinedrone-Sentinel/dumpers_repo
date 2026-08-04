@@ -2,13 +2,21 @@
 
 Desktop log watcher for Star Citizen — syncs blueprint unlocks and powers Live Mission Tracker on Windows.
 
-## Members (Windows)
+## Members
+
+### Windows (portable exe)
 
 1. Open **Dumper Apps** on the site (avatar menu or Mission Tracker).
 2. Download **Windows portable exe** and run it.
 3. Paste your API key when the console window asks on first run.
 
 The portable bundle includes Python and the scripts in this folder — no separate Python install required.
+
+### macOS / Linux (scripts)
+
+1. Open **Dumper Apps** → **Python scripts** (or clone this folder from the repo).
+2. Install Python 3.8+ and deps: `pip install -r requirements.txt`
+3. Run: `python dumper.py --watch --key "dr_your_api_key"` (or follow the prompts without `--key`).
 
 ## Developer setup
 

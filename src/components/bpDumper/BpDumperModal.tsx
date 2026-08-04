@@ -111,21 +111,28 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
         </section>
 
         <section className="space-y-2">
-          <h3 className="text-sm font-semibold text-white">How to set up (Windows)</h3>
+          <h3 className="text-sm font-semibold text-white">How to set up</h3>
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
-              Under <strong className="text-slate-300">Downloads</strong>, get{' '}
+              <strong className="text-slate-300">Windows:</strong> under Downloads, get{' '}
               <strong className="text-slate-300">Windows portable exe</strong> and run it. A console
               window opens for blueprint sync.
             </li>
             <li>
-              Copy your <strong className="text-slate-300">API key</strong> below, then paste it when the
-              black window asks for it on first run. Accept the one-time{' '}
+              <strong className="text-slate-300">macOS / Linux:</strong> open{' '}
+              <strong className="text-slate-300">Python scripts</strong>, install deps with{' '}
+              <span className="font-mono text-slate-300">pip install -r requirements.txt</span>, then
+              run <span className="font-mono text-slate-300">python dumper.py --watch</span> (see the
+              folder README).
+            </li>
+            <li>
+              Copy your <strong className="text-slate-300">API key</strong> below, then paste it when
+              prompted on first run. Accept the one-time{' '}
               <strong className="text-slate-300">full history import</strong> if you want to catch up from
               existing logbackups (can take a while if those folders are large).
             </li>
             <li>
-              Leave the window open while playing — new unlocks from the live Game.log sync
+              Leave the watcher running while playing — new unlocks from the live Game.log sync
               automatically after that.
             </li>
           </ol>
