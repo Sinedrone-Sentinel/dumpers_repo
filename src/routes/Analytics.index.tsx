@@ -82,6 +82,9 @@ type DumperUsageSummary = {
   total_invokes: number
   avg_invokes_per_active_user: number
   avg_invokes_per_day: number
+  /** Trailing 7 UTC days — used for capacity projection (not the period filter). */
+  pace_invokes_7d?: number
+  avg_invokes_per_day_7d?: number
   projected_monthly_invokes: number
   est_watch_hours: number
   top_users: DumperTopUser[]
@@ -413,12 +416,17 @@ export default function AnalyticsRoute() {
       {
         label: 'Avg invokes / day',
         value: Number(dumperUsage.avg_invokes_per_day ?? 0),
-        hint: 'Average Edge calls per day across the selected period.',
+        hint: 'Average Edge calls per day across the selected period only (can look low on 30d if early days were quiet).',
+      },
+      {
+        label: 'Avg invokes / day (7d pace)',
+        value: Number(dumperUsage.avg_invokes_per_day_7d ?? 0),
+        hint: 'Trailing 7 UTC days ÷ 7 — recent run-rate for capacity planning. Ignores the 1d/7d/30d period filter.',
       },
       {
         label: 'Projected monthly Edge',
         value: Number(dumperUsage.projected_monthly_invokes ?? 0),
-        hint: '(Avg invokes / active Dumper) × Active Dumpers (period) × 30. Compare to Supabase Free ~500,000 Edge invocations / month.',
+        hint: 'If the last 7 days continue: (7d pace invokes/day) × 30. Use this vs Supabase Free ~500,000 Edge / month — not diluted by quiet early days in a 30d window.',
       },
       {
         label: 'Est. watch-hours (period)',
