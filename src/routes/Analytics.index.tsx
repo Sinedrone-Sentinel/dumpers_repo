@@ -418,7 +418,7 @@ export default function AnalyticsRoute() {
       {
         label: 'Projected monthly Edge',
         value: Number(dumperUsage.projected_monthly_invokes ?? 0),
-        hint: 'If this pace continues: (avg invokes/day) × 30. Compare to Supabase Free ~500,000 Edge invocations / month.',
+        hint: '(Avg invokes / active Dumper) × Active Dumpers (period) × 30. Compare to Supabase Free ~500,000 Edge invocations / month.',
       },
       {
         label: 'Est. watch-hours (period)',
