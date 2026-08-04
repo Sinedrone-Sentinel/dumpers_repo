@@ -11,7 +11,21 @@ writeFileSync(join(distDir, 'version.json'), JSON.stringify({ buildId }, null, 2
 
 // GitHub Pages: serve the SPA shell for deep links and hard refreshes on client routes
 const indexPath = join(distDir, 'index.html')
-const indexHtml = readFileSync(indexPath, 'utf8')
+let indexHtml = readFileSync(indexPath, 'utf8')
+
+// Stamp build id into HTML so update checks can use the same artifact as the shell
+// (avoids version.json CDN skew vs hashed JS).
+const buildMeta = `<meta name="dr-build-id" content="${buildId}" />`
+if (indexHtml.includes('name="dr-build-id"')) {
+  indexHtml = indexHtml.replace(
+    /<meta\s+name="dr-build-id"\s+content="[^"]*"\s*\/?>/i,
+    buildMeta,
+  )
+} else {
+  indexHtml = indexHtml.replace('</head>', `    ${buildMeta}\n  </head>`)
+}
+writeFileSync(indexPath, indexHtml)
+
 writeFileSync(join(distDir, '404.html'), indexHtml)
 writeFileSync(join(distDir, '.nojekyll'), '')
 

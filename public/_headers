@@ -3,3 +3,6 @@
 
 /dfp-version.json
   Access-Control-Allow-Origin: *
+
+/version.json
+  Cache-Control: no-cache, no-store, must-revalidate

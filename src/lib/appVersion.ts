@@ -6,11 +6,12 @@ export const APP_UPDATE_POLL_MS = 15 * 60 * 1000
 /** Second fetch delay so a CDN/partial publish race cannot flash the banner. */
 const CONFIRM_GAP_MS = 2500
 
+const NAG_SESSION_KEY = 'dr_update_nag_for'
+
 function isPlausibleBuildId(value: unknown): value is string {
   if (typeof value !== 'string') return false
   const id = value.trim()
   if (!id || id === 'dev') return false
-  // GitHub SHA (full or short) or ci-* from workflows
   return /^(ci-)?[a-f0-9]{7,40}$/i.test(id)
 }
 
@@ -20,7 +21,24 @@ function sleep(ms: number): Promise<void> {
   })
 }
 
-async function fetchDeployedBuildId(): Promise<string | null> {
+/** Prefer HTML meta (same deploy unit as the shell) over version.json alone. */
+async function fetchBuildIdFromIndexHtml(): Promise<string | null> {
+  const response = await fetch(`/?dr_build_check=${Date.now()}`, {
+    cache: 'no-store',
+    headers: { Accept: 'text/html' },
+  })
+  if (!response.ok) return null
+
+  const contentType = (response.headers.get('content-type') || '').toLowerCase()
+  if (contentType && !contentType.includes('text/html')) return null
+
+  const html = await response.text()
+  const match = html.match(/<meta\s+name=["']dr-build-id["']\s+content=["']([^"']+)["']/i)
+  const id = match?.[1]?.trim()
+  return isPlausibleBuildId(id) ? id : null
+}
+
+async function fetchBuildIdFromVersionJson(): Promise<string | null> {
   const response = await fetch(`/version.json?t=${Date.now()}`, {
     cache: 'no-store',
     headers: { Accept: 'application/json' },
@@ -29,7 +47,6 @@ async function fetchDeployedBuildId(): Promise<string | null> {
 
   const contentType = (response.headers.get('content-type') || '').toLowerCase()
   if (contentType && !contentType.includes('application/json') && !contentType.includes('text/json')) {
-    // Mistaken HTML/SPA fallback must never count as an update.
     return null
   }
 
@@ -37,17 +54,32 @@ async function fetchDeployedBuildId(): Promise<string | null> {
   return isPlausibleBuildId(body.buildId) ? body.buildId.trim() : null
 }
 
+/**
+ * Deployed build id must agree from HTML meta + version.json.
+ * Either alone can false-positive when a CDN edge is skewed.
+ */
+async function fetchDeployedBuildId(): Promise<string | null> {
+  const [fromHtml, fromJson] = await Promise.all([
+    fetchBuildIdFromIndexHtml(),
+    fetchBuildIdFromVersionJson(),
+  ])
+  if (!fromHtml || !fromJson) return null
+  if (fromHtml !== fromJson) return null
+  return fromHtml
+}
+
 export function setupCacheBusting(): void {
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-      window.location.reload()
+      reloadForAppUpdate()
     }
   })
 }
 
 /**
- * True when the running client build id is behind a confirmed deployed
- * `/version.json`. Requires two agreeing remote reads spaced apart.
+ * True when this tab's build is behind a confirmed deploy.
+ * Requires two agreeing remote reads (HTML meta + version.json both match).
+ * Session-deduped so the same mismatch does not re-nag after dismiss/refresh loops.
  */
 export async function isAppOutOfDate(): Promise<boolean> {
   if (!BUILD_ID || BUILD_ID === 'dev') return false
@@ -59,13 +91,26 @@ export async function isAppOutOfDate(): Promise<boolean> {
     await sleep(CONFIRM_GAP_MS)
 
     const second = await fetchDeployedBuildId()
-    return Boolean(second && second === first && second !== BUILD_ID)
+    if (!second || second !== first || second === BUILD_ID) return false
+
+    // Same stale tab can re-trigger on every unlock — only nag once per mismatch pair.
+    try {
+      const nagKey = `${BUILD_ID}->${second}`
+      if (sessionStorage.getItem(NAG_SESSION_KEY) === nagKey) return false
+      sessionStorage.setItem(NAG_SESSION_KEY, nagKey)
+    } catch {
+      // sessionStorage unavailable — still allow the banner
+    }
+
+    return true
   } catch {
     return false
   }
 }
 
-/** Reload to pick up the newly deployed site. */
+/** Hard navigation so mobile browsers cannot keep a cached SPA shell. */
 export function reloadForAppUpdate(): void {
-  window.location.reload()
+  const url = new URL(window.location.href)
+  url.searchParams.set('dr_reload', String(Date.now()))
+  window.location.replace(url.toString())
 }
