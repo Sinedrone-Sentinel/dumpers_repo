@@ -87,6 +87,8 @@ type DumperUsageSummary = {
   avg_invokes_per_day_7d?: number
   projected_monthly_invokes: number
   est_watch_hours: number
+  /** Always rolling 30d for per-user bars (independent of period filter). */
+  top_users_period_days?: number
   top_users: DumperTopUser[]
 }
 
@@ -163,6 +165,7 @@ export default function AnalyticsRoute() {
   const [audience, setAudience] = useState<AudienceFilter>('all')
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null)
   const [dumperUsage, setDumperUsage] = useState<DumperUsageSummary | null>(null)
+  const [topDumpersOpen, setTopDumpersOpen] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -568,20 +571,51 @@ export default function AnalyticsRoute() {
                   ))}
                 </div>
                 {dumperUsage.top_users.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
-                      Top Dumpers by Edge invokes
-                    </h3>
-                    <div className="space-y-2">
-                      {dumperUsage.top_users.map((row) => (
-                        <GeoBarRow
-                          key={row.user_id}
-                          label={row.label}
-                          count={Number(row.invokes)}
-                          maxCount={Number(dumperUsage.top_users[0]?.invokes ?? 1)}
+                  <div className="site-section">
+                    <button
+                      type="button"
+                      onClick={() => setTopDumpersOpen((open) => !open)}
+                      className="site-section-header w-full flex items-center justify-between gap-3 text-left"
+                      aria-expanded={topDumpersOpen}
+                    >
+                      <div>
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+                          Top Dumpers by Edge invokes
+                        </h3>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          Rolling {dumperUsage.top_users_period_days ?? 30} days ·{' '}
+                          {dumperUsage.top_users.length} members
+                        </p>
+                      </div>
+                      <svg
+                        className={`w-4 h-4 shrink-0 text-slate-400 transition-transform ${
+                          topDumpersOpen ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
                         />
-                      ))}
-                    </div>
+                      </svg>
+                    </button>
+                    {topDumpersOpen && (
+                      <div className="site-section-body site-divider space-y-2">
+                        {dumperUsage.top_users.map((row) => (
+                          <GeoBarRow
+                            key={row.user_id}
+                            label={row.label}
+                            count={Number(row.invokes)}
+                            maxCount={Number(dumperUsage.top_users[0]?.invokes ?? 1)}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

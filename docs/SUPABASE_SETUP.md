@@ -191,6 +191,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 123 | `158_scu_resource_full_line_only.sql` | WTS/WTB partial checkout: SCU resources must take the full line; whole-unit items may use integer partial qty |
 | 124 | `159_new_user_discord_on_signup.sql` | Staff “New User Joined” Discord fires on signup (`handle_new_user`), not welcome-modal finish; backfill recent unfinished onboardings |
 | 125 | `160_rsi_verified_discord_notification.sql` | Staff “RSI Handle Verified” Discord on first verify (Edge + officer force) |
+| 126 | `161_dumper_top_users_rolling_30d.sql` | Analytics Top Dumpers Edge invokes always use rolling 30 days (period filter still scopes other Dumper cards) |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 
