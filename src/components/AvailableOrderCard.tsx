@@ -163,25 +163,42 @@ export default function AvailableOrderCard({
             </p>
           ) : null}
 
-          <OrderRequestLines
-            order={order}
-            blueprintById={blueprintById}
-            showDfp={showDfp}
-            showEffectiveStats
-            showKindBadge={false}
-          />
-
           {allowsPartial ? (
-            <WtsPartialPurchasePanel
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-stretch">
+              <div className="site-surface p-2.5 min-w-0 flex flex-col gap-2">
+                <p className="site-label !mb-0 text-[11px] uppercase tracking-wide">
+                  Listed items
+                </p>
+                <div className="min-h-0 flex-1 overflow-y-auto max-h-[min(28rem,55dvh)]">
+                  <OrderRequestLines
+                    order={order}
+                    blueprintById={blueprintById}
+                    showDfp={showDfp}
+                    showEffectiveStats
+                    showKindBadge={false}
+                  />
+                </div>
+              </div>
+              <WtsPartialPurchasePanel
+                order={order}
+                mode={isWts ? 'buy' : 'fulfill'}
+                acquiredBlueprints={acquiredBlueprints}
+                showDfp={showDfp}
+                disabled={!meetsMinRep || !canAcceptLimits}
+                submitting={accepting}
+                onPurchase={onAcceptPartial}
+                className="h-full min-h-0 max-h-[min(28rem,55dvh)]"
+              />
+            </div>
+          ) : (
+            <OrderRequestLines
               order={order}
-              mode={isWts ? 'buy' : 'fulfill'}
-              acquiredBlueprints={acquiredBlueprints}
+              blueprintById={blueprintById}
               showDfp={showDfp}
-              disabled={!meetsMinRep || !canAcceptLimits}
-              submitting={accepting}
-              onPurchase={onAcceptPartial}
+              showEffectiveStats
+              showKindBadge={false}
             />
-          ) : null}
+          )}
         </div>
       ) : null}
     </div>

@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from 'react'
 import { formatDfpAuec, formatResourceOrderQualityLabel } from '../lib/dfp'
-import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
+import {
+  isWholeUnitResource,
+  resourceLabelClassName,
+  resourceQuantityUnitLabel,
+} from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 import type { CustomOrder } from '../lib/operations'
 
@@ -20,6 +24,7 @@ interface PartialSelectionPanelProps {
   disabled?: boolean
   submitting?: boolean
   onPurchase: (selections: WtsLineSelection[]) => void | Promise<void>
+  className?: string
 }
 
 export default function WtsPartialPurchasePanel({
@@ -30,6 +35,7 @@ export default function WtsPartialPurchasePanel({
   disabled = false,
   submitting = false,
   onPurchase,
+  className = '',
 }: PartialSelectionPanelProps) {
   const isFulfill = mode === 'fulfill'
 
@@ -70,11 +76,25 @@ export default function WtsPartialPurchasePanel({
   const canSelectBlueprint = (blueprintId: string) =>
     !isFulfill || !acquiredBlueprints || acquiredBlueprints[blueprintId] === true
 
-  const toggleLine = (lineId: string, defaultQty: number) => {
+  const resourceQtyForLine = (line: (typeof resourceLines)[number]) => {
+    // SCU ores/salvage/etc.: always the full remaining line (cannot split refined cargo).
+    if (!isWholeUnitResource(line.resourceKey)) return line.available
+    return Math.min(
+      line.available,
+      Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0))
+    )
+  }
+
+  const toggleLine = (lineId: string, defaultQty: number, wholeUnit = true) => {
     setSelected((prev) => {
       const next = { ...prev, [lineId]: !prev[lineId] }
-      if (next[lineId] && quantities[lineId] == null) {
-        setQuantities((q) => ({ ...q, [lineId]: String(defaultQty === Math.trunc(defaultQty) ? Math.min(1, defaultQty) || 1 : defaultQty) }))
+      if (next[lineId] && quantities[lineId] == null && wholeUnit) {
+        setQuantities((q) => ({
+          ...q,
+          [lineId]: String(
+            defaultQty === Math.trunc(defaultQty) ? Math.min(1, defaultQty) || 1 : defaultQty
+          ),
+        }))
       }
       return next
     })
@@ -92,7 +112,7 @@ export default function WtsPartialPurchasePanel({
     }
     for (const line of resourceLines) {
       if (!selected[line.lineId]) continue
-      const qty = Math.min(line.available, Math.max(0.001, Number(quantities[line.lineId]) || 0))
+      const qty = resourceQtyForLine(line)
       total += Math.round(line.unitDfpAuec * qty)
     }
     return total
@@ -110,8 +130,11 @@ export default function WtsPartialPurchasePanel({
     }
     for (const line of resourceLines) {
       if (!selected[line.lineId]) continue
-      const qty = Math.min(line.available, Math.max(0.001, Number(quantities[line.lineId]) || 0))
-      out.push({ lineId: line.lineId, kind: 'resource', quantity: qty })
+      out.push({
+        lineId: line.lineId,
+        kind: 'resource',
+        quantity: resourceQtyForLine(line),
+      })
     }
     return out
   }
@@ -119,19 +142,21 @@ export default function WtsPartialPurchasePanel({
   const qtyVerb = isFulfill ? 'Crafting' : 'Buying'
 
   return (
-    <div className="mt-3 p-3 rounded-lg border border-cyan-500/30 bg-cyan-950/20 space-y-3">
-      <div>
+    <div
+      className={`p-3 rounded-lg border border-cyan-500/30 bg-cyan-950/20 flex flex-col gap-3 min-w-0 ${className}`.trim()}
+    >
+      <div className="shrink-0">
         <p className="text-cyan-200 text-xs font-medium">
           {isFulfill ? 'Select items to fulfill' : 'Partial purchase available'}
         </p>
         <p className="site-hint text-[11px] !mt-0.5">
           {isFulfill
-            ? 'Check the items you will craft and set quantities. The rest stays open for other fulfillers.'
-            : 'Check the items you want and set quantities. Unsold stock stays listed.'}
+            ? 'Check the lines you will supply. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unclaimed lines stay open for others.'
+            : 'Check the lines you want. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unsold lines stay listed.'}
         </p>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
         {blueprintLines.map((line) => {
           const isOn = !!selected[line.lineId]
           const selectable = canSelectBlueprint(line.blueprintId)
@@ -193,6 +218,7 @@ export default function WtsPartialPurchasePanel({
 
         {resourceLines.map((line) => {
           const isOn = !!selected[line.lineId]
+          const wholeUnit = isWholeUnitResource(line.resourceKey)
           return (
             <div
               key={line.lineId}
@@ -204,7 +230,7 @@ export default function WtsPartialPurchasePanel({
                 <input
                   type="checkbox"
                   checked={isOn}
-                  onChange={() => toggleLine(line.lineId, line.available)}
+                  onChange={() => toggleLine(line.lineId, line.available, wholeUnit)}
                   className="site-checkbox mt-1 accent-cyan-500"
                 />
                 <div className="flex-1">
@@ -217,22 +243,26 @@ export default function WtsPartialPurchasePanel({
                       {resourceQuantityUnitLabel(line.resourceKey)}{' '}
                       {isFulfill ? 'requested' : 'listed'} ·{' '}
                       {formatResourceOrderQualityLabel(line.resourceKey, line.title, line.minQuality)}
+                      {!wholeUnit && (
+                        <span className="text-slate-400 ml-1">(full line only)</span>
+                      )}
                     </span>
                   </div>
-                  {isOn && (
+                  {isOn && wholeUnit && (
                     <div className="mt-2 flex items-center gap-2">
                       <span className="text-slate-500 text-xs">{qtyVerb}</span>
                       <input
                         type="number"
-                        min={0.001}
+                        min={1}
                         max={line.available}
-                        step={0.001}
-                        value={quantities[line.lineId] ?? String(line.available)}
+                        step={1}
+                        value={quantities[line.lineId] ?? '1'}
                         onChange={(e) =>
                           setQuantities((q) => ({ ...q, [line.lineId]: e.target.value }))
                         }
                         className="site-input w-24 px-2 py-1 text-sm"
                       />
+                      <span className="text-slate-500 text-xs">of {line.available}</span>
                     </div>
                   )}
                 </div>
@@ -242,7 +272,7 @@ export default function WtsPartialPurchasePanel({
         })}
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-1 border-t border-cyan-500/20">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-1 border-t border-cyan-500/20 shrink-0 mt-auto">
         {showDfp && (
           <p className="text-amber-200 text-sm">
             Selected total: <span className="font-medium">{formatDfpAuec(selectionTotal)}</span>

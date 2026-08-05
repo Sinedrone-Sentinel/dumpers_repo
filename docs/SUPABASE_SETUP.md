@@ -185,6 +185,10 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 117 | `152_ticker_admin_purge_on_list.sql` | Admin ticker list purges expired rows on load (no “include expired” toggle) |
 | 118 | `153_ticker_category_ttl_days.sql` | Per-category TTL days (1–90); system categories protected; questionnaire active count includes open forms |
 | 119 | `154_questionnaire_ticker_include_creator.sql` | Creators see their own live questionnaires on the Updates ticker (can open/respond); activate fan-out still skips creator bell spam |
+| 120 | `155_rsi_handle_verified_only.sql` | RSI handle written only after verification; client cannot set privileged handle fields |
+| 121 | `156_dumper_projected_monthly.sql` | (superseded by 157) projected monthly Edge invokes |
+| 122 | `157_dumper_projected_monthly_recent_pace.sql` | Projected monthly Edge = trailing 7-day invoke pace × 30 |
+| 123 | `158_scu_resource_full_line_only.sql` | WTS/WTB partial checkout: SCU resources must take the full line; whole-unit items may use integer partial qty |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 
