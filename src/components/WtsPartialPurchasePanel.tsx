@@ -156,7 +156,7 @@ export default function WtsPartialPurchasePanel({
         </p>
       </div>
 
-      <div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
+      <div className="space-y-2 flex-1">
         {blueprintLines.map((line) => {
           const isOn = !!selected[line.lineId]
           const selectable = canSelectBlueprint(line.blueprintId)
