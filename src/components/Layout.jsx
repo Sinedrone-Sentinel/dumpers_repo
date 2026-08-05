@@ -125,7 +125,7 @@ function LayoutContent({
         <SupportTicketsModal onClose={() => setShowSupportModal(false)} />
       )}
       {!isGuestPreview && showWelcomeModal && (
-        <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
+        <WelcomeModal onComplete={() => setShowWelcomeModal(false)} />
       )}
       {!isGuestPreview && isSuperAdmin && showQuestionnairesAdmin && (
         <QuestionnairesAdminModal onClose={() => setShowQuestionnairesAdmin(false)} />
@@ -186,7 +186,8 @@ export default function Layout() {
   const [showTickerAdmin, setShowTickerAdmin] = useState(false)
   const [fillQuestionnaireId, setFillQuestionnaireId] = useState(null)
   const [pendingQuestionnaires, setPendingQuestionnaires] = useState([])
-  const [welcomeChecked, setWelcomeChecked] = useState(false)
+  /** unknown | required | done — required blocks member UI until welcome is finished */
+  const [onboardingState, setOnboardingState] = useState('done')
 
   const refreshPendingQuestionnaires = useCallback(async () => {
     if (!isGuestPreview && !user) {
@@ -227,23 +228,46 @@ export default function Layout() {
   }, [loading, user, isGuestPreview, pathname, enterGuestPreview])
 
   useEffect(() => {
-    if (!user || !isApproved || isGuestPreview || welcomeChecked) return
+    if (!user || !isApproved || isGuestPreview) {
+      setOnboardingState('done')
+      setShowWelcomeModal(false)
+      return
+    }
+
+    let cancelled = false
+    setOnboardingState('unknown')
 
     const checkWelcome = async () => {
       try {
-        const { data } = await supabase.rpc('get_welcome_modal_status')
-        if (data) {
-          const shouldShow = data.always_show || !data.has_seen
-          setShowWelcomeModal(shouldShow)
+        const { data, error } = await supabase.rpc('get_welcome_modal_status')
+        if (cancelled) return
+        if (error || !data) {
+          // Fail closed — do not let members into the app without a known welcome status
+          setOnboardingState('required')
+          setShowWelcomeModal(false)
+          return
         }
+        if (!data.has_seen) {
+          setOnboardingState('required')
+          setShowWelcomeModal(false)
+          return
+        }
+        setOnboardingState('done')
+        // Super-admin testing toggle: overlay only, does not re-lock the site
+        setShowWelcomeModal(Boolean(data.always_show))
       } catch {
-        // If RPC doesn't exist yet (migration not run), skip
+        if (!cancelled) {
+          setOnboardingState('required')
+          setShowWelcomeModal(false)
+        }
       }
-      setWelcomeChecked(true)
     }
 
     void checkWelcome()
-  }, [user, isApproved, isGuestPreview, welcomeChecked])
+    return () => {
+      cancelled = true
+    }
+  }, [user, isApproved, isGuestPreview])
 
   if (loading) {
     return <AppBootstrapScreen steps={bootstrapSteps} />
@@ -251,6 +275,27 @@ export default function Layout() {
 
   if (isBanned) {
     return <BannedAccount />
+  }
+
+  // Approved members must finish welcome before any member shell (including SEO catalog).
+  if (user && isApproved && !isGuestPreview && onboardingState === 'unknown') {
+    return <AppBootstrapScreen steps={bootstrapSteps} />
+  }
+
+  if (user && isApproved && !isGuestPreview && onboardingState === 'required') {
+    return (
+      <UiOverlayProvider>
+        <SeoHead />
+        <div className="site-page-bg min-h-screen text-slate-100">
+          <WelcomeModal
+            onComplete={() => {
+              setOnboardingState('done')
+              setShowWelcomeModal(false)
+            }}
+          />
+        </div>
+      </UiOverlayProvider>
+    )
   }
 
   // Public crawlable catalog — standalone shell for everyone (no app sidebar).

@@ -189,6 +189,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 121 | `156_dumper_projected_monthly.sql` | (superseded by 157) projected monthly Edge invokes |
 | 122 | `157_dumper_projected_monthly_recent_pace.sql` | Projected monthly Edge = trailing 7-day invoke pace × 30 |
 | 123 | `158_scu_resource_full_line_only.sql` | WTS/WTB partial checkout: SCU resources must take the full line; whole-unit items may use integer partial qty |
+| 124 | `159_new_user_discord_on_signup.sql` | Staff “New User Joined” Discord fires on signup (`handle_new_user`), not welcome-modal finish; backfill recent unfinished onboardings |
+| 125 | `160_rsi_verified_discord_notification.sql` | Staff “RSI Handle Verified” Discord on first verify (Edge + officer force) |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 

@@ -1,5 +1,5 @@
 import React, { useState, useId, useRef, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
@@ -8,7 +8,8 @@ import { SITE_RULES_SECTION } from '../lib/archiveGuide/welcomeSections'
 import RsiBioVerifyControls from './RsiBioVerifyControls'
 
 interface WelcomeModalProps {
-  onClose: () => void
+  /** Called only after mark_welcome_seen succeeds — onboarding is not dismissible. */
+  onComplete: () => void
 }
 
 /** Lightweight **bold** markers → React nodes. */
@@ -25,16 +26,19 @@ function renderRich(text: string): React.ReactNode {
   )
 }
 
-export default function WelcomeModal({ onClose }: WelcomeModalProps) {
+export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
   useBodyScrollLock(true)
   const overlayId = useId()
   useUiOverlayRegistration(overlayId, true)
   
   const { profile, refreshProfile } = useAuth()
+  const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [validationError, setValidationError] = useState<string | null>(null)
+  const [finishError, setFinishError] = useState<string | null>(null)
   const [rulesScrolledToEnd, setRulesScrolledToEnd] = useState(false)
+  const [finishing, setFinishing] = useState(false)
   const rulesScrollRef = useRef<HTMLDivElement>(null)
 
   const totalSteps = 4
@@ -61,16 +65,20 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
     return () => el.removeEventListener('scroll', checkScroll)
   }, [step])
 
-  const handleFinish = async () => {
-    // Mark welcome as seen
-    await supabase.rpc('mark_welcome_seen')
-    onClose()
-  }
-
-  const handleGoToArchive = async () => {
-    await supabase.rpc('mark_welcome_seen')
-    onClose()
-    // Navigate handled by Link component
+  const finishWelcome = async (to?: string) => {
+    if (finishing) return
+    setFinishing(true)
+    setFinishError(null)
+    try {
+      const { error } = await supabase.rpc('mark_welcome_seen')
+      if (error) throw error
+      onComplete()
+      if (to) void navigate({ to })
+    } catch {
+      setFinishError('Could not finish onboarding. Please try again.')
+    } finally {
+      setFinishing(false)
+    }
   }
 
   const canAdvance =
@@ -258,10 +266,11 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
               </p>
               
               <div className="space-y-3 mt-4">
-                <Link
-                  to="/archive"
-                  onClick={handleGoToArchive}
-                  className="flex items-center gap-3 p-3 site-surface hover:border-orange-500/30 transition-all group"
+                <button
+                  type="button"
+                  disabled={finishing}
+                  onClick={() => void finishWelcome('/archive')}
+                  className="w-full flex items-center gap-3 p-3 site-surface hover:border-orange-500/30 transition-all group text-left disabled:opacity-60"
                 >
                   <div className="p-2 rounded-lg bg-orange-600/20 text-orange-400 group-hover:bg-orange-600/30 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -277,12 +286,13 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                   <svg className="w-4 h-4 text-slate-500 group-hover:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </Link>
+                </button>
 
-                <Link
-                  to="/"
-                  onClick={handleFinish}
-                  className="flex items-center gap-3 p-3 site-surface hover:border-orange-500/30 transition-all group"
+                <button
+                  type="button"
+                  disabled={finishing}
+                  onClick={() => void finishWelcome('/')}
+                  className="w-full flex items-center gap-3 p-3 site-surface hover:border-orange-500/30 transition-all group text-left disabled:opacity-60"
                 >
                   <div className="p-2 rounded-lg bg-blue-600/20 text-blue-400 group-hover:bg-blue-600/30 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,12 +308,13 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                   <svg className="w-4 h-4 text-slate-500 group-hover:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </Link>
+                </button>
 
-                <Link
-                  to="/resources"
-                  onClick={handleFinish}
-                  className="flex items-center gap-3 p-3 site-surface hover:border-orange-500/30 transition-all group"
+                <button
+                  type="button"
+                  disabled={finishing}
+                  onClick={() => void finishWelcome('/resources')}
+                  className="w-full flex items-center gap-3 p-3 site-surface hover:border-orange-500/30 transition-all group text-left disabled:opacity-60"
                 >
                   <div className="p-2 rounded-lg bg-purple-600/20 text-purple-400 group-hover:bg-purple-600/30 transition-colors">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -319,41 +330,46 @@ export default function WelcomeModal({ onClose }: WelcomeModalProps) {
                   <svg className="w-4 h-4 text-slate-500 group-hover:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </Link>
+                </button>
               </div>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 site-divider flex items-center justify-between">
-          {step > 0 ? (
-            <button
-              onClick={() => setStep(step - 1)}
-              className="site-btn-ghost"
-            >
-              Back
-            </button>
-          ) : (
-            <div />
-          )}
-          
-          {step < totalSteps - 1 ? (
-            <button
-              onClick={() => setStep(step + 1)}
-              disabled={!canAdvance}
-              className="site-btn-primary !rounded-lg !px-5 !py-2 text-sm"
-            >
-              Next
-            </button>
-          ) : (
-            <button
-              onClick={handleFinish}
-              className="site-btn-primary !rounded-lg !px-5 !py-2 text-sm"
-            >
-              Get Started
-            </button>
-          )}
+        <div className="px-6 py-4 site-divider space-y-2">
+          {finishError && <p className="site-error-text text-center">{finishError}</p>}
+          <div className="flex items-center justify-between">
+            {step > 0 ? (
+              <button
+                onClick={() => setStep(step - 1)}
+                className="site-btn-ghost"
+              >
+                Back
+              </button>
+            ) : (
+              <div />
+            )}
+            
+            {step < totalSteps - 1 ? (
+              <button
+                onClick={() => setStep(step + 1)}
+                disabled={!canAdvance}
+                className="site-btn-primary !rounded-lg !px-5 !py-2 text-sm"
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={finishing}
+                onClick={() => void finishWelcome()}
+                className="site-btn-primary !rounded-lg !px-5 !py-2 text-sm"
+              >
+                {finishing ? 'Saving…' : 'Get Started'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
