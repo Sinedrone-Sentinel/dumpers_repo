@@ -63,6 +63,13 @@ import {
   formatQuantityForResource,
   parseQuantityForResource,
 } from '../lib/resourceQuantity'
+import AppModal from './layout/AppModal'
+
+type SubmitResultNotice = {
+  ok: boolean
+  listingType: 'wtb' | 'wts'
+  message: string
+}
 
 interface CartPricingFields {
   baseUnitDfpAuec: number
@@ -168,6 +175,7 @@ export default function ResourceBuyOrderPanel({
   const [bpCart, setBpCart] = useState<CartBlueprintLine[]>([])
   const [resCart, setResCart] = useState<CartResourceLine[]>([])
   const [showNoOwnerWarning, setShowNoOwnerWarning] = useState(false)
+  const [submitResult, setSubmitResult] = useState<SubmitResultNotice | null>(null)
   const [noOwnerBlueprints, setNoOwnerBlueprints] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [pendingListingType, setPendingListingType] = useState<'wtb' | 'wts'>('wtb')
@@ -483,46 +491,75 @@ export default function ResourceBuyOrderPanel({
       quantity: item.quantity,
     }))
 
-    const result = isEditing
-      ? await updateCustomOrderRequester({
-          orderId: editOrder!.id,
-          title: editOrder!.title,
-          notes,
-          totalDfpAuec: cartTotalDfp,
-          minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
-          blueprints: blueprintPayloads,
-          resources: resourcePayloads,
-          items: itemPayloads,
-          orderOverridesMap,
-          listingType: editOrder!.listing_type === 'wts' ? 'wts' : 'wtb',
-          sellEntireListing: false,
-        })
-      : await appendToMyListing({
+    try {
+      const result = isEditing
+        ? await updateCustomOrderRequester({
+            orderId: editOrder!.id,
+            title: editOrder!.title,
+            notes,
+            totalDfpAuec: cartTotalDfp,
+            minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
+            blueprints: blueprintPayloads,
+            resources: resourcePayloads,
+            items: itemPayloads,
+            orderOverridesMap,
+            listingType: editOrder!.listing_type === 'wts' ? 'wts' : 'wtb',
+            sellEntireListing: false,
+          })
+        : await appendToMyListing({
+            listingType,
+            blueprints: blueprintPayloads,
+            resources: resourcePayloads,
+            items: itemPayloads,
+            notes,
+            minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
+            orderOverridesMap,
+          })
+
+      if (result.error) {
+        onError?.(result.error)
+        setSubmitResult({
+          ok: false,
           listingType,
-          blueprints: blueprintPayloads,
-          resources: resourcePayloads,
-          items: itemPayloads,
-          notes,
-          minFulfillerReputation: minFulfillerRep ? Number(minFulfillerRep) : null,
-          orderOverridesMap,
+          message: result.error,
         })
+        return
+      }
 
-    setSubmitting(false)
-    setShowTransferModal(false)
+      if (!isEditing) {
+        setBpCart([])
+        setResCart([])
+        setNotes('')
+        setMinFulfillerRep('')
+        onDraftCleared?.()
+      }
 
-    if (result.error) {
-      onError?.(result.error)
-      return
+      const listingLabel = listingType === 'wts' ? 'WTS' : 'WTB'
+      setSubmitResult({
+        ok: true,
+        listingType,
+        message: isEditing
+          ? `Your ${listingLabel} listing changes were saved.`
+          : `Items were added to your ${listingLabel} listing.`,
+      })
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Something went wrong. Please try again.'
+      onError?.(message)
+      setSubmitResult({
+        ok: false,
+        listingType,
+        message,
+      })
+    } finally {
+      setSubmitting(false)
     }
+  }
 
-    if (!isEditing) {
-      setBpCart([])
-      setResCart([])
-      setNotes('')
-      setMinFulfillerRep('')
-      onDraftCleared?.()
-    }
-    onSubmitted?.()
+  const dismissSubmitResult = () => {
+    const wasOk = submitResult?.ok === true
+    setSubmitResult(null)
+    if (wasOk) onSubmitted?.()
   }
 
   const initiateSubmit = (listingType: 'wtb' | 'wts') => {
@@ -1019,6 +1056,37 @@ export default function ResourceBuyOrderPanel({
             </div>
           </div>
         </div>
+      )}
+
+      {submitResult && (
+        <AppModal
+          title={submitResult.ok ? 'Listing updated' : 'Could not update listing'}
+          size="sm"
+          onClose={dismissSubmitResult}
+          footer={
+            <button
+              type="button"
+              onClick={dismissSubmitResult}
+              className="site-btn-primary site-btn-shimmer w-full sm:w-auto"
+            >
+              OK
+            </button>
+          }
+        >
+          <div
+            className={
+              submitResult.ok ? 'site-banner-success text-sm' : 'site-banner-error text-sm'
+            }
+          >
+            {submitResult.message}
+          </div>
+          {submitResult.ok && (
+            <p className="site-hint mt-3 text-sm">
+              Close this message to refresh your {submitResult.listingType.toUpperCase()}{' '}
+              listing on this page.
+            </p>
+          )}
+        </AppModal>
       )}
     </>
   )
