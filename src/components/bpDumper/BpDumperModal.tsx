@@ -115,8 +115,9 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
               <strong className="text-slate-300">Windows:</strong> under Downloads, install from the{' '}
-              <strong className="text-slate-300">Microsoft Store</strong>, then open the app — a
-              console window runs blueprint sync.
+              <strong className="text-slate-300">Microsoft Store</strong>, open the app, choose your{' '}
+              <strong className="text-slate-300">Star Citizen LIVE folder</strong> when asked (no drive
+              scan), then paste your API key.
             </li>
             <li>
               <strong className="text-slate-300">macOS / Linux:</strong> open{' '}

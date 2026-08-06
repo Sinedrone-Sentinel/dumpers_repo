@@ -283,8 +283,10 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | Item | Detail |
 |------|--------|
 | **Downloads (members)** | **Microsoft Store** — [apps.microsoft.com/detail/9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); macOS/Linux via Python scripts in the modal |
-| **Member setup** | Install from Store → paste API key when prompted |
-| **Source / packaging** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/installer/`](scripts/installer/) — kept for Microsoft Store MSIX updates (not a member portable download) |
+| **Member setup (Store)** | Install → **pick Star Citizen LIVE folder** (no drive scan) → paste API key |
+| **Store app (sandboxed)** | [`apps/bp-dumper-store/`](apps/bp-dumper-store/) — WinUI AppContainer, FolderPicker + FutureAccessList, no `runFullTrust` |
+| **Standalone Python** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) — scripts / advanced; may auto-detect installs |
+| **Shared protocol** | [`scripts/bp-dumper-shared/`](scripts/bp-dumper-shared/) — keep both clients in sync (see Cursor rule `dumper-dual-client-sync`) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version`; outdated clients get HTTP `426` |

@@ -59,7 +59,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Microsoft Store (Windows)',
     description:
-      'Install BP Dumper from the Microsoft Store. Updates come through the Store; paste your API key on first run.',
+      'Install from the Microsoft Store. You choose your Star Citizen LIVE folder (no drive scan). Updates come through the Store; paste your API key on first run.',
     url: BP_DUMPER_STORE_WEB_URL,
   },
   {

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="BpDumperStore.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="BP Dumper">
+
+  <Grid Padding="24" RowSpacing="12">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0" Spacing="4">
+      <TextBlock Text="BP Dumper" FontSize="22" FontWeight="SemiBold" />
+      <TextBlock
+          Text="Sandboxed Store build — you pick your Star Citizen LIVE folder. This app does not scan your drives."
+          TextWrapping="Wrap"
+          Opacity="0.8" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Spacing="8">
+      <TextBlock Text="Log folder" FontWeight="SemiBold" />
+      <TextBlock x:Name="FolderPathText" Text="No folder granted yet." TextWrapping="Wrap" />
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button x:Name="PickFolderButton" Content="Choose LIVE folder…" Click="PickFolderButton_Click" />
+        <Button x:Name="ClearFolderButton" Content="Clear" Click="ClearFolderButton_Click" />
+      </StackPanel>
+    </StackPanel>
+
+    <StackPanel Grid.Row="2" Spacing="8">
+      <TextBlock Text="API key" FontWeight="SemiBold" />
+      <PasswordBox x:Name="ApiKeyBox" PlaceholderText="dr_…" />
+      <TextBlock
+          Text="Copy from Dumper Apps on dumpers-repo.com (Mission Tracker or avatar menu)."
+          FontSize="12"
+          Opacity="0.75"
+          TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="8">
+      <Button x:Name="StartButton" Content="Start watching" Click="StartButton_Click" Style="{StaticResource AccentButtonStyle}" />
+      <Button x:Name="StopButton" Content="Stop" Click="StopButton_Click" IsEnabled="False" />
+    </StackPanel>
+
+    <Border Grid.Row="4" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" Padding="12">
+      <ScrollViewer>
+        <TextBlock x:Name="LogText" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12" />
+      </ScrollViewer>
+    </Border>
+
+    <TextBlock
+        Grid.Row="5"
+        FontSize="11"
+        Opacity="0.65"
+        TextWrapping="Wrap"
+        Text="Updates come from the Microsoft Store. Shared protocol: scripts/bp-dumper-shared/PROTOCOL.md" />
+  </Grid>
+</Window>

@@ -1,0 +1,35 @@
+---
+description: BP Dumper Store app builds with .NET SDK CLI — never require Visual Studio
+globs: apps/bp-dumper-store/**/*
+alwaysApply: false
+---
+
+# BP Dumper Store — no Visual Studio
+
+The maintainer **does not use Visual Studio**. The sandboxed Store client in
+`apps/bp-dumper-store/` is built and packaged with the **.NET SDK + PowerShell**
+only.
+
+## Do
+
+- Build: `pwsh apps/bp-dumper-store/build-store.ps1`
+- Package MSIX: `pwsh apps/bp-dumper-store/build-store.ps1 -Config Release -Package`
+- Or: `dotnet build apps/bp-dumper-store/BpDumperStore/BpDumperStore.csproj -c Debug -p:Platform=x64`
+- Point at [`apps/bp-dumper-store/README.md`](apps/bp-dumper-store/README.md) for prereqs
+- Prefer **VS Code** (or any editor) when suggesting how to edit the project
+
+## Do not
+
+- Tell the user to install or open **Visual Studio** for this app
+- Document “Publish → Create App Packages” in VS as the primary path
+- Assume Visual Studio is installed when diagnosing build/pack failures
+
+## If packaging fails without VS
+
+Suggest (in order):
+
+1. Confirm `dotnet --version` shows .NET 8+
+2. Install **Windows SDK** or **Build Tools for Visual Studio** (workload only — not the full IDE) if Appx/MSBuild packaging targets are missing
+3. Re-run `build-store.ps1 -Package`
+
+Never escalate to “install Visual Studio Community/Professional” as the default fix.

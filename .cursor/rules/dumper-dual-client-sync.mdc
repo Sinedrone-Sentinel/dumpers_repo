@@ -1,0 +1,51 @@
+---
+description: Keep Python standalone and Store WinUI BP Dumper clients feature-synced (except FS discovery)
+globs: scripts/bp-dumper-py/**/*,apps/bp-dumper-store/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
+alwaysApply: false
+---
+
+# BP Dumper Dual-Client Sync
+
+Dumper Apps has **two clients** that must stay feature-aligned for product
+behavior. They intentionally differ only in how they obtain the Star Citizen
+log folder.
+
+| Client | Path | FS discovery |
+|---|---|---|
+| Standalone Python | `scripts/bp-dumper-py/` | Drive auto-scan / path prompt OK |
+| Store (sandboxed) | `apps/bp-dumper-store/` | **FolderPicker + FutureAccessList only** — no disk scan |
+
+Contract source of truth: `scripts/bp-dumper-shared/` (protocol + fixtures).
+
+## When you change one client, update the other
+
+If a change touches **shared product functionality**, apply the equivalent in
+**both** clients in the same change set (or immediately after), and update
+`scripts/bp-dumper-shared/PROTOCOL.md` / fixtures when the wire contract moves.
+
+### Must stay in sync
+
+- Webhook event `type` values and JSON fields
+- Auth / version headers (`Authorization: Bearer dr_…`, `X-Dumper-Version`)
+- Log parsing / mission correlation / blueprint resolution rules
+- Live Mission Tracker publish fields and session ping semantics
+- Version-gate behavior (`426` / update required)
+- Full-history import **meaning** (what awards are imported, once-only UX)
+- API key prompt / regenerate UX copy that members see
+
+### Must NOT be copied into the Store client
+
+- Drive scanning (`GetDriveType`, walking fixed disks for `StarCitizen`)
+- Silent Program Files probing / auto-detect without user grant
+- GitHub portable exe auto-update
+- Any capability or API that requires `runFullTrust` or `broadFileSystemAccess`
+
+Store access is limited to the folder the user picked (and persisted via
+`FutureAccessList`). Do not “helpfully” reintroduce scan logic behind a toggle.
+
+## Checklist before finishing a dumper feature
+
+- [ ] Shared behavior documented / fixture updated in `bp-dumper-shared` if the wire or parse contract changed
+- [ ] Python client updated **or** explicitly N/A (FS-discovery-only change)
+- [ ] Store client updated **or** explicitly N/A (FS-discovery-only change)
+- [ ] Commit scope stays `dumper` when cutting a Python release; Store packaging notes if Store binary/version must ship too

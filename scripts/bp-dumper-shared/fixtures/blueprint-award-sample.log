@@ -1,0 +1,2 @@
+<2026-01-15T12:00:00.000Z> [Notice] <CreateMarker> missionId [00000000-0000-0000-0000-000000000001] generator name [SampleContractGen] contract [Sample Contract] contractDefinitionId[sample_contract_def_01]
+<2026-01-15T12:00:05.000Z> [Notice] <[Actor]> [Player] Awarded blueprint: Sample_Blueprint_Internal_Name

@@ -1,65 +1,40 @@
-# Dumper Apps Windows build
+# Dumper Apps Windows packaging
 
-Builds **`DumperApps.exe`** — a single-file Windows app (PyInstaller). No install wizard, no zip/SFX extractor. The filename is stable (no version suffix) so re-downloads overwrite the previous file.
+Two Windows delivery paths:
 
-Members: download from **Dumper Apps** on the site → run the exe → paste API key → done.
+| Path | Project | Trust model |
+|---|---|---|
+| **Microsoft Store** | [`apps/bp-dumper-store/`](../../apps/bp-dumper-store/) | AppContainer — FolderPicker + FutureAccessList, **no `runFullTrust`**, no drive scan |
+| **Standalone / scripts** | [`scripts/bp-dumper-py/`](../bp-dumper-py/) | Python console — may auto-detect / scan drives |
 
-## App icon
+Shared protocol: [`scripts/bp-dumper-shared/PROTOCOL.md`](../bp-dumper-shared/PROTOCOL.md)  
+Sync rule: [`.cursor/rules/dumper-dual-client-sync.mdc`](../../.cursor/rules/dumper-dual-client-sync.mdc)
 
-Source art: `scripts/installer/bp-dumper-icon.png` (custom BP Dumper mark — not the site DR favicon).
+## Store app (preferred for members)
 
-- `generate-icon.ps1` / `generate_icon.py` → `dumper-apps.ico` + `tray.ico` (GitHub portable exe)
-- `msix/generate-msix-assets.py` → Store/MSIX tile logos (local MSIX only)
+See [`apps/bp-dumper-store/README.md`](../../apps/bp-dumper-store/README.md). **No Visual Studio required** — use `pwsh apps/bp-dumper-store/build-store.ps1` / `-Package`. Upload MSIX via Partner Center (identity locked to Store ID `9PMR8CPSB04K`).
 
-## Local build (portable exe)
+## Standalone Python exe (CI / advanced)
 
 ```powershell
 node scripts/copy-blueprint-lookup.mjs
 pwsh scripts/installer/build-exe.ps1
 ```
 
-Output: `scripts/installer/output/DumperApps.exe` (gitignored)
+Output: `scripts/installer/output/DumperApps.exe` (gitignored). Used by GitHub release automation and local testing — **not** offered as a member download on the site.
 
-## Microsoft Store MSIX (local / private only)
+### Legacy full-trust MSIX (retired for Store)
 
-**Do not** attach `BPDumper.msix` to GitHub Releases or public workflow artifacts. Upload only via Partner Center (product **BP Dumper**, Store ID `9PMR8CPSB04K`).
-
-Requires Windows 10/11 SDK (`MakeAppx.exe` on PATH or under `Windows Kits\10\bin`).
-
-```powershell
-node scripts/copy-blueprint-lookup.mjs
-pwsh scripts/installer/build-exe.ps1
-pwsh scripts/installer/build-msix.ps1
-```
-
-Output: `scripts/installer/output/BPDumper.msix` (gitignored)
-
-Partner Center identity (locked in `msix/AppxManifest.xml.template`):
-
-| Field | Value |
-|---|---|
-| Identity Name | `SinedroneSentinel.BPDumper` |
-| Publisher | `CN=BB0EF4E0-83D8-4581-AB1E-92981A9DA66B` |
-| Package Family Name | `SinedroneSentinel.BPDumper_fvbh2q0x73pq6` |
-| DisplayName | `BP Dumper` |
-| Store ID | `9PMR8CPSB04K` |
-
-On submission, explain **runFullTrust**: Win32 console tool that reads Star Citizen `Game.log` / `logbackups` under the user install path and POSTs unlock events to the org webhook.
-
-Store installs write `.env` / cache under `%LOCALAPPDATA%\BP Dumper` and update via the Store (not GitHub auto-update).
+`build-msix.ps1` + `msix/AppxManifest.xml.template` packaged the PyInstaller exe with `runFullTrust`. That Store vehicle is being replaced by the sandboxed WinUI app. Keep the scripts for reference until the Store listing ships the AppContainer package.
 
 ## CI
 
-- **Smoke test:** Actions → **Test Windows portable build** → Run workflow.
-- **Release build:** `.github/workflows/build-releases.yml` on tag / workflow_dispatch — publishes **exe only** (no MSIX).
+- **Release build:** `.github/workflows/build-releases.yml` — publishes **Python exe** to GitHub Release (tooling).
+- Store MSIX is built from `apps/bp-dumper-store` (Visual Studio / future CI), not attached to public Releases.
 
-After changing blueprint lookup data, redeploy the webhook:
+After changing blueprint lookup data:
 
 ```bash
 npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 ```
-
-## Legacy scripts
-
-- `prepare-bundle.ps1` — old folder layout with embeddable Python (local dev only).

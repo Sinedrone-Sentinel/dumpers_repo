@@ -1,6 +1,12 @@
 # Dependencies
 node_modules/
 
+# WinUI / .NET Store app build outputs
+apps/bp-dumper-store/**/bin/
+apps/bp-dumper-store/**/obj/
+apps/bp-dumper-store/**/AppPackages/
+apps/bp-dumper-store/**/BundleArtifacts/
+
 # Build output
 dist/
 

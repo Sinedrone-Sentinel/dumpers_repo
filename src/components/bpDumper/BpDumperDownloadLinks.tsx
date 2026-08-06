@@ -39,7 +39,8 @@ export default function BpDumperDownloadLinks() {
       </div>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows: install from the Microsoft Store. macOS / Linux: use the Python scripts (Python 3 +{' '}
+        Windows Store: pick your Star Citizen LIVE folder when the app asks (it does not scan your
+        drives). macOS / Linux: use the Python scripts (Python 3 +{' '}
         <span className="font-mono">requirements.txt</span>).
       </p>
     </div>
