@@ -11,7 +11,7 @@ export default function BpDumperDownloadLinks() {
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <p className="text-sm text-slate-300">
-          Latest release:{' '}
+          Latest portable release:{' '}
           <span className="text-amber-300 font-medium">
             {loading ? 'Checking GitHub…' : `v${release.version}`}
           </span>
@@ -22,13 +22,13 @@ export default function BpDumperDownloadLinks() {
           rel="noopener noreferrer"
           className="text-xs text-slate-400 hover:text-amber-300 underline underline-offset-2"
         >
-          View all releases
+          View GitHub releases
         </a>
       </div>
 
       {error && (
         <p className="text-xs text-slate-500">
-          {error}. Showing bundled version; Windows exe link still points at GitHub.
+          {error}. Showing bundled version; portable exe link still points at GitHub.
         </p>
       )}
 
@@ -36,7 +36,7 @@ export default function BpDumperDownloadLinks() {
         {BP_DUMPER_DOWNLOADS.map((opt) => {
           const href =
             opt.kind === 'release-asset' ? exeDownloadUrl : (opt.url ?? GITHUB_RELEASES_PAGE)
-          const isPrimary = opt.id === 'windows-portable'
+          const isPrimary = opt.id === 'windows-store'
           return (
             <a
               key={opt.id}
@@ -53,7 +53,7 @@ export default function BpDumperDownloadLinks() {
                 {opt.label}
                 {isPrimary && (
                   <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
-                    Windows
+                    Recommended
                   </span>
                 )}
               </span>
@@ -67,8 +67,9 @@ export default function BpDumperDownloadLinks() {
       </div>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows: use the portable exe. macOS / Linux: use the Python scripts (Python 3 +{' '}
-        <span className="font-mono">requirements.txt</span>).
+        Windows: install from the Microsoft Store when you can. Portable exe is optional. macOS /
+        Linux: use the Python scripts (Python 3 + <span className="font-mono">requirements.txt</span>
+        ).
       </p>
     </div>
   )

@@ -282,13 +282,13 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 | Item | Detail |
 |------|--------|
-| **Downloads** | GitHub releases — **`DumperApps.exe`** (single-file Windows exe, DR logo icon) |
-| **Member setup** | Run portable exe → paste API key when prompted |
+| **Downloads** | **Microsoft Store** (primary) — [apps.microsoft.com/detail/9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); GitHub **`DumperApps.exe`** portable as optional alternative |
+| **Member setup** | Install from Store (or run portable) → paste API key when prompted |
 | **Source** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/), [`scripts/installer/`](scripts/installer/) |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version`; outdated clients get HTTP `426` |
-| **Auto-update** | First-run **Keep App Up to Date** (default Yes) downloads `DumperApps.exe` from GitHub latest and relaunches |
+| **Auto-update** | Store builds via Microsoft Store; portable: first-run **Keep App Up to Date** (default Yes) can download `DumperApps.exe` from GitHub latest and relaunch |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
 **Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications. `session_ping` runs every 30s while in the PU; idle/not-in-PU pauses those pings (event POSTs still fire).

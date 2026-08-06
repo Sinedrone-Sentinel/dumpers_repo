@@ -67,7 +67,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Windows desktop app — syncs blueprint unlocks and powers Live Mission Tracker."
+      subtitle="Windows app (Microsoft Store) — syncs blueprint unlocks and powers Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >
@@ -114,9 +114,10 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <h3 className="text-sm font-semibold text-white">How to set up</h3>
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
-              <strong className="text-slate-300">Windows:</strong> under Downloads, get{' '}
-              <strong className="text-slate-300">Windows portable exe</strong> and run it. A console
-              window opens for blueprint sync.
+              <strong className="text-slate-300">Windows:</strong> under Downloads, install from the{' '}
+              <strong className="text-slate-300">Microsoft Store</strong> (recommended), or use the
+              optional <strong className="text-slate-300">Windows portable exe</strong>. Open the app —
+              a console window runs blueprint sync.
             </li>
             <li>
               <strong className="text-slate-300">macOS / Linux:</strong> open{' '}
