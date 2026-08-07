@@ -35,7 +35,11 @@ cd apps/bp-dumper-store
 pwsh ./build-store.ps1 -Config Release -Package
 ```
 
-Unsigned `.msix` lands under `AppPackages\` — upload in Partner Center (Store re-signs). Do **not** attach Store MSIX to public GitHub Releases.
+`-Package` copies the uploadable file to your usual drop folder:
+
+`Coding Projects\APP_Store Code\BP Dumper\BPDumper.msix`
+
+(build tree also under `AppPackages\`). Store re-signs on ingest. Do **not** attach Store MSIX to public GitHub Releases.
 
 ## Status
 

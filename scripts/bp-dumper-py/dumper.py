@@ -39,6 +39,38 @@ def _is_msix_packaged() -> bool:
         return False
 
 
+def _press_any_key_to_exit(message: str, *, code: int = 0) -> None:
+    """Print a clear message, wait for a key, then exit (avoids Store 'flash crash')."""
+    print()
+    print(message)
+    print()
+    print("Press any key to exit...")
+    try:
+        if sys.platform == "win32":
+            import msvcrt
+
+            # Console Start/Store launches usually have a console; getch works even when
+            # stdin is not a TTY. Non-interactive automation: brief sleep then exit.
+            if sys.stdin.isatty() or getattr(sys, "stdout", None) and sys.stdout.isatty():
+                msvcrt.getch()
+            else:
+                time.sleep(3)
+        elif sys.stdin.isatty():
+            input()
+        else:
+            time.sleep(3)
+    except Exception:
+        time.sleep(2)
+    sys.exit(code)
+
+
+def _exit_star_citizen_not_detected() -> None:
+    _press_any_key_to_exit(
+        "Star Citizen was not detected on this PC.\n"
+        "Install Star Citizen (or point BP Dumper at your LIVE / Game.log path), then try again."
+    )
+
+
 def _app_dir() -> Path:
     """Directory for user-writable files (.env, cache).
 
@@ -2008,6 +2040,10 @@ def main():
         print(f"{Colors.CYAN}             BP Dumper Configuration Wizard{Colors.RESET}")
         print(f"{Colors.CYAN}===================================================={Colors.RESET}")
         print()
+        print(f"{Colors.DIM}Source: github.com/Sinedrone-Sentinel/dumpers_repo (Python watcher){Colors.RESET}")
+        print(f"{Colors.DIM}Trust:  OpenSSF Scorecard + site Trust links under Dumper Apps{Colors.RESET}")
+        print(f"{Colors.DIM}Tip:    Leave the path blank — BP Dumper searches for your LIVE install.{Colors.RESET}")
+        print()
 
         # 1. Prompt file path / directory
         default_path = env_vars.get("LOG_PATH", "")
@@ -2035,11 +2071,12 @@ def main():
                 user_path = str(detected_dir)
             else:
                 fallback = Path(DEFAULT_WIN_PATH)
-                if fallback.is_dir():
-                    live_dir = fallback / "LIVE"
-                    if live_dir.is_dir():
-                        print(f"{Colors.GREEN}Detected default fallback at: {live_dir}{Colors.RESET}")
-                        user_path = str(live_dir)
+                live_dir = fallback / "LIVE" if fallback.is_dir() else None
+                if live_dir is not None and live_dir.is_dir():
+                    print(f"{Colors.GREEN}Detected default fallback at: {live_dir}{Colors.RESET}")
+                    user_path = str(live_dir)
+                else:
+                    _exit_star_citizen_not_detected()
 
         if user_path:
             args.file_path = Path(user_path)
@@ -2152,6 +2189,14 @@ def main():
         }
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
+
+    # No path yet and no install on disk — stop with a clear message (Store cert has no SC).
+    # Do this before the API-key hard-fail so Start/Store launch never flash-closes as a crash.
+    if not args.file_path and not args.log_dir:
+        installs = detect_sc_installs()
+        fallback_live = Path(DEFAULT_WIN_PATH) / "LIVE"
+        if not installs and not fallback_live.is_dir():
+            _exit_star_citizen_not_detected()
 
     # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file -> built-in default)
     url = args.url or os.getenv("SUPABASE_WEBHOOK_URL") or env_vars.get("SUPABASE_WEBHOOK_URL") or DEFAULT_WEBHOOK_URL
@@ -2300,15 +2345,12 @@ def main():
                     watch_file = installs[chosen_channel] / "Game.log"
                 else:
                     fallback = Path(DEFAULT_WIN_PATH)
-                    if fallback.is_dir():
-                        live_dir = fallback / "LIVE"
-                        if live_dir.is_dir():
-                            watch_file = live_dir / "Game.log"
+                    live_dir = fallback / "LIVE" if fallback.is_dir() else None
+                    if live_dir is not None and live_dir.is_dir():
+                        watch_file = live_dir / "Game.log"
 
         if not watch_file:
-            print(f"{Colors.RED}Error: Could not resolve a valid directory to locate Game.log for watch mode.{Colors.RESET}", file=sys.stderr)
-            print(f"Please specify the log path directly (e.g. ./dumper.sh --watch /path/to/Game.log)", file=sys.stderr)
-            sys.exit(1)
+            _exit_star_citizen_not_detected()
 
         # Load local translations if any
         channel_dir = watch_file.parent
@@ -2420,10 +2462,7 @@ def main():
                         log_dirs = [live_dir, live_dir / "logbackups"]
                 
         if not log_dirs or not any(d.is_dir() for d in log_dirs):
-            print(f"{Colors.RED}Error: No Star Citizen installations or log directories detected.{Colors.RESET}", file=sys.stderr)
-            print(f"Please run the script pointing to your logbackups folder or a single Game.log directly:", file=sys.stderr)
-            print(f"  python dumper.py --log-dir \"C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\\logbackups\"", file=sys.stderr)
-            sys.exit(1)
+            _exit_star_citizen_not_detected()
 
         # Collect log files
         log_files = []

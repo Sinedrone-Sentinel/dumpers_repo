@@ -10,26 +10,20 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 export const BP_DUMPER_SCRIPTS_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/tree/main/scripts/bp-dumper-py' as const
 
-/** Microsoft Store product identity (Partner Center). */
+/** Microsoft Store product identity (Partner Center) — listing kept for now; not primary. */
 export const BP_DUMPER_STORE_ID = '9PMR8CPSB04K' as const
 
-/** Browser-friendly Store listing (opens Store app on Windows when available). */
 export const BP_DUMPER_STORE_WEB_URL =
   `https://apps.microsoft.com/detail/${BP_DUMPER_STORE_ID}` as const
 
-/** Deep link that opens the Store client directly on Windows. */
 export const BP_DUMPER_STORE_PROTOCOL_URL =
   `ms-windows-store://pdp/?productid=${BP_DUMPER_STORE_ID}` as const
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
-/**
- * Windows exe filename used by packaging / release tooling (MSIX payload, CI).
- * Not offered as a member download — Windows members install from the Microsoft Store.
- */
+/** Windows exe built from scripts/bp-dumper-py via scripts/installer/build-exe.ps1 */
 export const DUMPER_APPS_EXE_FILENAME = 'DumperApps.exe' as const
 
-/** Packaging asset name for the current bundled dumper version. */
 export function getDumperAppsPortableFilename(_version: string = BP_DUMPER_VERSION): string {
   return DUMPER_APPS_EXE_FILENAME
 }
@@ -39,7 +33,6 @@ export function getDumperAppsInstallerFilename(version: string = BP_DUMPER_VERSI
   return getDumperAppsPortableFilename(version)
 }
 
-/** Member-facing name for desktop tools (blueprint log watcher + Live Mission Tracker). */
 export const DUMPER_APPS_DISPLAY_NAME = 'Dumper Apps' as const
 
 export const BP_DUMPER_CALLOUT_DISMISS_KEY = 'dr_bp_dumper_callout_dismissed_v1' as const
@@ -52,23 +45,35 @@ export type BpDumperDownloadOption = {
   kind: 'external'
 }
 
-/** Member-facing install options — Store (Windows) + scripts (macOS / Linux). */
+/**
+ * Member-facing install options.
+ * Primary: Python-built Windows exe (auto-detects Star Citizen install).
+ * Store listing remains available until SignPath / OpenSSF trust path is solid.
+ */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
-    id: 'windows-store',
+    id: 'windows-exe',
     kind: 'external',
-    label: 'Microsoft Store (Windows)',
+    label: 'Classic Windows exe (auto-detect)',
     description:
-      'Install from the Microsoft Store. You choose your Star Citizen LIVE folder (no drive scan). Updates come through the Store; paste your API key on first run.',
-    url: BP_DUMPER_STORE_WEB_URL,
+      'DumperApps.exe built from the original Python watcher — searches your drives for Star Citizen / LIVE, then asks for your API key. Use this if the Store build will not run.',
+    url: `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_APPS_EXE_FILENAME}`,
   },
   {
     id: 'python-scripts',
     kind: 'external',
-    label: 'Python scripts (macOS / Linux)',
+    label: 'Python scripts (macOS / Linux / advanced)',
     description:
-      'Run the watcher with your own Python 3 install — open the scripts folder on GitHub, install requirements, then run dumper.py (see README there).',
+      'Same watcher as the classic exe — open the scripts folder on GitHub, install requirements, then run dumper.py (auto-detect works there too).',
     url: BP_DUMPER_SCRIPTS_URL,
+  },
+  {
+    id: 'windows-store',
+    kind: 'external',
+    label: 'Microsoft Store (optional)',
+    description:
+      'Sandboxed Store build (pick LIVE folder). Prefer the classic Windows exe above if you want auto-detect or the Store app fails to start.',
+    url: BP_DUMPER_STORE_WEB_URL,
   },
 ]
 

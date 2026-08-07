@@ -1,7 +1,10 @@
 import React from 'react'
 import { BP_DUMPER_DOWNLOADS, BP_DUMPER_VERSION } from '../../config/bpDumper'
+import { getDumperTrustLinks } from '../../config/trustBadges'
 
 export default function BpDumperDownloadLinks() {
+  const trustLinks = getDumperTrustLinks()
+
   return (
     <div className="space-y-3">
       <p className="text-sm text-slate-300">
@@ -11,7 +14,7 @@ export default function BpDumperDownloadLinks() {
 
       <div className="space-y-2">
         {BP_DUMPER_DOWNLOADS.map((opt) => {
-          const isPrimary = opt.id === 'windows-store'
+          const isPrimary = opt.id === 'windows-exe'
           return (
             <a
               key={opt.id}
@@ -28,7 +31,7 @@ export default function BpDumperDownloadLinks() {
                 {opt.label}
                 {isPrimary && (
                   <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
-                    Windows
+                    Recommended
                   </span>
                 )}
               </span>
@@ -39,10 +42,33 @@ export default function BpDumperDownloadLinks() {
       </div>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows Store: pick your Star Citizen LIVE folder when the app asks (it does not scan your
-        drives). macOS / Linux: use the Python scripts (Python 3 +{' '}
-        <span className="font-mono">requirements.txt</span>).
+        Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your
+        Star Citizen install (searches for LIVE / Game.log). You can also paste a path if you prefer.
+        Updates come from GitHub Releases when “Keep App Up to Date” is on.
       </p>
+
+      {trustLinks.length > 0 && (
+        <div className="site-surface space-y-2 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Trust & transparency
+          </p>
+          <ul className="space-y-1.5">
+            {trustLinks.map((link) => (
+              <li key={link.id}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-orange-300 hover:text-orange-200 underline"
+                >
+                  {link.label}
+                </a>
+                <span className="block text-xs text-slate-500 leading-relaxed">{link.summary}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

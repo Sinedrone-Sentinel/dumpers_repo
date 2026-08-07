@@ -3,18 +3,20 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  IgnorableNamespaces="uap uap10">
   <!--
     Partner Center identity (same product as prior full-trust package):
     Store ID 9PMR8CPSB04K
     Package Family Name SinedroneSentinel.BPDumper_fvbh2q0x73pq6
     AppContainer — NO runFullTrust. User grants log folder via FolderPicker.
+    EntryPoint must be Windows.PartialTrustApplication (not $targetentrypoint$,
+    which expands to Windows.FullTrustApplication and requires runFullTrust).
   -->
   <Identity
     Name="SinedroneSentinel.BPDumper"
     Publisher="CN=BB0EF4E0-83D8-4581-AB1E-92981A9DA66B"
-    Version="1.12.0.0" />
+    Version="1.12.1.0" />
   <mp:PhoneIdentity PhoneProductId="00000000-0000-0000-0000-000000000000" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>BP Dumper</DisplayName>
@@ -22,13 +24,18 @@
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
   </Dependencies>
   <Resources>
     <Resource Language="en-US" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
+    <Application
+      Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="Windows.PartialTrustApplication"
+      uap10:TrustLevel="appContainer"
+      uap10:RuntimeBehavior="packagedClassicApp">
       <uap:VisualElements
         DisplayName="BP Dumper"
         Description="Star Citizen blueprint log watcher for Dumper's Repo. You choose your LIVE folder; the app does not scan your drives."

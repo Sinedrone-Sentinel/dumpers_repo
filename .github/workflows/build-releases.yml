@@ -1,5 +1,8 @@
 name: Build Executables on Release
 
+# SignPath optional: set SIGNPATH_* after OSS approval (OSI license required — docs/TRUST_AND_SIGNING.md).
+# Without secrets, the unsigned Python-built exe is still published to the GitHub Release.
+
 on:
   push:
     tags:
@@ -45,6 +48,8 @@ jobs:
     needs: resolve-tag
     runs-on: windows-latest
     timeout-minutes: 90
+    outputs:
+      unsigned_artifact_id: ${{ steps.upload-unsigned.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
 
@@ -59,7 +64,7 @@ jobs:
       - name: Copy blueprint lookup
         run: node scripts/copy-blueprint-lookup.mjs
 
-      - name: Build single-file DumperApps exe
+      - name: Build single-file DumperApps.exe
         shell: pwsh
         timeout-minutes: 45
         run: |
@@ -67,28 +72,61 @@ jobs:
           $version = "${{ needs.resolve-tag.outputs.version }}"
           & "$env:GITHUB_WORKSPACE/scripts/installer/build-exe.ps1" -Version $version
 
-      - name: Upload exe artifact
+      - name: Upload unsigned exe artifact
+        id: upload-unsigned
         uses: actions/upload-artifact@v4
         with:
-          name: windows-exe
+          name: windows-exe-unsigned
           path: scripts/installer/output/DumperApps.exe
+          if-no-files-found: error
 
-  release:
-    name: Upload GitHub Release assets
+  sign-and-release:
+    name: Sign (optional) and publish Release
     needs: [resolve-tag, build-windows-exe]
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: read
     steps:
-      - name: Download build artifacts
+      - name: Check SignPath config
+        id: signpath
+        env:
+          TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+          ORG_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          PROJECT: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          POLICY: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+        run: |
+          if [ -n "$TOKEN" ] && [ -n "$ORG_ID" ] && [ -n "$PROJECT" ] && [ -n "$POLICY" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::SignPath not configured — publishing UNSIGNED DumperApps.exe. See docs/TRUST_AND_SIGNING.md"
+          fi
+
+      - name: Sign with SignPath
+        if: steps.signpath.outputs.enabled == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: dumper-apps-exe
+          github-artifact-id: ${{ needs.build-windows-exe.outputs.unsigned_artifact_id }}
+          wait-for-completion: true
+          output-artifact-directory: dist/
+
+      - name: Download unsigned exe
+        if: steps.signpath.outputs.enabled != 'true'
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
+          name: windows-exe-unsigned
+          path: dist/
 
       - name: Upload exe to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: artifacts/windows-exe/DumperApps.exe
+          files: dist/DumperApps.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,51 +1,30 @@
 ---
-description: Keep Python standalone and Store WinUI BP Dumper clients feature-synced (except FS discovery)
+description: BP Dumper canonical client is Python; Store WinUI listing is parked
 globs: scripts/bp-dumper-py/**/*,apps/bp-dumper-store/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
 alwaysApply: false
 ---
 
-# BP Dumper Dual-Client Sync
+# BP Dumper — canonical Python client
 
-Dumper Apps has **two clients** that must stay feature-aligned for product
-behavior. They intentionally differ only in how they obtain the Star Citizen
-log folder.
+**Canonical product path:** `scripts/bp-dumper-py/` → packaged as `DumperApps.exe`
+via `scripts/installer/build-exe.ps1`. Members get auto-detect of the Star Citizen
+install (drive search for LIVE / Game.log).
 
-| Client | Path | FS discovery |
+| Client | Status | FS discovery |
 |---|---|---|
-| Standalone Python | `scripts/bp-dumper-py/` | Drive auto-scan / path prompt OK |
-| Store (sandboxed) | `apps/bp-dumper-store/` | **FolderPicker + FutureAccessList only** — no disk scan |
+| Standalone Python / exe | **Canonical** — build + ship this | Drive auto-scan / path prompt OK |
+| Store WinUI (`apps/bp-dumper-store/`) | **Parked** — listing may stay live; do not invest in feature parity | FolderPicker only (legacy sandbox experiment) |
 
-Contract source of truth: `scripts/bp-dumper-shared/` (protocol + fixtures).
+Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 
-## When you change one client, update the other
+## When changing BP Dumper
 
-If a change touches **shared product functionality**, apply the equivalent in
-**both** clients in the same change set (or immediately after), and update
-`scripts/bp-dumper-shared/PROTOCOL.md` / fixtures when the wire contract moves.
+- Prefer changes in **`scripts/bp-dumper-py/`** only.
+- Do **not** require Store WinUI updates for new member features.
+- Keep `feat(dumper)` / `fix(dumper)` Conventional Commits for semantic-release.
 
-### Must stay in sync
+## Do not regress
 
-- Webhook event `type` values and JSON fields
-- Auth / version headers (`Authorization: Bearer dr_…`, `X-Dumper-Version`)
-- Log parsing / mission correlation / blueprint resolution rules
-- Live Mission Tracker publish fields and session ping semantics
-- Version-gate behavior (`426` / update required)
-- Full-history import **meaning** (what awards are imported, once-only UX)
-- API key prompt / regenerate UX copy that members see
-
-### Must NOT be copied into the Store client
-
-- Drive scanning (`GetDriveType`, walking fixed disks for `StarCitizen`)
-- Silent Program Files probing / auto-detect without user grant
-- GitHub portable exe auto-update
-- Any capability or API that requires `runFullTrust` or `broadFileSystemAccess`
-
-Store access is limited to the folder the user picked (and persisted via
-`FutureAccessList`). Do not “helpfully” reintroduce scan logic behind a toggle.
-
-## Checklist before finishing a dumper feature
-
-- [ ] Shared behavior documented / fixture updated in `bp-dumper-shared` if the wire or parse contract changed
-- [ ] Python client updated **or** explicitly N/A (FS-discovery-only change)
-- [ ] Store client updated **or** explicitly N/A (FS-discovery-only change)
-- [ ] Commit scope stays `dumper` when cutting a Python release; Store packaging notes if Store binary/version must ship too
+- Auto-detect / drive search is a **wanted** member feature on the Python/exe client.
+- Do not push members back to “pick LIVE folder only” as the primary Windows story
+  while the exe path is primary.

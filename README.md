@@ -1,5 +1,7 @@
 # Dumper's Repo
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Sinedrone-Sentinel/dumpers_repo/badge)](https://scorecard.dev/viewer/?uri=github.com/Sinedrone-Sentinel/dumpers_repo)
+
 **Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen.
 
 **Official site:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`). This is the only authorized public deployment — see [LICENSE](LICENSE).
@@ -282,15 +284,15 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 | Item | Detail |
 |------|--------|
-| **Downloads (members)** | **Microsoft Store** — [apps.microsoft.com/detail/9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); macOS/Linux via Python scripts in the modal |
-| **Member setup (Store)** | Install → **pick Star Citizen LIVE folder** (no drive scan) → paste API key |
-| **Store app (sandboxed)** | [`apps/bp-dumper-store/`](apps/bp-dumper-store/) — WinUI AppContainer, FolderPicker + FutureAccessList, no `runFullTrust` |
-| **Standalone Python** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) — scripts / advanced; may auto-detect installs |
-| **Shared protocol** | [`scripts/bp-dumper-shared/`](scripts/bp-dumper-shared/) — keep both clients in sync (see Cursor rule `dumper-dual-client-sync`) |
+| **Canonical client** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) → `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) |
+| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (auto-detects Star Citizen LIVE); macOS/Linux: Python scripts in the modal |
+| **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
+| **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — OpenSSF Scorecard workflow; SignPath CI ready (OSI license required for OSS tier) |
+| **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version`; outdated clients get HTTP `426` |
-| **Auto-update** | Microsoft Store for Windows Store installs |
+| **Auto-update** | GitHub Releases when “Keep App Up to Date” is on |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
 **Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications. `session_ping` runs every 30s while in the PU; idle/not-in-PU pauses those pings (event POSTs still fire).
