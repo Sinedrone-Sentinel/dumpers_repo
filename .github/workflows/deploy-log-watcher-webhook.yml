@@ -10,6 +10,9 @@ on:
       - 'supabase/functions/_shared/blueprintResolver.ts'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Deploy log-watcher-webhook

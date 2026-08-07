@@ -4,6 +4,9 @@ name: Test Windows portable build
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-windows-exe:
     name: Build Windows exe (test)

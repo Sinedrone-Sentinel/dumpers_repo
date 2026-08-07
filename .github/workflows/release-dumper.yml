@@ -15,16 +15,19 @@ on:
       - '.github/workflows/release-dumper.yml'
       - '.github/workflows/build-releases.yml'
 
+# Least privilege: read-only at top level; write scopes only on the release job.
 permissions:
-  contents: write
-  issues: write
-  pull-requests: write
-  actions: write
+  contents: read
 
 jobs:
   release:
     name: Semantic Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      actions: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4

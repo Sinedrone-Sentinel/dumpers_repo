@@ -14,6 +14,10 @@ on:
         required: true
         default: 'v1.2.0'
 
+# Least privilege: read-only at top level; write only on the publish job.
+permissions:
+  contents: read
+
 jobs:
   resolve-tag:
     name: Resolve release tag
