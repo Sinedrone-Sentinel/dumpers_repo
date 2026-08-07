@@ -13,6 +13,10 @@
 Workflow: `.github/workflows/scorecard.yml`  
 Badge / viewer: `https://scorecard.dev/viewer/?uri=github.com/Sinedrone-Sentinel/dumpers_repo`
 
+Dependabot: [`.github/dependabot.yml`](../.github/dependabot.yml) (npm, Actions, pip under `scripts/bp-dumper-py`).
+
+BP Dumper Python pin: `requests>=2.33.0`. Production site deps (`npm audit --omit=dev`) should stay at 0. Remaining npm audit noise is usually nested inside `@semantic-release/npm`’s bundled `npm` CLI (CI-only).
+
 ## SignPath + OpenSSF Best Practices — license blocker
 
 SignPath Foundation free OSS signing and OpenSSF Best Practices (Passing → Gold) require an **OSI-approved open-source license** and no proprietary components in the signed artifact.
