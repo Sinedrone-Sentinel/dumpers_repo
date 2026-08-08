@@ -15,7 +15,7 @@ const appElement = document.getElementById('root')
 if (appElement) {
   const root = ReactDOM.createRoot(appElement)
 
-  // bfcache restore still hard-reloads; deploy mismatch shows UpdateAvailableBanner in AppChrome.
+  // Deploy mismatch shows UpdateAvailableBanner in AppChrome (no automatic full reload).
   setupCacheBusting()
 
   root.render(
