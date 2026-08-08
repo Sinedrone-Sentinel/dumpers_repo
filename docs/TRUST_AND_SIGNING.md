@@ -33,19 +33,21 @@ Without that secret, Branch-Protection stays errored even when `main` is protect
 
 [OpenSSF Baseline-1](https://www.bestpractices.dev/projects/13989) is earned (README badge: `/projects/13989/baseline`). Scorecard’s **CII-Best-Practices** check typically still needs the classic **Metal → Passing** questionnaire on the same project entry. Root [LICENSE](../LICENSE) is **Apache-2.0** (OSI). DFP remains proprietary under [LICENSE.DFP](../LICENSE.DFP).
 
-## SignPath Free OSS (license ready)
+## SignPath Free OSS
 
 SignPath Foundation free OSS signing requires an **OSI-approved** license and no proprietary code in the signed artifact.
 
 - Repository / Dumper Apps sources: **Apache-2.0** ([LICENSE](../LICENSE), `scripts/bp-dumper-py/LICENSE`)
 - DFP engine files: **not** in `DumperApps.exe`; licensed separately under [LICENSE.DFP](../LICENSE.DFP)
 - Trademarks: reserved ([TRADEMARK.md](../TRADEMARK.md) / [NOTICE](../NOTICE))
+- **Code signing policy** (required credit + roles + privacy): [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)
+- Download UI shows: *Free code signing provided by SignPath.io, certificate by SignPath Foundation*
 
-Before applying: credit SignPath Foundation on the download / trust UI per SignPath’s policy. After approval, configure CI secrets below.
+Application submitted. After SignPath approves and links the GitHub trusted build system, configure CI secrets below.
 
-## SignPath CI (ready after OSS approval)
+## SignPath CI (after approval)
 
-`.github/workflows/build-releases.yml` will submit `DumperApps.exe` when these are set:
+`.github/workflows/build-releases.yml` submits `DumperApps.exe` when these are set:
 
 | Kind | Name |
 |------|------|
@@ -54,9 +56,15 @@ Before applying: credit SignPath Foundation on the download / trust UI per SignP
 | Variable | `SIGNPATH_PROJECT_SLUG` |
 | Variable | `SIGNPATH_SIGNING_POLICY_SLUG` |
 
-Artifact config: `.signpath/artifact-configurations/dumper-apps-exe.xml`
+In the SignPath project UI:
 
-After the first signed release, set `SIGNPATH_SIGNING_LIVE = true` in `src/config/trustBadges.ts`.
+1. Connect this GitHub repo as a trusted build system
+2. Create / upload artifact configuration slug **`dumper-apps-exe`** from `.signpath/artifact-configurations/dumper-apps-exe.xml` (product name **Dumper Apps**, version parameter)
+3. Create a signing policy (approver = you) and copy the slugs / org id into the GitHub variables above
+
+Then cut a dumper release (`v*` tag). Confirm the Actions run signs and uploads `DumperApps.exe`.
+
+After the first signed release is live, set `SIGNPATH_SIGNING_LIVE = true` in `src/config/trustBadges.ts`.
 
 ## Gold standard realism
 
