@@ -5,6 +5,30 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+/** Remove leftover private screenshots under `{userId}/` (DB rows cascade; storage does not). */
+async function purgeServiceRequestScreenshots(
+  adminClient: ReturnType<typeof createClient>,
+  userId: string,
+) {
+  const bucket = 'service-request-screenshots'
+  try {
+    const { data: entries, error } = await adminClient.storage.from(bucket).list(userId, {
+      limit: 1000,
+    })
+    if (error || !entries?.length) return
+
+    const paths = entries
+      .filter((entry) => entry.name && !entry.name.endsWith('/'))
+      .map((entry) => `${userId}/${entry.name}`)
+
+    if (paths.length > 0) {
+      await adminClient.storage.from(bucket).remove(paths)
+    }
+  } catch {
+    // Best-effort: never fail account deletion on storage cleanup
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -47,6 +71,8 @@ Deno.serve(async (req) => {
     const adminClient = createClient(supabaseUrl, serviceRoleKey, {
       auth: { autoRefreshToken: false, persistSession: false },
     })
+
+    await purgeServiceRequestScreenshots(adminClient, caller.id)
 
     const { error: deleteError } = await adminClient.auth.admin.deleteUser(caller.id)
 
