@@ -3,20 +3,26 @@ import { getPublicTrustBadgeImages } from '../config/trustBadges'
 
 type Props = {
   className?: string
-  /** `md` for landing hero; default `sm` for Archive welcome. */
-  size?: 'sm' | 'md'
+  /** `xs` for landing under stats; `sm` Archive; `md` if a larger strip is needed. */
+  size?: 'xs' | 'sm' | 'md'
+}
+
+const SIZE_CLASS: Record<NonNullable<Props['size']>, string> = {
+  xs: 'h-3.5 w-auto max-w-[140px] sm:h-4 sm:max-w-[155px]',
+  sm: 'h-5 w-auto max-w-[200px]',
+  md: 'h-6 w-auto max-w-[220px] sm:h-7',
 }
 
 /** Centered OpenSSF / trust badge images (Scorecard, Best Practices, Baseline, ...). */
 export default function TrustBadgeStrip({ className = '', size = 'sm' }: Props) {
   const badges = getPublicTrustBadgeImages()
   if (badges.length === 0) return null
-  const imgClass =
-    size === 'md' ? 'h-7 w-auto max-w-[240px] sm:h-8' : 'h-5 w-auto max-w-[220px]'
+  const imgClass = SIZE_CLASS[size]
+  const gapClass = size === 'xs' ? 'gap-2' : 'gap-3'
 
   return (
     <div
-      className={`flex flex-wrap items-center justify-center gap-3 ${className}`}
+      className={`flex flex-wrap items-center justify-center ${gapClass} ${className}`}
       role="list"
       aria-label="Security and trust badges"
     >

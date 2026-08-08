@@ -150,8 +150,8 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             </a>
           </div>
 
-          <div className="site-stat-strip mx-auto mt-12 max-w-3xl flex-col gap-4">
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+          <div className="site-stat-strip mx-auto mt-12 max-w-3xl flex-col gap-5">
+            <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
               <div>
                 <span className="site-stat-value">Offline</span>
                 <span className="site-stat-label">No account needed</span>
@@ -165,7 +165,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
                 <span className="site-stat-label">Org ticker</span>
               </div>
             </div>
-            <TrustBadgeStrip size="md" />
+            <TrustBadgeStrip size="xs" className="opacity-80" />
           </div>
         </header>
 
