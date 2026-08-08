@@ -18,6 +18,8 @@ import CommodityLookupRoute from './CommodityLookup.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import AnalyticsRoute from './Analytics.index'
 import PartnershipRoute from './Partnership.index'
+import ContributeRoute from './Contribute.index'
+import ContributorTeamAdminRoute from './ContributorTeamAdmin.index'
 import ThemePreviewRoute from './ThemePreview.index'
 import PrivacyRoute from './Privacy.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
@@ -174,6 +176,20 @@ const partnershipRoute = createRoute({
   beforeLoad: requireFeature('partnership'),
 })
 
+const contributeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contribute',
+  component: ContributeRoute,
+  beforeLoad: requireFeature('contribute'),
+})
+
+const contributorTeamAdminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contributor-team',
+  component: ContributorTeamAdminRoute,
+  beforeLoad: requireSuperAdmin(),
+})
+
 /** Temporary theme gallery — remove before relying on prod if undesired */
 const themePreviewRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -207,6 +223,8 @@ export const routeTree = rootRoute.addChildren([
   analyticsRoute,
   discordSubscribeRoute,
   partnershipRoute,
+  contributeRoute,
+  contributorTeamAdminRoute,
   themePreviewRoute,
 ])
 

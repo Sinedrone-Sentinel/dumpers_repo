@@ -116,6 +116,7 @@ export default function AppUserMenu({
   const showOfficer = isOfficerOrAbove
   const showSiteAdmin = isSuperAdmin
   const showPartnership = !!profile?.rsi_handle_verified
+  const showContribute = !!profile && profile.role !== 'pending'
 
   return (
     <>
@@ -185,6 +186,11 @@ export default function AppUserMenu({
                     Partnership
                   </Link>
                 )}
+                {showContribute && (
+                  <Link to="/contribute" onClick={close} className={`block ${menuItemClass}`}>
+                    Contribute
+                  </Link>
+                )}
               </div>
             )}
 
@@ -248,6 +254,9 @@ export default function AppUserMenu({
                   <MenuSectionLabel>Site admin</MenuSectionLabel>
                   <Link to="/analytics" onClick={close} className={`block ${menuItemClass}`}>
                     Site Analytics
+                  </Link>
+                  <Link to="/contributor-team" onClick={close} className={`block ${menuItemClass}`}>
+                    Contributor Team
                   </Link>
                   <button
                     type="button"

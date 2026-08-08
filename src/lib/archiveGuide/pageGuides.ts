@@ -324,6 +324,21 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     relatesTo: ['Settings', 'Support', 'Updates', 'Site Rules'],
   },
   {
+    id: 'contribute',
+    title: 'Contribute',
+    description:
+      'Approved members can apply for a GitHub collaborator seat on the public dumpers_repo — triage issues, open pull requests, and request ladder upgrades.',
+    details: [
+      'Open Contribute from your avatar menu (Account) once your member account is approved',
+      'Choose an entry seat: Triage (discuss/triage) or Contributor (push to open PRs)',
+      'Applications and upgrades are reviewed by the lead maintainer — not automatic',
+      'Active seats can request the next ladder step (Contributor → Reviewer → Maintainer) with justification and evidence links',
+      'You can leave the team anytime; GitHub collaborator access is removed when you leave or are revoked',
+      'Contributor Team access is separate from site officer/super-admin roles and does not grant signing or secrets',
+    ],
+    relatesTo: ['Settings', 'Updates', 'Dumper Apps'],
+  },
+  {
     id: 'settings',
     title: 'Settings',
     description: 'Manage your profile and account from your avatar menu.',

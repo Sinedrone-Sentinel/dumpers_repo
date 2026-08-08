@@ -193,6 +193,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 125 | `160_rsi_verified_discord_notification.sql` | Staff “RSI Handle Verified” Discord on first verify (Edge + officer force) |
 | 126 | `161_dumper_top_users_rolling_30d.sql` | Analytics Top Dumpers Edge invokes always use rolling 30 days (period filter still scopes other Dumper cards) |
 | 127 | `162_member_left_discord_and_delete_cleanup.sql` | Staff “Member Left the Site” Discord on self-delete; Discord FK cleanup so profile delete cannot block; Edge also purges service-request screenshots |
+| 128 | `163_contributor_team_and_ticker_ttl.sql` | Contributor Team applications/upgrades + GitHub sync RPCs; per-entry ticker `ttl_days_override` (1–366) |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 
@@ -227,6 +228,7 @@ npx supabase functions deploy discord-services-dispatch
 npx supabase functions deploy discord-services-expire --no-verify-jwt
 npx supabase functions deploy discord-services-bot-invite
 npx supabase functions deploy discord-services-post-test
+npx supabase functions deploy manage-github-collaborator
 ```
 
 | Function | Purpose |
@@ -241,12 +243,15 @@ npx supabase functions deploy discord-services-post-test
 | `discord-services-expire` | Expire open Accept windows + Timed out embeds |
 | `discord-services-bot-invite` | Returns bot OAuth invite URL from `DISCORD_SERVICES_APPLICATION_ID` |
 | `discord-services-post-test` | Super-admin harness: post N Accept messages for race testing |
+| `manage-github-collaborator` | Contributor Team: invite/update/remove GitHub collaborators after approve/upgrade/leave/revoke |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
 Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, plus deprecated `SUPABASE_SERVICE_ROLE_KEY`). **Never** expose secret / service_role keys in frontend code.
 
 ### Edge Function secrets
+
+**Contributor Team:** set Edge secret `GITHUB_CONTRIBUTORS_TOKEN` to a fine-scoped GitHub PAT (or GitHub App installation token) that can manage collaborators on the configured public repo. Without it, `manage-github-collaborator` returns 503 and marks sync error.
 
 Set these under **Project Settings → Edge Functions → Secrets** (or let semantic-release create them):
 
