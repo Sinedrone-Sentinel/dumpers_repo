@@ -25,7 +25,8 @@ The ruleset allows **Repository admin** to bypass. Store a fine-grained PAT for 
 
 1. GitHub → Settings → Developer settings → Fine-grained tokens → Generate
 2. Resource owner: your user; Repository access: only dumpers_repo
-3. Permissions: **Contents → Read and write**, **Metadata → Read**, **Pull requests → Read and write**, **Workflows → Read and write** (needed so gh workflow run build-releases.yml works)
+3. Permissions: **Contents → Read and write**, **Metadata → Read**, **Pull requests → Read and write**
+   - Do **not** rely on the PAT for gh workflow run — the release job uses the Actions GITHUB_TOKEN for that step.
 4. Repo → Settings → Secrets → Actions → New secret RELEASE_TOKEN
 
 Workflow: .github/workflows/release-dumper.yml
