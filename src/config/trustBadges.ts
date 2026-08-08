@@ -1,7 +1,7 @@
 /**
  * Third-party trust links / badge images for Dumper Apps and Archive trust UI.
  * Do not claim SignPath signing until SIGNPATH_SIGNING_LIVE.
- * OpenSSF Best Practices Passing + Baseline-1 earned (project 13989).
+ * OpenSSF Best Practices Passing + Baseline-2 earned (project 13989).
  */
 
 export const GITHUB_REPO_URL =
@@ -104,7 +104,7 @@ export function getDumperTrustLinks(): TrustLink[] {
       id: 'baseline',
       label: 'OpenSSF Baseline',
       href: OPENSSF_BEST_PRACTICES_URL,
-      summary: 'Open Source Project Security Baseline Level 1 for this repository.',
+      summary: 'Open Source Project Security Baseline Level 2 for this repository.',
     },
   ]
   links.push({
