@@ -313,7 +313,7 @@ function renderPage({ bp, slug }) {
     ${missionsHtml}
   </main>
   <footer>
-    <p>© 2026 Black Star - All data is subject to change every patch</p>
+    <p>© 2026 Sinedrone Sentinel - All data is subject to change every patch</p>
     <p>Buy. Craft. Sell.</p>
   </footer>
 </body>

@@ -6,7 +6,7 @@
 
 **Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen.
 
-**Official site:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`).
+**Official site:** [dumpers-repo.com](https://www.dumpers-repo.com) (Sinedrone Sentinel / Michael Linzenmeyer / RSI `Sinedrone_Sentinel`).
 
 **License:** [Apache-2.0](LICENSE) for repository source (including Dumper Apps). **Trademarks** reserved — [TRADEMARK.md](TRADEMARK.md). **DFP** engine remains proprietary — [LICENSE.DFP](LICENSE.DFP).
 

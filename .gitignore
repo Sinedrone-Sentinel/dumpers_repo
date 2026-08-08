@@ -41,6 +41,7 @@ DumpersRepo-backup.zip
 # Reference org logo (not shipped — upload via Settings or use Supabase Storage)
 public/ORG_LOGO.png
 public/org-logo.png
+# Legacy local org-logo filename (pre–Sinedrone Sentinel rebrand)
 public/blackstar.png
 
 # DFP Engine source (proprietary - kept in private repo)

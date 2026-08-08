@@ -935,7 +935,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           </a>
 
           <a
-            href="https://robertsspaceindustries.com/en/orgs/BSTR"
+            href="https://robertsspaceindustries.com/citizens/Sinedrone_Sentinel"
             target="_blank"
             rel="noopener noreferrer"
             className="group text-left p-4 rounded-lg bg-gradient-to-br from-slate-800/60 to-orange-900/20 border border-orange-500/30 hover:border-orange-500/50 hover:from-slate-800/80 hover:to-orange-900/30 transition-all"
@@ -948,16 +948,16 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </div>
               <div>
                 <h4 className="text-sm font-medium text-slate-200 group-hover:text-orange-300 transition-colors">
-                  Black Star [BSTR]
+                  Sinedrone Sentinel
                 </h4>
                 <span className="text-[10px] text-orange-400/80 uppercase tracking-wide">Site Sponsor</span>
               </div>
             </div>
             <p className="text-xs text-slate-500 line-clamp-2">
-              The industrial and defense enterprise sponsoring Dumper's Repo. Focused on extraction, production, and trade across the verse.
+              Site operator of Dumper&apos;s Repo — extraction, production, and trade tools across the verse.
             </p>
             <span className="inline-flex items-center gap-1 mt-2 text-xs text-orange-400/70 group-hover:text-orange-400 transition-colors">
-              View Org
+              View RSI profile
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>

@@ -36,7 +36,7 @@ const BRAND_GRADIENT =
 
 /**
  * Open sequence (strictly one-by-one):
- * 1. flip — card flips in-place at click origin, Black Star on back
+ * 1. flip — card flips in-place at click origin, org logo on back
  * 2. expand — branded card zooms to screen center
  * 3. blinds-open — side wipes reveal detail panel
  * 4. ready — interactive
