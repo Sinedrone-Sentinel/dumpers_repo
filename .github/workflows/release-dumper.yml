@@ -56,9 +56,11 @@ jobs:
 
       - name: Run semantic-release
         env:
-          # Must be the same admin PAT as checkout — default GITHUB_TOKEN cannot push to protected main.
+          # Admin PAT: git push + GitHub Releases API (Protect main bypass).
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          # Job token for `gh workflow run` — fine-grained PATs often cannot dispatch Actions (403).
+          # `gh` prefers GH_TOKEN over GITHUB_TOKEN.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
