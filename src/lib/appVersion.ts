@@ -68,12 +68,9 @@ async function fetchDeployedBuildId(): Promise<string | null> {
   return fromHtml
 }
 
+/** Formerly hard-reloaded on bfcache restore; that felt like random auto-refresh. Banner handles deploys. */
 export function setupCacheBusting(): void {
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-      reloadForAppUpdate()
-    }
-  })
+  // no-op — do not call reloadForAppUpdate() on pageshow/persisted
 }
 
 /**
