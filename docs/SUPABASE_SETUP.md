@@ -371,7 +371,7 @@ VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-Optional (production uses the official DFP host — see LICENSE):
+Optional (production uses the official DFP host — see LICENSE.DFP):
 
 ```env
 # Dev only — local public/ copy from dfp-engine-private build
