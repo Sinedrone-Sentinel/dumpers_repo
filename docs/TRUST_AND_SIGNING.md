@@ -17,6 +17,19 @@ Dependabot: [`.github/dependabot.yml`](../.github/dependabot.yml) (npm, Actions,
 
 BP Dumper Python pin: `requests>=2.33.0`. Site + lockfile should stay at `npm audit` = 0 (unused `@semantic-release/npm` is stubbed under `scripts/stubs/`).
 
+### Release BP Dumper needs a PAT (RELEASE_TOKEN)
+
+Protect main requires PRs and status checks. The default Actions GITHUB_TOKEN (github-actions[bot]) **cannot** push version-bump commits from semantic-release.
+
+The ruleset allows **Repository admin** to bypass. Store a fine-grained PAT for @Sinedrone-Sentinel as repo secret **RELEASE_TOKEN**:
+
+1. GitHub → Settings → Developer settings → Fine-grained tokens → Generate
+2. Resource owner: your user; Repository access: only dumpers_repo
+3. Permissions: **Contents → Read and write**, **Metadata → Read**, **Pull requests → Read and write**, **Workflows → Read and write** (needed so gh workflow run build-releases.yml works)
+4. Repo → Settings → Secrets → Actions → New secret RELEASE_TOKEN
+
+Workflow: .github/workflows/release-dumper.yml
+
 ### Branch-Protection check needs a PAT
 
 The default `GITHUB_TOKEN` cannot read branch protection (`Resource not accessible by integration`). Create a **fine-grained PAT** and store it as repo secret `SCORECARD_TOKEN`:
