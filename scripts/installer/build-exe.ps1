@@ -48,6 +48,44 @@ Write-Step "Building single-file DumperApps exe"
 $versionJson = Join-Path $RepoRoot "scripts/bp-dumper/version.json"
 $bundledVersionJson = Join-Path $bpDir "dumper-version.json"
 Copy-Item $versionJson $bundledVersionJson -Force
+
+# PE metadata for SignPath product-name / product-version restrictions
+$parts = @($Version.Split('.') + @('0', '0', '0', '0'))[0..3] | ForEach-Object { [int]($_ -replace '[^0-9]', '0') }
+$fileVers = ($parts -join ', ')
+$versionInfoPath = Join-Path $workDir "DumperApps-version.txt"
+@"
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=($fileVers),
+    prodvers=($fileVers),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x40004,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo([
+      StringTable(
+        u'040904B0',
+        [
+          StringStruct(u'CompanyName', u'Dumper''s Repo'),
+          StringStruct(u'FileDescription', u'Dumper Apps'),
+          StringStruct(u'FileVersion', u'$Version'),
+          StringStruct(u'InternalName', u'DumperApps'),
+          StringStruct(u'LegalCopyright', u'Copyright (c) Michael Linzenmeyer'),
+          StringStruct(u'OriginalFilename', u'DumperApps.exe'),
+          StringStruct(u'ProductName', u'Dumper Apps'),
+          StringStruct(u'ProductVersion', u'$Version'),
+        ]
+      )
+    ]),
+    VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
+  ]
+)
+"@ | Set-Content -Path $versionInfoPath -Encoding utf8
+
 $addLookup = "$lookupPath;."
 $addVersion = "$bundledVersionJson;."
 python -m PyInstaller `
@@ -57,6 +95,7 @@ python -m PyInstaller `
     --console `
     --name "DumperApps" `
     --icon $iconPath `
+    --version-file $versionInfoPath `
     --distpath $OutputDir `
     --workpath $workDir `
     --specpath $workDir `

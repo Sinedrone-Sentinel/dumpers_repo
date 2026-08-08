@@ -1,0 +1,10 @@
+---
+description: Always assign Sinedrone-Sentinel on pull requests
+alwaysApply: true
+---
+
+# PR assignee
+
+Until the project has more maintainers, **always assign `@Sinedrone-Sentinel`** when creating a GitHub pull request (`gh pr create --assignee Sinedrone-Sentinel`, or `gh pr edit --add-assignee Sinedrone-Sentinel` if create omitted it).
+
+Do this for every PR opened in this repo unless the user names a different assignee.

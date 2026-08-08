@@ -1,0 +1,42 @@
+---
+description: Always ensure source/text files are UTF-8 (never UTF-16)
+alwaysApply: true
+---
+
+# UTF-8 source encoding (mandatory)
+
+On this Windows workspace, the Write tool (and some editors) sometimes save text as **UTF-16 LE**. That breaks ESLint (`Parsing error: Invalid character`), Node, and CI — the same failure that hit `TrustBadgeStrip.tsx`.
+
+## Hard rule
+
+**Never leave a repo text file as UTF-16.** After creating or editing text with Write / EditNotebook / shell redirection, **verify encoding and convert to UTF-8** before commit or push.
+
+## When to check
+
+- After every `Write` that creates or overwrites a file under the repo
+- Before `git commit` / `git push` if you touched new or rewritten files
+- Immediately if lint reports `Parsing error: Invalid character` on a file you just edited
+
+## How to detect
+
+UTF-16 LE often looks like: first bytes `FF FE`, or ASCII letters with `00` every other byte (e.g. `i\x00m\x00p\x00o` for `impo`).
+
+```powershell
+python -c "from pathlib import Path; p=Path(r'PATH'); b=p.read_bytes()[:8]; print(b)"
+```
+
+## How to fix
+
+Convert in place (no BOM preferred):
+
+```powershell
+python -c "from pathlib import Path; p=Path(r'PATH'); b=p.read_bytes();
+text=b.decode('utf-16') if (b[:2] in (b'\xff\xfe', b'\xfe\xff') or (len(b)>3 and b[1]==0 and b[3]==0)) else b.decode('utf-8');
+p.write_bytes(text.replace('\r\n','\n').replace('\r','\n').encode('utf-8'))"
+```
+
+Prefer writing via Python/`node` with explicit `encoding='utf-8'` when creating new files on Windows, instead of relying on Write alone for critical CI files (`.tsx`, `.ts`, `.mjs`, `.css`, `.md`, `.mdc`, `.yml`, `.json`).
+
+## Scope
+
+Apply to all text sources and config: `src/**`, `scripts/**`, `.github/**`, `.cursor/rules/**`, `*.md`, `*.json`, `*.yml`, `*.css`, etc. Do **not** convert real binaries (images, `.exe`, lockfile internals beyond normal text edits).

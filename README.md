@@ -291,7 +291,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Canonical client** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) → `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) |
 | **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (auto-detects Star Citizen LIVE); macOS/Linux: Python scripts in the modal |
 | **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
-| **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — OpenSSF Scorecard workflow; SignPath CI ready (OSI license required for OSS tier) |
+| **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + SignPath; [`docs/CODE_SIGNING_POLICY.md`](docs/CODE_SIGNING_POLICY.md) — SignPath credit / roles |
 | **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |

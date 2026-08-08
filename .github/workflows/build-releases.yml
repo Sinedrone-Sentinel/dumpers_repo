@@ -119,6 +119,8 @@ jobs:
           github-artifact-id: ${{ needs.build-windows-exe.outputs.unsigned_artifact_id }}
           wait-for-completion: true
           output-artifact-directory: dist/
+          parameters: |
+            version: ${{ toJSON(needs.resolve-tag.outputs.version) }}
 
       - name: Download unsigned exe
         if: steps.signpath.outputs.enabled != 'true'

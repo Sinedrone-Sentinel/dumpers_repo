@@ -358,6 +358,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Copy your API key from this page and paste it when Dumper Apps asks on first run',
       'Regenerate your API key if compromised; the old key stops working immediately',
       'Windows updates come from GitHub Releases when Keep App Up to Date is on (Microsoft Store remains an optional listing for now)',
+      'Download panel includes the SignPath Foundation code-signing credit and a link to the project Code signing policy (Authenticode signing after SignPath approval)',
       'Older builds are blocked by the server — update when prompted',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',
       'Successful imports appear under BP Dumper — Success in the notification bell',

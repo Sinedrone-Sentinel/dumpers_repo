@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   SignPath artifact configuration for DumperApps.exe (PE).
-  Used after SignPath OSS approval + GitHub trusted build system linking.
-  See docs/TRUST_AND_SIGNING.md
+  Slug in SignPath UI must match workflow: dumper-apps-exe
+  See docs/TRUST_AND_SIGNING.md and docs/CODE_SIGNING_POLICY.md
 -->
 <artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
-  <pe-file>
-    <file-matcher>
-      <include path="DumperApps.exe" />
-    </file-matcher>
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <pe-file
+    path="DumperApps.exe"
+    product-name="Dumper Apps"
+    product-version="${version}"
+    original-filename="DumperApps.exe"
+  >
+    <authenticode-sign />
   </pe-file>
 </artifact-configuration>

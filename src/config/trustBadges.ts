@@ -19,10 +19,21 @@ export const OPENSSF_BEST_PRACTICES_URL =
 export const OPENSSF_BASELINE_BADGE_URL =
   'https://www.bestpractices.dev/projects/13989/baseline' as const
 
-/** Set true only after SignPath has signed a published Windows release. */
+/**
+ * Set true only after SignPath has signed a published Windows release.
+ * Credit text (SIGNPATH_CREDIT_*) is always shown; this flag controls the
+ * “builds are signed” claim only.
+ */
 export const SIGNPATH_SIGNING_LIVE = false as const
 
 export const SIGNPATH_ABOUT_URL = 'https://signpath.io/' as const
+
+/** Exact credit required by SignPath Foundation conditions. */
+export const SIGNPATH_CREDIT_TEXT =
+  'Free code signing provided by SignPath.io, certificate by SignPath Foundation' as const
+
+export const CODE_SIGNING_POLICY_URL =
+  'https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/docs/CODE_SIGNING_POLICY.md' as const
 
 export type TrustLink = {
   id: string
@@ -78,13 +89,19 @@ export function getDumperTrustLinks(): TrustLink[] {
       summary: 'Open Source Project Security Baseline Level 1 for this repository.',
     },
   ]
-  if (SIGNPATH_SIGNING_LIVE) {
-    links.push({
-      id: 'signpath',
-      label: 'SignPath code signing',
-      href: SIGNPATH_ABOUT_URL,
-      summary: 'Windows builds are Authenticode-signed via SignPath Foundation.',
-    })
-  }
+  links.push({
+    id: 'signpath',
+    label: SIGNPATH_SIGNING_LIVE ? 'SignPath code signing' : 'SignPath Foundation',
+    href: SIGNPATH_ABOUT_URL,
+    summary: SIGNPATH_SIGNING_LIVE
+      ? 'Windows builds are Authenticode-signed via SignPath Foundation.'
+      : `${SIGNPATH_CREDIT_TEXT}. See Code signing policy for roles and release flow.`,
+  })
+  links.push({
+    id: 'code-signing-policy',
+    label: 'Code signing policy',
+    href: CODE_SIGNING_POLICY_URL,
+    summary: 'Roles, privacy statement, and what SignPath signs for Dumper Apps.',
+  })
   return links
 }
