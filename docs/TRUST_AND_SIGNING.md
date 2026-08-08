@@ -1,5 +1,7 @@
 # Trust & code signing (BP Dumper)
 
+> The in-app **Contributor Team** program grants public-repo collaborator seats only -- it does **not** grant SignPath access, code-signing rights, or GitHub Actions secrets.
+
 ## Product path
 
 **Canonical client:** Python watcher in `scripts/bp-dumper-py/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1`.

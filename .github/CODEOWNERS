@@ -1,0 +1,12 @@
+# Lead maintainer review for sensitive paths (GitHub handle).
+# Keep in sync with site_settings.github_codeowners_handle / docs.
+
+.cursor/rules/** @Sinedrone-Sentinel
+.github/workflows/** @Sinedrone-Sentinel
+
+GOVERNANCE.md @Sinedrone-Sentinel
+SECURITY.md @Sinedrone-Sentinel
+docs/TRUST_AND_SIGNING.md @Sinedrone-Sentinel
+
+public/dfp-engine.js @Sinedrone-Sentinel
+LICENSE.DFP @Sinedrone-Sentinel

@@ -29,6 +29,10 @@ export type WhatsNewEntry = {
   tickerCategoryLabel?: string | null
   accentHex?: string | null
   active?: boolean
+  /** Category TTL days (effective). */
+  ttlDays?: number
+  /** Per-entry override (1-366); null/undefined = use category TTL. */
+  ttlDaysOverride?: number | null
 }
 
 export type SiteTickerWhatsNew = {
@@ -60,6 +64,8 @@ export type AdminUpsertWhatsNewPayload = {
   kind?: WhatsNewKind | null
   detectedAt?: string | null
   tickerCategoryId: string
+  /** Optional 1-366 day TTL override for this entry. */
+  ttlDaysOverride?: number | null
 }
 
 export type AdminMutationResult = {

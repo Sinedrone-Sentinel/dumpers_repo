@@ -11,6 +11,7 @@ const SKIP_PATH_PREFIXES = [
   '/discord-subscribe',
   '/theme-preview',
   '/privacy',
+  '/contributor-team',
 ]
 
 export type AnalyticsContext = {
@@ -117,6 +118,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/bazaar')) return 'fulfillment'
   if (pathname.startsWith('/archive')) return 'archive'
   if (pathname.startsWith('/partnership')) return 'partnership'
+  if (pathname.startsWith('/contribute')) return 'contribute'
   if (pathname.startsWith('/guest-locked')) return 'guest_locked'
 
   return null
@@ -269,6 +271,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   fulfillment: 'The Bazaar',
   archive: 'Info Archive',
   partnership: 'Partnership',
+  contribute: 'Contribute',
   guest_locked: 'Guest Locked',
 }
 
@@ -289,8 +292,9 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   store: 'WTS Store',
   apply: 'Apply',
   applications: 'Applications',
-  manage: 'Manage services',
+  manage: 'Manage',
   officer_pending: 'Pending review',
+  status: 'Status',
   welcome: 'Overview',
   components: 'Components',
   ordnance: 'Ordnance',

@@ -33,6 +33,7 @@ type MessageEditor = {
   detectedAt: string
   issueKey: string
   version: string
+  ttlDaysOverride: number | ''
 }
 
 type CategoryEditor = {
@@ -56,6 +57,7 @@ function emptyMessage(defaultCategoryId: string): MessageEditor {
     detectedAt: new Date().toISOString().slice(0, 16),
     issueKey: '',
     version: '',
+    ttlDaysOverride: '',
   }
 }
 
@@ -162,6 +164,10 @@ export default function TickerAdminModal({ onClose }: Props) {
       detectedAt: toLocalInput(entry.detectedAt),
       issueKey: entry.issueKey || '',
       version: entry.version || '',
+      ttlDaysOverride:
+        typeof entry.ttlDaysOverride === 'number' && Number.isFinite(entry.ttlDaysOverride)
+          ? entry.ttlDaysOverride
+          : '',
     })
     setMessageView('edit')
     setError(null)
@@ -190,6 +196,16 @@ export default function TickerAdminModal({ onClose }: Props) {
       const detectedIso = messageEditor.detectedAt
         ? new Date(messageEditor.detectedAt).toISOString()
         : new Date().toISOString()
+      let ttlDaysOverride: number | null = null
+      if (messageEditor.ttlDaysOverride !== '') {
+        const n = Math.floor(Number(messageEditor.ttlDaysOverride))
+        if (!Number.isFinite(n) || n < 1 || n > 366) {
+          setError('Custom duration must be blank or an integer from 1 to 366 days.')
+          setSaving(false)
+          return
+        }
+        ttlDaysOverride = n
+      }
       const result = await adminUpsertWhatsNewEntry({
         id: messageEditor.id,
         headline: messageEditor.headline.trim(),
@@ -199,6 +215,7 @@ export default function TickerAdminModal({ onClose }: Props) {
         detectedAt: detectedIso,
         issueKey: messageEditor.issueKey.trim() || null,
         version: messageEditor.version.trim() || null,
+        ttlDaysOverride,
       })
       if (!result.success) {
         setError(result.error || 'Save failed')
@@ -518,6 +535,30 @@ export default function TickerAdminModal({ onClose }: Props) {
                 value={messageEditor.detectedAt}
                 onChange={(e) => setMessageEditor((s) => ({ ...s, detectedAt: e.target.value }))}
               />
+            </label>
+            <label className="block space-y-1">
+              <span className="site-label !mb-0">Custom duration (days)</span>
+              <input
+                type="number"
+                min={1}
+                max={366}
+                className="site-input w-full px-3 py-2 text-sm"
+                placeholder="Blank = category default"
+                value={messageEditor.ttlDaysOverride}
+                onChange={(e) => {
+                  const raw = e.target.value
+                  if (raw === '') {
+                    setMessageEditor((s) => ({ ...s, ttlDaysOverride: '' }))
+                    return
+                  }
+                  const n = Math.floor(Number(raw))
+                  setMessageEditor((s) => ({
+                    ...s,
+                    ttlDaysOverride: Number.isFinite(n) ? Math.min(366, Math.max(1, n)) : '',
+                  }))
+                }}
+              />
+              <span className="site-hint">Optional override 1–366 days (e.g. 365 for long-lived calls).</span>
             </label>
             <details className="text-xs text-slate-500">
               <summary className="cursor-pointer text-slate-400">Advanced keys</summary>

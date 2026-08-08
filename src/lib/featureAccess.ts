@@ -19,6 +19,8 @@ export type FeatureId =
   | 'mining_tracker'
   | 'commodity_lookup'
   | 'partnership'
+  | 'contribute'
+  | 'contributor_team_admin'
 
 export interface VisibilityContext {
   role: UserRole | null
@@ -118,6 +120,12 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'partnership':
       return ctx.isApproved
+
+    case 'contribute':
+      return ctx.isApproved
+
+    case 'contributor_team_admin':
+      return ctx.isSuperAdmin
 
     default:
       return false

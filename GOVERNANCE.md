@@ -14,9 +14,18 @@ Dumper's Repo (`dumpers_repo`) uses a **benevolent dictator / lead-maintainer** 
 |------|---------------|------------------|
 | Lead maintainer | GitHub `@Sinedrone-Sentinel` (Michael Linzenmeyer / RSI `Sinedrone_Sentinel`) | Merge PRs, cut Dumper Apps releases, operate production Supabase/Edge/Discord, security response, OpenSSF/BadgeApp entry |
 | Contributor | Anyone via PR | Propose code/docs; follow [CONTRIBUTING.md](CONTRIBUTING.md) including DCO |
+| Collaborator (ladder) | Site-approved Contributor Team seats | GitHub triage / push / maintain on the public repo per seat; not admin |
 | Member (site) | Approved dumpers-repo.com accounts | Use member tools; not repository admins |
 
 Officer / site-admin roles inside the product UI are **application roles**, not GitHub repository admin roles.
+
+### Contributor Team ladder (site + GitHub)
+
+Members apply at `/contribute`. Super-admins review at `/contributor-team`. Seats are linear:
+
+`Triage` → `Contributor` → `Reviewer` → `Maintainer`
+
+GitHub collaborator permission mapping: triage → `triage`, contributor/reviewer → `push`, maintainer → `maintain`. The Edge Function `manage-github-collaborator` performs invite/update/remove using `GITHUB_CONTRIBUTORS_TOKEN`. **Automation boundary:** the site never grants GitHub `admin`, never touches SignPath/Actions secrets, and never elevates site `role` via this program.
 
 ## Members with access to sensitive resources
 
