@@ -317,6 +317,8 @@ After cutting a dumper release, redeploy `log-watcher-webhook --no-verify-jwt` s
 
 ## For developers
 
+Contribution process (PRs, CI, tests): [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ### Tech stack
 
 React 19 · Vite 8 · TanStack Router / Query · Tailwind CSS 4 · Supabase (Auth, Postgres, RLS, Realtime, Edge Functions)
@@ -359,7 +361,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 
 | Workflow | Trigger | Purpose |
 |----------|---------|---------|
-| [ci.yml](.github/workflows/ci.yml) | PRs to `main` | Lint + build (no deploy) |
+| [ci.yml](.github/workflows/ci.yml) | PRs to `main` | Lint + test + build (no deploy) |
 | [deploy.yml](.github/workflows/deploy.yml) | Push to `main` | Build + GitHub Pages deploy (official site) |
 | [release-dumper.yml](.github/workflows/release-dumper.yml) | Dumper source changes on `main` | semantic-release version + tag |
 | [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags | Build Windows packaging artifacts for Store / release tooling |
@@ -369,6 +371,8 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | Script | Purpose |
 |--------|---------|
 | `npm run dev` | Vite dev server |
+| `npm test` | Automated suites (unit helpers + mining math); see [CONTRIBUTING.md](CONTRIBUTING.md) |
+| `npm run verify-mining-math` | Mining / loadout math suite only |
 | `npm run build` | Production build + SEO prerender + per-blueprint SEO pages + sitemap + version stamp + archive guide |
 | `npm run prerender-seo` | Re-prerender public hub routes into `dist/` (after `vite build`) |
 | `npm run generate-blueprint-seo` | Regenerate `dist/blueprints/{slug}/` HTML from current `game-blueprints.json` (after `vite build`) |
@@ -454,6 +458,7 @@ Host `dist/` with SPA fallback (`index.html` for unknown paths). GitHub Actions 
 
 | Doc | Audience | Topic |
 |-----|----------|-------|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contributors | PR flow, lint/test/build, coding expectations |
 | [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Maintainers | Migrations, Edge Functions, OAuth, BP Dumper API |
 | [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) | Maintainers | Deploy `dist/`, branding, env secrets |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Maintainers | Game extraction paths and generated JSON |
