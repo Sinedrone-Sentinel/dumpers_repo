@@ -21,8 +21,10 @@ export const OPENSSF_BASELINE_BADGE_URL =
 
 /**
  * Set true only after SignPath has signed a published Windows release.
- * Credit text (SIGNPATH_CREDIT_*) is always shown; this flag controls the
- * “builds are signed” claim only.
+ * Credit text is always shown; this flag controls the “builds are signed” claim only.
+ *
+ * When approved: see docs/TRUST_AND_SIGNING.md → “SignPath — YOUR next steps after approval”
+ * (or tell the agent “SignPath is approved”).
  */
 export const SIGNPATH_SIGNING_LIVE = false as const
 

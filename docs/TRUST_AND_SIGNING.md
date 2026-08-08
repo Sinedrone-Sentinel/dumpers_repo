@@ -43,28 +43,23 @@ SignPath Foundation free OSS signing requires an **OSI-approved** license and no
 - **Code signing policy** (required credit + roles + privacy): [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)
 - Download UI shows: *Free code signing provided by SignPath.io, certificate by SignPath Foundation*
 
-Application submitted. After SignPath approves and links the GitHub trusted build system, configure CI secrets below.
+Application submitted. Credit + policy are already on the site.
 
-## SignPath CI (after approval)
+### SignPath — YOUR next steps after approval
 
-`.github/workflows/build-releases.yml` submits `DumperApps.exe` when these are set:
+> **When SignPath emails approval (or you get org/API access):** tell Cursor *“SignPath is approved”* — the agent is instructed to run this list — **or** work the boxes yourself.
 
-| Kind | Name |
-|------|------|
-| Secret | `SIGNPATH_API_TOKEN` |
-| Variable | `SIGNPATH_ORGANIZATION_ID` |
-| Variable | `SIGNPATH_PROJECT_SLUG` |
-| Variable | `SIGNPATH_SIGNING_POLICY_SLUG` |
+- [ ] **GitHub Actions secret:** `SIGNPATH_API_TOKEN`
+- [ ] **GitHub Actions variables:** `SIGNPATH_ORGANIZATION_ID`, `SIGNPATH_PROJECT_SLUG`, `SIGNPATH_SIGNING_POLICY_SLUG`
+- [ ] **SignPath UI:** link this GitHub repo as a trusted build system
+- [ ] **SignPath UI:** artifact configuration slug **`dumper-apps-exe`** matches `.signpath/artifact-configurations/dumper-apps-exe.xml`
+- [ ] **SignPath UI:** signing policy exists (you are the approver); copy slugs/ids into GitHub vars above
+- [ ] **Release:** cut a dumper `v*` release; confirm Actions signs and publishes `DumperApps.exe` (not the “unsigned” warning)
+- [ ] **Site flag:** set `SIGNPATH_SIGNING_LIVE = true` in `src/config/trustBadges.ts` (PR + green CI) — **only after** a signed release exists
 
-In the SignPath project UI:
+## SignPath CI details
 
-1. Connect this GitHub repo as a trusted build system
-2. Create / upload artifact configuration slug **`dumper-apps-exe`** from `.signpath/artifact-configurations/dumper-apps-exe.xml` (product name **Dumper Apps**, version parameter)
-3. Create a signing policy (approver = you) and copy the slugs / org id into the GitHub variables above
-
-Then cut a dumper release (`v*` tag). Confirm the Actions run signs and uploads `DumperApps.exe`.
-
-After the first signed release is live, set `SIGNPATH_SIGNING_LIVE = true` in `src/config/trustBadges.ts`.
+`.github/workflows/build-releases.yml` submits `DumperApps.exe` when the secret + three variables above are set. Without them, the workflow still publishes an **unsigned** exe and logs a warning.
 
 ## Gold standard realism
 

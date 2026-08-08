@@ -1,0 +1,25 @@
+---
+description: When user says SignPath approved, run the post-approval checklist
+alwaysApply: true
+---
+
+# SignPath approval follow-up
+
+When the user says SignPath is **approved**, **accepted**, **live**, or that they have SignPath **org/API credentials**, do **not** stop at congratulations. Immediately drive this checklist (implement what you can; list what only they can do):
+
+## Checklist (in order)
+
+1. **Confirm secrets/vars in GitHub** (they paste values; never commit secrets):
+   - Secret: SIGNPATH_API_TOKEN
+   - Variables: SIGNPATH_ORGANIZATION_ID, SIGNPATH_PROJECT_SLUG, SIGNPATH_SIGNING_POLICY_SLUG
+2. **SignPath project UI** (guide them if needed):
+   - GitHub repo linked as trusted build system
+   - Artifact configuration slug dumper-apps-exe matches .signpath/artifact-configurations/dumper-apps-exe.xml
+   - Signing policy exists (approver = Sinedrone-Sentinel)
+3. **Cut / verify a dumper release** that runs Build Executables on Release with SignPath enabled (signed DumperApps.exe on the GitHub Release)
+4. **Flip the UI flag**: set SIGNPATH_SIGNING_LIVE = true in src/config/trustBadges.ts, open a PR assigned to @Sinedrone-Sentinel, wait for green CI
+5. Propose a Site Update only if they want ticker news; wait for numbered approval
+
+Canonical human-readable copy of this list: docs/TRUST_AND_SIGNING.md section **SignPath — YOUR next steps after approval**.
+
+Do **not** set SIGNPATH_SIGNING_LIVE = true before a signed release is confirmed.
