@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test
+        run: npm test
+
       - name: Create env file
         run: |
           echo "VITE_SUPABASE_URL=https://placeholder.supabase.co" >> .env
