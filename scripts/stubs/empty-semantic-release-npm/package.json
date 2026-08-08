@@ -1,0 +1,11 @@
+{
+  "name": "@semantic-release/npm",
+  "version": "0.0.0-stub",
+  "private": true,
+  "description": "Empty stub — this repo does not publish to npm; semantic-release only pulls @semantic-release/npm transitively.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  }
+}
