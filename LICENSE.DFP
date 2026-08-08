@@ -1,0 +1,22 @@
+Dumper's Fair-Value Price (DFP) — Proprietary License
+
+Copyright (c) Michael Linzenmeyer
+All rights reserved.
+
+The following are NOT licensed under the Apache License 2.0 that covers
+the rest of this repository:
+
+- public/dfp-engine.js
+- public/dfp-version.json (and any successor DFP version manifests shipped
+  for the official engine)
+- The DFP pricing formula, algorithms, and the private dfp-engine source
+  product used to build the official engine
+- Any redistribution or rehost of the DFP engine outside the official
+  Dumper's Repo deployment
+
+No license is granted to copy, modify, reverse-engineer for reuse,
+replace, circumvent, rehost, or redistribute the DFP engine or formula
+except as part of the official dumpers-repo.com deployment controlled by
+Michael Linzenmeyer, or with prior written permission.
+
+THE DFP MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.

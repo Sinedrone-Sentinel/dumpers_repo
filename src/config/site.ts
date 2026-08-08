@@ -45,7 +45,7 @@ export const DFP_OFFICIAL_HOSTS = ['dumpers-repo.com', 'www.dumpers-repo.com'] a
 
 /**
  * Canonical DFP base (cross-origin fallback for local/dev when not on an official host).
- * Do not rehost or replace the engine on other public sites — see LICENSE.
+ * Do not rehost or replace the engine on other public sites — see LICENSE.DFP.
  */
 export const DFP_CANONICAL_BASE_URL =
   'https://raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo/main/public' as const

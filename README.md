@@ -4,7 +4,9 @@
 
 **Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen.
 
-**Official site:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`). This is the only authorized public deployment — see [LICENSE](LICENSE).
+**Official site:** [dumpers-repo.com](https://www.dumpers-repo.com) (Black Star, operated by Michael Linzenmeyer / RSI `Sinedrone_Sentinel`).
+
+**License:** [Apache-2.0](LICENSE) for repository source (including Dumper Apps). **Trademarks** reserved — [TRADEMARK.md](TRADEMARK.md). **DFP** engine remains proprietary — [LICENSE.DFP](LICENSE.DFP).
 
 ## Contents
 
@@ -303,9 +305,9 @@ After cutting a dumper release, redeploy `log-watcher-webhook --no-verify-jwt` s
 
 ## Dumper's Fair-Value Price (DFP)
 
-**Dumper's Fair-Value Price (DFP)** is **proprietary** to Michael Linzenmeyer. Production loads the official engine from `https://www.dumpers-repo.com` (`dfp-engine.js` + `dfp-version.json`). Do not tamper with, rehost, or replace the engine.
+**Dumper's Fair-Value Price (DFP)** is **proprietary** to Michael Linzenmeyer ([LICENSE.DFP](LICENSE.DFP) — not Apache-2.0). Production loads the official engine from `https://www.dumpers-repo.com` (`dfp-engine.js` + `dfp-version.json`). Do not tamper with, rehost, or replace the engine.
 
-- Built from the private **dfp-engine-private** repository; this repo ships the pre-built bundle in `public/`
+- Built from the private **dfp-engine-private** repository; this repo ships the pre-built bundle in `public/` under LICENSE.DFP
 - Commodity/salvage Q0 bases refreshed via UEX Corp API (`npm run fetch-commodity-bases`)
 - Super-admins may disable DFP display in Settings; the required opt-out footer appears on every page
 
@@ -454,8 +456,10 @@ Host `dist/` with SPA fallback (`index.html` for unknown paths). GitHub Actions 
 | [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) | Maintainers | Deploy `dist/`, branding, env secrets |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Maintainers | Game extraction paths and generated JSON |
 | [scripts/bp-dumper/README.md](scripts/bp-dumper/README.md) | Maintainers | BP Dumper release process |
-| [LICENSE](LICENSE) | Everyone | Proprietary terms — official site only |
-| [TRADEMARK.md](TRADEMARK.md) | Everyone | Brand usage |
+| [LICENSE](LICENSE) | Everyone | Apache-2.0 (repository source / Dumper Apps) |
+| [LICENSE.DFP](LICENSE.DFP) | Everyone | Proprietary DFP engine terms |
+| [NOTICE](NOTICE) | Everyone | Apache NOTICE + trademark / DFP pointers |
+| [TRADEMARK.md](TRADEMARK.md) | Everyone | Brand usage (not granted by Apache-2.0) |
 
 Internal/historical notes also exist under `docs/` (Discord migration notes, stack revert playbook).
 
@@ -463,7 +467,7 @@ Internal/historical notes also exist under `docs/` (Discord migration notes, sta
 
 ## Ownership
 
-Dumper's Repo is owned by **Michael Linzenmeyer** (RSI: Sinedrone_Sentinel). The only authorized public deployment is [dumpers-repo.com](https://www.dumpers-repo.com). See [LICENSE](LICENSE) and [TRADEMARK.md](TRADEMARK.md).
+Dumper's Repo is owned by **Michael Linzenmeyer** (RSI: Sinedrone_Sentinel). Official site: [dumpers-repo.com](https://www.dumpers-repo.com). Source is Apache-2.0; use of the product name/marks requires following [TRADEMARK.md](TRADEMARK.md).
 
 ---
 
