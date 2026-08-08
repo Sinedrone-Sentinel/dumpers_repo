@@ -192,6 +192,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 124 | `159_new_user_discord_on_signup.sql` | Staff “New User Joined” Discord fires on signup (`handle_new_user`), not welcome-modal finish; backfill recent unfinished onboardings |
 | 125 | `160_rsi_verified_discord_notification.sql` | Staff “RSI Handle Verified” Discord on first verify (Edge + officer force) |
 | 126 | `161_dumper_top_users_rolling_30d.sql` | Analytics Top Dumpers Edge invokes always use rolling 30 days (period filter still scopes other Dumper cards) |
+| 127 | `162_member_left_discord_and_delete_cleanup.sql` | Staff “Member Left the Site” Discord on self-delete; Discord FK cleanup so profile delete cannot block; Edge also purges service-request screenshots |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 
@@ -231,7 +232,7 @@ npx supabase functions deploy discord-services-post-test
 | Function | Purpose |
 |----------|---------|
 | `ban-user` / `unban-user` | Admin user management |
-| `delete-account` | User self-service account deletion |
+| `delete-account` | User self-service account deletion (RPC cleanup + auth user + service-request screenshots) |
 | `validate-rsi-handle` | Verify RSI Handles via public citizen Bio challenge code (after `issue_rsi_verify_challenge`) |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 | `log-watcher-webhook` | Receives blueprint events from BP Dumper; Bearer API key + required `X-Dumper-Version` (rejects outdated clients with HTTP 426) |
