@@ -91,6 +91,7 @@ jobs:
     permissions:
       contents: write
       actions: read
+      id-token: write # cosign keyless (Sigstore)
     steps:
       - name: Check SignPath config
         id: signpath
@@ -129,10 +130,25 @@ jobs:
           name: windows-exe-unsigned
           path: dist/
 
+      - name: Install cosign
+        uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+
+      - name: Checksums and cosign-signed manifest
+        working-directory: dist
+        run: |
+          set -euo pipefail
+          sha256sum DumperApps.exe > SHA256SUMS
+          cosign sign-blob --yes --bundle SHA256SUMS.sig SHA256SUMS
+          echo "SHA256SUMS:"
+          cat SHA256SUMS
+
       - name: Upload exe to GitHub Release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
-          files: dist/DumperApps.exe
+          files: |
+            dist/DumperApps.exe
+            dist/SHA256SUMS
+            dist/SHA256SUMS.sig
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

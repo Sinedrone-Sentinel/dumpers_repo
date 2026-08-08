@@ -458,7 +458,14 @@ Host `dist/` with SPA fallback (`index.html` for unknown paths). GitHub Actions 
 
 | Doc | Audience | Topic |
 |-----|----------|-------|
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contributors | PR flow, lint/test/build, coding expectations |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contributors | PR flow, DCO, lint/test/build, coding expectations |
+| [GOVERNANCE.md](GOVERNANCE.md) | Everyone | Roles, sensitive access, decision-making |
+| [SECURITY.md](SECURITY.md) | Everyone | Vulnerability reporting and disclosure |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Contributors | High-level design / actors |
+| [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) | Contributors | How dependencies are selected and tracked |
+| [docs/SECURITY_ASSURANCE.md](docs/SECURITY_ASSURANCE.md) | Contributors | Threat model / security assessment notes |
+| [docs/VERIFY_RELEASE.md](docs/VERIFY_RELEASE.md) | Everyone | Verify Dumper Apps release hashes + cosign |
+| [docs/TRUST_AND_SIGNING.md](docs/TRUST_AND_SIGNING.md) | Maintainers | Scorecard, SignPath, release trust |
 | [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Maintainers | Migrations, Edge Functions, OAuth, BP Dumper API |
 | [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) | Maintainers | Deploy `dist/`, branding, env secrets |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Maintainers | Game extraction paths and generated JSON |

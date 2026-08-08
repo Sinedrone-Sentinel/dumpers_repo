@@ -31,4 +31,17 @@ We aim to acknowledge reports within **7 days** and to ship a fix or mitigation 
 
 ## Preferred disclosure
 
-Coordinated disclosure: give us a reasonable window to patch before public write-ups. Credit is offered if you want it.
+Coordinated disclosure: give us a reasonable window to patch before public write-ups. Credit is offered if you want it (unless you request anonymity).
+
+## Response process
+
+1. Acknowledge the report (target: within **7 days**).
+2. Triage severity and affected component (site, Dumper Apps, Edge Function).
+3. Develop and ship a fix or mitigation as quickly as practical for confirmed issues.
+4. Credit the reporter in the advisory or release notes unless anonymity was requested.
+
+## Public vulnerability data
+
+When a vulnerability in **this project's results** is confirmed and addressed, we publish it via **GitHub Security Advisories** for this repository (and release notes when users should upgrade). There are no advisories published to date; that archive will grow as issues are disclosed.
+
+See also [docs/SECURITY_ASSURANCE.md](docs/SECURITY_ASSURANCE.md) and [docs/VERIFY_RELEASE.md](docs/VERIFY_RELEASE.md).
