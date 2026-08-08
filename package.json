@@ -59,7 +59,6 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^13.1.5",
     "@tailwindcss/postcss": "^4.3.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
@@ -92,12 +91,6 @@
     "sigstore": "4.1.1",
     "@sigstore/core": "3.2.1",
     "tar": "7.5.22",
-    "npm": {
-      "tar": "7.5.22",
-      "picomatch": "4.0.4",
-      "ip-address": "10.3.1",
-      "sigstore": "4.1.1",
-      "@sigstore/core": "3.2.1"
-    }
+    "@semantic-release/npm": "file:scripts/stubs/empty-semantic-release-npm"
   }
 }
