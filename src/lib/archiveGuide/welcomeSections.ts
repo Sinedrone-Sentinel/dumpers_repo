@@ -397,9 +397,9 @@ export const ORGANIZATIONS = [
     description: 'Browse all Star Citizen organizations on the official RSI site',
   },
   {
-    title: 'Black Star [BSTR]',
+    title: 'Sinedrone Sentinel',
     badge: 'Site Sponsor',
-    description: 'Industrial and defense enterprise focused on extraction, production, and trade',
+    description: 'Site operator of Dumper\'s Repo — extraction, production, and trade tools for the verse',
   },
 ]
 

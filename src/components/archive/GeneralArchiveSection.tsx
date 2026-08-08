@@ -179,7 +179,7 @@ export default function GeneralArchiveSection() {
           </a>
 
           <a
-            href="https://robertsspaceindustries.com/en/orgs/BSTR"
+            href="https://robertsspaceindustries.com/citizens/Sinedrone_Sentinel"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-start gap-3 p-3 rounded-lg bg-gradient-to-br from-slate-800/60 to-orange-900/20 border border-orange-500/30 hover:border-orange-500/50 hover:from-slate-800/80 hover:to-orange-900/30 transition-all"
@@ -191,13 +191,13 @@ export default function GeneralArchiveSection() {
             </div>
             <div className="min-w-0">
               <h4 className="text-sm font-medium text-slate-200 group-hover:text-orange-300 transition-colors flex items-center gap-1">
-                Black Star [BSTR]
+                Sinedrone Sentinel
                 <svg className="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </h4>
               <p className="text-[10px] text-orange-400/80 uppercase tracking-wide">Site Sponsor</p>
-              <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">Industrial and defense enterprise focused on extraction, production, and trade</p>
+              <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">Site operator of Dumper&apos;s Repo — extraction, production, and trade tools for the verse</p>
             </div>
           </a>
         </div>

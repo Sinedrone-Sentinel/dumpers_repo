@@ -25,7 +25,7 @@ export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
 /** Footer copyright */
 export const SITE_COPYRIGHT =
-  '© 2026 Black Star - All data is subject to change every patch' as const
+  '© 2026 Sinedrone Sentinel - All data is subject to change every patch' as const
 /**
  * Optional support / tip page (e.g. Ko-fi). Shown as a quiet footer link when set.
  * Clear to hide the link.
