@@ -329,12 +329,12 @@
   }
 
   .site-stat-value {
-    @apply block font-[Orbitron,sans-serif] text-2xl font-black tracking-wide text-white sm:text-3xl;
+    @apply block font-[Orbitron,sans-serif] text-3xl font-black tracking-wide text-white sm:text-4xl;
     text-shadow: 0 0 28px rgba(249, 115, 22, 0.45);
   }
 
   .site-stat-label {
-    @apply mt-0.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-orange-300/80;
+    @apply mt-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-orange-300/85 sm:text-xs;
   }
 
   @media (prefers-reduced-motion: reduce) {
