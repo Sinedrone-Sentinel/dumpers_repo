@@ -31,24 +31,19 @@ Without that secret, Branch-Protection stays errored even when `main` is protect
 
 ### CII / OpenSSF Best Practices badge (separate from Scorecard)
 
-Scorecard’s **CII-Best-Practices** check is 0 until the project has a badge at [bestpractices.dev](https://www.bestpractices.dev/). That is a questionnaire (Passing → Silver → Gold), not a GitHub setting. Proprietary root `LICENSE` blocks an honest Passing/Gold claim — see below.
+Scorecard’s **CII-Best-Practices** check is 0 until the project has a badge at [bestpractices.dev](https://www.bestpractices.dev/). That is a questionnaire (Passing → Silver → Gold), not a GitHub setting. Root [LICENSE](../LICENSE) is **Apache-2.0** (OSI), so an honest Passing application is unblocked; complete the form separately. DFP remains proprietary under [LICENSE.DFP](../LICENSE.DFP).
 
-## SignPath + OpenSSF Best Practices — license blocker
+## SignPath Free OSS (license ready)
 
-SignPath Foundation free OSS signing and OpenSSF Best Practices (Passing → Gold) require an **OSI-approved open-source license** and no proprietary components in the signed artifact.
+SignPath Foundation free OSS signing requires an **OSI-approved** license and no proprietary code in the signed artifact.
 
-This repository’s root [LICENSE](../LICENSE) is currently **proprietary**. Until BP Dumper (at minimum) is released under an OSI-approved license that SignPath accepts:
+- Repository / Dumper Apps sources: **Apache-2.0** ([LICENSE](../LICENSE), `scripts/bp-dumper-py/LICENSE`)
+- DFP engine files: **not** in `DumperApps.exe`; licensed separately under [LICENSE.DFP](../LICENSE.DFP)
+- Trademarks: reserved ([TRADEMARK.md](../TRADEMARK.md) / [NOTICE](../NOTICE))
 
-- SignPath OSS applications will be **rejected**
-- OpenSSF Best Practices **Gold** (and Passing) cannot be honestly claimed
+Before applying: credit SignPath Foundation on the download / trust UI per SignPath’s policy. After approval, configure CI secrets below.
 
-Options for the maintainer:
-
-1. Relicense the **BP Dumper client** (`scripts/bp-dumper-py/` + packaging) under MIT/Apache-2.0 while keeping site/DFP proprietary (if legally clean), **or**
-2. Relicense the whole public repo, **or**
-3. Buy a commercial Authenticode cert / use a paid SignPath tier (not OSS Foundation)
-
-## SignPath CI (ready after approval + OSI license)
+## SignPath CI (ready after OSS approval)
 
 `.github/workflows/build-releases.yml` will submit `DumperApps.exe` when these are set:
 
@@ -65,4 +60,4 @@ After the first signed release, set `SIGNPATH_SIGNING_LIVE = true` in `src/confi
 
 ## Gold standard realism
 
-OpenSSF Best Practices **Gold** additionally requires (among other things) two unassociated significant contributors, ≥50% two-person review, high test coverage, and a security review. Solo-maintained projects often top out at **Passing** or **Silver**. Target remains Gold; expect Passing first after relicensing.
+OpenSSF Best Practices **Gold** additionally requires (among other things) two unassociated significant contributors, ≥50% two-person review, high test coverage, and a security review. Solo-maintained projects often top out at **Passing** or **Silver**. Target remains Gold; expect Passing first.

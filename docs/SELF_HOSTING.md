@@ -1,6 +1,8 @@
 # Operator deploy guide
 
-Deploy notes for the **official** Dumper's Repo site ([dumpers-repo.com](https://dumpers-repo.com)). Unauthorized public copies are not permitted — see [LICENSE](../LICENSE).
+Deploy notes for operators (including the official site at [dumpers-repo.com](https://dumpers-repo.com)).
+
+Source is **Apache-2.0** ([LICENSE](../LICENSE)). Forks/self-hosts must **rebrand** ([TRADEMARK.md](../TRADEMARK.md)) and must **not** redistribute the DFP engine ([LICENSE.DFP](../LICENSE.DFP)).
 
 ## Prerequisites
 

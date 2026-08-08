@@ -1,0 +1,20 @@
+Dumper's Repo
+Copyright 2024-2026 Michael Linzenmeyer
+
+This product includes software developed for Dumper's Repo
+(https://www.dumpers-repo.com).
+
+Licensed under the Apache License, Version 2.0 — see LICENSE.
+
+Trademarks
+----------
+"Dumper's Repo", "Buy. Craft. Sell.", and related marks are trademarks or
+trade identity of Michael Linzenmeyer. Apache-2.0 does not grant trademark
+rights. See TRADEMARK.md. The official public site is dumpers-repo.com.
+
+Dumper's Fair-Value Price (DFP)
+-------------------------------
+DFP engine files (including public/dfp-engine.js and public/dfp-version.json)
+and the DFP formula are proprietary and licensed under LICENSE.DFP, not
+Apache-2.0. Do not rehost or redistribute those artifacts outside the
+official deployment.
