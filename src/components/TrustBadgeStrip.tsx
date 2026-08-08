@@ -7,7 +7,7 @@ type Props = {
   size?: 'sm' | 'md'
 }
 
-/** Centered OpenSSF / trust badge images (Scorecard, Best Practices, Baseline, …). */
+/** Centered OpenSSF / trust badge images (Scorecard, Best Practices, Baseline, ...). */
 export default function TrustBadgeStrip({ className = '', size = 'sm' }: Props) {
   const badges = getPublicTrustBadgeImages()
   if (badges.length === 0) return null
