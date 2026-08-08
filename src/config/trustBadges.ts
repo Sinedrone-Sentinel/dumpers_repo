@@ -19,9 +19,6 @@ export const OPENSSF_BEST_PRACTICES_URL =
 export const OPENSSF_BASELINE_BADGE_URL =
   'https://www.bestpractices.dev/projects/13989/baseline' as const
 
-/** Display score for landing / trust UI — bump when Scorecard overall changes. */
-export const OPENSSF_SCORECARD_SCORE = '6.5' as const
-
 /** Set true only after SignPath has signed a published Windows release. */
 export const SIGNPATH_SIGNING_LIVE = false as const
 
@@ -46,7 +43,7 @@ export function getPublicTrustBadgeImages(): TrustBadgeImage[] {
   return [
     {
       id: 'scorecard',
-      alt: `OpenSSF Scorecard ${OPENSSF_SCORECARD_SCORE}`,
+      alt: 'OpenSSF Scorecard',
       href: OPENSSF_SCORECARD_URL,
       src: OPENSSF_SCORECARD_BADGE_URL,
     },
@@ -70,9 +67,9 @@ export function getDumperTrustLinks(): TrustLink[] {
     },
     {
       id: 'scorecard',
-      label: `OpenSSF Scorecard ${OPENSSF_SCORECARD_SCORE}`,
+      label: 'OpenSSF Scorecard',
       href: OPENSSF_SCORECARD_URL,
-      summary: `Automated security posture score (${OPENSSF_SCORECARD_SCORE}/10) for this GitHub project.`,
+      summary: 'Live OpenSSF Scorecard for this GitHub project (score updates with each scan).',
     },
     {
       id: 'baseline',

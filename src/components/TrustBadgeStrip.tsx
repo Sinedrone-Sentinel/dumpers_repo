@@ -3,12 +3,16 @@ import { getPublicTrustBadgeImages } from '../config/trustBadges'
 
 type Props = {
   className?: string
+  /** `md` for landing hero; default `sm` for Archive welcome. */
+  size?: 'sm' | 'md'
 }
 
 /** Centered OpenSSF / trust badge images (Scorecard, Baseline, …). */
-export default function TrustBadgeStrip({ className = '' }: Props) {
+export default function TrustBadgeStrip({ className = '', size = 'sm' }: Props) {
   const badges = getPublicTrustBadgeImages()
   if (badges.length === 0) return null
+  const imgClass =
+    size === 'md' ? 'h-7 w-auto max-w-[240px] sm:h-8' : 'h-5 w-auto max-w-[220px]'
 
   return (
     <div
@@ -26,7 +30,7 @@ export default function TrustBadgeStrip({ className = '' }: Props) {
           className="inline-flex opacity-95 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400/70"
           title={badge.alt}
         >
-          <img src={badge.src} alt={badge.alt} className="h-5 w-auto max-w-[220px]" loading="lazy" />
+          <img src={badge.src} alt={badge.alt} className={imgClass} loading="lazy" />
         </a>
       ))}
     </div>

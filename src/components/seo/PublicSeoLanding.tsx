@@ -5,14 +5,11 @@ import OAuthSignInButtons from '../auth/OAuthSignInButtons'
 import { SITE_COPYRIGHT, SITE_SLOGAN } from '../../config/site'
 import { buildJsonLdGraph } from '../../config/seo'
 import { SEO_LANDING_FAQS } from '../../config/seoFaqs'
-import {
-  OPENSSF_SCORECARD_SCORE,
-  OPENSSF_SCORECARD_URL,
-} from '../../config/trustBadges'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase } from '../../lib/supabase'
 import SiteSupportLink from '../layout/SiteSupportLink'
 import SitePrivacyLink from '../layout/SitePrivacyLink'
+import TrustBadgeStrip from '../TrustBadgeStrip'
 
 type FeatureCard = {
   title: string
@@ -153,29 +150,22 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             </a>
           </div>
 
-          <div className="site-stat-strip mx-auto mt-12 max-w-3xl">
-            <div>
-              <span className="site-stat-value">Offline</span>
-              <span className="site-stat-label">No account needed</span>
+          <div className="site-stat-strip mx-auto mt-12 max-w-3xl flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+              <div>
+                <span className="site-stat-value">Offline</span>
+                <span className="site-stat-label">No account needed</span>
+              </div>
+              <div>
+                <span className="site-stat-value">DFP</span>
+                <span className="site-stat-label">Fair-value pricing</span>
+              </div>
+              <div>
+                <span className="site-stat-value">Live</span>
+                <span className="site-stat-label">Org ticker</span>
+              </div>
             </div>
-            <div>
-              <span className="site-stat-value">DFP</span>
-              <span className="site-stat-label">Fair-value pricing</span>
-            </div>
-            <div>
-              <span className="site-stat-value">Live</span>
-              <span className="site-stat-label">Org ticker</span>
-            </div>
-            <a
-              href={OPENSSF_SCORECARD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg outline-none transition hover:opacity-90 focus-visible:ring-2 focus-visible:ring-orange-400/60"
-              title="OpenSSF Scorecard for this project"
-            >
-              <span className="site-stat-value">{OPENSSF_SCORECARD_SCORE}</span>
-              <span className="site-stat-label">OpenSSF Scorecard</span>
-            </a>
+            <TrustBadgeStrip size="md" />
           </div>
         </header>
 
