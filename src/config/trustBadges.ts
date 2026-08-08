@@ -1,6 +1,7 @@
 /**
- * Third-party trust links for Dumper Apps / BP Dumper UI.
+ * Third-party trust links / badge images for Dumper Apps and Archive trust UI.
  * Do not claim SignPath signing or OpenSSF Best Practices Passing/Gold until earned.
+ * OpenSSF Baseline-1 is earned (project 13989).
  */
 
 export const GITHUB_REPO_URL =
@@ -11,6 +12,12 @@ export const OPENSSF_SCORECARD_URL =
 
 export const OPENSSF_SCORECARD_BADGE_URL =
   'https://api.scorecard.dev/projects/github.com/Sinedrone-Sentinel/dumpers_repo/badge' as const
+
+export const OPENSSF_BEST_PRACTICES_URL =
+  'https://www.bestpractices.dev/projects/13989' as const
+
+export const OPENSSF_BASELINE_BADGE_URL =
+  'https://www.bestpractices.dev/projects/13989/baseline' as const
 
 /** Display score for landing / trust UI — bump when Scorecard overall changes. */
 export const OPENSSF_SCORECARD_SCORE = '6.5' as const
@@ -27,6 +34,31 @@ export type TrustLink = {
   summary: string
 }
 
+export type TrustBadgeImage = {
+  id: string
+  alt: string
+  href: string
+  src: string
+}
+
+/** Image badges for Archive / public trust strips (Scorecard + Baseline). */
+export function getPublicTrustBadgeImages(): TrustBadgeImage[] {
+  return [
+    {
+      id: 'scorecard',
+      alt: `OpenSSF Scorecard ${OPENSSF_SCORECARD_SCORE}`,
+      href: OPENSSF_SCORECARD_URL,
+      src: OPENSSF_SCORECARD_BADGE_URL,
+    },
+    {
+      id: 'baseline',
+      alt: 'OpenSSF Baseline',
+      href: OPENSSF_BEST_PRACTICES_URL,
+      src: OPENSSF_BASELINE_BADGE_URL,
+    },
+  ]
+}
+
 /** Member-facing trust links (omit SignPath until SIGNPATH_SIGNING_LIVE). */
 export function getDumperTrustLinks(): TrustLink[] {
   const links: TrustLink[] = [
@@ -41,6 +73,12 @@ export function getDumperTrustLinks(): TrustLink[] {
       label: `OpenSSF Scorecard ${OPENSSF_SCORECARD_SCORE}`,
       href: OPENSSF_SCORECARD_URL,
       summary: `Automated security posture score (${OPENSSF_SCORECARD_SCORE}/10) for this GitHub project.`,
+    },
+    {
+      id: 'baseline',
+      label: 'OpenSSF Baseline',
+      href: OPENSSF_BEST_PRACTICES_URL,
+      summary: 'Open Source Project Security Baseline Level 1 for this repository.',
     },
   ]
   if (SIGNPATH_SIGNING_LIVE) {

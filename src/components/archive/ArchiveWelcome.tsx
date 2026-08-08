@@ -9,6 +9,7 @@ import {
   RATINGS_SECTION,
   PENDING_REP_SECTION,
 } from '../../lib/archiveGuide/welcomeSections'
+import TrustBadgeStrip from '../TrustBadgeStrip'
 
 interface QuickLink {
   id: string
@@ -285,6 +286,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         <p className="text-slate-400 max-w-xl mx-auto">
           A community-driven platform for Star Citizen crafting, resource tracking, and fair-value pricing.
         </p>
+        <TrustBadgeStrip className="mt-5" />
       </div>
 
       {/* What is Dumper's Repo */}
