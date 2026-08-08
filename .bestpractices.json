@@ -51,7 +51,7 @@
   "contribution_status": "Met",
   "contribution_justification": "https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/CONTRIBUTING.md",
   "contribution_requirements_status": "Met",
-  "contribution_requirements_justification": "CONTRIBUTING.md — lint/test/build, theme tokens, no secrets, dumper commit scope. https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/CONTRIBUTING.md",
+  "contribution_requirements_justification": "https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/CONTRIBUTING.md — acceptable contributions: lint/test/build, site theme tokens, no secrets, dumper Conventional Commit scope.",
   "contributors_unassociated_status": "Unmet",
   "contributors_unassociated_justification": "No second unassociated significant contributor meeting Gold’s bar yet (solo primary maintainer).",
   "copyright_per_file_status": "Unmet",
