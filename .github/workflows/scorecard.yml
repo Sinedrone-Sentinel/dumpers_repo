@@ -27,12 +27,15 @@ jobs:
         with:
           persist-credentials: false
 
+      # Branch-Protection needs a PAT with Administration: Read (GITHUB_TOKEN cannot).
+      # Create a fine-grained PAT → repo secret SCORECARD_TOKEN (see docs/TRUST_AND_SIGNING.md).
       - name: Run analysis
         uses: ossf/scorecard-action@05b42c624433fc40578a4040d5cf5e36ddca8cde # v2.4.2
         with:
           results_file: results.sarif
           results_format: sarif
           publish_results: true
+          repo_token: ${{ secrets.SCORECARD_TOKEN }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
