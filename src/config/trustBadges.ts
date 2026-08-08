@@ -1,7 +1,7 @@
 /**
  * Third-party trust links / badge images for Dumper Apps and Archive trust UI.
- * Do not claim SignPath signing or OpenSSF Best Practices Passing/Gold until earned.
- * OpenSSF Baseline-1 is earned (project 13989).
+ * Do not claim SignPath signing until SIGNPATH_SIGNING_LIVE.
+ * OpenSSF Best Practices Passing + Baseline-1 earned (project 13989).
  */
 
 export const GITHUB_REPO_URL =
@@ -15,6 +15,10 @@ export const OPENSSF_SCORECARD_BADGE_URL =
 
 export const OPENSSF_BEST_PRACTICES_URL =
   'https://www.bestpractices.dev/projects/13989' as const
+
+/** Metal badge (Passing / Silver / Gold) — live image from BadgeApp. */
+export const OPENSSF_BEST_PRACTICES_BADGE_URL =
+  'https://www.bestpractices.dev/projects/13989/badge' as const
 
 export const OPENSSF_BASELINE_BADGE_URL =
   'https://www.bestpractices.dev/projects/13989/baseline' as const
@@ -51,7 +55,7 @@ export type TrustBadgeImage = {
   src: string
 }
 
-/** Image badges for Archive / public trust strips (Scorecard + Baseline). */
+/** Image badges for Archive / public trust strips (Scorecard + Best Practices + Baseline). */
 export function getPublicTrustBadgeImages(): TrustBadgeImage[] {
   return [
     {
@@ -59,6 +63,12 @@ export function getPublicTrustBadgeImages(): TrustBadgeImage[] {
       alt: 'OpenSSF Scorecard',
       href: OPENSSF_SCORECARD_URL,
       src: OPENSSF_SCORECARD_BADGE_URL,
+    },
+    {
+      id: 'best-practices',
+      alt: 'OpenSSF Best Practices',
+      href: OPENSSF_BEST_PRACTICES_URL,
+      src: OPENSSF_BEST_PRACTICES_BADGE_URL,
     },
     {
       id: 'baseline',
@@ -83,6 +93,12 @@ export function getDumperTrustLinks(): TrustLink[] {
       label: 'OpenSSF Scorecard',
       href: OPENSSF_SCORECARD_URL,
       summary: 'Live OpenSSF Scorecard for this GitHub project (score updates with each scan).',
+    },
+    {
+      id: 'best-practices',
+      label: 'OpenSSF Best Practices',
+      href: OPENSSF_BEST_PRACTICES_URL,
+      summary: 'OpenSSF Best Practices Passing badge for this repository (project 13989).',
     },
     {
       id: 'baseline',

@@ -31,7 +31,7 @@ Without that secret, Branch-Protection stays errored even when `main` is protect
 
 ### CII / OpenSSF Best Practices badge (separate from Scorecard)
 
-[OpenSSF Baseline-1](https://www.bestpractices.dev/projects/13989) is earned (README badge: `/projects/13989/baseline`). Scorecard’s **CII-Best-Practices** check typically still needs the classic **Metal → Passing** questionnaire on the same project entry. Root [LICENSE](../LICENSE) is **Apache-2.0** (OSI). DFP remains proprietary under [LICENSE.DFP](../LICENSE.DFP).
+[OpenSSF Best Practices Passing](https://www.bestpractices.dev/projects/13989) and [Baseline-1](https://www.bestpractices.dev/projects/13989) are earned (README badges: `/projects/13989/badge` and `/projects/13989/baseline`). Scorecard’s **CII-Best-Practices** check should reflect Passing after the next Scorecard scan. Root [LICENSE](../LICENSE) is **Apache-2.0** (OSI). DFP remains proprietary under [LICENSE.DFP](../LICENSE.DFP).
 
 ## SignPath Free OSS
 

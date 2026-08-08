@@ -1,7 +1,7 @@
 # Dumper's Repo
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Sinedrone-Sentinel/dumpers_repo/badge)](https://scorecard.dev/viewer/?uri=github.com/Sinedrone-Sentinel/dumpers_repo)
-[![OpenSSF Baseline](https://www.bestpractices.dev/projects/13989/baseline)](https://www.bestpractices.dev/projects/13989)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13989/badge)](https://www.bestpractices.dev/projects/13989)
 [![OpenSSF Baseline](https://www.bestpractices.dev/projects/13989/baseline)](https://www.bestpractices.dev/projects/13989)
 
 **Buy. Craft. Sell.** — Blueprint tracking, mining tools, resource coordination, and a member marketplace for Star Citizen.
