@@ -12,6 +12,9 @@ export const OPENSSF_SCORECARD_URL =
 export const OPENSSF_SCORECARD_BADGE_URL =
   'https://api.scorecard.dev/projects/github.com/Sinedrone-Sentinel/dumpers_repo/badge' as const
 
+/** Display score for landing / trust UI — bump when Scorecard overall changes. */
+export const OPENSSF_SCORECARD_SCORE = '6.5' as const
+
 /** Set true only after SignPath has signed a published Windows release. */
 export const SIGNPATH_SIGNING_LIVE = false as const
 
@@ -35,9 +38,9 @@ export function getDumperTrustLinks(): TrustLink[] {
     },
     {
       id: 'scorecard',
-      label: 'OpenSSF Scorecard',
+      label: `OpenSSF Scorecard ${OPENSSF_SCORECARD_SCORE}`,
       href: OPENSSF_SCORECARD_URL,
-      summary: 'Automated security posture score for this GitHub project.',
+      summary: `Automated security posture score (${OPENSSF_SCORECARD_SCORE}/10) for this GitHub project.`,
     },
   ]
   if (SIGNPATH_SIGNING_LIVE) {
