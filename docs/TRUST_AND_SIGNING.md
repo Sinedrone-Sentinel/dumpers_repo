@@ -15,7 +15,23 @@ Badge / viewer: `https://scorecard.dev/viewer/?uri=github.com/Sinedrone-Sentinel
 
 Dependabot: [`.github/dependabot.yml`](../.github/dependabot.yml) (npm, Actions, pip under `scripts/bp-dumper-py`).
 
-BP Dumper Python pin: `requests>=2.33.0`. Production site deps (`npm audit --omit=dev`) should stay at 0. Remaining npm audit noise is usually nested inside `@semantic-release/npm`’s bundled `npm` CLI (CI-only).
+BP Dumper Python pin: `requests>=2.33.0`. Site + lockfile should stay at `npm audit` = 0 (unused `@semantic-release/npm` is stubbed under `scripts/stubs/`).
+
+### Branch-Protection check needs a PAT
+
+The default `GITHUB_TOKEN` cannot read branch protection (`Resource not accessible by integration`). Create a **fine-grained PAT** and store it as repo secret `SCORECARD_TOKEN`:
+
+1. GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate
+2. Resource owner: your user/org; Repository access: only `dumpers_repo`
+3. Permissions: **Administration → Read**, **Metadata → Read**, **Contents → Read**
+4. Repo → Settings → Secrets and variables → Actions → New repository secret named `SCORECARD_TOKEN`
+5. Re-run the **OpenSSF Scorecard** workflow
+
+Without that secret, Branch-Protection stays errored even when `main` is protected.
+
+### CII / OpenSSF Best Practices badge (separate from Scorecard)
+
+Scorecard’s **CII-Best-Practices** check is 0 until the project has a badge at [bestpractices.dev](https://www.bestpractices.dev/). That is a questionnaire (Passing → Silver → Gold), not a GitHub setting. Proprietary root `LICENSE` blocks an honest Passing/Gold claim — see below.
 
 ## SignPath + OpenSSF Best Practices — license blocker
 
