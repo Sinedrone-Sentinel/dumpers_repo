@@ -1,0 +1,40 @@
+# Require Developer Certificate of Origin sign-off on every commit in a PR.
+name: DCO
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  dco:
+    name: Check Signed-off-by
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+
+      - name: Verify Signed-off-by on each PR commit
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for sha in $(git rev-list --no-merges "${BASE_SHA}..${HEAD_SHA}"); do
+            author="$(git show -s --format='%an <%ae>' "$sha")"
+            if ! git show -s --format='%(trailers:key=Signed-off-by,valueonly=true)' "$sha" | grep -qE '.+<.+@.+>'; then
+              echo "::error::commit $sha ($author) is missing a Signed-off-by trailer"
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Add a sign-off with: git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -s (or git rebase --signoff)."
+            echo "See https://developercertificate.org/ and CONTRIBUTING.md"
+            exit 1
+          fi
+          echo "All commits carry a Signed-off-by trailer."

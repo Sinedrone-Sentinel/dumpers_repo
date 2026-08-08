@@ -57,9 +57,18 @@ Application submitted. Credit + policy are already on the site.
 - [ ] **Release:** cut a dumper `v*` release; confirm Actions signs and publishes `DumperApps.exe` (not the “unsigned” warning)
 - [ ] **Site flag:** set `SIGNPATH_SIGNING_LIVE = true` in `src/config/trustBadges.ts` (PR + green CI) — **only after** a signed release exists
 
+## Release integrity (checksums + cosign)
+
+Every `v*` / release publish from `.github/workflows/build-releases.yml` also uploads:
+
+- `SHA256SUMS` — hashes of release assets
+- `SHA256SUMS.sig` — Sigstore **cosign** keyless signature (GitHub Actions OIDC)
+
+How to verify: [VERIFY_RELEASE.md](VERIFY_RELEASE.md). This satisfies OpenSSF Baseline **OSPS-BR-06.01** (signed manifest of asset hashes) even when SignPath Authenticode is not yet configured.
+
 ## SignPath CI details
 
-`.github/workflows/build-releases.yml` submits `DumperApps.exe` when the secret + three variables above are set. Without them, the workflow still publishes an **unsigned** exe and logs a warning.
+`.github/workflows/build-releases.yml` submits `DumperApps.exe` when the secret + three variables above are set. Without them, the workflow still publishes an **Authenticode-unsigned** exe (checksums + cosign still apply) and logs a warning.
 
 ## Gold standard realism
 
