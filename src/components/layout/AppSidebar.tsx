@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useId } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useRouterState } from '@tanstack/react-router'
 import type { AppNavItem, NavGroup } from '../../config/appNav'
 import { isNavItemLocked } from '../../config/appNav'
@@ -100,69 +101,81 @@ export default function AppSidebar({ groups, className = '' }: AppSidebarProps) 
         </svg>
       </button>
 
-      {/* Backdrop overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/85 z-[70] transition-opacity"
-          aria-hidden="true"
-        />
-      )}
+      {/* Portal above site ticker — header is z-40 and would trap stacking otherwise */}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <>
+            {isOpen ? (
+              <div
+                className="fixed inset-0 bg-black/85 z-[70] transition-opacity"
+                aria-hidden="true"
+              />
+            ) : null}
 
-      {/* Sidebar panel - slides in from left, positioned below header */}
-      <div
-        ref={sidebarRef}
-        className={`
-          site-menu-panel fixed top-[var(--site-header-height,3.5rem)] left-0 w-64
-          max-h-[calc(100vh-var(--site-header-height,3.5rem)-0.5rem)]
-          rounded-l-none rounded-r-xl z-[80] transition-transform duration-200 ease-out
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}
-      >
-        {/* Sidebar header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/40 to-transparent">
-          <span className="text-sm font-semibold text-amber-200/90 uppercase tracking-wider">Navigation</span>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="site-chrome-control p-1.5"
-            aria-label="Close menu"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+            <div
+              ref={sidebarRef}
+              className={`
+                site-menu-panel fixed top-[var(--site-header-height,3.5rem)] left-0 w-64
+                max-h-[calc(100vh-var(--site-header-height,3.5rem)-var(--site-ticker-height,0px)-0.5rem)]
+                flex flex-col
+                rounded-l-none rounded-r-xl z-[80] transition-transform duration-200 ease-out
+                ${isOpen ? 'translate-x-0 pointer-events-auto' : '-translate-x-full pointer-events-none'}
+              `}
+              aria-hidden={!isOpen}
+            >
+              <div className="flex items-center justify-between px-4 py-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/40 to-transparent shrink-0">
+                <span className="text-sm font-semibold text-amber-200/90 uppercase tracking-wider">
+                  Navigation
+                </span>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="site-chrome-control p-1.5"
+                  aria-label="Close menu"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-        {/* Navigation groups */}
-        <nav 
-          className="p-3 space-y-4 overflow-y-auto max-h-[calc(100vh-8rem)]" 
-          style={{ overscrollBehavior: 'contain' }}
-          aria-label="Main navigation"
-        >
-          {groups.map((group) => (
-            <div key={group.id}>
-              <h3 className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                {group.label}
-              </h3>
-              <ul className="space-y-0.5">
-                {group.items.map((item) => (
-                  <SidebarNavItem 
-                    key={item.id} 
-                    item={item} 
-                    pathname={pathname}
-                    search={search}
-                    isLocked={isNavItemLocked(item, visibilityContext, canAccess)}
-                    isExpanded={expandedItems.has(item.id)}
-                    isUserCollapsed={userCollapsed.has(item.id)}
-                    onToggleExpand={() => toggleExpanded(item.id)}
-                    onNavigate={() => setIsOpen(false)}
-                    badgeCount={item.id === 'orders' ? draftCount : undefined}
-                  />
+              <nav
+                className="p-3 space-y-4 overflow-y-auto min-h-0 flex-1"
+                style={{ overscrollBehavior: 'contain' }}
+                aria-label="Main navigation"
+              >
+                {groups.map((group) => (
+                  <div key={group.id}>
+                    <h3 className="px-3 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                      {group.label}
+                    </h3>
+                    <ul className="space-y-0.5">
+                      {group.items.map((item) => (
+                        <SidebarNavItem
+                          key={item.id}
+                          item={item}
+                          pathname={pathname}
+                          search={search}
+                          isLocked={isNavItemLocked(item, visibilityContext, canAccess)}
+                          isExpanded={expandedItems.has(item.id)}
+                          isUserCollapsed={userCollapsed.has(item.id)}
+                          onToggleExpand={() => toggleExpanded(item.id)}
+                          onNavigate={() => setIsOpen(false)}
+                          badgeCount={item.id === 'orders' ? draftCount : undefined}
+                        />
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </nav>
             </div>
-          ))}
-        </nav>
-      </div>
+          </>,
+          document.body
+        )}
     </>
   )
 }
