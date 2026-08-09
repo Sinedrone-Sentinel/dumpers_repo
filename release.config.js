@@ -61,6 +61,13 @@ export default {
         message: 'chore(release): bp-dumper ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
-    '@semantic-release/github',
+    [
+      '@semantic-release/github',
+      {
+        // Keep GitHub Release draft until build-releases.yml passes VirusTotal and publishes assets.
+        // /releases/latest ignores drafts, so members keep the previous published exe until the gate passes.
+        draftRelease: true,
+      },
+    ],
   ],
 }

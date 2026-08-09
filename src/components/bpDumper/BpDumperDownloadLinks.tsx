@@ -1,14 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BP_DUMPER_DOWNLOADS, BP_DUMPER_VERSION } from '../../config/bpDumper'
 import {
   CODE_SIGNING_POLICY_URL,
   SIGNPATH_ABOUT_URL,
   SIGNPATH_SIGNING_LIVE,
+  VIRUSTOTAL_HOME_URL,
   getDumperTrustLinks,
 } from '../../config/trustBadges'
+import { fetchBpDumperRelease, type BpDumperReleaseInfo } from '../../lib/bpDumperRelease'
 
 export default function BpDumperDownloadLinks() {
   const trustLinks = getDumperTrustLinks()
+  const [release, setRelease] = useState<BpDumperReleaseInfo | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    void fetchBpDumperRelease()
+      .then((info) => {
+        if (!cancelled) setRelease(info)
+      })
+      .catch(() => {
+        /* keep static trust links */
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <div className="space-y-3">
@@ -49,8 +66,35 @@ export default function BpDumperDownloadLinks() {
       <p className="text-xs text-slate-500 leading-relaxed">
         Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your
         Star Citizen install (searches for LIVE / Game.log). You can also paste a path if you prefer.
-        Updates come from GitHub Releases when “Keep App Up to Date” is on.
+        Updates come from GitHub Releases when “Keep App Up to Date” is on. New Windows builds only go
+        live after a clean VirusTotal gate in CI.
       </p>
+
+      {release?.virusTotalUrl && (
+        <div className="site-surface space-y-2 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">VirusTotal</p>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Latest published <strong className="text-slate-300">DumperApps.exe</strong> was scanned on{' '}
+            <a
+              href={VIRUSTOTAL_HOME_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-orange-300 hover:text-orange-200 underline"
+            >
+              VirusTotal
+            </a>{' '}
+            before members could download it.
+          </p>
+          <a
+            href={release.virusTotalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex text-sm text-orange-300 hover:text-orange-200 underline"
+          >
+            Open VirusTotal report for v{release.version}
+          </a>
+        </div>
+      )}
 
       <div className="site-surface space-y-2 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">

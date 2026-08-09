@@ -31,6 +31,8 @@ export type BpDumperReleaseInfo = {
   htmlUrl: string
   /** Best Windows download for the resolved release (from GitHub assets when available). */
   primaryDownload: { name: string; url: string }
+  /** VirusTotal GUI report for this release's exe when CI published VIRUSTOTAL.txt. */
+  virusTotalUrl: string | null
   downloadUrlFor: (filename: string) => string
 }
 
@@ -73,6 +75,20 @@ function bundledPrimaryDownload(version: string = BP_DUMPER_VERSION) {
   return { name, url: getBpDumperDownloadUrl(name) }
 }
 
+async function fetchVirusTotalPermalink(downloadUrlFor: (filename: string) => string): Promise<string | null> {
+  try {
+    const res = await fetch(downloadUrlFor('VIRUSTOTAL.txt'), {
+      headers: { Accept: 'text/plain' },
+    })
+    if (!res.ok) return null
+    const text = await res.text()
+    const line = text.split(/\r?\n/).map((l) => l.trim()).find((l) => l.startsWith('https://www.virustotal.com/'))
+    return line ?? null
+  } catch {
+    return null
+  }
+}
+
 export function buildFallbackReleaseInfo(): BpDumperReleaseInfo {
   const primaryDownload = bundledPrimaryDownload()
   return {
@@ -80,6 +96,7 @@ export function buildFallbackReleaseInfo(): BpDumperReleaseInfo {
     tag: `v${BP_DUMPER_VERSION}`,
     htmlUrl: GITHUB_RELEASES_PAGE,
     primaryDownload,
+    virusTotalUrl: null,
     downloadUrlFor: (filename) => getBpDumperDownloadUrl(filename),
   }
 }
@@ -105,11 +122,16 @@ export async function fetchBpDumperRelease(): Promise<BpDumperReleaseInfo> {
     ? { name: primaryAsset.name, url: primaryAsset.browser_download_url }
     : bundledPrimaryDownload(version)
 
+  const downloadUrlFor = (filename: string) =>
+    assetUrls.get(filename) ?? releaseDownloadUrl(release.tag_name, filename)
+  const virusTotalUrl = await fetchVirusTotalPermalink(downloadUrlFor)
+
   return {
     version,
     tag: release.tag_name,
     htmlUrl: GITHUB_RELEASES_PAGE,
     primaryDownload,
-    downloadUrlFor: (filename) => assetUrls.get(filename) ?? releaseDownloadUrl(release.tag_name, filename),
+    virusTotalUrl,
+    downloadUrlFor,
   }
 }
