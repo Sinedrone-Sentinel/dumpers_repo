@@ -1,0 +1,33 @@
+---
+description: Always commit and push finished work - never ask or wait for permission
+alwaysApply: true
+---
+
+# Always commit and push
+
+PR checks gate main. Do not ask whether to commit or push, and do not wait for the user to say commit it.
+
+## When work is ready
+
+As soon as a coherent unit of work is finished (feature, fix, docs/rule change you made):
+
+1. Run the usual pre-commit checks (README / Archive / Supabase docs when those rules apply).
+2. Commit with Conventional Commits and DCO sign-off (-s).
+3. Push the branch to origin (-u when new).
+4. Open or update a PR with gh pr create / push to the existing PR branch; assign Sinedrone-Sentinel.
+
+Treat done implementing as implicit approval to ship to a PR branch.
+
+## Still forbidden
+
+- Force-push to main / master
+- Skipping hooks unless the user explicitly orders it
+- Committing secrets (.env, service-role keys, PATs, webhook URLs)
+- Amending pushed commits unless the user amend rules are all met
+- Ingesting Site Update ticker entries without numbered approval
+
+## Scope notes
+
+- Prefer a feature/fix branch + PR over committing straight to main (Protect main / required checks).
+- If commit or gh auth fails, retry with available credentials; report the PR URL or the exact blocker - do not sit idle asking should I commit.
+- Site Update candidates: still propose and wait for 1,2 / all / none before ingest (separate from git push).
