@@ -1,20 +1,26 @@
 ---
-description: Always commit and push finished work - never ask or wait for permission
+description: Always commit, push, AND open/update a PR - never leave work as branch-only
 alwaysApply: true
 ---
 
-# Always commit and push
+# Always commit, push, and open a PR
 
 PR checks gate main. Do not ask whether to commit or push, and do not wait for the user to say commit it.
+
+**Commit + push without a pull request is incomplete.** A remote branch alone is not delivery — the user must see a PR URL.
 
 ## When work is ready
 
 As soon as a coherent unit of work is finished (feature, fix, docs/rule change you made):
 
 1. Run the usual pre-commit checks (README / Archive / Supabase docs when those rules apply).
-2. Commit with Conventional Commits and DCO sign-off (-s).
-3. Push the branch to origin (-u when new).
-4. Open or update a PR with gh pr create / push to the existing PR branch; assign Sinedrone-Sentinel.
+2. Commit with Conventional Commits and DCO sign-off (`-s` / `--signoff`).
+3. Push the branch to origin (`-u` when new).
+4. **Always open or update a PR** — never stop after push:
+   - No open PR for this branch → `gh pr create` (assign `@Sinedrone-Sentinel` per `pr-assign-maintainer`).
+   - PR already exists → push updates that PR; confirm with `gh pr view` / URL.
+   - Follow-up commits after a PR already merged → **new branch + new PR** (do not leave orphan commits on a dead branch).
+5. Reply with the **PR URL**. If `gh` auth fails, say so and give the compare URL — still do not treat push-only as done.
 
 Treat done implementing as implicit approval to ship to a PR branch.
 
@@ -22,12 +28,13 @@ Treat done implementing as implicit approval to ship to a PR branch.
 
 - Force-push to main / master
 - Skipping hooks unless the user explicitly orders it
-- Committing secrets (.env, service-role keys, PATs, webhook URLs)
+- Committing secrets (`.env`, service-role keys, PATs, webhook URLs)
 - Amending pushed commits unless the user amend rules are all met
 - Ingesting Site Update ticker entries without numbered approval
+- **Pushing commits and ending the turn without a PR** (unless the user explicitly said not to open one)
 
 ## Scope notes
 
-- Prefer a feature/fix branch + PR over committing straight to main (Protect main / required checks).
-- If commit or gh auth fails, retry with available credentials; report the PR URL or the exact blocker - do not sit idle asking should I commit.
-- Site Update candidates: still propose and wait for 1,2 / all / none before ingest (separate from git push).
+- Prefer a feature/fix branch + PR over committing straight to main.
+- If commit or `gh` auth fails, retry with available credentials; report the PR URL or the exact blocker — do not sit idle asking should I commit.
+- Site Update candidates: still propose and wait for `1, 2` / `all` / `none` before ingest (separate from git push).
