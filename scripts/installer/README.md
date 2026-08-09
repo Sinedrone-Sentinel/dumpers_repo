@@ -6,7 +6,7 @@
 |---|---|---|
 | **Member Windows** | [`scripts/bp-dumper-go/`](../bp-dumper-go/) + this folder | Auto-detects Star Citizen install; CI publishes `DumperApps.exe` |
 | **Python reference** | [`scripts/bp-dumper-py/`](../bp-dumper-py/) | Protocol/behavior source; macOS/Linux scripts |
-| **Microsoft Store** | [`apps/bp-dumper-store/`](../../apps/bp-dumper-store/) | Parked listing — not primary |
+| **Legacy Store experiment** | [`apps/bp-dumper-store/`](../../apps/bp-dumper-store/) | Not offered in member UI |
 
 Trust / SignPath / OpenSSF / VirusTotal: [`docs/TRUST_AND_SIGNING.md`](../../docs/TRUST_AND_SIGNING.md)
 
@@ -21,7 +21,7 @@ Requires Go on `PATH`. Output: `scripts/installer/output/DumperApps.exe` (gitign
 
 ## CI
 
-`.github/workflows/build-releases.yml` — builds the Go exe on `v*` tags, optionally SignPath-signs when secrets are configured, runs the VirusTotal gate (0 malicious), then publishes the draft GitHub Release.
+`.github/workflows/build-releases.yml` — builds the Go exe on `v*` tags, optionally SignPath-signs when secrets are configured, runs the VirusTotal gate (`VT_GATE_MODE=named`), then publishes the draft GitHub Release.
 
 ## Legacy full-trust MSIX
 

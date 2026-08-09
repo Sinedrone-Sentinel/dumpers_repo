@@ -10,18 +10,9 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 export const BP_DUMPER_SCRIPTS_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/tree/main/scripts/bp-dumper-py' as const
 
-/** Microsoft Store product identity (Partner Center) — listing kept for now; not primary. */
-export const BP_DUMPER_STORE_ID = '9PMR8CPSB04K' as const
-
-export const BP_DUMPER_STORE_WEB_URL =
-  `https://apps.microsoft.com/detail/${BP_DUMPER_STORE_ID}` as const
-
-export const BP_DUMPER_STORE_PROTOCOL_URL =
-  `ms-windows-store://pdp/?productid=${BP_DUMPER_STORE_ID}` as const
-
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
-/** Windows exe built from scripts/bp-dumper-py via scripts/installer/build-exe.ps1 */
+/** Windows exe built from scripts/bp-dumper-go via scripts/installer/build-exe.ps1 */
 export const DUMPER_APPS_EXE_FILENAME = 'DumperApps.exe' as const
 
 export function getDumperAppsPortableFilename(_version: string = BP_DUMPER_VERSION): string {
@@ -48,7 +39,6 @@ export type BpDumperDownloadOption = {
 /**
  * Member-facing install options.
  * Primary: native Go Windows exe (auto-detects Star Citizen install; path override OK).
- * Store listing remains available until SignPath / OpenSSF trust path is solid.
  */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
@@ -56,7 +46,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Windows exe (DumperApps.exe)',
     description:
-      'Native Windows build — searches your drives for Star Citizen / LIVE (or paste a path), then asks for your API key. Prefer this over the Store listing.',
+      'Native Windows build — searches your drives for Star Citizen / LIVE (or paste a path), then asks for your API key.',
     url: `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_APPS_EXE_FILENAME}`,
   },
   {
@@ -66,14 +56,6 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     description:
       'Same watcher protocol — open the scripts folder on GitHub, install requirements, then run dumper.py (auto-detect works there too).',
     url: BP_DUMPER_SCRIPTS_URL,
-  },
-  {
-    id: 'windows-store',
-    kind: 'external',
-    label: 'Microsoft Store (optional)',
-    description:
-      'Sandboxed Store build (pick LIVE folder). Prefer the Windows exe above if you want auto-detect or the Store app fails to start.',
-    url: BP_DUMPER_STORE_WEB_URL,
   },
 ]
 
