@@ -630,8 +630,38 @@ def _find_sc_roots(drive_root: Path, max_depth: int = SCAN_MAX_DEPTH) -> list[Pa
     return roots
 
 def detect_sc_installs() -> dict[str, Path]:
-    """Drive auto-scan removed - members must set LIVE path manually."""
-    return {}
+    if sys.platform != "win32":
+        return {}
+
+    import ctypes
+    import string
+
+    DRIVE_FIXED = 3
+    try:
+        get_drive_type = ctypes.windll.kernel32.GetDriveTypeW
+    except (AttributeError, OSError):
+        return {}
+
+    found = {}
+    for letter in string.ascii_uppercase:
+        root_str = f"{letter}:\\"
+        try:
+            if get_drive_type(root_str) != DRIVE_FIXED:
+                continue
+        except OSError:
+            continue
+        for sc_root in _find_sc_roots(Path(root_str)):
+            try:
+                children = list(sc_root.iterdir())
+            except OSError:
+                continue
+            for channel_dir in children:
+                if not channel_dir.is_dir() or not _is_channel_dir(channel_dir):
+                    continue
+                channel = channel_dir.name.upper()
+                if channel not in found:
+                    found[channel] = channel_dir
+    return found
 
 
 # Log parsing patterns & structures
@@ -1035,6 +1065,15 @@ def resolve_sc_channel_dir(args, env_vars: dict) -> Path | None:
     backup_p = env_vars.get("BACKUP_PATH")
     if backup_p:
         return Path(backup_p).parent
+    installs = detect_sc_installs()
+    if installs:
+        chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+        return installs[chosen_channel]
+    fallback = Path(DEFAULT_WIN_PATH)
+    if fallback.is_dir():
+        live_dir = fallback / "LIVE"
+        if live_dir.is_dir():
+            return live_dir
     return None
 
 
@@ -1957,12 +1996,12 @@ def main():
         print()
         print(f"{Colors.DIM}Source: github.com/Sinedrone-Sentinel/dumpers_repo (Python watcher){Colors.RESET}")
         print(f"{Colors.DIM}Trust:  OpenSSF Scorecard + site Trust links under Dumper Apps{Colors.RESET}")
-        print(f"{Colors.DIM}Tip:    Enter your LIVE folder path (the folder that contains Game.log).{Colors.RESET}")
+        print(f"{Colors.DIM}Tip:    Leave the path blank — BP Dumper searches for your LIVE install.{Colors.RESET}")
         print()
 
         # 1. Prompt file path / directory
         default_path = env_vars.get("LOG_PATH", "")
-        path_prompt = "Enter path to your Star Citizen LIVE folder (required)"
+        path_prompt = "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
         if default_path:
             path_prompt += f" [{default_path}]"
         path_prompt += ": "
@@ -1977,7 +2016,21 @@ def main():
             user_path = default_path
         
         if not user_path:
-            _exit_path_required()
+            print(f"{Colors.DIM}Auto-detecting Star Citizen installations...{Colors.RESET}")
+            installs = detect_sc_installs()
+            if installs:
+                chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                detected_dir = installs[chosen_channel]
+                print(f"{Colors.GREEN}Detected channel {chosen_channel} at: {detected_dir}{Colors.RESET}")
+                user_path = str(detected_dir)
+            else:
+                fallback = Path(DEFAULT_WIN_PATH)
+                live_dir = fallback / "LIVE" if fallback.is_dir() else None
+                if live_dir is not None and live_dir.is_dir():
+                    print(f"{Colors.GREEN}Detected default fallback at: {live_dir}{Colors.RESET}")
+                    user_path = str(live_dir)
+                else:
+                    _exit_star_citizen_not_detected()
 
         if user_path:
             args.file_path = Path(user_path)
@@ -2082,7 +2135,10 @@ def main():
         if env_vars.get("LOG_PATH"):
             args.file_path = Path(env_vars["LOG_PATH"])
         else:
-            _exit_path_required()
+            installs = detect_sc_installs()
+            fallback_live = Path(DEFAULT_WIN_PATH) / "LIVE"
+            if not installs and not fallback_live.is_dir():
+                _exit_star_citizen_not_detected()
 
     # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file -> built-in default)
     url = args.url or os.getenv("SUPABASE_WEBHOOK_URL") or env_vars.get("SUPABASE_WEBHOOK_URL") or DEFAULT_WEBHOOK_URL
@@ -2226,6 +2282,16 @@ def main():
             elif env_vars.get("LOG_PATH"):
                 p = Path(env_vars["LOG_PATH"])
                 watch_file = p / "Game.log" if p.is_dir() else p
+            else:
+                installs = detect_sc_installs()
+                if installs:
+                    chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                    watch_file = installs[chosen_channel] / "Game.log"
+                else:
+                    fallback = Path(DEFAULT_WIN_PATH)
+                    live_dir = fallback / "LIVE" if fallback.is_dir() else None
+                    if live_dir is not None and live_dir.is_dir():
+                        watch_file = live_dir / "Game.log"
 
         if not watch_file:
             _exit_star_citizen_not_detected()
@@ -2312,16 +2378,35 @@ def main():
             print(f"{Colors.RED}Error: Path not found: {args.file_path}{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
 
-    # Mode 2: path/log-dir required (drive auto-detect removed)
+    # Mode 2: Auto-detect installs (no path provided, or --log-dir was passed)
     else:
         log_dirs = []
         if args.log_dir:
             log_dirs = [args.log_dir]
         else:
-            _exit_path_required()
+            # Auto-detect installs
+            print(f"{Colors.DIM}Scanning local system for Star Citizen installations...{Colors.RESET}")
+            installs = detect_sc_installs()
+            if installs:
+                print(f"Detected channel installations:")
+                for channel, install_path in installs.items():
+                    print(f"  - {channel}: {install_path}")
+                # Prefer LIVE, fall back to first one found
+                chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                channel_dir = installs[chosen_channel]
+                print(f"Using channel: {Colors.CYAN}{chosen_channel}{Colors.RESET} ({channel_dir})")
+                log_dirs = [channel_dir, channel_dir / "logbackups"]
+            else:
+                # Standard fallback locations
+                fallback = Path(DEFAULT_WIN_PATH)
+                if fallback.is_dir():
+                    # scan LIVE by default
+                    live_dir = fallback / "LIVE"
+                    if live_dir.is_dir():
+                        log_dirs = [live_dir, live_dir / "logbackups"]
 
         if not log_dirs or not any(d.is_dir() for d in log_dirs):
-            _exit_path_required()
+            _exit_star_citizen_not_detected()
 
         # Collect log files
         log_files = []

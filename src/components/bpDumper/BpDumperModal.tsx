@@ -67,7 +67,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Point at your LIVE folder, sync unlocks from Game.log, power Live Mission Tracker."
+      subtitle="Classic Windows exe (auto-detect) — finds your Star Citizen install, syncs unlocks, powers Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >
@@ -76,9 +76,9 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <h3 className="text-sm font-semibold text-white">What you get</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-slate-400">
             <li>
-              <strong className="text-slate-300">You choose the folder</strong> — point the app at your
-              Star Citizen <strong className="text-slate-300">LIVE</strong> folder (the one that contains{' '}
-              <strong className="text-slate-300">Game.log</strong>). It does not scan your drives.
+              <strong className="text-slate-300">Auto-find install</strong> — searches your drives for
+              Star Citizen and picks <strong className="text-slate-300">LIVE</strong> (or you can paste a
+              path). No manual folder hunt required.
             </li>
             <li>
               <strong className="text-slate-300">Blueprint sync</strong> — reads unlock lines from your
@@ -120,15 +120,16 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
               <strong className="text-slate-300">Windows:</strong> under Downloads, get{' '}
-              <strong className="text-slate-300">DumperApps.exe</strong>, run it, enter the path to your{' '}
-              <strong className="text-slate-300">LIVE</strong> folder, then paste your API key.
+              <strong className="text-slate-300">DumperApps.exe</strong>, run it, let it{' '}
+              <strong className="text-slate-300">auto-detect</strong> your Star Citizen install, then
+              paste your API key.
             </li>
             <li>
               <strong className="text-slate-300">macOS / Linux:</strong> open{' '}
               <strong className="text-slate-300">Python scripts</strong>, install deps with{' '}
               <span className="font-mono text-slate-300">pip install -r requirements.txt</span>, then
-              run <span className="font-mono text-slate-300">python dumper.py --watch</span> with your
-              LIVE folder path (see the folder README).
+              run <span className="font-mono text-slate-300">python dumper.py --watch</span> (same
+              auto-detect; see the folder README).
             </li>
             <li>
               Copy your <strong className="text-slate-300">API key</strong> below, then paste it when
