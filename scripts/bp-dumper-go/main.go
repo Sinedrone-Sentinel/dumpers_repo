@@ -40,11 +40,21 @@ func minGameVersion() string {
 	return v
 }
 
+func exitSCNotDetected() {
+	fmt.Printf(
+		"%sStar Citizen LIVE install was not detected.%s\n"+
+			"Install/launch Star Citizen, or re-run with --configure and enter your LIVE folder path.\n",
+		colors.Red, colors.Reset,
+	)
+	pressAnyKey()
+	os.Exit(1)
+}
+
 func requirePathMissing() {
 	fmt.Printf(
 		"%sPath required.%s\n"+
 			"Enter your Star Citizen LIVE folder (the folder that contains Game.log),\n"+
-			"or pass it as an argument / set LOG_PATH in .env / use --log-dir.\n"+
+			"or leave blank in the wizard to auto-detect, or pass --log-dir / LOG_PATH.\n"+
 			"Example: C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\n",
 		colors.Red, colors.Reset,
 	)
@@ -83,7 +93,11 @@ func resolveChannelDir(filePath, logDir string, env map[string]string) string {
 	if backup := env["BACKUP_PATH"]; backup != "" {
 		return filepath.Dir(backup)
 	}
-	return ""
+	installs := discover.DetectSCInstalls()
+	if _, p := discover.PreferLIVE(installs); p != "" {
+		return p
+	}
+	return discover.FallbackLIVE()
 }
 
 func runFolderImport(
@@ -276,10 +290,10 @@ func main() {
 		fmt.Printf("%s====================================================%s\n\n", colors.Cyan, colors.Reset)
 		fmt.Printf("%sSource: github.com/Sinedrone-Sentinel/dumpers_repo (native Windows client)%s\n", colors.Dim, colors.Reset)
 		fmt.Printf("%sTrust:  OpenSSF Scorecard + site Trust links under Dumper Apps%s\n", colors.Dim, colors.Reset)
-		fmt.Printf("%sTip:    Enter your LIVE folder path (the folder that contains Game.log).%s\n\n", colors.Dim, colors.Reset)
+		fmt.Printf("%sTip:    Leave the path blank — BP Dumper searches for your LIVE install.%s\n\n", colors.Dim, colors.Reset)
 
 		defaultPath := envVars["LOG_PATH"]
-		pathPrompt := "Enter path to your Star Citizen LIVE folder (required)"
+		pathPrompt := "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
 		if defaultPath != "" {
 			pathPrompt += " [" + defaultPath + "]"
 		}
@@ -293,9 +307,18 @@ func main() {
 			userPath = defaultPath
 		}
 		if userPath == "" {
-			requirePathMissing()
-		}
-		if validated, errMsg := discover.ValidateLogPath(userPath); errMsg != "" {
+			fmt.Printf("%sAuto-detecting Star Citizen installations...%s\n", colors.Dim, colors.Reset)
+			installs := discover.DetectSCInstalls()
+			if ch, p := discover.PreferLIVE(installs); p != "" {
+				fmt.Printf("%sDetected channel %s at: %s%s\n", colors.Green, ch, p, colors.Reset)
+				userPath = p
+			} else if live := discover.FallbackLIVE(); live != "" {
+				fmt.Printf("%sDetected default fallback at: %s%s\n", colors.Green, live, colors.Reset)
+				userPath = live
+			} else {
+				exitSCNotDetected()
+			}
+		} else if validated, errMsg := discover.ValidateLogPath(userPath); errMsg != "" {
 			fmt.Printf("%s%s%s\n", colors.Red, errMsg, colors.Reset)
 			requirePathMissing()
 		} else {
@@ -407,7 +430,10 @@ func main() {
 		if envVars["LOG_PATH"] != "" {
 			filePath = envVars["LOG_PATH"]
 		} else {
-			requirePathMissing()
+			installs := discover.DetectSCInstalls()
+			if len(installs) == 0 && discover.FallbackLIVE() == "" {
+				exitSCNotDetected()
+			}
 		}
 	}
 
@@ -520,9 +546,16 @@ func main() {
 			} else {
 				watchFile = p
 			}
+		} else {
+			installs := discover.DetectSCInstalls()
+			if _, p := discover.PreferLIVE(installs); p != "" {
+				watchFile = filepath.Join(p, "Game.log")
+			} else if live := discover.FallbackLIVE(); live != "" {
+				watchFile = filepath.Join(live, "Game.log")
+			}
 		}
 		if watchFile == "" {
-			requirePathMissing()
+			exitSCNotDetected()
 		}
 
 		channelDir := filepath.Dir(watchFile)

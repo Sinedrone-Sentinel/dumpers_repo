@@ -57,7 +57,7 @@ Prefer posting **internal** blueprint names after local lookup resolution.
 
 | Client | How the folder is chosen |
 |---|---|
-| Go Windows / Python | Member enters LIVE / Game.log path (no drive scan) |
+| Go Windows / Python | Auto-detect / drive scan / path prompt (manual override OK) |
 | Store | **FolderPicker** once → persist with **FutureAccessList**; user may change folder later |
 
 Both must then:

@@ -36,5 +36,5 @@ Do **not** UPX-pack or re-wrap the exe.
 
 ## Member setup notes
 
-- Point the app at your Star Citizen **LIVE** folder (contains `Game.log`) — no drive scan.
+- Leave the LIVE path blank in the wizard to **auto-detect** Star Citizen (drive search for LIVE / Game.log), or paste a path to override.
 - Updates are **manual**: download a new `DumperApps.exe` from GitHub Releases when prompted (HTTP 426). No auto-download/self-replace.

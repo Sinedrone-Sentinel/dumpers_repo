@@ -6,7 +6,7 @@
 
 **Canonical Windows download:** native Go client in `scripts/bp-dumper-go/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1` (no PyInstaller, no UPX).
 
-- Members point the app at their Star Citizen LIVE folder (Game.log); no drive scan. Updates are manual GitHub downloads (no self-replace).
+- Auto-detects Star Citizen installs (drive search for LIVE / Game.log); members can paste a path to override. Updates are manual GitHub downloads (no self-replace).
 - Member Windows download: GitHub Releases `DumperApps.exe`.
 - Python watcher in `scripts/bp-dumper-py/` remains the protocol/reference client (and for non-Windows scripting).
 - Microsoft Store listing may remain published temporarily; it is **not** the primary trust or install path.
