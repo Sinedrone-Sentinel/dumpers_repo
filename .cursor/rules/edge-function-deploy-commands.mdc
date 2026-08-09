@@ -1,0 +1,56 @@
+---
+description: Always paste the full Edge Function deploy command when a redeploy is needed
+alwaysApply: true
+---
+
+# Edge Function deploy commands (always paste the full string)
+
+When an Edge Function must be redeployed (after you change `supabase/functions/**`, or after a migration that depends on Edge behavior), **always show the complete copy-pasteable command** in the reply. Never say only "redeploy send-discord" or "redeploy the Edge Function."
+
+## Required reply format
+
+Include a short fenced block with the exact command(s), for example:
+
+```bash
+npx supabase functions deploy send-discord --no-verify-jwt
+```
+
+If several functions changed, list **each full command** on its own line.
+
+If the project is not linked yet in that shell, also show the one-time setup lines:
+
+```bash
+npx supabase login
+npx supabase link --project-ref YOUR_PROJECT_REF
+```
+
+Use the real project ref only when it is already known from local config; otherwise leave `YOUR_PROJECT_REF`.
+
+## Canonical deploy commands (this repo)
+
+Source of truth: `docs/SUPABASE_SETUP.md` section Deploy Edge Functions. Prefer `npx supabase` (CLI is a devDependency).
+
+| Function | Full command |
+|---|---|
+| `ban-user` | `npx supabase functions deploy ban-user` |
+| `unban-user` | `npx supabase functions deploy unban-user` |
+| `delete-account` | `npx supabase functions deploy delete-account` |
+| `validate-rsi-handle` | `npx supabase functions deploy validate-rsi-handle` |
+| `send-discord` | `npx supabase functions deploy send-discord --no-verify-jwt` |
+| `log-watcher-webhook` | `npm run copy-blueprint-lookup` then `npx supabase functions deploy log-watcher-webhook --no-verify-jwt` |
+| `discord-services-interactions` | `npx supabase functions deploy discord-services-interactions --no-verify-jwt` |
+| `discord-services-dispatch` | `npx supabase functions deploy discord-services-dispatch` |
+| `discord-services-expire` | `npx supabase functions deploy discord-services-expire --no-verify-jwt` |
+| `discord-services-bot-invite` | `npx supabase functions deploy discord-services-bot-invite` |
+| `discord-services-post-test` | `npx supabase functions deploy discord-services-post-test` |
+| `manage-github-collaborator` | `npx supabase functions deploy manage-github-collaborator` |
+
+**Do not drop `--no-verify-jwt`** on functions that require it above (Discord cron/webhooks, log-watcher, services interactions/expire).
+
+## When this applies
+
+- Finishing work that edits an Edge Function
+- Telling the user what to run after merge / after applying a related migration
+- PR descriptions / Apply-deploy checklists that mention Edge redeploys
+
+Also paste the matching migration filename when SQL must be applied first.
