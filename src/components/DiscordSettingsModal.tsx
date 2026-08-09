@@ -324,7 +324,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
 
             <ToggleRow
               label="Personal notifications"
-              description="Member deal alerts (my_order_* and support replies)"
+              description="Member deal + friend alerts (my_order_*, my_friend_*, support replies)"
               enabled={settings?.personal_discord_enabled ?? true}
               onToggle={() => handleToggleSetting('personal_discord_enabled')}
               disabled={saving}

@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `169_sync_pending_friend_notifications.sql` (restore missing pending friend Notify rows; block Clear on those types). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `170_friend_discord_personal_events.sql` (personal Discord: friend request + accepted). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -200,6 +200,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 132 | `167_friends_notify_actions_reorder_groups.sql` | Friends: outbound `friend_request_sent` Notify + clear pending request rows on resolve; `reorder_friend_groups` RPC |
 | 133 | `168_friends_rsi_handle_privacy.sql` | Friends privacy: pending search/Notify/list use RSI Handle only; scrub leaked display names in existing friend Notify rows |
 | 134 | `169_sync_pending_friend_notifications.sql` | Friends: `ensure_pending_friend_notifications` + backfill; DELETE RLS blocks Clear on pending friend Notify types |
+| 135 | `170_friend_discord_personal_events.sql` | Friends personal Discord: `my_friend_request` / `my_friend_accepted` subscribe events; queue RSI-handle embed fields from friend RPCs |
 
 ### pg_cron (migrations 054, 065-068, 144, 147)
 

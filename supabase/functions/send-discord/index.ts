@@ -30,6 +30,8 @@ const COLORS: Record<string, number> = {
   my_order_dispute: 0xef4444,
   my_support_reply: 0x8b5cf6,
   my_support_resolved: 0x22c55e,
+  my_friend_request: 0x3b82f6,
+  my_friend_accepted: 0x22c55e,
   support: 0x8b5cf6,
   admin: 0xef4444,
   partnership_application: 0x8b5cf6,

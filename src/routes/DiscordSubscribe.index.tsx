@@ -14,7 +14,8 @@ import { useAuth } from '../contexts/AuthContext'
 const CATEGORY_LABELS: Record<DiscordEventCategory, { title: string; description: string }> = {
   personal: {
     title: 'My activity',
-    description: 'Alerts when someone else moves your deal forward — not when you click it yourself.',
+    description:
+      'Alerts when someone else moves your deal forward or sends/accepts a friend request — not when you click it yourself.',
   },
   marketplace: {
     title: 'Marketplace activity',

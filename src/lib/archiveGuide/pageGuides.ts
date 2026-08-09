@@ -254,10 +254,11 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
   {
     id: 'discord-webhooks',
     title: 'Discord Webhooks',
-    description: 'Route marketplace and personal deal alerts to your own Discord channel.',
+    description: 'Route marketplace, personal deal, and friend alerts to your own Discord channel.',
     details: [
       'Paste a webhook URL from your Discord server (Integrations → Webhooks)',
       'My activity: pings when someone else moves your deal forward (accepted, ready, completed, released, etc.) — requires verified RSI Handle',
+      'My activity also covers friend alerts: Friend request received and Friend request accepted (RSI Handle only in the Discord fields)',
       'Marketplace activity (opt-in): new WTB/WTS listings, acceptances, and cancellations from other members — no RSI verification required',
       'Use the same channel URL in both sections if you want everything in one Discord channel',
       'Coalesced marketplace digests require New WTB, New WTS, or Listing cancelled — not Listing accepted alone',
@@ -268,7 +269,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'One channel name and webhook URL per alert type — leave the URL blank to unregister',
       'Set up from your avatar menu → Webhooks after sign-in',
     ],
-    relatesTo: ['My Listings', 'The Bazaar', 'Notifications'],
+    relatesTo: ['My Listings', 'The Bazaar', 'Notifications', 'Friends'],
   },
   {
     id: 'notifications',
@@ -304,9 +305,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'On Blueprints, pick a friend in Members to filter by their acquired collection (your checkboxes stay yours)',
       'On Resource Tracker, Friends Resources shows a friend’s stock in a read-only list',
       'Friends’ Bazaar listings stay hidden from each other by design',
+      'Optional Discord pings (Webhooks → My activity): Friend request received / Friend request accepted — RSI Handle only',
       'Unavailable while your account is pending approval or in Offline Mode',
     ],
-    relatesTo: ['Blueprints', 'Resource Tracker', 'The Bazaar', 'Notifications'],
+    relatesTo: ['Blueprints', 'Resource Tracker', 'The Bazaar', 'Notifications', 'Discord Webhooks'],
   },
   {
     id: 'updates-ticker',
