@@ -49,6 +49,27 @@ Without that secret, Branch-Protection stays errored even when `main` is protect
 
 [OpenSSF Best Practices Passing](https://www.bestpractices.dev/projects/13989) and [Baseline-2](https://www.bestpractices.dev/projects/13989) are earned (README badges: `/projects/13989/badge` and `/projects/13989/baseline`). Scorecard’s **CII-Best-Practices** check should reflect Passing after the next Scorecard scan. Root [LICENSE](../LICENSE) is **Apache-2.0** (OSI). DFP remains proprietary under [LICENSE.DFP](../LICENSE.DFP).
 
+## VirusTotal release gate (required before download)
+
+GitHub does not offer a native “required check before `/releases/latest/download` updates.” We enforce the same outcome in CI:
+
+1. **semantic-release** creates a **draft** GitHub Release (`draftRelease: true` in `release.config.js`).
+2. Drafts are **ignored** by `/releases/latest` — members keep downloading the previous published `DumperApps.exe`.
+3. `.github/workflows/build-releases.yml` builds the exe, optional SignPath, checksums/cosign, then runs **`scripts/ci/virustotal-release-gate.mjs`**.
+4. Only if VirusTotal completes with **0 malicious** detections does the workflow upload assets and set **`draft: false`** (publish).
+
+If `VT_API_KEY` is missing or the gate fails, the release stays draft / unpublished — **no new live download**.
+
+### Setup (one-time)
+
+1. Create a free VirusTotal account → profile → **API key**
+2. Repo → Settings → Secrets and variables → Actions → New secret **`VT_API_KEY`**
+3. Re-run **Build Executables on Release** for any stuck draft tag if needed
+
+Optional: `VT_MAX_MALICIOUS` (workflow env, default `0`) if you ever need to temporarily tolerate a documented false positive — prefer fixing/reporting the FP instead.
+
+Published releases include `VIRUSTOTAL.txt` / `VIRUSTOTAL.json` and a VirusTotal section in the release notes.
+
 ## SignPath Free OSS
 
 SignPath Foundation free OSS signing requires an **OSI-approved** license and no proprietary code in the signed artifact.
@@ -75,8 +96,9 @@ Application submitted. Credit + policy are already on the site.
 
 ## Release integrity (checksums + cosign)
 
-Every `v*` / release publish from `.github/workflows/build-releases.yml` also uploads:
+Every `v*` / release publish from `.github/workflows/build-releases.yml` (after VirusTotal gate) also uploads:
 
+- `VIRUSTOTAL.txt` / `VIRUSTOTAL.json` — scan permalink + stats from the publish gate
 - `SHA256SUMS` — hashes of release assets
 - `SHA256SUMS.sig` — Sigstore **cosign** keyless signature (GitHub Actions OIDC)
 

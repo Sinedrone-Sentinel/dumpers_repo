@@ -1,7 +1,8 @@
 name: Build Executables on Release
 
 # SignPath optional: set SIGNPATH_* after OSS approval (OSI license required — docs/TRUST_AND_SIGNING.md).
-# Without secrets, the unsigned Python-built exe is still published to the GitHub Release.
+# VirusTotal REQUIRED: set repo secret VT_API_KEY. DumperApps.exe is not published until VT gate passes.
+# semantic-release creates a DRAFT GitHub Release; this workflow publishes it only after a clean VT scan.
 
 on:
   push:
@@ -93,6 +94,13 @@ jobs:
       actions: read
       id-token: write # cosign keyless (Sigstore)
     steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
       - name: Check SignPath config
         id: signpath
         env:
@@ -105,7 +113,7 @@ jobs:
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::SignPath not configured — publishing UNSIGNED DumperApps.exe. See docs/TRUST_AND_SIGNING.md"
+            echo "::warning::SignPath not configured — publishing Authenticode-unsigned DumperApps.exe after VirusTotal gate. See docs/TRUST_AND_SIGNING.md"
           fi
 
       - name: Sign with SignPath
@@ -142,13 +150,33 @@ jobs:
           echo "SHA256SUMS:"
           cat SHA256SUMS
 
-      - name: Upload exe to GitHub Release
+      - name: Require VirusTotal API key
+        env:
+          VT_API_KEY: ${{ secrets.VT_API_KEY }}
+        run: |
+          if [ -z "$VT_API_KEY" ]; then
+            echo "::error::Missing repo secret VT_API_KEY. DumperApps.exe will stay unpublished (draft) until VirusTotal gating is configured. See docs/TRUST_AND_SIGNING.md"
+            exit 1
+          fi
+
+      - name: VirusTotal gate (blocks publish)
+        env:
+          VT_API_KEY: ${{ secrets.VT_API_KEY }}
+          VT_MAX_MALICIOUS: "0"
+        run: node scripts/ci/virustotal-release-gate.mjs dist/DumperApps.exe
+
+      - name: Publish GitHub Release assets (after clean VT)
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}
+          draft: false
+          append_body: true
+          body_path: dist/VIRUSTOTAL_RELEASE_FOOTER.md
           files: |
             dist/DumperApps.exe
             dist/SHA256SUMS
             dist/SHA256SUMS.sig
+            dist/VIRUSTOTAL.txt
+            dist/VIRUSTOTAL.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

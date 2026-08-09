@@ -301,7 +301,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Canonical client** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) → `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) |
 | **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (auto-detects Star Citizen LIVE); macOS/Linux: Python scripts in the modal |
 | **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
-| **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + SignPath; [`docs/CODE_SIGNING_POLICY.md`](docs/CODE_SIGNING_POLICY.md) — SignPath credit / roles |
+| **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SignPath; [`docs/CODE_SIGNING_POLICY.md`](docs/CODE_SIGNING_POLICY.md) — SignPath credit / roles |
 | **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
@@ -374,7 +374,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | [ci.yml](.github/workflows/ci.yml) | PRs to `main` | Lint + test + build (no deploy) |
 | [deploy.yml](.github/workflows/deploy.yml) | Push to `main` | Build + GitHub Pages deploy (official site) |
 | [release-dumper.yml](.github/workflows/release-dumper.yml) | Dumper source changes on `main` | semantic-release version + tag |
-| [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags | Build Windows packaging artifacts for Store / release tooling |
+| [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags / workflow_dispatch | Build exe → VirusTotal gate → publish draft GitHub Release (members only get `/latest` after a clean scan) |
 
 ### npm scripts
 

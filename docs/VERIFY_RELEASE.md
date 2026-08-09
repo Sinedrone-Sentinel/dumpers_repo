@@ -7,6 +7,8 @@ Each release also includes:
 - **`SHA256SUMS`** — hex digests of release assets (including `DumperApps.exe`)
 - **`SHA256SUMS.sig`** — Sigstore/cosign **bundle** signature over `SHA256SUMS` (keyless OIDC from GitHub Actions)
 
+Each published Windows build is **VirusTotal-gated in CI** before the GitHub Release leaves draft (see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)). Releases include `VIRUSTOTAL.txt` with the report URL.
+
 Optional later: Authenticode signature via SignPath (see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)).
 
 ## 1. Check the file hash
@@ -35,3 +37,12 @@ cosign verify-blob \
 ```
 
 A successful verify confirms the checksum manifest was produced by this repository's release workflow (expected release process / identity).
+## 3. VirusTotal report
+
+Download `VIRUSTOTAL.txt` from the same release (or open the VirusTotal section in the release notes). The first line is the GUI report for that exact `DumperApps.exe` SHA-256:
+
+```text
+https://www.virustotal.com/gui/file/<sha256>
+```
+
+You can also hash the exe locally and open `https://www.virustotal.com/gui/file/<your-sha256>`.

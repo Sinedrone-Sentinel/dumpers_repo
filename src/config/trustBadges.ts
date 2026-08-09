@@ -41,6 +41,9 @@ export const SIGNPATH_CREDIT_TEXT =
 export const CODE_SIGNING_POLICY_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/docs/CODE_SIGNING_POLICY.md' as const
 
+export const VIRUSTOTAL_HOME_URL = 'https://www.virustotal.com/' as const
+
+
 export type TrustLink = {
   id: string
   label: string
@@ -107,6 +110,13 @@ export function getDumperTrustLinks(): TrustLink[] {
       summary: 'Open Source Project Security Baseline Level 2 for this repository.',
     },
   ]
+  links.push({
+    id: 'virustotal',
+    label: 'VirusTotal gate',
+    href: VIRUSTOTAL_HOME_URL,
+    summary:
+      'Windows builds stay draft on GitHub until VirusTotal reports 0 malicious detections; the live report link is on each GitHub Release and in Dumper Apps.',
+  })
   links.push({
     id: 'signpath',
     label: SIGNPATH_SIGNING_LIVE ? 'SignPath code signing' : 'SignPath Foundation',
