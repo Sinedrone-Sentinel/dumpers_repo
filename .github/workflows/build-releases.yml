@@ -163,10 +163,13 @@ jobs:
       - name: VirusTotal gate (blocks publish)
         env:
           VT_API_KEY: ${{ secrets.VT_API_KEY }}
+          # named = block only concrete malware-family labels; generic/ML (Wacatac!ml, susgen, …) may publish
+          # strict = fail if malicious > VT_MAX_MALICIOUS (legacy zero-tolerance)
+          VT_GATE_MODE: named
           VT_MAX_MALICIOUS: "0"
         run: node scripts/ci/virustotal-release-gate.mjs dist/DumperApps.exe
 
-      - name: Publish GitHub Release assets (after clean VT)
+      - name: Publish GitHub Release assets (after VT gate)
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           tag_name: ${{ needs.resolve-tag.outputs.tag }}

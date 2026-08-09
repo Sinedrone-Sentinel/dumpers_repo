@@ -375,7 +375,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | [ci.yml](.github/workflows/ci.yml) | PRs to `main` | Lint + test + build (no deploy) |
 | [deploy.yml](.github/workflows/deploy.yml) | Push to `main` | Build + GitHub Pages deploy (official site) |
 | [release-dumper.yml](.github/workflows/release-dumper.yml) | Dumper source changes on `main` | semantic-release version + tag |
-| [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags / workflow_dispatch | Build exe → VirusTotal gate → publish draft GitHub Release (members only get `/latest` after a clean scan) |
+| [build-releases.yml](.github/workflows/build-releases.yml) | `v*` tags / workflow_dispatch | Build exe → VirusTotal gate (blocks named malware families) → publish draft GitHub Release (members only get `/latest` after the gate passes) |
 
 ### npm scripts
 

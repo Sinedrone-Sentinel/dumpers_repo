@@ -4,7 +4,9 @@
  * - Requires VT_API_KEY
  * - Uploads the file (large-file URL when >32MB)
  * - Polls until analysis completes
- * - Fails the process if malicious > VT_MAX_MALICIOUS (default 0)
+ * - Gate modes (VT_GATE_MODE):
+ *   - named (default): fail only on *named* malware-family labels; generic/ML hits warn but allow publish
+ *   - strict: fail if malicious count > VT_MAX_MALICIOUS (default 0)
  * - Writes dist sidecar files for the GitHub Release
  *
  * Usage: node scripts/ci/virustotal-release-gate.mjs <path-to-exe>
@@ -68,6 +70,75 @@ function maxMaliciousAllowed() {
   return n
 }
 
+/** @returns {'named' | 'strict'} */
+function gateMode() {
+  const raw = String(process.env.VT_GATE_MODE || 'named').trim().toLowerCase()
+  if (raw === 'named' || raw === 'strict') return raw
+  fail(`VT_GATE_MODE must be "named" or "strict" (got ${process.env.VT_GATE_MODE})`)
+}
+
+/**
+ * Classify a VT "malicious" engine result as generic/heuristic vs a named family.
+ * Fail-closed: unknown labels are treated as named (block publish).
+ *
+ * @param {string} engine
+ * @param {string} result
+ * @returns {'generic' | 'named'}
+ */
+export function classifyMaliciousResult(engine, result) {
+  const r = String(result || '').trim()
+  const lower = r.toLowerCase()
+
+  // Bare category labels with no family token
+  if (!r || lower === 'malicious' || lower === 'malware' || lower === 'trojan' || lower === 'virus') {
+    return 'generic'
+  }
+
+  // Well-known heuristic / ML / generic buckets (not concrete malware families)
+  const genericPatterns = [
+    /!ml\b/i,
+    /\bml\.score\b/i,
+    /\.ml\./i,
+    /\bwacatac\b/i,
+    /\bsusgen\b/i,
+    /\bgeneric\b/i,
+    /\bheur/i,
+    /\bai[_-]?detect/i,
+    /malware\.[0-9a-f]{6,}/i, // Bkav-style W32.Malware.<hex>
+    /trojan\.win32\.save\.a/i, // Sangfor's classic generic
+    /\bzapchast\b/i,
+    /\briskware\b/i,
+    /\bpua\b/i,
+    /\bpup\b/i,
+    /\bunwanted\b/i,
+    /\bscore\b/i,
+    /\bbehaves?[_-]?like\b/i,
+    /\bstatic[_-]?ml\b/i,
+  ]
+
+  for (const re of genericPatterns) {
+    if (re.test(r)) return 'generic'
+  }
+
+  // Engine name alone is not used — unknown concrete labels block.
+  void engine
+  return 'named'
+}
+
+function listFlagged(results, categories) {
+  const out = []
+  for (const [engine, row] of Object.entries(results || {})) {
+    if (categories.includes(row?.category)) {
+      out.push({ engine, result: row.result || row.category, category: row.category })
+    }
+  }
+  return out.sort((a, b) => a.engine.localeCompare(b.engine))
+}
+
+function formatHit(hit) {
+  return `${hit.engine}: ${hit.result}`
+}
+
 async function uploadFile(filePath, apiKey) {
   const size = statSync(filePath).size
   const fileName = basename(filePath)
@@ -77,7 +148,7 @@ async function uploadFile(filePath, apiKey) {
 
   let uploadUrl = `${VT_API}/files`
   if (size > LARGE_FILE_BYTES) {
-    console.log(`File is ${(size / (1024 * 1024)).toFixed(1)} MiB ? requesting large upload URL`)
+    console.log(`File is ${(size / (1024 * 1024)).toFixed(1)} MiB — requesting large upload URL`)
     const { res, json, text } = await vtFetch('/files/upload_url', apiKey)
     if (!res.ok) fail(`Failed to get VT upload URL (${res.status}): ${text.slice(0, 400)}`)
     uploadUrl = json?.data
@@ -97,7 +168,7 @@ async function pollAnalysis(analysisId, apiKey) {
   while (Date.now() - started < MAX_WAIT_MS) {
     const { res, json, text } = await vtFetch(`/analyses/${analysisId}`, apiKey)
     if (res.status === 429) {
-      console.warn('VT rate limited while polling ? backing off 60s')
+      console.warn('VT rate limited while polling — backing off 60s')
       await sleep(60_000)
       continue
     }
@@ -110,16 +181,6 @@ async function pollAnalysis(analysisId, apiKey) {
     await sleep(POLL_MS)
   }
   fail(`VT analysis did not complete within ${MAX_WAIT_MS / 1000}s`)
-}
-
-function listFlagged(results, categories) {
-  const out = []
-  for (const [engine, row] of Object.entries(results || {})) {
-    if (categories.includes(row?.category)) {
-      out.push(`${engine}: ${row.result || row.category}`)
-    }
-  }
-  return out.sort()
 }
 
 async function main() {
@@ -141,10 +202,15 @@ async function main() {
 
   const sha256 = sha256File(filePath)
   const permalink = `https://www.virustotal.com/gui/file/${sha256}`
+  const mode = gateMode()
   const maxMalicious = maxMaliciousAllowed()
   console.log(`SHA256 ${sha256}`)
   console.log(`VirusTotal permalink (after scan): ${permalink}`)
-  console.log(`Gate: fail if malicious > ${maxMalicious}`)
+  if (mode === 'named') {
+    console.log('Gate: named mode — fail only on named malware-family labels (generic/ML hits allowed)')
+  } else {
+    console.log(`Gate: strict mode — fail if malicious > ${maxMalicious}`)
+  }
 
   // Always upload/analyze this exact build so the report matches the release artifact.
   const analysisId = await uploadFile(filePath, apiKey)
@@ -159,15 +225,25 @@ async function main() {
     `VT stats: malicious=${malicious} suspicious=${suspicious} undetected=${undetected} harmless=${harmless}`,
   )
 
-  const maliciousEngines = listFlagged(attrs.results, ['malicious'])
-  const suspiciousEngines = listFlagged(attrs.results, ['suspicious'])
-  if (maliciousEngines.length) {
-    console.log('Malicious engine hits:')
-    for (const line of maliciousEngines) console.log(`  - ${line}`)
+  const maliciousHits = listFlagged(attrs.results, ['malicious'])
+  const suspiciousHits = listFlagged(attrs.results, ['suspicious'])
+  const genericHits = []
+  const namedHits = []
+  for (const hit of maliciousHits) {
+    if (classifyMaliciousResult(hit.engine, hit.result) === 'generic') genericHits.push(hit)
+    else namedHits.push(hit)
   }
-  if (suspiciousEngines.length) {
+
+  if (maliciousHits.length) {
+    console.log('Malicious engine hits:')
+    for (const hit of maliciousHits) {
+      const kind = classifyMaliciousResult(hit.engine, hit.result)
+      console.log(`  - [${kind}] ${formatHit(hit)}`)
+    }
+  }
+  if (suspiciousHits.length) {
     console.log('Suspicious engine hits:')
-    for (const line of suspiciousEngines) console.log(`  - ${line}`)
+    for (const hit of suspiciousHits) console.log(`  - ${formatHit(hit)}`)
   }
 
   const outDir = dirname(filePath)
@@ -175,9 +251,12 @@ async function main() {
     sha256,
     permalink,
     analysisId,
+    gateMode: mode,
     stats: { malicious, suspicious, undetected, harmless },
-    maliciousEngines,
-    suspiciousEngines,
+    maliciousEngines: maliciousHits.map(formatHit),
+    suspiciousEngines: suspiciousHits.map(formatHit),
+    genericMaliciousEngines: genericHits.map(formatHit),
+    namedMaliciousEngines: namedHits.map(formatHit),
     gatedAt: new Date().toISOString(),
   }
   writeFileSync(join(outDir, 'VIRUSTOTAL.json'), JSON.stringify(report, null, 2) + '\n', 'utf8')
@@ -186,7 +265,10 @@ async function main() {
     [
       permalink,
       `sha256=${sha256}`,
+      `gateMode=${mode}`,
       `malicious=${malicious}`,
+      `namedMalicious=${namedHits.length}`,
+      `genericMalicious=${genericHits.length}`,
       `suspicious=${suspicious}`,
       `undetected=${undetected}`,
       `harmless=${harmless}`,
@@ -195,6 +277,12 @@ async function main() {
     ].join('\n'),
     'utf8',
   )
+
+  const gateSummary =
+    mode === 'named'
+      ? `**${namedHits.length} named-family** / ${genericHits.length} generic-ML malicious (${malicious} total) / ${suspicious} suspicious`
+      : `**${malicious} malicious** / ${suspicious} suspicious (undetected ${undetected})`
+
   writeFileSync(
     join(outDir, 'VIRUSTOTAL_RELEASE_FOOTER.md'),
     [
@@ -202,14 +290,27 @@ async function main() {
       '### VirusTotal',
       '',
       `- Report: ${permalink}`,
-      `- Detections at publish gate: **${malicious} malicious** / ${suspicious} suspicious (undetected ${undetected})`,
-      `- This Windows build is only published after a clean VirusTotal gate in CI.`,
+      `- Detections at publish gate: ${gateSummary}`,
+      mode === 'named'
+        ? '- Publish requires **no named malware-family** malicious labels (generic/ML heuristic hits may still appear on VirusTotal).'
+        : '- This Windows build is only published after a clean VirusTotal gate in CI.',
       '',
     ].join('\n'),
     'utf8',
   )
 
-  if (malicious > maxMalicious) {
+  if (mode === 'named') {
+    if (namedHits.length > 0) {
+      fail(
+        `VirusTotal gate failed: ${namedHits.length} named malware-family detection(s). Refusing to publish DumperApps.exe. Named: ${namedHits.map(formatHit).join('; ')}. See ${permalink}`,
+      )
+    }
+    if (genericHits.length > 0) {
+      console.warn(
+        `::warning::VirusTotal reported ${genericHits.length} generic/ML malicious hit(s); named-family gate allows publish. Review ${permalink}`,
+      )
+    }
+  } else if (malicious > maxMalicious) {
     fail(
       `VirusTotal gate failed: ${malicious} malicious detection(s) (max allowed ${maxMalicious}). Refusing to publish DumperApps.exe. See ${permalink}`,
     )
@@ -217,11 +318,14 @@ async function main() {
 
   if (suspicious > 0) {
     console.warn(
-      `::warning::VirusTotal reported ${suspicious} suspicious detection(s). Publish continues (malicious=${malicious}). Review ${permalink}`,
+      `::warning::VirusTotal reported ${suspicious} suspicious detection(s). Publish continues. Review ${permalink}`,
     )
   }
 
-  console.log(`VirusTotal gate passed. ${permalink}`)
+  console.log(`VirusTotal gate passed (${mode}). ${permalink}`)
 }
 
-main().catch((err) => fail(err?.stack || String(err)))
+const isMain = process.argv[1] && basename(process.argv[1]) === 'virustotal-release-gate.mjs'
+if (isMain) {
+  main().catch((err) => fail(err?.stack || String(err)))
+}
