@@ -1,30 +1,39 @@
 ---
-description: BP Dumper canonical client is Python; Store WinUI listing is parked
-globs: scripts/bp-dumper-py/**/*,apps/bp-dumper-store/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
+description: BP Dumper Windows exe is Go; Python remains for scripts / non-Windows; Store WinUI parked
+globs: scripts/bp-dumper-py/**/*,scripts/bp-dumper-go/**/*,apps/bp-dumper-store/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
 alwaysApply: false
 ---
 
-# BP Dumper — canonical Python client
+# BP Dumper — Windows Go exe + Python reference
 
-**Canonical product path:** `scripts/bp-dumper-py/` → packaged as `DumperApps.exe`
-via `scripts/installer/build-exe.ps1`. Members get auto-detect of the Star Citizen
-install (drive search for LIVE / Game.log).
+**Shipped Windows product:** `scripts/bp-dumper-go/` → packaged as `DumperApps.exe`
+via `scripts/installer/build-exe.ps1` (native Go; no PyInstaller / no UPX).
+
+**Protocol / behavior reference:** `scripts/bp-dumper-py/` (still used for macOS/Linux
+and as the behavioral source of truth when changing parse/webhook rules).
 
 | Client | Status | FS discovery |
 |---|---|---|
-| Standalone Python / exe | **Canonical** — build + ship this | Drive auto-scan / path prompt OK |
+| Native Go Windows exe | **Canonical Windows download** | Drive auto-scan / path prompt OK |
+| Standalone Python | Scripts / non-Windows; keep in sync with Go for protocol | Drive auto-scan / path prompt OK |
 | Store WinUI (`apps/bp-dumper-store/`) | **Parked** — listing may stay live; do not invest in feature parity | FolderPicker only (legacy sandbox experiment) |
 
 Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 
 ## When changing BP Dumper
 
-- Prefer changes in **`scripts/bp-dumper-py/`** only.
+- Member-facing Windows behavior must work in **`scripts/bp-dumper-go/`**.
+- Prefer updating **both** Go and Python when changing log regexes, webhook event
+  shapes, wizard keys, or auto-update behavior.
 - Do **not** require Store WinUI updates for new member features.
 - Keep `feat(dumper)` / `fix(dumper)` Conventional Commits for semantic-release.
+- Release path triggers on dumper paths (see `release-dumper.yml`); include
+  `scripts/bp-dumper-go/**` when shipping Windows binary changes.
 
 ## Do not regress
 
-- Auto-detect / drive search is a **wanted** member feature on the Python/exe client.
-- Do not push members back to “pick LIVE folder only” as the primary Windows story
-  while the exe path is primary.
+- Auto-detect / drive search is a **wanted** member feature on the Windows exe.
+- Do not push members back to “pick LIVE folder only” as the primary Windows story.
+- Do not reintroduce PyInstaller `--onefile` for the published `DumperApps.exe`
+  (VirusTotal false-positive risk).
+- VirusTotal gate stays **0 malicious** — do not allowlist Trojan heuristics.

@@ -1,13 +1,14 @@
 # BP Dumper shared protocol
 
-Contract for **both** clients:
+Contract for clients that talk to `log-watcher-webhook`:
 
 | Client | Path |
 |---|---|
-| Standalone Python | `scripts/bp-dumper-py/` |
-| Store (sandboxed WinUI) | `apps/bp-dumper-store/` |
+| Native Windows exe (shipped) | `scripts/bp-dumper-go/` |
+| Standalone Python (reference / non-Windows) | `scripts/bp-dumper-py/` |
+| Store (sandboxed WinUI, parked) | `apps/bp-dumper-store/` |
 
-When this document changes, update **both** clients (see `.cursor/rules/dumper-dual-client-sync.mdc`).
+When this document changes, update the **Go Windows** and **Python** clients (see `.cursor/rules/dumper-dual-client-sync.mdc`).
 
 ## Endpoint
 
@@ -56,7 +57,7 @@ Prefer posting **internal** blueprint names after local lookup resolution.
 
 | Client | How the folder is chosen |
 |---|---|
-| Python | Auto-detect / drive scan / path prompt |
+| Go Windows / Python | Auto-detect / drive scan / path prompt |
 | Store | **FolderPicker** once → persist with **FutureAccessList**; user may change folder later |
 
 Both must then:

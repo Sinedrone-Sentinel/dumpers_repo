@@ -17,6 +17,7 @@ the exe.
 - Do **not** edit version/manifest files — semantic-release owns them:
   - `scripts/bp-dumper/version.json`, `scripts/bp-dumper/package.json`
   - `scripts/bp-dumper-py/_version.py`, `scripts/bp-dumper-py/_min_game_version.py`
+ - `scripts/bp-dumper-go/version.txt`, `scripts/bp-dumper-go/mingame.txt`
   - `src/data/bp-dumper-version.json`
   - `scripts/bp-dumper/CHANGELOG.md`
 - Do **not** create git tags or trigger the build workflow manually.
