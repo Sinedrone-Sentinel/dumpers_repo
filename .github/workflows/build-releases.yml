@@ -162,7 +162,7 @@ jobs:
       - name: VirusTotal gate (blocks publish)
         env:
           VT_API_KEY: ${{ secrets.VT_API_KEY }}
-          VT_MAX_MALICIOUS: "0"
+          VT_MAX_UNEXPLAINED_MALICIOUS: "0"
         run: node scripts/ci/virustotal-release-gate.mjs dist/DumperApps.exe
 
       - name: Publish GitHub Release assets (after clean VT)

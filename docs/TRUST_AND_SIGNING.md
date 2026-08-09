@@ -56,7 +56,8 @@ GitHub does not offer a native “required check before `/releases/latest/downlo
 1. **semantic-release** creates a **draft** GitHub Release (`draftRelease: true` in `release.config.js`).
 2. Drafts are **ignored** by `/releases/latest` — members keep downloading the previous published `DumperApps.exe`.
 3. `.github/workflows/build-releases.yml` builds the exe, optional SignPath, checksums/cosign, then runs **`scripts/ci/virustotal-release-gate.mjs`**.
-4. Only if VirusTotal completes with **0 malicious** detections does the workflow upload assets and set **`draft: false`** (publish).
+4. VirusTotal must complete. The gate **fails on unexplained malicious detections** (real malware families). Known unsigned-PyInstaller / Microsoft `Wacatac*!ml` style ML heuristics are classified and allowed (capped) — they are industry-wide false positives on unsigned onefile builds until Authenticode (SignPath) is live.
+5. Only after the gate passes does the workflow upload assets and set **`draft: false`** (publish).
 
 If `VT_API_KEY` is missing or the gate fails, the release stays draft / unpublished — **no new live download**.
 
@@ -66,7 +67,7 @@ If `VT_API_KEY` is missing or the gate fails, the release stays draft / unpublis
 2. Repo → Settings → Secrets and variables → Actions → New secret **`VT_API_KEY`**
 3. Re-run **Build Executables on Release** for any stuck draft tag if needed
 
-Optional: `VT_MAX_MALICIOUS` (workflow env, default `0`) if you ever need to temporarily tolerate a documented false positive — prefer fixing/reporting the FP instead.
+Optional env overrides on the gate step: `VT_MAX_UNEXPLAINED_MALICIOUS` (default `0`), `VT_MAX_KNOWN_HEURISTICS` (default `12`). Prefer SignPath signing over raising caps.
 
 Published releases include `VIRUSTOTAL.txt` / `VIRUSTOTAL.json` and a VirusTotal section in the release notes.
 

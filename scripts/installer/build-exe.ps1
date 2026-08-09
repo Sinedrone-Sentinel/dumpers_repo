@@ -92,6 +92,7 @@ python -m PyInstaller `
     --noconfirm `
     --clean `
     --onefile `
+    --noupx `
     --console `
     --name "DumperApps" `
     --icon $iconPath `
