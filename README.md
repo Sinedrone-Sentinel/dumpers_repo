@@ -114,7 +114,8 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 
 ### Friends (header)
 
-- Header Friends control (between notifications and avatar): add by RSI Handle, approve/deny, remove, private groups
+- Header Friends control (between notifications and avatar): add by RSI Handle, remove, private reorderable groups
+- Incoming/outgoing friend requests are managed from the notification bell (Accept / Deny / Cancel)
 - View friends’ acquired blueprints (Blueprints Members) and personal resources (Friends Resources)
 - Accepted friends do not see each other’s Bazaar listings (by design)
 

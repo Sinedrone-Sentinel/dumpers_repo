@@ -73,7 +73,12 @@ export function getNotificationCategoryId(notification: UserNotification): Notif
   if (type.startsWith('rating_')) return 'ratings'
   if (type === 'questionnaire_available') return 'questionnaires'
   if (type === 'service_request_accepted' || type.startsWith('service_request_')) return 'services'
-  if (type === 'friend_request' || type === 'friend_accepted' || type === 'friend_declined') {
+  if (
+    type === 'friend_request' ||
+    type === 'friend_request_sent' ||
+    type === 'friend_accepted' ||
+    type === 'friend_declined'
+  ) {
     return 'friends'
   }
 
