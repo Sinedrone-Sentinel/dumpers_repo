@@ -61,7 +61,9 @@ GitHub does not offer a native “required check before `/releases/latest/downlo
 1. **semantic-release** creates a **draft** GitHub Release (`draftRelease: true` in `release.config.js`).
 2. Drafts are **ignored** by `/releases/latest` — members keep downloading the previous published `DumperApps.exe`.
 3. `.github/workflows/build-releases.yml` builds the exe, optional SignPath, checksums/cosign, then runs **`scripts/ci/virustotal-release-gate.mjs`**.
-4. Only if VirusTotal completes with **0 malicious** detections does the workflow upload assets and set **`draft: false`** (publish).
+4. Only if the VirusTotal gate passes does the workflow upload assets and set **`draft: false`** (publish).
+
+**Default gate (`VT_GATE_MODE=named`):** publish is blocked only when an engine returns a **named malware-family** label (e.g. Emotet, AgentTesla). Generic / ML buckets (`Wacatac!ml`, `susgen`, bare `MALICIOUS`, Bkav `Malware.<hex>`, etc.) are logged as warnings and **do not** block — those are the usual unsigned-PE false positives. Set `VT_GATE_MODE=strict` to require zero malicious detections of any kind (`VT_MAX_MALICIOUS`, default `0`).
 
 If `VT_API_KEY` is missing or the gate fails, the release stays draft / unpublished — **no new live download**.
 
@@ -70,8 +72,6 @@ If `VT_API_KEY` is missing or the gate fails, the release stays draft / unpublis
 1. Create a free VirusTotal account → profile → **API key**
 2. Repo → Settings → Secrets and variables → Actions → New secret **`VT_API_KEY`**
 3. Re-run **Build Executables on Release** for any stuck draft tag if needed
-
-Optional: `VT_MAX_MALICIOUS` (workflow env, default `0`) if you ever need to temporarily tolerate a documented false positive — prefer fixing/reporting the FP instead.
 
 Published releases include `VIRUSTOTAL.txt` / `VIRUSTOTAL.json` and a VirusTotal section in the release notes.
 
