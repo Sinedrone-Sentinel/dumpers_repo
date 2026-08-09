@@ -67,7 +67,7 @@ export default function BpDumperDownloadLinks() {
         Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your
         Star Citizen install (searches for LIVE / Game.log). You can also paste a path if you prefer.
         Updates come from GitHub Releases when “Keep App Up to Date” is on. New Windows builds only go
-        live after a clean VirusTotal gate in CI.
+        live after the VirusTotal CI gate passes (report linked on the release).
       </p>
 
       {release?.virusTotalUrl && (

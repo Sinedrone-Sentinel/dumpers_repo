@@ -115,7 +115,7 @@ export function getDumperTrustLinks(): TrustLink[] {
     label: 'VirusTotal gate',
     href: VIRUSTOTAL_HOME_URL,
     summary:
-      'Windows builds stay draft on GitHub until VirusTotal reports 0 malicious detections; the live report link is on each GitHub Release and in Dumper Apps.',
+      'Windows builds stay draft on GitHub until the VirusTotal CI gate passes (unexplained malware blocks publish; known PyInstaller/ML heuristics are disclosed on the release); the live report link is on each GitHub Release and in Dumper Apps.',
   })
   links.push({
     id: 'signpath',
