@@ -64,10 +64,10 @@ export default function BpDumperDownloadLinks() {
       </div>
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your
-        Star Citizen install (searches for LIVE / Game.log). You can also paste a path if you prefer.
-        Updates come from GitHub Releases when “Keep App Up to Date” is on. New Windows builds only go
-        live after a clean VirusTotal gate in CI.
+        On first run, point Dumper Apps at your Star Citizen <strong className="text-slate-400">LIVE</strong>{' '}
+        folder (the folder that contains Game.log). When a new Windows build is required, download{' '}
+        <strong className="text-slate-400">DumperApps.exe</strong> from GitHub Releases and replace the old
+        file yourself. New Windows builds only go live after a clean VirusTotal gate in CI.
       </p>
 
       {release?.virusTotalUrl && (

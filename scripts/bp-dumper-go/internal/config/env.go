@@ -47,7 +47,6 @@ func SaveEnvFile(path string, variables map[string]string) error {
 		"IMPORT_OLD_LOGS",
 		"FULL_HISTORY_IMPORT",
 		"WATCH_MODE",
-		"KEEP_APP_UP_TO_DATE",
 	}
 	seen := map[string]bool{}
 	for _, k := range keys {

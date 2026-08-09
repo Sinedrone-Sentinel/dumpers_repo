@@ -14,8 +14,8 @@ and as the behavioral source of truth when changing parse/webhook rules).
 
 | Client | Status | FS discovery |
 |---|---|---|
-| Native Go Windows exe | **Canonical Windows download** | Drive auto-scan / path prompt OK |
-| Standalone Python | Scripts / non-Windows; keep in sync with Go for protocol | Drive auto-scan / path prompt OK |
+| Native Go Windows exe | **Canonical Windows download** | **Manual LIVE / Game.log path only** (no drive scan) |
+| Standalone Python | Scripts / non-Windows; keep in sync with Go for protocol | **Manual path only** (no drive scan) |
 | Store WinUI (`apps/bp-dumper-store/`) | **Parked** — listing may stay live; do not invest in feature parity | FolderPicker only (legacy sandbox experiment) |
 
 Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
@@ -24,7 +24,7 @@ Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 
 - Member-facing Windows behavior must work in **`scripts/bp-dumper-go/`**.
 - Prefer updating **both** Go and Python when changing log regexes, webhook event
-  shapes, wizard keys, or auto-update behavior.
+  shapes, wizard keys, update prompts, or path requirements.
 - Do **not** require Store WinUI updates for new member features.
 - Keep `feat(dumper)` / `fix(dumper)` Conventional Commits for semantic-release.
 - Release path triggers on dumper paths (see `release-dumper.yml`); include
@@ -32,8 +32,9 @@ Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 
 ## Do not regress
 
-- Auto-detect / drive search is a **wanted** member feature on the Windows exe.
-- Do not push members back to “pick LIVE folder only” as the primary Windows story.
-- Do not reintroduce PyInstaller `--onefile` for the published `DumperApps.exe`
-  (VirusTotal false-positive risk).
+- Members **must** point at their LIVE folder (or Game.log) — do **not** reintroduce
+  full-drive auto-scan / install search.
+- Do **not** reintroduce GitHub auto-download / self-replace of `DumperApps.exe`
+  (AV dropper / Wacatac heuristics).
+- Do not reintroduce PyInstaller `--onefile` for the published `DumperApps.exe`.
 - VirusTotal gate stays **0 malicious** — do not allowlist Trojan heuristics.

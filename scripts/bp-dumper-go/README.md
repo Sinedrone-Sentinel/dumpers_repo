@@ -33,3 +33,8 @@ go build -ldflags "-s -w -X main.Version=1.16.0" -o DumperApps.exe .
 ```
 
 Do **not** UPX-pack or re-wrap the exe.
+
+## Member setup notes
+
+- Point the app at your Star Citizen **LIVE** folder (contains `Game.log`) — no drive scan.
+- Updates are **manual**: download a new `DumperApps.exe` from GitHub Releases when prompted (HTTP 426). No auto-download/self-replace.

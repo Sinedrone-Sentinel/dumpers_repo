@@ -300,14 +300,14 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 |------|--------|
 | **Canonical Windows client** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/) → native `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) (not PyInstaller) |
 | **Python reference / non-Windows** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
-| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (auto-detects Star Citizen LIVE); macOS/Linux: Python scripts in the modal |
-| **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
+| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (member points at LIVE folder); macOS/Linux: Python scripts in the modal |
+| **Member setup** | Run exe → enter LIVE folder path (contains Game.log) → paste API key |
 | **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SignPath; [`docs/CODE_SIGNING_POLICY.md`](docs/CODE_SIGNING_POLICY.md) — SignPath credit / roles |
 | **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version`; outdated clients get HTTP `426` |
-| **Auto-update** | GitHub Releases when “Keep App Up to Date” is on |
+| **Updates** | Manual: download new `DumperApps.exe` from GitHub Releases when prompted (no auto-download / self-replace) |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
 **Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications. `session_ping` runs every 30s while in the PU; idle/not-in-PU pauses those pings (event POSTs still fire).

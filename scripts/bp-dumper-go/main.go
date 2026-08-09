@@ -40,10 +40,12 @@ func minGameVersion() string {
 	return v
 }
 
-func exitSCNotDetected() {
+func requirePathMissing() {
 	fmt.Printf(
-		"%sStar Citizen LIVE install was not detected.%s\n"+
-			"Install/launch Star Citizen, or re-run with --configure and enter your LIVE folder path.\n",
+		"%sPath required.%s\n"+
+			"Enter your Star Citizen LIVE folder (the folder that contains Game.log),\n"+
+			"or pass it as an argument / set LOG_PATH in .env / use --log-dir.\n"+
+			"Example: C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\n",
 		colors.Red, colors.Reset,
 	)
 	pressAnyKey()
@@ -81,11 +83,7 @@ func resolveChannelDir(filePath, logDir string, env map[string]string) string {
 	if backup := env["BACKUP_PATH"]; backup != "" {
 		return filepath.Dir(backup)
 	}
-	installs := discover.DetectSCInstalls()
-	if _, p := discover.PreferLIVE(installs); p != "" {
-		return p
-	}
-	return discover.FallbackLIVE()
+	return ""
 }
 
 func runFolderImport(
@@ -269,7 +267,6 @@ func main() {
 
 	filePath := filePathArg
 	apiKey := *keyFlag
-	keepAppUpToDate := "true"
 	importOldLogs := "true"
 	fullHistoryImport := "false"
 
@@ -279,10 +276,10 @@ func main() {
 		fmt.Printf("%s====================================================%s\n\n", colors.Cyan, colors.Reset)
 		fmt.Printf("%sSource: github.com/Sinedrone-Sentinel/dumpers_repo (native Windows client)%s\n", colors.Dim, colors.Reset)
 		fmt.Printf("%sTrust:  OpenSSF Scorecard + site Trust links under Dumper Apps%s\n", colors.Dim, colors.Reset)
-		fmt.Printf("%sTip:    Leave the path blank — BP Dumper searches for your LIVE install.%s\n\n", colors.Dim, colors.Reset)
+		fmt.Printf("%sTip:    Enter your LIVE folder path (the folder that contains Game.log).%s\n\n", colors.Dim, colors.Reset)
 
 		defaultPath := envVars["LOG_PATH"]
-		pathPrompt := "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
+		pathPrompt := "Enter path to your Star Citizen LIVE folder (required)"
 		if defaultPath != "" {
 			pathPrompt += " [" + defaultPath + "]"
 		}
@@ -296,17 +293,13 @@ func main() {
 			userPath = defaultPath
 		}
 		if userPath == "" {
-			fmt.Printf("%sAuto-detecting Star Citizen installations...%s\n", colors.Dim, colors.Reset)
-			installs := discover.DetectSCInstalls()
-			if ch, p := discover.PreferLIVE(installs); p != "" {
-				fmt.Printf("%sDetected channel %s at: %s%s\n", colors.Green, ch, p, colors.Reset)
-				userPath = p
-			} else if live := discover.FallbackLIVE(); live != "" {
-				fmt.Printf("%sDetected default fallback at: %s%s\n", colors.Green, live, colors.Reset)
-				userPath = live
-			} else {
-				exitSCNotDetected()
-			}
+			requirePathMissing()
+		}
+		if validated, errMsg := discover.ValidateLogPath(userPath); errMsg != "" {
+			fmt.Printf("%s%s%s\n", colors.Red, errMsg, colors.Reset)
+			requirePathMissing()
+		} else {
+			userPath = validated
 		}
 		filePath = userPath
 
@@ -325,15 +318,6 @@ func main() {
 			os.Exit(0)
 		}
 		watchMode = !strings.EqualFold(watchAns, "n")
-
-		keepAns, ok := prompt(reader, "Keep App Up to Date (auto-download new BP Dumper when released)? (Y/N, Enter = Y): ")
-		if !ok {
-			fmt.Println("\nAborted.")
-			os.Exit(0)
-		}
-		if strings.EqualFold(keepAns, "n") {
-			keepAppUpToDate = "false"
-		}
 
 		if !*dryRun {
 			defaultKey := envVars["LOG_WATCHER_API_KEY"]
@@ -409,7 +393,6 @@ func main() {
 			"IMPORT_OLD_LOGS":      importOldLogs,
 			"FULL_HISTORY_IMPORT":  fullHistoryImport,
 			"WATCH_MODE":           boolStr(watchMode),
-			"KEEP_APP_UP_TO_DATE":  keepAppUpToDate,
 		}
 		if !*dryRun {
 			newEnv["SUPABASE_WEBHOOK_URL"] = resolvedURL
@@ -421,9 +404,10 @@ func main() {
 	}
 
 	if filePath == "" && *logDirFlag == "" {
-		installs := discover.DetectSCInstalls()
-		if len(installs) == 0 && discover.FallbackLIVE() == "" {
-			exitSCNotDetected()
+		if envVars["LOG_PATH"] != "" {
+			filePath = envVars["LOG_PATH"]
+		} else {
+			requirePathMissing()
 		}
 	}
 
@@ -451,13 +435,6 @@ func main() {
 		}
 	}
 
-	keepUpToDate := config.Truthy(envVars["KEEP_APP_UP_TO_DATE"], true)
-	if _, ok := envVars["KEEP_APP_UP_TO_DATE"]; !ok {
-		if envExisted {
-			envVars["KEEP_APP_UP_TO_DATE"] = boolStr(keepUpToDate)
-			_ = config.SaveEnvFile(envPath, envVars)
-		}
-	}
 
 	lu, err := lookup.Load(embeddedLookup, app)
 	if err != nil {
@@ -476,7 +453,7 @@ func main() {
 		bps, latest, dl, err := client.SyncAcquired()
 		if err != nil {
 			if u, ok := err.(*api.UpdateRequiredError); ok {
-				update.HandleUpdateRequired(u, ver, keepUpToDate)
+				update.HandleUpdateRequired(u, ver)
 			}
 			fmt.Printf("%sError: Could not sync with server (%v).%s\n", colors.Red, err, colors.Reset)
 			os.Exit(1)
@@ -487,7 +464,7 @@ func main() {
 		cache.Save(cachePath, acquired)
 		fmt.Printf("Synced %d blueprints from account.\n", len(bps))
 		if latest != "" && api.IsNewerVersion(latest, ver) {
-			update.HandleUpdateRequired(&api.UpdateRequiredError{Latest: latest, DownloadURL: dl}, ver, keepUpToDate)
+			update.HandleUpdateRequired(&api.UpdateRequiredError{Latest: latest, DownloadURL: dl}, ver)
 		}
 	}
 
@@ -536,16 +513,16 @@ func main() {
 			}
 		} else if *logDirFlag != "" {
 			watchFile = filepath.Join(*logDirFlag, "Game.log")
-		} else {
-			installs := discover.DetectSCInstalls()
-			if _, p := discover.PreferLIVE(installs); p != "" {
+		} else if envVars["LOG_PATH"] != "" {
+			p := envVars["LOG_PATH"]
+			if fi, err := os.Stat(p); err == nil && fi.IsDir() {
 				watchFile = filepath.Join(p, "Game.log")
-			} else if live := discover.FallbackLIVE(); live != "" {
-				watchFile = filepath.Join(live, "Game.log")
+			} else {
+				watchFile = p
 			}
 		}
 		if watchFile == "" {
-			exitSCNotDetected()
+			requirePathMissing()
 		}
 
 		channelDir := filepath.Dir(watchFile)
@@ -572,7 +549,6 @@ func main() {
 			Acquired:      acquired,
 			CachePath:     cachePath,
 			DryRun:        *dryRun,
-			KeepUpToDate:  keepUpToDate,
 			DumperVersion: ver,
 		})
 		return

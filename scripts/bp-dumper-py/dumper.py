@@ -64,6 +64,15 @@ def _press_any_key_to_exit(message: str, *, code: int = 0) -> None:
     sys.exit(code)
 
 
+def _exit_path_required() -> None:
+    _press_any_key_to_exit(
+        "Path required. Enter your Star Citizen LIVE folder (contains Game.log), "
+        "or set LOG_PATH / --log-dir.\n"
+        r"Example: C:\Program Files\Roberts Space Industries\StarCitizen\LIVE",
+        code=1,
+    )
+
+
 def _exit_star_citizen_not_detected() -> None:
     _press_any_key_to_exit(
         "Star Citizen was not detected on this PC.\n"
@@ -418,72 +427,18 @@ def raise_if_update_required(res) -> None:
 
 
 def keep_app_up_to_date_enabled(env_vars: dict) -> bool:
-    """Default ON when unset — members must opt out explicitly. Store/MSIX never auto-updates from GitHub."""
-    if _is_msix_packaged():
-        return False
-    raw = (env_vars.get("KEEP_APP_UP_TO_DATE") or os.getenv("KEEP_APP_UP_TO_DATE") or "true").strip().lower()
-    return raw not in ("0", "false", "n", "no", "off")
+    """Auto-download/self-replace removed (AV dropper heuristics). Always manual update."""
+    return False
 
 
 def perform_auto_update(latest_ver: str, download_url: str) -> None:
-    """Download latest DumperApps.exe next to this process and relaunch (portable frozen Windows builds)."""
-    if _is_msix_packaged():
-        print(
-            f"{Colors.YELLOW}[Update] Microsoft Store installs update through the Store — "
-            f"not via GitHub auto-download.{Colors.RESET}"
-        )
-        sys.exit(1)
-
+    """Removed: downloading/replacing the running exe tripped AV heuristics."""
     url = (download_url or DEFAULT_DOWNLOAD_URL).strip() or DEFAULT_DOWNLOAD_URL
-    latest_label = latest_ver or "latest"
-    print(f"\n{Colors.CYAN}[Update] Downloading BP Dumper {latest_label}...{Colors.RESET}")
-    print(f"{Colors.DIM}{url}{Colors.RESET}")
+    print(f"{Colors.YELLOW}[Update] Auto-update is disabled. Download manually:{Colors.RESET}")
+    print(f"  {url}")
+    print(f"  Releases: {DEFAULT_RELEASES_URL}")
+    sys.exit(1)
 
-    if not getattr(sys, "frozen", False):
-        print(
-            f"{Colors.RED}[Update] Auto-update only works for the portable DumperApps.exe. "
-            f"Update from: {DEFAULT_RELEASES_URL}{Colors.RESET}"
-        )
-        sys.exit(1)
-
-    exe_path = Path(sys.executable).resolve()
-    tmp_path = exe_path.with_name(exe_path.name + ".new")
-    try:
-        with urllib.request.urlopen(url, timeout=120) as resp:
-            data = resp.read()
-        if not data or len(data) < 1_000_000:
-            raise RuntimeError(f"Download too small ({len(data) if data else 0} bytes) — aborting replace")
-        tmp_path.write_bytes(data)
-    except Exception as e:
-        print(f"{Colors.RED}[Update] Download failed: {e}{Colors.RESET}")
-        print(f"{Colors.YELLOW}Download manually: {url}{Colors.RESET}")
-        sys.exit(1)
-
-    helper = exe_path.parent / "_dumper_update.cmd"
-    pid = os.getpid()
-    helper.write_text(
-        "\r\n".join(
-            [
-                "@echo off",
-                "setlocal",
-                f"set PID={pid}",
-                f'set EXE={exe_path}',
-                f'set NEW={tmp_path}',
-                ":wait",
-                "timeout /t 1 /nobreak >nul",
-                'tasklist /FI "PID eq %PID%" 2>nul | find "%PID%" >nul',
-                "if not errorlevel 1 goto wait",
-                'move /Y "%NEW%" "%EXE%" >nul',
-                'start "" "%EXE%"',
-                'del "%~f0"',
-                "",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    print(f"{Colors.GREEN}[Update] Restarting with {latest_label}...{Colors.RESET}")
-    subprocess.Popen(["cmd", "/c", str(helper)], close_fds=True)
-    sys.exit(0)
 
 
 def handle_update_required(err: DumperUpdateRequired, *, keep_up_to_date: bool) -> None:
@@ -499,9 +454,7 @@ def handle_update_required(err: DumperUpdateRequired, *, keep_up_to_date: bool) 
             f"and install the update.{Colors.RESET}"
         )
         sys.exit(1)
-    if keep_up_to_date:
-        perform_auto_update(err.latest, url)
-    print(f"{Colors.YELLOW}Keep App Up to Date is off — download and run:{Colors.RESET}")
+    print(f"{Colors.YELLOW}Download the new DumperApps.exe and replace this file:{Colors.RESET}")
     print(f"  {url}")
     print(f"  Releases: {DEFAULT_RELEASES_URL}")
     sys.exit(1)
@@ -677,38 +630,9 @@ def _find_sc_roots(drive_root: Path, max_depth: int = SCAN_MAX_DEPTH) -> list[Pa
     return roots
 
 def detect_sc_installs() -> dict[str, Path]:
-    if sys.platform != "win32":
-        return {}
+    """Drive auto-scan removed - members must set LIVE path manually."""
+    return {}
 
-    import ctypes
-    import string
-
-    DRIVE_FIXED = 3
-    try:
-        get_drive_type = ctypes.windll.kernel32.GetDriveTypeW
-    except (AttributeError, OSError):
-        return {}
-
-    found = {}
-    for letter in string.ascii_uppercase:
-        root_str = f"{letter}:\\"
-        try:
-            if get_drive_type(root_str) != DRIVE_FIXED:
-                continue
-        except OSError:
-            continue
-        for sc_root in _find_sc_roots(Path(root_str)):
-            try:
-                children = list(sc_root.iterdir())
-            except OSError:
-                continue
-            for channel_dir in children:
-                if not channel_dir.is_dir() or not _is_channel_dir(channel_dir):
-                    continue
-                channel = channel_dir.name.upper()
-                if channel not in found:
-                    found[channel] = channel_dir
-    return found
 
 # Log parsing patterns & structures
 PATTERN_TIMESTAMP = re.compile(r"^<([0-9T:\-.Z]+)>")
@@ -1111,15 +1035,6 @@ def resolve_sc_channel_dir(args, env_vars: dict) -> Path | None:
     backup_p = env_vars.get("BACKUP_PATH")
     if backup_p:
         return Path(backup_p).parent
-    installs = detect_sc_installs()
-    if installs:
-        chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
-        return installs[chosen_channel]
-    fallback = Path(DEFAULT_WIN_PATH)
-    if fallback.is_dir():
-        live_dir = fallback / "LIVE"
-        if live_dir.is_dir():
-            return live_dir
     return None
 
 
@@ -2042,12 +1957,12 @@ def main():
         print()
         print(f"{Colors.DIM}Source: github.com/Sinedrone-Sentinel/dumpers_repo (Python watcher){Colors.RESET}")
         print(f"{Colors.DIM}Trust:  OpenSSF Scorecard + site Trust links under Dumper Apps{Colors.RESET}")
-        print(f"{Colors.DIM}Tip:    Leave the path blank — BP Dumper searches for your LIVE install.{Colors.RESET}")
+        print(f"{Colors.DIM}Tip:    Enter your LIVE folder path (the folder that contains Game.log).{Colors.RESET}")
         print()
 
         # 1. Prompt file path / directory
         default_path = env_vars.get("LOG_PATH", "")
-        path_prompt = "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
+        path_prompt = "Enter path to your Star Citizen LIVE folder (required)"
         if default_path:
             path_prompt += f" [{default_path}]"
         path_prompt += ": "
@@ -2062,21 +1977,7 @@ def main():
             user_path = default_path
         
         if not user_path:
-            print(f"{Colors.DIM}Auto-detecting Star Citizen installations...{Colors.RESET}")
-            installs = detect_sc_installs()
-            if installs:
-                chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
-                detected_dir = installs[chosen_channel]
-                print(f"{Colors.GREEN}Detected channel {chosen_channel} at: {detected_dir}{Colors.RESET}")
-                user_path = str(detected_dir)
-            else:
-                fallback = Path(DEFAULT_WIN_PATH)
-                live_dir = fallback / "LIVE" if fallback.is_dir() else None
-                if live_dir is not None and live_dir.is_dir():
-                    print(f"{Colors.GREEN}Detected default fallback at: {live_dir}{Colors.RESET}")
-                    user_path = str(live_dir)
-                else:
-                    _exit_star_citizen_not_detected()
+            _exit_path_required()
 
         if user_path:
             args.file_path = Path(user_path)
@@ -2102,22 +2003,7 @@ def main():
         if user_watch == 'n':
             args.watch = False
 
-        # Keep App Up to Date (default Y) — Store/MSIX updates via Microsoft Store only
-        if _is_msix_packaged():
-            keep_app_up_to_date = "false"
-            print(
-                f"{Colors.DIM}Microsoft Store build — updates come from the Store "
-                f"(GitHub auto-update disabled).{Colors.RESET}"
-            )
-        else:
-            try:
-                user_keep_updated = input(
-                    "Keep App Up to Date (auto-download new BP Dumper when released)? (Y/N, Enter = Y): "
-                ).strip().lower()
-            except (KeyboardInterrupt, EOFError):
-                print("\nAborted.")
-                sys.exit(0)
-            keep_app_up_to_date = "false" if user_keep_updated == "n" else "true"
+
 
         # Prompt Key (only if not dry run)
         if not args.dry_run:
@@ -2185,7 +2071,7 @@ def main():
             "IMPORT_OLD_LOGS": import_old_logs,
             "FULL_HISTORY_IMPORT": full_history_import,
             "WATCH_MODE": "true" if args.watch else "false",
-            "KEEP_APP_UP_TO_DATE": keep_app_up_to_date,
+            "KEEP_APP_UP_TO_DATE": "false",
         }
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
@@ -2193,10 +2079,10 @@ def main():
     # No path yet and no install on disk — stop with a clear message (Store cert has no SC).
     # Do this before the API-key hard-fail so Start/Store launch never flash-closes as a crash.
     if not args.file_path and not args.log_dir:
-        installs = detect_sc_installs()
-        fallback_live = Path(DEFAULT_WIN_PATH) / "LIVE"
-        if not installs and not fallback_live.is_dir():
-            _exit_star_citizen_not_detected()
+        if env_vars.get("LOG_PATH"):
+            args.file_path = Path(env_vars["LOG_PATH"])
+        else:
+            _exit_path_required()
 
     # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file -> built-in default)
     url = args.url or os.getenv("SUPABASE_WEBHOOK_URL") or env_vars.get("SUPABASE_WEBHOOK_URL") or DEFAULT_WEBHOOK_URL
@@ -2209,10 +2095,9 @@ def main():
 
     # Update script args.url with resolved URL for reference
     args.url = url
-    keep_up_to_date = keep_app_up_to_date_enabled(env_vars)
-    # Persist default for older .env files that never asked.
-    if "KEEP_APP_UP_TO_DATE" not in env_vars and env_path.is_file():
-        env_vars["KEEP_APP_UP_TO_DATE"] = "true" if keep_up_to_date else "false"
+    keep_up_to_date = False
+    if env_path.is_file() and env_vars.get("KEEP_APP_UP_TO_DATE") != "false":
+        env_vars["KEEP_APP_UP_TO_DATE"] = "false"
         save_env_file(env_path, env_vars)
 
     cache_path = _app_dir() / ".dumper_cache.json"
@@ -2338,16 +2223,9 @@ def main():
         else:
             if args.log_dir:
                 watch_file = args.log_dir / "Game.log"
-            else:
-                installs = detect_sc_installs()
-                if installs:
-                    chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
-                    watch_file = installs[chosen_channel] / "Game.log"
-                else:
-                    fallback = Path(DEFAULT_WIN_PATH)
-                    live_dir = fallback / "LIVE" if fallback.is_dir() else None
-                    if live_dir is not None and live_dir.is_dir():
-                        watch_file = live_dir / "Game.log"
+            elif env_vars.get("LOG_PATH"):
+                p = Path(env_vars["LOG_PATH"])
+                watch_file = p / "Game.log" if p.is_dir() else p
 
         if not watch_file:
             _exit_star_citizen_not_detected()
@@ -2434,35 +2312,16 @@ def main():
             print(f"{Colors.RED}Error: Path not found: {args.file_path}{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
 
-    # Mode 2: Auto-detect installs (no path provided, or --log-dir was passed)
+    # Mode 2: path/log-dir required (drive auto-detect removed)
     else:
         log_dirs = []
         if args.log_dir:
             log_dirs = [args.log_dir]
         else:
-            # Auto-detect installs
-            print(f"{Colors.DIM}Scanning local system for Star Citizen installations...{Colors.RESET}")
-            installs = detect_sc_installs()
-            if installs:
-                print(f"Detected channel installations:")
-                for channel, install_path in installs.items():
-                    print(f"  - {channel}: {install_path}")
-                # Prefer LIVE, fall back to first one found
-                chosen_channel = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
-                channel_dir = installs[chosen_channel]
-                print(f"Using channel: {Colors.CYAN}{chosen_channel}{Colors.RESET} ({channel_dir})")
-                log_dirs = [channel_dir, channel_dir / "logbackups"]
-            else:
-                # Standard fallback locations
-                fallback = Path(DEFAULT_WIN_PATH)
-                if fallback.is_dir():
-                    # scan LIVE by default
-                    live_dir = fallback / "LIVE"
-                    if live_dir.is_dir():
-                        log_dirs = [live_dir, live_dir / "logbackups"]
-                
+            _exit_path_required()
+
         if not log_dirs or not any(d.is_dir() for d in log_dirs):
-            _exit_star_citizen_not_detected()
+            _exit_path_required()
 
         # Collect log files
         log_files = []

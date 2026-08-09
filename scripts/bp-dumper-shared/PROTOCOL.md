@@ -23,7 +23,7 @@ When this document changes, update the **Go Windows** and **Python** clients (se
 | `Content-Type` | `application/json` |
 | `X-Dumper-Version` | Semver string of the client build (e.g. `1.12.0`) |
 
-Hard version gate: outdated clients may receive **HTTP 426** — client must stop and tell the user to update (Store: Microsoft Store; Python: release/scripts).
+Hard version gate: outdated clients may receive **HTTP 426** — client must stop and tell the user to download the new build manually from GitHub Releases (no auto-download / self-replace).
 
 ## Event types (`POST` JSON `type`)
 
@@ -57,7 +57,7 @@ Prefer posting **internal** blueprint names after local lookup resolution.
 
 | Client | How the folder is chosen |
 |---|---|
-| Go Windows / Python | Auto-detect / drive scan / path prompt |
+| Go Windows / Python | Member enters LIVE / Game.log path (no drive scan) |
 | Store | **FolderPicker** once → persist with **FutureAccessList**; user may change folder later |
 
 Both must then:
