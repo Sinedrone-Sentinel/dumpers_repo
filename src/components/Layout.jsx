@@ -189,8 +189,10 @@ export default function Layout() {
   /** unknown | required | done — required blocks member UI until welcome is finished */
   const [onboardingState, setOnboardingState] = useState('done')
 
+  const userId = user?.id ?? null
+
   const refreshPendingQuestionnaires = useCallback(async () => {
-    if (!isGuestPreview && !user) {
+    if (!isGuestPreview && !userId) {
       setPendingQuestionnaires([])
       return
     }
@@ -201,7 +203,7 @@ export default function Layout() {
     }
     // Active / non-dismissed only — RPC excludes declined & submitted
     setPendingQuestionnaires(result.data ?? [])
-  }, [isGuestPreview, user])
+  }, [isGuestPreview, userId])
 
   useEffect(() => {
     void refreshPendingQuestionnaires()
@@ -217,7 +219,7 @@ export default function Layout() {
 
   // SEO / deep links: /?q=Name must open Offline Mode instead of the marketing landing.
   useEffect(() => {
-    if (loading || user || isGuestPreview) return
+    if (loading || userId || isGuestPreview) return
     if (pathname !== '/') return
     try {
       const q = new URLSearchParams(window.location.search).get('q')
@@ -225,17 +227,20 @@ export default function Layout() {
     } catch {
       /* ignore */
     }
-  }, [loading, user, isGuestPreview, pathname, enterGuestPreview])
+  }, [loading, userId, isGuestPreview, pathname, enterGuestPreview])
 
+  // Key on user id (not user object) — TOKEN_REFRESHED replaces the user reference
+  // and used to re-run this effect, flash AppBootstrapScreen, and look like a full refresh.
   useEffect(() => {
-    if (!user || !isApproved || isGuestPreview) {
+    if (!userId || !isApproved || isGuestPreview) {
       setOnboardingState('done')
       setShowWelcomeModal(false)
       return
     }
 
     let cancelled = false
-    setOnboardingState('unknown')
+    // Only block the shell on first check for this session; soft re-checks keep UI up.
+    setOnboardingState((prev) => (prev === 'done' ? 'done' : 'unknown'))
 
     const checkWelcome = async () => {
       try {
@@ -267,7 +272,7 @@ export default function Layout() {
     return () => {
       cancelled = true
     }
-  }, [user, isApproved, isGuestPreview])
+  }, [userId, isApproved, isGuestPreview])
 
   if (loading) {
     return <AppBootstrapScreen steps={bootstrapSteps} />

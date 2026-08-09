@@ -186,12 +186,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   useEffect(() => {
-    if (user || !isGuestPreview) return
+    if (user?.id || !isGuestPreview) return
     ensureGuestCacheSchema()
     const acquired = applyDefaultAcquiredState(readGuestAcquiredBlueprints())
     writeGuestAcquiredBlueprints(acquired)
     setAcquiredBlueprints(acquired)
-  }, [user, isGuestPreview])
+  }, [user?.id, isGuestPreview])
 
   useEffect(() => {
     isBannedRef.current = isBanned
@@ -484,12 +484,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setSession(nextSession)
-      setUser(nextSession?.user ?? null)
 
-      // Token refresh only renews JWTs — do not re-fetch profile/settings (felt like a full refresh).
+      // Token refresh only renews JWTs — keep the same user object identity so
+      // effects keyed on `user` do not re-fire (Layout was flashing the bootstrap
+      // splash on every refresh by re-running the welcome check).
       if (event === 'TOKEN_REFRESHED') {
+        setUser((prev) => {
+          const next = nextSession?.user ?? null
+          if (prev?.id && next?.id && prev.id === next.id) return prev
+          return next
+        })
         return
       }
+
+      setUser(nextSession?.user ?? null)
 
       if (nextSession?.user) {
         await loadUserData(nextSession.user, event === 'SIGNED_IN')
@@ -1016,11 +1024,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
       writeGuestPreviewSession(false)
       setIsGuestPreview(false)
     }
-  }, [user])
+  }, [user?.id])
   const canAccess = useCallback(
     (minRole: UserRole) => roleAtLeast(profile?.role, minRole),
     [profile?.role]

@@ -38,8 +38,10 @@ export default function ServiceRequestAcceptedListener() {
     return () => window.removeEventListener(SERVICE_REQUEST_ACCEPTED_EVENT, onEvent)
   }, [open])
 
+  const userId = user?.id ?? null
+
   useEffect(() => {
-    if (!user || !isApproved) return
+    if (!userId || !isApproved) return
 
     let cancelled = false
 
@@ -71,7 +73,7 @@ export default function ServiceRequestAcceptedListener() {
       window.clearInterval(timer)
       document.removeEventListener('visibilitychange', onVis)
     }
-  }, [user, isApproved])
+  }, [userId, isApproved])
 
   if (!detail) return null
 
