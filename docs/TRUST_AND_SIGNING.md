@@ -4,20 +4,25 @@
 
 ## Product path
 
-**Canonical client:** Python watcher in `scripts/bp-dumper-py/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1`.
+**Canonical Windows download:** native Go client in `scripts/bp-dumper-go/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1` (no PyInstaller, no UPX).
 
 - Auto-detects Star Citizen installs (drive search for LIVE / Game.log).
 - Member Windows download: GitHub Releases `DumperApps.exe`.
+- Python watcher in `scripts/bp-dumper-py/` remains the protocol/reference client (and for non-Windows scripting).
 - Microsoft Store listing may remain published temporarily; it is **not** the primary trust or install path.
+
+### Why not PyInstaller on Windows
+
+PyInstaller `--onefile` extracts a shared bootloader fingerprint that multiple AV engines (including Microsoft `Trojan:Win32/Wacatac.B!ml`) frequently mark malicious even when the app is clean. That hurts member trust when screenshots of VirusTotal “Trojan” labels circulate. The Go Windows build is a normal native PE; the publish gate still requires **0 VirusTotal malicious** detections before a release leaves draft.
 
 ## OpenSSF Scorecard
 
 Workflow: `.github/workflows/scorecard.yml`  
 Badge / viewer: `https://scorecard.dev/viewer/?uri=github.com/Sinedrone-Sentinel/dumpers_repo`
 
-Dependabot: [`.github/dependabot.yml`](../.github/dependabot.yml) (npm, Actions, pip under `scripts/bp-dumper-py`).
+Dependabot: [`.github/dependabot.yml`](../.github/dependabot.yml) (npm, Actions, pip under `scripts/bp-dumper-py`, Go under `scripts/bp-dumper-go` when configured).
 
-BP Dumper Python pin: `requests>=2.33.0`. Site + lockfile should stay at `npm audit` = 0 (unused `@semantic-release/npm` is stubbed under `scripts/stubs/`).
+BP Dumper Python pin (scripts path): `requests>=2.33.0`. Windows release binary is Go. Site + lockfile should stay at `npm audit` = 0 (unused `@semantic-release/npm` is stubbed under `scripts/stubs/`).
 
 ### Release BP Dumper needs a PAT (RELEASE_TOKEN)
 
@@ -74,7 +79,7 @@ Published releases include `VIRUSTOTAL.txt` / `VIRUSTOTAL.json` and a VirusTotal
 
 SignPath Foundation free OSS signing requires an **OSI-approved** license and no proprietary code in the signed artifact.
 
-- Repository / Dumper Apps sources: **Apache-2.0** ([LICENSE](../LICENSE), `scripts/bp-dumper-py/LICENSE`)
+- Repository / Dumper Apps sources: **Apache-2.0** ([LICENSE](../LICENSE), `scripts/bp-dumper-py/LICENSE`; Go Windows client under the same repo license)
 - DFP engine files: **not** in `DumperApps.exe`; licensed separately under [LICENSE.DFP](../LICENSE.DFP)
 - Trademarks: reserved ([TRADEMARK.md](../TRADEMARK.md) / [NOTICE](../NOTICE))
 - **Code signing policy** (required credit + roles + privacy): [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)
