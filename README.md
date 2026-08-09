@@ -213,7 +213,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 ### Partnership (`/partnership`)
 
 - RSI-verified members apply for their org to offer services (medical, lift, security, salvage, …)
-- Submit creates a **Partnership Application** support ticket (officer inbox + staff Discord support webhook)
+- Submit creates a **Partnership Application** support ticket (officer inbox + Super-Admin Discord webhook when enabled)
 - Officers approve/deny on Partnership → Pending review; approved managers set per-service pricing (default FREE) and **separate** Discord webhooks
 - Listed services/pricing must be transparent, honest, and upheld; Accept shows the requester a modal with org + pricing
 - Header **Request Services** (left of bell, RSI verified): actionable jobs (Accept, 30 min / 31 min cooldown) and intel tips (screenshot, no Accept; purged after delivery)

@@ -51,7 +51,7 @@ Creates:
 | `order_fulfilled_enabled` | `market_accepted` |
 | `order_cancelled_enabled` | `market_cancelled` |
 | `personal_discord_enabled` (new) | all `my_*` + `my_support_*` |
-| `support` / `admin` | staff official webhook |
+| `support` / `admin` / `partnership_application` / `contributor_application` | Super-Admin webhook |
 
 Remove **Blueprints** toggle from admin UI (column can remain in DB).
 
@@ -77,7 +77,7 @@ See org deferred doc for verification rules.
 
 Update fan-out per message:
 
-1. **`support` / `admin`** → official webhook only (unchanged)
+1. **`support` / `admin` / `partnership_application` / `contributor_application`** → Super-Admin webhook only
 2. **`my_*` / `my_support_*`** → `get_discord_webhooks_for_personal_event(event_type, target_user_id)`
 3. **`market_*`** → `get_discord_webhooks_for_market_event(event_type, actor_user_id)`
 4. **Legacy `order_new` / `order_fulfilled` / `order_cancelled` / `orders`** → drain via `get_discord_webhooks_for_event` until queue empty

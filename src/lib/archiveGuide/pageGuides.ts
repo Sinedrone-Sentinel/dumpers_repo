@@ -314,7 +314,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Actionable requests (medical, security, refuel, repair, CrimeStat, prison pickup, transport) need a short details note (max 250 chars); first Discord Accept wins; cooldown is per service × FREE/FEE',
       'Intel tips (report salvage / report pirate) need details + a Ctrl+V starmap screenshot with r_DisplayInfo 3 — no Accept; tip data is deleted after Discord delivery',
       'Apply with your RSI org page URL (Org SID fills in automatically), org name, and role — staff check Spectrum/RSI evidence before approval',
-      'Submitting creates a Partnership Application Support ticket (staff Discord support ping)',
+      'Submitting creates a Partnership Application Support ticket and can ping the Super-Admin Discord webhook',
       'After approval, manage which services you offer, pricing (default FREE), and a Discord webhook per service',
       'After approval, Partnership shows the Dumper Services bot invite URL — add it to the same Discord server as each webhook channel (Send Messages, Embed Links, Attach Files)',
       'Listed services and pricing must be transparent, honest, and upheld — bait pricing or refusing listed terms can revoke the partnership',
