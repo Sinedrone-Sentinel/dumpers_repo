@@ -5,6 +5,13 @@ import { useAsyncEffect } from './useAsyncEffect'
 
 const POLL_MS = 30_000
 
+export const NOTIFICATIONS_CHANGED_EVENT = 'dumpers:notifications-changed'
+
+export function notifyNotificationsChanged() {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(new CustomEvent(NOTIFICATIONS_CHANGED_EVENT))
+}
+
 function notificationIdsKey(rows: UserNotification[]): string {
   return rows
     .map((n) => n.id)
@@ -60,6 +67,14 @@ export function useNotificationInbox(disabled: boolean) {
 
     return () => window.clearInterval(timer)
   }, [disabled, tabVisible, refresh])
+
+  useEffect(() => {
+    const onChanged = () => {
+      void refresh()
+    }
+    window.addEventListener(NOTIFICATIONS_CHANGED_EVENT, onChanged)
+    return () => window.removeEventListener(NOTIFICATIONS_CHANGED_EVENT, onChanged)
+  }, [refresh])
 
   const clearAll = useCallback(() => {
     setNotifications([])

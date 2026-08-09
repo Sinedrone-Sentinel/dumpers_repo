@@ -3,13 +3,12 @@ import { useClickOutside } from '../../hooks/useClickOutside'
 import { useFriends } from '../../contexts/FriendsContext'
 import {
   OPEN_FRIENDS_MENU_EVENT,
-  cancelFriendRequest,
   createFriendGroup,
   deleteFriendGroup,
   friendLabel,
   removeFriend,
   renameFriendGroup,
-  respondFriendRequest,
+  reorderFriendGroups,
   sendFriendRequest,
   setFriendGroup,
 } from '../../lib/friends'
@@ -19,14 +18,7 @@ type Props = {
 }
 
 export default function AppFriendsMenu({ disabled = false }: Props) {
-  const {
-    friends,
-    pendingInbound,
-    pendingOutbound,
-    groups,
-    loading,
-    refresh,
-  } = useFriends()
+  const { friends, groups, loading, refresh } = useFriends()
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
@@ -52,8 +44,6 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
     if (open && !disabled) void refresh()
   }, [open, disabled, refresh])
 
-  const badgeCount = pendingInbound.length
-
   const friendsByGroup = useMemo(() => {
     const ungrouped = friends.filter((f) => !f.groupId)
     const grouped = groups.map((g) => ({
@@ -76,6 +66,15 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
     await refresh()
   }
 
+  const moveGroup = (groupId: string, direction: -1 | 1) => {
+    const ids = groups.map((g) => g.id)
+    const idx = ids.indexOf(groupId)
+    const swap = idx + direction
+    if (idx < 0 || swap < 0 || swap >= ids.length) return
+    ;[ids[idx], ids[swap]] = [ids[swap], ids[idx]]
+    void run(() => reorderFriendGroups(ids))
+  }
+
   return (
     <div ref={containerRef} className="relative shrink-0">
       <button
@@ -84,13 +83,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
         onClick={() => {
           if (!disabled) setOpen(!open)
         }}
-        aria-label={
-          disabled
-            ? 'Friends unavailable until account is approved'
-            : badgeCount > 0
-              ? `Friends, ${badgeCount} pending request${badgeCount === 1 ? '' : 's'}`
-              : 'Friends'
-        }
+        aria-label={disabled ? 'Friends unavailable until account is approved' : 'Friends'}
         aria-expanded={open}
         className="site-chrome-control relative px-2 py-1"
       >
@@ -108,16 +101,10 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
           />
         </svg>
-        {!disabled && badgeCount > 0 && (
-          <span
-            className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-orange-500 ring-2 ring-slate-950"
-            aria-hidden
-          />
-        )}
       </button>
 
       {open && !disabled && (
-        <div className="site-menu-panel absolute right-0 top-full mt-2 w-[22rem] max-w-[calc(100vw-1.5rem)] max-h-[min(70vh,32rem)] overflow-y-auto overscroll-contain z-50 p-3 space-y-3">
+        <div className="site-menu-panel absolute right-0 top-full mt-2 w-[20rem] max-w-[calc(100vw-1.5rem)] max-h-[min(50vh,22rem)] overflow-y-auto overscroll-contain z-50 p-3 space-y-2.5">
           <div className="flex items-center justify-between gap-2">
             <h3 className="text-sm font-semibold text-white">Friends</h3>
             {loading && <span className="text-[10px] text-slate-500">Refreshing…</span>}
@@ -129,62 +116,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
             </p>
           )}
 
-          {pendingInbound.length > 0 && (
-            <section className="space-y-2">
-              <h4 className="text-[11px] uppercase tracking-wide text-slate-400">Incoming requests</h4>
-              {pendingInbound.map((req) => (
-                <div
-                  key={req.friendshipId}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-slate-700/80 bg-slate-900/50 px-2 py-1.5"
-                >
-                  <span className="text-xs text-slate-200 truncate">{friendLabel(req.profile)}</span>
-                  <div className="flex gap-1 shrink-0">
-                    <button
-                      type="button"
-                      disabled={busy}
-                      className="site-btn-success text-[10px] px-2 py-1"
-                      onClick={() => void run(() => respondFriendRequest(req.friendshipId, true))}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      type="button"
-                      disabled={busy}
-                      className="site-btn-danger text-[10px] px-2 py-1"
-                      onClick={() => void run(() => respondFriendRequest(req.friendshipId, false))}
-                    >
-                      Deny
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </section>
-          )}
-
-          {pendingOutbound.length > 0 && (
-            <section className="space-y-2">
-              <h4 className="text-[11px] uppercase tracking-wide text-slate-400">Outgoing</h4>
-              {pendingOutbound.map((req) => (
-                <div
-                  key={req.friendshipId}
-                  className="flex items-center justify-between gap-2 rounded-lg border border-slate-700/80 bg-slate-900/50 px-2 py-1.5"
-                >
-                  <span className="text-xs text-slate-200 truncate">{friendLabel(req.profile)}</span>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    className="site-btn-ghost text-[10px] px-2 py-1"
-                    onClick={() => void run(() => cancelFriendRequest(req.friendshipId), 'Request cancelled')}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ))}
-            </section>
-          )}
-
-          <section className="space-y-2">
-            <h4 className="text-[11px] uppercase tracking-wide text-slate-400">Add by RSI Handle</h4>
+          <section className="space-y-1.5">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -193,6 +125,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                 placeholder="RSI Handle"
                 className="site-input flex-1 px-2 py-1.5 text-xs"
                 disabled={busy}
+                aria-label="Add by RSI Handle"
               />
               <button
                 type="button"
@@ -203,7 +136,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                     const result = await sendFriendRequest(rsiHandle.trim())
                     if (!result.error) setRsiHandle('')
                     return result
-                  }, 'Request sent')
+                  }, 'Request sent — manage it from Notifications')
                 }
               >
                 Add
@@ -211,7 +144,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
             </div>
           </section>
 
-          <section className="space-y-2">
+          <section className="space-y-1.5">
             <h4 className="text-[11px] uppercase tracking-wide text-slate-400">Groups</h4>
             <div className="flex gap-2">
               <input
@@ -238,13 +171,33 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                 Create
               </button>
             </div>
-            {groups.map((g) => (
-              <div key={g.id} className="flex items-center gap-2">
+            {groups.map((g, index) => (
+              <div key={g.id} className="flex items-center gap-1">
+                <div className="flex flex-col shrink-0">
+                  <button
+                    type="button"
+                    disabled={busy || index === 0}
+                    className="site-btn-icon text-[10px] leading-none px-1 py-0.5 disabled:opacity-30"
+                    aria-label={`Move ${g.label} up`}
+                    onClick={() => moveGroup(g.id, -1)}
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy || index === groups.length - 1}
+                    className="site-btn-icon text-[10px] leading-none px-1 py-0.5 disabled:opacity-30"
+                    aria-label={`Move ${g.label} down`}
+                    onClick={() => moveGroup(g.id, 1)}
+                  >
+                    ▼
+                  </button>
+                </div>
                 <input
                   type="text"
                   defaultValue={g.label}
                   maxLength={40}
-                  className="site-input flex-1 px-2 py-1 text-xs"
+                  className="site-input flex-1 px-2 py-1 text-xs min-w-0"
                   disabled={busy}
                   onBlur={(e) => {
                     const next = e.target.value.trim()
@@ -256,7 +209,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                 <button
                   type="button"
                   disabled={busy}
-                  className="site-btn-ghost text-[10px] px-2 py-1 text-rose-300"
+                  className="site-btn-ghost text-[10px] px-2 py-1 text-rose-300 shrink-0"
                   onClick={() => void run(() => deleteFriendGroup(g.id))}
                 >
                   Delete
@@ -265,12 +218,14 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
             ))}
           </section>
 
-          <section className="space-y-2">
+          <section className="space-y-1.5">
             <h4 className="text-[11px] uppercase tracking-wide text-slate-400">
               Friends ({friends.length})
             </h4>
             {friends.length === 0 && (
-              <p className="text-xs text-slate-500">No friends yet. Add someone by RSI Handle.</p>
+              <p className="text-xs text-slate-500">
+                No friends yet. Requests appear under Notifications.
+              </p>
             )}
             {friendsByGroup.grouped.map(({ group, members }) =>
               members.length === 0 ? null : (

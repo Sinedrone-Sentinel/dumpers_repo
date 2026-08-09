@@ -279,7 +279,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Notifications are grouped into collapsible categories — BP Dumper, WTB & Craft Orders, WTS Listings, Support, Mining Ledgers, Friends, and more',
       'Every category stays visible even when empty; expand a section to see its alerts or a None placeholder',
       'Alerts cover marketplace events such as order acceptances, ready-for-pickup, and status changes',
-      'Friend request, accept, and decline alerts open the Friends menu from the header',
+      'Friend request alerts include Accept / Deny; outgoing requests include Cancel — all under the Friends category',
       'Order alerts include a clickable link in the message — The Bazaar for seller/fulfiller actions, My Listings → Completed to archive & rate',
       'Itemized order summaries reflect blueprint stats and materials when the order includes them',
       'Click Clear on a notification to dismiss it — dismissed rows are deleted (no read history kept)',
@@ -296,10 +296,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description:
       'Add approved members by RSI Handle, organize private groups, and view friends’ blueprints and resources.',
     details: [
-      'Friends icon in the header (between notifications and your avatar) — all add, approve, deny, remove, and group actions live in that dropdown',
+      'Friends icon in the header (between notifications and your avatar) — add by RSI Handle, remove friends, and manage private groups',
       'Send a request by RSI Handle; the other member must accept before you are friends',
-      'Pending inbound requests show a badge on the Friends icon; approve or deny in the dropdown',
-      'Create private group labels to organize your list — only you see your group names',
+      'Incoming and outgoing requests are handled in the notification bell (Friends category) — Accept, Deny, or Cancel there',
+      'Create private group labels to organize your list; use the arrows to reorder groups — only you see your group names',
       'On Blueprints, pick a friend in Members to filter by their acquired collection (your checkboxes stay yours)',
       'On Resource Tracker, Friends Resources shows a friend’s stock in a read-only list',
       'Friends’ Bazaar listings stay hidden from each other by design',

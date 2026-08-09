@@ -96,8 +96,13 @@ export function getNotificationActionLink(
   const dumperLink = blueprintDumperLink(notification)
   if (dumperLink) return dumperLink
 
-  if (type === 'friend_request' || type === 'friend_accepted' || type === 'friend_declined') {
+  if (type === 'friend_accepted' || type === 'friend_declined') {
     return { to: '/', label: 'Open Friends', openFriendsMenu: true }
+  }
+
+  // friend_request / friend_request_sent use Accept/Deny/Cancel buttons in NotificationBody
+  if (type === 'friend_request' || type === 'friend_request_sent') {
+    return null
   }
 
   if (!ORDER_TYPES.has(type)) return null

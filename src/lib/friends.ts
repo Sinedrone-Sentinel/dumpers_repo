@@ -1,6 +1,12 @@
 import { supabase } from './supabase'
 
 export const OPEN_FRIENDS_MENU_EVENT = 'dumpers:open-friends-menu'
+export const FRIENDS_CHANGED_EVENT = 'dumpers:friends-changed'
+
+export function notifyFriendsChanged() {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(new CustomEvent(FRIENDS_CHANGED_EVENT))
+}
 
 export type FriendProfile = {
   id: string
@@ -169,6 +175,14 @@ export async function deleteFriendGroup(groupId: string): Promise<{ error?: stri
   if (error) return { error: error.message }
   const row = data as { success?: boolean; error?: string } | null
   if (!row?.success) return { error: row?.error || 'Failed to delete group' }
+  return {}
+}
+
+export async function reorderFriendGroups(groupIds: string[]): Promise<{ error?: string }> {
+  const { data, error } = await supabase.rpc('reorder_friend_groups', { p_group_ids: groupIds })
+  if (error) return { error: error.message }
+  const row = data as { success?: boolean; error?: string } | null
+  if (!row?.success) return { error: row?.error || 'Failed to reorder groups' }
   return {}
 }
 
