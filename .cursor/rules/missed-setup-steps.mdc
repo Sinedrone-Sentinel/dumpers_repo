@@ -1,0 +1,37 @@
+---
+description: Tell the user they missed a setup/apply step; do not code around it
+alwaysApply: true
+---
+
+# Missed Setup Steps - Tell, Don't Bypass
+
+When an error, failure, or odd state is explained by the user (or environment) **skipping a required step**, say that clearly. **Do not** rewrite app code, migrations, or RPCs to paper over the miss.
+
+## Hard rule
+
+1. **Diagnose** whether the fix is "run/apply/merge X first" (migration order, env var, deploy, PR merge, script, dependency).
+2. If yes -> **tell the user the missed step** (what, why, exact order). Stop there unless they ask you to change code.
+3. **Do not** invent workarounds that duplicate helpers, inline prior migration logic, or weaken dependencies so an incomplete setup "still works."
+
+## Especially (Supabase / this repo)
+
+Migrations are **ordered**. If SQL fails with `function/type/relation does not exist` and that object is created in an earlier migration file:
+
+- Say: apply migration **N** before **N+1** (list the files).
+- Do **not** copy helpers from an earlier migration into the later one just so it runs alone.
+
+Same for: Edge Function not deployed, service-role env missing, PR not merged, `npm` script not run, parse/extract step skipped.
+
+## Good vs bad
+
+```text
+BAD: Error "friend_rsi_label does not exist" -> rewrite 169 to avoid calling it / redefine it inline
+GOOD: "169 needs 168 first - apply 168_friends_rsi_handle_privacy.sql, then re-run 169."
+
+BAD: Feature half-broken because RPC not deployed -> change client to hit tables directly
+GOOD: "Deploy / apply migration X; client already calls the right RPC."
+```
+
+## When coding is appropriate
+
+Only change code when the **repo** is wrong (bug, real missing dependency in git, bad migration that can't be applied in order even when prior steps ran). If prior steps weren't applied, that is not a code bug - report the gap.

@@ -118,6 +118,7 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 - Incoming/outgoing friend requests are managed from the notification bell (Accept / Deny / Cancel)
 - View friends’ acquired blueprints (Blueprints Members) and personal resources (Friends Resources)
 - Accepted friends do not see each other’s Bazaar listings (by design)
+- Optional Discord Webhooks (My activity): friend request received / accepted (RSI Handle only)
 
 ### Mining Tracker (`/mining-tracker`)
 
@@ -207,7 +208,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 ### Discord Webhooks (`/discord-subscribe`)
 
-- **My activity** — your deals moving forward (requires verified RSI Handle)
+- **My activity** — your deals moving forward, plus friend request received / accepted (requires verified RSI Handle)
 - **Marketplace activity** (opt-in) — new/changed listings from other members; coalesced digests for post/cancel bursts, and listing edits post one held, diff-only "Listing Updated" (only the changed lines, never a full re-dump)
 - **Support** — staff replies and resolved tickets
 - Per-event URLs; no self-echo on your own posts
