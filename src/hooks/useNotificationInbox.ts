@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { ensurePendingFriendNotifications } from '../lib/friends'
 import { fetchUserNotifications, type UserNotification } from '../lib/operations'
 import { syncQuestionnaireNotificationsForMe } from '../lib/questionnaires'
 import { useAsyncEffect } from './useAsyncEffect'
@@ -43,6 +44,8 @@ export function useNotificationInbox(disabled: boolean) {
   const refresh = useCallback(async () => {
     // Keep questionnaire bell items accurate (drop stale; add for late joiners).
     await syncQuestionnaireNotificationsForMe()
+    // Recreate Notify rows for pending friendships cleared without cancel.
+    await ensurePendingFriendNotifications()
     const result = await fetchUserNotifications()
     if (!result.error) applyNotifications(result.data)
   }, [applyNotifications])
@@ -51,6 +54,8 @@ export function useNotificationInbox(disabled: boolean) {
     if (disabled || !tabVisible) return
 
     await syncQuestionnaireNotificationsForMe()
+    if (controls.cancelled) return
+    await ensurePendingFriendNotifications()
     if (controls.cancelled) return
 
     const result = await fetchUserNotifications()
