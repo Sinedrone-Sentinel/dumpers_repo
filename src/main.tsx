@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import QueryClientProvider from './providers/QueryClientProvider'
 import { AuthProvider } from './contexts/AuthContext'
+import { FriendsProvider } from './contexts/FriendsContext'
 import { OrderDraftProvider } from './contexts/OrderDraftContext'
 import { MiningTrackerProvider } from './contexts/MiningTrackerContext'
 import { MiningLoadoutProvider } from './contexts/MiningLoadoutContext'
@@ -21,17 +22,19 @@ if (appElement) {
   root.render(
     <React.StrictMode>
       <AuthProvider>
-        <MiningTrackerProvider>
-          <MiningLoadoutProvider>
-          <OrderDraftProvider>
-            <DfpInitGate>
-              <QueryClientProvider>
-                <RouterApp />
-              </QueryClientProvider>
-            </DfpInitGate>
-          </OrderDraftProvider>
-          </MiningLoadoutProvider>
-        </MiningTrackerProvider>
+        <FriendsProvider>
+          <MiningTrackerProvider>
+            <MiningLoadoutProvider>
+              <OrderDraftProvider>
+                <DfpInitGate>
+                  <QueryClientProvider>
+                    <RouterApp />
+                  </QueryClientProvider>
+                </DfpInitGate>
+              </OrderDraftProvider>
+            </MiningLoadoutProvider>
+          </MiningTrackerProvider>
+        </FriendsProvider>
       </AuthProvider>
     </React.StrictMode>
   )

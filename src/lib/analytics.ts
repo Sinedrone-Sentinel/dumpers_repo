@@ -280,6 +280,7 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   browse_missions: 'Browse Missions',
   live_tracker: 'Live Tracker',
   my_resources: 'My Resources',
+  friends_resources: 'Friends Resources',
   can_craft: 'Can Craft',
   site_total: 'Site Total',
   rs_tracker: 'RS Tracker',

@@ -67,7 +67,7 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 
 - Browse the full crafting catalog with search, category, material, and acquisition filters (filters persist per account in the browser)
 - Mark blueprints **acquired**; starter defaults may reappear on refresh until marked
-- **Member collection directory** on each card — see which org members own a blueprint (respects privacy flags in the database)
+- **Members** dropdown (when you have friends) — filter the grid by Mine or a friend’s acquired collection; checkboxes still update only yours
 - Blueprint detail modal: crafting materials, components, stats, **Dumper's Fair-Value Price (DFP)** at selectable quality bands
 - **Missions** on each blueprint lists every contract that rewards it and opens Mission Tracker browse
 - Add blueprints to a session **order draft** (continues on My Listings) or **target list** (Mission Tracker)
@@ -107,9 +107,16 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 - **Cards** view (edit quantities) and **List** view (read-only overview)
 - Location filter chips appear automatically from stock notes (case/punctuation-insensitive; refresh when cards change)
 - Mined/refined ore uses bands Q500–Q1000; salvage and trade goods use fixed **Purchased (Q0)** tiers
-- **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); note chips plus **ALL** scope craftability and Craft deductions to one location; ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown
+- **Friends Resources** tab (when you have friends) — read-only list of a friend’s My Resources stock
+- **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); note chips plus **ALL** scope craftability and Craft deductions to one location; ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown; never uses friend stock
 - **Site Total** rollup (officers and super-admins only) — org-wide inventory aggregate
 - Resource catalog ships with the site from parsed game data — no manual sync
+
+### Friends (header)
+
+- Header Friends control (between notifications and avatar): add by RSI Handle, approve/deny, remove, private groups
+- View friends’ acquired blueprints (Blueprints Members) and personal resources (Friends Resources)
+- Accepted friends do not see each other’s Bazaar listings (by design)
 
 ### Mining Tracker (`/mining-tracker`)
 
@@ -192,7 +199,8 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 ### Notifications
 
-- Header bell with unread count; categories include BP Dumper, WTB/WTS, Support, Mining Ledger, and more
+- Header bell with unread count; categories include BP Dumper, WTB/WTS, Support, Mining Ledger, Friends, and more
+- Friend request / accept / decline alerts open the Friends header menu
 - Dismiss (**Clear**) deletes the row — no read-history archive
 - Unavailable while account is `pending`
 

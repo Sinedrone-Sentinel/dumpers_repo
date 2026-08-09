@@ -11,9 +11,11 @@ import {
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
 import { useAuth } from '../contexts/AuthContext'
+import { useFriends } from '../contexts/FriendsContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
+import { friendLabel, getFriendPersonalInventory } from '../lib/friends'
 import {
   inventoryLineKey,
   normalizeLocationSearch,
@@ -44,20 +46,39 @@ import {
 } from '../lib/resourceQuantity'
 import type { CraftPlanReduction, CraftStockCardLite } from '../lib/craftFromStock'
 
-type ResourceTrackerTab = InventoryScope | 'can_craft'
+type ResourceTrackerTab = InventoryScope | 'can_craft' | 'friends'
+
+type FriendStockCard = {
+  resource_key: string
+  label: string
+  synced_at: string
+  quantity: number
+  quality: number
+  note: string | null
+}
 
 export default function ResourceTrackerRoute() {
   const { user, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
+  const { friends } = useFriends()
   const isGuest = !user && isGuestPreview
   const canViewSiteTotal = !isGuest && canUseFeature('site_total', visibilityContext)
+  const showFriendsTab = !isGuest && friends.length > 0
 
   const [activeTab, setActiveTab] = useState<ResourceTrackerTab>('personal')
   const [stockError, setStockError] = useState<string | null>(null)
   const [guestResources, setGuestResources] = useState<GuestResourceEntry[]>([])
+  const [selectedFriendId, setSelectedFriendId] = useState('')
+  const [friendStockCards, setFriendStockCards] = useState<FriendStockCard[]>([])
+  const [friendLoading, setFriendLoading] = useState(false)
+  const [friendError, setFriendError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isGuest && activeTab === 'site') setActiveTab('personal')
+    if (isGuest && (activeTab === 'site' || activeTab === 'friends')) setActiveTab('personal')
   }, [isGuest, activeTab])
+
+  useEffect(() => {
+    if (!showFriendsTab && activeTab === 'friends') setActiveTab('personal')
+  }, [showFriendsTab, activeTab])
 
   useEffect(() => {
     setAnalyticsSubTool(
@@ -65,9 +86,21 @@ export default function ResourceTrackerRoute() {
         ? 'site_total'
         : activeTab === 'can_craft'
           ? 'can_craft'
-          : 'my_resources'
+          : activeTab === 'friends'
+            ? 'friends_resources'
+            : 'my_resources'
     )
   }, [activeTab])
+
+  useEffect(() => {
+    if (!showFriendsTab) {
+      setSelectedFriendId('')
+      return
+    }
+    if (!selectedFriendId || !friends.some((f) => f.userId === selectedFriendId)) {
+      setSelectedFriendId(friends[0]?.userId ?? '')
+    }
+  }, [showFriendsTab, friends, selectedFriendId])
 
   // Load guest resources from localStorage on mount / guest enter
   useEffect(() => {
@@ -88,6 +121,7 @@ export default function ResourceTrackerRoute() {
 
   const inventoryContext = useMemo(() => {
     if (isGuest || !user?.id) return null
+    // Friends / Can Craft keep personal inventory warm for labels; UI does not show it.
     const scope: InventoryScope = activeTab === 'site' ? 'site' : 'personal'
     return {
       scope,
@@ -95,15 +129,17 @@ export default function ResourceTrackerRoute() {
     }
   }, [isGuest, user?.id, activeTab])
 
-  /** Can Craft always uses the signed-in member's My Resources — never Site Total. */
+  /** Can Craft always uses the signed-in member's My Resources — never Site Total / friends. */
   const personalInventoryContext = useMemo(() => {
     if (isGuest || !user?.id) return null
     return { scope: 'personal' as const, userId: user.id }
   }, [isGuest, user?.id])
 
-  const readOnly = activeTab === 'site'
+  const readOnly = activeTab === 'site' || activeTab === 'friends'
   const isPersonalTab = activeTab === 'personal'
+  const isFriendsTab = activeTab === 'friends'
   const isCanCraftTab = activeTab === 'can_craft'
+  const showNotesAndLocations = isPersonalTab || isFriendsTab
 
   const {
     catalog,
@@ -131,8 +167,65 @@ export default function ResourceTrackerRoute() {
     }
   }, [refresh, refreshPersonalInventory, isGuest])
 
+  useEffect(() => {
+    if (!isFriendsTab || !selectedFriendId) {
+      setFriendStockCards([])
+      setFriendError(null)
+      setFriendLoading(false)
+      return
+    }
+
+    let cancelled = false
+    setFriendLoading(true)
+    setFriendError(null)
+
+    void getFriendPersonalInventory(selectedFriendId).then((result) => {
+      if (cancelled) return
+      setFriendLoading(false)
+      if (result.error) {
+        setFriendError(result.error)
+        setFriendStockCards([])
+        return
+      }
+
+      const catalogByKey = new Map(catalog.map((c) => [c.resource_key, c]))
+      const rows = Array.isArray(result.inventory) ? result.inventory : []
+      const cards: FriendStockCard[] = rows
+        .map((raw) => {
+          const row = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
+          const resourceKey = String(row.resource_key ?? '')
+          const quantity = Number(row.quantity ?? 0)
+          const quality = Number(row.quality ?? DEFAULT_STOCK_QUALITY)
+          const note =
+            typeof row.note === 'string' && row.note.trim() ? row.note.trim() : null
+          const catalogEntry = catalogByKey.get(resourceKey)
+          return {
+            resource_key: resourceKey,
+            label: catalogEntry?.label ?? resourceKey,
+            synced_at: catalogEntry?.synced_at ?? '',
+            quantity,
+            quality,
+            note,
+          }
+        })
+        .filter((card) => card.resource_key && card.quantity > 0)
+        .sort((a, b) => {
+          const labelCmp = a.label.localeCompare(b.label)
+          if (labelCmp !== 0) return labelCmp
+          return a.quality - b.quality
+        })
+
+      setFriendStockCards(cards)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [isFriendsTab, selectedFriendId, catalog])
+
   // Build stock cards: guests mirror logged-in — one card per (resource_key, quality, note) row
   const stockCards = useMemo(() => {
+    if (isFriendsTab) return friendStockCards
     if (!isGuest) return catalogWithInventory
 
     const catalogByKey = new Map(catalog.map((c) => [c.resource_key, c]))
@@ -155,7 +248,7 @@ export default function ResourceTrackerRoute() {
         if (labelCmp !== 0) return labelCmp
         return a.quality - b.quality
       })
-  }, [isGuest, catalog, catalogWithInventory, guestResources])
+  }, [isFriendsTab, friendStockCards, isGuest, catalog, catalogWithInventory, guestResources])
 
   const existingLineKeys = useMemo(() => {
     if (isGuest) {
@@ -183,19 +276,23 @@ export default function ResourceTrackerRoute() {
    * no note group under an "Empty" chip.
    */
   const locationFilterOptions = useMemo(() => {
-    if (!isPersonalTab) return []
+    if (!showNotesAndLocations) return []
     return buildLocationFilterOptions(stockCards)
-  }, [isPersonalTab, stockCards])
+  }, [showNotesAndLocations, stockCards])
 
   useEffect(() => {
-    if (!isPersonalTab) {
+    if (!showNotesAndLocations) {
       setLocationFilter(null)
       return
     }
     if (locationFilter && !locationFilterOptions.some((opt) => opt.key === locationFilter)) {
       setLocationFilter(null)
     }
-  }, [isPersonalTab, locationFilter, locationFilterOptions])
+  }, [showNotesAndLocations, locationFilter, locationFilterOptions])
+
+  useEffect(() => {
+    if (isFriendsTab && viewMode !== 'list') setViewMode('list')
+  }, [isFriendsTab, viewMode])
 
   const filteredCards = stockCards.filter((card) => {
     const quality = card.quality ?? DEFAULT_STOCK_QUALITY
@@ -205,7 +302,7 @@ export default function ResourceTrackerRoute() {
       card.label.toLowerCase().includes(q) ||
       card.resource_key.toLowerCase().includes(q) ||
       (card.quality != null && `q${card.quality}`.includes(q)) ||
-      (isPersonalTab &&
+      (showNotesAndLocations &&
         normalizeLocationSearch(card.note).includes(normalizeLocationSearch(search)))
     const matchesLocation = cardMatchesLocationFilter(card.note, locationFilter)
     const matchesQuality =
@@ -629,7 +726,16 @@ export default function ResourceTrackerRoute() {
     ]
   )
 
-  const tabLabel = activeTab === 'personal' ? 'My stock cards' : activeTab === 'can_craft' ? 'Can craft' : 'Site Total'
+  const tabLabel =
+    activeTab === 'personal'
+      ? 'My stock cards'
+      : activeTab === 'friends'
+        ? 'Friend stock cards'
+        : activeTab === 'can_craft'
+          ? 'Can craft'
+          : 'Site Total'
+  const listLoading = isFriendsTab ? friendLoading : loading
+  const displayError = friendError ?? stockError ?? error
 
   return (
     <FeaturePageLayout
@@ -655,6 +761,17 @@ export default function ResourceTrackerRoute() {
         >
           My Resources
         </button>
+        {showFriendsTab && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('friends')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+              activeTab === 'friends' ? 'site-filter-selected-orange' : 'site-filter-idle'
+            }`}
+          >
+            Friends Resources
+          </button>
+        )}
         {canViewSiteTotal && (
           <button
             type="button"
@@ -705,7 +822,29 @@ export default function ResourceTrackerRoute() {
               onError={setStockError}
             />
           )
-        ) : readOnly ? (
+        ) : isFriendsTab ? (
+          <div className="site-banner-info space-y-3">
+            <p>
+              Friends Resources is read-only — pick a friend to browse their My Resources
+              stock. Can Craft still uses only your own inventory.
+            </p>
+            <label className="block">
+              <span className="site-label">Member</span>
+              <select
+                value={selectedFriendId}
+                onChange={(e) => setSelectedFriendId(e.target.value)}
+                className="site-input mt-1 px-3 py-2 text-sm w-full max-w-sm"
+                aria-label="View friend resources"
+              >
+                {friends.map((f) => (
+                  <option key={f.userId} value={f.userId}>
+                    {friendLabel(f.profile)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        ) : activeTab === 'site' ? (
           <div className="site-banner-info">
             Site Total is a read-only rollup — summed from every approved member&apos;s My
             Resources (excluding banned accounts). Update your own quantities under My
@@ -714,10 +853,10 @@ export default function ResourceTrackerRoute() {
         ) : null}
       </div>
 
-      {(error || stockError) && (
+      {displayError && (
         <div className="mb-4 site-banner-error">
-          {stockError ?? error}
-          {(stockError ?? error)?.includes('get_site_total_inventory') && (
+          {displayError}
+          {displayError.includes('get_site_total_inventory') && (
             <p className="mt-2 text-red-200/80">
               Run pending Supabase migrations (038 for site totals) first.
             </p>
@@ -732,7 +871,7 @@ export default function ResourceTrackerRoute() {
         </div>
         <div className="site-surface p-4">
           <p className="text-slate-500 text-xs uppercase tracking-wide">
-            {isPersonalTab ? 'On hand' : 'On hand (site-wide)'}
+            {isPersonalTab || isFriendsTab ? 'On hand' : 'On hand (site-wide)'}
           </p>
           <div className="mt-1 space-y-1">
             <p className="text-2xl font-bold text-orange-300 tabular-nums leading-tight">
@@ -748,32 +887,34 @@ export default function ResourceTrackerRoute() {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-3 mb-4">
-        <div className="site-chip-strip shrink-0 w-fit">
-          <button
-            type="button"
-            onClick={() => setViewMode('cards')}
-            className={`px-3 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
-              viewMode === 'cards' ? 'site-filter-selected-orange' : 'site-filter-idle'
-            }`}
-          >
-            Cards
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('list')}
-            className={`px-3 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
-              viewMode === 'list' ? 'site-filter-selected-orange' : 'site-filter-idle'
-            }`}
-          >
-            List
-          </button>
-        </div>
+        {!isFriendsTab && (
+          <div className="site-chip-strip shrink-0 w-fit">
+            <button
+              type="button"
+              onClick={() => setViewMode('cards')}
+              className={`px-3 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+                viewMode === 'cards' ? 'site-filter-selected-orange' : 'site-filter-idle'
+              }`}
+            >
+              Cards
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('list')}
+              className={`px-3 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+                viewMode === 'list' ? 'site-filter-selected-orange' : 'site-filter-idle'
+              }`}
+            >
+              List
+            </button>
+          </div>
+        )}
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={
-            isPersonalTab ? 'Search stock or locations...' : 'Search site totals...'
+            showNotesAndLocations ? 'Search stock or locations...' : 'Search site totals...'
           }
           className="site-input flex-1 px-3 py-2"
         />
@@ -794,7 +935,7 @@ export default function ResourceTrackerRoute() {
         )}
       </div>
 
-      {isPersonalTab && locationFilterOptions.length > 0 && (
+      {showNotesAndLocations && locationFilterOptions.length > 0 && (
         <div className="site-chip-strip mb-4">
           {locationFilterOptions.map((opt) => (
             <button
@@ -818,7 +959,7 @@ export default function ResourceTrackerRoute() {
       )}
 
       <div className="relative w-full min-w-0 min-h-[24rem]">
-      {loading && stockCards.length === 0 ? (
+      {listLoading && stockCards.length === 0 ? (
         <div className="text-center py-16">
           <div className="w-12 h-12 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin mx-auto" />
           <p className="text-slate-400 mt-4">Loading resources...</p>
@@ -838,19 +979,32 @@ export default function ResourceTrackerRoute() {
                   Learn more in the Archive
                 </a>
               </>
+            ) : isFriendsTab ? (
+              selectedFriendId
+                ? 'This friend has no stock cards yet.'
+                : 'Pick a friend to view their resources.'
             ) : (
               'No site-wide stock recorded yet.'
             )}
           </p>
         </div>
-      ) : viewMode === 'list' ? (
-        <ResourceStockListView cards={filteredCards} isPersonalTab={isPersonalTab} />
+      ) : isFriendsTab || viewMode === 'list' ? (
+        <ResourceStockListView
+          cards={filteredCards.map((card) => ({
+            resource_key: card.resource_key,
+            label: card.label,
+            quality: card.quality ?? DEFAULT_STOCK_QUALITY,
+            quantity: card.quantity,
+            note: card.note ?? null,
+          }))}
+          isPersonalTab={showNotesAndLocations}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 w-full min-w-0">
           {filteredCards.map((card) => renderStockCard(card))}
         </div>
       )}
-      {loading && stockCards.length > 0 && (
+      {listLoading && stockCards.length > 0 && (
         <div
           className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[1px] rounded-2xl"
           aria-busy="true"

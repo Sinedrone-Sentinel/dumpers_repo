@@ -10,6 +10,7 @@ export type NotificationCategoryId =
   | 'ratings'
   | 'questionnaires'
   | 'services'
+  | 'friends'
   | 'other'
 
 export interface NotificationCategoryDefinition {
@@ -27,6 +28,7 @@ export const NOTIFICATION_CATEGORIES: NotificationCategoryDefinition[] = [
   { id: 'ratings', label: 'Ratings' },
   { id: 'questionnaires', label: 'Questionnaires' },
   { id: 'services', label: 'Partner Services' },
+  { id: 'friends', label: 'Friends' },
   { id: 'other', label: 'Other' },
 ]
 
@@ -71,6 +73,9 @@ export function getNotificationCategoryId(notification: UserNotification): Notif
   if (type.startsWith('rating_')) return 'ratings'
   if (type === 'questionnaire_available') return 'questionnaires'
   if (type === 'service_request_accepted' || type.startsWith('service_request_')) return 'services'
+  if (type === 'friend_request' || type === 'friend_accepted' || type === 'friend_declined') {
+    return 'friends'
+  }
 
   if (ORDER_TYPES.has(type)) {
     return isWtsOrderNotification(notification) ? 'wts-listings' : 'wtb-orders'
