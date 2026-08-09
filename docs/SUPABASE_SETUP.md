@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
 
-**Latest migration:** `154_questionnaire_ticker_include_creator.sql` (live questionnaires appear on ticker for creators too). Apply through `154` in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `164_fix_list_active_whats_new_volatile.sql` (fixes empty Updates ticker after 163 — public list no longer DELETEs inside a STABLE RPC). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -194,6 +194,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 126 | `161_dumper_top_users_rolling_30d.sql` | Analytics Top Dumpers Edge invokes always use rolling 30 days (period filter still scopes other Dumper cards) |
 | 127 | `162_member_left_discord_and_delete_cleanup.sql` | Staff “Member Left the Site” Discord on self-delete; Discord FK cleanup so profile delete cannot block; Edge also purges service-request screenshots |
 | 128 | `163_contributor_team_and_ticker_ttl.sql` | Contributor Team applications/upgrades + GitHub sync RPCs; per-entry ticker `ttl_days_override` (1–366) |
+| 129 | `164_fix_list_active_whats_new_volatile.sql` | Fix empty Updates ticker: `list_active_whats_new` is filter-only again (no DELETE in STABLE/read-only RPC) |
 
 ### pg_cron (migrations 054, 065–068, 144, 147)
 
