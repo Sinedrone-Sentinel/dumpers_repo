@@ -59,6 +59,14 @@ export function openFriendsMenu() {
   window.dispatchEvent(new CustomEvent(OPEN_FRIENDS_MENU_EVENT))
 }
 
+export async function ensurePendingFriendNotifications(): Promise<{ created?: number; error?: string }> {
+  const { data, error } = await supabase.rpc('ensure_pending_friend_notifications')
+  if (error) return { error: error.message }
+  const row = data as { success?: boolean; created?: number; error?: string } | null
+  if (!row?.success) return { error: row?.error || 'Failed to sync friend notifications' }
+  return { created: Number(row.created ?? 0) }
+}
+
 export async function listMyFriends(): Promise<{ data?: FriendsSnapshot; error?: string }> {
   const { data, error } = await supabase.rpc('list_my_friends')
   if (error) return { error: error.message }

@@ -8,6 +8,7 @@ import {
   type FriendsSnapshot,
   type PendingFriendRequest,
 } from '../lib/friends'
+import { notifyNotificationsChanged } from '../hooks/useNotificationInbox'
 
 type FriendsContextValue = {
   friends: FriendListEntry[]
@@ -42,6 +43,7 @@ export function FriendsProvider({ children }: { children: React.ReactNode }) {
     if (result.data) setSnapshot(result.data)
     else setSnapshot(EMPTY)
     setLoading(false)
+    notifyNotificationsChanged()
   }, [user, isApproved, isGuestPreview])
 
   useEffect(() => {
