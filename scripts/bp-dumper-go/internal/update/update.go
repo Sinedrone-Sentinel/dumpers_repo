@@ -1,5 +1,3 @@
-//go:build !windows
-
 package update
 
 import (
@@ -10,15 +8,9 @@ import (
 	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/colors"
 )
 
-func PerformAutoUpdate(_, downloadURL string) {
-	if downloadURL == "" {
-		downloadURL = api.DefaultDownloadURL
-	}
-	fmt.Printf("%s[Update] Auto-update is Windows-only. Download: %s%s\n", colors.Yellow, downloadURL, colors.Reset)
-	os.Exit(1)
-}
-
-func HandleUpdateRequired(err *api.UpdateRequiredError, currentVersion string, keepUpToDate bool) {
+// HandleUpdateRequired tells the member to download manually.
+// Auto-download / self-replace was removed — that path tripped AV heuristics (Wacatac / dropper ML).
+func HandleUpdateRequired(err *api.UpdateRequiredError, currentVersion string) {
 	latest := err.Latest
 	if latest == "" {
 		latest = "newer"
@@ -31,7 +23,8 @@ func HandleUpdateRequired(err *api.UpdateRequiredError, currentVersion string, k
 		"\n%s[Update required] This BP Dumper (%s) is outdated. Latest is %s.%s\n",
 		colors.Red, currentVersion, latest, colors.Reset,
 	)
-	_ = keepUpToDate
-	fmt.Printf("%sDownload: %s%s\n", colors.Yellow, url, colors.Reset)
+	fmt.Printf("%sDownload the new DumperApps.exe from GitHub Releases and replace this file:%s\n", colors.Yellow, colors.Reset)
+	fmt.Printf("  %s\n", url)
+	fmt.Printf("  Releases: %s\n", api.DefaultReleasesURL)
 	os.Exit(1)
 }

@@ -21,7 +21,6 @@ type Options struct {
 	Acquired        map[string]struct{}
 	CachePath       string
 	DryRun          bool
-	KeepUpToDate    bool
 	DumperVersion   string
 }
 
@@ -87,7 +86,6 @@ func ImportDiscoveredBlueprint(
 	acquired map[string]struct{},
 	cachePath string,
 	dryRun bool,
-	keepUpToDate bool,
 	dumperVersion string,
 	livePrefix string,
 ) bool {
@@ -122,7 +120,7 @@ func ImportDiscoveredBlueprint(
 			if ver == "" && c != nil {
 				ver = c.Version
 			}
-			update.HandleUpdateRequired(u, ver, keepUpToDate)
+			update.HandleUpdateRequired(u, ver)
 		}
 		fmt.Printf("  %s %s✗ Connection Error:%s %s (%v)\n", livePrefix, colors.Red, colors.Reset, productName, err)
 		return false
@@ -177,11 +175,10 @@ func SyncBlueprintsFromLog(path string, c *api.Client, acquired map[string]struc
 		parse.ApplyMissionLogLine(line, state, ts)
 		if m := parse.PatternBlueprint.FindStringSubmatch(line); m != nil {
 			ver := ""
-			keep := true
 			if c != nil {
 				ver = c.Version
 			}
-			if ImportDiscoveredBlueprint(strings.TrimSpace(m[1]), ts, state, filepathBase(path), c, acquired, cachePath, dryRun, keep, ver, "[Startup]") {
+			if ImportDiscoveredBlueprint(strings.TrimSpace(m[1]), ts, state, filepathBase(path), c, acquired, cachePath, dryRun, ver, "[Startup]") {
 				imported++
 			}
 		}
@@ -229,7 +226,7 @@ func Run(opts Options) {
 	path := opts.Path
 
 	handleUpdate := func(err *api.UpdateRequiredError) {
-		update.HandleUpdateRequired(err, opts.DumperVersion, opts.KeepUpToDate)
+		update.HandleUpdateRequired(err, opts.DumperVersion)
 	}
 
 	for {
@@ -391,7 +388,7 @@ func Run(opts Options) {
 					ImportDiscoveredBlueprint(
 						strings.TrimSpace(blueprintHit[1]), ts, state, filepathBase(path),
 						opts.Client, opts.Acquired, opts.CachePath, opts.DryRun,
-						opts.KeepUpToDate, opts.DumperVersion, "[Live]",
+						opts.DumperVersion, "[Live]",
 					)
 				}
 

@@ -47,16 +47,16 @@ export type BpDumperDownloadOption = {
 
 /**
  * Member-facing install options.
- * Primary: Python-built Windows exe (auto-detects Star Citizen install).
+ * Primary: native Go Windows exe (member picks LIVE folder).
  * Store listing remains available until SignPath / OpenSSF trust path is solid.
  */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
     id: 'windows-exe',
     kind: 'external',
-    label: 'Classic Windows exe (auto-detect)',
+    label: 'Windows exe (DumperApps.exe)',
     description:
-      'DumperApps.exe built from the original Python watcher — searches your drives for Star Citizen / LIVE, then asks for your API key. Use this if the Store build will not run.',
+      'Native Windows build — point it at your Star Citizen LIVE folder (contains Game.log), then paste your API key. Prefer this over the Store listing.',
     url: `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_APPS_EXE_FILENAME}`,
   },
   {
@@ -64,7 +64,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Python scripts (macOS / Linux / advanced)',
     description:
-      'Same watcher as the classic exe — open the scripts folder on GitHub, install requirements, then run dumper.py (auto-detect works there too).',
+      'Same watcher protocol — open the scripts folder on GitHub, install requirements, then run dumper.py with your LIVE folder path.',
     url: BP_DUMPER_SCRIPTS_URL,
   },
   {
@@ -72,7 +72,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Microsoft Store (optional)',
     description:
-      'Sandboxed Store build (pick LIVE folder). Prefer the classic Windows exe above if you want auto-detect or the Store app fails to start.',
+      'Sandboxed Store build (pick LIVE folder). Prefer the Windows exe above if the Store app fails to start.',
     url: BP_DUMPER_STORE_WEB_URL,
   },
 ]
