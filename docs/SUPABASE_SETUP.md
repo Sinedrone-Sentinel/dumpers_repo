@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `165_super_admin_discord_application_events.sql` (Super-Admin Discord toggles for partnership + Dev Team applications). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `166_friends_list.sql` (two-way friends list, groups, friend blueprint/inventory reads, Bazaar hide between accepted friends). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -196,6 +196,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 128 | `163_contributor_team_and_ticker_ttl.sql` | Contributor Team applications/upgrades + GitHub sync RPCs; per-entry ticker `ttl_days_override` (1-366) |
 | 129 | `164_fix_list_active_whats_new_volatile.sql` | Fix empty Updates ticker: `list_active_whats_new` is filter-only again (no DELETE in STABLE/read-only RPC) |
 | 130 | `165_super_admin_discord_application_events.sql` | Super-Admin Discord: partnership_application + contributor_application event types/toggles |
+| 131 | `166_friends_list.sql` | Friends: friendships + private groups; DEFINER RPCs for request/accept/remove/list/friend reads; tighten acquired_blueprints SELECT; hide accepted friends’ Bazaar listings |
 
 ### pg_cron (migrations 054, 065-068, 144, 147)
 

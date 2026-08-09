@@ -3,6 +3,7 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import type { UserNotification } from '../lib/operations'
 import { getNotificationActionLink } from '../lib/notificationLinks'
 import { requestBlueprintFocus } from '../lib/blueprintFocusRequest'
+import { openFriendsMenu } from '../lib/friends'
 import {
   SERVICE_REQUEST_ACCEPTED_TYPE,
   dispatchServiceRequestAccepted,
@@ -92,6 +93,12 @@ export default function NotificationBody({
           to={link.to}
           search={link.blueprintFocus ? undefined : link.search}
           onClick={(event) => {
+            if (link.openFriendsMenu) {
+              event.preventDefault()
+              openFriendsMenu()
+              finishNavigate()
+              return
+            }
             if (link.blueprintFocus) {
               event.preventDefault()
               requestBlueprintFocus(link.blueprintFocus)

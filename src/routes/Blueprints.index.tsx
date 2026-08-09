@@ -13,6 +13,8 @@ import VirtualizedBlueprintGrid from '../components/VirtualizedBlueprintGrid'
 import BlueprintMaterialFilter from '../components/BlueprintMaterialFilter'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import { useAuth } from '../contexts/AuthContext'
+import { useFriends } from '../contexts/FriendsContext'
+import { friendLabel, getFriendAcquiredBlueprints } from '../lib/friends'
 import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useBlueprintCraftTracker } from '../hooks/useBlueprintCraftTracker'
 import { useTargetList } from '../hooks/useTargetList'
@@ -113,7 +115,12 @@ export default function BlueprintsRoute() {
     groupBlueprintVariants,
     dfpDisplayEnabled,
   } = useAuth()
+  const { friends } = useFriends()
   const isGuest = !user && isGuestPreview
+  const [selectedMemberId, setSelectedMemberId] = React.useState<string>('mine')
+  const [friendAcquiredBlueprints, setFriendAcquiredBlueprints] = React.useState<
+    Record<string, boolean>
+  >({})
   const uiScope = getBlueprintsUiScope(user?.id, isGuestPreview)
   const hydratedUiScopeRef = React.useRef<string | null | undefined>(undefined)
   const skipPersistRef = React.useRef(true)
@@ -270,7 +277,33 @@ export default function BlueprintsRoute() {
     }
   }, [blueprints, isGuest])
 
+  // Checkmarks / toggles always reflect the signed-in member's collection.
   const displayAcquiredBlueprints = myAcquiredBlueprints
+  // Acquisition filter uses the selected friend's set when viewing a friend.
+  const filterAcquiredBlueprints =
+    selectedMemberId !== 'mine' ? friendAcquiredBlueprints : myAcquiredBlueprints
+
+  React.useEffect(() => {
+    if (selectedMemberId !== 'mine' && !friends.some((f) => f.userId === selectedMemberId)) {
+      setSelectedMemberId('mine')
+      setFriendAcquiredBlueprints({})
+    }
+  }, [friends, selectedMemberId])
+
+  React.useEffect(() => {
+    if (selectedMemberId === 'mine' || isGuest) {
+      setFriendAcquiredBlueprints({})
+      return
+    }
+    let cancelled = false
+    void getFriendAcquiredBlueprints(selectedMemberId).then((result) => {
+      if (cancelled) return
+      setFriendAcquiredBlueprints(result.acquired ?? {})
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [selectedMemberId, isGuest])
 
   // Base filtered blueprints (applies global filters: search, rewards, and acquisition filter)
   const baseFilteredBlueprints = React.useMemo(() => {
@@ -286,7 +319,7 @@ export default function BlueprintsRoute() {
       const matchesReward =
         isDefault || !showOnlyRewards || resolveIsOrderable(bp, overridesMap)
 
-      const isAcquiredInActiveSet = !!myAcquiredBlueprints[bp.internalName]
+      const isAcquiredInActiveSet = !!filterAcquiredBlueprints[bp.internalName]
       
       let matchesAcquisition = true
       if (acquisitionFilter === 'acquired') {
@@ -297,7 +330,7 @@ export default function BlueprintsRoute() {
       
       return matchesSearch && matchesReward && matchesAcquisition
     })
-  }, [blueprints, searchTerm, showOnlyRewards, myAcquiredBlueprints, overridesMap, acquisitionFilter])
+  }, [blueprints, searchTerm, showOnlyRewards, filterAcquiredBlueprints, overridesMap, acquisitionFilter])
 
   const materialFilteredBlueprints = React.useMemo(() => {
     if (!selectedMaterial) return baseFilteredBlueprints
@@ -761,6 +794,21 @@ export default function BlueprintsRoute() {
             <option value="acquired">✓ Acquired</option>
             <option value="not_acquired">✗ Not Acquired</option>
           </select>
+          {friends.length > 0 && !isGuest && (
+            <select
+              value={selectedMemberId}
+              onChange={(e) => setSelectedMemberId(e.target.value)}
+              className="site-input px-2 py-1.5 text-sm"
+              aria-label="View member collection"
+            >
+              <option value="mine">Mine</option>
+              {friends.map((f) => (
+                <option key={f.userId} value={f.userId}>
+                  {friendLabel(f.profile)}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         {/* Main Category Tags */}

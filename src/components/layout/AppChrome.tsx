@@ -9,6 +9,7 @@ import type { NavGroup } from '../../config/appNav'
 import type { Profile } from '../../lib/supabase'
 import AppSidebar from './AppSidebar'
 import AppNotificationBell from './AppNotificationBell'
+import AppFriendsMenu from './AppFriendsMenu'
 import RequestServicesControl from './RequestServicesControl'
 import AppUserMenu from './AppUserMenu'
 import GuestPreviewBanner from './GuestPreviewBanner'
@@ -166,6 +167,7 @@ export default function AppChrome({
                     disabled={isPending}
                     onOpenQuestionnaire={onOpenQuestionnaire}
                   />
+                  <AppFriendsMenu disabled={isPending} />
                   <AppUserMenu
                     displayName={displayName}
                     profile={profile}

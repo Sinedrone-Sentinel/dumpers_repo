@@ -7,6 +7,8 @@ export interface NotificationActionLink {
   search?: Record<string, string | undefined>
   /** Apply Blueprints search via one-shot focus (not a sticky ?q= URL). */
   blueprintFocus?: string
+  /** Open Friends header menu instead of navigating. */
+  openFriendsMenu?: boolean
 }
 
 const ORDER_TYPES = new Set([
@@ -93,6 +95,10 @@ export function getNotificationActionLink(
 
   const dumperLink = blueprintDumperLink(notification)
   if (dumperLink) return dumperLink
+
+  if (type === 'friend_request' || type === 'friend_accepted' || type === 'friend_declined') {
+    return { to: '/', label: 'Open Friends', openFriendsMenu: true }
+  }
 
   if (!ORDER_TYPES.has(type)) return null
 
