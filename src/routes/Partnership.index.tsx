@@ -358,7 +358,7 @@ export default function PartnershipPage() {
             <div className="space-y-3 max-w-2xl">
               <p className="text-slate-400 text-sm">
                 Pending applications also appear as Support tickets (Partnership Application) and
-                ping the staff Discord support webhook.
+                ping the Super-Admin Discord webhook (Partnership Applications).
               </p>
               {pending.length === 0 ? (
                 <p className="text-slate-500 text-sm">No pending applications.</p>

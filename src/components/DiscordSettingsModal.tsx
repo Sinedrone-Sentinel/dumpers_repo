@@ -116,7 +116,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
         official_webhook_url: officialUrl,
         official_webhook_name: officialName,
       } : null)
-      setMessage({ type: 'success', text: 'Official webhook saved' })
+      setMessage({ type: 'success', text: 'Super-Admin webhook saved' })
     } else {
       setMessage({ type: 'error', text: result.error || 'Failed to save webhook' })
     }
@@ -332,15 +332,15 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
             />
           </div>
 
-          {/* Org-Only Event Types */}
+          {/* Super-Admin Event Types */}
           <div className="p-4 rounded-xl border border-purple-500/30 bg-purple-950/10 space-y-3">
             <div className="flex items-center gap-2 mb-3">
-              <h3 className="text-white font-medium text-sm">Org-Only Event Types</h3>
+              <h3 className="text-white font-medium text-sm">Super-Admin Event Types</h3>
               <span className="px-1.5 py-0.5 bg-purple-900/50 text-purple-400 rounded text-xs">
-                Official Webhook Only
+                Super-Admin Webhook Only
               </span>
             </div>
-            
+
             <ToggleRow
               label="Support"
               description="New support tickets"
@@ -349,23 +349,42 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               disabled={saving}
               color="purple"
             />
-            
+
             <ToggleRow
               label="Admin"
-              description="Sync errors, system alerts"
+              description="Sync errors, system alerts (new user, RSI verified, member left)"
               enabled={settings?.admin_enabled ?? false}
               onToggle={() => handleToggleSetting('admin_enabled')}
               disabled={saving}
               color="red"
             />
+
+            <ToggleRow
+              label="Partnership Applications"
+              description="New partnership applications submitted"
+              enabled={settings?.partnership_application_enabled ?? true}
+              onToggle={() => handleToggleSetting('partnership_application_enabled')}
+              disabled={saving}
+              color="purple"
+            />
+
+            <ToggleRow
+              label="Dev Team Applications"
+              description="New contributor / Dev Team applications submitted"
+              enabled={settings?.contributor_application_enabled ?? true}
+              onToggle={() => handleToggleSetting('contributor_application_enabled')}
+              disabled={saving}
+              color="blue"
+            />
           </div>
 
-          {/* Official Org Webhook */}
+          {/* Super-Admin Webhook */}
           <div className="p-4 rounded-xl border border-purple-500/30 bg-purple-950/20 space-y-3">
             <div>
-              <h3 className="text-white font-medium text-sm">Official Org Webhook</h3>
+              <h3 className="text-white font-medium text-sm">Super-Admin Webhook</h3>
               <p className="text-xs text-slate-400 mt-1">
-                This channel receives org-only events (support tickets, admin alerts)
+                This channel receives staff-only events (support, admin alerts, partnership and Dev
+                Team applications)
               </p>
             </div>
             <input
@@ -387,7 +406,7 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               disabled={saving}
               className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
             >
-              {saving ? 'Saving...' : 'Save Official Webhook'}
+              {saving ? 'Saving...' : 'Save Super-Admin Webhook'}
             </button>
           </div>
 
