@@ -10,7 +10,7 @@ SET search_path = public
 AS $$
 DECLARE
   v_me uuid := auth.uid();
-  r record;
+  r public.friendships%ROWTYPE;
   v_other uuid;
   v_handle text;
   v_created int := 0;
@@ -25,7 +25,7 @@ BEGIN
     WHERE f.status = 'pending'
       AND (f.user_low = v_me OR f.user_high = v_me)
   LOOP
-    v_other := public.friend_other_user(r, v_me);
+    v_other := CASE WHEN r.user_low = v_me THEN r.user_high ELSE r.user_low END;
 
     -- Invitee: inbound friend_request
     IF r.requested_by <> v_me THEN
@@ -190,9 +190,10 @@ END;
 $$;
 
 -- One-shot repair for all pending friendships (both sides).
+-- Use explicit UUID picks (not friend_other_user on a RECORD) — avoids 42846.
 DO $$
 DECLARE
-  r record;
+  r public.friendships%ROWTYPE;
   v_other uuid;
   v_handle text;
 BEGIN
@@ -201,7 +202,10 @@ BEGIN
     FROM public.friendships f
     WHERE f.status = 'pending'
   LOOP
-    v_other := public.friend_other_user(r, r.requested_by);
+    v_other := CASE
+      WHEN r.user_low = r.requested_by THEN r.user_high
+      ELSE r.user_low
+    END;
 
     IF NOT EXISTS (
       SELECT 1 FROM public.user_notifications un
