@@ -89,7 +89,8 @@ export function getDumperTrustLinks(): TrustLink[] {
       id: 'source',
       label: 'Source on GitHub',
       href: GITHUB_REPO_URL,
-      summary: 'BP Dumper is built from the public Python watcher in this repository.',
+      summary:
+        'Windows DumperApps.exe is the public Go client; Python scripts in this repo cover macOS/Linux and the protocol reference.',
     },
     {
       id: 'scorecard',
@@ -115,7 +116,7 @@ export function getDumperTrustLinks(): TrustLink[] {
     label: 'VirusTotal gate',
     href: VIRUSTOTAL_HOME_URL,
     summary:
-      'Windows builds stay draft on GitHub until VirusTotal reports 0 malicious detections; the live report link is on each GitHub Release and in Dumper Apps.',
+      'Windows builds stay draft until the VirusTotal CI gate passes: named malware-family hits block publish; common generic/ML heuristic labels (e.g. Wacatac) are ignored. The report link is on each GitHub Release and in Dumper Apps — you may still see those heuristic hits on VirusTotal.',
   })
   links.push({
     id: 'signpath',

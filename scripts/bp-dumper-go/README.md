@@ -14,8 +14,9 @@ Wire protocol: [`scripts/bp-dumper-shared/PROTOCOL.md`](../bp-dumper-shared/PROT
 
 PyInstaller `--onefile` shared bootloaders are frequently flagged by AV / VirusTotal
 (e.g. `Trojan:Win32/Wacatac.B!ml`) even when the app is clean. A native Go binary
-avoids that packaging fingerprint. The VirusTotal publish gate still requires
-**0 malicious** before a release leaves draft.
+avoids that packaging fingerprint. The VirusTotal publish gate uses
+`VT_GATE_MODE=named` (blocks named malware families; ignores common generic/ML
+heuristic labels) before a release leaves draft.
 
 ## Build
 

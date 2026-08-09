@@ -2,7 +2,7 @@ import { SITE_COPYRIGHT, SITE_SUPPORT_LABEL, SITE_SUPPORT_URL, SITE_URL } from '
 import SiteBrandMark from '../components/SiteBrandMark'
 import SiteBrandTitle from '../components/SiteBrandTitle'
 
-const LAST_UPDATED = 'August 3, 2026'
+const LAST_UPDATED = 'August 9, 2026'
 
 export default function PrivacyRoute() {
   return (
@@ -23,8 +23,8 @@ export default function PrivacyRoute() {
             <p className="mt-4">
               This Privacy Policy describes how <strong className="text-slate-100">Dumper&apos;s Repo</strong>{' '}
               ({SITE_URL}) collects, uses, and shares information when you use our website and related
-              tools, including the optional <strong className="text-slate-100">BP Dumper</strong> desktop
-              app available through the Microsoft Store and other distribution channels we operate.
+              tools, including the optional <strong className="text-slate-100">Dumper Apps</strong>{' '}
+              desktop app distributed via GitHub Releases (and related Python scripts for non-Windows).
             </p>
             <p className="mt-3">
               Dumper&apos;s Repo is a community site for Star Citizen crafting, tracking, and marketplace

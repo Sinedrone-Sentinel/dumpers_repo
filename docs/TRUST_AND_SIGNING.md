@@ -7,13 +7,12 @@
 **Canonical Windows download:** native Go client in `scripts/bp-dumper-go/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1` (no PyInstaller, no UPX).
 
 - Auto-detects Star Citizen installs (drive search for LIVE / Game.log); members can paste a path to override. Updates are manual GitHub downloads (no self-replace).
-- Member Windows download: GitHub Releases `DumperApps.exe`.
+- Member Windows download: GitHub Releases `DumperApps.exe` (no Microsoft Store option in the member UI).
 - Python watcher in `scripts/bp-dumper-py/` remains the protocol/reference client (and for non-Windows scripting).
-- Microsoft Store listing may remain published temporarily; it is **not** the primary trust or install path.
 
 ### Why not PyInstaller on Windows
 
-PyInstaller `--onefile` extracts a shared bootloader fingerprint that multiple AV engines (including Microsoft `Trojan:Win32/Wacatac.B!ml`) frequently mark malicious even when the app is clean. That hurts member trust when screenshots of VirusTotal “Trojan” labels circulate. The Go Windows build is a normal native PE; the publish gate still requires **0 VirusTotal malicious** detections before a release leaves draft.
+PyInstaller `--onefile` extracts a shared bootloader fingerprint that multiple AV engines (including Microsoft `Trojan:Win32/Wacatac.B!ml`) frequently mark malicious even when the app is clean. That hurts member trust when screenshots of VirusTotal “Trojan” labels circulate. The Go Windows build is a normal native PE; the publish gate uses **`VT_GATE_MODE=named`** (blocks named malware families; ignores common generic/ML heuristic labels).
 
 ## OpenSSF Scorecard
 

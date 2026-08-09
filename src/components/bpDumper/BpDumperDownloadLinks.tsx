@@ -67,8 +67,10 @@ export default function BpDumperDownloadLinks() {
         Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your Star
         Citizen install (searches for LIVE / Game.log). You can also paste a path if you prefer. When a
         new Windows build is required, download <strong className="text-slate-400">DumperApps.exe</strong>{' '}
-        from GitHub Releases and replace the old file yourself. New Windows builds only go live after a
-        clean VirusTotal gate in CI.
+        from GitHub Releases and replace the old file yourself. New Windows builds only go live after the
+        VirusTotal CI gate: <strong className="text-slate-400">named malware-family</strong> hits block
+        publish; common <strong className="text-slate-400">generic/ML heuristic</strong> labels (e.g.
+        Wacatac) are ignored — you may still see those on the VirusTotal report.
       </p>
 
       {release?.virusTotalUrl && (
@@ -84,7 +86,8 @@ export default function BpDumperDownloadLinks() {
             >
               VirusTotal
             </a>{' '}
-            before members could download it.
+            before members could download it. Generic/ML heuristic hits do not block publish; named
+            malware-family hits do.
           </p>
           <a
             href={release.virusTotalUrl}
