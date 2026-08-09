@@ -4,12 +4,12 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 
 ## If you already have a live database
 
-1. **Do not** re-run the squashed baseline (`001`–`006`) or migrations you have already applied.
-2. If you previously ran incremental migrations `001`–`041` from `supabase/migrations_legacy/`, your starting point for this repo is **`042_site_settings.sql`** onward.
+1. **Do not** re-run the squashed baseline (`001`-`006`) or migrations you have already applied.
+2. If you previously ran incremental migrations `001`-`041` from `supabase/migrations_legacy/`, your starting point for this repo is **`042_site_settings.sql`** onward.
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
-4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran — verify with the sanity checks at the end.
+4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `164_fix_list_active_whats_new_volatile.sql` (fixes empty Updates ticker after 163 — public list no longer DELETEs inside a STABLE RPC). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `164_fix_list_active_whats_new_volatile.sql` (fixes empty Updates ticker after 163 - public list no longer DELETEs inside a STABLE RPC). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -17,7 +17,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 
 1. [supabase.com](https://supabase.com) → New project
 2. Note **Project URL** and **anon public** key for `.env`
-3. Note **service_role** key (Settings → API) — needed for Edge Functions; keep secret
+3. Note **service_role** key (Settings → API) - needed for Edge Functions; keep secret
 
 ---
 
@@ -44,7 +44,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 5. Paste Client ID and Client Secret
 6. Ensure your Site URL and Redirect URLs include your app origin(s)
 
-> Supabase maps Discord's `global_name` to `full_name` in `raw_user_meta_data`. The existing `handle_new_user` trigger reads `full_name` and populates `display_name` automatically — no changes needed.
+> Supabase maps Discord's `global_name` to `full_name` in `raw_user_meta_data`. The existing `handle_new_user` trigger reads `full_name` and populates `display_name` automatically - no changes needed.
 
 ---
 
@@ -52,9 +52,9 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 
 Members can use **one account** with multiple sign-in methods:
 
-1. **Authentication → Settings → Enable Manual Linking** — required for Connect / Disconnect in app Settings
-2. **Automatic linking** (on by default) — when Google and Discord share the same **verified** email, Supabase links them to the same user on first sign-in (works both directions). No duplicate profile is created.
-3. **Discord email scope** — the Discord OAuth app must allow email; the app requests `identify email` so auto-merge can match addresses.
+1. **Authentication → Settings → Enable Manual Linking** - required for Connect / Disconnect in app Settings
+2. **Automatic linking** (on by default) - when Google and Discord share the same **verified** email, Supabase links them to the same user on first sign-in (works both directions). No duplicate profile is created.
+3. **Discord email scope** - the Discord OAuth app must allow email; the app requests `identify email` so auto-merge can match addresses.
 
 Manual linking: a signed-in member can connect an additional provider from **Settings → Connected Accounts**, even when emails differ. At least one sign-in method must remain connected.
 
@@ -90,7 +90,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 22 | `057_guest_preview_anon_read.sql` | Anonymous read for archive reference data |
 | 23 | `058_officer_ratings_escalation.sql` | Officer ticket ratings + escalation |
 | 24 | `059_mining_tracker.sql` | Mining Tracker entries (member sync) |
-| 25 | `060_shop_data.sql` | *(Historical)* Shop tables — dropped by `087` |
+| 25 | `060_shop_data.sql` | *(Historical)* Shop tables - dropped by `087` |
 | 26 | `061_discord_integration.sql` | Discord webhook integration + message queue |
 | 27 | `062_granular_order_events.sql` | Granular Discord order event subscriptions |
 | 28 | `063_user_webhook_management.sql` | User-managed Discord webhooks (4 max) |
@@ -105,18 +105,18 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 37 | `072_inventory_note_field.sql` | Note field on personal resource inventory |
 | 38 | `073_blueprint_owner_counts.sql` | Blueprint owner count RPC for order UI |
 | 39 | `074_resource_lore.sql` | Resource lore/description column |
-| 40 | `075_game_data_tables.sql` | *(Historical)* Rename `starstrings_*` → `game_*` tables — dropped by `118` |
-| 41 | `076_game_data_anon_read.sql` | *(Historical)* Anonymous read on `game_*` tables — dropped by `118` |
+| 40 | `075_game_data_tables.sql` | *(Historical)* Rename `starstrings_*` → `game_*` tables - dropped by `118` |
+| 41 | `076_game_data_anon_read.sql` | *(Historical)* Anonymous read on `game_*` tables - dropped by `118` |
 | 42 | `077_guest_pending_order_count.sql` | `get_pending_custom_order_count()` for Offline Fulfillment teaser |
 | 43 | `078_order_listing_type.sql` | WTB/WTS `listing_type`, semantic buyer/seller RPCs |
 | 44 | `079_drop_synced_blueprints.sql` | Drop legacy `synced_blueprints` (sccrafter era) |
 | 45 | `080_discord_personal_routing.sql` | Personal + marketplace Discord routing, server-side triggers |
-| 46 | `081_rsi_org_schema.sql` | *(Historical)* RSI multi-org tables — dropped by `114` (not site org logo / Discord admin) |
+| 46 | `081_rsi_org_schema.sql` | *(Historical)* RSI multi-org tables - dropped by `114` (not site org logo / Discord admin) |
 | 47 | `082_discord_market_coalesce.sql` | Marketplace listing churn coalesce + admin quiet-period setting |
 | 48 | `083_discord_per_event_webhooks.sql` | Remove webhook cap; per-event sync RPC; return URLs to owner |
 | 49 | `084_discord_rsi_personal_webhooks.sql` | Require RSI verification for `my_order_*` webhook registration |
-| 50 | `085_shop_socpak_fields.sql` | *(Historical)* Shop socpak fields — dropped by `087` |
-| 51 | `086_shop_shelf_vendors.sql` | *(Historical)* Shop shelf vendors — dropped by `087` |
+| 50 | `085_shop_socpak_fields.sql` | *(Historical)* Shop socpak fields - dropped by `087` |
+| 51 | `086_shop_shelf_vendors.sql` | *(Historical)* Shop shelf vendors - dropped by `087` |
 | 52 | `087_drop_shop_data.sql` | Drop shop tables and RPCs (Shops feature removed from app) |
 | 53 | `088_mining_tracker_location.sql` | Mining tracker location field |
 | 54 | `089_org_logo.sql` | Supabase Storage bucket + super-admin org logo (`ORG_LOGO.png`) |
@@ -148,15 +148,15 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 80 | `115_mining_loadouts.sql` | Per-user mining loadout planner state (cross-device sync) |
 | 81 | `116_marketplace_ads.sql` | Marketplace listing ads, purchase toasts, dismissals, site/profile toggles |
 | 82 | `117_marketplace_ads_rpc_hooks.sql` | Marketplace ad hooks on order RPCs; fix partial WTS line depletion |
-| 83 | `118_drop_game_data_mirror_tables.sql` | Drop `game_*` mirror tables — game catalogs ship bundled from parsed JSON |
+| 83 | `118_drop_game_data_mirror_tables.sql` | Drop `game_*` mirror tables - game catalogs ship bundled from parsed JSON |
 | 84 | `119_mining_ledger_close_payout_total.sql` | Ledger close records app-computed payout in site stats; skip zero-payout ledgers |
 | 85 | `120_bazaar_one_listing.sql` | Bazaar rework: one open WTS + WTB listing per user (pending orders merged), exact-DFP pricing, `append_to_my_listing` / `accept_wtb_partial` / listing line-edit RPCs, listing-aware limits and timeouts |
 | 86 | `121_inventory_note_line_key.sql` | Resource Tracker: stock cards unique per resource + quality + note (`note_key`); case-insensitive merge on add; note rename RPC takes current note key |
 | 87 | `122_dumper_session_stale_timeout.sql` | BP Dumper live tracker: stale session cleanup after 120s (avoids flicker between 30s pings) |
 | 88 | `123_market_edit_digest.sql` | Marketplace: listing edits (add items / change or remove a line) coalesce into one held, diff-only "Listing Updated" Discord digest; net-zero edits (add then remove) send nothing; new listings still post one full announcement |
-| 89 | `124_drop_resource_is_active.sql` | Drop `blueprint_resources.is_active` and its partial index — resources are never retired from game files |
+| 89 | `124_drop_resource_is_active.sql` | Drop `blueprint_resources.is_active` and its partial index - resources are never retired from game files |
 | 90 | `125_questionnaires.sql` | Custom questionnaires: super-admin builder, audience targeting, availability window, anonymous answers, submit/decline dispositions, notify fan-out |
-| 91 | `126_questionnaire_notification_sync.sql` | `sync_questionnaire_notifications_for_me` — remove stale questionnaire bell items; create missing ones for late-eligible users |
+| 91 | `126_questionnaire_notification_sync.sql` | `sync_questionnaire_notifications_for_me` - remove stale questionnaire bell items; create missing ones for late-eligible users |
 | 92 | `127_questionnaire_exclude_creator.sql` | Exclude questionnaire `created_by` from activate fan-out, pending list, sync, and fill/decline |
 | 93 | `128_discord_market_webhook_url_dedupe.sql` | Deduplicate market/personal/legacy Discord webhook lookups by `webhook_url` (fixes coalesced marketplace triple-posts when WTB/WTS/cancel share one channel) |
 | 94 | `129_whats_new_ticker.sql` | Site-wide Updates / What's New ticker (DB-backed) |
@@ -173,7 +173,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 105 | `140_service_requests.sql` | Member service requests, delivery fan-out, first-wins Accept + requester notification (org + pricing) |
 | 106 | `141_support_other_and_new_service.sql` | Support ticket categories: Other, Add New Service Request |
 | 107 | `142_service_catalog_kinds.sql` | Service kinds (actionable/informative), catalog seeds, 30m/31m timers, tip screenshot storage |
-| 108 | `143_service_request_pricing_tiers.sql` | FREE vs FEE request tiers — list/notify split by partner pricing_label |
+| 108 | `143_service_request_pricing_tiers.sql` | FREE vs FEE request tiers - list/notify split by partner pricing_label |
 | 109 | `144_discord_cron_ready_only.sql` | Discord cron skips coalesce-held queue rows (no empty wake every minute) |
 | 110 | `145_dumper_invoke_analytics.sql` | BP Dumper Edge invoke stats (30-day daily rows; daily `cleanup-dumper-invoke-daily` cron) + Site Analytics RPC |
 | 111 | `146_site_analytics_30day_retention.sql` | Purge site analytics daily/tool/visitor rows older than 30 days (daily cron + one-shot on apply) |
@@ -183,7 +183,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 115 | `150_ticker_headline_cleanup.sql` | Short ticker titles; strip legacy prefixes; remove over-detailed site rows |
 | 116 | `151_admin_whats_new_crud.sql` | Super-admin ticker CRUD; `ticker_categories` (labels/colors/TTL); delete blocked while active messages use a category |
 | 117 | `152_ticker_admin_purge_on_list.sql` | Admin ticker list purges expired rows on load (no “include expired” toggle) |
-| 118 | `153_ticker_category_ttl_days.sql` | Per-category TTL days (1–90); system categories protected; questionnaire active count includes open forms |
+| 118 | `153_ticker_category_ttl_days.sql` | Per-category TTL days (1-90); system categories protected; questionnaire active count includes open forms |
 | 119 | `154_questionnaire_ticker_include_creator.sql` | Creators see their own live questionnaires on the Updates ticker (can open/respond); activate fan-out still skips creator bell spam |
 | 120 | `155_rsi_handle_verified_only.sql` | RSI handle written only after verification; client cannot set privileged handle fields |
 | 121 | `156_dumper_projected_monthly.sql` | (superseded by 157) projected monthly Edge invokes |
@@ -193,16 +193,16 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 125 | `160_rsi_verified_discord_notification.sql` | Staff “RSI Handle Verified” Discord on first verify (Edge + officer force) |
 | 126 | `161_dumper_top_users_rolling_30d.sql` | Analytics Top Dumpers Edge invokes always use rolling 30 days (period filter still scopes other Dumper cards) |
 | 127 | `162_member_left_discord_and_delete_cleanup.sql` | Staff “Member Left the Site” Discord on self-delete; Discord FK cleanup so profile delete cannot block; Edge also purges service-request screenshots |
-| 128 | `163_contributor_team_and_ticker_ttl.sql` | Contributor Team applications/upgrades + GitHub sync RPCs; per-entry ticker `ttl_days_override` (1–366) |
+| 128 | `163_contributor_team_and_ticker_ttl.sql` | Contributor Team applications/upgrades + GitHub sync RPCs; per-entry ticker `ttl_days_override` (1-366) |
 | 129 | `164_fix_list_active_whats_new_volatile.sql` | Fix empty Updates ticker: `list_active_whats_new` is filter-only again (no DELETE in STABLE/read-only RPC) |
 
-### pg_cron (migrations 054, 065–068, 144, 147)
+### pg_cron (migrations 054, 065-068, 144, 147)
 
-Migrations **065–068** schedule a cron job that calls the `send-discord` Edge Function. On Supabase:
+Migrations **065-068** schedule a cron job that calls the `send-discord` Edge Function. On Supabase:
 
 1. Dashboard → **Database** → **Extensions** → enable **pg_cron** and **pg_net**
 2. Deploy the `send-discord` Edge Function (see below)
-3. Run migrations 065–068 if not already applied
+3. Run migrations 065-068 if not already applied
 4. Set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Dashboard → Settings → API Keys → **Publishable and secret API keys** (the Legacy `service_role` JWT is the wrong value for cron once Edge prefers `SUPABASE_SECRET_KEYS`)
 5. Apply migration **147** so cron sends that secret on the `apikey` header (not `Authorization: Bearer`)
 
@@ -269,11 +269,11 @@ Apply migrations through `151_admin_whats_new_crud.sql` for the bottom Updates t
 | Piece | Role |
 |-------|------|
 | `whats_new_entries` | Rows keyed by `issue_key` + `version`; `kind` is `game` or `site`; optional `ticker_category_id` |
-| `ticker_categories` | Layout categories (slug, label, accent hex, **ttl_days** 1–90); seeded Site / Game / Questionnaire / Dumper Apps |
+| `ticker_categories` | Layout categories (slug, label, accent hex, **ttl_days** 1-90); seeded Site / Game / Questionnaire / Dumper Apps |
 | `list_ticker_categories()` | Anon/authenticated read of layout categories for badge colors |
-| `list_active_whats_new()` | Anon/authenticated read — **game** rows 7 days, **site** rows 3 days (includes category layout fields) |
+| `list_active_whats_new()` | Anon/authenticated read - **game** rows 7 days, **site** rows 3 days (includes category layout fields) |
 | `ingest_whats_new_entries(jsonb)` | Super-admin or `service_role` insert; **skips** if same issue+version (or identical headline for that version) already exists; resolves `ticker_category_id` |
-| `cleanup_expired_whats_new()` | Deletes by kind TTL (site 3d / game 7d) — scheduled daily via pg_cron when available |
+| `cleanup_expired_whats_new()` | Deletes by kind TTL (site 3d / game 7d) - scheduled daily via pg_cron when available |
 | `admin_*_whats_new_*` / `admin_*_ticker_category*` | Super-admin only CRUD; category delete blocked while **active** messages use that category; admin list runs `cleanup_expired_whats_new` so expired rows are gone |
 
 Local parse flow: append `extracted-data/whats-new-pending.jsonl` → RPC ingest → wipe file. Put `SUPABASE_SERVICE_ROLE_KEY` in `.env` on the parse machine (never in the browser). Retry with `npm run push-whats-new`.
@@ -292,14 +292,14 @@ npx supabase functions deploy send-discord
 | Mask `official_webhook_url` in `get_discord_settings` | Only super-admins and `service_role` receive the staff webhook URL |
 | `send-discord` auth | Cron: exact match of the project **Secret API key** (`sb_secret_…`) on the `apikey` header (migration `147`). Manual Process Queue: verified super-admin user JWT. Deploy with `--no-verify-jwt`. Set `app_config.supabase_service_key` from Dashboard → Settings → API Keys → **Publishable and secret API keys** (not the Legacy JWT tab). |
 
-Staff webhook **rotation** in Discord is optional after this — do it only if you suspect the URL was already pulled.
+Staff webhook **rotation** in Discord is optional after this - do it only if you suspect the URL was already pulled.
 
 ### Public questionnaire polls (`131_questionnaire_public_poll_ticker.sql`)
 
 Apply migration `131`. Super-admin questionnaire editor gains a **Public poll** checkbox (off by default). When checked:
 
 - **Archive** posts anonymous radio/checkbox tallies to the Updates ticker (`POLL RESULTS: …`)
-- Soft expiry (`available_until`) is swept hourly by `publish_due_public_questionnaire_results` (pg_cron when available) — archives the row and posts results
+- Soft expiry (`available_until`) is swept hourly by `publish_due_public_questionnaire_results` (pg_cron when available) - archives the row and posts results
 - Free-text answers are counted only (bodies never go on the ticker)
 - Results stay on the ticker for the **site** What's New TTL (3 days)
 
@@ -318,25 +318,25 @@ npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 
 **Auth header (all requests):** `Authorization: Bearer dr_<your_api_key>`
 
-**POST — mark blueprint acquired**
+**POST - mark blueprint acquired**
 
 ```json
 {
   "type": "blueprint_received",
   "blueprint": "<displayName or internalName from Game.log>",
-  "contractDefinitionId": "<optional — from log marker for disambiguation>"
+  "contractDefinitionId": "<optional - from log marker for disambiguation>"
 }
 ```
 
-- `blueprint` should be the catalog **internalName** when the client can resolve it (preferred). If not, send the original Game.log display text — the server checks internalName first, then maps display names.
+- `blueprint` should be the catalog **internalName** when the client can resolve it (preferred). If not, send the original Game.log display text - the server checks internalName first, then maps display names.
 - Optional `contractDefinitionId` from log markers helps disambiguate armor variants.
-- Response `200`: `{ "success": true, "blueprint": "<internalName>", "blueprintName": "...", "resolvedVia": "internal"|"display"|"contract", "duplicate": false }` — green-check site notification on new inserts only.
-- Response `202`: `{ "error": "ambiguous_blueprint", "displayName": "...", "notificationSent": true }` — sends a red-× site notification to mark manually on Blueprints.
+- Response `200`: `{ "success": true, "blueprint": "<internalName>", "blueprintName": "...", "resolvedVia": "internal"|"display"|"contract", "duplicate": false }` - green-check site notification on new inserts only.
+- Response `202`: `{ "error": "ambiguous_blueprint", "displayName": "...", "notificationSent": true }` - sends a red-× site notification to mark manually on Blueprints.
 - Response `400`: unknown blueprint (not in catalog).
 - Idempotent: duplicate inserts return `duplicate: true` without error or success notification.
 - Also clears the blueprint from the member's Mission Tracker target list on new acquire.
 
-**GET — sync acquired blueprint IDs**
+**GET - sync acquired blueprint IDs**
 
 ```json
 { "success": true, "blueprints": ["behr_smg_ballistic_01", "..."] }
@@ -378,10 +378,10 @@ VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-Optional (production uses the official DFP host — see LICENSE.DFP):
+Optional (production uses the official DFP host - see LICENSE.DFP):
 
 ```env
-# Dev only — local public/ copy from dfp-engine-private build
+# Dev only - local public/ copy from dfp-engine-private build
 # VITE_DFP_ENGINE_BASE_URL=http://localhost:5173
 ```
 
@@ -421,7 +421,7 @@ SELECT public.get_pending_custom_order_count();
 SELECT column_name FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name = 'custom_orders' AND column_name = 'listing_type';
 
--- Shop tables removed (087) — skip if migration 087 applied
+-- Shop tables removed (087) - skip if migration 087 applied
 
 -- 118: game data mirror tables removed (catalogs ship bundled with the site)
 SELECT table_name FROM information_schema.tables
@@ -456,4 +456,4 @@ WHERE proname = 'sync_my_discord_event_webhooks';
 
 ## Legacy migrations
 
-`supabase/migrations_legacy/` (001–041) is historical audit only — **not** for new installs.
+`supabase/migrations_legacy/` (001-041) is historical audit only - **not** for new installs.
