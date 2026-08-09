@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { APP_UPDATE_POLL_MS, isAppOutOfDate } from '../lib/appVersion'
+import { isAppOutOfDate } from '../lib/appVersion'
 
 /**
  * Detects when a newer site build is deployed than the one this tab loaded.
- * Checks on mount, when the tab becomes visible again, and on a slow poll
- * so long-lived sessions still see the update banner.
+ * Checks on mount and when the tab becomes visible again — never on a background
+ * timer, so idle tabs do not keep poking the network or flashing UI.
  */
-export function useAppUpdateAvailable(pollMs = APP_UPDATE_POLL_MS): boolean {
+export function useAppUpdateAvailable(): boolean {
   const [updateAvailable, setUpdateAvailable] = useState(false)
 
   useEffect(() => {
@@ -21,10 +21,6 @@ export function useAppUpdateAvailable(pollMs = APP_UPDATE_POLL_MS): boolean {
 
     void check()
 
-    const intervalId = window.setInterval(() => {
-      void check()
-    }, pollMs)
-
     const onVisibility = () => {
       if (document.visibilityState === 'visible') void check()
     }
@@ -32,10 +28,9 @@ export function useAppUpdateAvailable(pollMs = APP_UPDATE_POLL_MS): boolean {
 
     return () => {
       cancelled = true
-      window.clearInterval(intervalId)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [pollMs, updateAvailable])
+  }, [updateAvailable])
 
   return updateAvailable
 }

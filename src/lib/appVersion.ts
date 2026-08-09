@@ -1,7 +1,7 @@
 const BUILD_ID = import.meta.env.VITE_BUILD_ID as string | undefined
 
-/** How often long-lived tabs re-check for a new deploy. */
-export const APP_UPDATE_POLL_MS = 15 * 60 * 1000
+/** @deprecated Idle polling removed — update checks run on mount / tab focus only. */
+export const APP_UPDATE_POLL_MS = 0
 
 /** Second fetch delay so a CDN/partial publish race cannot flash the banner. */
 const CONFIRM_GAP_MS = 2500
@@ -21,24 +21,12 @@ function sleep(ms: number): Promise<void> {
   })
 }
 
-/** Prefer HTML meta (same deploy unit as the shell) over version.json alone. */
-async function fetchBuildIdFromIndexHtml(): Promise<string | null> {
-  const response = await fetch(`/?dr_build_check=${Date.now()}`, {
-    cache: 'no-store',
-    headers: { Accept: 'text/html' },
-  })
-  if (!response.ok) return null
-
-  const contentType = (response.headers.get('content-type') || '').toLowerCase()
-  if (contentType && !contentType.includes('text/html')) return null
-
-  const html = await response.text()
-  const match = html.match(/<meta\s+name=["']dr-build-id["']\s+content=["']([^"']+)["']/i)
-  const id = match?.[1]?.trim()
-  return isPlausibleBuildId(id) ? id : null
-}
-
-async function fetchBuildIdFromVersionJson(): Promise<string | null> {
+/**
+ * Deployed build id from version.json only.
+ * Do not fetch `/` (document URL) — that was an idle-network footgun and is unnecessary
+ * when version.json is published with the same deploy (see public/_headers).
+ */
+async function fetchDeployedBuildId(): Promise<string | null> {
   const response = await fetch(`/version.json?t=${Date.now()}`, {
     cache: 'no-store',
     headers: { Accept: 'application/json' },
@@ -54,28 +42,13 @@ async function fetchBuildIdFromVersionJson(): Promise<string | null> {
   return isPlausibleBuildId(body.buildId) ? body.buildId.trim() : null
 }
 
-/**
- * Deployed build id must agree from HTML meta + version.json.
- * Either alone can false-positive when a CDN edge is skewed.
- */
-async function fetchDeployedBuildId(): Promise<string | null> {
-  const [fromHtml, fromJson] = await Promise.all([
-    fetchBuildIdFromIndexHtml(),
-    fetchBuildIdFromVersionJson(),
-  ])
-  if (!fromHtml || !fromJson) return null
-  if (fromHtml !== fromJson) return null
-  return fromHtml
-}
-
 /** Formerly hard-reloaded on bfcache restore; that felt like random auto-refresh. Banner handles deploys. */
 export function setupCacheBusting(): void {
   // no-op — do not call reloadForAppUpdate() on pageshow/persisted
 }
 
 /**
- * True when this tab's build is behind a confirmed deploy.
- * Requires two agreeing remote reads (HTML meta + version.json both match).
+ * True when this tab's build is behind a confirmed deploy (version.json, twice).
  * Session-deduped so the same mismatch does not re-nag after dismiss/refresh loops.
  */
 export async function isAppOutOfDate(): Promise<boolean> {
