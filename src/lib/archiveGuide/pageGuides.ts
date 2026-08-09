@@ -298,6 +298,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Friends icon in the header (between notifications and your avatar) — add by RSI Handle, remove friends, and manage private groups',
       'Send a request by RSI Handle; the other member must accept before you are friends',
+      'Until a request is accepted, only RSI Handles are shown (not real names) in requests and notifications',
       'Incoming and outgoing requests are handled in the notification bell (Friends category) — Accept, Deny, or Cancel there',
       'Create private group labels to organize your list; use the arrows to reorder groups — only you see your group names',
       'On Blueprints, pick a friend in Members to filter by their acquired collection (your checkboxes stay yours)',
