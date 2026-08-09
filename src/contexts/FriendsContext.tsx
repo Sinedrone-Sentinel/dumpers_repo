@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext'
 import {
+  FRIENDS_CHANGED_EVENT,
   listMyFriends,
   type FriendGroup,
   type FriendListEntry,
@@ -45,6 +46,14 @@ export function FriendsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     void refresh()
+  }, [refresh])
+
+  useEffect(() => {
+    const onChanged = () => {
+      void refresh()
+    }
+    window.addEventListener(FRIENDS_CHANGED_EVENT, onChanged)
+    return () => window.removeEventListener(FRIENDS_CHANGED_EVENT, onChanged)
   }, [refresh])
 
   const value = useMemo(
