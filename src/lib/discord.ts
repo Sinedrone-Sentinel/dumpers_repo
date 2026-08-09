@@ -23,6 +23,8 @@ export const DISCORD_COLORS = {
   my_support_resolved: 0x22c55e,
   support: 0x8b5cf6,
   admin: 0xef4444,
+  partnership_application: 0x8b5cf6,
+  contributor_application: 0x3498db,
   success: 0x22c55e,
   warning: 0xeab308,
   error: 0xef4444,
@@ -52,6 +54,8 @@ export type DiscordEventType =
   | 'my_support_resolved'
   | 'support'
   | 'admin'
+  | 'partnership_application'
+  | 'contributor_application'
 
 export type DiscordEventCategory = 'personal' | 'marketplace' | 'support'
 
@@ -70,6 +74,8 @@ export interface DiscordSettings {
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
+  partnership_application_enabled: boolean
+  contributor_application_enabled: boolean
   personal_discord_enabled: boolean
   market_coalesce_enabled: boolean
   market_coalesce_minutes: number
@@ -151,6 +157,8 @@ export async function updateDiscordSettings(settings: Partial<{
   blueprints_enabled: boolean
   support_enabled: boolean
   admin_enabled: boolean
+  partnership_application_enabled: boolean
+  contributor_application_enabled: boolean
   personal_discord_enabled: boolean
   market_coalesce_enabled: boolean
   market_coalesce_minutes: number
@@ -167,6 +175,8 @@ export async function updateDiscordSettings(settings: Partial<{
       p_blueprints_enabled: settings.blueprints_enabled ?? null,
       p_support_enabled: settings.support_enabled ?? null,
       p_admin_enabled: settings.admin_enabled ?? null,
+      p_partnership_application_enabled: settings.partnership_application_enabled ?? null,
+      p_contributor_application_enabled: settings.contributor_application_enabled ?? null,
       p_personal_discord_enabled: settings.personal_discord_enabled ?? null,
       p_market_coalesce_enabled: settings.market_coalesce_enabled ?? null,
       p_market_coalesce_minutes: settings.market_coalesce_minutes ?? null,

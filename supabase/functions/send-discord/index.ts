@@ -32,6 +32,8 @@ const COLORS: Record<string, number> = {
   my_support_resolved: 0x22c55e,
   support: 0x8b5cf6,
   admin: 0xef4444,
+  partnership_application: 0x8b5cf6,
+  contributor_application: 0x3498db,
   blueprints: 0x5865f2,
 }
 
@@ -209,7 +211,12 @@ function sanitizeEmbed(embed: DiscordEmbed): DiscordEmbed {
 }
 
 function isStaffEvent(eventType: string): boolean {
-  return eventType === 'support' || eventType === 'admin'
+  return (
+    eventType === 'support' ||
+    eventType === 'admin' ||
+    eventType === 'partnership_application' ||
+    eventType === 'contributor_application'
+  )
 }
 
 function isPersonalEvent(eventType: string): boolean {
