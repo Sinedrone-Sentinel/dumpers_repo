@@ -18,6 +18,7 @@ Guests/offline users see ticker headlines **and** modal detail. **Never** put in
 - Security, RLS, Edge, auth, API keys, version gates, cron, migrations
 - Officer/super-admin-only workflows or internal tool names beyond what members already see
 - Implementation jargon (“full history import”, “catch-up”, “RPC”, “webhook hardening”)
+- **Private repos / sibling projects** — never mention a private DFP project, `dfp-engine-private`, or that anything exists outside the public Dumper's Repo / Dumper Apps. Say where work happens (this public repo / GitHub); do not advertise what is off-limits.
 
 ## Layout categories (UI badges — do not prefix headlines)
 
