@@ -486,6 +486,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(nextSession)
       setUser(nextSession?.user ?? null)
 
+      // Token refresh only renews JWTs — do not re-fetch profile/settings (felt like a full refresh).
+      if (event === 'TOKEN_REFRESHED') {
+        return
+      }
+
       if (nextSession?.user) {
         await loadUserData(nextSession.user, event === 'SIGNED_IN')
       } else if (!isBannedRef.current) {
