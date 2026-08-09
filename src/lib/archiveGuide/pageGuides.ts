@@ -279,7 +279,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Notifications are grouped into collapsible categories — BP Dumper, WTB & Craft Orders, WTS Listings, Support, Mining Ledgers, Friends, and more',
       'Every category stays visible even when empty; expand a section to see its alerts or a None placeholder',
       'Alerts cover marketplace events such as order acceptances, ready-for-pickup, and status changes',
-      'Friend request alerts include Accept / Deny; outgoing requests include Cancel — all under the Friends category',
+      'Friend request alerts: incoming show Accept / Deny (no Clear); outgoing show Cancel instead of Clear — under the Friends category',
       'Order alerts include a clickable link in the message — The Bazaar for seller/fulfiller actions, My Listings → Completed to archive & rate',
       'Itemized order summaries reflect blueprint stats and materials when the order includes them',
       'Click Clear on a notification to dismiss it — dismissed rows are deleted (no read history kept)',

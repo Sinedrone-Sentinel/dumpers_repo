@@ -4,7 +4,6 @@ import type { UserNotification } from '../lib/operations'
 import { getNotificationActionLink } from '../lib/notificationLinks'
 import { requestBlueprintFocus } from '../lib/blueprintFocusRequest'
 import {
-  cancelFriendRequest,
   notifyFriendsChanged,
   openFriendsMenu,
   respondFriendRequest,
@@ -50,15 +49,16 @@ export default function NotificationBody({
       : null
   const friendshipId = friendshipIdFromPayload(notification.payload)
   const isInboundFriendRequest = notification.type === 'friend_request' && !!friendshipId
-  const isOutboundFriendRequest = notification.type === 'friend_request_sent' && !!friendshipId
-  const hasFriendActions = isInboundFriendRequest || isOutboundFriendRequest
+  // Outgoing pending Cancel lives in the notification row action (replaces Clear).
+  const hasFriendActions = isInboundFriendRequest
 
   if (
     !notification.body &&
     !link &&
     !questionnaireId &&
     !acceptedDetail &&
-    !hasFriendActions
+    !hasFriendActions &&
+    notification.type !== 'friend_request_sent'
   ) {
     return null
   }
@@ -136,18 +136,6 @@ export default function NotificationBody({
             onClick={() => void runFriendAction(() => respondFriendRequest(friendshipId, false))}
           >
             Deny
-          </button>
-        </div>
-      )}
-      {isOutboundFriendRequest && (
-        <div className="flex flex-wrap items-center gap-1.5">
-          <button
-            type="button"
-            disabled={friendBusy}
-            className="site-btn-ghost text-[10px] px-2 py-1"
-            onClick={() => void runFriendAction(() => cancelFriendRequest(friendshipId))}
-          >
-            Cancel request
           </button>
         </div>
       )}

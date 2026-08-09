@@ -1,8 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouterState } from '@tanstack/react-router'
 import { deleteAllUserNotifications, deleteUserNotification } from '../../lib/operations'
+import {
+  cancelFriendRequest,
+  notifyFriendsChanged,
+} from '../../lib/friends'
 import { useClickOutside } from '../../hooks/useClickOutside'
-import { useNotificationInbox } from '../../hooks/useNotificationInbox'
+import {
+  notifyNotificationsChanged,
+  useNotificationInbox,
+} from '../../hooks/useNotificationInbox'
 import NotificationBody from '../NotificationBody'
 import { getNotificationVisual, NotificationStatusIcon } from '../../lib/notificationPresentation'
 import {
@@ -13,6 +20,18 @@ import {
   saveNotificationInboxCollapsed,
   type NotificationCategoryId,
 } from '../../lib/notificationCategories'
+
+
+const PENDING_FRIEND_REQUEST_TYPES = new Set(['friend_request', 'friend_request_sent'])
+
+function isPendingFriendRequestType(type: string): boolean {
+  return PENDING_FRIEND_REQUEST_TYPES.has(type)
+}
+
+function friendshipIdFromPayload(payload: Record<string, unknown> | null | undefined): string | null {
+  const raw = payload?.friendship_id
+  return typeof raw === 'string' && raw.length > 0 ? raw : null
+}
 
 interface AppNotificationBellProps {
   disabled?: boolean
@@ -70,15 +89,27 @@ export default function AppNotificationBell({
     if (!result.error) removeOne(notificationId)
   }
 
+  const handleCancelFriendRequest = async (notificationId: string, friendshipId: string) => {
+    setLoading(true)
+    const result = await cancelFriendRequest(friendshipId)
+    setLoading(false)
+    if (result.error) return
+    notifyFriendsChanged()
+    notifyNotificationsChanged()
+    removeOne(notificationId)
+  }
+
   const handleDismissAll = async () => {
     setLoading(true)
     const result = await deleteAllUserNotifications()
     setLoading(false)
-    // Server skips questionnaire_available; refresh so local list matches.
+    // Skips questionnaires + pending friend requests; refresh so local list matches.
     if (!result.error) void refresh()
   }
 
-  const clearableCount = notifications.filter((n) => n.type !== 'questionnaire_available').length
+  const clearableCount = notifications.filter(
+    (n) => n.type !== 'questionnaire_available' && !isPendingFriendRequestType(n.type)
+  ).length
 
   return (
     <div ref={containerRef} className="relative shrink-0">
@@ -130,7 +161,7 @@ export default function AppNotificationBell({
                 disabled={loading}
                 onClick={() => void handleDismissAll()}
                 className="text-xs text-slate-400 hover:text-white disabled:opacity-50"
-                title="Does not clear questionnaire prompts"
+                title="Does not clear questionnaires or pending friend requests"
               >
                 Clear all
               </button>
@@ -186,6 +217,7 @@ export default function AppNotificationBell({
                         {items.map((notification) => {
                           const visual = getNotificationVisual(notification.type)
                           const isQuestionnaire = notification.type === 'questionnaire_available'
+                          const isPendingFriend = isPendingFriendRequestType(notification.type)
                           return (
                             <li
                               key={notification.id}
@@ -200,7 +232,7 @@ export default function AppNotificationBell({
                                       notification={notification}
                                       onNavigate={close}
                                       onDismissAfterNavigate={
-                                        isQuestionnaire
+                                        isQuestionnaire || isPendingFriend
                                           ? undefined
                                           : () => void handleDismiss(notification.id)
                                       }
@@ -208,7 +240,20 @@ export default function AppNotificationBell({
                                     />
                                   </div>
                                 </div>
-                                {!isQuestionnaire && (
+                                {notification.type === 'friend_request_sent' ? (
+                                  <button
+                                    type="button"
+                                    disabled={loading || !friendshipIdFromPayload(notification.payload)}
+                                    onClick={() => {
+                                      const friendshipId = friendshipIdFromPayload(notification.payload)
+                                      if (!friendshipId) return
+                                      void handleCancelFriendRequest(notification.id, friendshipId)
+                                    }}
+                                    className="shrink-0 text-xs text-rose-300 hover:text-rose-200 disabled:opacity-50"
+                                  >
+                                    Cancel
+                                  </button>
+                                ) : !isQuestionnaire && !isPendingFriendRequestType(notification.type) ? (
                                   <button
                                     type="button"
                                     onClick={() => void handleDismiss(notification.id)}
@@ -216,7 +261,7 @@ export default function AppNotificationBell({
                                   >
                                     Clear
                                   </button>
-                                )}
+                                ) : null}
                               </div>
                             </li>
                           )
