@@ -20,7 +20,8 @@ export type FriendListEntry = {
   profile: FriendProfile
   friendshipId: string
   since: string
-  groupId: string | null
+  /** Always set after migration 171 (Default group if none chosen). */
+  groupId: string
 }
 
 export type PendingFriendRequest = {
@@ -35,6 +36,7 @@ export type FriendGroup = {
   id: string
   label: string
   sortOrder: number
+  isDefault: boolean
 }
 
 export type FriendsSnapshot = {
@@ -88,7 +90,7 @@ export async function listMyFriends(): Promise<{ data?: FriendsSnapshot; error?:
           profile: asProfile(o.profile),
           friendshipId: String(o.friendshipId ?? ''),
           since: String(o.since ?? ''),
-          groupId: typeof o.groupId === 'string' ? o.groupId : null,
+          groupId: String(o.groupId ?? ''),
         }
       }),
       pendingInbound: inboundRaw.map((f) => {
@@ -115,6 +117,7 @@ export async function listMyFriends(): Promise<{ data?: FriendsSnapshot; error?:
           id: String(o.id ?? ''),
           label: String(o.label ?? ''),
           sortOrder: Number(o.sortOrder ?? 0),
+          isDefault: Boolean(o.isDefault),
         }
       }),
     },
@@ -196,7 +199,7 @@ export async function reorderFriendGroups(groupIds: string[]): Promise<{ error?:
 
 export async function setFriendGroup(
   friendUserId: string,
-  groupId: string | null
+  groupId: string
 ): Promise<{ error?: string }> {
   const { data, error } = await supabase.rpc('set_friend_group', {
     p_friend_user_id: friendUserId,
