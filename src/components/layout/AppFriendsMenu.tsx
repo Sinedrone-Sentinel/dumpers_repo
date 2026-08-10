@@ -28,7 +28,6 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
   const { friends, groups, loading, refresh } = useFriends()
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
   const [rsiHandle, setRsiHandle] = useState('')
   const [newGroupLabel, setNewGroupLabel] = useState('')
   const [openGroupId, setOpenGroupId] = useState<string | null>(null)
@@ -101,16 +100,11 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
     if (!open) seededOpenRef.current = false
   }, [open])
 
-  const run = async (fn: () => Promise<{ error?: string }>, okMsg?: string) => {
+  const run = async (fn: () => Promise<{ error?: string }>) => {
     setBusy(true)
-    setMessage(null)
     const result = await fn()
     setBusy(false)
-    if (result.error) {
-      setMessage(result.error)
-      return
-    }
-    if (okMsg) setMessage(okMsg)
+    if (result.error) return
     await refresh()
   }
 
@@ -197,17 +191,11 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
       </button>
 
       {open && !disabled && (
-        <div className="site-menu-panel absolute right-0 top-full mt-2 w-[22rem] max-w-[calc(100vw-1.5rem)] max-h-[min(70vh,32rem)] flex flex-col overflow-hidden z-50 p-3 gap-2.5">
+        <div className="site-menu-panel absolute right-0 top-full mt-2 w-[calc(22rem-20px)] max-w-[calc(100vw-1.5rem)] max-h-[min(70vh,calc(32rem+50px))] flex flex-col overflow-hidden z-50 p-3 gap-2.5">
           <div className="flex items-center justify-between gap-2 shrink-0">
             <h3 className="text-sm font-semibold text-white">Friends</h3>
             {loading && <span className="text-[10px] text-slate-500">Refreshing…</span>}
           </div>
-
-          {message && (
-            <p className="text-xs text-amber-200/90 bg-amber-950/40 border border-amber-500/30 rounded-lg px-2 py-1.5 shrink-0">
-              {message}
-            </p>
-          )}
 
           <section className="flex gap-2 shrink-0">
             <input
@@ -228,7 +216,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                   const result = await sendFriendRequest(rsiHandle.trim())
                   if (!result.error) setRsiHandle('')
                   return result
-                }, 'Request sent — manage it from Notifications')
+                })
               }
             >
               Add
@@ -456,7 +444,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                 onClick={() => {
                   const id = deleteTarget.id
                   setDeleteTarget(null)
-                  void run(() => deleteFriendGroup(id), 'Group deleted — friends moved to Default')
+                  void run(() => deleteFriendGroup(id))
                 }}
               >
                 Delete group
