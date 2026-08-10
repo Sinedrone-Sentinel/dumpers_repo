@@ -1,4 +1,4 @@
-# Dependabot kept — Scorecard likes it — but open-pull-requests-limit: 0
+# Dependabot kept for Scorecard, but open-pull-requests-limit: 0
 # so it does NOT open version-update PRs. Bump deps by hand when you care.
 # Security alerts (if enabled in repo settings) are separate from this file.
 version: 2
