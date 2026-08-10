@@ -117,7 +117,7 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 - Header Friends control (between notifications and avatar): add by RSI Handle, remove, private reorderable groups
 - Incoming/outgoing friend requests are managed from the notification bell (Accept / Deny / Cancel)
 - View friends’ acquired blueprints (Blueprints Members) and personal resources (Friends Resources)
-- Accepted friends do not see each other’s Bazaar listings (by design)
+- Friends organize private groups (Default + custom bands); accepted friends can browse and trade each other’s Bazaar listings
 - Optional Discord Webhooks (My activity): friend request received / accepted (RSI Handle only)
 
 ### Mining Tracker (`/mining-tracker`)
