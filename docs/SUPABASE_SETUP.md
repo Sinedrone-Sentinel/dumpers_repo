@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `171_friend_default_group.sql` (Friends: Default group + restore friends’ Bazaar visibility/trade). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `172_friend_invite_links.sql` (Friends: multi-use opaque invite links). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -202,6 +202,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 134 | `169_sync_pending_friend_notifications.sql` | Friends: `ensure_pending_friend_notifications` + backfill; DELETE RLS blocks Clear on pending friend Notify types |
 | 135 | `170_friend_discord_personal_events.sql` | Friends personal Discord: `my_friend_request` / `my_friend_accepted` subscribe events; queue RSI-handle embed fields from friend RPCs |
 | 136 | `171_friend_default_group.sql` | Friends: per-owner Default group (`is_default`); accept assigns both sides; delete custom group moves members to Default; reorder pins Default last; restore friends’ visibility/trade on Bazaar |
+| 137 | `172_friend_invite_links.sql` | Friends: `friend_invite_token` + ensure/rotate/redeem RPCs (multi-use link; per-clicker rate limit) |
 
 ### pg_cron (migrations 054, 065-068, 144, 147)
 

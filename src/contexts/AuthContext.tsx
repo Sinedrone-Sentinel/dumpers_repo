@@ -654,34 +654,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const acquiredRef = useRef(acquiredBlueprints)
   acquiredRef.current = acquiredBlueprints
 
-  const oauthRedirectOptions = useMemo(
-    () => ({ redirectTo: window.location.origin }),
-    []
-  )
-
-  const oauthProviderOptions = useCallback(
-    (provider: OAuthProviderId) => ({
-      ...oauthRedirectOptions,
-      ...(provider === 'discord' ? getDiscordOAuthOptions() : {}),
-    }),
-    [oauthRedirectOptions]
-  )
-
   const signInWithOAuthProvider = useCallback(
     async (provider: OAuthProviderId) => {
       writeGuestPreviewSession(false)
       setIsGuestPreview(false)
 
+      const { buildOAuthRedirectTo } = await import('../lib/friendInvite')
+      const redirectTo = buildOAuthRedirectTo(window.location.origin)
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
-        options: oauthProviderOptions(provider),
+        options: {
+          redirectTo,
+          ...(provider === 'discord' ? getDiscordOAuthOptions() : {}),
+        },
       })
       if (error) {
         console.error(`Error signing in with ${provider}:`, error)
         throw error
       }
     },
-    [oauthProviderOptions]
+    []
   )
 
   const signInWithGoogle = useCallback(
@@ -707,14 +700,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (provider: OAuthProviderId) => {
       const { error } = await supabase.auth.linkIdentity({
         provider,
-        options: oauthProviderOptions(provider),
+        options: {
+          redirectTo: window.location.origin,
+          ...(provider === 'discord' ? getDiscordOAuthOptions() : {}),
+        },
       })
       if (error) {
         console.error(`Error linking ${provider}:`, error)
         throw error
       }
     },
-    [oauthProviderOptions]
+    []
   )
 
   const linkWithGoogle = useCallback(

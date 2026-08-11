@@ -239,3 +239,45 @@ export function friendLabel(profile: FriendProfile): string {
   if (profile.rsiHandle) return profile.rsiHandle
   return profile.displayName || 'Member'
 }
+
+export type FriendInviteLinkResult = {
+  token?: string
+  urlPath?: string
+  error?: string
+}
+
+export type FriendInviteRedeemStatus = 'pending' | 'already_friends'
+
+export async function ensureMyFriendInviteLink(): Promise<FriendInviteLinkResult> {
+  const { data, error } = await supabase.rpc('ensure_my_friend_invite_link')
+  if (error) return { error: error.message }
+  const row = data as { success?: boolean; token?: string; urlPath?: string; error?: string } | null
+  if (!row?.success) return { error: row?.error || 'Failed to get invite link' }
+  return { token: row.token, urlPath: row.urlPath }
+}
+
+export async function rotateMyFriendInviteLink(): Promise<FriendInviteLinkResult> {
+  const { data, error } = await supabase.rpc('rotate_my_friend_invite_link')
+  if (error) return { error: error.message }
+  const row = data as { success?: boolean; token?: string; urlPath?: string; error?: string } | null
+  if (!row?.success) return { error: row?.error || 'Failed to rotate invite link' }
+  return { token: row.token, urlPath: row.urlPath }
+}
+
+export async function redeemFriendInvite(
+  token: string
+): Promise<{ status?: FriendInviteRedeemStatus; error?: string }> {
+  const { data, error } = await supabase.rpc('redeem_friend_invite', { p_token: token })
+  if (error) return { error: error.message }
+  const row = data as { success?: boolean; status?: string; error?: string } | null
+  if (!row?.success) return { error: row?.error || 'Invite unavailable' }
+  const status = row.status === 'already_friends' ? 'already_friends' : 'pending'
+  return { status }
+}
+
+/** Absolute invite URL for clipboard (same token until owner rotates in Settings). */
+export function friendInviteAbsoluteUrl(urlPath: string): string {
+  if (typeof window === 'undefined') return urlPath
+  if (urlPath.startsWith('http://') || urlPath.startsWith('https://')) return urlPath
+  return `${window.location.origin}${urlPath.startsWith('/') ? '' : '/'}${urlPath}`
+}

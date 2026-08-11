@@ -2,7 +2,7 @@ import { SITE_COPYRIGHT, SITE_SUPPORT_LABEL, SITE_SUPPORT_URL, SITE_URL } from '
 import SiteBrandMark from '../components/SiteBrandMark'
 import SiteBrandTitle from '../components/SiteBrandTitle'
 
-const LAST_UPDATED = 'August 9, 2026'
+const LAST_UPDATED = 'August 10, 2026'
 
 export default function PrivacyRoute() {
   return (
@@ -95,6 +95,7 @@ export default function PrivacyRoute() {
               <li>Questionnaire / poll responses</li>
               <li>Partnership applications and related notes</li>
               <li>Notifications delivered in-app</li>
+              <li>Friend relationships, private friend groups, and optional friend invite link tokens</li>
               <li>Optional Discord webhook URLs you configure for personal or org alerts</li>
               <li>BP Dumper-related API credentials you generate for sync</li>
               <li>

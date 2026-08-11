@@ -36,6 +36,8 @@ const indexRoute = createRoute({
   path: '/',
   component: BlueprintsRoute,
   validateSearch: (search: Record<string, unknown>) => ({
+    // friendInvite is intentionally untyped here — FriendInviteRedeemer reads the raw
+    // query string so every navigate({ to: '/' }) does not require a search object.
     q: typeof search.q === 'string' && search.q.trim() ? search.q.trim() : undefined,
   }),
 })

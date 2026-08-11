@@ -9,6 +9,8 @@ import ConnectedAccountsSettings from './settings/ConnectedAccountsSettings'
 import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
 import RsiBioVerifyControls from './RsiBioVerifyControls'
+import SiteTooltip from './SiteTooltip'
+import { rotateMyFriendInviteLink } from '../lib/friends'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const {
@@ -44,6 +46,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     profile?.craft_deduct_inventory ?? false
   )
   const [groupVariantsEnabled, setGroupVariantsEnabled] = useState(groupBlueprintVariants)
+  const [rotatingInvite, setRotatingInvite] = useState(false)
   const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
   const [savingGroupBlueprintVariants, setSavingGroupBlueprintVariants] = useState(false)
   const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
@@ -400,6 +403,49 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           </SettingsSection>
 
           <ConnectedAccountsSettings onMessage={setMessage} />
+
+          <SettingsSection
+            title="Security"
+            description="Invite links and account-sensitive controls"
+          >
+            <SettingsField
+              label="Friend invite link"
+              hint={
+                isVerified
+                  ? 'Copy your invite link from the Friends menu. Rotate only if you need to invalidate a link you already posted (YouTube, Discord, etc.).'
+                  : 'Verify your RSI Handle above before you can share or rotate an invite link.'
+              }
+            >
+              <SiteTooltip
+                side="top"
+                content="Creates a new invite link and immediately stops the old one from working. Your previous YouTube/Discord posts will no longer add friend requests. Copy does not rotate — only this button does."
+              >
+                <button
+                  type="button"
+                  disabled={!isVerified || rotatingInvite}
+                  className="site-btn-secondary text-sm px-3 py-2"
+                  onClick={() => {
+                    if (!isVerified || rotatingInvite) return
+                    setRotatingInvite(true)
+                    void (async () => {
+                      const result = await rotateMyFriendInviteLink()
+                      setRotatingInvite(false)
+                      if (result.error) {
+                        setMessage({ type: 'error', text: result.error })
+                        return
+                      }
+                      setMessage({
+                        type: 'success',
+                        text: 'Invite link rotated. Old links no longer work — copy the new one from Friends.',
+                      })
+                    })()
+                  }}
+                >
+                  {rotatingInvite ? 'Rotating…' : 'Rotate invite link'}
+                </button>
+              </SiteTooltip>
+            </SettingsField>
+          </SettingsSection>
 
           <SettingsSection
             title="Display"
