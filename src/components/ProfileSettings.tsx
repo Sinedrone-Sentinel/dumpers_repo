@@ -412,13 +412,13 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               label="Friend invite link"
               hint={
                 isVerified
-                  ? 'Copy your invite link from the Friends menu. Rotate only if you need to invalidate a link you already posted (YouTube, Discord, etc.).'
+                  ? 'Share invite from the Friends menu. Rotate only if you need to invalidate a link you already posted (YouTube, Discord, etc.).'
                   : 'Verify your RSI Handle above before you can share or rotate an invite link.'
               }
             >
               <SiteTooltip
                 side="top"
-                content="Creates a new invite link and immediately stops the old one from working. Your previous YouTube/Discord posts will no longer add friend requests. Copy does not rotate — only this button does."
+                content="Creates a new invite link and immediately stops the old one from working. Your previous YouTube/Discord posts will no longer add friend requests. Share invite does not rotate — only this button does."
               >
                 <button
                   type="button"
