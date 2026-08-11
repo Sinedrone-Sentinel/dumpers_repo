@@ -297,6 +297,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Add approved members by RSI Handle, organize private groups, and view friends’ blueprints and resources.',
     details: [
       'Friends icon in the header (between notifications and your avatar) — add by RSI Handle, remove friends, and manage private groups',
+      'Friends is RSI-verified only — you and the other member must both have a verified RSI Handle (accept is mutual)',
       'Send a request by RSI Handle; the other member must accept before you are friends',
       'Until a request is accepted, only RSI Handles are shown (not real names) in requests and notifications',
       'Incoming and outgoing requests are handled in the notification bell (Friends category) — Accept, Deny, or Cancel there',
@@ -304,7 +305,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Create cosmetic group bands (names can match); open one band at a time, drag the handle to reorder custom groups',
       'Drag a friend onto another band to move them — friends stay alphabetical inside each group',
       'Deleting a custom group asks for confirmation, then moves its friends back to Default',
-      'Share invite (Friends header) copies one reusable link — viewers who sign in send you a pending request (you still Accept/Deny); requires verified RSI Handle',
+      'Share invite (Friends header) copies one reusable link — you must be RSI-verified to share; viewers who sign in have the invite saved until they verify RSI, then a pending request is sent (you still Accept/Deny)',
+      'If you rotate the invite under Settings → Security before they verify, their saved code stops working',
       'Rotate invite link under Settings → Security if you need to invalidate an old posted link — Share invite never rotates by itself',
       'On Blueprints, pick a friend in Members to filter by their acquired collection (your checkboxes stay yours)',
       'On Resource Tracker, Friends Resources shows a friend’s stock in a read-only list',

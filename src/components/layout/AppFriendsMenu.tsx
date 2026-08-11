@@ -239,30 +239,37 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
             </div>
           </div>
 
-          <section className="flex gap-2 shrink-0">
-            <input
-              type="text"
-              value={rsiHandle}
-              onChange={(e) => setRsiHandle(e.target.value)}
-              placeholder="RSI Handle"
-              className="site-input flex-1 px-2 py-1.5 text-xs"
-              disabled={busy}
-              aria-label="Add by RSI Handle"
-            />
-            <button
-              type="button"
-              disabled={busy || !rsiHandle.trim()}
-              className="site-btn-primary text-xs px-2 py-1.5 shrink-0"
-              onClick={() =>
-                void run(async () => {
-                  const result = await sendFriendRequest(rsiHandle.trim())
-                  if (!result.error) setRsiHandle('')
-                  return result
-                })
-              }
-            >
-              Add
-            </button>
+          <section className="flex flex-col gap-1.5 shrink-0">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={rsiHandle}
+                onChange={(e) => setRsiHandle(e.target.value)}
+                placeholder={rsiVerified ? 'RSI Handle' : 'Verify RSI Handle in Settings'}
+                className="site-input flex-1 px-2 py-1.5 text-xs"
+                disabled={busy || !rsiVerified}
+                aria-label="Add by RSI Handle"
+              />
+              <button
+                type="button"
+                disabled={busy || !rsiVerified || !rsiHandle.trim()}
+                className="site-btn-primary text-xs px-2 py-1.5 shrink-0"
+                onClick={() =>
+                  void run(async () => {
+                    const result = await sendFriendRequest(rsiHandle.trim())
+                    if (!result.error) setRsiHandle('')
+                    return result
+                  })
+                }
+              >
+                Add
+              </button>
+            </div>
+            {!rsiVerified && (
+              <p className="text-[10px] text-slate-500 px-0.5">
+                Friends require a verified RSI Handle — for you and the member you add.
+              </p>
+            )}
           </section>
 
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-1.5 pr-0.5">

@@ -114,9 +114,9 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 
 ### Friends (header)
 
-- Header Friends control (between notifications and avatar): add by RSI Handle, remove, private reorderable groups
-- Share invite (Friends header) — reusable multi-use link; viewers who sign in send a pending request (you still Accept/Deny); requires verified RSI Handle
-- Rotate invite link under Settings → Security to invalidate a previously shared link (Share invite never rotates)
+- Header Friends control (between notifications and avatar): add by RSI Handle, remove, private reorderable groups — RSI-verified members only (both sides)
+- Share invite (Friends header) — reusable multi-use link; invite is saved until the visitor verifies RSI, then a pending request is created (you still Accept/Deny)
+- Rotate invite link under Settings → Security to invalidate a previously shared link (Share invite never rotates; also invalidates saved codes)
 - Incoming/outgoing friend requests are managed from the notification bell (Accept / Deny / Cancel)
 - View friends’ acquired blueprints (Blueprints Members) and personal resources (Friends Resources)
 - Friends organize private groups (Default + custom bands); accepted friends can browse and trade each other’s Bazaar listings

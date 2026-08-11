@@ -95,7 +95,7 @@ export default function PrivacyRoute() {
               <li>Questionnaire / poll responses</li>
               <li>Partnership applications and related notes</li>
               <li>Notifications delivered in-app</li>
-              <li>Friend relationships, private friend groups, and optional friend invite link tokens</li>
+              <li>Friend relationships, private friend groups, friend invite link tokens, and invite codes saved until RSI verification</li>
               <li>Optional Discord webhook URLs you configure for personal or org alerts</li>
               <li>BP Dumper-related API credentials you generate for sync</li>
               <li>
