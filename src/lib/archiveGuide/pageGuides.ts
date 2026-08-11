@@ -296,7 +296,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description:
       'Add approved members by RSI Handle, organize private groups, and view friends’ blueprints and resources.',
     details: [
-      'Friends icon in the header (between notifications and your avatar) — add by RSI Handle, remove friends, and manage private groups',
+      'Friends icon stays visible in the header for signed-in members; until your RSI Handle is verified it is unclickable (tooltip: verify required)',
       'Friends is RSI-verified only — you and the other member must both have a verified RSI Handle (accept is mutual)',
       'Send a request by RSI Handle; the other member must accept before you are friends',
       'Until a request is accepted, only RSI Handles are shown (not real names) in requests and notifications',
