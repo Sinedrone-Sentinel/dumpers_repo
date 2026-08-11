@@ -208,8 +208,8 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                 side="bottom"
                 content={
                   rsiVerified
-                    ? 'Copies a shareable invite link. Anyone who opens it while signed in sends you a friend request you can Accept or Deny. The same link works for many people (for example a YouTube description). It does not change until you rotate it under Settings → Security.'
-                    : 'Verify your RSI Handle in Settings before sharing an invite link.'
+                    ? 'Reusable link — signed-in visitors send a pending request. Rotate under Settings → Security.'
+                    : 'Verify your RSI Handle in Settings first.'
                 }
               >
                 <button
