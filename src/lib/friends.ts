@@ -246,7 +246,7 @@ export type FriendInviteLinkResult = {
   error?: string
 }
 
-export type FriendInviteRedeemStatus = 'pending' | 'already_friends'
+export type FriendInviteRedeemStatus = 'pending' | 'already_friends' | 'stashed_pending_rsi'
 
 export async function ensureMyFriendInviteLink(): Promise<FriendInviteLinkResult> {
   const { data, error } = await supabase.rpc('ensure_my_friend_invite_link')
@@ -271,8 +271,41 @@ export async function redeemFriendInvite(
   if (error) return { error: error.message }
   const row = data as { success?: boolean; status?: string; error?: string } | null
   if (!row?.success) return { error: row?.error || 'Invite unavailable' }
-  const status = row.status === 'already_friends' ? 'already_friends' : 'pending'
-  return { status }
+  if (row.status === 'stashed_pending_rsi') return { status: 'stashed_pending_rsi' }
+  if (row.status === 'already_friends') return { status: 'already_friends' }
+  return { status: 'pending' }
+}
+
+export type ProcessStashedInvitesResult = {
+  processed?: number
+  pending?: number
+  alreadyFriends?: number
+  invalid?: number
+  errors?: number
+  error?: string
+}
+
+/** After RSI verify: turn saved invite tokens into pending requests (rotated tokens drop). */
+export async function processMyStashedFriendInvites(): Promise<ProcessStashedInvitesResult> {
+  const { data, error } = await supabase.rpc('process_my_stashed_friend_invites')
+  if (error) return { error: error.message }
+  const row = data as {
+    success?: boolean
+    processed?: number
+    pending?: number
+    alreadyFriends?: number
+    invalid?: number
+    errors?: number
+    error?: string
+  } | null
+  if (!row?.success) return { error: row?.error || 'Failed to process saved invites' }
+  return {
+    processed: row.processed ?? 0,
+    pending: row.pending ?? 0,
+    alreadyFriends: row.alreadyFriends ?? 0,
+    invalid: row.invalid ?? 0,
+    errors: row.errors ?? 0,
+  }
 }
 
 /** Absolute invite URL for clipboard (same token until owner rotates in Settings). */
