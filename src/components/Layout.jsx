@@ -25,6 +25,7 @@ import MarketplaceBottomStack from './marketplace/MarketplaceBottomStack'
 import AppChrome from './layout/AppChrome'
 import AnalyticsTracker from './AnalyticsTracker'
 import AppBootstrapScreen from './bootstrap/AppBootstrapScreen'
+import FriendInviteRedeemer from './FriendInviteRedeemer'
 
 /** Signed-out visitors may open these without Offline Mode (crawlable SEO surfaces). */
 function isPublicSeoPath(pathname) {
@@ -84,6 +85,7 @@ function LayoutContent({
   return (
     <>
       <AnalyticsTracker />
+      <FriendInviteRedeemer />
       <AppChrome
         navGroups={navGroups}
         displayName={displayName}

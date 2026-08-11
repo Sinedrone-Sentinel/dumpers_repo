@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent } from 'react'
 import { useClickOutside } from '../../hooks/useClickOutside'
+import { useAuth } from '../../contexts/AuthContext'
 import { useFriends } from '../../contexts/FriendsContext'
 import AppModal from './AppModal'
+import SiteTooltip from '../SiteTooltip'
 import {
   OPEN_FRIENDS_MENU_EVENT,
   createFriendGroup,
   deleteFriendGroup,
+  ensureMyFriendInviteLink,
+  friendInviteAbsoluteUrl,
   friendLabel,
   removeFriend,
   renameFriendGroup,
@@ -25,10 +29,14 @@ type DragPayload =
   | { kind: 'friend'; userId: string; fromGroupId: string }
 
 export default function AppFriendsMenu({ disabled = false }: Props) {
+  const { profile } = useAuth()
   const { friends, groups, loading, refresh } = useFriends()
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [copyBusy, setCopyBusy] = useState(false)
+  const [copiedInvite, setCopiedInvite] = useState(false)
   const [rsiHandle, setRsiHandle] = useState('')
+  const rsiVerified = Boolean(profile?.rsi_handle_verified)
   const [newGroupLabel, setNewGroupLabel] = useState('')
   const [openGroupId, setOpenGroupId] = useState<string | null>(null)
   const [editingGroupId, setEditingGroupId] = useState<string | null>(null)
@@ -194,7 +202,41 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
         <div className="site-menu-panel absolute right-0 top-full mt-2 w-[calc(22rem-20px)] max-w-[calc(100vw-1.5rem)] max-h-[min(70vh,calc(32rem+50px))] flex flex-col overflow-hidden z-50 p-3 gap-2.5">
           <div className="flex items-center justify-between gap-2 shrink-0">
             <h3 className="text-sm font-semibold text-white">Friends</h3>
-            {loading && <span className="text-[10px] text-slate-500">Refreshing…</span>}
+            <div className="flex items-center gap-1.5">
+              {loading && <span className="text-[10px] text-slate-500">Refreshing…</span>}
+              <SiteTooltip
+                side="bottom"
+                content={
+                  rsiVerified
+                    ? 'Copies a shareable invite link. Anyone who opens it while signed in sends you a friend request you can Accept or Deny. The same link works for many people (for example a YouTube description). It does not change until you rotate it under Settings → Security.'
+                    : 'Verify your RSI Handle in Settings before sharing an invite link.'
+                }
+              >
+                <button
+                  type="button"
+                  disabled={busy || copyBusy || !rsiVerified}
+                  className="site-btn-secondary text-[10px] px-2 py-1 shrink-0"
+                  onClick={() => {
+                    if (!rsiVerified || copyBusy) return
+                    setCopyBusy(true)
+                    void (async () => {
+                      const result = await ensureMyFriendInviteLink()
+                      setCopyBusy(false)
+                      if (result.error || !result.urlPath) return
+                      try {
+                        await navigator.clipboard.writeText(friendInviteAbsoluteUrl(result.urlPath))
+                        setCopiedInvite(true)
+                        window.setTimeout(() => setCopiedInvite(false), 2500)
+                      } catch {
+                        /* clipboard blocked */
+                      }
+                    })()
+                  }}
+                >
+                  {copiedInvite ? 'Copied!' : 'Copy invite link'}
+                </button>
+              </SiteTooltip>
+            </div>
           </div>
 
           <section className="flex gap-2 shrink-0">
