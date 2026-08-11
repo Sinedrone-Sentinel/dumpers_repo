@@ -64,15 +64,15 @@ export function wasFriendInviteRedeemed(token: string): boolean {
  * never forwards arbitrary redirect query params (open-redirect safe).
  */
 export function buildOAuthRedirectTo(origin: string = window.location.origin): string {
-  let token: string | null = null
+  let fromUrl: string | null
   try {
-    token = normalizeFriendInviteToken(
+    fromUrl = normalizeFriendInviteToken(
       new URLSearchParams(window.location.search).get('friendInvite'),
     )
   } catch {
-    token = null
+    fromUrl = null
   }
-  if (!token) token = readStashedFriendInviteToken()
+  const token = fromUrl ?? readStashedFriendInviteToken()
   if (token) {
     stashFriendInviteToken(token)
     return `${origin}/?friendInvite=${encodeURIComponent(token)}`
