@@ -47,26 +47,39 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
   const seededOpenRef = useRef(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  const lockedByPending = disabled
+  const lockedByRsi = !rsiVerified
+  const cannotOpen = lockedByPending || lockedByRsi
+  const lockTooltip = lockedByPending
+    ? 'Friends unavailable until account is approved'
+    : lockedByRsi
+      ? 'You must be RSI Verified for this Feature'
+      : null
+
   const close = useCallback(() => {
     if (deleteTarget) return
     setOpen(false)
   }, [deleteTarget])
-  useClickOutside(containerRef, open && !disabled && !deleteTarget, close)
+  useClickOutside(containerRef, open && !cannotOpen && !deleteTarget, close)
+
+  useEffect(() => {
+    if (cannotOpen && open) setOpen(false)
+  }, [cannotOpen, open])
 
   useEffect(() => {
     const onOpen = () => {
-      if (!disabled) {
+      if (!cannotOpen) {
         setOpen(true)
         void refresh()
       }
     }
     window.addEventListener(OPEN_FRIENDS_MENU_EVENT, onOpen)
     return () => window.removeEventListener(OPEN_FRIENDS_MENU_EVENT, onOpen)
-  }, [disabled, refresh])
+  }, [cannotOpen, refresh])
 
   useEffect(() => {
-    if (open && !disabled) void refresh()
-  }, [open, disabled, refresh])
+    if (open && !cannotOpen) void refresh()
+  }, [open, cannotOpen, refresh])
 
   const orderedGroups = useMemo(() => {
     const customs = groups
@@ -170,33 +183,43 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
     ? (membersByGroup.get(deleteTarget.id)?.length ?? 0)
     : 0
 
+  const triggerButton = (
+    <button
+      type="button"
+      disabled={cannotOpen}
+      onClick={() => {
+        if (!cannotOpen) setOpen(!open)
+      }}
+      aria-label={lockTooltip ?? 'Friends'}
+      aria-expanded={open}
+      className="site-chrome-control relative px-2 py-1"
+    >
+      <svg
+        className={`w-6 h-6 ${cannotOpen ? 'text-slate-500' : 'text-slate-300'}`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+        />
+      </svg>
+    </button>
+  )
+
   return (
     <div ref={containerRef} className="relative shrink-0">
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={() => {
-          if (!disabled) setOpen(!open)
-        }}
-        aria-label={disabled ? 'Friends unavailable until account is approved' : 'Friends'}
-        aria-expanded={open}
-        className="site-chrome-control relative px-2 py-1"
-      >
-        <svg
-          className={`w-6 h-6 ${disabled ? 'text-slate-500' : 'text-slate-300'}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-          />
-        </svg>
-      </button>
+      {lockTooltip ? (
+        <SiteTooltip content={lockTooltip} side="bottom">
+          <span className="inline-flex">{triggerButton}</span>
+        </SiteTooltip>
+      ) : (
+        triggerButton
+      )}
 
       {open && !disabled && (
         <div className="site-menu-panel absolute right-0 top-full mt-2 w-[calc(22rem-20px)] max-w-[calc(100vw-1.5rem)] max-h-[min(70vh,calc(32rem+50px))] flex flex-col overflow-hidden z-50 p-3 gap-2.5">
