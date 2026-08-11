@@ -233,7 +233,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                     })()
                   }}
                 >
-                  {copiedInvite ? 'Copied!' : 'Copy invite link'}
+                  {copiedInvite ? 'Copied!' : 'Share invite'}
                 </button>
               </SiteTooltip>
             </div>
