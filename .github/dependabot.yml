@@ -1,83 +1,28 @@
-# Keep npm + GitHub Actions + Python watcher + Go deps current (helps OpenSSF Scorecard).
-# Majors are ignored — review those by hand. Groups + monthly cadence avoid PR floods.
+# Dependabot kept for Scorecard, but open-pull-requests-limit: 0
+# so it does NOT open version-update PRs. Bump deps by hand when you care.
+# Security alerts (if enabled in repo settings) are separate from this file.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: monthly
-      day: monday
-    open-pull-requests-limit: 3
-    labels:
-      - dependencies
-    groups:
-      npm-minor-patch:
-        patterns:
-          - '*'
-        update-types:
-          - minor
-          - patch
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - version-update:semver-major
+    open-pull-requests-limit: 0
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
-      day: monday
-    open-pull-requests-limit: 2
-    labels:
-      - dependencies
-    groups:
-      github-actions-minor-patch:
-        patterns:
-          - '*'
-        update-types:
-          - minor
-          - patch
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - version-update:semver-major
+    open-pull-requests-limit: 0
 
   - package-ecosystem: pip
     directory: /scripts/bp-dumper-py
     schedule:
       interval: monthly
-      day: monday
-    open-pull-requests-limit: 2
-    labels:
-      - dependencies
-    groups:
-      pip-minor-patch:
-        patterns:
-          - '*'
-        update-types:
-          - minor
-          - patch
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - version-update:semver-major
+    open-pull-requests-limit: 0
 
   - package-ecosystem: gomod
     directory: /scripts/bp-dumper-go
     schedule:
       interval: monthly
-      day: monday
-    open-pull-requests-limit: 2
-    labels:
-      - dependencies
-    groups:
-      go-minor-patch:
-        patterns:
-          - '*'
-        update-types:
-          - minor
-          - patch
-    ignore:
-      - dependency-name: '*'
-        update-types:
-          - version-update:semver-major
+    open-pull-requests-limit: 0
