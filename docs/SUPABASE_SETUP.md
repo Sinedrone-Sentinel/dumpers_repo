@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `173_friends_rsi_verified_invite_stash.sql` (Friends: RSI-verified only + stash invite tokens until verify). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `174_dumper_edge_abuse_guard.sql` (BP Dumper Edge: junk-key IP fail bucket + valid-key burst alerts to super-admins). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -204,6 +204,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 136 | `171_friend_default_group.sql` | Friends: per-owner Default group (`is_default`); accept assigns both sides; delete custom group moves members to Default; reorder pins Default last; restore friends’ visibility/trade on Bazaar |
 | 137 | `172_friend_invite_links.sql` | Friends: `friend_invite_token` + ensure/rotate/redeem RPCs (multi-use link; per-clicker rate limit) |
 | 138 | `173_friends_rsi_verified_invite_stash.sql` | Friends: RSI-verified send/accept; `friend_invite_stashes` until clicker verifies; process on `mark_rsi_handle_verified` |
+| 139 | `174_dumper_edge_abuse_guard.sql` | BP Dumper Edge abuse guard: IP auth-fail buckets (429); valid-key burst counters + Discord/Notify super-admin alerts (service_role RPCs only) |
 
 ### pg_cron (migrations 054, 065-068, 144, 147)
 
@@ -247,7 +248,7 @@ npx supabase functions deploy manage-github-collaborator
 | `delete-account` | User self-service account deletion (RPC cleanup + auth user + service-request screenshots) |
 | `validate-rsi-handle` | Verify RSI Handles via public citizen Bio challenge code (after `issue_rsi_verify_challenge`) |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
-| `log-watcher-webhook` | Receives blueprint events from BP Dumper; Bearer API key + required `X-Dumper-Version` (rejects outdated clients with HTTP 426) |
+| `log-watcher-webhook` | Receives blueprint events from BP Dumper; Bearer API key + required `X-Dumper-Version` (426 outdated); IP auth-fail 429 + valid-key burst alerts (mig 174) |
 | `discord-services-interactions` | Partnership Dumper Services bot (Accept buttons); Discord signature auth |
 | `discord-services-dispatch` | Fan-out service requests to partner Discord channels |
 | `discord-services-expire` | Expire open Accept windows + Timed out embeds |
@@ -316,12 +317,14 @@ Apply migration `131`. Super-admin questionnaire editor gains a **Public poll** 
 
 Members copy a personal API key from the **BP Dumper** modal (avatar menu, or Blueprints / Mission Tracker callout). Only the BP Dumper desktop program uses this key; it calls the deployed `log-watcher-webhook` Edge Function.
 
-After migration **145**, redeploy the webhook so Site Analytics can show per-user Edge invoke stats:
+After migrations **145** / **174**, redeploy the webhook so invoke analytics and abuse-guard RPCs stay in sync with Edge:
 
 ```bash
 npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
 ```
+
+**Abuse guard (migration 174, Edge):** malformed/`Invalid API key` traffic is counted per client IP; after ~25 fails in ~60s the IP is blocked with **429** (~10 min) and staff get a Discord/Notify alert (30 min cooldown). Accepted traffic with a **valid** key is classified (`ping` / `get_sync` / `blueprint` / `other`); bursts above normal dumper rates alert super-admins with **user id + RSI/email** (alert only — does not 429 bulk blueprint import). Thresholds: ping >10/min, GET sync >30/min, other >120/min, blueprint >900/min.
 
 **Base URL:** `https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-webhook` (hardcoded in BP Dumper; members only need their API key)
 
@@ -360,7 +363,7 @@ curl -X POST "https://dcyugmcvlmhlfmillzma.supabase.co/functions/v1/log-watcher-
   -d '{"type":"blueprint_received","blueprint":"behr_smg_ballistic_01"}'
 ```
 
-**Error codes:** 401 invalid/missing key · 403 banned or pending approval · 405 wrong HTTP method · 400 invalid JSON or blueprint ID
+**Error codes:** 401 invalid/missing key · 403 banned or pending approval · 426 outdated `X-Dumper-Version` · 429 auth-fail IP bucket · 405 wrong HTTP method · 400 invalid JSON or blueprint ID
 
 > **Removed from repo:** `sync-blueprints` (sccrafter.com), `sync-starstrings` (StarStrings), and `sync-game-data-to-db.mjs` (Supabase `game_*` mirror tables, dropped in migration 118). All game catalogs ship bundled from parsed `game-*.json`.
 

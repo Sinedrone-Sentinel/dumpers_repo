@@ -308,7 +308,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
-| **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version`; outdated clients get HTTP `426` |
+| **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version` (`426` if outdated); migration **174** IP auth-fail `429` + valid-key burst alerts to super-admins (see `SUPABASE_SETUP.md`) |
 | **Updates** | Manual: download new `DumperApps.exe` from GitHub Releases when prompted (no auto-download / self-replace) |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
@@ -352,7 +352,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`161_dumper_top_users_rolling_30d.sql`** (see full table in `SUPABASE_SETUP.md`)
+   Apply migrations in numeric order through **`174_dumper_edge_abuse_guard.sql`** (see full table in `SUPABASE_SETUP.md`)
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt` and `send-discord --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain; set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Settings → API Keys → **Publishable and secret API keys**
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)

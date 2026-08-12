@@ -1,0 +1,444 @@
+-- =============================================================================
+-- 174: BP Dumper Edge abuse guard
+-- =============================================================================
+-- 1) Junk / invalid API-key hammering: per-IP fail bucket → temporary 429
+-- 2) Valid-key abnormal burst (above normal dumper traffic): staff Discord +
+--    in-app Notify for every super-admin (with account identity)
+-- =============================================================================
+
+-- ---------------------------------------------------------------------------
+-- Tables (service_role only — Edge invokes DEFINER RPCs)
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.dumper_auth_fail_buckets (
+  client_key text PRIMARY KEY,
+  window_start timestamptz NOT NULL DEFAULT now(),
+  fail_count integer NOT NULL DEFAULT 0,
+  blocked_until timestamptz NULL
+);
+
+COMMENT ON TABLE public.dumper_auth_fail_buckets IS
+  'Edge auth-fail counters by client IP (or unknown); used to 429 junk hammering.';
+
+ALTER TABLE public.dumper_auth_fail_buckets ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.dumper_auth_fail_buckets FROM PUBLIC;
+REVOKE ALL ON TABLE public.dumper_auth_fail_buckets FROM anon, authenticated;
+
+CREATE TABLE IF NOT EXISTS public.dumper_invoke_burst_buckets (
+  user_id uuid NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
+  kind text NOT NULL,
+  window_start timestamptz NOT NULL,
+  invoke_count integer NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, kind)
+);
+
+COMMENT ON TABLE public.dumper_invoke_burst_buckets IS
+  'Sliding ~60s counters of accepted dumper Edge invokes by kind (ping/get/blueprint/other).';
+
+ALTER TABLE public.dumper_invoke_burst_buckets ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.dumper_invoke_burst_buckets FROM PUBLIC;
+REVOKE ALL ON TABLE public.dumper_invoke_burst_buckets FROM anon, authenticated;
+
+CREATE TABLE IF NOT EXISTS public.dumper_abuse_alert_cooldown (
+  subject_key text NOT NULL,
+  alert_kind text NOT NULL,
+  last_alerted_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (subject_key, alert_kind)
+);
+
+COMMENT ON TABLE public.dumper_abuse_alert_cooldown IS
+  'Cooldown rows so dumper abuse Discord/Notify alerts do not spam (default 30 min).';
+
+ALTER TABLE public.dumper_abuse_alert_cooldown ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.dumper_abuse_alert_cooldown FROM PUBLIC;
+REVOKE ALL ON TABLE public.dumper_abuse_alert_cooldown FROM anon, authenticated;
+
+-- ---------------------------------------------------------------------------
+-- Cooldown helper
+-- ---------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.dumper_abuse_try_alert(
+  p_subject_key text,
+  p_alert_kind text,
+  p_cooldown_seconds integer DEFAULT 1800
+)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_last timestamptz;
+  v_cooldown integer := GREATEST(60, COALESCE(p_cooldown_seconds, 1800));
+BEGIN
+  IF p_subject_key IS NULL OR length(trim(p_subject_key)) = 0 THEN
+    RETURN false;
+  END IF;
+  IF p_alert_kind IS NULL OR length(trim(p_alert_kind)) = 0 THEN
+    RETURN false;
+  END IF;
+
+  SELECT last_alerted_at
+  INTO v_last
+  FROM public.dumper_abuse_alert_cooldown
+  WHERE subject_key = trim(p_subject_key)
+    AND alert_kind = trim(p_alert_kind);
+
+  IF v_last IS NOT NULL AND v_last > (now() - make_interval(secs => v_cooldown)) THEN
+    RETURN false;
+  END IF;
+
+  INSERT INTO public.dumper_abuse_alert_cooldown (subject_key, alert_kind, last_alerted_at)
+  VALUES (trim(p_subject_key), trim(p_alert_kind), now())
+  ON CONFLICT (subject_key, alert_kind) DO UPDATE
+  SET last_alerted_at = now();
+
+  RETURN true;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.dumper_abuse_try_alert(text, text, integer) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.dumper_abuse_try_alert(text, text, integer) TO service_role;
+
+-- ---------------------------------------------------------------------------
+-- Staff alert: Discord admin + Notify all super-admins
+-- ---------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.queue_dumper_abuse_alert(
+  p_title text,
+  p_description text,
+  p_fields jsonb DEFAULT '[]'::jsonb,
+  p_notify_user_id uuid DEFAULT NULL,
+  p_notify_body text DEFAULT NULL,
+  p_notify_payload jsonb DEFAULT '{}'::jsonb
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_admin record;
+  v_color int := 15158332; -- red
+BEGIN
+  PERFORM public.queue_discord_message(
+    'admin',
+    COALESCE(NULLIF(trim(p_title), ''), 'Dumper Edge Abuse'),
+    COALESCE(NULLIF(trim(p_description), ''), 'Suspicious BP Dumper Edge traffic detected.'),
+    v_color,
+    COALESCE(p_fields, '[]'::jsonb)
+  );
+
+  FOR v_admin IN
+    SELECT id
+    FROM public.profiles
+    WHERE role = 'super-admin'
+  LOOP
+    PERFORM public.create_user_notification(
+      v_admin.id,
+      'dumper_edge_abuse',
+      COALESCE(NULLIF(trim(p_title), ''), 'Dumper Edge Abuse'),
+      COALESCE(
+        NULLIF(trim(p_notify_body), ''),
+        NULLIF(trim(p_description), ''),
+        'Suspicious BP Dumper Edge traffic detected.'
+      ),
+      COALESCE(p_notify_payload, '{}'::jsonb)
+        || CASE
+          WHEN p_notify_user_id IS NOT NULL THEN jsonb_build_object('target_user_id', p_notify_user_id)
+          ELSE '{}'::jsonb
+        END
+    );
+  END LOOP;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.queue_dumper_abuse_alert(text, text, jsonb, uuid, text, jsonb) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.queue_dumper_abuse_alert(text, text, jsonb, uuid, text, jsonb) TO service_role;
+
+-- ---------------------------------------------------------------------------
+-- Auth-fail gate (call before work; note after each 401)
+-- ---------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.dumper_check_auth_fail_gate(p_client_key text)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_key text := left(trim(COALESCE(p_client_key, 'unknown')), 64);
+  v_blocked_until timestamptz;
+  v_retry integer;
+BEGIN
+  IF v_key = '' THEN
+    v_key := 'unknown';
+  END IF;
+
+  SELECT blocked_until
+  INTO v_blocked_until
+  FROM public.dumper_auth_fail_buckets
+  WHERE client_key = v_key;
+
+  IF v_blocked_until IS NOT NULL AND v_blocked_until > now() THEN
+    v_retry := GREATEST(1, CEIL(EXTRACT(EPOCH FROM (v_blocked_until - now()))));
+    RETURN jsonb_build_object(
+      'blocked', true,
+      'retry_after_sec', v_retry
+    );
+  END IF;
+
+  RETURN jsonb_build_object('blocked', false, 'retry_after_sec', 0);
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.dumper_check_auth_fail_gate(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.dumper_check_auth_fail_gate(text) TO service_role;
+
+CREATE OR REPLACE FUNCTION public.dumper_note_auth_failure(p_client_key text)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_key text := left(trim(COALESCE(p_client_key, 'unknown')), 64);
+  v_window_secs integer := 60;
+  v_max_fails integer := 25;
+  v_block_secs integer := 600;
+  v_row public.dumper_auth_fail_buckets%ROWTYPE;
+  v_retry integer := 0;
+  v_just_blocked boolean := false;
+BEGIN
+  IF v_key = '' THEN
+    v_key := 'unknown';
+  END IF;
+
+  -- Opportunistic prune
+  DELETE FROM public.dumper_auth_fail_buckets
+  WHERE window_start < (now() - interval '2 days')
+    AND (blocked_until IS NULL OR blocked_until < now());
+
+  INSERT INTO public.dumper_auth_fail_buckets (client_key, window_start, fail_count, blocked_until)
+  VALUES (v_key, now(), 1, NULL)
+  ON CONFLICT (client_key) DO UPDATE
+  SET
+    window_start = CASE
+      WHEN public.dumper_auth_fail_buckets.blocked_until IS NOT NULL
+        AND public.dumper_auth_fail_buckets.blocked_until > now()
+        THEN public.dumper_auth_fail_buckets.window_start
+      WHEN public.dumper_auth_fail_buckets.window_start < (now() - make_interval(secs => v_window_secs))
+        THEN now()
+      ELSE public.dumper_auth_fail_buckets.window_start
+    END,
+    fail_count = CASE
+      WHEN public.dumper_auth_fail_buckets.blocked_until IS NOT NULL
+        AND public.dumper_auth_fail_buckets.blocked_until > now()
+        THEN public.dumper_auth_fail_buckets.fail_count
+      WHEN public.dumper_auth_fail_buckets.window_start < (now() - make_interval(secs => v_window_secs))
+        THEN 1
+      ELSE public.dumper_auth_fail_buckets.fail_count + 1
+    END,
+    blocked_until = CASE
+      WHEN public.dumper_auth_fail_buckets.blocked_until IS NOT NULL
+        AND public.dumper_auth_fail_buckets.blocked_until > now()
+        THEN public.dumper_auth_fail_buckets.blocked_until
+      WHEN (
+        CASE
+          WHEN public.dumper_auth_fail_buckets.window_start < (now() - make_interval(secs => v_window_secs))
+            THEN 1
+          ELSE public.dumper_auth_fail_buckets.fail_count + 1
+        END
+      ) >= v_max_fails
+        THEN now() + make_interval(secs => v_block_secs)
+      ELSE public.dumper_auth_fail_buckets.blocked_until
+    END
+  RETURNING * INTO v_row;
+
+  IF v_row.blocked_until IS NOT NULL AND v_row.blocked_until > now() THEN
+    v_retry := GREATEST(1, CEIL(EXTRACT(EPOCH FROM (v_row.blocked_until - now()))));
+    v_just_blocked := v_row.fail_count >= v_max_fails;
+
+    IF v_just_blocked
+      AND public.dumper_abuse_try_alert('ip:' || v_key, 'auth_fail_block', 1800)
+    THEN
+      PERFORM public.queue_dumper_abuse_alert(
+        'Dumper auth fail flood',
+        'An IP hit the junk/invalid API-key fail bucket and is temporarily blocked.',
+        jsonb_build_array(
+          jsonb_build_object('name', 'Client', 'value', v_key, 'inline', true),
+          jsonb_build_object('name', 'Fails (window)', 'value', v_row.fail_count::text, 'inline', true),
+          jsonb_build_object('name', 'Blocked for', 'value', v_retry::text || 's', 'inline', true)
+        ),
+        NULL,
+        format('IP %s blocked for ~%ss after %s auth failures in ~1 minute.', v_key, v_retry, v_row.fail_count),
+        jsonb_build_object(
+          'client_key', v_key,
+          'fail_count', v_row.fail_count,
+          'retry_after_sec', v_retry,
+          'kind', 'auth_fail_block'
+        )
+      );
+    END IF;
+
+    RETURN jsonb_build_object(
+      'blocked', true,
+      'retry_after_sec', v_retry,
+      'fail_count', v_row.fail_count
+    );
+  END IF;
+
+  RETURN jsonb_build_object(
+    'blocked', false,
+    'retry_after_sec', 0,
+    'fail_count', v_row.fail_count
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.dumper_note_auth_failure(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.dumper_note_auth_failure(text) TO service_role;
+
+-- ---------------------------------------------------------------------------
+-- Valid-key burst (alert only — do not 429 legitimate bulk BP import)
+-- Thresholds tuned above normal dumper:
+--   ping: ~2/min → alert > 10/min
+--   get_sync: occasional startup sync → alert > 30/min
+--   other events: reconnect/mission bursts → alert > 120/min
+--   blueprint: sequential import can be fast → alert only > 900/min
+-- ---------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.dumper_note_valid_invoke_burst(
+  p_user_id uuid,
+  p_kind text,
+  p_client_version text DEFAULT NULL,
+  p_client_ip text DEFAULT NULL
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_kind text := lower(trim(COALESCE(p_kind, 'other')));
+  v_window_secs integer := 60;
+  v_threshold integer;
+  v_count integer;
+  v_window_start timestamptz;
+  v_should_alert boolean := false;
+  v_alert_kind text;
+  v_rsi text;
+  v_display text;
+  v_email text;
+  v_label text;
+BEGIN
+  IF p_user_id IS NULL THEN
+    RETURN jsonb_build_object('ok', false, 'alerted', false, 'error', 'missing_user');
+  END IF;
+
+  IF v_kind NOT IN ('ping', 'get_sync', 'blueprint', 'other') THEN
+    v_kind := 'other';
+  END IF;
+
+  v_threshold := CASE v_kind
+    WHEN 'ping' THEN 10
+    WHEN 'get_sync' THEN 30
+    WHEN 'blueprint' THEN 900
+    ELSE 120
+  END;
+
+  DELETE FROM public.dumper_invoke_burst_buckets
+  WHERE window_start < (now() - interval '2 days');
+
+  INSERT INTO public.dumper_invoke_burst_buckets (user_id, kind, window_start, invoke_count)
+  VALUES (p_user_id, v_kind, now(), 1)
+  ON CONFLICT (user_id, kind) DO UPDATE
+  SET
+    window_start = CASE
+      WHEN public.dumper_invoke_burst_buckets.window_start < (now() - make_interval(secs => v_window_secs))
+        THEN now()
+      ELSE public.dumper_invoke_burst_buckets.window_start
+    END,
+    invoke_count = CASE
+      WHEN public.dumper_invoke_burst_buckets.window_start < (now() - make_interval(secs => v_window_secs))
+        THEN 1
+      ELSE public.dumper_invoke_burst_buckets.invoke_count + 1
+    END
+  RETURNING invoke_count, window_start INTO v_count, v_window_start;
+
+  IF v_count > v_threshold THEN
+    v_alert_kind := 'burst_' || v_kind;
+    IF public.dumper_abuse_try_alert('user:' || p_user_id::text, v_alert_kind, 1800) THEN
+      v_should_alert := true;
+
+      SELECT
+        nullif(trim(p.rsi_handle), ''),
+        nullif(trim(p.display_name), ''),
+        nullif(trim(u.email), '')
+      INTO v_rsi, v_display, v_email
+      FROM public.profiles p
+      LEFT JOIN auth.users u ON u.id = p.id
+      WHERE p.id = p_user_id;
+
+      v_label := COALESCE(v_rsi, v_display, 'Unknown');
+
+      PERFORM public.queue_dumper_abuse_alert(
+        'Dumper valid-key burst',
+        format(
+          'Accepted Edge traffic for kind "%s" exceeded the normal dumper pattern (>%s in ~60s). Review before banning — bulk BP import can be fast; ping floods are not normal.',
+          v_kind,
+          v_threshold
+        ),
+        jsonb_build_array(
+          jsonb_build_object('name', 'Account', 'value', v_label, 'inline', true),
+          jsonb_build_object('name', 'User ID', 'value', p_user_id::text, 'inline', false),
+          jsonb_build_object('name', 'Kind', 'value', v_kind, 'inline', true),
+          jsonb_build_object('name', 'Count / ~60s', 'value', v_count::text || ' (limit ' || v_threshold::text || ')', 'inline', true),
+          jsonb_build_object(
+            'name', 'Client version',
+            'value', COALESCE(NULLIF(trim(p_client_version), ''), 'unknown'),
+            'inline', true
+          ),
+          jsonb_build_object(
+            'name', 'Client IP',
+            'value', COALESCE(NULLIF(left(trim(COALESCE(p_client_ip, '')), 64), ''), 'unknown'),
+            'inline', true
+          ),
+          jsonb_build_object('name', 'RSI', 'value', COALESCE(v_rsi, '—'), 'inline', true),
+          jsonb_build_object('name', 'Email', 'value', COALESCE(v_email, '—'), 'inline', false)
+        ),
+        p_user_id,
+        format(
+          '%s hit %s %s invokes in ~60s (normal dumper stays under %s). User id: %s',
+          v_label,
+          v_count,
+          v_kind,
+          v_threshold,
+          p_user_id
+        ),
+        jsonb_build_object(
+          'kind', v_kind,
+          'count', v_count,
+          'threshold', v_threshold,
+          'client_version', COALESCE(NULLIF(trim(p_client_version), ''), NULL),
+          'client_ip', COALESCE(NULLIF(left(trim(COALESCE(p_client_ip, '')), 64), ''), NULL),
+          'rsi_handle', v_rsi,
+          'display_name', v_display
+        )
+      );
+    END IF;
+  END IF;
+
+  RETURN jsonb_build_object(
+    'ok', true,
+    'alerted', v_should_alert,
+    'kind', v_kind,
+    'count', v_count,
+    'threshold', v_threshold,
+    'window_start', v_window_start
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.dumper_note_valid_invoke_burst(uuid, text, text, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.dumper_note_valid_invoke_burst(uuid, text, text, text) TO service_role;

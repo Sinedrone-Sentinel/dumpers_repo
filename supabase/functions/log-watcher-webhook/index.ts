@@ -17,7 +17,89 @@ const AMBIGUOUS_DEDUPE_HOURS = 24
 const DUMPER_DOWNLOAD_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/releases/latest/download/DumperApps.exe'
 
+/** Issued keys are `dr_` + 24 random bytes as hex (see migration 110). */
+const DUMPER_API_KEY_RE = /^dr_[0-9a-f]{48}$/i
+
 type SupabaseAdmin = ReturnType<typeof createClient>
+type BurstKind = 'ping' | 'get_sync' | 'blueprint' | 'other'
+
+function clientIpFromRequest(req: Request): string {
+  const cf = req.headers.get('cf-connecting-ip')?.trim()
+  if (cf) return cf.slice(0, 64)
+  const realIp = req.headers.get('x-real-ip')?.trim()
+  if (realIp) return realIp.slice(0, 64)
+  const xff = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+  if (xff) return xff.slice(0, 64)
+  return 'unknown'
+}
+
+function burstKindFromEventType(eventType: string): BurstKind {
+  if (eventType === 'session_ping') return 'ping'
+  if (eventType === 'blueprint_received') return 'blueprint'
+  return 'other'
+}
+
+async function checkAuthFailGate(supabase: SupabaseAdmin, clientKey: string): Promise<Response | null> {
+  const { data, error } = await supabase.rpc('dumper_check_auth_fail_gate', {
+    p_client_key: clientKey,
+  })
+  if (error) {
+    console.warn('dumper_check_auth_fail_gate failed:', error.message)
+    return null
+  }
+  if (data?.blocked) {
+    const retry = Number(data.retry_after_sec) || 60
+    return new Response(JSON.stringify({ error: 'Too many failed auth attempts', retryAfterSec: retry }), {
+      status: 429,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        'Retry-After': String(retry),
+      },
+    })
+  }
+  return null
+}
+
+async function noteAuthFailure(supabase: SupabaseAdmin, clientKey: string): Promise<Response | null> {
+  const { data, error } = await supabase.rpc('dumper_note_auth_failure', {
+    p_client_key: clientKey,
+  })
+  if (error) {
+    console.warn('dumper_note_auth_failure failed:', error.message)
+    return null
+  }
+  if (data?.blocked) {
+    const retry = Number(data.retry_after_sec) || 60
+    return new Response(JSON.stringify({ error: 'Too many failed auth attempts', retryAfterSec: retry }), {
+      status: 429,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        'Retry-After': String(retry),
+      },
+    })
+  }
+  return null
+}
+
+async function noteValidInvokeBurst(
+  supabase: SupabaseAdmin,
+  userId: string,
+  kind: BurstKind,
+  clientVersion: string,
+  clientIp: string
+) {
+  const { error } = await supabase.rpc('dumper_note_valid_invoke_burst', {
+    p_user_id: userId,
+    p_kind: kind,
+    p_client_version: clientVersion || null,
+    p_client_ip: clientIp,
+  })
+  if (error) {
+    console.warn('dumper_note_valid_invoke_burst failed:', error.message)
+  }
+}
 
 function parseSemver(version: string): number[] {
   const cleaned = version.trim().toLowerCase().replace(/^v/, '')
@@ -196,18 +278,35 @@ serve(async (req) => {
   }
 
   try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    const clientIp = clientIpFromRequest(req)
+
+    const blockedEarly = await checkAuthFailGate(supabase, clientIp)
+    if (blockedEarly) return blockedEarly
+
     const authHeader = req.headers.get('Authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !/^Bearer\s+\S+/i.test(authHeader)) {
+      const rateLimited = await noteAuthFailure(supabase, clientIp)
+      if (rateLimited) return rateLimited
       return new Response(JSON.stringify({ error: 'Missing or invalid Authorization header. Provide Bearer <your_api_key>' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-    const apiKey = authHeader.replace('Bearer ', '').trim()
+    const apiKey = authHeader.replace(/^Bearer\s+/i, '').trim()
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    // Junk keys never hit user_api_keys — format gate + fail bucket.
+    if (!DUMPER_API_KEY_RE.test(apiKey)) {
+      console.log('Rejected malformed API key')
+      const rateLimited = await noteAuthFailure(supabase, clientIp)
+      if (rateLimited) return rateLimited
+      return new Response(JSON.stringify({ error: 'Invalid API key' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
 
     const { data: keyData, error: keyError } = await supabase
       .from('user_api_keys')
@@ -217,6 +316,8 @@ serve(async (req) => {
 
     if (keyError || !keyData) {
       console.log('Invalid API key')
+      const rateLimited = await noteAuthFailure(supabase, clientIp)
+      if (rateLimited) return rateLimited
       return new Response(JSON.stringify({ error: 'Invalid API key' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -270,6 +371,8 @@ serve(async (req) => {
     await recordApiInvoke(supabase, apiKey)
 
     if (req.method === 'GET') {
+      await noteValidInvokeBurst(supabase, userId, 'get_sync', clientVersion, clientIp)
+
       const { data: bpsData, error: bpsError } = await supabase
         .from('acquired_blueprints')
         .select('blueprint_id')
@@ -304,6 +407,8 @@ serve(async (req) => {
     }
 
     if (payload.type === 'blueprint_received' && payload.blueprint) {
+      await noteValidInvokeBurst(supabase, userId, 'blueprint', clientVersion, clientIp)
+
       const rawBlueprint = String(payload.blueprint).trim()
       if (!rawBlueprint || rawBlueprint.length > 200) {
         return new Response(JSON.stringify({ error: 'Invalid blueprint ID' }), {
@@ -410,6 +515,13 @@ serve(async (req) => {
     }
 
     const eventType = typeof payload.type === 'string' ? payload.type.trim() : ''
+    await noteValidInvokeBurst(
+      supabase,
+      userId,
+      burstKindFromEventType(eventType),
+      clientVersion,
+      clientIp
+    )
 
     if (eventType === 'session_start') {
       await setGameStatus(supabase, userId, 'tracking', false)
