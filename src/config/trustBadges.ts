@@ -32,6 +32,8 @@ export type TrustLink = {
   label: string
   href: string
   summary: string
+  /** OpenSSF (or similar) badge image shown next to the row label. */
+  badgeSrc?: string
 }
 
 export type TrustBadgeImage = {
@@ -79,26 +81,29 @@ export function getDumperTrustLinks(): TrustLink[] {
       id: 'scorecard',
       label: 'OpenSSF Scorecard',
       href: OPENSSF_SCORECARD_URL,
+      badgeSrc: OPENSSF_SCORECARD_BADGE_URL,
       summary: 'Live OpenSSF Scorecard for this GitHub project (score updates with each scan).',
     },
     {
       id: 'best-practices',
       label: 'OpenSSF Best Practices',
       href: OPENSSF_BEST_PRACTICES_URL,
+      badgeSrc: OPENSSF_BEST_PRACTICES_BADGE_URL,
       summary: 'OpenSSF Best Practices Passing badge for this repository (project 13989).',
     },
     {
       id: 'baseline',
       label: 'OpenSSF Baseline',
       href: OPENSSF_BEST_PRACTICES_URL,
+      badgeSrc: OPENSSF_BASELINE_BADGE_URL,
       summary: 'Open Source Project Security Baseline Level 2 for this repository.',
     },
     {
       id: 'virustotal',
       label: 'VirusTotal gate',
-      href: VIRUSTOTAL_HOME_URL,
+      href: '#virustotal-findings',
       summary:
-        'Windows builds stay draft until the VirusTotal CI gate passes: named malware-family hits block publish; common generic/ML heuristic labels (e.g. Wacatac) are ignored. The report link is on each GitHub Release and in Dumper Apps — you may still see those heuristic hits on VirusTotal.',
+        'Windows builds stay draft until the VirusTotal CI gate passes. Click to expand the latest scan findings (named malware-family hits block publish; generic/ML heuristics may still appear).',
     },
     {
       id: 'verify-release',
