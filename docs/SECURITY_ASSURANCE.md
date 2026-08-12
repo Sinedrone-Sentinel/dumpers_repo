@@ -10,7 +10,7 @@ Baseline-oriented assessment of the most likely and impactful security problems 
 | Client forging marketplace / role changes | Fraud, privilege escalation | RLS; DEFINER RPCs with server-side checks; privileged profile columns not client-writable |
 | Leaked service_role or webhook secrets | Full backend compromise | Secrets in Actions / Supabase only; never `VITE_*`; secret scanning / `.gitignore` |
 | Malicious or compromised dependency | Supply-chain RCE in CI or clients | Lockfiles; Dependabot; pinned Actions SHAs; CodeQL |
-| Fake Dumper Apps binary | Member runs malware | GitHub Releases over HTTPS; VirusTotal publish gate (blocks named malware-family labels; see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)) before draft→live; `SHA256SUMS` + cosign-signed manifest ([VERIFY_RELEASE.md](VERIFY_RELEASE.md)); SignPath Authenticode when live |
+| Fake Dumper Apps binary | Member runs malware | GitHub Releases over HTTPS; VirusTotal publish gate (blocks named malware-family labels; see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)) before draft→live; `SHA256SUMS` + cosign-signed manifest ([VERIFY_RELEASE.md](VERIFY_RELEASE.md)) |
 | Dumper Apps abused to steal RSI passwords | Credential theft | App design: no RSI/CIG password prompts ([SECURITY.md](../SECURITY.md)) |
 
 ## Attack surface (release)

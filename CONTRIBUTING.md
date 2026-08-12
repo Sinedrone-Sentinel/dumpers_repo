@@ -9,7 +9,7 @@ Approved members on [dumpers-repo.com](https://www.dumpers-repo.com) can apply f
 - Entry seats: **Triage** (discuss/triage) or **Contributor** (push / open PRs)
 - Linear ladder afterward: Contributor -> Reviewer -> Maintainer (lead-reviewed upgrades)
 - GitHub invites and removals sync from the site after approve / upgrade / leave / revoke
-- Collaborator access does **not** grant SignPath, Actions secrets, or repository admin
+- Collaborator access does **not** grant Actions secrets or repository admin
 
 Public PRs from forks remain welcome without joining the team -- follow the process below either way.
 

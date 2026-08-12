@@ -25,14 +25,32 @@ type GitHubRelease = {
   assets: GitHubReleaseAsset[]
 }
 
+export type BpDumperVirusTotalReport = {
+  permalink: string
+  sha256: string
+  gateMode: string
+  gatedAt: string | null
+  stats: {
+    malicious: number
+    suspicious: number
+    undetected: number
+    harmless: number
+  }
+  namedMaliciousEngines: string[]
+  genericMaliciousEngines: string[]
+  suspiciousEngines: string[]
+}
+
 export type BpDumperReleaseInfo = {
   version: string
   tag: string
   htmlUrl: string
   /** Best Windows download for the resolved release (from GitHub assets when available). */
   primaryDownload: { name: string; url: string }
-  /** VirusTotal GUI report for this release's exe when CI published VIRUSTOTAL.txt. */
+  /** VirusTotal GUI report for this release's exe when CI published VIRUSTOTAL.txt / .json. */
   virusTotalUrl: string | null
+  /** Parsed CI gate report when VIRUSTOTAL.json is on the release. */
+  virusTotalReport: BpDumperVirusTotalReport | null
   downloadUrlFor: (filename: string) => string
 }
 
@@ -75,6 +93,43 @@ function bundledPrimaryDownload(version: string = BP_DUMPER_VERSION) {
   return { name, url: getBpDumperDownloadUrl(name) }
 }
 
+function asStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((entry): entry is string => typeof entry === 'string' && entry.trim().length > 0)
+}
+
+async function fetchVirusTotalReport(
+  downloadUrlFor: (filename: string) => string
+): Promise<BpDumperVirusTotalReport | null> {
+  try {
+    const res = await fetch(downloadUrlFor('VIRUSTOTAL.json'), {
+      headers: { Accept: 'application/json' },
+    })
+    if (!res.ok) return null
+    const data = (await res.json()) as Record<string, unknown>
+    const permalink = typeof data.permalink === 'string' ? data.permalink.trim() : ''
+    if (!permalink.startsWith('https://www.virustotal.com/')) return null
+    const statsRaw = data.stats && typeof data.stats === 'object' ? (data.stats as Record<string, unknown>) : {}
+    return {
+      permalink,
+      sha256: typeof data.sha256 === 'string' ? data.sha256 : '',
+      gateMode: typeof data.gateMode === 'string' ? data.gateMode : 'named',
+      gatedAt: typeof data.gatedAt === 'string' ? data.gatedAt : null,
+      stats: {
+        malicious: Number(statsRaw.malicious || 0),
+        suspicious: Number(statsRaw.suspicious || 0),
+        undetected: Number(statsRaw.undetected || 0),
+        harmless: Number(statsRaw.harmless || 0),
+      },
+      namedMaliciousEngines: asStringArray(data.namedMaliciousEngines),
+      genericMaliciousEngines: asStringArray(data.genericMaliciousEngines),
+      suspiciousEngines: asStringArray(data.suspiciousEngines),
+    }
+  } catch {
+    return null
+  }
+}
+
 async function fetchVirusTotalPermalink(downloadUrlFor: (filename: string) => string): Promise<string | null> {
   try {
     const res = await fetch(downloadUrlFor('VIRUSTOTAL.txt'), {
@@ -97,6 +152,7 @@ export function buildFallbackReleaseInfo(): BpDumperReleaseInfo {
     htmlUrl: GITHUB_RELEASES_PAGE,
     primaryDownload,
     virusTotalUrl: null,
+    virusTotalReport: null,
     downloadUrlFor: (filename) => getBpDumperDownloadUrl(filename),
   }
 }
@@ -124,7 +180,9 @@ export async function fetchBpDumperRelease(): Promise<BpDumperReleaseInfo> {
 
   const downloadUrlFor = (filename: string) =>
     assetUrls.get(filename) ?? releaseDownloadUrl(release.tag_name, filename)
-  const virusTotalUrl = await fetchVirusTotalPermalink(downloadUrlFor)
+  const virusTotalReport = await fetchVirusTotalReport(downloadUrlFor)
+  const virusTotalUrl =
+    virusTotalReport?.permalink ?? (await fetchVirusTotalPermalink(downloadUrlFor))
 
   return {
     version,
@@ -132,6 +190,7 @@ export async function fetchBpDumperRelease(): Promise<BpDumperReleaseInfo> {
     htmlUrl: GITHUB_RELEASES_PAGE,
     primaryDownload,
     virusTotalUrl,
+    virusTotalReport,
     downloadUrlFor,
   }
 }

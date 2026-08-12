@@ -1,17 +1,44 @@
 import React, { useEffect, useState } from 'react'
 import { BP_DUMPER_DOWNLOADS, BP_DUMPER_VERSION } from '../../config/bpDumper'
-import {
-  CODE_SIGNING_POLICY_URL,
-  SIGNPATH_ABOUT_URL,
-  SIGNPATH_SIGNING_LIVE,
-  VIRUSTOTAL_HOME_URL,
-  getDumperTrustLinks,
-} from '../../config/trustBadges'
+import { getDumperTrustLinks } from '../../config/trustBadges'
 import { fetchBpDumperRelease, type BpDumperReleaseInfo } from '../../lib/bpDumperRelease'
+
+function formatGatedAt(iso: string | null): string | null {
+  if (!iso) return null
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return null
+  return d.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+function EngineList({ title, engines, empty }: { title: string; engines: string[]; empty: string }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{title}</p>
+      {engines.length === 0 ? (
+        <p className="text-xs text-slate-500">{empty}</p>
+      ) : (
+        <ul className="list-disc space-y-0.5 pl-4 text-xs text-slate-300">
+          {engines.map((engine) => (
+            <li key={engine} className="break-words">
+              {engine}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
 
 export default function BpDumperDownloadLinks() {
   const trustLinks = getDumperTrustLinks()
   const [release, setRelease] = useState<BpDumperReleaseInfo | null>(null)
+  const [vtOpen, setVtOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -26,6 +53,10 @@ export default function BpDumperDownloadLinks() {
       cancelled = true
     }
   }, [])
+
+  const vtReport = release?.virusTotalReport ?? null
+  const vtUrl = release?.virusTotalUrl ?? null
+  const gatedLabel = formatGatedAt(vtReport?.gatedAt ?? null)
 
   return (
     <div className="space-y-3">
@@ -73,82 +104,150 @@ export default function BpDumperDownloadLinks() {
         Wacatac) are ignored — you may still see those on the VirusTotal report.
       </p>
 
-      {release?.virusTotalUrl && (
-        <div className="site-surface space-y-2 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">VirusTotal</p>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Latest published <strong className="text-slate-300">DumperApps.exe</strong> was scanned on{' '}
-            <a
-              href={VIRUSTOTAL_HOME_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-orange-300 hover:text-orange-200 underline"
-            >
-              VirusTotal
-            </a>{' '}
-            before members could download it. Generic/ML heuristic hits do not block publish; named
-            malware-family hits do.
-          </p>
-          <a
-            href={release.virusTotalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex text-sm text-orange-300 hover:text-orange-200 underline"
-          >
-            Open VirusTotal report for v{release.version}
-          </a>
-        </div>
-      )}
-
-      <div className="site-surface space-y-2 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Code signing policy
-        </p>
-        <p className="text-xs text-slate-400 leading-relaxed">
-          Free code signing provided by{' '}
-          <a
-            href={SIGNPATH_ABOUT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-300 hover:text-orange-200 underline"
-          >
-            SignPath.io
-          </a>
-          , certificate by SignPath Foundation.
-          {SIGNPATH_SIGNING_LIVE
-            ? ' Published Windows builds are Authenticode-signed.'
-            : ' Signing activates after SignPath approval and CI secrets are configured.'}{' '}
-          <a
-            href={CODE_SIGNING_POLICY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-300 hover:text-orange-200 underline"
-          >
-            Full code signing policy
-          </a>
-          .
-        </p>
-      </div>
-
       {trustLinks.length > 0 && (
-        <div className="site-surface space-y-2 p-3">
+        <div className="site-surface space-y-3 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
             Trust & transparency
           </p>
-          <ul className="space-y-1.5">
-            {trustLinks.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-orange-300 hover:text-orange-200 underline"
-                >
-                  {link.label}
-                </a>
-                <span className="block text-xs text-slate-500 leading-relaxed">{link.summary}</span>
-              </li>
-            ))}
+          <ul className="space-y-3">
+            {trustLinks.map((link) => {
+              if (link.id === 'virustotal') {
+                return (
+                  <li key={link.id} id="virustotal-findings" className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => setVtOpen((open) => !open)}
+                      className="flex w-full items-start gap-3 rounded-md text-left transition-colors hover:bg-slate-900/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400/70"
+                      aria-expanded={vtOpen}
+                    >
+                      <span className="mt-0.5 inline-flex h-5 min-w-[4.5rem] items-center justify-center rounded bg-sky-500/15 px-1.5 text-[10px] font-semibold uppercase tracking-wide text-sky-300">
+                        VT
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="text-sm text-orange-300 underline">
+                          {link.label}
+                          <span className="ml-1 text-xs text-slate-500 no-underline">
+                            {vtOpen ? '(hide findings)' : '(show findings)'}
+                          </span>
+                        </span>
+                        <span className="mt-0.5 block text-xs text-slate-500 leading-relaxed">
+                          {link.summary}
+                        </span>
+                      </span>
+                    </button>
+
+                    {vtOpen && (
+                      <div className="ml-0 space-y-3 rounded-md border border-slate-700/70 bg-slate-950/50 p-3 sm:ml-[4.5rem]">
+                        {!release ? (
+                          <p className="text-xs text-slate-500">Loading latest VirusTotal gate report…</p>
+                        ) : vtReport ? (
+                          <>
+                            <div className="flex flex-wrap gap-2 text-[11px]">
+                              <span className="site-badge-slate">
+                                malicious {vtReport.stats.malicious}
+                              </span>
+                              <span className="site-badge-slate">
+                                suspicious {vtReport.stats.suspicious}
+                              </span>
+                              <span className="site-badge-slate">
+                                undetected {vtReport.stats.undetected}
+                              </span>
+                              <span className="site-badge-slate">
+                                gate {vtReport.gateMode}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-400 leading-relaxed">
+                              Latest published <strong className="text-slate-300">DumperApps.exe</strong>{' '}
+                              (v{release.version})
+                              {gatedLabel ? <> · scanned {gatedLabel}</> : null}. Named-family hits:{' '}
+                              <strong className="text-slate-300">
+                                {vtReport.namedMaliciousEngines.length}
+                              </strong>
+                              ; generic/ML hits shown below do not block publish.
+                            </p>
+                            <EngineList
+                              title="Named malware-family (blocks publish)"
+                              engines={vtReport.namedMaliciousEngines}
+                              empty="None — gate passed."
+                            />
+                            <EngineList
+                              title="Generic / ML heuristic (allowed)"
+                              engines={vtReport.genericMaliciousEngines}
+                              empty="None reported."
+                            />
+                            {vtReport.suspiciousEngines.length > 0 && (
+                              <EngineList
+                                title="Suspicious"
+                                engines={vtReport.suspiciousEngines}
+                                empty="None reported."
+                              />
+                            )}
+                            {vtReport.sha256 ? (
+                              <p className="break-all text-[11px] text-slate-500">
+                                SHA-256: {vtReport.sha256}
+                              </p>
+                            ) : null}
+                            <a
+                              href={vtReport.permalink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex text-sm text-orange-300 hover:text-orange-200 underline"
+                            >
+                              Open full VirusTotal report
+                            </a>
+                          </>
+                        ) : vtUrl ? (
+                          <>
+                            <p className="text-xs text-slate-400 leading-relaxed">
+                              Findings summary is unavailable, but a VirusTotal report link was published
+                              for v{release.version}.
+                            </p>
+                            <a
+                              href={vtUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex text-sm text-orange-300 hover:text-orange-200 underline"
+                            >
+                              Open VirusTotal report for v{release.version}
+                            </a>
+                          </>
+                        ) : (
+                          <p className="text-xs text-slate-500 leading-relaxed">
+                            No VirusTotal gate report found on the latest GitHub Release yet.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                )
+              }
+
+              return (
+                <li key={link.id}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 rounded-md transition-colors hover:bg-slate-900/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400/70"
+                  >
+                    {link.badgeSrc ? (
+                      <img
+                        src={link.badgeSrc}
+                        alt=""
+                        className="mt-0.5 h-5 w-auto max-w-[9rem] shrink-0 opacity-95"
+                        loading="lazy"
+                      />
+                    ) : null}
+                    <span className="min-w-0">
+                      <span className="text-sm text-orange-300 underline">{link.label}</span>
+                      <span className="mt-0.5 block text-xs text-slate-500 leading-relaxed">
+                        {link.summary}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              )
+            })}
           </ul>
         </div>
       )}

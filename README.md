@@ -304,7 +304,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Python reference / non-Windows** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
 | **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (auto-detects Star Citizen LIVE); macOS/Linux: Python scripts in the modal |
 | **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
-| **Trust / signing** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SignPath; [`docs/CODE_SIGNING_POLICY.md`](docs/CODE_SIGNING_POLICY.md) — SignPath credit / roles |
+| **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
 | **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
@@ -478,7 +478,7 @@ Host `dist/` with SPA fallback (`index.html` for unknown paths). GitHub Actions 
 | [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md) | Contributors | How dependencies are selected and tracked |
 | [docs/SECURITY_ASSURANCE.md](docs/SECURITY_ASSURANCE.md) | Contributors | Threat model / security assessment notes |
 | [docs/VERIFY_RELEASE.md](docs/VERIFY_RELEASE.md) | Everyone | Verify Dumper Apps release hashes + cosign |
-| [docs/TRUST_AND_SIGNING.md](docs/TRUST_AND_SIGNING.md) | Maintainers | Scorecard, SignPath, release trust |
+| [docs/TRUST_AND_SIGNING.md](docs/TRUST_AND_SIGNING.md) | Maintainers | Scorecard, VirusTotal gate, release checksums |
 | [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) | Maintainers | Migrations, Edge Functions, OAuth, BP Dumper API |
 | [docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) | Maintainers | Deploy `dist/`, branding, env secrets |
 | [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Maintainers | Game extraction paths and generated JSON |
