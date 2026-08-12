@@ -1,6 +1,5 @@
 /**
  * Third-party trust links / badge images for Dumper Apps and Archive trust UI.
- * Do not claim SignPath signing until SIGNPATH_SIGNING_LIVE.
  * OpenSSF Best Practices Passing + Baseline-2 earned (project 13989).
  */
 
@@ -23,26 +22,10 @@ export const OPENSSF_BEST_PRACTICES_BADGE_URL =
 export const OPENSSF_BASELINE_BADGE_URL =
   'https://www.bestpractices.dev/projects/13989/baseline' as const
 
-/**
- * Set true only after SignPath has signed a published Windows release.
- * Credit text is always shown; this flag controls the “builds are signed” claim only.
- *
- * When approved: see docs/TRUST_AND_SIGNING.md → “SignPath — YOUR next steps after approval”
- * (or tell the agent “SignPath is approved”).
- */
-export const SIGNPATH_SIGNING_LIVE = false as const
-
-export const SIGNPATH_ABOUT_URL = 'https://signpath.io/' as const
-
-/** Exact credit required by SignPath Foundation conditions. */
-export const SIGNPATH_CREDIT_TEXT =
-  'Free code signing provided by SignPath.io, certificate by SignPath Foundation' as const
-
-export const CODE_SIGNING_POLICY_URL =
-  'https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/docs/CODE_SIGNING_POLICY.md' as const
-
 export const VIRUSTOTAL_HOME_URL = 'https://www.virustotal.com/' as const
 
+export const VERIFY_RELEASE_URL =
+  'https://github.com/Sinedrone-Sentinel/dumpers_repo/blob/main/docs/VERIFY_RELEASE.md' as const
 
 export type TrustLink = {
   id: string
@@ -82,9 +65,9 @@ export function getPublicTrustBadgeImages(): TrustBadgeImage[] {
   ]
 }
 
-/** Member-facing trust links (omit SignPath until SIGNPATH_SIGNING_LIVE). */
+/** Member-facing trust links for the BP Dumper download panel. */
 export function getDumperTrustLinks(): TrustLink[] {
-  const links: TrustLink[] = [
+  return [
     {
       id: 'source',
       label: 'Source on GitHub',
@@ -110,27 +93,19 @@ export function getDumperTrustLinks(): TrustLink[] {
       href: OPENSSF_BEST_PRACTICES_URL,
       summary: 'Open Source Project Security Baseline Level 2 for this repository.',
     },
+    {
+      id: 'virustotal',
+      label: 'VirusTotal gate',
+      href: VIRUSTOTAL_HOME_URL,
+      summary:
+        'Windows builds stay draft until the VirusTotal CI gate passes: named malware-family hits block publish; common generic/ML heuristic labels (e.g. Wacatac) are ignored. The report link is on each GitHub Release and in Dumper Apps — you may still see those heuristic hits on VirusTotal.',
+    },
+    {
+      id: 'verify-release',
+      label: 'Verify release checksums',
+      href: VERIFY_RELEASE_URL,
+      summary:
+        'Each GitHub Release includes SHA256SUMS and a cosign-signed manifest so you can verify DumperApps.exe integrity. Builds are not Authenticode-signed.',
+    },
   ]
-  links.push({
-    id: 'virustotal',
-    label: 'VirusTotal gate',
-    href: VIRUSTOTAL_HOME_URL,
-    summary:
-      'Windows builds stay draft until the VirusTotal CI gate passes: named malware-family hits block publish; common generic/ML heuristic labels (e.g. Wacatac) are ignored. The report link is on each GitHub Release and in Dumper Apps — you may still see those heuristic hits on VirusTotal.',
-  })
-  links.push({
-    id: 'signpath',
-    label: SIGNPATH_SIGNING_LIVE ? 'SignPath code signing' : 'SignPath Foundation',
-    href: SIGNPATH_ABOUT_URL,
-    summary: SIGNPATH_SIGNING_LIVE
-      ? 'Windows builds are Authenticode-signed via SignPath Foundation.'
-      : `${SIGNPATH_CREDIT_TEXT}. See Code signing policy for roles and release flow.`,
-  })
-  links.push({
-    id: 'code-signing-policy',
-    label: 'Code signing policy',
-    href: CODE_SIGNING_POLICY_URL,
-    summary: 'Roles, privacy statement, and what SignPath signs for Dumper Apps.',
-  })
-  return links
 }

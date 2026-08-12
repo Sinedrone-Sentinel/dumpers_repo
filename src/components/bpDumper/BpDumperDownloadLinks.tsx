@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { BP_DUMPER_DOWNLOADS, BP_DUMPER_VERSION } from '../../config/bpDumper'
-import {
-  CODE_SIGNING_POLICY_URL,
-  SIGNPATH_ABOUT_URL,
-  SIGNPATH_SIGNING_LIVE,
-  VIRUSTOTAL_HOME_URL,
-  getDumperTrustLinks,
-} from '../../config/trustBadges'
+import { VIRUSTOTAL_HOME_URL, getDumperTrustLinks } from '../../config/trustBadges'
 import { fetchBpDumperRelease, type BpDumperReleaseInfo } from '../../lib/bpDumperRelease'
 
 export default function BpDumperDownloadLinks() {
@@ -99,36 +93,6 @@ export default function BpDumperDownloadLinks() {
           </a>
         </div>
       )}
-
-      <div className="site-surface space-y-2 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Code signing policy
-        </p>
-        <p className="text-xs text-slate-400 leading-relaxed">
-          Free code signing provided by{' '}
-          <a
-            href={SIGNPATH_ABOUT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-300 hover:text-orange-200 underline"
-          >
-            SignPath.io
-          </a>
-          , certificate by SignPath Foundation.
-          {SIGNPATH_SIGNING_LIVE
-            ? ' Published Windows builds are Authenticode-signed.'
-            : ' Signing activates after SignPath approval and CI secrets are configured.'}{' '}
-          <a
-            href={CODE_SIGNING_POLICY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-300 hover:text-orange-200 underline"
-          >
-            Full code signing policy
-          </a>
-          .
-        </p>
-      </div>
 
       {trustLinks.length > 0 && (
         <div className="site-surface space-y-2 p-3">

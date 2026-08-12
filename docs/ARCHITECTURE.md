@@ -50,6 +50,6 @@ This document describes the major **actions and actors** in the software produce
 
 - **Craft / track / market:** SPA calls PostgREST selects + RPCs; mutations for orders/listings go through DEFINER RPCs (not client `.insert`/`.update` on those tables).
 - **BP Dumper sync:** local log parse → HTTPS post → Edge validates key → DB update for that user.
-- **Release:** tag `v*` → `build-releases.yml` builds exe → optional SignPath Authenticode → checksums + cosign-signed manifest → GitHub Release assets.
+- **Release:** tag `v*` → `build-releases.yml` builds exe → checksums + cosign-signed manifest → VirusTotal gate → GitHub Release assets (Authenticode-unsigned).
 
 See also [SECURITY.md](../SECURITY.md) and [docs/SECURITY_ASSURANCE.md](SECURITY_ASSURANCE.md).

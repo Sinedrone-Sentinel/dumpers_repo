@@ -1,6 +1,6 @@
 # Trust & code signing (BP Dumper)
 
-> The in-app **Contributor Team** program grants public-repo collaborator seats only -- it does **not** grant SignPath access, code-signing rights, or GitHub Actions secrets.
+> The in-app **Contributor Team** program grants public-repo collaborator seats only -- it does **not** grant Actions secrets or production credentials.
 
 ## Product path
 
@@ -59,7 +59,7 @@ GitHub does not offer a native “required check before `/releases/latest/downlo
 
 1. **semantic-release** creates a **draft** GitHub Release (`draftRelease: true` in `release.config.js`).
 2. Drafts are **ignored** by `/releases/latest` — members keep downloading the previous published `DumperApps.exe`.
-3. `.github/workflows/build-releases.yml` builds the exe, optional SignPath, checksums/cosign, then runs **`scripts/ci/virustotal-release-gate.mjs`**.
+3. `.github/workflows/build-releases.yml` builds the exe, checksums/cosign, then runs **`scripts/ci/virustotal-release-gate.mjs`**.
 4. Only if the VirusTotal gate passes does the workflow upload assets and set **`draft: false`** (publish).
 
 **Default gate (`VT_GATE_MODE=named`):** publish is blocked only when an engine returns a **named malware-family** label (e.g. Emotet, AgentTesla). Generic / ML buckets (`Wacatac!ml`, `susgen`, bare `MALICIOUS`, Bkav `Malware.<hex>`, etc.) are logged as warnings and **do not** block — those are the usual unsigned-PE false positives. Set `VT_GATE_MODE=strict` to require zero malicious detections of any kind (`VT_MAX_MALICIOUS`, default `0`).
@@ -74,29 +74,9 @@ If `VT_API_KEY` is missing or the gate fails, the release stays draft / unpublis
 
 Published releases include `VIRUSTOTAL.txt` / `VIRUSTOTAL.json` and a VirusTotal section in the release notes.
 
-## SignPath Free OSS
+## Authenticode
 
-SignPath Foundation free OSS signing requires an **OSI-approved** license and no proprietary code in the signed artifact.
-
-- Repository / Dumper Apps sources: **Apache-2.0** ([LICENSE](../LICENSE), `scripts/bp-dumper-py/LICENSE`; Go Windows client under the same repo license)
-- DFP engine files: **not** in `DumperApps.exe`; licensed separately under [LICENSE.DFP](../LICENSE.DFP)
-- Trademarks: reserved ([TRADEMARK.md](../TRADEMARK.md) / [NOTICE](../NOTICE))
-- **Code signing policy** (required credit + roles + privacy): [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md)
-- Download UI shows: *Free code signing provided by SignPath.io, certificate by SignPath Foundation*
-
-Application submitted. Credit + policy are already on the site.
-
-### SignPath — YOUR next steps after approval
-
-> **When SignPath emails approval (or you get org/API access):** tell Cursor *“SignPath is approved”* — the agent is instructed to run this list — **or** work the boxes yourself.
-
-- [ ] **GitHub Actions secret:** `SIGNPATH_API_TOKEN`
-- [ ] **GitHub Actions variables:** `SIGNPATH_ORGANIZATION_ID`, `SIGNPATH_PROJECT_SLUG`, `SIGNPATH_SIGNING_POLICY_SLUG`
-- [ ] **SignPath UI:** link this GitHub repo as a trusted build system
-- [ ] **SignPath UI:** artifact configuration slug **`dumper-apps-exe`** matches `.signpath/artifact-configurations/dumper-apps-exe.xml`
-- [ ] **SignPath UI:** signing policy exists (you are the approver); copy slugs/ids into GitHub vars above
-- [ ] **Release:** cut a dumper `v*` release; confirm Actions signs and publishes `DumperApps.exe` (not the “unsigned” warning)
-- [ ] **Site flag:** set `SIGNPATH_SIGNING_LIVE = true` in `src/config/trustBadges.ts` (PR + green CI) — **only after** a signed release exists
+Windows releases are **not** Authenticode-signed. SmartScreen may warn on first run; members should download only from official GitHub Releases and verify checksums (below).
 
 ## Release integrity (checksums + cosign)
 
@@ -106,11 +86,7 @@ Every `v*` / release publish from `.github/workflows/build-releases.yml` (after 
 - `SHA256SUMS` — hashes of release assets
 - `SHA256SUMS.sig` — Sigstore **cosign** keyless signature (GitHub Actions OIDC)
 
-How to verify: [VERIFY_RELEASE.md](VERIFY_RELEASE.md). This satisfies OpenSSF Baseline **OSPS-BR-06.01** (signed manifest of asset hashes) even when SignPath Authenticode is not yet configured.
-
-## SignPath CI details
-
-`.github/workflows/build-releases.yml` submits `DumperApps.exe` when the secret + three variables above are set. Without them, the workflow still publishes an **Authenticode-unsigned** exe (checksums + cosign still apply) and logs a warning.
+How to verify: [VERIFY_RELEASE.md](VERIFY_RELEASE.md). This satisfies OpenSSF Baseline **OSPS-BR-06.01** (signed manifest of asset hashes).
 
 ## Gold standard realism
 

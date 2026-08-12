@@ -25,7 +25,7 @@ Members apply at `/contribute`. Super-admins review at `/contributor-team`. Seat
 
 `Triage` → `Contributor` → `Reviewer` → `Maintainer`
 
-GitHub collaborator permission mapping: triage → `triage`, contributor/reviewer → `push`, maintainer → `maintain`. The Edge Function `manage-github-collaborator` performs invite/update/remove using `GITHUB_CONTRIBUTORS_TOKEN`. **Automation boundary:** the site never grants GitHub `admin`, never touches SignPath/Actions secrets, and never elevates site `role` via this program.
+GitHub collaborator permission mapping: triage → `triage`, contributor/reviewer → `push`, maintainer → `maintain`. The Edge Function `manage-github-collaborator` performs invite/update/remove using `GITHUB_CONTRIBUTORS_TOKEN`. **Automation boundary:** the site never grants GitHub `admin`, never touches Actions secrets, and never elevates site `role` via this program.
 
 ## Members with access to sensitive resources
 
@@ -33,15 +33,13 @@ While the project is solo-maintained, the following sensitive access is held by 
 
 - GitHub repository **admin** (rulesets, Actions secrets/variables, Releases)
 - Production **Supabase** project (including service-role / dashboard)
-- **GitHub Actions** secrets (deploy, Discord-related, SignPath when configured, Scorecard PAT)
+- **GitHub Actions** secrets (deploy, Discord-related, Scorecard PAT, VirusTotal)
 - Domain / hosting for **dumpers-repo.com** (GitHub Pages + DNS as applicable)
-- **SignPath** organization (when approved) for Authenticode signing
-
 No other GitHub collaborators currently have admin or secrets access. Granting escalated access to anyone new requires an explicit review by the lead maintainer (see below).
 
 ## Escalated permissions policy
 
-Before a collaborator is granted access to sensitive resources (repo admin, Actions secrets, Supabase service role, SignPath, production DNS/hosting):
+Before a collaborator is granted access to sensitive resources (repo admin, Actions secrets, Supabase service role, production DNS/hosting):
 
 1. The lead maintainer reviews the person's need and trustworthiness.
 2. Access is granted at the **least privilege** required for the task.

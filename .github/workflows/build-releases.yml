@@ -1,8 +1,8 @@
 name: Build Executables on Release
 
-# SignPath optional: set SIGNPATH_* after OSS approval (OSI license required — docs/TRUST_AND_SIGNING.md).
 # VirusTotal REQUIRED: set repo secret VT_API_KEY. DumperApps.exe is not published until VT gate passes.
 # semantic-release creates a DRAFT GitHub Release; this workflow publishes it only after a clean VT scan.
+# Releases are Authenticode-unsigned; integrity is SHA256SUMS + cosign (see docs/TRUST_AND_SIGNING.md).
 
 on:
   push:
@@ -102,38 +102,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Check SignPath config
-        id: signpath
-        env:
-          TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
-          ORG_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
-          PROJECT: ${{ vars.SIGNPATH_PROJECT_SLUG }}
-          POLICY: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
-        run: |
-          if [ -n "$TOKEN" ] && [ -n "$ORG_ID" ] && [ -n "$PROJECT" ] && [ -n "$POLICY" ]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::SignPath not configured — publishing Authenticode-unsigned DumperApps.exe after VirusTotal gate. See docs/TRUST_AND_SIGNING.md"
-          fi
-
-      - name: Sign with SignPath
-        if: steps.signpath.outputs.enabled == 'true'
-        uses: signpath/github-action-submit-signing-request@ced31329c0317e779dad2eec2a7c3bb46ea1343e # v1
-        with:
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
-          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
-          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
-          artifact-configuration-slug: dumper-apps-exe
-          github-artifact-id: ${{ needs.build-windows-exe.outputs.unsigned_artifact_id }}
-          wait-for-completion: true
-          output-artifact-directory: dist/
-          parameters: |
-            version: ${{ toJSON(needs.resolve-tag.outputs.version) }}
-
       - name: Download unsigned exe
-        if: steps.signpath.outputs.enabled != 'true'
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: windows-exe-unsigned

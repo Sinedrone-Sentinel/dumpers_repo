@@ -9,7 +9,7 @@ Each release also includes:
 
 Each published Windows build is **VirusTotal-gated in CI** before the GitHub Release leaves draft (see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)). Releases include `VIRUSTOTAL.txt` with the report URL.
 
-Optional later: Authenticode signature via SignPath (see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)).
+Windows builds are Authenticode-unsigned; use the checksums/cosign steps above (see [TRUST_AND_SIGNING.md](TRUST_AND_SIGNING.md)).
 
 ## 1. Check the file hash
 

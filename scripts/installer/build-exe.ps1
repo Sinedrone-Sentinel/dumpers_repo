@@ -52,7 +52,7 @@ if (Test-Path $pyMin) {
 Write-Step "Generating BP Dumper icon"
 & (Join-Path $PSScriptRoot "generate-icon.ps1") -RepoRoot $RepoRoot
 
-Write-Step "Embedding PE version info (SignPath product metadata)"
+Write-Step "Embedding PE version info"
 $parts = @($Version.Split('.') + @('0', '0', '0', '0'))[0..3] | ForEach-Object { [int]($_ -replace '[^0-9]', '0') }
 $fileVers = ($parts -join '.')
 $sysoPath = Join-Path $goDir "resource.syso"

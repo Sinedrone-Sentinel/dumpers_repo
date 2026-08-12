@@ -405,7 +405,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Copy your API key from this page and paste it when Dumper Apps asks on first run',
       'Regenerate your API key if compromised; the old key stops working immediately',
       'When a new Windows build is required, download DumperApps.exe from GitHub Releases and replace the old file yourself (no auto-download)',
-      'Download panel includes the SignPath Foundation code-signing credit and a link to the project Code signing policy (Authenticode signing after SignPath approval)',
+      'Download panel links VirusTotal gate status, OpenSSF trust badges, and how to verify release checksums (SHA256SUMS + cosign; builds are not Authenticode-signed)',
       'Older builds are blocked by the server — download the latest release when prompted',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',
       'Successful imports appear under BP Dumper — Success in the notification bell',
