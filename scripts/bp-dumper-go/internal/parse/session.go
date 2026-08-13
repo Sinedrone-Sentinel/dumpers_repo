@@ -77,6 +77,14 @@ func (s *SessionTracker) ProcessLine(line string, ts float64, state *WatcherStat
 		s.PendingStatus = "exit_menu"
 		return "game_exit_menu"
 	}
+	// Inactivity kick: same pause as menu; Frontend_Main usually follows shortly.
+	if PatternPlayerInactive.MatchString(line) {
+		state.ClearAllActive()
+		s.PausedReason = "exit_menu"
+		s.CrashAt = nil
+		s.PendingStatus = "exit_menu"
+		return "game_exit_menu"
+	}
 	if PatternCrash.MatchString(line) {
 		s.CrashAt = &ts
 		if float64(time.Now().Unix())-ts > CrashRecoveryWindowSec {

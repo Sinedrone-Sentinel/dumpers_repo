@@ -224,6 +224,30 @@ func Run(opts Options) {
 	var buffer []byte
 	firstOpen := true
 	path := opts.Path
+	// Grace clock for mission-idle ping pause (reset on PU/mission/BP activity).
+	lastMissionActivity := time.Now()
+	noteMissionActivity := func() {
+		lastMissionActivity = time.Now()
+	}
+	maybeIdlePausePings := func() {
+		if opts.Client == nil || opts.DryRun {
+			return
+		}
+		if !parse.IsLiveMissionSyncReady(session) {
+			return
+		}
+		if pingCtrl.IsPaused() {
+			return
+		}
+		if len(state.Active) > 0 {
+			return
+		}
+		if time.Since(lastMissionActivity).Seconds() < parse.MissionIdlePauseSec {
+			return
+		}
+		pingCtrl.Pause("no mission activity 1h")
+		fmt.Printf("  [Live] %sSession ping paused (no mission/BP activity for 1h; still watching Game.log)%s\n", colors.Dim, colors.Reset)
+	}
 
 	handleUpdate := func(err *api.UpdateRequiredError) {
 		update.HandleUpdateRequired(err, opts.DumperVersion)
@@ -233,6 +257,7 @@ func Run(opts Options) {
 		if u := pingCtrl.TakeUpdateRequired(); u != nil {
 			handleUpdate(u)
 		}
+		maybeIdlePausePings()
 		st, err := os.Stat(path)
 		if err != nil {
 			if fh != nil {
@@ -275,6 +300,8 @@ func Run(opts Options) {
 					} else {
 						fmt.Printf("%s⚠ Could not sync live tracker:%s %v\n", colors.Yellow, colors.Reset, err)
 					}
+				} else if parse.IsLiveMissionSyncReady(session) {
+					noteMissionActivity()
 				}
 			}
 			f, err := os.Open(path)
@@ -300,6 +327,7 @@ func Run(opts Options) {
 				postGameSession(opts.Client, expired)
 				if expired == "game_tracking" {
 					pingCtrl.Resume("crash wait ended")
+					noteMissionActivity()
 				} else {
 					pingCtrl.Pause(expired)
 				}
@@ -314,7 +342,8 @@ func Run(opts Options) {
 		chunk := make([]byte, 64*1024)
 		n, err := fh.Read(chunk)
 		if n > 0 {
-			pingCtrl.Resume("new log activity")
+			// Do NOT resume session_ping on raw log bytes — menu noise would keep
+			// pings alive after exit/AFK. Resume only on PU/reconnect/mission below.
 			buffer = append(buffer, chunk[:n]...)
 			for {
 				nl := bytes.IndexByte(buffer, '\n')
@@ -337,6 +366,7 @@ func Run(opts Options) {
 						fmt.Printf("  [Live] %s⚠ Could not resync missions after reconnect:%s %v\n", colors.Yellow, colors.Reset, err)
 					} else {
 						pingCtrl.Resume("reconnected")
+						noteMissionActivity()
 					}
 				} else if (gameEvent == "game_exit_menu" || gameEvent == "game_quit") && opts.Client != nil && !opts.DryRun {
 					postGameSession(opts.Client, gameEvent)
@@ -359,6 +389,7 @@ func Run(opts Options) {
 							"debugName":            active.DebugName,
 						})
 						pingCtrl.Resume("mission activity")
+						noteMissionActivity()
 					}
 				} else if missionEnd != nil {
 					// ApplyMissionLogLine already recorded end; fetch names from maps
@@ -384,12 +415,17 @@ func Run(opts Options) {
 							"completion":  completion,
 						})
 					}
+					noteMissionActivity()
 				} else if blueprintHit != nil {
 					ImportDiscoveredBlueprint(
 						strings.TrimSpace(blueprintHit[1]), ts, state, filepathBase(path),
 						opts.Client, opts.Acquired, opts.CachePath, opts.DryRun,
 						opts.DumperVersion, "[Live]",
 					)
+					noteMissionActivity()
+					if pingCtrl.IsPaused() && parse.IsLiveMissionSyncReady(session) {
+						pingCtrl.Resume("blueprint activity")
+					}
 				}
 
 				if wasPaused && gameEvent == "" && opts.Client != nil && !opts.DryRun && (active != nil || missionEnd != nil || blueprintHit != nil) {
@@ -398,6 +434,7 @@ func Run(opts Options) {
 						fmt.Printf("  [Live] %s⚠ Could not resync after PU activity:%s %v\n", colors.Yellow, colors.Reset, err)
 					} else {
 						pingCtrl.Resume("back in PU")
+						noteMissionActivity()
 					}
 				}
 			}

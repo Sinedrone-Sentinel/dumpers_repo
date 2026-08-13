@@ -18,6 +18,8 @@ var (
 	)
 	PatternBlueprint = regexp.MustCompile(`Added notification "Received Blueprint: ([^:]+):`)
 	PatternExitMenu  = regexp.MustCompile(`Requesting game mode Frontend_Main/SC_Frontend`)
+	// AFK / inactivity kick (seen before Frontend_Main in Game.log).
+	PatternPlayerInactive = regexp.MustCompile(`Remote Disconnect - player inactive`)
 	PatternCrash     = regexp.MustCompile(`Cloud Imperium Games public crash handler taking over`)
 	PatternLogStarted = regexp.MustCompile(`Log started on`)
 	// Go RE2 has no lookahead — filter Frontend_* in IsPUEntryLine.
@@ -33,4 +35,7 @@ var (
 const (
 	CrashRecoveryWindowSec     = 1800.0
 	BlueprintCorrelationWindow = 5.0
+	// Pause session_ping when in PU with no active missions and no mission/BP
+	// log activity for this long (Dumper Apps is for mission + BP watching).
+	MissionIdlePauseSec = 3600.0
 )
