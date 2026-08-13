@@ -1,0 +1,89 @@
+/**
+ * Pull latest published VIRUSTOTAL.json into public/ for same-origin modal fetch.
+ * GitHub release asset URLs are not browser-CORS-friendly; the site must host a copy.
+ */
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+const OUT = join(ROOT, 'public', 'dumper-apps', 'VIRUSTOTAL.json')
+const API =
+  'https://api.github.com/repos/Sinedrone-Sentinel/dumpers_repo/releases?per_page=10'
+
+function asStringArray(value) {
+  if (!Array.isArray(value)) return []
+  return value.filter((entry) => typeof entry === 'string' && entry.trim().length > 0)
+}
+
+async function main() {
+  const listRes = await fetch(API, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'dumpers-repo-sync-dumper-virustotal',
+    },
+  })
+  if (!listRes.ok) {
+    throw new Error(`GitHub releases API ${listRes.status}`)
+  }
+  const releases = await listRes.json()
+  const release = releases.find((r) => !r.draft && !r.prerelease && Array.isArray(r.assets) && r.assets.length)
+  if (!release) {
+    console.warn('sync-dumper-virustotal: no published release with assets; leaving existing file')
+    return
+  }
+
+  const asset = release.assets.find((a) => a.name === 'VIRUSTOTAL.json')
+  if (!asset?.browser_download_url) {
+    console.warn(`sync-dumper-virustotal: no VIRUSTOTAL.json on ${release.tag_name}; leaving existing file`)
+    return
+  }
+
+  const assetRes = await fetch(asset.browser_download_url, {
+    headers: { Accept: 'application/octet-stream', 'User-Agent': 'dumpers-repo-sync-dumper-virustotal' },
+    redirect: 'follow',
+  })
+  if (!assetRes.ok) {
+    throw new Error(`Download VIRUSTOTAL.json failed: ${assetRes.status}`)
+  }
+  const data = await assetRes.json()
+  const permalink = typeof data.permalink === 'string' ? data.permalink.trim() : ''
+  if (!permalink.startsWith('https://www.virustotal.com/')) {
+    throw new Error('VIRUSTOTAL.json missing permalink')
+  }
+
+  const stats = data.stats && typeof data.stats === 'object' ? data.stats : {}
+  const version = String(release.tag_name || '').replace(/^v/i, '')
+  const out = {
+    version,
+    tag: release.tag_name,
+    sha256: typeof data.sha256 === 'string' ? data.sha256 : '',
+    permalink,
+    analysisId: typeof data.analysisId === 'string' ? data.analysisId : null,
+    gateMode: typeof data.gateMode === 'string' ? data.gateMode : 'named',
+    stats: {
+      malicious: Number(stats.malicious || 0),
+      suspicious: Number(stats.suspicious || 0),
+      undetected: Number(stats.undetected || 0),
+      harmless: Number(stats.harmless || 0),
+    },
+    maliciousEngines: asStringArray(data.maliciousEngines),
+    suspiciousEngines: asStringArray(data.suspiciousEngines),
+    genericMaliciousEngines: asStringArray(data.genericMaliciousEngines),
+    namedMaliciousEngines: asStringArray(data.namedMaliciousEngines),
+    gatedAt: typeof data.gatedAt === 'string' ? data.gatedAt : null,
+  }
+
+  mkdirSync(dirname(OUT), { recursive: true })
+  writeFileSync(OUT, `${JSON.stringify(out, null, 2)}\n`, 'utf8')
+  console.log(`Wrote ${OUT} for ${release.tag_name}`)
+}
+
+main().catch((err) => {
+  console.warn('sync-dumper-virustotal failed:', err?.message || err)
+  if (existsSync(OUT)) {
+    console.warn(`Keeping existing ${OUT}`)
+    process.exit(0)
+  }
+  process.exit(1)
+})

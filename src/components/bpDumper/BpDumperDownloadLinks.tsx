@@ -16,19 +16,65 @@ function formatGatedAt(iso: string | null): string | null {
   })
 }
 
+/** Split CI hit strings like `Microsoft: Trojan:Win32/Wacatac.B!ml`. */
+function splitEngineHit(hit: string): { engine: string; detection: string } {
+  const trimmed = hit.trim()
+  const colon = trimmed.indexOf(':')
+  if (colon <= 0) return { engine: '', detection: trimmed }
+  return {
+    engine: trimmed.slice(0, colon).trim(),
+    detection: trimmed.slice(colon + 1).trim() || trimmed,
+  }
+}
+
+/**
+ * Google search for a VT label in the context of custom-built / unsigned apps
+ * (false-positive research), not a generic “you have a virus” scare query.
+ */
+function virusDetectionSearchUrl(hit: string): string {
+  const { engine, detection } = splitEngineHit(hit)
+  const parts = [
+    `"${detection}"`,
+    engine ? `${engine} antivirus` : null,
+    'false positive',
+    'custom built',
+    'self compiled',
+    'Windows executable',
+    'unsigned developer app',
+  ].filter(Boolean)
+  return `https://www.google.com/search?q=${encodeURIComponent(parts.join(' '))}`
+}
+
 function EngineList({ title, engines, empty }: { title: string; engines: string[]; empty: string }) {
+  // Fully dynamic: whatever names/count the latest VIRUSTOTAL.json lists become rows + search links.
+  const count = engines.length
   return (
     <div className="space-y-1">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{title}</p>
-      {engines.length === 0 ? (
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+        {title}
+        {count > 0 ? ` (${count})` : ''}
+      </p>
+      {count === 0 ? (
         <p className="text-xs text-slate-500">{empty}</p>
       ) : (
         <ul className="list-disc space-y-0.5 pl-4 text-xs text-slate-300">
-          {engines.map((engine) => (
-            <li key={engine} className="break-words">
-              {engine}
-            </li>
-          ))}
+          {engines.map((hit, index) => {
+            const { engine, detection } = splitEngineHit(hit)
+            return (
+              <li key={`${index}-${hit}`} className="break-words">
+                {engine ? <span className="text-slate-400">{engine}: </span> : null}
+                <a
+                  href={virusDetectionSearchUrl(hit)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-300 hover:text-orange-200 underline"
+                  title={`Search Google for this detection on custom-built apps: ${detection}`}
+                >
+                  {detection}
+                </a>
+              </li>
+            )
+          })}
         </ul>
       )}
     </div>
@@ -164,6 +210,13 @@ export default function BpDumperDownloadLinks() {
                                 {vtReport.namedMaliciousEngines.length}
                               </strong>
                               ; generic/ML hits shown below do not block publish.
+                            </p>
+                            <p className="text-[11px] text-slate-500 leading-relaxed">
+                              Each detection name below is linked dynamically from this release’s gate
+                              report — if VirusTotal hits change on the next publish, the list and
+                              Google searches update automatically. Searches use{' '}
+                              <strong className="text-slate-400">custom-built / unsigned Windows app</strong>{' '}
+                              false-positive context, not a generic “infected PC” scare query.
                             </p>
                             <EngineList
                               title="Named malware-family (blocks publish)"

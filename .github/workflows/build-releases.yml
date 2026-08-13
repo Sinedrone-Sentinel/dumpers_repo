@@ -87,7 +87,7 @@ jobs:
           if-no-files-found: error
 
   sign-and-release:
-    name: Sign (optional) and publish Release
+    name: Publish Release
     needs: [resolve-tag, build-windows-exe]
     runs-on: ubuntu-latest
     permissions:

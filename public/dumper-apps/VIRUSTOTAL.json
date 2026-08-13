@@ -1,0 +1,29 @@
+{
+  "version": "1.17.2",
+  "tag": "v1.17.2",
+  "sha256": "6111fbb6cf1847cc12e7ce3d79dea5346d4afe08bff75d2064f9210be76b2187",
+  "permalink": "https://www.virustotal.com/gui/file/6111fbb6cf1847cc12e7ce3d79dea5346d4afe08bff75d2064f9210be76b2187",
+  "analysisId": "YjA0NmZmY2VkM2MxMjcxNjc2NzRhNjdiYjE4ZjVlOTI6MTc4NjMwMzM0NQ==",
+  "gateMode": "named",
+  "stats": {
+    "malicious": 4,
+    "suspicious": 0,
+    "undetected": 66,
+    "harmless": 0
+  },
+  "maliciousEngines": [
+    "Bkav: W32.Malware.428B50BE",
+    "MaxSecure: Trojan.Malware.300983.susgen",
+    "Microsoft: Trojan:Win32/Wacatac.B!ml",
+    "Trapmine: malicious.moderate.ml.score"
+  ],
+  "suspiciousEngines": [],
+  "genericMaliciousEngines": [
+    "Bkav: W32.Malware.428B50BE",
+    "MaxSecure: Trojan.Malware.300983.susgen",
+    "Microsoft: Trojan:Win32/Wacatac.B!ml",
+    "Trapmine: malicious.moderate.ml.score"
+  ],
+  "namedMaliciousEngines": [],
+  "gatedAt": "2026-08-09T19:23:20.731Z"
+}
