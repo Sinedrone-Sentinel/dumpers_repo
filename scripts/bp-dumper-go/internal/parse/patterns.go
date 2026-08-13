@@ -35,4 +35,7 @@ var (
 const (
 	CrashRecoveryWindowSec     = 1800.0
 	BlueprintCorrelationWindow = 5.0
+	// Pause session_ping when in PU with no active missions and no mission/BP
+	// log activity for this long (Dumper Apps is for mission + BP watching).
+	MissionIdlePauseSec = 3600.0
 )

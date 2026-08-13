@@ -685,6 +685,8 @@ PATTERN_END_MISSION = re.compile(
 )
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
 PATTERN_EXIT_MENU = re.compile(r"Requesting game mode Frontend_Main/SC_Frontend")
+# Pause session_ping after this many seconds with no mission/BP/PU activity (still watch logs).
+MISSION_IDLE_PAUSE_SEC = 3600.0
 # AFK / inactivity kick (seen before Frontend_Main in Game.log).
 PATTERN_PLAYER_INACTIVE = re.compile(r"Remote Disconnect - player inactive")
 PATTERN_CRASH = re.compile(r"Cloud Imperium Games public crash handler taking over")
@@ -1567,6 +1569,29 @@ def watch_log_file(
     ping_ctrl = SessionPingController()
     ping_thread = None
     session_tracker = SessionTracker()
+    # Grace clock for mission-idle ping pause (reset on PU/mission/BP activity).
+    last_mission_activity = time.time()
+
+    def note_mission_activity() -> None:
+        nonlocal last_mission_activity
+        last_mission_activity = time.time()
+
+    def maybe_idle_pause_pings() -> None:
+        if not session or args.dry_run:
+            return
+        if not is_live_mission_sync_ready(session_tracker):
+            return
+        if ping_ctrl.is_paused():
+            return
+        if state.active:
+            return
+        if (time.time() - last_mission_activity) < MISSION_IDLE_PAUSE_SEC:
+            return
+        ping_ctrl.pause("no mission activity 1h")
+        print(
+            f"  [Live] {Colors.DIM}Session ping paused "
+            f"(no mission/BP activity for 1h; still watching Game.log){Colors.RESET}"
+        )
 
     if session and not args.dry_run:
         ping_thread = threading.Thread(
@@ -1591,6 +1616,7 @@ def watch_log_file(
     try:
         while True:
             check_update_from_ping()
+            maybe_idle_pause_pings()
             try:
                 st = path.stat()
             except FileNotFoundError:
@@ -1641,6 +1667,8 @@ def watch_log_file(
                             publish_live_tracker_state(
                                 session, args.url, state, session_tracker, ping_ctrl
                             )
+                            if is_live_mission_sync_ready(session_tracker):
+                                note_mission_activity()
                         except DumperUpdateRequired as e:
                             handle_update_required(e, keep_up_to_date=keep_up_to_date)
                         except Exception as e:
@@ -1675,6 +1703,7 @@ def watch_log_file(
                     if expired in ("game_quit", "game_exit_menu", "game_tracking"):
                         if expired == "game_tracking":
                             ping_ctrl.resume("crash wait ended")
+                            note_mission_activity()
                         else:
                             ping_ctrl.pause(expired)
 
@@ -1710,6 +1739,7 @@ def watch_log_file(
                                 try:
                                     sync_reconnect_missions(session, args.url, path, state, session_tracker)
                                     ping_ctrl.resume("reconnected")
+                                    note_mission_activity()
                                 except Exception as e:
                                     print(f"  [Live] {Colors.YELLOW}⚠ Could not resync missions after reconnect:{Colors.RESET} {e}")
                                     game_event = ""
@@ -1740,6 +1770,7 @@ def watch_log_file(
                                             "debugName": active.debug_name,
                                         })
                                         ping_ctrl.resume("mission activity")
+                                        note_mission_activity()
                                     except Exception as e:
                                         print(f"  [Live] {Colors.RED}✗ Mission sync failed:{Colors.RESET} {e}")
 
@@ -1766,6 +1797,7 @@ def watch_log_file(
                                         })
                                     except Exception as e:
                                         print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
+                                note_mission_activity()
 
                             elif blueprint_hit:
                                 import_discovered_blueprint(
@@ -1779,6 +1811,9 @@ def watch_log_file(
                                     cache_path,
                                     dry_run=args.dry_run,
                                 )
+                                note_mission_activity()
+                                if ping_ctrl.is_paused() and is_live_mission_sync_ready(session_tracker):
+                                    ping_ctrl.resume("blueprint activity")
 
                             if (
                                 was_paused
@@ -1791,6 +1826,7 @@ def watch_log_file(
                                 try:
                                     sync_reconnect_missions(session, args.url, path, state, session_tracker)
                                     ping_ctrl.resume("back in PU")
+                                    note_mission_activity()
                                 except Exception as e:
                                     print(f"  [Live] {Colors.YELLOW}⚠ Could not resync after PU activity:{Colors.RESET} {e}")
                         except DumperUpdateRequired as e:
