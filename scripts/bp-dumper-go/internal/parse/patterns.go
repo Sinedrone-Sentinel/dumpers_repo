@@ -18,6 +18,8 @@ var (
 	)
 	PatternBlueprint = regexp.MustCompile(`Added notification "Received Blueprint: ([^:]+):`)
 	PatternExitMenu  = regexp.MustCompile(`Requesting game mode Frontend_Main/SC_Frontend`)
+	// AFK / inactivity kick (seen before Frontend_Main in Game.log).
+	PatternPlayerInactive = regexp.MustCompile(`Remote Disconnect - player inactive`)
 	PatternCrash     = regexp.MustCompile(`Cloud Imperium Games public crash handler taking over`)
 	PatternLogStarted = regexp.MustCompile(`Log started on`)
 	// Go RE2 has no lookahead — filter Frontend_* in IsPUEntryLine.

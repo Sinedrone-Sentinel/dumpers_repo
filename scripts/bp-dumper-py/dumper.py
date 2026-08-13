@@ -685,6 +685,8 @@ PATTERN_END_MISSION = re.compile(
 )
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
 PATTERN_EXIT_MENU = re.compile(r"Requesting game mode Frontend_Main/SC_Frontend")
+# AFK / inactivity kick (seen before Frontend_Main in Game.log).
+PATTERN_PLAYER_INACTIVE = re.compile(r"Remote Disconnect - player inactive")
 PATTERN_CRASH = re.compile(r"Cloud Imperium Games public crash handler taking over")
 PATTERN_LOG_STARTED = re.compile(r"Log started on")
 # PU load: system name in log (Pyro, Nyx, pu, Stanton, …) with any SC_* gamerules tag.
@@ -892,6 +894,13 @@ class SessionTracker:
             return "game_quit"
         if PATTERN_EXIT_MENU.search(line):
             # Returning to the menu abandons all in-progress missions server-side.
+            state.clear_all_active()
+            self.paused_reason = "exit_menu"
+            self.crash_at = None
+            self.pending_status = "exit_menu"
+            return "game_exit_menu"
+        if PATTERN_PLAYER_INACTIVE.search(line):
+            # Inactivity kick: same pause as menu; Frontend_Main usually follows shortly.
             state.clear_all_active()
             self.paused_reason = "exit_menu"
             self.crash_at = None
@@ -1680,8 +1689,8 @@ def watch_log_file(
                 continue
 
             if chunk:
-                # Prefer false "watching" over missed live state — any new log resumes pings.
-                ping_ctrl.resume("new log activity")
+                # Do NOT resume session_ping on raw log bytes — menu noise would keep
+                # pings alive after exit/AFK. Resume only on PU/reconnect/mission below.
                 buffer.extend(chunk)
                 nl = buffer.rfind(b"\n")
                 if nl >= 0:

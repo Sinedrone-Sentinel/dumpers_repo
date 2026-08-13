@@ -314,7 +314,8 @@ func Run(opts Options) {
 		chunk := make([]byte, 64*1024)
 		n, err := fh.Read(chunk)
 		if n > 0 {
-			pingCtrl.Resume("new log activity")
+			// Do NOT resume session_ping on raw log bytes — menu noise would keep
+			// pings alive after exit/AFK. Resume only on PU/reconnect/mission below.
 			buffer = append(buffer, chunk[:n]...)
 			for {
 				nl := bytes.IndexByte(buffer, '\n')
