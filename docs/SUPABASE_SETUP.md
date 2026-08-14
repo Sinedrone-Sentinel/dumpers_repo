@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `174_dumper_edge_abuse_guard.sql` (BP Dumper Edge: junk-key IP fail bucket + valid-key burst alerts to super-admins). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `175_support_chat_realtime.sql` (support tickets/messages on `supabase_realtime` for live officer dashboard + chat typing). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -205,6 +205,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 137 | `172_friend_invite_links.sql` | Friends: `friend_invite_token` + ensure/rotate/redeem RPCs (multi-use link; per-clicker rate limit) |
 | 138 | `173_friends_rsi_verified_invite_stash.sql` | Friends: RSI-verified send/accept; `friend_invite_stashes` until clicker verifies; process on `mark_rsi_handle_verified` |
 | 139 | `174_dumper_edge_abuse_guard.sql` | BP Dumper Edge abuse guard: IP auth-fail buckets (429); valid-key burst counters + Discord/Notify super-admin alerts (service_role RPCs only) |
+| 140 | `175_support_chat_realtime.sql` | Publish `support_tickets` + `ticket_messages` to `supabase_realtime` (live support queues/chat; typing uses Presence) |
 
 ### pg_cron (migrations 054, 065-068, 144, 147)
 

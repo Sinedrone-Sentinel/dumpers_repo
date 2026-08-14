@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import SupportTicketThread from '../components/SupportTicketThread'
+import { useSupportListRealtime } from '../hooks/useSupportRealtime'
 
 type TicketCategory =
   | 'bug_report'
@@ -102,19 +103,22 @@ export default function SupportDashboardRoute() {
   const [statusFilter, setStatusFilter] = useState<TicketStatus | ''>('')
   const [showPerformance, setShowPerformance] = useState(false)
 
-  const loadTickets = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+  const loadTickets = useCallback(async (opts?: { quiet?: boolean }) => {
+    if (!opts?.quiet) {
+      setLoading(true)
+      setError(null)
+    }
 
     try {
       const { data, error: fetchError } = await supabase.rpc('get_officer_tickets')
       if (fetchError) throw fetchError
       setTickets(data || [])
     } catch (err) {
-      setError((err as Error).message)
+      if (!opts?.quiet) setError((err as Error).message)
+      else console.error('Failed to refresh tickets:', err)
     }
 
-    setLoading(false)
+    if (!opts?.quiet) setLoading(false)
   }, [])
 
   const loadEscalatedTickets = useCallback(async () => {
@@ -139,13 +143,21 @@ export default function SupportDashboardRoute() {
     }
   }, [isSuperAdmin])
 
+  const reloadAllQuiet = useCallback(() => {
+    void loadTickets({ quiet: true })
+    void loadEscalatedTickets()
+    void loadOfficerPerformance()
+  }, [loadTickets, loadEscalatedTickets, loadOfficerPerformance])
+
+  useSupportListRealtime(Boolean(isOfficerOrAbove && user?.id), reloadAllQuiet)
+
   useEffect(() => {
     if (isOfficerOrAbove) {
-      loadTickets()
+      void loadTickets()
     }
     if (isSuperAdmin) {
-      loadEscalatedTickets()
-      loadOfficerPerformance()
+      void loadEscalatedTickets()
+      void loadOfficerPerformance()
     }
   }, [isOfficerOrAbove, isSuperAdmin, loadTickets, loadEscalatedTickets, loadOfficerPerformance])
 
@@ -297,6 +309,7 @@ export default function SupportDashboardRoute() {
           onClick={() => reloadAll()}
           disabled={loading}
           className="ml-auto site-btn-secondary px-3 py-1.5 text-sm disabled:opacity-50"
+          title="Queues also update live; use Refresh if something looks stale"
         >
           {loading ? 'Loading...' : 'Refresh'}
         </button>

@@ -1,0 +1,199 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { supabase } from '../lib/supabase'
+
+type PresenceMeta = {
+  user_id: string
+  is_staff: boolean
+  name: string
+  typing: boolean
+}
+
+/** Quiet-refresh support queues when tickets or messages change (RLS scopes what you receive). */
+export function useSupportListRealtime(enabled: boolean, onChange: () => void) {
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
+
+  useEffect(() => {
+    if (!enabled) return
+
+    let timer: ReturnType<typeof setTimeout> | null = null
+    const schedule = () => {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => {
+        onChangeRef.current()
+      }, 250)
+    }
+
+    const channel = supabase
+      .channel('support-lists')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'support_tickets' },
+        () => schedule()
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'ticket_messages' },
+        () => schedule()
+      )
+      .subscribe()
+
+    return () => {
+      if (timer) clearTimeout(timer)
+      void supabase.removeChannel(channel)
+    }
+  }, [enabled])
+}
+
+/**
+ * Live ticket thread: refetch on message/ticket changes + Presence typing indicators.
+ * Members see "Staff is typing..."; staff see "{name} is typing...".
+ */
+export function useSupportThreadRealtime(opts: {
+  ticketId: string
+  enabled: boolean
+  userId: string | undefined
+  isStaff: boolean
+  displayName: string
+  /** Parent sets true while the local textarea has recent keystrokes. */
+  localTyping: boolean
+  onRemoteChange: () => void
+}): { typingLabel: string | null } {
+  const { ticketId, enabled, userId, isStaff, displayName, localTyping, onRemoteChange } = opts
+  const onRemoteChangeRef = useRef(onRemoteChange)
+  onRemoteChangeRef.current = onRemoteChange
+  const [typingLabel, setTypingLabel] = useState<string | null>(null)
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
+
+  const syncTypingLabel = useCallback(
+    (state: Record<string, PresenceMeta[] | PresenceMeta>) => {
+      if (!userId) {
+        setTypingLabel(null)
+        return
+      }
+      const rows: PresenceMeta[] = []
+      for (const value of Object.values(state)) {
+        const list = Array.isArray(value) ? value : [value]
+        for (const row of list) {
+          if (row?.user_id && row.user_id !== userId && row.typing) rows.push(row)
+        }
+      }
+      if (rows.length === 0) {
+        setTypingLabel(null)
+        return
+      }
+      if (isStaff) {
+        const member = rows.find((r) => !r.is_staff) ?? rows[0]
+        const name = (member.name || 'Member').trim() || 'Member'
+        setTypingLabel(`${name} is typing...`)
+        return
+      }
+      if (rows.some((r) => r.is_staff)) {
+        setTypingLabel('Staff is typing...')
+        return
+      }
+      setTypingLabel(null)
+    },
+    [isStaff, userId]
+  )
+
+  useEffect(() => {
+    if (!enabled || !ticketId || !userId) {
+      setTypingLabel(null)
+      return
+    }
+
+    let timer: ReturnType<typeof setTimeout> | null = null
+    const scheduleRefresh = () => {
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => onRemoteChangeRef.current(), 150)
+    }
+
+    const channel = supabase.channel(`support-ticket-${ticketId}`, {
+      config: { presence: { key: userId } },
+    })
+
+    channel
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'ticket_messages',
+          filter: `ticket_id=eq.${ticketId}`,
+        },
+        () => scheduleRefresh()
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'support_tickets',
+          filter: `id=eq.${ticketId}`,
+        },
+        () => scheduleRefresh()
+      )
+      .on('presence', { event: 'sync' }, () => {
+        syncTypingLabel(channel.presenceState() as Record<string, PresenceMeta[] | PresenceMeta>)
+      })
+      .on('presence', { event: 'join' }, () => {
+        syncTypingLabel(channel.presenceState() as Record<string, PresenceMeta[] | PresenceMeta>)
+      })
+      .on('presence', { event: 'leave' }, () => {
+        syncTypingLabel(channel.presenceState() as Record<string, PresenceMeta[] | PresenceMeta>)
+      })
+      .subscribe(async (status) => {
+        if (status !== 'SUBSCRIBED') return
+        await channel.track({
+          user_id: userId,
+          is_staff: isStaff,
+          name: displayName,
+          typing: false,
+        } satisfies PresenceMeta)
+      })
+
+    channelRef.current = channel
+
+    return () => {
+      if (timer) clearTimeout(timer)
+      channelRef.current = null
+      void supabase.removeChannel(channel)
+      setTypingLabel(null)
+    }
+  }, [enabled, ticketId, userId, isStaff, displayName, syncTypingLabel])
+
+  useEffect(() => {
+    const channel = channelRef.current
+    if (!channel || !userId) return
+    void channel.track({
+      user_id: userId,
+      is_staff: isStaff,
+      name: displayName,
+      typing: localTyping,
+    } satisfies PresenceMeta)
+  }, [localTyping, userId, isStaff, displayName])
+
+  return { typingLabel }
+}
+
+/** Debounce local typing for Presence (true while typing, clears ~1.5s after last key). */
+export function useLocalTypingFlag(text: string, enabled: boolean): boolean {
+  const [typing, setTyping] = useState(false)
+
+  useEffect(() => {
+    if (!enabled) {
+      setTyping(false)
+      return
+    }
+    if (!text.trim()) {
+      setTyping(false)
+      return
+    }
+    setTyping(true)
+    const id = window.setTimeout(() => setTyping(false), 1500)
+    return () => window.clearTimeout(id)
+  }, [text, enabled])
+
+  return typing
+}

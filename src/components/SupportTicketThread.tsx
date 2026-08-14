@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { fetchDisputeOrderId, resolveOrderDispute } from '../lib/operations'
-import { supabase } from '../lib/supabase'
+import { getDisplayName, supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import {
+  useLocalTypingFlag,
+  useSupportThreadRealtime,
+} from '../hooks/useSupportRealtime'
 import AppModal from './layout/AppModal'
 
 type TicketCategory =
@@ -87,7 +91,7 @@ export default function SupportTicketThread({
   isOfficer,
   onDeleted,
 }: Props) {
-  const { isSuperAdmin } = useAuth()
+  const { user, profile, isSuperAdmin } = useAuth()
   const [ticket, setTicket] = useState<TicketDetail | null>(null)
   const [messages, setMessages] = useState<TicketMessage[]>([])
   const [rating, setRating] = useState<TicketRating | null>(null)
@@ -106,8 +110,8 @@ export default function SupportTicketThread({
   const [resolvingDispute, setResolvingDispute] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const loadTicket = async () => {
-    setLoading(true)
+  const loadTicket = async (opts?: { quiet?: boolean }) => {
+    if (!opts?.quiet) setLoading(true)
     try {
       const { data, error } = await supabase.rpc('get_ticket_detail', {
         p_ticket_id: ticketId,
@@ -122,13 +126,30 @@ export default function SupportTicketThread({
     } catch (err) {
       console.error('Failed to load ticket:', err)
     }
-    setLoading(false)
+    if (!opts?.quiet) setLoading(false)
   }
 
   useEffect(() => {
-    loadTicket()
+    void loadTicket()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId])
+
+  const displayName = getDisplayName(profile)
+  const localTyping = useLocalTypingFlag(
+    newMessage,
+    Boolean(ticket && ticket.status !== 'resolved'),
+  )
+  const { typingLabel } = useSupportThreadRealtime({
+    ticketId,
+    enabled: Boolean(ticket && ticket.status !== 'resolved'),
+    userId: user?.id,
+    isStaff: isOfficer,
+    displayName,
+    localTyping,
+    onRemoteChange: () => {
+      void loadTicket({ quiet: true })
+    },
+  })
 
   useEffect(() => {
     if (!isOfficer || !ticket?.subject.startsWith('Order dispute:')) {
@@ -142,7 +163,7 @@ export default function SupportTicketThread({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, typingLabel])
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || sending) return
@@ -156,7 +177,7 @@ export default function SupportTicketThread({
       if (error) throw error
       if (data?.success) {
         setNewMessage('')
-        loadTicket()
+        void loadTicket({ quiet: true })
       }
     } catch (err) {
       console.error('Failed to send message:', err)
@@ -548,6 +569,9 @@ export default function SupportTicketThread({
             </div>
           </div>
         ))}
+        {typingLabel && (
+          <p className="text-xs text-slate-400 italic px-1">{typingLabel}</p>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -562,12 +586,12 @@ export default function SupportTicketThread({
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault()
-              handleSendMessage()
+              void handleSendMessage()
             }
           }}
         />
         <button
-          onClick={handleSendMessage}
+          onClick={() => void handleSendMessage()}
           disabled={sending || !newMessage.trim()}
           className="site-btn-danger self-end"
         >
