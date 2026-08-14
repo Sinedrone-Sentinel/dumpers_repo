@@ -97,12 +97,59 @@ def _app_dir() -> Path:
     return Path(__file__).resolve().parent
 
 _LOOKUP_PATH = _resource_dir() / "lookup.json"
+# Canonical file lives in the repo; release zip ships a copy as lookup.json next to dumper.py.
+_LOOKUP_FALLBACK_URL = (
+    "https://raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo/main/"
+    "src/data/blueprint-name-lookup.json"
+)
 _cached: dict[str, Any] | None = None
+
+
+def _ensure_lookup_file() -> Path:
+    """Require lookup.json beside the script; download once if the folder was incomplete."""
+    if _LOOKUP_PATH.is_file():
+        return _LOOKUP_PATH
+    if getattr(sys, "frozen", False):
+        _press_any_key_to_exit(
+            "Bundled lookup.json is missing from this build. Re-download DumperApps.exe "
+            "from Dumper Apps → Downloads on the site.",
+            code=1,
+        )
+    print()
+    print(f"[ERROR] Missing required file: {_LOOKUP_PATH}")
+    print("This file maps Game.log blueprint names. It is included in BPDumper-python-scripts.zip")
+    print("from GitHub Releases (Dumper Apps → Downloads), not in a bare GitHub folder copy.")
+    print()
+    print("Trying one-time download from the official repo…")
+    try:
+        req = urllib.request.Request(
+            _LOOKUP_FALLBACK_URL,
+            headers={"User-Agent": "BPDumper-python/lookup-fetch"},
+        )
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = resp.read()
+        if not data or data[:1] not in (b"{", b"["):
+            raise RuntimeError("download did not look like JSON")
+        _LOOKUP_PATH.write_bytes(data)
+        print(f"Saved lookup.json ({len(data)} bytes) — continuing.")
+        print()
+        return _LOOKUP_PATH
+    except Exception as exc:
+        print(f"Download failed: {exc}")
+        print()
+        print("Fix manually (pick one):")
+        print("  1) Download BPDumper-python-scripts.zip from GitHub Releases and extract it")
+        print("  2) Save this URL as lookup.json next to dumper.py:")
+        print(f"     {_LOOKUP_FALLBACK_URL}")
+        _press_any_key_to_exit("Cannot continue without lookup.json.", code=1)
+        raise  # unreachable; keeps type-checkers happy
+
 
 def _load_lookup() -> dict[str, Any]:
     global _cached
     if _cached is None:
-        with _LOOKUP_PATH.open(encoding="utf-8") as f:
+        path = _ensure_lookup_file()
+        with path.open(encoding="utf-8") as f:
             _cached = json.load(f)
     return _cached
 

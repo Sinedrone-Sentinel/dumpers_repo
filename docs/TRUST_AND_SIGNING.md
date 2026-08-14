@@ -8,6 +8,7 @@
 
 - Auto-detects Star Citizen installs (drive search for LIVE / Game.log); members can paste a path to override. Updates are manual GitHub downloads (no self-replace).
 - Member Windows download: GitHub Releases `DumperApps.exe` (no Microsoft Store option in the member UI).
+- Member Python / non-Windows: GitHub Releases `BPDumper-python-scripts.zip` (includes `lookup.json`; do not use a bare GitHub tree copy of `scripts/bp-dumper-py/`).
 - Python watcher in `scripts/bp-dumper-py/` remains the protocol/reference client (and for non-Windows scripting).
 
 ### Why not PyInstaller on Windows

@@ -108,6 +108,9 @@ jobs:
           name: windows-exe-unsigned
           path: dist/
 
+      - name: Pack Python scripts zip (includes lookup.json)
+        run: node scripts/pack-bp-dumper-py-zip.mjs dist
+
       - name: Install cosign
         uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
 
@@ -115,7 +118,7 @@ jobs:
         working-directory: dist
         run: |
           set -euo pipefail
-          sha256sum DumperApps.exe > SHA256SUMS
+          sha256sum DumperApps.exe BPDumper-python-scripts.zip > SHA256SUMS
           cosign sign-blob --yes --bundle SHA256SUMS.sig SHA256SUMS
           echo "SHA256SUMS:"
           cat SHA256SUMS
@@ -147,6 +150,7 @@ jobs:
           body_path: dist/VIRUSTOTAL_RELEASE_FOOTER.md
           files: |
             dist/DumperApps.exe
+            dist/BPDumper-python-scripts.zip
             dist/SHA256SUMS
             dist/SHA256SUMS.sig
             dist/VIRUSTOTAL.txt

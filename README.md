@@ -302,7 +302,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 |------|--------|
 | **Canonical Windows client** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/) → native `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) (not PyInstaller) |
 | **Python reference / non-Windows** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
-| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (auto-detects Star Citizen LIVE); macOS/Linux: Python scripts in the modal |
+| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe`; **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` (includes `lookup.json`) from the same release / modal |
 | **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
 | **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
 | **Store listing** | Optional / parked — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); WinUI app under `apps/bp-dumper-store/` is not the primary path |

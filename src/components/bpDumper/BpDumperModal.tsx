@@ -119,19 +119,35 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <h3 className="text-sm font-semibold text-white">How to set up</h3>
           <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
             <li>
-              <strong className="text-slate-300">Windows:</strong> under Downloads, get{' '}
+              <strong className="text-slate-300">Windows (easiest):</strong> under Downloads, get{' '}
               <strong className="text-slate-300">DumperApps.exe</strong>, run it, let it{' '}
               <strong className="text-slate-300">auto-detect</strong> your Star Citizen install, then
-              paste your API key.
+              paste your API key. No Python install needed.
             </li>
             <li>
-              <strong className="text-slate-300">macOS / Linux / scripts:</strong> open{' '}
-              <strong className="text-slate-300">Python scripts</strong>, create a venv (
-              <span className="font-mono text-slate-300">python -m venv .venv</span>, activate it),
-              then <span className="font-mono text-slate-300">pip install -r requirements.txt</span>{' '}
-              and run <span className="font-mono text-slate-300">python dumper.py --watch</span>{' '}
-              (Windows: double-click <span className="font-mono text-slate-300">dumper.bat</span>; see
-              the folder README).
+              <strong className="text-slate-300">macOS / Linux / scripts:</strong> install{' '}
+              <strong className="text-slate-300">Python 3.8+</strong> from python.org (Windows: check{' '}
+              <strong className="text-slate-300">Add python.exe to PATH</strong>, then reopen the
+              terminal). Verify with{' '}
+              <span className="font-mono text-slate-300">python --version</span> and{' '}
+              <span className="font-mono text-slate-300">python -m pip --version</span> — if bare{' '}
+              <span className="font-mono text-slate-300">pip</span> fails, always use{' '}
+              <span className="font-mono text-slate-300">python -m pip</span>.
+            </li>
+            <li>
+              Download <strong className="text-slate-300">Python scripts zip</strong>{' '}
+              (<span className="font-mono text-slate-300">BPDumper-python-scripts.zip</span>) from
+              Downloads — not a bare GitHub folder copy. Extract it; the folder must include{' '}
+              <span className="font-mono text-slate-300">lookup.json</span> next to{' '}
+              <span className="font-mono text-slate-300">dumper.py</span>.
+            </li>
+            <li>
+              Create a venv so deps do not clash with other Python apps:{' '}
+              <span className="font-mono text-slate-300">python -m venv .venv</span>, activate it, then{' '}
+              <span className="font-mono text-slate-300">python -m pip install -r requirements.txt</span>{' '}
+              and <span className="font-mono text-slate-300">python dumper.py --watch</span>. Windows:{' '}
+              double-click <span className="font-mono text-slate-300">dumper.bat</span> to do that for
+              you (see the zip README).
             </li>
             <li>
               Copy your <strong className="text-slate-300">API key</strong> below, then paste it when
