@@ -397,7 +397,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
       '**Windows:** download **DumperApps.exe** (native Go build) — it **searches for your Star Citizen install** (LIVE) for you, then paste your API key',
       'Published Windows builds only go live after the VirusTotal CI gate — named malware-family hits block publish; common generic/ML heuristic labels are ignored (you may still see them on the VirusTotal report)',
-      '**macOS / Linux (or advanced Windows):** use **Python scripts** from Downloads (Python 3 + requirements.txt), then run `dumper.py --watch` — same auto-detect',
+      '**macOS / Linux (or advanced Windows):** use **Python scripts** from Downloads — create a local venv (`python -m venv .venv`, activate), then `pip install -r requirements.txt` and `python dumper.py --watch` (Windows: `dumper.bat` does this for you) — same auto-detect',
       'You can paste a custom path if auto-detect misses your install',
       'Does **not** download your craft-bench / inventory from CIG — only blueprint award lines found in local log files',
       'First run can import awards from `.log` files under detected log dirs, then watch mode tails the live Game.log',
