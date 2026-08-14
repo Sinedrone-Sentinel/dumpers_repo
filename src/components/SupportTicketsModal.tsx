@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
 import OfficerRatingModal from './OfficerRatingModal'
 import SupportTicketThread from './SupportTicketThread'
+import { useSupportListRealtime } from '../hooks/useSupportRealtime'
 
 /** Categories members can pick when filing a new ticket (not system-only ones). */
 type MemberTicketCategory =
@@ -95,8 +96,8 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
-  const loadTickets = async () => {
-    setLoading(true)
+  const loadTickets = useCallback(async (opts?: { quiet?: boolean }) => {
+    if (!opts?.quiet) setLoading(true)
     try {
       const { data, error } = await supabase.rpc('get_my_tickets')
       if (error) throw error
@@ -104,12 +105,16 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
     } catch (err) {
       console.error('Failed to load tickets:', err)
     }
-    setLoading(false)
-  }
+    if (!opts?.quiet) setLoading(false)
+  }, [])
 
   useEffect(() => {
-    loadTickets()
-  }, [])
+    void loadTickets()
+  }, [loadTickets])
+
+  useSupportListRealtime(Boolean(user?.id), () => {
+    void loadTickets({ quiet: true })
+  })
 
   // Search members for report
   useEffect(() => {
