@@ -80,6 +80,48 @@ def _exit_star_citizen_not_detected() -> None:
     )
 
 
+def _prompt_live_path_until_valid(default_path: str = "") -> str:
+    """Keep asking for LIVE / Game.log until auto-detect or a usable path succeeds."""
+    print(f"{Colors.YELLOW}Star Citizen LIVE folder is required.{Colors.RESET}")
+    print("Enter the LIVE folder that contains Game.log (not the RSI Launcher folder).")
+    print(r"Example: C:\Program Files\Roberts Space Industries\StarCitizen\LIVE")
+    print("Leave blank to auto-detect, or paste a path to override.")
+    print()
+    current_default = (default_path or "").strip()
+    while True:
+        path_prompt = "LIVE / Game.log path"
+        if current_default:
+            path_prompt += f" [{current_default}]"
+        path_prompt += ": "
+        try:
+            user_path = input(path_prompt).strip().strip('"').strip("'")
+        except (KeyboardInterrupt, EOFError):
+            print("\nAborted.")
+            sys.exit(0)
+        if not user_path and current_default:
+            user_path = current_default
+        if not user_path:
+            print(f"{Colors.DIM}Auto-detecting Star Citizen installations...{Colors.RESET}")
+            installs = detect_sc_installs()
+            if installs:
+                chosen = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                detected = installs[chosen]
+                print(f"{Colors.GREEN}Detected channel {chosen} at: {detected}{Colors.RESET}")
+                return str(detected)
+            fallback = Path(DEFAULT_WIN_PATH) / "LIVE"
+            if fallback.is_dir():
+                print(f"{Colors.GREEN}Detected default fallback at: {fallback}{Colors.RESET}")
+                return str(fallback)
+            print(f"{Colors.RED}Still not found — paste your LIVE folder path and press Enter.{Colors.RESET}")
+            current_default = ""
+            continue
+        p = Path(user_path)
+        if not p.exists():
+            print(f"{Colors.RED}Path not found: {user_path}{Colors.RESET}")
+            continue
+        return str(p)
+
+
 def _app_dir() -> Path:
     """Directory for user-writable files (.env, cache).
 
@@ -2042,11 +2084,12 @@ def main():
         print(f"{Colors.DIM}Source: github.com/Sinedrone-Sentinel/dumpers_repo (Python watcher){Colors.RESET}")
         print(f"{Colors.DIM}Trust:  OpenSSF Scorecard + site Trust links under Dumper Apps{Colors.RESET}")
         print(f"{Colors.DIM}Tip:    Leave the path blank — BP Dumper searches for your LIVE install.{Colors.RESET}")
+        print(f"{Colors.DIM}        Or paste your LIVE folder path (the folder that contains Game.log).{Colors.RESET}")
         print()
 
         # 1. Prompt file path / directory
         default_path = env_vars.get("LOG_PATH", "")
-        path_prompt = "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
+        path_prompt = "Enter path to LIVE folder / Game.log (Leave empty to auto-detect)"
         if default_path:
             path_prompt += f" [{default_path}]"
         path_prompt += ": "
@@ -2075,7 +2118,10 @@ def main():
                     print(f"{Colors.GREEN}Detected default fallback at: {live_dir}{Colors.RESET}")
                     user_path = str(live_dir)
                 else:
-                    _exit_star_citizen_not_detected()
+                    user_path = _prompt_live_path_until_valid("")
+        elif not Path(user_path).exists():
+            print(f"{Colors.RED}Path not found: {user_path}{Colors.RESET}")
+            user_path = _prompt_live_path_until_valid("")
 
         if user_path:
             args.file_path = Path(user_path)
@@ -2174,15 +2220,23 @@ def main():
         env_vars.update(new_env)
         save_env_file(env_path, env_vars)
 
-    # No path yet and no install on disk — stop with a clear message (Store cert has no SC).
-    # Do this before the API-key hard-fail so Start/Store launch never flash-closes as a crash.
+    # No path yet — auto-detect or keep asking (Store / odd install paths).
     if not args.file_path and not args.log_dir:
         if env_vars.get("LOG_PATH"):
             args.file_path = Path(env_vars["LOG_PATH"])
         else:
             installs = detect_sc_installs()
             fallback_live = Path(DEFAULT_WIN_PATH) / "LIVE"
-            if not installs and not fallback_live.is_dir():
+            if installs:
+                chosen = "LIVE" if "LIVE" in installs else list(installs.keys())[0]
+                args.file_path = installs[chosen]
+            elif fallback_live.is_dir():
+                args.file_path = fallback_live
+            elif sys.stdin.isatty():
+                args.file_path = Path(_prompt_live_path_until_valid(""))
+                env_vars["LOG_PATH"] = str(args.file_path)
+                save_env_file(env_path, env_vars)
+            else:
                 _exit_star_citizen_not_detected()
 
     # Resolve URL & API Key (checks CLI args -> ENV variables -> .env file -> built-in default)
