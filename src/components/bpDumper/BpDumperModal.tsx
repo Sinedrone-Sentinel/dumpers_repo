@@ -29,7 +29,7 @@ function SetupHowTo() {
         <span>
           <span className="text-sm font-semibold text-white">How to set up</span>
           <span className="mt-0.5 block text-xs text-slate-500">
-            Pick one path — Windows exe or Python scripts (not both)
+            Pick one path — Microsoft Store, Windows exe, or Python scripts
           </span>
         </span>
         <span className="shrink-0 text-slate-400" aria-hidden>
@@ -40,15 +40,46 @@ function SetupHowTo() {
       {open && (
         <div className="space-y-5 border-t border-slate-700/60 px-4 py-4">
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-amber-300">Option A — Windows exe</h4>
-            <p className="text-xs text-slate-500">Recommended. No Python install.</p>
+            <h4 className="text-sm font-semibold text-amber-300">Option A — Microsoft Store</h4>
+            <p className="text-xs text-slate-500">Recommended on Windows.</p>
+            <SetupStepList>
+              <li>
+                Under Downloads, open <strong className="text-slate-300">Microsoft Store (Windows)</strong>.
+              </li>
+              <li>Install BP Dumper from the Store, then open it.</li>
+              <li>
+                Choose your Star Citizen <strong className="text-slate-300">LIVE</strong> folder when
+                asked (FolderPicker — the app does not scan your drives).
+              </li>
+              <li>
+                Copy your <strong className="text-slate-300">API key</strong> from this page and paste
+                it when asked.
+              </li>
+              <li>
+                On first run, answer <strong className="text-slate-300">Y</strong> to full history
+                import so old log files are scanned.
+              </li>
+              <li>Leave the app running while you play.</li>
+            </SetupStepList>
+          </div>
+
+          <div className="space-y-2 border-t border-slate-700/50 pt-5">
+            <h4 className="text-sm font-semibold text-orange-300">Option B — Windows exe</h4>
+            <p className="text-xs text-slate-500">
+              Portable GitHub build. Unsigned — Windows antivirus / SmartScreen often hates this file.
+            </p>
             <SetupStepList>
               <li>
                 Under Downloads, get <strong className="text-slate-300">DumperApps.exe</strong>.
               </li>
               <li>
-                Run it. Let it <strong className="text-slate-300">auto-detect</strong> Star Citizen
-                (LIVE), or paste your LIVE folder path.
+                If Defender or SmartScreen blocks it, that is common for this{' '}
+                <strong className="text-slate-300">unsigned</strong> exe (false positive). Prefer the
+                Microsoft Store when you can. Otherwise allow / unblock and run it.
+              </li>
+              <li>
+                Let it <strong className="text-slate-300">auto-detect</strong> Star Citizen (LIVE), or
+                paste your LIVE folder path.
               </li>
               <li>
                 Copy your <strong className="text-slate-300">API key</strong> from this page and paste
@@ -63,11 +94,10 @@ function SetupHowTo() {
           </div>
 
           <div className="space-y-2 border-t border-slate-700/50 pt-5">
-            <h4 className="text-sm font-semibold text-sky-300">Option B — Python scripts</h4>
+            <h4 className="text-sm font-semibold text-sky-300">Option C — Python scripts</h4>
             <p className="text-xs text-slate-500">
               macOS / Linux / advanced Windows. You must install Python first.
-            </p>
-            <SetupStepList>
+            </p>            <SetupStepList>
               <li>
                 Install <strong className="text-slate-300">Python 3.8+</strong> from{' '}
                 <a
@@ -186,7 +216,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Classic Windows exe (auto-detect) — finds your Star Citizen install, syncs unlocks, powers Live Mission Tracker."
+      subtitle="Microsoft Store (recommended) or Windows exe — syncs unlocks and powers Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >

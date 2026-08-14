@@ -118,7 +118,7 @@ export default function BpDumperDownloadLinks({
 
       <div className="space-y-2">
         {BP_DUMPER_DOWNLOADS.map((opt) => {
-          const isPrimary = opt.id === 'windows-exe'
+          const isPrimary = opt.id === 'windows-store'
           return (
             <a
               key={opt.id}
