@@ -268,7 +268,7 @@ Set these under **Project Settings → Edge Functions → Secrets** (or let sema
 
 | Secret | Purpose | How it is updated |
 |--------|---------|-------------------|
-| `LATEST_DUMPER_VERSION` | Latest BP Dumper semver shown to desktop clients | Updated by semantic-release when dumper releases ship |
+| `LATEST_DUMPER_VERSION` | Optional hotfix raise for the desktop version gate | Auto-set to the new semver by `build-releases.yml` after VirusTotal publish. Bundled `dumper-version.json` on Edge is the baseline; a **stale older** secret cannot pin below the bundle. |
 
 BP Dumper's minimum Star Citizen **major.minor** (e.g. `4.8`) is **baked into each release build**, not stored in Supabase. When game data is parsed (`parse-extracted-data.mjs`), `npm run sync-min-game-version` updates `scripts/bp-dumper-py/_min_game_version.py` from `src/data/game-build-version.json`.
 
