@@ -9,20 +9,13 @@ export const GITHUB_LATEST_DOWNLOAD_BASE =
 /** Release asset: full Python watcher folder including lookup.json. */
 export const DUMPER_PYTHON_SCRIPTS_ZIP = 'BPDumper-python-scripts.zip' as const
 
-/** Direct download of the Python scripts zip (preferred for members). */
+/** Direct download of the Python scripts zip. */
 export const BP_DUMPER_SCRIPTS_URL =
   `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_PYTHON_SCRIPTS_ZIP}` as const
 
 /** Source tree (devs only — lookup.json is gitignored and not on GitHub). */
 export const BP_DUMPER_SCRIPTS_SOURCE_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/tree/main/scripts/bp-dumper-py' as const
-
-/** Microsoft Store product identity (Partner Center). */
-export const BP_DUMPER_STORE_ID = '9PMR8CPSB04K' as const
-
-/** Browser-friendly Store listing (opens Store app on Windows when available). */
-export const BP_DUMPER_STORE_WEB_URL =
-  `https://apps.microsoft.com/detail/${BP_DUMPER_STORE_ID}` as const
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
@@ -51,24 +44,16 @@ export type BpDumperDownloadOption = {
 }
 
 /**
- * Member-facing install options.
- * Primary: Microsoft Store (AppContainer). Portable exe is unsigned — Defender often flags it.
+ * Member-facing install options — no Microsoft Store link in the UI.
+ * Portable exe is unsigned; Defender / SmartScreen often flag it.
  */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
-  {
-    id: 'windows-store',
-    kind: 'external',
-    label: 'Microsoft Store (Windows)',
-    description:
-      'Install BP Dumper from the Microsoft Store. Paste your API key on first run. You pick your LIVE folder in-app (no drive scan).',
-    url: BP_DUMPER_STORE_WEB_URL,
-  },
   {
     id: 'windows-exe',
     kind: 'external',
     label: 'Windows exe (DumperApps.exe)',
     description:
-      'Portable GitHub build — auto-detects Star Citizen / LIVE (or paste a path), then asks for your API key. Unsigned: Windows Defender / SmartScreen often block or quarantine this exe (false positive). Prefer the Microsoft Store when you can.',
+      'Native Windows build — auto-detects Star Citizen / LIVE (or paste a path), then asks for your API key. Unsigned: Windows Defender / SmartScreen often block or quarantine this exe (false positive).',
     url: `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_APPS_EXE_FILENAME}`,
   },
   {

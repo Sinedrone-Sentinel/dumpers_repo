@@ -302,10 +302,10 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 |------|--------|
 | **Canonical Windows client** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/) → native `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) (not PyInstaller) |
 | **Python reference / non-Windows** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
-| **Downloads (members)** | **Windows:** Microsoft Store ([9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K)) recommended; portable `DumperApps.exe` (unsigned — Defender often flags it); **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` |
+| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (unsigned — Defender often flags it); **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` |
 | **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
 | **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
-| **Store listing** | Member UI primary Windows path — [9PMR8CPSB04K](https://apps.microsoft.com/detail/9PMR8CPSB04K); AppContainer WinUI under `apps/bp-dumper-store/` |
+| **Store listing** | Legacy / not in member UI — `apps/bp-dumper-store/` parked; do not advertise |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version` (`426` if outdated); migration **174** IP auth-fail `429` + valid-key burst alerts to super-admins (see `SUPABASE_SETUP.md`) |
