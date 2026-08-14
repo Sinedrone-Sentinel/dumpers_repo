@@ -101,6 +101,10 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
+          cache: npm
+
+      - name: Install Node deps (adm-zip for scripts zip)
+        run: npm ci
 
       - name: Download unsigned exe
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -108,7 +112,7 @@ jobs:
           name: windows-exe-unsigned
           path: dist/
 
-      - name: Pack Python scripts zip (includes lookup.json)
+      - name: Pack Python scripts zip (must include lookup.json)
         run: node scripts/pack-bp-dumper-py-zip.mjs dist
 
       - name: Install cosign
