@@ -6,8 +6,15 @@ export const GITHUB_RELEASES_PAGE =
 export const GITHUB_LATEST_DOWNLOAD_BASE =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/releases/latest/download' as const
 
-/** Python watcher sources for macOS / Linux / manual Windows runs. */
+/** Release asset: full Python watcher folder including lookup.json. */
+export const DUMPER_PYTHON_SCRIPTS_ZIP = 'BPDumper-python-scripts.zip' as const
+
+/** Direct download of the Python scripts zip (preferred for members). */
 export const BP_DUMPER_SCRIPTS_URL =
+  `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_PYTHON_SCRIPTS_ZIP}` as const
+
+/** Source tree (devs only — lookup.json is gitignored and not on GitHub). */
+export const BP_DUMPER_SCRIPTS_SOURCE_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/tree/main/scripts/bp-dumper-py' as const
 
 export const BP_DUMPER_VERSION = dumperVersionData.version
@@ -52,9 +59,9 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
   {
     id: 'python-scripts',
     kind: 'external',
-    label: 'Python scripts (macOS / Linux / advanced)',
+    label: 'Python scripts zip (macOS / Linux / advanced)',
     description:
-      'Same watcher protocol — open the scripts folder on GitHub, install requirements, then run dumper.py (auto-detect works there too).',
+      'Download BPDumper-python-scripts.zip (includes lookup.json). Install Python 3, use a venv or dumper.bat, then run dumper.py.',
     url: BP_DUMPER_SCRIPTS_URL,
   },
 ]

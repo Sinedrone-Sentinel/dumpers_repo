@@ -138,13 +138,75 @@ def _app_dir() -> Path:
         return Path(sys.executable).resolve().parent
     return Path(__file__).resolve().parent
 
-_LOOKUP_PATH = _resource_dir() / "lookup.json"
+_LOOKUP_CANDIDATES = (
+    "lookup.json",
+    "blueprint-name-lookup.json",
+)
+# Canonical file lives in the repo; release zip ships a copy as lookup.json next to dumper.py.
+_LOOKUP_FALLBACK_URL = (
+    "https://raw.githubusercontent.com/Sinedrone-Sentinel/dumpers_repo/main/"
+    "src/data/blueprint-name-lookup.json"
+)
 _cached: dict[str, Any] | None = None
+
+
+def _find_local_lookup() -> Path | None:
+    """Accept either the release name or the canonical repo filename — no rename required."""
+    root = _resource_dir()
+    for name in _LOOKUP_CANDIDATES:
+        path = root / name
+        if path.is_file():
+            return path
+    return None
+
+
+def _ensure_lookup_file() -> Path:
+    """Require a blueprint lookup JSON beside the script; download once if missing."""
+    found = _find_local_lookup()
+    if found is not None:
+        return found
+    if getattr(sys, "frozen", False):
+        _press_any_key_to_exit(
+            "Bundled lookup.json is missing from this build. Re-download DumperApps.exe "
+            "from Dumper Apps → Downloads on the site.",
+            code=1,
+        )
+    dest = _resource_dir() / "lookup.json"
+    print()
+    print("[ERROR] Missing blueprint name lookup next to dumper.py.")
+    print("Expected one of: lookup.json  OR  blueprint-name-lookup.json")
+    print("(Release zip BPDumper-python-scripts.zip includes lookup.json.)")
+    print()
+    print("Trying one-time download from the official repo…")
+    try:
+        req = urllib.request.Request(
+            _LOOKUP_FALLBACK_URL,
+            headers={"User-Agent": "BPDumper-python/lookup-fetch"},
+        )
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = resp.read()
+        if not data or data[:1] not in (b"{", b"["):
+            raise RuntimeError("download did not look like JSON")
+        dest.write_bytes(data)
+        print(f"Saved lookup.json ({len(data)} bytes) — continuing.")
+        print()
+        return dest
+    except Exception as exc:
+        print(f"Download failed: {exc}")
+        print()
+        print("Fix manually (pick one):")
+        print("  1) Download BPDumper-python-scripts.zip from GitHub Releases and extract it")
+        print("  2) Put blueprint-name-lookup.json OR lookup.json next to dumper.py")
+        print(f"     {_LOOKUP_FALLBACK_URL}")
+        _press_any_key_to_exit("Cannot continue without the lookup file.", code=1)
+        raise  # unreachable; keeps type-checkers happy
+
 
 def _load_lookup() -> dict[str, Any]:
     global _cached
     if _cached is None:
-        with _LOOKUP_PATH.open(encoding="utf-8") as f:
+        path = _ensure_lookup_file()
+        with path.open(encoding="utf-8") as f:
             _cached = json.load(f)
     return _cached
 

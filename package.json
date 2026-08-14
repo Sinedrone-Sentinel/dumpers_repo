@@ -42,6 +42,7 @@
     "verify-dfp-premiums": "node scripts/verify-dfp-acquisition-premiums.mjs",
     "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs",
     "copy-blueprint-lookup": "node scripts/copy-blueprint-lookup.mjs",
+    "pack-bp-dumper-py-zip": "node scripts/pack-bp-dumper-py-zip.mjs",
     "sync-dumper-version": "node scripts/sync-dumper-version.mjs",
     "sync-min-game-version": "node scripts/lib/syncDumperMinGameVersion.mjs",
     "release:dumper": "semantic-release"

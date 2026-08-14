@@ -12,11 +12,31 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-:: Install dependencies silently
-python -m pip install -r requirements.txt >nul 2>&1
+:: Prefer an isolated venv so pip does not clash with other global packages
+if not exist ".venv\Scripts\python.exe" (
+    echo Creating local virtual environment (.venv^)...
+    python -m venv .venv
+    if %errorlevel% neq 0 (
+        echo [ERROR] Could not create .venv. Try: python -m venv .venv
+        echo.
+        pause
+        exit /b 1
+    )
+)
+
+set "PY=.venv\Scripts\python.exe"
+
+echo Installing dependencies into .venv...
+"%PY%" -m pip install -q -r requirements.txt
+if %errorlevel% neq 0 (
+    echo [ERROR] pip install failed. See messages above.
+    echo.
+    pause
+    exit /b 1
+)
 
 :: Run python script forwarding all args
-python dumper.py %*
+"%PY%" dumper.py %*
 
 if not "%~1"=="" (
     exit /b %errorlevel%
