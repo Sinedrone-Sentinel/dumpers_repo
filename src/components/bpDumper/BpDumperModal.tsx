@@ -115,51 +115,98 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           </p>
         </section>
 
-        <section className="space-y-2">
+        <section className="space-y-3">
           <h3 className="text-sm font-semibold text-white">How to set up</h3>
-          <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
-            <li>
-              <strong className="text-slate-300">Windows (easiest):</strong> under Downloads, get{' '}
-              <strong className="text-slate-300">DumperApps.exe</strong>, run it, let it{' '}
-              <strong className="text-slate-300">auto-detect</strong> your Star Citizen install, then
-              paste your API key. No Python install needed.
-            </li>
-            <li>
-              <strong className="text-slate-300">macOS / Linux / scripts:</strong> install{' '}
-              <strong className="text-slate-300">Python 3.8+</strong> from python.org (Windows: check{' '}
-              <strong className="text-slate-300">Add python.exe to PATH</strong>, then reopen the
-              terminal). Verify with{' '}
-              <span className="font-mono text-slate-300">python --version</span> and{' '}
-              <span className="font-mono text-slate-300">python -m pip --version</span> — if bare{' '}
-              <span className="font-mono text-slate-300">pip</span> fails, always use{' '}
-              <span className="font-mono text-slate-300">python -m pip</span>.
-            </li>
-            <li>
-              Download <strong className="text-slate-300">Python scripts zip</strong>{' '}
-              (<span className="font-mono text-slate-300">BPDumper-python-scripts.zip</span>) from
-              Downloads — not a bare GitHub folder copy. Extract it; the folder must include{' '}
-              <span className="font-mono text-slate-300">lookup.json</span> next to{' '}
-              <span className="font-mono text-slate-300">dumper.py</span>.
-            </li>
-            <li>
-              Create a venv so deps do not clash with other Python apps:{' '}
-              <span className="font-mono text-slate-300">python -m venv .venv</span>, activate it, then{' '}
-              <span className="font-mono text-slate-300">python -m pip install -r requirements.txt</span>{' '}
-              and <span className="font-mono text-slate-300">python dumper.py --watch</span>. Windows:{' '}
-              double-click <span className="font-mono text-slate-300">dumper.bat</span> to do that for
-              you (see the zip README).
-            </li>
-            <li>
-              Copy your <strong className="text-slate-300">API key</strong> below, then paste it when
-              prompted on first run. Accept the one-time{' '}
-              <strong className="text-slate-300">full history import</strong> if you want to catch up from
-              existing logbackups (can take a while if those folders are large).
-            </li>
-            <li>
-              Leave the watcher running while playing — new unlocks from the live Game.log sync
-              automatically after that.
-            </li>
-          </ol>
+
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+              Path A — Windows exe (no Python)
+            </h4>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
+              <li>
+                Under <strong className="text-slate-300">Downloads</strong>, download{' '}
+                <strong className="text-slate-300">DumperApps.exe</strong>.
+              </li>
+              <li>Run the exe. Let it auto-detect Star Citizen (LIVE), or paste your LIVE folder path.</li>
+              <li>
+                Copy your <strong className="text-slate-300">API key</strong> from below and paste it when
+                asked.
+              </li>
+              <li>
+                On first run, answer <strong className="text-slate-300">Y</strong> to full history import
+                so old log files are scanned.
+              </li>
+              <li>Leave the window running while you play.</li>
+            </ol>
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+              Path B — Python scripts (macOS / Linux / Windows scripts)
+            </h4>
+            <p className="text-sm text-slate-400">
+              You <strong className="text-slate-300">must install Python</strong> before these scripts will
+              run.
+            </p>
+            <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
+              <li>
+                Install <strong className="text-slate-300">Python 3.8 or newer</strong> from{' '}
+                <a
+                  href="https://www.python.org/downloads/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-300 hover:text-orange-200 underline"
+                >
+                  https://www.python.org/downloads/
+                </a>
+                . On Windows: check{' '}
+                <strong className="text-slate-300">Add python.exe to PATH</strong>, finish install, then{' '}
+                <strong className="text-slate-300">close and reopen</strong> Command Prompt.
+              </li>
+              <li>
+                Confirm Python works. In a new terminal run{' '}
+                <span className="font-mono text-slate-300">python --version</span> then{' '}
+                <span className="font-mono text-slate-300">python -m pip --version</span>. Both must print a
+                version. Always use <span className="font-mono text-slate-300">python -m pip</span> (do not
+                rely on bare <span className="font-mono text-slate-300">pip</span>).
+              </li>
+              <li>
+                Under <strong className="text-slate-300">Downloads</strong>, download{' '}
+                <strong className="text-slate-300">Python scripts zip</strong> (
+                <span className="font-mono text-slate-300">BPDumper-python-scripts.zip</span>). Extract the
+                zip to a folder on your PC. That folder must contain{' '}
+                <span className="font-mono text-slate-300">dumper.py</span>,{' '}
+                <span className="font-mono text-slate-300">lookup.json</span> (or{' '}
+                <span className="font-mono text-slate-300">blueprint-name-lookup.json</span>), and{' '}
+                <span className="font-mono text-slate-300">requirements.txt</span>.
+              </li>
+              <li>
+                Open a terminal in that extracted folder. Create a virtual environment:{' '}
+                <span className="font-mono text-slate-300">python -m venv .venv</span>
+              </li>
+              <li>
+                Activate it — Windows:{' '}
+                <span className="font-mono text-slate-300">.venv\Scripts\activate</span> — macOS / Linux:{' '}
+                <span className="font-mono text-slate-300">source .venv/bin/activate</span>
+              </li>
+              <li>
+                Install dependencies:{' '}
+                <span className="font-mono text-slate-300">python -m pip install -r requirements.txt</span>
+              </li>
+              <li>
+                Copy your <strong className="text-slate-300">API key</strong> from below, then run{' '}
+                <span className="font-mono text-slate-300">python dumper.py --watch</span>. Paste the key
+                when asked. On first run answer <strong className="text-slate-300">Y</strong> to full
+                history import.
+              </li>
+              <li>
+                On Windows you can instead double-click{' '}
+                <span className="font-mono text-slate-300">dumper.bat</span> in the extracted folder (it
+                runs the venv + install + start steps for you). Still paste your API key when asked.
+              </li>
+              <li>Leave the watcher running while you play.</li>
+            </ol>
+          </div>
         </section>
 
         <section className="site-surface space-y-3 p-4">

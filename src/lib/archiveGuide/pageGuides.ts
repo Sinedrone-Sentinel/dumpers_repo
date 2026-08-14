@@ -395,10 +395,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Desktop app that reads your local Star Citizen Game.log — not CIG servers — to sync blueprint unlocks and power Live Mission Tracker.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
-      '**Windows:** download **DumperApps.exe** (native Go build) — it **searches for your Star Citizen install** (LIVE) for you, then paste your API key',
+      '**Path A — Windows:** download **DumperApps.exe** → run it → auto-detect LIVE (or paste path) → paste API key → answer **Y** to full history import → leave it running',
       'Published Windows builds only go live after the VirusTotal CI gate — named malware-family hits block publish; common generic/ML heuristic labels are ignored (you may still see them on the VirusTotal report)',
-      '**macOS / Linux (or advanced Windows):** download **BPDumper-python-scripts.zip** from Downloads (includes `lookup.json`) — install Python 3 with PATH enabled, use a venv or `dumper.bat`, then `python -m pip install -r requirements.txt` and `python dumper.py --watch` (use `python -m pip` if bare `pip` is not recognized)',
-      'Do **not** copy only the GitHub scripts folder — `lookup.json` is missing there; use the release zip',
+      '**Path B — Python scripts (requires Python):** (1) Install Python 3.8+ from https://www.python.org/downloads/ (Windows: check Add python.exe to PATH, reopen terminal) (2) Confirm `python --version` and `python -m pip --version` (3) Download **BPDumper-python-scripts.zip** from Downloads and extract it (4) `python -m venv .venv` (5) activate `.venv` (6) `python -m pip install -r requirements.txt` (7) `python dumper.py --watch`, paste API key, answer **Y** to full history — Windows: `dumper.bat` runs steps 4–7 after the zip is extracted',
+      'Do **not** copy only the GitHub scripts folder — use the release zip so `lookup.json` is included (`blueprint-name-lookup.json` also works next to `dumper.py`)',
       'You can paste a custom path if auto-detect misses your install',
       'Does **not** download your craft-bench / inventory from CIG — only blueprint award lines found in local log files',
       'First run can import awards from `.log` files under detected log dirs, then watch mode tails the live Game.log',

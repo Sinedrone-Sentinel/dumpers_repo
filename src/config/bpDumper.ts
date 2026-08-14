@@ -61,7 +61,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Python scripts zip (macOS / Linux / advanced)',
     description:
-      'Download BPDumper-python-scripts.zip (includes lookup.json). Install Python 3, use a venv or dumper.bat, then run dumper.py.',
+      'Requires Python 3.8+ from python.org first. Then download BPDumper-python-scripts.zip (includes lookup.json), create a venv, install requirements, run dumper.py.',
     url: BP_DUMPER_SCRIPTS_URL,
   },
 ]
