@@ -434,30 +434,30 @@ def keep_app_up_to_date_enabled(env_vars: dict) -> bool:
 def perform_auto_update(latest_ver: str, download_url: str) -> None:
     """Removed: downloading/replacing the running exe tripped AV heuristics."""
     url = (download_url or DEFAULT_DOWNLOAD_URL).strip() or DEFAULT_DOWNLOAD_URL
-    print(f"{Colors.YELLOW}[Update] Auto-update is disabled. Download manually:{Colors.RESET}")
-    print(f"  {url}")
-    print(f"  Releases: {DEFAULT_RELEASES_URL}")
-    sys.exit(1)
+    _press_any_key_to_exit(
+        "[Update] Auto-update is disabled. Download manually:\n"
+        f"  {url}\n"
+        f"  Releases: {DEFAULT_RELEASES_URL}",
+        code=1,
+    )
 
 
 
 def handle_update_required(err: DumperUpdateRequired, *, keep_up_to_date: bool) -> None:
     latest = err.latest or "newer"
     url = err.download_url or DEFAULT_DOWNLOAD_URL
-    print(
-        f"\n{Colors.RED}[Update required] This BP Dumper ({DUMPER_VERSION}) is outdated. "
-        f"Latest is {latest}.{Colors.RESET}"
-    )
+    lines = [
+        f"[Update required] This BP Dumper ({DUMPER_VERSION}) is outdated. Latest is {latest}."
+    ]
     if _is_msix_packaged():
-        print(
-            f"{Colors.YELLOW}Open Microsoft Store → Library (or the BP Dumper product page) "
-            f"and install the update.{Colors.RESET}"
+        lines.append(
+            "Open Microsoft Store → Library (or the BP Dumper product page) and install the update."
         )
-        sys.exit(1)
-    print(f"{Colors.YELLOW}Download the new DumperApps.exe and replace this file:{Colors.RESET}")
-    print(f"  {url}")
-    print(f"  Releases: {DEFAULT_RELEASES_URL}")
-    sys.exit(1)
+    else:
+        lines.append("Download the new DumperApps.exe and replace this file:")
+        lines.append(f"  {url}")
+        lines.append(f"  Releases: {DEFAULT_RELEASES_URL}")
+    _press_any_key_to_exit("\n".join(lines), code=1)
 
 
 class SessionPingController:
