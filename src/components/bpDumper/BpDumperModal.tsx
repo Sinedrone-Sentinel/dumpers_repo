@@ -11,6 +11,125 @@ interface BpDumperModalProps {
   onClose: () => void
 }
 
+function SetupStepList({ children }: { children: React.ReactNode }) {
+  return <ol className="mt-2 list-decimal space-y-2.5 pl-5 text-sm leading-relaxed text-slate-400">{children}</ol>
+}
+
+function SetupHowTo() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="site-surface overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-900/50"
+        aria-expanded={open}
+      >
+        <span>
+          <span className="text-sm font-semibold text-white">How to set up</span>
+          <span className="mt-0.5 block text-xs text-slate-500">
+            Pick one path — Windows exe or Python scripts (not both)
+          </span>
+        </span>
+        <span className="shrink-0 text-slate-400" aria-hidden>
+          {open ? '▾' : '▸'}
+        </span>
+      </button>
+
+      {open && (
+        <div className="space-y-5 border-t border-slate-700/60 px-4 py-4">
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-amber-300">Option A — Windows exe</h4>
+            <p className="text-xs text-slate-500">Recommended. No Python install.</p>
+            <SetupStepList>
+              <li>
+                Under Downloads, get <strong className="text-slate-300">DumperApps.exe</strong>.
+              </li>
+              <li>
+                Run it. Let it <strong className="text-slate-300">auto-detect</strong> Star Citizen
+                (LIVE), or paste your LIVE folder path.
+              </li>
+              <li>
+                Copy your <strong className="text-slate-300">API key</strong> from this page and paste
+                it when asked.
+              </li>
+              <li>
+                On first run, answer <strong className="text-slate-300">Y</strong> to full history
+                import so old log files are scanned.
+              </li>
+              <li>Leave the window running while you play.</li>
+            </SetupStepList>
+          </div>
+
+          <div className="space-y-2 border-t border-slate-700/50 pt-5">
+            <h4 className="text-sm font-semibold text-sky-300">Option B — Python scripts</h4>
+            <p className="text-xs text-slate-500">
+              macOS / Linux / advanced Windows. You must install Python first.
+            </p>
+            <SetupStepList>
+              <li>
+                Install <strong className="text-slate-300">Python 3.8+</strong> from{' '}
+                <a
+                  href="https://www.python.org/downloads/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-300 underline hover:text-orange-200"
+                >
+                  python.org/downloads
+                </a>
+                . On Windows: check <strong className="text-slate-300">Add python.exe to PATH</strong>,
+                then close and reopen the terminal.
+              </li>
+              <li>
+                Confirm it works:{' '}
+                <span className="font-mono text-slate-300">python --version</span> and{' '}
+                <span className="font-mono text-slate-300">python -m pip --version</span>. Always use{' '}
+                <span className="font-mono text-slate-300">python -m pip</span> (not bare{' '}
+                <span className="font-mono text-slate-300">pip</span>).
+              </li>
+              <li>
+                Download <strong className="text-slate-300">Python scripts zip</strong> (
+                <span className="font-mono text-slate-300">BPDumper-python-scripts.zip</span>) from
+                Downloads. Extract it. Confirm the folder has{' '}
+                <span className="font-mono text-slate-300">dumper.py</span>,{' '}
+                <span className="font-mono text-slate-300">lookup.json</span> (or{' '}
+                <span className="font-mono text-slate-300">blueprint-name-lookup.json</span>), and{' '}
+                <span className="font-mono text-slate-300">requirements.txt</span>.
+              </li>
+              <li>
+                In that folder:{' '}
+                <span className="font-mono text-slate-300">python -m venv .venv</span>
+              </li>
+              <li>
+                Activate — Windows:{' '}
+                <span className="font-mono text-slate-300">.venv\Scripts\activate</span> — macOS /
+                Linux: <span className="font-mono text-slate-300">source .venv/bin/activate</span>
+              </li>
+              <li>
+                Install deps:{' '}
+                <span className="font-mono text-slate-300">python -m pip install -r requirements.txt</span>
+              </li>
+              <li>
+                Copy your <strong className="text-slate-300">API key</strong>, then run{' '}
+                <span className="font-mono text-slate-300">python dumper.py --watch</span>. Paste the
+                key when asked. Answer <strong className="text-slate-300">Y</strong> to full history
+                import on first run.
+              </li>
+              <li>
+                Windows shortcut after steps 1–3: double-click{' '}
+                <span className="font-mono text-slate-300">dumper.bat</span> (handles venv + install +
+                start). Still paste your API key when asked.
+              </li>
+              <li>Leave the watcher running while you play.</li>
+            </SetupStepList>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   const { user, isApproved, isPending } = useAuth()
   const [error, setError] = useState<string | null>(null)
@@ -94,72 +213,18 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
             </li>
             <li>
               <strong className="text-slate-300">Live Mission Tracker</strong> — see active missions and
-              what is still in your pool while watch mode runs.
+              what is still in your pool while watch mode runs. Open{' '}
+              <Link to="/targets/live" className="text-orange-300 underline hover:text-orange-200">
+                Live Mission Tracker
+              </Link>{' '}
+              while the watcher is running.
             </li>
           </ul>
         </section>
 
         <section className="space-y-3">
           <h3 className="text-sm font-semibold text-white">Downloads</h3>
-          <BpDumperDownloadLinks />
-        </section>
-
-        <section className="space-y-2">
-          <h3 className="text-sm font-semibold text-white">Live Mission Tracker</h3>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            While BP Dumper watches your game log, open the{' '}
-            <Link to="/targets/live" className="text-orange-300 hover:text-orange-200 underline">
-              Live Mission Tracker
-            </Link>{' '}
-            page to see active in-game missions and pool blueprints you still need to acquire.
-          </p>
-        </section>
-
-        <section className="space-y-2">
-          <h3 className="text-sm font-semibold text-white">How to set up</h3>
-          <ol className="list-decimal list-inside space-y-2 text-sm text-slate-400">
-            <li>
-              <strong className="text-slate-300">Windows (easiest):</strong> under Downloads, get{' '}
-              <strong className="text-slate-300">DumperApps.exe</strong>, run it, let it{' '}
-              <strong className="text-slate-300">auto-detect</strong> your Star Citizen install, then
-              paste your API key. No Python install needed.
-            </li>
-            <li>
-              <strong className="text-slate-300">macOS / Linux / scripts:</strong> install{' '}
-              <strong className="text-slate-300">Python 3.8+</strong> from python.org (Windows: check{' '}
-              <strong className="text-slate-300">Add python.exe to PATH</strong>, then reopen the
-              terminal). Verify with{' '}
-              <span className="font-mono text-slate-300">python --version</span> and{' '}
-              <span className="font-mono text-slate-300">python -m pip --version</span> — if bare{' '}
-              <span className="font-mono text-slate-300">pip</span> fails, always use{' '}
-              <span className="font-mono text-slate-300">python -m pip</span>.
-            </li>
-            <li>
-              Download <strong className="text-slate-300">Python scripts zip</strong>{' '}
-              (<span className="font-mono text-slate-300">BPDumper-python-scripts.zip</span>) from
-              Downloads — not a bare GitHub folder copy. Extract it; the folder must include{' '}
-              <span className="font-mono text-slate-300">lookup.json</span> next to{' '}
-              <span className="font-mono text-slate-300">dumper.py</span>.
-            </li>
-            <li>
-              Create a venv so deps do not clash with other Python apps:{' '}
-              <span className="font-mono text-slate-300">python -m venv .venv</span>, activate it, then{' '}
-              <span className="font-mono text-slate-300">python -m pip install -r requirements.txt</span>{' '}
-              and <span className="font-mono text-slate-300">python dumper.py --watch</span>. Windows:{' '}
-              double-click <span className="font-mono text-slate-300">dumper.bat</span> to do that for
-              you (see the zip README).
-            </li>
-            <li>
-              Copy your <strong className="text-slate-300">API key</strong> below, then paste it when
-              prompted on first run. Accept the one-time{' '}
-              <strong className="text-slate-300">full history import</strong> if you want to catch up from
-              existing logbackups (can take a while if those folders are large).
-            </li>
-            <li>
-              Leave the watcher running while playing — new unlocks from the live Game.log sync
-              automatically after that.
-            </li>
-          </ol>
+          <BpDumperDownloadLinks afterDownloads={<SetupHowTo />} />
         </section>
 
         <section className="site-surface space-y-3 p-4">

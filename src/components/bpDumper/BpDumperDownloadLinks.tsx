@@ -81,7 +81,12 @@ function EngineList({ title, engines, empty }: { title: string; engines: string[
   )
 }
 
-export default function BpDumperDownloadLinks() {
+export default function BpDumperDownloadLinks({
+  afterDownloads,
+}: {
+  /** Rendered after the download cards (e.g. How to set up), before trust / VirusTotal notes. */
+  afterDownloads?: React.ReactNode
+}) {
   const trustLinks = getDumperTrustLinks()
   const [release, setRelease] = useState<BpDumperReleaseInfo | null>(null)
   const [vtOpen, setVtOpen] = useState(false)
@@ -139,6 +144,8 @@ export default function BpDumperDownloadLinks() {
           )
         })}
       </div>
+
+      {afterDownloads}
 
       <p className="text-xs text-slate-500 leading-relaxed">
         Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your Star
