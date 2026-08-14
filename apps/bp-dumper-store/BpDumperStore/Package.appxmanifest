@@ -16,7 +16,7 @@
   <Identity
     Name="SinedroneSentinel.BPDumper"
     Publisher="CN=BB0EF4E0-83D8-4581-AB1E-92981A9DA66B"
-    Version="1.17.7.0" />
+    Version="1.12.1.0" />
   <mp:PhoneIdentity PhoneProductId="00000000-0000-0000-0000-000000000000" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>BP Dumper</DisplayName>
