@@ -1,48 +1,25 @@
 ---
-description: Microsoft Store / Partner Center - AppContainer WinUI ONLY; never full-trust MSIX
+description: Do NOT offer Microsoft Store in member UI; Store packaging is legacy/parked
 alwaysApply: true
 ---
 
-# BP Dumper Microsoft Store - do not screw this up
+# BP Dumper — no Microsoft Store in member UI
 
-Partner Center product **BP Dumper** (`9PMR8CPSB04K`) is **AppContainer only**.
+**Hard rule:** Do **not** add a Microsoft Store download, Store setup path, or Store "Recommended" badge to the member-facing Dumper Apps modal / Downloads.
 
-## Only allowed Store package source
+Member Windows install is **GitHub Releases `DumperApps.exe` only** (plus Python scripts zip for non-Windows / advanced).
 
-| Do | Path |
-|---|---|
-| **YES - Partner Center upload** | `apps/bp-dumper-store/` via `pwsh apps/bp-dumper-store/build-store.ps1 -Config Release -Package` |
-| Drop folder | `Coding Projects/APP_Store Code/BP Dumper/BPDumper.msix` (copy from that script only) |
+## Do not
 
-Manifest requirements (already in `Package.appxmanifest`):
+- Re-add `windows-store` / `BP_DUMPER_STORE_*` links to `BP_DUMPER_DOWNLOADS`
+- Tell members to install from Partner Center / apps.microsoft.com
+- Upload or copy `build-msix.ps1` (full-trust) packages for Store as if they were the member path
+- "Fix" Partner Center submissions unless the maintainer explicitly asks
 
-- `EntryPoint="Windows.PartialTrustApplication"`
-- `uap10:TrustLevel="appContainer"`
-- Capability: **`internetClient` only**
-- User grants LIVE folder via **FolderPicker** / FutureAccessList
-- **No drive scanning**
+## Legacy code (parked)
 
-## Forbidden (never for Partner Center)
+`apps/bp-dumper-store/` may remain in the repo for historical Partner Center work. It is **not** a member download route. Do not rebuild or promote it unless explicitly asked.
 
-| Do not | Why |
-|---|---|
-| `scripts/installer/build-msix.ps1` | Wraps `DumperApps.exe` with **`runFullTrust`** / `Windows.FullTrustApplication` |
-| `scripts/installer/msix/AppxManifest.xml.template` | Full-trust template - **not** Store |
-| Putting `DumperApps.exe` or full-trust MSIX in `APP_Store Code` | Wrong payload; certification / policy fail |
-| Leaving `AppxManifest.xml.template` with `runFullTrust` in the Store drop folder | Confuses uploads / looks like full-trust |
-| Rebuilding Store because Go/exe changed | Store WinUI is a **separate** client; use its **existing** package unless the user explicitly asks to repackage Store |
-| Inventing a new Store packaging path | Use the project that already exists |
+## Portable exe note (allowed)
 
-`build-msix.ps1` is **local/private experiment only**. It must **never** be uploaded to Partner Center or copied over the Store drop `BPDumper.msix`.
-
-## When the user mentions Store / MSIX / Partner Center
-
-1. Use **`apps/bp-dumper-store`** only.
-2. Do **not** run `build-msix.ps1`.
-3. Do **not** bump Store package version or rebuild unless they **explicitly** ask.
-4. If a good `AppPackages/BpDumperStore_*.msix` already exists, **copy that** - do not reinvent.
-5. Before saying ready to upload, verify the MSIX `AppxManifest.xml` has **no** `runFullTrust` and uses **PartialTrust** / `appContainer`.
-
-## Portable Windows (not Store)
-
-GitHub Releases `DumperApps.exe` from `scripts/bp-dumper-go/` + `build-exe.ps1` is the **member portable** path. That is **not** the Store package.
+The unsigned `DumperApps.exe` description may warn that Windows Defender / SmartScreen often block it (false positive). That is fine — do not respond by bringing Store back.
