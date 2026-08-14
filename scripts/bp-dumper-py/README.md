@@ -12,11 +12,24 @@ Desktop log watcher for Star Citizen — syncs blueprint unlocks and powers Live
 
 The portable bundle includes Python and the scripts in this folder — no separate Python install required.
 
-### macOS / Linux (scripts)
+### macOS / Linux / Windows scripts
 
-1. Open **Dumper Apps** → **Python scripts** (or clone this folder from the repo).
-2. Install Python 3.8+ and deps: `pip install -r requirements.txt`
-3. Run: `python dumper.py --watch --key "dr_your_api_key"` (or follow the prompts without `--key`).
+Use a **local virtual environment** so `pip` does not conflict with other Python tools on the machine:
+
+```bash
+cd scripts/bp-dumper-py   # or your extracted "bp dumper" folder
+python -m venv .venv
+
+# Windows:
+.venv\Scripts\activate
+# macOS / Linux:
+# source .venv/bin/activate
+
+python -m pip install -r requirements.txt
+python dumper.py --watch
+```
+
+Or on Windows double-click **`dumper.bat`** — it creates `.venv`, installs deps there, then runs the watcher.
 
 ## Developer setup
 
@@ -24,7 +37,10 @@ Requires **Python 3.8+** on PATH.
 
 ```bash
 cd scripts/bp-dumper-py
-pip install -r requirements.txt
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+python -m pip install -r requirements.txt
 python dumper.py --watch --key "dr_your_api_key"
 ```
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Check Python installation
 if ! command -v python3 &> /dev/null && ! command -v python &> /dev/null; then
@@ -12,9 +13,16 @@ if ! command -v python3 &> /dev/null; then
     PYTHON_CMD="python"
 fi
 
-# Install dependencies silently
-$PYTHON_CMD -m pip install -r requirements.txt &> /dev/null
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT"
 
-# Run python script forwarding all args
-$PYTHON_CMD dumper.py "$@"
-exit $?
+if [[ ! -x .venv/bin/python ]]; then
+    echo "Creating local virtual environment (.venv)..."
+    "$PYTHON_CMD" -m venv .venv
+fi
+
+PY=".venv/bin/python"
+echo "Installing dependencies into .venv..."
+"$PY" -m pip install -q -r requirements.txt
+
+exec "$PY" dumper.py "$@"

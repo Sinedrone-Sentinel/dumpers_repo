@@ -125,11 +125,13 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
               paste your API key.
             </li>
             <li>
-              <strong className="text-slate-300">macOS / Linux:</strong> open{' '}
-              <strong className="text-slate-300">Python scripts</strong>, install deps with{' '}
-              <span className="font-mono text-slate-300">pip install -r requirements.txt</span>, then
-              run <span className="font-mono text-slate-300">python dumper.py --watch</span> (same
-              auto-detect; see the folder README).
+              <strong className="text-slate-300">macOS / Linux / scripts:</strong> open{' '}
+              <strong className="text-slate-300">Python scripts</strong>, create a venv (
+              <span className="font-mono text-slate-300">python -m venv .venv</span>, activate it),
+              then <span className="font-mono text-slate-300">pip install -r requirements.txt</span>{' '}
+              and run <span className="font-mono text-slate-300">python dumper.py --watch</span>{' '}
+              (Windows: double-click <span className="font-mono text-slate-300">dumper.bat</span>; see
+              the folder README).
             </li>
             <li>
               Copy your <strong className="text-slate-300">API key</strong> below, then paste it when
