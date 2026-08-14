@@ -17,6 +17,13 @@ export const BP_DUMPER_SCRIPTS_URL =
 export const BP_DUMPER_SCRIPTS_SOURCE_URL =
   'https://github.com/Sinedrone-Sentinel/dumpers_repo/tree/main/scripts/bp-dumper-py' as const
 
+/** Microsoft Store product identity (Partner Center). */
+export const BP_DUMPER_STORE_ID = '9PMR8CPSB04K' as const
+
+/** Browser-friendly Store listing (opens Store app on Windows when available). */
+export const BP_DUMPER_STORE_WEB_URL =
+  `https://apps.microsoft.com/detail/${BP_DUMPER_STORE_ID}` as const
+
 export const BP_DUMPER_VERSION = dumperVersionData.version
 
 /** Windows exe built from scripts/bp-dumper-go via scripts/installer/build-exe.ps1 */
@@ -45,15 +52,23 @@ export type BpDumperDownloadOption = {
 
 /**
  * Member-facing install options.
- * Primary: native Go Windows exe (auto-detects Star Citizen install; path override OK).
+ * Primary: Microsoft Store (AppContainer). Portable exe is unsigned — Defender often flags it.
  */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
+  {
+    id: 'windows-store',
+    kind: 'external',
+    label: 'Microsoft Store (Windows)',
+    description:
+      'Install BP Dumper from the Microsoft Store. Paste your API key on first run. You pick your LIVE folder in-app (no drive scan).',
+    url: BP_DUMPER_STORE_WEB_URL,
+  },
   {
     id: 'windows-exe',
     kind: 'external',
     label: 'Windows exe (DumperApps.exe)',
     description:
-      'Native Windows build — searches your drives for Star Citizen / LIVE (or paste a path), then asks for your API key.',
+      'Portable GitHub build — auto-detects Star Citizen / LIVE (or paste a path), then asks for your API key. Unsigned: Windows Defender / SmartScreen often block or quarantine this exe (false positive). Prefer the Microsoft Store when you can.',
     url: `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_APPS_EXE_FILENAME}`,
   },
   {
@@ -61,7 +76,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Python scripts zip (macOS / Linux / advanced)',
     description:
-      'Download BPDumper-python-scripts.zip (includes lookup.json). Install Python 3, use a venv or dumper.bat, then run dumper.py.',
+      'Requires Python 3.8+ from python.org first. Then download BPDumper-python-scripts.zip (includes lookup.json), create a venv, install requirements, run dumper.py.',
     url: BP_DUMPER_SCRIPTS_URL,
   },
 ]
