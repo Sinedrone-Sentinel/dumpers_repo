@@ -131,8 +131,18 @@ function isVersionLessThan(a: string, b: string): boolean {
   return false
 }
 
+/**
+ * Source of truth is the bundled dumper-version.json (copied on Edge deploy).
+ * LATEST_DUMPER_VERSION may only raise the gate (hotfix without redeploy) — a stale
+ * older secret must never pin clients below the shipped bundle (that broke 1.17.3).
+ */
 function latestDumperVersion(): string {
-  return Deno.env.get('LATEST_DUMPER_VERSION')?.trim() || dumperVersionData.version
+  const bundled = String(dumperVersionData.version ?? '').trim()
+  const fromEnv = Deno.env.get('LATEST_DUMPER_VERSION')?.trim() || ''
+  if (fromEnv && bundled) {
+    return isVersionLessThan(bundled, fromEnv) ? fromEnv : bundled
+  }
+  return bundled || fromEnv || '0.0.0'
 }
 
 /** Bump last_used_at + lifetime/daily invoke counters (Edge usage analytics). */

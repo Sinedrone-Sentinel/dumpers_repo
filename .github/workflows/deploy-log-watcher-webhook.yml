@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'src/data/blueprint-name-lookup.json'
+      - 'src/data/bp-dumper-version.json'
       - 'supabase/functions/log-watcher-webhook/**'
       - 'supabase/functions/_shared/blueprintResolver.ts'
   workflow_dispatch:

@@ -314,7 +314,7 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 
 **Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications. `session_ping` runs every 30s while in the PU; idle/not-in-PU pauses those pings (event POSTs still fire).
 
-After cutting a dumper release, redeploy `log-watcher-webhook --no-verify-jwt` so the Edge hard version gate matches `LATEST_DUMPER_VERSION`.
+After a dumper release publishes (VirusTotal gate), CI redeploys `log-watcher-webhook`, sets `LATEST_DUMPER_VERSION`, and triggers Pages so the site modal matches. Manual redeploy is only needed if that sync step was skipped (missing Supabase secrets).
 
 ---
 
