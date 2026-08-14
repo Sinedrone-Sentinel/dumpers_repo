@@ -423,6 +423,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Get help with RSI Handle verification issues',
       'Request a new Partnership service type (Add New Service Request) or file Other for anything else',
       'View the status of your open tickets and respond to staff questions',
+      'While a ticket is open, new staff replies and typing indicators appear live — no refresh needed',
       'All ticket data is deleted after resolution for your privacy',
     ],
     relatesTo: ['Settings', 'Blueprints', 'Partnership'],
