@@ -1,4 +1,12 @@
-# Build a Store-ready BPDumper.msix from DumperApps.exe (local/private only - do NOT attach to GitHub Releases).
+# Build a LOCAL/PRIVATE full-trust MSIX from DumperApps.exe.
+#
+# *** NOT FOR MICROSOFT STORE / PARTNER CENTER ***
+# This package uses runFullTrust + Windows.FullTrustApplication.
+# Partner Center product 9PMR8CPSB04K requires the AppContainer WinUI app:
+#   apps/bp-dumper-store → pwsh ./build-store.ps1 -Config Release -Package
+#
+# Do NOT copy this output to APP_Store Code or upload it to Partner Center.
+# Do NOT attach to GitHub Releases.
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "../..")).Path,
     [string]$OutputDir = (Join-Path $PSScriptRoot "output"),
@@ -100,11 +108,11 @@ if ($LASTEXITCODE -ne 0 -or -not (Test-Path $msixPath)) {
     throw "MakeAppx failed (exit $LASTEXITCODE)"
 }
 
-Write-Step "MSIX ready (Store-only - do not attach to GitHub Releases)"
+Write-Step "MSIX packed (LOCAL/PRIVATE ONLY — NOT for Partner Center / Store)"
 Write-Host $msixPath
 Get-Item $msixPath | ForEach-Object {
     Write-Host ("Size: {0:N1} MB" -f ($_.Length / 1MB))
 }
 Write-Host ""
-Write-Host "Partner Center product: 9PMR8CPSB04K (BP Dumper)" -ForegroundColor Yellow
-Write-Host "Upload this .msix in Partner Center. Explain runFullTrust: reads Star Citizen Game.log/logbackups; POSTs to org webhook." -ForegroundColor DarkGray
+Write-Host "FORBIDDEN for Store upload: this package has runFullTrust." -ForegroundColor Red
+Write-Host "For Partner Center 9PMR8CPSB04K use: apps/bp-dumper-store/build-store.ps1 -Package" -ForegroundColor Yellow
