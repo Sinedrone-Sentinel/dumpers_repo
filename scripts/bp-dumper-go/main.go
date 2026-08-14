@@ -76,6 +76,53 @@ func prompt(reader *bufio.Reader, label string) (string, bool) {
 	return strings.TrimSpace(strings.Trim(line, "\"'")), true
 }
 
+// promptLivePathUntilValid keeps asking for the Star Citizen LIVE folder until a usable path is entered
+// (or blank + auto-detect succeeds). Used by Store/MSIX and desktop when SC is not found.
+func promptLivePathUntilValid(reader *bufio.Reader, defaultPath string) (string, bool) {
+	fmt.Printf(
+		"%sStar Citizen LIVE folder is required.%s\n"+
+			"Enter the LIVE folder that contains Game.log (not the RSI Launcher folder).\n"+
+			"Example: C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\n"+
+			"Leave blank to auto-detect, or paste a path to override.\n\n",
+		colors.Yellow, colors.Reset,
+	)
+	for {
+		pathPrompt := "LIVE / Game.log path"
+		if defaultPath != "" {
+			pathPrompt += " [" + defaultPath + "]"
+		}
+		pathPrompt += ": "
+		userPath, ok := prompt(reader, pathPrompt)
+		if !ok {
+			return "", false
+		}
+		if userPath == "" && defaultPath != "" {
+			userPath = defaultPath
+		}
+		if userPath == "" {
+			fmt.Printf("%sAuto-detecting Star Citizen installations...%s\n", colors.Dim, colors.Reset)
+			installs := discover.DetectSCInstalls()
+			if ch, p := discover.PreferLIVE(installs); p != "" {
+				fmt.Printf("%sDetected channel %s at: %s%s\n", colors.Green, ch, p, colors.Reset)
+				return p, true
+			}
+			if live := discover.FallbackLIVE(); live != "" {
+				fmt.Printf("%sDetected default fallback at: %s%s\n", colors.Green, live, colors.Reset)
+				return live, true
+			}
+			fmt.Printf("%sStill not found — paste your LIVE folder path and press Enter.%s\n", colors.Red, colors.Reset)
+			defaultPath = ""
+			continue
+		}
+		validated, errMsg := discover.ValidateLogPath(userPath)
+		if errMsg != "" {
+			fmt.Printf("%s%s%s\n", colors.Red, errMsg, colors.Reset)
+			continue
+		}
+		return validated, true
+	}
+}
+
 func resolveChannelDir(filePath, logDir string, env map[string]string) string {
 	if logDir != "" {
 		if fi, err := os.Stat(logDir); err == nil && fi.IsDir() {
@@ -290,10 +337,11 @@ func main() {
 		fmt.Printf("%s====================================================%s\n\n", colors.Cyan, colors.Reset)
 		fmt.Printf("%sSource: github.com/Sinedrone-Sentinel/dumpers_repo (native Windows client)%s\n", colors.Dim, colors.Reset)
 		fmt.Printf("%sTrust:  OpenSSF Scorecard + site Trust links under Dumper Apps%s\n", colors.Dim, colors.Reset)
-		fmt.Printf("%sTip:    Leave the path blank — BP Dumper searches for your LIVE install.%s\n\n", colors.Dim, colors.Reset)
+		fmt.Printf("%sTip:    Leave the path blank — BP Dumper searches for your LIVE install.%s\n", colors.Dim, colors.Reset)
+		fmt.Printf("%s        Or paste your LIVE folder path (the folder that contains Game.log).%s\n\n", colors.Dim, colors.Reset)
 
 		defaultPath := envVars["LOG_PATH"]
-		pathPrompt := "Enter path to JSON export or folder (Leave empty to auto-detect SC logs)"
+		pathPrompt := "Enter path to LIVE folder / Game.log (Leave empty to auto-detect)"
 		if defaultPath != "" {
 			pathPrompt += " [" + defaultPath + "]"
 		}
@@ -316,11 +364,21 @@ func main() {
 				fmt.Printf("%sDetected default fallback at: %s%s\n", colors.Green, live, colors.Reset)
 				userPath = live
 			} else {
-				exitSCNotDetected()
+				var okPath bool
+				userPath, okPath = promptLivePathUntilValid(reader, "")
+				if !okPath {
+					fmt.Println("\nAborted.")
+					os.Exit(0)
+				}
 			}
 		} else if validated, errMsg := discover.ValidateLogPath(userPath); errMsg != "" {
 			fmt.Printf("%s%s%s\n", colors.Red, errMsg, colors.Reset)
-			requirePathMissing()
+			var okPath bool
+			userPath, okPath = promptLivePathUntilValid(reader, "")
+			if !okPath {
+				fmt.Println("\nAborted.")
+				os.Exit(0)
+			}
 		} else {
 			userPath = validated
 		}
@@ -423,7 +481,11 @@ func main() {
 		for k, v := range newEnv {
 			envVars[k] = v
 		}
-		_ = config.SaveEnvFile(envPath, envVars)
+		if err := config.SaveEnvFile(envPath, envVars); err != nil {
+			fmt.Printf("%s⚠ Could not save settings to %s: %v%s\n", colors.Yellow, envPath, err, colors.Reset)
+		} else if appdir.IsMsix() {
+			fmt.Printf("%sSaved settings under %s%s\n", colors.Dim, app, colors.Reset)
+		}
 	}
 
 	if filePath == "" && *logDirFlag == "" {
@@ -431,7 +493,22 @@ func main() {
 			filePath = envVars["LOG_PATH"]
 		} else {
 			installs := discover.DetectSCInstalls()
-			if len(installs) == 0 && discover.FallbackLIVE() == "" {
+			if _, p := discover.PreferLIVE(installs); p != "" {
+				filePath = p
+			} else if live := discover.FallbackLIVE(); live != "" {
+				filePath = live
+			} else if isTTY() {
+				var okPath bool
+				filePath, okPath = promptLivePathUntilValid(reader, "")
+				if !okPath {
+					fmt.Println("\nAborted.")
+					os.Exit(0)
+				}
+				envVars["LOG_PATH"] = filePath
+				if err := config.SaveEnvFile(envPath, envVars); err != nil {
+					fmt.Printf("%s⚠ Could not save LOG_PATH: %v%s\n", colors.Yellow, err, colors.Reset)
+				}
+			} else {
 				exitSCNotDetected()
 			}
 		}
@@ -555,7 +632,23 @@ func main() {
 			}
 		}
 		if watchFile == "" {
-			exitSCNotDetected()
+			if isTTY() {
+				livePath, okPath := promptLivePathUntilValid(reader, envVars["LOG_PATH"])
+				if !okPath {
+					fmt.Println("\nAborted.")
+					os.Exit(0)
+				}
+				envVars["LOG_PATH"] = livePath
+				_ = config.SaveEnvFile(envPath, envVars)
+				fi, err := os.Stat(livePath)
+				if err == nil && fi.IsDir() {
+					watchFile = filepath.Join(livePath, "Game.log")
+				} else {
+					watchFile = livePath
+				}
+			} else {
+				exitSCNotDetected()
+			}
 		}
 
 		channelDir := filepath.Dir(watchFile)
