@@ -233,9 +233,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Two tabs: Fulfillment (WTB listings you can craft/supply for) and Store (WTS listings you can buy from)',
       'Search by item name and filter by minimum quality band — a listing matches if any of its lines match',
-      'Fulfillment tab extras: min buyer rep filter and "Only listings with my blueprints" (you only need blueprints for the lines you pick)',
+      'Fulfillment tab extras: min buyer rep filter and "Only listings with my blueprints" (narrows the list to blueprints you have marked as acquired)',
       'Listings collapse to a compact summary row (title, tag, member, price, rep) — click to expand line details; only one expands at a time',
       'Item-by-item checkout: check lines to buy or fulfill — set quantities on whole-unit items; SCU resources are always the full listed amount (refined cargo cannot be split) — unchecked lines stay listed',
+      'Using the Blueprint tracker is optional: lines needing a blueprint you have not marked as acquired are flagged in amber and you confirm once before claiming, but you are never blocked from fulfilling them',
       'Each checkout or fulfillment claim becomes its own transaction through the normal handoff, pickup, and rating flow',
       'Active transactions show the other party\'s in-game name — add them in Star Citizen to coordinate pickup',
       'Seller-side WTS: actions and status appear directly on each sale card — start handoff, mark ready, or cancel',

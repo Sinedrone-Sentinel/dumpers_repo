@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react'
+import AppModal from './layout/AppModal'
 import { formatDfpAuec, formatResourceOrderQualityLabel } from '../lib/dfp'
 import {
   isWholeUnitResource,
@@ -18,7 +19,7 @@ interface PartialSelectionPanelProps {
   order: CustomOrder
   /** 'buy' = purchasing from a WTS listing; 'fulfill' = crafting for a WTB listing. */
   mode?: 'buy' | 'fulfill'
-  /** Fulfill mode: blueprint lines you do not own are disabled. */
+  /** Fulfill mode: blueprint lines missing from the tracker are flagged, not blocked. */
   acquiredBlueprints?: Record<string, boolean>
   showDfp?: boolean
   disabled?: boolean
@@ -72,9 +73,11 @@ export default function WtsPartialPurchasePanel({
 
   const [selected, setSelected] = useState<Record<string, boolean>>({})
   const [quantities, setQuantities] = useState<Record<string, string>>({})
+  const [pendingConfirm, setPendingConfirm] = useState<WtsLineSelection[] | null>(null)
 
-  const canSelectBlueprint = (blueprintId: string) =>
-    !isFulfill || !acquiredBlueprints || acquiredBlueprints[blueprintId] === true
+  // The Blueprint tracker is opt-in, so an untracked blueprint is a warning, not a block.
+  const isUntrackedBlueprint = (blueprintId: string) =>
+    isFulfill && !!acquiredBlueprints && acquiredBlueprints[blueprintId] !== true
 
   const resourceQtyForLine = (line: (typeof resourceLines)[number]) => {
     // SCU ores/salvage/etc.: always the full remaining line (cannot split refined cargo).
@@ -139,6 +142,26 @@ export default function WtsPartialPurchasePanel({
     return out
   }
 
+  const untrackedSelectedTitles = useMemo(
+    () =>
+      blueprintLines
+        .filter((line) => selected[line.lineId] && isUntrackedBlueprint(line.blueprintId))
+        .map((line) => line.title),
+    // isUntrackedBlueprint reads isFulfill + acquiredBlueprints
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [blueprintLines, selected, isFulfill, acquiredBlueprints]
+  )
+
+  const submit = () => {
+    const selections = buildSelections()
+    if (selections.length === 0) return
+    if (untrackedSelectedTitles.length > 0) {
+      setPendingConfirm(selections)
+      return
+    }
+    void onPurchase(selections)
+  }
+
   const qtyVerb = isFulfill ? 'Crafting' : 'Buying'
 
   return (
@@ -159,21 +182,22 @@ export default function WtsPartialPurchasePanel({
       <div className="space-y-2 flex-1">
         {blueprintLines.map((line) => {
           const isOn = !!selected[line.lineId]
-          const selectable = canSelectBlueprint(line.blueprintId)
+          const untracked = isUntrackedBlueprint(line.blueprintId)
           return (
             <div
               key={line.lineId}
-              className={`rounded-lg border p-2.5 ${
-                isOn
-                  ? 'border-cyan-500/40 site-surface'
-                  : 'site-surface'
-              } ${!selectable ? 'opacity-60' : ''}`}
+              className={`rounded-lg border p-2.5 site-surface ${
+                untracked
+                  ? 'border-amber-500/40'
+                  : isOn
+                    ? 'border-cyan-500/40'
+                    : ''
+              }`}
             >
-              <label className={`flex items-start gap-2 ${selectable ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
+              <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={isOn}
-                  disabled={!selectable}
                   onChange={() => toggleLine(line.lineId, 1)}
                   className="site-checkbox mt-1 accent-cyan-500"
                 />
@@ -189,7 +213,7 @@ export default function WtsPartialPurchasePanel({
                       )}
                     </span>
                   </div>
-                  {!selectable && (
+                  {untracked && (
                     <p className="text-amber-400/80 text-[11px] mt-1">
                       You need this blueprint to fulfill this line.
                     </p>
@@ -281,11 +305,7 @@ export default function WtsPartialPurchasePanel({
         <button
           type="button"
           disabled={disabled || submitting || selectionTotal <= 0}
-          onClick={() => {
-            const selections = buildSelections()
-            if (selections.length === 0) return
-            void onPurchase(selections)
-          }}
+          onClick={submit}
           className="px-3 py-1.5 text-xs bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 rounded disabled:opacity-40 shrink-0"
         >
           {submitting
@@ -297,6 +317,53 @@ export default function WtsPartialPurchasePanel({
               : 'Buy selected items'}
         </button>
       </div>
+
+      {pendingConfirm && (
+        <AppModal
+          title="Blueprints missing from your tracker"
+          subtitle="The Blueprint tracker is optional — this is a heads-up, not a block."
+          size="sm"
+          onClose={() => setPendingConfirm(null)}
+          footer={
+            <div className="flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                className="site-btn-secondary"
+                onClick={() => setPendingConfirm(null)}
+              >
+                Go back
+              </button>
+              <button
+                type="button"
+                className="site-btn-primary"
+                onClick={() => {
+                  const selections = pendingConfirm
+                  setPendingConfirm(null)
+                  void onPurchase(selections)
+                }}
+              >
+                Fulfill anyway
+              </button>
+            </div>
+          }
+        >
+          <p className="site-hint !mt-0">
+            You have not marked {untrackedSelectedTitles.length === 1 ? 'this blueprint' : 'these blueprints'} as
+            acquired:
+          </p>
+          <ul className="mt-2 space-y-1">
+            {untrackedSelectedTitles.map((title) => (
+              <li key={title} className="text-amber-200 text-sm">
+                {title}
+              </li>
+            ))}
+          </ul>
+          <p className="site-hint mt-3">
+            If you own {untrackedSelectedTitles.length === 1 ? 'it' : 'them'} in-game, carry on — only take
+            what you can actually craft, because the buyer rates the trade.
+          </p>
+        </AppModal>
+      )}
     </div>
   )
 }
