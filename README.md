@@ -176,7 +176,8 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 
 - Two tabs: **Fulfillment** (WTB listings) and **Store** (WTS listings)
 - Item-level **search** plus **minimum quality-band filter**; Fulfillment tab adds min buyer rep and "only listings with my blueprints" filters
-- Pick exact lines and quantities to buy or fulfill — fulfillers only need blueprints for the lines they claim
+- Pick exact lines and quantities to buy or fulfill
+- Marking blueprints acquired is optional: lines using untracked blueprints are flagged in amber and confirmed once before claiming, never blocked (`accept_wtb_partial` enforces no ownership check)
 - Every checkout/claim spawns a full child transaction (same handoff, deadlines, ratings)
 - Seller actions on-card: start handoff, mark ready, cancel/release (items restore to the listing)
 - **Reputation badges** show buyer rep, fulfiller/seller rep, and average delivery time (after 5 completed trades)

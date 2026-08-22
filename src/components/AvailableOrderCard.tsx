@@ -36,7 +36,7 @@ interface AvailableOrderCardProps {
   meetsMinRep: boolean
   canAcceptLimits: boolean
   accepting: boolean
-  /** Fulfill mode: used to disable WTB blueprint lines the fulfiller does not own. */
+  /** Fulfill mode: used to flag WTB blueprint lines missing from the fulfiller's tracker. */
   acquiredBlueprints?: Record<string, boolean>
   onAcceptPartial: (selections: WtsLineSelection[]) => void
 }
