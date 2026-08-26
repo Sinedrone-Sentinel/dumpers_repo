@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-07-31T01:46:24.046Z",
+  "_extracted": "2026-08-26T23:07:01.119Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -3086,6 +3086,12 @@
       "description": "Showcase your dedication to helping Alliance Aid assist the people of Levski during their time of need with this green livery with yellow accents.",
       "kind": "item"
     },
+    "asgard_paint_silver_silver_silver": {
+      "key": "item_DescAsgard_Paint_Silver_Silver_Silver",
+      "label": "Asgard SteelTek Livery",
+      "description": "The SteelTek livery features a shining metallic coating with a Damascus pattern that runs across the surface of the Asgard.",
+      "kind": "item"
+    },
     "asgard_paint_beige_black_red": {
       "key": "item_DescAsgard_Paint_beige_black_red",
       "label": "Asgard Sand Sea Livery",
@@ -3692,6 +3698,12 @@
       "description": "This replica Banu lockbox mimics the look and feel of these rare and highly sought after collector's items. Usually owned by the heads of soulis to hold valuable items or documents, this realistic replica version was produced as a purely decorative item for Humans and can't be opened.",
       "kind": "item"
     },
+    "basher_paint_black_black_red_pirate": {
+      "key": "item_DescBasher_Paint_Black_Black_Red_Pirate",
+      "label": "Basher Skull and Crossbones Livery",
+      "description": "This livery embraces classic pirate iconography by featuring several skull and crossbones symbols across the Basher's dark hull with blood red highlights.",
+      "kind": "item"
+    },
     "basher_paint_black_grey_grey": {
       "key": "item_DescBasher_Paint_Black_Grey_Grey",
       "label": "Basher Razorburn Livery",
@@ -4198,8 +4210,8 @@
     },
     "crus_star_runner_front_turret": {
       "key": "item_DescCRUS_Star_Runner_Front_Turret",
-      "label": "Crusader Mercury Star Runner Nose Turret",
-      "description": "Item Type: Turret Manufacturer: Crusader Industries Size: 3 This pilot-controlled, dual-linked nose turret is mounted to the belly of the Mercury Star Runner. Bespoke to the ship, the turret is outfitted with two size-3 laser repeaters ready to help keep your flight path clear.",
+      "label": "Mercury Dual S3 Nose Mount",
+      "description": "Item Type: Weapon Mount Manufacturer: Crusader Industries Size: 3 This pilot-controlled, dual-linked weapon mount is bespoke to the Mercury Star Runner and outfitted with two size-3 laser repeaters ready to help keep your flight path clear.",
       "kind": "item"
     },
     "crus_game_chess_1_a": {
@@ -4724,6 +4736,12 @@
       "description": "Discreetly soar through the night sky in the Clipper with the Nightbreak livery, which is primarily black with red highlights.",
       "kind": "item"
     },
+    "clipper_paint_black_black_red_pirate": {
+      "key": "item_DescClipper_Paint_Black_Black_Red_Pirate",
+      "label": "Clipper Skull and Crossbones Livery",
+      "description": "This livery embraces classic pirate iconography by featuring several skull and crossbones symbols across the Clipper's dark hull with blood red highlights.",
+      "kind": "item"
+    },
     "clipper_paint_black_cream_red": {
       "key": "item_DescClipper_Paint_Black_Cream_Red",
       "label": "Clipper Basalt Livery",
@@ -5051,7 +5069,7 @@
     "cutlass_paint_skullandcrossbones_black_red": {
       "key": "item_DescCutlass_Paint_SkullandCrossbones_Black_Red",
       "label": "Cutlass Skull and Crossbones Livery",
-      "description": "Deemed by Drake's public relations team as a ?tongue-in-cheek reference to the overblown controversy,? the Skull and Crossbones livery leans into the perception that the Cutlass is marketed toward those on the wrong side of the law. The livery embraces classic pirate iconography by featuring several skull and crossbones symbols across it grey frame with red highlights.",
+      "description": "Deemed by Drake's public relations team as a tongue-in-cheek reference to the overblown controversy, the Skull and Crossbones livery leans into the perception that the Cutlass is marketed toward those on the wrong side of the law. The livery embraces classic pirate iconography by featuring several skull and crossbones symbols across it grey frame with red highlights.",
       "kind": "item"
     },
     "cutlass_paint_special_asia": {
@@ -8456,6 +8474,12 @@
       "description": "Modify your Hammerhead with this white and grey camo livery specifically designed for the 2951 IAE.",
       "kind": "item"
     },
+    "harddrive_generic": {
+      "key": "item_DescHardDrive_Generic",
+      "label": "Data Drive",
+      "description": "A mobile data storage device designed to transport information.",
+      "kind": "item"
+    },
     "hawk_paint_fleetweek_level1_military": {
       "key": "item_DescHawk_Paint_Fleetweek_Level1_Military",
       "label": "Hawk Timberline Livery",
@@ -8930,6 +8954,12 @@
       "description": "The Altair livery is primarily a crisp white with black and red highlights.",
       "kind": "item"
     },
+    "ironclad_paint_black_black_red_pirate": {
+      "key": "item_DescIronclad_Paint_Black_Black_Red_Pirate",
+      "label": "Ironclad Skull and Crossbones Livery",
+      "description": "This livery embraces classic pirate iconography by featuring several skull and crossbones symbols across the Ironclad's dark hull with blood red highlights.",
+      "kind": "item"
+    },
     "ironclad_beige_beige_beige": {
       "key": "item_DescIronclad_beige_beige_beige",
       "label": "Ironclad Sediment Livery",
@@ -9144,6 +9174,12 @@
       "key": "item_DescKRIG_LaserCannon_S3",
       "label": "Quarreler Cannon",
       "description": "Manufacturer: Kruger Intergalactic Item Type: Laser Cannon Size: 3 Crafted with precision manufactured parts forged to extremely tight tolerances, designed for top-of-class heat management and assembled to exceed all industry standards, the Quarreler laser autocannon was created by Kruger Intergalactic for true defensive dependability.",
+      "kind": "item"
+    },
+    "krig_laserrepeater_bespoke_s2": {
+      "key": "item_DescKRIG_LaserRepeater_Bespoke_S2",
+      "label": "Whiptail STR-E2 Repeater",
+      "description": "Item Type: Laser Repeater Manufacturer: Kruger Intergalactic Size: 2 Designed for the Stringray to unleash a torrent of laser fire, this custom made laser repeater is capable of firing in rapid succession to strip away defenses.",
       "kind": "item"
     },
     "krig_wolf_ballisticgatling_s4": {
@@ -10448,6 +10484,18 @@
       "description": "Item Type: Missile Rack Manufacturer: Gatac Manufacture Size: 4 Missiles: 8xS1 Designed by Gatac, this missile rack is capable of storing eight S1 missiles.",
       "kind": "item"
     },
+    "mrck_s04_krig_s65_stingray_left": {
+      "key": "item_DescMRCK_S04_KRIG_S65_Stingray_Left",
+      "label": "Kruger Stingray S4 Missile Rack - Left",
+      "description": "Item Type: Missile Rack Manufacturer: Kruger Intergalactic Size: 4 Missiles: 4xS2 Bespoke missile rack for the Stingray that fires four S2 missiles.",
+      "kind": "item"
+    },
+    "mrck_s04_krig_s65_stingray_right": {
+      "key": "item_DescMRCK_S04_KRIG_S65_Stingray_Right",
+      "label": "Kruger Stingray S4 Missile Rack - Right",
+      "description": "Item Type: Missile Rack Manufacturer: Kruger Intergalactic Size: 4 Missiles: 4xS2 Bespoke missile rack for the Stingray that fires four S2 missiles.",
+      "kind": "item"
+    },
     "mrck_s04_orig_400i_octo_s02": {
       "key": "item_DescMRCK_S04_ORIG_400i_Octo_S02",
       "label": "ST-205 Missile Rack",
@@ -11148,6 +11196,12 @@
       "key": "item_DescMount_Gimbal_S2",
       "label": "VariPuck S2 Gimbal Mount",
       "description": "Manufacturer: Flashfire Systems Item Type: Weapon Mount Size: 2 The VariPuck fits between your weapon and the ship hardpoint to transform a fixed weapon mount into a gimballed mount, allowing the pilot to independently aim their weapon’s fire. VariPucks will accept any weapon the same size as the hardpoint it is mounting to.",
+      "kind": "item"
+    },
+    "mount_gimbal_s2_stingray": {
+      "key": "item_DescMount_Gimbal_S2_Stingray",
+      "label": "STR-E2 Gimbal Mount",
+      "description": "Item Type: Gimbal Mount Manufacturer: Kruger Intergalactic Size: 2 This custom made gimbal mount for the Stingray is able to support up to S2 weaponry and allows for adaptive targeting.",
       "kind": "item"
     },
     "mount_gimbal_s3": {
@@ -14156,6 +14210,12 @@
       "description": "Discreetly soar through the night sky in the Shiv with the Nightbreak livery, which is primarily black with red highlights.",
       "kind": "item"
     },
+    "shiv_paint_black_black_red_pirate": {
+      "key": "item_DescShiv_Paint_Black_Black_Red_Pirate",
+      "label": "Shiv Skull and Crossbones Livery",
+      "description": "This livery embraces classic pirate iconography by featuring several skull and crossbones symbols across the Shiv's dark hull with blood red highlights.",
+      "kind": "item"
+    },
     "shiv_paint_brown_white_brown": {
       "key": "item_DescShiv_Paint_Brown_White_Brown",
       "label": "Shiv Nightmare Livery",
@@ -14772,6 +14832,30 @@
       "key": "item_DescStinger_Paint_Silver_Silver_Silver",
       "label": "Stinger Meridian Livery",
       "description": "The Meridian livery gives the Stinger a simple yet stylish metallic silver finish.",
+      "kind": "item"
+    },
+    "stingray_paint_black_black_orange": {
+      "key": "item_DescStingray_Paint_black_black_orange",
+      "label": "Stingray Manta Livery",
+      "description": "The Manta livery features fiery orange accents that cut through the otherwise solid black hull.",
+      "kind": "item"
+    },
+    "stingray_paint_golden_blue_black_stripes": {
+      "key": "item_DescStingray_Paint_golden_blue_black_stripes",
+      "label": "Stingray Marina Livery",
+      "description": "Featuring thin, fluid lines resembling gills, the Marina's blues and golds bring an aquatic theme to the Stingray.",
+      "kind": "item"
+    },
+    "stingray_paint_white_black_red": {
+      "key": "item_DescStingray_Paint_white_black_red",
+      "label": "Stingray Protocol Livery",
+      "description": "Crisp whites contrast against a deep black in the Protocol livery, completed with an eye-catching red that follows the smooth edges of the Stingray.",
+      "kind": "item"
+    },
+    "stingray_paint_white_gray_blue_camo": {
+      "key": "item_DescStingray_Paint_white_gray_blue_camo",
+      "label": "Stingray Domain Camo Livery",
+      "description": "The Domain Camo livery consists of various shades of grays in a digital camo pattern.",
       "kind": "item"
     },
     "storall_atls_inventory": {
@@ -16292,6 +16376,12 @@
       "description": "Enhance your basic t-shirt game with this stylish short sleeve t-shirt from City Lights, which features a dynamic, asymmetrical line across the front. Women's sizes currently out of stock.",
       "kind": "item"
     },
+    "carryable_1h_cy_flair_poster_ht_gamescom2026_1_a": {
+      "key": "item_Desc_Carryable_1H_CY_flair_poster_HT_Gamescom2026_1_a",
+      "label": "M80 \"Beauty Is Power\" Poster",
+      "description": "Take in the magesty of the M80 with this exclusive poster showing off the ship's streamlined, monochromatic structure with the Beauty Is Power slogan on top.",
+      "kind": "item"
+    },
     "carryable_1h_sq_flair_coin_1_chairmansclub_a": {
       "key": "item_Desc_Carryable_1H_SQ_Flair_Coin_1_chairmansclub_a",
       "label": "Chairman's Club Coin",
@@ -16472,10 +16562,10 @@
       "description": "A partial zip pullover shirt with mesh arm accents and a button collar. Escar Limited's Balboa line delivers cutting edge style suitable for any system or situation. Women's sizes currently out of stock.",
       "kind": "item"
     },
-    "_eld_shirt_04_01_01": {
+    "eld_shirt_04_01_01": {
       "key": "item_Desc_ELD_Shirt_04_01_01",
-      "label": "Hannu Shirt",
-      "description": "ELD - shirt (04) - description",
+      "label": "microTech T-Shirt",
+      "description": "A comfortable white cotton t-shirt featuring a large microTech logo across the front and a smaller one on the back.",
       "kind": "item"
     },
     "eld_shirt_04_assistance_dec": {
@@ -16745,7 +16835,7 @@
     "grin_utility_medium_backpack_01": {
       "key": "item_Desc_GRIN_utility_medium_backpack_01",
       "label": "Aril Backpack",
-      "description": "Item Type: Medium Backpack Carrying Capacity: 85K µSCU Core Compatibility: Medium & Heavy Originally designed for miners, the Aril armor comes with an attachable backpack that can accommodate a variety of tools and supplies to keep your hands free. The Aril backpack is available in a variety of vibrant colors to fit your personal taste and for easy identification on the jobsite.",
+      "description": "Item Type: Medium Backpack Carrying Capacity: 127.5K µSCU Core Compatibility: Medium & Heavy Originally designed for miners, the Aril armor comes with an attachable backpack that can accommodate a variety of tools and supplies to keep your hands free. The Aril backpack is available in a variety of vibrant colors to fit your personal taste and for easy identification on the jobsite.",
       "kind": "item"
     },
     "grin_utility_medium_backpack_02": {
@@ -17098,8 +17188,8 @@
     },
     "keycard_soo_iffi_2": {
       "key": "item_Desc_KeyCard_SOO_IFFI_2",
-      "label": "Hartmore Inverter Code",
-      "description": "A single use card that contains the codes for accessing the Nine Tails' Identity Friend and Foe Inverter on the Hartmore platform.",
+      "label": "Hartmoore Inverter Code",
+      "description": "A single use card that contains the codes for accessing the Nine Tails' Identity Friend and Foe Inverter on the Hartmoore platform.",
       "kind": "item"
     },
     "keycard_soo_iffi_3": {
@@ -19421,7 +19511,7 @@
     "cds_combat_heavy_core_01_02_02": {
       "key": "item_Desc_cds_combat_heavy_core_01_02_02",
       "label": "ADP-mk4 Core SecondWind",
-      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU Backpacks: All When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 10.5K µSCU Backpacks: All When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_heavy_helmet_01_02_02": {
@@ -19433,7 +19523,7 @@
     "cds_combat_heavy_legs_01_02_02": {
       "key": "item_Desc_cds_combat_heavy_legs_01_02_02",
       "label": "ADP-mk4 Legs SecondWind",
-      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 8.0 µSCU When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -80 / 105 °C Radiation Protection: 52800 REM Radiation Scrub Rate: 251.1 REM/s Carrying Capacity: 6.5K µSCU When there's a difficult job at hand, you want to ensure that you can see it through to the end. Clark Defense Systems' ADP-mk4 heavy armor allows Marines to remain in active combat situations for a longer duration with more loadout options, while its powered frame provides near unfettered movement despite the protection it offers. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_light_arms_02_02_01": {
@@ -19517,19 +19607,19 @@
     "cds_combat_light_core_02_02_01": {
       "key": "item_Desc_cds_combat_light_core_02_02_01",
       "label": "FBL-8a Core SecondWind",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Backpacks: Light CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_light_core_03": {
       "key": "item_Desc_cds_combat_light_core_03",
       "label": "FBL-8a Core (Modified)",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Backpacks: Light Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
       "kind": "item"
     },
     "cds_combat_light_core_04": {
       "key": "item_Desc_cds_combat_light_core_04",
       "label": "FBL-8a Core (Modified)",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -32 / 62 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Backpacks: Light Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
       "kind": "item"
     },
     "cds_combat_light_helmet_02_02_01": {
@@ -19553,25 +19643,25 @@
     "cds_combat_light_legs_02_02_01": {
       "key": "item_Desc_cds_combat_light_legs_02_02_01",
       "label": "FBL-8a Legs SecondWind",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU CDS's quest to create the ideal light armor continues with the FBL-8a. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_light_legs_03": {
       "key": "item_Desc_cds_combat_light_legs_03",
       "label": "FBL-8a Legs (Modified)",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
       "kind": "item"
     },
     "cds_combat_light_legs_04": {
       "key": "item_Desc_cds_combat_light_legs_04",
       "label": "FBL-8a Legs (Modified)",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU Based on CDS' FBL-8a combat armor, this set has been modified from its original form. This light armor will keep you fast on your feet with its strategic mix of protective plating and reinforced nano-weave fabrics. While the armor works with any undersuit, it was specifically designed to match the FBL-8u undersuit with special attention given to how the two fit together to make the set as streamlined and responsive as possible.",
       "kind": "item"
     },
     "cds_combat_medium_arms_01_02_01": {
       "key": "item_Desc_cds_combat_medium_arms_01_02_01",
       "label": "ORC-mkX Arms SecondWind",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: Medium, Light The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_medium_arms_03_01_01": {
@@ -19595,13 +19685,13 @@
     "cds_combat_medium_backpack_01_01_01": {
       "key": "item_Desc_cds_combat_medium_backpack_01_01_01",
       "label": "CSP-68M Backpack",
-      "description": "Item Type: Medium Backpack Carrying Capacity: 70K µSCU Core Compatibility: Medium & Heavy Be ready for any situation with the CSP-68M Backpack. Originally designed for the rigors combat support, this medium backpack has become popular thanks to its durability and a patented core connector that helps the CSP-68M sit comfortably and balanced on the back.",
+      "description": "Item Type: Medium Backpack Carrying Capacity: 105K µSCU Core Compatibility: Medium & Heavy Be ready for any situation with the CSP-68M Backpack. Originally designed for the rigors combat support, this medium backpack has become popular thanks to its durability and a patented core connector that helps the CSP-68M sit comfortably and balanced on the back.",
       "kind": "item"
     },
     "cds_combat_medium_backpack_01_02_01": {
       "key": "item_Desc_cds_combat_medium_backpack_01_02_01",
       "label": "CSP-68M Backpack Epoque",
-      "description": "Item Type: Medium Backpack Carrying Capacity: 70K µSCU Core Compatibility: Medium & Heavy Be ready for any situation with the CSP-68M Backpack. Originally designed for the rigors combat support, this medium backpack has become popular thanks to its durability and a patented core connector that helps the CSP-68M sit comfortably and balanced on the back. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
+      "description": "Item Type: Medium Backpack Carrying Capacity: 105K µSCU Core Compatibility: Medium & Heavy Be ready for any situation with the CSP-68M Backpack. Originally designed for the rigors combat support, this medium backpack has become popular thanks to its durability and a patented core connector that helps the CSP-68M sit comfortably and balanced on the back. The Epoque edition features a navy and black coloring, finished with baroque gold detailing.",
       "kind": "item"
     },
     "cds_combat_medium_backpack_02_01_01": {
@@ -19613,13 +19703,13 @@
     "cds_combat_medium_core_01_02_01": {
       "key": "item_Desc_cds_combat_medium_core_01_02_01",
       "label": "ORC-mkX Core SecondWind",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5K µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_medium_core_03_01_01": {
       "key": "item_Desc_cds_combat_medium_core_03_01_01",
       "label": "ORC-mkX Core (XenoThreat)",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5K µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
     "cds_combat_medium_core_04_01_01": {
@@ -19631,7 +19721,7 @@
     "cds_combat_medium_core_04_01_xenothreat": {
       "key": "item_Desc_cds_combat_medium_core_04_01_xenothreat",
       "label": "ORC-mkX Core (XenoThreat v2)",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5K µSCU Backpacks: Medium, Light This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
     "cds_combat_medium_helmet_01_02_01": {
@@ -19655,13 +19745,13 @@
     "cds_combat_medium_legs_01_02_01": {
       "key": "item_Desc_cds_combat_medium_legs_01_02_01",
       "label": "ORC-mkX Legs SecondWind",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.5K µSCU The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility. To honor those who came to Orison's aid in its time of need, the SecondWind edition compliments the armor with a rich blue base adorned with a sleek, flowing air design.",
       "kind": "item"
     },
     "cds_combat_medium_legs_03_01_01": {
       "key": "item_Desc_cds_combat_medium_legs_03_01_01",
       "label": "ORC-mkX Legs (XenoThreat)",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.5K µSCU This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
     "cds_combat_medium_legs_04_01_01": {
@@ -19673,7 +19763,7 @@
     "cds_combat_medium_legs_04_01_xenothreat": {
       "key": "item_Desc_cds_combat_medium_legs_04_01_xenothreat",
       "label": "ORC-mkX Legs (XenoThreat v2)",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.5K µSCU This version of CDS' ORC-mkX combat armor has been modified from its original form. The mark X is part of CDS’ award-winning Omni-Role Combat armor series. This EVA-rated suit features new EdgeCore composite weave technology, maximizing protection against projectiles, explosives and the elements while minimizing operator agility.",
       "kind": "item"
     },
     "cds_combat_superheavy_arms_02_01_01": {
@@ -19745,7 +19835,7 @@
     "cds_combat_superheavy_suit_01_01_01": {
       "key": "item_Desc_cds_combat_superheavy_suit_01_01_01",
       "label": "BUL-H4 Armor",
-      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit.",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit.",
       "kind": "item"
     },
     "cds_combat_superheavy_suit_01_03_01": {
@@ -19757,13 +19847,13 @@
     "cds_combat_superheavy_suit_01_04_01": {
       "key": "item_Desc_cds_combat_superheavy_suit_01_04_01",
       "label": "BUL-H4 Armor SteelTek",
-      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The SteelTek edition features a shining metallic silver with a mercurial pattern that runs across the surface.",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The SteelTek edition features a shining metallic silver with a mercurial pattern that runs across the surface.",
       "kind": "item"
     },
     "cds_combat_superheavy_suit_02_01_01": {
       "key": "item_Desc_cds_combat_superheavy_suit_02_01_01",
       "label": "BUL-H4 Armor Stronghold",
-      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "description": "Item Type: Super Heavy Armor Damage Reduction: 90% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Redefine personal protection with the BUL-H4 series. Utilizing advanced synthetic polymers, impacts are significantly mitigated transforming the wearer into a bulwark of defense. The armor's power-assisted frame helps maintain mobility, offsetting the heavy weight of the suit. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "cds_heavy_armor_01_shared": {
@@ -20459,19 +20549,19 @@
     "clda_undersuit_01_01_01": {
       "key": "item_Desc_clda_undersuit_01_01_01",
       "label": "Levin Undersuit (Refurbished)",
-      "description": "Item Type: Undersuit Damage Reduction: 10% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Carrying Capacity: 8.0 µSCU Featuring flexible gaskets for greater comfort and more natural movement, along with a convenient range of chest connector port options, the Levin from Caldera has been a practical choice for explorers everywhere. This particular undersuit has been repaired for extended use.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Featuring flexible gaskets for greater comfort and more natural movement, along with a convenient range of chest connector port options, the Levin from Caldera has been a practical choice for explorers everywhere. This particular undersuit has been repaired for extended use.",
       "kind": "item"
     },
     "clda_undersuit_02": {
       "key": "item_Desc_clda_undersuit_02",
       "label": "Markanda Undersuit (Refurbished)",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Built for adventure but comfortable enough for everyday, the Markanda undersuit has become beloved by explorers. A unique patchwork design creates a flexible yet resilient undersuit, while an odor resistant SureSoft inner lining will keep you from wanting to take it off. This particular undersuit has been repaired for extended use.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Built for adventure but comfortable enough for everyday, the Markanda undersuit has become beloved by explorers. A unique patchwork design creates a flexible yet resilient undersuit, while an odor resistant SureSoft inner lining will keep you from wanting to take it off. This particular undersuit has been repaired for extended use.",
       "kind": "item"
     },
     "clda_undersuit_02_02_01": {
       "key": "item_Desc_clda_undersuit_02_02_01",
       "label": "Markanda Undersuit Pyrotechnic",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Built for adventure but comfortable enough for everyday, the Markanda undersuit has become beloved by explorers. A unique patchwork design creates a flexible yet resilient undersuit, while an odor resistant SureSoft inner lining will keep you from wanting to take it off. This edition features the colors and logo of the now defunct Pyrotechnic Amalgamated.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Built for adventure but comfortable enough for everyday, the Markanda undersuit has become beloved by explorers. A unique patchwork design creates a flexible yet resilient undersuit, while an odor resistant SureSoft inner lining will keep you from wanting to take it off. This edition features the colors and logo of the now defunct Pyrotechnic Amalgamated.",
       "kind": "item"
     },
     "clda_utility_heavy_backpack_01": {
@@ -20681,19 +20771,19 @@
     "ctl_deckcrew_undersuit_01_lum01_01": {
       "key": "item_Desc_ctl_deckcrew_undersuit_01_lum01_01",
       "label": "One Light Undersuit Red",
-      "description": "Item Type: Undersuit Damage Reduction: 10% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Carrying Capacity: 8.0 µSCU Featuring durable poly-fiber fabric, a comfortable fit, and a special holiday design, this undersuit is the perfect thing to wear to any Luminalia party.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Featuring durable poly-fiber fabric, a comfortable fit, and a special holiday design, this undersuit is the perfect thing to wear to any Luminalia party.",
       "kind": "item"
     },
     "ctl_deckcrew_undersuit_01_lum01_06": {
       "key": "item_Desc_ctl_deckcrew_undersuit_01_lum01_06",
       "label": "One Light Undersuit Teal",
-      "description": "Item Type: Undersuit Damage Reduction: 10% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Carrying Capacity: 8.0 µSCU Featuring durable poly-fiber fabric, a comfortable fit, and a special holiday design, this undersuit is the perfect thing to wear to any Luminalia party.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Featuring durable poly-fiber fabric, a comfortable fit, and a special holiday design, this undersuit is the perfect thing to wear to any Luminalia party.",
       "kind": "item"
     },
     "ctl_deckcrew_undersuit_01_lum01_07": {
       "key": "item_Desc_ctl_deckcrew_undersuit_01_lum01_07",
       "label": "One Light Undersuit Blue",
-      "description": "Item Type: Undersuit Damage Reduction: 10% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Carrying Capacity: 8.0 µSCU Featuring durable poly-fiber fabric, a comfortable fit, and a special holiday design, this undersuit is the perfect thing to wear to any Luminalia party.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Featuring durable poly-fiber fabric, a comfortable fit, and a special holiday design, this undersuit is the perfect thing to wear to any Luminalia party.",
       "kind": "item"
     },
     "ctl_hat_01_lum01_01": {
@@ -22097,7 +22187,7 @@
     "gys_undersuit_01": {
       "key": "item_Desc_gys_undersuit_01",
       "label": "Deep-Space Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all.",
       "kind": "item"
     },
     "hdh_boots_01": {
@@ -22355,13 +22445,13 @@
     "hdtc_undersuit_01_01_01": {
       "key": "item_Desc_hdtc_undersuit_01_01_01",
       "label": "Lamont Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 10% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU The Lamont looks so good you won't want to wear armor over it. Seamlessly blending lightweight plating with durable synthetic weaves, the Lamont will be as comfortable in the cockpit as it is stylish in the streets. Embrace personal protection gear suitable for both work and play, and gain the Hardin Tactical advantage.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% The Lamont looks so good you won't want to wear armor over it. Seamlessly blending lightweight plating with durable synthetic weaves, the Lamont will be as comfortable in the cockpit as it is stylish in the streets. Embrace personal protection gear suitable for both work and play, and gain the Hardin Tactical advantage.",
       "kind": "item"
     },
     "hdtc_undersuit_01_01_02": {
       "key": "item_Desc_hdtc_undersuit_01_01_02",
       "label": "Lamont Xy'kara Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU The Lamont looks so good you won't want to wear armor over it. Seamlessly blending lightweight plating with durable synthetic weaves, the Lamont will be as comfortable in the cockpit as it is stylish in the streets. Embrace personal protection gear suitable for both work and play, and gain the Hardin Tactical advantage. The Xy'kara undersuit draws inspiration from the millennia-long heritage of the Xi'an.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% The Lamont looks so good you won't want to wear armor over it. Seamlessly blending lightweight plating with durable synthetic weaves, the Lamont will be as comfortable in the cockpit as it is stylish in the streets. Embrace personal protection gear suitable for both work and play, and gain the Hardin Tactical advantage. The Xy'kara undersuit draws inspiration from the millennia-long heritage of the Xi'an.",
       "kind": "item"
     },
     "hdtc_utility_light_backpack_01": {
@@ -22673,7 +22763,7 @@
     "kap_combat_light_core_04_01_01": {
       "key": "item_Desc_kap_combat_light_core_04_01_01",
       "label": "Geist Armor Core Stronghold",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Backpacks: Light An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "kap_combat_light_helmet_01": {
@@ -22733,7 +22823,7 @@
     "kap_combat_light_legs_04_01_01": {
       "key": "item_Desc_kap_combat_light_legs_04_01_01",
       "label": "Geist Armor Legs Stronghold",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -35 / 65 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU An ideal synthesis of strength and technology, the Geist Stealth Armor has been crafted from military-grade carbon silk sourced from the same manufacturers that protect the UEE's special forces. Hair-thin filaments woven into the fabric mask the wearer's emissions, making them undetectable via radar, and specialized tubing built into the soles of the boots dampens the sound of footsteps. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "ksar_armor_heavy_helmet_01": {
@@ -22769,7 +22859,7 @@
     "ksar_undersuit_01": {
       "key": "item_Desc_ksar_undersuit_01",
       "label": "Scaleweave Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU This baseline undersuit from Kastak Arms offers complete protection seal from the elements and compatibility with multiple armor types.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% This baseline undersuit from Kastak Arms offers complete protection seal from the elements and compatibility with multiple armor types.",
       "kind": "item"
     },
     "m_hdtc_jacket_01_01_01": {
@@ -23579,7 +23669,7 @@
     "ops_pants_02_01_01": {
       "key": "item_Desc_ops_pants_02_01_01",
       "label": "Mivaldi Pants",
-      "description": "Carrying Capacity: 0.5K µSCU Cut to a narrow fit, OpalSky's Mivaldi pants feature bold asymmetrical design with smart yet casual dual material styling, making it the perfect addition to any wardrobe. Women's sizes currently out of stock.",
+      "description": "Carrying Capacity: 0.5K µSCU Cut to a narrow fit, OpalSky's Mivaldi pants feature bold asymmetrical design with smart yet casual dual material styling, making it the perfect addition to any wardrobe.",
       "kind": "item"
     },
     "ops_pants_02_01_9tails01": {
@@ -24275,7 +24365,7 @@
     "qrt_specialist_medium_backpack_01_03": {
       "key": "item_Desc_qrt_specialist_medium_backpack_01_03",
       "label": "Arden-CL Backpack Elysium",
-      "description": "Item Type: Light Backpack Carrying Capacity: 40K µSCU Core Compatibility: All Whether carrying supplies into a combat zone or simply hauling extra gear, the Arden-CL backpack is battle ready and tested. Roussimoff Rehabilitation Systems designed the backpack with a universal core connector allowing it to attach to a wide of variety armors. The Elysium edition combines bright gold detailing of winged skulls with a navy blue.",
+      "description": "Item Type: Light Backpack Carrying Capacity: 54K µSCU Core Compatibility: All Whether carrying supplies into a combat zone or simply hauling extra gear, the Arden-CL backpack is battle ready and tested. Roussimoff Rehabilitation Systems designed the backpack with a universal core connector allowing it to attach to a wide of variety armors. The Elysium edition combines bright gold detailing of winged skulls with a navy blue.",
       "kind": "item"
     },
     "qrt_specialist_medium_core_01": {
@@ -24764,6 +24854,12 @@
       "description": "Item Type: Heavy Backpack Carrying Capacity: 150K µSCU Core Compatibility: Heavy Comfortably carry vital gear with the Morozov-CH backpack. This softshell bag is made with an advanced duraweave that's lightweight yet ready for battlefield action. It also features several easy to access pockets and a plethora of straps to keep supplies secure and tight to your back. The Lifeforce edition was designed with first responders in mind with a highly visible white, red, and grey color scheme.",
       "kind": "item"
     },
+    "rrs_combat_heavy_backpack_01_04_01": {
+      "key": "item_Desc_rrs_combat_heavy_backpack_01_04_01",
+      "label": "Morozov-CH Backpack Stronghold",
+      "description": "Item Type: Heavy Backpack Carrying Capacity: 150K µSCU Core Compatibility: Heavy Comfortably carry vital gear with the Morozov-CH backpack. This softshell bag is made with an advanced duraweave that's lightweight yet ready for battlefield action. It also features several easy to access pockets and a plethora of straps to keep supplies secure and tight to your back. The Stronghold edition features the fierce symbology of the Nine Tails gang.",
+      "kind": "item"
+    },
     "rrs_combat_heavy_backpack_01_crus01_01": {
       "key": "item_Desc_rrs_combat_heavy_backpack_01_crus01_01",
       "label": "Morozov-CH Backpack Crusader Edition",
@@ -24797,13 +24893,13 @@
     "rrs_combat_light_backpack_01": {
       "key": "item_Desc_rrs_combat_light_backpack_01",
       "label": "Arden-CL Backpack",
-      "description": "Item Type: Light Backpack Carrying Capacity: 40K µSCU Core Compatibility: All Whether carrying supplies into a combat zone or simply hauling extra gear, the Arden-CL backpack is battle ready and tested. Roussimoff Rehabilitation Systems designed the backpack with a universal core connector allowing it to attach to a wide variety of armors.",
+      "description": "Item Type: Light Backpack Carrying Capacity: 54K µSCU Core Compatibility: All Whether carrying supplies into a combat zone or simply hauling extra gear, the Arden-CL backpack is battle ready and tested. Roussimoff Rehabilitation Systems designed the backpack with a universal core connector allowing it to attach to a wide variety of armors.",
       "kind": "item"
     },
     "rrs_combat_light_backpack_02_02_01": {
       "key": "item_Desc_rrs_combat_light_backpack_02_02_01",
       "label": "Arden-CL Backpack Chairman's Club",
-      "description": "Item Type: Light Backpack Carrying Capacity: 40K µSCU Core Compatibility: All Whether carrying supplies into a combat zone or simply hauling extra gear, the Arden-CL backpack is battle ready and tested. Roussimoff Rehabilitation Systems designed the backpack with a universal core connector allowing it to attach to a wide of variety armors. The Chairman's Club edition is clad in black with rich gold highlights.",
+      "description": "Item Type: Light Backpack Carrying Capacity: 54K µSCU Core Compatibility: All Whether carrying supplies into a combat zone or simply hauling extra gear, the Arden-CL backpack is battle ready and tested. Roussimoff Rehabilitation Systems designed the backpack with a universal core connector allowing it to attach to a wide of variety armors. The Chairman's Club edition is clad in black with rich gold highlights.",
       "kind": "item"
     },
     "rrs_specialist_heavy_arms_01": {
@@ -24848,10 +24944,10 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -97 / 121 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Gideon edition features a heavily worn teal finish with yellow accents and a signature red snake insignia.",
       "kind": "item"
     },
-    "_rrs_specialist_heavy_arms_06_01_01": {
+    "rrs_specialist_heavy_arms_06_01_01": {
       "key": "item_Desc_rrs_specialist_heavy_arms_06_01_01",
-      "label": "Morozov-SH Arms",
-      "description": "PH - Description for rrs_specialist_heavy_arms_06_01_01",
+      "label": "Morozov-SH-I Arms Stronghold",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "rrs_specialist_heavy_backpack_05_01_01": {
@@ -24908,10 +25004,10 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -97 / 121 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Gideon edition features a heavily worn teal finish with yellow accents and a signature red snake insignia.",
       "kind": "item"
     },
-    "_rrs_specialist_heavy_core_06_01_01": {
+    "rrs_specialist_heavy_core_06_01_01": {
       "key": "item_Desc_rrs_specialist_heavy_core_06_01_01",
-      "label": "Morozov-SH Core",
-      "description": "PH - Description for rrs_specialist_heavy_core_06_01_01",
+      "label": "Morozov-SH-I Core Stronghold",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 12K µSCU Backpacks: All Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "rrs_specialist_heavy_helmet_01": {
@@ -25004,10 +25100,10 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -97 / 121 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Gideon edition features a heavily worn teal finish with yellow accents.",
       "kind": "item"
     },
-    "_rrs_specialist_heavy_legs_06_01_01": {
+    "rrs_specialist_heavy_legs_06_01_01": {
       "key": "item_Desc_rrs_specialist_heavy_legs_06_01_01",
-      "label": "Morozov-SH Legs",
-      "description": "PH - Description for rrs_specialist_heavy_legs_06_01_01",
+      "label": "Morozov-SH-I Legs Stronghold",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8K µSCU Featuring fortified armor plating, special anti-rip protective padding and ample storage, the Morozov-SH is ready to overcome all kinds of adversity. After consulting with security professionals, RRS added a unique high protective collar and a lightweight inner lining; making the Morozov-SH both comfortable and a battlefield stalwart. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
     "rrs_specialist_light_arms_01": {
@@ -25157,13 +25253,13 @@
     "rsi_deckcrew_undersuit_01": {
       "key": "item_Desc_rsi_deckcrew_undersuit_01",
       "label": "Beacon Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU RSI's Beacon undersuit is a general use utility designed to provide total protection against environments and vacuum. Built out of a durable but flexible polymers, the Beacon provides a wide freedom of motion for a variety of body types.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% RSI's Beacon undersuit is a general use utility designed to provide total protection against environments and vacuum. Built out of a durable but flexible polymers, the Beacon provides a wide freedom of motion for a variety of body types.",
       "kind": "item"
     },
     "rsi_deckcrew_undersuit_01_ruso": {
       "key": "item_Desc_rsi_deckcrew_undersuit_01_ruso",
       "label": "Beacon Undersuit \"Rust Society\"",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU RSI's Beacon undersuit is a general use utility designed to provide total protection against environments and vacuum. Built out of a durable but flexible polymers, the Beacon provides a wide freedom of motion for a variety of body types. The Rust Society edition celebrates blue-collar workers with an exclusive red and tan coloration that hides dirt and wear and tear well.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% RSI's Beacon undersuit is a general use utility designed to provide total protection against environments and vacuum. Built out of a durable but flexible polymers, the Beacon provides a wide freedom of motion for a variety of body types. The Rust Society edition celebrates blue-collar workers with an exclusive red and tan coloration that hides dirt and wear and tear well.",
       "kind": "item"
     },
     "rsi_explorer_01_shared": {
@@ -25307,19 +25403,25 @@
     "rsi_explorer_light_core_01_01_coramor": {
       "key": "item_Desc_rsi_explorer_light_core_01_01_coramor",
       "label": "Venture Core Lovestruck",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special Lovestruck edition features a stylish metallic pink and black color scheme inspired by the colors of the Coramor festival.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special Lovestruck edition features a stylish metallic pink and black color scheme inspired by the colors of the Coramor festival.",
+      "kind": "item"
+    },
+    "rsi_explorer_light_core_01_02_coramor": {
+      "key": "item_Desc_rsi_explorer_light_core_01_02_coramor",
+      "label": "Venture Core Envy",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special Envy edition inspired by the Coramor festival features a vibrant pink and purple color scheme for the most enthusiastic of lovers.",
       "kind": "item"
     },
     "rsi_explorer_light_core_01_03_coramor": {
       "key": "item_Desc_rsi_explorer_light_core_01_03_coramor",
       "label": "Venture Core Starcrossed",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special Starcrossed edition is modeled after the armor worn by Yuri Ilyin in the famous 25th century vid, Coramor, which inspired the eponymous lovers' festival.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special Starcrossed edition is modeled after the armor worn by Yuri Ilyin in the famous 25th century vid, Coramor, which inspired the eponymous lovers' festival.",
       "kind": "item"
     },
     "rsi_explorer_light_core_01_iae2023_01": {
       "key": "item_Desc_rsi_explorer_light_core_01_iae2023_01",
       "label": "Venture Core Ascension",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special Envy edition inspired by the Coramor festival features a vibrant pink and purple color scheme for the most enthusiastic of lovers.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -38 / 68 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 9k µSCU Backpacks: Light Robert Space Industries’ Venture Explorer Suit provides exceptional protection against the dangers of space. Designed for those who don't know where their next adventure might go, the suit combines comfort and safety without sacrificing mobility. This special IAE 2953 edition is decorated with a copper and white pattern inspired by Gatac Manufacture's Syulen.",
       "kind": "item"
     },
     "rsi_explorer_light_helmet_01": {
@@ -25367,43 +25469,43 @@
     "rsi_explorer_undersuit_01": {
       "key": "item_Desc_rsi_explorer_undersuit_01",
       "label": "Venture Undersuit Alpha",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_01_coramor": {
       "key": "item_Desc_rsi_explorer_undersuit_01_01_coramor",
       "label": "Venture Undersuit Lovestruck",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special Lovestruck edition features a stylish metallic pink and black color scheme inspired by the colors of the Coramor festival.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special Lovestruck edition features a stylish metallic pink and black color scheme inspired by the colors of the Coramor festival.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_02_coramor": {
       "key": "item_Desc_rsi_explorer_undersuit_01_02_coramor",
       "label": "Venture Undersuit Envy",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special Envy edition inspired by the Coramor festival features a vibrant pink and purple color scheme for the most enthusiastic of lovers.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special Envy edition inspired by the Coramor festival features a vibrant pink and purple color scheme for the most enthusiastic of lovers.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_03_coramor": {
       "key": "item_Desc_rsi_explorer_undersuit_01_03_coramor",
       "label": "Venture Undersuit Starcrossed",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special Starcrossed edition is modeled after the armor worn by Yuri Ilyin in the famous 25th century vid, Coramor, which inspired the eponymous lovers' festival.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special Starcrossed edition is modeled after the armor worn by Yuri Ilyin in the famous 25th century vid, Coramor, which inspired the eponymous lovers' festival.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_concierge": {
       "key": "item_Desc_rsi_explorer_undersuit_01_concierge",
       "label": "Venture Undersuit Executive",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This exclusive executive edition features a dynamic black and gold color palette.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This exclusive executive edition features a dynamic black and gold color palette.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_iae2023_01": {
       "key": "item_Desc_rsi_explorer_undersuit_01_iae2023_01",
       "label": "Venture Undersuit Ascension",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special IAE 2953 edition has a black and grey color palette with copper accents.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. This special IAE 2953 edition has a black and grey color palette with copper accents.",
       "kind": "item"
     },
     "rsi_explorer_undersuit_01_ruso": {
       "key": "item_Desc_rsi_explorer_undersuit_01_ruso",
       "label": "Venture Undersuit \"Rust Society\"",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. The Rust Society edition adds a red and tan color scheme so you look good while working hard.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Whether you’re discovering bold new frontiers or simply stretching your legs after a long spaceflight, Robert Space Industries’ Venture Explorer Suit takes vacuum-safe wear to the next level with its incorporation of top-of-class safety features seamlessly blended with phenomenal freedom of movement. The Rust Society edition adds a red and tan color scheme so you look good while working hard.",
       "kind": "item"
     },
     "rsi_light_utility_backpack_01": {
@@ -25457,7 +25559,7 @@
     "rsi_odyssey_undersuit_01_shared": {
       "key": "item_Desc_rsi_odyssey_undersuit_01_Shared",
       "label": "Odyssey II Undersuit Alpha",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU The latest generation of RSI's classic Odyssey undersuit features a new rugged design capable of withstanding the harshest of conditions in space or planetside. Built using the latest microweave technology, the Odyssey II undersuit provides hours of comfort in locations that are anything but comfortable.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% The latest generation of RSI's classic Odyssey undersuit features a new rugged design capable of withstanding the harshest of conditions in space or planetside. Built using the latest microweave technology, the Odyssey II undersuit provides hours of comfort in locations that are anything but comfortable.",
       "kind": "item"
     },
     "rsi_odyssey_undersuit_helmet_01_01_coramor": {
@@ -25674,6 +25776,12 @@
       "key": "item_Desc_sasu_medium_armor_helmet_01_01_19",
       "label": "Star Kitten Damon Helmet",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Celebrate your love of Genady Kuzo's classic Star Kitten cartoon with this commemorative helmet from Sakura Sun. The custom molding for this medium helmet faithfully recreates the show's icon character design without sacrificing its defensive capabilities. Integrated accent lights provide pops of color and highlight the helmet's unique silhouette. The helmet is sure to be a collectible among fans of the show and unusual armor enthusiasts. The Star Kitten Damon edition is primarily black to look like Sally's close friend who constantly tempts her to join his mischievous adventures.",
+      "kind": "item"
+    },
+    "scraper_salvation_medium": {
+      "key": "item_Desc_scraper_Salvation_Medium",
+      "label": "Comer Scraper Module",
+      "description": "Manufacturer: Greycat Industrial Item Type: Scraper Module Extraction Speed: 0.7 Radius: 1.5m Extraction Efficiency: 80% Made for RSI's Salvation, the Comer scraper module provides a focused work area with an expedited extraction rate to allow for a smooth salvaging experience.",
       "kind": "item"
     },
     "scu_apron_01": {
@@ -25930,14 +26038,14 @@
     },
     "slaver_armor_light_01_core": {
       "key": "item_Desc_slaver_armor_light_01_core",
-      "label": "Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
+      "label": "Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
       "kind": "item"
     },
     "slaver_armor_light_01_legs": {
       "key": "item_Desc_slaver_armor_light_01_legs",
-      "label": "Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
+      "label": "Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down.",
       "kind": "item"
     },
     "slaver_armor_light_helmet_01_01_nes": {
@@ -25966,8 +26074,8 @@
     },
     "slaver_armor_medium_01_core": {
       "key": "item_Desc_slaver_armor_medium_01_core",
-      "label": "Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire, but the real gem is the modified helmet. That thing was built to withstand explosions, so it should totally protect you against some shots. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying.",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire, but the real gem is the modified helmet. That thing was built to withstand explosions, so it should totally protect you against some shots. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying.",
+      "label": "Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5K µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire, but the real gem is the modified helmet. That thing was built to withstand explosions, so it should totally protect you against some shots. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5K µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire, but the real gem is the modified helmet. That thing was built to withstand explosions, so it should totally protect you against some shots. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying.",
       "kind": "item"
     },
     "slaver_armor_medium_01_legs": {
@@ -25985,7 +26093,7 @@
     "slaver_combat_heavy_core_01_02_01": {
       "key": "item_Desc_slaver_combat_heavy_core_01_02_01",
       "label": "Defiance Core Ultimatum",
-      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 10.5K µSCU Backpacks: All Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "slaver_combat_heavy_helmet_01_02_01": {
@@ -25997,7 +26105,7 @@
     "slaver_combat_heavy_legs_01_02_01": {
       "key": "item_Desc_slaver_combat_heavy_legs_01_02_01",
       "label": "Defiance Legs Ultimatum",
-      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -72 / 102 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.5K µSCU Incorporating the same manufacturing know-how and expertise that the UEE Marines have come to rely on, Clark Defense Systems has designed their civilian-line of Defiance heavy armors to stand firm in the face of even the most adverse combat scenarios with its three-star rated protective plating and fully integrated mobility framework. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "slaver_combat_light_arms_01_02_01": {
@@ -26009,19 +26117,19 @@
     "slaver_combat_light_core_01_02_01": {
       "key": "item_Desc_slaver_combat_light_core_01_02_01",
       "label": "Calico Core Ultimatum",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4K µSCU Backpacks: Light Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "slaver_combat_light_helmet_01_02_01": {
       "key": "item_Desc_slaver_combat_light_helmet_01_02_01",
-      "label": "Calico Helmet Tactical",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Kastak Arm's Renegade combat helmet is a light but durable infantry helmet designed for added protection and impact-reduction during in-atmosphere operations. Visor is AR crosshair compatible.",
+      "label": "Calico Helmet Ultimatum",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Kastak Arm's Renegade combat helmet is a light but durable infantry helmet designed for added protection and impact-reduction during in-atmosphere operations. Visor is AR crosshair compatible. The Ultimatum edition features the signature iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "slaver_combat_light_legs_01_02_01": {
       "key": "item_Desc_slaver_combat_light_legs_01_02_01",
       "label": "Calico Legs Ultimatum",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.0 µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features subtle Nine Tails neon pink accents along the length of the armor.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -39 / 69 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2.5K µSCU Designed to be an EVA-compliant light combat suit, the Calico set is the perfect armor suit for infiltrators, snipers, thieves, basically anyone who likes to avoid kicking in doors. Built out of a combination of PAB3 armor and a custom helmet, it can help you weather some incoming fire without slowing you down. The Ultimatum edition features subtle Nine Tails neon pink accents along the length of the armor.",
       "kind": "item"
     },
     "slaver_combat_medium_arms_01_02_01": {
@@ -26033,7 +26141,7 @@
     "slaver_combat_medium_core_01_02_01": {
       "key": "item_Desc_slaver_combat_medium_core_01_02_01",
       "label": "DustUp Core Ultimatum",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5K µSCU Backpacks: Medium, Light The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "slaver_combat_medium_helmet_01_02_01": {
@@ -26045,7 +26153,7 @@
     "slaver_combat_medium_legs_01_02_01": {
       "key": "item_Desc_slaver_combat_medium_legs_01_02_01",
       "label": "DustUp Legs Ultimatum",
-      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -60 / 90 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.5K µSCU The DustUp has your back if you’re looking to get into some trouble. The body plating is built off of the same CDS undersuit used by the UEE Marines, it adds reconstructed Omni-Role mkII pieces to give you solid protection against incoming fire. The whole thing’s been reasonably tested against vacuum too, so you can feel free to EVA all you want without worrying about dying. The Ultimatum edition features the signature neon pink iconography of the Nine Tails gang.",
       "kind": "item"
     },
     "slaver_medium_armor_helmet_01_starkitty": {
@@ -26057,7 +26165,7 @@
     "slaver_undersuit_armor_01_01_01": {
       "key": "item_Desc_slaver_undersuit_armor_01_01_01",
       "label": "Stoneskin Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 10% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Kastak Arms' Stoneskin is a combat undersuit that are built upon CDS' famous TCS-4 system based on extensive feedback from the operators who rely on this technology in the field. Offering a myriad of options for armor and EVA capabilities, the Stoneskin is set to rival CDS as a rugged and reliable undersuit.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Kastak Arms' Stoneskin is a combat undersuit that are built upon CDS' famous TCS-4 system based on extensive feedback from the operators who rely on this technology in the field. Offering a myriad of options for armor and EVA capabilities, the Stoneskin is set to rival CDS as a rugged and reliable undersuit.",
       "kind": "item"
     },
     "slaver_undersuit_helmet_01": {
@@ -26573,7 +26681,7 @@
     "srvl_undersuit_01": {
       "key": "item_Desc_srvl_undersuit_01",
       "label": "Second Life Undersuit",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Featuring the same relatively reliable construction as the Why Not helmet, the Second Life takes some of those tattered old undersuits and gives them new life.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Featuring the same relatively reliable construction as the Why Not helmet, the Second Life takes some of those tattered old undersuits and gives them new life.",
       "kind": "item"
     },
     "srvl_undersuit_02_01_01": {
@@ -26723,7 +26831,7 @@
     "syfb_combat_light_core_01_01_01": {
       "key": "item_Desc_syfb_combat_light_core_01_01_01",
       "label": "Xy'kara Core",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -31 / 61 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Capacity: 2000 mSCU The Xy'kara Armor from Syang Fabrications offers the result of thousands of years of Xi'an combat expertise in a Human package. Closely patterned to the Human physique, the Xy'kara armor provides unparalleled protection without sacrificing mobility and combat effectiveness without sacrificing style.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -31 / 61 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2K µSCU The Xy'kara Armor from Syang Fabrications offers the result of thousands of years of Xi'an combat expertise in a Human package. Closely patterned to the Human physique, the Xy'kara armor provides unparalleled protection without sacrificing mobility and combat effectiveness without sacrificing style.",
       "kind": "item"
     },
     "syfb_combat_light_helmet_01_01_01": {
@@ -26735,7 +26843,7 @@
     "syfb_combat_light_legs_01_01_01": {
       "key": "item_Desc_syfb_combat_light_legs_01_01_01",
       "label": "Xy'kara Legs",
-      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -31 / 61 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s The Xy'kara Armor from Syang Fabrications offers the result of thousands of years of Xi'an combat expertise in a Human package. Closely patterned to the Human physique, the Xy'kara armor provides unparalleled protection without sacrificing mobility and combat effectiveness without sacrificing style.",
+      "description": "Item Type: Light Armor Damage Reduction: 20% Temp. Rating: -31 / 61 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 2K µSCU The Xy'kara Armor from Syang Fabrications offers the result of thousands of years of Xi'an combat expertise in a Human package. Closely patterned to the Human physique, the Xy'kara armor provides unparalleled protection without sacrificing mobility and combat effectiveness without sacrificing style.",
       "kind": "item"
     },
     "syfb_flightsuit_helmet_01_01_01": {
@@ -27125,7 +27233,7 @@
     "vgl_undersuit_01_01_shared": {
       "key": "item_Desc_vgl_undersuit_01_01_Shared",
       "label": "ForceFlex Undersuit Black/Gold",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Virgil's ForceFlex is the next generation in undersuit technology. Rated for combat as well as industrial work, you can rest assured that the comboweave will keep you protected in whatever situation you put it through.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Virgil's ForceFlex is the next generation in undersuit technology. Rated for combat as well as industrial work, you can rest assured that the comboweave will keep you protected in whatever situation you put it through.",
       "kind": "item"
     },
     "vgl_utility_light_arms_01_01_01": {
@@ -28928,6 +29036,12 @@
       "description": "Manufacturer: Greycat Industrial Item Type: Tractor Beam Class: Gadget Magazine Size: Integrated Battery Rate of Fire: N / A (Beam) Effective Range: 10-20 m Greycat's heavy duty tractor beam boasts industrial performance at a consumer-friendly price. With its longer-lasting battery and wider beam emitter, the MaxLift can easily manipulate heavier and bulkier items making it the perfect tool for long days of hauling cargo. The Keystone edition features a white, gray and blue finish with URW logos.",
       "kind": "item"
     },
+    "hdgw_optics_tsco_x4_s2": {
+      "key": "item_Deschdgw_optics_tsco_x4_s2",
+      "label": "Myers (4x Telescopic)",
+      "description": "Manufacturer: Hedeby Gunworks Type: Telescopic Attachment Point: Optic Magnification: 1.5x - 4x Aim Time: +25% Size: 2 Exquisitely crafted by the gunsmiths at Hedeby Gunworks, the Myers scope was designed to pair with the graceful lines of their stately Arlington rifle.",
+      "kind": "item"
+    },
     "hdgw_pistol_ballistic_01": {
       "key": "item_Deschdgw_pistol_ballistic_01",
       "label": "Salvo Frag Pistol",
@@ -28955,13 +29069,31 @@
     "hdgw_rifle_ballistic_01": {
       "key": "item_Deschdgw_rifle_ballistic_01",
       "label": "Arlington Rifle",
-      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 25 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier.",
+      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 20 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier.",
       "kind": "item"
     },
     "hdgw_rifle_ballistic_01_mag": {
       "key": "item_Deschdgw_rifle_ballistic_01_mag",
-      "label": "Arlington Rifle (25 Cap)",
-      "description": "Item Type: Magazine Capacity: 25 This magazine for the Arlington rifle comes pre-loaded with twenty-five rounds.",
+      "label": "Arlington Rifle Magazine (20 Cap)",
+      "description": "Item Type: Magazine Capacity: 20 This magazine for the Arlington rifle comes pre-loaded with twenty-five rounds.",
+      "kind": "item"
+    },
+    "hdgw_rifle_ballistic_01_tint01": {
+      "key": "item_Deschdgw_rifle_ballistic_01_tint01",
+      "label": "Arlington \"Gamekeeper\" Rifle",
+      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 20 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier. The Gamekeeper edition swaps the stock of the rifle to an elegant walnut wood.",
+      "kind": "item"
+    },
+    "hdgw_rifle_ballistic_01_tint02": {
+      "key": "item_Deschdgw_rifle_ballistic_01_tint02",
+      "label": "Arlington \"Widowmaker\" Rifle",
+      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 20 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier. The Widowmaker edition consists of dark metal body with a deep mahogany stock.",
+      "kind": "item"
+    },
+    "hdgw_rifle_ballistic_01_tint03": {
+      "key": "item_Deschdgw_rifle_ballistic_01_tint03",
+      "label": "Arlington \"Watchpoint\" Rifle",
+      "description": "Manufacturer: Hedeby Gunworks Item Type: Rifle Class: Ballistic Magazine Size: 20 Rate Of Fire: 320 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Gunsmiths at Hedeby Gunworks looked to classic ballistic designs to construct a long rifle steeped in the past and the future. The Arlington provides accurate marksmanship, an easy cycling of rounds thanks to the lever action design, and multiple fire modes. Artisans shaped the weapon's body by hand to create a piece that's equally fit for the mantle as it is on the frontier. The Watchpoint edition adds a sleek carbon fiber stock to the rifle that contrasts with the refined silver of the barrel.",
       "kind": "item"
     },
     "ht_glass_wine_1_a": {
@@ -31391,19 +31523,19 @@
     "gys_undersuit_01_01_12": {
       "key": "item_desc_gys_undersuit_01_01_12",
       "label": "Deep-Space Undersuit Shutdown",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all. The Shutdown version features black and gray coloring with dark metal accents.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all. The Shutdown version features black and gray coloring with dark metal accents.",
       "kind": "item"
     },
     "gys_undersuit_01_01_13": {
       "key": "item_desc_gys_undersuit_01_01_13",
       "label": "Deep-Space Undersuit Bruiser",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all. The Bruiser version features dark crimson and midnight blue coloring with polished metal accents.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all. The Bruiser version features dark crimson and midnight blue coloring with polished metal accents.",
       "kind": "item"
     },
     "gys_undersuit_01_01_14": {
       "key": "item_desc_gys_undersuit_01_01_14",
       "label": "Deep-Space Undersuit Brassy",
-      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Carrying Capacity: 8.0 µSCU Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all. The Brassy version features white coloring with bronze accents.",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Confidently venture into the unknown with the Deep-Space undersuit. Smartly designed with several overlapping sections to guarantee the suit's integrity, Gyson has created an affordable and fashionable undersuit that helps make space travel more accessible to all. The Brassy version features white coloring with bronze accents.",
       "kind": "item"
     },
     "hackingchip_001": {
@@ -31458,6 +31590,12 @@
       "key": "item_desc_rockcrack_sparkplug_a",
       "label": "PGR Capacitor",
       "description": "This high-capacity industrial capacitor features optimized voltage output to minimize power fluctuations, improving the performance of generators and heavy machinery alike.",
+      "kind": "item"
+    },
+    "scraper_salvation_small": {
+      "key": "item_desc_scraper_Salvation_Small",
+      "label": "Hart Scraper Module",
+      "description": "Manufacturer: Greycat Industrial Item Type: Scraper Module Extraction Speed: 0.8 Radius: 1.0m Extraction Efficiency: 100% Made for RSI's Salvation, the efficient Hart scraper module allows salvagers to work quickly to harvest a claim.",
       "kind": "item"
     },
     "srvl_helmet_01_01_12": {
@@ -31648,6 +31786,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 5274
+    "totalDescriptions": 5297
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T05:49:42.497Z",
+  "generatedAt": "2026-08-26T23:18:07.375Z",
   "source": "api.star-citizen.wiki",
   "blueprints": {
     "cool_acom_s01_iceplunge": {
@@ -1635,10 +1635,19 @@
     "klwe_laserrepeater_s1": {
       "grade": "A"
     },
+    "klwe_laserrepeater_s1_mr01": {
+      "grade": "A"
+    },
     "klwe_laserrepeater_s2": {
       "grade": "A"
     },
+    "klwe_laserrepeater_s2_mr01": {
+      "grade": "A"
+    },
     "klwe_laserrepeater_s3": {
+      "grade": "A"
+    },
+    "klwe_laserrepeater_s3_mr01": {
       "grade": "A"
     },
     "klwe_laserrepeater_s4": {

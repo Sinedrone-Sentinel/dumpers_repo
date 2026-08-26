@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-31T01:46:24.748Z",
+  "_extracted": "2026-08-26T23:07:01.865Z",
   "mineableElements": [
     {
       "id": "d61d6c33-e428-4014-9326-0b06034de16a",
@@ -693,7 +693,7 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 7,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable $DRAK_Golem miningMount"
+      "tags": "flightReady weaponMountUsable miningMount"
     },
     {
       "id": "0982203d-579f-4c3c-8b7a-c5f1c4a7ddd6",
@@ -1058,6 +1058,20 @@
   ],
   "miningModules": [
     {
+      "id": "1f8f946d-7f09-453c-8b2b-f1fbeb8d11bf",
+      "name": "Mining_Modules_Passive_Deluge",
+      "displayName": "Deluge Module",
+      "kind": "passive",
+      "size": 1,
+      "grade": 1,
+      "powerMultiplier": 1,
+      "resistanceModifier": -15.5,
+      "optimalWindowModifier": 0,
+      "filterModifier": 0,
+      "instabilityModifier": 0,
+      "shatterDamageModifier": 0
+    },
+    {
       "id": "fb3be543-707b-4582-a25b-c118325fc024",
       "name": "Mining_Modules_Passive_FLTR_MK1",
       "displayName": "FLTR Module",
@@ -1137,6 +1151,20 @@
       "powerMultiplier": 0.85,
       "resistanceModifier": 0,
       "optimalWindowModifier": 30,
+      "filterModifier": 0,
+      "instabilityModifier": 0,
+      "shatterDamageModifier": 0
+    },
+    {
+      "id": "a69721a2-06e7-4fb3-93b4-c94e4faa6820",
+      "name": "Mining_Modules_Passive_Overrun",
+      "displayName": "Overrun Module",
+      "kind": "passive",
+      "size": 1,
+      "grade": 1,
+      "powerMultiplier": 1,
+      "resistanceModifier": -24.8,
+      "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
       "shatterDamageModifier": 0
@@ -1324,6 +1352,20 @@
       "shatterDamageModifier": -30
     },
     {
+      "id": "a6e3aeb0-95df-4f63-9ca1-e8ad5df1a783",
+      "name": "Mining_Modules_Active_Clearcut",
+      "displayName": "Clearcut Module",
+      "kind": "active",
+      "size": 1,
+      "grade": 1,
+      "powerMultiplier": 1,
+      "resistanceModifier": 0,
+      "optimalWindowModifier": 30,
+      "filterModifier": 0,
+      "instabilityModifier": 0,
+      "shatterDamageModifier": 0
+    },
+    {
       "id": "6c072263-8f32-4ca1-b64b-37d820b0786f",
       "name": "Mining_Modules_Active_Forel",
       "displayName": "Forel Module",
@@ -1494,7 +1536,7 @@
     "elements": 43,
     "signatureOres": 26,
     "lasers": 21,
-    "modules": 26,
+    "modules": 29,
     "gadgets": 6
   }
 }

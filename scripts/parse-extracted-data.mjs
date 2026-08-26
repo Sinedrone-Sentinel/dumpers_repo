@@ -5149,17 +5149,18 @@ async function main() {
     }
     console.log('\nThis may indicate game data structure changes.')
     console.log('Review the issues above and update the parser if needed.')
-    
-    // Write validation report
-    saveJson('_extraction-validation.json', {
-      _generated: new Date().toISOString(),
-      issues: validationIssues,
-      expectedPaths: EXPECTED_PATHS
-    })
   } else {
     console.log('\n✓ All expected data paths found')
     console.log('✓ No validation issues detected')
   }
+
+  // Always rewrite: patch-day step 4 reads this to tell a real removal from a
+  // moved directory, so a leftover report from the previous patch misleads.
+  saveJson('_extraction-validation.json', {
+    _generated: new Date().toISOString(),
+    issues: validationIssues,
+    expectedPaths: EXPECTED_PATHS
+  })
   
   // What's New: append pending JSONL → push to Supabase (version-scoped dedupe) → wipe on success
   try {
