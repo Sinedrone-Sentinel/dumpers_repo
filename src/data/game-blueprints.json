@@ -1,7 +1,7 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-31T01:46:24.706Z",
-  "version": "4.9.x",
+  "_extracted": "2026-08-26T23:07:01.823Z",
+  "version": "4.10.x",
   "blueprints": [
     {
       "id": "017bb372-2fe2-4615-8bcb-e18020baaa4f",
@@ -3384,7 +3384,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -3677,7 +3677,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 2200,
           "maxReputation": 95250,
           "standingName": "Contractor",
@@ -8078,6 +8078,12 @@
           ]
         }
       ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": 0,
+        "Armor_Temperaturemax": 0,
+        "Armor_Radiationdissipation": 0,
+        "Armor_Radiationcapacity": 0
+      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -8110,12 +8116,12 @@
       "name": "BP_CRAFT_cds_combat_superheavy_backpack_01_03_01",
       "internalName": "cds_combat_superheavy_backpack_01_03_01",
       "blueprintName": "H4-PBF Ammo Carrier Snow Camo",
-      "entityClass": null,
+      "entityClass": "cds_combat_superheavy_backpack_01_03_01",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
       "subtype": "standard",
       "armorSlot": "backpack",
-      "armorWeight": null,
+      "armorWeight": "superheavy",
       "craftTimeMinutes": 3.5,
       "craftTime": {
         "hours": 0,
@@ -8146,6 +8152,12 @@
           ]
         }
       ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": 0,
+        "Armor_Temperaturemax": 0,
+        "Armor_Radiationdissipation": 0,
+        "Armor_Radiationcapacity": 0
+      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -8295,12 +8307,12 @@
       "name": "BP_CRAFT_cds_combat_superheavy_helmet_01_03_01",
       "internalName": "cds_combat_superheavy_helmet_01_03_01",
       "blueprintName": "BUL-H4 Helmet Snow Camo",
-      "entityClass": null,
+      "entityClass": "cds_combat_superheavy_helmet_01_03_01",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
       "subtype": "standard",
       "armorSlot": "helmet",
-      "armorWeight": null,
+      "armorWeight": "superheavy",
       "craftTimeMinutes": 3.5,
       "craftTime": {
         "hours": 0,
@@ -8373,6 +8385,13 @@
           ]
         }
       ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.125
+      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -8522,12 +8541,12 @@
       "name": "BP_CRAFT_cds_combat_superheavy_suit_01_03_01",
       "internalName": "cds_combat_superheavy_suit_01_03_01",
       "blueprintName": "BUL-H4 Armor Snow Camo",
-      "entityClass": null,
+      "entityClass": "cds_combat_superheavy_suit_01_03_01",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
       "subtype": "standard",
       "armorSlot": "suit",
-      "armorWeight": null,
+      "armorWeight": "superheavy",
       "craftTimeMinutes": 3.5,
       "craftTime": {
         "hours": 0,
@@ -8600,6 +8619,13 @@
           ]
         }
       ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.125
+      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -10906,12 +10932,12 @@
       "name": "BP_CRAFT_cds_combat_heavy_helmet_01_02_02",
       "internalName": "cds_combat_heavy_helmet_01_02_02",
       "blueprintName": "ADP-mk4 Helmet SecondWind",
-      "entityClass": null,
+      "entityClass": "cds_combat_heavy_helmet_01_02_02",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
       "subtype": "standard",
       "armorSlot": "helmet",
-      "armorWeight": null,
+      "armorWeight": "heavy",
       "craftTimeMinutes": 4,
       "craftTime": {
         "hours": 0,
@@ -10971,6 +10997,13 @@
           ]
         }
       ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -83058,7 +83091,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -83098,7 +83131,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 2200,
           "maxReputation": 95250,
           "standingName": "Contractor",
@@ -83194,7 +83227,7 @@
       "file": "qrt_specialist_heavy_arms_01_01_13",
       "name": "BP_CRAFT_qrt_specialist_heavy_arms_01_01_13",
       "internalName": "qrt_specialist_heavy_arms_01_01_13",
-      "blueprintName": "Antium Helmet Jet Arms",
+      "blueprintName": "Antium Arms Maroon",
       "entityClass": "qrt_specialist_heavy_arms_01_01_13",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
@@ -83293,13 +83326,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -83312,13 +83345,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -83388,13 +83421,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -83407,13 +83440,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -83445,13 +83478,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -83464,13 +83537,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -83483,13 +83577,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -83502,13 +83615,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -83526,6 +83639,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -83549,23 +83700,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -83578,13 +83730,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -83601,6 +83791,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -83625,44 +83853,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -83680,25 +83870,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -84063,13 +84234,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -84082,13 +84253,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -84158,13 +84329,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -84177,13 +84348,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -84215,13 +84386,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -84234,13 +84445,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -84253,13 +84485,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -84272,13 +84523,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -84296,6 +84547,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -84319,23 +84608,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -84348,13 +84638,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -84371,6 +84699,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -84395,44 +84761,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -84450,25 +84778,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -85180,7 +85489,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -85220,7 +85529,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 2200,
           "maxReputation": 95250,
           "standingName": "Contractor",
@@ -85415,13 +85724,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -85434,13 +85743,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -85510,13 +85819,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -85529,13 +85838,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -85567,13 +85876,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -85586,13 +85935,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -85605,13 +85975,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -85624,13 +86013,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -85648,6 +86037,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -85671,23 +86098,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -85700,13 +86128,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -85723,6 +86189,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -85747,44 +86251,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -85802,25 +86268,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -86185,13 +86632,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -86204,13 +86651,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -86280,13 +86727,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -86299,13 +86746,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -86337,13 +86784,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -86356,13 +86843,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -86375,13 +86883,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -86394,13 +86921,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -86418,6 +86945,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -86441,23 +87006,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -86470,13 +87036,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -86493,6 +87097,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -86517,44 +87159,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -86572,25 +87176,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -87202,7 +87787,7 @@
       "file": "qrt_specialist_heavy_helmet_01_01_12",
       "name": "BP_CRAFT_qrt_specialist_heavy_helmet_01_01_12",
       "internalName": "qrt_specialist_heavy_helmet_01_01_12",
-      "blueprintName": "Antium Core Jet Helmet",
+      "blueprintName": "Antium Helmet Jet",
       "entityClass": "qrt_specialist_heavy_helmet_01_01_12",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
@@ -87302,7 +87887,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -87342,7 +87927,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 2200,
           "maxReputation": 95250,
           "standingName": "Contractor",
@@ -87537,13 +88122,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -87556,13 +88141,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -87632,13 +88217,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -87651,13 +88236,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -87689,13 +88274,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -87708,13 +88333,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -87727,13 +88373,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -87746,13 +88411,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -87770,6 +88435,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -87793,23 +88496,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -87822,13 +88526,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -87845,6 +88587,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -87869,44 +88649,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -87924,25 +88666,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -88307,13 +89030,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -88326,13 +89049,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -88402,13 +89125,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -88421,13 +89144,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -88459,13 +89182,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -88478,13 +89241,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -88497,13 +89281,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -88516,13 +89319,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -88540,6 +89343,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -88563,23 +89404,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -88592,13 +89434,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -88615,6 +89495,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -88639,44 +89557,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -88694,25 +89574,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -89424,7 +90285,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -89464,7 +90325,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 2200,
           "maxReputation": 95250,
           "standingName": "Contractor",
@@ -89659,13 +90520,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -89678,13 +90539,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -89754,13 +90615,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -89773,13 +90634,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -89811,13 +90672,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -89830,13 +90731,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -89849,13 +90771,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -89868,13 +90809,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -89892,6 +90833,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -89915,23 +90894,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -89944,13 +90924,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -89967,6 +90985,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -89991,44 +91047,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -90046,25 +91064,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -90429,13 +91428,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: ~mission(Contractor|DestroyProbeTitle)",
@@ -90448,13 +91447,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Red Level Contract: Clear PAFs, Recover Cargo, and Deliver to OLP",
@@ -90524,13 +91523,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 0,
-          "standingName": "Applicant",
-          "maxStandingName": "Applicant",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "standingName": "Neutral",
+          "maxStandingName": "Neutral",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Clear Out PAF",
@@ -90543,13 +91542,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Limiting Potential Threat",
@@ -90581,13 +91580,53 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
-          "maxReputation": 1600000,
-          "standingName": "Applicant",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "maxReputation": 95250,
+          "standingName": "Neutral",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 2200,
+          "standingName": "Neutral",
+          "maxStandingName": "Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Yellow Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 100,
+          "minReputation": 0,
+          "maxReputation": 5800,
+          "standingName": "Neutral",
+          "maxStandingName": "Sr. Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Help Protect Site",
@@ -90600,13 +91639,34 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton",
+            "Nyx",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 800,
+          "maxReputation": 15000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Veteran Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Precision Strike on ~mission(TargetName)",
@@ -90619,13 +91679,32 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 1000,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 800,
+          "maxReputation": 38000,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Track Down ~mission(TargetName)",
@@ -90638,13 +91717,13 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 1,
-          "maxReputation": 1600000,
-          "standingName": "Security Trainee",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Yellow Level Contract: Disrupt Operations",
@@ -90662,6 +91741,44 @@
           "maxReputation": 95250,
           "standingName": "Jr. Contractor",
           "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Orange Level Contract: ~mission(Ship) Needs Assistance",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 15000,
+          "standingName": "Contractor",
+          "maxStandingName": "Veteran Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
         },
@@ -90685,23 +91802,24 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Knock Out New Drug Op",
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
           "chance": 0.125,
           "poolChance": 1,
           "poolKey": "foxwellenforcement_generator",
           "locations": [
-            "Stanton"
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 200,
+          "minReputation": 2200,
+          "maxReputation": 38000,
+          "standingName": "Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Sweep and Clear Location",
@@ -90714,13 +91832,51 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 5000,
-          "maxReputation": 1600000,
-          "standingName": "Jr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
+          "repPoints": 150,
+          "minReputation": 2200,
+          "maxReputation": 95250,
+          "standingName": "Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Carefully Clear Site",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 95250,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         },
         {
           "mission": "Foxwell Enforcement: Orange Level Contract: Destroy Outlaw Infrastructure",
@@ -90737,6 +91893,44 @@
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Red Level Contract: Ship Under Attack",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 200,
+          "minReputation": 5800,
+          "maxReputation": 38000,
+          "standingName": "Sr. Contractor",
+          "maxStandingName": "Head Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "foxwellenforcement_generator",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 250,
+          "minReputation": 15000,
+          "maxReputation": 95250,
+          "standingName": "Veteran Contractor",
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
@@ -90761,44 +91955,6 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
-          "mission": "Foxwell Enforcement: Carefully Clear Site",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Illegal Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 30000,
-          "maxReputation": 1600000,
-          "standingName": "Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
-        },
-        {
           "mission": "Foxwell Enforcement: Red Level Contract: Destroy Outlaw Infrastructure",
           "chance": 0.125,
           "poolChance": 1,
@@ -90816,25 +91972,6 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
-        },
-        {
-          "mission": "Foxwell Enforcement: Destroy Dangerous Drugs",
-          "chance": 0.125,
-          "poolChance": 1,
-          "poolKey": "foxwellenforcement_generator",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Mercenary",
-          "repPoints": 500,
-          "minReputation": 120000,
-          "maxReputation": 1600000,
-          "standingName": "Sr. Security Contractor",
-          "maxStandingName": "Elite Security Contractor",
-          "repCareerLabel": "Security",
-          "repScopeKey": "ReputationScope_Security"
         }
       ],
       "missionPools": [
@@ -118003,12 +119140,12 @@
       "name": "BP_CRAFT_cds_undersuit_01_02_02",
       "internalName": "cds_undersuit_01_02_02",
       "blueprintName": "FBL-8u Undersuit SecondWind",
-      "entityClass": null,
+      "entityClass": "cds_undersuit_01_02_02",
       "category": "FPSArmours",
       "categoryName": "FPSArmours",
       "subtype": "undersuit",
       "armorSlot": "undersuit",
-      "armorWeight": null,
+      "armorWeight": "light",
       "craftTimeMinutes": 1.5,
       "craftTime": {
         "hours": 0,
@@ -118046,6 +119183,13 @@
           ]
         }
       ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -30,
+        "Armor_Temperaturemax": 60,
+        "Armor_Radiationdissipation": 81,
+        "Armor_Radiationcapacity": 15200,
+        "Armor_Damagemitigation": 0.95
+      },
       "isReward": true,
       "rewardMissions": [
         {
@@ -134346,7 +135490,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 500,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -134386,7 +135530,7 @@
           "system": "Stanton",
           "region": null,
           "category": "Mercenary",
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 2200,
           "maxReputation": 95250,
           "standingName": "Contractor",
@@ -150961,6 +152105,576 @@
       "missionPools": [
         "bp_reward_collectormaterial_002"
       ]
+    },
+    {
+      "id": "19b32f89-8ea6-4338-8410-fd219fc0a8b8",
+      "file": "cargo_shipmining_pod_golem",
+      "name": "BP_CRAFT_Cargo_ShipMining_Pod_Golem",
+      "internalName": "cargo_shipmining_pod_golem",
+      "blueprintName": "Drake Ore Pod",
+      "entityClass": "cargo_shipmining_pod_golem",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.3,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 5000
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "dc671104-f50a-41df-b922-e4d529c6ced7",
+      "file": "cargo_shipmining_pod_golem_btgl",
+      "name": "BP_CRAFT_Cargo_ShipMining_Pod_Golem_BTGL",
+      "internalName": "cargo_shipmining_pod_golem_btgl",
+      "blueprintName": "GOLEM MC-4 Ore Pod",
+      "entityClass": "cargo_shipmining_pod_golem_btgl",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.3,
+              "minQuality": 800
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 5000
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Unknown: Idea for Isaac",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "cargo_shipmining_pod_golem_btgl",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Battaglia",
+          "repPoints": 800,
+          "minReputation": 6000,
+          "maxReputation": 69600,
+          "standingName": "Trusted Associate",
+          "maxStandingName": "Prestige 3",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "MissionProviderReputationScope_Battaglia"
+        }
+      ],
+      "missionPools": [
+        "cargo_shipmining_pod_golem_btgl"
+      ]
+    },
+    {
+      "id": "8378085b-f334-4c8e-934f-dde839c8714b",
+      "file": "cargo_shipmining_pod_mole",
+      "name": "BP_CRAFT_Cargo_ShipMining_Pod_Mole",
+      "internalName": "cargo_shipmining_pod_mole",
+      "blueprintName": "Argo Ore Pod",
+      "entityClass": "cargo_shipmining_pod_mole",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.7,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 3500
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "c2d44927-b79d-4d43-b46e-274d16cf6b2d",
+      "file": "cargo_shipmining_pod_moleprospector_btgl",
+      "name": "BP_CRAFT_Cargo_ShipMining_Pod_MoleProspector_BTGL",
+      "internalName": "cargo_shipmining_pod_moleprospector_btgl",
+      "blueprintName": "MISC Enhanced Ore Pod",
+      "entityClass": "cargo_shipmining_pod_moleprospector_btgl",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.75,
+              "minQuality": 800
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 3500
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Unknown: Idea for Isaac",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "cargo_shipmining_pod_moleprospector_btgl",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Battaglia",
+          "repPoints": 800,
+          "minReputation": 6000,
+          "maxReputation": 69600,
+          "standingName": "Trusted Associate",
+          "maxStandingName": "Prestige 3",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "MissionProviderReputationScope_Battaglia"
+        }
+      ],
+      "missionPools": [
+        "cargo_shipmining_pod_moleprospector_btgl"
+      ]
+    },
+    {
+      "id": "8d811596-73c2-4baf-b5cc-eb0235adee58",
+      "file": "cargo_shipmining_pod_prospector",
+      "name": "BP_CRAFT_Cargo_ShipMining_Pod_Prospector",
+      "internalName": "cargo_shipmining_pod_prospector",
+      "blueprintName": "MISC Ore Pod",
+      "entityClass": "cargo_shipmining_pod_prospector",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.5,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 5000
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "ef5d60fc-37a2-47c2-a958-d788d6cb7fcb",
+      "file": "mining_modules_active_clearcut",
+      "name": "BP_CRAFT_Mining_Modules_Active_Clearcut",
+      "internalName": "mining_modules_active_clearcut",
+      "blueprintName": "Clearcut Module",
+      "entityClass": "mining_modules_active_clearcut",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Case",
+          "slotDebugName": "CASE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.2,
+              "minQuality": 800
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Wiring",
+          "slotDebugName": "WIRING",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Copper",
+              "standardCargoUnits": 0.1,
+              "minQuality": 800
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 200
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Unknown: Welcome to the System",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "mining_modules_active_clearcut",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Battaglia",
+          "repPoints": 800,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "mining_modules_active_clearcut"
+      ]
+    },
+    {
+      "id": "f32efc4e-4ed6-4f26-b774-58cf754bfe27",
+      "file": "mining_modules_active_stampede",
+      "name": "BP_CRAFT_Mining_Modules_Active_Stampede",
+      "internalName": "mining_modules_active_stampede",
+      "blueprintName": "Stampede Module",
+      "entityClass": "mining_modules_active_stampede",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Case",
+          "slotDebugName": "CASE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.2,
+              "minQuality": 1
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Wiring",
+          "slotDebugName": "WIRING",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Copper",
+              "standardCargoUnits": 0.1,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 200
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "69b3ab1d-034c-4432-b8fb-099f19a3680d",
+      "file": "mining_modules_passive_deluge",
+      "name": "BP_CRAFT_Mining_Modules_Passive_Deluge",
+      "internalName": "mining_modules_passive_deluge",
+      "blueprintName": "Deluge Module",
+      "entityClass": "mining_modules_passive_deluge",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Case",
+          "slotDebugName": "CASE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.2,
+              "minQuality": 800
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Wiring",
+          "slotDebugName": "WIRING",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Copper",
+              "standardCargoUnits": 0.1,
+              "minQuality": 800
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 200
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Unknown: Emergency: Blinding Hope in Trouble",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "mining_modules_passive_deluge",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Battaglia",
+          "repPoints": 800,
+          "minReputation": 2400,
+          "maxReputation": 69600,
+          "standingName": "Associate",
+          "maxStandingName": "Prestige 3",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "MissionProviderReputationScope_Battaglia"
+        }
+      ],
+      "missionPools": [
+        "mining_modules_passive_deluge"
+      ]
+    },
+    {
+      "id": "8c60d61b-9c97-4f85-b41a-aa0d7960dfbf",
+      "file": "mining_modules_passive_overrun",
+      "name": "BP_CRAFT_Mining_Modules_Passive_Overrun",
+      "internalName": "mining_modules_passive_overrun",
+      "blueprintName": "Overrun Module",
+      "entityClass": "mining_modules_passive_overrun",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Case",
+          "slotDebugName": "CASE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.2,
+              "minQuality": 800
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Wiring",
+          "slotDebugName": "WIRING",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Copper",
+              "standardCargoUnits": 0.1,
+              "minQuality": 800
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 200
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Unknown: Emergency: Blinding Hope in Trouble",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "mining_modules_passive_overrun",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Battaglia",
+          "repPoints": 800,
+          "minReputation": 2400,
+          "maxReputation": 69600,
+          "standingName": "Associate",
+          "maxStandingName": "Prestige 3",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "MissionProviderReputationScope_Battaglia"
+        }
+      ],
+      "missionPools": [
+        "mining_modules_passive_overrun"
+      ]
+    },
+    {
+      "id": "38f9d428-75dd-4fcd-834c-c4ff876c9b3f",
+      "file": "mining_modules_passive_torrent_mk3",
+      "name": "BP_CRAFT_Mining_Modules_Passive_Torrent_MK3",
+      "internalName": "mining_modules_passive_torrent_mk3",
+      "blueprintName": "Torrent III Module",
+      "entityClass": "mining_modules_passive_torrent_mk3",
+      "category": "VehicleComponentS0",
+      "categoryName": "Veh. Comp. S0",
+      "subtype": null,
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 1.6,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 36
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Case",
+          "slotDebugName": "CASE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.2,
+              "minQuality": 1
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Wiring",
+          "slotDebugName": "WIRING",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Copper",
+              "standardCargoUnits": 0.1,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "vehicleBaseStats": {
+        "Health_Maxhealth": 200
+      },
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "604a5d56-7fc1-4770-969f-5b35a459c32e",
@@ -178341,7 +180055,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -179591,7 +181305,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -180389,7 +182103,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -181235,7 +182949,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -182269,7 +183983,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -182817,7 +184531,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -183945,7 +185659,7 @@
           "system": "Pyro",
           "region": "A",
           "category": null,
-          "repPoints": 2000,
+          "repPoints": 150,
           "minReputation": 5800,
           "maxReputation": 95250,
           "standingName": "Sr. Contractor",
@@ -185550,7 +187264,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 120,
-        "Quantum_Speed": 168000000,
+        "Quantum_Speed": 263040000,
         "Quantum_Fuelrequirement": 0.00588
       },
       "isReward": false,
@@ -185665,7 +187379,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 110,
-        "Quantum_Speed": 140000000,
+        "Quantum_Speed": 239127300,
         "Quantum_Fuelrequirement": 0.0049
       },
       "isReward": false,
@@ -185780,7 +187494,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 170,
-        "Quantum_Speed": 198000000,
+        "Quantum_Speed": 230160000,
         "Quantum_Fuelrequirement": 0.011368
       },
       "isReward": false,
@@ -185895,7 +187609,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 130,
-        "Quantum_Speed": 138000000,
+        "Quantum_Speed": 188312700,
         "Quantum_Fuelrequirement": 0.010094
       },
       "isReward": false,
@@ -186010,7 +187724,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 150,
-        "Quantum_Speed": 165000000,
+        "Quantum_Speed": 209236400,
         "Quantum_Fuelrequirement": 0.010682
       },
       "isReward": false,
@@ -186125,7 +187839,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 210,
-        "Quantum_Speed": 257000000,
+        "Quantum_Speed": 241120000,
         "Quantum_Fuelrequirement": 0.005488
       },
       "isReward": true,
@@ -186299,7 +188013,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 120,
-        "Quantum_Speed": 168000000,
+        "Quantum_Speed": 263040000,
         "Quantum_Fuelrequirement": 0.00588
       },
       "isReward": false,
@@ -186414,7 +188128,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 160,
-        "Quantum_Speed": 179000000,
+        "Quantum_Speed": 197280000,
         "Quantum_Fuelrequirement": 0.006076
       },
       "isReward": false,
@@ -186529,7 +188243,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 130,
-        "Quantum_Speed": 140000000,
+        "Quantum_Speed": 167389100,
         "Quantum_Fuelrequirement": 0.01666
       },
       "isReward": false,
@@ -186644,7 +188358,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 170,
-        "Quantum_Speed": 196000000,
+        "Quantum_Speed": 217605800,
         "Quantum_Fuelrequirement": 0.01862
       },
       "isReward": true,
@@ -186803,7 +188517,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 150,
-        "Quantum_Speed": 168000000,
+        "Quantum_Speed": 184128000,
         "Quantum_Fuelrequirement": 0.01764
       },
       "isReward": true,
@@ -186962,7 +188676,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 200,
-        "Quantum_Speed": 231000000,
+        "Quantum_Speed": 259054500,
         "Quantum_Fuelrequirement": 0.007546
       },
       "isReward": false,
@@ -187077,7 +188791,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 150,
-        "Quantum_Speed": 165000000,
+        "Quantum_Speed": 199272700,
         "Quantum_Fuelrequirement": 0.009114
       },
       "isReward": false,
@@ -187192,7 +188906,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 170,
-        "Quantum_Speed": 198000000,
+        "Quantum_Speed": 219200000,
         "Quantum_Fuelrequirement": 0.008232
       },
       "isReward": false,
@@ -187307,7 +189021,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 150,
-        "Quantum_Speed": 165000000,
+        "Quantum_Speed": 189309100,
         "Quantum_Fuelrequirement": 0.0098
       },
       "isReward": false,
@@ -187422,7 +189136,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 170,
-        "Quantum_Speed": 198000000,
+        "Quantum_Speed": 208240000,
         "Quantum_Fuelrequirement": 0.009114
       },
       "isReward": false,
@@ -187537,7 +189251,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 130,
-        "Quantum_Speed": 138000000,
+        "Quantum_Speed": 170378200,
         "Quantum_Fuelrequirement": 0.010094
       },
       "isReward": false,
@@ -187652,7 +189366,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 240,
-        "Quantum_Speed": 190000000,
+        "Quantum_Speed": 161410900,
         "Quantum_Fuelrequirement": 0.01862
       },
       "isReward": false,
@@ -187767,7 +189481,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 270,
-        "Quantum_Speed": 228000000,
+        "Quantum_Speed": 177552000,
         "Quantum_Fuelrequirement": 0.02058
       },
       "isReward": true,
@@ -187926,7 +189640,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 300,
-        "Quantum_Speed": 266000000,
+        "Quantum_Speed": 209834200,
         "Quantum_Fuelrequirement": 0.02156
       },
       "isReward": true,
@@ -188085,7 +189799,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 290,
-        "Quantum_Speed": 171000000,
+        "Quantum_Speed": 301028600,
         "Quantum_Fuelrequirement": 0.00545
       },
       "isReward": false,
@@ -188200,7 +189914,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 330,
-        "Quantum_Speed": 205000000,
+        "Quantum_Speed": 331131400,
         "Quantum_Fuelrequirement": 0.00654
       },
       "isReward": false,
@@ -188315,7 +190029,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 360,
-        "Quantum_Speed": 168000000,
+        "Quantum_Speed": 237060000,
         "Quantum_Fuelrequirement": 0.011227
       },
       "isReward": false,
@@ -188430,7 +190144,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 470,
-        "Quantum_Speed": 242000000,
+        "Quantum_Speed": 289740000,
         "Quantum_Fuelrequirement": 0.012644
       },
       "isReward": false,
@@ -188545,7 +190259,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 410,
-        "Quantum_Speed": 201000000,
+        "Quantum_Speed": 263400000,
         "Quantum_Fuelrequirement": 0.011881
       },
       "isReward": false,
@@ -188660,7 +190374,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 500,
-        "Quantum_Speed": 262000000,
+        "Quantum_Speed": 275942800,
         "Quantum_Fuelrequirement": 0.00654
       },
       "isReward": false,
@@ -188775,7 +190489,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 570,
-        "Quantum_Speed": 314000000,
+        "Quantum_Speed": 303537200,
         "Quantum_Fuelrequirement": 0.006104
       },
       "isReward": true,
@@ -188949,7 +190663,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 430,
-        "Quantum_Speed": 218000000,
+        "Quantum_Speed": 248348600,
         "Quantum_Fuelrequirement": 0.006758
       },
       "isReward": false,
@@ -189064,7 +190778,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 400,
-        "Quantum_Speed": 205000000,
+        "Quantum_Speed": 231792000,
         "Quantum_Fuelrequirement": 0.01962
       },
       "isReward": true,
@@ -189223,7 +190937,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 350,
-        "Quantum_Speed": 171000000,
+        "Quantum_Speed": 210720000,
         "Quantum_Fuelrequirement": 0.01853
       },
       "isReward": false,
@@ -189338,7 +191052,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 460,
-        "Quantum_Speed": 240000000,
+        "Quantum_Speed": 273936000,
         "Quantum_Fuelrequirement": 0.02071
       },
       "isReward": true,
@@ -189497,7 +191211,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 470,
-        "Quantum_Speed": 242000000,
+        "Quantum_Speed": 275942800,
         "Quantum_Fuelrequirement": 0.009156
       },
       "isReward": false,
@@ -189612,7 +191326,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 540,
-        "Quantum_Speed": 282000000,
+        "Quantum_Speed": 326114300,
         "Quantum_Fuelrequirement": 0.008393
       },
       "isReward": false,
@@ -189727,7 +191441,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 410,
-        "Quantum_Speed": 201000000,
+        "Quantum_Speed": 250857100,
         "Quantum_Fuelrequirement": 0.010137
       },
       "isReward": false,
@@ -189842,7 +191556,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 410,
-        "Quantum_Speed": 201000000,
+        "Quantum_Speed": 238314300,
         "Quantum_Fuelrequirement": 0.0109
       },
       "isReward": false,
@@ -189957,7 +191671,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 360,
-        "Quantum_Speed": 168000000,
+        "Quantum_Speed": 214482900,
         "Quantum_Fuelrequirement": 0.011227
       },
       "isReward": false,
@@ -190072,7 +191786,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 470,
-        "Quantum_Speed": 242000000,
+        "Quantum_Speed": 262145700,
         "Quantum_Fuelrequirement": 0.010355
       },
       "isReward": false,
@@ -190187,7 +191901,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 660,
-        "Quantum_Speed": 231000000,
+        "Quantum_Speed": 203194300,
         "Quantum_Fuelrequirement": 0.02071
       },
       "isReward": false,
@@ -190302,7 +192016,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 840,
-        "Quantum_Speed": 324000000,
+        "Quantum_Speed": 264152600,
         "Quantum_Fuelrequirement": 0.02398
       },
       "isReward": true,
@@ -190461,7 +192175,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 750,
-        "Quantum_Speed": 278000000,
+        "Quantum_Speed": 223513700,
         "Quantum_Fuelrequirement": 0.02289
       },
       "isReward": true,
@@ -190620,7 +192334,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 990,
-        "Quantum_Speed": 205000000,
+        "Quantum_Speed": 457439100,
         "Quantum_Fuelrequirement": 0.049588
       },
       "isReward": false,
@@ -190735,7 +192449,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1100,
-        "Quantum_Speed": 246000000,
+        "Quantum_Speed": 508265600,
         "Quantum_Fuelrequirement": 0.070196
       },
       "isReward": false,
@@ -190850,7 +192564,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1300,
-        "Quantum_Speed": 295000000,
+        "Quantum_Speed": 559092200,
         "Quantum_Fuelrequirement": 0.074704
       },
       "isReward": false,
@@ -190965,7 +192679,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1600,
-        "Quantum_Speed": 383000000,
+        "Quantum_Speed": 585715600,
         "Quantum_Fuelrequirement": 0.036064
       },
       "isReward": true,
@@ -191139,7 +192853,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1400,
-        "Quantum_Speed": 319000000,
+        "Quantum_Speed": 532468700,
         "Quantum_Fuelrequirement": 0.03864
       },
       "isReward": false,
@@ -191254,7 +192968,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1200,
-        "Quantum_Speed": 266000000,
+        "Quantum_Speed": 479221900,
         "Quantum_Fuelrequirement": 0.039928
       },
       "isReward": false,
@@ -191369,7 +193083,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1500,
-        "Quantum_Speed": 344000000,
+        "Quantum_Speed": 629281300,
         "Quantum_Fuelrequirement": 0.049588
       },
       "isReward": false,
@@ -191484,7 +193198,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1100,
-        "Quantum_Speed": 246000000,
+        "Quantum_Speed": 484062500,
         "Quantum_Fuelrequirement": 0.059892
       },
       "isReward": false,
@@ -191599,7 +193313,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1300,
-        "Quantum_Speed": 295000000,
+        "Quantum_Speed": 532468700,
         "Quantum_Fuelrequirement": 0.054096
       },
       "isReward": false,
@@ -191714,7 +193428,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 990,
-        "Quantum_Speed": 205000000,
+        "Quantum_Speed": 413873400,
         "Quantum_Fuelrequirement": 0.066332
       },
       "isReward": false,
@@ -191829,7 +193543,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1300,
-        "Quantum_Speed": 295000000,
+        "Quantum_Speed": 505845300,
         "Quantum_Fuelrequirement": 0.06118
       },
       "isReward": false,
@@ -191944,7 +193658,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1100,
-        "Quantum_Speed": 246000000,
+        "Quantum_Speed": 459859400,
         "Quantum_Fuelrequirement": 0.0644
       },
       "isReward": false,
@@ -192059,7 +193773,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 2100,
-        "Quantum_Speed": 339000000,
+        "Quantum_Speed": 431299700,
         "Quantum_Fuelrequirement": 0.13524
       },
       "isReward": true,
@@ -192218,7 +193932,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 1800,
-        "Quantum_Speed": 282000000,
+        "Quantum_Speed": 392090600,
         "Quantum_Fuelrequirement": 0.12236
       },
       "isReward": false,
@@ -192333,7 +194047,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 2300,
-        "Quantum_Speed": 395000000,
+        "Quantum_Speed": 509717800,
         "Quantum_Fuelrequirement": 0.14168
       },
       "isReward": true,
@@ -192492,7 +194206,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 9900,
-        "Quantum_Speed": 512000000,
+        "Quantum_Speed": 1262910000,
         "Quantum_Fuelrequirement": 0.0613
       },
       "isReward": false,
@@ -192607,7 +194321,7 @@
       ],
       "vehicleBaseStats": {
         "Health_Maxhealth": 48000,
-        "Quantum_Speed": 718000000,
+        "Quantum_Speed": 974244900,
         "Quantum_Fuelrequirement": 0.0613
       },
       "isReward": false,
@@ -201613,7 +203327,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -201990,6 +203704,26 @@
             "Stanton",
             "Pyro",
             "Nyx"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
@@ -202262,7 +203996,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -202506,6 +204240,26 @@
             "Stanton",
             "Pyro",
             "Nyx"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
@@ -202626,7 +204380,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -203014,6 +204768,26 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -203123,7 +204897,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -203500,6 +205274,26 @@
             "Stanton",
             "Pyro",
             "Nyx"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
@@ -203772,7 +205566,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -204016,6 +205810,26 @@
             "Stanton",
             "Pyro",
             "Nyx"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
@@ -204136,7 +205950,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -204380,6 +206194,26 @@
             "Stanton",
             "Pyro",
             "Nyx"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
@@ -204498,7 +206332,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -204753,6 +206587,26 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -204860,7 +206714,7 @@
           "system": "Stanton",
           "region": null,
           "category": null,
-          "repPoints": 200,
+          "repPoints": 100,
           "minReputation": 0,
           "maxReputation": 95250,
           "standingName": "Neutral",
@@ -205104,6 +206958,26 @@
             "Stanton",
             "Pyro",
             "Nyx"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": null,
+          "repPoints": 200,
+          "minReputation": 95250,
+          "maxReputation": 95250,
+          "standingName": "Elite Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "United Wayfarers Club: URGENT CAPITAL FLEET REFUEL",
+          "chance": 0.125,
+          "poolChance": 1,
+          "poolKey": "fuelnozzle",
+          "locations": [
+            "Stanton",
+            "Pyro"
           ],
           "system": "Stanton",
           "region": null,
@@ -205950,7 +207824,7 @@
       "file": "salvage_modifier_scraper_salvation_medium",
       "name": "BP_CRAFT_Salvage_Modifier_Scraper_Salvation_Medium",
       "internalName": "salvage_modifier_scraper_salvation_medium",
-      "blueprintName": "Cinch Scraper Module",
+      "blueprintName": "Comer Scraper Module",
       "entityClass": "salvage_modifier_scraper_salvation_medium",
       "category": "VehicleComponentS1",
       "categoryName": "Veh. Comp. S1",
@@ -206477,7 +208351,7 @@
       "file": "salvage_modifier_scraper_salvation_small",
       "name": "BP_CRAFT_Salvage_Modifier_Scraper_Salvation_Small",
       "internalName": "salvage_modifier_scraper_salvation_small",
-      "blueprintName": "Cinch Scraper Module",
+      "blueprintName": "Hart Scraper Module",
       "entityClass": "salvage_modifier_scraper_salvation_small",
       "category": "VehicleComponentS1",
       "categoryName": "Veh. Comp. S1",
@@ -222107,7 +223981,7 @@
       ],
       "weaponBaseStats": {
         "Health_Maxhealth": 1650,
-        "Weapon_Damage": 1090
+        "Weapon_Damage": 975
       },
       "isReward": true,
       "rewardMissions": [
@@ -225565,7 +227439,7 @@
       ],
       "weaponBaseStats": {
         "Health_Maxhealth": 1500,
-        "Weapon_Damage": 19
+        "Weapon_Damage": 32
       },
       "isReward": true,
       "rewardMissions": [
@@ -237694,9 +239568,9 @@
     "cds_armor_light_legs_01_01_01"
   ],
   "summary": {
-    "totalBlueprints": 1597,
+    "totalBlueprints": 1607,
     "defaultBlueprints": 8,
-    "blueprintsWithRewards": 723,
+    "blueprintsWithRewards": 728,
     "rewardBlueprintsNeedingLocalization": 0,
     "nonRewardBlueprintsWithFallback": 0
   }

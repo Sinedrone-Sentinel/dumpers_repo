@@ -1,11 +1,11 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-07-31T01:46:24.738Z",
+  "_extracted": "2026-08-26T23:18:42.867Z",
   "stats": {
-    "internalNames": 1597,
-    "displayNames": 1582,
-    "ambiguousDisplayNames": 14,
-    "contractDefinitions": 1546
+    "internalNames": 1607,
+    "displayNames": 1594,
+    "ambiguousDisplayNames": 13,
+    "contractDefinitions": 1582
   },
   "byInternalName": {
     "behr_lmg_ballistic_01_mag": {
@@ -2761,7 +2761,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_13": {
-      "blueprintName": "Antium Helmet Jet Arms",
+      "blueprintName": "Antium Arms Maroon",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_arms_01_01_15": {
@@ -2813,7 +2813,7 @@
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_helmet_01_01_12": {
-      "blueprintName": "Antium Core Jet Helmet",
+      "blueprintName": "Antium Helmet Jet",
       "categoryName": "FPSArmours"
     },
     "qrt_specialist_heavy_helmet_01_01_13": {
@@ -4528,6 +4528,46 @@
       "blueprintName": "Metamaterial Test #152",
       "categoryName": "MissionItem"
     },
+    "cargo_shipmining_pod_golem": {
+      "blueprintName": "Drake Ore Pod",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "cargo_shipmining_pod_golem_btgl": {
+      "blueprintName": "GOLEM MC-4 Ore Pod",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "cargo_shipmining_pod_mole": {
+      "blueprintName": "Argo Ore Pod",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "cargo_shipmining_pod_moleprospector_btgl": {
+      "blueprintName": "MISC Enhanced Ore Pod",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "cargo_shipmining_pod_prospector": {
+      "blueprintName": "MISC Ore Pod",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "mining_modules_active_clearcut": {
+      "blueprintName": "Clearcut Module",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "mining_modules_active_stampede": {
+      "blueprintName": "Stampede Module",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "mining_modules_passive_deluge": {
+      "blueprintName": "Deluge Module",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "mining_modules_passive_overrun": {
+      "blueprintName": "Overrun Module",
+      "categoryName": "Veh. Comp. S0"
+    },
+    "mining_modules_passive_torrent_mk3": {
+      "blueprintName": "Torrent III Module",
+      "categoryName": "Veh. Comp. S0"
+    },
     "cool_acom_s01_iceplunge": {
       "blueprintName": "IcePlunge",
       "categoryName": "Veh. Comp. S1"
@@ -5705,11 +5745,11 @@
       "categoryName": "Veh. Comp. S1"
     },
     "salvage_modifier_scraper_salvation_medium": {
-      "blueprintName": "Cinch Scraper Module",
+      "blueprintName": "Comer Scraper Module",
       "categoryName": "Veh. Comp. S1"
     },
     "salvage_modifier_scraper_salvation_small": {
-      "blueprintName": "Cinch Scraper Module",
+      "blueprintName": "Hart Scraper Module",
       "categoryName": "Veh. Comp. S1"
     },
     "salvage_modifier_scraper_small": {
@@ -9190,9 +9230,9 @@
       "internalName": "qrt_specialist_heavy_arms_01_01_12",
       "blueprintName": "Antium Arms Jet"
     },
-    "antium helmet jet arms": {
+    "antium arms maroon": {
       "internalName": "qrt_specialist_heavy_arms_01_01_13",
-      "blueprintName": "Antium Helmet Jet Arms"
+      "blueprintName": "Antium Arms Maroon"
     },
     "antium arms sand": {
       "internalName": "qrt_specialist_heavy_arms_01_01_15",
@@ -9242,9 +9282,9 @@
       "internalName": "qrt_specialist_heavy_helmet_01_01_10",
       "blueprintName": "Antium Helmet Storm"
     },
-    "antium core jet helmet": {
+    "antium helmet jet": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_12",
-      "blueprintName": "Antium Core Jet Helmet"
+      "blueprintName": "Antium Helmet Jet"
     },
     "antium helmet maroon": {
       "internalName": "qrt_specialist_heavy_helmet_01_01_13",
@@ -10966,6 +11006,46 @@
       "internalName": "carryable_2h_sq_collectormaterial_002",
       "blueprintName": "Metamaterial Test #152"
     },
+    "drake ore pod": {
+      "internalName": "cargo_shipmining_pod_golem",
+      "blueprintName": "Drake Ore Pod"
+    },
+    "golem mc-4 ore pod": {
+      "internalName": "cargo_shipmining_pod_golem_btgl",
+      "blueprintName": "GOLEM MC-4 Ore Pod"
+    },
+    "argo ore pod": {
+      "internalName": "cargo_shipmining_pod_mole",
+      "blueprintName": "Argo Ore Pod"
+    },
+    "misc enhanced ore pod": {
+      "internalName": "cargo_shipmining_pod_moleprospector_btgl",
+      "blueprintName": "MISC Enhanced Ore Pod"
+    },
+    "misc ore pod": {
+      "internalName": "cargo_shipmining_pod_prospector",
+      "blueprintName": "MISC Ore Pod"
+    },
+    "clearcut module": {
+      "internalName": "mining_modules_active_clearcut",
+      "blueprintName": "Clearcut Module"
+    },
+    "stampede module": {
+      "internalName": "mining_modules_active_stampede",
+      "blueprintName": "Stampede Module"
+    },
+    "deluge module": {
+      "internalName": "mining_modules_passive_deluge",
+      "blueprintName": "Deluge Module"
+    },
+    "overrun module": {
+      "internalName": "mining_modules_passive_overrun",
+      "blueprintName": "Overrun Module"
+    },
+    "torrent iii module": {
+      "internalName": "mining_modules_passive_torrent_mk3",
+      "blueprintName": "Torrent III Module"
+    },
     "iceplunge": {
       "internalName": "cool_acom_s01_iceplunge",
       "blueprintName": "IcePlunge"
@@ -12190,26 +12270,17 @@
       "internalName": "salvage_modifier_scraper_medium",
       "blueprintName": "Abrade Scraper Module"
     },
+    "comer scraper module": {
+      "internalName": "salvage_modifier_scraper_salvation_medium",
+      "blueprintName": "Comer Scraper Module"
+    },
+    "hart scraper module": {
+      "internalName": "salvage_modifier_scraper_salvation_small",
+      "blueprintName": "Hart Scraper Module"
+    },
     "cinch scraper module": {
-      "ambiguous": true,
-      "displayName": "Cinch Scraper Module",
-      "candidates": [
-        {
-          "internalName": "salvage_modifier_scraper_salvation_medium",
-          "blueprintName": "Cinch Scraper Module",
-          "categoryName": "Veh. Comp. S1"
-        },
-        {
-          "internalName": "salvage_modifier_scraper_salvation_small",
-          "blueprintName": "Cinch Scraper Module",
-          "categoryName": "Veh. Comp. S1"
-        },
-        {
-          "internalName": "salvage_modifier_scraper_small",
-          "blueprintName": "Cinch Scraper Module",
-          "categoryName": "Veh. Comp. S1"
-        }
-      ]
+      "internalName": "salvage_modifier_scraper_small",
+      "blueprintName": "Cinch Scraper Module"
     },
     "rs-barrier": {
       "internalName": "shld_aegs_s04_reclaimer",
@@ -16865,6 +16936,246 @@
       "espr_lasercannon_s5",
       "espr_lasercannon_s6"
     ],
+    "0e5f4731-ef9b-4344-bffe-4aecd7ff8184": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_stanton_defendshipnamed_e": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "0542532c-804e-43d5-87ee-592dab1782e0": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_stanton_defendshipnamed_m": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "bd6069eb-b776-4b2f-a0ac-93ad3103088a": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_stanton_defendshipnamed_h": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "59244b0c-d105-430e-900c-9528cecafdca": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_stanton_defendshipnamed_e_nearlocation": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "dfd28b43-114a-4e1f-9257-0e6c07f36c53": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_stanton_defendshipnamed_m_nearlocation": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "00e63746-b222-452f-91aa-48857a7bf066": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_stanton_defendshipnamed_h_nearlocation": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "db71e9be-141b-4df2-b51b-3fbf926e687b": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_nyx_defendshipnamed_e": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "b0bfeb75-4f5c-458b-80e1-814526892916": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_nyx_defendshipnamed_m": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "c29d15ed-0f24-4ede-881c-957cc3d239fa": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_nyx_defendshipnamed_h": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "6166482f-352d-497a-aacc-417ce1820f03": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_pyro_defendshipnamed_e": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "0d2baa66-a46a-4d03-8c8f-c242343565c4": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_pyro_defendshipnamed_m": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "116b5a65-a258-41d9-82a1-7c407eb13699": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
+    "foxwellenforcement_pyro_defendshipnamed_h": [
+      "qrt_specialist_heavy_arms_01_01_13",
+      "qrt_specialist_heavy_core_01_01_13",
+      "qrt_specialist_heavy_legs_01_01_13",
+      "qrt_specialist_heavy_helmet_01_01_13",
+      "qrt_specialist_heavy_helmet_01_02_16",
+      "qrt_specialist_heavy_arms_01_02_16",
+      "qrt_specialist_heavy_core_01_02_16",
+      "qrt_specialist_heavy_legs_01_02_16"
+    ],
     "6d43451e-c36b-4f9a-bc41-9ee6e3b8587f": [
       "qrt_specialist_heavy_arms_01_01_13",
       "qrt_specialist_heavy_core_01_01_13",
@@ -19462,6 +19773,28 @@
       "cds_combat_superheavy_backpack_01_01_01",
       "cds_combat_superheavy_helmet_01_01_01",
       "cds_combat_superheavy_suit_01_01_01"
+    ],
+    "f81b133e-6043-469c-97e6-7524cad5eca5": [
+      "mining_modules_active_clearcut"
+    ],
+    "battagliastory1": [
+      "mining_modules_active_clearcut"
+    ],
+    "67623fed-550c-4b1a-a451-e670c260f1d9": [
+      "mining_modules_passive_overrun",
+      "mining_modules_passive_deluge"
+    ],
+    "battagliastory2": [
+      "mining_modules_passive_overrun",
+      "mining_modules_passive_deluge"
+    ],
+    "67cf0b4c-c894-4bb1-8409-4a14334abcd4": [
+      "cargo_shipmining_pod_golem_btgl",
+      "cargo_shipmining_pod_moleprospector_btgl"
+    ],
+    "battagliastory3": [
+      "cargo_shipmining_pod_golem_btgl",
+      "cargo_shipmining_pod_moleprospector_btgl"
     ],
     "4173543e-eaa7-4efd-ada3-41549f84448a": [
       "mining_laser_shin_hofstede_s0",
@@ -31448,26 +31781,6 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "0b862c68-8b32-40af-96ed-40a0dbc1c47c": [
-      "nozzle_fuelgiver_grin_nozzlefast",
-      "nozzle_fuelgiver_grin_nozzlesecure",
-      "nozzle_fuelgiver_grin_nozzleveryfast",
-      "nozzle_fuelgiver_grin_nozzleverysecure",
-      "nozzle_fuelgiver_misc_nozzlestandard",
-      "nozzle_fuelgiver_shin_nozzleexpensivefast",
-      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
-      "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
-    "refueling_stanton_hydrogen_2vs_1s_rank0": [
-      "nozzle_fuelgiver_grin_nozzlefast",
-      "nozzle_fuelgiver_grin_nozzlesecure",
-      "nozzle_fuelgiver_grin_nozzleveryfast",
-      "nozzle_fuelgiver_grin_nozzleverysecure",
-      "nozzle_fuelgiver_misc_nozzlestandard",
-      "nozzle_fuelgiver_shin_nozzleexpensivefast",
-      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
-      "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
     "3b19d365-3ff9-4980-9eac-f04da407499f": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
@@ -31479,6 +31792,26 @@
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
     "refueling_stanton_hydrogen_2vs_rank0": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "0b862c68-8b32-40af-96ed-40a0dbc1c47c": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "refueling_stanton_hydrogen_2vs_1s_rank0": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -31608,7 +31941,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_stanton_hydrogen_1l_rank2": [
+    "refueling_stanton_hydrogen_1m_1l_rank2": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -31628,7 +31961,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_stanton_both_2s_1m_rank3": [
+    "refueling_stanton_quantum_3l_rank3": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -31649,6 +31982,26 @@
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
     "refueling_stanton_both_2m_1l_rank3": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "debb0e7a-b79a-470b-87e2-6b3c68727899": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "refueling_stanton_hydrogen_3l_rank3": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -31728,7 +32081,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_stanton_hydrogen_1xl_rank5": [
+    "refueling_stanton_hydrogen_2xl_rank5": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -31838,26 +32191,6 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "f81c98d1-59ac-420d-8ab3-2a839ae41b6f": [
-      "nozzle_fuelgiver_grin_nozzlefast",
-      "nozzle_fuelgiver_grin_nozzlesecure",
-      "nozzle_fuelgiver_grin_nozzleveryfast",
-      "nozzle_fuelgiver_grin_nozzleverysecure",
-      "nozzle_fuelgiver_misc_nozzlestandard",
-      "nozzle_fuelgiver_shin_nozzleexpensivefast",
-      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
-      "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
-    "refueling_pyro_hydrogen_2vs_1s_rank0": [
-      "nozzle_fuelgiver_grin_nozzlefast",
-      "nozzle_fuelgiver_grin_nozzlesecure",
-      "nozzle_fuelgiver_grin_nozzleveryfast",
-      "nozzle_fuelgiver_grin_nozzleverysecure",
-      "nozzle_fuelgiver_misc_nozzlestandard",
-      "nozzle_fuelgiver_shin_nozzleexpensivefast",
-      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
-      "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
     "2c5309c8-6fb0-419a-9727-98cd07d3b77b": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
@@ -31869,6 +32202,26 @@
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
     "refueling_pyro_hydrogen_2vs_rank0": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "f81c98d1-59ac-420d-8ab3-2a839ae41b6f": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "refueling_pyro_hydrogen_2vs_1s_rank0": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -31998,7 +32351,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_pyro_hydrogen_1l_rank2": [
+    "refueling_pyro_hydrogen_1m_1l_rank2": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32018,7 +32371,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_pyro_both_2s_1m_rank3": [
+    "refueling_pyro_quantum_3l_rank3": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32039,6 +32392,26 @@
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
     "refueling_pyro_both_2m_1l_rank3": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "f58c6360-348f-4744-88f8-46f739fb73a0": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "refueling_pyro_hydrogen_3l_rank3": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32118,7 +32491,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_pyro_hydrogen_1xl_rank5": [
+    "refueling_pyro_hydrogen_2xl_rank5": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32228,26 +32601,6 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "2d59b1f3-5802-4921-893f-c0538bbcfd5a": [
-      "nozzle_fuelgiver_grin_nozzlefast",
-      "nozzle_fuelgiver_grin_nozzlesecure",
-      "nozzle_fuelgiver_grin_nozzleveryfast",
-      "nozzle_fuelgiver_grin_nozzleverysecure",
-      "nozzle_fuelgiver_misc_nozzlestandard",
-      "nozzle_fuelgiver_shin_nozzleexpensivefast",
-      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
-      "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
-    "refueling_nyx_hydrogen_2vs_1s_rank0": [
-      "nozzle_fuelgiver_grin_nozzlefast",
-      "nozzle_fuelgiver_grin_nozzlesecure",
-      "nozzle_fuelgiver_grin_nozzleveryfast",
-      "nozzle_fuelgiver_grin_nozzleverysecure",
-      "nozzle_fuelgiver_misc_nozzlestandard",
-      "nozzle_fuelgiver_shin_nozzleexpensivefast",
-      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
-      "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
     "664407d8-8f62-42a6-bb04-3b6c368f2aa8": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
@@ -32259,6 +32612,26 @@
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
     "refueling_nyx_hydrogen_2vs_rank0": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "2d59b1f3-5802-4921-893f-c0538bbcfd5a": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "refueling_nyx_hydrogen_2vs_1s_rank0": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32388,7 +32761,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_nyx_hydrogen_1l_rank2": [
+    "refueling_nyx_hydrogen_1m_1l_rank2": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32408,7 +32781,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_nyx_both_2s_1m_rank3": [
+    "refueling_nyx_quantum_3l_rank3": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32429,6 +32802,26 @@
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
     "refueling_nyx_both_2m_1l_rank3": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "5d0179dd-b4b5-4613-8d52-9e522ec5507a": [
+      "nozzle_fuelgiver_grin_nozzlefast",
+      "nozzle_fuelgiver_grin_nozzlesecure",
+      "nozzle_fuelgiver_grin_nozzleveryfast",
+      "nozzle_fuelgiver_grin_nozzleverysecure",
+      "nozzle_fuelgiver_misc_nozzlestandard",
+      "nozzle_fuelgiver_shin_nozzleexpensivefast",
+      "nozzle_fuelgiver_shin_nozzleexpensivesecure",
+      "nozzle_fuelgiver_shin_nozzlemostexpensive"
+    ],
+    "refueling_nyx_hydrogen_3l_rank3": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -32508,7 +32901,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refueling_nyx_hydrogen_1xl_rank5": [
+    "refueling_nyx_hydrogen_2xl_rank5": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",

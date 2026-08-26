@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-07-31T01:46:24.791Z",
+  "_extracted": "2026-08-26T23:07:01.910Z",
   "weapons": [
     {
       "id": "e302c7ae-b850-412d-983e-36dbf04f98fe",
@@ -539,19 +539,6 @@
       "id": "adb5c353-7685-461c-9c3c-32ad182430b1",
       "name": "behr_rifle_ballistic_03",
       "displayName": "CQ7 Rifle",
-      "type": "Medium",
-      "size": 2,
-      "fireRate": 0,
-      "idealCombatRange": 30,
-      "maxFiringRange": 50,
-      "damageMultiplier": 1,
-      "combatRangeCategory": "Unknown",
-      "tags": "stocked behr_rifle_ballistic_01 rifle"
-    },
-    {
-      "id": "09ca39f1-ebc5-49d2-9683-14cafc2724a5",
-      "name": "behr_rifle_ballistic_03_mr01",
-      "displayName": "@item_Namebehr_rifle_ballistic_03_mr01",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -1795,6 +1782,58 @@
       "damageMultiplier": 1,
       "combatRangeCategory": "Unknown",
       "tags": "pistol"
+    },
+    {
+      "id": "cc95ae76-505d-4481-8639-77ae6a41b99c",
+      "name": "hdgw_rifle_ballistic_01",
+      "displayName": "Arlington Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked hdgw_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "47403176-45ef-4424-b3ee-07555e019ad4",
+      "name": "hdgw_rifle_ballistic_01_tint01",
+      "displayName": "Arlington \"Gamekeeper\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked hdgw_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "54885d55-afbb-4aff-b206-b64d7681f89e",
+      "name": "hdgw_rifle_ballistic_01_tint02",
+      "displayName": "Arlington \"Widowmaker\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked hdgw_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "7a90fcaf-9b96-4ef8-b65d-9201e3f44ca2",
+      "name": "hdgw_rifle_ballistic_01_tint03",
+      "displayName": "Arlington \"Watchpoint\" Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked hdgw_rifle_ballistic_01 rifle"
     },
     {
       "id": "1b6a6b76-f3fc-402c-a24a-204f2eeae6f7",
@@ -4047,6 +4086,6 @@
     }
   ],
   "summary": {
-    "totalWeapons": 311
+    "totalWeapons": 314
   }
 }
