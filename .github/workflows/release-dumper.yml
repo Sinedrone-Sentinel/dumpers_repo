@@ -1,6 +1,7 @@
 name: Release BP Dumper
 
-# Semantic-release only when dumper source changes; feat(dumper)/fix(dumper) commits cut a tag.
+# Semantic-release on dumper source changes AND on patch-day game data;
+# feat(dumper)/fix(dumper) commits cut a tag.
 on:
   push:
     branches: [main]
@@ -15,6 +16,11 @@ on:
       - 'release.config.js'
       - '.github/workflows/release-dumper.yml'
       - '.github/workflows/build-releases.yml'
+      # Every game patch needs a fresh dumper: MIN_GAME_VERSION is baked from the
+      # parsed game build and gates which logs are skipped after the initial full
+      # dump, and lookup.json is embedded in the exe for new blueprint names.
+      - 'src/data/game-build-version.json'
+      - 'src/data/blueprint-name-lookup.json'
 
 # Least privilege: read-only at top level; write scopes only on the release job.
 permissions:
