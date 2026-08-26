@@ -149,7 +149,22 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
    - Writes `public/dfp-engine.js` + `public/dfp-version.json` here — commit both with the game-data commit
    - `npm run patch-audit` includes `verify-dfp-acquisition-premiums.mjs` (fails if premiums/bundle are stale)
    - **Pricing formulas live only in dfp-engine-private** — do not edit DFP math in this repo
-8. **BP Dumper (only if blueprints changed):** `npm run generate-dumper-mappings && npm run copy-blueprint-lookup`, then `npx supabase functions deploy log-watcher-webhook --no-verify-jwt`; run `npm run sync-min-game-version` if the game major.minor changed
+8. **BP Dumper — every patch, even when no blueprints changed:** run
+   `npm run generate-dumper-mappings` and commit `src/data/blueprint-name-lookup.json`
+   with the game data, then include a **`dumper`-scoped** commit (e.g.
+   `fix(dumper): rebuild for 4.10`) in the same PR
+   - A new dumper build is required each patch because `MIN_GAME_VERSION` gates which
+     logs are skipped after the initial full dump — leave it behind and the dumper keeps
+     rescanning the previous patch's logs
+   - `release-dumper.yml` watches `game-build-version.json` and `blueprint-name-lookup.json`,
+     so patch-day data fires the workflow; the `dumper` scope is what makes
+     semantic-release actually cut the version
+   - **Do not** hand-run `npm run sync-min-game-version` or edit `_min_game_version.py` /
+     `mingame.txt` — `release.config.js` runs `syncDumperMinGameVersion.mjs` in `prepareCmd`
+     and commits them (see `.cursor/rules/bp-dumper-versioning.mdc`)
+   - `build-releases.yml` runs `copy-blueprint-lookup` before building the exe and before
+     redeploying the Edge Function, so new blueprint names ship automatically. Only if you
+     need it out-of-band: `npx supabase functions deploy log-watcher-webhook --no-verify-jwt`
 9. **Sync resource catalog:** use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials appeared after parse
 10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
 

@@ -40,3 +40,19 @@ Commit dumper changes with a Conventional Commit **scoped to `dumper`**:
   the scope stays accurate.
 - In `release.config.js`, do **not** add a bare `{ release: false }` catch-all —
   it matches every commit and suppresses all bumps (including `feat(dumper)`).
+
+## Every game patch cuts a dumper release
+
+Ship a new dumper build on **every** game patch, even when no blueprints changed.
+`MIN_GAME_VERSION` gates which logs are skipped after the initial full dump, so a
+stale build keeps rescanning the previous patch's logs.
+
+- The patch-day PR must include a **`dumper`-scoped** commit (e.g.
+  `fix(dumper): rebuild for 4.10`). Data-only commits cut nothing.
+- `release-dumper.yml` watches `src/data/game-build-version.json` and
+  `src/data/blueprint-name-lookup.json`, so refreshed game data fires the workflow.
+- `MIN_GAME_VERSION` is baked automatically: `prepareCmd` chains
+  `syncDumperMinGameVersion.mjs`, which reads `game-build-version.json`. Never hand-run
+  `npm run sync-min-game-version`.
+- `build-releases.yml` runs `copy-blueprint-lookup` before building, so new blueprint
+  names reach the exe and the `log-watcher-webhook` Edge Function without manual steps.
