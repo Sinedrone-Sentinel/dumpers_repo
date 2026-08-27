@@ -103,6 +103,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'After a crash, the bar waits for reconnect — missions may restore only if you rejoin within 30 minutes',
       'When those 30 minutes have passed, tracking returns to normal while BP Dumper keeps watching your log',
       'Missions with no remaining pool blueprints show in red',
+      'If none of your active missions drop pool blueprints, Remaining to acquire says so — not that you already unlocked them',
       'When BP Dumper stops or disconnects, lists clear and a not-connected message appears',
       'If Dumper Apps is open but Star Citizen is closed (or you are not in the PU), Live Tracker can show not connected after a short idle window — that is expected',
     ],

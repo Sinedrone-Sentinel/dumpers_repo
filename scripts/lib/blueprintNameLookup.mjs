@@ -4,6 +4,13 @@ import { fileURLToPath } from 'url'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '../..')
 
+function sameNameSet(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false
+  const left = [...a].map((n) => String(n).toLowerCase()).sort()
+  const right = [...b].map((n) => String(n).toLowerCase()).sort()
+  return left.every((name, i) => name === right[i])
+}
+
 /**
  * Build display-name → internalName lookup (+ contract disambiguation map).
  */
@@ -56,8 +63,22 @@ export function buildBlueprintNameLookup(blueprints, contractData, missionBluepr
       }
     }
     if (internalNames.size === 0) continue
-    for (const id of [contract.id, contract.debugName].filter(Boolean)) {
-      byContractDefinitionId[id.toLowerCase()] = [...internalNames]
+    const names = [...internalNames]
+    const keys = [contract.id, contract.debugName, contract.displayTitle, contract.title]
+    for (const id of keys.filter(Boolean)) {
+      const key = String(id).trim().toLowerCase()
+      if (!key) continue
+      const existing = byContractDefinitionId[key]
+      if (existing && !sameNameSet(existing, names)) {
+        // Display-title collision with a different pool — drop the ambiguous title key.
+        if (id === contract.id || id === contract.debugName) {
+          byContractDefinitionId[key] = names
+        } else {
+          delete byContractDefinitionId[key]
+        }
+        continue
+      }
+      byContractDefinitionId[key] = names
     }
   }
 

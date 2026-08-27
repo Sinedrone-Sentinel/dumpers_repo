@@ -80323,6 +80323,124 @@
       ],
       "isLawful": true,
       "source": "orphanPoolBridge"
+    },
+    {
+      "id": "34f8d04a-8c43-4fb8-bfdb-997234ccea54",
+      "debugName": "IDS_RecoverEncryptedData_Intro",
+      "title": "Vanduul-Tech Smugglers",
+      "displayTitle": "Vanduul-Tech Smugglers",
+      "titleKey": "@Kaboos_Intro_Title",
+      "description": "MISSION SPECS\n\nArea of Operation: Nyx System\nHostile Forces: Unknown\nEquipment Specs: Combat-rated Ship, Personal Arms\nBriefing: InterSec has been enlisted by the UEE to gather intel on a group of <EM4>black marketeers dealing in Vanduul parts</EM4>, that have been linked to the illegal Vanduul experiments happening at ASD’s Onyx Facility. The UEE is eager to understand and put an end to their operations.\n\nBased on evidence extracted from the ASD facilities, we’ve potentially managed to track down the location of one of their storage sites.\n\nOnce accepted, head over to the old <EM4>QV Planet Services Logistics station</EM4> and we’ll be in touch.\n\n\nRespectfully, \n\nDeacon Tobin\nOperations Manager\nInterSec Defense Solutions\n\nThis communication consists of confidential information solely intended for the recipient. Please disregard if received in error and notify sender. All operations are conducted at the contractor’s own personal risk and must adhere to UEE and system law where applicable.",
+      "descriptionKey": "@Kaboos_Intro_Description",
+      "faction": "InterSec Defense Solutions",
+      "factionKey": "lawful_intersecdefensesolutions",
+      "system": "Nyx",
+      "region": null,
+      "category": "Investigation",
+      "blueprintPools": [
+        {
+          "key": "ids_recoverencrypteddata",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_ids_recoverencrypteddata.json"
+        },
+        {
+          "key": "idsrecoverencrypteddatavgear",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/48blueprints/bp_rewards_idsrecoverencrypteddatavgear.json"
+        }
+      ],
+      "minStanding": {
+        "name": "Jr. Contractor",
+        "minReputation": 800
+      },
+      "maxStanding": {
+        "name": "Elite Contractor",
+        "minReputation": 95250
+      },
+      "repPoints": 100,
+      "repEffects": [
+        {
+          "factionKey": "lawful_intersecdefensesolutions",
+          "faction": "InterSec Defense Solutions",
+          "amount": 100
+        }
+      ],
+      "locality": {
+        "key": "nyx",
+        "label": "Anywhere in Nyx",
+        "systems": [
+          "Nyx"
+        ]
+      },
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 0,
+        "respawnTimeVariationMinutes": 0,
+        "instanceLifeTimeMinutes": null,
+        "instanceLifeTimeVariationMinutes": null,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 60,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": true,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "repScopeKey": "FactionReputationScope",
+      "repCareerLabel": "Standing"
+    },
+    {
+      "id": "593a375f-1344-4eea-a8cb-caf3acbd9fb5",
+      "debugName": "SOO2_Intro",
+      "title": "Orison Platforms Under Attack",
+      "displayTitle": "Orison Platforms Under Attack",
+      "titleKey": "@northrock_SOO_intro_title_001",
+      "description": "Greetings,\n\nCrusader Security Forces have contacted us seeking our expertise in dealing with an urgent situation. Several platforms near Orison have been overtaken by members of the Nine Tails gang and Northrock is eager to staff an operation to remove them and return the platforms to Crusader.\n\nThe Nine Tails have put measures in place to block all air traffic in the area, so we've been granted access to a secure shuttle that will take you, and any other members of your assault team, to the first platform.\n\nFor full disclosure, I must warn that this is not a contract for the faint of heart. I am confident though that your combat skills, you and your selected team will be fully up to the challenge. \n\nOnce you've arrived at the shuttle I'll be in touch directly with more information.\n\nSpeak more soon,\nAdrienne Du-Buisson\nLogistics Officer - Stanton Branch\nNorthrock Service Group",
+      "descriptionKey": "@northrock_SOO_intro_desc_001",
+      "faction": "Northrock Service Group",
+      "factionKey": "lawful_northrockservicegroup",
+      "system": "Stanton",
+      "region": null,
+      "category": "Mercenary",
+      "blueprintPools": [
+        {
+          "key": "superheavy",
+          "chance": 1,
+          "path": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_superheavy.json"
+        }
+      ],
+      "minStanding": null,
+      "maxStanding": null,
+      "repPoints": 0,
+      "repEffects": [],
+      "locality": null,
+      "frequency": {
+        "maxInstances": 0,
+        "maxInstancesPerPlayer": 0,
+        "respawnTimeMinutes": 5,
+        "respawnTimeVariationMinutes": 2,
+        "instanceLifeTimeMinutes": 5,
+        "instanceLifeTimeVariationMinutes": 2,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 1,
+        "personalCooldownVariationSeconds": 1,
+        "abandonedCooldownSeconds": 1,
+        "abandonedCooldownVariationSeconds": 1,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": true,
+        "canReacceptAfterFailing": false,
+        "canBeShared": true
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "__minStandingPath": null,
+      "__maxStandingPath": null,
+      "__repScopePath": null
     }
   ],
   "missionsByPool": {
@@ -95878,6 +95996,58 @@
           "canReacceptAfterFailing": false,
           "canBeShared": true
         }
+      },
+      {
+        "title": "Vanduul-Tech Smugglers",
+        "displayTitle": "Vanduul-Tech Smugglers",
+        "titleKey": "@Kaboos_Intro_Title",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "IDS_RecoverEncryptedData_Intro",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Investigation",
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 100,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 100
+          }
+        ],
+        "locality": {
+          "key": "nyx",
+          "label": "Anywhere in Nyx",
+          "systems": [
+            "Nyx"
+          ]
+        },
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 60,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
       }
     ],
     "idsrecoverencrypteddatavgear": [
@@ -95910,6 +96080,58 @@
         ],
         "repCareerLabel": "Standing",
         "repScopeKey": "FactionReputationScope",
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 60,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      },
+      {
+        "title": "Vanduul-Tech Smugglers",
+        "displayTitle": "Vanduul-Tech Smugglers",
+        "titleKey": "@Kaboos_Intro_Title",
+        "faction": "InterSec Defense Solutions",
+        "factionKey": "lawful_intersecdefensesolutions",
+        "debugName": "IDS_RecoverEncryptedData_Intro",
+        "isLawful": true,
+        "system": "Nyx",
+        "region": null,
+        "category": "Investigation",
+        "minStanding": {
+          "name": "Jr. Contractor",
+          "minReputation": 800
+        },
+        "maxStanding": {
+          "name": "Elite Contractor",
+          "minReputation": 95250
+        },
+        "repPoints": 100,
+        "repEffects": [
+          {
+            "factionKey": "lawful_intersecdefensesolutions",
+            "faction": "InterSec Defense Solutions",
+            "amount": 100
+          }
+        ],
+        "locality": {
+          "key": "nyx",
+          "label": "Anywhere in Nyx",
+          "systems": [
+            "Nyx"
+          ]
+        },
         "frequency": {
           "maxInstances": -1,
           "maxInstancesPerPlayer": 1,
@@ -96505,6 +96727,40 @@
         "repEffects": [],
         "repCareerLabel": null,
         "repScopeKey": null,
+        "frequency": {
+          "maxInstances": 0,
+          "maxInstancesPerPlayer": 0,
+          "respawnTimeMinutes": 5,
+          "respawnTimeVariationMinutes": 2,
+          "instanceLifeTimeMinutes": 5,
+          "instanceLifeTimeVariationMinutes": 2,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 1,
+          "personalCooldownVariationSeconds": 1,
+          "abandonedCooldownSeconds": 1,
+          "abandonedCooldownVariationSeconds": 1,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": true
+        }
+      },
+      {
+        "title": "Orison Platforms Under Attack",
+        "displayTitle": "Orison Platforms Under Attack",
+        "titleKey": "@northrock_SOO_intro_title_001",
+        "faction": "Northrock Service Group",
+        "factionKey": "lawful_northrockservicegroup",
+        "debugName": "SOO2_Intro",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Mercenary",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 0,
+        "repEffects": [],
+        "locality": null,
         "frequency": {
           "maxInstances": 0,
           "maxInstancesPerPlayer": 0,
