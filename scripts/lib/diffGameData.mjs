@@ -171,8 +171,25 @@ export const COSMETIC_FIELD_NAMES = new Set([
 /**
  * Parser / release-metadata fields that appear across patches without meaningful
  * member-facing gameplay change (also suppresses schema-add noise on backfills).
+ * `notForRelease` is never a "changed" summary field — first-time release is
+ * classified as added via isUnreleasedRecord(), not as a flag flip.
  */
 export const NON_GAMEPLAY_FIELD_NAMES = new Set(['frequency', 'notForRelease'])
+
+/**
+ * CIG not-for-release flag, or a blueprint/item whose entityClass is still unwired.
+ * These records stay in parsed JSON for the NFR tag / WIP list, but must not
+ * appear on the What's New ticker as added (or as changed while still unreleased).
+ */
+export function isUnreleasedRecord(rec) {
+  if (!rec || typeof rec !== 'object') return false
+  if (rec.notForRelease === true) return true
+  if (Object.prototype.hasOwnProperty.call(rec, 'entityClass')) {
+    const v = rec.entityClass
+    if (v == null || String(v).trim() === '') return true
+  }
+  return false
+}
 
 export function stripMeta(value) {
   if (Array.isArray(value)) return value.map(stripMeta)
@@ -279,10 +296,10 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
   const changed = []
 
   for (const [key, rec] of newByKey) {
-    if (!oldByKey.has(key)) added.push({ key, rec })
+    if (!oldByKey.has(key) && !isUnreleasedRecord(rec)) added.push({ key, rec })
   }
   for (const [key, rec] of oldByKey) {
-    if (!newByKey.has(key)) removed.push({ key, rec })
+    if (!newByKey.has(key) && !isUnreleasedRecord(rec)) removed.push({ key, rec })
   }
 
   const renamed = []
@@ -326,6 +343,16 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
   for (const [key, newRec] of newByKey) {
     const oldRec = oldByKey.get(key)
     if (!oldRec) continue
+    const wasUnreleased = isUnreleasedRecord(oldRec)
+    const nowUnreleased = isUnreleasedRecord(newRec)
+    if (wasUnreleased && !nowUnreleased) {
+      added.push({ key, rec: newRec })
+      continue
+    }
+    if (nowUnreleased) {
+      if (!wasUnreleased) removed.push({ key, rec: oldRec })
+      continue
+    }
     pushChanged(key, oldRec, newRec)
   }
 
@@ -333,7 +360,15 @@ export function diffKeyedCollection(spec, oldData, newData, options = {}) {
   // field diff so the new UUID itself is not reported as a gameplay change.
   const renameOmit = new Set([spec.key])
   for (const r of renamed) {
-    if (r.oldRec && r.newRec) pushChanged(r.newKey, r.oldRec, r.newRec, renameOmit)
+    if (!r.oldRec || !r.newRec) continue
+    const wasUnreleased = isUnreleasedRecord(r.oldRec)
+    const nowUnreleased = isUnreleasedRecord(r.newRec)
+    if (wasUnreleased && !nowUnreleased) {
+      added.push({ key: r.newKey, rec: r.newRec })
+      continue
+    }
+    if (nowUnreleased) continue
+    pushChanged(r.newKey, r.oldRec, r.newRec, renameOmit)
   }
 
   if (!added.length && !removed.length && !renamed.length && !changed.length) return null
