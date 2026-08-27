@@ -184,6 +184,36 @@ func ParseLocalLocalization(channelDir string) map[string][]string {
 	return localMap
 }
 
+func isImportLogName(name string) bool {
+	lower := strings.ToLower(name)
+	return strings.HasSuffix(lower, ".log") || strings.Contains(lower, ".log.")
+}
+
+func listImportLogs(dir string, recurse bool) []string {
+	var out []string
+	if !recurse {
+		entries, err := os.ReadDir(dir)
+		if err != nil {
+			return out
+		}
+		for _, e := range entries {
+			if e.IsDir() || !isImportLogName(e.Name()) {
+				continue
+			}
+			out = append(out, filepath.Join(dir, e.Name()))
+		}
+		return out
+	}
+	_ = filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		if err != nil || d.IsDir() || !isImportLogName(d.Name()) {
+			return nil
+		}
+		out = append(out, path)
+		return nil
+	})
+	return out
+}
+
 func CollectLogFiles(logDirs []string, includeGameLog bool) []string {
 	var files []string
 	seen := map[string]struct{}{}
@@ -192,19 +222,15 @@ func CollectLogFiles(logDirs []string, includeGameLog bool) []string {
 		if err != nil || !fi.IsDir() {
 			continue
 		}
-		entries, err := os.ReadDir(d)
-		if err != nil {
-			continue
-		}
-		sort.Slice(entries, func(i, j int) bool { return entries[i].Name() < entries[j].Name() })
-		for _, e := range entries {
-			if e.IsDir() || !strings.HasSuffix(strings.ToLower(e.Name()), ".log") {
+		recurse := strings.EqualFold(filepath.Base(d), "logbackups")
+		candidates := listImportLogs(d, recurse)
+		sort.Slice(candidates, func(i, j int) bool {
+			return strings.ToLower(filepath.Base(candidates[i])) < strings.ToLower(filepath.Base(candidates[j]))
+		})
+		for _, p := range candidates {
+			if !includeGameLog && filepath.Base(p) == "Game.log" {
 				continue
 			}
-			if !includeGameLog && e.Name() == "Game.log" {
-				continue
-			}
-			p := filepath.Join(d, e.Name())
 			resolved, err := filepath.Abs(p)
 			if err != nil {
 				resolved = p

@@ -294,7 +294,7 @@ func main() {
 	watchFlag := flag.Bool("watch", false, "Watch Game.log (default on)")
 	noWatch := flag.Bool("no-watch", false, "Disable watch mode")
 	logDirFlag := flag.String("log-dir", "", "Scan a specific log directory")
-	fullHistoryFlag := flag.Bool("full-history-import", false, "One-time full history import")
+	fullHistoryFlag := flag.Bool("full-history-import", false, "One-time full history import (all logs, no version filter)")
 	configure := flag.Bool("configure", false, "Force configuration wizard")
 	flag.Parse()
 
@@ -305,10 +305,6 @@ func main() {
 
 	app := appdir.Dir()
 	envPath := filepath.Join(app, ".env")
-	envExisted := false
-	if _, err := os.Stat(envPath); err == nil {
-		envExisted = true
-	}
 	envVars := config.LoadEnvFile(envPath)
 
 	watchMode := true
@@ -423,7 +419,7 @@ func main() {
 		}
 
 		importAns, ok := prompt(reader, fmt.Sprintf(
-			"Import recent backup logs on first run (min version %s+ only)? (Y/N, Enter = Y): ", minGameVersion(),
+			"Import recent backup logs on first run (%s.x only)? (Y/N, Enter = Y): ", minGameVersion(),
 		))
 		if !ok {
 			fmt.Println("\nAborted.")
@@ -433,27 +429,19 @@ func main() {
 			importOldLogs = "false"
 		}
 
-		fullDefault := "Y"
-		if envExisted {
-			fullDefault = "N"
-		}
 		fmt.Println()
 		fmt.Printf(
-			"%sFull history import%s scans EVERY .log file (including older patches below %s and the current Game.log). "+
-				"Use this once to catch up BPs from large logbackups. It can take a long time.\n",
-			colors.Yellow, colors.Reset, minGameVersion(),
+			"%sFull history import%s scans EVERY log file (all patches, including the current Game.log). "+
+				"No version filter. Use this once to catch up BPs from large logbackups. It can take a long time.\n",
+			colors.Yellow, colors.Reset,
 		)
-		fullAns, ok := prompt(reader, fmt.Sprintf("Run one-time FULL history import now? (Y/N, Enter = %s): ", fullDefault))
+		fullAns, ok := prompt(reader, "Run one-time FULL history import now? (Y/N, Enter = Y): ")
 		if !ok {
 			fmt.Println("\nAborted.")
 			os.Exit(0)
 		}
 		switch {
-		case fullAns == "":
-			if !envExisted {
-				fullHistoryImport = "true"
-			}
-		case strings.EqualFold(fullAns, "y"):
+		case fullAns == "" || strings.EqualFold(fullAns, "y"):
 			fullHistoryImport = "true"
 		default:
 			fullHistoryImport = "false"
@@ -594,7 +582,7 @@ func main() {
 		} else if runRecent {
 			didBatch = true
 			runFolderImport(logDirs, client, lu, acquired, cachePath, *dryRun, false, false,
-				fmt.Sprintf("[First Run] Scanning backup logs (min version %s+)...", minGameVersion()))
+				fmt.Sprintf("[First Run] Scanning backup logs (%s.x only)...", minGameVersion()))
 			envVars["IMPORT_OLD_LOGS"] = "false"
 			_ = config.SaveEnvFile(envPath, envVars)
 			fmt.Printf("%s[First Run] Recent-log import complete. Disabling future auto-imports.%s\n\n", colors.Green, colors.Reset)
