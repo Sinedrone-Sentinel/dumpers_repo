@@ -10,11 +10,17 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync, unlinkSync, mk
 import { join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { config as loadDotenv } from 'dotenv'
-import { diffGameDataFiles, fmtValue } from './diffGameData.mjs'
+import { diffGameDataFiles } from './diffGameData.mjs'
 import { getAppliedSpellingCorrections } from './spellingCorrections.mjs'
+import {
+  buildDisplayNameResolver,
+  cleanDisplayLabel,
+  describeChangedFields,
+  shortVersion,
+} from './tickerLanguage.mjs'
 import aliasData from '../../src/data/mining-ore-aliases.json' with { type: 'json' }
 
-const MAX_SUMMARY_FIELDS = 4
+const MAX_SUMMARY_FIELDS = 3
 
 const MISSPELLING_HEADLINES = [
   (n, ver) =>
@@ -34,18 +40,10 @@ function actionVerb(action) {
   return action
 }
 
-function labelOf(specLabel, rec, key) {
+function labelOf(specLabel, rec, key, resolve) {
   const label = typeof specLabel === 'function' ? specLabel(rec) : null
-  return label && String(label).trim() ? String(label) : key
-}
-
-function fieldSummary(fields) {
-  const parts = fields.slice(0, MAX_SUMMARY_FIELDS).map((f) => {
-    return `${f.path}: ${fmtValue(f.old)} → ${fmtValue(f.new)}`
-  })
-  const more =
-    fields.length > MAX_SUMMARY_FIELDS ? ` (+${fields.length - MAX_SUMMARY_FIELDS} more)` : ''
-  return parts.join('; ') + more
+  const raw = label && String(label).trim() ? String(label) : key
+  return cleanDisplayLabel(raw, resolve) || String(key)
 }
 
 function readJsonSafe(path) {
@@ -103,7 +101,7 @@ function buildMisspellingsEntry(version, detectedAt) {
     version,
     category: 'Misspellings',
     action: 'corrected',
-    headline: pick(n, version),
+    headline: pick(n, shortVersion(version)),
     detectedAt,
     items: items.sort((a, b) => a.label.localeCompare(b.label)),
   }
@@ -112,6 +110,7 @@ function buildMisspellingsEntry(version, detectedAt) {
 export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
   const version = options.version || options.launcherVersion || 'unknown'
   const detectedAt = options.detectedAt || new Date().toISOString()
+  const resolve = options.resolve ?? buildDisplayNameResolver({ dataDir: options.dataDir })
 
   /** @type {Map<string, { category: string, action: string, items: object[] }>} */
   const buckets = new Map()
@@ -127,22 +126,26 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
     for (const a of col.added) {
       ensure(col.category, 'added').items.push({
         key: a.key,
-        label: labelOf(labelFn, a.rec, a.key),
+        label: labelOf(labelFn, a.rec, a.key, resolve),
         summary: null,
       })
     }
     for (const r of col.removed) {
       ensure(col.category, 'removed').items.push({
         key: r.key,
-        label: labelOf(labelFn, r.rec, r.key),
+        label: labelOf(labelFn, r.rec, r.key, resolve),
         summary: null,
       })
     }
     for (const c of col.changed) {
+      // Internal-only churn (localization keys, schema backfill) yields no phrase;
+      // drop the item instead of showing members something they cannot act on.
+      const summary = describeChangedFields(c.fields, resolve, { maxParts: MAX_SUMMARY_FIELDS })
+      if (!summary) continue
       ensure(col.category, 'changed').items.push({
         key: c.key,
-        label: labelOf(labelFn, c.rec, c.key),
-        summary: fieldSummary(c.fields),
+        label: labelOf(labelFn, c.rec, c.key, resolve),
+        summary,
       })
     }
   }
@@ -165,7 +168,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       version,
       category,
       action,
-      headline: `${n} ${category} ${verb} in ${version}`,
+      headline: `${n} ${category} ${verb} in ${shortVersion(version)}`,
       detectedAt,
       items: unique,
     })
@@ -276,6 +279,7 @@ export async function writeWhatsNewDigest(options = {}) {
   const freshEntries = buildWhatsNewEntriesFromDiff(diffResult, {
     version,
     detectedAt,
+    dataDir,
   })
 
   // Curated CIG/game typos (legacy StarStrings keys excluded).

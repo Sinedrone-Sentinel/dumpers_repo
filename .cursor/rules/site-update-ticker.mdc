@@ -75,6 +75,21 @@ Whenever a **3rd Party** entry is added/updated in `src/lib/thirdPartyServices.t
 3. Put portal vs Discord Accept detail in `items[]`.
 4. Wait for numbered approval before ingest.
 
+### Never post a solo "update" entry
+
+A game patch already produces **several** ticker entries from the parse digest
+(Blueprints / Missions / Components / Wikelo added-changed-removed). A standalone
+entry announcing the patch itself is redundant — **do not create one**.
+
+This covers:
+
+- "Updated for 4.10", "4.10 data is live", "Patch day refresh"
+- "BP Dumper updated for 4.10" / "New Dumper Apps build" tied to a patch
+- Any headline whose only content is that an update happened
+
+Post an entry only when there is a **specific new capability** members can use that
+the digests do not already convey.
+
 **Do not** propose (members do not care):
 
 - **SEO / discoverability** — crawlable catalogs, sitemap, prerender, meta/titles, robots, Search Console, JSON-LD, “so Google can find us”
@@ -119,6 +134,11 @@ Reply with numbers to send (e.g. `1, 2`), `all`, or `none`.
 
 ## Tone
 
+- **Display names only.** Never let an entity class, localization key, debug name,
+  UUID or raw JSON blob reach a headline or item (see `display-names-only.mdc`).
+  Script-generated digests must render through `scripts/lib/tickerLanguage.mjs`.
+- If a changed field cannot be phrased in plain language, leave it out entirely —
+  an item with nothing explainable should not appear at all.
 - Member voice (“You can…” / clear capability).
 - No migration numbers, RLS, or security-hole language.
 - Short title in the bar/list; longer explanation only in the modal items.
