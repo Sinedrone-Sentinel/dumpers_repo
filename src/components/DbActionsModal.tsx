@@ -46,7 +46,7 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 5,
     title: 'Audit + validate',
     description:
-      'Full battery: mining aliases, ore names, blueprint sanity, mission rewards, HPP/alias coverage (needs extract), mining math + mole strategy verifiers, DFP premium check, patch diff. Fix typos in parse-extracted-data.mjs or mining-ore-aliases.json as needed',
+      'Full battery: mining aliases, ore names, blueprint sanity, mission factions (never Unknown), mission rewards, HPP/alias coverage (needs extract), mining math + mole strategy verifiers, DFP premium check, patch diff. Fix typos in parse-extracted-data.mjs or mining-ore-aliases.json as needed',
     commands: ['npm run patch-audit'],
   },
   {

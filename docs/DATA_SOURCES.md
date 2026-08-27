@@ -112,6 +112,7 @@ Located in `/scripts/`:
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `fetch-shop-commodity-data.mjs` | Refresh UEX commodity buy/sell locations → `shop-commodity-index.json` (`npm run fetch-shop-data`) |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
+| `audit-blueprint-missions.mjs` | Fail if any mission faction is Unknown / unresolved; also system + title checks |
 | `verify-dfp-spotcheck.mjs` | Spot-check DFP engine output against catalog |
 | `audit-blueprint-names.mjs` | Dev utility for catalog name audits |
 
@@ -136,7 +137,8 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
      new extract: `rg -l -i "<name>" extracted-data/libs/foundry/records`
    - If a whole directory moved, update `EXPECTED_PATHS` in `scripts/parse-extracted-data.mjs`
 5. **Audit + validate:** `npm run patch-audit` — full battery: mining aliases, ore names, broad
-   locations, blueprint sanity, mission rewards, HPP/alias/coverage cross-checks against the raw
+   locations, blueprint sanity, **mission factions (must never be Unknown — resolve them)**,
+   mission rewards, HPP/alias/coverage cross-checks against the raw
    extract (skipped with a warning if `extracted-data/` is absent), mining math + crew strategy
    verifiers, and the patch diff
    - New CIG misspellings surface here — add corrections to the typo handlers in
