@@ -1,0 +1,33 @@
+---
+description: Mission factions must never be Unknown — resolve them on every patch
+alwaysApply: true
+---
+
+# Never ship Unknown mission factions
+
+A contract whose `faction` (or `factionKey`) is `Unknown` / `unknown` is a parse miss,
+not a real in-game faction. Members see it in the Factions breadcrumb (e.g. Recco
+Battaglia's People's Alliance jobs landing under **Unknown**).
+
+## Hard rule
+
+- **Never** leave `faction: "Unknown"` or `factionKey: "unknown"` on a mission.
+- If the audit finds Unknown, **resolve it** before shipping. Do not hide the row,
+  rename it to a placeholder, or treat it as a generic board.
+
+## How to resolve (in order)
+
+1. **Reputation the contract actually awards** — `contractResults` often bind
+   `factionReputation` even when the generator does not. `extractContractRepEffects`
+   already has the display name (this is how Recco Battaglia was recovered in 4.10).
+2. **Generator / debugName / pool path** — add a `FACTION_NAME_OVERRIDES` entry in
+   `scripts/parse-extracted-data.mjs` (and `factionKeyPatterns` if the key is missing).
+3. **Localization** — `factionreputation_*.json` `displayName` (`@mg_...` keys).
+   Use the contractor display name members see (e.g. **Recco Battaglia**, not
+   `battaglia` or the org slogan).
+
+## Patch-day gate
+
+`npm run patch-audit` runs `scripts/audit-blueprint-missions.mjs`, which **fails**
+if any contract in `game-blueprint-missions.json` still has an unresolved faction.
+Fix the parser and re-parse; do not hand-edit the JSON as the lasting fix.

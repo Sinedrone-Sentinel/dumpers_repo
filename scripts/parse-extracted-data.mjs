@@ -231,6 +231,8 @@ const FACTION_NAME_OVERRIDES = {
   collectorwikelo: 'Wikelo Emporium',
   highpointwildernessspecialists: 'Highpoint Wilderness Specialists',
   highpoint: 'Highpoint Wilderness Specialists',
+  battaglia: 'Recco Battaglia',
+  reccobattaglia: 'Recco Battaglia',
 }
 
 function isUnresolvedDisplayName(name) {
@@ -239,9 +241,15 @@ function isUnresolvedDisplayName(name) {
   return (
     trimmed.length === 0 ||
     trimmed.startsWith('@') ||
+    /^unknown$/i.test(trimmed) ||
     trimmed.includes('PLACEHOLDER') ||
     trimmed.includes('UNINITIALIZED')
   )
+}
+
+function isUnresolvedFactionKey(factionKey) {
+  const key = String(factionKey || '').trim().toLowerCase()
+  return !key || key === 'unknown'
 }
 
 function humanizeFactionKey(factionKey) {
@@ -1519,6 +1527,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
     thecollector: 'wikelo',
     wikelo: 'wikelo',
     collectorwikelo: 'wikelo',
+    battaglia: 'battaglia',
+    reccobattaglia: 'battaglia',
   }
   
   function inferFactionFromPath(filePath, debugName) {
@@ -1598,6 +1608,14 @@ function parseContractGenerators(localization, reputationCaches = {}) {
       // Orison Relief fabrication orders — Crusader-run relief effort.
       factionKey = 'crusader_industries'
       factionName = 'Crusader Industries'
+    } else if (
+      (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) &&
+      (contractSignals.includes('battaglia') || contractSignals.includes('reccobattaglia'))
+    ) {
+      // Recco Battaglia / People's Alliance mission-provider (Nyx). Generator has no
+      // factionReputation binding; reputation is on the contract results instead.
+      factionKey = 'battaglia'
+      factionName = factionNames.factionreputation_battaglia || 'Recco Battaglia'
     } else if (factionName === 'Unknown' || factionName === factionKey || isUnresolvedDisplayName(factionName)) {
       const inferredName = inferFactionFromPath(generatorFile, `${generatorDebugName || ''} ${contractDebugName || ''}`)
       if (inferredName) {
@@ -1757,6 +1775,20 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           factionNames,
           factionKey
         )
+
+        // Generator often omits factionReputation for mission-provider NPCs.
+        // The reputation the contract actually awards is the real contractor.
+        if (
+          (isUnresolvedFactionKey(factionKey) || isUnresolvedDisplayName(factionName)) &&
+          repEffects.length
+        ) {
+          const primary =
+            repEffects.find((e) => !isUnresolvedFactionKey(e.factionKey)) || repEffects[0]
+          if (primary && !isUnresolvedFactionKey(primary.factionKey)) {
+            factionKey = primary.factionKey
+            if (!isUnresolvedDisplayName(primary.faction)) factionName = primary.faction
+          }
+        }
         
         // Extract standing requirements (direct fields or ContractPrerequisite_Reputation)
         const repPrereq = extractContractReputationPrerequisite(contract)
@@ -1958,6 +1990,20 @@ function parseContractGenerators(localization, reputationCaches = {}) {
   console.log(`  Found ${contractsWithBlueprints} contracts with blueprint rewards`)
   console.log(`  Indexed ${Object.keys(missionsByPool).length} unique blueprint pools`)
   console.log(`  Resolved prerequisite mission chains for ${prereqResolved} of ${prereqPending.length} gated contract(s)`)
+
+  const unresolvedFaction = contracts.filter(
+    (c) => isUnresolvedDisplayName(c.faction) || isUnresolvedFactionKey(c.factionKey)
+  )
+  if (unresolvedFaction.length) {
+    for (const c of unresolvedFaction.slice(0, 20)) {
+      validationIssues.push(
+        `Unresolved mission faction [${c.debugName || c.id}] "${c.displayTitle || c.title}" → faction=${c.faction} key=${c.factionKey}`
+      )
+    }
+    if (unresolvedFaction.length > 20) {
+      validationIssues.push(`... and ${unresolvedFaction.length - 20} more unresolved mission factions`)
+    }
+  }
 
   return { contracts, missionsByPool, poolsByBlueprint, factionNames, standingDefs, repRewardAmounts }
 }

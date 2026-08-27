@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Audit blueprint contract missions: system tags, display titles, browse coverage.
- * Exit 1 when contracts with blueprint pools have suspicious Unknown systems or bad titles.
+ * Audit blueprint contract missions: factions, system tags, display titles, browse coverage.
+ * Exit 1 when any contract has an unresolved (Unknown) faction, or when contracts with
+ * blueprint pools have suspicious Unknown systems or bad titles.
  */
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
@@ -76,6 +77,14 @@ function resolveContractIsLawful(contract) {
   return true
 }
 
+function isUnresolvedFaction(contract) {
+  const faction = String(contract.faction || '').trim()
+  const key = String(contract.factionKey || '').trim().toLowerCase()
+  if (!faction || /^unknown$/i.test(faction) || faction.startsWith('@')) return true
+  if (!key || key === 'unknown') return true
+  return false
+}
+
 function isBrowseEligible(contract) {
   const title = contract.displayTitle || contract.title || ''
   if (!title.trim()) return false
@@ -88,6 +97,12 @@ const issues = []
 const factionSummary = {}
 
 for (const contract of contracts) {
+  if (isUnresolvedFaction(contract)) {
+    issues.push(
+      `Unknown faction [${contract.debugName}] "${contract.displayTitle || contract.title}" → faction=${contract.faction} key=${contract.factionKey}`
+    )
+  }
+
   if (!contractHasBlueprints(contract)) continue
 
   const faction = contract.faction || 'Unknown'
