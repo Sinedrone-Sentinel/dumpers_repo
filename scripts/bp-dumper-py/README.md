@@ -104,10 +104,10 @@ python dumper.py --watch --key "dr_your_api_key"
 # One-shot import from a specific log file
 python dumper.py /path/to/Game.log --key "dr_your_api_key"
 
-# One-time full history catch-up (ALL .log files, skips min game-version filter)
+# One-time full history catch-up (ALL log files, no version filter)
 python dumper.py --full-history-import --key "dr_your_api_key"
 ```
 
-On first run (no `.env` yet), the wizard defaults **full history import** to **Y**. After it finishes, `FULL_HISTORY_IMPORT` is set to `false` so later launches only watch. Re-run catch-up with `--full-history-import` or `--configure`.
+On first run and `--configure`, the wizard defaults **full history import** to **Y** (Enter). That scan has no version filter. After it finishes, `FULL_HISTORY_IMPORT` is set to `false` so later launches only watch. Re-run catch-up with `--full-history-import` or `--configure`. Recent backup import is current patch only (for example `4.10.x`).
 
 Releases and versioning: [`../bp-dumper/README.md`](../bp-dumper/README.md).
