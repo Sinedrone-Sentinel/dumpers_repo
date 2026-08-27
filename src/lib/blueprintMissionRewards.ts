@@ -347,22 +347,42 @@ export function getContractsForMissionLabel(missionLabel: string): ContractEntry
 
 const contractsById = new Map<string, ContractEntry>()
 const contractsByDebugName = new Map<string, ContractEntry>()
+const contractsByTitle = new Map<string, ContractEntry | null>()
 for (const contract of contracts) {
   if (contract.id) contractsById.set(contract.id.toLowerCase(), contract)
   if (contract.debugName) contractsByDebugName.set(contract.debugName.toLowerCase(), contract)
+  for (const title of [contract.displayTitle, contract.title]) {
+    const key = _normalizeMissionTitle(title || '').toLowerCase()
+    if (!key) continue
+    const existing = contractsByTitle.get(key)
+    if (existing && existing.id !== contract.id) {
+      contractsByTitle.set(key, null)
+    } else if (!existing) {
+      contractsByTitle.set(key, contract)
+    }
+  }
 }
 
-/** Resolve a live dumper mission to catalog contract data (UUID or debugName). */
+/** Resolve a live dumper mission to catalog contract data (UUID, debugName, or accept title). */
 export function findContractForLiveMission(
   contractDefinitionId: string | null | undefined,
   debugName: string | null | undefined
 ): ContractEntry | null {
   const idKey = contractDefinitionId?.trim().toLowerCase()
   if (idKey) {
-    return contractsById.get(idKey) ?? contractsByDebugName.get(idKey) ?? null
+    const byId = contractsById.get(idKey) ?? contractsByDebugName.get(idKey)
+    if (byId) return byId
   }
   const debugKey = debugName?.trim().toLowerCase()
-  if (debugKey) return contractsByDebugName.get(debugKey) ?? null
+  if (debugKey) {
+    const byDebug = contractsByDebugName.get(debugKey)
+    if (byDebug) return byDebug
+  }
+  const titleKey = _normalizeMissionTitle(debugName || '').toLowerCase()
+  if (titleKey) {
+    const byTitle = contractsByTitle.get(titleKey)
+    if (byTitle) return byTitle
+  }
   return null
 }
 

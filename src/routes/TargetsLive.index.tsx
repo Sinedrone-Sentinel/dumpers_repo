@@ -125,11 +125,13 @@ export default function TargetsLiveRoute() {
                   </h2>
                 </header>
                 <ul className="flex-1 divide-y divide-slate-800/80 overflow-y-auto max-h-[480px]">
-                  {remaining.length === 0 ? (
+                      {remaining.length === 0 ? (
                     <li className="px-4 py-8 text-sm text-slate-500 text-center">
                       {missions.length === 0
                         ? 'Pool blueprints from active missions appear here.'
-                        : 'All pool blueprints from active missions are already acquired.'}
+                        : missions.some((mission) => mission.hasBlueprintPool)
+                          ? 'All pool blueprints from active missions are already acquired.'
+                          : 'None of these missions drop pool blueprints.'}
                     </li>
                   ) : (
                     remaining.map((bp) => (

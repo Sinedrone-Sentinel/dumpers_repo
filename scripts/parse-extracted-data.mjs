@@ -58,6 +58,10 @@ import {
   REWARD_POOL_TRACKING_EXCLUSIONS,
   REDWIND_BRIDGE,
 } from './lib/orphanPoolBridges.mjs'
+import {
+  buildSiblingPoolIndexes,
+  inheritSiblingBlueprintPools,
+} from './lib/contractBlueprintPools.mjs'
 import { buildReputationStandingCache } from './lib/reputationCache.mjs'
 import {
   buildContractRepRewardAmounts,
@@ -1680,6 +1684,8 @@ function parseContractGenerators(localization, reputationCaches = {}) {
         }
       }
       
+      const siblingPoolIndexes = buildSiblingPoolIndexes(generatorContracts)
+
       for (const contract of generatorContracts) {
         totalContracts++
         
@@ -1725,27 +1731,10 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           description = String(description).replace(/\\n/g, '\n').trim()
         }
         
-        // Extract blueprint pools from contractResults
-        const blueprintPools = []
-        if (contract.contractResults?.contractResults) {
-          for (const result of contract.contractResults.contractResults) {
-            if (!result) continue
-            if (result._Type_ === 'BlueprintRewards' && result.blueprintPool) {
-              const poolMatch = result.blueprintPool.match(/([^/]+)\.json$/i)
-              if (poolMatch) {
-                const poolKey = poolMatch[1]
-                  .replace(/bp_rewards_/i, '')
-                  .replace(/bp_missionreward_/i, '')
-                  .toLowerCase()
-                blueprintPools.push({
-                  key: poolKey,
-                  chance: result.chance || 1.0,
-                  path: result.blueprintPool
-                })
-              }
-            }
-          }
-        }
+        // Extract blueprint pools from contractResults. Empty-result variants of
+        // the same activity inherit the sibling's pool (Orison Platforms Under
+        // Attack → Retake Platforms From Nine Tails / superheavy).
+        const blueprintPools = inheritSiblingBlueprintPools(contract, siblingPoolIndexes)
 
         const resolvedFaction = resolveContractFaction({
           generatorFactionKey: factionKey,
