@@ -1,0 +1,47 @@
+---
+description: Never show internal identifiers to members — always resolve to display names
+alwaysApply: true
+---
+
+# Show display names, never internal names
+
+Anything a member can read — ticker entries, UI labels, modals, Discord messages,
+tooltips, error text, exported guides — must use the **in-game display name**.
+Internal identifiers are for code and logs only.
+
+## Never render to a member
+
+| Internal form | Example | Show instead |
+|---|---|---|
+| Entity class | `cds_combat_heavy_helmet_01_02_02` | `ADP-mk4 Helmet SecondWind` |
+| Internal name | `behr_rifle_ballistic_01` | `P4-AR Rifle` |
+| Localization key | `@item_Namebehr_rifle_ballistic_03_mr01` | `Behr Rifle Ballistic 03 MR01` |
+| Debug name | `FoxwellEnforcement_Nyx_DefendShipNamed_M` | `Foxwell Enforcement Defend Ship Named M` |
+| Pool key | `foxwellenforcement_ambush` | the mission's display title |
+| UUID / contract id | `41231c57-f186-…` | the record's title |
+| CIG placeholder | `~mission(Ship) Needs Assistance` | `Needs Assistance` |
+| Raw JSON blob | `{"entityClass":"…","amount":1}` | `Wikelo Favor x50` |
+
+## How to resolve
+
+`scripts/lib/tickerLanguage.mjs` is the shared helper for script-side rendering:
+
+- `buildDisplayNameResolver({ dataDir })` — entity class / internal name → display
+  name, built from Wikelo trades, blueprints, components, weapons, mining and ordnance
+- `cleanDisplayLabel(label, resolve)` — strips `@` keys, debug names and CIG placeholders
+- `humanizeToken()` / `humanizeStatName()` — last-resort fallback for unknown ids
+- `cleanGameText()` — removes `~mission(...)` style placeholders
+
+In app code, prefer the display field already on the record (`displayName`,
+`blueprintName`, `title`) and fall back to a resolver — never to the raw key.
+
+## When no display name exists
+
+CIG ships unlocalized items. Humanize the token (`behr_rifle_ballistic_03_mr01` →
+`Behr Rifle Ballistic 03 MR01`); do **not** print the raw key or `@`-prefixed
+localization key.
+
+## Raw values are worse than no value
+
+If a field cannot be phrased in plain language, **omit it**. Never dump JSON,
+stat blobs, or internal field paths into member-facing text as filler.

@@ -121,19 +121,24 @@ export function formatMissionTickerLabel(r) {
   return parts.join(' · ')
 }
 
-/** Strip system/rank prefixes from debugName → short loadout/variant hint. */
+/**
+ * Strip system/rank prefixes from debugName → short loadout/variant hint.
+ * The result is member-facing, so camelCase internals are split into words and
+ * the system name is dropped (the label already carries it).
+ */
 function missionVariantHint(debugName, system) {
   if (!debugName) return null
   let s = String(debugName)
   s = s.replace(/^Refueling_/i, '')
+  s = s.replace(/_Rank\d+$/i, '')
+  s = s.replace(/_/g, ' ')
   if (system) {
     const sys = String(system).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    s = s.replace(new RegExp(`^${sys}_?`, 'i'), '')
-    // Multi-system tokens like PyroNyx
-    s = s.replace(new RegExp(`^[A-Za-z]*${sys}[A-Za-z]*_?`, 'i'), '')
+    s = s.replace(new RegExp(`\\b${sys}\\b`, 'ig'), ' ')
   }
-  s = s.replace(/_Rank\d+$/i, '')
-  s = s.replace(/_/g, ' ').replace(/\s+/g, ' ').trim()
+  s = s.replace(/([a-z])([A-Z])/g, '$1 $2')
+  s = s.replace(/([A-Za-z])(\d)/g, '$1 $2')
+  s = s.replace(/\s+/g, ' ').trim()
   if (!s || /^rank\s*\d+$/i.test(s)) return null
   if (s.length > 48) s = `${s.slice(0, 45)}…`
   return s
