@@ -1,0 +1,32 @@
+---
+description: Patch-day ticker -- NFR/unimplemented never added; first live ship is added not changed
+alwaysApply: true
+---
+
+# NFR and unimplemented items on the Updates ticker
+
+Game-data parse still **keeps** NFR / unwired records in JSON (UI shows the NFR tag). The What's New ticker is different.
+
+## Hard rules
+
+1. **NFR must never appear as added.** A new `notForRelease: true` record (Wikelo, mission, or any keyed collection) is silent on the ticker. Do not list it under Blueprints/Missions/Wikelo added.
+2. **Unimplemented last patch that ships this patch is added, not changed.** Same id/key that was NFR or had a null/empty `entityClass` last parse, and is live now, goes in **added**. Example: Wikelo **Heavy and Bright** was NFR in 4.9, live in 4.10 with super-heavy armour -- that is added, not "3 Wikelo changed".
+3. **Still-unreleased churn is silent.** Tweaking costs/rewards on an NFR row, or flipping only the NFR flag without going live, is not a member-facing change.
+4. **Live pulled back to NFR is removed**, not changed.
+
+"Unreleased" means `notForRelease === true` **or** a record that has an `entityClass` field which is still null/empty (WIP blueprint not wired to an SCItem). Parse still stores those rows.
+
+## Where this is enforced
+
+- `scripts/lib/diffGameData.mjs` -- `isUnreleasedRecord()` + `diffKeyedCollection()`
+- `scripts/lib/writeWhatsNewDigest.mjs` -- digest skips any leftover NFR rows
+- `npm test` unit suite covers NFR to live as added
+
+Do **not** hand-edit ticker JSON to paper over a miss. Fix the classifier, then re-parse / re-run the digest.
+
+## Patch-day check
+
+After extract + parse, `npm run diff-game-data` (or the digest at the end of parse). Confirm:
+
+- No NFR titles in **ADDED**
+- Trades/items that just left NFR (or just gained `entityClass`) are in **ADDED**, not **CHANGED**

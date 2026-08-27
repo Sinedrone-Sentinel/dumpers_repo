@@ -189,4 +189,53 @@ check(orisonRow?.remainingCount === 3, 'Orison live row lists 3 unacquired bluep
 check(callRow?.hasBlueprintPool === false, 'A Call To Arms has no blueprint pool')
 check(view.remaining.length === 3, 'remaining list is the 3 Orison pool blueprints')
 
+const diffMod = await import(pathToFileURL(path.join(root, 'scripts/lib/diffGameData.mjs')).href)
+const digestMod = await import(pathToFileURL(path.join(root, 'scripts/lib/writeWhatsNewDigest.mjs')).href)
+const wikeloSpec = { path: 'trades', key: 'id', category: 'Wikelo', label: (r) => r.title }
+const nfrOld = {
+  trades: [
+    { id: 'heavy', title: 'Heavy and Bright', notForRelease: true, rewards: [] },
+    { id: 'gun', title: 'Too Much Gun', notForRelease: true },
+    { id: 'nfr-new-stay', title: 'Still NFR', notForRelease: true },
+  ],
+}
+const nfrNew = {
+  trades: [
+    { id: 'heavy', title: 'Heavy and Bright', notForRelease: false, rewards: [{ name: 'BUL-H4 Helmet' }] },
+    { id: 'gun', title: 'Too Much Gun', notForRelease: false },
+    { id: 'nfr-new-stay', title: 'Still NFR', notForRelease: true, rewards: [{ name: 'placeholder' }] },
+    { id: 'brand-nfr', title: 'Brand new NFR', notForRelease: true },
+    { id: 'brand-live', title: 'Brand new live', notForRelease: false },
+  ],
+}
+const nfrDiff = diffMod.diffKeyedCollection(wikeloSpec, nfrOld, nfrNew)
+check(
+  nfrDiff.added.some((a) => a.rec.title === 'Heavy and Bright') &&
+    nfrDiff.added.some((a) => a.rec.title === 'Too Much Gun') &&
+    nfrDiff.added.some((a) => a.rec.title === 'Brand new live'),
+  'NFR last patch that ships this patch is added; new live is added'
+)
+check(
+  !nfrDiff.added.some((a) => a.rec.notForRelease === true) &&
+    !nfrDiff.changed?.some((c) => c.rec.title === 'Heavy and Bright') &&
+    !nfrDiff.changed?.some((c) => c.rec.title === 'Still NFR'),
+  'NFR never added; released-from-NFR and still-NFR are not changed'
+)
+const bpSpec = { path: 'blueprints', key: 'internalName', category: 'Blueprints', label: (r) => r.blueprintName }
+const bpDiff = diffMod.diffKeyedCollection(
+  bpSpec,
+  { blueprints: [{ internalName: 'wip', blueprintName: 'WIP Cooler', entityClass: null }] },
+  { blueprints: [{ internalName: 'wip', blueprintName: 'WIP Cooler', entityClass: 'cool_s04' }] }
+)
+check(bpDiff.added.some((a) => a.key === 'wip') && !(bpDiff.changed || []).length, 'null entityClass then wired is added')
+const nfrEntries = digestMod.buildWhatsNewEntriesFromDiff(
+  { collections: [nfrDiff] },
+  { resolve: (key) => key }
+)
+const addedWikelo = nfrEntries.find((e) => e.category === 'Wikelo' && e.action === 'added')
+check(
+  addedWikelo?.items.every((i) => i.label !== 'Brand new NFR' && i.label !== 'Still NFR'),
+  'digest omits NFR from added'
+)
+
 console.log(`Unit tests: ${pass} passed`)
