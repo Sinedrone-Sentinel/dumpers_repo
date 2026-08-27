@@ -1192,13 +1192,31 @@ def resolve_sc_channel_dir(args, env_vars: dict) -> Path | None:
     return None
 
 
+def is_import_log_file(path: Path) -> bool:
+    """True for Game.log, *.log, and rotated names like Game.log.1."""
+    if not path.is_file():
+        return False
+    name = path.name.lower()
+    return name.endswith(".log") or ".log." in name
+
+
+def _iter_import_log_paths(directory: Path) -> list[Path]:
+    """Top-level logs, plus recursive scan when the folder is logbackups."""
+    try:
+        if directory.name.lower() == "logbackups":
+            return [p for p in directory.rglob("*") if is_import_log_file(p)]
+        return [p for p in directory.iterdir() if is_import_log_file(p)]
+    except OSError:
+        return []
+
+
 def collect_log_files_for_import(log_dirs: list[Path], *, include_game_log: bool) -> list[Path]:
     files: list[Path] = []
     seen: set[Path] = set()
     for d in log_dirs:
         if not d.is_dir():
             continue
-        for p in sorted(d.glob("*.log")):
+        for p in sorted(_iter_import_log_paths(d), key=lambda x: x.name.lower()):
             if not include_game_log and p.name == "Game.log":
                 continue
             try:
@@ -2105,8 +2123,8 @@ def main():
         "--full-history-import",
         action="store_true",
         help=(
-            "One-time catch-up: scan ALL .log files (including Game.log and older patches below "
-            f"min version {MIN_GAME_VERSION}), import every blueprint award found, then disable itself."
+            "One-time catch-up: scan ALL log files (including Game.log and older patches; "
+            "no version filter), import every blueprint award found, then disable itself."
         ),
     )
     parser.add_argument(
@@ -2119,7 +2137,6 @@ def main():
 
     # Load configuration from .env file
     env_path = _app_dir() / ".env"
-    env_existed_before_wizard = env_path.is_file()
     env_vars = load_env_file(env_path)
 
     # Resolve watch mode: default on; --no-watch or WATCH_MODE=false disables
@@ -2232,7 +2249,7 @@ def main():
 
         try:
             user_import_old = input(
-                f"Import recent backup logs on first run (min version {MIN_GAME_VERSION}+ only)? (Y/N, Enter = Y): "
+                f"Import recent backup logs on first run ({MIN_GAME_VERSION}.x only)? (Y/N, Enter = Y): "
             ).strip().lower()
         except (KeyboardInterrupt, EOFError):
             print("\nAborted.")
@@ -2242,26 +2259,21 @@ def main():
         if user_import_old == "n":
             import_old_logs = "false"
 
-        # First launch (no .env yet): default Y so new users catch up from logbackups.
-        # Re-configure with an existing .env: default N (already ran or opted out).
-        full_history_enter_default = "Y" if not env_existed_before_wizard else "N"
         try:
             print()
             print(
-                f"{Colors.YELLOW}Full history import{Colors.RESET} scans EVERY .log file "
-                f"(including older patches below {MIN_GAME_VERSION} and the current Game.log). "
+                f"{Colors.YELLOW}Full history import{Colors.RESET} scans EVERY log file "
+                "(all patches, including the current Game.log). No version filter. "
                 "Use this once to catch up BPs from large logbackups. It can take a long time."
             )
             user_full_history = input(
-                f"Run one-time FULL history import now? (Y/N, Enter = {full_history_enter_default}): "
+                "Run one-time FULL history import now? (Y/N, Enter = Y): "
             ).strip().lower()
         except (KeyboardInterrupt, EOFError):
             print("\nAborted.")
             sys.exit(0)
 
-        if user_full_history == "":
-            full_history_import = "true" if not env_existed_before_wizard else "false"
-        elif user_full_history == "y":
+        if user_full_history == "" or user_full_history == "y":
             full_history_import = "true"
         else:
             full_history_import = "false"
@@ -2417,7 +2429,7 @@ def main():
                 include_game_log=False,
                 skip_version_check=False,
                 banner=(
-                    f"[First Run] Scanning backup logs (min version {MIN_GAME_VERSION}+)..."
+                    f"[First Run] Scanning backup logs ({MIN_GAME_VERSION}.x only)..."
                 ),
             )
             env_vars["IMPORT_OLD_LOGS"] = "false"
@@ -2498,10 +2510,7 @@ def main():
                     print(f"{Colors.RED}Error parsing JSON: {e}{Colors.RESET}", file=sys.stderr)
                     sys.exit(1)
             else:
-                # Direct single log file parsing (e.g., Game.log)
-                if not is_log_version_allowed(args.file_path, MIN_GAME_VERSION):
-                    print(f"Skipping log file {args.file_path.name} (game version is below minimum {MIN_GAME_VERSION})")
-                    sys.exit(0)
+                # Direct single log file parsing (e.g., Game.log) — no recent-import version filter
                 print(f"Scanning single log file: {args.file_path.name}...")
                 channel_dir = args.file_path.parent
                 local_loc_map = parse_local_localization(channel_dir)
@@ -2513,10 +2522,10 @@ def main():
                 unique_blueprints = coalesce_discovered_blueprints(all_bps)
                 source_name = args.file_path.name
         elif args.file_path.is_dir():
-            # Direct directory scan (e.g. logbackups folder)
-            log_files = list(args.file_path.glob("*.log"))
+            # Direct directory scan (e.g. logbackups folder) — backlog read, no version filter
+            log_files = collect_log_files_for_import([args.file_path], include_game_log=True)
             if not log_files:
-                print(f"{Colors.RED}Error: No .log files found in directory: {args.file_path}{Colors.RESET}", file=sys.stderr)
+                print(f"{Colors.RED}Error: No log files found in directory: {args.file_path}{Colors.RESET}", file=sys.stderr)
                 sys.exit(1)
 
             # Merge local translations if any
@@ -2527,9 +2536,9 @@ def main():
                 register_custom_translations(local_loc_map)
                 print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
 
-            print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name} (Multithreaded)...")
+            print(f"Scanning {len(log_files)} log file(s) in {args.file_path.name} (Multithreaded, version filter OFF)...")
             all_bps: list[tuple[str, str | None]] = []
-            work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
+            work_items = [(i, len(log_files), path, True) for i, path in enumerate(log_files, 1)]
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 for res in executor.map(process_log_file, work_items):
                     all_bps.extend(res)
@@ -2569,28 +2578,26 @@ def main():
         if not log_dirs or not any(d.is_dir() for d in log_dirs):
             _exit_star_citizen_not_detected()
 
-        # Collect log files
-        log_files = []
+        # Collect log files (backlog read — no recent-import version filter)
+        log_files = collect_log_files_for_import(log_dirs, include_game_log=True)
         local_loaded = False
         for d in log_dirs:
-            if d.is_dir():
-                log_files.extend(d.glob("*.log"))
-                if not local_loaded:
-                    local_loc_map = parse_local_localization(d)
-                    if not local_loc_map:
-                        local_loc_map = parse_local_localization(d.parent)
-                    if local_loc_map:
-                        register_custom_translations(local_loc_map)
-                        print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
-                        local_loaded = True
+            if d.is_dir() and not local_loaded:
+                local_loc_map = parse_local_localization(d)
+                if not local_loc_map:
+                    local_loc_map = parse_local_localization(d.parent)
+                if local_loc_map:
+                    register_custom_translations(local_loc_map)
+                    print(f"{Colors.GREEN}Loaded {len(local_loc_map)} custom translations from local global.ini (StarStrings/localization mod active){Colors.RESET}")
+                    local_loaded = True
         
         if not log_files:
             print(f"{Colors.RED}Error: No log files found in detected directories: {[str(d) for d in log_dirs]}{Colors.RESET}", file=sys.stderr)
             sys.exit(1)
 
-        print(f"Scanning {len(log_files)} log file(s) (Multithreaded)...")
+        print(f"Scanning {len(log_files)} log file(s) (Multithreaded, version filter OFF)...")
         all_bps: list[tuple[str, str | None]] = []
-        work_items = [(i, len(log_files), path) for i, path in enumerate(log_files, 1)]
+        work_items = [(i, len(log_files), path, True) for i, path in enumerate(log_files, 1)]
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for res in executor.map(process_log_file, work_items):
                 all_bps.extend(res)

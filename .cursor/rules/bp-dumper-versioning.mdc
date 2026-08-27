@@ -44,9 +44,12 @@ Commit dumper changes with a Conventional Commit **scoped to `dumper`**:
 ## Every game patch cuts a dumper release
 
 Ship a new dumper build on **every** game patch, even when no blueprints changed.
-`MIN_GAME_VERSION` gates which logs are skipped after the initial full dump, so a
-stale build keeps rescanning the previous patch's logs.
 
+`MIN_GAME_VERSION` is the **recent-import** floor only (`IMPORT_OLD_LOGS` / first-run backup prompt). Patch-day bake sets it to current **major.minor** (e.g. `4.10`) so that prompt accepts **4.10.x** logs and skips older patches. It does **not** gate live watch, full history, or one-shot directory scans.
+
+- Live watch tails `Game.log` with no min-version check.
+- Full history (`FULL_HISTORY_IMPORT` / `--full-history-import`) always scans with the version filter **off**. Wizard Enter default is always **Y** (first launch and `--configure`); after it runs, the flag is written `false` so later launches do not rescan.
+- One-shot / `--no-watch` directory scans of logbackups are backlog reads — no recent-import filter.
 - The patch-day PR must include a **`dumper`-scoped** commit (e.g.
   `fix(dumper): rebuild for 4.10`). Data-only commits cut nothing.
 - `release-dumper.yml` watches `src/data/game-build-version.json` and

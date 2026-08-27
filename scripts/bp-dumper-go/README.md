@@ -38,4 +38,5 @@ Do **not** UPX-pack or re-wrap the exe.
 ## Member setup notes
 
 - Leave the LIVE path blank in the wizard to **auto-detect** Star Citizen (drive search for LIVE / Game.log), or paste a path to override.
+- Full history import defaults to **Y** (Enter) on first run and `--configure`. It scans every log with no version filter, then disables itself. Recent backup import is current patch only (e.g. `4.10.x`).
 - Updates are **manual**: download a new `DumperApps.exe` from GitHub Releases when prompted (HTTP 426). No auto-download/self-replace.

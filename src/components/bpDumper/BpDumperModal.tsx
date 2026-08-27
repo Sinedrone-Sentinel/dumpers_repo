@@ -62,8 +62,9 @@ function SetupHowTo() {
                 it when asked.
               </li>
               <li>
-                On first run, answer <strong className="text-slate-300">Y</strong> to full history
-                import so old log files are scanned.
+                On first run (and when you re-run configure), answer
+                <strong className="text-slate-300">Y</strong> or press Enter on full history
+                import so every old log is scanned. Recent backups only cover the current patch.
               </li>
               <li>Leave the window running while you play.</li>
             </SetupStepList>
@@ -120,8 +121,8 @@ function SetupHowTo() {
               <li>
                 Copy your <strong className="text-slate-300">API key</strong>, then run{' '}
                 <span className="font-mono text-slate-300">python dumper.py --watch</span>. Paste the
-                key when asked. Answer <strong className="text-slate-300">Y</strong> to full history
-                import on first run.
+                key when asked. Answer <strong className="text-slate-300">Y</strong> (or Enter) to
+                full history import so every old log is scanned.
               </li>
               <li>
                 Windows shortcut after steps 1–3: double-click{' '}
