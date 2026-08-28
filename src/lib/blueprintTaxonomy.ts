@@ -47,9 +47,13 @@ export function detectArmorSlotFromName(name: string, displayName = ''): string 
 }
 
 /**
- * Combat-clothing garment types — armored apparel (Bellator, GYS, etc.) that is worn
- * like clothing rather than the four combat-armor plate slots. These get a dedicated
- * garment tag instead of the Core/Legs slot chip.
+ * Combat-clothing garment types — armored apparel worn like clothing (shirt/jacket/
+ * pants/shoes/gloves) instead of combat-armor plate. These get a garment tag instead
+ * of the Core/Legs slot chip.
+ *
+ * Filename tokens are not enough: Carnifex is `gys_jacket_` / `gys_pants_` but the
+ * parse already sets armorWeight + armorSlot (Medium Core / Medium Legs). If
+ * armorWeight is set, treat it as plate. Clothing rows have no armorWeight.
  */
 export const COMBAT_CLOTHING_GARMENT_OPTIONS = ['shirt', 'jacket', 'pants', 'shoes', 'gloves'] as const
 
@@ -67,10 +71,11 @@ export function detectGarmentTypeFromName(name: string): string | null {
 
 /**
  * Combat-clothing garment for an FPS armour blueprint, or null for regular combat-armor
- * plate. Detected from the internal name (garment tokens only appear on clothing makers).
+ * plate.
  */
 export function getCombatClothingGarment(bp: BlueprintTaxonomyInput): string | null {
   if (bp.categoryName && bp.categoryName !== 'FPSArmours') return null
+  if (bp.armorWeight) return null
   return detectGarmentTypeFromName(getArmorFilename(bp))
 }
 
