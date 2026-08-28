@@ -16,6 +16,7 @@ const modules = [
   'src/lib/blueprintSeoSlug.ts',
   'src/lib/listingType.ts',
   'src/lib/liveMissionTracker.ts',
+  'src/lib/blueprintTaxonomy.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -188,5 +189,47 @@ check(orisonRow?.hasBlueprintPool === true, 'Orison live row has a blueprint poo
 check(orisonRow?.remainingCount === 3, 'Orison live row lists 3 unacquired blueprints')
 check(callRow?.hasBlueprintPool === false, 'A Call To Arms has no blueprint pool')
 check(view.remaining.length === 3, 'remaining list is the 3 Orison pool blueprints')
+
+const taxonomy = await import(pathToFileURL(path.join(outDir, 'blueprintTaxonomy.mjs')).href)
+const carnifexTags = taxonomy.getBlueprintDisplayTags({
+  categoryName: 'FPSArmours',
+  internalName: 'gys_jacket_01_01_01',
+  blueprintName: 'Carnifex Armor Core',
+  armorSlot: 'core',
+  armorWeight: 'medium',
+  subtype: 'standard',
+})
+check(
+  carnifexTags.some((t) => t.label === 'Medium') &&
+    carnifexTags.some((t) => t.label === 'Core') &&
+    !carnifexTags.some((t) => t.label === 'Combat Clothing') &&
+    !carnifexTags.some((t) => t.label === 'Jacket'),
+  'Carnifex (gys_jacket + medium weight) is Medium Core, not Combat Clothing'
+)
+const bellatorTags = taxonomy.getBlueprintDisplayTags({
+  categoryName: 'FPSArmours',
+  internalName: 'hdtc_jacket_01_01_01',
+  blueprintName: 'Bellator Jacket',
+  armorSlot: 'core',
+  armorWeight: null,
+  subtype: 'undersuit',
+})
+check(
+  bellatorTags.some((t) => t.label === 'Combat Clothing') &&
+    bellatorTags.some((t) => t.label === 'Jacket') &&
+    !bellatorTags.some((t) => t.label === 'Core'),
+  'Bellator jacket stays Combat Clothing, not Core plate'
+)
+check(taxonomy.getCombatClothingGarment({
+  categoryName: 'FPSArmours',
+  internalName: 'gys_pants_01_01_01',
+  armorWeight: 'medium',
+  armorSlot: 'legs',
+}) === null, 'Carnifex pants with armorWeight are not a garment')
+check(taxonomy.getCombatClothingGarment({
+  categoryName: 'FPSArmours',
+  internalName: 'hdtc_pants_01_01_01',
+  armorWeight: null,
+}) === 'pants', 'Bellator trousers stay a garment')
 
 console.log(`Unit tests: ${pass} passed`)
