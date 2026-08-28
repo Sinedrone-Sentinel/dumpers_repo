@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync, existsSync, appendFileSync, unlinkSync, mk
 import { join } from 'path'
 import { createClient } from '@supabase/supabase-js'
 import { config as loadDotenv } from 'dotenv'
-import { diffGameDataFiles } from './diffGameData.mjs'
+import { diffGameDataFiles, isUnreleasedRecord } from './diffGameData.mjs'
 import { getAppliedSpellingCorrections } from './spellingCorrections.mjs'
 import {
   buildDisplayNameResolver,
@@ -124,6 +124,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
   for (const col of diffResult.collections) {
     const labelFn = col.label
     for (const a of col.added) {
+      if (isUnreleasedRecord(a.rec)) continue
       ensure(col.category, 'added').items.push({
         key: a.key,
         label: labelOf(labelFn, a.rec, a.key, resolve),
@@ -131,6 +132,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       })
     }
     for (const r of col.removed) {
+      if (isUnreleasedRecord(r.rec)) continue
       ensure(col.category, 'removed').items.push({
         key: r.key,
         label: labelOf(labelFn, r.rec, r.key, resolve),
@@ -138,6 +140,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       })
     }
     for (const c of col.changed) {
+      if (isUnreleasedRecord(c.rec)) continue
       // Internal-only churn (localization keys, schema backfill) yields no phrase;
       // drop the item instead of showing members something they cannot act on.
       const summary = describeChangedFields(c.fields, resolve, { maxParts: MAX_SUMMARY_FIELDS })

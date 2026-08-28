@@ -70,7 +70,8 @@ export function formatLauncherVersionLabel(manifestData, options = {}) {
 }
 
 /**
- * Convert a game build version string to major.minor for MIN_GAME_VERSION (e.g. 4.8.x -> 4.8).
+ * Convert a game build version string to major.minor for the dumper recent-import
+ * MIN_GAME_VERSION (e.g. 4.10.x -> 4.10). Does not apply to full history.
  */
 export function toMinGameVersionSecret(version) {
   if (typeof version !== 'string' || !version.trim()) return null

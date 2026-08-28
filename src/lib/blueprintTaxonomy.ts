@@ -47,13 +47,13 @@ export function detectArmorSlotFromName(name: string, displayName = ''): string 
 }
 
 /**
- * Combat-clothing garment types — armored apparel (Bellator, Spettro shoes) that is
- * worn like clothing rather than combat-armor plate. These get a dedicated garment
- * tag instead of the Core/Legs slot chip.
+ * Combat-clothing garment types — armored apparel worn like clothing (shirt/jacket/
+ * pants/shoes/gloves) instead of combat-armor plate. These get a garment tag instead
+ * of the Core/Legs slot chip.
  *
- * Do not treat every `_jacket_` / `_pants_` internal name as clothing. Carnifex is
- * `gys_jacket_` / `gys_pants_` but the parse already sets armorWeight + armorSlot
- * (Medium Core / Medium Legs). Real plate keeps those fields; clothing does not.
+ * Filename tokens are not enough: Carnifex is `gys_jacket_` / `gys_pants_` but the
+ * parse already sets armorWeight + armorSlot (Medium Core / Medium Legs). If
+ * armorWeight is set, treat it as plate. Clothing rows have no armorWeight.
  */
 export const COMBAT_CLOTHING_GARMENT_OPTIONS = ['shirt', 'jacket', 'pants', 'shoes', 'gloves'] as const
 

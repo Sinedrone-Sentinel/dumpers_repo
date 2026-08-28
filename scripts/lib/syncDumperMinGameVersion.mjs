@@ -19,7 +19,8 @@ function readCommittedGameBuildVersion() {
 }
 
 /**
- * Bake major.minor game version into BP Dumper Python sources.
+ * Bake major.minor into BP Dumper for the recent-import filter only
+ * (IMPORT_OLD_LOGS / first-run backup prompt). Full history and live watch do not use this.
  */
 export function syncDumperMinGameVersion(version, options = {}) {
   const minVersion = toMinGameVersionSecret(version)
