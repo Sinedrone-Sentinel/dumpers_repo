@@ -137,7 +137,7 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 
 - **By Ore** — rarity filters, location chips, spawn/cluster/composition tooltips
 - **By Location** — all ores at each mineable site; Overall summaries for broad regions
-- **All Sites / Surface / Asteroid** deposit-type filter for both views (asteroid sites dodge planetary weather for solo Mole crews)
+- **All / Stanton / Pyro / Nyx** (systems that appear in the data) plus **All Sites / Surface / Asteroid** — search first, then system, then deposit type
 - 📍 **Find-it-in-game hints** on belt/cluster tooltips, plus a grouped **QT markers & stations** panel when you click a location (PYAM stations per Lagrange point, RAB/RMB cluster bases per Pyro region, BRK breakers) — all parsed from game files
 - Negligible odds show as **trace spawn (<0.01%)** — dimmed and sorted last instead of a misleading "0.00%"
 
