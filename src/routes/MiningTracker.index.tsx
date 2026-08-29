@@ -11,6 +11,8 @@ import {
   countGuideRarityBucket,
   buildLocationOresMap,
   canOpenGuideLocationModal,
+  collectGuideSystems,
+  systemForGuideLocation,
 } from '../lib/miningDataHelpers'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import {
@@ -122,6 +124,7 @@ export default function MiningTrackerRoute() {
   const [guideSearch, setGuideSearch] = useState('')
   const [guideViewMode, setGuideViewMode] = useState<'ores' | 'locations'>('ores')
   const [guideDepositFilter, setGuideDepositFilter] = useState<GuideDepositFilter>('all')
+  const [guideSystemFilter, setGuideSystemFilter] = useState<string>('all')
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null)
   const [selectedOre, setSelectedOre] = useState<MiningData | null>(null)
   const [selectedOreGuideLocation, setSelectedOreGuideLocation] = useState<string | null>(null)
@@ -356,12 +359,19 @@ export default function MiningTrackerRoute() {
 
   const allLocations = useMemo(() => {
     return Object.keys(locationOresMap).sort((a, b) => {
-      const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
-      const sysB = LOCATION_SYSTEMS[b] || 'Unknown'
+      const sysA = systemForGuideLocation(a)
+      const sysB = systemForGuideLocation(b)
       if (sysA !== sysB) return sysA.localeCompare(sysB)
       return a.localeCompare(b)
     })
   }, [locationOresMap])
+
+  const guideSystems = useMemo(() => collectGuideSystems(allLocations), [allLocations])
+
+  useEffect(() => {
+    if (guideSystemFilter === 'all') return
+    if (!guideSystems.includes(guideSystemFilter)) setGuideSystemFilter('all')
+  }, [guideSystems, guideSystemFilter])
 
   const guideFilteredData = useMemo(() => {
     let filtered = data || []
@@ -370,44 +380,52 @@ export default function MiningTrackerRoute() {
         matchesGuideRarityFilter(item.ore_name, item.rarity, guideRarityFilter)
       )
     }
-    if (guideDepositFilter !== 'all') {
-      filtered = filtered.filter((item) =>
-        (item.locations ?? []).some((loc) =>
-          depositTypesForOreAtGuideLocation(item.ore_name, item.rarity, loc).includes(
-            guideDepositFilter
-          )
+    const term = guideSearch.trim().toLowerCase()
+    return filtered.filter((item) => {
+      const locations = item.locations ?? []
+      if (locations.length === 0) {
+        if (term && !item.ore_name.toLowerCase().includes(term)) return false
+        if (guideSystemFilter !== 'all') return false
+        if (guideDepositFilter !== 'all') return false
+        return true
+      }
+      return locations.some((loc) =>
+        locationPassesGuidePipeline(
+          item.ore_name,
+          loc,
+          term,
+          guideSystemFilter,
+          guideDepositFilter,
+          item.rarity
         )
       )
-    }
-    if (guideSearch) {
-      const term = guideSearch.toLowerCase()
-      filtered = filtered.filter(
-        (item) =>
-          item.ore_name.toLowerCase().includes(term) ||
-          item.locations?.some((loc) => loc.toLowerCase().includes(term))
-      )
-    }
-    return filtered
-  }, [data, guideRarityFilter, guideDepositFilter, guideSearch])
+    })
+  }, [data, guideRarityFilter, guideSearch, guideSystemFilter, guideDepositFilter])
 
   const guideFilteredLocations = useMemo(() => {
-    let filtered = allLocations
-    if (guideDepositFilter !== 'all') {
-      filtered = filtered.filter((loc) =>
-        (locationOresMap[loc] ?? []).some((ore) =>
+    const term = guideSearch.trim().toLowerCase()
+    return allLocations.filter((loc) => {
+      const ores = locationOresMap[loc] ?? []
+      if (term) {
+        const textMatch =
+          loc.toLowerCase().includes(term) ||
+          ores.some((ore) => ore.ore_name.toLowerCase().includes(term))
+        if (!textMatch) return false
+      }
+      if (guideSystemFilter !== 'all' && systemForGuideLocation(loc) !== guideSystemFilter) {
+        return false
+      }
+      if (guideDepositFilter !== 'all') {
+        const hasDeposit = ores.some((ore) =>
           depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, loc).includes(
             guideDepositFilter
           )
         )
-      )
-    }
-    if (!guideSearch) return filtered
-    const term = guideSearch.toLowerCase()
-    return filtered.filter(loc =>
-      loc.toLowerCase().includes(term) ||
-      locationOresMap[loc]?.some(ore => ore.ore_name.toLowerCase().includes(term))
-    )
-  }, [allLocations, locationOresMap, guideSearch, guideDepositFilter])
+        if (!hasDeposit) return false
+      }
+      return true
+    })
+  }, [allLocations, locationOresMap, guideSearch, guideSystemFilter, guideDepositFilter])
 
   return (
     <FeaturePageLayout
@@ -801,9 +819,9 @@ export default function MiningTrackerRoute() {
             </button>
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
+          {/* Filters: search → system → deposit type (rarity is By Ore only) */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3">
+            <div className="relative flex-1 min-w-[12rem]">
               <input
                 type="text"
                 placeholder={guideViewMode === 'ores' ? "Search ores or locations..." : "Search locations or ores..."}
@@ -814,6 +832,44 @@ export default function MiningTrackerRoute() {
               <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
+            </div>
+            <div className="site-chip-strip self-start shrink-0">
+              <SiteTooltip content={GUIDE_SYSTEM_FILTER_ALL_TOOLTIP} side="bottom">
+                <button
+                  type="button"
+                  onClick={() => setGuideSystemFilter('all')}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors site-btn-shimmer ${
+                    guideSystemFilter === 'all'
+                      ? 'site-filter-selected-slate'
+                      : 'site-filter-idle'
+                  }`}
+                >
+                  All
+                </button>
+              </SiteTooltip>
+              {guideSystems.map((system) => (
+                <SiteTooltip
+                  key={system}
+                  content={
+                    system === 'Unknown'
+                      ? 'Sites with no mapped star system'
+                      : `${system} sites only`
+                  }
+                  side="bottom"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setGuideSystemFilter(system)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors site-btn-shimmer ${
+                      guideSystemFilter === system
+                        ? systemFilterSelectedClass(system)
+                        : 'site-filter-idle'
+                    }`}
+                  >
+                    {system}
+                  </button>
+                </SiteTooltip>
+              ))}
             </div>
             <div className="site-chip-strip self-start shrink-0">
               {(['all', 'surface', 'asteroid'] as const).map((mode) => (
@@ -888,6 +944,8 @@ export default function MiningTrackerRoute() {
                     locationOresMap={locationOresMap}
                     onLocationClick={setSelectedLocation}
                     depositFilter={guideDepositFilter}
+                    systemFilter={guideSystemFilter}
+                    search={guideSearch}
                   />
                 ))
               )}
@@ -957,6 +1015,43 @@ const GUIDE_DEPOSIT_FILTER_TOOLTIPS: Record<GuideDepositFilter, string> = {
   asteroid: 'Space rocks only — zero-G and no weather. Easiest sites to work solo in a Mole',
 }
 
+const GUIDE_SYSTEM_FILTER_ALL_TOOLTIP = 'Show sites in every system'
+
+const GUIDE_SYSTEM_FILTER_SELECTED: Record<string, string> = {
+  Stanton: 'site-filter-selected-blue',
+  Pyro: 'site-filter-selected-orange',
+  Nyx: 'site-filter-selected-purple',
+}
+
+function systemFilterSelectedClass(system: string): string {
+  return GUIDE_SYSTEM_FILTER_SELECTED[system] ?? 'site-filter-selected-slate'
+}
+
+/** Search → system → deposit type. A location must pass each step in that order. */
+function locationPassesGuidePipeline(
+  oreName: string,
+  location: string,
+  searchTerm: string,
+  systemFilter: string,
+  depositFilter: GuideDepositFilter,
+  rarity: string
+): boolean {
+  if (searchTerm) {
+    const textMatch =
+      oreName.toLowerCase().includes(searchTerm) || location.toLowerCase().includes(searchTerm)
+    if (!textMatch) return false
+  }
+  if (systemFilter !== 'all' && systemForGuideLocation(location) !== systemFilter) {
+    return false
+  }
+  if (depositFilter !== 'all') {
+    if (!depositTypesForOreAtGuideLocation(oreName, rarity, location).includes(depositFilter)) {
+      return false
+    }
+  }
+  return true
+}
+
 function getOreLocations(ore: MiningData): string[] {
   return ore.locations ?? []
 }
@@ -980,11 +1075,15 @@ function GuideOreCard({
   locationOresMap,
   onLocationClick,
   depositFilter,
+  systemFilter = 'all',
+  search = '',
 }: {
   item: MiningData
   locationOresMap: Record<string, MiningData[]>
   onLocationClick: (loc: string) => void
   depositFilter: GuideDepositFilter
+  systemFilter?: string
+  search?: string
 }) {
   const colors = MINING_RARITY_COLORS[item.rarity] || MINING_RARITY_COLORS.common
   const signature = ORE_SIGNATURES[item.ore_name]
@@ -1011,8 +1110,21 @@ function GuideOreCard({
           maxNodes: 0,
         })
       }
+      const term = search.trim().toLowerCase()
+      const surface = chips
+        .filter((chip) =>
+          locationPassesGuidePipeline(
+            item.ore_name,
+            chip.location,
+            term,
+            systemFilter,
+            'all',
+            item.rarity
+          )
+        )
+        .sort((a, b) => a.location.localeCompare(b.location))
       return {
-        surface: chips.sort((a, b) => a.location.localeCompare(b.location)),
+        surface,
         asteroid: [] as Chip[],
       }
     }
@@ -1067,8 +1179,21 @@ function GuideOreCard({
     }
     const surface = chips.filter((c) => c.depositType === 'surface').sort(chipSort)
     const asteroid = chips.filter((c) => c.depositType === 'asteroid').sort(chipSort)
-    return { surface, asteroid }
-  }, [item.ore_name, item.locations, locationListOnly, locationOresMap])
+    const term = search.trim().toLowerCase()
+    const passesPipeline = (chip: Chip) =>
+      locationPassesGuidePipeline(
+        item.ore_name,
+        chip.location,
+        term,
+        systemFilter,
+        'all',
+        item.rarity
+      )
+    return {
+      surface: surface.filter(passesPipeline),
+      asteroid: asteroid.filter(passesPipeline),
+    }
+  }, [item.ore_name, item.rarity, item.locations, locationListOnly, locationOresMap, search, systemFilter])
 
   const renderChip = (chip: {
     location: string
@@ -1077,8 +1202,9 @@ function GuideOreCard({
     spawnTier: string
     maxNodes: number
   }) => {
-    const system = LOCATION_SYSTEMS[chip.location]
-    const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+    const system = systemForGuideLocation(chip.location)
+    const systemColor =
+      system !== 'Unknown' ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
     const habitatLabel = locationListOnly
       ? formatHandMineableHabitatAtSite(item.ore_name, chip.location)
       : null
@@ -1105,7 +1231,7 @@ function GuideOreCard({
             </span>
           )}
           {chip.location}
-          {system && (
+          {system !== 'Unknown' && (
             <span className={`ml-1 ${systemColor} opacity-70`}>({system})</span>
           )}
           <span className="block text-[10px] text-slate-500 mt-0.5">

@@ -172,6 +172,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'The **selected loadout** label above the calculator shows which setup Smart Cracker will use. Open Smart Cracker to change ship, slot, or edit modules',
       '**Mining Guide → By Ore**: filter by rarity, open an ore for composition and locations, jump to RS Tracker cards from location chips',
       '**Mining Guide → By Location**: pick a site and see which ores can spawn there, with spawn %, cluster odds, and composition tooltips',
+      '**All** plus each star system found in the data (Stanton, Pyro, Nyx, …) filters both guide views by system. Search applies first, then system, then deposit type',
       '**All Sites / Surface / Asteroid** filter narrows both guide views by deposit type — pick Asteroid to skip planetary weather when soloing a Mole',
       'Belt and cluster tooltips include a 📍 **find-it-in-game** hint: which QT markers or starmap search terms to use (e.g. Akiro Cluster sits near Pyro I L3)',
       'Click a belt/cluster location to open its **QT markers & stations** panel — organized by belt L-point or Pyro region (PYAM stations per Lagrange point, RAB/RMB cluster bases per region, BRK breaker stations) instead of one long list',

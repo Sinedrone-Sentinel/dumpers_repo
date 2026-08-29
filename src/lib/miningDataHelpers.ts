@@ -121,10 +121,32 @@ export function canOpenGuideLocationModal(
   return (locationOresMap[location]?.length ?? 0) > 0
 }
 
+/** Star system for a guide site; unmapped names are Unknown. */
+export function systemForGuideLocation(location: string): string {
+  return LOCATION_SYSTEMS[location] || 'Unknown'
+}
+
+const GUIDE_SYSTEM_SORT_ORDER = ['Stanton', 'Pyro', 'Nyx'] as const
+
+/** Distinct systems present in the guide, All-button companions — canonical order then extras. */
+export function collectGuideSystems(locations: readonly string[]): string[] {
+  const found = new Set(locations.map(systemForGuideLocation))
+  const head = GUIDE_SYSTEM_SORT_ORDER.filter((name) => found.has(name))
+  const extras = [...found]
+    .filter(
+      (name) =>
+        name !== 'Unknown' &&
+        !(GUIDE_SYSTEM_SORT_ORDER as readonly string[]).includes(name)
+    )
+    .sort((a, b) => a.localeCompare(b))
+  if (found.has('Unknown')) extras.push('Unknown')
+  return [...head, ...extras]
+}
+
 export function getSortedLocations(locationOresMap: Record<string, MiningData[]>): string[] {
   return Object.keys(locationOresMap).sort((a, b) => {
-    const sysA = LOCATION_SYSTEMS[a] || 'Unknown'
-    const sysB = LOCATION_SYSTEMS[b] || 'Unknown'
+    const sysA = systemForGuideLocation(a)
+    const sysB = systemForGuideLocation(b)
     if (sysA !== sysB) return sysA.localeCompare(sysB)
     return a.localeCompare(b)
   })
