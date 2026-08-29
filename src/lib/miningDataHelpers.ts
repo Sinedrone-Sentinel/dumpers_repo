@@ -131,15 +131,11 @@ const GUIDE_SYSTEM_SORT_ORDER = ['Stanton', 'Pyro', 'Nyx'] as const
 /** Distinct systems present in the guide, All-button companions — canonical order then extras. */
 export function collectGuideSystems(locations: readonly string[]): string[] {
   const found = new Set(locations.map(systemForGuideLocation))
+  found.delete('Unknown')
   const head = GUIDE_SYSTEM_SORT_ORDER.filter((name) => found.has(name))
   const extras = [...found]
-    .filter(
-      (name) =>
-        name !== 'Unknown' &&
-        !(GUIDE_SYSTEM_SORT_ORDER as readonly string[]).includes(name)
-    )
+    .filter((name) => !(GUIDE_SYSTEM_SORT_ORDER as readonly string[]).includes(name))
     .sort((a, b) => a.localeCompare(b))
-  if (found.has('Unknown')) extras.push('Unknown')
   return [...head, ...extras]
 }
 

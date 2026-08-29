@@ -125,6 +125,8 @@ function buildGuideLocationSystemsMap(): Record<string, string> {
 
   for (const alias of Object.values(locationAliases)) {
     if (!alias.system || alias.system === 'Unknown') continue
+    // Spawn-key cards (e.g. Lagrange G) leak into By Location when they have no station name.
+    if (alias.spawnKey) map[alias.spawnKey] = alias.system
     if (alias.guideName) map[alias.guideName] = alias.system
     for (const name of alias.guideNames ?? []) {
       if (name === 'Pyro Asteroid Clusters') continue
@@ -141,6 +143,16 @@ export const GUIDE_LOCATION_SYSTEMS = buildGuideLocationSystemsMap()
 
 export function getSystemForGuideLocation(guideLocationName: string): string | null {
   return GUIDE_LOCATION_SYSTEMS[guideLocationName] ?? null
+}
+
+/**
+ * Member-facing site label. Spawn-key leftovers (Lagrange G / Occupied) use the
+ * alias display name; named stations keep the starmap name (ARC-L1, not HUR-L1).
+ */
+export function guideLocationDisplayName(guideLocationName: string): string {
+  const alias = locationAliases[guideLocationName]
+  if (alias?.displayName && alias.spawnKey === guideLocationName) return alias.displayName
+  return guideLocationName
 }
 
 export { locationAliases, guideToSpawnKeys }
