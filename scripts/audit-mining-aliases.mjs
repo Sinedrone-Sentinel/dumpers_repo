@@ -67,6 +67,8 @@ const REQUIRED_GUIDE_SYSTEMS = {
   'Keeger Belt': 'Nyx',
   'Akiro Cluster': 'Pyro',
   Aberdeen: 'Stanton',
+  'Lagrange G': 'Stanton',
+  'Lagrange Occupied': 'Stanton',
 }
 
 function auditGuideLocationSystems(aliases, guideToSpawnKeysMap) {
@@ -88,6 +90,31 @@ if (systemMismatches.length) {
   for (const row of systemMismatches) {
     console.error(`  - ${row.guideName}: expected ${row.expected}, got ${row.systems.join(', ') || 'none'}`)
   }
+}
+
+const BROAD_GUIDE_LOCATION_SYSTEMS = {
+  'All Moons/Planets/Caves': 'Stanton',
+  'All Pyro Planets': 'Pyro',
+  'Pyro Asteroid Clusters': 'Pyro',
+  'Found in All Stanton Deposits (Rare)': 'Stanton',
+  'Found in All Stanton Deposits': 'Stanton',
+  'QV Breaker Stations (Nyx)': 'Nyx',
+}
+
+const unresolvedGuideSites = []
+for (const loc of Object.keys(locations.locationOres ?? {})) {
+  if (BROAD_GUIDE_LOCATION_SYSTEMS[loc]) continue
+  const keys = guideToSpawnKeys[loc] ?? [loc]
+  const fromKeys = keys.map((k) => aliases[k]?.system).find((s) => s && s !== 'Unknown')
+  const fromAlias = aliases[loc]?.system
+  if ((!fromAlias || fromAlias === 'Unknown') && !fromKeys) {
+    unresolvedGuideSites.push(loc)
+  }
+}
+if (unresolvedGuideSites.length) {
+  exitCode = 1
+  console.error('\nBy Location sites with no star system:')
+  for (const loc of unresolvedGuideSites.sort()) console.error(`  - ${loc}`)
 }
 
 if (exitCode === 0) {

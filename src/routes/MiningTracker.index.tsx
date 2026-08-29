@@ -45,6 +45,7 @@ import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import {
   getNavHintForGuideLocation,
   getNavMarkersForGuideLocation,
+  guideLocationDisplayName,
   type NavMarkerGroup,
 } from '../lib/miningLocationNames'
 import TrackOreButtons from '../components/TrackOreButton'
@@ -409,6 +410,7 @@ export default function MiningTrackerRoute() {
       if (term) {
         const textMatch =
           loc.toLowerCase().includes(term) ||
+          guideLocationDisplayName(loc).toLowerCase().includes(term) ||
           ores.some((ore) => ore.ore_name.toLowerCase().includes(term))
         if (!textMatch) return false
       }
@@ -1038,7 +1040,9 @@ function locationPassesGuidePipeline(
 ): boolean {
   if (searchTerm) {
     const textMatch =
-      oreName.toLowerCase().includes(searchTerm) || location.toLowerCase().includes(searchTerm)
+      oreName.toLowerCase().includes(searchTerm) ||
+      location.toLowerCase().includes(searchTerm) ||
+      guideLocationDisplayName(location).toLowerCase().includes(searchTerm)
     if (!textMatch) return false
   }
   if (systemFilter !== 'all' && systemForGuideLocation(location) !== systemFilter) {
@@ -1230,7 +1234,7 @@ function GuideOreCard({
               {chip.depositType === 'surface' ? 'Surface' : 'Asteroid'}
             </span>
           )}
-          {chip.location}
+          {guideLocationDisplayName(chip.location)}
           {system !== 'Unknown' && (
             <span className={`ml-1 ${systemColor} opacity-70`}>({system})</span>
           )}
@@ -1316,8 +1320,9 @@ function GuideLocationCard({
   onLocationClick?: (location: string) => void
   depositFilter?: GuideDepositFilter
 }) {
-  const system = LOCATION_SYSTEMS[location]
-  const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+  const system = systemForGuideLocation(location)
+  const systemColor = system !== 'Unknown' ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+  const locationLabel = guideLocationDisplayName(location)
 
   const visibleOres =
     depositFilter === 'all'
@@ -1342,12 +1347,12 @@ function GuideLocationCard({
                 onClick={() => onLocationClick(location)}
                 className="font-semibold text-white hover:text-orange-300 transition-colors text-left"
               >
-                {location}
+                {locationLabel}
               </button>
             ) : (
-              <h3 className="font-semibold text-white">{location}</h3>
+              <h3 className="font-semibold text-white">{locationLabel}</h3>
             )}
-            {system && (
+            {system !== 'Unknown' && (
               <span className={`text-xs ${systemColor} uppercase tracking-wider`}>
                 {system} System
               </span>
@@ -1505,8 +1510,10 @@ function GuideOreModal({
           </p>
           <div className="space-y-2">
             {sortedLocations.map((location) => {
-              const system = LOCATION_SYSTEMS[location]
-              const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+              const system = systemForGuideLocation(location)
+              const systemColor =
+                system !== 'Unknown' ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+              const locationLabel = guideLocationDisplayName(location)
               if (locationListOnly) {
                 const habitatLabel = formatHandMineableHabitatAtSite(ore.ore_name, location)
                 return (
@@ -1514,8 +1521,8 @@ function GuideOreModal({
                     key={location}
                     className="site-surface p-3"
                   >
-                    <span className="font-medium text-white">{location}</span>
-                    {system && (
+                    <span className="font-medium text-white">{locationLabel}</span>
+                    {system !== 'Unknown' && (
                       <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
                     )}
                     <span className="block text-xs text-slate-500 mt-1">
@@ -1541,8 +1548,8 @@ function GuideOreModal({
                       <div className="site-surface p-3">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <span className="font-medium text-white">{location}</span>
-                            {system && (
+                            <span className="font-medium text-white">{locationLabel}</span>
+                            {system !== 'Unknown' && (
                               <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
                             )}
                           </div>
@@ -1565,8 +1572,8 @@ function GuideOreModal({
                     key={location}
                     className="site-surface p-3"
                   >
-                    <span className="font-medium text-white">{location}</span>
-                    {system && (
+                    <span className="font-medium text-white">{locationLabel}</span>
+                    {system !== 'Unknown' && (
                       <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
                     )}
                     <span className="block text-xs text-slate-500 mt-1">Broad spawn</span>
@@ -1583,8 +1590,8 @@ function GuideOreModal({
                   <div className="site-surface p-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="font-medium text-white">{location}</span>
-                        {system && (
+                        <span className="font-medium text-white">{locationLabel}</span>
+                        {system !== 'Unknown' && (
                           <span className={`block text-xs ${systemColor} mt-0.5`}>{system} System</span>
                         )}
                       </div>
@@ -1647,8 +1654,9 @@ function NavMarkerPanel({ groups }: { groups: NavMarkerGroup[] }) {
 function GuideLocationModal({ location, ores, onClose }: { location: string; ores: MiningData[]; onClose: () => void }) {
   useBodyScrollLock(true)
   
-  const system = LOCATION_SYSTEMS[location]
-  const systemColor = system ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+  const system = systemForGuideLocation(location)
+  const systemColor = system !== 'Unknown' ? MINING_SYSTEM_COLORS[system] : 'text-slate-400'
+  const locationLabel = guideLocationDisplayName(location)
   const navHint = getNavHintForGuideLocation(location)
   const navMarkerGroups = getNavMarkersForGuideLocation(location)
   
@@ -1663,8 +1671,8 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
         <div className="p-4 border-b border-orange-500/15 flex items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-              <h2 className="text-lg font-semibold text-white">{location}</h2>
-              {system && (
+              <h2 className="text-lg font-semibold text-white">{locationLabel}</h2>
+              {system !== 'Unknown' && (
                 <span className={`text-sm ${systemColor}`}>{system} System</span>
               )}
             </div>

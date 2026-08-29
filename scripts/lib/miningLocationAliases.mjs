@@ -378,12 +378,15 @@ function applyVerifiedOverlays(aliases) {
     'Lagrange G',
     'Lagrange Occupied',
   ]) {
-    const guideNames = SPAWN_TO_GUIDE_NAMES.get(spawnKey)
-      ? [...SPAWN_TO_GUIDE_NAMES.get(spawnKey)].sort()
-      : undefined
+    const fromTable = SPAWN_TO_GUIDE_NAMES.get(spawnKey)
+    const stationNames = fromTable ? [...fromTable].sort() : undefined
+    // G / Occupied have no named L-station — keep the spawn key as a guide name
+    // so By Location can resolve Stanton instead of Unknown.
+    const guideNames = stationNames ?? [spawnKey]
     upsertAlias(aliases, spawnKey, {
+      guideName: stationNames ? undefined : spawnKey,
       guideNames,
-      displayName: lagrangeDisplayName(spawnKey, guideNames),
+      displayName: lagrangeDisplayName(spawnKey, stationNames),
       system: 'Stanton',
       source: 'verified_overlay',
     })

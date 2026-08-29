@@ -3757,6 +3757,10 @@
     },
     "Lagrange G": {
       "spawnKey": "Lagrange G",
+      "guideName": "Lagrange G",
+      "guideNames": [
+        "Lagrange G"
+      ],
       "displayName": "Aaron Halo belt · G",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
@@ -3764,6 +3768,10 @@
     },
     "Lagrange Occupied": {
       "spawnKey": "Lagrange Occupied",
+      "guideName": "Lagrange Occupied",
+      "guideNames": [
+        "Lagrange Occupied"
+      ],
       "displayName": "Occupied Lagrange belt",
       "system": "Stanton",
       "source": "verified_overlay+hpp_path_audit",
@@ -4438,6 +4446,12 @@
     ],
     "Keeger Belt": [
       "Keeger Belt"
+    ],
+    "Lagrange G": [
+      "Lagrange G"
+    ],
+    "Lagrange Occupied": [
+      "Lagrange Occupied"
     ],
     "Lyria": [
       "Stanton3a"
