@@ -8,6 +8,8 @@ export interface BlueprintsUiState {
   selectedMainCategory: string | null
   selectedSubCategory: string | null
   selectedSize: string | null
+  selectedComponentClass: string | null
+  selectedComponentGrade: string | null
   selectedArmorWeight: string | null
   selectedArmorSlot: string | null
   showOnlyRewards: boolean
@@ -20,6 +22,8 @@ const DEFAULT_STATE: BlueprintsUiState = {
   selectedMainCategory: null,
   selectedSubCategory: null,
   selectedSize: null,
+  selectedComponentClass: null,
+  selectedComponentGrade: null,
   selectedArmorWeight: null,
   selectedArmorSlot: null,
   showOnlyRewards: true,
@@ -72,6 +76,8 @@ export function readBlueprintsUiState(scope: string | null): BlueprintsUiState {
     selectedMainCategory: nullableString(parsed.selectedMainCategory),
     selectedSubCategory: nullableString(parsed.selectedSubCategory),
     selectedSize: nullableString(parsed.selectedSize),
+    selectedComponentClass: nullableString(parsed.selectedComponentClass),
+    selectedComponentGrade: nullableString(parsed.selectedComponentGrade),
     selectedArmorWeight: nullableString(parsed.selectedArmorWeight),
     selectedArmorSlot: nullableString(parsed.selectedArmorSlot),
     showOnlyRewards: typeof parsed.showOnlyRewards === 'boolean' ? parsed.showOnlyRewards : true,
@@ -94,6 +100,14 @@ export function writeBlueprintsUiState(scope: string | null, update: Partial<Blu
     selectedSubCategory:
       update.selectedSubCategory !== undefined ? update.selectedSubCategory : current.selectedSubCategory,
     selectedSize: update.selectedSize !== undefined ? update.selectedSize : current.selectedSize,
+    selectedComponentClass:
+      update.selectedComponentClass !== undefined
+        ? update.selectedComponentClass
+        : current.selectedComponentClass,
+    selectedComponentGrade:
+      update.selectedComponentGrade !== undefined
+        ? update.selectedComponentGrade
+        : current.selectedComponentGrade,
     selectedArmorWeight:
       update.selectedArmorWeight !== undefined ? update.selectedArmorWeight : current.selectedArmorWeight,
     selectedArmorSlot:
