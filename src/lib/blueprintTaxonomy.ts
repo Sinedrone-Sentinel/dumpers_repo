@@ -115,7 +115,15 @@ export function formatSubtypeLabel(sub: string | null | undefined): string | nul
   return sub.charAt(0).toUpperCase() + sub.slice(1).replace(/([A-Z])/g, ' $1')
 }
 
-export type BlueprintTagKind = 'category' | 'size' | 'armorWeight' | 'armorSlot' | 'subtype' | 'garment'
+export type BlueprintTagKind =
+  | 'category'
+  | 'size'
+  | 'armorWeight'
+  | 'armorSlot'
+  | 'subtype'
+  | 'garment'
+  | 'itemClass'
+  | 'grade'
 
 export interface BlueprintDisplayTag {
   kind: BlueprintTagKind
@@ -130,6 +138,8 @@ export const BLUEPRINT_TAG_CHIP_CLASS: Record<BlueprintTagKind, string> = {
   armorSlot: 'bg-green-950/50 text-green-400 border-green-500/30',
   subtype: 'bg-orange-950/50 text-orange-400 border-orange-500/30',
   garment: 'bg-violet-950/50 text-violet-300 border-violet-500/30',
+  itemClass: 'bg-green-950/50 text-green-400 border-green-500/30',
+  grade: 'bg-purple-950/50 text-purple-300 border-purple-500/30',
 }
 
 /** Ordered taxonomy tags for blueprint cards and detail views. */

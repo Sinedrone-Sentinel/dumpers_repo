@@ -3,7 +3,6 @@ import { resourceChipClassName } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
 import { getBlueprintDisplayTags } from '../lib/blueprintTaxonomy'
 import BlueprintCategoryTags from './BlueprintCategoryTags'
-import { formatBlueprintSpecLine } from '../lib/blueprintSpec'
 import { calculateBlueprintDfpWithParts, calculateBlueprintDfp, formatCraftDfpBreakdown, formatDfpLabel, isAmmoBlueprint } from '../lib/dfp'
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
@@ -54,7 +53,6 @@ export default function BlueprintCard({
   const categoryTags = getBlueprintDisplayTags(blueprint)
   const dfpLabel = formatDfpLabel(dfp.total)
   const dfpBreakdown = formatCraftDfpBreakdown(dfp)
-  const specLine = formatBlueprintSpecLine(blueprint)
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation()
@@ -160,11 +158,6 @@ export default function BlueprintCard({
           >
             {blueprint.blueprintName}
           </h3>
-          {specLine && (
-            <p className="text-xs text-slate-400 leading-snug mt-0.5 truncate">
-              {specLine}
-            </p>
-          )}
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col text-sm">

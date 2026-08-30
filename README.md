@@ -66,7 +66,7 @@ Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnersh
 ### Blueprints (`/`)
 
 - Browse the full crafting catalog with search, category, material, and acquisition filters (filters persist per account in the browser)
-- Vehicle Components add Class (Military / Civilian / Stealth / Industrial / Competition) and Grade (A–D) chips — same words as the card spec line
+- Vehicle Components: after you pick a type (Cooler, Shield, …), Class (Military / Civilian / Stealth / Industrial / Competition) and Grade (A–D) chips appear — cards show the same chips
 - Mark blueprints **acquired**; starter defaults may reappear on refresh until marked
 - **Members** dropdown (when you have friends) — filter the grid by Mine or a friend’s acquired collection; checkboxes still update only yours
 - Blueprint detail modal: crafting materials, components, stats, **Dumper's Fair-Value Price (DFP)** at selectable quality bands
