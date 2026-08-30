@@ -46,11 +46,8 @@ function formatItemClass(itemClass: string): string {
   return formatComponentItemClass(itemClass)
 }
 
-function isShipBlueprint(categoryName?: string): boolean {
-  return (
-    categoryName?.startsWith('Veh. Comp.') === true ||
-    categoryName?.startsWith('Veh. Weapons') === true
-  )
+function isVehicleComponent(categoryName?: string): boolean {
+  return categoryName?.startsWith('Veh. Comp.') === true
 }
 
 function normalizeMetadataKey(raw: string): string {
@@ -82,12 +79,14 @@ function resolveComponentSize(bp: BlueprintSpecInput): string | null {
 }
 
 export function getComponentItemClass(bp: BlueprintSpecInput): string | null {
+  if (!isVehicleComponent(bp.categoryName)) return null
   const itemClass = resolveComponentMeta(bp)?.itemClass
   if (!itemClass) return null
   return itemClass.toLowerCase()
 }
 
 export function getComponentGrade(bp: BlueprintSpecInput): string | null {
+  if (!isVehicleComponent(bp.categoryName)) return null
   const grade = resolveComponentMeta(bp)?.grade
   if (!grade) return null
   const letter = grade.toUpperCase()
@@ -96,7 +95,7 @@ export function getComponentGrade(bp: BlueprintSpecInput): string | null {
 
 /** Size + class + grade + component type subline, e.g. "S2 Military A Cooler". */
 export function formatBlueprintSpecLine(bp: BlueprintSpecInput): string | null {
-  if ((!bp.file && !bp.internalName) || !isShipBlueprint(bp.categoryName)) return null
+  if ((!bp.file && !bp.internalName) || !isVehicleComponent(bp.categoryName)) return null
 
   const subTypeLabel = formatSubtypeLabel(getBlueprintSubType(bp))
   const meta = resolveComponentMeta(bp)
