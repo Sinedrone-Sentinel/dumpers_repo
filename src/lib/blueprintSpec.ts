@@ -20,6 +20,16 @@ export type BlueprintSpecInput = Pick<
 
 const metadataByFile = componentMetadata.blueprints as Record<string, ComponentMeta>
 
+export const COMPONENT_ITEM_CLASS_OPTIONS = [
+  'military',
+  'civilian',
+  'stealth',
+  'industrial',
+  'competition',
+] as const
+
+export const COMPONENT_GRADE_OPTIONS = ['A', 'B', 'C', 'D'] as const
+
 const ITEM_CLASS_LABELS: Record<string, string> = {
   competition: 'Competition',
   civilian: 'Civilian',
@@ -28,8 +38,12 @@ const ITEM_CLASS_LABELS: Record<string, string> = {
   stealth: 'Stealth',
 }
 
-function formatItemClass(itemClass: string): string {
+export function formatComponentItemClass(itemClass: string): string {
   return ITEM_CLASS_LABELS[itemClass] ?? itemClass.charAt(0).toUpperCase() + itemClass.slice(1)
+}
+
+function formatItemClass(itemClass: string): string {
+  return formatComponentItemClass(itemClass)
 }
 
 function isShipBlueprint(categoryName?: string): boolean {
@@ -65,6 +79,19 @@ function resolveComponentSize(bp: BlueprintSpecInput): string | null {
   }
 
   return null
+}
+
+export function getComponentItemClass(bp: BlueprintSpecInput): string | null {
+  const itemClass = resolveComponentMeta(bp)?.itemClass
+  if (!itemClass) return null
+  return itemClass.toLowerCase()
+}
+
+export function getComponentGrade(bp: BlueprintSpecInput): string | null {
+  const grade = resolveComponentMeta(bp)?.grade
+  if (!grade) return null
+  const letter = grade.toUpperCase()
+  return (COMPONENT_GRADE_OPTIONS as readonly string[]).includes(letter) ? letter : null
 }
 
 /** Size + class + grade + component type subline, e.g. "S2 Military A Cooler". */

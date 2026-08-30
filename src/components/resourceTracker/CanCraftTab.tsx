@@ -45,6 +45,13 @@ import {
 import { blueprintUsesMaterial, extractBlueprintResources } from '../../lib/blueprintResources'
 import { buildBlueprintGridItems, type BlueprintGridItem } from '../../lib/blueprintVariantGroups'
 import {
+  COMPONENT_GRADE_OPTIONS,
+  COMPONENT_ITEM_CLASS_OPTIONS,
+  formatComponentItemClass,
+  getComponentGrade,
+  getComponentItemClass,
+} from '../../lib/blueprintSpec'
+import {
   DEFAULT_BLUEPRINTS_CATEGORY,
   isBlueprintListable,
   isDefaultBlueprint,
@@ -158,6 +165,8 @@ export default function CanCraftTab({
   const [selectedMainCategory, setSelectedMainCategory] = React.useState<string | null>(null)
   const [selectedSubCategory, setSelectedSubCategory] = React.useState<string | null>(null)
   const [selectedSize, setSelectedSize] = React.useState<string | null>(null)
+  const [selectedComponentClass, setSelectedComponentClass] = React.useState<string | null>(null)
+  const [selectedComponentGrade, setSelectedComponentGrade] = React.useState<string | null>(null)
   const [selectedArmorWeight, setSelectedArmorWeight] = React.useState<string | null>(null)
   const [selectedArmorSlot, setSelectedArmorSlot] = React.useState<string | null>(null)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState<any>(null)
@@ -396,11 +405,63 @@ export default function CanCraftTab({
     selectedSubCategory,
   ])
 
+  const filteredVehicleCompCounts = React.useMemo(() => {
+    if (selectedMainCategory !== 'Vehicle Components') {
+      return { sizes: {}, classes: {}, grades: {}, types: {} }
+    }
+
+    const sizes: Record<string, number> = {}
+    const classes: Record<string, number> = {}
+    const grades: Record<string, number> = {}
+    const types: Record<string, number> = {}
+    const validCategories = MAIN_CATEGORY_GROUPS['Vehicle Components'] || []
+
+    materialFilteredBlueprints.forEach((bp) => {
+      if (!bp.categoryName || !validCategories.includes(bp.categoryName)) return
+
+      const sizeMatch = bp.categoryName.match(/S(\d)/)
+      const size = sizeMatch ? `S${sizeMatch[1]}` : null
+      const itemClass = getComponentItemClass(bp)
+      const grade = getComponentGrade(bp)
+      const type = getSubType(bp)
+
+      const matchesSize = !selectedSize || size === selectedSize
+      const matchesClass = !selectedComponentClass || itemClass === selectedComponentClass
+      const matchesGrade = !selectedComponentGrade || grade === selectedComponentGrade
+      const matchesType = !selectedSubCategory || type === selectedSubCategory
+
+      if (matchesClass && matchesGrade && matchesType && size) {
+        sizes[size] = (sizes[size] || 0) + 1
+      }
+      if (matchesSize && matchesGrade && matchesType && itemClass) {
+        classes[itemClass] = (classes[itemClass] || 0) + 1
+      }
+      if (matchesSize && matchesClass && matchesType && grade) {
+        grades[grade] = (grades[grade] || 0) + 1
+      }
+      if (matchesSize && matchesClass && matchesGrade && type) {
+        types[type] = (types[type] || 0) + 1
+      }
+    })
+
+    return { sizes, classes, grades, types }
+  }, [
+    materialFilteredBlueprints,
+    selectedMainCategory,
+    selectedSize,
+    selectedComponentClass,
+    selectedComponentGrade,
+    selectedSubCategory,
+  ])
+
   const filteredSubTypeCounts = React.useMemo(() => {
     if (!selectedMainCategory) return {}
 
     if (selectedMainCategory === 'FPS Armour') {
       return filteredArmorCounts.types
+    }
+    if (selectedMainCategory === 'Vehicle Components') {
+      return filteredVehicleCompCounts.types
     }
 
     const counts: Record<string, number> = {}
@@ -419,7 +480,7 @@ export default function CanCraftTab({
     })
 
     return counts
-  }, [materialFilteredBlueprints, selectedMainCategory, selectedSize, filteredArmorCounts])
+  }, [materialFilteredBlueprints, selectedMainCategory, selectedSize, filteredArmorCounts, filteredVehicleCompCounts])
 
   const filteredBlueprints = React.useMemo(() => {
     let results = materialFilteredBlueprints
@@ -434,6 +495,15 @@ export default function CanCraftTab({
         if (!validCategories.includes(bp.categoryName)) return false
 
         if (selectedSize && !bp.categoryName.includes(selectedSize)) return false
+
+        if (selectedMainCategory === 'Vehicle Components') {
+          if (selectedComponentClass && getComponentItemClass(bp) !== selectedComponentClass) {
+            return false
+          }
+          if (selectedComponentGrade && getComponentGrade(bp) !== selectedComponentGrade) {
+            return false
+          }
+        }
 
         if (selectedArmorWeight && selectedMainCategory === 'FPS Armour') {
           const weight = getArmorWeight(bp)
@@ -460,6 +530,8 @@ export default function CanCraftTab({
     selectedMainCategory,
     selectedSubCategory,
     selectedSize,
+    selectedComponentClass,
+    selectedComponentGrade,
     selectedArmorWeight,
     selectedArmorSlot,
   ])
@@ -477,6 +549,8 @@ export default function CanCraftTab({
         selectedMainCategory,
         selectedSubCategory,
         selectedSize,
+        selectedComponentClass,
+        selectedComponentGrade,
         selectedArmorWeight,
         selectedArmorSlot,
         groupBlueprintVariants,
@@ -487,6 +561,8 @@ export default function CanCraftTab({
       selectedMainCategory,
       selectedSubCategory,
       selectedSize,
+      selectedComponentClass,
+      selectedComponentGrade,
       selectedArmorWeight,
       selectedArmorSlot,
       groupBlueprintVariants,
@@ -614,12 +690,16 @@ export default function CanCraftTab({
       setSelectedMainCategory(null)
       setSelectedSubCategory(null)
       setSelectedSize(null)
+      setSelectedComponentClass(null)
+      setSelectedComponentGrade(null)
       setSelectedArmorWeight(null)
       setSelectedArmorSlot(null)
     } else {
       setSelectedMainCategory(cat)
       setSelectedSubCategory(null)
       setSelectedSize(null)
+      setSelectedComponentClass(null)
+      setSelectedComponentGrade(null)
       setSelectedArmorWeight(null)
       setSelectedArmorSlot(null)
     }
@@ -656,9 +736,26 @@ export default function CanCraftTab({
 
   const sizeOptions = selectedMainCategory ? VEHICLE_SIZE_OPTIONS[selectedMainCategory] || [] : []
   const currentSizes = sizeOptions.reduce<Record<string, number>>((acc, size) => {
-    acc[size] = categoryData.sizes[selectedMainCategory!]?.[size] ?? 0
+    acc[size] =
+      selectedMainCategory === 'Vehicle Components'
+        ? filteredVehicleCompCounts.sizes[size] || 0
+        : (categoryData.sizes[selectedMainCategory!]?.[size] ?? 0)
     return acc
   }, {})
+  const currentComponentClasses = COMPONENT_ITEM_CLASS_OPTIONS.reduce<Record<string, number>>(
+    (acc, itemClass) => {
+      acc[itemClass] = filteredVehicleCompCounts.classes[itemClass] || 0
+      return acc
+    },
+    {}
+  )
+  const currentComponentGrades = COMPONENT_GRADE_OPTIONS.reduce<Record<string, number>>(
+    (acc, grade) => {
+      acc[grade] = filteredVehicleCompCounts.grades[grade] || 0
+      return acc
+    },
+    {}
+  )
   const currentArmorWeights = ARMOR_WEIGHT_OPTIONS.reduce<Record<string, number>>((acc, weight) => {
     acc[weight] = filteredArmorCounts.weights[weight] || 0
     return acc
@@ -686,10 +783,18 @@ export default function CanCraftTab({
     return acc
   }, {})
   const showVehicleSizes = sizeOptions.length > 0
+  const showComponentClass = selectedMainCategory === 'Vehicle Components'
+  const showComponentGrade = selectedMainCategory === 'Vehicle Components'
   const showArmorWeights = selectedMainCategory === 'FPS Armour'
   const showArmorSlots = selectedMainCategory === 'FPS Armour'
   const showSubTypes = subTypeOptions.length > 0
-  const hasSubFilters = showVehicleSizes || showArmorWeights || showArmorSlots || showSubTypes
+  const hasSubFilters =
+    showVehicleSizes ||
+    showComponentClass ||
+    showComponentGrade ||
+    showArmorWeights ||
+    showArmorSlots ||
+    showSubTypes
 
   return (
     <>
@@ -815,28 +920,94 @@ export default function CanCraftTab({
 
         {hasSubFilters && (
           <div className="flex flex-wrap gap-1.5 lg:gap-2 pt-2 site-divider">
-            {showVehicleSizes &&
-              sizeOptions.map((size) => {
-                const count = currentSizes[size] || 0
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    onClick={() => setSelectedSize(selectedSize === size ? null : size)}
-                    disabled={count === 0}
-                    className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
-                      selectedSize === size
-                        ? 'site-filter-selected-blue'
-                        : count === 0
-                          ? 'bg-blue-950/30 text-blue-800 border border-blue-900/50 cursor-not-allowed'
-                          : 'bg-blue-950/50 text-blue-400 hover:bg-blue-900/50 border border-blue-800/50'
-                    }`}
-                  >
-                    {size}
-                    <span className="opacity-70 ml-0.5">({count})</span>
-                  </button>
-                )
-              })}
+            {showVehicleSizes && (
+              <>
+                {sizeOptions.map((size) => {
+                  const count = currentSizes[size] || 0
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => setSelectedSize(selectedSize === size ? null : size)}
+                      disabled={count === 0}
+                      className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
+                        selectedSize === size
+                          ? 'site-filter-selected-blue'
+                          : count === 0
+                            ? 'bg-blue-950/30 text-blue-800 border border-blue-900/50 cursor-not-allowed'
+                            : 'bg-blue-950/50 text-blue-400 hover:bg-blue-900/50 border border-blue-800/50'
+                      }`}
+                    >
+                      {size}
+                      <span className="opacity-70 ml-0.5">({count})</span>
+                    </button>
+                  )
+                })}
+                <span className="text-slate-500 self-center text-sm hidden lg:inline">+</span>
+              </>
+            )}
+
+            {showComponentClass && (
+              <>
+                {COMPONENT_ITEM_CLASS_OPTIONS.map((itemClass) => {
+                  const count = currentComponentClasses[itemClass] || 0
+                  return (
+                    <button
+                      key={itemClass}
+                      type="button"
+                      onClick={() =>
+                        setSelectedComponentClass(
+                          selectedComponentClass === itemClass ? null : itemClass
+                        )
+                      }
+                      disabled={count === 0}
+                      className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
+                        selectedComponentClass === itemClass
+                          ? 'site-filter-selected-green'
+                          : count === 0
+                            ? 'bg-green-950/30 text-green-800 border border-green-900/50 cursor-not-allowed'
+                            : 'bg-green-950/50 text-green-400 hover:bg-green-900/50 border border-green-800/50'
+                      }`}
+                    >
+                      {formatComponentItemClass(itemClass)}
+                      <span className="opacity-70 ml-0.5">({count})</span>
+                    </button>
+                  )
+                })}
+                <span className="text-slate-500 self-center text-sm hidden lg:inline">+</span>
+              </>
+            )}
+
+            {showComponentGrade && (
+              <>
+                {COMPONENT_GRADE_OPTIONS.map((grade) => {
+                  const count = currentComponentGrades[grade] || 0
+                  return (
+                    <button
+                      key={grade}
+                      type="button"
+                      onClick={() =>
+                        setSelectedComponentGrade(
+                          selectedComponentGrade === grade ? null : grade
+                        )
+                      }
+                      disabled={count === 0}
+                      className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
+                        selectedComponentGrade === grade
+                          ? 'site-filter-selected-purple'
+                          : count === 0
+                            ? 'bg-purple-950/30 text-purple-800 border border-purple-900/50 cursor-not-allowed'
+                            : 'bg-purple-950/50 text-purple-400 hover:bg-purple-900/50 border border-purple-800/50'
+                      }`}
+                    >
+                      {grade}
+                      <span className="opacity-70 ml-0.5">({count})</span>
+                    </button>
+                  )
+                })}
+                <span className="text-slate-500 self-center text-sm hidden lg:inline">+</span>
+              </>
+            )}
 
             {showArmorWeights &&
               ARMOR_WEIGHT_OPTIONS.map((weight) => {
@@ -951,6 +1122,8 @@ export default function CanCraftTab({
               selectedMainCategory ||
               selectedSubCategory ||
               selectedSize ||
+              selectedComponentClass ||
+              selectedComponentGrade ||
               selectedArmorWeight ||
               selectedArmorSlot ||
               searchTerm) && (
@@ -961,6 +1134,8 @@ export default function CanCraftTab({
                   setSelectedMainCategory(null)
                   setSelectedSubCategory(null)
                   setSelectedSize(null)
+                  setSelectedComponentClass(null)
+                  setSelectedComponentGrade(null)
                   setSelectedArmorWeight(null)
                   setSelectedArmorSlot(null)
                   setSearchTerm('')
