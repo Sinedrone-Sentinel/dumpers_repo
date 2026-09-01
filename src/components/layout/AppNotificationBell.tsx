@@ -20,9 +20,18 @@ import {
   saveNotificationInboxCollapsed,
   type NotificationCategoryId,
 } from '../../lib/notificationCategories'
+import { ORDER_DEAL_MESSAGE_TYPE } from '../../lib/dealChat'
 
 
 const PENDING_FRIEND_REQUEST_TYPES = new Set(['friend_request', 'friend_request_sent'])
+
+function isStickyNotificationType(type: string): boolean {
+  return (
+    type === 'questionnaire_available' ||
+    type === ORDER_DEAL_MESSAGE_TYPE ||
+    PENDING_FRIEND_REQUEST_TYPES.has(type)
+  )
+}
 
 function isPendingFriendRequestType(type: string): boolean {
   return PENDING_FRIEND_REQUEST_TYPES.has(type)
@@ -103,13 +112,11 @@ export default function AppNotificationBell({
     setLoading(true)
     const result = await deleteAllUserNotifications()
     setLoading(false)
-    // Skips questionnaires + pending friend requests; refresh so local list matches.
+    // Skips questionnaires, pending friend requests, and open deal-chat pings.
     if (!result.error) void refresh()
   }
 
-  const clearableCount = notifications.filter(
-    (n) => n.type !== 'questionnaire_available' && !isPendingFriendRequestType(n.type)
-  ).length
+  const clearableCount = notifications.filter((n) => !isStickyNotificationType(n.type)).length
 
   return (
     <div ref={containerRef} className="relative shrink-0">
@@ -161,7 +168,7 @@ export default function AppNotificationBell({
                 disabled={loading}
                 onClick={() => void handleDismissAll()}
                 className="text-xs text-slate-400 hover:text-white disabled:opacity-50"
-                title="Does not clear questionnaires or pending friend requests"
+                title="Does not clear questionnaires, pending friend requests, or open deal chats"
               >
                 Clear all
               </button>
@@ -218,6 +225,8 @@ export default function AppNotificationBell({
                           const visual = getNotificationVisual(notification.type)
                           const isQuestionnaire = notification.type === 'questionnaire_available'
                           const isPendingFriend = isPendingFriendRequestType(notification.type)
+                          const isDealChat = notification.type === ORDER_DEAL_MESSAGE_TYPE
+                          const hideClear = isQuestionnaire || isPendingFriend || isDealChat
                           return (
                             <li
                               key={notification.id}
@@ -232,9 +241,7 @@ export default function AppNotificationBell({
                                       notification={notification}
                                       onNavigate={close}
                                       onDismissAfterNavigate={
-                                        isQuestionnaire || isPendingFriend
-                                          ? undefined
-                                          : () => void handleDismiss(notification.id)
+                                        hideClear ? undefined : () => void handleDismiss(notification.id)
                                       }
                                       onOpenQuestionnaire={onOpenQuestionnaire}
                                     />
@@ -253,7 +260,7 @@ export default function AppNotificationBell({
                                   >
                                     Cancel
                                   </button>
-                                ) : !isQuestionnaire && !isPendingFriendRequestType(notification.type) ? (
+                                ) : !hideClear ? (
                                   <button
                                     type="button"
                                     onClick={() => void handleDismiss(notification.id)}

@@ -7,6 +7,7 @@ import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import ReputationBadge from '../components/ReputationBadge'
 import TradeContactChip from '../components/TradeContactChip'
+import DealMessageButton from '../components/DealMessageButton'
 import MyListingCard from '../components/MyListingCard'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
@@ -787,6 +788,7 @@ export default function CustomOrdersRoute() {
 
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex gap-2 flex-wrap justify-end">
+                      <DealMessageButton order={order} />
                       {canSemanticBuyerConfirmPickup(order, userId) && (
                         <>
                           <button

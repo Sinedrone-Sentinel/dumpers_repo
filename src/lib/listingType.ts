@@ -66,3 +66,13 @@ export function isWtsPartialPurchaseOrder(order: CustomOrder): boolean {
 export function isWtbPartialFulfillmentOrder(order: CustomOrder): boolean {
   return orderListingType(order) === 'wtb' && !!order.source_listing_id
 }
+
+const DEAL_CHAT_OPEN_STATUSES = new Set(['accepted', 'in_progress', 'ready_for_pickup'])
+
+/** Two-party child deal that can still open chat. */
+export function canOpenDealChat(order: CustomOrder): boolean {
+  if (!order.assignee_id) return false
+  if (isListingContainer(order)) return false
+  if (DEAL_CHAT_OPEN_STATUSES.has(order.status)) return true
+  return Boolean(order.dispute_opened_at) && !['completed', 'cancelled', 'archived', 'fulfilled'].includes(order.status)
+}

@@ -8,6 +8,8 @@ import { formatDfpAuec } from '../lib/dfp'
 import { releaseOrderButtonLabel } from '../lib/orderRelease'
 import { orderTotalDfp } from '../lib/orderPricing'
 import type { CustomOrder } from '../lib/operations'
+import { canOpenDealChat } from '../lib/listingType'
+import DealMessageButton from './DealMessageButton'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
 
 const STATUS_STYLES: Record<string, string> = {
@@ -74,9 +76,10 @@ export default function WtsSaleOrderCard({
       <OrderDeadlineNotice order={order} role="seller" />
       <OrderNextStepCallout order={order} context="wts_seller" />
 
-      {canAct && (
+      {(canAct || canOpenDealChat(order)) && (
         <div className="pt-3 site-divider space-y-2">
-          {order.status === 'accepted' && (
+          <DealMessageButton order={order} variant="stack" />
+          {canAct && order.status === 'accepted' && (
             <button
               type="button"
               onClick={onStartWork}
@@ -86,22 +89,26 @@ export default function WtsSaleOrderCard({
               {submitting ? 'Starting...' : 'Start handoff'}
             </button>
           )}
-          <button
-            type="button"
-            onClick={onMarkReady}
-            disabled={submitting}
-            className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
-          >
-            {submitting ? 'Working...' : 'Mark ready for pickup'}
-          </button>
-          <button
-            type="button"
-            onClick={onAbandon}
-            disabled={submitting}
-            className="site-btn-secondary w-full py-2 text-sm"
-          >
-            {submitting ? 'Working...' : releaseOrderButtonLabel(order, userId)}
-          </button>
+          {canAct && (
+            <>
+              <button
+                type="button"
+                onClick={onMarkReady}
+                disabled={submitting}
+                className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
+              >
+                {submitting ? 'Working...' : 'Mark ready for pickup'}
+              </button>
+              <button
+                type="button"
+                onClick={onAbandon}
+                disabled={submitting}
+                className="site-btn-secondary w-full py-2 text-sm"
+              >
+                {submitting ? 'Working...' : releaseOrderButtonLabel(order, userId)}
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

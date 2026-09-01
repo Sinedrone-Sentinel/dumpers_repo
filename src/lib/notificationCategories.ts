@@ -82,7 +82,7 @@ export function getNotificationCategoryId(notification: UserNotification): Notif
     return 'friends'
   }
 
-  if (ORDER_TYPES.has(type)) {
+  if (ORDER_TYPES.has(type) || type === 'order_deal_message') {
     return isWtsOrderNotification(notification) ? 'wts-listings' : 'wtb-orders'
   }
 
