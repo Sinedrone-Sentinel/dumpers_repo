@@ -109,7 +109,7 @@ export const ORDER_LIFECYCLE_SECTION = {
   steps: [
     {
       title: '1. Pick items to buy or fulfill',
-      body: 'A **WTB** fulfiller claims lines on The Bazaar Fulfillment tab, or a buyer picks items from a **WTS** listing on the Store tab. Each selection becomes its own transaction, and both sides see the other party’s **in-game name** on the order card — add them in Star Citizen to coordinate.',
+      body: 'A **WTB** fulfiller claims lines on The Bazaar Fulfillment tab, or a buyer picks items from a **WTS** listing on the Store tab. Each selection becomes its own transaction, and both sides see the other party’s **in-game name** on the order card — add them in Star Citizen to coordinate. After both are on the deal, **Message** opens a private chat (verified RSI Handle required on both sides).',
     },
     {
       title: '2. Seller prepares the order',
@@ -125,7 +125,7 @@ export const ORDER_LIFECYCLE_SECTION = {
     },
   ],
   reminders: [
-    'Header **Notifications** include clickable links (Confirm pickup, Archive & rate, Browse the Bazaar, etc.)',
+    'Header **Notifications** include clickable links (Confirm pickup, Archive & rate, Browse the Bazaar, Open chat, etc.)',
     'If the other party rates first, you have **24 hours** to archive & rate or a 5-star rating is auto-applied on your behalf',
     'Use **Report Problem** on Active if goods were not received — do not wait for the 72-hour auto-complete',
   ],

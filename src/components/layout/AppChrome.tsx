@@ -19,6 +19,7 @@ import { useAppUpdateAvailable } from '../../hooks/useAppUpdateAvailable'
 import { getLiveGameVersionLabel } from '../../lib/gameBuildVersion'
 import SiteTicker from './SiteTicker'
 import ServiceRequestAcceptedListener from '../ServiceRequestAcceptedListener'
+import DealChatListener from '../DealChatListener'
 import {
   buildSiteTickerItems,
   fetchActiveWhatsNewEntries,
@@ -219,6 +220,7 @@ export default function AppChrome({
         onOpenQuestionnaire={(id) => onOpenQuestionnaire?.(id)}
       />
       {!isGuestPreview && !isPending ? <ServiceRequestAcceptedListener /> : null}
+      {!isGuestPreview && !isPending ? <DealChatListener /> : null}
     </div>
   )
 }

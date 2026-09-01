@@ -14,6 +14,11 @@ import {
   parseServiceRequestAcceptedPayload,
 } from '../lib/serviceRequestAccepted'
 import { notifyNotificationsChanged } from '../hooks/useNotificationInbox'
+import {
+  ORDER_DEAL_MESSAGE_TYPE,
+  orderIdFromDealNotificationPayload,
+  requestDealChat,
+} from '../lib/dealChat'
 
 interface NotificationBodyProps {
   notification: UserNotification
@@ -51,6 +56,10 @@ export default function NotificationBody({
   const isInboundFriendRequest = notification.type === 'friend_request' && !!friendshipId
   // Outgoing pending Cancel lives in the notification row action (replaces Clear).
   const hasFriendActions = isInboundFriendRequest
+  const dealChatOrderId =
+    notification.type === ORDER_DEAL_MESSAGE_TYPE
+      ? orderIdFromDealNotificationPayload(notification.payload)
+      : null
 
   if (
     !notification.body &&
@@ -58,6 +67,7 @@ export default function NotificationBody({
     !questionnaireId &&
     !acceptedDetail &&
     !hasFriendActions &&
+    !dealChatOrderId &&
     notification.type !== 'friend_request_sent'
   ) {
     return null
@@ -105,6 +115,18 @@ export default function NotificationBody({
           className="text-cyan-400 hover:text-cyan-300 underline font-medium"
         >
           View acceptance
+        </button>
+      ) : null}
+      {dealChatOrderId ? (
+        <button
+          type="button"
+          onClick={() => {
+            requestDealChat(dealChatOrderId)
+            onNavigate?.()
+          }}
+          className="text-cyan-400 hover:text-cyan-300 underline font-medium"
+        >
+          Open chat
         </button>
       ) : null}
       {questionnaireId && onOpenQuestionnaire ? (

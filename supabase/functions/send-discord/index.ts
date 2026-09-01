@@ -28,6 +28,7 @@ const COLORS: Record<string, number> = {
   my_order_timeout: 0xef4444,
   my_order_noshow: 0xef4444,
   my_order_dispute: 0xef4444,
+  my_order_deal_message: 0x38bdf8,
   my_support_reply: 0x8b5cf6,
   my_support_resolved: 0x22c55e,
   my_friend_request: 0x3b82f6,

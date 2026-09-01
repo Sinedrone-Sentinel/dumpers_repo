@@ -1206,8 +1206,7 @@ export async function deleteUserNotification(notificationId: string): Promise<{ 
 }
 
 /** Dismiss all unread notifications — deletes rows (no read history kept).
- * Questionnaire prompts and pending friend requests are excluded
- * (friend requests must be accepted, denied, or cancelled explicitly).
+ * Questionnaire prompts, pending friend requests, and open deal-chat pings are excluded.
  */
 export async function deleteAllUserNotifications(): Promise<{ error?: string }> {
   const {
@@ -1224,7 +1223,7 @@ export async function deleteAllUserNotifications(): Promise<{ error?: string }> 
     .not(
       'type',
       'in',
-      '(questionnaire_available,friend_request,friend_request_sent)'
+      '(questionnaire_available,friend_request,friend_request_sent,order_deal_message)'
     )
 
   if (error) return { error: error.message }
@@ -1261,6 +1260,61 @@ export async function wipeResourceTracker(): Promise<{ deletedCount?: number; er
 
   if (error) return { error: error.message }
   return { deletedCount: Number(data ?? 0) }
+}
+
+export interface DealChatMessage {
+  id: string
+  orderId: string
+  senderId: string
+  body: string
+  createdAt: string
+}
+
+export async function fetchCustomOrderById(orderId: string): Promise<{
+  data?: CustomOrder
+  error?: string
+}> {
+  const { data, error } = await supabase
+    .from('custom_orders')
+    .select(`
+      *,
+      items:custom_order_items(*),
+      blueprints:custom_order_blueprints(*),
+      resource_lines:custom_order_resource_lines(*),
+      requester:profiles!custom_orders_requester_id_fkey(rsi_handle, display_name, email),
+      assignee:profiles!custom_orders_assignee_id_fkey(rsi_handle, display_name, email)
+    `)
+    .eq('id', orderId)
+    .maybeSingle()
+
+  if (error) return { error: error.message }
+  if (!data) return { error: 'Deal not found' }
+  return { data: data as CustomOrder }
+}
+
+export async function listDealMessages(orderId: string): Promise<{
+  data: DealChatMessage[]
+  error?: string
+}> {
+  const { data, error } = await supabase.rpc('list_deal_messages', { p_order_id: orderId })
+  if (error) return { data: [], error: error.message }
+  const row = data as { success?: boolean; error?: string; messages?: DealChatMessage[] } | null
+  if (!row?.success) return { data: [], error: row?.error || 'Failed to load messages' }
+  return { data: row.messages ?? [] }
+}
+
+export async function sendDealMessage(
+  orderId: string,
+  body: string
+): Promise<{ data?: DealChatMessage; error?: string }> {
+  const { data, error } = await supabase.rpc('send_deal_message', {
+    p_order_id: orderId,
+    p_body: body,
+  })
+  if (error) return { error: error.message }
+  const row = data as { success?: boolean; error?: string; message?: DealChatMessage } | null
+  if (!row?.success) return { error: row?.error || 'Failed to send message' }
+  return { data: row.message }
 }
 
 export type { ExtractedBlueprintResource }

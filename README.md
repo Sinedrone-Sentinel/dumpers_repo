@@ -170,7 +170,7 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 - **Pure DFP pricing** — no price sliders or adjustments; line totals must equal DFP
 - Expand cart lines to set per-slot material qualities; live DFP total and stat preview
 - **My open listings** panel: edit line quantities, remove lines, or close a listing inline
-- Tabs: active, completed, archive track **child transactions**; confirm pickup; **Archive & rate** after completion
+- Tabs: active, completed, archive track **child transactions**; **Message** on accepted deals; confirm pickup; **Archive & rate** after completion
 - Requires **verified RSI Handle**; pending-member buyer/seller limits apply per transaction (open listings don't count)
 
 ### The Bazaar (`/bazaar`)
@@ -180,7 +180,7 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 - Pick exact lines and quantities to buy or fulfill
 - Marking blueprints acquired is optional: lines using untracked blueprints are flagged in amber and confirmed once before claiming, never blocked (`accept_wtb_partial` enforces no ownership check)
 - Every checkout/claim spawns a full child transaction (same handoff, deadlines, ratings)
-- Seller actions on-card: start handoff, mark ready, cancel/release (items restore to the listing)
+- Seller actions on-card: message the other party, start handoff, mark ready, cancel/release (items restore to the listing)
 - **Reputation badges** show buyer rep, fulfiller/seller rep, and average delivery time (after 5 completed trades)
 - Offline users see open-listing **count only** — sign in to browse or trade
 
@@ -207,12 +207,13 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 - Header bell with unread count; categories include BP Dumper, WTB/WTS, Support, Mining Ledger, Friends, and more
 - Friend request / accept / decline alerts open the Friends header menu
+- Deal-chat pings stay until the deal ends (Open chat does not Clear them)
 - Dismiss (**Clear**) deletes the row — no read-history archive
 - Unavailable while account is `pending`
 
 ### Discord Webhooks (`/discord-subscribe`)
 
-- **My activity** — your deals moving forward, plus friend request received / accepted (requires verified RSI Handle)
+- **My activity** — your deals moving forward (including deal chat), plus friend request received / accepted (requires verified RSI Handle)
 - **Marketplace activity** (opt-in) — new/changed listings from other members; coalesced digests for post/cancel bursts, and listing edits post one held, diff-only "Listing Updated" (only the changed lines, never a full re-dump)
 - **Support** — staff replies and resolved tickets
 - Per-event URLs; no self-echo on your own posts

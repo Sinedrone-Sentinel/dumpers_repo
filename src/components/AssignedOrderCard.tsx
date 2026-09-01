@@ -13,6 +13,7 @@ import { formatQuantityForResource } from '../lib/resourceQuantity'
 import { orderTotalDfp } from '../lib/orderPricing'
 import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
 import type { CustomOrder } from '../lib/operations'
+import DealMessageButton from './DealMessageButton'
 
 interface AssignedOrderCardProps {
   order: CustomOrder
@@ -161,6 +162,7 @@ export default function AssignedOrderCard({
       )}
 
       <div className="pt-3 site-divider space-y-2">
+        <DealMessageButton order={order} variant="stack" />
         <button
           type="button"
           onClick={onAbandon}

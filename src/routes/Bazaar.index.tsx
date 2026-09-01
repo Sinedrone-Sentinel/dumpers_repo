@@ -7,6 +7,7 @@ import OrderRatingModal, { type OrderRatingTarget } from '../components/OrderRat
 import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import TradeContactChip from '../components/TradeContactChip'
+import DealMessageButton from '../components/DealMessageButton'
 import WtsSaleOrderCard from '../components/WtsSaleOrderCard'
 import { type WtsLineSelection } from '../components/WtsPartialPurchasePanel'
 import ReputationBadge from '../components/ReputationBadge'
@@ -982,7 +983,10 @@ export default function BazaarRoute() {
                             {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                           </p>
                           {order.assignee && (
-                            <TradeContactChip role="fulfiller" profile={order.assignee} compact />
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <TradeContactChip role="fulfiller" profile={order.assignee} compact />
+                              <DealMessageButton order={order} />
+                            </div>
                           )}
                           {order.assignee_id && (
                             <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} type="fulfiller" />
@@ -1065,8 +1069,9 @@ export default function BazaarRoute() {
                                   {order.status.replace(/_/g, ' ')}
                                   {dfpDisplayEnabled && totalDfp > 0 && ` · ${formatDfpAuec(totalDfp)}`}
                                 </p>
-                                <div className="mt-2">
+                                <div className="mt-2 flex items-center gap-2 flex-wrap">
                                   <TradeContactChip role="customer" profile={order.requester} compact />
+                                  <DealMessageButton order={order} />
                                 </div>
                                 <div className="mt-2">
                                   <ReputationBadge

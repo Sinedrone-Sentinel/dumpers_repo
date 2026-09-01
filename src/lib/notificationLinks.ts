@@ -105,6 +105,11 @@ export function getNotificationActionLink(
     return null
   }
 
+  // Deal chat opens the global modal — do not navigate away or Clear on click.
+  if (type === 'order_deal_message') {
+    return null
+  }
+
   if (!ORDER_TYPES.has(type)) return null
 
   const listingType = listingTypeFromPayload(payload)
