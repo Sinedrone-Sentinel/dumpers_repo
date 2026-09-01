@@ -22,6 +22,7 @@ function run(label, scriptRel) {
 }
 
 run('Unit suite', 'scripts/tests/unit-suite.mjs')
+run('Blueprint SEO display', 'scripts/audit-blueprint-seo-display.mjs')
 run('Mining math', 'scripts/verify-mining-math.mjs')
 
 console.log('\nAll test suites passed.\n')

@@ -19,6 +19,12 @@ import {
   buildBlueprintSeoSlugMap,
   hasBlueprintSeoEntity,
 } from './lib/blueprintSeoSlug.mjs'
+import {
+  cleanSeoMissionTitle,
+  pickSeoMaterialOption,
+  seoMaterialAmount,
+  seoMaterialLabel,
+} from './lib/blueprintSeoDisplay.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const distDir = join(root, 'dist')
@@ -81,21 +87,12 @@ function craftTimeIsoDuration(bp) {
 function listMaterials(bp) {
   const lines = []
   for (const slot of bp.slots || []) {
-    const opt =
-      (slot.options || []).find((o) => o.type === 'resource' || o.resourceName) ||
-      slot.options?.[0]
+    const opt = pickSeoMaterialOption(slot)
     if (!opt) continue
-    const name = opt.resourceName || opt.itemName || 'Material'
-    let amountText = '—'
-    if (opt.standardCargoUnits != null && Number(opt.standardCargoUnits) > 0) {
-      amountText = `${Number(opt.standardCargoUnits)} SCU`
-    } else if (opt.count != null) {
-      amountText = `${opt.count} item${opt.count === 1 ? '' : 's'}`
-    }
     lines.push({
       slot: slot.slotDisplayName || 'Input',
-      label: name,
-      amountText,
+      label: seoMaterialLabel(opt),
+      amountText: seoMaterialAmount(opt),
     })
   }
   return lines
@@ -110,7 +107,8 @@ function formatPct(chance) {
 
 function listMissions(bp) {
   return [...(bp.rewardMissions || [])]
-    .filter((m) => m.mission && String(m.mission).trim())
+    .map((m) => ({ ...m, mission: cleanSeoMissionTitle(m.mission) }))
+    .filter((m) => m.mission)
     .sort((a, b) =>
       String(a.mission).localeCompare(String(b.mission), undefined, { sensitivity: 'base' })
     )
