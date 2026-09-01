@@ -281,4 +281,36 @@ check(taxonomy.getCombatClothingGarment({
   armorWeight: null,
 }) === 'pants', 'Bellator trousers stay a garment')
 
+const seoDisplay = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/blueprintSeoDisplay.mjs')).href
+)
+check(
+  seoDisplay.seoMaterialLabel({
+    itemName: 'harvestable_mineral_1h_sadaryx',
+    displayName: 'Sadaryx',
+    entityName: 'Sadaryx',
+  }) === 'Sadaryx',
+  'SEO material prefers displayName over itemName'
+)
+check(
+  seoDisplay.seoMaterialAmount({ quantity: 4, itemName: 'harvestable_mineral_1h_sadaryx' }) ===
+    '4 items',
+  'SEO material uses item quantity'
+)
+check(
+  seoDisplay.seoMaterialAmount({ standardCargoUnits: 0.04, resourceName: 'Iron' }) === '0.04 SCU',
+  'SEO material keeps SCU for resources'
+)
+check(
+  seoDisplay.cleanSeoMissionTitle(
+    'Citizens For Prosperity: Disable Outlaw Stronghold at ~mission(Location)'
+  ) === 'Citizens For Prosperity: Disable Outlaw Stronghold',
+  'SEO mission title strips ~mission() and trailing at'
+)
+check(
+  seoDisplay.looksInternalSeoLabel('harvestable_mineral_1h_sadaryx') === true,
+  'internal harvestable label detected'
+)
+check(seoDisplay.looksInternalSeoLabel('Sadaryx') === false, 'display name is not internal')
+
 console.log(`Unit tests: ${pass} passed`)

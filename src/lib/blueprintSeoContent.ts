@@ -10,8 +10,11 @@ import gameBlueprintsData from '../data/game-blueprints.json'
 type SlotOption = {
   type?: string
   resourceName?: string
+  entityName?: string
+  displayName?: string
   standardCargoUnits?: number
   count?: number
+  quantity?: number
   itemName?: string
 }
 
@@ -125,22 +128,46 @@ export function craftTimeIsoDuration(bp: SeoBlueprint): string | null {
   return `PT${totalSec}S`
 }
 
+function seoMaterialLabel(opt: SlotOption): string {
+  return opt.resourceName || opt.entityName || opt.displayName || opt.itemName || 'Material'
+}
+
+function seoMaterialAmount(opt: SlotOption): string {
+  if (opt.standardCargoUnits != null && Number(opt.standardCargoUnits) > 0) {
+    return `${Number(opt.standardCargoUnits)} SCU`
+  }
+  const count = opt.quantity ?? opt.count
+  if (count != null && Number(count) > 0) {
+    const n = Number(count)
+    return `${n} item${n === 1 ? '' : 's'}`
+  }
+  return '—'
+}
+
+/** Same rules as scripts/lib/blueprintSeoDisplay.mjs cleanSeoMissionTitle. */
+export function cleanSeoMissionTitle(raw: string | null | undefined): string {
+  if (raw == null) return ''
+  return String(raw)
+    .replace(/~mission\s*\([^)]*\)/gi, '')
+    .replace(/~\w+\([^)]*\)/g, '')
+    .replace(/\s*\|\s*/g, ' · ')
+    .replace(/\s*:\s*(\s|$)/g, ': ')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+at\s*$/i, '')
+    .replace(/^\s*Rank\s*-\s*/i, '')
+    .replace(/:\s*$/g, '')
+    .trim()
+}
+
 export function listSeoMaterials(bp: SeoBlueprint): SeoMaterialLine[] {
   const lines: SeoMaterialLine[] = []
   for (const slot of bp.slots ?? []) {
     const opt = (slot.options ?? []).find((o) => o.type === 'resource' || o.resourceName) ?? slot.options?.[0]
     if (!opt) continue
-    const name = opt.resourceName || opt.itemName || 'Material'
-    let amountText = '—'
-    if (opt.standardCargoUnits != null && Number(opt.standardCargoUnits) > 0) {
-      amountText = `${Number(opt.standardCargoUnits)} SCU`
-    } else if (opt.count != null) {
-      amountText = `${opt.count} item${opt.count === 1 ? '' : 's'}`
-    }
     lines.push({
       slot: slot.slotDisplayName || 'Input',
-      label: name,
-      amountText,
+      label: seoMaterialLabel(opt),
+      amountText: seoMaterialAmount(opt),
     })
   }
   return lines
@@ -160,7 +187,8 @@ export function listSeoRewardMissions(bp: SeoBlueprint): SeoMissionLine[] {
     })
   )
   return missions
-    .filter((m) => m.mission && String(m.mission).trim())
+    .map((m) => ({ ...m, mission: cleanSeoMissionTitle(m.mission) }))
+    .filter((m) => m.mission)
     .map((m) => {
       const standingParts: string[] = []
       if (m.standingName) {
