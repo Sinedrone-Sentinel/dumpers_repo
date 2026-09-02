@@ -703,11 +703,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 Time Limits
               </h4>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li>• <strong className="text-slate-300">Seller deadline:</strong> 72 hours to mark ready after a trade starts (WTB craft or WTS handoff), or the items return to the listing</li>
-                <li>• <strong className="text-slate-300">Cancel/release:</strong> Cancelling a transaction restores its items and quantities to the parent listing</li>
-                <li>• <strong className="text-slate-300">Buyer pickup:</strong> 72 hours to confirm after ready, or auto-complete (buyer may receive a strike)</li>
-                <li>• <strong className="text-slate-300">Rating deadline:</strong> 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf</li>
-                <li>• <strong className="text-slate-300">3 strikes in 30 days</strong> may lead to account restrictions</li>
+                {ORDER_RULES_SECTION.timeLimits.items.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
           </div>
@@ -720,9 +718,9 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               Consequences for Violations
             </h4>
             <ul className="text-xs text-slate-400 space-y-1.5">
-              <li>• <strong className="text-slate-300">Reputation reset:</strong> All ratings cleared, returning you to "Pending" status with limits</li>
-              <li>• <strong className="text-slate-300">Order history cleared:</strong> Archived orders may be removed along with your reputation</li>
-              <li>• <strong className="text-slate-300">Account ban:</strong> Severe or repeated violations may result in permanent removal from the platform</li>
+              {ORDER_RULES_SECTION.consequences.items.map((item) => (
+                <li key={item}>• {renderRich(item)}</li>
+              ))}
             </ul>
             <p className="text-xs text-red-300/80 mt-2">
               {ORDER_RULES_SECTION.consequences.note}

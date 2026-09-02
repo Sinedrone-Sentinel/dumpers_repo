@@ -278,6 +278,7 @@ export const ORDER_RULES_SECTION = {
       '**Archive & rate:** Required after pickup — both parties must click **Archive & rate** on completed orders',
       '**Rating deadline:** 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf',
       '**3 strikes in 30 days** may lead to account restrictions',
+      '**Ghosting** a trade (buyer, seller, or fulfiller missing a 72-hour deadline) shows a warning on your next sign-in; repeated ghosting can lead to an account ban',
     ],
   },
   consequences: {
@@ -285,7 +286,7 @@ export const ORDER_RULES_SECTION = {
     items: [
       '**Reputation reset:** All ratings cleared, returning you to "Pending" status with limits',
       '**Order history cleared:** Archived orders may be removed along with your reputation',
-      '**Account ban:** Severe or repeated violations may result in permanent removal from the platform',
+      '**Account ban:** Severe or repeated violations — including repeated ghosting on order deadlines — may result in permanent removal from the platform',
     ],
     note: 'Repeated or serious violations may result in account review and disciplinary action by site staff.',
   },

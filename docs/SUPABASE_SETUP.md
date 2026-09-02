@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `177_deal_messages.sql` (per-deal marketplace chat + sticky `order_deal_message` Notify + personal Discord `my_order_deal_message`). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `178_order_timeout_cron_and_warning.sql` (hourly 72h order timeout cron + one-time ghosting warning). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -208,8 +208,9 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 140 | `175_support_chat_realtime.sql` | Publish `support_tickets` + `ticket_messages` to `supabase_realtime` (live support queues/chat; typing uses Presence) |
 | 141 | `176_wtb_fulfill_without_blueprint_tracker.sql` | WTB fulfill no longer requires the Blueprint tracker; amber confirm on untracked lines |
 | 142 | `177_deal_messages.sql` | Per-deal chat (`deal_messages`); `list_deal_messages` / `send_deal_message`; purge on terminal status; sticky `order_deal_message`; personal Discord `my_order_deal_message` |
+| 143 | `178_order_timeout_cron_and_warning.sql` | Hourly `order-timeout-checks` cron (`run_order_timeout_jobs`); WTS/WTB timeout attribution; `get_my_pending_timeout_warning` / `acknowledge_timeout_warning` |
 
-### pg_cron (migrations 054, 065-068, 144, 147)
+### pg_cron (migrations 054, 065-068, 144, 147, 178)
 
 Migrations **065-068** schedule a cron job that calls the `send-discord` Edge Function. On Supabase:
 
@@ -220,6 +221,22 @@ Migrations **065-068** schedule a cron job that calls the `send-discord` Edge Fu
 5. Apply migration **147** so cron sends that secret on the `apikey` header (not `Authorization: Bearer`)
 
 If pg_cron is unavailable on your plan, Discord queue messages can still be processed manually from super-admin Discord settings (invoke `send-discord`).
+
+Order timeout enforcement (`order-timeout-checks`, hourly) is scheduled by migration **178**. If pg_cron is missing, run this in the SQL editor after applying 178:
+
+```sql
+SELECT cron.schedule(
+  'order-timeout-checks',
+  '0 * * * *',
+  $$SELECT public.run_order_timeout_jobs()$$
+);
+```
+
+To process already-overdue trades immediately after apply:
+
+```sql
+SELECT public.run_order_timeout_jobs();
+```
 
 ---
 

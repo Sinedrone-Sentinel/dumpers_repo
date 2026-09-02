@@ -20,6 +20,7 @@ import { getLiveGameVersionLabel } from '../../lib/gameBuildVersion'
 import SiteTicker from './SiteTicker'
 import ServiceRequestAcceptedListener from '../ServiceRequestAcceptedListener'
 import DealChatListener from '../DealChatListener'
+import TimeoutWarningListener from '../TimeoutWarningListener'
 import {
   buildSiteTickerItems,
   fetchActiveWhatsNewEntries,
@@ -221,6 +222,7 @@ export default function AppChrome({
       />
       {!isGuestPreview && !isPending ? <ServiceRequestAcceptedListener /> : null}
       {!isGuestPreview && !isPending ? <DealChatListener /> : null}
+      {!isGuestPreview && !isPending ? <TimeoutWarningListener /> : null}
     </div>
   )
 }
