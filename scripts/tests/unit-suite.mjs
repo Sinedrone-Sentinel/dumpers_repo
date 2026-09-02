@@ -319,8 +319,32 @@ check(quality.formatMitigationPercent(0.6) === '40.000%', 'heavy 0.6 taken → 4
 check(quality.formatMitigationPercent(0.8) === '20.000%', 'light 0.8 taken → 20.000% mitigated')
 check(quality.formatMitigationPercent(0.125) === '87.500%', 'super-heavy 0.125 taken → 87.500% mitigated')
 check(
-  quality.formatMitigationPercent(0.6 * 1.0046) === '39.724%',
-  '0.6 × 1.0046 bonus → 39.724% mitigated'
+  quality.formatMitigationPercent(quality.applyArmorMitigationBonus(0.6, 0.46)) === '40.460%',
+  'heavy 40.000% + 0.46% bonus → 40.460% mitigated'
+)
+check(
+  quality.formatMitigationPercent(quality.applyArmorMitigationBonus(0.6, 0.69)) === '40.690%',
+  'heavy 40.000% + 0.69% bonus → 40.690% mitigated'
+)
+check(
+  quality.formatStatValue(quality.applyArmorMitigationBonus(0.6, 0.69), 'Armor_Damagemitigation') ===
+    '40.690%',
+  'FINAL display adds bonus to blocked percent'
+)
+check(quality.formatModifierPercent(1.0069) === '+0.690%', 'bonus percent shows 3 decimals')
+check(quality.formatPercentChange(0.6864123) === '+0.686%', 'bonus rounds to 3 decimals')
+check(
+  quality.formatMitigationPercent(quality.applyArmorMitigationBonus(0.6, 0.6864123)) === '40.686%',
+  'FINAL uses the same 3-decimal bonus as the displayed +0.686%'
+)
+check(
+  quality.formatAggregatedModifierDisplay({
+    property: 'Armor_Damagemitigation',
+    propertyLabel: 'Damage Mitigation',
+    combinedModifier: 1.006864123,
+    percentChange: 0.6864123,
+  }) === '+0.686%',
+  'combined bonus uses 3-decimal percentChange, not 2-decimal combinedModifier'
 )
 check(
   quality.formatStatValue(0.6, 'Armor_Damagemitigation') === '40.000%',

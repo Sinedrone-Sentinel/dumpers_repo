@@ -235,14 +235,30 @@ export function interpolateModifier(quality: number, modifiers: Modifier[]): num
   return 1
 }
 
+export const PERCENT_DISPLAY_DECIMALS = 3
+
+/** Round a percent-change so bonus text and FINAL use the same number. */
+export function roundPercentChange(percentChange: number): number {
+  const factor = 10 ** PERCENT_DISPLAY_DECIMALS
+  return Math.round(percentChange * factor) / factor
+}
+
+/**
+ * Format a percent-change with a sign and three decimal places.
+ * 0.6864123 → "+0.686%"
+ */
+export function formatPercentChange(percentChange: number): string {
+  const rounded = roundPercentChange(percentChange)
+  const sign = rounded >= 0 ? '+' : ''
+  return `${sign}${rounded.toFixed(PERCENT_DISPLAY_DECIMALS)}%`
+}
+
 /**
  * Format a modifier value as a percentage change string.
- * 0.8 → "-20.00%", 1.0 → "0.00%", 1.2 → "+20.00%"
+ * 0.8 → "-20.000%", 1.0 → "+0.000%", 1.2 → "+20.000%"
  */
 export function formatModifierPercent(modifier: number): string {
-  const percentChange = (modifier - 1) * 100
-  const sign = percentChange >= 0 ? '+' : ''
-  return `${sign}${percentChange.toFixed(2)}%`
+  return formatPercentChange((modifier - 1) * 100)
 }
 
 export function formatAdditiveModifier(value: number): string {
@@ -254,14 +270,14 @@ export function formatSlotModifierDisplay(result: SlotModifierResult): string {
   if (result.isIntegerAdditive) {
     return formatAdditiveModifier(result.additiveAmount ?? 0)
   }
-  return formatModifierPercent(result.modifier)
+  return formatPercentChange(result.percentChange)
 }
 
 export function formatAggregatedModifierDisplay(mod: AggregatedModifier): string {
   if (mod.isIntegerAdditive) {
     return formatAdditiveModifier(mod.additiveChange ?? 0)
   }
-  return formatModifierPercent(mod.combinedModifier)
+  return formatPercentChange(mod.percentChange)
 }
 
 /**
@@ -398,8 +414,11 @@ export function aggregateModifiers(
     )
     const baseValue = baseKey ? baseStats![baseKey] : undefined
     const rawFinal =
-      baseValue !== undefined ? baseValue * combinedModifier + additiveChange : undefined
-    // Keep full precision for damage-taken multipliers so mitigation % can show XX.XXX.
+      baseValue === undefined
+        ? undefined
+        : isArmorDamageTakenStat(data.originalProperty)
+          ? applyArmorMitigationBonus(baseValue, percentChange)
+          : baseValue * combinedModifier + additiveChange
     const finalValue =
       rawFinal === undefined
         ? undefined
@@ -434,6 +453,12 @@ export function isArmorDamageTakenStat(property?: string | null): boolean {
 export function formatMitigationPercent(takenMultiplier: number): string {
   const pct = (1 - takenMultiplier) * 100
   return `${pct.toFixed(3)}%`
+}
+
+/** Add a quality bonus to blocked percent, then store the matching taken-multiplier. */
+export function applyArmorMitigationBonus(takenMultiplier: number, percentChange: number): number {
+  const mitigated = 1 - takenMultiplier + roundPercentChange(percentChange) / 100
+  return 1 - mitigated
 }
 
 /**
