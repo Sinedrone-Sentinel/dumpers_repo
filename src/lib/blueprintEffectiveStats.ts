@@ -3,7 +3,9 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import {
   aggregateModifiers,
   calculateSlotModifiers,
+  formatPercentChange,
   formatStatValue,
+  roundPercentChange,
   type AggregatedModifier,
   type RawModifier,
 } from './qualityModifiers'
@@ -106,7 +108,7 @@ export function computeBlueprintEffectiveModifiers(
 export function serializeEffectiveStats(modifiers: AggregatedModifier[]): StoredEffectiveStat[] {
   return modifiers.map((mod) => ({
     propertyLabel: mod.propertyLabel,
-    percentChange: Math.round(mod.percentChange * 10) / 10,
+    percentChange: roundPercentChange(mod.percentChange),
     ...(mod.isIntegerAdditive ? { additiveChange: mod.additiveChange, isIntegerAdditive: true } : {}),
     ...(mod.baseValue !== undefined && mod.finalValue !== undefined
       ? { baseValue: mod.baseValue, finalValue: mod.finalValue }
@@ -119,9 +121,7 @@ function formatStoredStatChange(stat: StoredEffectiveStat): string {
     const val = stat.additiveChange ?? 0
     return val >= 0 ? `+${val}` : `${val}`
   }
-  return stat.percentChange >= 0
-    ? `+${stat.percentChange.toFixed(1)}%`
-    : `${stat.percentChange.toFixed(1)}%`
+  return formatPercentChange(stat.percentChange)
 }
 
 export function formatStoredStatLine(stat: StoredEffectiveStat): string {
