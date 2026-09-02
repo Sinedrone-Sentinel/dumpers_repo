@@ -42,9 +42,9 @@ export default function BlueprintEffectiveStatsSummary({
             <span className="flex flex-wrap items-center gap-x-2 justify-end">
               {mod.baseValue !== undefined && mod.finalValue !== undefined && (
                 <span className="text-slate-500">
-                  {formatStatValue(mod.baseValue)} →{' '}
+                  {formatStatValue(mod.baseValue, mod.property)} →{' '}
                   <span className={getAggregatedModifierColorClass(mod)}>
-                    {formatStatValue(mod.finalValue)}
+                    {formatStatValue(mod.finalValue, mod.property)}
                   </span>
                 </span>
               )}

@@ -17,6 +17,7 @@ const modules = [
   'src/lib/listingType.ts',
   'src/lib/liveMissionTracker.ts',
   'src/lib/blueprintTaxonomy.ts',
+  'src/lib/qualityModifiers.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -34,6 +35,7 @@ for (const mod of modules) {
 
 const slug = await import(pathToFileURL(path.join(outDir, 'blueprintSeoSlug.mjs')).href)
 const listing = await import(pathToFileURL(path.join(outDir, 'listingType.mjs')).href)
+const quality = await import(pathToFileURL(path.join(outDir, 'qualityModifiers.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -312,5 +314,25 @@ check(
   'internal harvestable label detected'
 )
 check(seoDisplay.looksInternalSeoLabel('Sadaryx') === false, 'display name is not internal')
+
+check(quality.formatMitigationPercent(0.6) === '40.000%', 'heavy 0.6 taken → 40.000% mitigated')
+check(quality.formatMitigationPercent(0.8) === '20.000%', 'light 0.8 taken → 20.000% mitigated')
+check(quality.formatMitigationPercent(0.125) === '87.500%', 'super-heavy 0.125 taken → 87.500% mitigated')
+check(
+  quality.formatMitigationPercent(0.6 * 1.0046) === '39.724%',
+  '0.6 × 1.0046 bonus → 39.724% mitigated'
+)
+check(
+  quality.formatStatValue(0.6, 'Armor_Damagemitigation') === '40.000%',
+  'formatStatValue uses mitigation % for armor key'
+)
+check(
+  quality.formatStatValue(0.6, 'Damage Mitigation') === '40.000%',
+  'formatStatValue uses mitigation % for armor label'
+)
+check(
+  !quality.formatStatValue(26800, 'Armor_Radiationcapacity').includes('%'),
+  'non-armor stats keep numeric format, not mitigation %'
+)
 
 console.log(`Unit tests: ${pass} passed`)

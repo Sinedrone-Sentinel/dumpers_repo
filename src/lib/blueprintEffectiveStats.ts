@@ -127,7 +127,7 @@ function formatStoredStatChange(stat: StoredEffectiveStat): string {
 export function formatStoredStatLine(stat: StoredEffectiveStat): string {
   const change = formatStoredStatChange(stat)
   if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
-    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)} → ${formatStatValue(stat.finalValue)} (${change})`
+    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue, stat.propertyLabel)} → ${formatStatValue(stat.finalValue, stat.propertyLabel)} (${change})`
   }
   return `${stat.propertyLabel}: ${change}`
 }
@@ -136,7 +136,7 @@ export function formatStoredStatLine(stat: StoredEffectiveStat): string {
 export function formatStoredStatCompact(stat: StoredEffectiveStat): string {
   const change = formatStoredStatChange(stat)
   if (stat.baseValue !== undefined && stat.finalValue !== undefined) {
-    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue)}→${formatStatValue(stat.finalValue)} (${change})`
+    return `${stat.propertyLabel}: ${formatStatValue(stat.baseValue, stat.propertyLabel)}→${formatStatValue(stat.finalValue, stat.propertyLabel)} (${change})`
   }
   return `${stat.propertyLabel}: ${change}`
 }
