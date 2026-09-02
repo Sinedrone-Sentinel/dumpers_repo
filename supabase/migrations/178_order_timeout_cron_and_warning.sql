@@ -1,4 +1,4 @@
--- 178: Hourly order timeout cron, correct WTS/WTB attribution, ghosting warning ack
+-- 178: Daily order timeout cron, correct WTS/WTB attribution, ghosting warning ack
 -- Seller/fulfiller: 72h after accept to mark ready.
 -- Buyer: 72h after ready to confirm pickup.
 -- Offending member sees a one-time warning on next login.
@@ -305,8 +305,8 @@ GRANT EXECUTE ON FUNCTION public.check_buyer_noshow() TO service_role;
 GRANT EXECUTE ON FUNCTION public.check_rating_deadlines() TO service_role;
 GRANT EXECUTE ON FUNCTION public.run_order_timeout_jobs() TO service_role;
 
--- Hourly sweep (pg_cron). Safe to re-run; skips if extension missing.
-DO $
+-- Daily sweep at 04:00 UTC (pg_cron). Safe to re-run; skips if extension missing.
+DO $order_timeout_cron$
 BEGIN
   BEGIN
     PERFORM cron.unschedule('order-timeout-checks');
@@ -316,14 +316,14 @@ BEGIN
 
   PERFORM cron.schedule(
     'order-timeout-checks',
-    '0 * * * *',
-     public.run_order_timeout_jobs()$
+    '0 4 * * *',
+    $cmd$SELECT public.run_order_timeout_jobs()$cmd$
   );
 EXCEPTION
   WHEN undefined_table THEN
     RAISE NOTICE
-      'pg_cron not available — schedule manually: SELECT cron.schedule(''order-timeout-checks'', ''0 * * * *'',  public.run_order_timeout_jobs()$);';
+      'pg_cron not available — schedule manually: SELECT cron.schedule(''order-timeout-checks'', ''0 4 * * *'', $cmd$SELECT public.run_order_timeout_jobs()$cmd$);';
   WHEN OTHERS THEN
     RAISE NOTICE 'Could not schedule order timeout cron: %', SQLERRM;
 END;
-$;
+$order_timeout_cron$;

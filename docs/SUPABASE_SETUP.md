@@ -208,7 +208,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 140 | `175_support_chat_realtime.sql` | Publish `support_tickets` + `ticket_messages` to `supabase_realtime` (live support queues/chat; typing uses Presence) |
 | 141 | `176_wtb_fulfill_without_blueprint_tracker.sql` | WTB fulfill no longer requires the Blueprint tracker; amber confirm on untracked lines |
 | 142 | `177_deal_messages.sql` | Per-deal chat (`deal_messages`); `list_deal_messages` / `send_deal_message`; purge on terminal status; sticky `order_deal_message`; personal Discord `my_order_deal_message` |
-| 143 | `178_order_timeout_cron_and_warning.sql` | Hourly `order-timeout-checks` cron (`run_order_timeout_jobs`); WTS/WTB timeout attribution; `get_my_pending_timeout_warning` / `acknowledge_timeout_warning` |
+| 143 | `178_order_timeout_cron_and_warning.sql` | Daily 04:00 UTC `order-timeout-checks` cron (`run_order_timeout_jobs`); WTS/WTB timeout attribution; `get_my_pending_timeout_warning` / `acknowledge_timeout_warning` |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178)
 
@@ -222,12 +222,12 @@ Migrations **065-068** schedule a cron job that calls the `send-discord` Edge Fu
 
 If pg_cron is unavailable on your plan, Discord queue messages can still be processed manually from super-admin Discord settings (invoke `send-discord`).
 
-Order timeout enforcement (`order-timeout-checks`, hourly) is scheduled by migration **178**. If pg_cron is missing, run this in the SQL editor after applying 178:
+Order timeout enforcement (`order-timeout-checks`, daily at 04:00 UTC) is scheduled by migration **178**. If pg_cron is missing, run this in the SQL editor after applying 178:
 
 ```sql
 SELECT cron.schedule(
   'order-timeout-checks',
-  '0 * * * *',
+  '0 4 * * *',
   $$SELECT public.run_order_timeout_jobs()$$
 );
 ```
