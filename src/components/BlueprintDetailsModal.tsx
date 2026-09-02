@@ -353,7 +353,7 @@ export default function BlueprintDetailsModal({
               {Object.entries(mergedBaseStats).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center text-sm">
                   <span className="text-slate-400">{getPropertyLabel(key)}</span>
-                  <span className="text-white font-mono">{formatStatValue(value)}</span>
+                  <span className="text-white font-mono">{formatStatValue(value, key)}</span>
                 </div>
               ))}
             </div>
@@ -612,12 +612,12 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
               <div className="flex flex-wrap gap-x-6 gap-y-1 text-xs font-mono">
                 <span className="text-slate-500">
                   BASE{' '}
-                  <span className="text-slate-300">{formatStatValue(mod.baseValue)}</span>
+                  <span className="text-slate-300">{formatStatValue(mod.baseValue, mod.property)}</span>
                 </span>
                 <span className="text-slate-500">
                   FINAL{' '}
                   <span className={getAggregatedModifierColorClass(mod)}>
-                    {formatStatValue(mod.finalValue)}
+                    {formatStatValue(mod.finalValue, mod.property)}
                   </span>
                 </span>
               </div>

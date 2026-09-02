@@ -397,10 +397,15 @@ export function aggregateModifiers(
       (k) => k.toLowerCase() === property.toLowerCase()
     )
     const baseValue = baseKey ? baseStats![baseKey] : undefined
+    const rawFinal =
+      baseValue !== undefined ? baseValue * combinedModifier + additiveChange : undefined
+    // Keep full precision for damage-taken multipliers so mitigation % can show XX.XXX.
     const finalValue =
-      baseValue !== undefined
-        ? Math.round((baseValue * combinedModifier + additiveChange) * 100) / 100
-        : undefined
+      rawFinal === undefined
+        ? undefined
+        : isArmorDamageTakenStat(data.originalProperty)
+          ? rawFinal
+          : Math.round(rawFinal * 100) / 100
 
     aggregated.push({
       property: data.originalProperty,
@@ -418,10 +423,27 @@ export function aggregateModifiers(
   return aggregated.sort((a, b) => a.propertyLabel.localeCompare(b.propertyLabel))
 }
 
+/** CIG stores this as a damage-taken multiplier (0.6 = take 60% = mitigate 40%). */
+export function isArmorDamageTakenStat(property?: string | null): boolean {
+  if (!property) return false
+  const key = property.trim().toLowerCase()
+  return key === 'armor_damagemitigation' || key === 'damage mitigation'
+}
+
+/** Convert a taken-multiplier to the mitigated percent members actually care about. */
+export function formatMitigationPercent(takenMultiplier: number): string {
+  const pct = (1 - takenMultiplier) * 100
+  return `${pct.toFixed(3)}%`
+}
+
 /**
  * Format a number with locale-specific thousands separators, rounded to 2 decimal places.
+ * Armor damage mitigation is shown as actual blocked percent (XX.XXX%).
  */
-export function formatStatValue(value: number): string {
+export function formatStatValue(value: number, property?: string | null): string {
+  if (isArmorDamageTakenStat(property)) {
+    return formatMitigationPercent(value)
+  }
   const rounded = Math.round(value * 100) / 100
   return rounded.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })
 }
