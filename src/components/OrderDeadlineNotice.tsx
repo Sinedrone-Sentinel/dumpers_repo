@@ -68,11 +68,19 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
     )
   }
 
-  if (role === 'buyer' && order.status === 'ready_for_pickup' && order.ready_at) {
+  if (order.status === 'ready_for_pickup' && order.ready_at) {
     const deadline = deadlineFromStart(order.ready_at, 72)
     const hours = hoursRemaining(deadline)
     if (hours === null) return null
     const urgent = hours <= 12
+    const buyerCopy =
+      hours === 0
+        ? 'Pickup deadline expired — this order will auto-complete shortly (you may receive a strike).'
+        : `Confirm pickup within ${formatHoursRemaining(hours)} or the order auto-completes (you may receive a strike).`
+    const sellerCopy =
+      hours === 0
+        ? 'Customer pickup deadline expired — this order will auto-complete shortly.'
+        : `Customer has ${formatHoursRemaining(hours)} to confirm pickup, or this auto-completes.`
     return (
       <div
         className={`mt-2 p-2 rounded-lg text-xs border ${
@@ -81,8 +89,7 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
             : 'bg-cyan-900/20 border-cyan-500/30 text-cyan-300'
         }`}
       >
-        Confirm pickup within {formatHoursRemaining(hours)} or the order auto-completes (you may
-        receive a strike).
+        {role === 'buyer' ? buyerCopy : sellerCopy}
       </div>
     )
   }

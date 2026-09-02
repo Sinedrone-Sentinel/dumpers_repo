@@ -8,6 +8,7 @@ import OrderRequestLines from '../components/OrderRequestLines'
 import ListingTypeBadge from '../components/ListingTypeBadge'
 import TradeContactChip from '../components/TradeContactChip'
 import DealMessageButton from '../components/DealMessageButton'
+import OrderDeadlineNotice from '../components/OrderDeadlineNotice'
 import WtsSaleOrderCard from '../components/WtsSaleOrderCard'
 import { type WtsLineSelection } from '../components/WtsPartialPurchasePanel'
 import ReputationBadge from '../components/ReputationBadge'
@@ -1082,6 +1083,7 @@ export default function BazaarRoute() {
                                 <p className="text-cyan-300/80 text-xs mt-2">
                                   Waiting for customer pickup confirmation in My Listings.
                                 </p>
+                                <OrderDeadlineNotice order={order} role="fulfiller" />
                                 <div className="mt-2">
                                   <OrderRequestLines order={order} showDfp={dfpDisplayEnabled} blueprintById={blueprintById} showEffectiveStats />
                                 </div>
