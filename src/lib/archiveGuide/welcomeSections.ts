@@ -135,7 +135,7 @@ export const PENDING_REP_SECTION = {
   id: 'pending-rep',
   title: 'Building Your Reputation',
   intro:
-    'New members start with **"Pending" reputation** until they complete 5 successful marketplace transactions (as buyer or seller/fulfiller, on either WTB or WTS). During this time, limits apply by **role**, not by tag:',
+    'New members start with **"Pending" reputation** until they complete **5 items** as a buyer or as a seller/fulfiller (WTB or WTS). Quantity on a craft line counts — two of the same item on one deal is two. During this time, limits apply by **role**, not by tag:',
   buyerLimits: {
     title: 'Pending Buyer Limits',
     items: [
@@ -143,16 +143,16 @@ export const PENDING_REP_SECTION = {
       'Maximum of 2 active buyer-side transactions at a time',
       'Total buyer-side value capped at 1,000,000 aUEC (site limit while reputation is pending)',
       'Your open WTB/WTS **listings** do not count — only transactions someone has started',
-      'Limits lift after 5 completed transactions as a buyer',
+      'Limits lift after 5 completed items as a buyer',
     ],
   },
   sellerLimits: {
     title: 'Pending Seller / Fulfiller Limits',
     items: [
-      'Applies when you are the **seller** — WTB fulfillment claims and active WTS sales (each child transaction counts)',
+      'Applies when you are the **seller** — WTB fulfillment claims and active WTS sales (each selected item counts toward the 5)',
       'Can only have 1 active seller-side job at a time',
       'Complete or release it before starting another WTB or WTS handoff',
-      'Limits lift after 5 completed transactions as a seller/fulfiller',
+      'Limits lift after 5 completed items as a seller/fulfiller',
       'After that, others see your star rating plus average delivery time (ddd:HH:mm from accept to ready)',
     ],
   },

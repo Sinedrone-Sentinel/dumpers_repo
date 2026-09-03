@@ -719,7 +719,7 @@ export default function BazaarRoute() {
             open. Once you start a trade, you have{' '}
             <strong className="text-slate-300">72 hours</strong> to finish your side or it returns
             to the listing. Ratings show as <span className="text-slate-400 italic">Pending</span>{' '}
-            until a member has 5 completed trades.
+            until a member has 5 completed items (quantity on a line counts).
           </p>
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -837,7 +837,7 @@ export default function BazaarRoute() {
 
               {activeTab === 'fulfillment' && (
                 <p className="text-slate-500 text-xs mb-3">
-                  Buyers without 5 completed orders always appear — they cannot be filtered out.
+                  Buyers without 5 completed items always appear — they cannot be filtered out.
                   You only need the blueprints for the lines you choose to fulfill.
                 </p>
               )}
