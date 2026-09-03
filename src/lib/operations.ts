@@ -1167,6 +1167,53 @@ export async function fetchMemberReputations(userIds: string[]): Promise<{
   return { data: map }
 }
 
+export interface MemberOrderRating {
+  stars: number
+  comment: string | null
+  isAuto: boolean
+  createdAt: string
+  orderTitle: string
+  raterName: string
+}
+
+export async function fetchMemberOrderRatings(
+  userId: string,
+  kind: 'buyer' | 'fulfiller'
+): Promise<{ data: MemberOrderRating[]; error?: string }> {
+  const { data, error } = await supabase.rpc('list_member_order_ratings', {
+    p_user_id: userId,
+    p_kind: kind,
+  })
+  if (error) return { data: [], error: error.message }
+
+  const payload = data as {
+    success?: boolean
+    error?: string
+    ratings?: Array<{
+      stars: number
+      comment: string | null
+      is_auto: boolean
+      created_at: string
+      order_title: string
+      rater_name: string
+    }>
+  }
+  if (!payload?.success) {
+    return { data: [], error: payload?.error ?? 'Could not load ratings' }
+  }
+
+  return {
+    data: (payload.ratings ?? []).map((row) => ({
+      stars: Number(row.stars),
+      comment: row.comment,
+      isAuto: Boolean(row.is_auto),
+      createdAt: row.created_at,
+      orderTitle: row.order_title,
+      raterName: row.rater_name,
+    })),
+  }
+}
+
 export async function archiveCustomOrderWithRating(
   orderId: string,
   stars: number,

@@ -97,6 +97,7 @@ export default function AssignedOrderCard({
       <ReputationBadge
         label="Buyer rep"
         reputation={buyerReputationFromRow(reputations[order.requester_id])}
+        userId={order.requester_id}
       />
 
       <OrderDeadlineNotice order={order} role="fulfiller" />

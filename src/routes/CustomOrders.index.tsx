@@ -509,7 +509,7 @@ export default function CustomOrdersRoute() {
 
       {userId && isRsiVerified && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" />
+          <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" userId={userId} />
           {orderLimits?.has_pending_buyer_rep && (
             <>
               <span className="text-slate-500">·</span>
