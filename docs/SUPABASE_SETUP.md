@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `179_own_fulfillment_history.sql` (own 30-day fulfillment history + monthly cleanup cron). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `180_purge_deal_messages_on_timeout.sql` (purge Bazaar deal chat on timeout, including release back to pending). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -210,6 +210,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 142 | `177_deal_messages.sql` | Per-deal chat (`deal_messages`); `list_deal_messages` / `send_deal_message`; purge on terminal status; sticky `order_deal_message`; personal Discord `my_order_deal_message` |
 | 143 | `178_order_timeout_cron_and_warning.sql` | Daily 04:00 UTC `order-timeout-checks` cron (`run_order_timeout_jobs`); WTS/WTB timeout attribution; `get_my_pending_timeout_warning` / `acknowledge_timeout_warning` |
 | 144 | `179_own_fulfillment_history.sql` | Fulfillment history SELECT is own rows, last 30 days (including super-admin); monthly `cleanup-old-order-fulfillments` cron on the 1st |
+| 145 | `180_purge_deal_messages_on_timeout.sql` | Purge `deal_messages` on fulfiller/buyer timeout, including when a job is released back to `pending` |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 
