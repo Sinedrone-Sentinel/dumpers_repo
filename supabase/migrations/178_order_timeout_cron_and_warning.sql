@@ -23,7 +23,7 @@ RETURNS int
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
-AS 
+AS $fn$
 DECLARE
   v_order record;
   v_count int := 0;
@@ -112,7 +112,7 @@ BEGIN
 
   RETURN v_count;
 END;
-;
+$fn$;
 
 -- -----------------------------------------------------------------------------
 -- Buyer no-show: strike the semantic buyer (WTB requester / WTS assignee)
@@ -123,7 +123,7 @@ RETURNS int
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
-AS 
+AS $fn$
 DECLARE
   v_order record;
   v_count int := 0;
@@ -154,17 +154,17 @@ BEGIN
 
     IF v_listing_type = 'wts' THEN
       PERFORM public.auto_apply_order_rating(
-        v_order.id, v_seller, v_buyer, 'requester', 1
+        v_order.id, v_seller, v_buyer, 'requester'::text, 1::smallint
       );
       PERFORM public.auto_apply_order_rating(
-        v_order.id, v_buyer, v_seller, 'fulfiller', 5
+        v_order.id, v_buyer, v_seller, 'fulfiller'::text, 5::smallint
       );
     ELSE
       PERFORM public.auto_apply_order_rating(
-        v_order.id, v_seller, v_buyer, 'fulfiller', 1
+        v_order.id, v_seller, v_buyer, 'fulfiller'::text, 1::smallint
       );
       PERFORM public.auto_apply_order_rating(
-        v_order.id, v_buyer, v_seller, 'requester', 5
+        v_order.id, v_buyer, v_seller, 'requester'::text, 5::smallint
       );
     END IF;
 
@@ -205,7 +205,72 @@ BEGIN
 
   RETURN v_count;
 END;
-;
+$fn$;
+
+-- Rating auto-5 also used integer literals that do not match smallint.
+CREATE OR REPLACE FUNCTION public.check_rating_deadlines()
+RETURNS int
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $fn$
+DECLARE
+  v_order record;
+  v_count int := 0;
+BEGIN
+  FOR v_order IN
+    SELECT id, requester_id, assignee_id
+    FROM public.custom_orders
+    WHERE status = 'completed'
+      AND requester_archived_at IS NOT NULL
+      AND fulfiller_archived_at IS NULL
+      AND assignee_id IS NOT NULL
+      AND requester_archived_at < NOW() - INTERVAL '24 hours'
+  LOOP
+    PERFORM public.auto_apply_order_rating(
+      v_order.id, v_order.assignee_id, v_order.requester_id, 'fulfiller'::text, 5::smallint
+    );
+    PERFORM public.maybe_archive_order(v_order.id);
+
+    PERFORM public.create_user_notification(
+      v_order.assignee_id,
+      'rating_auto',
+      'Auto-rating applied',
+      'You did not rate within 24 hours — a 5-star rating was applied on your behalf.',
+      jsonb_build_object('order_id', v_order.id)
+    );
+
+    v_count := v_count + 1;
+  END LOOP;
+
+  FOR v_order IN
+    SELECT id, requester_id, assignee_id
+    FROM public.custom_orders
+    WHERE status = 'completed'
+      AND fulfiller_archived_at IS NOT NULL
+      AND requester_archived_at IS NULL
+      AND assignee_id IS NOT NULL
+      AND fulfiller_archived_at < NOW() - INTERVAL '24 hours'
+  LOOP
+    PERFORM public.auto_apply_order_rating(
+      v_order.id, v_order.requester_id, v_order.assignee_id, 'requester'::text, 5::smallint
+    );
+    PERFORM public.maybe_archive_order(v_order.id);
+
+    PERFORM public.create_user_notification(
+      v_order.requester_id,
+      'rating_auto',
+      'Auto-rating applied',
+      'You did not rate within 24 hours — a 5-star rating was applied on your behalf.',
+      jsonb_build_object('order_id', v_order.id)
+    );
+
+    v_count := v_count + 1;
+  END LOOP;
+
+  RETURN v_count;
+END;
+$fn$;
 
 -- -----------------------------------------------------------------------------
 -- Member warning RPCs (no client writes on order_violations)
@@ -217,7 +282,7 @@ LANGUAGE plpgsql
 STABLE
 SECURITY DEFINER
 SET search_path = public
-AS 
+AS $fn$
 DECLARE
   v_uid uuid := auth.uid();
   v_row record;
@@ -262,14 +327,14 @@ BEGIN
     'created_at', v_row.created_at
   );
 END;
-;
+$fn$;
 
 CREATE OR REPLACE FUNCTION public.acknowledge_timeout_warning()
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
-AS 
+AS $fn$
 DECLARE
   v_uid uuid := auth.uid();
 BEGIN
@@ -285,7 +350,7 @@ BEGIN
 
   RETURN jsonb_build_object('success', true);
 END;
-;
+$fn$;
 
 REVOKE ALL ON FUNCTION public.get_my_pending_timeout_warning() FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.acknowledge_timeout_warning() FROM PUBLIC;
