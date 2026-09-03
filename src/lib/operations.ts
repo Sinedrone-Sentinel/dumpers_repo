@@ -1242,6 +1242,13 @@ export async function fetchFulfillments(): Promise<{
   data: OrderFulfillment[]
   error?: string
 }> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { data: [] }
+
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+
   const { data, error } = await supabase
     .from('order_fulfillments')
     .select(`
@@ -1249,6 +1256,8 @@ export async function fetchFulfillments(): Promise<{
       items:fulfillment_items(resource_key, quantity),
       order:custom_orders(title, status, total_dfp_auec)
     `)
+    .eq('fulfilled_by', user.id)
+    .gte('created_at', since)
     .order('created_at', { ascending: false })
 
   if (error) return { data: [], error: error.message }
