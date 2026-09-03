@@ -723,8 +723,8 @@ export default function BazaarRoute() {
           </p>
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} type="fulfiller" />
-            <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" />
+            <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} type="fulfiller" userId={userId} />
+            <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" userId={userId} />
             {orderLimits?.has_pending_fulfiller_rep && (
               <>
                 <span className="text-slate-500">·</span>
@@ -990,7 +990,12 @@ export default function BazaarRoute() {
                             </div>
                           )}
                           {order.assignee_id && (
-                            <ReputationBadge label="Fulfiller rep" reputation={fulfillerRep} type="fulfiller" />
+                            <ReputationBadge
+                              label="Fulfiller rep"
+                              reputation={fulfillerRep}
+                              type="fulfiller"
+                              userId={order.assignee_id}
+                            />
                           )}
                         </div>
                       )
@@ -1078,6 +1083,7 @@ export default function BazaarRoute() {
                                   <ReputationBadge
                                     label="Buyer rep"
                                     reputation={buyerReputationFromRow(reputations[order.requester_id])}
+                                    userId={order.requester_id}
                                   />
                                 </div>
                                 <p className="text-cyan-300/80 text-xs mt-2">

@@ -1,21 +1,55 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { formatDeliveryDuration, formatReputationLabel, type MemberReputation } from '../lib/reputation'
+import { fetchMemberOrderRatings, type MemberOrderRating } from '../lib/operations'
+import ReputationReviewsModal from './ReputationReviewsModal'
 
 interface ReputationBadgeProps {
   label: string
   reputation: MemberReputation
   className?: string
   type?: 'buyer' | 'fulfiller'
+  /** Required to open the star-review modal on an unlocked rating. */
+  userId?: string
 }
 
-export default function ReputationBadge({ label, reputation, className = '', type = 'buyer' }: ReputationBadgeProps) {
+export default function ReputationBadge({
+  label,
+  reputation,
+  className = '',
+  type = 'buyer',
+  userId,
+}: ReputationBadgeProps) {
   const pending = reputation.isPending || reputation.score == null
   const [showRulesModal, setShowRulesModal] = useState(false)
+  const [showReviews, setShowReviews] = useState(false)
+  const [reviews, setReviews] = useState<MemberOrderRating[]>([])
+  const [reviewsLoading, setReviewsLoading] = useState(false)
+  const [reviewsError, setReviewsError] = useState<string | undefined>()
   const showDeliveryTime =
     type === 'fulfiller' &&
     !pending &&
     reputation.avgDeliverySeconds != null &&
     reputation.deliverySampleCount > 0
+
+  useEffect(() => {
+    if (!showReviews || !userId) return
+    let cancelled = false
+    setReviewsLoading(true)
+    setReviewsError(undefined)
+    void fetchMemberOrderRatings(userId, type).then((result) => {
+      if (cancelled) return
+      setReviewsLoading(false)
+      if (result.error) {
+        setReviewsError(result.error)
+        setReviews([])
+        return
+      }
+      setReviews(result.data)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [showReviews, userId, type])
 
   const badgeContent = (
     <>
@@ -37,13 +71,41 @@ export default function ReputationBadge({ label, reputation, className = '', typ
   )
 
   if (!pending) {
+    const canOpenReviews = Boolean(userId)
     return (
-      <span
-        className={`inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 px-2 py-0.5 rounded text-xs border bg-amber-950/40 text-amber-200 border-amber-500/30 ${className}`}
-        title={`Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'})`}
-      >
-        {badgeContent}
-      </span>
+      <>
+        <button
+          type="button"
+          disabled={!canOpenReviews}
+          onClick={(event) => {
+            event.stopPropagation()
+            if (canOpenReviews) setShowReviews(true)
+          }}
+          className={`inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 px-2 py-0.5 rounded text-xs border bg-amber-950/40 text-amber-200 border-amber-500/30 ${
+            canOpenReviews
+              ? 'hover:border-amber-400/60 hover:text-amber-100 cursor-pointer'
+              : 'cursor-default'
+          } ${className}`}
+          title={
+            canOpenReviews
+              ? `Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'}) — click to read comments`
+              : `Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'})`
+          }
+        >
+          {badgeContent}
+        </button>
+        {showReviews && (
+          <ReputationReviewsModal
+            title={label}
+            score={reputation.score}
+            ratingCount={reputation.ratingCount}
+            ratings={reviews}
+            loading={reviewsLoading}
+            error={reviewsError}
+            onClose={() => setShowReviews(false)}
+          />
+        )}
+      </>
     )
   }
 
@@ -51,7 +113,10 @@ export default function ReputationBadge({ label, reputation, className = '', typ
     <>
       <button
         type="button"
-        onClick={() => setShowRulesModal(true)}
+        onClick={(event) => {
+          event.stopPropagation()
+          setShowRulesModal(true)
+        }}
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs border bg-slate-800/80 text-slate-400 border-slate-600 hover:border-amber-500/40 hover:text-amber-300 transition-colors cursor-pointer ${className}`}
         title="Click to view pending reputation rules"
       >
@@ -126,7 +191,7 @@ export default function ReputationBadge({ label, reputation, className = '', typ
               </a>
               <button
                 onClick={() => setShowRulesModal(false)}
-                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors"
+                className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm"
               >
                 Got It
               </button>

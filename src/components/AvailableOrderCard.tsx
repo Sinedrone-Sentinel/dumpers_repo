@@ -121,15 +121,6 @@ export default function AvailableOrderCard({
               </span>
             ) : null}
 
-            {!isWts ? <ReputationBadge label="Buyer rep" reputation={buyerRep} /> : null}
-            {isWts ? (
-              <ReputationBadge
-                label="Seller rep"
-                reputation={sellerRep}
-                type="fulfiller"
-              />
-            ) : null}
-
             {order.min_fulfiller_reputation != null ? (
               <span className="site-badge-slate text-[10px]">
                 Requires {isWts ? 'buyer' : 'fulfiller'} {order.min_fulfiller_reputation}+
@@ -137,6 +128,16 @@ export default function AvailableOrderCard({
             ) : null}
           </div>
         </button>
+        {!isWts ? (
+          <ReputationBadge label="Buyer rep" reputation={buyerRep} userId={order.requester_id} />
+        ) : (
+          <ReputationBadge
+            label="Seller rep"
+            reputation={sellerRep}
+            type="fulfiller"
+            userId={order.requester_id}
+          />
+        )}
 
       </div>
 
