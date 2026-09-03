@@ -71,8 +71,8 @@ export default function ReputationBadge({ label, reputation, className = '', typ
               Pending Reputation Rules
             </h3>
             <p className="text-slate-400 text-sm mb-4">
-              Your <strong className="text-white">{label.toLowerCase()} reputation</strong> is pending until you complete 5 
-              orders. During this period, some limits apply to protect the community:
+              Your <strong className="text-white">{label.toLowerCase()} reputation</strong> is pending until you complete 5
+              items (two of the same craft on one deal counts as two). During this period, some limits apply to protect the community:
             </p>
 
             <div className="space-y-3 mb-4">
