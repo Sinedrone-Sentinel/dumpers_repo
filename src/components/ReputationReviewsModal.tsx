@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import AppModal from './layout/AppModal'
 import type { MemberOrderRating } from '../lib/operations'
+import { formatReputationScore } from '../lib/reputation'
 
 interface ReputationReviewsModalProps {
   title: string
@@ -30,12 +31,22 @@ export default function ReputationReviewsModal({
   error,
   onClose,
 }: ReputationReviewsModalProps) {
+  const [starFilter, setStarFilter] = useState<number | 'all'>('all')
+
+  const availableStars = useMemo(() => {
+    const found = new Set(ratings.map((row) => row.stars))
+    return [5, 4, 3, 2, 1].filter((star) => found.has(star))
+  }, [ratings])
+
+  const activeFilter = starFilter !== 'all' && !availableStars.includes(starFilter) ? 'all' : starFilter
+  const list = activeFilter === 'all' ? ratings : ratings.filter((row) => row.stars === activeFilter)
+
   return (
     <AppModal
       title={title}
       subtitle={
         score != null
-          ? `${score} average from ${ratingCount} rating${ratingCount === 1 ? '' : 's'}`
+          ? `${formatReputationScore(score)} average from ${ratingCount} rating${ratingCount === 1 ? '' : 's'}`
           : undefined
       }
       onClose={onClose}
@@ -50,27 +61,57 @@ export default function ReputationReviewsModal({
       ) : ratings.length === 0 ? (
         <div className="site-empty !py-8 text-sm">No ratings yet.</div>
       ) : (
-        <ul className="space-y-3">
-          {ratings.map((row, idx) => (
-            <li key={`${row.createdAt}-${idx}`} className="site-surface p-3">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <StarRow stars={row.stars} />
-                <span className="text-slate-500 text-xs">
-                  {new Date(row.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-              <p className="text-slate-400 text-xs mt-1">
-                {row.isAuto ? 'Auto-applied' : row.raterName}
-                {row.orderTitle ? ` · ${row.orderTitle}` : ''}
-              </p>
-              {row.comment ? (
-                <p className="text-slate-200 text-sm mt-2 whitespace-pre-wrap">{row.comment}</p>
-              ) : (
-                <p className="site-hint !mt-2">No comment</p>
-              )}
-            </li>
-          ))}
-        </ul>
+        <div className="space-y-3">
+          <div className="site-chip-strip w-fit">
+            <button
+              type="button"
+              onClick={() => setStarFilter('all')}
+              className={`px-3 py-1 text-xs font-medium rounded-lg site-btn-shimmer ${
+                activeFilter === 'all' ? 'site-filter-selected-amber' : 'site-filter-idle'
+              }`}
+            >
+              ALL
+            </button>
+            {availableStars.map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setStarFilter(star)}
+                className={`px-3 py-1 text-xs font-medium rounded-lg site-btn-shimmer ${
+                  activeFilter === star ? 'site-filter-selected-amber' : 'site-filter-idle'
+                }`}
+              >
+                {star}★
+              </button>
+            ))}
+          </div>
+
+          {list.length === 0 ? (
+            <div className="site-empty !py-6 text-sm">No ratings at this star.</div>
+          ) : (
+            <ul className="space-y-3">
+              {list.map((row, idx) => (
+                <li key={`${row.createdAt}-${idx}`} className="site-surface p-3">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <StarRow stars={row.stars} />
+                    <span className="text-slate-500 text-xs">
+                      {new Date(row.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-slate-400 text-xs mt-1">
+                    {row.isAuto ? 'Auto-applied' : row.raterName}
+                    {row.orderTitle ? ` · ${row.orderTitle}` : ''}
+                  </p>
+                  {row.comment ? (
+                    <p className="text-slate-200 text-sm mt-2 whitespace-pre-wrap">{row.comment}</p>
+                  ) : (
+                    <p className="site-hint !mt-2">No comment</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
     </AppModal>
   )

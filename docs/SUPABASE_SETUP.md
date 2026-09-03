@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `182_list_member_order_ratings.sql` (click a visible star rating to list comments). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `183_reputation_one_decimal.sql` (visible buyer/fulfiller scores are one decimal). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -213,6 +213,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 145 | `180_purge_deal_messages_on_timeout.sql` | Purge `deal_messages` on fulfiller/buyer timeout, including when a job is released back to `pending` |
 | 146 | `181_rep_count_selected_items.sql` | Reputation completed count is blueprint quantity + resource lines on a deal, not one per child order |
 | 147 | `182_list_member_order_ratings.sql` | `list_member_order_ratings` — members can read star ratings and optional comments for a buyer or fulfiller score |
+| 148 | `183_reputation_one_decimal.sql` | Visible buyer/fulfiller reputation is `X.X` (one decimal), not a rounded integer |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 

@@ -23,12 +23,22 @@ export interface MemberReputationRow {
   fulfiller_delivery_sample_count?: number
 }
 
+function toScore(value: number | string | null | undefined): number | null {
+  if (value == null || value === '') return null
+  const n = Number(value)
+  return Number.isFinite(n) ? n : null
+}
+
+export function formatReputationScore(score: number): string {
+  return score.toFixed(1)
+}
+
 export function buyerReputationFromRow(row: MemberReputationRow | undefined): MemberReputation {
   if (!row) return emptyReputation()
   return {
     completedCount: row.buyer_completed_count,
     ratingCount: row.buyer_rating_count,
-    score: row.buyer_reputation,
+    score: toScore(row.buyer_reputation),
     isPending: row.buyer_is_pending,
     avgDeliverySeconds: null,
     deliverySampleCount: 0,
@@ -40,7 +50,7 @@ export function fulfillerReputationFromRow(row: MemberReputationRow | undefined)
   return {
     completedCount: row.fulfiller_completed_count,
     ratingCount: row.fulfiller_rating_count,
-    score: row.fulfiller_reputation,
+    score: toScore(row.fulfiller_reputation),
     isPending: row.fulfiller_is_pending,
     avgDeliverySeconds: row.fulfiller_avg_delivery_seconds ?? null,
     deliverySampleCount: row.fulfiller_delivery_sample_count ?? 0,
@@ -75,7 +85,7 @@ export function formatReputationLabel(rep: MemberReputation): string {
     }
     return 'Pending'
   }
-  return String(rep.score)
+  return formatReputationScore(rep.score)
 }
 
 export function passesBuyerRepFilter(
