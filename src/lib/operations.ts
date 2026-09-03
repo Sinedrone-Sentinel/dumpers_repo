@@ -1173,7 +1173,6 @@ export interface MemberOrderRating {
   isAuto: boolean
   createdAt: string
   orderTitle: string
-  raterName: string
 }
 
 export async function fetchMemberOrderRatings(
@@ -1195,7 +1194,6 @@ export async function fetchMemberOrderRatings(
       is_auto: boolean
       created_at: string
       order_title: string
-      rater_name: string
     }>
   }
   if (!payload?.success) {
@@ -1209,7 +1207,6 @@ export async function fetchMemberOrderRatings(
       isAuto: Boolean(row.is_auto),
       createdAt: row.created_at,
       orderTitle: row.order_title,
-      raterName: row.rater_name,
     })),
   }
 }

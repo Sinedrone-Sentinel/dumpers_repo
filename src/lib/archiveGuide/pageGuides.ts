@@ -250,7 +250,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Fulfillment history on this tab shows only your own completed crafts from the last 30 days',
       'Rate completed trades on The Bazaar or My Listings → Completed — purple Archive & rate on each finished deal',
       'Cancel or release returns claimed items to the owner\'s listing with quantities restored',
-      'Same reputation ratings for all paths; visible fulfiller/seller rep is an X.X average plus delivery time (ddd:HH:mm from accept to ready) after 5 completed items. Click a visible star rating to read optional comments and filter by star',
+      'Same reputation ratings for all paths; visible fulfiller/seller rep is an X.X average plus delivery time (ddd:HH:mm from accept to ready) after 5 completed items. Click a visible star rating to read optional comments (no names or RSI handles) and filter by star',
       'Requires a verified RSI Handle; fulfiller and buyer pending limits apply by role per transaction',
       'Offline Mode shows an open-listing count teaser only — sign in to browse or trade',
       'Verify you have materials before claiming 800+ quality WTB blueprint lines',

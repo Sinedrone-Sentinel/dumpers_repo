@@ -16,8 +16,8 @@ interface ReputationReviewsModalProps {
 function StarRow({ stars }: { stars: number }) {
   return (
     <span className="text-amber-400 tracking-tight" aria-label={`${stars} of 5 stars`}>
-      {'★★★★★'.slice(0, stars)}
-      <span className="text-slate-600">{'★★★★★'.slice(stars)}</span>
+      {'\u2605\u2605\u2605\u2605\u2605'.slice(0, stars)}
+      <span className="text-slate-600">{'\u2605\u2605\u2605\u2605\u2605'.slice(stars)}</span>
     </span>
   )
 }
@@ -55,7 +55,7 @@ export default function ReputationReviewsModal({
       titleId="rep-reviews-title"
     >
       {loading ? (
-        <p className="site-hint">Loading ratings…</p>
+        <p className="site-hint">Loading ratings...</p>
       ) : error ? (
         <p className="site-error-text">{error}</p>
       ) : ratings.length === 0 ? (
@@ -81,7 +81,7 @@ export default function ReputationReviewsModal({
                   activeFilter === star ? 'site-filter-selected-amber' : 'site-filter-idle'
                 }`}
               >
-                {star}★
+                {star}{'\u2605'}
               </button>
             ))}
           </div>
@@ -99,8 +99,8 @@ export default function ReputationReviewsModal({
                     </span>
                   </div>
                   <p className="text-slate-400 text-xs mt-1">
-                    {row.isAuto ? 'Auto-applied' : row.raterName}
-                    {row.orderTitle ? ` · ${row.orderTitle}` : ''}
+                    {row.isAuto ? 'Auto-applied' : 'Member review'}
+                    {row.orderTitle ? ` \u00b7 ${row.orderTitle}` : ''}
                   </p>
                   {row.comment ? (
                     <p className="text-slate-200 text-sm mt-2 whitespace-pre-wrap">{row.comment}</p>
