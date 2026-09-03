@@ -1100,9 +1100,10 @@ export default function BazaarRoute() {
               {activeTab === 'fulfillment' && (
                 <div>
                   <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
+                  <p className="text-slate-500 text-xs mb-3">Your crafts from the last 30 days.</p>
                   {fulfillments.length === 0 ? (
                     <div className="site-empty !py-6 text-sm">
-                      No fulfillments yet.
+                      No fulfillments in the last 30 days.
                     </div>
                   ) : (
                     <div className="space-y-2 max-h-[600px] overflow-y-auto">

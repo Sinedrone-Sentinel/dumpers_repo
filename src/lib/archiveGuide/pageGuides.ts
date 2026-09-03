@@ -247,6 +247,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Seller-side WTS: actions and status appear directly on each sale card — start handoff, mark ready, or cancel',
       'After marking a WTS sale ready, wait for the buyer to confirm pickup in My Listings → Active (72 hours, then the order auto-completes)',
       'Missing a 72-hour deadline (buyer pickup or seller/fulfiller mark-ready) auto-releases or auto-completes the trade and shows a one-time warning the next time you sign in',
+      'Fulfillment history on this tab shows only your own completed crafts from the last 30 days',
       'Rate completed trades on The Bazaar or My Listings → Completed — purple Archive & rate on each finished deal',
       'Cancel or release returns claimed items to the owner\'s listing with quantities restored',
       'Same reputation ratings for all paths; visible fulfiller/seller rep shows average delivery time (ddd:HH:mm from accept to ready) after 5 completed trades',
