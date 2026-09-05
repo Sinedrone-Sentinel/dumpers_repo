@@ -21,6 +21,7 @@ import PartnershipRoute from './Partnership.index'
 import ContributeRoute from './Contribute.index'
 import ContributorTeamAdminRoute from './ContributorTeamAdmin.index'
 import ThemePreviewRoute from './ThemePreview.index'
+import AuthCallbackRoute from './AuthCallback.index'
 import PrivacyRoute from './Privacy.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
@@ -199,6 +200,12 @@ const themePreviewRoute = createRoute({
   component: ThemePreviewRoute,
 })
 
+const authCallbackRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/auth/callback',
+  component: AuthCallbackRoute,
+})
+
 /** Public Privacy Policy — no auth / Offline Mode required (Store + footer links). */
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -228,6 +235,7 @@ export const routeTree = rootRoute.addChildren([
   contributeRoute,
   contributorTeamAdminRoute,
   themePreviewRoute,
+  authCallbackRoute,
 ])
 
 export default routeTree

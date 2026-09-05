@@ -1,5 +1,7 @@
+export const OAUTH_CALLBACK_PATH = '/auth/callback'
+
 export const OAUTH_RETURN_FAILED_MESSAGE =
-  'Sign-in did not finish. Tap Sign in with Discord or Google again in this Safari or Chrome window. Refresh will not log you in — the page icon next to the address is Safari Reader, not Refresh.'
+  'Sign-in did not finish in this window. Stay here — we keep trying to complete it. If you are still signed out after a few seconds, use Sign in with Discord or Google once more in this same Safari or Chrome window.'
 
 const PENDING_KEY = 'dr_oauth_pending'
 

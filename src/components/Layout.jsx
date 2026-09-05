@@ -45,6 +45,13 @@ function isThemePreviewPath(pathname) {
   return normalized === '/theme-preview'
 }
 
+/** Discord/Google return — do not replace with the marketing landing. */
+function isAuthCallbackPath(pathname) {
+  const bare = (pathname || '/').split('?')[0].split('#')[0] || '/'
+  const normalized = bare.length > 1 && bare.endsWith('/') ? bare.slice(0, -1) : bare
+  return normalized === '/auth/callback'
+}
+
 function LayoutContent({
   navGroups,
   displayName,
@@ -311,6 +318,15 @@ export default function Layout() {
       <>
         <SeoHead />
         <AnalyticsTracker />
+        <Outlet />
+      </>
+    )
+  }
+
+  if (isAuthCallbackPath(pathname)) {
+    return (
+      <>
+        <SeoHead />
         <Outlet />
       </>
     )

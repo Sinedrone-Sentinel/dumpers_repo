@@ -663,23 +663,88 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [loading])
 
   useEffect(() => {
-    const onFocus = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session?.user) return
+    const adoptSession = async (session: Session) => {
+      consumeOAuthAttempt()
+      setOAuthReturnError(null)
+      setSession(session)
+      setUser((prev) => (prev?.id === session.user.id ? prev : session.user))
+      if (isOAuthReturnUrl(window.location.search, window.location.hash)) {
+        cleanOAuthReturnUrl()
+      }
+      if (!userRef.current) {
+        await loadUserData(session.user, true)
+      }
+    }
 
-      const banned = await checkBanned(session.user.id, session.user.email)
-      if (banned) {
-        await handleBannedUser()
+    const resumeOAuthReturn = async () => {
+      if (!initialBootstrapDone.current) return
+
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        await adoptSession(session)
         return
       }
 
-      const profileData = await fetchProfile(session.user.id)
-      if (profileData) setProfile(profileData)
+      const authCode = new URLSearchParams(window.location.search).get('code')
+      if (authCode) {
+        const { data: exchanged } = await supabase.auth.exchangeCodeForSession(authCode)
+        if (exchanged?.session) {
+          await adoptSession(exchanged.session)
+          return
+        }
+      }
+
+      const pending = peekOAuthAttempt()
+      const returning = isOAuthReturnUrl(window.location.search, window.location.hash)
+      if (!session?.user && (pending || returning)) {
+        consumeOAuthAttempt()
+        setOAuthReturnError(OAUTH_RETURN_FAILED_MESSAGE)
+        if (returning) cleanOAuthReturnUrl()
+      }
+    }
+
+    const onFocus = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        const banned = await checkBanned(session.user.id, session.user.email)
+        if (banned) {
+          await handleBannedUser()
+          return
+        }
+        await adoptSession(session)
+        const profileData = await fetchProfile(session.user.id)
+        if (profileData) setProfile(profileData)
+        return
+      }
+      await resumeOAuthReturn()
+    }
+
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (
+        event.persisted ||
+        peekOAuthAttempt() ||
+        isOAuthReturnUrl(window.location.search, window.location.hash)
+      ) {
+        void resumeOAuthReturn()
+      }
+    }
+
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return
+      if (peekOAuthAttempt() || isOAuthReturnUrl(window.location.search, window.location.hash)) {
+        void resumeOAuthReturn()
+      }
     }
 
     window.addEventListener('focus', onFocus)
-    return () => window.removeEventListener('focus', onFocus)
-  }, [checkBanned, handleBannedUser, fetchProfile])
+    window.addEventListener('pageshow', onPageShow)
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      window.removeEventListener('focus', onFocus)
+      window.removeEventListener('pageshow', onPageShow)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [checkBanned, handleBannedUser, fetchProfile, loadUserData])
 
   const userRef = useRef(user)
   userRef.current = user

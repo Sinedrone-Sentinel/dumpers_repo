@@ -20,6 +20,7 @@ const modules = [
   'src/lib/qualityModifiers.ts',
   'src/lib/inAppBrowser.ts',
   'src/lib/oauthReturn.ts',
+  'src/lib/friendInvite.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -40,6 +41,7 @@ const listing = await import(pathToFileURL(path.join(outDir, 'listingType.mjs'))
 const quality = await import(pathToFileURL(path.join(outDir, 'qualityModifiers.mjs')).href)
 const iab = await import(pathToFileURL(path.join(outDir, 'inAppBrowser.mjs')).href)
 const oauthReturn = await import(pathToFileURL(path.join(outDir, 'oauthReturn.mjs')).href)
+const friendInvite = await import(pathToFileURL(path.join(outDir, 'friendInvite.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -400,5 +402,9 @@ check(
   'strip OAuth params keeps friendInvite'
 )
 check(oauthReturn.stripOAuthReturnParams('https://dumpers-repo.com/#access_token=x') === '/', 'strip OAuth hash')
+check(
+  friendInvite.buildOAuthRedirectTo('https://dumpers-repo.com') === 'https://dumpers-repo.com/auth/callback',
+  'OAuth return uses /auth/callback'
+)
 
 console.log(`Unit tests: ${pass} passed`)
