@@ -11,6 +11,10 @@ export const SEO_LANDING_FAQS: SeoFaq[] = [
     a: 'No. Choose Browse tools offline to explore the blueprint tracker, missions, mining, resources, Wikelo barter trades, and the archive in this browser. Sign in when you want cloud sync, the community marketplace, and BP Dumper.',
   },
   {
+    q: 'Why did Discord or Google sign-in fail on my phone?',
+    a: 'If you opened this site from Facebook, Discord, Instagram, or another app, sign-in cannot finish there. Open dumpers-repo.com in Safari on iPhone (or Chrome on Android), then tap Sign in. You can still use Offline Mode from the other app.',
+  },
+  {
     q: 'Is there a free Star Citizen blueprint tracker?',
     a: "Yes. Dumper's Repo includes a crafting blueprint database and tracker — browse recipes, mark acquisitions, and see which reputation missions reward each blueprint. Start from the public /blueprints catalog or open Blueprints in Offline Mode.",
   },

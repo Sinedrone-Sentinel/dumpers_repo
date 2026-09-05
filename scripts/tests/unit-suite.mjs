@@ -18,6 +18,8 @@ const modules = [
   'src/lib/liveMissionTracker.ts',
   'src/lib/blueprintTaxonomy.ts',
   'src/lib/qualityModifiers.ts',
+  'src/lib/inAppBrowser.ts',
+  'src/lib/oauthReturn.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -36,6 +38,8 @@ for (const mod of modules) {
 const slug = await import(pathToFileURL(path.join(outDir, 'blueprintSeoSlug.mjs')).href)
 const listing = await import(pathToFileURL(path.join(outDir, 'listingType.mjs')).href)
 const quality = await import(pathToFileURL(path.join(outDir, 'qualityModifiers.mjs')).href)
+const iab = await import(pathToFileURL(path.join(outDir, 'inAppBrowser.mjs')).href)
+const oauthReturn = await import(pathToFileURL(path.join(outDir, 'oauthReturn.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -358,5 +362,43 @@ check(
   !quality.formatStatValue(26800, 'Armor_Radiationcapacity').includes('%'),
   'non-armor stats keep numeric format, not mitigation %'
 )
+
+check(
+  iab.detectInAppBrowser(
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 [FBAN/FBIOS;FBAV/1.0]'
+  ).inApp === true,
+  'Facebook iOS is an in-app browser'
+)
+check(
+  iab.detectInAppBrowser(
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1'
+  ).inApp === false,
+  'Safari is not an in-app browser'
+)
+check(
+  iab.detectInAppBrowser('Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Instagram 300.0.0').inApp ===
+    true,
+  'Instagram Android is an in-app browser'
+)
+check(iab.systemBrowserButtonLabel('Mozilla/5.0 (Linux; Android 14)') === 'Open in Chrome', 'Android Chrome label')
+check(iab.systemBrowserButtonLabel('Mozilla/5.0 (iPhone)') === 'Open in Safari', 'iOS Safari label')
+check(
+  iab.buildSystemBrowserUrl('https://dumpers-repo.com/#sign-in', 'iPhone FBAN').startsWith('x-safari-https://'),
+  'iOS uses x-safari-https'
+)
+check(
+  iab.buildSystemBrowserUrl('https://dumpers-repo.com/', 'Android Instagram').startsWith('intent://'),
+  'Android uses intent URL'
+)
+check(oauthReturn.isOAuthReturnUrl('?code=abc', '') === true, 'PKCE code is an OAuth return')
+check(oauthReturn.isOAuthReturnUrl('', '#access_token=x') === true, 'implicit hash is an OAuth return')
+check(oauthReturn.isOAuthReturnUrl('?error=access_denied', '') === true, 'OAuth error is an OAuth return')
+check(oauthReturn.isOAuthReturnUrl('', '') === false, 'plain URL is not an OAuth return')
+check(
+  oauthReturn.stripOAuthReturnParams('https://dumpers-repo.com/?code=abc&state=1&friendInvite=tok') ===
+    '/?friendInvite=tok',
+  'strip OAuth params keeps friendInvite'
+)
+check(oauthReturn.stripOAuthReturnParams('https://dumpers-repo.com/#access_token=x') === '/', 'strip OAuth hash')
 
 console.log(`Unit tests: ${pass} passed`)

@@ -37,6 +37,11 @@ import {
   markDiscordAppAuthorized,
   userHasDiscordIdentity,
 } from '../lib/discordOAuth'
+import {
+  cleanOAuthReturnUrl,
+  isOAuthReturnUrl,
+  OAUTH_RETURN_FAILED_MESSAGE,
+} from '../lib/oauthReturn'
 
 const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
 const BOOTSTRAP_FAILSAFE_MS = 45_000
@@ -144,6 +149,7 @@ interface AuthContextType {
   orgLogoUpdatedAt: string | null
   orgLogoConfigured: boolean
   refreshOrgLogo: () => Promise<void>
+  oauthReturnError: string | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -166,6 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useState(false)
   const [orgLogoUpdatedAt, setOrgLogoUpdatedAt] = useState<string | null>(null)
   const [orgLogoConfigured, setOrgLogoConfigured] = useState(false)
+  const [oauthReturnError, setOAuthReturnError] = useState<string | null>(null)
   const [isGuestPreview, setIsGuestPreview] = useState(() => readGuestPreviewSession())
   const [guestGroupBlueprintVariants, setGuestGroupBlueprintVariants] = useState(
     () => readGuestGroupBlueprintVariants()
@@ -512,11 +519,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setBootstrapSteps(buildBootstrapSteps(false))
 
       try {
-        const hash = window.location.hash
-        const isOAuthCallback = hash.includes('access_token')
+        const isOAuthCallback = isOAuthReturnUrl(window.location.search, window.location.hash)
 
         setStep('session', { status: 'active', progress: 15 })
-        const { data: { session: getSessionResult }, error } = await withTimeout(
+        const { data: { session: getSessionResult } } = await withTimeout(
           supabase.auth.getSession(),
           AUTH_BOOTSTRAP_TIMEOUT_MS,
           'auth.getSession'
@@ -540,11 +546,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           resolveInitialSession = null
         }
 
-        if (isOAuthCallback && session && !error) {
-          window.history.replaceState(null, '', window.location.pathname)
+        if (!session?.user) {
+          const authCode = new URLSearchParams(window.location.search).get('code')
+          if (authCode) {
+            const { data: exchanged } = await withTimeout(
+              supabase.auth.exchangeCodeForSession(authCode),
+              AUTH_BOOTSTRAP_TIMEOUT_MS,
+              'auth.exchangeCodeForSession'
+            )
+            if (exchanged?.session) session = exchanged.session
+          }
+        }
+
+        if (isOAuthCallback && session) {
+          cleanOAuthReturnUrl()
+          setOAuthReturnError(null)
           if (userHasDiscordIdentity(session.user.identities)) {
             markDiscordAppAuthorized()
           }
+        } else if (isOAuthCallback && !session) {
+          setOAuthReturnError(OAUTH_RETURN_FAILED_MESSAGE)
+          cleanOAuthReturnUrl()
         }
 
         if (cancelled) return
@@ -573,6 +595,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Late restore while DFP was loading — adopt before dropping the splash.
         if (!session?.user && bootstrapSession?.user) {
           session = bootstrapSession
+          setOAuthReturnError(null)
           setSession(session)
           setUser(session.user)
           const ok = await loadUserDataWithProgress(session.user, isOAuthCallback)
@@ -1090,6 +1113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       orgLogoUpdatedAt,
       orgLogoConfigured,
       refreshOrgLogo,
+      oauthReturnError,
     }),
     [
       user,
@@ -1145,6 +1169,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       orgLogoUpdatedAt,
       orgLogoConfigured,
       refreshOrgLogo,
+      oauthReturnError,
     ]
   )
 

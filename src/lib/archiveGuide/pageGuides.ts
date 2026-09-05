@@ -387,6 +387,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Handle is only saved after Verify succeeds — Get code alone does not set it; Change clears your handle until you verify a new (or re-verify the old) one',
       'After verifying you can remove the code from your RSI bio',
       'Deduct inventory on craft complete: when enabled, finishing a WTB fulfillment deducts materials from My Resources (requires verified RSI Handle)',
+      'If you opened the site from Facebook, Discord, or Instagram, open dumpers-repo.com in Safari (or Chrome on Android) before signing in — sign-in cannot finish inside those apps',
       'Connect Google or Discord from Connected Accounts to sign in with either method on one account',
       'When provider emails match, sign-in automatically merges into your existing account',
       'Disconnect a linked provider from Settings if you have at least two sign-in methods connected',
