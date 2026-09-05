@@ -32,3 +32,9 @@ entrypoint = "./functions/discord-services-expire/index.ts"
 enabled = true
 verify_jwt = true
 entrypoint = "./functions/discord-services-bot-invite/index.ts"
+
+# Citizen iD returns here without a Supabase JWT (state binds the member).
+[functions.citizenid-oauth-callback]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/citizenid-oauth-callback/index.ts"

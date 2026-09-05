@@ -44,8 +44,11 @@ Source of truth: `docs/SUPABASE_SETUP.md` section Deploy Edge Functions. Prefer 
 | `discord-services-bot-invite` | `npx supabase functions deploy discord-services-bot-invite` |
 | `discord-services-post-test` | `npx supabase functions deploy discord-services-post-test` |
 | `manage-github-collaborator` | `npx supabase functions deploy manage-github-collaborator` |
+| `link-citizenid` | `npx supabase functions deploy link-citizenid` |
+| `citizenid-oauth-callback` | `npx supabase functions deploy citizenid-oauth-callback --no-verify-jwt` |
+| `unlink-citizenid` | `npx supabase functions deploy unlink-citizenid` |
 
-**Do not drop `--no-verify-jwt`** on functions that require it above (Discord cron/webhooks, log-watcher, services interactions/expire).
+**Do not drop `--no-verify-jwt`** on functions that require it above (Discord cron/webhooks, log-watcher, services interactions/expire, `citizenid-oauth-callback`).
 
 ## When this applies
 

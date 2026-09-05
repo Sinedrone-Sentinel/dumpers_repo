@@ -6,6 +6,7 @@ import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { useUiOverlayRegistration } from '../contexts/UiOverlayContext'
 import { SITE_RULES_SECTION } from '../lib/archiveGuide/welcomeSections'
 import RsiBioVerifyControls from './RsiBioVerifyControls'
+import { startCitizenIdLink } from '../lib/spectrum'
 
 interface WelcomeModalProps {
   /** Called only after mark_welcome_seen succeeds — onboarding is not dismissible. */
@@ -39,6 +40,7 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
   const [finishError, setFinishError] = useState<string | null>(null)
   const [rulesScrolledToEnd, setRulesScrolledToEnd] = useState(false)
   const [finishing, setFinishing] = useState(false)
+  const [linkingCitizenId, setLinkingCitizenId] = useState(false)
   const rulesScrollRef = useRef<HTMLDivElement>(null)
 
   const totalSteps = 4
@@ -194,6 +196,27 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                   }}
                   onError={setValidationError}
                 />
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    className="site-btn-primary text-sm px-3 py-2 w-full"
+                    disabled={linkingCitizenId || isVerified}
+                    onClick={() => {
+                      void (async () => {
+                        setLinkingCitizenId(true)
+                        const result = await startCitizenIdLink()
+                        if (!result.ok) {
+                          setValidationError(result.error)
+                          setLinkingCitizenId(false)
+                          return
+                        }
+                        window.location.assign(result.url)
+                      })()
+                    }}
+                  >
+                    {linkingCitizenId ? 'Opening Citizen iD…' : 'Link Citizen iD instead'}
+                  </button>
+                </div>
 
                 {validationError && (
                   <p className="mt-2 text-xs text-red-400 flex items-center gap-1">

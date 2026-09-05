@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `184_anonymous_order_rating_list.sql` (review list omits rater identity; rows still stored). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `186_delete_account_settle_orders.sql` (account delete settles live deals; apply `185_spectrum_citizenid.sql` first). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -215,6 +215,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 147 | `182_list_member_order_ratings.sql` | `list_member_order_ratings` — members can read star ratings and optional comments for a buyer or fulfiller score |
 | 148 | `183_reputation_one_decimal.sql` | Visible buyer/fulfiller reputation is `X.X` (one decimal), not a rounded integer |
 | 149 | `184_anonymous_order_rating_list.sql` | Review modal list does not return rater RSI handle / name; `custom_order_ratings.rater_id` is unchanged |
+| 150 | `185_spectrum_citizenid.sql` | RSI Spectrum store + Citizen iD link RPCs; bio stubs; grace clock stays NULL until super-admin starts it |
+| 151 | `186_delete_account_settle_orders.sql` | Account delete: auto 5-star the other party on live deals; cancel pending listings; requester/rater FKs SET NULL |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 
@@ -282,6 +284,9 @@ npx supabase functions deploy discord-services-expire --no-verify-jwt
 npx supabase functions deploy discord-services-bot-invite
 npx supabase functions deploy discord-services-post-test
 npx supabase functions deploy manage-github-collaborator
+npx supabase functions deploy link-citizenid
+npx supabase functions deploy citizenid-oauth-callback --no-verify-jwt
+npx supabase functions deploy unlink-citizenid
 ```
 
 | Function | Purpose |
@@ -297,6 +302,9 @@ npx supabase functions deploy manage-github-collaborator
 | `discord-services-bot-invite` | Returns bot OAuth invite URL from `DISCORD_SERVICES_APPLICATION_ID` |
 | `discord-services-post-test` | Super-admin harness: post N Accept messages for race testing |
 | `manage-github-collaborator` | Contributor Team: invite/update/remove GitHub collaborators after approve/upgrade/leave/revoke |
+| `link-citizenid` | Signed-in member starts Citizen iD OAuth (PKCE state stored server-side) |
+| `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
+| `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
@@ -305,6 +313,18 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 ### Edge Function secrets
 
 **Contributor Team:** set Edge secret `GITHUB_CONTRIBUTORS_TOKEN` to a fine-scoped GitHub PAT (or GitHub App installation token) that can manage collaborators on the configured public repo. Without it, `manage-github-collaborator` returns 503 and marks sync error.
+
+**Citizen iD (never `VITE_*`):** after you register an integrator app on [citizenid.dev](https://citizenid.dev) (staging) then production [citizenid.space](https://citizenid.space):
+
+| Secret | Purpose |
+|--------|---------|
+| `CITIZENID_CLIENT_ID` | OAuth client id |
+| `CITIZENID_CLIENT_SECRET` | Confidential client secret |
+| `CITIZENID_AUTHORITY` | `https://citizenid.dev` (staging) or `https://citizenid.space` (production) |
+| `CITIZENID_REDIRECT_URI` | Optional override; default `{SUPABASE_URL}/functions/v1/citizenid-oauth-callback` |
+| `PUBLIC_SITE_URL` | Where the callback 302s after link (`https://dumpers-repo.com`) |
+
+Register that redirect URI on the Citizen iD app. Apply **185** then **186**. Link stays 503 until secrets exist. Super-admin **Start 90-day Citizen iD grace** in Settings starts the legacy clock (do not click until Link works).
 
 Set these under **Project Settings → Edge Functions → Secrets** (or let semantic-release create them):
 

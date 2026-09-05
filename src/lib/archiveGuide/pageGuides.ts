@@ -383,7 +383,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     title: 'Settings',
     description: 'Manage your profile and account from your avatar menu.',
     details: [
-      'Verify your RSI Handle: get a short code, paste it into your public RSI citizen Bio, then Verify (proves you control that page)',
+      'Verify your RSI Handle with Link Citizen iD in Settings (uses your Spectrum portrait as your avatar). Bio-code verify remains until the site starts the 90-day grace, then new verifies are Citizen iD only',
+      'You can remove the Citizen iD link in Settings — that un-verifies you and frees the handle (blocked while you have an accepted deal). Deleting your account also removes Spectrum / Citizen iD data',
       'Handle is only saved after Verify succeeds — Get code alone does not set it; Change clears your handle until you verify a new (or re-verify the old) one',
       'After verifying you can remove the code from your RSI bio',
       'Deduct inventory on craft complete: when enabled, finishing a WTB fulfillment deducts materials from My Resources (requires verified RSI Handle)',

@@ -6,6 +6,7 @@ import SettingsSection from './settings/SettingsSection'
 import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 import ConnectedAccountsSettings from './settings/ConnectedAccountsSettings'
+import CitizenIdSettings from './settings/CitizenIdSettings'
 import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
 import RsiBioVerifyControls from './RsiBioVerifyControls'
@@ -68,6 +69,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [showResourceWipeConfirm, setShowResourceWipeConfirm] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
+  const [hasLiveDeals, setHasLiveDeals] = useState(false)
   const [_checkingOrders, setCheckingOrders] = useState(true)
 
   const isVerified = profile?.rsi_handle_verified ?? false
@@ -95,7 +97,20 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           .eq('assignee_id', user.id)
           .in('status', ['accepted', 'in_progress'])
 
+        const liveRequester = await supabase
+          .from('custom_orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('requester_id', user.id)
+          .in('status', ['accepted', 'in_progress', 'ready_for_pickup'])
+
+        const liveAssignee = await supabase
+          .from('custom_orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('assignee_id', user.id)
+          .in('status', ['accepted', 'in_progress', 'ready_for_pickup'])
+
         setHasActiveOrders((requesterCount ?? 0) > 0 || (assigneeCount ?? 0) > 0)
+        setHasLiveDeals((liveRequester.count ?? 0) > 0 || (liveAssignee.count ?? 0) > 0)
       } catch {
         // If query fails, assume no active orders
         setHasActiveOrders(false)
@@ -387,6 +402,15 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             </SettingsField>
 
             <div className="mt-4 pt-4 site-divider">
+              <CitizenIdSettings
+                isSuperAdmin={isSuperAdmin}
+                hasActiveOrders={hasLiveDeals}
+                onRefreshProfile={refreshProfile}
+                onMessage={setMessage}
+              />
+            </div>
+
+            <div className="mt-4 pt-4 site-divider">
               <SettingsToggle
                 label="Deduct inventory on craft complete"
                 description={
@@ -638,7 +662,10 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             ) : !showDeleteConfirm ? (
               <>
                 <p className="text-sm text-slate-400">
-                  Remove your blueprint data and sign-in permanently.
+                  Remove your blueprint data and sign-in permanently. Accepted deals in progress
+                  will close and the other party gets an automatic 5-star (counts toward their
+                  5-item reputation unlock). Open WTS/WTB postings that nobody accepted are
+                  cancelled with no rating. Citizen iD / Spectrum data is deleted with the account.
                 </p>
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
