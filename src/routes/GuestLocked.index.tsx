@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useSearch } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import OAuthSignInButtons from '../components/auth/OAuthSignInButtons'
 import type { FeatureId } from '../lib/featureAccess'
 import { getGuestFeatureCopy, GUEST_MEMBERSHIP_PITCH } from '../lib/guestFeatureCopy'
+import { useAuth } from '../contexts/AuthContext'
 
 interface GuestLockedSearch {
   feature?: FeatureId
@@ -11,8 +12,13 @@ interface GuestLockedSearch {
 
 export default function GuestLockedRoute() {
   const { feature = 'custom_orders' } = useSearch({ strict: false }) as GuestLockedSearch
+  const { oauthReturnError } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const copy = getGuestFeatureCopy(feature)
+
+  useEffect(() => {
+    if (oauthReturnError) setError(oauthReturnError)
+  }, [oauthReturnError])
 
   return (
     <FeaturePageLayout

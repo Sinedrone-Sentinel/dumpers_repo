@@ -6,13 +6,17 @@ import {
   OAUTH_PROVIDER_LABELS,
   type OAuthProviderId,
 } from '../../lib/authProviders'
+import { IN_APP_BROWSER_MESSAGE, openSiteInSystemBrowser, useInAppBrowser } from '../../lib/inAppBrowser'
 import AuthProviderIcon from '../settings/AuthProviderIcon'
+import InAppBrowserSignInNotice from './InAppBrowserSignInNotice'
 
 export default function SignInMenu() {
-  const { signInWithGoogle, signInWithDiscord, loading } = useAuth()
+  const { signInWithGoogle, signInWithDiscord, loading, oauthReturnError } = useAuth()
   const [open, setOpen] = useState(false)
   const [busyProvider, setBusyProvider] = useState<OAuthProviderId | null>(null)
+  const [localError, setLocalError] = useState<string | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const inAppBrowser = useInAppBrowser()
 
   const close = useCallback(() => setOpen(false), [])
   useClickOutside(containerRef, open, close)
@@ -25,6 +29,11 @@ export default function SignInMenu() {
   }
 
   const handleSignIn = async (provider: OAuthProviderId) => {
+    if (inAppBrowser) {
+      setLocalError(IN_APP_BROWSER_MESSAGE)
+      openSiteInSystemBrowser()
+      return
+    }
     setBusyProvider(provider)
     close()
     try {
@@ -55,8 +64,12 @@ export default function SignInMenu() {
       {open && (
         <div
           role="menu"
-          className="site-menu-panel absolute right-0 top-full mt-2 w-52 z-[60] py-1"
+          className="site-menu-panel absolute right-0 top-full mt-2 w-64 z-[60] py-1"
         >
+          {inAppBrowser && <InAppBrowserSignInNotice compact />}
+          {(localError || oauthReturnError) && (
+            <p className="site-error-text px-3 py-2">{localError || oauthReturnError}</p>
+          )}
           <p className="px-3 py-2 text-[11px] uppercase tracking-wide text-slate-500 border-b border-orange-500/15">
             Choose provider
           </p>

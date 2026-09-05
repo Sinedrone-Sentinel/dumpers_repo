@@ -71,12 +71,16 @@ type PublicSeoLandingProps = {
 }
 
 export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingProps) {
-  const { loading } = useAuth()
+  const { loading, oauthReturnError } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState<boolean | null>(null)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const jsonLdId = useId()
+
+  useEffect(() => {
+    if (oauthReturnError) setError(oauthReturnError)
+  }, [oauthReturnError])
 
   useEffect(() => {
     const fetchAutoApprove = async () => {

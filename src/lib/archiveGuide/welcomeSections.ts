@@ -39,7 +39,7 @@ export const OFFLINE_MODE_SECTION = {
   migration:
     'Offline progress is stored in your browser using the same IDs as member accounts. Old offline data from before a recent update is cleared automatically when you visit. On your **first sign-in**, you must finish welcome onboarding before member tools unlock; when that flow appears, valid offline data migrates to your account — unmatched or outdated items are skipped, not forced in. If you already have an account, your offline stash stays separate in the browser.',
   footnote:
-    "Offline data is stored in your browser. It persists across sessions but won't sync between devices or browsers until you create an account.",
+    "Offline data is stored in your browser. It persists across sessions but won't sync between devices or browsers until you create an account. If you opened the site from Facebook, Discord, or Instagram, open dumpers-repo.com in Safari (iPhone) or Chrome (Android) before signing in — Offline Mode still works from those apps.",
 }
 
 export const DFP_SECTION = {
