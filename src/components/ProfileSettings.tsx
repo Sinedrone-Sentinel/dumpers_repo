@@ -40,6 +40,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     updateMarketplacePurchaseToasts,
     signOut,
     isSuperAdmin,
+    isOfficerOrAbove,
     refreshAcquiredBlueprints,
   } = useAuth()
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
@@ -404,6 +405,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
             <div className="mt-4 pt-4 site-divider">
               <CitizenIdSettings
                 isSuperAdmin={isSuperAdmin}
+                canTestCitizenId={isOfficerOrAbove}
                 hasActiveOrders={hasLiveDeals}
                 onRefreshProfile={refreshProfile}
                 onMessage={setMessage}

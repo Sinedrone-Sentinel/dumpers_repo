@@ -32,7 +32,7 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
   const overlayId = useId()
   useUiOverlayRegistration(overlayId, true)
   
-  const { profile, refreshProfile } = useAuth()
+  const { profile, refreshProfile, isOfficerOrAbove } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
@@ -196,6 +196,7 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                   }}
                   onError={setValidationError}
                 />
+                {isOfficerOrAbove && (
                 <div className="mt-3">
                   <button
                     type="button"
@@ -217,6 +218,7 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                     {linkingCitizenId ? 'Opening Citizen iD…' : 'Link Citizen iD instead'}
                   </button>
                 </div>
+                )}
 
                 {validationError && (
                   <p className="mt-2 text-xs text-red-400 flex items-center gap-1">

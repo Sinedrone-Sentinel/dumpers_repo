@@ -302,8 +302,8 @@ npx supabase functions deploy unlink-citizenid
 | `discord-services-bot-invite` | Returns bot OAuth invite URL from `DISCORD_SERVICES_APPLICATION_ID` |
 | `discord-services-post-test` | Super-admin harness: post N Accept messages for race testing |
 | `manage-github-collaborator` | Contributor Team: invite/update/remove GitHub collaborators after approve/upgrade/leave/revoke |
-| `link-citizenid` | Signed-in member starts Citizen iD OAuth (PKCE state stored server-side) |
-| `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
+| `link-citizenid` | Officer / super-admin starts Citizen iD OAuth (PKCE; staff-test gate until opened to members) |
+| `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum (same staff-test gate) |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
@@ -324,7 +324,7 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 | `CITIZENID_REDIRECT_URI` | Optional override; default `{SUPABASE_URL}/functions/v1/citizenid-oauth-callback` |
 | `PUBLIC_SITE_URL` | Where the callback 302s after link (`https://dumpers-repo.com`) |
 
-Register that redirect URI on the Citizen iD app. Apply **185** then **186**. Link stays 503 until secrets exist. Super-admin **Start 90-day Citizen iD grace** in Settings starts the legacy clock (do not click until Link works).
+Register that redirect URI on the Citizen iD app. Apply **185** then **186**. Link stays 503 until secrets exist. **Link / callback are officer + super-admin only** until you remove that gate. Super-admin **Start 90-day Citizen iD grace** in Settings starts the legacy clock (do not click until officers have tested). Staging testers may also need a [citizenid.dev](https://citizenid.dev) account (and community authorization) before OAuth will succeed.
 
 Set these under **Project Settings → Edge Functions → Secrets** (or let semantic-release create them):
 

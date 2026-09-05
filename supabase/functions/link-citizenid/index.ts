@@ -61,16 +61,27 @@ serve(async (req) => {
       })
     }
 
+    const admin = createClient(supabaseUrl, serviceKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    })
+    const { data: staffProfile } = await admin
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .maybeSingle()
+    if (staffProfile?.role !== 'officer' && staffProfile?.role !== 'super-admin') {
+      return new Response(
+        JSON.stringify({ error: 'Citizen iD link is in staff testing — officers and super-admins only for now.' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      )
+    }
+
     const redirectUri =
       Deno.env.get('CITIZENID_REDIRECT_URI') ||
       `${supabaseUrl.replace(/\/$/, '')}/functions/v1/citizenid-oauth-callback`
 
     const state = base64Url(crypto.getRandomValues(new Uint8Array(24)))
     const { verifier, challenge } = await pkcePair()
-
-    const admin = createClient(supabaseUrl, serviceKey, {
-      auth: { autoRefreshToken: false, persistSession: false },
-    })
 
     await admin.from('spectrum_oauth_pending').delete().eq('user_id', user.id)
     const { error: insertError } = await admin.from('spectrum_oauth_pending').insert({

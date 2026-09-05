@@ -90,6 +90,16 @@ serve(async (req) => {
     return siteRedirect('?citizenid=error&reason=expired')
   }
 
+  const { data: staffProfile } = await admin
+    .from('profiles')
+    .select('role')
+    .eq('id', pending.user_id)
+    .maybeSingle()
+  if (staffProfile?.role !== 'officer' && staffProfile?.role !== 'super-admin') {
+    await admin.from('spectrum_oauth_pending').delete().eq('state', state)
+    return siteRedirect('?citizenid=error&reason=staff_only')
+  }
+
   const tokenRes = await fetch(`${authority}/connect/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

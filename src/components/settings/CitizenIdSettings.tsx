@@ -11,6 +11,7 @@ import SettingsField from './SettingsField'
 
 type Props = {
   isSuperAdmin?: boolean
+  canTestCitizenId?: boolean
   hasActiveOrders: boolean
   onRefreshProfile: () => Promise<void>
   onMessage: (message: { type: 'success' | 'error'; text: string } | null) => void
@@ -18,6 +19,7 @@ type Props = {
 
 export default function CitizenIdSettings({
   isSuperAdmin = false,
+  canTestCitizenId = false,
   hasActiveOrders,
   onRefreshProfile,
   onMessage,
@@ -101,10 +103,12 @@ export default function CitizenIdSettings({
   }
 
   if (loading) {
+    if (!canTestCitizenId) return null
     return <p className="site-hint">Loading Citizen iD status…</p>
   }
 
   const linked = Boolean(spectrum?.linked)
+  if (!canTestCitizenId && !linked) return null
 
   return (
     <SettingsField
@@ -116,7 +120,7 @@ export default function CitizenIdSettings({
             : 'Removing the link un-verifies you and frees your RSI Handle — used when selling an account.'
           : spectrum?.needsLink
             ? 'Link Citizen iD to keep RSI verification after the grace period and to show your Spectrum orgs.'
-            : 'Link Citizen iD to verify your RSI Handle and use your Spectrum portrait as your avatar.'
+            : 'Staff test: Link Citizen iD to verify your RSI Handle and use your Spectrum portrait as your avatar. Regular members still use bio verify.'
       }
     >
       {linked ? (

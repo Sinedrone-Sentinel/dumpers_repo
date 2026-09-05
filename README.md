@@ -238,7 +238,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **All approved members**
 
-- RSI Handle verification via **Link Citizen iD** (Spectrum portrait becomes your avatar) or, until the 90-day grace starts, the public-bio challenge code
+- RSI Handle verification via **Link Citizen iD** (officer / super-admin staff test; Spectrum portrait becomes your avatar) or the public-bio challenge code
 - **Connected Accounts** — link Google and Discord (auto-merge when emails match)
 - **Deduct inventory on craft complete** — optional WTB fulfillment material deduct from Resource Tracker
 - **Group FPS blueprint variants** — Blueprints page display preference
@@ -279,7 +279,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **Sign-in:** Google or Discord OAuth. Enable **Manual Linking** in Supabase Auth settings so members can connect both providers from Settings.
 
-**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. Prefer **Link Citizen iD** in Settings (Edge `link-citizenid` / `citizenid-oauth-callback`). Bio-code verify (`issue_rsi_verify_challenge` + `validate-rsi-handle`) stays available until a super-admin starts the 90-day grace. Removing the Citizen iD link un-verifies the member.
+**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. **Link Citizen iD** in Settings is officer / super-admin only during staff test (Edge `link-citizenid` / `citizenid-oauth-callback`). Bio-code verify (`issue_rsi_verify_challenge` + `validate-rsi-handle`) stays available until a super-admin starts the 90-day grace. Removing the Citizen iD link un-verifies the member.
 
 ---
 
