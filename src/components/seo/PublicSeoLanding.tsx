@@ -79,7 +79,9 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
   const jsonLdId = useId()
 
   useEffect(() => {
-    if (oauthReturnError) setError(oauthReturnError)
+    if (!oauthReturnError) return
+    setError(oauthReturnError)
+    document.getElementById('sign-in')?.scrollIntoView({ behavior: 'smooth' })
   }, [oauthReturnError])
 
   useEffect(() => {
@@ -138,6 +140,11 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             trades, mining RS reference, and a member marketplace — Offline Mode for instant access,
             sign-in when you want sync.
           </p>
+          {error && (
+            <div className="site-banner-error mx-auto mt-6 max-w-xl" role="alert">
+              {error}
+            </div>
+          )}
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <button
               type="button"
@@ -234,7 +241,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             </p>
 
             {error && (
-              <div className="mt-4 rounded-lg border border-red-500/50 bg-red-900/50 p-3 text-sm text-red-400">
+              <div className="site-banner-error mt-4" role="alert">
                 {error}
               </div>
             )}

@@ -1,5 +1,33 @@
 export const OAUTH_RETURN_FAILED_MESSAGE =
-  'Sign-in did not finish. If you opened this site from Facebook, Discord, Instagram, or another app, open dumpers-repo.com in Safari (or Chrome on Android) and sign in there.'
+  'Sign-in did not finish. Tap Sign in with Discord or Google again in this Safari or Chrome window. Refresh will not log you in — the page icon next to the address is Safari Reader, not Refresh.'
+
+const PENDING_KEY = 'dr_oauth_pending'
+
+export function markOAuthAttempt(): void {
+  try {
+    sessionStorage.setItem(PENDING_KEY, String(Date.now()))
+  } catch {
+    // ignore
+  }
+}
+
+export function consumeOAuthAttempt(): boolean {
+  try {
+    const value = sessionStorage.getItem(PENDING_KEY)
+    if (value) sessionStorage.removeItem(PENDING_KEY)
+    return Boolean(value)
+  } catch {
+    return false
+  }
+}
+
+export function peekOAuthAttempt(): boolean {
+  try {
+    return Boolean(sessionStorage.getItem(PENDING_KEY))
+  } catch {
+    return false
+  }
+}
 
 const OAUTH_QUERY_KEYS = ['code', 'state', 'error', 'error_description'] as const
 
