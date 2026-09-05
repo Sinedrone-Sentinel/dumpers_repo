@@ -12,6 +12,7 @@ const SKIP_PATH_PREFIXES = [
   '/theme-preview',
   '/privacy',
   '/contributor-team',
+  '/auth/callback',
 ]
 
 export type AnalyticsContext = {
