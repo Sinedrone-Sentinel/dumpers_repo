@@ -39,8 +39,11 @@ import {
 } from '../lib/discordOAuth'
 import {
   cleanOAuthReturnUrl,
+  consumeOAuthAttempt,
   isOAuthReturnUrl,
+  markOAuthAttempt,
   OAUTH_RETURN_FAILED_MESSAGE,
+  peekOAuthAttempt,
 } from '../lib/oauthReturn'
 
 const AUTH_BOOTSTRAP_TIMEOUT_MS = 12_000
@@ -520,6 +523,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         const isOAuthCallback = isOAuthReturnUrl(window.location.search, window.location.hash)
+        const pendingOAuth = peekOAuthAttempt()
 
         setStep('session', { status: 'active', progress: 15 })
         const { data: { session: getSessionResult } } = await withTimeout(
@@ -558,15 +562,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
+        if (session) {
+          consumeOAuthAttempt()
+        }
+
         if (isOAuthCallback && session) {
           cleanOAuthReturnUrl()
           setOAuthReturnError(null)
           if (userHasDiscordIdentity(session.user.identities)) {
             markDiscordAppAuthorized()
           }
-        } else if (isOAuthCallback && !session) {
+        } else if (!session && (isOAuthCallback || pendingOAuth)) {
+          consumeOAuthAttempt()
           setOAuthReturnError(OAUTH_RETURN_FAILED_MESSAGE)
-          cleanOAuthReturnUrl()
+          if (isOAuthCallback) cleanOAuthReturnUrl()
         }
 
         if (cancelled) return
@@ -681,6 +690,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (provider: OAuthProviderId) => {
       writeGuestPreviewSession(false)
       setIsGuestPreview(false)
+      markOAuthAttempt()
 
       const { buildOAuthRedirectTo } = await import('../lib/friendInvite')
       const redirectTo = buildOAuthRedirectTo(window.location.origin)

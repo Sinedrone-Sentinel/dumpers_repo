@@ -6,9 +6,13 @@ import { supabase } from '../lib/supabase'
 import OAuthSignInButtons from './auth/OAuthSignInButtons'
 
 export default function Login() {
-  const { loading, enterGuestPreview } = useAuth()
+  const { loading, enterGuestPreview, oauthReturnError } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const [autoApproveEnabled, setAutoApproveEnabled] = useState<boolean | null>(null)
+
+  React.useEffect(() => {
+    if (oauthReturnError) setError(oauthReturnError)
+  }, [oauthReturnError])
 
   React.useEffect(() => {
     const fetchAutoApprove = async () => {

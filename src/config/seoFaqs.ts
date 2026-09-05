@@ -12,7 +12,7 @@ export const SEO_LANDING_FAQS: SeoFaq[] = [
   },
   {
     q: 'Why did Discord or Google sign-in fail on my phone?',
-    a: 'If you opened this site from Facebook, Discord, Instagram, or another app, sign-in cannot finish there. Open dumpers-repo.com in Safari on iPhone (or Chrome on Android), then tap Sign in. You can still use Offline Mode from the other app.',
+    a: 'If you opened this site from Facebook, Discord, Instagram, or another app, sign-in cannot finish there. Open dumpers-repo.com in Safari on iPhone (or Chrome on Android), then tap Sign in. If you already did that and landed back on the home page still signed out, tap Sign in again in that same Safari window — Refresh will not finish it. The page icon next to the address is Safari Reader (that is what “Reader Unavailable” means), not Refresh. Offline Mode still works from the other app.',
   },
   {
     q: 'Is there a free Star Citizen blueprint tracker?',
