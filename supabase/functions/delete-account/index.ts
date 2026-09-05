@@ -59,6 +59,20 @@ Deno.serve(async (req) => {
       })
     }
 
+    const adminClient = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    })
+
+    let citizenidRefresh: string | null = null
+    try {
+      const { data: token } = await adminClient.rpc('take_citizenid_refresh_token', {
+        p_user_id: caller.id,
+      })
+      if (typeof token === 'string' && token.trim()) citizenidRefresh = token.trim()
+    } catch {
+      // Token table may not exist yet on older deploys
+    }
+
     const { error: rpcError } = await userClient.rpc('delete_own_account')
 
     if (rpcError) {
@@ -68,9 +82,27 @@ Deno.serve(async (req) => {
       })
     }
 
-    const adminClient = createClient(supabaseUrl, serviceRoleKey, {
-      auth: { autoRefreshToken: false, persistSession: false },
-    })
+    if (citizenidRefresh) {
+      const clientId = Deno.env.get('CITIZENID_CLIENT_ID')
+      const clientSecret = Deno.env.get('CITIZENID_CLIENT_SECRET')
+      const authority = (Deno.env.get('CITIZENID_AUTHORITY') || 'https://citizenid.space').replace(/\/$/, '')
+      if (clientId && clientSecret) {
+        try {
+          await fetch(`${authority}/connect/revoke`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              token: citizenidRefresh,
+              token_type_hint: 'refresh_token',
+              client_id: clientId,
+              client_secret: clientSecret,
+            }),
+          })
+        } catch {
+          // Never fail account delete if Citizen iD revoke is down
+        }
+      }
+    }
 
     await purgeServiceRequestScreenshots(adminClient, caller.id)
 

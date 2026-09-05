@@ -287,6 +287,7 @@ export const ORDER_RULES_SECTION = {
       '**Reputation reset:** All ratings cleared, returning you to "Pending" status with limits',
       '**Order history cleared:** Archived orders may be removed along with your reputation',
       '**Account ban:** Severe or repeated violations — including repeated ghosting on order deadlines — may result in permanent removal from the platform',
+      '**Account delete during an accepted deal:** the live order closes and the other party receives an automatic 5-star (counts toward their 5-item reputation unlock). Unused WTS/WTB postings are cancelled with no rating',
     ],
     note: 'Repeated or serious violations may result in account review and disciplinary action by site staff.',
   },

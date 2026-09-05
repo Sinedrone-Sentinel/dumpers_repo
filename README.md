@@ -238,13 +238,13 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **All approved members**
 
-- RSI Handle verification via temporary public-bio challenge code (robertsspaceindustries.com citizen page)
+- RSI Handle verification via **Link Citizen iD** (Spectrum portrait becomes your avatar) or, until the 90-day grace starts, the public-bio challenge code
 - **Connected Accounts** — link Google and Discord (auto-merge when emails match)
 - **Deduct inventory on craft complete** — optional WTB fulfillment material deduct from Resource Tracker
 - **Group FPS blueprint variants** — Blueprints page display preference
 - **Marketplace ads / purchase toasts** — personal opt-out toggles (shown when the site has them enabled)
 - **My Data** — wipe acquired blueprints or tracked resources
-- Delete account (blocked while active orders exist)
+- Delete account — accepted deals in progress close and the other party gets an automatic 5-star (counts toward their 5-item unlock); leftover WTS/WTB postings cancel with no rating
 
 **Super-admin only (same Settings modal)**
 
@@ -279,7 +279,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 **Sign-in:** Google or Discord OAuth. Enable **Manual Linking** in Supabase Auth settings so members can connect both providers from Settings.
 
-**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. Members get a short-lived code (`issue_rsi_verify_challenge`), paste it into their public RSI Bio, then the `validate-rsi-handle` Edge Function confirms it.
+**RSI Handle verification** is required to post listings or trade on the Bazaar, register personal Discord webhooks, and use Mining Ledgers. Prefer **Link Citizen iD** in Settings (Edge `link-citizenid` / `citizenid-oauth-callback`). Bio-code verify (`issue_rsi_verify_challenge` + `validate-rsi-handle`) stays available until a super-admin starts the 90-day grace. Removing the Citizen iD link un-verifies the member.
 
 ---
 
