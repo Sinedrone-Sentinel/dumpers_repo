@@ -73,9 +73,10 @@ export function buildOAuthRedirectTo(origin: string = window.location.origin): s
     fromUrl = null
   }
   const token = fromUrl ?? readStashedFriendInviteToken()
+  const base = `${origin.replace(/\/$/, '')}/auth/callback`
   if (token) {
     stashFriendInviteToken(token)
-    return `${origin}/?friendInvite=${encodeURIComponent(token)}`
+    return `${base}?friendInvite=${encodeURIComponent(token)}`
   }
-  return origin
+  return base
 }

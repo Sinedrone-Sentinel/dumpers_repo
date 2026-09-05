@@ -7,8 +7,69 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
+const PKCE_VERIFIER_COOKIE = 'dr-pkce-verifier'
+
+function readCookie(name: string): string | null {
+  if (typeof document === 'undefined') return null
+  const parts = `; ${document.cookie}`.split(`; ${name}=`)
+  if (parts.length < 2) return null
+  const raw = parts.pop()?.split(';').shift()
+  return raw ? decodeURIComponent(raw) : null
+}
+
+function writeCookie(name: string, value: string, maxAgeSec: number): void {
+  if (typeof document === 'undefined') return
+  const secure = typeof location !== 'undefined' && location.protocol === 'https:'
+  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSec}; SameSite=Lax${secure ? '; Secure' : ''}`
+}
+
+/** localStorage plus a short-lived cookie so iOS Safari can finish PKCE after Discord hops tabs. */
+function createAuthStorage() {
+  const memory = new Map<string, string>()
+  const isVerifierKey = (key: string) => key.includes('code-verifier')
+
+  return {
+    getItem: (key: string) => {
+      try {
+        const fromLs = localStorage.getItem(key)
+        if (fromLs) return fromLs
+      } catch {
+        /* private mode */
+      }
+      if (isVerifierKey(key)) {
+        const fromCookie = readCookie(PKCE_VERIFIER_COOKIE)
+        if (fromCookie) return fromCookie
+      }
+      return memory.get(key) ?? null
+    },
+    setItem: (key: string, value: string) => {
+      memory.set(key, value)
+      try {
+        localStorage.setItem(key, value)
+      } catch {
+        /* private mode */
+      }
+      if (isVerifierKey(key)) writeCookie(PKCE_VERIFIER_COOKIE, value, 600)
+    },
+    removeItem: (key: string) => {
+      memory.delete(key)
+      try {
+        localStorage.removeItem(key)
+      } catch {
+        /* private mode */
+      }
+      if (isVerifierKey(key)) writeCookie(PKCE_VERIFIER_COOKIE, '', 0)
+    },
+  }
+}
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { flowType: 'pkce' },
+  auth: {
+    flowType: 'pkce',
+    detectSessionInUrl: true,
+    persistSession: true,
+    storage: createAuthStorage(),
+  },
 })
 
 export type UserRole = 'pending' | 'member' | 'officer' | 'super-admin'

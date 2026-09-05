@@ -42,7 +42,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. Add redirect URI: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
 4. In Supabase: Authentication → Providers → Discord → Enable
 5. Paste Client ID and Client Secret
-6. Ensure your Site URL and Redirect URLs include your app origin(s) (`https://dumpers-repo.com` and `https://dumpers-repo.com/**` on production). The site uses PKCE and returns to that origin after Discord or Google — same allowlist as before.
+6. Ensure your Site URL and Redirect URLs include your app origin(s) (`https://dumpers-repo.com`, `https://dumpers-repo.com/**`, and `https://dumpers-repo.com/auth/callback` on production). The site uses PKCE and returns to `/auth/callback` after Discord or Google.
 
 > Supabase maps Discord's `global_name` to `full_name` in `raw_user_meta_data`. The existing `handle_new_user` trigger reads `full_name` and populates `display_name` automatically - no changes needed.
 
