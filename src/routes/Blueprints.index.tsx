@@ -4,7 +4,7 @@ import {
   consumeBlueprintFocusRequest,
   subscribeBlueprintFocus,
 } from '../lib/blueprintFocusRequest'
-import { blueprintDataVersion, useBlueprintData } from './blueprints'
+import { useBlueprintData } from './blueprints'
 import BlueprintCard from '../components/BlueprintCard'
 import BlueprintDetailsModal from '../components/BlueprintDetailsModal'
 import BlueprintRewardMissionsModal from '../components/BlueprintRewardMissionsModal'
@@ -592,6 +592,15 @@ export default function BlueprintsRoute() {
     )
   }, [materialFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedComponentClass, selectedComponentGrade, selectedArmorWeight, selectedArmorSlot])
 
+  const shownAcquiredCount = React.useMemo(
+    () =>
+      filteredBlueprints.filter(
+        (bp) =>
+          !!displayAcquiredBlueprints[bp.internalName] || isDefaultBlueprint(bp.internalName)
+      ).length,
+    [filteredBlueprints, displayAcquiredBlueprints]
+  )
+
   const blueprintGridItems = React.useMemo(
     () => buildBlueprintGridItems(filteredBlueprints, groupBlueprintVariants),
     [filteredBlueprints, groupBlueprintVariants]
@@ -846,15 +855,6 @@ export default function BlueprintsRoute() {
     <FeaturePageLayout
       title="Blueprints"
       subtitle="Comprehensive Crafting Database & Mission Rewards Tracker"
-      meta={
-        <>
-          <span>LIVE {blueprintDataVersion}</span>
-          <span className="mx-2">•</span>
-          <span className="text-green-400">
-            {`${Object.keys(displayAcquiredBlueprints).length} acquired`}
-          </span>
-        </>
-      }
     >
       {isGuest && (
         <div className="mb-4 site-banner-warn">
@@ -1142,6 +1142,10 @@ export default function BlueprintsRoute() {
         {/* Results count */}
         <div className="text-slate-500 text-sm">
           Showing {filteredBlueprints.length} blueprints
+          <span className="text-green-400">
+            {' · '}
+            {shownAcquiredCount} acquired
+          </span>
           {(selectedMaterial ||
             selectedMainCategory ||
             selectedSubCategory ||
