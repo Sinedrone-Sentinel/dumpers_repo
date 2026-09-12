@@ -16,6 +16,7 @@ var (
 	PatternEndMission = regexp.MustCompile(
 		`<EndMission>.*MissionId\[([^\]]+)\].*CompletionType\[(\w+)\].*Reason\[([^\]]+)\]`,
 	)
+	PatternClientSpawned = regexp.MustCompile(`\[CSessionManager::OnClientSpawned\]\s+Spawned!`)
 	PatternBlueprint = regexp.MustCompile(`Added notification "Received Blueprint: ([^:]+):`)
 	PatternExitMenu  = regexp.MustCompile(`Requesting game mode Frontend_Main/SC_Frontend`)
 	// AFK / inactivity kick (seen before Frontend_Main in Game.log).
@@ -38,4 +39,8 @@ const (
 	// Pause session_ping when in PU with no active missions and no mission/BP
 	// log activity for this long (Dumper Apps is for mission + BP watching).
 	MissionIdlePauseSec = 3600.0
+	// After spawn, CIG re-emits Contract Accepted / CreateMarker for missions
+	// still on the Accepted tab. Shared party jobs can vanish with no EndMission.
+	SpawnConfirmWindowSec = 8.0
+	ZeroMissionGUID       = "00000000-0000-0000-0000-000000000000"
 )
