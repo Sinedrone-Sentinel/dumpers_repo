@@ -1,6 +1,6 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-08-27T02:01:41.979Z",
+  "_extracted": "2026-09-12T00:10:07.816Z",
   "stats": {
     "internalNames": 1607,
     "displayNames": 1594,
@@ -21932,6 +21932,63 @@
       "qrt_combat_medium_backpack_01_01_16",
       "qrt_combat_medium_backpack_01_01_10"
     ],
+    "34f8d04a-8c43-4fb8-bfdb-997234ccea54": [
+      "volt_pistol_energy_01_tint01",
+      "volt_smg_energy_01",
+      "volt_smg_energy_01_tint02",
+      "qrt_combat_medium_arms_01_01_01",
+      "qrt_combat_medium_core_01_01_01",
+      "qrt_combat_medium_legs_01_01_01",
+      "qrt_combat_medium_helmet_01_01_01",
+      "qrt_combat_medium_helmet_02_01_01",
+      "qrt_combat_medium_core_02_01_01",
+      "qrt_combat_medium_legs_02_01_01",
+      "qrt_combat_medium_arms_02_01_01",
+      "volt_smg_energy_01_mag",
+      "volt_pistol_energy_01_mag",
+      "qrt_combat_medium_backpack_01_01_01",
+      "hrst_laserrepeater_s1",
+      "hrst_laserrepeater_s2",
+      "hrst_laserrepeater_s3"
+    ],
+    "ids_recoverencrypteddata_intro": [
+      "volt_pistol_energy_01_tint01",
+      "volt_smg_energy_01",
+      "volt_smg_energy_01_tint02",
+      "qrt_combat_medium_arms_01_01_01",
+      "qrt_combat_medium_core_01_01_01",
+      "qrt_combat_medium_legs_01_01_01",
+      "qrt_combat_medium_helmet_01_01_01",
+      "qrt_combat_medium_helmet_02_01_01",
+      "qrt_combat_medium_core_02_01_01",
+      "qrt_combat_medium_legs_02_01_01",
+      "qrt_combat_medium_arms_02_01_01",
+      "volt_smg_energy_01_mag",
+      "volt_pistol_energy_01_mag",
+      "qrt_combat_medium_backpack_01_01_01",
+      "hrst_laserrepeater_s1",
+      "hrst_laserrepeater_s2",
+      "hrst_laserrepeater_s3"
+    ],
+    "vanduul-tech smugglers": [
+      "volt_pistol_energy_01_tint01",
+      "volt_smg_energy_01",
+      "volt_smg_energy_01_tint02",
+      "qrt_combat_medium_arms_01_01_01",
+      "qrt_combat_medium_core_01_01_01",
+      "qrt_combat_medium_legs_01_01_01",
+      "qrt_combat_medium_helmet_01_01_01",
+      "qrt_combat_medium_helmet_02_01_01",
+      "qrt_combat_medium_core_02_01_01",
+      "qrt_combat_medium_legs_02_01_01",
+      "qrt_combat_medium_arms_02_01_01",
+      "volt_smg_energy_01_mag",
+      "volt_pistol_energy_01_mag",
+      "qrt_combat_medium_backpack_01_01_01",
+      "hrst_laserrepeater_s1",
+      "hrst_laserrepeater_s2",
+      "hrst_laserrepeater_s3"
+    ],
     "4f735fe1-caec-4c9d-acba-606d8e096ba6": [
       "volt_pistol_energy_01_tint01",
       "volt_smg_energy_01",
@@ -22300,6 +22357,21 @@
       "cds_combat_superheavy_suit_01_01_01"
     ],
     "retake platforms from nine tails": [
+      "cds_combat_superheavy_backpack_01_01_01",
+      "cds_combat_superheavy_helmet_01_01_01",
+      "cds_combat_superheavy_suit_01_01_01"
+    ],
+    "593a375f-1344-4eea-a8cb-caf3acbd9fb5": [
+      "cds_combat_superheavy_backpack_01_01_01",
+      "cds_combat_superheavy_helmet_01_01_01",
+      "cds_combat_superheavy_suit_01_01_01"
+    ],
+    "soo2_intro": [
+      "cds_combat_superheavy_backpack_01_01_01",
+      "cds_combat_superheavy_helmet_01_01_01",
+      "cds_combat_superheavy_suit_01_01_01"
+    ],
+    "orison platforms under attack": [
       "cds_combat_superheavy_backpack_01_01_01",
       "cds_combat_superheavy_helmet_01_01_01",
       "cds_combat_superheavy_suit_01_01_01"
@@ -37600,78 +37672,6 @@
       "powr_just_s01_breton",
       "powr_just_s02_genoa",
       "powr_just_s03_durango"
-    ],
-    "34f8d04a-8c43-4fb8-bfdb-997234ccea54": [
-      "volt_pistol_energy_01_tint01",
-      "volt_smg_energy_01",
-      "volt_smg_energy_01_tint02",
-      "qrt_combat_medium_arms_01_01_01",
-      "qrt_combat_medium_core_01_01_01",
-      "qrt_combat_medium_legs_01_01_01",
-      "qrt_combat_medium_helmet_01_01_01",
-      "qrt_combat_medium_helmet_02_01_01",
-      "qrt_combat_medium_core_02_01_01",
-      "qrt_combat_medium_legs_02_01_01",
-      "qrt_combat_medium_arms_02_01_01",
-      "volt_smg_energy_01_mag",
-      "volt_pistol_energy_01_mag",
-      "qrt_combat_medium_backpack_01_01_01",
-      "hrst_laserrepeater_s1",
-      "hrst_laserrepeater_s2",
-      "hrst_laserrepeater_s3"
-    ],
-    "ids_recoverencrypteddata_intro": [
-      "volt_pistol_energy_01_tint01",
-      "volt_smg_energy_01",
-      "volt_smg_energy_01_tint02",
-      "qrt_combat_medium_arms_01_01_01",
-      "qrt_combat_medium_core_01_01_01",
-      "qrt_combat_medium_legs_01_01_01",
-      "qrt_combat_medium_helmet_01_01_01",
-      "qrt_combat_medium_helmet_02_01_01",
-      "qrt_combat_medium_core_02_01_01",
-      "qrt_combat_medium_legs_02_01_01",
-      "qrt_combat_medium_arms_02_01_01",
-      "volt_smg_energy_01_mag",
-      "volt_pistol_energy_01_mag",
-      "qrt_combat_medium_backpack_01_01_01",
-      "hrst_laserrepeater_s1",
-      "hrst_laserrepeater_s2",
-      "hrst_laserrepeater_s3"
-    ],
-    "vanduul-tech smugglers": [
-      "volt_pistol_energy_01_tint01",
-      "volt_smg_energy_01",
-      "volt_smg_energy_01_tint02",
-      "qrt_combat_medium_arms_01_01_01",
-      "qrt_combat_medium_core_01_01_01",
-      "qrt_combat_medium_legs_01_01_01",
-      "qrt_combat_medium_helmet_01_01_01",
-      "qrt_combat_medium_helmet_02_01_01",
-      "qrt_combat_medium_core_02_01_01",
-      "qrt_combat_medium_legs_02_01_01",
-      "qrt_combat_medium_arms_02_01_01",
-      "volt_smg_energy_01_mag",
-      "volt_pistol_energy_01_mag",
-      "qrt_combat_medium_backpack_01_01_01",
-      "hrst_laserrepeater_s1",
-      "hrst_laserrepeater_s2",
-      "hrst_laserrepeater_s3"
-    ],
-    "593a375f-1344-4eea-a8cb-caf3acbd9fb5": [
-      "cds_combat_superheavy_backpack_01_01_01",
-      "cds_combat_superheavy_helmet_01_01_01",
-      "cds_combat_superheavy_suit_01_01_01"
-    ],
-    "soo2_intro": [
-      "cds_combat_superheavy_backpack_01_01_01",
-      "cds_combat_superheavy_helmet_01_01_01",
-      "cds_combat_superheavy_suit_01_01_01"
-    ],
-    "orison platforms under attack": [
-      "cds_combat_superheavy_backpack_01_01_01",
-      "cds_combat_superheavy_helmet_01_01_01",
-      "cds_combat_superheavy_suit_01_01_01"
     ]
   }
 }
