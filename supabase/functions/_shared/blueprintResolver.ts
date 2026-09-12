@@ -236,7 +236,7 @@ export function resolveBlueprintInput(
   const internalMatch = resolveFromInternalKey(byInternal, internalKey, 'internal')
   if (internalMatch) return internalMatch
 
-  if (!byInternal[internalKey]) {
+  if (!internalKey.startsWith('bp_') && !byInternal[internalKey]) {
     const prefixed = resolveFromInternalKey(byInternal, `bp_${internalKey}`, 'internal')
     if (prefixed) return prefixed
   }

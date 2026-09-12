@@ -350,6 +350,13 @@ def resolve_blueprint_input(raw_input: str, contract_definition_id: str | None =
     if internal_match:
         return internal_match
 
+    # Unique catalog alias: CIG item id without the crafting `bp_` prefix
+    # (e.g. hrst_laserscattergun_s2 → bp_hrst_laserscattergun_s2). Exact only.
+    if not internal_key.startswith("bp_"):
+        prefixed = _resolve_from_internal_key(by_internal, f"bp_{internal_key}")
+        if prefixed:
+            return prefixed
+
     display_entry = data.get("byDisplayName", {}).get(_normalize_display_key(text))
     if not display_entry:
         alias_match = _try_starstrings_display_alias(text, data)

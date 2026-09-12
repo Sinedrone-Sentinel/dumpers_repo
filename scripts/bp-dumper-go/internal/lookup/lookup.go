@@ -235,6 +235,13 @@ func (d *Data) Resolve(rawInput string, contractDefinitionID string) Entry {
 	if m := d.resolveFromInternal(internalKey); m != nil {
 		return *m
 	}
+	// Unique catalog alias: CIG item id without the crafting bp_ prefix
+	// (e.g. hrst_laserscattergun_s2 → bp_hrst_laserscattergun_s2). Exact only.
+	if !strings.HasPrefix(internalKey, "bp_") {
+		if m := d.resolveFromInternal("bp_" + internalKey); m != nil {
+			return *m
+		}
+	}
 	de, ok := d.ByDisplayName[NormalizeDisplayKey(text)]
 	if !ok {
 		if m := d.tryStarstringsAlias(text); m != nil {
