@@ -600,6 +600,10 @@ export default function BlueprintsRoute() {
       ).length,
     [filteredBlueprints, displayAcquiredBlueprints]
   )
+  const totalAcquiredCount = React.useMemo(
+    () => Object.keys(displayAcquiredBlueprints).filter((id) => displayAcquiredBlueprints[id]).length,
+    [displayAcquiredBlueprints]
+  )
 
   const blueprintGridItems = React.useMemo(
     () => buildBlueprintGridItems(filteredBlueprints, groupBlueprintVariants),
@@ -1144,7 +1148,9 @@ export default function BlueprintsRoute() {
           Showing {filteredBlueprints.length} blueprints
           <span className="text-green-400">
             {' · '}
-            {shownAcquiredCount} acquired
+            {shownAcquiredCount !== totalAcquiredCount
+              ? `${shownAcquiredCount} of ${totalAcquiredCount} acquired`
+              : `${totalAcquiredCount} acquired`}
           </span>
           {(selectedMaterial ||
             selectedMainCategory ||
