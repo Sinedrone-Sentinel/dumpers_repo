@@ -7,14 +7,43 @@ const LOG_NOISE_TAIL_RE = /\s:\s*"\s*\[\d+\]\s*To Queue|\[\d+\]\s*To Queue/i
 const BP_TAG_RE = /\s*\[bp\](?=\s*\[|$)/gi
 
 /**
- * Strip HTML, [bp] tags, and Game.log queue noise from contract accept text.
+ * Drop `<...>` spans and leftover angle brackets.
+ * Repeats so nested junk (`<scr<script>ipt>`) cannot survive one pass, then
+ * removes any remaining `<` / `>` so no markup token can remain.
+ */
+function stripAngleMarkup(raw: string): string {
+  let text = raw
+  let previous = ''
+  while (text !== previous) {
+    previous = text
+    let out = ''
+    let i = 0
+    while (i < text.length) {
+      const open = text.indexOf('<', i)
+      if (open === -1) {
+        out += text.slice(i)
+        break
+      }
+      out += text.slice(i, open)
+      const close = text.indexOf('>', open + 1)
+      if (close === -1) break
+      i = close + 1
+    }
+    text = out
+  }
+  return text.replace(/[<>]/g, '')
+}
+
+/**
+ * Strip markup, [bp] tags, and Game.log queue noise from contract accept text.
  * Shared by display, contract match, and live-tracker pool lookup.
+ * Result is always plain text (React renders it as a text child, never HTML).
  */
 export function sanitizeLiveMissionRawLabel(raw: string | null | undefined): string {
   let text = (raw || '').trim()
   if (!text) return ''
 
-  text = text.replace(/<[^>]+>/g, '')
+  text = stripAngleMarkup(text)
   text = text.replace(BP_TAG_RE, '').replace(/\s+/g, ' ').trim()
 
   const embeddedRep = text.match(/\[(\d+)\s*\/\s*(\d+)\s*(?:rep|Rep|REP)?\]/i)

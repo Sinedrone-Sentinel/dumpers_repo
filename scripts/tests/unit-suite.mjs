@@ -211,6 +211,25 @@ check(
     'Jorrit Dossier: Updated Security Data',
   'parse title drops [bp] before catalog match'
 )
+check(
+  live.sanitizeLiveMissionRawLabel('<b>Jorrit Dossier: Updated Security Data</b>') ===
+    'Jorrit Dossier: Updated Security Data',
+  'sanitize keeps inner text from simple markup'
+)
+const nestedMarkup = live.sanitizeLiveMissionRawLabel(
+  '<scr<script>ipt>alert(1)</script>Jorrit Dossier: Updated Security Data'
+)
+check(
+  !nestedMarkup.toLowerCase().includes('<script') &&
+    !nestedMarkup.includes('<') &&
+    !nestedMarkup.includes('>') &&
+    nestedMarkup.includes('Jorrit Dossier: Updated Security Data'),
+  'sanitize cannot leave a script tag or angle brackets'
+)
+check(
+  live.sanitizeLiveMissionRawLabel('Jorrit Dossier<script') === 'Jorrit Dossier',
+  'sanitize drops an unclosed angle-bracket tail'
+)
 
 const missionCatalog = JSON.parse(
   readFileSync(path.join(root, 'src/data/game-blueprint-missions.json'), 'utf8')
