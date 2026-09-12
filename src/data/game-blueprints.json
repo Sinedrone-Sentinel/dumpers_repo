@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-08-26T23:07:01.823Z",
+  "_extracted": "2026-09-12T00:08:53.979Z",
   "version": "4.10.x",
   "blueprints": [
     {
@@ -5578,6 +5578,25 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
           "mission": "Rayari Incorporated: Need Resource for Research\\n",
           "chance": 0.027777777777777776,
           "poolChance": 0.25,
@@ -5790,6 +5809,25 @@
         },
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -8087,6 +8125,25 @@
       "isReward": true,
       "rewardMissions": [
         {
+          "mission": "Northrock Service Group: Orison Platforms Under Attack",
+          "chance": 0.3333333333333333,
+          "poolChance": 1,
+          "poolKey": "superheavy",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 0,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        },
+        {
           "mission": "Northrock Service Group: Retake Platforms From Nine Tails",
           "chance": 0.3333333333333333,
           "poolChance": 1,
@@ -8277,6 +8334,25 @@
       },
       "isReward": true,
       "rewardMissions": [
+        {
+          "mission": "Northrock Service Group: Orison Platforms Under Attack",
+          "chance": 0.3333333333333333,
+          "poolChance": 1,
+          "poolKey": "superheavy",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 0,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        },
         {
           "mission": "Northrock Service Group: Retake Platforms From Nine Tails",
           "chance": 0.3333333333333333,
@@ -8511,6 +8587,25 @@
       },
       "isReward": true,
       "rewardMissions": [
+        {
+          "mission": "Northrock Service Group: Orison Platforms Under Attack",
+          "chance": 0.3333333333333333,
+          "poolChance": 1,
+          "poolKey": "superheavy",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Mercenary",
+          "repPoints": 0,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        },
         {
           "mission": "Northrock Service Group: Retake Platforms From Nine Tails",
           "chance": 0.3333333333333333,
@@ -58044,6 +58139,25 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -58917,6 +59031,25 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -58960,6 +59093,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -59543,6 +59695,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -60432,6 +60603,25 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -60533,6 +60723,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -61422,6 +61631,25 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -61523,6 +61751,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -62396,6 +62643,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -129938,6 +130204,25 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
           "mission": "Rayari Incorporated: Need Resource for Research\\n",
           "chance": 0.027777777777777776,
           "poolChance": 0.25,
@@ -144181,6 +144466,25 @@
           "repScopeKey": "FactionReputationScope"
         },
         {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
           "mission": "Rayari Incorporated: Need Resource for Research\\n",
           "chance": 0.027777777777777776,
           "poolChance": 0.25,
@@ -144587,6 +144891,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.07142857142857142,
+          "poolChance": 1,
+          "poolKey": "ids_recoverencrypteddata",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.07142857142857142,
           "poolChance": 1,
           "poolKey": "ids_recoverencrypteddata",
@@ -152184,7 +152507,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Idea for Isaac",
+          "mission": "Recco Battaglia: Idea for Isaac",
           "chance": 1,
           "poolChance": 1,
           "poolKey": "cargo_shipmining_pod_golem_btgl",
@@ -152285,7 +152608,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Idea for Isaac",
+          "mission": "Recco Battaglia: Idea for Isaac",
           "chance": 1,
           "poolChance": 1,
           "poolKey": "cargo_shipmining_pod_moleprospector_btgl",
@@ -152399,7 +152722,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Welcome to the System",
+          "mission": "Recco Battaglia: Welcome to the System",
           "chance": 1,
           "poolChance": 1,
           "poolKey": "mining_modules_active_clearcut",
@@ -152526,7 +152849,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Emergency: Blinding Hope in Trouble",
+          "mission": "Recco Battaglia: Emergency: Blinding Hope in Trouble",
           "chance": 1,
           "poolChance": 1,
           "poolKey": "mining_modules_passive_deluge",
@@ -152601,7 +152924,7 @@
       "isReward": true,
       "rewardMissions": [
         {
-          "mission": "Unknown: Emergency: Blinding Hope in Trouble",
+          "mission": "Recco Battaglia: Emergency: Blinding Hope in Trouble",
           "chance": 1,
           "poolChance": 1,
           "poolKey": "mining_modules_passive_overrun",
@@ -235748,6 +236071,25 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.3333333333333333,
+          "poolChance": 1,
+          "poolKey": "idsrecoverencrypteddatavgear",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -235867,6 +236209,25 @@
           "maxStandingName": "Elite Contractor",
           "repCareerLabel": "Standing",
           "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
+          "chance": 0.3333333333333333,
+          "poolChance": 1,
+          "poolKey": "idsrecoverencrypteddatavgear",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
         }
       ],
       "missionPools": [
@@ -235970,6 +236331,25 @@
       "rewardMissions": [
         {
           "mission": "InterSec Defense Solutions: Retrieve Additional Smuggler Intel",
+          "chance": 0.3333333333333333,
+          "poolChance": 1,
+          "poolKey": "idsrecoverencrypteddatavgear",
+          "locations": [
+            "Nyx"
+          ],
+          "system": "Nyx",
+          "region": null,
+          "category": "Investigation",
+          "repPoints": 100,
+          "minReputation": 800,
+          "maxReputation": 95250,
+          "standingName": "Jr. Contractor",
+          "maxStandingName": "Elite Contractor",
+          "repCareerLabel": "Standing",
+          "repScopeKey": "FactionReputationScope"
+        },
+        {
+          "mission": "InterSec Defense Solutions: Vanduul-Tech Smugglers",
           "chance": 0.3333333333333333,
           "poolChance": 1,
           "poolKey": "idsrecoverencrypteddatavgear",

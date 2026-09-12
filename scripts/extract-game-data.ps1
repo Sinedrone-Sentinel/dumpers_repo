@@ -101,7 +101,11 @@ if (Test-Path $BuildManifestPath) {
         $p4Change = $manifest.Data.RequestedP4ChangeNum
         $branch = $manifest.Data.Branch
         $GameBuildVersion = $null
-        if ($internalVersion -and $internalVersion -ne 'None') {
+        # Prefer sc-alpha-X.Y; CIG hotfix Version is often the 1.0 engine build.
+        if ($branch -match 'sc-alpha-(\d+)\.(\d+)') {
+            $GameBuildVersion = "$($Matches[1]).$($Matches[2]).x"
+        }
+        elseif ($internalVersion -and $internalVersion -ne 'None' -and $internalVersion -notmatch '^1\.') {
             $parts = $internalVersion -split '\.'
             if ($parts.Length -ge 2) {
                 $GameBuildVersion = "$($parts[0]).$($parts[1]).x"
