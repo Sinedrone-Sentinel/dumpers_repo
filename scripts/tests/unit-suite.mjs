@@ -4,6 +4,7 @@
  */
 import assert from 'node:assert/strict'
 import * as esbuild from 'esbuild'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { fileURLToPath } from 'node:url'
@@ -199,6 +200,91 @@ check(orisonRow?.hasBlueprintPool === true, 'Orison live row has a blueprint poo
 check(orisonRow?.remainingCount === 3, 'Orison live row lists 3 unacquired blueprints')
 check(callRow?.hasBlueprintPool === false, 'A Call To Arms has no blueprint pool')
 check(view.remaining.length === 3, 'remaining list is the 3 Orison pool blueprints')
+
+check(
+  live.sanitizeLiveMissionRawLabel('Jorrit Dossier: Updated Security Data [bp]') ===
+    'Jorrit Dossier: Updated Security Data',
+  'sanitize strips trailing [bp] accept tag'
+)
+check(
+  live.parseLiveMissionLabel('Jorrit Dossier: Updated Security Data [bp]').title ===
+    'Jorrit Dossier: Updated Security Data',
+  'parse title drops [bp] before catalog match'
+)
+
+const missionCatalog = JSON.parse(
+  readFileSync(path.join(root, 'src/data/game-blueprint-missions.json'), 'utf8')
+)
+const asd2bNames = (missionCatalog.missionBlueprints.asd2b || []).map((item) =>
+  String(item.name || '').toLowerCase()
+)
+check(asd2bNames.length === 12, 'Updated Security Data catalog pool is 12 blueprints')
+
+const jorritBpView = live.computeLiveTrackerView(
+  [
+    {
+      user_id: 'u',
+      mission_guid: 'jorrit-bp',
+      contract_definition_id: null,
+      debug_name: 'Jorrit Dossier: Updated Security Data [bp]',
+      started_at: '',
+    },
+  ],
+  {}
+)
+const jorritRow = jorritBpView.missions[0]
+check(jorritRow?.hasBlueprintPool === true, 'Jorrit [bp] accept title resolves a blueprint pool')
+check(
+  jorritRow?.remainingCount === asd2bNames.length,
+  'Jorrit [bp] remaining count matches Browse catalog pool'
+)
+check(
+  asd2bNames.every((name) => jorritBpView.remaining.some((row) => row.internalName === name)),
+  'Jorrit [bp] remaining list is the same 12 catalog names as Browse'
+)
+check(
+  /hockrow agency/i.test(jorritRow?.displayLabel || ''),
+  'Jorrit [bp] display uses catalog faction label'
+)
+
+const acquiredName = asd2bNames[0]
+const jorritAcquiredView = live.computeLiveTrackerView(
+  [
+    {
+      user_id: 'u',
+      mission_guid: 'jorrit-bp',
+      contract_definition_id: null,
+      debug_name: 'Jorrit Dossier: Updated Security Data [bp]',
+      started_at: '',
+    },
+  ],
+  { [acquiredName]: true }
+)
+check(
+  jorritAcquiredView.missions[0]?.remainingCount === asd2bNames.length - 1,
+  'Jorrit [bp] remaining drops by one when a pool id is acquired'
+)
+check(
+  !jorritAcquiredView.remaining.some((row) => row.internalName === acquiredName),
+  'acquired pool blueprint is omitted from Remaining to acquire'
+)
+
+const labView = live.computeLiveTrackerView(
+  [
+    {
+      user_id: 'u',
+      mission_guid: 'lab',
+      contract_definition_id: null,
+      debug_name: 'Jorrit Dossier: Lab Sample',
+      started_at: '',
+    },
+  ],
+  {}
+)
+check(
+  labView.missions[0]?.hasBlueprintPool === false && labView.remaining.length === 0,
+  'unknown Lab Sample title does not invent a blueprint pool'
+)
 
 const diffMod = await import(pathToFileURL(path.join(root, 'scripts/lib/diffGameData.mjs')).href)
 const digestMod = await import(pathToFileURL(path.join(root, 'scripts/lib/writeWhatsNewDigest.mjs')).href)

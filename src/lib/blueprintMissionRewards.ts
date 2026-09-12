@@ -1,4 +1,5 @@
 import blueprintMissionData from '../data/game-blueprint-missions.json'
+import { liveMissionMatchTitle } from './liveMissionLabel'
 import { formatMissionDisplayTitle, isValidBrowseMissionTitle } from './missionDisplay'
 import type { MissionFrequency } from './missionFrequency'
 import { resolveMissionIsLawful } from './missionLawfulStatus'
@@ -363,6 +364,26 @@ for (const contract of contracts) {
   }
 }
 
+function lookupContractByTitle(title: string | null | undefined): ContractEntry | null {
+  const titleKey = _normalizeMissionTitle(title || '').toLowerCase()
+  if (!titleKey) return null
+  return contractsByTitle.get(titleKey) ?? null
+}
+
+/** Unique pool blueprint ids for a catalog contract (same join Browse Missions uses). */
+export function getContractPoolInternalNames(contract: {
+  blueprintPools?: ContractBlueprintPool[]
+}): string[] {
+  const names = new Set<string>()
+  for (const poolRef of contract.blueprintPools ?? []) {
+    for (const item of missionBlueprints[poolRef.key] ?? []) {
+      const name = (item.name || '').toLowerCase()
+      if (name) names.add(name)
+    }
+  }
+  return [...names]
+}
+
 /** Resolve a live dumper mission to catalog contract data (UUID, debugName, or accept title). */
 export function findContractForLiveMission(
   contractDefinitionId: string | null | undefined,
@@ -378,10 +399,12 @@ export function findContractForLiveMission(
     const byDebug = contractsByDebugName.get(debugKey)
     if (byDebug) return byDebug
   }
-  const titleKey = _normalizeMissionTitle(debugName || '').toLowerCase()
-  if (titleKey) {
-    const byTitle = contractsByTitle.get(titleKey)
-    if (byTitle) return byTitle
+  const byRawTitle = lookupContractByTitle(debugName)
+  if (byRawTitle) return byRawTitle
+  const matchTitle = liveMissionMatchTitle(debugName)
+  if (matchTitle) {
+    const bySanitized = lookupContractByTitle(matchTitle)
+    if (bySanitized) return bySanitized
   }
   return null
 }
@@ -472,8 +495,15 @@ const missionTitleHintIndex = buildMissionTitleHintIndex()
 /** Resolve faction/location metadata for rep-only missions missing from the contracts catalog. */
 export function findMissionHintByTitle(title: string): MissionCatalogHint | null {
   const key = _normalizeMissionTitle(title).toLowerCase()
-  if (!key) return null
-  return missionTitleHintIndex.get(key) ?? null
+  if (key) {
+    const hit = missionTitleHintIndex.get(key)
+    if (hit) return hit
+  }
+  const matchKey = _normalizeMissionTitle(liveMissionMatchTitle(title)).toLowerCase()
+  if (matchKey && matchKey !== key) {
+    return missionTitleHintIndex.get(matchKey) ?? null
+  }
+  return null
 }
 
 export interface ContractBlueprintDrop {
