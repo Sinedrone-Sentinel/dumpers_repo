@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 /**
  * Re-link stored acquired / target-list blueprint_id values onto the current catalog.
- * Auto-applies only exact mechanical remaps. Anything else goes to an approval list.
+ * 1) Same-record catalog key changes (stripped internalName changed) from parse / git.
+ * 2) Exact mechanical leftovers (_scitem, unique bp_ prefix, legacy paths).
+ * Anything else goes to an approval list.
  *
  *   npm run relink-acquired-blueprint-ids -- --dry-run
  *   npm run relink-acquired-blueprint-ids -- --apply
  */
 import { createClient } from '@supabase/supabase-js'
 import { config as loadDotenv } from 'dotenv'
-import { readFileSync, mkdirSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { exactRelinkBlueprintId } from './lib/canonicalizeBlueprintId.mjs'
+import { buildCatalogKeyRenames } from './lib/blueprintIdRenames.mjs'
+import { readGitJson } from './lib/diffGameData.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -36,6 +40,26 @@ const displayOf = new Map(
     .filter((bp) => bp.internalName)
     .map((bp) => [bp.internalName, bp.blueprintName || bp.internalName])
 )
+
+const priorCatalog = readGitJson(ROOT, 'HEAD', 'src/data/game-blueprints.json')
+let catalogRenames = buildCatalogKeyRenames(priorCatalog?.blueprints || [], catalog.blueprints || [])
+const parseRenamePath = join(ROOT, 'extracted-data', 'blueprint-id-renames.json')
+if (existsSync(parseRenamePath)) {
+  try {
+    const parsed = JSON.parse(readFileSync(parseRenamePath, 'utf8'))
+    const extra = Array.isArray(parsed.remaps) ? parsed.remaps : []
+    const seen = new Set(catalogRenames.map((r) => r.from))
+    for (const row of extra) {
+      if (!row?.from || !row?.to || row.from === row.to || seen.has(row.from)) continue
+      if (catalogIds.has(row.from)) continue
+      seen.add(row.from)
+      catalogRenames.push({ ...row, rule: row.rule || 'catalog_key_change' })
+    }
+  } catch {
+    /* keep git remaps */
+  }
+}
+const catalogRenameByFrom = new Map(catalogRenames.map((r) => [r.from, r]))
 
 const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } })
 
@@ -62,6 +86,11 @@ function classify(rows) {
   const approval = []
   const exact = []
   for (const row of rows) {
+    const catalogHit = catalogRenameByFrom.get(row.blueprint_id)
+    if (catalogHit && catalogHit.to !== row.blueprint_id) {
+      remap.push({ ...row, canon: catalogHit.to, rule: 'catalog_key_change' })
+      continue
+    }
     const result = exactRelinkBlueprintId(row.blueprint_id, catalogIds)
     if (result.ok && result.canon === row.blueprint_id && result.rule === 'exact') {
       exact.push(row)
@@ -95,12 +124,21 @@ async function applyTable(table, remap) {
   return { updated, droppedDupes }
 }
 
+console.log('Catalog internal names:', catalogIds.size)
+console.log('Catalog key changes (same UUID):', catalogRenames.length)
+for (const row of catalogRenames.slice(0, 40)) {
+  const label = displayOf.get(row.to)
+  console.log(`  ${row.from} -> ${row.to}${label ? ` "${label}"` : ''}`)
+}
+if (catalogRenames.length > 40) {
+  console.log('  ...', catalogRenames.length - 40, 'more catalog key changes')
+}
+
 const acquired = await fetchAll('acquired_blueprints')
 const targets = await fetchAll('target_list_blueprints')
 const acq = classify(acquired)
 const tgt = classify(targets)
 
-console.log('Catalog internal names:', catalogIds.size)
 console.log(
   'acquired_blueprints:',
   acquired.length,

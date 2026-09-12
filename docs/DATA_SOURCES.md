@@ -172,7 +172,8 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
 10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
 11. **Relink acquired marks (after the rest):** `npm run relink-acquired-blueprint-ids -- --apply`
     - Runs last so it uses the just-parsed catalog
-    - Auto-remaps only exact mechanical aliases (`_scitem` suffix, unique `bp_` prefix, legacy `bp_craft_` paths)
+    - Parse already queued same-record catalog key changes (stripped `internalName` changed, same UUID) into `extracted-data/blueprint-id-renames.json`
+    - Also remaps leftover `_scitem` / unique `bp_` / `bp_craft_` path aliases
     - Anything that is not an exact unique hit is written to `extracted-data/acquired-id-relink-approval.json` for manual approval — do not guess
 
 Catalogs themselves have no DB sync: mining, ordnance, components, and blueprints are bundled

@@ -114,7 +114,7 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 14,
     title: 'Relink acquired blueprint IDs',
     description:
-      'After the new catalog is in place: remap leftover acquired / target-list IDs onto current internal names (exact suffix/prefix only). Review any approval-list IDs — do not guess',
+      'After the new catalog is in place: rewrite stored acquired / target-list IDs when the stripped catalog key changed on the same record UUID, plus leftover _scitem / bp_ aliases. Review any approval-list IDs — do not guess',
     commands: ['npm run relink-acquired-blueprint-ids -- --apply'],
   },
 ]

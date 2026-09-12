@@ -73,6 +73,7 @@ import { readGameBuildInfo } from './lib/gameBuildVersion.mjs'
 import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
 import { clearAppliedSpellingCorrections } from './lib/spellingCorrections.mjs'
 import { writeWhatsNewDigest } from './lib/writeWhatsNewDigest.mjs'
+import { buildCatalogKeyRenames, writeCatalogKeyRenames } from './lib/blueprintIdRenames.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -5016,6 +5017,28 @@ async function main() {
   
   // Clean up internal tracking flag before saving (don't expose to frontend)
   const cleanedBlueprints = enrichedBlueprints.map(({ _usedFallbackName, ...bp }) => bp)
+
+  const previousBlueprintsPath = join(OUTPUT_DIR, 'game-blueprints.json')
+  let previousBlueprints = []
+  if (existsSync(previousBlueprintsPath)) {
+    try {
+      previousBlueprints = JSON.parse(readFileSync(previousBlueprintsPath, 'utf8')).blueprints || []
+    } catch {
+      previousBlueprints = []
+    }
+  }
+  const catalogKeyRenames = buildCatalogKeyRenames(previousBlueprints, cleanedBlueprints)
+  writeCatalogKeyRenames(join(EXTRACTED_DATA, 'blueprint-id-renames.json'), catalogKeyRenames)
+  if (catalogKeyRenames.length) {
+    console.log(`\n  Catalog ID changes (same record UUID, stripped internalName changed): ${catalogKeyRenames.length}`)
+    for (const row of catalogKeyRenames.slice(0, 40)) {
+      console.log(`      ${row.from} -> ${row.to}`)
+    }
+    if (catalogKeyRenames.length > 40) {
+      console.log(`      ... and ${catalogKeyRenames.length - 40} more`)
+    }
+    console.log('      Queued for acquired/target-list update: npm run relink-acquired-blueprint-ids -- --apply')
+  }
   
   // Blueprint definitions (enriched with mission data)
   saveJson('game-blueprints.json', {

@@ -418,6 +418,23 @@ const keep = relink.exactRelinkBlueprintId('hrst_laserrepeater_s2', catalog)
 check(keep.ok === true && keep.canon === 'hrst_laserrepeater_s2' && keep.rule === 'exact', 'leave exact catalog id')
 const unknown = relink.exactRelinkBlueprintId('not_a_real_blueprint', catalog)
 check(unknown.ok === false && unknown.rule === 'unknown', 'unknown id is not guessed')
+const catalogRenames = await import(pathToFileURL(path.join(root, 'scripts/lib/blueprintIdRenames.mjs')).href)
+const renamed = catalogRenames.buildCatalogKeyRenames(
+  [{ id: 'uuid-1', internalName: 'cool_tydt_s02_heatsink' }],
+  [{ id: 'uuid-1', internalName: 'cool_tydt_s02_heatsnk' }],
+)
+check(
+  renamed.length === 1 && renamed[0].from === 'cool_tydt_s02_heatsink' && renamed[0].to === 'cool_tydt_s02_heatsnk',
+  'same UUID stripped-id change is queued',
+)
+const stillLive = catalogRenames.buildCatalogKeyRenames(
+  [{ id: 'uuid-1', internalName: 'cool_tydt_s02_heatsink' }],
+  [
+    { id: 'uuid-1', internalName: 'cool_tydt_s02_heatsnk' },
+    { id: 'uuid-2', internalName: 'cool_tydt_s02_heatsink' },
+  ],
+)
+check(stillLive.length === 0, 'does not remap when the old key is still a live catalog id')
 const unknownScitem = relink.exactRelinkBlueprintId('not_a_real_blueprint_scitem', catalog)
 check(unknownScitem.ok === false && unknownScitem.rule === 'unknown', 'unknown _scitem is not stripped without a catalog hit')
 const noPrefixGuess = relink.exactRelinkBlueprintId('cool_tydt_s02_heatsink', catalog)
