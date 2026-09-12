@@ -110,6 +110,13 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
       'Commit game-*.json, DFP bundle, shop/commodity data, and generated lookup files; deploy dist/. No other DB sync — catalogs bundle at build time',
     commands: [],
   },
+  {
+    step: 14,
+    title: 'Relink acquired blueprint IDs',
+    description:
+      'After the new catalog is in place: remap leftover acquired / target-list IDs onto current internal names (exact suffix/prefix only). Review any approval-list IDs — do not guess',
+    commands: ['npm run relink-acquired-blueprint-ids -- --apply'],
+  },
 ]
 
 function PatchDayCommandList() {

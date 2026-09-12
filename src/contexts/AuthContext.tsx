@@ -8,7 +8,7 @@ import {
   type VisibilityContext,
 } from '../lib/featureAccess'
 import { readGuestPreviewSession, writeGuestPreviewSession } from '../lib/guestPreview'
-import { normalizeGuestBlueprintId } from '../lib/guestCatalog'
+import { canonicalizeBlueprintInternalName, normalizeGuestBlueprintId } from '../lib/guestCatalog'
 import {
   ensureGuestCacheSchema,
   readGuestAcquiredBlueprints,
@@ -326,7 +326,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const acquired: Record<string, boolean> = {}
     data?.forEach((item: { blueprint_id: string }) => {
-      acquired[item.blueprint_id] = true
+      const canon = canonicalizeBlueprintInternalName(item.blueprint_id) ?? item.blueprint_id
+      acquired[canon] = true
     })
 
     const missingDefaults = DEFAULT_BLUEPRINT_IDS.filter((id) => !acquired[id])
@@ -839,7 +840,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const toggleAcquired = useCallback(async (blueprintId: string) => {
-    if (isDefaultBlueprint(blueprintId)) {
+    const catalogId = canonicalizeBlueprintInternalName(blueprintId) ?? blueprintId
+
+    if (isDefaultBlueprint(catalogId)) {
       return
     }
 
@@ -875,18 +878,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    const isCurrentlyAcquired = acquiredRef.current[blueprintId]
+    const isCurrentlyAcquired = acquiredRef.current[catalogId]
 
     if (isCurrentlyAcquired) {
+      const deleteIds = [catalogId]
+      if (blueprintId !== catalogId) deleteIds.push(blueprintId)
+      if (!catalogId.endsWith('_scitem')) deleteIds.push(`${catalogId}_scitem`)
+      if (catalogId.startsWith('bp_')) deleteIds.push(catalogId.slice(3))
       const { error } = await supabase
         .from('acquired_blueprints')
         .delete()
         .eq('user_id', activeUser.id)
-        .eq('blueprint_id', blueprintId)
+        .in('blueprint_id', deleteIds)
 
       if (!error) {
         setAcquiredBlueprints(prev => {
           const updated = { ...prev }
+          delete updated[catalogId]
           delete updated[blueprintId]
           return updated
         })
@@ -896,16 +904,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else {
       const { error } = await supabase
         .from('acquired_blueprints')
-        .insert({ user_id: activeUser.id, blueprint_id: blueprintId })
+        .insert({ user_id: activeUser.id, blueprint_id: catalogId })
 
       // 23505 = already acquired (e.g. BP Dumper wrote it while local state was stale)
       if (!error || error.code === '23505') {
         setAcquiredBlueprints(prev => ({
           ...prev,
-          [blueprintId]: true,
+          [catalogId]: true,
         }))
         if (!error) {
-          await removeTargetBlueprint(activeUser.id, blueprintId)
+          await removeTargetBlueprint(activeUser.id, catalogId)
         }
       } else {
         console.error('Error acquiring blueprint:', error)

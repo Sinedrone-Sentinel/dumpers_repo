@@ -1,7 +1,7 @@
 import gameBlueprints from '../data/game-blueprints.json'
 import { EXTRA_CATALOG_RESOURCE_KEYS } from '../config/extraResources'
 import { extractBlueprintResources, slugifyResourceName } from './blueprintResources'
-import { resolveCatalogBlueprintKey } from './blueprintOrderable'
+import { exactRelinkBlueprintId } from './canonicalizeBlueprintId'
 import { MINING_RARITY_ORDER, ORE_SIGNATURES } from './miningConstants'
 
 const blueprintInternalNames = new Set(
@@ -22,11 +22,15 @@ export function isValidBlueprintInternalName(id: string): boolean {
   return blueprintInternalNames.has(id)
 }
 
+/** Normalize to catalog internalName; null if unknown. Exact remaps only. */
+export function canonicalizeBlueprintInternalName(blueprintId: string): string | null {
+  const relinked = exactRelinkBlueprintId(blueprintId, blueprintInternalNames)
+  return relinked.ok ? relinked.canon : null
+}
+
 /** Normalize to catalog internalName; null if unknown. */
 export function normalizeGuestBlueprintId(blueprintId: string): string | null {
-  const key = resolveCatalogBlueprintKey(blueprintId)
-  if (!key || !blueprintInternalNames.has(key)) return null
-  return key
+  return canonicalizeBlueprintInternalName(blueprintId)
 }
 
 export function isValidBundledResourceKey(resourceKey: string): boolean {

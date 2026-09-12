@@ -115,6 +115,7 @@ Located in `/scripts/`:
 | `audit-blueprint-missions.mjs` | Fail if any mission faction is Unknown / unresolved; also system + title checks |
 | `verify-dfp-spotcheck.mjs` | Spot-check DFP engine output against catalog |
 | `audit-blueprint-names.mjs` | Dev utility for catalog name audits |
+| `relink-acquired-blueprint-ids.mjs` | After parse: remap leftover acquired / target-list IDs (`npm run relink-acquired-blueprint-ids`). Exact mechanical aliases only; unknowns go to an approval list |
 
 ---
 
@@ -169,9 +170,14 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
      need it out-of-band: `npx supabase functions deploy log-watcher-webhook --no-verify-jwt`
 9. **Sync resource catalog:** use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials appeared after parse
 10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
+11. **Relink acquired marks (after the rest):** `npm run relink-acquired-blueprint-ids -- --apply`
+    - Runs last so it uses the just-parsed catalog
+    - Auto-remaps only exact mechanical aliases (`_scitem` suffix, unique `bp_` prefix, legacy `bp_craft_` paths)
+    - Anything that is not an exact unique hit is written to `extracted-data/acquired-id-relink-approval.json` for manual approval — do not guess
 
-No DB sync step: all game catalogs (mining guide, ordnance, components, blueprints) are bundled
-from the parsed `game-*.json` at build time — deploying the site updates everything at once.
+Catalogs themselves have no DB sync: mining, ordnance, components, and blueprints are bundled
+from the parsed `game-*.json` at build time. Acquired / target-list **IDs** are the exception —
+run step 11 after deploy so leftover stored keys remap onto the new catalog.
 
 If Step 2 reports validation issues in `_extraction-validation.json`, the game data structure may have changed.
 

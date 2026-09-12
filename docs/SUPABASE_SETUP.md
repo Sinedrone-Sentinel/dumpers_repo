@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `186_delete_account_settle_orders.sql` (account delete settles live deals; apply `185_spectrum_citizenid.sql` first). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `187_relink_acquired_blueprint_ids.sql` (remap leftover acquired / target-list IDs; apply `186_delete_account_settle_orders.sql` first). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -217,6 +217,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 149 | `184_anonymous_order_rating_list.sql` | Review modal list does not return rater RSI handle / name; `custom_order_ratings.rater_id` is unchanged |
 | 150 | `185_spectrum_citizenid.sql` | RSI Spectrum store + Citizen iD link RPCs; bio stubs; grace clock stays NULL until super-admin starts it |
 | 151 | `186_delete_account_settle_orders.sql` | Account delete: auto 5-star the other party on live deals; cancel pending listings; requester/rater FKs SET NULL |
+| 152 | `187_relink_acquired_blueprint_ids.sql` | Remap leftover acquired / target-list IDs (`_scitem` suffix, unique `bp_` Dominance-2). Later patches: `npm run relink-acquired-blueprint-ids` |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 
