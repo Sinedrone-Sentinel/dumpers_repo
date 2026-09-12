@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-08-26T23:07:01.318Z",
+  "_extracted": "2026-09-12T00:08:53.500Z",
   "rarityTiers": {
     "legendary": [
       {
@@ -4529,6 +4529,6 @@
     "locationsWithDetails": 39,
     "handMineableHabitatEntries": 90,
     "locationAliasCount": 47,
-    "guideToSpawnKeyCount": 52
+    "guideToSpawnKeyCount": 54
   }
 }

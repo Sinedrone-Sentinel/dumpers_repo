@@ -14,20 +14,32 @@ function readJson(path) {
   }
 }
 
+/** CIG hotfix manifests now put engine builds in Version (e.g. 1.0.191.55227). */
+function isEngineInternalVersion(raw) {
+  return typeof raw === 'string' && /^1\.\d+/.test(raw.trim())
+}
+
+function versionFromScBranch(branch) {
+  if (typeof branch !== 'string' || !branch.trim()) return null
+  const sc = branch.match(/sc-alpha-(\d+)\.(\d+)/i)
+  if (sc) return `${sc[1]}.${sc[2]}.x`
+  const match = branch.match(/(\d+)\.(\d+)/)
+  if (match && Number(match[1]) >= 3) return `${match[1]}.${match[2]}.x`
+  return null
+}
+
 /**
  * Format manifest version as major.minor.x (e.g. 4.8.183.37006 -> 4.8.x).
+ * Prefer the sc-alpha branch when Version is the 1.0 engine build.
  */
 export function formatGameBuildVersion(manifestData) {
+  const fromBranch = versionFromScBranch(manifestData?.Branch)
+  if (fromBranch) return fromBranch
+
   const raw = manifestData?.Version
-  if (typeof raw === 'string' && raw && raw !== 'None') {
+  if (typeof raw === 'string' && raw && raw !== 'None' && !isEngineInternalVersion(raw)) {
     const [major, minor] = raw.split('.')
     if (major && minor) return `${major}.${minor}.x`
-  }
-
-  const branch = manifestData?.Branch
-  if (typeof branch === 'string') {
-    const match = branch.match(/(\d+)\.(\d+)/)
-    if (match) return `${match[1]}.${match[2]}.x`
   }
 
   return null
@@ -95,7 +107,11 @@ export function readGameBuildInfo(options = {}) {
   const buildFile = readJson(gameBuildFile)
   if (buildFile) {
     let version = null
-    if (typeof buildFile.version === 'string' && /^\d+\.\d+\.x$/.test(buildFile.version)) {
+    if (
+      typeof buildFile.version === 'string' &&
+      /^\d+\.\d+\.x$/.test(buildFile.version) &&
+      !isEngineInternalVersion(buildFile.version)
+    ) {
       version = buildFile.version
     } else {
       version = formatGameBuildVersion({
