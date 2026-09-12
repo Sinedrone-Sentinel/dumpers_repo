@@ -236,6 +236,11 @@ export function resolveBlueprintInput(
   const internalMatch = resolveFromInternalKey(byInternal, internalKey, 'internal')
   if (internalMatch) return internalMatch
 
+  if (!byInternal[internalKey]) {
+    const prefixed = resolveFromInternalKey(byInternal, `bp_${internalKey}`, 'internal')
+    if (prefixed) return prefixed
+  }
+
   const displayEntry = lookup.byDisplayName[normalizeDisplayKey(rawInput)]
   if (!displayEntry) {
     const aliasMatch = tryStarStringsDisplayAlias(rawInput, lookup)

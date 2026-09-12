@@ -404,6 +404,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
 | `npm run sync-min-game-version` | Bake game major.minor into BP Dumper sources |
 | `npm run release:dumper` | Manual semantic-release for BP Dumper |
+| `npm run relink-acquired-blueprint-ids` | Remap leftover acquired / target-list IDs onto the current catalog (exact aliases only) |
 
 Additional one-off audits live in `scripts/` (e.g. `audit-ore-location-coverage.mjs`, `audit-blueprint-mission-rewards.mjs`).
 
@@ -417,11 +418,12 @@ npm run parse-game-data       # regenerate src/data/game-*.json from scratch (+ 
 npm run push-whats-new        # retry pending What's New ingest if parse could not reach DB
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
 npm run patch-audit           # full audit battery: data consistency + math verifiers + diff
+npm run relink-acquired-blueprint-ids -- --apply  # last: remap leftover acquired IDs (exact only)
 # After parse (when blueprints changed): npm run build in sibling dfp-engine-private, then commit public/dfp-engine.js + dfp-version.json
 npm run sync-min-game-version # optional: update dumper min game version in source
 ```
 
-All game catalogs (mining guide, ordnance, components, blueprints) are bundled from the parsed `game-*.json` at build time — no Supabase sync step on patch day.
+All game catalogs (mining guide, ordnance, components, blueprints) are bundled from the parsed `game-*.json` at build time. After deploy, run `npm run relink-acquired-blueprint-ids -- --apply` so leftover acquired / target-list IDs remap onto the new catalog (exact aliases only).
 
 **Blueprint SEO pages track the parser automatically:** `npm run parse-game-data` updates `game-blueprints.json`; the next `npm run build` (CI on `main`, or local) regenerates every `/blueprints/{slug}/` HTML file and the sitemap from that JSON. New/removed/renamed blueprints do not need a hand-maintained page list — do not commit `dist/` SEO HTML; it is build output only.
 

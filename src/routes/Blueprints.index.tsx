@@ -592,13 +592,9 @@ export default function BlueprintsRoute() {
     )
   }, [materialFilteredBlueprints, selectedMainCategory, selectedSubCategory, selectedSize, selectedComponentClass, selectedComponentGrade, selectedArmorWeight, selectedArmorSlot])
 
-  const shownAcquiredCount = React.useMemo(
-    () =>
-      filteredBlueprints.filter(
-        (bp) =>
-          !!displayAcquiredBlueprints[bp.internalName] || isDefaultBlueprint(bp.internalName)
-      ).length,
-    [filteredBlueprints, displayAcquiredBlueprints]
+  const totalAcquiredCount = React.useMemo(
+    () => Object.keys(displayAcquiredBlueprints).filter((id) => displayAcquiredBlueprints[id]).length,
+    [displayAcquiredBlueprints]
   )
 
   const blueprintGridItems = React.useMemo(
@@ -1144,7 +1140,7 @@ export default function BlueprintsRoute() {
           Showing {filteredBlueprints.length} blueprints
           <span className="text-green-400">
             {' · '}
-            {shownAcquiredCount} acquired
+            {totalAcquiredCount} acquired
           </span>
           {(selectedMaterial ||
             selectedMainCategory ||

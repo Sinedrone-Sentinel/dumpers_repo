@@ -21,6 +21,7 @@ const modules = [
   'src/lib/inAppBrowser.ts',
   'src/lib/oauthReturn.ts',
   'src/lib/friendInvite.ts',
+  'src/lib/canonicalizeBlueprintId.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -42,6 +43,7 @@ const quality = await import(pathToFileURL(path.join(outDir, 'qualityModifiers.m
 const iab = await import(pathToFileURL(path.join(outDir, 'inAppBrowser.mjs')).href)
 const oauthReturn = await import(pathToFileURL(path.join(outDir, 'oauthReturn.mjs')).href)
 const friendInvite = await import(pathToFileURL(path.join(outDir, 'friendInvite.mjs')).href)
+const relink = await import(pathToFileURL(path.join(outDir, 'canonicalizeBlueprintId.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -405,6 +407,23 @@ check(oauthReturn.stripOAuthReturnParams('https://dumpers-repo.com/#access_token
 check(
   friendInvite.buildOAuthRedirectTo('https://dumpers-repo.com') === 'https://dumpers-repo.com/auth/callback',
   'OAuth return uses /auth/callback'
+)
+
+const catalog = new Set(['cool_tydt_s02_heatsink', 'bp_hrst_laserscattergun_s2', 'hrst_laserrepeater_s2'])
+const strip = relink.exactRelinkBlueprintId('cool_tydt_s02_heatsink_scitem', catalog)
+check(strip.ok === true && strip.canon === 'cool_tydt_s02_heatsink' && strip.rule === 'strip_scitem', 'strip _scitem')
+const prefix = relink.exactRelinkBlueprintId('hrst_laserscattergun_s2', catalog)
+check(prefix.ok === true && prefix.canon === 'bp_hrst_laserscattergun_s2' && prefix.rule === 'add_bp_prefix', 'add unique bp_ prefix')
+const keep = relink.exactRelinkBlueprintId('hrst_laserrepeater_s2', catalog)
+check(keep.ok === true && keep.canon === 'hrst_laserrepeater_s2' && keep.rule === 'exact', 'leave exact catalog id')
+const unknown = relink.exactRelinkBlueprintId('not_a_real_blueprint', catalog)
+check(unknown.ok === false && unknown.rule === 'unknown', 'unknown id is not guessed')
+const unknownScitem = relink.exactRelinkBlueprintId('not_a_real_blueprint_scitem', catalog)
+check(unknownScitem.ok === false && unknownScitem.rule === 'unknown', 'unknown _scitem is not stripped without a catalog hit')
+const noPrefixGuess = relink.exactRelinkBlueprintId('cool_tydt_s02_heatsink', catalog)
+check(
+  noPrefixGuess.ok === true && noPrefixGuess.canon === 'cool_tydt_s02_heatsink' && noPrefixGuess.rule === 'exact',
+  'does not add bp_ when the unprefixed id is already in the catalog'
 )
 
 console.log(`Unit tests: ${pass} passed`)

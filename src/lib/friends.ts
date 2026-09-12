@@ -1,3 +1,4 @@
+import { canonicalizeBlueprintInternalName } from './guestCatalog'
 import { supabase } from './supabase'
 
 export const OPEN_FRIENDS_MENU_EVENT = 'dumpers:open-friends-menu'
@@ -220,7 +221,12 @@ export async function getFriendAcquiredBlueprints(
   if (error) return { error: error.message }
   const row = data as { success?: boolean; acquired?: Record<string, boolean>; error?: string } | null
   if (!row?.success) return { error: row?.error || 'Failed to load friend blueprints' }
-  return { acquired: row.acquired ?? {} }
+  const remapped: Record<string, boolean> = {}
+  for (const [id, on] of Object.entries(row.acquired ?? {})) {
+    if (!on) continue
+    remapped[canonicalizeBlueprintInternalName(id) ?? id] = true
+  }
+  return { acquired: remapped }
 }
 
 export async function getFriendPersonalInventory(

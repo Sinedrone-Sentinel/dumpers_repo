@@ -25,6 +25,7 @@
     "parse-game-data": "node scripts/parse-extracted-data.mjs",
     "enrich-mission-descriptions": "node scripts/enrich-mission-descriptions.mjs",
     "diff-game-data": "node scripts/diff-game-data.mjs",
+    "relink-acquired-blueprint-ids": "node scripts/relink-acquired-blueprint-ids.mjs",
     "push-whats-new": "node scripts/push-whats-new.mjs",
     "patch-audit": "node scripts/patch-audit.mjs",
     "validate-blueprints": "node scripts/validate-blueprints.mjs",
