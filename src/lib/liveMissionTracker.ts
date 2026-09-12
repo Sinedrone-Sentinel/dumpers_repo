@@ -3,14 +3,20 @@ import {
   findContractForLiveMission,
   findMissionHintByTitle,
   getContractMissionLabel,
+  getContractPoolInternalNames,
 } from './blueprintMissionRewards'
-import { formatMissionDisplayTitle } from './missionDisplay'
+import {
+  liveMissionMatchTitle,
+  parseLiveMissionLabel,
+} from './liveMissionLabel'
 import { resolveMissionIsLawful } from './missionLawfulStatus'
 import {
   formatRepReward,
   formatScenarioPointsRequirement,
 } from './missionAcquisition'
 import { categorizeRegions, type Region } from './missions'
+
+export { parseLiveMissionLabel, sanitizeLiveMissionRawLabel } from './liveMissionLabel'
 
 export interface DumperActiveMission {
   user_id: string
@@ -59,7 +65,7 @@ function resolveBlueprintDisplayName(internalName: string): string {
     .join(' ')
 }
 
-export function poolInternalNamesForContract(
+function lookupPoolFallback(
   contractDefinitionId: string | null | undefined,
   debugName?: string | null
 ): string[] {
@@ -68,65 +74,24 @@ export function poolInternalNamesForContract(
     const byId = byContractDefinitionId[idKey]
     if (byId?.length) return byId
   }
+  const matchKey = liveMissionMatchTitle(debugName).trim().toLowerCase()
+  if (matchKey) {
+    const byTitle = byContractDefinitionId[matchKey]
+    if (byTitle?.length) return byTitle
+  }
   const debugKey = debugName?.trim().toLowerCase()
   if (debugKey) return byContractDefinitionId[debugKey] ?? []
   return []
 }
 
-const REP_PROGRESS_SUFFIX_RE = /^(.+?)\s*\[(\d+)\s*\/\s*(\d+)\s*(?:rep|Rep|REP)?\]\s*$/
-const REP_AWARD_SUFFIX_RE = /^(.+?)\s*\[(\d+)\s*(?:rep|Rep|REP)\]\s*$/
-const LOG_NOISE_TAIL_RE = /\s:\s*"\s*\[\d+\]\s*To Queue|\[\d+\]\s*To Queue/i
-
-/** Strip HTML and Game.log queue noise from contract accept notification text. */
-export function sanitizeLiveMissionRawLabel(raw: string | null | undefined): string {
-  let text = (raw || '').trim()
-  if (!text) return ''
-
-  text = text.replace(/<[^>]+>/g, '')
-
-  const embeddedRep = text.match(/\[(\d+)\s*\/\s*(\d+)\s*(?:rep|Rep|REP)?\]/i)
-  if (embeddedRep && embeddedRep.index != null) {
-    const title = text.slice(0, embeddedRep.index).replace(/[\s:"']+$/g, '').trim()
-    if (title) {
-      return `${title} [${embeddedRep[1]}/${embeddedRep[2]} Rep]`
-    }
-  }
-
-  text = text.split(LOG_NOISE_TAIL_RE)[0].replace(/[\s:"',]+$/g, '').trim()
-  return text
-}
-
-/** Parse mission title + rep suffix from Game.log accept notification or internal debug name. */
-export function parseLiveMissionLabel(raw: string | null | undefined): {
-  title: string
-  rewardText: string | null
-} {
-  const trimmed = sanitizeLiveMissionRawLabel(raw)
-  if (!trimmed || trimmed.toLowerCase() === 'unknown') {
-    return { title: 'Unknown mission', rewardText: null }
-  }
-
-  const progress = trimmed.match(REP_PROGRESS_SUFFIX_RE)
-  if (progress) {
-    const awarded = Number(progress[2])
-    const tierTotal = Number(progress[3])
-    return {
-      title: progress[1].trim(),
-      rewardText: `${awarded.toLocaleString()} / ${tierTotal.toLocaleString()} rep`,
-    }
-  }
-
-  const awardedOnly = trimmed.match(REP_AWARD_SUFFIX_RE)
-  if (awardedOnly) {
-    const rep = Number(awardedOnly[2])
-    return {
-      title: awardedOnly[1].trim(),
-      rewardText: formatRepReward(rep, rep),
-    }
-  }
-
-  const title = formatMissionDisplayTitle({ debugName: trimmed, title: trimmed })
-  return { title, rewardText: null }
+/** Pool internal names for a live row — catalog contract first, lookup JSON only as fallback. */
+export function poolInternalNamesForContract(
+  contractDefinitionId: string | null | undefined,
+  debugName?: string | null
+): string[] {
+  const contract = findContractForLiveMission(contractDefinitionId, debugName)
+  if (contract) return getContractPoolInternalNames(contract)
+  return lookupPoolFallback(contractDefinitionId, debugName)
 }
 
 function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
