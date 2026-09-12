@@ -375,9 +375,18 @@ func Run(opts Options) {
 					postGameSession(opts.Client, gameEvent)
 				}
 
-				active := parse.ApplyMissionLogLine(line, state, ts)
+				active, spawnDropped := parse.IngestMissionLine(line, state, ts)
 				missionEnd := parse.PatternEndMission.FindStringSubmatch(line)
 				blueprintHit := parse.PatternBlueprint.FindStringSubmatch(line)
+
+				if len(spawnDropped) > 0 && opts.Client != nil && !opts.DryRun && parse.IsLiveMissionSyncReady(session) {
+					fmt.Printf("  [Live] %sDropped %d ghost mission(s) after spawn confirm:%s %s\n", colors.Yellow, len(spawnDropped), colors.Reset, strings.Join(spawnDropped, ", "))
+					if err := opts.Client.SyncActiveMissions(state); err != nil {
+						fmt.Printf("  [Live] %s✗ Ghost prune sync failed:%s %v\n", colors.Red, colors.Reset, err)
+					} else {
+						noteMissionActivity()
+					}
+				}
 
 				if active != nil {
 					session.OnMissionAccepted()

@@ -31,12 +31,14 @@ type WatcherState struct {
 	GUIDMap         map[string]*MissionEntry
 	Active          map[string]*ActiveMission
 	RecentLifecycle []*MissionLifecycleEvent
+	SpawnConfirm    *SpawnConfirmTracker
 }
 
 func NewWatcherState() *WatcherState {
 	return &WatcherState{
-		GUIDMap: map[string]*MissionEntry{},
-		Active:  map[string]*ActiveMission{},
+		GUIDMap:      map[string]*MissionEntry{},
+		Active:       map[string]*ActiveMission{},
+		SpawnConfirm: NewSpawnConfirmTracker(),
 	}
 }
 
@@ -131,6 +133,9 @@ func (s *WatcherState) RecordEnd(guid, completion string, ts float64) *ActiveMis
 
 func (s *WatcherState) ClearAllActive() {
 	s.Active = map[string]*ActiveMission{}
+	if s.SpawnConfirm != nil {
+		s.SpawnConfirm.Reset()
+	}
 }
 
 func (s *WatcherState) CorrelateBlueprint(ts float64) *MissionLifecycleEvent {

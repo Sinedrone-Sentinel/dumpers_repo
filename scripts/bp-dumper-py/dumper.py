@@ -787,6 +787,11 @@ PATTERN_ACCEPTED_FALLBACK = re.compile(
 PATTERN_END_MISSION = re.compile(
     r"<EndMission>.*MissionId\[([^\]]+)\].*CompletionType\[(\w+)\].*Reason\[([^\]]+)\]"
 )
+PATTERN_CLIENT_SPAWNED = re.compile(r"\[CSessionManager::OnClientSpawned\]\s+Spawned!")
+ZERO_MISSION_GUID = "00000000-0000-0000-0000-000000000000"
+# After spawn, CIG re-emits Contract Accepted / CreateMarker for missions still
+# on the Accepted tab. Shared party jobs can vanish with no EndMission.
+SPAWN_CONFIRM_WINDOW_SEC = 8.0
 PATTERN_BLUEPRINT = re.compile(r'Added notification "Received Blueprint: ([^:]+):')
 PATTERN_EXIT_MENU = re.compile(r"Requesting game mode Frontend_Main/SC_Frontend")
 # Pause session_ping after this many seconds with no mission/BP/PU activity (still watch logs).
@@ -856,11 +861,93 @@ class MissionLifecycleEvent:
         self.ts = ts
         self.contract_definition_id = contract_definition_id
 
+class SpawnConfirmTracker:
+    """Prune ghosts after a spawn if CIG re-lists a non-empty Accepted set."""
+
+    def __init__(self) -> None:
+        self.reset()
+
+    def reset(self) -> None:
+        self.spawn_ts: float | None = None
+        self.pre_active: set[str] = set()
+        self.confirmed: set[str] = set()
+        self.saw_accept = False
+
+    def open(self, ts: float, active_guids) -> None:
+        self.spawn_ts = ts
+        self.pre_active = {guid for guid in active_guids if guid and guid != ZERO_MISSION_GUID}
+        self.confirmed = set()
+        self.saw_accept = False
+
+    def confirm(self, guid: str, *, from_accept: bool) -> None:
+        if self.spawn_ts is None or not guid or guid == ZERO_MISSION_GUID:
+            return
+        self.confirmed.add(guid)
+        if from_accept:
+            self.saw_accept = True
+
+    def flush(self, state: "WatcherState") -> list[str]:
+        if self.spawn_ts is None:
+            return []
+        dropped: list[str] = []
+        if self.saw_accept:
+            for guid in self.pre_active:
+                if guid in self.confirmed:
+                    continue
+                if guid in state.active:
+                    state.active.pop(guid, None)
+                    dropped.append(guid)
+        self.reset()
+        return dropped
+
+    def advance(self, ts: float, state: "WatcherState") -> list[str]:
+        if self.spawn_ts is None:
+            return []
+        if ts < self.spawn_ts + SPAWN_CONFIRM_WINDOW_SEC:
+            return []
+        return self.flush(state)
+
+
+def confirm_guid_from_line(line: str) -> tuple[str | None, bool]:
+    """GUID to confirm after spawn. Contract Shared / zero ids are ignored."""
+    if "Contract Shared:" in line:
+        return None, False
+    if m := PATTERN_ACCEPTED.search(line):
+        guid = (m.group("guid") or "").strip()
+        if guid and guid != ZERO_MISSION_GUID:
+            return guid, True
+    if m := PATTERN_ACCEPTED_FALLBACK.search(line):
+        guid = (m.group("guid") or "").strip()
+        if guid and guid != ZERO_MISSION_GUID:
+            return guid, True
+    if m := PATTERN_MISSION_CONTRACT.search(line):
+        guid = (m.group(1) or "").strip()
+        if guid and guid != ZERO_MISSION_GUID:
+            return guid, False
+    return None, False
+
+
+def ingest_mission_line(line: str, state: "WatcherState", ts: float) -> tuple[ActiveMission | None, list[str]]:
+    """Apply accept/end and spawn-confirm prune. Returns (accepted, dropped_guids)."""
+    pruner = state.spawn_confirm
+    dropped = pruner.advance(ts, state)
+    if PATTERN_CLIENT_SPAWNED.search(line):
+        if pruner.spawn_ts is not None:
+            dropped.extend(pruner.flush(state))
+        pruner.open(ts, state.active.keys())
+    active = apply_mission_log_line(line, state, ts)
+    guid, from_accept = confirm_guid_from_line(line)
+    if guid:
+        pruner.confirm(guid, from_accept=from_accept)
+    return active, dropped
+
+
 class WatcherState:
     def __init__(self) -> None:
         self.guid_map = {}
         self.active = {}
         self.recent_lifecycle = deque(maxlen=32)
+        self.spawn_confirm = SpawnConfirmTracker()
 
     def record_marker(self, guid: str, generator: str, contract: str, contract_definition_id=None) -> None:
         existing = self.guid_map.get(guid)
@@ -931,6 +1018,7 @@ class WatcherState:
 
     def clear_all_active(self) -> None:
         self.active.clear()
+        self.spawn_confirm.reset()
 
     def correlate_blueprint(self, ts: float) -> Optional[MissionLifecycleEvent]:
         best = None
@@ -1433,7 +1521,7 @@ def apply_mission_log_line(line: str, state: WatcherState, ts: float) -> ActiveM
 def apply_watch_line_to_state(line: str, state: WatcherState, session: SessionTracker | None, ts: float) -> ActiveMission | None:
     if session is not None:
         session.process_line(line, ts, state)
-    active = apply_mission_log_line(line, state, ts)
+    active, _dropped = ingest_mission_line(line, state, ts)
     if active and session is not None:
         session.on_mission_accepted()
     return active
@@ -1451,6 +1539,7 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState, session:
     state.active.clear()
     state.guid_map.clear()
     state.recent_lifecycle.clear()
+    state.spawn_confirm.reset()
 
     replay = SessionTracker()
     with open(path, "r", encoding="utf-8", errors="replace") as log_file:
@@ -1463,8 +1552,10 @@ def reconcile_active_missions_from_log(path: Path, state: WatcherState, session:
             # accept on the same line (accept lines are not session lines, so order
             # is safe), then record mission accept/marker/end.
             replay.process_line(line, ts, state)
-            if apply_mission_log_line(line, state, ts):
+            active, _dropped = ingest_mission_line(line, state, ts)
+            if active:
                 replay.on_mission_accepted()
+    state.spawn_confirm.flush(state)
 
     # If the log ended mid-crash and the window has elapsed, drop the stale missions.
     replay.finalize_after_reconcile(state)
@@ -1877,9 +1968,21 @@ def watch_log_file(
                                 except Exception as e:
                                     print(f"  [Live] {Colors.RED}✗ Game status sync failed:{Colors.RESET} {e}")
 
-                            active = apply_mission_log_line(line, state, ts)
+                            active, spawn_dropped = ingest_mission_line(line, state, ts)
                             mission_end = PATTERN_END_MISSION.search(line)
                             blueprint_hit = PATTERN_BLUEPRINT.search(line)
+
+                            if spawn_dropped and session and not args.dry_run and is_live_mission_sync_ready(session_tracker):
+                                names = ", ".join(spawn_dropped)
+                                print(
+                                    f"  [Live] {Colors.YELLOW}Dropped {len(spawn_dropped)} ghost mission(s) "
+                                    f"after spawn confirm:{Colors.RESET} {names}"
+                                )
+                                try:
+                                    sync_active_missions_to_server(session, args.url, state)
+                                    note_mission_activity()
+                                except Exception as e:
+                                    print(f"  [Live] {Colors.RED}✗ Ghost prune sync failed:{Colors.RESET} {e}")
 
                             if active:
                                 session_tracker.on_mission_accepted()

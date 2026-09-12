@@ -173,6 +173,11 @@ func ReconcileActiveMissionsFromLog(path string, state *WatcherState, session *S
 	state.Active = map[string]*ActiveMission{}
 	state.GUIDMap = map[string]*MissionEntry{}
 	state.RecentLifecycle = nil
+	if state.SpawnConfirm == nil {
+		state.SpawnConfirm = NewSpawnConfirmTracker()
+	} else {
+		state.SpawnConfirm.Reset()
+	}
 
 	replay := &SessionTracker{}
 	f, err := os.Open(path)
@@ -191,9 +196,13 @@ func ReconcileActiveMissionsFromLog(path string, state *WatcherState, session *S
 		}
 		ts := replay.ResolveTimestamp(line)
 		replay.ProcessLine(line, ts, state)
-		if ApplyMissionLogLine(line, state, ts) != nil {
+		active, _ := IngestMissionLine(line, state, ts)
+		if active != nil {
 			replay.OnMissionAccepted()
 		}
+	}
+	if state.SpawnConfirm != nil {
+		state.SpawnConfirm.Flush(state)
 	}
 	replay.FinalizeAfterReconcile(state)
 	if session != nil && len(state.Active) > 0 {
