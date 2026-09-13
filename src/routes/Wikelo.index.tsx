@@ -1,6 +1,5 @@
 import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { blueprintDataVersion } from './blueprints'
 import { useWikeloTrades, WIKELO_FACTION_NAME, type WikeloTrade } from './wikelo'
 import WikeloTradeCard from '../components/WikeloTradeCard'
 import WikeloTradeDetailsModal from '../components/WikeloTradeDetailsModal'
@@ -76,13 +75,6 @@ export default function WikeloRoute() {
       title="Wikelo"
       subtitle="Wikelo Emporium barter trades — favors, rep, hand-ins & rewards"
       seoIntro="Star Citizen Wikelo Emporium barter guide: look up favors, reputation (rep) requirements, hand-in costs, and rewards for every trade — including ships, ground vehicles, armor, weapons, gear, and favor contracts. Search by trade title, hand-in item, or reward."
-      meta={
-        <>
-          <span>LIVE {blueprintDataVersion}</span>
-          <span className="mx-2">•</span>
-          <span className="text-amber-400">{trades.length} trades</span>
-        </>
-      }
     >
       <div className="space-y-3 mb-6 w-full min-w-0">
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
