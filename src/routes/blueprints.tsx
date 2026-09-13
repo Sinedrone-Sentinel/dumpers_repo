@@ -1,8 +1,6 @@
 import gameBluePrints from '../data/game-blueprints.json'
 import { useQuery } from '@tanstack/react-query'
 
-export const blueprintDataVersion = gameBluePrints.version
-
 export function useBlueprintData() {
   return useQuery({
     queryKey: ['blueprints'],
