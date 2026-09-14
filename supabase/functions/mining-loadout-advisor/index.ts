@@ -2,6 +2,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import catalogJson from './catalog.json' with { type: 'json' }
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -49,16 +50,11 @@ type Catalog = {
   ores: Array<{ displayName: string }>
 }
 
-let catalogCache: Catalog | null = null
-
-async function loadCatalog(): Promise<Catalog> {
-  if (catalogCache) return catalogCache
-  const raw = await Deno.readTextFile(new URL('./catalog.json', import.meta.url))
-  const parsed = JSON.parse(raw) as Catalog
+function loadCatalog(): Catalog {
+  const parsed = catalogJson as Catalog
   if (!parsed?.lasers?.length || !parsed.ores?.length) {
     throw new Error('catalog_missing')
   }
-  catalogCache = parsed
   return parsed
 }
 
@@ -249,8 +245,9 @@ serve(async (req) => {
 
     let catalog: Catalog
     try {
-      catalog = await loadCatalog()
+      catalog = loadCatalog()
     } catch {
+      console.error('advisor catalog missing')
       return json(503, { error: 'Advisor is not deployed yet. Ask a site admin to finish setup.' })
     }
 
