@@ -23,6 +23,8 @@ export interface AdvisorChatMessage {
 export interface AdvisorHeadSession {
   head: string
   modules: string[]
+  slots: number | null
+  size: number | null
 }
 
 export interface AdvisorScanPayload {
@@ -57,6 +59,8 @@ export function describeAdvisorLoadout(slots: MiningLaserSlotConfig[]): AdvisorH
     return {
       head: laser?.displayName ?? 'Unknown head',
       modules,
+      slots: laser?.moduleSlotCount ?? null,
+      size: laser?.size ?? null,
     }
   })
 }

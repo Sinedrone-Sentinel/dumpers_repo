@@ -5,6 +5,15 @@
 
 const EXCLUDED_LASER_NAME = /_test(_|$)|template|_mpuv_/i
 
+/** Ship hardpoints — display names only. Must match src/lib/miningVessels.ts. */
+const VESSELS = [
+  { displayName: 'Prospector', laserHardpoints: 1, laserSize: 1 },
+  { displayName: 'Mole', laserHardpoints: 3, laserSize: 2 },
+  { displayName: 'Golem', laserHardpoints: 1, laserSize: 1, fixedHead: 'Pitman Mining Laser' },
+  { displayName: 'ROC', laserHardpoints: 1, laserSize: 0 },
+  { displayName: 'ROC-DS', laserHardpoints: 1, laserSize: 0 },
+]
+
 function isProductionLaser(laser) {
   return !EXCLUDED_LASER_NAME.test(laser?.name ?? '')
 }
@@ -103,6 +112,7 @@ export function buildMiningAdvisorCatalog(gameMining) {
     modules,
     gadgets,
     ores,
+    vessels: VESSELS,
   }
 }
 
@@ -115,5 +125,10 @@ export function assertAdvisorCatalogShape(catalog) {
   if (!catalog.ores?.length) throw new Error('Advisor catalog missing ores')
   const q = catalog.ores.find((o) => /quantainium/i.test(o.displayName))
   if (!q) throw new Error('Advisor catalog missing Quantainium')
+  const lancet = catalog.lasers.find((l) => l.displayName === 'Lancet MH1 Mining Laser')
+  if (!lancet || lancet.slots !== 1) throw new Error('Lancet MH1 must have 1 module port')
+  if (!catalog.vessels?.some((v) => v.displayName === 'Prospector' && v.laserHardpoints === 1 && v.laserSize === 1)) {
+    throw new Error('Advisor catalog missing Prospector hardpoints')
+  }
   return true
 }

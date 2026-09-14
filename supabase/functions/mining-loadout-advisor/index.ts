@@ -27,6 +27,21 @@ type ChatRole = 'user' | 'advisor'
 type HeadSession = {
   head: string
   modules: string[]
+  slots: number | null
+  size: number | null
+}
+
+type CatalogLaser = {
+  displayName: string
+  size?: number
+  slots?: number
+}
+
+type CatalogVessel = {
+  displayName: string
+  laserHardpoints: number
+  laserSize: number
+  fixedHead?: string
 }
 
 type ScanSession = {
@@ -50,10 +65,11 @@ type AdvisorBody = {
 }
 
 type Catalog = {
-  lasers: unknown[]
+  lasers: CatalogLaser[]
   modules: unknown[]
   gadgets: unknown[]
   ores: Array<{ displayName: string }>
+  vessels?: CatalogVessel[]
 }
 
 function loadCatalog(): Catalog {
@@ -98,25 +114,42 @@ function parseMessages(raw: unknown): Array<{ role: ChatRole; text: string }> {
   return out
 }
 
-function parseLoadout(raw: unknown): HeadSession[] {
+function findCatalogLaser(catalog: Catalog, name: string): CatalogLaser | null {
+  const needle = name.trim().toLowerCase()
+  if (!needle) return null
+  return (
+    catalog.lasers.find((laser) => laser.displayName.toLowerCase() === needle) ??
+    catalog.lasers.find((laser) => laser.displayName.toLowerCase().includes(needle)) ??
+    null
+  )
+}
+
+function parseLoadout(raw: unknown, catalog: Catalog): HeadSession[] {
   if (!Array.isArray(raw)) return []
   const out: HeadSession[] = []
   for (const row of raw.slice(0, 6)) {
     if (!row || typeof row !== 'object') continue
     const head = clip((row as { head?: unknown }).head, 80)
     if (!head) continue
+    const laser = findCatalogLaser(catalog, head)
+    const maxPorts = Number.isFinite(laser?.slots) ? Number(laser?.slots) : 4
     const modulesRaw = (row as { modules?: unknown }).modules
     const modules = Array.isArray(modulesRaw)
-      ? modulesRaw.map((name) => clip(name, 80)).filter(Boolean).slice(0, 4)
+      ? modulesRaw.map((name) => clip(name, 80)).filter(Boolean).slice(0, Math.max(0, maxPorts))
       : []
-    out.push({ head, modules })
+    out.push({
+      head: laser?.displayName ?? head,
+      modules,
+      slots: Number.isFinite(laser?.slots) ? Number(laser?.slots) : null,
+      size: Number.isFinite(laser?.size) ? Number(laser?.size) : null,
+    })
   }
   return out
 }
 
 function parseGadgets(raw: unknown): string[] {
   if (!Array.isArray(raw)) return []
-  return raw.map((name) => clip(name, 80)).filter(Boolean).slice(0, 4)
+  return raw.map((name) => clip(name, 80)).filter(Boolean).slice(0, 2)
 }
 
 function parseScan(raw: unknown): ScanSession | null {
@@ -165,6 +198,21 @@ function buildSystemPrompt(input: {
     'Keep answers concise. Prefer 1 recommended setup plus a short why.',
     'If a field is unknown, say so. Do not dump JSON or internal identifiers.',
     '',
+    'Hard fit rules — never violate:',
+    '- Each laser "slots" value is the exact module-port count. Recommend at most that many modules for that head. A 1-port head gets 0 or 1 module, never 2 or 3.',
+    '- Only recommend heads whose size matches the ship laserSize. Do not add more heads than laserHardpoints.',
+    '- Golem may only use Pitman Mining Laser. ROC and ROC-DS are size 0 only.',
+    '- At most two gadgets on the rock.',
+    '- If you name modules, the count must fit that head\'s slots.',
+    '',
+    'Module ports by head (authoritative):',
+    input.catalog.lasers
+      .map((laser) => `- ${laser.displayName}: ${laser.slots ?? '?'} port(s), size ${laser.size ?? '?'}`)
+      .join('\n'),
+    '',
+    'Ships (authoritative):',
+    JSON.stringify(input.catalog.vessels ?? []),
+    '',
     'Gear catalog (authoritative game-file stats):',
     JSON.stringify({
       lasers: input.catalog.lasers,
@@ -173,7 +221,7 @@ function buildSystemPrompt(input: {
     }),
     '',
     'Current ship: ' + (input.vesselDisplayName || 'unknown'),
-    'Current heads: ' + JSON.stringify(input.loadout),
+    'Current heads (slots = ports on that equipped head): ' + JSON.stringify(input.loadout),
     'Gadgets already on the rock: ' + (input.gadgetsInUse.join(', ') || 'none'),
   ]
 
@@ -343,7 +391,7 @@ serve(async (req) => {
       oreName,
       oreRow,
       vesselDisplayName: clip(body.vesselDisplayName, 40),
-      loadout: parseLoadout(body.loadout),
+      loadout: parseLoadout(body.loadout, catalog),
       gadgetsInUse: parseGadgets(body.gadgetsInUse),
       scan,
     })
