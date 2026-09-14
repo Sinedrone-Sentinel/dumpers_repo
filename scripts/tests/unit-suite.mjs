@@ -531,4 +531,20 @@ check(
   'does not add bp_ when the unprefixed id is already in the catalog'
 )
 
+const advisorCatalogLib = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/miningAdvisorCatalog.mjs')).href
+)
+const gameMining = JSON.parse(readFileSync(path.join(root, 'src/data/game-mining.json'), 'utf8'))
+const advisorCatalog = advisorCatalogLib.buildMiningAdvisorCatalog(gameMining)
+advisorCatalogLib.assertAdvisorCatalogShape(advisorCatalog)
+check(
+  !JSON.stringify(advisorCatalog.lasers).includes('Mining_Laser_'),
+  'advisor catalog lasers use display names only',
+)
+check(
+  advisorCatalog.ores.every((ore) => !String(ore.displayName).startsWith('Ore_')),
+  'advisor catalog ores use display names',
+)
+check(advisorCatalog.gadgets.length >= 4, 'advisor catalog includes gadgets')
+
 console.log(`Unit tests: ${pass} passed`)

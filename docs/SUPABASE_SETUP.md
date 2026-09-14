@@ -219,6 +219,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 151 | `186_delete_account_settle_orders.sql` | Account delete: auto 5-star the other party on live deals; cancel pending listings; requester/rater FKs SET NULL |
 | 152 | `187_relink_acquired_blueprint_ids.sql` | Remap leftover acquired / target-list IDs (`_scitem` suffix, unique `bp_` Dominance-2). Later patches: `npm run relink-acquired-blueprint-ids` |
 | 153 | `188_drop_rsi_bio_verify.sql` | Drop bio-code verify (`rsi_verify_challenges` + challenge RPCs). Member verify is Citizen iD only |
+| 154 | `189_mining_advisor_rate_limit.sql` | Smart Cracker advisor: per-member hourly Edge rate buckets + `mining_advisor_try_consume` (`service_role` only). No API keys stored |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 
@@ -288,6 +289,8 @@ npx supabase functions deploy manage-github-collaborator
 npx supabase functions deploy link-citizenid
 npx supabase functions deploy citizenid-oauth-callback --no-verify-jwt
 npx supabase functions deploy unlink-citizenid
+npm run copy-mining-advisor-catalog
+npx supabase functions deploy mining-loadout-advisor
 ```
 
 | Function | Purpose |
@@ -305,12 +308,20 @@ npx supabase functions deploy unlink-citizenid
 | `link-citizenid` | Signed-in member starts Citizen iD OAuth (PKCE state stored server-side) |
 | `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
+| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste their own Gemini key; site holds no LLM secret. Apply migration **189** first |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
 Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, plus deprecated `SUPABASE_SERVICE_ROLE_KEY`). **Never** expose secret / service_role keys in frontend code.
 
 ### Edge Function secrets
+
+**Smart Cracker Advisor:** no site Gemini/OpenAI secret. Members paste their own key in the Advisor panel (`localStorage` on that browser). Apply migration **189**, then:
+
+```bash
+npm run copy-mining-advisor-catalog
+npx supabase functions deploy mining-loadout-advisor
+```
 
 **Contributor Team:** set Edge secret `GITHUB_CONTRIBUTORS_TOKEN` to a fine-scoped GitHub PAT (or GitHub App installation token) that can manage collaborators on the configured public repo. Without it, `manage-github-collaborator` returns 503 and marks sync error.
 

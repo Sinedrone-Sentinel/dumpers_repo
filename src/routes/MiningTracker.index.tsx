@@ -180,10 +180,14 @@ export default function MiningTrackerRoute() {
   }, [search.view])
 
   useEffect(() => {
+    if (smartCrackerOpen) {
+      setAnalyticsSubTool('smart_cracker')
+      return
+    }
     const subTool =
       viewMode === 'guide' ? 'mining_guide' : viewMode === 'ledger' ? 'ledger' : 'rs_tracker'
     setAnalyticsSubTool(subTool)
-  }, [viewMode])
+  }, [viewMode, smartCrackerOpen])
 
   useEffect(() => {
     if (viewMode !== 'ledger' || isGuestPreview) return

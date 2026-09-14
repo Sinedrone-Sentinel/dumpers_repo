@@ -37,6 +37,13 @@ import {
   MINING_VESSELS,
   type MiningVesselId,
 } from '../../lib/miningVessels'
+import {
+  buildAdvisorCrackSummary,
+  describeAdvisorLoadout,
+  gadgetDisplayNames,
+  vesselAdvisorLabel,
+} from '../../lib/miningAdvisor'
+import MiningAdvisorChat from './MiningAdvisorChat'
 
 export interface MiningLoadoutSelection {
   vesselId: MiningVesselId
@@ -561,6 +568,26 @@ export default function MiningLoadoutPanel({
         <p className="text-[11px] text-slate-500">
           Enter scanner mass and resistance in the Rock Calculator to compare breakability.
         </p>
+      ) : null}
+
+      {embedded && draftLasers ? (
+        <MiningAdvisorChat
+          rockReady={isRockBreakabilityTargetReady(rockTarget)}
+          oreName={rockTarget?.oreName ?? null}
+          vesselDisplayName={vesselAdvisorLabel(vesselId)}
+          loadout={describeAdvisorLoadout(draftLasers)}
+          gadgetsInUse={gadgetDisplayNames(rockTarget?.selectedGadgetNames)}
+          scan={
+            comparison && isRockBreakabilityTargetReady(rockTarget)
+              ? {
+                  mass: rockTarget!.scannerMass as number,
+                  resistancePercent: rockTarget!.resistancePercent as number,
+                  instability: rockTarget!.instability,
+                  crackSummary: buildAdvisorCrackSummary(comparison, smartCracker),
+                }
+              : null
+          }
+        />
       ) : null}
     </>
   )

@@ -39,6 +39,7 @@ interface AppModalProps {
   children: React.ReactNode
   footer?: React.ReactNode
   headerExtra?: React.ReactNode
+  overlay?: React.ReactNode
   closeOnBackdrop?: boolean
   titleId?: string
   bodyClassName?: string
@@ -54,6 +55,7 @@ export default function AppModal({
   children,
   footer,
   headerExtra,
+  overlay,
   closeOnBackdrop = true,
   titleId: titleIdProp,
   bodyClassName = '',
@@ -82,7 +84,7 @@ export default function AppModal({
       aria-labelledby={titleId}
     >
       <div
-        className={`site-modal-shell w-full max-w-[min(96vw,100%)] ${sizeClasses[size]} ${shellClassName || modalShellClasses[size]}`}
+        className={`site-modal-shell relative w-full max-w-[min(96vw,100%)] ${sizeClasses[size]} ${shellClassName || modalShellClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 p-3 sm:p-4 shrink-0 bg-gradient-to-r from-orange-950/45 via-orange-950/20 to-transparent border-b border-orange-500/20">
@@ -121,6 +123,8 @@ export default function AppModal({
             {footer}
           </div>
         )}
+
+        {overlay}
       </div>
     </div>,
     document.body,
