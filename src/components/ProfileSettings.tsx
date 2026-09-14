@@ -11,6 +11,11 @@ import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
 import SiteTooltip from './SiteTooltip'
 import { rotateMyFriendInviteLink } from '../lib/friends'
+import {
+  deleteMiningAdvisorSavedKey,
+  MINING_ADVISOR_SAVED_KEY_EVENT,
+  miningAdvisorHasSavedKey,
+} from '../lib/miningAdvisor'
 
 export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const {
@@ -68,6 +73,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [hasActiveOrders, setHasActiveOrders] = useState(false)
   const [hasLiveDeals, setHasLiveDeals] = useState(false)
   const [_checkingOrders, setCheckingOrders] = useState(true)
+  const [hasAdvisorSavedKey, setHasAdvisorSavedKey] = useState(false)
+  const [clearingAdvisorKey, setClearingAdvisorKey] = useState(false)
 
   const isVerified = profile?.rsi_handle_verified ?? false
 
@@ -117,6 +124,15 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
 
     checkActiveOrders()
   }, [user?.id])
+
+  useEffect(() => {
+    const sync = () => {
+      void miningAdvisorHasSavedKey().then(setHasAdvisorSavedKey)
+    }
+    sync()
+    window.addEventListener(MINING_ADVISOR_SAVED_KEY_EVENT, sync)
+    return () => window.removeEventListener(MINING_ADVISOR_SAVED_KEY_EVENT, sync)
+  }, [])
 
   // Load welcome modal setting for super-admin
   useEffect(() => {
@@ -453,6 +469,41 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                   {rotatingInvite ? 'Rotating…' : 'Rotate invite link'}
                 </button>
               </SiteTooltip>
+            </SettingsField>
+          </SettingsSection>
+
+          <SettingsSection
+            title="Advisor"
+            description="Smart Cracker Gemini access saved on this profile"
+          >
+            <SettingsField
+              label="Saved Advisor key"
+              hint={
+                hasAdvisorSavedKey
+                  ? 'Removes the encrypted copy from your profile. The key itself is never shown here.'
+                  : 'No Advisor key is saved on this profile.'
+              }
+            >
+              <button
+                type="button"
+                disabled={!hasAdvisorSavedKey || clearingAdvisorKey}
+                className="site-btn-secondary text-sm px-3 py-2 disabled:opacity-40"
+                onClick={() => {
+                  if (!hasAdvisorSavedKey || clearingAdvisorKey) return
+                  setClearingAdvisorKey(true)
+                  void deleteMiningAdvisorSavedKey().then((result) => {
+                    setClearingAdvisorKey(false)
+                    if (!result.ok) {
+                      setMessage({ type: 'error', text: result.error })
+                      return
+                    }
+                    setHasAdvisorSavedKey(false)
+                    setMessage({ type: 'success', text: 'Saved Advisor key removed.' })
+                  })
+                }}
+              >
+                {clearingAdvisorKey ? 'Clearing…' : 'Clear saved Advisor key'}
+              </button>
             </SettingsField>
           </SettingsSection>
 

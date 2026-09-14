@@ -113,6 +113,12 @@ async function advisorInvokeError(error: { message?: string; context?: Response 
   return error.message || 'Advisor is unavailable right now.'
 }
 
+export const MINING_ADVISOR_SAVED_KEY_EVENT = 'dumpers:mining-advisor-saved-key'
+
+export function notifyMiningAdvisorSavedKeyChanged(): void {
+  window.dispatchEvent(new Event(MINING_ADVISOR_SAVED_KEY_EVENT))
+}
+
 export async function miningAdvisorHasSavedKey(): Promise<boolean> {
   const { data, error } = await supabase.rpc('mining_advisor_has_saved_key')
   if (error) return false
@@ -135,6 +141,7 @@ export async function saveMiningAdvisorKey(apiKey: string, lockPhrase: string): 
   if (error || data !== true) {
     return { ok: false, error: error?.message || 'Could not save your key. Try again.' }
   }
+  notifyMiningAdvisorSavedKeyChanged()
   return { ok: true, advice: '' }
 }
 
@@ -158,6 +165,7 @@ export async function unlockMiningAdvisorKey(lockPhrase: string): Promise<Adviso
 export async function deleteMiningAdvisorSavedKey(): Promise<AdvisorAskResult> {
   const { error } = await supabase.rpc('mining_advisor_delete_saved_key')
   if (error) return { ok: false, error: error.message || 'Could not remove the saved key.' }
+  notifyMiningAdvisorSavedKeyChanged()
   return { ok: true, advice: '' }
 }
 
