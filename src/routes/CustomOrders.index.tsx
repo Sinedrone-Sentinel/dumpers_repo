@@ -474,7 +474,7 @@ export default function CustomOrdersRoute() {
                 can be identified by their in-game identity.
               </p>
               <p className="text-amber-200/70 text-sm mt-2">
-                Go to <strong className="text-amber-300">Settings → Profile</strong>, get a verification code, paste it into your public RSI Bio, then click <strong className="text-cyan-400">Verify</strong>.
+                Go to <strong className="text-amber-300">Settings → Profile</strong> and <strong className="text-cyan-400">Link Citizen iD</strong>.
               </p>
             </div>
           </div>

@@ -13,12 +13,3 @@ SET
   updated_at = now()
 WHERE COALESCE(rsi_handle_verified, false) = false
   AND rsi_handle IS NOT NULL;
-
--- Optional: drop orphan challenges for those users
-DELETE FROM public.rsi_verify_challenges c
-WHERE EXISTS (
-  SELECT 1
-  FROM public.profiles p
-  WHERE p.id = c.user_id
-    AND COALESCE(p.rsi_handle_verified, false) = false
-);

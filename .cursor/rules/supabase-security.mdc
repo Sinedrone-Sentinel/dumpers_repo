@@ -42,7 +42,7 @@ Client may update **own** non-privileged prefs (`rsi_handle`, craft/ads toggles,
 | Action | Path |
 |---|---|
 | Change member role | `admin_set_user_role` RPC (Admin Panel) |
-| Mark RSI verified | Edge `validate-rsi-handle` → `mark_rsi_handle_verified` (**service_role only**, mig 133) |
+| Mark RSI verified | Edge `citizenid-oauth-callback` → `upsert_spectrum_from_citizenid` → `mark_rsi_handle_verified` (**service_role only**) |
 | DEFINER SQL must set privileged cols | Call `profiles_begin_privileged_update()` in that transaction first |
 
 Do **not** restore broad officer `FOR ALL` on `profiles`.

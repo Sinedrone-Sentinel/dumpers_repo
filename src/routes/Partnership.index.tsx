@@ -144,11 +144,11 @@ export default function PartnershipPage() {
         <div className="rounded-xl border border-amber-500/30 bg-amber-950/20 p-5 space-y-3 max-w-xl">
           <p className="text-amber-200 text-sm font-medium">Verified RSI Handle required</p>
           <p className="text-slate-400 text-sm leading-relaxed">
-            Partnership is only available after you verify your RSI Handle (bio code in Settings).
+            Partnership is only available after you verify your RSI Handle with Link Citizen iD.
           </p>
           <p className="text-slate-500 text-xs">
-            Open <strong className="text-slate-400">Settings</strong> from your avatar menu → get a
-            code → paste into your public RSI Bio → Verify.
+            Open <strong className="text-slate-400">Settings</strong> from your avatar menu and{' '}
+            <strong className="text-cyan-400">Link Citizen iD</strong>.
           </p>
         </div>
       </FeaturePageLayout>

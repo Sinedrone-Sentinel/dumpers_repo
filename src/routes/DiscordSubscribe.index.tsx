@@ -275,9 +275,8 @@ export default function DiscordSubscribeRoute() {
                           available.
                         </p>
                         <p className="text-amber-200/70 text-xs mt-2">
-                          Go to <strong className="text-amber-300">Settings → Profile</strong> and
-                          get a code, paste it into your public RSI Bio, then <strong className="text-cyan-400">Verify</strong> your RSI
-                          Handle.
+                          Go to <strong className="text-amber-300">Settings → Profile</strong> and{' '}
+                          <strong className="text-cyan-400">Link Citizen iD</strong>.
                         </p>
                       </div>
                     )}

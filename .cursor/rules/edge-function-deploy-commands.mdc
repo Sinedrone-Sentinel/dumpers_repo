@@ -35,7 +35,6 @@ Source of truth: `docs/SUPABASE_SETUP.md` section Deploy Edge Functions. Prefer 
 | `ban-user` | `npx supabase functions deploy ban-user` |
 | `unban-user` | `npx supabase functions deploy unban-user` |
 | `delete-account` | `npx supabase functions deploy delete-account` |
-| `validate-rsi-handle` | `npx supabase functions deploy validate-rsi-handle` |
 | `send-discord` | `npx supabase functions deploy send-discord --no-verify-jwt` |
 | `log-watcher-webhook` | `npm run copy-blueprint-lookup` then `npx supabase functions deploy log-watcher-webhook --no-verify-jwt` |
 | `discord-services-interactions` | `npx supabase functions deploy discord-services-interactions --no-verify-jwt` |
