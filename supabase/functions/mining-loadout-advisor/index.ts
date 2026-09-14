@@ -9,8 +9,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const GEMINI_MODEL = 'gemini-2.5-flash'
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
+const GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'] as const
 const MAX_QUESTION = 2000
 const MAX_HISTORY = 8
 const MAX_MSG = 2000
@@ -184,8 +183,7 @@ function buildSystemPrompt(input: {
   if (input.planningMode) {
     lines.push(
       'Mode: planning. Do not mention or use any HUD scan numbers.',
-      'Typical deposit mass is not in game files. If you use web search, label those numbers as community typical, never as this rock.',
-      'If you have no typical mass, say typical deposit size is unknown.',
+      'Typical deposit mass is not in game files. Say typical deposit size is unknown rather than inventing a number.',
     )
   } else if (input.scan) {
     lines.push(
@@ -208,13 +206,60 @@ function extractGeminiText(data: unknown): string {
 }
 
 function memberSafeGeminiError(status: number): string {
-  if (status === 400 || status === 403) {
-    return 'That Gemini key was rejected. Check it in Google AI Studio.'
+  if (status === 400 || status === 401 || status === 403) {
+    return 'That Gemini key was rejected. Create a Gemini API key in Google AI Studio and try again.'
+  }
+  if (status === 404) {
+    return 'Gemini could not reach that model. Try again in a moment.'
   }
   if (status === 429) {
     return 'Your Gemini quota is used up for now. Try again later, or check AI Studio rate limits.'
   }
   return 'Gemini is unavailable right now. Try again in a moment.'
+}
+
+function geminiUrl(model: string, apiKey: string | null): string {
+  const base = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
+  return apiKey ? `${base}?key=${encodeURIComponent(apiKey)}` : base
+}
+
+function postGemini(
+  apiKey: string,
+  model: string,
+  payload: Record<string, unknown>,
+  viaQuery: boolean,
+): Promise<Response> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (!viaQuery) headers['x-goog-api-key'] = apiKey
+  return fetch(geminiUrl(model, viaQuery ? apiKey : null), {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload),
+  })
+}
+
+async function generateAdvice(
+  apiKey: string,
+  payload: Record<string, unknown>,
+): Promise<{ ok: true; advice: string } | { ok: false; status: number }> {
+  let lastStatus = 502
+  for (const model of GEMINI_MODELS) {
+    for (const viaQuery of [false, true]) {
+      const res = await postGemini(apiKey, model, payload, viaQuery)
+      lastStatus = res.status
+      if (res.status === 429) return { ok: false, status: 429 }
+      if (!res.ok) {
+        console.error('gemini status', res.status, viaQuery ? 'query' : 'header')
+        if (res.status === 401 || res.status === 403) continue
+        if (res.status === 404) break
+        continue
+      }
+      const advice = extractGeminiText(await res.json())
+      if (advice) return { ok: true, advice }
+      lastStatus = 502
+    }
+  }
+  return { ok: false, status: lastStatus }
 }
 
 serve(async (req) => {
@@ -312,33 +357,17 @@ serve(async (req) => {
       generationConfig: {
         temperature: 0.4,
         maxOutputTokens: MAX_OUTPUT_TOKENS,
+        thinkingConfig: { thinkingBudget: 0 },
       },
     }
-    if (planningMode && oreName) {
-      payload.tools = [{ google_search: {} }]
+    const generated = await generateAdvice(apiKey, payload)
+    if (!generated.ok) {
+      return json(generated.status === 429 ? 429 : 502, {
+        error: memberSafeGeminiError(generated.status),
+      })
     }
 
-    const geminiRes = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify(payload),
-    })
-
-    if (!geminiRes.ok) {
-      console.error('gemini status', geminiRes.status)
-      return json(geminiRes.status === 429 ? 429 : 502, { error: memberSafeGeminiError(geminiRes.status) })
-    }
-
-    const geminiJson = await geminiRes.json()
-    const advice = extractGeminiText(geminiJson)
-    if (!advice) {
-      return json(502, { error: 'Gemini returned an empty answer. Try again.' })
-    }
-
-    return json(200, { advice })
+    return json(200, { advice: generated.advice })
   } catch (error) {
     console.error('advisor failed', error instanceof Error ? error.name : 'error')
     return json(500, { error: 'Advisor is temporarily unavailable.' })
