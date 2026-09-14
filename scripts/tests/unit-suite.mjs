@@ -23,6 +23,7 @@ const modules = [
   'src/lib/oauthReturn.ts',
   'src/lib/friendInvite.ts',
   'src/lib/canonicalizeBlueprintId.ts',
+  'src/lib/miningAdvisorCrypto.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -45,6 +46,7 @@ const iab = await import(pathToFileURL(path.join(outDir, 'inAppBrowser.mjs')).hr
 const oauthReturn = await import(pathToFileURL(path.join(outDir, 'oauthReturn.mjs')).href)
 const friendInvite = await import(pathToFileURL(path.join(outDir, 'friendInvite.mjs')).href)
 const relink = await import(pathToFileURL(path.join(outDir, 'canonicalizeBlueprintId.mjs')).href)
+const advisorCrypto = await import(pathToFileURL(path.join(outDir, 'miningAdvisorCrypto.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -530,5 +532,36 @@ check(
   noPrefixGuess.ok === true && noPrefixGuess.canon === 'cool_tydt_s02_heatsink' && noPrefixGuess.rule === 'exact',
   'does not add bp_ when the unprefixed id is already in the catalog'
 )
+
+const advisorCatalogLib = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/miningAdvisorCatalog.mjs')).href
+)
+const gameMining = JSON.parse(readFileSync(path.join(root, 'src/data/game-mining.json'), 'utf8'))
+const advisorCatalog = advisorCatalogLib.buildMiningAdvisorCatalog(gameMining)
+advisorCatalogLib.assertAdvisorCatalogShape(advisorCatalog)
+check(
+  !JSON.stringify(advisorCatalog.lasers).includes('Mining_Laser_'),
+  'advisor catalog lasers use display names only',
+)
+check(
+  advisorCatalog.ores.every((ore) => !String(ore.displayName).startsWith('Ore_')),
+  'advisor catalog ores use display names',
+)
+check(advisorCatalog.gadgets.length >= 4, 'advisor catalog includes gadgets')
+
+check(advisorCrypto.isAdvisorLockPhrase('short') === false, 'lock phrase min length')
+check(advisorCrypto.isAdvisorLockPhrase('long-enough-phrase') === true, 'lock phrase accepted')
+const wrapped = await advisorCrypto.encryptAdvisorSecret('AIzaSyDummyTestKeyValue12', 'long-enough-phrase')
+check(typeof wrapped === 'string' && wrapped.startsWith('v2.'), 'advisor wrap prefix')
+check(!wrapped.includes('AIzaSyDummyTestKeyValue12'), 'wrapped blob hides plaintext')
+const unlocked = await advisorCrypto.decryptAdvisorSecret(wrapped, 'long-enough-phrase')
+check(unlocked === 'AIzaSyDummyTestKeyValue12', 'advisor wrap roundtrip')
+let badUnlock = false
+try {
+  await advisorCrypto.decryptAdvisorSecret(wrapped, 'wrong-lock-phrase')
+} catch {
+  badUnlock = true
+}
+check(badUnlock, 'wrong lock phrase fails')
 
 console.log(`Unit tests: ${pass} passed`)

@@ -38,3 +38,9 @@ entrypoint = "./functions/discord-services-bot-invite/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/citizenid-oauth-callback/index.ts"
+
+# Member JWT + their Gemini key. Catalog is bundled; no site LLM secret.
+[functions.mining-loadout-advisor]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/mining-loadout-advisor/index.ts"
