@@ -15,7 +15,7 @@ Source is **Apache-2.0** ([LICENSE](../LICENSE)). Forks/self-hosts must **rebran
 1. Clone the repository
 2. Copy `.env.example` to `.env` and configure Supabase credentials
 3. Run all database migrations in numeric order (currently through **`118_drop_game_data_mirror_tables.sql`**) — see [docs/SUPABASE_SETUP.md](SUPABASE_SETUP.md)
-4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`, `log-watcher-webhook`)
+4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `send-discord`, `log-watcher-webhook`, `link-citizenid`, `citizenid-oauth-callback`, `unlink-citizenid`)
 5. Build and deploy
 
 ```bash
@@ -149,7 +149,7 @@ Prefer same-origin DFP on dumpers-repo.com / www. If you override `VITE_DFP_ENGI
 
 ### Edge Functions not working
 1. Verify functions are deployed: `npx supabase functions list`
-2. Required functions: `ban-user`, `unban-user`, `delete-account`, `validate-rsi-handle`, `send-discord`, `log-watcher-webhook`
+2. Required functions: `ban-user`, `unban-user`, `delete-account`, `send-discord`, `log-watcher-webhook`, `link-citizenid`, `citizenid-oauth-callback`, `unlink-citizenid`
 3. Check function logs: `npx supabase functions logs send-discord`
 4. Discord queue cron requires **pg_cron** + **pg_net** (see `SUPABASE_SETUP.md` migrations 065–068)
 5. Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in Supabase dashboard

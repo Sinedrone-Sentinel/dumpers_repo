@@ -383,10 +383,9 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     title: 'Settings',
     description: 'Manage your profile and account from your avatar menu.',
     details: [
-      'Verify your RSI Handle with Link Citizen iD in Settings (uses your Spectrum portrait as your avatar). Bio-code verify remains until the site starts the 90-day grace, then new verifies are Citizen iD only',
+      'Verify your RSI Handle with Link Citizen iD in Settings (uses your Spectrum portrait as your avatar)',
       'You can remove the Citizen iD link in Settings — that un-verifies you and frees the handle (blocked while you have an accepted deal). Deleting your account also removes Spectrum / Citizen iD data',
-      'Handle is only saved after Verify succeeds — Get code alone does not set it; Change clears your handle until you verify a new (or re-verify the old) one',
-      'After verifying you can remove the code from your RSI bio',
+      'To change your RSI Handle, remove the Citizen iD link (when you have no accepted deal) and Link again',
       'Deduct inventory on craft complete: when enabled, finishing a WTB fulfillment deducts materials from My Resources (requires verified RSI Handle)',
       'If you opened the site from Facebook, Instagram, Messenger, Discord, TikTok, Twitter/X, Snapchat, WhatsApp, Reddit, LinkedIn, Pinterest, Line, WeChat, or another app, open dumpers-repo.com in Safari (or Chrome on Android) before signing in — sign-in cannot finish inside those apps',
       'If Discord or Google sends you back to the home page still signed out, tap Sign in again in that same Safari or Chrome window — Refresh will not finish it (the page icon next to the address is Safari Reader, not Refresh)',

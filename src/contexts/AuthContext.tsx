@@ -114,7 +114,6 @@ interface AuthContextType {
   unlinkProvider: (identity: UserIdentity) => Promise<void>
   signOut: () => Promise<void>
   toggleAcquired: (blueprintId: string) => Promise<void>
-  updateRsiHandle: (handle: string) => Promise<boolean>
   updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
   updateGroupBlueprintVariants: (enabled: boolean) => Promise<boolean>
   groupBlueprintVariants: boolean
@@ -921,36 +920,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  /** RSI handles are verified-only — clients cannot set a handle string directly. */
-  const updateRsiHandle = useCallback(async (handle: string): Promise<boolean> => {
-    const activeUser = userRef.current
-    if (!activeUser) return false
-
-    const trimmedHandle = handle.trim()
-    if (trimmedHandle) {
-      console.error('RSI handle can only be set via bio verification')
-      return false
-    }
-
-    const { data, error } = await supabase.rpc('clear_my_rsi_handle')
-    if (error || !(data as { success?: boolean } | null)?.success) {
-      console.error('Error clearing RSI handle:', error)
-      return false
-    }
-
-    setProfile((prev) =>
-      prev
-        ? {
-            ...prev,
-            rsi_handle: null,
-            rsi_handle_verified: false,
-            rsi_handle_verified_at: null,
-          }
-        : null,
-    )
-    return true
-  }, [])
-
   const updateCraftDeductInventory = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) return false
@@ -1158,7 +1127,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       unlinkProvider,
       signOut,
       toggleAcquired,
-      updateRsiHandle,
       updateCraftDeductInventory,
       updateGroupBlueprintVariants,
       groupBlueprintVariants,
@@ -1214,7 +1182,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       unlinkProvider,
       signOut,
       toggleAcquired,
-      updateRsiHandle,
       updateCraftDeductInventory,
       updateGroupBlueprintVariants,
       groupBlueprintVariants,

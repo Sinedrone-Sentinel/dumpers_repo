@@ -95,7 +95,7 @@ export default function CitizenIdSettings({
     onMessage({
       type: 'success',
       text: result.endsAt
-        ? `Legacy bio verify grace ends ${new Date(result.endsAt).toLocaleDateString()}.`
+        ? `Citizen iD grace ends ${new Date(result.endsAt).toLocaleDateString()}.`
         : 'Legacy grace started.',
     })
   }
@@ -116,7 +116,7 @@ export default function CitizenIdSettings({
             : 'Removing the link un-verifies you and frees your RSI Handle — used when selling an account.'
           : spectrum?.needsLink
             ? 'Link Citizen iD to keep RSI verification after the grace period and to show your Spectrum orgs.'
-            : 'Link Citizen iD to verify your RSI Handle and use your Spectrum portrait as your avatar.'
+            : 'Link Citizen iD to verify your RSI Handle. Your Spectrum portrait becomes your avatar.'
       }
     >
       {linked ? (
@@ -175,8 +175,7 @@ export default function CitizenIdSettings({
       {isSuperAdmin && (
         <div className="mt-3 pt-3 site-divider">
           <p className="site-hint mb-2">
-            Super-admin: start the 90-day legacy grace (new bio verifies stop; existing bio-verified
-            members must Link before the end date).
+            Super-admin: 90-day Citizen iD grace (existing bio-verified members must Link before the end date).
           </p>
           <button
             type="button"

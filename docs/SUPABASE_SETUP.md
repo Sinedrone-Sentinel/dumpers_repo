@@ -215,9 +215,10 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 147 | `182_list_member_order_ratings.sql` | `list_member_order_ratings` — members can read star ratings and optional comments for a buyer or fulfiller score |
 | 148 | `183_reputation_one_decimal.sql` | Visible buyer/fulfiller reputation is `X.X` (one decimal), not a rounded integer |
 | 149 | `184_anonymous_order_rating_list.sql` | Review modal list does not return rater RSI handle / name; `custom_order_ratings.rater_id` is unchanged |
-| 150 | `185_spectrum_citizenid.sql` | RSI Spectrum store + Citizen iD link RPCs; bio stubs; grace clock stays NULL until super-admin starts it |
+| 150 | `185_spectrum_citizenid.sql` | RSI Spectrum store + Citizen iD link RPCs; grace clock until super-admin starts it |
 | 151 | `186_delete_account_settle_orders.sql` | Account delete: auto 5-star the other party on live deals; cancel pending listings; requester/rater FKs SET NULL |
 | 152 | `187_relink_acquired_blueprint_ids.sql` | Remap leftover acquired / target-list IDs (`_scitem` suffix, unique `bp_` Dominance-2). Later patches: `npm run relink-acquired-blueprint-ids` |
+| 153 | `188_drop_rsi_bio_verify.sql` | Drop bio-code verify (`rsi_verify_challenges` + challenge RPCs). Member verify is Citizen iD only |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 
@@ -275,7 +276,6 @@ npx supabase link --project-ref YOUR_PROJECT_REF
 npx supabase functions deploy ban-user
 npx supabase functions deploy unban-user
 npx supabase functions deploy delete-account
-npx supabase functions deploy validate-rsi-handle
 npx supabase functions deploy send-discord --no-verify-jwt
 npm run copy-blueprint-lookup
 npx supabase functions deploy log-watcher-webhook --no-verify-jwt
@@ -294,7 +294,6 @@ npx supabase functions deploy unlink-citizenid
 |----------|---------|
 | `ban-user` / `unban-user` | Admin user management |
 | `delete-account` | User self-service account deletion (RPC cleanup + auth user + service-request screenshots) |
-| `validate-rsi-handle` | Verify RSI Handles via public citizen Bio challenge code (after `issue_rsi_verify_challenge`) |
 | `send-discord` | Process queued Discord webhook messages (used by pg_cron) |
 | `log-watcher-webhook` | Receives blueprint events from BP Dumper; Bearer API key + required `X-Dumper-Version` (426 outdated); IP auth-fail 429 + valid-key burst alerts (mig 174) |
 | `discord-services-interactions` | Partnership Dumper Services bot (Accept buttons); Discord signature auth |
@@ -325,7 +324,7 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 | `CITIZENID_REDIRECT_URI` | Optional override; default `{SUPABASE_URL}/functions/v1/citizenid-oauth-callback` |
 | `PUBLIC_SITE_URL` | Where the callback 302s after link (`https://dumpers-repo.com`) |
 
-Register that redirect URI on the Citizen iD app. Apply **185** then **186**. Link stays 503 until secrets exist. Super-admin **Start 90-day Citizen iD grace** in Settings starts the legacy clock (do not click until Link works).
+Register that redirect URI on the Citizen iD app. Apply **185**, **186**, and **188**. Link stays 503 until secrets exist. Super-admin **Start 90-day Citizen iD grace** in Settings starts the clock for existing bio-verified members.
 
 Set these under **Project Settings → Edge Functions → Secrets** (or let semantic-release create them):
 

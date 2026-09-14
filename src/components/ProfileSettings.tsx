@@ -9,7 +9,6 @@ import ConnectedAccountsSettings from './settings/ConnectedAccountsSettings'
 import CitizenIdSettings from './settings/CitizenIdSettings'
 import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
-import RsiBioVerifyControls from './RsiBioVerifyControls'
 import SiteTooltip from './SiteTooltip'
 import { rotateMyFriendInviteLink } from '../lib/friends'
 
@@ -18,7 +17,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     user,
     profile,
     refreshProfile,
-    updateRsiHandle: _updateRsiHandle,
     updateCraftDeductInventory,
     updateGroupBlueprintVariants,
     groupBlueprintVariants,
@@ -42,7 +40,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     isSuperAdmin,
     refreshAcquiredBlueprints,
   } = useAuth()
-  const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [craftDeductInventory, setCraftDeductInventory] = useState(
     profile?.craft_deduct_inventory ?? false
   )
@@ -138,11 +135,9 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   }, [isSuperAdmin])
 
   useEffect(() => {
-    setRsiHandle(profile?.rsi_handle || '')
     setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
     setGroupVariantsEnabled(groupBlueprintVariants)
   }, [
-    profile?.rsi_handle,
     profile?.craft_deduct_inventory,
     groupBlueprintVariants,
   ])
@@ -381,24 +376,14 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 </span>
               }
               hint={
-                hasActiveOrders && isVerified
-                  ? "You have active orders — clear them before changing your handle."
-                  : isVerified
-                    ? `Verified on ${profile?.rsi_handle_verified_at ? new Date(profile.rsi_handle_verified_at).toLocaleDateString() : 'RSI'}`
-                    : 'Your handle is only saved after Verify succeeds. Change clears it until you verify again.'
+                isVerified
+                  ? `Verified${profile?.rsi_handle_verified_at ? ` on ${new Date(profile.rsi_handle_verified_at).toLocaleDateString()}` : ''}. Link or remove Citizen iD below to change it.`
+                  : 'Link Citizen iD below to verify your RSI Handle.'
               }
             >
-              <RsiBioVerifyControls
-                rsiHandle={rsiHandle}
-                onRsiHandleChange={setRsiHandle}
-                isVerified={isVerified}
-                inputDisabled={hasActiveOrders && isVerified}
-                onVerified={async () => {
-                  await refreshProfile()
-                }}
-                onError={(text) => setMessage({ type: 'error', text })}
-                onSuccessMessage={(text) => setMessage({ type: 'success', text })}
-              />
+              <p className={`site-input px-3 py-2 ${isVerified ? '' : 'text-slate-500'}`}>
+                {isVerified && profile?.rsi_handle ? profile.rsi_handle : 'Not verified'}
+              </p>
             </SettingsField>
 
             <div className="mt-4 pt-4 site-divider">
@@ -416,7 +401,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 description={
                   isVerified
                     ? "When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically."
-                    : 'Verify your RSI Handle above to enable this feature.'
+                    : 'Link Citizen iD above to enable this feature.'
                 }
                 checked={craftDeductInventory}
                 onChange={handleCraftDeductInventoryChange}
@@ -437,7 +422,7 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               hint={
                 isVerified
                   ? 'Share invite from the Friends menu. Rotate only if you need to invalidate a link you already posted (YouTube, Discord, etc.).'
-                  : 'Verify your RSI Handle above before you can share or rotate an invite link.'
+                  : 'Link Citizen iD above before you can share or rotate an invite link.'
               }
             >
               <SiteTooltip

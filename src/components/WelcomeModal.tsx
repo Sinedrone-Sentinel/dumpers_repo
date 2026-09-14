@@ -5,7 +5,6 @@ import { useAuth } from '../contexts/AuthContext'
 import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { useUiOverlayRegistration } from '../contexts/UiOverlayContext'
 import { SITE_RULES_SECTION } from '../lib/archiveGuide/welcomeSections'
-import RsiBioVerifyControls from './RsiBioVerifyControls'
 import { startCitizenIdLink } from '../lib/spectrum'
 
 interface WelcomeModalProps {
@@ -32,10 +31,9 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
   const overlayId = useId()
   useUiOverlayRegistration(overlayId, true)
   
-  const { profile, refreshProfile } = useAuth()
+  const { profile } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
-  const [rsiHandle, setRsiHandle] = useState(profile?.rsi_handle || '')
   const [validationError, setValidationError] = useState<string | null>(null)
   const [finishError, setFinishError] = useState<string | null>(null)
   const [rulesScrolledToEnd, setRulesScrolledToEnd] = useState(false)
@@ -154,7 +152,7 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
           {step === 1 && (
             <div className="space-y-4">
               <h3 className="text-white font-medium flex items-center gap-2">
-                Set Your RSI Handle
+                Verify with Citizen iD
                 {isVerified && (
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-cyan-900/50 border border-cyan-500/30 rounded text-[10px] text-cyan-400 font-semibold">
                     <span className="italic">RSI</span>
@@ -165,8 +163,8 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                 )}
               </h3>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Your RSI handle helps other players identify you when coordinating trades and crafting.
-                It is only saved after Verify succeeds — typing a handle or getting a code alone does not set it.
+                Link Citizen iD to verify your RSI Handle. Your Spectrum portrait becomes your avatar,
+                and other members can identify you on trades and crafting.
               </p>
               <div className="mt-2 p-3 bg-amber-900/30 border border-amber-500/30 rounded-lg">
                 <p className="text-xs text-amber-300 flex items-start gap-2">
@@ -175,32 +173,23 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                   </svg>
                   <span>
                     <strong>Note:</strong> A verified RSI Handle is <strong>required</strong> to create Custom Orders
-                    or participate in Fulfillment. You can skip this for now but will need to complete it later
-                    to access those features.
+                    or participate in Fulfillment. You can skip this for now and Link later in Settings.
                   </span>
                 </p>
               </div>
               <div className="mt-4">
-                <label className="site-label">RSI Handle</label>
-                <RsiBioVerifyControls
-                  compact
-                  rsiHandle={rsiHandle}
-                  onRsiHandleChange={(value) => {
-                    setRsiHandle(value)
-                    setValidationError(null)
-                  }}
-                  isVerified={isVerified}
-                  onVerified={async () => {
-                    setValidationError(null)
-                    await refreshProfile()
-                  }}
-                  onError={setValidationError}
-                />
-                <div className="mt-3">
+                {isVerified ? (
+                  <p className="text-sm text-cyan-400 flex items-center gap-1">
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Verified{profile?.rsi_handle ? ` as ${profile.rsi_handle}` : ''}.
+                  </p>
+                ) : (
                   <button
                     type="button"
                     className="site-btn-primary text-sm px-3 py-2 w-full"
-                    disabled={linkingCitizenId || isVerified}
+                    disabled={linkingCitizenId}
                     onClick={() => {
                       void (async () => {
                         setLinkingCitizenId(true)
@@ -214,9 +203,9 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                       })()
                     }}
                   >
-                    {linkingCitizenId ? 'Opening Citizen iD…' : 'Link Citizen iD instead'}
+                    {linkingCitizenId ? 'Opening Citizen iD…' : 'Link Citizen iD'}
                   </button>
-                </div>
+                )}
 
                 {validationError && (
                   <p className="mt-2 text-xs text-red-400 flex items-center gap-1">
@@ -226,18 +215,9 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                     {validationError}
                   </p>
                 )}
-
-                {isVerified && (
-                  <p className="mt-2 text-xs text-cyan-400 flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Verified — you can remove the code from your RSI bio.
-                  </p>
-                )}
               </div>
               <p className="text-xs text-slate-500 mt-2">
-                You can always change this later in your profile settings.
+                You can Link or remove Citizen iD later in Settings.
               </p>
             </div>
           )}

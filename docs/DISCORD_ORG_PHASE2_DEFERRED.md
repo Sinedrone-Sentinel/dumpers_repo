@@ -60,7 +60,7 @@ Org channel **includes** “member posted WTB” (unlike personal lane — org a
 
 ## Implementation order (Phase 2 site)
 
-1. Edge function `refresh-rsi-affiliations` (extend or split from `validate-rsi-handle`)
+1. Edge function `refresh-rsi-affiliations` (new function; Citizen iD / Spectrum orgs already store primary org)
 2. RPC `verify_org_webhook_eligibility(user_id, org_sid)`
 3. `/discord-subscribe` — “Org channels” section (scraped affiliations only)
 4. `send-discord` — fourth fan-out branch on `target_org_sid`
@@ -72,6 +72,6 @@ Org channel **includes** “member posted WTB” (unlike personal lane — org a
 
 ## Touchpoints (reference)
 
-- [`supabase/functions/validate-rsi-handle/index.ts`](../supabase/functions/validate-rsi-handle/index.ts) — bio-code challenge (migration `136`); org affiliation scrape still deferred
+- [`src/lib/spectrum.ts`](../src/lib/spectrum.ts) — Citizen iD Spectrum orgs; org affiliation scrape still deferred
 - [`src/routes/DiscordSubscribe.index.tsx`](../src/routes/DiscordSubscribe.index.tsx) — add org section later
 - [`supabase/functions/send-discord/index.ts`](../supabase/functions/send-discord/index.ts) — org fan-out branch
