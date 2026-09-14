@@ -6,6 +6,7 @@ import type { MiningLaserSlotConfig } from './miningLaserStats'
 import { getMiningModuleByName } from './miningModules'
 import { getMiningLaserByName, getMiningVessel, type MiningVesselId } from './miningVessels'
 
+/** Legacy localStorage key — never write a Gemini key here. Cleared on Advisor open. */
 export const MINING_ADVISOR_KEY_STORAGE = 'dumpers_mining_advisor_gemini_key'
 export const MINING_ADVISOR_THREAD_STORAGE = 'dumpers_mining_advisor_thread'
 export const MINING_ADVISOR_UI_STORAGE = 'dumpers_mining_advisor_ui'

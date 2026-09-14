@@ -316,7 +316,7 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 
 ### Edge Function secrets
 
-**Smart Cracker Advisor:** no site Gemini/OpenAI secret. Members paste their own key in the Advisor panel (`localStorage` on that browser). Apply migration **189**, then:
+**Smart Cracker Advisor:** no site Gemini/OpenAI secret. Members paste their own key in the Advisor panel (held in memory for that visit only — never written to storage or the database). Apply migration **189**, then:
 
 ```bash
 npm run copy-mining-advisor-catalog

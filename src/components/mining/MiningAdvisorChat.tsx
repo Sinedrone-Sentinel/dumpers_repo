@@ -38,11 +38,11 @@ const DEFAULT_UI: AdvisorUiState = {
   offsetY: 0,
 }
 
-function readStoredKey(): string {
+function forgetStoredKey(): void {
   try {
-    return localStorage.getItem(MINING_ADVISOR_KEY_STORAGE) ?? ''
+    localStorage.removeItem(MINING_ADVISOR_KEY_STORAGE)
   } catch {
-    return ''
+    /* private mode */
   }
 }
 
@@ -87,8 +87,7 @@ export default function MiningAdvisorChat({
   const listRef = useRef<HTMLDivElement | null>(null)
   const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null)
 
-  const [apiKey, setApiKey] = useState(readStoredKey)
-  const [rememberKey, setRememberKey] = useState(() => Boolean(readStoredKey()))
+  const [apiKey, setApiKey] = useState('')
   const [messages, setMessages] = useState<AdvisorChatMessage[]>(readThread)
   const [ui, setUi] = useState<AdvisorUiState>(readUi)
   const [draft, setDraft] = useState('')
@@ -121,13 +120,8 @@ export default function MiningAdvisorChat({
   }, [ui])
 
   useEffect(() => {
-    try {
-      if (rememberKey && apiKey.trim()) localStorage.setItem(MINING_ADVISOR_KEY_STORAGE, apiKey.trim())
-      else localStorage.removeItem(MINING_ADVISOR_KEY_STORAGE)
-    } catch {
-      /* private mode */
-    }
-  }, [apiKey, rememberKey])
+    forgetStoredKey()
+  }, [])
 
   useEffect(() => {
     if (ui.minimized) return
@@ -289,15 +283,6 @@ export default function MiningAdvisorChat({
             />
           </label>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <label className="flex items-center gap-1.5 text-[11px] text-slate-400 cursor-pointer">
-              <input
-                type="checkbox"
-                className="site-checkbox"
-                checked={rememberKey}
-                onChange={(event) => setRememberKey(event.target.checked)}
-              />
-              Remember on this device
-            </label>
             <a
               href={GEMINI_STUDIO_KEY_URL}
               target="_blank"
@@ -308,8 +293,8 @@ export default function MiningAdvisorChat({
             </a>
           </div>
           <p className="site-hint">
-            Your key stays in this browser. Free-tier chats may be used by Google to improve their
-            products. Limited to 20 questions per hour on this site.
+            Paste each visit — we do not save your key. Free-tier chats may be used by Google to
+            improve their products. Limited to 20 questions per hour on this site.
           </p>
         </div>
 
