@@ -693,7 +693,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 7,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": -40.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "0982203d-579f-4c3c-8b7a-c5f1c4a7ddd6",
@@ -711,7 +715,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "8bfc261a-6c67-4bec-b5b5-71407e086ec9",
@@ -729,7 +737,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.05,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "7a5a7439-15c6-4fae-ba64-788bb905af22",
@@ -747,7 +759,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.05,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "4435898e-a6cc-4f51-ab2a-805d0cf1a44a",
@@ -765,7 +781,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.05,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "ba94a262-bc0a-4484-9bbd-a4be7a2ec3e7",
@@ -783,7 +803,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 40.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "c2006c91-f8f7-4bda-ae38-e0ca5af5c737",
@@ -801,7 +825,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.3,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 40.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "5b5d11f8-a2b0-4e6e-80c3-2437cc0accae",
@@ -819,7 +847,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.001,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "1c2bab01-941b-4515-a6a4-5845aaa95696",
@@ -837,7 +869,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 20.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "077a4a94-6296-4a83-a6c4-f215f7efd1df",
@@ -855,7 +891,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.05,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 20.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "b422bcf8-b553-4b09-b2be-e92ab2f80e9a",
@@ -873,7 +913,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.1,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 20.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "40bd6a85-5695-409c-9d6c-ae1babde416a",
@@ -891,7 +935,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "e6b284b9-456a-4444-b5fc-7c33bf5a6945",
@@ -909,7 +957,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.15,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "41850766-d4a8-4255-be75-0d24af7280b0",
@@ -927,7 +979,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "5b3a2200-4b1d-4b08-9e67-88e3c62728ae",
@@ -945,7 +1001,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.001,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "ac0185ec-c252-4958-b4cb-b295e91fc809",
@@ -963,7 +1023,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.001,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "8c95c978-9e47-46ec-88e3-a0662c13d76a",
@@ -981,7 +1045,11 @@
       "filterModifier": 0,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.15,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 20.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "81e1a10a-c7bd-401f-92e1-284115dcd6e1",
@@ -999,7 +1067,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "3bcde69d-3e3a-4f78-b2cb-8189b349e4d2",
@@ -1017,7 +1089,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.3,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": 0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "6429e3d3-c813-4dfc-bc68-c95b54123722",
@@ -1035,7 +1111,11 @@
       "filterModifier": 30,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.2,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": -40.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "30545178-b09e-495d-a8b8-c6267ce2b495",
@@ -1053,7 +1133,11 @@
       "filterModifier": 40,
       "throttleLerpSpeed": 6.5,
       "throttleMinimum": 0.3,
-      "tags": "flightReady weaponMountUsable miningMount"
+      "tags": "flightReady weaponMountUsable miningMount",
+      "optimalWindowRateModifier": -40.0,
+      "shatterDamageModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     }
   ],
   "miningModules": [
@@ -1069,7 +1153,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "fb3be543-707b-4582-a25b-c118325fc024",
@@ -1081,9 +1168,12 @@
       "powerMultiplier": 0.85,
       "resistanceModifier": 0,
       "optimalWindowModifier": 0,
-      "filterModifier": 20,
+      "filterModifier": 20.0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "e2647306-e5d7-452a-8af6-d7141b540a6b",
@@ -1095,9 +1185,12 @@
       "powerMultiplier": 0.9,
       "resistanceModifier": 0,
       "optimalWindowModifier": 0,
-      "filterModifier": 23,
+      "filterModifier": 23.0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "6ebc1ebe-3058-4d41-b45b-6022f322d623",
@@ -1109,9 +1202,12 @@
       "powerMultiplier": 0.95,
       "resistanceModifier": 0,
       "optimalWindowModifier": 0,
-      "filterModifier": 24,
+      "filterModifier": 24.0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "bb54a97f-bdfb-4772-91a1-7273d88bec19",
@@ -1122,10 +1218,13 @@
       "grade": 1,
       "powerMultiplier": 0.9,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 37,
+      "optimalWindowModifier": 37.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "91417d7d-a6ad-4ce2-9d57-1ae15a7486f9",
@@ -1136,10 +1235,13 @@
       "grade": 1,
       "powerMultiplier": 0.95,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 40,
+      "optimalWindowModifier": 40.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "e8864c48-6cd1-49e8-95ba-91912e321f35",
@@ -1150,10 +1252,13 @@
       "grade": 1,
       "powerMultiplier": 0.85,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 30,
+      "optimalWindowModifier": 30.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "a69721a2-06e7-4fb3-93b4-c94e4faa6820",
@@ -1167,7 +1272,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "44b6d85a-ad86-479b-8cd9-5b3d9ab9eddc",
@@ -1178,10 +1286,13 @@
       "grade": 1,
       "powerMultiplier": 1.15,
       "resistanceModifier": 0,
-      "optimalWindowModifier": -10,
+      "optimalWindowModifier": -10.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "369d2b1b-d42e-41b4-aff4-74de9712ab68",
@@ -1192,10 +1303,13 @@
       "grade": 1,
       "powerMultiplier": 1.2,
       "resistanceModifier": 0,
-      "optimalWindowModifier": -3,
+      "optimalWindowModifier": -3.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "2ceb0de9-105b-434e-a152-8af1fd1660d0",
@@ -1206,10 +1320,13 @@
       "grade": 1,
       "powerMultiplier": 1.25,
       "resistanceModifier": 0,
-      "optimalWindowModifier": -1,
+      "optimalWindowModifier": -1.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "c9944e4b-d911-4f92-9840-1a078659b123",
@@ -1220,10 +1337,13 @@
       "grade": 1,
       "powerMultiplier": 1,
       "resistanceModifier": 0,
-      "optimalWindowModifier": -3,
+      "optimalWindowModifier": -3.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 35.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "54f4471f-592d-49c1-a12f-fb24c4771ab2",
@@ -1234,10 +1354,13 @@
       "grade": 1,
       "powerMultiplier": 1,
       "resistanceModifier": 0,
-      "optimalWindowModifier": -1,
+      "optimalWindowModifier": -1.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 45.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "d1b1792f-21bc-456f-ae53-20f301920a55",
@@ -1248,10 +1371,13 @@
       "grade": 1,
       "powerMultiplier": 1,
       "resistanceModifier": 0,
-      "optimalWindowModifier": -10,
+      "optimalWindowModifier": -10.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 30.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "586a6f24-c94f-4cfc-9370-0df8a5ed3fe2",
@@ -1265,7 +1391,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": -20.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "c60c2615-ec40-491b-9d60-adddf88782f0",
@@ -1279,7 +1408,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": -15.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "e40337f2-7f52-4160-95eb-0e96752bc3c2",
@@ -1293,7 +1425,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": -5.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "37d62503-f13e-4f41-8ba1-7a3a692dd79f",
@@ -1304,10 +1439,13 @@
       "grade": 1,
       "powerMultiplier": 0.85,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 15,
-      "filterModifier": 5,
+      "optimalWindowModifier": 15.0,
+      "filterModifier": 5.0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "79a47fc7-4950-41a8-b58d-aa3a6b7f686e",
@@ -1318,10 +1456,13 @@
       "grade": 1,
       "powerMultiplier": 0.9,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 22,
+      "optimalWindowModifier": 22.0,
       "filterModifier": 5.75,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "a0595561-6252-4340-bd02-c9a748e2fe7b",
@@ -1332,10 +1473,13 @@
       "grade": 1,
       "powerMultiplier": 0.95,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 25,
-      "filterModifier": 6,
+      "optimalWindowModifier": 25.0,
+      "filterModifier": 6.0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "18a62ae8-e1aa-453f-8631-df928a71abda",
@@ -1349,7 +1493,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": -30
+      "shatterDamageModifier": -30.0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "a6e3aeb0-95df-4f63-9ca1-e8ad5df1a783",
@@ -1360,10 +1507,13 @@
       "grade": 1,
       "powerMultiplier": 1,
       "resistanceModifier": 0,
-      "optimalWindowModifier": 30,
+      "optimalWindowModifier": 30.0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "6c072263-8f32-4ca1-b64b-37d820b0786f",
@@ -1377,7 +1527,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 0
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": -60.0
     },
     {
       "id": "a133320c-1cd0-4622-99dd-715924d6f928",
@@ -1390,8 +1543,11 @@
       "resistanceModifier": -15.5,
       "optimalWindowModifier": 0,
       "filterModifier": 0,
-      "instabilityModifier": -20,
-      "shatterDamageModifier": 0
+      "instabilityModifier": -20.0,
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 60.0
     },
     {
       "id": "688d8f8b-b3ca-4f5c-acc5-f71dfaf2f5bd",
@@ -1404,8 +1560,11 @@
       "resistanceModifier": 0,
       "optimalWindowModifier": 0,
       "filterModifier": 0,
-      "instabilityModifier": -10,
-      "shatterDamageModifier": 0
+      "instabilityModifier": -10.0,
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": -80.0
     },
     {
       "id": "4af4857b-b564-4448-afbc-820ff288c0af",
@@ -1419,7 +1578,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": -10
+      "shatterDamageModifier": -10.0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "1bb6ee6d-3930-4c03-b6c6-38aad3a4703b",
@@ -1432,8 +1594,11 @@
       "resistanceModifier": 0,
       "optimalWindowModifier": 0,
       "filterModifier": 0,
-      "instabilityModifier": -10,
-      "shatterDamageModifier": -10
+      "instabilityModifier": -10.0,
+      "shatterDamageModifier": -10.0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "46643b07-bb39-4ac1-83e4-d428f0c01a75",
@@ -1446,8 +1611,11 @@
       "resistanceModifier": -15.5,
       "optimalWindowModifier": 0,
       "filterModifier": 0,
-      "instabilityModifier": 10,
-      "shatterDamageModifier": 0
+      "instabilityModifier": 10.0,
+      "shatterDamageModifier": 0,
+      "optimalWindowRateModifier": 0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": 0
     },
     {
       "id": "47ba04b0-010b-47cd-9f7d-209e2ec190b9",
@@ -1461,7 +1629,10 @@
       "optimalWindowModifier": 0,
       "filterModifier": 0,
       "instabilityModifier": 0,
-      "shatterDamageModifier": 40
+      "shatterDamageModifier": 40.0,
+      "optimalWindowRateModifier": 60.0,
+      "clusterFactorModifier": 0,
+      "catastrophicChargeWindowRateModifier": -60.0
     }
   ],
   "miningGadgets": [

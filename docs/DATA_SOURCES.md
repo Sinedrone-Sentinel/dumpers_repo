@@ -27,7 +27,7 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 |------|-------------|--------|
 | `game-blueprint-missions.json` | Mission → blueprint reward mappings | `crafting/blueprintrewards/` |
 | `game-blueprints.json` | Blueprint definitions with crafting recipes (**app catalog**) | `crafting/blueprints/` |
-| `game-mining.json` | Mineable element stats, **RS base signatures** (`oreSignatures`), mining lasers | `mining/mineableelements/`, `entities/mineable/mineablerock_*`, `entities/scitem/ships/weapons/` |
+| `game-mining.json` | Mineable element stats, **RS base signatures** (`oreSignatures`), mining lasers, **modules**, **gadgets** | `mining/mineableelements/`, `entities/mineable/mineablerock_*`, `entities/scitem/ships/weapons/`, `entities/scitem/ships/utility/mining/miningarm/`, `entities/scitem/weapons/devices/` |
 | `game-mining-locations.json` | Ore/location compendium, `locationAliases` (spawnKey → displayName/guideName), mineable details | Game localization (`*_desc` keys) + compendium + HPP audit |
 | `game-mining-spawns.json` | Per-location spawn weights, cluster RS/chance profiles; each location includes `spawnKey`, `displayName`, `guideName` | `harvestable/providerpresets/`, `harvestable/clusteringpresets/`, `mining/rockcompositionpresets/` |
 | `game-components.json` | Ship components (coolers, shields, etc.) | `entities/scitem/ships/` |

@@ -84,27 +84,40 @@ export interface CombinedModuleModifiers {
   powerChangeSum: number
   resistanceModifier: number
   optimalWindowModifier: number
+  optimalWindowRateModifier: number
   filterModifier: number
   instabilityModifier: number
   shatterDamageModifier: number
+  clusterFactorModifier: number
+  catastrophicChargeWindowRateModifier: number
 }
 
 const NEUTRAL_MODIFIERS: CombinedModuleModifiers = {
   powerChangeSum: 0,
   resistanceModifier: 0,
   optimalWindowModifier: 0,
+  optimalWindowRateModifier: 0,
   filterModifier: 0,
   instabilityModifier: 0,
   shatterDamageModifier: 0,
+  clusterFactorModifier: 0,
+  catastrophicChargeWindowRateModifier: 0,
+}
+
+function addend(value: number | undefined): number {
+  return Number.isFinite(value) ? (value as number) : 0
 }
 
 function addModuleToModifiers(result: CombinedModuleModifiers, mod: MiningModule): void {
-  result.powerChangeSum += mod.powerMultiplier - 1
-  result.resistanceModifier += mod.resistanceModifier
-  result.optimalWindowModifier += mod.optimalWindowModifier
-  result.filterModifier += mod.filterModifier
-  result.instabilityModifier += mod.instabilityModifier
-  result.shatterDamageModifier += mod.shatterDamageModifier
+  result.powerChangeSum += addend(mod.powerMultiplier) - 1
+  result.resistanceModifier += addend(mod.resistanceModifier)
+  result.optimalWindowModifier += addend(mod.optimalWindowModifier)
+  result.optimalWindowRateModifier += addend(mod.optimalWindowRateModifier)
+  result.filterModifier += addend(mod.filterModifier)
+  result.instabilityModifier += addend(mod.instabilityModifier)
+  result.shatterDamageModifier += addend(mod.shatterDamageModifier)
+  result.clusterFactorModifier += addend(mod.clusterFactorModifier)
+  result.catastrophicChargeWindowRateModifier += addend(mod.catastrophicChargeWindowRateModifier)
 }
 
 /**

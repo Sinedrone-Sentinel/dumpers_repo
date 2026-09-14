@@ -52,6 +52,10 @@ const STAT_COPY: Record<string, { title: string; hint: string }> = {
     title: 'Charge window',
     hint: 'Wider window = easier to stay in the green fracture band.',
   },
+  'window-rate': {
+    title: 'Charge window rate',
+    hint: 'How fast the green fracture band fills. Faster rate makes it easier to land a clean crack.',
+  },
   filter: {
     title: 'Inert filter',
     hint: 'How aggressively this head ignores inert material.',
@@ -63,6 +67,14 @@ const STAT_COPY: Record<string, { title: string; hint: string }> = {
   shatter: {
     title: 'Shatter damage',
     hint: 'Extra yield lost if the rock cracks while overcharged. Negative reduces shatter; positive punishes sloppy fractures.',
+  },
+  cluster: {
+    title: 'Cluster factor',
+    hint: 'How the rock splits into child rocks when it fractures. Shown for planning — not used in Power required.',
+  },
+  'catastrophic-rate': {
+    title: 'Overcharge rate',
+    hint: 'How fast the red overcharge band fills. Negative is safer (slower to blow). Shown for planning — not used in Power required.',
   },
   'craft-power': {
     title: 'Crafted head power',
@@ -78,9 +90,12 @@ const EMPTY_MODULE_LINES: ModifierStatLine[] = [
   { key: 'power', label: 'Laser power', value: '0%', affectsCracking: true },
   { key: 'resistance', label: 'Resistance', value: '0%', affectsCracking: true },
   { key: 'window', label: 'Optimal charge window', value: '0%', affectsCracking: false },
+  { key: 'window-rate', label: 'Charge window rate', value: '0%', affectsCracking: false },
   { key: 'filter', label: 'Inert filter', value: '0%', affectsCracking: false },
   { key: 'instability', label: 'Laser instability', value: '0%', affectsCracking: true },
   { key: 'shatter', label: 'Shatter damage', value: '0%', affectsCracking: false },
+  { key: 'cluster', label: 'Cluster factor', value: '0%', affectsCracking: false },
+  { key: 'catastrophic-rate', label: 'Overcharge rate', value: '0%', affectsCracking: false },
 ]
 
 const SLOT_GRID_COLS: Record<number, string> = {

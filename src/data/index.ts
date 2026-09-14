@@ -309,7 +309,13 @@ export interface MiningLaser {
   instabilityModifier: number
   resistanceModifier: number
   optimalWindowModifier: number
+  /** How fast the optimal (green) charge window fills. */
+  optimalWindowRateModifier: number
   filterModifier: number
+  shatterDamageModifier: number
+  clusterFactorModifier: number
+  /** How fast the overcharge / catastrophic band fills. */
+  catastrophicChargeWindowRateModifier: number
   throttleLerpSpeed: number
   throttleMinimum: number
   tags: string
@@ -329,9 +335,14 @@ export interface MiningModule {
   /** Additive % applied to laser resistance modifier. */
   resistanceModifier: number
   optimalWindowModifier: number
+  /** How fast the optimal (green) charge window fills. */
+  optimalWindowRateModifier: number
   filterModifier: number
   instabilityModifier: number
   shatterDamageModifier: number
+  clusterFactorModifier: number
+  /** How fast the overcharge / catastrophic band fills. */
+  catastrophicChargeWindowRateModifier: number
 }
 
 export interface MiningGadget {

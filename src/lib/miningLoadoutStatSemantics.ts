@@ -124,11 +124,14 @@ export function statSentiment(key: string, value: string): StatSentiment {
     case 'resistance':
       return num < 0 ? 'good' : 'bad'
     case 'window':
+    case 'window-rate':
     case 'filter':
+    case 'cluster':
       return num > 0 ? 'good' : 'bad'
     case 'instability':
       return num < 0 ? 'good' : 'bad'
     case 'shatter':
+    case 'catastrophic-rate':
       return num < 0 ? 'good' : 'bad'
     case 'craft-power':
     case 'module-power':

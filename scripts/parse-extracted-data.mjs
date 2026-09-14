@@ -4003,14 +4003,21 @@ function countMiningModulePorts(itemPortParams) {
   ).length
 }
 
+function miningModifierValue(field) {
+  return field?.value != null ? field.value : 0
+}
+
 function extractMiningModuleModifiers(components) {
   const stats = {
     powerMultiplier: 1,
     resistanceModifier: 0,
     optimalWindowModifier: 0,
+    optimalWindowRateModifier: 0,
     filterModifier: 0,
     instabilityModifier: 0,
     shatterDamageModifier: 0,
+    clusterFactorModifier: 0,
+    catastrophicChargeWindowRateModifier: 0,
   }
 
   const modifierComp = components?.find(
@@ -4028,18 +4035,15 @@ function extractMiningModuleModifiers(components) {
     }
     if (mod._Type_ === 'ItemMiningModifierParams' && mod.MiningLaserModifier) {
       const ml = mod.MiningLaserModifier
-      if (ml.resistanceModifier?.value != null) {
-        stats.resistanceModifier += ml.resistanceModifier.value
-      }
-      if (ml.optimalChargeWindowSizeModifier?.value != null) {
-        stats.optimalWindowModifier += ml.optimalChargeWindowSizeModifier.value
-      }
-      if (ml.laserInstability?.value != null) {
-        stats.instabilityModifier += ml.laserInstability.value
-      }
-      if (ml.shatterdamageModifier?.value != null) {
-        stats.shatterDamageModifier += ml.shatterdamageModifier.value
-      }
+      stats.resistanceModifier += miningModifierValue(ml.resistanceModifier)
+      stats.optimalWindowModifier += miningModifierValue(ml.optimalChargeWindowSizeModifier)
+      stats.optimalWindowRateModifier += miningModifierValue(ml.optimalChargeWindowRateModifier)
+      stats.instabilityModifier += miningModifierValue(ml.laserInstability)
+      stats.shatterDamageModifier += miningModifierValue(ml.shatterdamageModifier)
+      stats.clusterFactorModifier += miningModifierValue(ml.clusterFactorModifier)
+      stats.catastrophicChargeWindowRateModifier += miningModifierValue(
+        ml.catastrophicChargeWindowRateModifier
+      )
     }
     if (mod._Type_ === 'MiningFilterItemModifierParams') {
       const filterVal = mod.filterParams?.filterModifier?.value
@@ -4282,7 +4286,11 @@ function parseMiningLasers(localization = {}) {
       instabilityModifier: miningParams?.miningLaserModifiers?.laserInstability?.value || 0,
       resistanceModifier: miningParams?.miningLaserModifiers?.resistanceModifier?.value || 0,
       optimalWindowModifier: miningParams?.miningLaserModifiers?.optimalChargeWindowSizeModifier?.value || 0,
+      optimalWindowRateModifier: miningParams?.miningLaserModifiers?.optimalChargeWindowRateModifier?.value || 0,
       filterModifier: miningParams?.filterParams?.filterModifier?.value || 0,
+      shatterDamageModifier: miningParams?.miningLaserModifiers?.shatterdamageModifier?.value || 0,
+      clusterFactorModifier: miningParams?.miningLaserModifiers?.clusterFactorModifier?.value || 0,
+      catastrophicChargeWindowRateModifier: miningParams?.miningLaserModifiers?.catastrophicChargeWindowRateModifier?.value || 0,
       throttleLerpSpeed: miningParams?.throttleLerpSpeed || 0,
       throttleMinimum: miningParams?.throttleMinimum || 0,
       tags: attachParams?.AttachDef?.Tags || ''
