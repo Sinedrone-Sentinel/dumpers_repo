@@ -220,6 +220,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 152 | `187_relink_acquired_blueprint_ids.sql` | Remap leftover acquired / target-list IDs (`_scitem` suffix, unique `bp_` Dominance-2). Later patches: `npm run relink-acquired-blueprint-ids` |
 | 153 | `188_drop_rsi_bio_verify.sql` | Drop bio-code verify (`rsi_verify_challenges` + challenge RPCs). Member verify is Citizen iD only |
 | 154 | `189_mining_advisor_rate_limit.sql` | Smart Cracker advisor: per-member hourly Edge rate buckets + `mining_advisor_try_consume` (`service_role` only). No API keys stored |
+| 155 | `190_mining_advisor_saved_key.sql` | Optional encrypted Advisor key (`mining_advisor_secrets`). Client may only ask/delete own row; Edge writes ciphertext |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
 
@@ -308,7 +309,7 @@ npx supabase functions deploy mining-loadout-advisor
 | `link-citizenid` | Signed-in member starts Citizen iD OAuth (PKCE state stored server-side) |
 | `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
-| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste their own Gemini key; site holds no LLM secret. Apply migration **189** first |
+| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key or use one saved encrypted on their profile. Apply migrations **189–190** first |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
@@ -316,9 +317,10 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 
 ### Edge Function secrets
 
-**Smart Cracker Advisor:** no site Gemini/OpenAI secret. Members paste their own key in the Advisor panel (held in memory for that visit only — never written to storage or the database). Apply migration **189**, then:
+**Smart Cracker Advisor:** no site Gemini/OpenAI secret. Members paste a key each visit, or optionally save an encrypted copy on their profile. Set Edge secret `MINING_ADVISOR_WRAP_KEY` (32-byte hex or base64) so Save to profile works — paste-each-visit still works without it. Apply migrations **189–190**, then:
 
 ```bash
+npx supabase secrets set MINING_ADVISOR_WRAP_KEY=YOUR_32_BYTE_HEX
 npm run copy-mining-advisor-catalog
 npx supabase functions deploy mining-loadout-advisor
 ```

@@ -3,10 +3,13 @@ import { createPortal } from 'react-dom'
 import { setAnalyticsSubTool } from '../../lib/analytics'
 import {
   askMiningAdvisor,
+  deleteMiningAdvisorSavedKey,
   GEMINI_STUDIO_KEY_URL,
   MINING_ADVISOR_KEY_STORAGE,
   MINING_ADVISOR_THREAD_STORAGE,
   MINING_ADVISOR_UI_STORAGE,
+  miningAdvisorHasSavedKey,
+  saveMiningAdvisorKey,
   type AdvisorChatMessage,
   type AdvisorHeadSession,
   type AdvisorScanPayload,
@@ -88,6 +91,8 @@ export default function MiningAdvisorChat({
   const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null)
 
   const [apiKey, setApiKey] = useState('')
+  const [hasSavedKey, setHasSavedKey] = useState(false)
+  const [keyBusy, setKeyBusy] = useState(false)
   const [messages, setMessages] = useState<AdvisorChatMessage[]>(readThread)
   const [ui, setUi] = useState<AdvisorUiState>(readUi)
   const [draft, setDraft] = useState('')
@@ -121,6 +126,7 @@ export default function MiningAdvisorChat({
 
   useEffect(() => {
     forgetStoredKey()
+    void miningAdvisorHasSavedKey().then(setHasSavedKey)
   }, [])
 
   useEffect(() => {
@@ -156,7 +162,8 @@ export default function MiningAdvisorChat({
     }
   }, [])
 
-  const hasKey = apiKey.trim().length >= 20
+  const hasPastedKey = apiKey.trim().length >= 20
+  const canAsk = hasSavedKey || hasPastedKey
   const placeholder = oreName
     ? `Ask for a ${oreName} loadout, or turn on Use scanned info for this rock.`
     : 'Ask for a Quantainium loadout, or turn on Use scanned info for this rock.'
@@ -174,14 +181,15 @@ export default function MiningAdvisorChat({
 
   const sendQuestion = async () => {
     const question = draft.trim()
-    if (!question || busy || !hasKey) return
+    if (!question || busy || !canAsk) return
     setDraft('')
     setError(null)
     setMessages((prev) => [...prev, { role: 'user', text: question }])
     setBusy(true)
     const history = messages.slice(-8)
     const result = await askMiningAdvisor({
-      apiKey: apiKey.trim(),
+      apiKey: apiKey.trim() || undefined,
+      useStoredKey: hasSavedKey && !apiKey.trim(),
       question,
       messages: history,
       useScannedInfo: useScannedInfo && rockReady,
@@ -271,31 +279,79 @@ export default function MiningAdvisorChat({
             </span>
           </label>
 
-          <label className="block space-y-1">
-            <span className="site-label">Gemini API key</span>
-            <input
-              type="password"
-              autoComplete="off"
-              value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
-              className="site-input w-full px-2 py-1.5 text-xs"
-              placeholder="Paste your AI Studio key"
-            />
-          </label>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <a
-              href={GEMINI_STUDIO_KEY_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[11px] text-sky-400 hover:text-sky-300"
-            >
-              Get a free key
-            </a>
-          </div>
-          <p className="site-hint">
-            Paste each visit — we do not save your key. Free-tier chats may be used by Google to
-            improve their products. Limited to 20 questions per hour on this site.
-          </p>
+          {hasSavedKey ? (
+            <div className="space-y-1.5">
+              <p className="text-[11px] text-slate-300">Using the Gemini access saved on your profile.</p>
+              <button
+                type="button"
+                className="site-btn-ghost !px-2 !py-1 text-[11px]"
+                disabled={keyBusy}
+                onClick={() => {
+                  setKeyBusy(true)
+                  setError(null)
+                  void deleteMiningAdvisorSavedKey().then((result) => {
+                    setKeyBusy(false)
+                    if (!result.ok) {
+                      setError(result.error)
+                      return
+                    }
+                    setHasSavedKey(false)
+                  })
+                }}
+              >
+                Remove saved key
+              </button>
+            </div>
+          ) : (
+            <>
+              <label className="block space-y-1">
+                <span className="site-label">Gemini API key</span>
+                <input
+                  type="password"
+                  autoComplete="off"
+                  value={apiKey}
+                  onChange={(event) => setApiKey(event.target.value)}
+                  className="site-input w-full px-2 py-1.5 text-xs"
+                  placeholder="Paste your AI Studio key"
+                />
+              </label>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
+                  disabled={!hasPastedKey || keyBusy}
+                  onClick={() => {
+                    setKeyBusy(true)
+                    setError(null)
+                    void saveMiningAdvisorKey(apiKey.trim()).then((result) => {
+                      setKeyBusy(false)
+                      if (!result.ok) {
+                        setError(result.error)
+                        return
+                      }
+                      setApiKey('')
+                      setHasSavedKey(true)
+                    })
+                  }}
+                >
+                  Save to my profile
+                </button>
+                <a
+                  href={GEMINI_STUDIO_KEY_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[11px] text-sky-400 hover:text-sky-300"
+                >
+                  Get a free key
+                </a>
+              </div>
+              <p className="site-hint">
+                Paste each visit, or save an encrypted copy on your profile. Free-tier chats may be
+                used by Google to improve their products. Limited to 20 questions per hour on this
+                site.
+              </p>
+            </>
+          )}
         </div>
 
         <div ref={listRef} className="flex-1 min-h-0 overflow-y-auto px-2.5 py-2 space-y-2">
@@ -325,8 +381,8 @@ export default function MiningAdvisorChat({
           <textarea
             className="site-textarea w-full min-h-[4.5rem] text-xs"
             value={draft}
-            disabled={!hasKey || busy}
-            placeholder={hasKey ? placeholder : 'Add your Gemini key to use Advisor.'}
+            disabled={!canAsk || busy}
+            placeholder={canAsk ? placeholder : 'Add your Gemini key to use Advisor.'}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && !event.shiftKey) {
@@ -339,7 +395,7 @@ export default function MiningAdvisorChat({
             <button
               type="button"
               className="site-btn-primary !px-2.5 !py-1 text-xs disabled:opacity-40"
-              disabled={!hasKey || busy || !draft.trim()}
+              disabled={!canAsk || busy || !draft.trim()}
               onClick={() => void sendQuestion()}
             >
               Send

@@ -32,7 +32,8 @@ export interface AdvisorScanPayload {
 }
 
 export interface AdvisorAskInput {
-  apiKey: string
+  apiKey?: string
+  useStoredKey?: boolean
   question: string
   messages: AdvisorChatMessage[]
   useScannedInfo: boolean
@@ -99,10 +100,49 @@ export function buildAdvisorCrackSummary(
   return parts.join(' ')
 }
 
+async function advisorInvokeError(error: { message?: string; context?: Response }): Promise<string> {
+  const ctx = error.context
+  if (ctx && typeof ctx.json === 'function') {
+    try {
+      const payload = (await ctx.json()) as { error?: string }
+      if (payload?.error) return payload.error
+    } catch {
+      /* fall through */
+    }
+  }
+  return error.message || 'Advisor is unavailable right now.'
+}
+
+export async function miningAdvisorHasSavedKey(): Promise<boolean> {
+  const { data, error } = await supabase.rpc('mining_advisor_has_saved_key')
+  if (error) return false
+  return data === true
+}
+
+export async function saveMiningAdvisorKey(apiKey: string): Promise<AdvisorAskResult> {
+  const { data, error } = await supabase.functions.invoke('mining-loadout-advisor', {
+    body: { action: 'save-key', apiKey },
+  })
+  if (error) return { ok: false, error: await advisorInvokeError(error) }
+  if (!(data as { saved?: boolean } | null)?.saved) {
+    return { ok: false, error: 'Could not save your key. Try again.' }
+  }
+  return { ok: true, advice: '' }
+}
+
+export async function deleteMiningAdvisorSavedKey(): Promise<AdvisorAskResult> {
+  const { error } = await supabase.rpc('mining_advisor_delete_saved_key')
+  if (error) return { ok: false, error: error.message || 'Could not remove the saved key.' }
+  return { ok: true, advice: '' }
+}
+
 export async function askMiningAdvisor(input: AdvisorAskInput): Promise<AdvisorAskResult> {
+  const pasted = input.apiKey?.trim() ?? ''
   const { data, error } = await supabase.functions.invoke('mining-loadout-advisor', {
     body: {
-      apiKey: input.apiKey,
+      action: 'ask',
+      apiKey: pasted || undefined,
+      useStoredKey: Boolean(input.useStoredKey) && !pasted,
       question: input.question,
       messages: input.messages.slice(-8),
       useScannedInfo: input.useScannedInfo,
@@ -114,18 +154,7 @@ export async function askMiningAdvisor(input: AdvisorAskInput): Promise<AdvisorA
     },
   })
 
-  if (error) {
-    const ctx = (error as { context?: Response }).context
-    if (ctx && typeof ctx.json === 'function') {
-      try {
-        const payload = (await ctx.json()) as { error?: string }
-        if (payload?.error) return { ok: false, error: payload.error }
-      } catch {
-        /* fall through */
-      }
-    }
-    return { ok: false, error: error.message || 'Advisor is unavailable right now.' }
-  }
+  if (error) return { ok: false, error: await advisorInvokeError(error) }
 
   const advice = (data as { advice?: string } | null)?.advice?.trim()
   if (!advice) return { ok: false, error: 'Advisor returned an empty answer.' }
