@@ -24,6 +24,7 @@ export const sitePage = {
 export const siteSurface = {
   glass: 'site-glass',
   surface: 'site-surface',
+  surfaceSolid: 'site-surface-solid',
   card: 'site-card',
   cardAcquired: 'site-card site-card-acquired',
   panel: 'site-panel',

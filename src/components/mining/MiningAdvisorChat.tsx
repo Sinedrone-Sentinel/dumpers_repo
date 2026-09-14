@@ -6,6 +6,7 @@ import {
   deleteMiningAdvisorSavedKey,
   GEMINI_STUDIO_KEY_URL,
   MINING_ADVISOR_KEY_STORAGE,
+  MINING_ADVISOR_SAVED_KEY_EVENT,
   MINING_ADVISOR_THREAD_STORAGE,
   MINING_ADVISOR_UI_STORAGE,
   miningAdvisorHasSavedKey,
@@ -129,7 +130,15 @@ export default function MiningAdvisorChat({
 
   useEffect(() => {
     forgetStoredKey()
-    void miningAdvisorHasSavedKey().then(setHasSavedKey)
+    const sync = () => {
+      void miningAdvisorHasSavedKey().then((saved) => {
+        setHasSavedKey(saved)
+        if (!saved) setSessionKey('')
+      })
+    }
+    sync()
+    window.addEventListener(MINING_ADVISOR_SAVED_KEY_EVENT, sync)
+    return () => window.removeEventListener(MINING_ADVISOR_SAVED_KEY_EVENT, sync)
   }, [])
 
   useEffect(() => {
@@ -222,7 +231,7 @@ export default function MiningAdvisorChat({
 
   const overlay = ui.minimized || !chrome?.overlaySlot ? null : (
     <section
-        className="site-surface absolute flex flex-col shadow-lg shadow-black/40"
+        className="site-surface-solid absolute flex flex-col"
         style={panelStyle}
         aria-labelledby={titleId}
       >
