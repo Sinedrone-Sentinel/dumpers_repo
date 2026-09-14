@@ -548,6 +548,14 @@ check(
   'advisor catalog ores use display names',
 )
 check(advisorCatalog.gadgets.length >= 4, 'advisor catalog includes gadgets')
+const lancetMh1 = advisorCatalog.lasers.find((l) => l.displayName === 'Lancet MH1 Mining Laser')
+check(lancetMh1?.slots === 1, 'Lancet MH1 catalog has one module port')
+const helix2 = advisorCatalog.lasers.find((l) => l.displayName === 'Helix II Mining Laser')
+check(helix2?.slots === 3, 'Helix II catalog has three module ports')
+check(
+  advisorCatalog.vessels.some((v) => v.displayName === 'Prospector' && v.laserHardpoints === 1 && v.laserSize === 1),
+  'catalog includes Prospector hardpoints',
+)
 
 check(advisorCrypto.isAdvisorLockPhrase('short') === false, 'lock phrase min length')
 check(advisorCrypto.isAdvisorLockPhrase('long-enough-phrase') === true, 'lock phrase accepted')
