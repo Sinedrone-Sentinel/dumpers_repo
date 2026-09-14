@@ -10,6 +10,7 @@ import {
   MINING_ADVISOR_UI_STORAGE,
   miningAdvisorHasSavedKey,
   saveMiningAdvisorKey,
+  unlockMiningAdvisorKey,
   type AdvisorChatMessage,
   type AdvisorHeadSession,
   type AdvisorScanPayload,
@@ -91,6 +92,8 @@ export default function MiningAdvisorChat({
   const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null)
 
   const [apiKey, setApiKey] = useState('')
+  const [lockPhrase, setLockPhrase] = useState('')
+  const [sessionKey, setSessionKey] = useState('')
   const [hasSavedKey, setHasSavedKey] = useState(false)
   const [keyBusy, setKeyBusy] = useState(false)
   const [messages, setMessages] = useState<AdvisorChatMessage[]>(readThread)
@@ -163,7 +166,8 @@ export default function MiningAdvisorChat({
   }, [])
 
   const hasPastedKey = apiKey.trim().length >= 20
-  const canAsk = hasSavedKey || hasPastedKey
+  const unlocked = sessionKey.length >= 20
+  const canAsk = unlocked || hasPastedKey
   const placeholder = oreName
     ? `Ask for a ${oreName} loadout, or turn on Use scanned info for this rock.`
     : 'Ask for a Quantainium loadout, or turn on Use scanned info for this rock.'
@@ -188,8 +192,7 @@ export default function MiningAdvisorChat({
     setBusy(true)
     const history = messages.slice(-8)
     const result = await askMiningAdvisor({
-      apiKey: apiKey.trim() || undefined,
-      useStoredKey: hasSavedKey && !apiKey.trim(),
+      apiKey: (apiKey.trim() || sessionKey).trim(),
       question,
       messages: history,
       useScannedInfo: useScannedInfo && rockReady,
@@ -279,9 +282,9 @@ export default function MiningAdvisorChat({
             </span>
           </label>
 
-          {hasSavedKey ? (
+          {hasSavedKey && unlocked ? (
             <div className="space-y-1.5">
-              <p className="text-[11px] text-slate-300">Using the Gemini access saved on your profile.</p>
+              <p className="text-[11px] text-slate-300">Saved key unlocked for this visit.</p>
               <button
                 type="button"
                 className="site-btn-ghost !px-2 !py-1 text-[11px]"
@@ -296,11 +299,71 @@ export default function MiningAdvisorChat({
                       return
                     }
                     setHasSavedKey(false)
+                    setSessionKey('')
                   })
                 }}
               >
                 Remove saved key
               </button>
+            </div>
+          ) : hasSavedKey ? (
+            <div className="space-y-2">
+              <label className="block space-y-1">
+                <span className="site-label">Lock phrase</span>
+                <input
+                  type="password"
+                  autoComplete="off"
+                  value={lockPhrase}
+                  onChange={(event) => setLockPhrase(event.target.value)}
+                  className="site-input w-full px-2 py-1.5 text-xs"
+                  placeholder="Phrase you chose when you saved"
+                />
+              </label>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
+                  disabled={lockPhrase.trim().length < 10 || keyBusy}
+                  onClick={() => {
+                    setKeyBusy(true)
+                    setError(null)
+                    void unlockMiningAdvisorKey(lockPhrase).then((result) => {
+                      setKeyBusy(false)
+                      if (!result.ok) {
+                        setError(result.error)
+                        return
+                      }
+                      setSessionKey(result.advice)
+                      setLockPhrase('')
+                    })
+                  }}
+                >
+                  Unlock
+                </button>
+                <button
+                  type="button"
+                  className="site-btn-ghost !px-2 !py-1 text-[11px]"
+                  disabled={keyBusy}
+                  onClick={() => {
+                    setKeyBusy(true)
+                    setError(null)
+                    void deleteMiningAdvisorSavedKey().then((result) => {
+                      setKeyBusy(false)
+                      if (!result.ok) {
+                        setError(result.error)
+                        return
+                      }
+                      setHasSavedKey(false)
+                      setSessionKey('')
+                    })
+                  }}
+                >
+                  Remove saved key
+                </button>
+              </div>
+              <p className="site-hint">
+                Unlock decrypts on this device. We never store the Gemini key in cleartext.
+              </p>
             </div>
           ) : (
             <>
@@ -315,21 +378,35 @@ export default function MiningAdvisorChat({
                   placeholder="Paste your AI Studio key"
                 />
               </label>
+              <label className="block space-y-1">
+                <span className="site-label">Lock phrase (optional save)</span>
+                <input
+                  type="password"
+                  autoComplete="off"
+                  value={lockPhrase}
+                  onChange={(event) => setLockPhrase(event.target.value)}
+                  className="site-input w-full px-2 py-1.5 text-xs"
+                  placeholder="At least 10 characters — not your Gemini key"
+                />
+              </label>
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
-                  disabled={!hasPastedKey || keyBusy}
+                  disabled={!hasPastedKey || lockPhrase.trim().length < 10 || keyBusy}
                   onClick={() => {
+                    const pasted = apiKey.trim()
                     setKeyBusy(true)
                     setError(null)
-                    void saveMiningAdvisorKey(apiKey.trim()).then((result) => {
+                    void saveMiningAdvisorKey(pasted, lockPhrase).then((result) => {
                       setKeyBusy(false)
                       if (!result.ok) {
                         setError(result.error)
                         return
                       }
+                      setSessionKey(pasted)
                       setApiKey('')
+                      setLockPhrase('')
                       setHasSavedKey(true)
                     })
                   }}
@@ -346,9 +423,9 @@ export default function MiningAdvisorChat({
                 </a>
               </div>
               <p className="site-hint">
-                Paste each visit, or save an encrypted copy on your profile. Free-tier chats may be
-                used by Google to improve their products. Limited to 20 questions per hour on this
-                site.
+                Paste each visit, or save a copy encrypted with your lock phrase. Only you can unlock
+                it. Free-tier chats may be used by Google to improve their products. Limited to 20
+                questions per hour on this site.
               </p>
             </>
           )}

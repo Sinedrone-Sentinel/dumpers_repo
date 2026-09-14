@@ -1,3 +1,4 @@
+import { decryptAdvisorSecret, encryptAdvisorSecret, isAdvisorLockPhrase } from './miningAdvisorCrypto'
 import { supabase } from './supabase'
 import { getMiningGadgetByName } from './miningGadgets'
 import type { SmartCrackerResult } from './miningGadgetRecommendations'
@@ -32,8 +33,7 @@ export interface AdvisorScanPayload {
 }
 
 export interface AdvisorAskInput {
-  apiKey?: string
-  useStoredKey?: boolean
+  apiKey: string
   question: string
   messages: AdvisorChatMessage[]
   useScannedInfo: boolean
@@ -119,15 +119,40 @@ export async function miningAdvisorHasSavedKey(): Promise<boolean> {
   return data === true
 }
 
-export async function saveMiningAdvisorKey(apiKey: string): Promise<AdvisorAskResult> {
-  const { data, error } = await supabase.functions.invoke('mining-loadout-advisor', {
-    body: { action: 'save-key', apiKey },
+export async function saveMiningAdvisorKey(apiKey: string, lockPhrase: string): Promise<AdvisorAskResult> {
+  if (!isAdvisorLockPhrase(lockPhrase)) {
+    return { ok: false, error: 'Choose a lock phrase of at least 10 characters.' }
+  }
+  let ciphertext: string
+  try {
+    ciphertext = await encryptAdvisorSecret(apiKey.trim(), lockPhrase)
+  } catch {
+    return { ok: false, error: 'Could not encrypt your key on this device.' }
+  }
+  const { data, error } = await supabase.rpc('mining_advisor_store_own_secret', {
+    p_ciphertext: ciphertext,
   })
-  if (error) return { ok: false, error: await advisorInvokeError(error) }
-  if (!(data as { saved?: boolean } | null)?.saved) {
-    return { ok: false, error: 'Could not save your key. Try again.' }
+  if (error || data !== true) {
+    return { ok: false, error: error?.message || 'Could not save your key. Try again.' }
   }
   return { ok: true, advice: '' }
+}
+
+export async function unlockMiningAdvisorKey(lockPhrase: string): Promise<AdvisorAskResult> {
+  if (!isAdvisorLockPhrase(lockPhrase)) {
+    return { ok: false, error: 'Enter the lock phrase you chose when you saved.' }
+  }
+  const { data, error } = await supabase.rpc('mining_advisor_load_own_secret')
+  if (error || typeof data !== 'string' || !data) {
+    return { ok: false, error: 'No saved key on this profile.' }
+  }
+  try {
+    const plain = (await decryptAdvisorSecret(data, lockPhrase)).trim()
+    if (plain.length < 20) return { ok: false, error: 'That lock phrase did not unlock the saved key.' }
+    return { ok: true, advice: plain }
+  } catch {
+    return { ok: false, error: 'That lock phrase did not unlock the saved key.' }
+  }
 }
 
 export async function deleteMiningAdvisorSavedKey(): Promise<AdvisorAskResult> {
@@ -137,12 +162,10 @@ export async function deleteMiningAdvisorSavedKey(): Promise<AdvisorAskResult> {
 }
 
 export async function askMiningAdvisor(input: AdvisorAskInput): Promise<AdvisorAskResult> {
-  const pasted = input.apiKey?.trim() ?? ''
+  const pasted = input.apiKey.trim()
   const { data, error } = await supabase.functions.invoke('mining-loadout-advisor', {
     body: {
-      action: 'ask',
-      apiKey: pasted || undefined,
-      useStoredKey: Boolean(input.useStoredKey) && !pasted,
+      apiKey: pasted,
       question: input.question,
       messages: input.messages.slice(-8),
       useScannedInfo: input.useScannedInfo,

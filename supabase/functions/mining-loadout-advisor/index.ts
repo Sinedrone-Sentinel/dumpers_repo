@@ -30,9 +30,7 @@ type ScanSession = {
 }
 
 type AdvisorBody = {
-  action?: unknown
   apiKey?: unknown
-  useStoredKey?: unknown
   question?: unknown
   messages?: unknown
   useScannedInfo?: unknown
@@ -81,89 +79,6 @@ function isGeminiKey(value: unknown): value is string {
   if (key.length < 20 || key.length > 200) return false
   if (/\s/.test(key)) return false
   return /^[A-Za-z0-9_\-]+$/.test(key)
-}
-
-function bytesToB64(bytes: Uint8Array): string {
-  let bin = ''
-  for (const b of bytes) bin += String.fromCharCode(b)
-  return btoa(bin)
-}
-
-function b64ToBytes(value: string): Uint8Array {
-  const bin = atob(value)
-  const out = new Uint8Array(bin.length)
-  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i)
-  return out
-}
-
-function wrapKeyBytes(): Uint8Array | null {
-  const raw = (Deno.env.get('MINING_ADVISOR_WRAP_KEY') || '').trim()
-  if (!raw) return null
-  if (/^[0-9a-fA-F]{64}$/.test(raw)) {
-    const out = new Uint8Array(32)
-    for (let i = 0; i < 32; i++) out[i] = parseInt(raw.slice(i * 2, i * 2 + 2), 16)
-    return out
-  }
-  try {
-    const decoded = b64ToBytes(raw)
-    return decoded.length === 32 ? decoded : null
-  } catch {
-    return null
-  }
-}
-
-async function importWrapKey(): Promise<CryptoKey | null> {
-  const bytes = wrapKeyBytes()
-  if (!bytes) return null
-  return crypto.subtle.importKey('raw', bytes, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt'])
-}
-
-async function encryptGeminiKey(plain: string): Promise<string | null> {
-  const key = await importWrapKey()
-  if (!key) return null
-  const iv = crypto.getRandomValues(new Uint8Array(12))
-  const cipher = new Uint8Array(
-    await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(plain)),
-  )
-  return 'v1.' + bytesToB64(iv) + '.' + bytesToB64(cipher)
-}
-
-async function decryptGeminiKey(blob: string): Promise<string | null> {
-  const key = await importWrapKey()
-  if (!key) return null
-  const parts = blob.split('.')
-  if (parts.length !== 3 || parts[0] !== 'v1') return null
-  try {
-    const iv = b64ToBytes(parts[1])
-    const cipher = b64ToBytes(parts[2])
-    const raw = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipher)
-    const text = new TextDecoder().decode(raw).trim()
-    return isGeminiKey(text) ? text : null
-  } catch {
-    return null
-  }
-}
-
-type AdminClient = ReturnType<typeof createClient>
-
-async function loadStoredGeminiKey(admin: AdminClient, userId: string): Promise<string | null> {
-  const { data, error } = await admin
-    .from('mining_advisor_secrets')
-    .select('ciphertext')
-    .eq('user_id', userId)
-    .maybeSingle()
-  if (error || !data?.ciphertext) return null
-  return decryptGeminiKey(String(data.ciphertext))
-}
-
-async function saveStoredGeminiKey(admin: AdminClient, userId: string, apiKey: string): Promise<boolean> {
-  const ciphertext = await encryptGeminiKey(apiKey)
-  if (!ciphertext) return false
-  const { error } = await admin.from('mining_advisor_secrets').upsert(
-    { user_id: userId, ciphertext, updated_at: new Date().toISOString() },
-    { onConflict: 'user_id' },
-  )
-  return !error
 }
 
 function parseMessages(raw: unknown): Array<{ role: ChatRole; text: string }> {
@@ -332,27 +247,6 @@ serve(async (req) => {
       // Client catalog is ignored. Do not mention this to the model.
     }
 
-    const admin = createClient(supabaseUrl, serviceKey, {
-      auth: { autoRefreshToken: false, persistSession: false },
-    })
-    const action = clip(body.action, 20) || 'ask'
-
-    if (action === 'save-key') {
-      if (!isGeminiKey(body.apiKey)) {
-        return json(400, { error: 'Add your Gemini API key to save it.' })
-      }
-      if (!wrapKeyBytes()) {
-        return json(503, { error: 'Saving a key is not configured yet. Paste it each visit for now.' })
-      }
-      const stored = await saveStoredGeminiKey(admin, user.id, body.apiKey.trim())
-      if (!stored) return json(500, { error: 'Could not save your key. Try again.' })
-      return json(200, { saved: true })
-    }
-
-    if (action !== 'ask') {
-      return json(400, { error: 'Unknown Advisor action.' })
-    }
-
     let catalog: Catalog
     try {
       catalog = await loadCatalog()
@@ -360,13 +254,14 @@ serve(async (req) => {
       return json(503, { error: 'Advisor is not deployed yet. Ask a site admin to finish setup.' })
     }
 
-    let apiKey = isGeminiKey(body.apiKey) ? body.apiKey.trim() : ''
-    if (!apiKey && body.useStoredKey === true) {
-      apiKey = (await loadStoredGeminiKey(admin, user.id)) || ''
-    }
-    if (!apiKey) {
+    if (!isGeminiKey(body.apiKey)) {
       return json(400, { error: 'Add your Gemini API key to use Advisor.' })
     }
+    const apiKey = body.apiKey.trim()
+
+    const admin = createClient(supabaseUrl, serviceKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    })
 
     const question = clip(body.question, MAX_QUESTION)
     if (!question) return json(400, { error: 'Ask a mining loadout question.' })
