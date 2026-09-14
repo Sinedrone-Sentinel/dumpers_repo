@@ -950,6 +950,10 @@ export default function RockCalculator({
 function formatGadgetEffect(gadget: {
   resistanceModifier: number
   instabilityModifier: number
+  optimalWindowModifier: number
+  optimalWindowRateModifier: number
+  clusterFactorModifier: number
+  shatterDamageModifier: number
 }): string {
   const parts: string[] = []
   if (gadget.resistanceModifier !== 0) {
@@ -958,7 +962,19 @@ function formatGadgetEffect(gadget: {
   if (gadget.instabilityModifier !== 0) {
     parts.push(`${formatGadgetModifierPercent(gadget.instabilityModifier)} instab`)
   }
-  return parts.join(', ')
+  if (gadget.optimalWindowModifier !== 0) {
+    parts.push(`${formatGadgetModifierPercent(gadget.optimalWindowModifier)} window`)
+  }
+  if (gadget.optimalWindowRateModifier !== 0) {
+    parts.push(`${formatGadgetModifierPercent(gadget.optimalWindowRateModifier)} window rate`)
+  }
+  if (gadget.clusterFactorModifier !== 0) {
+    parts.push(`${formatGadgetModifierPercent(gadget.clusterFactorModifier)} cluster`)
+  }
+  if (gadget.shatterDamageModifier !== 0) {
+    parts.push(`${formatGadgetModifierPercent(gadget.shatterDamageModifier)} shatter`)
+  }
+  return parts.join(', ') || 'no listed modifiers'
 }
 
 interface GadgetSelectProps {

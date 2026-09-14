@@ -107,6 +107,8 @@ const LANCET_S1 = {
 }
 
 const FOCUS_MK3 = 'Mining_Modules_Passive_Focus_MK3'
+const TORRENT_MK2 = 'Mining_Modules_Passive_Torrent_MK2'
+const VAUX_MK1 = 'Mining_Modules_Passive_Vaux_MK1'
 const RIEGER_MK3 = 'Mining_Modules_Passive_Rieger_MK3'
 const SURGE = 'Mining_Modules_Active_Surge'
 
@@ -242,6 +244,11 @@ const surgePortOnly = miningModules.combineModuleModifiers([SURGE, FOCUS_MK3, nu
 assertApprox(surgePortOnly.powerChangeSum, 0.45, 0.01, 'combineModuleModifiers port 0 on → Surge + Focus III +45%')
 const surgePortOff = miningModules.combineModuleModifiers([SURGE, FOCUS_MK3, null], new Set())
 assertApprox(surgePortOff.powerChangeSum, -0.05, 0.01, 'combineModuleModifiers empty set → Surge off, only Focus III')
+
+const torrentVaux = miningModules.combineEquippedModuleModifiers([TORRENT_MK2, VAUX_MK1, null])
+assertApprox(torrentVaux.optimalWindowModifier, -3, 0.01, 'Torrent II + Vaux → −3% window size')
+assertApprox(torrentVaux.optimalWindowRateModifier, 15, 0.01, 'Torrent II + Vaux → +35% −20% = +15% window rate')
+assertApprox(torrentVaux.instabilityModifier, 0, 0.01, 'Torrent II + Vaux → 0 laser instability')
 
 // 2.2 Effective power multiplier (head craft + modules)
 console.log('\n2.2 Effective power multiplier')

@@ -66,6 +66,114 @@ function formatSignedPercent(value: number, decimals = 0): string {
   return `${rounded > 0 ? '+' : ''}${text}%`
 }
 
+type PercentStatKey =
+  | 'resistance'
+  | 'window'
+  | 'window-rate'
+  | 'filter'
+  | 'instability'
+  | 'shatter'
+  | 'cluster'
+  | 'catastrophic-rate'
+
+type PercentStatDef = {
+  key: PercentStatKey
+  label: string
+  laserField?: keyof NonNullable<ReturnType<typeof getMiningLaserByName>>
+  moduleField: keyof CombinedPercentFields
+  affectsCracking: boolean
+}
+
+type CombinedPercentFields = {
+  resistanceModifier: number
+  optimalWindowModifier: number
+  optimalWindowRateModifier: number
+  filterModifier: number
+  instabilityModifier: number
+  shatterDamageModifier: number
+  clusterFactorModifier: number
+  catastrophicChargeWindowRateModifier: number
+}
+
+const PERCENT_STAT_DEFS: PercentStatDef[] = [
+  {
+    key: 'resistance',
+    label: 'Resistance',
+    laserField: 'resistanceModifier',
+    moduleField: 'resistanceModifier',
+    affectsCracking: true,
+  },
+  {
+    key: 'window',
+    label: 'Optimal charge window',
+    laserField: 'optimalWindowModifier',
+    moduleField: 'optimalWindowModifier',
+    affectsCracking: false,
+  },
+  {
+    key: 'window-rate',
+    label: 'Charge window rate',
+    laserField: 'optimalWindowRateModifier',
+    moduleField: 'optimalWindowRateModifier',
+    affectsCracking: false,
+  },
+  {
+    key: 'filter',
+    label: 'Inert filter',
+    laserField: 'filterModifier',
+    moduleField: 'filterModifier',
+    affectsCracking: false,
+  },
+  {
+    key: 'instability',
+    label: 'Laser instability',
+    laserField: 'instabilityModifier',
+    moduleField: 'instabilityModifier',
+    affectsCracking: true,
+  },
+  {
+    key: 'shatter',
+    label: 'Shatter damage',
+    laserField: 'shatterDamageModifier',
+    moduleField: 'shatterDamageModifier',
+    affectsCracking: false,
+  },
+  {
+    key: 'cluster',
+    label: 'Cluster factor',
+    laserField: 'clusterFactorModifier',
+    moduleField: 'clusterFactorModifier',
+    affectsCracking: false,
+  },
+  {
+    key: 'catastrophic-rate',
+    label: 'Overcharge rate',
+    laserField: 'catastrophicChargeWindowRateModifier',
+    moduleField: 'catastrophicChargeWindowRateModifier',
+    affectsCracking: false,
+  },
+]
+
+function fieldValue(record: object | undefined, field: string | undefined): number {
+  if (!record || !field) return 0
+  const value = (record as Record<string, unknown>)[field]
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
+function percentLine(
+  def: PercentStatDef,
+  value: number,
+  activeValue?: string
+): ModifierStatLine {
+  return {
+    key: def.key,
+    label: def.label,
+    value: formatSignedPercent(value),
+    activeValue,
+    affectsCracking: def.affectsCracking,
+  }
+}
+
 function moduleStatLines(mod: MiningModule): ModifierStatLine[] {
   const powerPct = (mod.powerMultiplier - 1) * 100
   return [
@@ -75,36 +183,7 @@ function moduleStatLines(mod: MiningModule): ModifierStatLine[] {
       value: formatSignedPercent(powerPct),
       affectsCracking: true,
     },
-    {
-      key: 'resistance',
-      label: 'Resistance',
-      value: formatSignedPercent(mod.resistanceModifier),
-      affectsCracking: true,
-    },
-    {
-      key: 'window',
-      label: 'Optimal charge window',
-      value: formatSignedPercent(mod.optimalWindowModifier),
-      affectsCracking: false,
-    },
-    {
-      key: 'filter',
-      label: 'Inert filter',
-      value: formatSignedPercent(mod.filterModifier),
-      affectsCracking: false,
-    },
-    {
-      key: 'instability',
-      label: 'Laser instability',
-      value: formatSignedPercent(mod.instabilityModifier),
-      affectsCracking: true,
-    },
-    {
-      key: 'shatter',
-      label: 'Shatter damage',
-      value: formatSignedPercent(mod.shatterDamageModifier),
-      affectsCracking: false,
-    },
+    ...PERCENT_STAT_DEFS.map((def) => percentLine(def, fieldValue(mod, def.moduleField))),
   ]
 }
 
@@ -116,30 +195,9 @@ function stockHeadLines(laser: NonNullable<ReturnType<typeof getMiningLaserByNam
       value: `${laser.laserPower.toLocaleString()} MW`,
       affectsCracking: true,
     },
-    {
-      key: 'resistance',
-      label: 'Resistance',
-      value: formatSignedPercent(laser.resistanceModifier),
-      affectsCracking: true,
-    },
-    {
-      key: 'window',
-      label: 'Optimal charge window',
-      value: formatSignedPercent(laser.optimalWindowModifier),
-      affectsCracking: false,
-    },
-    {
-      key: 'filter',
-      label: 'Inert filter',
-      value: formatSignedPercent(laser.filterModifier),
-      affectsCracking: false,
-    },
-    {
-      key: 'instability',
-      label: 'Laser instability',
-      value: formatSignedPercent(laser.instabilityModifier),
-      affectsCracking: true,
-    },
+    ...PERCENT_STAT_DEFS.map((def) =>
+      percentLine(def, fieldValue(laser, def.laserField))
+    ),
   ]
 }
 
@@ -195,53 +253,19 @@ function effectiveHeadLines(
     })
   }
 
-  const resistanceOf = (mods: typeof passiveMods) =>
-    formatSignedPercent(laser.resistanceModifier + mods.resistanceModifier)
-  const windowOf = (mods: typeof passiveMods) =>
-    formatSignedPercent(laser.optimalWindowModifier + mods.optimalWindowModifier)
-  const filterOf = (mods: typeof passiveMods) =>
-    formatSignedPercent(laser.filterModifier + mods.filterModifier)
-  const instabilityOf = (mods: typeof passiveMods) =>
-    formatSignedPercent(laser.instabilityModifier + mods.instabilityModifier)
-  const shatterOf = (mods: typeof passiveMods) => formatSignedPercent(mods.shatterDamageModifier)
+  const stacked = (mods: CombinedPercentFields, def: PercentStatDef) =>
+    fieldValue(laser, def.laserField) + fieldValue(mods, def.moduleField)
 
-  lines.push(
-    {
-      key: 'resistance',
-      label: 'Resistance',
-      value: resistanceOf(passiveMods),
-      activeValue: activeOverlay(resistanceOf(passiveMods), resistanceOf(activeMods)),
-      affectsCracking: true,
-    },
-    {
-      key: 'window',
-      label: 'Optimal charge window',
-      value: windowOf(passiveMods),
-      activeValue: activeOverlay(windowOf(passiveMods), windowOf(activeMods)),
-      affectsCracking: false,
-    },
-    {
-      key: 'filter',
-      label: 'Inert filter',
-      value: filterOf(passiveMods),
-      activeValue: activeOverlay(filterOf(passiveMods), filterOf(activeMods)),
-      affectsCracking: false,
-    },
-    {
-      key: 'instability',
-      label: 'Laser instability',
-      value: instabilityOf(passiveMods),
-      activeValue: activeOverlay(instabilityOf(passiveMods), instabilityOf(activeMods)),
-      affectsCracking: true,
-    },
-    {
-      key: 'shatter',
-      label: 'Shatter damage',
-      value: shatterOf(passiveMods),
-      activeValue: activeOverlay(shatterOf(passiveMods), shatterOf(activeMods)),
-      affectsCracking: false,
-    }
-  )
+  for (const def of PERCENT_STAT_DEFS) {
+    const passiveDisplay = formatSignedPercent(stacked(passiveMods, def))
+    lines.push(
+      percentLine(
+        def,
+        stacked(passiveMods, def),
+        activeOverlay(passiveDisplay, formatSignedPercent(stacked(activeMods, def)))
+      )
+    )
+  }
 
   return lines
 }
