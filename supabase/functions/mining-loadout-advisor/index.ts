@@ -72,9 +72,10 @@ function clip(value: unknown, max: number): string {
 function isGeminiKey(value: unknown): value is string {
   if (typeof value !== 'string') return false
   const key = value.trim()
-  if (key.length < 20 || key.length > 200) return false
+  if (key.length < 20 || key.length > 512) return false
   if (/\s/.test(key)) return false
-  return /^[A-Za-z0-9_\-]+$/.test(key)
+  // Legacy AIza… keys and 2026 AI Studio auth keys (AQ.…).
+  return /^[A-Za-z0-9_.-]+$/.test(key)
 }
 
 function parseMessages(raw: unknown): Array<{ role: ChatRole; text: string }> {
