@@ -9,7 +9,14 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const GEMINI_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'] as const
+// New AI Studio keys 404 on 2.5 (“no longer available to new users”).
+// Prefer free-tier 3.x Flash-Lite, then Flash, then legacy 2.5 for older keys.
+const GEMINI_MODELS = [
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+  'gemini-3.5-flash',
+  'gemini-2.5-flash',
+] as const
 const MAX_QUESTION = 2000
 const MAX_HISTORY = 8
 const MAX_MSG = 2000
@@ -357,7 +364,6 @@ serve(async (req) => {
       generationConfig: {
         temperature: 0.4,
         maxOutputTokens: MAX_OUTPUT_TOKENS,
-        thinkingConfig: { thinkingBudget: 0 },
       },
     }
     const generated = await generateAdvice(apiKey, payload)
