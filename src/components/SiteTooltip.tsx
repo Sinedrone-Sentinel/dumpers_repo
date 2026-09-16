@@ -10,6 +10,10 @@ interface SiteTooltipProps {
   className?: string
   panelClassName?: string
   children: React.ReactNode
+  /** Open even when a modal has registered (help inside that modal). */
+  ignoreOverlayPause?: boolean
+  /** Click toggles; hover does not open or close. */
+  toggleOnClick?: boolean
 }
 
 const VIEWPORT_PAD = 8
@@ -68,17 +72,27 @@ function computePanelPosition(
     }
   }
 
+  const midTop = anchorRect.top + anchorRect.height / 2 - panelRect.height / 2
+  const clampedTop = Math.max(
+    VIEWPORT_PAD,
+    Math.min(midTop, window.innerHeight - VIEWPORT_PAD - panelRect.height),
+  )
+
   if (resolvedSide === 'left') {
+    let left = anchorRect.left - panelRect.width - GAP
+    if (left < VIEWPORT_PAD) {
+      left = Math.min(anchorRect.right + GAP, window.innerWidth - VIEWPORT_PAD - panelRect.width)
+    }
     return {
-      top: anchorRect.top + anchorRect.height / 2 - panelRect.height / 2,
-      left: anchorRect.left - panelRect.width - GAP,
+      top: clampedTop,
+      left,
       resolvedSide,
     }
   }
 
   return {
-    top: anchorRect.top + anchorRect.height / 2 - panelRect.height / 2,
-    left: anchorRect.right + GAP,
+    top: clampedTop,
+    left: Math.max(VIEWPORT_PAD, Math.min(anchorRect.right + GAP, window.innerWidth - VIEWPORT_PAD - panelRect.width)),
     resolvedSide,
   }
 }
@@ -89,8 +103,11 @@ export default function SiteTooltip({
   className = '',
   panelClassName = '',
   children,
+  ignoreOverlayPause = false,
+  toggleOnClick = false,
 }: SiteTooltipProps) {
   const overlayPaused = useUiOverlayPaused()
+  const paused = overlayPaused && !ignoreOverlayPause
   const [open, setOpen] = useState(false)
   const [position, setPosition] = useState<PanelPosition | null>(null)
   const tooltipId = useId()
@@ -99,35 +116,62 @@ export default function SiteTooltip({
   const panelRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
-    if (overlayPaused) {
+    if (paused) {
       setOpen(false)
       setPosition(null)
     }
-  }, [overlayPaused])
+  }, [paused])
 
   const show = useCallback(() => {
-    if (overlayPaused || touchRef.current) return
+    if (paused || touchRef.current || toggleOnClick) return
     setOpen(true)
-  }, [overlayPaused])
+  }, [paused, toggleOnClick])
 
   const hide = useCallback(() => {
+    if (toggleOnClick) return
     if (!touchRef.current) {
       setOpen(false)
       setPosition(null)
     }
-  }, [])
+  }, [toggleOnClick])
 
-  const toggleTouch = useCallback(() => {
-    if (overlayPaused) return
-    touchRef.current = true
+  const toggleOpen = useCallback(() => {
+    if (paused) return
     setOpen((prev) => {
       if (prev) setPosition(null)
       return !prev
     })
+  }, [paused])
+
+  const toggleTouch = useCallback(() => {
+    if (paused) return
+    touchRef.current = true
+    toggleOpen()
     window.setTimeout(() => {
       touchRef.current = false
     }, 300)
-  }, [overlayPaused])
+  }, [paused, toggleOpen])
+
+  useEffect(() => {
+    if (!toggleOnClick || !open) return
+    const onDocDown = (event: MouseEvent) => {
+      const anchor = anchorRef.current
+      if (anchor && event.target instanceof Node && anchor.contains(event.target)) return
+      setOpen(false)
+      setPosition(null)
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      setOpen(false)
+      setPosition(null)
+    }
+    document.addEventListener('mousedown', onDocDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDocDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [toggleOnClick, open])
 
   useLayoutEffect(() => {
     if (!open) return
@@ -160,7 +204,7 @@ export default function SiteTooltip({
     }
   }, [open, side, content])
 
-  const panel = open && !overlayPaused ? (
+  const panel = open && !paused ? (
     <span
       ref={panelRef}
       id={tooltipId}
@@ -184,7 +228,12 @@ export default function SiteTooltip({
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
-      onClick={() => {
+      onClick={(event) => {
+        if (toggleOnClick) {
+          event.stopPropagation()
+          toggleOpen()
+          return
+        }
         if ('ontouchstart' in window) toggleTouch()
       }}
       aria-describedby={open ? tooltipId : undefined}

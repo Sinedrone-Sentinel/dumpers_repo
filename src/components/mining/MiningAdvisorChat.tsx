@@ -49,6 +49,8 @@ function LockPhraseHelpMark(): React.ReactElement {
   return (
     <SiteTooltip
       side="left"
+      ignoreOverlayPause
+      toggleOnClick
       panelClassName="max-w-[20rem] text-left"
       content={
         <span className="block space-y-2">
