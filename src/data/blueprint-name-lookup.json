@@ -1,11 +1,11 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-09-12T00:10:07.816Z",
+  "_extracted": "2026-09-16T23:11:35.651Z",
   "stats": {
     "internalNames": 1607,
     "displayNames": 1594,
     "ambiguousDisplayNames": 13,
-    "contractDefinitions": 1991
+    "contractDefinitions": 1979
   },
   "byInternalName": {
     "behr_lmg_ballistic_01_mag": {
@@ -37494,62 +37494,6 @@
       "nozzle_fuelgiver_shin_nozzleexpensivefast",
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
-    ],
-    "ors_scenarioprogress_tier_43200": [
-      "behr_pistol_ballistic_01_mr01"
-    ],
-    "orison relief — 43,200 pts": [
-      "behr_pistol_ballistic_01_mr01"
-    ],
-    "ors_scenarioprogress_tier_72000": [
-      "cds_combat_light_helmet_02_02_01",
-      "cds_combat_light_legs_02_02_01",
-      "cds_combat_light_core_02_02_01",
-      "cds_combat_light_arms_02_02_01"
-    ],
-    "orison relief — 72,000 pts": [
-      "cds_combat_light_helmet_02_02_01",
-      "cds_combat_light_legs_02_02_01",
-      "cds_combat_light_core_02_02_01",
-      "cds_combat_light_arms_02_02_01"
-    ],
-    "ors_scenarioprogress_tier_123840": [
-      "behr_rifle_ballistic_01_mr01"
-    ],
-    "orison relief — 123,840 pts": [
-      "behr_rifle_ballistic_01_mr01"
-    ],
-    "ors_scenarioprogress_tier_164160": [
-      "cds_combat_medium_arms_01_02_01",
-      "cds_combat_medium_core_01_02_01",
-      "cds_combat_medium_legs_01_02_01",
-      "cds_combat_medium_helmet_01_02_01"
-    ],
-    "orison relief — 164,160 pts": [
-      "cds_combat_medium_arms_01_02_01",
-      "cds_combat_medium_core_01_02_01",
-      "cds_combat_medium_legs_01_02_01",
-      "cds_combat_medium_helmet_01_02_01"
-    ],
-    "ors_scenarioprogress_tier_230400": [
-      "klwe_smg_energy_01_mr01"
-    ],
-    "orison relief — 230,400 pts": [
-      "klwe_smg_energy_01_mr01"
-    ],
-    "ors_scenarioprogress_tier_288000": [
-      "cds_combat_heavy_helmet_01_02_02",
-      "cds_combat_heavy_legs_01_02_02",
-      "cds_combat_heavy_core_01_02_02",
-      "cds_combat_heavy_arms_01_02_02",
-      "cds_undersuit_01_02_02"
-    ],
-    "orison relief — 288,000 pts": [
-      "cds_combat_heavy_helmet_01_02_02",
-      "cds_combat_heavy_legs_01_02_02",
-      "cds_combat_heavy_core_01_02_02",
-      "cds_combat_heavy_arms_01_02_02",
-      "cds_undersuit_01_02_02"
     ],
     "rox_scenarioprogress_tier_18000": [
       "vgl_utility_light_arms_01_04_01",
