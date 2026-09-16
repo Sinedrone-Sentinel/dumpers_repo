@@ -221,8 +221,9 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 153 | `188_drop_rsi_bio_verify.sql` | Drop bio-code verify (`rsi_verify_challenges` + challenge RPCs). Member verify is Citizen iD only |
 | 154 | `189_mining_advisor_rate_limit.sql` | Smart Cracker advisor: per-member hourly Edge rate buckets + `mining_advisor_try_consume` (`service_role` only). No API keys stored |
 | 155 | `190_mining_advisor_saved_key.sql` | Optional end-to-end Advisor secret (`mining_advisor_secrets`). Client wraps with a lock phrase; server stores ciphertext only |
+| 156 | `191_citizenid_grace_demote_officers.sql` | After Citizen iD grace ends, daily cron demotes officers who never linked (`citizenid_demote_unlinked_officers`). Super-admin is never auto-demoted |
 
-### pg_cron (migrations 054, 065-068, 144, 147, 178, 179)
+### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191)
 
 Migrations **065-068** schedule a cron job that calls the `send-discord` Edge Function. On Supabase:
 
@@ -264,6 +265,22 @@ To purge rows older than 30 days immediately:
 
 ```sql
 SELECT public.cleanup_old_order_fulfillments();
+```
+
+Officer demotion after Citizen iD grace (`citizenid-demote-unlinked-officers`, daily at 04:05 UTC) is scheduled by migration **191**. If pg_cron is missing, run this in the SQL editor after applying 191:
+
+```sql
+SELECT cron.schedule(
+  'citizenid-demote-unlinked-officers',
+  '5 4 * * *',
+  $$SELECT public.citizenid_demote_unlinked_officers()$$
+);
+```
+
+To run the sweep immediately (no-op until the grace clock has started and expired):
+
+```sql
+SELECT public.citizenid_demote_unlinked_officers();
 ```
 
 ---
