@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted via dcb query)",
-  "_extracted": "2026-09-12T00:08:54.071Z",
+  "_extracted": "2026-09-16T23:09:45.436Z",
   "qualityBands": {
     "carinite": {
       "name": "Carinite",
@@ -2036,6 +2036,1381 @@
         965,
         1000
       ]
+    },
+    "amoishiplague": {
+      "name": "AmoishiPlague",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 313
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 566
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 636
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 732
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 852
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 906
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 984
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        313,
+        566,
+        636,
+        732,
+        852,
+        906,
+        984,
+        1000
+      ]
+    },
+    "armillaria": {
+      "name": "Armillaria",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 328
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 584
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 686
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 765
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 810
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 907
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 967
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        328,
+        584,
+        686,
+        765,
+        810,
+        907,
+        967,
+        1000
+      ]
+    },
+    "bluebilva": {
+      "name": "BlueBilva",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 358
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 584
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 632
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 795
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 895
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 929
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 985
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        358,
+        584,
+        632,
+        795,
+        895,
+        929,
+        985,
+        1000
+      ]
+    },
+    "decaripod": {
+      "name": "DecariPod",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 393
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 505
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 655
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 790
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 883
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 940
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 998
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        393,
+        505,
+        655,
+        790,
+        883,
+        940,
+        998,
+        1000
+      ]
+    },
+    "degnousroot": {
+      "name": "DegnousRoot",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 252
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 524
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 634
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 785
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 829
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 934
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 980
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        252,
+        524,
+        634,
+        785,
+        829,
+        934,
+        980,
+        1000
+      ]
+    },
+    "fotia": {
+      "name": "Fotia",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 386
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 539
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 687
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 785
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 830
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 905
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 989
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        386,
+        539,
+        687,
+        785,
+        830,
+        905,
+        989,
+        1000
+      ]
+    },
+    "gaspingweevileggs": {
+      "name": "GaspingWeevilEggs",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 354
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 305
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 600
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 748
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 841
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 927
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 988
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        354,
+        305,
+        600,
+        748,
+        841,
+        927,
+        988,
+        1000
+      ]
+    },
+    "goldenmedmon": {
+      "name": "GoldenMedmon",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 361
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 508
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 687
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 743
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 882
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 901
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 984
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        361,
+        508,
+        687,
+        743,
+        882,
+        901,
+        984,
+        1000
+      ]
+    },
+    "heartofthewoods": {
+      "name": "HeartOfTheWoods",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 398
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 544
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 604
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 771
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 896
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 945
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 993
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        398,
+        544,
+        604,
+        771,
+        896,
+        945,
+        993,
+        1000
+      ]
+    },
+    "jumpinglimes": {
+      "name": "JumpingLimes",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 312
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 525
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 680
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 722
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 815
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 926
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 985
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        312,
+        525,
+        680,
+        722,
+        815,
+        926,
+        985,
+        1000
+      ]
+    },
+    "kopionhorn": {
+      "name": "KopionHorn",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 259
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 511
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 661
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 776
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 838
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 947
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 992
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        259,
+        511,
+        661,
+        776,
+        838,
+        947,
+        992,
+        1000
+      ]
+    },
+    "marokpearl": {
+      "name": "MarokPearl",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 281
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 505
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 679
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 734
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 866
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 903
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 987
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        281,
+        505,
+        679,
+        734,
+        866,
+        903,
+        987,
+        1000
+      ]
+    },
+    "oza": {
+      "name": "Oza",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 270
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 561
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 654
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 708
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 871
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 944
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 966
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        270,
+        561,
+        654,
+        708,
+        871,
+        944,
+        966,
+        1000
+      ]
+    },
+    "pingala": {
+      "name": "Pingala",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 368
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 513
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 601
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 730
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 884
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 947
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 980
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        368,
+        513,
+        601,
+        730,
+        884,
+        947,
+        980,
+        1000
+      ]
+    },
+    "pitambu": {
+      "name": "Pitambu",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 329
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 599
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 697
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 781
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 820
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 911
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 979
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        329,
+        599,
+        697,
+        781,
+        820,
+        911,
+        979,
+        1000
+      ]
+    },
+    "prota": {
+      "name": "Prota",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 368
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 533
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 678
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 788
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 809
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 931
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 987
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        368,
+        533,
+        678,
+        788,
+        809,
+        931,
+        987,
+        1000
+      ]
+    },
+    "quasiegg": {
+      "name": "QuasiEgg",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 349
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 545
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 625
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 790
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 889
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 918
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 978
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        349,
+        545,
+        625,
+        790,
+        889,
+        918,
+        978,
+        1000
+      ]
+    },
+    "quasitongue": {
+      "name": "QuasiTongue",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 254
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 548
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 661
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 776
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 858
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 907
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 968
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        254,
+        548,
+        661,
+        776,
+        858,
+        907,
+        968,
+        1000
+      ]
+    },
+    "rantadung": {
+      "name": "RantaDung",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 263
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 558
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 692
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 739
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 856
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 920
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 996
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        263,
+        558,
+        692,
+        739,
+        856,
+        920,
+        996,
+        1000
+      ]
+    },
+    "revenantpod": {
+      "name": "RevenantPod",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 379
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 541
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 694
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 793
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 881
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 919
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 962
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        379,
+        541,
+        694,
+        793,
+        881,
+        919,
+        962,
+        1000
+      ]
+    },
+    "spiralfruit": {
+      "name": "SpiralFruit",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 302
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 520
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 672
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 750
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 872
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 934
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 978
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        302,
+        520,
+        672,
+        750,
+        872,
+        934,
+        978,
+        1000
+      ]
+    },
+    "sunsetberry": {
+      "name": "SunsetBerry",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 266
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 555
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 679
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 711
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 830
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 938
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 973
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        266,
+        555,
+        679,
+        711,
+        830,
+        938,
+        973,
+        1000
+      ]
+    },
+    "vlkfang": {
+      "name": "VLKFang",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 294
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 529
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 640
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 761
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 868
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 902
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 951
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        294,
+        529,
+        640,
+        761,
+        868,
+        902,
+        951,
+        1000
+      ]
+    },
+    "vlkpearl": {
+      "name": "VLKPearl",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 396
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 584
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 660
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 790
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 834
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 912
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 964
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        396,
+        584,
+        660,
+        790,
+        834,
+        912,
+        964,
+        1000
+      ]
+    },
+    "yormandieye": {
+      "name": "YormandiEye",
+      "bands": [
+        {
+          "start": 0,
+          "end": 399,
+          "mappedValue": 391
+        },
+        {
+          "start": 400,
+          "end": 599,
+          "mappedValue": 515
+        },
+        {
+          "start": 600,
+          "end": 699,
+          "mappedValue": 663
+        },
+        {
+          "start": 700,
+          "end": 799,
+          "mappedValue": 794
+        },
+        {
+          "start": 800,
+          "end": 899,
+          "mappedValue": 807
+        },
+        {
+          "start": 900,
+          "end": 949,
+          "mappedValue": 938
+        },
+        {
+          "start": 950,
+          "end": 998,
+          "mappedValue": 978
+        },
+        {
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000
+        }
+      ],
+      "thresholds": [
+        391,
+        515,
+        663,
+        794,
+        807,
+        938,
+        978,
+        1000
+      ]
     }
   },
   "qualityDistribution": {
@@ -2426,10 +3801,260 @@
       906,
       965,
       1000
+    ],
+    "amoishiplague": [
+      313,
+      566,
+      636,
+      732,
+      852,
+      906,
+      984,
+      1000
+    ],
+    "armillaria": [
+      328,
+      584,
+      686,
+      765,
+      810,
+      907,
+      967,
+      1000
+    ],
+    "bluebilva": [
+      358,
+      584,
+      632,
+      795,
+      895,
+      929,
+      985,
+      1000
+    ],
+    "decaripod": [
+      393,
+      505,
+      655,
+      790,
+      883,
+      940,
+      998,
+      1000
+    ],
+    "degnousroot": [
+      252,
+      524,
+      634,
+      785,
+      829,
+      934,
+      980,
+      1000
+    ],
+    "fotia": [
+      386,
+      539,
+      687,
+      785,
+      830,
+      905,
+      989,
+      1000
+    ],
+    "gaspingweevileggs": [
+      354,
+      305,
+      600,
+      748,
+      841,
+      927,
+      988,
+      1000
+    ],
+    "goldenmedmon": [
+      361,
+      508,
+      687,
+      743,
+      882,
+      901,
+      984,
+      1000
+    ],
+    "heartofthewoods": [
+      398,
+      544,
+      604,
+      771,
+      896,
+      945,
+      993,
+      1000
+    ],
+    "jumpinglimes": [
+      312,
+      525,
+      680,
+      722,
+      815,
+      926,
+      985,
+      1000
+    ],
+    "kopionhorn": [
+      259,
+      511,
+      661,
+      776,
+      838,
+      947,
+      992,
+      1000
+    ],
+    "marokpearl": [
+      281,
+      505,
+      679,
+      734,
+      866,
+      903,
+      987,
+      1000
+    ],
+    "oza": [
+      270,
+      561,
+      654,
+      708,
+      871,
+      944,
+      966,
+      1000
+    ],
+    "pingala": [
+      368,
+      513,
+      601,
+      730,
+      884,
+      947,
+      980,
+      1000
+    ],
+    "pitambu": [
+      329,
+      599,
+      697,
+      781,
+      820,
+      911,
+      979,
+      1000
+    ],
+    "prota": [
+      368,
+      533,
+      678,
+      788,
+      809,
+      931,
+      987,
+      1000
+    ],
+    "quasiegg": [
+      349,
+      545,
+      625,
+      790,
+      889,
+      918,
+      978,
+      1000
+    ],
+    "quasitongue": [
+      254,
+      548,
+      661,
+      776,
+      858,
+      907,
+      968,
+      1000
+    ],
+    "rantadung": [
+      263,
+      558,
+      692,
+      739,
+      856,
+      920,
+      996,
+      1000
+    ],
+    "revenantpod": [
+      379,
+      541,
+      694,
+      793,
+      881,
+      919,
+      962,
+      1000
+    ],
+    "spiralfruit": [
+      302,
+      520,
+      672,
+      750,
+      872,
+      934,
+      978,
+      1000
+    ],
+    "sunsetberry": [
+      266,
+      555,
+      679,
+      711,
+      830,
+      938,
+      973,
+      1000
+    ],
+    "vlkfang": [
+      294,
+      529,
+      640,
+      761,
+      868,
+      902,
+      951,
+      1000
+    ],
+    "vlkpearl": [
+      396,
+      584,
+      660,
+      790,
+      834,
+      912,
+      964,
+      1000
+    ],
+    "yormandieye": [
+      391,
+      515,
+      663,
+      794,
+      807,
+      938,
+      978,
+      1000
     ]
   },
   "summary": {
-    "totalResources": 37,
+    "totalResources": 62,
     "distributionTypes": 2
   }
 }

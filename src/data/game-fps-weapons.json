@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-09-12T00:08:54.069Z",
+  "_extracted": "2026-09-16T23:09:45.434Z",
   "weapons": [
     {
       "id": "e302c7ae-b850-412d-983e-36dbf04f98fe",
@@ -539,6 +539,19 @@
       "id": "adb5c353-7685-461c-9c3c-32ad182430b1",
       "name": "behr_rifle_ballistic_03",
       "displayName": "CQ7 Rifle",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_rifle_ballistic_01 rifle"
+    },
+    {
+      "id": "3f375c15-0d9b-4821-adc3-57b70362cabb",
+      "name": "behr_rifle_ballistic_03_sf01",
+      "displayName": "CQ7 \"Skullcap\" Rifle",
       "type": "Medium",
       "size": 2,
       "fireRate": 0,
@@ -4086,6 +4099,6 @@
     }
   ],
   "summary": {
-    "totalWeapons": 314
+    "totalWeapons": 315
   }
 }

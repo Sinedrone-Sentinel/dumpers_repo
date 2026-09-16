@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted localization)",
-  "_extracted": "2026-09-12T00:08:53.315Z",
+  "_extracted": "2026-09-16T23:09:44.663Z",
   "resources": {
     "audio_visual_equipment": {
       "key": "items_commodities_AudioVisualEquipment_desc",
@@ -3152,6 +3152,12 @@
       "description": "Combining deep purples and blue, the Shimmerscale livery is finished with a subtle green offering an ethereal shimmer.",
       "kind": "item"
     },
+    "aurora_mk2_paint_silver_white_red": {
+      "key": "item_DescAurora_Mk2_Paint_Silver_White_Red",
+      "label": "Aurora Mk II Streamline Livery",
+      "description": "Show your might with the Aurora Mk II exclusive Streamline livery, entirely lined in bright silver plating with uniform streaks of red along the wings and cockpit.",
+      "kind": "item"
+    },
     "aurora_mk2_paint_white_blue_yellow": {
       "key": "item_DescAurora_Mk2_Paint_White_Blue_Yellow",
       "label": "Aurora Mk II Cloudbuster Livery",
@@ -5082,6 +5088,12 @@
       "key": "item_DescCutlass_Paint_Unity",
       "label": "Cutlass Foundation Guide Livery",
       "description": "Foundation Festival is an opportunity for Citizens and Civilians to come together and strengthen the foundation of our community. Show your commitment to a better universe with this custom livery.",
+      "kind": "item"
+    },
+    "cutlass_paint_white_white_pink": {
+      "key": "item_DescCutlass_Paint_White_White_Pink",
+      "label": "Cutlass Akuma Livery",
+      "description": "Featuring the bold inconography of the Nine Tails gang and bold splashes of pink, the Akuma livery fully embraces the Cutlass' wilder side.",
       "kind": "item"
     },
     "cutter_paint_2955redfestival_red_gold_pig": {
@@ -9068,6 +9080,12 @@
       "description": "Manufacturer: Klaus & Werner Item Type: Laser Repeater Size: 1 Featuring a three-barrel sequential fire design, the Klaus & Werner CF-117 Bulldog laser repeater is capable of delivering high velocity energy rounds while maintaining heat efficiency making it a favorite among new pilots who are outfitting their first ship.",
       "kind": "item"
     },
+    "klwe_laserrepeater_s1_atls_ntls": {
+      "key": "item_DescKLWE_LaserRepeater_S1_ATLS_NTLS",
+      "label": "CF-999 \"Akuma\" Repeater",
+      "description": "Manufacturer: Unknown Item Type: Plasma Repeater Size: 1 Featuring a three-barrel sequential fire design, this custom weapon built from a modified Klaus & Werner CF-117 Bulldog laser repeater was specially made to work with the ATLS GEO IKTI Akuma.",
+      "kind": "item"
+    },
     "klwe_laserrepeater_s1_mr01": {
       "key": "item_DescKLWE_LaserRepeater_S1_mr01",
       "label": "CF-117 Bulldog \"Hazard-Zone\" Repeater",
@@ -12764,6 +12782,12 @@
       "description": "Manufacturer: Wei-Tek Type: Quantum Dampener Size: 1 Grade: A Class: Military See that justice is served with the Burke QD. This powerful quantum dampener from Wei-Tek projects a massive field that keeps ships from engaging their quantum drives, making it a valuable component for both law enforcement and security professionals.",
       "kind": "item"
     },
+    "qdmp_wetk_s02_raven_x": {
+      "key": "item_DescQDMP_WETK_S02_Raven_X",
+      "label": "Vertine QD",
+      "description": "Manufacturer: Wei-Tek Type: Quantum Dampener Size: 2 Internally designed by Wei-Tek for the Sabre Raven EX, the Vertine Quantum Dampener generates a field that prevents quantum drive activation and helps ensures that hostile targets can't escape.",
+      "kind": "item"
+    },
     "qdrv_acas_s02_sparkfire_scitem": {
       "key": "item_DescQDRV_ACAS_S02_SparkFire_SCItem",
       "label": "SparkFire",
@@ -13958,6 +13982,12 @@
       "description": "The Landslide livery for the Sabre features a tan fuselage with grey wings and subtle silver highlights.",
       "kind": "item"
     },
+    "sabre_paint_black_black_black": {
+      "key": "item_DescSabre_Paint_Black_Black_Black",
+      "label": "Sabre Darkshade Livery",
+      "description": "Envelop your Sabre in deep black for a sleek, professional look with the Darkshade livery.",
+      "kind": "item"
+    },
     "sabre_paint_black_black_gold_carbon": {
       "key": "item_DescSabre_Paint_Black_Black_Gold_Carbon",
       "label": "Sabre Ashcloud Livery",
@@ -13982,10 +14012,22 @@
       "description": "An elegant black with chrome highlights, the Starlight livery brings a subtly striking and timeless look to the Sabre.",
       "kind": "item"
     },
+    "sabre_paint_blue_blue_yellow": {
+      "key": "item_DescSabre_Paint_Blue_Blue_Yellow",
+      "label": "Sabre Beyond Livery",
+      "description": "Featuring dark teals with yellow trim, the Beyond livery for the Sabre is sure to inspire on your next mission.",
+      "kind": "item"
+    },
     "sabre_paint_green_black_orange": {
       "key": "item_DescSabre_Paint_Green_Black_Orange",
       "label": "Sabre Windbreak Livery",
       "description": "The Windbreak livery exudes style by giving the Sabre a green body, dark grey wings, and silver and orange highlights.",
+      "kind": "item"
+    },
+    "sabre_paint_green_green_yellow": {
+      "key": "item_DescSabre_Paint_Green_Green_Yellow",
+      "label": "Sabre Tribunal Livery",
+      "description": "Head out to the frontlines with your Sabre looking ready for action with the Tribunal livery in military green and yellow trim.",
       "kind": "item"
     },
     "sabre_paint_halloween25_orange_black": {
@@ -14004,6 +14046,12 @@
       "key": "item_DescSabre_Paint_IAE2950_Grey_White_Camo",
       "label": "Sabre Polar Camo Livery",
       "description": "Modify your Sabre with this white and grey camo livery specifically designed for the 2950 IAE event on microTech.",
+      "kind": "item"
+    },
+    "sabre_paint_metal_metal_metal": {
+      "key": "item_DescSabre_Paint_Metal_Metal_Metal",
+      "label": "Sabre Blue Steel Livery",
+      "description": "Catch the focus of passing ships with the Blue Steel livery for the Sabre featuring a dark, polished metal finish with vibrant blue highlights.",
       "kind": "item"
     },
     "sabre_paint_racing_white_pink_blue": {
@@ -16379,7 +16427,7 @@
     "carryable_1h_cy_flair_poster_ht_gamescom2026_1_a": {
       "key": "item_Desc_Carryable_1H_CY_flair_poster_HT_Gamescom2026_1_a",
       "label": "M80 \"Beauty Is Power\" Poster",
-      "description": "Take in the magesty of the M80 with this exclusive poster showing off the ship's streamlined, monochromatic structure with the Beauty Is Power slogan on top.",
+      "description": "Take in the majesty of the M80 with this exclusive poster showing off the ship's streamlined, monochromatic structure with the Beauty Is Power slogan on top.",
       "kind": "item"
     },
     "carryable_1h_sq_flair_coin_1_chairmansclub_a": {
@@ -21188,6 +21236,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -56 / 86 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Celebrate the season with the festive Holiday Butcher helmet. Doomsday designed this twisted bit of armor to withstand a firefight, raucous holiday party, and everything in between. The snout's custom armor plating provides protection while remaining lightweight, and the synthetic spiral horns are more durable than the real deal. The Holiday Butcher adds to Doomsday's reputation as the universe's premiere engineer of warped gear. Visor is AR crosshair compatible.",
       "kind": "item"
     },
+    "doom_undersuit_helmet_01_01_01": {
+      "key": "item_Desc_doom_undersuit_helmet_01_01_01",
+      "label": "Skullcap Helmet",
+      "description": "Item Type: Flight Helmet Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s Doomsday's latest in headgear marries subtle practicality with the company's signature edge. This helmet features all the standard protection you could hope for, including subtle built-in filtration system along the tough, hand-molded skeletal mask, thick but lightweight metal protecting your real skull, as well as premium eye protection unaffected by the stylishly ominous red LEDs.",
+      "kind": "item"
+    },
     "drn_business_jacket_01_01_01": {
       "key": "item_Desc_drn_business_jacket_01_01_01",
       "label": "Saskia Jacket",
@@ -22532,6 +22586,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -77 / 107 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5 µSCU From the masterwork designers of Kilgore & Poole comes the Monde heavy armor. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system and specialized flex-point joints. The Purgatory Camo edition features a sleek gray-on-gray pattern.",
       "kind": "item"
     },
+    "kap_combat_heavy_arms_02_10_01": {
+      "key": "item_Desc_kap_combat_heavy_arms_02_10_01",
+      "label": "Monde Arms Streamline",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s From the masterwork designers of Kilgore & Poole comes the Monde heavy armor. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system and specialized flex-point joints. The Streamline edition is a subdued white finished with strokes of deep red and metallic accents.",
+      "kind": "item"
+    },
     "kap_combat_heavy_core_02_01_01": {
       "key": "item_Desc_kap_combat_heavy_core_02_01_01",
       "label": "Monde Core",
@@ -22584,6 +22644,12 @@
       "key": "item_Desc_kap_combat_heavy_core_02_09_01",
       "label": "Monde Core Purgatory Camo",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -77 / 107 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 12.0 µSCU Backpacks: All From the masterwork designers of Kilgore & Poole comes the Monde heavy armor. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system and specialized flex-point joints. The Purgatory Camo edition features a sleek gray-on-gray pattern.",
+      "kind": "item"
+    },
+    "kap_combat_heavy_core_02_10_01": {
+      "key": "item_Desc_kap_combat_heavy_core_02_10_01",
+      "label": "Monde Core Streamline",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 12K µSCU Backpacks: All From the masterwork designers of Kilgore & Poole comes the Monde heavy armor. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system and specialized flex-point joints. The Streamline edition is a subdued white finished with strokes of deep red and metallic accents.",
       "kind": "item"
     },
     "kap_combat_heavy_helmet_02_01_01": {
@@ -22640,6 +22706,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -77 / 107 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s From the masterwork designers of Kilgore & Poole comes the Monde helmet. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system. The Purgatory Camo edition features a sleek gray-on-gray pattern.",
       "kind": "item"
     },
+    "kap_combat_heavy_helmet_02_10_01": {
+      "key": "item_Desc_kap_combat_heavy_helmet_02_10_01",
+      "label": "Monde Helmet Streamline",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s From the masterwork designers of Kilgore & Poole comes the Monde helmet. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system. The Streamline edition is a subdued white finished with strokes of deep red and metallic accents.",
+      "kind": "item"
+    },
     "kap_combat_heavy_legs_02_01_01": {
       "key": "item_Desc_kap_combat_heavy_legs_02_01_01",
       "label": "Monde Legs",
@@ -22692,6 +22764,12 @@
       "key": "item_Desc_kap_combat_heavy_legs_02_09_01",
       "label": "Monde Legs Purgatory Camo",
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -77 / 107 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 7.5 µSCU From the masterwork designers of Kilgore & Poole comes the Monde heavy armor. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system and specialized flex-point joints. The Purgatory Camo edition features a sleek gray-on-gray pattern.",
+      "kind": "item"
+    },
+    "kap_combat_heavy_legs_02_10_01": {
+      "key": "item_Desc_kap_combat_heavy_legs_02_10_01",
+      "label": "Monde Legs Streamline",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26800 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.5K µSCU From the masterwork designers of Kilgore & Poole comes the Monde heavy armor. Effortlessly integrating triple-laminate plating with the latest in defensive technology, this armor provides battle-ready protection with a next-class comfort system and specialized flex-point joints. The Streamline edition is a subdued white finished with strokes of deep red and metallic accents.",
       "kind": "item"
     },
     "kap_combat_light_arms_01": {
@@ -23924,6 +24002,12 @@
       "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Inspired by ancient Human folklore, the Shogun Kiba helmet features a demonic face with long fangs paired with curved-horns and a flared back plating. The use of high-end treated metals creates an ornamental aesthetic, whilst still providing substantial protection from all angles. Visor is AR crosshair compatible. The Stronghold edition features the fierce symbology of the Nine Tails gang with bold neon pink accents.",
       "kind": "item"
     },
+    "qrt_combat_heavy_helmet_05_02_01": {
+      "key": "item_Desc_qrt_combat_heavy_helmet_05_02_01",
+      "label": "Shogun Kiba Helmet Akuma",
+      "description": "Item Type: Heavy Armor Damage Reduction: 40% Temp. Rating: -70 / 100 °C Radiation Protection: 26000 REM Radiation Scrub Rate: 145.8 REM/s Inspired by ancient Human folklore, the Shogun Kiba helmet features a demonic face with long fangs paired with curved-horns and a flared back plating. The use of high-end treated metals creates an ornamental aesthetic, whilst still providing substantial protection from all angles. Visor is AR crosshair compatible. The Akuma edition strikes fear with its bold metallic red faceplate paired with black armor backing.",
+      "kind": "item"
+    },
     "qrt_combat_heavy_legs_02": {
       "key": "item_Desc_qrt_combat_heavy_legs_02",
       "label": "Bokto Legs",
@@ -24362,6 +24446,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Blending durability and a striking style, the Artimex armor exemplifies the Quirinus aesthetic. This intricately detailed armor considers both form and function, especially when paired with the fully enclosed helmet that features a neon ocular flourish. The armor also comes with a unique cowl that fans over the helmet and a knee length fitted cape. The Hurston Dynamics edition was made specifically for the company's Executive Security team.",
       "kind": "item"
     },
+    "qrt_specialist_medium_arms_03_01_01": {
+      "key": "item_Desc_qrt_specialist_medium_arms_03_01_01",
+      "label": "Artimex Arms Akuma",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91°C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Blending durability and a striking style, the intricately detailed Artimex armor exemplifies the Quirinus aesthetic. The Akuma editions features metallic red highlights between black metal plating, as well as a colorful decals reminiscent of the Nine Tails gang's aesthetic.",
+      "kind": "item"
+    },
     "qrt_specialist_medium_backpack_01_03": {
       "key": "item_Desc_qrt_specialist_medium_backpack_01_03",
       "label": "Arden-CL Backpack Elysium",
@@ -24398,6 +24488,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 6.4 µSCU Backpacks: Medium, Light Blending durability and a striking style, the Artimex armor exemplifies the Quirinus aesthetic. This intricately detailed armor considers both form and function, especially when paired with the fully enclosed helmet that features a neon ocular flourish. The armor also comes with a unique cowl that fans over the helmet and a knee length fitted cape. The Hurston Dynamics edition was made specifically for the company's Executive Security team.",
       "kind": "item"
     },
+    "qrt_specialist_medium_core_03_01_01": {
+      "key": "item_Desc_qrt_specialist_medium_core_03_01_01",
+      "label": "Artimex Core Akuma",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91°C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 8.5 µSCU Blending durability and a striking style, the intricately detailed Artimex armor exemplifies the Quirinus aesthetic. The Akuma editions features metallic red highlights between black metal plating, as well as a colorful decals reminiscent of the Nine Tails gang's aesthetic.",
+      "kind": "item"
+    },
     "qrt_specialist_medium_helmet_01": {
       "key": "item_Desc_qrt_specialist_medium_helmet_01",
       "label": "Artimex Helmet",
@@ -24428,6 +24524,12 @@
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Blending durability and a striking style, the Artimex armor exemplifies the Quirinus aesthetic. This intricately detailed armor considers both form and function, especially when paired with the fully enclosed helmet that features a neon ocular flourish. The armor also comes with a unique cowl that fans over the helmet and a knee length fitted cape. The Hurston Dynamics edition was made specifically for the company's Executive Security team. Visor is AR crosshair compatible.",
       "kind": "item"
     },
+    "_qrt_specialist_medium_helmet_03_01_01": {
+      "key": "item_Desc_qrt_specialist_medium_helmet_03_01_01",
+      "label": "Artimex Helmet",
+      "description": "PH - Description for qrt_specialist_medium_helmet_03_01_01",
+      "kind": "item"
+    },
     "qrt_specialist_medium_legs_01": {
       "key": "item_Desc_qrt_specialist_medium_legs_01",
       "label": "Artimex Legs",
@@ -24450,6 +24552,12 @@
       "key": "item_Desc_qrt_specialist_medium_legs_02",
       "label": "Artimex Legs Hurston Dynamics Executive Security",
       "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91 °C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Carrying Capacity: 4.0 µSCU Blending durability and a striking style, the Artimex armor exemplifies the Quirinus aesthetic. This intricately detailed armor considers both form and function, especially when paired with the fully enclosed helmet that features a neon ocular flourish. The armor also comes with a unique cowl that fans over the helmet and a knee length fitted cape. The Hurston Dynamics edition was made specifically for the company's Executive Security team.",
+      "kind": "item"
+    },
+    "qrt_specialist_medium_legs_03_01_01": {
+      "key": "item_Desc_qrt_specialist_medium_legs_03_01_01",
+      "label": "Artimex Legs Akuma",
+      "description": "Item Type: Medium Armor Damage Reduction: 30% Temp. Rating: -61 / 91°C Radiation Protection: 26400 REM Radiation Scrub Rate: 145.8 REM/s Blending durability and a striking style, the intricately detailed Artimex armor exemplifies the Quirinus aesthetic. The Akuma editions features metallic red highlights between black metal plating, as well as a colorful decals reminiscent of the Nine Tails gang's aesthetic.",
       "kind": "item"
     },
     "qrt_utility_heavy_arms_01_01_01": {
@@ -27062,6 +27170,12 @@
       "description": "Item Type: Heavy Backpack Carrying Capacity: 150K µSCU Core Compatibility: Heavy This hard backpack from Virgil, Ltd. makes travel easy. Whether you need a place to carry your weapons or you've decided to bring some extra rations along for a long journey, this backpack was designed to handle any occasion. The interior features a generous, closeable pocket to keep your small items from falling out of place. The Hiro edition features a clean white finish with dark gray accents.",
       "kind": "item"
     },
+    "vgl_combat_heavy_backpack_01_11_01": {
+      "key": "item_Desc_vgl_combat_heavy_backpack_01_11_01",
+      "label": "Warden Backpack Streamline",
+      "description": "Item Type: Heavy Backpack Carrying Capacity: 150K µSCU Core Compatibility: Heavy This hard backpack from Virgil, Ltd. makes travel easy. Whether you need a place to carry your weapons or you've decided to bring some extra rations along for a long journey, this backpack was designed to handle any occasion. The interior features a generous, closeable pocket to keep your small items from falling out of place. The Streamline edition is a subdued white finished with strokes of deep red and metallic accents.",
+      "kind": "item"
+    },
     "vgl_combat_heavy_backpack_01_12_01": {
       "key": "item_Desc_vgl_combat_heavy_backpack_01_12_01",
       "label": "Warden Backpack Purgatory Camo",
@@ -27234,6 +27348,12 @@
       "key": "item_Desc_vgl_undersuit_01_01_Shared",
       "label": "ForceFlex Undersuit Black/Gold",
       "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Virgil's ForceFlex is the next generation in undersuit technology. Rated for combat as well as industrial work, you can rest assured that the comboweave will keep you protected in whatever situation you put it through.",
+      "kind": "item"
+    },
+    "vgl_undersuit_01_02_01": {
+      "key": "item_Desc_vgl_undersuit_01_02_01",
+      "label": "ForceFlex Undersuit Skeleton",
+      "description": "Item Type: Undersuit Damage Reduction: 5% Temp. Rating: -30 / 60 °C Radiation Protection: 15200 REM Radiation Scrub Rate: 81 REM/s G-Force Tolerance: +90% Virgil's ForceFlex is the next generation in undersuit technology. Rated for combat as well as industrial work, you can rest assured that the comboweave will keep you protected in whatever situation you put it through. Indulge in Day of the Vara hijinks with the Skeleton edition, featuring a double-sided skeleton graphic atop a black base.",
       "kind": "item"
     },
     "vgl_utility_light_arms_01_01_01": {
@@ -28220,6 +28340,12 @@
       "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 15 Rate Of Fire: 475 rpm Effective Range: 100 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) The direct descendant of the UEE Marines standard issue weapon, Behring has crafted the semi-automatic P8-AR to provide civilians across the empire a straight-forward and dependable weapon to defend themselves against aggressive hostiles. The Dominion Camo edition adds a dark green camo pattern to the rifle.",
       "kind": "item"
     },
+    "behr_rifle_ballistic_02_civilian_store02": {
+      "key": "item_Descbehr_rifle_ballistic_02_civilian_store02",
+      "label": "P8AR Akuma Rifle",
+      "description": "Manufacturer: Behring Item Type: Assault Rifle Class: Ballistic Magazine Size: 15 Rate Of Fire: 475 rpm Effective Range: 100 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) The direct descendant of the UEE Marines standard issue weapon, Behring has crafted the semi-automatic P8-AR to provide civilians across the empire a straight-forward and dependable weapon to defend themselves against aggressive hostiles. The Akuma edition features eye-catching decals with splashes of bright pink to match the style of the Nine Tails gang.",
+      "kind": "item"
+    },
     "behr_rifle_ballistic_02_mag": {
       "key": "item_Descbehr_rifle_ballistic_02_mag",
       "label": "P8-ARM Rifle Magazine (30 cap)",
@@ -28242,6 +28368,12 @@
       "key": "item_Descbehr_rifle_ballistic_03_mag",
       "label": "CQ7 Rifle Magazine (40 Cap)",
       "description": "Item Type: Magazine Capacity: 40 This magazine for the CQ7 rifle comes pre-loaded with forty rounds.",
+      "kind": "item"
+    },
+    "behr_rifle_ballistic_03_sf01": {
+      "key": "item_Descbehr_rifle_ballistic_03_sf01",
+      "label": "CQ7 \"Skullcap\" Rifle",
+      "description": "Manufacturer: Behring Item Type: Rifle Class: Ballistic Magazine Size: 40 Rate Of Fire: 600 rpm Effective Range: 50 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S2) Designed for close quarter engagements such as boarding actions, Behring's CQ7 is a next generation bullpup battle rifle designed to dominate the rigors of the modern battlefield environment. The Skullcap edition features an ominous skulls along the length of the rifle atop a black base coat.",
       "kind": "item"
     },
     "behr_rifle_ballistic_03_store01": {
@@ -28712,6 +28844,12 @@
       "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m Attachments: Optics (S1), Barrel (S1), Underbarrel (S1) The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine. The \"Righteous\" edition features a bold red paint perfect for showing your dedication to the fight.",
       "kind": "item"
     },
+    "gmni_pistol_ballistic_01_store01": {
+      "key": "item_Descgmni_pistol_ballistic_01_store01",
+      "label": "LH86 Akuma Pistol",
+      "description": "Manufacturer: Gemini Item Type: Pistol Class: Ballistic Magazine Size: 25 Rate Of Fire: 1200 rpm Effective Range: 30 m The LH86 from Gemini is a compact kinetic handgun designed for personal defense and close-quarter combat. A keen eye on ergonomics and balance coupled with hardy construction makes this pistol a natural fit for any shooter in any number of hostile conditions. The LH86 also comes with Tritium low-light sight and a twenty-five round magazine. The Akuma edition features eye-catching decals with splashes of bright pink to match the style of the Nine Tails gang.",
+      "kind": "item"
+    },
     "gmni_pistol_ballistic_02": {
       "key": "item_Descgmni_pistol_ballistic_02",
       "label": "LH86 Silenced Pistol",
@@ -28854,6 +28992,12 @@
       "key": "item_Descgmni_sniper_ballistic_01_store01",
       "label": "A03 \"HighSec\" Sniper Rifle",
       "description": "Manufacturer: Gemini Item Type: Sniper Rifle Class: Ballistic Magazine Size: 15 Rate Of Fire: 120 rpm Effective Range: 80 m Attachments: Optics (S3), Barrel (S2), Underbarrel (S2) Devastate at distance with the A03 sniper rifle. Masterfully designed by Gemini's Tevarin co-founder Clem, the weapon balances a stylish and ergonomic design with a powerful ballistic punch. The A03 delivers an impressive rate of fire for a sniper rifle that sacrifices accuracy for urgency when successive shots are required. Considering its renowned design and unique features, it's easy to see why the A03 has become a favorite of security professionals across the empire. The HighSec edition features a carbon fiber finish with red accents.",
+      "kind": "item"
+    },
+    "gmni_sniper_ballistic_01_store02": {
+      "key": "item_Descgmni_sniper_ballistic_01_store02",
+      "label": "A03 Akuma Sniper Rifle",
+      "description": "Manufacturer: Gemini Item Type: Sniper Rifle Class: Ballistic Magazine Size: 15 Rate Of Fire: 120 rpm Effective Range: 80 m Attachments: Optics (S3), Barrel (S2), Underbarrel (S2) Devastate at distance with the A03 sniper rifle. Masterfully designed by Gemini's Tevarin co-founder Clem, the weapon balances a stylish and ergonomic design with a powerful ballistic punch. The A03 delivers an impressive rate of fire for a sniper rifle that sacrifices accuracy for urgency when successive shots are required. Considering its renowned design and unique features, it's easy to see why the A03 has become a favorite of security professionals across the empire. The Akuma edition features eye-catching decals with splashes of bright pink to match the style of the Nine Tails gang.",
       "kind": "item"
     },
     "grin_energy_multitool_01_mag": {
@@ -29166,6 +29310,12 @@
       "key": "item_Descklwe_lmg_energy_01_purple_blue01",
       "label": "Demeco \"Ultraviolet\" LMG",
       "description": "Manufacturer: Klaus & Werner Item Type: LMG Class: Energy (Laser) Battery Size: 100 Rate Of Fire: 400 rpm Effective Range: 40 m Attachments: Optics (S2), Barrel (S2), Underbarrel (S3) Klaus & Werner has created an iconic weapon with tried and true Demeco laser LMG. Used extensively in military engagements, this short-to-mid-range infantry favorite has been constructed with stability and accuracy at the forefront. The Ultraviolet edition features eye-catching violet and orchid coloring.",
+      "kind": "item"
+    },
+    "klwe_lmg_energy_01_store01": {
+      "key": "item_Descklwe_lmg_energy_01_store01",
+      "label": "Demeco \"Streamline\" LMG",
+      "description": "Manufacturer: Verified Offworld Laser Technologies Item Type: LMG Class: Energy (Electron) Battery Size: 165 Rate of Fire: 550 rpm - 220 rpm Effective Range: 50m Attachments: Optics (S3), Underbarrel (S3) The engineers at VOLT crafted the Fresnel LMG to bring a powerful energy weapon to the frontlines, one that can initiate a fight with a rapid spray of deadly blasts. As the weapon heats up, the shots become slower and more powerful, but be careful of overheating. A weapon of this magnitude demands a strong foundation; operators are encouraged to fire from a crouching position to allow for better recoil management. The Streamline edition is a subdued white finished with strokes of deep red and metallic accents.",
       "kind": "item"
     },
     "klwe_optics_disp_x8_s3": {
@@ -31786,6 +31936,6 @@
     }
   },
   "summary": {
-    "totalDescriptions": 5297
+    "totalDescriptions": 5322
   }
 }
