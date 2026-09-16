@@ -10,6 +10,23 @@ export const BLUEPRINT_MISSION_TRACKING_EXCLUSIONS = [
   'cargo_shipmining_pod_prospector',
   'mining_modules_active_stampede',
   'mining_modules_passive_torrent_mk3',
+  /** 4.10.1 emptied Orison Relief scenario blueprintPool arrays; pool records remain. */
+  'behr_pistol_ballistic_01_mr01',
+  'behr_rifle_ballistic_01_mr01',
+  'klwe_smg_energy_01_mr01',
+  'cds_undersuit_01_02_02',
+  'cds_combat_light_arms_02_02_01',
+  'cds_combat_light_core_02_02_01',
+  'cds_combat_light_helmet_02_02_01',
+  'cds_combat_light_legs_02_02_01',
+  'cds_combat_medium_arms_01_02_01',
+  'cds_combat_medium_core_01_02_01',
+  'cds_combat_medium_helmet_01_02_01',
+  'cds_combat_medium_legs_01_02_01',
+  'cds_combat_heavy_arms_01_02_02',
+  'cds_combat_heavy_core_01_02_02',
+  'cds_combat_heavy_helmet_01_02_02',
+  'cds_combat_heavy_legs_01_02_02',
 ]
 
 /** Reward pool keys excluded from mission tracking (mirrors exclusions above). */
@@ -29,6 +46,26 @@ export const REWARD_POOL_TRACKING_EXCLUSIONS = [
   'cargo_shipmining_pod_prospector',
   'mining_modules_active_stampede',
   'mining_modules_passive_torrent_mk3',
+  /**
+   * 4.10.1: Orison Relief scenario tiers still exist but blueprintPool is empty.
+   * Pool JSON remains; no contract links. Re-check if CIG restores the track.
+   */
+  'bp_reward_behr_pistol_ballistic_01_mr01',
+  'bp_reward_behr_rifle_ballistic_01_mr01',
+  'bp_reward_klwe_smg_energy_01_mr01',
+  'bp_reward_cds_undersuit_01_02_02',
+  'bp_reward_cds_combat_light_arms_02_02_01',
+  'bp_reward_cds_combat_light_core_02_02_01',
+  'bp_reward_cds_combat_light_helmet_02_02_01',
+  'bp_reward_cds_combat_light_legs_02_02_01',
+  'bp_reward_cds_combat_medium_arms_01_02_01',
+  'bp_reward_cds_combat_medium_core_01_02_01',
+  'bp_reward_cds_combat_medium_helmet_01_02_01',
+  'bp_reward_cds_combat_medium_legs_01_02_01',
+  'bp_reward_cds_combat_heavy_arms_01_02_02',
+  'bp_reward_cds_combat_heavy_core_01_02_02',
+  'bp_reward_cds_combat_heavy_helmet_01_02_02',
+  'bp_reward_cds_combat_heavy_legs_01_02_02',
 ]
 
 /** Red Wind pool exists in game data but has no BlueprintRewards on hauling contracts. */

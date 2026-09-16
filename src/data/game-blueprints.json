@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-09-12T00:08:53.979Z",
+  "_extracted": "2026-09-16T23:09:45.336Z",
   "version": "4.10.x",
   "blueprints": [
     {
@@ -10855,31 +10855,8 @@
         "Armor_Radiationcapacity": 26800,
         "Armor_Damagemitigation": 0.6
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 288,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_heavy_arms_01_02_02",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_heavy_arms_01_02_02"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "292f90d9-dbbd-4c9d-bd81-b474bc48e2ed",
@@ -10995,31 +10972,8 @@
         "Armor_Radiationcapacity": 26800,
         "Armor_Damagemitigation": 0.6
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 288,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_heavy_core_01_02_02",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_heavy_core_01_02_02"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "b7c1c3e2-7c74-4219-830c-7a75c4d13f80",
@@ -11099,31 +11053,8 @@
         "Armor_Radiationcapacity": 26800,
         "Armor_Damagemitigation": 0.6
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 288,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_heavy_helmet_01_02_02",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_heavy_helmet_01_02_02"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "d7471459-d238-4f44-b5c5-e793377de11a",
@@ -11203,31 +11134,8 @@
         "Armor_Radiationcapacity": 26800,
         "Armor_Damagemitigation": 0.6
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 288,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_heavy_legs_01_02_02",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_heavy_legs_01_02_02"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "1244f177-7b33-4f16-8e63-8d19e87f2a48",
@@ -32245,31 +32153,8 @@
         "Armor_Radiationcapacity": 26000,
         "Armor_Damagemitigation": 0.8
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 72,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_light_arms_02_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_light_arms_02_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "1ac52ca8-a15c-445a-9b1b-adbc4f060cf0",
@@ -32349,31 +32234,8 @@
         "Armor_Radiationcapacity": 26000,
         "Armor_Damagemitigation": 0.8
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 72,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_light_core_02_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_light_core_02_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "e75c0be5-82b7-4cdf-ab29-7187040a27ac",
@@ -32453,31 +32315,8 @@
         "Armor_Radiationcapacity": 26000,
         "Armor_Damagemitigation": 0.8
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 72,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_light_helmet_02_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_light_helmet_02_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "77047612-1413-4401-a29d-74822babf286",
@@ -32557,31 +32396,8 @@
         "Armor_Radiationcapacity": 26000,
         "Armor_Damagemitigation": 0.8
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 72,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_light_legs_02_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_light_legs_02_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "90bf3459-4ad8-49f2-bc05-8103033cf49a",
@@ -48839,31 +48655,8 @@
         "Armor_Radiationcapacity": 26400,
         "Armor_Damagemitigation": 0.7
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 164,160 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_medium_arms_01_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_medium_arms_01_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "82e51d72-b371-4720-83a0-b8bc7ffb7ece",
@@ -48992,31 +48785,8 @@
         "Armor_Radiationcapacity": 26400,
         "Armor_Damagemitigation": 0.7
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 164,160 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_medium_core_01_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_medium_core_01_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "7e329a5d-3b5a-4f8c-a1ec-1299ef1debd9",
@@ -49109,32 +48879,8 @@
         "Armor_Radiationcapacity": 26400,
         "Armor_Damagemitigation": 0.7
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 164,160 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_medium_helmet_01_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_medium_helmet_01_02_01",
-        "bp_reward_ds_combat_medium_helmet_01_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "ad7e7203-073a-4937-a43e-d5ed7170e460",
@@ -49227,31 +48973,8 @@
         "Armor_Radiationcapacity": 26400,
         "Armor_Damagemitigation": 0.7
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 164,160 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_combat_medium_legs_01_02_01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_combat_medium_legs_01_02_01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "5748ffcc-b539-4e5e-b66c-fe86a3f887ed",
@@ -119456,31 +119179,8 @@
         "Armor_Radiationcapacity": 15200,
         "Armor_Damagemitigation": 0.95
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 288,000 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_cds_undersuit_01_02_02",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_cds_undersuit_01_02_02"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "172f6f26-9a96-450e-b379-9ccb734ed744",
@@ -123731,31 +123431,8 @@
         "Weapon_Damage": 22.5,
         "Weapon_Firerate": 450
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 43,200 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_behr_pistol_ballistic_01_mr01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_behr_pistol_ballistic_01_mr01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "efdfd631-c2c4-4a0c-9520-f12a7a2bffbc",
@@ -131077,31 +130754,8 @@
         "Weapon_Recoil_Handling": 0.3,
         "Weapon_Recoil_Kick": 1
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 123,840 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_behr_rifle_ballistic_01_mr01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_behr_rifle_ballistic_01_mr01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "07cf5e1e-ec19-4a0c-9750-b8897de97cb8",
@@ -142975,31 +142629,8 @@
         "Weapon_Recoil_Handling": 0.6,
         "Weapon_Recoil_Kick": 1
       },
-      "isReward": true,
-      "rewardMissions": [
-        {
-          "mission": "Crusader Industries: Orison Relief — 230,400 pts",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "bp_reward_klwe_smg_energy_01_mr01",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Scenario Progress",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        }
-      ],
-      "missionPools": [
-        "bp_reward_klwe_smg_energy_01_mr01"
-      ]
+      "isReward": false,
+      "rewardMissions": []
     },
     {
       "id": "41cf01a5-1600-4017-b0a8-62344627803c",
@@ -239950,7 +239581,7 @@
   "summary": {
     "totalBlueprints": 1607,
     "defaultBlueprints": 8,
-    "blueprintsWithRewards": 728,
+    "blueprintsWithRewards": 712,
     "rewardBlueprintsNeedingLocalization": 0,
     "nonRewardBlueprintsWithFallback": 0
   }
