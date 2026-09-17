@@ -48,11 +48,13 @@ import {
   reportOrderDispute,
   fetchBlueprintOwnerCounts,
   fetchCustomOrders,
+  fetchInventory,
   fetchMemberReputations,
   fetchUserOrderLimits,
   cancelCustomOrderRequester,
   type CustomOrder,
   type CustomOrderStatus,
+  type ResourceInventoryRow,
   type UserOrderLimits,
 } from '../lib/operations'
 import {
@@ -139,6 +141,7 @@ export default function CustomOrdersRoute() {
   const { draftItems, draftResourceItems, draftCount, clearDraft } = useOrderDraft()
   const search = customOrdersRoute.useSearch()
   const [orders, setOrders] = useState<CustomOrder[]>([])
+  const [inventory, setInventory] = useState<ResourceInventoryRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
@@ -175,11 +178,15 @@ export default function CustomOrdersRoute() {
   const loadOrders = useCallback(async () => {
     setLoading(true)
     setError(null)
-    const ordersResult = await fetchCustomOrders(
-      user?.id ? { participantId: user.id } : undefined
-    )
+    const [ordersResult, inventoryResult] = await Promise.all([
+      fetchCustomOrders(user?.id ? { participantId: user.id } : undefined),
+      user?.id
+        ? fetchInventory({ scope: 'personal', userId: user.id })
+        : Promise.resolve({ data: [] as ResourceInventoryRow[], error: undefined }),
+    ])
     if (ordersResult.error) setError(ordersResult.error)
     setOrders(ordersResult.data)
+    setInventory(inventoryResult.data ?? [])
 
     if (user?.id) {
       const [repResult, limitsResult] = await Promise.all([
@@ -581,6 +588,8 @@ export default function CustomOrdersRoute() {
                 key={listing.id}
                 order={listing}
                 showDfp={dfpDisplayEnabled}
+                inventory={inventory}
+                labelMap={labelMap}
                 onChanged={() => void loadOrders()}
                 onAddItems={() => {
                   setEditingOrderId(null)

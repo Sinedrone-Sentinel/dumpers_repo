@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from '@tanstack/react-router'
 import ListingTypeBadge from './ListingTypeBadge'
 import OrderDeadlineNotice from './OrderDeadlineNotice'
@@ -14,17 +13,22 @@ import { orderTotalDfp } from '../lib/orderPricing'
 import { buyerReputationFromRow, type MemberReputationRow } from '../lib/reputation'
 import type { CustomOrder } from '../lib/operations'
 import DealMessageButton from './DealMessageButton'
+import {
+  buildStockByQuality,
+  collectOrderDeductPlan,
+  formatDeductPlanHint,
+  planFitsStock,
+  type StockDeductCard,
+} from '../lib/bazaarStockDeduct'
 
 interface AssignedOrderCardProps {
   order: CustomOrder
   blueprintById: Map<string, BlueprintWithSlots>
   dfpDisplayEnabled: boolean
-  craftDeductInventory: boolean
   reputations: Record<string, MemberReputationRow>
   labelMap: Record<string, string>
-  quantityByKey: Record<string, number>
+  inventory: StockDeductCard[]
   orderItems: { resourceKey: string; quantity: number }[]
-  stockCheck: { canFulfill: boolean; shortages: string[] }
   notes: string
   onNotesChange: (value: string) => void
   submitting: boolean
@@ -37,12 +41,10 @@ export default function AssignedOrderCard({
   order,
   blueprintById,
   dfpDisplayEnabled,
-  craftDeductInventory,
   reputations,
   labelMap,
-  quantityByKey,
+  inventory,
   orderItems,
-  stockCheck,
   notes,
   onNotesChange,
   submitting,
@@ -51,12 +53,9 @@ export default function AssignedOrderCard({
   onCompleteCraft,
 }: AssignedOrderCardProps) {
   const totalDfp = orderTotalDfp(order)
-  const shortages = craftDeductInventory
-    ? orderItems.filter((item) => {
-        const available = quantityByKey[item.resourceKey] ?? 0
-        return available < item.quantity
-      })
-    : []
+  const deductPlan = collectOrderDeductPlan(order, blueprintById)
+  const hasDeduct = deductPlan.length > 0
+  const canCoverDeduct = !hasDeduct || planFitsStock(deductPlan, buildStockByQuality(inventory))
 
   return (
     <div className="p-4 site-surface space-y-3">
@@ -65,15 +64,15 @@ export default function AssignedOrderCard({
           {order.title}
           <ListingTypeBadge order={order} />
         </span>
-        {craftDeductInventory && (
+        {hasDeduct && (
           <span
             className={`text-xs px-2 py-0.5 rounded border ${
-              shortages.length > 0
-                ? 'bg-red-950/50 text-red-300 border-red-500/30'
-                : 'bg-green-950/50 text-green-300 border-green-500/30'
+              canCoverDeduct
+                ? 'bg-green-950/50 text-green-300 border-green-500/30'
+                : 'bg-red-950/50 text-red-300 border-red-500/30'
             }`}
           >
-            {shortages.length > 0 ? 'Short stock' : 'Stock OK'}
+            {canCoverDeduct ? 'Stock OK' : 'Short stock'}
           </span>
         )}
       </div>
@@ -81,7 +80,7 @@ export default function AssignedOrderCard({
       <p className="text-slate-500 text-xs">
         {order.status.replace(/_/g, ' ')}
         {dfpDisplayEnabled && totalDfp > 0 && (
-          <span className="text-amber-300/90"> · {formatDfpAuec(totalDfp)}</span>
+          <span className="text-amber-300/90"> ? {formatDfpAuec(totalDfp)}</span>
         )}
       </p>
 
@@ -109,57 +108,38 @@ export default function AssignedOrderCard({
             Craft checklist
           </summary>
           <div className="mt-2 space-y-2">
-            {craftDeductInventory && (
-              <p className="text-slate-500 text-xs">
-                Inventory deduction is on — stock is checked from My Resources.
-              </p>
-            )}
-            {orderItems.map((item) => {
-              const available = quantityByKey[item.resourceKey] ?? 0
-              const enough = available >= item.quantity
-
-              return (
-                <div
-                  key={item.resourceKey}
-                  className="flex items-center justify-between text-sm site-surface px-3 py-2"
-                >
-                  <span className="text-slate-300">
-                    {getResourceLabel(item.resourceKey, labelMap)}
-                  </span>
-                  <span
-                    className={`tabular-nums ${
-                      craftDeductInventory
-                        ? enough
-                          ? 'text-green-400'
-                          : 'text-red-400'
-                        : 'text-slate-400'
-                    }`}
-                  >
-                    {formatQuantityForResource(item.resourceKey, item.quantity)}{' '}
-                    {resourceQuantityUnitLabel(item.resourceKey)}
-                    {craftDeductInventory && (
-                      <>
-                        {' '}
-                        needed · {formatQuantityForResource(item.resourceKey, available)}{' '}
-                        {resourceQuantityUnitLabel(item.resourceKey)} in My Resources
-                      </>
-                    )}
-                  </span>
-                </div>
-              )
-            })}
+            {orderItems.map((item) => (
+              <div
+                key={item.resourceKey}
+                className="flex items-center justify-between text-sm site-surface px-3 py-2"
+              >
+                <span className="text-slate-300">
+                  {getResourceLabel(item.resourceKey, labelMap)}
+                </span>
+                <span className="tabular-nums text-slate-400">
+                  {formatQuantityForResource(item.resourceKey, item.quantity)}{' '}
+                  {resourceQuantityUnitLabel(item.resourceKey)}
+                </span>
+              </div>
+            ))}
           </div>
         </details>
       )}
 
-      {craftDeductInventory && !stockCheck.canFulfill && (
-        <p className="text-red-300 text-xs">
-          Short: {stockCheck.shortages.join(', ')}. Add stock in{' '}
-          <Link to="/resources" className="text-red-200 underline">
-            Resource Tracker → My Resources
-          </Link>
-          .
-        </p>
+      {hasDeduct && (
+        <div className="site-surface px-3 py-2 space-y-1">
+          <p className="text-slate-300 text-xs font-medium">Will deduct from My Resources</p>
+          <p className="site-hint !mt-0">{formatDeductPlanHint(deductPlan, labelMap)}</p>
+          {!canCoverDeduct && (
+            <p className="text-red-300 text-xs">
+              Short at the listed qualities. Add stock in{' '}
+              <Link to="/resources" className="text-red-200 underline">
+                Resource Tracker ? My Resources
+              </Link>
+              .
+            </p>
+          )}
+        </div>
       )}
 
       <div className="pt-3 site-divider space-y-2">
@@ -170,7 +150,7 @@ export default function AssignedOrderCard({
           disabled={submitting}
           className="site-btn-secondary w-full"
         >
-          {submitting ? 'Releasing...' : 'Abandon job — return to pool'}
+          {submitting ? 'Releasing...' : 'Abandon job ? return to pool'}
         </button>
 
         {order.status === 'accepted' && (
@@ -197,7 +177,7 @@ export default function AssignedOrderCard({
             <button
               type="button"
               onClick={onCompleteCraft}
-              disabled={(craftDeductInventory && !stockCheck.canFulfill) || submitting}
+              disabled={(hasDeduct && !canCoverDeduct) || submitting}
               className="site-btn-success w-full"
             >
               {submitting ? 'Completing...' : 'Complete craft & mark ready for pickup'}

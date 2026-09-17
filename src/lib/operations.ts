@@ -88,6 +88,8 @@ export interface CustomOrderBlueprint {
   unit_dfp_auec: number
   line_dfp_auec: number
   sort_order: number
+  deduct_from_stock?: boolean
+  deduct_plan?: unknown
 }
 
 export interface CustomOrderBlueprintInput {
@@ -188,6 +190,8 @@ export interface CustomOrderResourceLine {
   unit_dfp_auec: number
   line_dfp_auec: number
   sort_order: number
+  deduct_from_stock?: boolean
+  deduct_plan?: unknown
 }
 
 export interface CustomOrderResourceInput {
@@ -874,7 +878,13 @@ export async function acceptWtsPartialPurchase(
 
 export async function acceptWtbPartialFulfillment(
   listingId: string,
-  selections: { lineId: string; kind: 'blueprint' | 'resource'; quantity: number }[]
+  selections: {
+    lineId: string
+    kind: 'blueprint' | 'resource'
+    quantity: number
+    deductFromStock?: boolean
+    deductPlan?: { resource_key: string; quality: number; quantity: number }[]
+  }[]
 ): Promise<{ purchaseOrderId?: string; listingId?: string; error?: string }> {
   const { data, error } = await supabase.rpc('accept_wtb_partial', {
     p_listing_id: listingId,
@@ -882,6 +892,8 @@ export async function acceptWtbPartialFulfillment(
       line_id: sel.lineId,
       kind: sel.kind,
       quantity: sel.quantity,
+      deduct_from_stock: sel.deductFromStock === true,
+      deduct_plan: sel.deductFromStock ? (sel.deductPlan ?? []) : [],
     })),
   })
 
@@ -1007,6 +1019,21 @@ export async function updateListingLine(
     p_line_id: lineId,
     p_kind: kind,
     p_quantity: quantity,
+  })
+  if (error) return { error: error.message }
+  return {}
+}
+
+/** WTS listing owner: toggle deduct-from-My-Resources on a commodity line. */
+export async function setListingLineStockDeduct(
+  lineId: string,
+  kind: 'blueprint' | 'resource',
+  enabled: boolean
+): Promise<{ error?: string }> {
+  const { error } = await supabase.rpc('set_listing_line_stock_deduct', {
+    p_line_id: lineId,
+    p_kind: kind,
+    p_enabled: enabled,
   })
   if (error) return { error: error.message }
   return {}

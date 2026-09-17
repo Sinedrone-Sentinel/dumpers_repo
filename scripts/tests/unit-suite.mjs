@@ -24,6 +24,7 @@ const modules = [
   'src/lib/friendInvite.ts',
   'src/lib/canonicalizeBlueprintId.ts',
   'src/lib/miningAdvisorCrypto.ts',
+  'src/lib/bazaarStockDeduct.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -47,6 +48,7 @@ const oauthReturn = await import(pathToFileURL(path.join(outDir, 'oauthReturn.mj
 const friendInvite = await import(pathToFileURL(path.join(outDir, 'friendInvite.mjs')).href)
 const relink = await import(pathToFileURL(path.join(outDir, 'canonicalizeBlueprintId.mjs')).href)
 const advisorCrypto = await import(pathToFileURL(path.join(outDir, 'miningAdvisorCrypto.mjs')).href)
+const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDeduct.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -571,5 +573,81 @@ try {
   badUnlock = true
 }
 check(badUnlock, 'wrong lock phrase fails')
+
+const cq7 = {
+  blueprintName: 'CQ7 Rifle',
+  slots: [
+    {
+      requiredCount: 1,
+      options: [{ type: 'resource', resourceName: 'Aluminum', standardCargoUnits: 0.06 }],
+    },
+    {
+      requiredCount: 1,
+      options: [{ type: 'resource', resourceName: 'Hephaestanite', standardCargoUnits: 0.02 }],
+    },
+    {
+      requiredCount: 1,
+      options: [{ type: 'resource', resourceName: 'Iron', standardCargoUnits: 0.01 }],
+    },
+  ],
+}
+const cq7Plan = bazaarDeduct.blueprintLineDeductPlan(cq7, 3, { 0: 700, 1: 500, 2: 800 }, 500)
+const byKey = Object.fromEntries(cq7Plan.map((row) => [row.resourceKey, row]))
+check(byKey.aluminum?.quantity === 0.18 && byKey.aluminum?.quality === 700, 'CQ7 x3 aluminum at frame Q')
+check(
+  byKey.hephaestanite?.quantity === 0.06 && byKey.hephaestanite?.quality === 500,
+  'CQ7 x3 hephaestanite at stock Q'
+)
+check(byKey.iron?.quantity === 0.03 && byKey.iron?.quality === 800, 'CQ7 x3 iron at barrel Q')
+check(
+  bazaarDeduct.planFitsStock(cq7Plan, bazaarDeduct.buildStockByQuality([
+    { resource_key: 'aluminum', quality: 700, quantity: 0.18 },
+    { resource_key: 'hephaestanite', quality: 500, quantity: 0.06 },
+    { resource_key: 'iron', quality: 800, quantity: 0.03 },
+  ])) === true,
+  'CQ7 plan covered at matching qualities'
+)
+check(
+  bazaarDeduct.planFitsStock(cq7Plan, bazaarDeduct.buildStockByQuality([
+    { resource_key: 'aluminum', quality: 500, quantity: 1 },
+    { resource_key: 'hephaestanite', quality: 500, quantity: 1 },
+    { resource_key: 'iron', quality: 800, quantity: 1 },
+  ])) === false,
+  'CQ7 plan rejects aluminum at the wrong quality'
+)
+
+const evalLines = bazaarDeduct.evaluateDeductCheckboxes(
+  [
+    {
+      id: 'a',
+      active: true,
+      wantDeduct: true,
+      plan: bazaarDeduct.resourceLineDeductPlan('aluminum', 700, 0.12),
+    },
+    {
+      id: 'b',
+      active: true,
+      wantDeduct: true,
+      plan: bazaarDeduct.resourceLineDeductPlan('aluminum', 700, 0.12),
+    },
+  ],
+  [{ resource_key: 'aluminum', quality: 700, quantity: 0.18 }]
+)
+check(evalLines.a.checked === true && evalLines.a.enabled === true, 'first deduct line takes remaining stock')
+check(evalLines.b.enabled === false && evalLines.b.checked === false, 'second deduct line disables when leftover is short')
+
+const kept = bazaarDeduct.evaluateDeductCheckboxes(
+  [
+    {
+      id: 'kept',
+      active: true,
+      wantDeduct: true,
+      keepWanted: true,
+      plan: bazaarDeduct.resourceLineDeductPlan('aluminum', 700, 0.25),
+    },
+  ],
+  [{ resource_key: 'aluminum', quality: 700, quantity: 0.18 }]
+)
+check(kept.kept.checked === true && kept.kept.enabled === true && kept.kept.fits === false, 'saved listing deduct stays on when stock is short')
 
 console.log(`Unit tests: ${pass} passed`)

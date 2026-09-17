@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import ListingTypeBadge from './ListingTypeBadge'
 import { formatDfpAuec } from '../lib/dfp'
 import { formatSlotQualitySummary, isUniformSlotQuality } from '../lib/blueprintQuality'
@@ -8,15 +8,25 @@ import { resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 import {
   removeListingLine,
+  setListingLineStockDeduct,
   updateListingLine,
   type CustomOrder,
   type CustomOrderBlueprint,
   type CustomOrderResourceLine,
 } from '../lib/operations'
+import StockDeductCheckbox from './StockDeductCheckbox'
+import {
+  evaluateDeductCheckboxes,
+  formatDeductPlanHint,
+  resourceLineDeductPlan,
+  type StockDeductCard,
+} from '../lib/bazaarStockDeduct'
 
 interface MyListingCardProps {
   order: CustomOrder
   showDfp: boolean
+  inventory: StockDeductCard[]
+  labelMap: Record<string, string>
   onChanged: () => void
   onAddItems: () => void
   onDelete: () => void
@@ -37,6 +47,8 @@ function blueprintQualityLabel(line: CustomOrderBlueprint): string {
 export default function MyListingCard({
   order,
   showDfp,
+  inventory,
+  labelMap,
   onChanged,
   onAddItems,
   onDelete,
@@ -48,6 +60,21 @@ export default function MyListingCard({
   const resLines = order.resource_lines ?? []
   const [qtyDrafts, setQtyDrafts] = useState<Record<string, string>>({})
   const [busyLineId, setBusyLineId] = useState<string | null>(null)
+
+  const deductEval = useMemo(() => {
+    if (!isWts) return {}
+    const lines = order.resource_lines ?? []
+    return evaluateDeductCheckboxes(
+      lines.map((line) => ({
+        id: line.id,
+        active: true,
+        wantDeduct: line.deduct_from_stock === true,
+        keepWanted: line.deduct_from_stock === true,
+        plan: resourceLineDeductPlan(line.resource_key, line.min_quality, Number(line.quantity_scu)),
+      })),
+      inventory
+    )
+  }, [isWts, order.resource_lines, inventory])
 
   const draftFor = (lineId: string, current: number) =>
     qtyDrafts[lineId] ?? String(current)
@@ -104,6 +131,17 @@ export default function MyListingCard({
     const result = await removeListingLine(lineId, kind)
     setBusyLineId(null)
 
+    if (result.error) {
+      onError(result.error)
+      return
+    }
+    onChanged()
+  }
+
+  const handleToggleDeduct = async (lineId: string, enabled: boolean) => {
+    setBusyLineId(lineId)
+    const result = await setListingLineStockDeduct(lineId, 'resource', enabled)
+    setBusyLineId(null)
     if (result.error) {
       onError(result.error)
       return
@@ -172,12 +210,19 @@ export default function MyListingCard({
     </div>
   )
 
-  const renderResourceLine = (line: CustomOrderResourceLine) => (
+  const renderResourceLine = (line: CustomOrderResourceLine) => {
+    const plan = resourceLineDeductPlan(
+      line.resource_key,
+      line.min_quality,
+      Number(line.quantity_scu)
+    )
+    const deduct = deductEval[line.id]
+    return (
     <div
       key={line.id}
       className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 site-surface"
     >
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <p className="text-white text-sm truncate">{line.resource_label}</p>
         <p className="text-slate-500 text-xs">
           Q{line.min_quality} ·{' '}
@@ -185,10 +230,21 @@ export default function MyListingCard({
           {resourceQuantityUnitLabel(line.resource_key)}
           {showDfp && ` · ${formatDfpAuec(line.line_dfp_auec)}`}
         </p>
+        {isWts && (
+          <StockDeductCheckbox
+            checked={deduct?.checked === true}
+            enabled={deduct?.enabled === true}
+            fits={deduct?.fits !== false}
+            hint={formatDeductPlanHint(plan, labelMap)}
+            disabled={busyLineId === line.id}
+            onChange={(next) => void handleToggleDeduct(line.id, next)}
+          />
+        )}
       </div>
       {renderLineControls(line.id, 'resource', line.quantity_scu, '0.01')}
     </div>
-  )
+    )
+  }
 
   return (
     <div
@@ -240,7 +296,7 @@ export default function MyListingCard({
 
       <p className="text-slate-500 text-xs">
         {isWts
-          ? 'Buyers pick items straight from this listing — each purchase becomes its own transaction below.'
+          ? 'Buyers pick items straight from this listing — each purchase becomes its own transaction below. Check Deduct from My Resources on commodity lines to pull that stock when you mark the sale ready. Finished blueprint items are not deducted.'
           : 'Fulfillers claim items from this listing — each claim becomes its own transaction below.'}
       </p>
     </div>

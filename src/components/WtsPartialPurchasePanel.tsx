@@ -8,11 +8,23 @@ import {
 } from '../config/resourceTypes'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
 import type { CustomOrder } from '../lib/operations'
+import type { BlueprintWithSlots } from '../lib/blueprintResources'
+import StockDeductCheckbox from './StockDeductCheckbox'
+import {
+  blueprintLineDeductPlan,
+  deductPlanToRpc,
+  evaluateDeductCheckboxes,
+  formatDeductPlanHint,
+  resourceLineDeductPlan,
+  type StockDeductCard,
+} from '../lib/bazaarStockDeduct'
 
 export interface WtsLineSelection {
   lineId: string
   kind: 'blueprint' | 'resource'
   quantity: number
+  deductFromStock?: boolean
+  deductPlan?: { resource_key: string; quality: number; quantity: number }[]
 }
 
 interface PartialSelectionPanelProps {
@@ -26,6 +38,10 @@ interface PartialSelectionPanelProps {
   submitting?: boolean
   onPurchase: (selections: WtsLineSelection[]) => void | Promise<void>
   className?: string
+  /** Fulfill mode only: quality-aware My Resources cards for deduct checkboxes. */
+  inventory?: StockDeductCard[]
+  blueprintById?: Map<string, BlueprintWithSlots>
+  labelMap?: Record<string, string>
 }
 
 export default function WtsPartialPurchasePanel({
@@ -37,6 +53,9 @@ export default function WtsPartialPurchasePanel({
   submitting = false,
   onPurchase,
   className = '',
+  inventory = [],
+  blueprintById,
+  labelMap = {},
 }: PartialSelectionPanelProps) {
   const isFulfill = mode === 'fulfill'
 
@@ -51,6 +70,8 @@ export default function WtsPartialPurchasePanel({
           available: row.quantity,
           unitDfpAuec: Number(row.unit_dfp_auec),
           isBlueprint: true as const,
+          slotQualities: row.slot_qualities,
+          minQuality: row.min_quality,
         })),
     [order.blueprints]
   )
@@ -73,6 +94,7 @@ export default function WtsPartialPurchasePanel({
 
   const [selected, setSelected] = useState<Record<string, boolean>>({})
   const [quantities, setQuantities] = useState<Record<string, string>>({})
+  const [wantDeduct, setWantDeduct] = useState<Record<string, boolean>>({})
   const [pendingConfirm, setPendingConfirm] = useState<WtsLineSelection[] | null>(null)
 
   // The Blueprint tracker is opt-in, so an untracked blueprint is a warning, not a block.
@@ -86,6 +108,68 @@ export default function WtsPartialPurchasePanel({
       line.available,
       Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0))
     )
+  }
+
+  const blueprintQtyForLine = (line: (typeof blueprintLines)[number]) =>
+    Math.min(line.available, Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0)))
+
+  const deductEval = useMemo(() => {
+    if (!isFulfill) return {}
+    const lines = [
+      ...blueprintLines.map((line) => {
+        const qty = selected[line.lineId] ? blueprintQtyForLine(line) : 0
+        const blueprint = blueprintById?.get(line.blueprintId)
+        const plan =
+          blueprint && qty > 0
+            ? blueprintLineDeductPlan(blueprint, qty, line.slotQualities, line.minQuality)
+            : []
+        return {
+          id: line.lineId,
+          active: !!selected[line.lineId],
+          wantDeduct: !!wantDeduct[line.lineId],
+          plan,
+        }
+      }),
+      ...resourceLines.map((line) => {
+        const qty = selected[line.lineId] ? resourceQtyForLine(line) : 0
+        return {
+          id: line.lineId,
+          active: !!selected[line.lineId],
+          wantDeduct: !!wantDeduct[line.lineId],
+          plan: qty > 0 ? resourceLineDeductPlan(line.resourceKey, line.minQuality, qty) : [],
+        }
+      }),
+    ]
+    return evaluateDeductCheckboxes(lines, inventory)
+    // quantity helpers close over quantities/selected
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isFulfill,
+    blueprintLines,
+    resourceLines,
+    selected,
+    quantities,
+    wantDeduct,
+    inventory,
+    blueprintById,
+  ])
+
+  const deductPlanForLine = (lineId: string, kind: 'blueprint' | 'resource') => {
+    if (kind === 'blueprint') {
+      const line = blueprintLines.find((row) => row.lineId === lineId)
+      if (!line) return []
+      const blueprint = blueprintById?.get(line.blueprintId)
+      if (!blueprint) return []
+      return blueprintLineDeductPlan(
+        blueprint,
+        blueprintQtyForLine(line),
+        line.slotQualities,
+        line.minQuality
+      )
+    }
+    const line = resourceLines.find((row) => row.lineId === lineId)
+    if (!line) return []
+    return resourceLineDeductPlan(line.resourceKey, line.minQuality, resourceQtyForLine(line))
   }
 
   const toggleLine = (lineId: string, defaultQty: number, wholeUnit = true) => {
@@ -129,7 +213,16 @@ export default function WtsPartialPurchasePanel({
         line.available,
         Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0))
       )
-      out.push({ lineId: line.lineId, kind: 'blueprint', quantity: qty })
+      out.push({
+        lineId: line.lineId,
+        kind: 'blueprint',
+        quantity: qty,
+        deductFromStock: isFulfill ? deductEval[line.lineId]?.checked === true : undefined,
+        deductPlan:
+          isFulfill && deductEval[line.lineId]?.checked
+            ? deductPlanToRpc(deductPlanForLine(line.lineId, 'blueprint'))
+            : undefined,
+      })
     }
     for (const line of resourceLines) {
       if (!selected[line.lineId]) continue
@@ -137,6 +230,11 @@ export default function WtsPartialPurchasePanel({
         lineId: line.lineId,
         kind: 'resource',
         quantity: resourceQtyForLine(line),
+        deductFromStock: isFulfill ? deductEval[line.lineId]?.checked === true : undefined,
+        deductPlan:
+          isFulfill && deductEval[line.lineId]?.checked
+            ? deductPlanToRpc(deductPlanForLine(line.lineId, 'resource'))
+            : undefined,
       })
     }
     return out
@@ -174,7 +272,7 @@ export default function WtsPartialPurchasePanel({
         </p>
         <p className="site-hint text-[11px] !mt-0.5">
           {isFulfill
-            ? 'Check the lines you will supply. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unclaimed lines stay open for others.'
+            ? 'Check the lines you will supply. Optionally deduct each selected line from My Resources at that line’s listed qualities. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unclaimed lines stay open for others.'
             : 'Check the lines you want. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unsold lines stay listed.'}
         </p>
       </div>
@@ -194,7 +292,7 @@ export default function WtsPartialPurchasePanel({
                     : ''
               }`}
             >
-              <label className="flex items-start gap-2 cursor-pointer">
+              <div className="flex items-start gap-2">
                 <input
                   type="checkbox"
                   checked={isOn}
@@ -234,8 +332,22 @@ export default function WtsPartialPurchasePanel({
                       <span className="text-slate-500 text-xs">of {line.available}</span>
                     </div>
                   )}
+                  {isFulfill && isOn && (
+                    <StockDeductCheckbox
+                      checked={deductEval[line.lineId]?.checked === true}
+                      enabled={deductEval[line.lineId]?.enabled === true}
+                      fits={deductEval[line.lineId]?.fits !== false}
+                      hint={formatDeductPlanHint(
+                        deductPlanForLine(line.lineId, 'blueprint'),
+                        labelMap
+                      )}
+                      onChange={(next) =>
+                        setWantDeduct((prev) => ({ ...prev, [line.lineId]: next }))
+                      }
+                    />
+                  )}
                 </div>
-              </label>
+              </div>
             </div>
           )
         })}
@@ -250,7 +362,7 @@ export default function WtsPartialPurchasePanel({
                 isOn ? 'border-cyan-500/40 site-surface' : 'site-surface'
               }`}
             >
-              <label className="flex items-start gap-2 cursor-pointer">
+              <div className="flex items-start gap-2">
                 <input
                   type="checkbox"
                   checked={isOn}
@@ -289,8 +401,22 @@ export default function WtsPartialPurchasePanel({
                       <span className="text-slate-500 text-xs">of {line.available}</span>
                     </div>
                   )}
+                  {isFulfill && isOn && (
+                    <StockDeductCheckbox
+                      checked={deductEval[line.lineId]?.checked === true}
+                      enabled={deductEval[line.lineId]?.enabled === true}
+                      fits={deductEval[line.lineId]?.fits !== false}
+                      hint={formatDeductPlanHint(
+                        deductPlanForLine(line.lineId, 'resource'),
+                        labelMap
+                      )}
+                      onChange={(next) =>
+                        setWantDeduct((prev) => ({ ...prev, [line.lineId]: next }))
+                      }
+                    />
+                  )}
                 </div>
-              </label>
+              </div>
             </div>
           )
         })}

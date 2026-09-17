@@ -18,7 +18,6 @@ import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { SITE_SLOGAN } from '../config/site'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import { formatDfpAuec } from '../lib/dfp'
-import { buildStockTotalsByResource } from '../lib/inventoryStock'
 import {
   archiveRatingInfo,
   canUserArchiveOrder,
@@ -122,7 +121,6 @@ function listingMatchesSearch(
 export default function BazaarRoute() {
   const { user, profile, acquiredBlueprints, dfpDisplayEnabled, isGuestPreview } = useAuth()
   const isGuest = !user && isGuestPreview
-  const craftDeductInventory = profile?.craft_deduct_inventory ?? false
   const isRsiVerified = profile?.rsi_handle_verified ?? false
   const { data: blueprints = [] } = useBlueprintData()
   const { labelMap } = useResourceCatalog()
@@ -226,8 +224,6 @@ export default function BazaarRoute() {
       void loadData()
     }
   }, [isGuest, loadData, loadGuestData])
-
-  const quantityByKey = useMemo(() => buildStockTotalsByResource(inventory), [inventory])
 
   const blueprintById = useMemo(() => {
     const map = new Map<string, BlueprintWithSlots>()
@@ -424,28 +420,6 @@ export default function BazaarRoute() {
     setArchiveRatingModal(null)
     await loadData()
   }
-
-  const getStockCheckForOrder = useCallback(
-    (order: CustomOrder) => {
-      if (!craftDeductInventory) {
-        return { canFulfill: true, shortages: [] as string[] }
-      }
-
-      const items = fulfillmentItemsForOrder(order)
-      const shortages: string[] = []
-      for (const item of items) {
-        const available = quantityByKey[item.resourceKey] ?? 0
-        if (available < item.quantity) {
-          shortages.push(
-            `${getResourceLabel(item.resourceKey, labelMap)} (need ${formatQuantityForResource(item.resourceKey, item.quantity)} ${resourceQuantityUnitLabel(item.resourceKey)}, have ${formatQuantityForResource(item.resourceKey, available)} ${resourceQuantityUnitLabel(item.resourceKey)})`
-          )
-        }
-      }
-
-      return { canFulfill: shortages.length === 0, shortages }
-    },
-    [craftDeductInventory, fulfillmentItemsForOrder, quantityByKey, labelMap]
-  )
 
   const handleAcceptPartial = async (listing: CustomOrder, selections: WtsLineSelection[]) => {
     setAcceptingOrderId(listing.id)
@@ -876,6 +850,8 @@ export default function BazaarRoute() {
                         canAcceptLimits={canAcceptLimits}
                         accepting={acceptingOrderId === order.id}
                         acquiredBlueprints={acquiredBlueprints}
+                        inventory={inventory}
+                        labelMap={labelMap}
                         onAcceptPartial={(selections) =>
                           void handleAcceptPartial(order, selections)
                         }
@@ -900,7 +876,6 @@ export default function BazaarRoute() {
                     <div className="space-y-2">
                       {myAssignedOrders.map((order) => {
                         const orderItems = fulfillmentItemsForOrder(order)
-                        const stockCheck = getStockCheckForOrder(order)
                         const isSubmitting = submittingOrderId === order.id
 
                         return (
@@ -909,12 +884,10 @@ export default function BazaarRoute() {
                             order={order}
                             blueprintById={blueprintById}
                             dfpDisplayEnabled={dfpDisplayEnabled}
-                            craftDeductInventory={craftDeductInventory}
                             reputations={reputations}
                             labelMap={labelMap}
-                            quantityByKey={quantityByKey}
+                            inventory={inventory}
                             orderItems={orderItems}
-                            stockCheck={stockCheck}
                             notes={craftNotesByOrderId[order.id] ?? ''}
                             onNotesChange={(value) =>
                               setCraftNotesByOrderId((prev) => ({ ...prev, [order.id]: value }))
@@ -948,6 +921,8 @@ export default function BazaarRoute() {
                           blueprintById={blueprintById}
                           dfpDisplayEnabled={dfpDisplayEnabled}
                           submitting={submittingOrderId === order.id}
+                          inventory={inventory}
+                          labelMap={labelMap}
                           onAbandon={() => void handleAbandon(order.id)}
                           onStartWork={() => void handleStartWork(order.id)}
                           onMarkReady={() => void handleMarkWtsReady(order.id)}
