@@ -114,7 +114,6 @@ interface AuthContextType {
   unlinkProvider: (identity: UserIdentity) => Promise<void>
   signOut: () => Promise<void>
   toggleAcquired: (blueprintId: string) => Promise<void>
-  updateCraftDeductInventory: (enabled: boolean) => Promise<boolean>
   updateGroupBlueprintVariants: (enabled: boolean) => Promise<boolean>
   groupBlueprintVariants: boolean
   refreshProfile: () => Promise<void>
@@ -920,24 +919,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  const updateCraftDeductInventory = useCallback(async (enabled: boolean): Promise<boolean> => {
-    const activeUser = userRef.current
-    if (!activeUser) return false
-
-    const { error } = await supabase
-      .from('profiles')
-      .update({ craft_deduct_inventory: enabled })
-      .eq('id', activeUser.id)
-
-    if (error) {
-      console.error('Error updating craft deduct inventory:', error)
-      return false
-    }
-
-    setProfile(prev => prev ? { ...prev, craft_deduct_inventory: enabled } : null)
-    return true
-  }, [])
-
   const updateGroupBlueprintVariants = useCallback(async (enabled: boolean): Promise<boolean> => {
     const activeUser = userRef.current
     if (!activeUser) {
@@ -1127,7 +1108,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       unlinkProvider,
       signOut,
       toggleAcquired,
-      updateCraftDeductInventory,
       updateGroupBlueprintVariants,
       groupBlueprintVariants,
       refreshProfile,
@@ -1182,7 +1162,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       unlinkProvider,
       signOut,
       toggleAcquired,
-      updateCraftDeductInventory,
       updateGroupBlueprintVariants,
       groupBlueprintVariants,
       refreshProfile,

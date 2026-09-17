@@ -11,6 +11,13 @@ import type { CustomOrder } from '../lib/operations'
 import { canOpenDealChat } from '../lib/listingType'
 import DealMessageButton from './DealMessageButton'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
+import {
+  buildStockByQuality,
+  collectOrderDeductPlan,
+  formatDeductPlanHint,
+  planFitsStock,
+  type StockDeductCard,
+} from '../lib/bazaarStockDeduct'
 
 const STATUS_STYLES: Record<string, string> = {
   accepted: 'bg-emerald-950/50 text-emerald-300 border-emerald-500/30',
@@ -24,6 +31,8 @@ interface WtsSaleOrderCardProps {
   blueprintById: Map<string, BlueprintWithSlots>
   dfpDisplayEnabled: boolean
   submitting: boolean
+  inventory: StockDeductCard[]
+  labelMap: Record<string, string>
   onAbandon: () => void
   onStartWork: () => void
   onMarkReady: () => void
@@ -35,12 +44,17 @@ export default function WtsSaleOrderCard({
   blueprintById,
   dfpDisplayEnabled,
   submitting,
+  inventory,
+  labelMap,
   onAbandon,
   onStartWork,
   onMarkReady,
 }: WtsSaleOrderCardProps) {
   const totalDfp = orderTotalDfp(order)
   const canAct = order.status === 'accepted' || order.status === 'in_progress'
+  const deductPlan = collectOrderDeductPlan(order, blueprintById)
+  const hasDeduct = deductPlan.length > 0
+  const canCoverDeduct = !hasDeduct || planFitsStock(deductPlan, buildStockByQuality(inventory))
 
   return (
     <div className="p-4 site-surface space-y-3">
@@ -76,6 +90,18 @@ export default function WtsSaleOrderCard({
       <OrderDeadlineNotice order={order} role="seller" />
       <OrderNextStepCallout order={order} context="wts_seller" />
 
+      {hasDeduct && canAct && (
+        <div className="site-surface px-3 py-2 space-y-1">
+          <p className="text-slate-300 text-xs font-medium">Will deduct from My Resources</p>
+          <p className="site-hint !mt-0">{formatDeductPlanHint(deductPlan, labelMap)}</p>
+          {!canCoverDeduct && (
+            <p className="text-red-300 text-xs">
+              Short at the listed qualities. Add stock before marking ready.
+            </p>
+          )}
+        </div>
+      )}
+
       {(canAct || canOpenDealChat(order)) && (
         <div className="pt-3 site-divider space-y-2">
           <DealMessageButton order={order} variant="stack" />
@@ -94,7 +120,7 @@ export default function WtsSaleOrderCard({
               <button
                 type="button"
                 onClick={onMarkReady}
-                disabled={submitting}
+                disabled={submitting || (hasDeduct && !canCoverDeduct)}
                 className="w-full py-2 bg-green-700 hover:bg-green-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium"
               >
                 {submitting ? 'Working...' : 'Mark ready for pickup'}

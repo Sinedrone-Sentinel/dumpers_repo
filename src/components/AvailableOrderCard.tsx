@@ -11,6 +11,7 @@ import { orderTotalDfp } from '../lib/orderPricing'
 import type { MemberReputation } from '../lib/reputation'
 import type { CustomOrder } from '../lib/operations'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
+import type { StockDeductCard } from '../lib/bazaarStockDeduct'
 
 function orderKindBadgeClass(order: CustomOrder): string {
   const kind = orderKindLabel(order).toLowerCase()
@@ -39,6 +40,8 @@ interface AvailableOrderCardProps {
   /** Fulfill mode: used to flag WTB blueprint lines missing from the fulfiller's tracker. */
   acquiredBlueprints?: Record<string, boolean>
   onAcceptPartial: (selections: WtsLineSelection[]) => void
+  inventory?: StockDeductCard[]
+  labelMap?: Record<string, string>
 }
 
 export default function AvailableOrderCard({
@@ -56,6 +59,8 @@ export default function AvailableOrderCard({
   accepting,
   acquiredBlueprints,
   onAcceptPartial,
+  inventory,
+  labelMap,
 }: AvailableOrderCardProps) {
   const isWts = orderListingType(order) === 'wts'
   const allowsPartial = isListingContainer(order)
@@ -186,6 +191,9 @@ export default function AvailableOrderCard({
                 disabled={!meetsMinRep || !canAcceptLimits}
                 submitting={accepting}
                 onPurchase={onAcceptPartial}
+                inventory={inventory}
+                blueprintById={blueprintById}
+                labelMap={labelMap}
                 className="h-full"
               />
             </div>

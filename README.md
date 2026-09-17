@@ -169,7 +169,7 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 - **Add to my WTS listing** — offer stock on hand; every listing is **always partially shoppable**
 - **Pure DFP pricing** — no price sliders or adjustments; line totals must equal DFP
 - Expand cart lines to set per-slot material qualities; live DFP total and stat preview
-- **My open listings** panel: edit line quantities, remove lines, or close a listing inline
+- **My open listings** panel: edit line quantities, remove lines, or close a listing inline; WTS commodity lines can optionally deduct from My Resources
 - Tabs: active, completed, archive track **child transactions**; **Message** on accepted deals; confirm pickup; **Archive & rate** after completion
 - Requires **verified RSI Handle**; pending-member buyer/seller limits apply per transaction (open listings don't count)
 
@@ -178,6 +178,7 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 - Two tabs: **Fulfillment** (WTB listings) and **Store** (WTS listings)
 - Item-level **search** plus **minimum quality-band filter**; Fulfillment tab adds min buyer rep and "only listings with my blueprints" filters
 - Pick exact lines and quantities to buy or fulfill
+- WTB fulfill and WTS commodity lines can optionally **Deduct from My Resources** at the listed qualities when the seller/fulfiller marks ready (not on the Store buy picker)
 - Marking blueprints acquired is optional: lines using untracked blueprints are flagged in amber and confirmed once before claiming, never blocked (`accept_wtb_partial` enforces no ownership check)
 - Every checkout/claim spawns a full child transaction (same handoff, deadlines, ratings)
 - Seller actions on-card: message the other party, start handoff, mark ready, cancel/release (items restore to the listing)
@@ -240,7 +241,6 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 - RSI Handle verification via **Link Citizen iD** (Spectrum portrait becomes your avatar)
 - **Connected Accounts** — link Google and Discord (auto-merge when emails match)
-- **Deduct inventory on craft complete** — optional WTB fulfillment material deduct from Resource Tracker
 - **Group FPS blueprint variants** — Blueprints page display preference
 - **Marketplace ads / purchase toasts** — personal opt-out toggles (shown when the site has them enabled)
 - **My Data** — wipe acquired blueprints or tracked resources
@@ -355,7 +355,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`191_citizenid_grace_demote_officers.sql`** (see full table in `SUPABASE_SETUP.md`)
+   Apply migrations in numeric order through **`192_bazaar_line_stock_deduct.sql`** (see full table in `SUPABASE_SETUP.md`)
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt` and `send-discord --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain; set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Settings → API Keys → **Publishable and secret API keys**
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)

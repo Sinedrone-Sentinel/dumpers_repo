@@ -22,7 +22,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     user,
     profile,
     refreshProfile,
-    updateCraftDeductInventory,
     updateGroupBlueprintVariants,
     groupBlueprintVariants,
     updateDfpDisplayEnabled,
@@ -45,12 +44,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     isSuperAdmin,
     refreshAcquiredBlueprints,
   } = useAuth()
-  const [craftDeductInventory, setCraftDeductInventory] = useState(
-    profile?.craft_deduct_inventory ?? false
-  )
   const [groupVariantsEnabled, setGroupVariantsEnabled] = useState(groupBlueprintVariants)
   const [rotatingInvite, setRotatingInvite] = useState(false)
-  const [savingCraftDeduct, setSavingCraftDeduct] = useState(false)
   const [savingGroupBlueprintVariants, setSavingGroupBlueprintVariants] = useState(false)
   const [savingDfpDisplay, setSavingDfpDisplay] = useState(false)
   const [savingAutoApprove, setSavingAutoApprove] = useState(false)
@@ -151,10 +146,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   }, [isSuperAdmin])
 
   useEffect(() => {
-    setCraftDeductInventory(profile?.craft_deduct_inventory ?? false)
     setGroupVariantsEnabled(groupBlueprintVariants)
   }, [
-    profile?.craft_deduct_inventory,
     groupBlueprintVariants,
   ])
 
@@ -200,22 +193,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
     }
 
     setSavingWelcome(false)
-  }
-
-  const handleCraftDeductInventoryChange = async (enabled: boolean) => {
-    const previous = craftDeductInventory
-    setCraftDeductInventory(enabled)
-    setSavingCraftDeduct(true)
-    setMessage(null)
-
-    const success = await updateCraftDeductInventory(enabled)
-
-    if (!success) {
-      setCraftDeductInventory(previous)
-      setMessage({ type: 'error', text: 'Failed to update craft inventory setting.' })
-    }
-
-    setSavingCraftDeduct(false)
   }
 
   const handleGroupBlueprintVariantsChange = async (enabled: boolean) => {
@@ -408,21 +385,6 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                 hasActiveOrders={hasLiveDeals}
                 onRefreshProfile={refreshProfile}
                 onMessage={setMessage}
-              />
-            </div>
-
-            <div className="mt-4 pt-4 site-divider">
-              <SettingsToggle
-                label="Deduct inventory on craft complete"
-                description={
-                  isVerified
-                    ? "When on, completing a fulfillment craft requires enough stock in My Resources and deducts materials automatically."
-                    : 'Link Citizen iD above to enable this feature.'
-                }
-                checked={craftDeductInventory}
-                onChange={handleCraftDeductInventoryChange}
-                saving={savingCraftDeduct}
-                disabled={!isVerified}
               />
             </div>
           </SettingsSection>
