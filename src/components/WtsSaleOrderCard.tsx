@@ -92,7 +92,7 @@ export default function WtsSaleOrderCard({
 
       {hasDeduct && canAct && (
         <div className="site-surface px-3 py-2 space-y-1">
-          <p className="text-slate-300 text-xs font-medium">Will deduct from My Resources</p>
+          <p className="text-slate-300 text-xs font-medium">Will deduct from Tracked Resources</p>
           <p className="site-hint !mt-0">{formatDeductPlanHint(deductPlan, labelMap)}</p>
           {!canCoverDeduct && (
             <p className="text-red-300 text-xs">

@@ -29,16 +29,16 @@ export default function StockDeductCheckbox({
         onChange={(event) => onChange(event.target.checked)}
       />
       <span className="min-w-0">
-        <span className="text-slate-200 text-xs font-medium">Deduct from My Resources</span>
+        <span className="text-slate-200 text-xs font-medium">Deduct from Tracked Resources</span>
         {hint ? <span className="site-hint block !mt-0.5">{hint}</span> : null}
         {!fits && checked ? (
           <span className="site-error-text block mt-0.5">
-            My Resources no longer covers this line at these qualities.
+            Tracked Resources no longer covers this line at these qualities.
           </span>
         ) : null}
         {!enabled && !checked ? (
           <span className="site-hint block !mt-0.5">
-            Not enough My Resources at these qualities.
+            Not enough Tracked Resources at these qualities.
           </span>
         ) : null}
       </span>

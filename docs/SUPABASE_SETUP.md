@@ -223,6 +223,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 155 | `190_mining_advisor_saved_key.sql` | Optional end-to-end Advisor secret (`mining_advisor_secrets`). Client wraps with a lock phrase; server stores ciphertext only |
 | 156 | `191_citizenid_grace_demote_officers.sql` | After Citizen iD grace ends, daily cron demotes officers who never linked (`citizenid_demote_unlinked_officers`). Super-admin is never auto-demoted |
 | 157 | `192_bazaar_line_stock_deduct.sql` | Per-line WTB fulfill / WTS commodity deduct from My Resources at listed qualities (`deduct_from_stock` + `deduct_plan`). `complete_order_craft` no longer reads `profiles.craft_deduct_inventory` |
+| 158 | `193_tracked_resources_deduct_copy.sql` | Bazaar deduct shortage errors say Tracked Resources |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191)
 
