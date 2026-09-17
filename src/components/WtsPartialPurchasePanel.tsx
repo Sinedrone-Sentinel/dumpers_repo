@@ -38,7 +38,7 @@ interface PartialSelectionPanelProps {
   submitting?: boolean
   onPurchase: (selections: WtsLineSelection[]) => void | Promise<void>
   className?: string
-  /** Fulfill mode only: quality-aware My Resources cards for deduct checkboxes. */
+  /** Fulfill mode only: quality-aware Tracked Resources cards for deduct checkboxes. */
   inventory?: StockDeductCard[]
   blueprintById?: Map<string, BlueprintWithSlots>
   labelMap?: Record<string, string>
@@ -272,7 +272,7 @@ export default function WtsPartialPurchasePanel({
         </p>
         <p className="site-hint text-[11px] !mt-0.5">
           {isFulfill
-            ? 'Check the lines you will supply. Optionally deduct each selected line from My Resources at that line’s listed qualities. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unclaimed lines stay open for others.'
+            ? 'Check the lines you will supply. Optionally deduct each selected line from Tracked Resources at that line’s listed qualities. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unclaimed lines stay open for others.'
             : 'Check the lines you want. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unsold lines stay listed.'}
         </p>
       </div>
