@@ -49,6 +49,15 @@ export const DEFAULT_TICKER_CATEGORIES: TickerCategory[] = [
     sortOrder: 20,
   },
   {
+    id: 'fallback-game_error',
+    slug: 'game_error',
+    label: 'Game Error',
+    accentHex: '#EF4444',
+    entryKind: 'game',
+    ttlDays: 14,
+    sortOrder: 25,
+  },
+  {
     id: 'fallback-questionnaire',
     slug: 'questionnaire',
     label: 'Questionnaire',
@@ -163,6 +172,14 @@ export function resolveTickerCategorySlugFromEntry(entry: WhatsNewEntry): string
 
   if (cat === 'questionnaire' || ver === 'poll' || key.startsWith('questionnaire')) {
     return 'questionnaire'
+  }
+  if (
+    cat === 'game error' ||
+    cat === 'game_error' ||
+    key.startsWith('site:starstrings') ||
+    key.includes('game_error')
+  ) {
+    return 'game_error'
   }
   if (
     cat === 'dumper apps' ||

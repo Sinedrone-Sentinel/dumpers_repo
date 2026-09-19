@@ -224,6 +224,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 156 | `191_citizenid_grace_demote_officers.sql` | After Citizen iD grace ends, daily cron demotes officers who never linked (`citizenid_demote_unlinked_officers`). Super-admin is never auto-demoted |
 | 157 | `192_bazaar_line_stock_deduct.sql` | Per-line WTB fulfill / WTS commodity deduct from My Resources at listed qualities (`deduct_from_stock` + `deduct_plan`). `complete_order_craft` no longer reads `profiles.craft_deduct_inventory` |
 | 158 | `193_tracked_resources_deduct_copy.sql` | Bazaar deduct shortage errors say Tracked Resources |
+| 159 | `194_ticker_game_error_category.sql` | Ticker layout **Game Error** (red `#EF4444`, 14-day TTL) for client-breaking game warnings |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191)
 
@@ -372,7 +373,7 @@ Apply migrations through `151_admin_whats_new_crud.sql` for the bottom Updates t
 | Piece | Role |
 |-------|------|
 | `whats_new_entries` | Rows keyed by `issue_key` + `version`; `kind` is `game` or `site`; optional `ticker_category_id` |
-| `ticker_categories` | Layout categories (slug, label, accent hex, **ttl_days** 1-90); seeded Site / Game / Questionnaire / Dumper Apps |
+| `ticker_categories` | Layout categories (slug, label, accent hex, **ttl_days** 1-90); seeded Site / Game / Game Error / Questionnaire / Dumper Apps |
 | `list_ticker_categories()` | Anon/authenticated read of layout categories for badge colors |
 | `list_active_whats_new()` | Anon/authenticated read - **game** rows 7 days, **site** rows 3 days (includes category layout fields) |
 | `ingest_whats_new_entries(jsonb)` | Super-admin or `service_role` insert; **skips** if same issue+version (or identical headline for that version) already exists; resolves `ticker_category_id` |

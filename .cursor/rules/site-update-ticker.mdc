@@ -28,6 +28,7 @@ Seeded defaults (editable by super-admin under **Site admin â†’ Updates Ticker â
 |------|------|----------------|
 | `site` | Product/UI announcements | Sky `#0EA5E9` |
 | `game` | Parse digests | Emerald `#10B981` |
+| `game_error` | Client-breaking game / third-party tool warnings | Red `#EF4444` |
 | `questionnaire` | Open questionnaires + poll results | Violet `#8B5CF6` |
 | `dumper_apps` | Desktop app announcements | Amber `#F59E0B` |
 
@@ -43,6 +44,7 @@ Per **ticker category** (`ttl_days`, editable in Site admin â†’ Updates Ticker â
 
 - **Site** / **Questionnaire** / **Dumper Apps**: **3 days**
 - **Game** digests: **7 days**
+- **Game Error**: **14 days**
 
 Open questionnaire prompts stay until the form closes (separate from poll-result message TTL).
 
