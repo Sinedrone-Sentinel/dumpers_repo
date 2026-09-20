@@ -6,6 +6,13 @@ import catalogJson from './catalog.json' with { type: 'json' }
 import shopsJson from './shops.json' with { type: 'json' }
 import { buildSystemPrompt } from './advisorPrompt.ts'
 import {
+  collectCatalogNames,
+  formatCrossoverDeny,
+  formatScopeRefusalReply,
+  isCrossoverTableProbe,
+  shouldDenyCrossover,
+} from './sciFiCrossover.ts'
+import {
   type GearShopIndex,
   renderGearShopBlock,
   resolveGearShopMatches,
@@ -352,42 +359,73 @@ serve(async (req) => {
     const question = clip(body.question, MAX_QUESTION)
     if (!question) return json(400, { error: 'Ask a mining loadout question.' })
     const keySha256 = await sha256Hex(apiKey)
-    const { data: rate, error: rateError } = await admin.rpc('ai_chat_try_consume', {
-      p_user_id: user.id,
-      p_feature: RATE_FEATURE,
-    })
-    if (rateError) {
-      console.error('advisor rate rpc failed')
-      return json(500, { error: 'Advisor is temporarily unavailable.' })
-    }
-    const usage = usageFromRate(rate)
-    const allowed = (rate as { allowed?: boolean } | null)?.allowed
-    await recordAiChatEvent(admin, {
-      userId: user.id,
-      feature: RATE_FEATURE,
-      keySha256,
-      event: 'invoke',
-    })
-    if (!allowed) {
+    const catalogNames = collectCatalogNames(catalog)
+
+    const consumeAsk = async (): Promise<
+      { ok: true; usage: UsageSnapshot | null } | { ok: false; response: Response }
+    > => {
+      const { data: rate, error: rateError } = await admin.rpc('ai_chat_try_consume', {
+        p_user_id: user.id,
+        p_feature: RATE_FEATURE,
+      })
+      if (rateError) {
+        console.error('advisor rate rpc failed')
+        return {
+          ok: false,
+          response: json(500, { error: 'Advisor is temporarily unavailable.' }),
+        }
+      }
+      const usage = usageFromRate(rate)
+      const allowed = (rate as { allowed?: boolean } | null)?.allowed
       await recordAiChatEvent(admin, {
         userId: user.id,
         feature: RATE_FEATURE,
         keySha256,
-        event: 'blocked',
+        event: 'invoke',
       })
-      const retry = Number((rate as { retry_after_sec?: unknown } | null)?.retry_after_sec)
-      return json(429, {
-        error: `Slow down — Advisor is limited to ${usage?.max ?? 20} questions per hour.`,
-        retryAfterSec: Number.isFinite(retry) ? retry : 3600,
-        usage,
+      if (!allowed) {
+        await recordAiChatEvent(admin, {
+          userId: user.id,
+          feature: RATE_FEATURE,
+          keySha256,
+          event: 'blocked',
+        })
+        const retry = Number((rate as { retry_after_sec?: unknown } | null)?.retry_after_sec)
+        return {
+          ok: false,
+          response: json(429, {
+            error: `Slow down — Advisor is limited to ${usage?.max ?? 20} questions per hour.`,
+            retryAfterSec: Number.isFinite(retry) ? retry : 3600,
+            usage,
+          }),
+        }
+      }
+      await recordAiChatEvent(admin, {
+        userId: user.id,
+        feature: RATE_FEATURE,
+        keySha256,
+        event: 'asked',
+      })
+      return { ok: true, usage }
+    }
+
+    if (isCrossoverTableProbe(question)) {
+      const consumed = await consumeAsk()
+      if (!consumed.ok) return consumed.response
+      return json(200, {
+        advice: formatScopeRefusalReply(),
+        usage: consumed.usage,
       })
     }
-    await recordAiChatEvent(admin, {
-      userId: user.id,
-      feature: RATE_FEATURE,
-      keySha256,
-      event: 'asked',
-    })
+
+    const crossover = shouldDenyCrossover(question, catalogNames)
+    if (crossover.action === 'deny') {
+      return json(200, { advice: formatCrossoverDeny(crossover.hit.entry.retort) })
+    }
+
+    const consumed = await consumeAsk()
+    if (!consumed.ok) return consumed.response
+    const usage = consumed.usage
 
     const useScannedInfo = body.useScannedInfo === true
     const scan = useScannedInfo ? parseScan(body.scan) : null
@@ -418,6 +456,7 @@ serve(async (req) => {
       gadgetsInUse,
       scan,
       gearShopBlock,
+      closer: crossover.hit ? crossover.hit.entry.retort : undefined,
     })
 
     const history = parseMessages(body.messages)
