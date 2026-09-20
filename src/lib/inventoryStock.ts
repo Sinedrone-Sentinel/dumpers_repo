@@ -33,6 +33,26 @@ export function locationKeyForNote(note: string | null | undefined): string {
 }
 
 /** Unique note locations from stock cards (Empty first, then A–Z by label). */
+
+/** Unique non-empty note labels (same collapse as location chips, Empty omitted). */
+export function uniqueStockNoteLabels(cards: { note?: string | null }[]): string[] {
+  return buildLocationFilterOptions(cards)
+    .filter((opt) => opt.key !== EMPTY_LOCATION_KEY)
+    .map((opt) => opt.label)
+}
+
+/** Case-insensitive tag match; punctuation-insensitive so "cru" hits "CRU-L1". */
+export function filterNoteSuggestions(labels: string[], query: string): string[] {
+  const q = query.trim()
+  if (!q) return [...labels]
+  const folded = q.toLowerCase()
+  const compact = normalizeLocationSearch(q)
+  return labels.filter((label) => {
+    if (label.toLowerCase().includes(folded)) return true
+    return compact.length > 0 && normalizeLocationSearch(label).includes(compact)
+  })
+}
+
 export function buildLocationFilterOptions(
   cards: { note?: string | null }[]
 ): LocationFilterOption[] {

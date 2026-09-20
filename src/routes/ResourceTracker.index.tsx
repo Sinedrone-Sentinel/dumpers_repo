@@ -17,6 +17,7 @@ import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { friendLabel, getFriendPersonalInventory } from '../lib/friends'
 import StockCardListingShortcut from '../components/resourceTracker/StockCardListingShortcut'
+import StockNoteTypeahead from '../components/resourceTracker/StockNoteTypeahead'
 import type { StockCardListingType } from '../lib/stockCardListing'
 import {
   inventoryLineKey,
@@ -26,6 +27,7 @@ import {
   buildStockTotalsByResource,
   buildLocationFilterOptions,
   cardMatchesLocationFilter,
+  uniqueStockNoteLabels,
 } from '../lib/inventoryStock'
 import {
   type GuestResourceEntry,
@@ -288,6 +290,8 @@ export default function ResourceTrackerRoute() {
     if (!showNotesAndLocations) return []
     return buildLocationFilterOptions(stockCards)
   }, [showNotesAndLocations, stockCards])
+
+  const noteSuggestions = useMemo(() => uniqueStockNoteLabels(stockCards), [stockCards])
 
   useEffect(() => {
     if (!showNotesAndLocations) {
@@ -697,13 +701,13 @@ export default function ResourceTrackerRoute() {
             <div className="mt-3 pt-3 site-divider">
               {editingNoteKey === lineKey ? (
                 <div className="flex gap-2 items-center">
-                  <input
-                    type="text"
+                  <div className="flex-1 min-w-0">
+                  <StockNoteTypeahead
                     value={noteValue}
-                    onChange={(e) => setNoteValue(e.target.value.slice(0, 64))}
+                    onChange={setNoteValue}
+                    suggestions={noteSuggestions}
                     placeholder="Add note (64 chars max)"
-                    maxLength={64}
-                    className="site-input flex-1 px-2 py-1 text-xs"
+                    className="site-input w-full px-2 py-1 text-xs"
                     autoFocus
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
@@ -714,6 +718,7 @@ export default function ResourceTrackerRoute() {
                       }
                     }}
                   />
+                  </div>
                   <button
                     onClick={() => void handleSaveNote(card.resource_key, quality, card.note)}
                     className="px-2 py-1 text-xs site-btn-success text-xs shrink-0"
@@ -768,6 +773,7 @@ export default function ResourceTrackerRoute() {
       rsiVerified,
       listingEdit,
       listingQty,
+      noteSuggestions,
     ]
   )
 
@@ -855,6 +861,7 @@ export default function ResourceTrackerRoute() {
               catalog={catalog}
               labelMap={labelMap}
               existingKeys={existingLineKeys}
+              noteSuggestions={noteSuggestions}
               onAdded={() => void refreshInventoryViews()}
               onError={setStockError}
             />
@@ -863,6 +870,7 @@ export default function ResourceTrackerRoute() {
               catalog={catalog}
               labelMap={labelMap}
               existingKeys={existingLineKeys}
+              noteSuggestions={noteSuggestions}
               onAdd={handleGuestAddResource}
               onError={setStockError}
             />

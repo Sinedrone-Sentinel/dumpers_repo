@@ -5,6 +5,7 @@ import { getResourceLabel } from '../lib/blueprintResources'
 import { inventoryLineKey } from '../lib/inventoryStock'
 import { addPersonalInventoryLine, type BlueprintResourceRow } from '../lib/operations'
 import ResourceQuantityInput from './ResourceQuantityInput'
+import StockNoteTypeahead from './resourceTracker/StockNoteTypeahead'
 import ResourceQualitySelect, { getDefaultQualityForResource } from './ResourceQualitySelect'
 import {
   formatQuantityForResource,
@@ -16,6 +17,7 @@ type PersonalStockAddPanelBaseProps = {
   catalog: BlueprintResourceRow[]
   labelMap: Record<string, string>
   existingKeys: Set<string>
+  noteSuggestions?: string[]
   onError?: (message: string) => void
 }
 
@@ -26,7 +28,7 @@ type PersonalStockAddPanelProps = PersonalStockAddPanelBaseProps &
   )
 
 export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps) {
-  const { catalog, labelMap, existingKeys, onError } = props
+  const { catalog, labelMap, existingKeys, noteSuggestions = [], onError } = props
   const isGuestMode = 'onAdd' in props && props.onAdd != null
 
   const [search, setSearch] = useState('')
@@ -106,7 +108,7 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
   }
 
   return (
-    <div className="site-surface w-full min-w-0 p-4 space-y-3 overflow-hidden">
+    <div className="site-surface w-full min-w-0 p-4 space-y-3 overflow-visible">
       <div>
         <h2 className="text-white font-medium text-sm">Add material stock</h2>
         <p className="text-slate-500 text-xs mt-1">
@@ -169,15 +171,14 @@ export default function PersonalStockAddPanel(props: PersonalStockAddPanelProps)
           className="site-input sm:w-24 shrink-0 px-3 py-2 text-sm tabular-nums"
         />
 
-        <input
-          type="text"
-          value={note}
-          onChange={(e) => setNote(e.target.value.slice(0, 64))}
-          placeholder="Note (optional)"
-          maxLength={64}
-          className="site-input sm:flex-1 min-w-0 px-3 py-2 text-sm"
-          aria-label="Stock card note"
-        />
+        <div className="sm:flex-1 min-w-0">
+          <StockNoteTypeahead
+            value={note}
+            onChange={setNote}
+            suggestions={noteSuggestions}
+            className="site-input w-full px-3 py-2 text-sm"
+          />
+        </div>
       </div>
 
       {resourceKey && (
