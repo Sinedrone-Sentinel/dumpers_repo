@@ -33,6 +33,7 @@ const modules = [
   'supabase/functions/site-help-bot/helpPrompt.ts',
   'src/lib/aiChatUsage.ts',
   'src/lib/shubinTerminalReply.ts',
+  'src/lib/stockCardListing.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -65,6 +66,7 @@ const sciFiCrossover = await import(pathToFileURL(path.join(outDir, 'sciFiCrosso
 const helpPrompt = await import(pathToFileURL(path.join(outDir, 'helpPrompt.mjs')).href)
 const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs')).href)
 const shubinTerm = await import(pathToFileURL(path.join(outDir, 'shubinTerminalReply.mjs')).href)
+const stockCardListing = await import(pathToFileURL(path.join(outDir, 'stockCardListing.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -1289,6 +1291,65 @@ const unknownTag = shubinTerm.parseShubinTerminalLine('[FOO] leftover')
 check(
   unknownTag[0]?.kind === 'tag' && unknownTag[0].slug === 'default',
   'unknown tags use default color',
+)
+
+const openWts = {
+  requester_id: 'u1',
+  listing_type: 'wts',
+  status: 'pending',
+  source_listing_id: null,
+  resource_lines: [
+    { id: 'line-a', resource_key: 'aslarite', min_quality: 287, unit_dfp_auec: 100 },
+  ],
+}
+const childSale = {
+  requester_id: 'u1',
+  listing_type: 'wts',
+  status: 'pending',
+  source_listing_id: 'parent',
+  resource_lines: [
+    { id: 'line-child', resource_key: 'aslarite', min_quality: 287, unit_dfp_auec: 100 },
+  ],
+}
+check(
+  stockCardListing.findOpenListingForType([openWts, childSale], 'wts', 'u1')?.resource_lines?.[0]?.id ===
+    'line-a',
+  'open WTS listing ignores child sales',
+)
+check(
+  stockCardListing.findOpenListingForType([openWts], 'wtb', 'u1') === null,
+  'WTS listing is not used for WTB',
+)
+check(
+  stockCardListing.findMatchingResourceLine(openWts.resource_lines, 'aslarite', 287)?.id === 'line-a',
+  'match existing resource+quality',
+)
+check(
+  stockCardListing.findMatchingResourceLine(openWts.resource_lines, 'aslarite', 500) === null,
+  'different quality is a miss',
+)
+const splitDfp = [
+  { id: 'old-dfp', resource_key: 'aslarite', min_quality: 287, unit_dfp_auec: 90 },
+  { id: 'new-dfp', resource_key: 'aslarite', min_quality: 287, unit_dfp_auec: 100 },
+]
+check(
+  stockCardListing.findMatchingResourceLine(splitDfp, 'aslarite', 287, 100)?.id === 'new-dfp',
+  'prefer current DFP when two lines share resource+quality',
+)
+check(
+  stockCardListing.stockCardListingAction(true) === 'set',
+  'existing line SETs quantity',
+)
+check(
+  stockCardListing.stockCardListingAction(false) === 'append',
+  'missing line appends instead of SET',
+)
+const hangarAndShip = [
+  { id: 'shared', resource_key: 'aslarite', min_quality: 287, unit_dfp_auec: 100 },
+]
+check(
+  stockCardListing.findMatchingResourceLine(hangarAndShip, 'aslarite', 287)?.id === 'shared',
+  'two location cards still share one listing line',
 )
 
 console.log(`Unit tests: ${pass} passed`)

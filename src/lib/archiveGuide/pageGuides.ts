@@ -134,9 +134,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Salvage and trade goods use fixed Q0 tiers',
       'Perfect for tracking what you have available for crafting or trading',
       'Each stock card and list row shows a blue **UEX** chip (on commodities) — click it to see every terminal that buys or sells that material, with SCU box sizes, in a popup. Powered by UEX',
+      'On My Resources cards, **WTS** and **WTB** post that card’s resource and quality to your open listing. The quantity box starts with SCU on hand; Finish sets the listing line to that amount (or creates the listing). WTS turns on deduct from Tracked Resources when you mark the sale ready. Requires a verified RSI Handle',
       'Offline Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],
-    relatesTo: ['Blueprints', 'Mining Tracker', 'Commodity Lookup', 'Friends'],
+    relatesTo: ['Blueprints', 'Mining Tracker', 'Commodity Lookup', 'Friends', 'My Listings'],
   },
   {
     id: 'mining-tracker',
@@ -219,6 +220,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'You have at most one open WTB listing and one open WTS listing — posting new items appends them to the matching listing',
       'Click Post items to open the builder for items (blueprints) and/or commodities (resources); Add to my WTB listing requests items, Add to my WTS listing offers stock on hand',
+      'From a My Resources stock card you can also Finish a **WTS** or **WTB** for that resource and quality — it sets the listing line to the amount you type (default: SCU on hand) instead of adding on top',
       'All pricing is exact DFP — no price sliders or adjustments; the live total and effective stat preview update as you compose the cart',
       'Expand any cart line to edit per-slot material qualities and see stat changes before posting',
       'Add blueprints from the Blueprints page into a session draft, then continue on My Listings',

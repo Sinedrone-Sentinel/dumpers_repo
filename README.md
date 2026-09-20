@@ -110,6 +110,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - Log personal stock by resource and **quality band** (SCU); optional per-row notes (e.g. hangar / ship location)
 - **Cards** view (edit quantities) and **List** view (read-only overview)
 - Location filter chips appear automatically from stock notes (case/punctuation-insensitive; refresh when cards change)
+- **WTS / WTB** on My Resources cards (signed-in, RSI verified): Finish posts that resource + quality at exact DFP, prefilling SCU on hand; an existing line is **set** to that qty (not added). WTS enables deduct-from-Tracked-Resources on ready
 - Mined/refined ore uses bands Q500–Q1000; salvage and trade goods use fixed **Purchased (Q0)** tiers
 - **Friends Resources** tab (when you have friends) — read-only list of a friend’s My Resources stock
 - **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); note chips plus **ALL** scope craftability and Craft deductions to one location; ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown; never uses friend stock
