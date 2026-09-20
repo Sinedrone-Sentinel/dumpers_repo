@@ -54,7 +54,9 @@ export const CROSSOVER_ENTRIES: CrossoverEntry[] = [
       'weyland-yutani',
       'weyland yutani',
       'weyland corp',
+      'weyland',
       'yutani corporation',
+      'yutani',
       'kelland mining',
       'nostromo',
       'sulaco',
@@ -91,7 +93,7 @@ export const CROSSOVER_ENTRIES: CrossoverEntry[] = [
     franchise: 'Red Faction',
     org: 'Ultor Corporation',
     tone: 'anger',
-    terms: ['ultor corporation', 'ultor corp'],
+    terms: ['ultor corporation', 'ultor corp', 'ultor'],
     retort: 'Ultor ruins claims and calls it industry. That name is not welcome on a Shubin terminal.',
   },
   {
@@ -116,7 +118,7 @@ export const CROSSOVER_ENTRIES: CrossoverEntry[] = [
     franchise: 'Star Wars',
     org: 'Czerka Corporation',
     tone: 'anger',
-    terms: ['czerka corporation', 'czerka corp'],
+    terms: ['czerka corporation', 'czerka corp', 'czerka'],
     retort: 'Czerka is a scavenger with a letterhead. This computer will not discuss their methods.',
   },
   {
@@ -428,6 +430,110 @@ function paddedIncludes(haystack: string, needle: string): boolean {
   return false
 }
 
+/** Mining / Star Citizen tokens. Never treat these as a typo of a franchise name. */
+const FUZZY_SKIP = new Set([
+  'helix',
+  'mole',
+  'golem',
+  'prospector',
+  'orion',
+  'constellation',
+  'aurora',
+  'hornet',
+  'cutlass',
+  'carrack',
+  'idris',
+  'pioneer',
+  'hofstede',
+  'quantainium',
+  'quantanium',
+  'stanton',
+  'hurston',
+  'arccorp',
+  'microtech',
+  'crusader',
+  'covalex',
+  'greycat',
+  'aegis',
+  'anvil',
+  'origin',
+  'drake',
+  'shubin',
+  'mining',
+  'loadout',
+  'module',
+  'laser',
+  'gadget',
+  'aluminum',
+  'arbor',
+  'impact',
+  'klein',
+  'lancet',
+  'lawson',
+  'pitman',
+  'brandt',
+  'focus',
+  'rieger',
+  'torrent',
+  'stampede',
+  'overrun',
+  'deluge',
+  'optimum',
+  'forel',
+  'lifeline',
+  'clearcut',
+])
+
+/** Damerau-Levenshtein so a swapped pair counts as one typo. */
+export function levenshtein(a: string, b: string): number {
+  const m = a.length
+  const n = b.length
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0))
+  for (let i = 0; i <= m; i++) dp[i][0] = i
+  for (let j = 0; j <= n; j++) dp[0][j] = j
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost)
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + 1)
+      }
+    }
+  }
+  return dp[m][n]
+}
+
+/** Short names stay exact. Six letters allow one edit; seven or more allow two. */
+export function maxTypoDistance(termLength: number): number {
+  if (termLength < 6) return 0
+  if (termLength === 6) return 1
+  return 2
+}
+
+function tokenMatchesTerm(token: string, termPart: string): boolean {
+  if (token === termPart) return true
+  if (!termPart.endsWith('s') && token === `${termPart}s`) return true
+  if (FUZZY_SKIP.has(token)) return false
+  if (token.length < 5) return false
+  const max = maxTypoDistance(termPart.length)
+  if (max <= 0) return false
+  if (Math.abs(token.length - termPart.length) > max) return false
+  return levenshtein(token, termPart) <= max
+}
+
+function fuzzyNeedleInTokens(tokens: string[], needle: string): boolean {
+  const parts = needle.split(' ').filter(Boolean)
+  if (!parts.length) return false
+  if (parts.length === 1) {
+    return tokens.some((token) => tokenMatchesTerm(token, parts[0]))
+  }
+  for (let i = 0; i <= tokens.length - parts.length; i++) {
+    const window = tokens.slice(i, i + parts.length)
+    if (window.every((token, idx) => tokenMatchesTerm(token, parts[idx]))) return true
+  }
+  return false
+}
+
 export function collectCatalogNames(catalog: {
   lasers?: Array<{ displayName?: string }>
   modules?: Array<{ displayName?: string }>
@@ -467,6 +573,12 @@ export function findSciFiCrossover(question: string): CrossoverHit | null {
   if (!normalized) return null
   for (const row of PREPARED_TERMS) {
     if (paddedIncludes(normalized, row.needle)) {
+      return { entry: row.entry, term: row.term }
+    }
+  }
+  const tokens = normalized.split(' ').filter(Boolean)
+  for (const row of PREPARED_TERMS) {
+    if (fuzzyNeedleInTokens(tokens, row.needle)) {
       return { entry: row.entry, term: row.term }
     }
   }
