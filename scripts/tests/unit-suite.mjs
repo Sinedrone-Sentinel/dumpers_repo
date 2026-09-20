@@ -1117,6 +1117,30 @@ check(sciFiCrossover.findSciFiCrossover('alien') === null, 'bare alien is not a 
 check(sciFiCrossover.findSciFiCrossover('data') === null, 'bare data is not a crossover term')
 check(sciFiCrossover.findSciFiCrossover('binary helix')?.entry.id === 'mass-effect', 'binary helix is Mass Effect only')
 
+check(sciFiCrossover.findSciFiCrossover('waylan')?.entry.id === 'weyland-yutani', 'waylan is a Weyland typo')
+check(sciFiCrossover.findSciFiCrossover('wayland')?.entry.id === 'weyland-yutani', 'wayland is a Weyland typo')
+check(sciFiCrossover.findSciFiCrossover('waylend')?.entry.id === 'weyland-yutani', 'waylend is a Weyland typo')
+check(
+  sciFiCrossover.shouldDenyCrossover('Are there any wayland mining heads I can buy?', miningCatalogNames)
+    .action === 'deny',
+  'wayland buy question is still a subject deny',
+)
+check(sciFiCrossover.findSciFiCrossover('nostrommo')?.entry.id === 'weyland-yutani', 'nostrommo is a Nostromo typo')
+check(sciFiCrossover.findSciFiCrossover('sulako')?.entry.id === 'weyland-yutani', 'sulako is a Sulaco typo')
+check(sciFiCrossover.findSciFiCrossover('millenium falcon')?.entry.id === 'star-wars-fleets', 'millenium falcon typo')
+check(sciFiCrossover.findSciFiCrossover('starfleeet')?.entry.id === 'starfleet', 'starfleeet is a Starfleet typo')
+check(sciFiCrossover.findSciFiCrossover('cerbrus')?.entry.id === 'mass-effect', 'cerbrus is a Cerberus typo')
+check(sciFiCrossover.findSciFiCrossover('arassaka')?.entry.id === 'arasaka', 'arassaka is an Arasaka typo')
+check(sciFiCrossover.findSciFiCrossover('czerka')?.entry.id === 'czerka', 'czerka still exact-matches')
+check(sciFiCrossover.maxTypoDistance(5) === 0, 'names shorter than 6 stay exact-only')
+check(sciFiCrossover.maxTypoDistance(6) === 1, 'six-letter names allow one edit')
+check(sciFiCrossover.maxTypoDistance(7) === 2, 'seven-letter names allow two edits')
+check(sciFiCrossover.findSciFiCrossover('choan') === null, 'CHOAM does not fuzzy-match four-letter typos')
+check(sciFiCrossover.findSciFiCrossover('module') === null, 'module is not a franchise typo')
+check(sciFiCrossover.findSciFiCrossover('loadout') === null, 'loadout is not a franchise typo')
+check(sciFiCrossover.findSciFiCrossover('Stanton') === null, 'Stanton is not a franchise typo')
+check(sciFiCrossover.findSciFiCrossover('Hofstede') === null, 'Hofstede is not a franchise typo')
+
 const angryIds = ['weyland-yutani', 'rda', 'cec', 'mining-guild', 'czerka', 'choam', 'ultor']
 for (const id of angryIds) {
   const entry = sciFiCrossover.CROSSOVER_ENTRIES.find((row) => row.id === id)
