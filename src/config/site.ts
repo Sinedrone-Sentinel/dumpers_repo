@@ -32,7 +32,7 @@ export const SITE_COPYRIGHT =
  */
 export const SITE_SUPPORT_URL = 'https://ko-fi.com/dumpers_repo' as const
 export const SITE_SUPPORT_LABEL = 'Support this site' as const
-/** Public Privacy Policy path (Partner Center / footer / onboarding). */
+/** Public Privacy Policy path (footer / onboarding). */
 export const SITE_PRIVACY_PATH = '/privacy' as const
 export const SITE_PRIVACY_URL = `${SITE_URL}${SITE_PRIVACY_PATH}` as const
 export const SITE_PRIVACY_LABEL = 'Privacy Policy' as const

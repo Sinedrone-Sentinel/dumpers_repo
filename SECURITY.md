@@ -2,7 +2,7 @@
 
 ## Supported software
 
-This repository powers **Dumper's Repo** ([dumpers-repo.com](https://dumpers-repo.com)) and the **BP Dumper** desktop watcher (`scripts/bp-dumper-py/`, packaged as `DumperApps.exe`).
+This repository powers **Dumper's Repo** ([dumpers-repo.com](https://dumpers-repo.com)) and the **BP Dumper** desktop watcher. Canonical Windows `DumperApps.exe` is the Go client in `scripts/bp-dumper-go/` (Python in `scripts/bp-dumper-py/` is the reference / non-Windows zip).
 
 ## What BP Dumper does (and does not)
 
@@ -17,7 +17,7 @@ BP Dumper:
 
 Please report security issues privately — do not open a public GitHub issue for exploitable vulnerabilities.
 
-1. Email the maintainer at the address published on the official site / GitHub profile for **Michael Linzenmeyer** / RSI `Sinedrone_Sentinel`, **or**
+1. Use **GitHub private vulnerability reporting** on this repository (Security → Report a vulnerability), **or**
 2. Open a Support ticket on dumpers-repo.com (preferred for authenticated members) and mark it as a security / bug report without posting exploit detail publicly.
 
 Include:

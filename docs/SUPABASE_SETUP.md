@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `187_relink_acquired_blueprint_ids.sql` (remap leftover acquired / target-list IDs; apply `186_delete_account_settle_orders.sql` first). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `196_ai_chat_invoke_analytics.sql` (super-admin AI chat Edge usage rollups; apply `195_ai_chat_rate_buckets.sql` first). Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -163,7 +163,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 95 | `130_discord_webhook_hardening.sql` | Drop open `discord_webhooks` INSERT RLS; `get_discord_settings` returns `official_webhook_url` only to super-admins and service_role |
 | 96 | `131_questionnaire_public_poll_ticker.sql` | `public_results` on questionnaires; publish anonymous option tallies to What's New ticker on archive or soft expiry (hourly cron when pg_cron available) |
 | 97 | `132_protect_profile_privileged_columns.sql` | Trigger blocks client UPDATE of `role` / `approved_*` / `rsi_handle_verified*`; drop officer FOR ALL profile policy; `admin_set_user_role` for Admin Panel |
-| 98 | `133_lock_mark_rsi_handle_verified.sql` | Revoke client execute on `mark_rsi_handle_verified`; service_role / `validate-rsi-handle` Edge Function only |
+| 98 | `133_lock_mark_rsi_handle_verified.sql` | Revoke client execute on `mark_rsi_handle_verified`; originally service_role / `validate-rsi-handle` Edge Function only. That Edge function is gone — member verify is Citizen iD as of **188** |
 | 99 | `134_lock_queue_discord_message.sql` | Queue support Discord from `create_support_ticket`; revoke authenticated execute on `queue_discord_message` |
 | 100 | `135_marketplace_rls_rpc_only_writes.sql` | Replace marketplace FOR ALL RLS with SELECT; `cancel_custom_order_requester` for former client status updates |
 | 101 | `136_rsi_bio_verify_challenge.sql` | Bio-code RSI verification (`issue_rsi_verify_challenge` / Edge scrape of public citizen Bio); officer `admin_force_rsi_handle_verified` escape hatch |

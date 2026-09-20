@@ -404,6 +404,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Live purchase toasts only show accepts while you are online — there is no backlog for missed events',
       'Advisor: **Clear saved Advisor key** removes an encrypted Gemini copy from your profile if you saved one in Smart Cracker. The button is disabled when nothing is saved, and the key is never shown',
       'Clear only removes the encrypted copy — the lock phrase was never stored. If you forget the phrase, Clear, paste your Gemini key again, and pick a new phrase',
+      '**Delete My Account** (type DELETE to confirm) is self-serve in Settings. Super-admins cannot use it. Deleting closes accepted deals in progress (the other party gets an automatic 5-star), cancels leftover listings with no rating, and removes Spectrum / Citizen iD data',
     ],
     relatesTo: ['Blueprints', 'Mission Tracker', 'Resource Tracker', 'Mining Tracker', 'BP Dumper', 'The Bazaar'],
   },

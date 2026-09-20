@@ -51,13 +51,16 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
+| `/privacy` | Privacy Policy | Everyone (no account) |
+| `/contribute` | Contribute / Contributor Team apply | Approved members |
+| `/contributor-team` | Contributor Team admin | Super-admins |
 | `/discord-subscribe` | Discord Webhooks | Signed-in members |
 | `/partnership` | Org Partnership | Approved members (RSI verified to apply/manage) |
 | `/support-dashboard` | Support Dashboard | Officers + super-admins |
 | `/analytics` | Site Analytics | Super-admins |
 | `/guest-locked` | Feature preview gate | Offline users (locked features) |
 
-Avatar menu (signed-in): **Account** (Settings, Dumper Apps, Webhooks, Partnership when RSI verified), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions).
+Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified). Avatar menu: **Account** (Settings, Dumper Apps, Webhooks, Partnership when RSI verified, Contribute), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions, Contributor Team).
 
 ---
 
@@ -295,7 +298,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**) to use tools in the browser without an account:
 
-- Blueprints (acquired marks), Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), Archive, Bazaar listing-count teaser
+- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), Commodity Lookup, Archive, Bazaar listing-count teaser
 
 Requires a free member account:
 
@@ -363,7 +366,7 @@ cp .env.example .env   # VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 ```
 
 1. Database — [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)  
-   Apply migrations in numeric order through **`194_ticker_game_error_category.sql`** (see full table in `SUPABASE_SETUP.md`)
+   Apply migrations in numeric order through **`196_ai_chat_invoke_analytics.sql`** (see full table in `SUPABASE_SETUP.md`)
 2. Edge Functions — deploy all functions listed in `SUPABASE_SETUP.md` (including `log-watcher-webhook --no-verify-jwt` and `send-discord --no-verify-jwt`)
 3. Enable **pg_cron** + **pg_net** if using automated Discord queue drain; set `app_config.supabase_service_key` to the **Secret API key** (`sb_secret_…`) from Settings → API Keys → **Publishable and secret API keys**
 4. Promote your first super-admin (SQL in `SUPABASE_SETUP.md`)
