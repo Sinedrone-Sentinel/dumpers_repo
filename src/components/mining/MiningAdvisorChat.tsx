@@ -19,6 +19,7 @@ import {
 import { useAiChatUsage } from '../../hooks/useAiChatUsage'
 import AiChatUsageMeter from '../ai/AiChatUsageMeter'
 import LockPhraseHelpMark from '../ai/LockPhraseHelpMark'
+import ShubinTerminalReply from './ShubinTerminalReply'
 import { useMiningAdvisorChrome } from './MiningAdvisorChrome'
 
 type DockSide = 'bottom-right' | 'right'
@@ -459,18 +460,20 @@ export default function MiningAdvisorChat({
               change your loadout.
             </p>
           ) : null}
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={
-                msg.role === 'user'
-                  ? 'ml-6 rounded-md bg-orange-950/40 px-2 py-1.5 text-xs text-amber-50 whitespace-pre-wrap'
-                  : 'mr-6 rounded-md bg-slate-900/70 px-2 py-1.5 text-xs text-slate-200 whitespace-pre-wrap'
-              }
-            >
-              {msg.text}
-            </div>
-          ))}
+          {messages.map((msg, index) =>
+            msg.role === 'user' ? (
+              <div
+                key={index}
+                className="ml-6 rounded-md bg-orange-950/40 px-2 py-1.5 text-xs text-amber-50 whitespace-pre-wrap"
+              >
+                {msg.text}
+              </div>
+            ) : (
+              <div key={index} className="mr-6">
+                <ShubinTerminalReply text={msg.text} />
+              </div>
+            ),
+          )}
           {busy ? <p className="text-[11px] text-slate-500">Thinking…</p> : null}
         </div>
 

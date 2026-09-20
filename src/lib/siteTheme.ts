@@ -92,6 +92,11 @@ export const siteNav = {
   idle: 'site-nav-link site-nav-link-idle',
 } as const
 
+/** Smart Cracker Advisor — Shubin terminal replies only */
+export const siteAdvisor = {
+  shubinReply: 'advisor-shubin-reply',
+} as const
+
 /** Overlays / lists / feedback */
 export const siteOverlay = {
   dropdownList: 'site-dropdown-list',

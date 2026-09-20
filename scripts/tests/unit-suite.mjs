@@ -32,6 +32,7 @@ const modules = [
   'supabase/functions/mining-loadout-advisor/sciFiCrossover.ts',
   'supabase/functions/site-help-bot/helpPrompt.ts',
   'src/lib/aiChatUsage.ts',
+  'src/lib/shubinTerminalReply.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -63,6 +64,7 @@ const advisorPrompt = await import(pathToFileURL(path.join(outDir, 'advisorPromp
 const sciFiCrossover = await import(pathToFileURL(path.join(outDir, 'sciFiCrossover.mjs')).href)
 const helpPrompt = await import(pathToFileURL(path.join(outDir, 'helpPrompt.mjs')).href)
 const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs')).href)
+const shubinTerm = await import(pathToFileURL(path.join(outDir, 'shubinTerminalReply.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -1263,5 +1265,30 @@ check(
 check(aiUsage.aiChatUsageTone({ used: 2, max: 20, resetsInSec: 0 }) === 'ok', 'usage tone ok')
 check(aiUsage.aiChatUsageTone({ used: 17, max: 20, resetsInSec: 0 }) === 'warn', 'usage tone warn')
 check(aiUsage.aiChatUsageTone({ used: 20, max: 20, resetsInSec: 0 }) === 'full', 'usage tone full')
+
+const deniedLine = shubinTerm.parseShubinTerminalLine(
+  '[DENIED] That mineral is not on the Shubin assay.',
+)
+check(deniedLine[0]?.kind === 'tag' && deniedLine[0].slug === 'denied', 'DENIED tag is parsed')
+check(deniedLine[0]?.tag === '[DENIED]', 'DENIED token keeps brackets')
+check(
+  deniedLine.some((part) => part.kind === 'text' && part.text.includes('Shubin assay')),
+  'DENIED body stays as text',
+)
+const termLine = shubinTerm.parseShubinTerminalLine(
+  '[TERM] SHUBIN INTERSTELLAR // MINING COMPUTER',
+)
+check(termLine[0]?.kind === 'tag' && termLine[0].slug === 'term', 'TERM tag is parsed')
+const fitLine = shubinTerm.parseShubinTerminalLine('[FIT] 3x Helix II — Rieger-C3, Focus III')
+check(fitLine[0]?.slug === 'fit', 'FIT tag is parsed')
+const plain = shubinTerm.parseShubinTerminalLine('no tag here')
+check(plain.length === 1 && plain[0].kind === 'text', 'untagged Shubin lines stay plain text')
+check(shubinTerm.shubinLineTagSlug('[DENIED] no') === 'denied', 'line slug follows the tag')
+check(shubinTerm.shubinLineTagSlug('plain body') === null, 'untagged lines have no slug')
+const unknownTag = shubinTerm.parseShubinTerminalLine('[FOO] leftover')
+check(
+  unknownTag[0]?.kind === 'tag' && unknownTag[0].slug === 'default',
+  'unknown tags use default color',
+)
 
 console.log(`Unit tests: ${pass} passed`)
