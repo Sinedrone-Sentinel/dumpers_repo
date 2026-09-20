@@ -1,8 +1,20 @@
 import gameMiningSpawnsData from '../data/game-mining-spawns.json'
 import type { MiningTrackerEntry } from './localGuestCache'
 import { normalizeMiningOreName } from './miningOreCanonical'
-import { getSpawnKeysForGuideLocation, isBroadGuideLocation, spawnKeyMatchesGuideLocation, formatOverallTagLabel } from './miningLocationAliases'
-import { getDisplayNameForSpawnKey, getPrimaryCompendiumGuideName } from './miningLocationNames'
+import { isGuideLocationListOnlyOre } from './handMineables'
+import {
+  formatOverallTagLabel,
+  getSpawnKeysForGuideLocation,
+  isAsteroidFieldGuideLocation,
+  isBroadGuideLocation,
+  isSurfaceBodyGuideLocation,
+  spawnKeyMatchesGuideLocation,
+} from './miningLocationAliases'
+import {
+  getDisplayNameForSpawnKey,
+  getPrimaryCompendiumGuideName,
+  getSystemForGuideLocation,
+} from './miningLocationNames'
 
 export type DepositType = 'surface' | 'asteroid'
 export type ProfileMode = 'overall' | 'location'
@@ -95,6 +107,132 @@ export function getOverallProfile(
   return getOreProfile(oreName)?.overallByType[depositType] ?? null
 }
 
+/** Optional chip/modal scope — Best-at must stay inside this system / site. */
+export interface SpawnScope {
+  system?: string
+  guideLocationName?: string
+}
+
+export function spawnScopeForGuideLocation(guideLocationName: string): SpawnScope {
+  const system = getSystemForGuideLocation(guideLocationName)
+  return {
+    guideLocationName,
+    system: system && system !== 'Unknown' ? system : undefined,
+  }
+}
+
+/**
+ * Deposit types a guide chip may show at this site.
+ * Asteroid-field names stay asteroid-only; planetary buckets stay surface-only.
+ */
+export function depositTypesForOreAtGuideLocation(
+  oreName: string,
+  rarity: string,
+  location: string
+): DepositType[] {
+  if (isGuideLocationListOnlyOre(oreName, rarity)) return ['surface']
+
+  if (isAsteroidFieldGuideLocation(location)) {
+    const profiles = getGuideLocationProfiles(oreName, location)
+    if (profiles.length > 0) return ['asteroid']
+    if (isBroadGuideLocation(location) && getDepositTypes(oreName).includes('asteroid')) {
+      return ['asteroid']
+    }
+    if (!isBroadGuideLocation(location)) return ['asteroid']
+    return []
+  }
+
+  if (isSurfaceBodyGuideLocation(location)) {
+    const profiles = getGuideLocationProfiles(oreName, location)
+    if (profiles.some((p) => p.depositType === 'surface')) return ['surface']
+    if (profiles.length === 0 && getDepositTypes(oreName).includes('surface')) return ['surface']
+    return []
+  }
+
+  const profiles = getGuideLocationProfiles(oreName, location)
+  if (profiles.length === 0) return ['surface']
+  return [...new Set(profiles.map((p) => p.depositType))]
+}
+
+function profilesForScope(
+  oreName: string,
+  depositType: DepositType,
+  scope?: SpawnScope
+): LocationSpawnProfile[] {
+  let pool = getLocationProfilesForOre(oreName)
+
+  if (scope?.guideLocationName) {
+    const atSite = getGuideLocationProfiles(oreName, scope.guideLocationName)
+    if (atSite.length > 0) {
+      pool = atSite
+    } else if (!(isBroadGuideLocation(scope.guideLocationName) && scope.system)) {
+      pool = []
+    }
+  }
+
+  if (scope?.system) {
+    pool = pool.filter((p) => p.system === scope.system)
+  }
+
+  if (scope?.guideLocationName && isAsteroidFieldGuideLocation(scope.guideLocationName)) {
+    return pool
+  }
+  if (scope?.guideLocationName && isSurfaceBodyGuideLocation(scope.guideLocationName)) {
+    return pool.filter((p) => p.depositType === 'surface')
+  }
+  return pool.filter((p) => p.depositType === depositType)
+}
+
+function pickBestScopedProfile(
+  pool: LocationSpawnProfile[],
+  guideLocationName?: string
+): LocationSpawnProfile {
+  const labeled = guideLocationName
+    ? pool.filter((p) => (p.displayName ?? p.guideName) !== guideLocationName)
+    : pool
+  const candidates = labeled.length > 0 ? labeled : pool
+  return candidates.reduce((best, loc) =>
+    loc.effectiveSpawnPercent > best.effectiveSpawnPercent ? loc : best
+  )
+}
+
+function displayNameForScopedBest(
+  best: LocationSpawnProfile,
+  guideLocationName?: string
+): string | undefined {
+  const display = best.displayName ?? best.guideName
+  if (!display) return undefined
+  if (guideLocationName && display === guideLocationName) return undefined
+  return display
+}
+
+/**
+ * Overall cluster/best-at for a chip. When scoped, never fall back to another system.
+ */
+export function getScopedOverallProfile(
+  oreName: string,
+  depositType: DepositType,
+  scope?: SpawnScope
+): ClusterDisplayProfile | null {
+  if (!scope?.system && !scope?.guideLocationName) {
+    return getOverallProfile(oreName, depositType)
+  }
+
+  const pool = profilesForScope(oreName, depositType, scope)
+  if (pool.length === 0) return null
+
+  const best = pickBestScopedProfile(pool, scope.guideLocationName)
+  return {
+    maxNodes: Math.max(...pool.map((p) => p.maxNodes)),
+    clusterRows: best.clusterRows,
+    bestLocation: best.spawnKey ?? best.locationName,
+    bestLocationDisplayName: displayNameForScopedBest(best, scope.guideLocationName),
+    bestLocationSpawnPercent: best.effectiveSpawnPercent,
+    scaleRange: best.scaleRange,
+    scannerMassRange: best.scannerMassRange,
+  }
+}
+
 export function getLocationProfile(
   oreName: string,
   locationName: string,
@@ -112,7 +250,9 @@ export function getLocationProfile(
       (loc.guideName === locationName ||
         spawnKeys.includes(loc.locationName) ||
         loc.locationName === locationName) &&
-      (!depositType || loc.depositType === depositType)
+      (!depositType ||
+        loc.depositType === depositType ||
+        isAsteroidFieldGuideLocation(locationName))
   )
   if (matches.length === 0) return null
   const exact = matches.filter((loc) => loc.guideName === locationName)
@@ -196,9 +336,10 @@ export type SpawnTagTier = 'best' | 'high' | 'medium' | 'low' | 'trace' | 'broad
 
 export function getOverallSpawnTag(
   oreName: string,
-  depositType: DepositType
+  depositType: DepositType,
+  scope?: SpawnScope
 ): { label: string; tier: SpawnTagTier } {
-  const overall = getOverallProfile(oreName, depositType)
+  const overall = getScopedOverallProfile(oreName, depositType, scope)
   if (!overall) return { label: 'Overall', tier: 'broad' }
   return {
     label: formatOverallTagLabel(overall.bestLocation, overall.bestLocationDisplayName),
@@ -212,7 +353,7 @@ export function getLocationSpawnTag(
   depositType: DepositType
 ): { label: string; tier: SpawnTagTier } {
   if (isBroadGuideLocation(locationName)) {
-    return getOverallSpawnTag(oreName, depositType)
+    return getOverallSpawnTag(oreName, depositType, spawnScopeForGuideLocation(locationName))
   }
 
   const loc = getLocationProfile(oreName, locationName, depositType)
