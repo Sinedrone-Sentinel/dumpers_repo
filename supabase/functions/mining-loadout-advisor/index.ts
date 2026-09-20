@@ -4,6 +4,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import catalogJson from './catalog.json' with { type: 'json' }
 import shopsJson from './shops.json' with { type: 'json' }
+import { buildSystemPrompt } from './advisorPrompt.ts'
 import {
   type GearShopIndex,
   renderGearShopBlock,
@@ -238,92 +239,6 @@ function matchOre(catalog: Catalog, oreName: string) {
     catalog.ores.find((ore) => ore.displayName.toLowerCase().includes(needle)) ??
     null
   )
-}
-
-function buildSystemPrompt(input: {
-  catalog: Catalog
-  planningMode: boolean
-  oreName: string
-  oreRow: unknown
-  vesselDisplayName: string
-  loadout: HeadSession[]
-  gadgetsInUse: string[]
-  scan: ScanSession | null
-  gearShopBlock: string
-}): string {
-  const lines = [
-    'You are the Smart Cracker mining loadout advisor for Dumper\'s Repo (Star Citizen).',
-    'Give practical advice about mining ship lasers, modules, and gadgets only.',
-    'Use display names from the catalog. Never invent gear, stats, or ores.',
-    'Never claim you changed, saved, or equipped a loadout. Advice only.',
-    'Refuse questions about other site tools, accounts, security, or anything not mining loadouts.',
-    'Keep answers concise. Prefer 1 recommended setup plus a short why.',
-    'If a field is unknown, say so. Do not dump JSON or internal identifiers.',
-    '',
-    'Hard fit rules — never violate:',
-    '- Each laser "slots" value is the exact module-port count. Recommend at most that many modules for that head. A 1-port head gets 0 or 1 module, never 2 or 3.',
-    '- Only recommend heads whose size matches the ship laserSize. Do not add more heads than laserHardpoints.',
-    '- Golem may only use Pitman Mining Laser. ROC and ROC-DS are size 0 only.',
-    '- At most two gadgets on the rock.',
-    '- If you name modules, the count must fit that head\'s slots.',
-    '',
-    'Module ports by head (authoritative):',
-    input.catalog.lasers
-      .map((laser) => `- ${laser.displayName}: ${laser.slots ?? '?'} port(s), size ${laser.size ?? '?'}`)
-      .join('\n'),
-    '',
-    'Ships (authoritative):',
-    JSON.stringify(input.catalog.vessels ?? []),
-    '',
-    'Gear catalog (authoritative game-file stats):',
-    JSON.stringify({
-      lasers: input.catalog.lasers,
-      modules: input.catalog.modules,
-      gadgets: input.catalog.gadgets,
-    }),
-    '',
-    'Current ship: ' + (input.vesselDisplayName || 'unknown'),
-    'Current heads (slots = ports on that equipped head): ' + JSON.stringify(input.loadout),
-    'Gadgets already on the rock: ' + (input.gadgetsInUse.join(', ') || 'none'),
-    '',
-    'Where-to-buy rules — never violate:',
-    '- You may answer "where can I buy this" for mining heads, modules and gadgets only.',
-    '- Refuse buy questions about anything else (ammo, armour, food, drinks, personal weapons, ship purchases, commodity trading). Say that is outside the mining loadout advisor and point them at the site\'s Commodity Lookup for ore prices.',
-    '- Only use the BUY LOCATIONS block below. Never invent a shop, terminal, system or price.',
-    '- If the gear is not in that block, or the block is absent, say you have no buy location on record for it. Do not guess.',
-    '- When you give prices or locations, credit UEX and say the data is crowdsourced and can drift.',
-  ]
-
-  if (input.gearShopBlock) {
-    lines.push('', input.gearShopBlock)
-  }
-
-  if (input.oreName) {
-    lines.push('Resource: ' + input.oreName)
-  }
-  if (input.oreRow) {
-    lines.push(
-      'Game-file element stats for this resource (not a scanned rock mass): ' +
-        JSON.stringify(input.oreRow),
-    )
-  }
-
-  if (input.planningMode) {
-    lines.push(
-      'Mode: planning. Do not mention or use any HUD scan numbers.',
-      'Typical deposit mass is not in game files. Say typical deposit size is unknown rather than inventing a number.',
-    )
-  } else if (input.scan) {
-    lines.push(
-      'Mode: this rock. Use the HUD scan and Smart Cracker math below. Do not invent different mass/resistance.',
-      'HUD mass: ' + input.scan.mass,
-      'HUD resistance %: ' + input.scan.resistancePercent,
-      'HUD instability: ' + (input.scan.instability ?? 'not entered'),
-      'Smart Cracker summary: ' + (input.scan.crackSummary || 'none'),
-    )
-  }
-
-  return lines.join('\n')
 }
 
 function extractGeminiText(data: unknown): string {
