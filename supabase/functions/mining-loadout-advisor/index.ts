@@ -23,6 +23,7 @@ const GEMINI_MODELS = [
   'gemini-3.5-flash',
   'gemini-2.5-flash',
 ] as const
+const RATE_FEATURE = 'mining_advisor'
 const MAX_QUESTION = 2000
 const MAX_HISTORY = 8
 const MAX_MSG = 2000
@@ -94,6 +95,23 @@ function loadGearShops(): GearShopIndex | null {
   const parsed = shopsJson as GearShopIndex
   if (!parsed?.items?.length || !parsed.terminals?.length) return null
   return parsed
+}
+
+type UsageSnapshot = {
+  used: number
+  max: number
+  resetsInSec: number
+}
+
+/** Echoed to the client so the x/20 meter moves the moment a question is sent. */
+function usageFromRate(rate: unknown): UsageSnapshot | null {
+  if (!rate || typeof rate !== 'object') return null
+  const row = rate as { ask_count?: unknown; max?: unknown; resets_in_sec?: unknown }
+  const used = Number(row.ask_count)
+  const max = Number(row.max)
+  if (!Number.isFinite(used) || !Number.isFinite(max)) return null
+  const resets = Number(row.resets_in_sec)
+  return { used, max, resetsInSec: Number.isFinite(resets) ? resets : 0 }
 }
 
 function json(status: number, payload: Record<string, unknown>): Response {
@@ -391,19 +409,22 @@ serve(async (req) => {
 
     const question = clip(body.question, MAX_QUESTION)
     if (!question) return json(400, { error: 'Ask a mining loadout question.' })
-    const { data: rate, error: rateError } = await admin.rpc('mining_advisor_try_consume', {
+    const { data: rate, error: rateError } = await admin.rpc('ai_chat_try_consume', {
       p_user_id: user.id,
+      p_feature: RATE_FEATURE,
     })
     if (rateError) {
       console.error('advisor rate rpc failed')
       return json(500, { error: 'Advisor is temporarily unavailable.' })
     }
+    const usage = usageFromRate(rate)
     const allowed = (rate as { allowed?: boolean } | null)?.allowed
     if (!allowed) {
       const retry = Number((rate as { retry_after_sec?: unknown } | null)?.retry_after_sec)
       return json(429, {
-        error: 'Slow down — Advisor is limited to 20 questions per hour.',
+        error: `Slow down — Advisor is limited to ${usage?.max ?? 20} questions per hour.`,
         retryAfterSec: Number.isFinite(retry) ? retry : 3600,
+        usage,
       })
     }
 
@@ -460,10 +481,11 @@ serve(async (req) => {
     if (!generated.ok) {
       return json(generated.status === 429 ? 429 : 502, {
         error: memberSafeGeminiError(generated.status),
+        usage,
       })
     }
 
-    return json(200, { advice: generated.advice })
+    return json(200, { advice: generated.advice, usage })
   } catch (error) {
     console.error('advisor failed', error instanceof Error ? error.name : 'error')
     return json(500, { error: 'Advisor is temporarily unavailable.' })

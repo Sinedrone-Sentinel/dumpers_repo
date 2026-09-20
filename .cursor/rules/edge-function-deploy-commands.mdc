@@ -47,6 +47,7 @@ Source of truth: `docs/SUPABASE_SETUP.md` section Deploy Edge Functions. Prefer 
 | `citizenid-oauth-callback` | `npx supabase functions deploy citizenid-oauth-callback --no-verify-jwt` |
 | `unlink-citizenid` | `npx supabase functions deploy unlink-citizenid` |
 | `mining-loadout-advisor` | `npm run copy-mining-advisor-catalog` then `npx supabase functions deploy mining-loadout-advisor` |
+| `site-help-bot` | `npm run build-help-knowledge-base` then `npx supabase functions deploy site-help-bot` |
 
 **Do not drop `--no-verify-jwt`** on functions that require it above (Discord cron/webhooks, log-watcher, services interactions/expire, `citizenid-oauth-callback`).
 
