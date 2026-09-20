@@ -16,6 +16,8 @@ import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { friendLabel, getFriendPersonalInventory } from '../lib/friends'
+import StockCardListingShortcut from '../components/resourceTracker/StockCardListingShortcut'
+import type { StockCardListingType } from '../lib/stockCardListing'
 import {
   inventoryLineKey,
   normalizeLocationSearch,
@@ -58,10 +60,12 @@ type FriendStockCard = {
 }
 
 export default function ResourceTrackerRoute() {
-  const { user, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
+  const { user, profile, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
   const { friends } = useFriends()
   const isGuest = !user && isGuestPreview
   const canViewSiteTotal = !isGuest && canUseFeature('site_total', visibilityContext)
+  const canListFromStock = !isGuest && canUseFeature('custom_orders', visibilityContext)
+  const rsiVerified = Boolean(profile?.rsi_handle_verified)
   const showFriendsTab = !isGuest && friends.length > 0
 
   const [activeTab, setActiveTab] = useState<ResourceTrackerTab>('personal')
@@ -118,6 +122,11 @@ export default function ResourceTrackerRoute() {
   const [editValue, setEditValue] = useState('')
   const [editingNoteKey, setEditingNoteKey] = useState<string | null>(null)
   const [noteValue, setNoteValue] = useState('')
+  const [listingEdit, setListingEdit] = useState<{
+    lineKey: string
+    type: StockCardListingType
+  } | null>(null)
+  const [listingQty, setListingQty] = useState('')
 
   const inventoryContext = useMemo(() => {
     if (isGuest || !user?.id) return null
@@ -609,6 +618,8 @@ export default function ResourceTrackerRoute() {
                   <button
                     type="button"
                     onClick={() => {
+                      setListingEdit(null)
+                      setListingQty('')
                       setEditingKey(lineKey)
                       setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
                     }}
@@ -624,28 +635,55 @@ export default function ResourceTrackerRoute() {
 
           <div className="mt-3 min-h-[6.75rem]">
             {!readOnly && (
-              <div className="grid grid-cols-2 gap-1.5 min-w-0">
-                {adjustSteps.map((step) => (
-                  <div key={step} className="flex gap-1 min-w-0">
-                    <button
-                      onClick={() =>
-                        void handleAdjust(card.resource_key, quality, -step, card.note)
-                      }
-                      className="site-btn-danger flex-1 min-w-0 !px-1 py-1 text-xs tabular-nums"
-                    >
-                      −{step}
-                    </button>
-                    <button
-                      onClick={() =>
-                        void handleAdjust(card.resource_key, quality, step, card.note)
-                      }
-                      className="site-btn-success flex-1 min-w-0 !px-1 py-1 text-xs tabular-nums"
-                    >
-                      +{step}
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 gap-1.5 min-w-0">
+                  {adjustSteps.map((step) => (
+                    <div key={step} className="flex gap-1 min-w-0">
+                      <button
+                        onClick={() =>
+                          void handleAdjust(card.resource_key, quality, -step, card.note)
+                        }
+                        className="site-btn-danger flex-1 min-w-0 !px-1 py-1 text-xs tabular-nums"
+                      >
+                        −{step}
+                      </button>
+                      <button
+                        onClick={() =>
+                          void handleAdjust(card.resource_key, quality, step, card.note)
+                        }
+                        className="site-btn-success flex-1 min-w-0 !px-1 py-1 text-xs tabular-nums"
+                      >
+                        +{step}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {isPersonalTab && user?.id ? (
+                  <StockCardListingShortcut
+                    userId={user.id}
+                    resourceKey={card.resource_key}
+                    resourceLabel={card.label}
+                    quality={quality}
+                    lineKey={lineKey}
+                    canList={canListFromStock}
+                    rsiVerified={rsiVerified}
+                    listingEdit={listingEdit}
+                    listingQty={listingQty}
+                    onOpen={(type) => {
+                      setEditingKey(null)
+                      setEditValue('')
+                      setEditingNoteKey(null)
+                      setListingEdit({ lineKey, type })
+                      setListingQty(formatQuantityForResource(card.resource_key, card.quantity))
+                    }}
+                    onQtyChange={setListingQty}
+                    onCancel={() => {
+                      setListingEdit(null)
+                      setListingQty('')
+                    }}
+                  />
+                ) : null}
+              </>
             )}
           </div>
 
@@ -695,6 +733,8 @@ export default function ResourceTrackerRoute() {
               ) : (
                 <button
                   onClick={() => {
+                    setListingEdit(null)
+                    setListingQty('')
                     setEditingNoteKey(lineKey)
                     setNoteValue(card.note ?? '')
                   }}
@@ -723,6 +763,11 @@ export default function ResourceTrackerRoute() {
       handleSaveNote,
       editingNoteKey,
       noteValue,
+      user?.id,
+      canListFromStock,
+      rsiVerified,
+      listingEdit,
+      listingQty,
     ]
   )
 
