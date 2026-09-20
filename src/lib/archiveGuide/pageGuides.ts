@@ -127,7 +127,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'The Craft button greys out if the quality you picked for a material doesn\'t have enough on hand, and locks for a couple of seconds after each craft to prevent accidental double-clicks',
       'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand; for two or more materials, also those fully stocked except one (that one may be missing). These do not get a Craft button until you have enough',
       'Switch between Cards (edit quantities) and List (read-only overview with notes) on My Resources / Site Total',
-      'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding',
+      'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding, and the note box suggests your existing location tags as you type',
       'On My Resources, stock notes (e.g. hangar / ship) automatically become location filter chips — variants like `arcL1`, `Arc l1`, and `ARC-l1` collapse into one; cards with no note use an **Empty** chip; chips refresh when you add or edit cards',
       'Filter by quality band on both views — each Q-tier stays on its own row',
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',

@@ -34,6 +34,7 @@ const modules = [
   'src/lib/aiChatUsage.ts',
   'src/lib/shubinTerminalReply.ts',
   'src/lib/stockCardListing.ts',
+  'src/lib/inventoryStock.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -67,6 +68,7 @@ const helpPrompt = await import(pathToFileURL(path.join(outDir, 'helpPrompt.mjs'
 const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs')).href)
 const shubinTerm = await import(pathToFileURL(path.join(outDir, 'shubinTerminalReply.mjs')).href)
 const stockCardListing = await import(pathToFileURL(path.join(outDir, 'stockCardListing.mjs')).href)
+const inventoryStock = await import(pathToFileURL(path.join(outDir, 'inventoryStock.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -1361,6 +1363,34 @@ const hangarAndShip = [
 check(
   stockCardListing.findMatchingResourceLine(hangarAndShip, 'aslarite', 287)?.id === 'shared',
   'two location cards still share one listing line',
+)
+
+const noteTags = inventoryStock.uniqueStockNoteLabels([
+  { note: 'CRU-L1' },
+  { note: 'cru-l1' },
+  { note: 'Orison' },
+  { note: '  ' },
+  { note: null },
+])
+check(
+  noteTags.length === 2 && noteTags.includes('CRU-L1') && noteTags.includes('Orison'),
+  'unique note tags collapse case and skip empty',
+)
+check(
+  inventoryStock.filterNoteSuggestions(noteTags, '').join(',') === noteTags.join(','),
+  'empty query lists every unique tag',
+)
+check(
+  inventoryStock.filterNoteSuggestions(noteTags, 'orison').join(',') === 'Orison',
+  'note suggest is case-insensitive',
+)
+check(
+  inventoryStock.filterNoteSuggestions(noteTags, 'cru').join(',') === 'CRU-L1',
+  'note suggest matches CRU-L1 without the hyphen',
+)
+check(
+  inventoryStock.filterNoteSuggestions(noteTags, 'pyro').length === 0,
+  'unknown note query has no suggestions',
 )
 
 console.log(`Unit tests: ${pass} passed`)
