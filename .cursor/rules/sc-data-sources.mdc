@@ -39,10 +39,18 @@ Key paths in extracted data:
 
 ## Secondary Data Sources
 
-### 1. UEX Corp API (Commodity DFP bases only)
+### 1. UEX Corp API (prices + shop locations)
 **URL:** https://uexcorp.space/api/documentation
 
-Crowdsourced live commodity price data. **Use for:** Resource Tracker DFP Q0 base prices (`npm run fetch-commodity-bases`).
+Crowdsourced. Always **baked** by a script — never called at runtime:
+
+- Resource Tracker DFP Q0 bases — `npm run fetch-commodity-bases`
+- Commodity Lookup buy/sell terminals — `npm run fetch-shop-data`
+- Smart Cracker Advisor mining-gear buy locations — `npm run fetch-mining-gear-shops`
+
+The gear bake is **mining heads, modules and gadgets only** (UEX categories 28/29/30, all flagged `is_mining`). Do not widen it to armour, ammo, food, personal weapons or ships — the Advisor is a mining loadout tool and must have no data to answer those. Join to game data on **Star Citizen uuid**; uuids are stripped before the Advisor prompt.
+
+After refreshing gear shops, re-run `npm run copy-mining-advisor-catalog` and redeploy `mining-loadout-advisor`. Never ticker these refreshes.
 
 ### 2. Star Citizen Wiki API (General reference)
 **URL:** https://api.star-citizen.wiki/api/

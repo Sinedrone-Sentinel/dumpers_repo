@@ -3,6 +3,12 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import catalogJson from './catalog.json' with { type: 'json' }
+import shopsJson from './shops.json' with { type: 'json' }
+import {
+  type GearShopIndex,
+  renderGearShopBlock,
+  resolveGearShopMatches,
+} from './gearShopLookup.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -77,6 +83,16 @@ function loadCatalog(): Catalog {
   if (!parsed?.lasers?.length || !parsed.ores?.length) {
     throw new Error('catalog_missing')
   }
+  return parsed
+}
+
+/**
+ * Baked UEX buy locations for mining gear. Optional on purpose — a stale or missing
+ * shops.json must never take the advisor down, it just loses "where can I buy" answers.
+ */
+function loadGearShops(): GearShopIndex | null {
+  const parsed = shopsJson as GearShopIndex
+  if (!parsed?.items?.length || !parsed.terminals?.length) return null
   return parsed
 }
 
@@ -188,6 +204,7 @@ function buildSystemPrompt(input: {
   loadout: HeadSession[]
   gadgetsInUse: string[]
   scan: ScanSession | null
+  gearShopBlock: string
 }): string {
   const lines = [
     'You are the Smart Cracker mining loadout advisor for Dumper\'s Repo (Star Citizen).',
@@ -223,7 +240,18 @@ function buildSystemPrompt(input: {
     'Current ship: ' + (input.vesselDisplayName || 'unknown'),
     'Current heads (slots = ports on that equipped head): ' + JSON.stringify(input.loadout),
     'Gadgets already on the rock: ' + (input.gadgetsInUse.join(', ') || 'none'),
+    '',
+    'Where-to-buy rules — never violate:',
+    '- You may answer "where can I buy this" for mining heads, modules and gadgets only.',
+    '- Refuse buy questions about anything else (ammo, armour, food, drinks, personal weapons, ship purchases, commodity trading). Say that is outside the mining loadout advisor and point them at the site\'s Commodity Lookup for ore prices.',
+    '- Only use the BUY LOCATIONS block below. Never invent a shop, terminal, system or price.',
+    '- If the gear is not in that block, or the block is absent, say you have no buy location on record for it. Do not guess.',
+    '- When you give prices or locations, credit UEX and say the data is crowdsourced and can drift.',
   ]
+
+  if (input.gearShopBlock) {
+    lines.push('', input.gearShopBlock)
+  }
 
   if (input.oreName) {
     lines.push('Resource: ' + input.oreName)
@@ -384,6 +412,19 @@ serve(async (req) => {
     const oreName = clip(body.oreName, 80)
     const planningMode = !useScannedInfo || !scan
     const oreRow = oreName ? matchOre(catalog, oreName) : null
+    const loadout = parseLoadout(body.loadout, catalog)
+    const gadgetsInUse = parseGadgets(body.gadgetsInUse)
+
+    // Only the gear actually being asked about (or, for "where do I buy these", the gear
+    // they already run) reaches the prompt — the full index would swamp it.
+    const gearShops = loadGearShops()
+    const equippedGear = [
+      ...loadout.flatMap((head) => [head.head, ...head.modules]),
+      ...gadgetsInUse,
+    ]
+    const gearShopBlock = gearShops
+      ? renderGearShopBlock(gearShops, resolveGearShopMatches(gearShops, question, equippedGear))
+      : ''
 
     const systemPrompt = buildSystemPrompt({
       catalog,
@@ -391,9 +432,10 @@ serve(async (req) => {
       oreName,
       oreRow,
       vesselDisplayName: clip(body.vesselDisplayName, 40),
-      loadout: parseLoadout(body.loadout, catalog),
-      gadgetsInUse: parseGadgets(body.gadgetsInUse),
+      loadout,
+      gadgetsInUse,
       scan,
+      gearShopBlock,
     })
 
     const history = parseMessages(body.messages)

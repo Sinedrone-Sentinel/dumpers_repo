@@ -63,6 +63,7 @@ export function buildMiningAdvisorCatalog(gameMining) {
     if (seenLasers.has(key)) continue
     seenLasers.add(key)
     lasers.push({
+      uuid: laser.id ?? null,
       displayName,
       size: laser.size,
       mw: laser.laserPower,
@@ -75,6 +76,7 @@ export function buildMiningAdvisorCatalog(gameMining) {
   const modules = (gameMining.miningModules ?? [])
     .filter((mod) => mod.displayName)
     .map((mod) => ({
+      uuid: mod.id ?? null,
       displayName: mod.displayName,
       kind: mod.kind,
       powerMultiplier: mod.powerMultiplier ?? 1,
@@ -85,6 +87,7 @@ export function buildMiningAdvisorCatalog(gameMining) {
   const gadgets = (gameMining.miningGadgets ?? [])
     .filter((g) => g.displayName)
     .map((g) => ({
+      uuid: g.id ?? null,
       displayName: g.displayName,
       resistance: g.resistanceModifier ?? 0,
       instability: g.instabilityModifier ?? 0,
@@ -114,6 +117,103 @@ export function buildMiningAdvisorCatalog(gameMining) {
     ores,
     vessels: VESSELS,
   }
+}
+
+function normalizeGearName(name) {
+  return String(name ?? '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '')
+}
+
+/**
+ * Join the baked UEX gear shop index (src/data/mining-gear-shops.json) onto the advisor
+ * catalog by Star Citizen uuid, so the Edge Function can answer "where can I buy X"
+ * using our display names only.
+ *
+ * Scope is the mining catalog itself — if a piece of gear is not a head, module or
+ * gadget we advise on, it has no shop row and the advisor cannot answer for it.
+ */
+export function buildAdvisorGearShops(catalog, gearShops) {
+  const shopByUuid = new Map()
+  const shopByName = new Map()
+  for (const item of gearShops?.items ?? []) {
+    if (item?.uuid) shopByUuid.set(item.uuid, item)
+    const key = normalizeGearName(item?.name)
+    if (key && !shopByName.has(key)) shopByName.set(key, item)
+  }
+
+  const usedTerminalIds = new Set()
+  const items = []
+  const missing = []
+
+  const addGear = (entry, kind) => {
+    // uuid is the reliable key, but UEX sometimes files a listing under a variant uuid
+    // we exclude (e.g. Arbor MH1 sits on the MPUV arm), so fall back to display name.
+    const shop =
+      (entry.uuid ? shopByUuid.get(entry.uuid) : null) ??
+      shopByName.get(normalizeGearName(entry.displayName))
+    if (!shop) missing.push(`${entry.displayName} (${kind})`)
+
+    for (const listing of shop?.listings ?? []) usedTerminalIds.add(listing.t)
+    // Gear with no listing stays in the index on purpose: the advisor must be able to
+    // say "UEX has no buy location on record" instead of treating it as unknown gear.
+    items.push({
+      displayName: entry.displayName,
+      kind,
+      // Every known terminal, cheapest first — never a truncated sample.
+      listings: (shop?.listings ?? []).map((l) => ({ t: l.t, buy: l.buy })),
+    })
+  }
+
+  for (const laser of catalog.lasers ?? []) addGear(laser, 'head')
+  for (const mod of catalog.modules ?? []) addGear(mod, 'module')
+  for (const gadget of catalog.gadgets ?? []) addGear(gadget, 'gadget')
+
+  const terminals = (gearShops?.terminals ?? [])
+    .filter((t) => usedTerminalIds.has(t.id))
+    .map((t) => ({ id: t.id, name: t.name, system: t.system ?? null }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  return {
+    payload: {
+      generatedAt: gearShops?.generatedAt ?? null,
+      attribution: gearShops?.attribution ?? 'Powered by UEX',
+      sourceUrl: gearShops?.sourceUrl ?? 'https://uexcorp.space',
+      gameVersions: gearShops?.gameVersions ?? [],
+      terminals,
+      items: items.sort((a, b) => a.displayName.localeCompare(b.displayName)),
+    },
+    missing,
+  }
+}
+
+/** uuids are a join key only — they must never reach the model prompt. */
+export function stripCatalogUuids(catalog) {
+  const drop = ({ uuid: _uuid, ...rest }) => rest
+  return {
+    ...catalog,
+    lasers: (catalog.lasers ?? []).map(drop),
+    modules: (catalog.modules ?? []).map(drop),
+    gadgets: (catalog.gadgets ?? []).map(drop),
+  }
+}
+
+export function assertAdvisorGearShopsShape(shops) {
+  if (!shops?.items?.length) throw new Error('Advisor gear shops missing items')
+  if (!shops?.terminals?.length) throw new Error('Advisor gear shops missing terminals')
+  const canary = shops.items.find((i) => i.displayName === 'Hofstede-S2 Mining Laser')
+  if (!canary?.listings?.length) {
+    throw new Error('Advisor gear shops missing Hofstede-S2 buy locations')
+  }
+  const terminalIds = new Set(shops.terminals.map((t) => t.id))
+  for (const item of shops.items) {
+    for (const listing of item.listings ?? []) {
+      if (!terminalIds.has(listing.t)) {
+        throw new Error(`Gear shop listing for ${item.displayName} points at unknown terminal`)
+      }
+    }
+  }
+  return true
 }
 
 export function assertAdvisorCatalogShape(catalog) {
