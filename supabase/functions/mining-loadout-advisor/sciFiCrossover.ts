@@ -32,11 +32,14 @@ export type CrossoverDecision =
   | { action: 'allow'; hit: CrossoverHit }
   | { action: 'deny'; hit: CrossoverHit }
 
-const SIMILE =
-  /\b(like|as in|similar to|style of|inspired by|from the movie|from the show|from the film)\b/i
+/** Analogy English in the window around a franchise hit — not mining nouns. */
+const COMPARISON =
+  /\b(like|as in|similar to|akin to|equivalent of|equivalent to|analogue of|analog of|version of|compared to|versus|vs|instead of|rather than|style of|inspired by|reminiscent of|modeled after|modelled after|based on|from the movie|from the show|from the film)\b/
 
-const MINING_INTENT =
-  /\b(mine|mining|miner|loadout|laser|module|asteroid|rock|ore|deposit|gadget|head|prospector|mole|golem)\b/i
+const COMPARISON_SUFFIX = /\b(like|style)\b/
+
+const ANALOGY_PREFIX_TOKENS = 12
+const ANALOGY_SUFFIX_TOKENS = 3
 
 const PROBE_TOPIC =
   /\b(sci[\s-]?fi|science fiction|franchises?|crossover|other universes?|fictional|rival compan(?:y|ies)|rival corps?|rival corporations?|easter eggs?|your tables?|companies you know)\b/i
@@ -573,15 +576,76 @@ function tokenMatchesTerm(token: string, termPart: string): boolean {
 }
 
 function fuzzyNeedleInTokens(tokens: string[], needle: string): boolean {
+  return findFuzzyNeedleIndex(tokens, needle) >= 0
+}
+
+function findFuzzyNeedleIndex(tokens: string[], needle: string): number {
   const parts = needle.split(' ').filter(Boolean)
-  if (!parts.length) return false
+  if (!parts.length) return -1
   if (parts.length === 1) {
-    return tokens.some((token) => tokenMatchesTerm(token, parts[0]))
+    return tokens.findIndex((token) => tokenMatchesTerm(token, parts[0]))
   }
   for (let i = 0; i <= tokens.length - parts.length; i++) {
     const window = tokens.slice(i, i + parts.length)
-    if (window.every((token, idx) => tokenMatchesTerm(token, parts[idx]))) return true
+    if (window.every((token, idx) => tokenMatchesTerm(token, parts[idx]))) return i
   }
+  return -1
+}
+
+function tokenRangeToSpan(
+  tokens: string[],
+  startIdx: number,
+  count: number,
+): { start: number; end: number } {
+  let start = 0
+  for (let i = 0; i < startIdx; i++) start += tokens[i].length + 1
+  let end = start
+  for (let i = 0; i < count; i++) {
+    end += tokens[startIdx + i].length
+    if (i < count - 1) end += 1
+  }
+  return { start, end }
+}
+
+/** Character span of the franchise needle in the normalized question. */
+function findNeedleSpan(normalized: string, needle: string): { start: number; end: number } | null {
+  if (!normalized || !needle) return null
+  const padded = ` ${normalized} `
+  const exactAt = (n: string) => {
+    const idx = padded.indexOf(` ${n} `)
+    if (idx < 0) return null
+    return { start: idx, end: idx + n.length }
+  }
+  const exact = exactAt(needle) ?? (!needle.endsWith('s') ? exactAt(`${needle}s`) : null)
+  if (exact) return exact
+
+  const tokens = normalized.split(' ').filter(Boolean)
+  const parts = needle.split(' ').filter(Boolean)
+  const startIdx = findFuzzyNeedleIndex(tokens, needle)
+  if (startIdx < 0) return null
+  return tokenRangeToSpan(tokens, startIdx, parts.length)
+}
+
+function lastTokens(text: string, count: number): string {
+  const tokens = text.split(' ').filter(Boolean)
+  return tokens.slice(Math.max(0, tokens.length - count)).join(' ')
+}
+
+function firstTokens(text: string, count: number): string {
+  const tokens = text.split(' ').filter(Boolean)
+  return tokens.slice(0, count).join(' ')
+}
+
+/** True when comparison wording frames this franchise hit (like / similar to / version of). */
+export function comparisonFramesHit(question: string, hit: CrossoverHit): boolean {
+  const normalized = normalizeCrossoverText(question)
+  const needle = normalizeCrossoverText(hit.term)
+  const span = findNeedleSpan(normalized, needle)
+  if (!span) return false
+  const prefix = lastTokens(normalized.slice(0, span.start).trim(), ANALOGY_PREFIX_TOKENS)
+  const suffix = firstTokens(normalized.slice(span.end).trim(), ANALOGY_SUFFIX_TOKENS)
+  if (prefix && COMPARISON.test(prefix)) return true
+  if (suffix && (COMPARISON.test(suffix) || COMPARISON_SUFFIX.test(suffix))) return true
   return false
 }
 
@@ -650,7 +714,7 @@ export function shouldDenyCrossover(
   const hit = findSciFiCrossover(question)
   if (!hit) return { action: 'allow', hit: null }
   if (questionHasCatalogName(question, catalogNames)) return { action: 'allow', hit }
-  if (SIMILE.test(question) && MINING_INTENT.test(question)) return { action: 'allow', hit }
+  if (comparisonFramesHit(question, hit)) return { action: 'allow', hit }
   return { action: 'deny', hit }
 }
 
