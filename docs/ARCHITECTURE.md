@@ -6,7 +6,7 @@ This document describes the major **actions and actors** in the software produce
 
 1. **Dumper's Repo site** — static React SPA (`src/`) built with Vite, hosted as static files (GitHub Pages for the official deployment).
 2. **Backend data & auth** — Supabase (Postgres + Auth + Realtime + Edge Functions). The browser uses the **anon** key; authorization is enforced with **RLS** and **SECURITY DEFINER** RPCs.
-3. **Dumper Apps (BP Dumper)** — Python watcher (`scripts/bp-dumper-py/`) packaged as Windows `DumperApps.exe`, published on GitHub Releases. It reads local Star Citizen logs and posts events to the official webhook using the member's personal API key (`dr_…`).
+3. **Dumper Apps (BP Dumper)** — canonical Windows client is native Go (`scripts/bp-dumper-go/`) packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1` and published on GitHub Releases. Python (`scripts/bp-dumper-py/`) is the reference / non-Windows zip. The app reads local Star Citizen logs and posts events to the official webhook using the member's personal API key (`dr_…`).
 
 ```
   [Browser / Offline Mode]
@@ -49,7 +49,9 @@ This document describes the major **actions and actors** in the software produce
 ## Major flows
 
 - **Craft / track / market:** SPA calls PostgREST selects + RPCs; mutations for orders/listings go through DEFINER RPCs (not client `.insert`/`.update` on those tables).
+- **RSI verify:** member **Link Citizen iD** OAuth (`link-citizenid` / `citizenid-oauth-callback`); Spectrum snapshot + tokens stored server-side; bio-code scrape is gone.
+- **Advisor / Help:** member JWT + the member's own Gemini key; Edge Functions `mining-loadout-advisor` and `site-help-bot` call Google Gemini. Saved keys are browser-encrypted ciphertext on the profile.
 - **BP Dumper sync:** local log parse → HTTPS post → Edge validates key → DB update for that user.
-- **Release:** tag `v*` → `build-releases.yml` builds exe → checksums + cosign-signed manifest → VirusTotal gate → GitHub Release assets (Authenticode-unsigned).
+- **Release:** tag `v*` → `build-releases.yml` builds the Go exe → checksums + cosign-signed manifest → VirusTotal gate → GitHub Release assets (Authenticode-unsigned).
 
 See also [SECURITY.md](../SECURITY.md) and [docs/SECURITY_ASSURANCE.md](SECURITY_ASSURANCE.md).

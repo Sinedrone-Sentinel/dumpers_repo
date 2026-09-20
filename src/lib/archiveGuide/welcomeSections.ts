@@ -26,6 +26,8 @@ export const OFFLINE_MODE_SECTION = {
     'Build your Mission Tracker list (local only)',
     'Track resources in Resource Tracker (local only)',
     'Use the Mining Tracker for RS references',
+    'Browse Wikelo barter trades',
+    'Look up commodity buy/sell terminals (Commodity Lookup)',
     'Preview The Bazaar — see how many WTB/WTS listings are open (sign in to trade)',
   ],
   membersOnly: [

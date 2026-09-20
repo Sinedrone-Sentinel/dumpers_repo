@@ -14,8 +14,8 @@ Source is **Apache-2.0** ([LICENSE](../LICENSE)). Forks/self-hosts must **rebran
 
 1. Clone the repository
 2. Copy `.env.example` to `.env` and configure Supabase credentials
-3. Run all database migrations in numeric order (currently through **`118_drop_game_data_mirror_tables.sql`**) — see [docs/SUPABASE_SETUP.md](SUPABASE_SETUP.md)
-4. Deploy Edge Functions (`ban-user`, `unban-user`, `delete-account`, `send-discord`, `log-watcher-webhook`, `link-citizenid`, `citizenid-oauth-callback`, `unlink-citizenid`)
+3. Run all database migrations in numeric order (currently through **`196_ai_chat_invoke_analytics.sql`**) — see the full table in [docs/SUPABASE_SETUP.md](SUPABASE_SETUP.md)
+4. Deploy Edge Functions listed in `SUPABASE_SETUP.md` (including `ban-user`, `unban-user`, `delete-account`, `send-discord`, `log-watcher-webhook`, Citizen iD trio, `mining-loadout-advisor`, `site-help-bot`, `discord-services-*`, and `manage-github-collaborator`; several require `--no-verify-jwt`)
 5. Build and deploy
 
 ```bash
@@ -149,10 +149,10 @@ Prefer same-origin DFP on dumpers-repo.com / www. If you override `VITE_DFP_ENGI
 
 ### Edge Functions not working
 1. Verify functions are deployed: `npx supabase functions list`
-2. Required functions: `ban-user`, `unban-user`, `delete-account`, `send-discord`, `log-watcher-webhook`, `link-citizenid`, `citizenid-oauth-callback`, `unlink-citizenid`
+2. Deploy every function in the table in `SUPABASE_SETUP.md` (Citizen iD, Advisor, Help, Discord services bot, Contributor Team, plus the core set). Copy-pasteable commands live in that same section.
 3. Check function logs: `npx supabase functions logs send-discord`
-4. Discord queue cron requires **pg_cron** + **pg_net** (see `SUPABASE_SETUP.md` migrations 065–068)
-5. Ensure `SUPABASE_SERVICE_ROLE_KEY` is set in Supabase dashboard
+4. Discord queue cron requires **pg_cron** + **pg_net** (see `SUPABASE_SETUP.md`)
+5. Ensure Edge secrets include the current **Secret API key** (`sb_secret_…` / `SUPABASE_SECRET_KEYS`; `SUPABASE_SERVICE_ROLE_KEY` is the older name)
 
 ### Google OAuth redirect errors
 1. Verify redirect URIs in Google Cloud Console match Supabase callback URL

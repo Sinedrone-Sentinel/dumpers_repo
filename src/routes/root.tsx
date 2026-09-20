@@ -206,7 +206,7 @@ const authCallbackRoute = createRoute({
   component: AuthCallbackRoute,
 })
 
-/** Public Privacy Policy — no auth / Offline Mode required (Store + footer links). */
+/** Public Privacy Policy — no auth / Offline Mode required (footer / onboarding). */
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/privacy',
