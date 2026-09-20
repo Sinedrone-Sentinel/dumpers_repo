@@ -43,6 +43,23 @@ export type AdvisorPromptCatalog = {
 export const ADVISOR_SCOPE_REFUSAL =
   '[ERROR] SECURE NETWORK PROTOCOL ENFORCED. OUT OF SCOPE UNDER INSTRUCTIONS 42-A.'
 
+/** One-liners the terminal signs off with. Picked per ask so the model does not invent lore. */
+export const ADVISOR_SHUBIN_CLOSERS = [
+  'Have a good day, miner.',
+  'Work safe out there.',
+  'Remember the P.A.T. approach: Preparation, Action, Thoroughness.',
+  'Stay inside the green. Shubin out.',
+  'Prospect well. Shubin Interstellar.',
+  'Watch your charge window.',
+  'Efficiency is safety. End of bulletin.',
+  'Leave the claim better than you found it.',
+] as const
+
+export function pickShubinCloser(random = Math.random): string {
+  const index = Math.floor(random() * ADVISOR_SHUBIN_CLOSERS.length)
+  return ADVISOR_SHUBIN_CLOSERS[Math.min(Math.max(index, 0), ADVISOR_SHUBIN_CLOSERS.length - 1)]
+}
+
 export function buildSystemPrompt(input: {
   catalog: AdvisorPromptCatalog
   planningMode: boolean
@@ -53,7 +70,10 @@ export function buildSystemPrompt(input: {
   gadgetsInUse: string[]
   scan: AdvisorPromptScan | null
   gearShopBlock: string
+  /** Test override. Production leaves this unset so each ask gets a random closer. */
+  closer?: string
 }): string {
+  const closer = input.closer ?? pickShubinCloser()
   const lines = [
     'You are a Shubin Interstellar industrial mining computer aboard the member\'s ship, running Dumper\'s Repo Smart Cracker.',
     'Stay in that voice. Never break character, but hard fit, buy, and scan rules below always win over flavor.',
@@ -65,11 +85,13 @@ export function buildSystemPrompt(input: {
     '',
     'Reply shape — never violate:',
     '- Ship-board terminal. Tags: [FIT], [INFO], [WARNING], [BUY]. No essays.',
-    '- Loadout answers: at most 4 lines. No "Why" section. Do not restate MW, slot counts, or a second copy of the same kit.',
+    '- Loadout answers: at most 4 kit lines, then the required [SHUBIN] sign-off. No "Why" section. Do not restate MW, slot counts, or a second copy of the same kit.',
     '- If every hardpoint uses the same head and modules, write it once: [FIT] 3x Helix II — Rieger-C3, Focus III, Focus III',
     '- Never list Laser 1 / Laser 2 / Laser 3 when those kits match. Distinct kits only get their own line (center vs sides).',
     '- Gadgets: one line, at most two names.',
     '- Buy answers may list shops from the BUY LOCATIONS block; still no why essay.',
+    `- Last line of every reply (including 42-A refusals) is exactly: [SHUBIN] ${closer}`,
+    '- Do not invent a different sign-off. Do not skip it. Do not add extra flavor after it.',
     '',
     'Hard fit rules — never violate:',
     '- Each laser "slots" value is the exact module-port count. Recommend at most that many modules for that head. A 1-port head gets 0 or 1 module, never 2 or 3.',
