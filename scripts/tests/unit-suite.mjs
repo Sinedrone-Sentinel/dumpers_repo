@@ -25,6 +25,8 @@ const modules = [
   'src/lib/canonicalizeBlueprintId.ts',
   'src/lib/miningAdvisorCrypto.ts',
   'src/lib/bazaarStockDeduct.ts',
+  'src/lib/miningLocationAliases.ts',
+  'src/lib/miningClusterProfiles.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -49,6 +51,8 @@ const friendInvite = await import(pathToFileURL(path.join(outDir, 'friendInvite.
 const relink = await import(pathToFileURL(path.join(outDir, 'canonicalizeBlueprintId.mjs')).href)
 const advisorCrypto = await import(pathToFileURL(path.join(outDir, 'miningAdvisorCrypto.mjs')).href)
 const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDeduct.mjs')).href)
+const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocationAliases.mjs')).href)
+const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -649,5 +653,114 @@ const kept = bazaarDeduct.evaluateDeductCheckboxes(
   [{ resource_key: 'aluminum', quality: 700, quantity: 0.18 }]
 )
 check(kept.kept.checked === true && kept.kept.enabled === true && kept.kept.fits === false, 'saved listing deduct stays on when stock is short')
+
+check(miningAliases.isAsteroidFieldGuideLocation('Pyro Asteroid Clusters'), 'Pyro clusters are asteroid-field')
+check(miningAliases.isAsteroidFieldGuideLocation('ARC-L1'), 'ARC-L1 is asteroid-field')
+check(miningAliases.isAsteroidFieldGuideLocation('Yela Ring'), 'Yela Ring is asteroid-field')
+check(miningAliases.isAsteroidFieldGuideLocation('QV Breaker Stations (Nyx)'), 'QV Breakers are asteroid-field')
+check(!miningAliases.isAsteroidFieldGuideLocation('Adir'), 'Adir is not asteroid-field')
+check(!miningAliases.isAsteroidFieldGuideLocation('All Moons/Planets/Caves'), 'All Moons is not asteroid-field')
+check(miningAliases.isSurfaceBodyGuideLocation('All Pyro Planets'), 'All Pyro Planets is surface-body')
+
+const wTypes = miningChips.depositTypesForOreAtGuideLocation(
+  'Tungsten',
+  'uncommon',
+  'Pyro Asteroid Clusters'
+)
+check(
+  wTypes.length === 1 && wTypes[0] === 'asteroid',
+  'Tungsten at Pyro Asteroid Clusters is asteroid-only'
+)
+check(
+  miningChips.depositTypesForOreAtGuideLocation('Tungsten', 'uncommon', 'Adir')[0] === 'surface',
+  'Tungsten at Adir is surface'
+)
+check(
+  miningChips.depositTypesForOreAtGuideLocation('Tungsten', 'uncommon', 'ARC-L1')[0] === 'asteroid',
+  'Tungsten at ARC-L1 is asteroid'
+)
+check(
+  miningChips.depositTypesForOreAtGuideLocation('Agricium', 'uncommon', 'Pyro Asteroid Clusters')[0] ===
+    'asteroid',
+  'Agricium belt HPP tagged surface still chips as asteroid at Pyro clusters'
+)
+
+const pyroScope = miningChips.spawnScopeForGuideLocation('Pyro Asteroid Clusters')
+check(pyroScope.system === 'Pyro', 'Pyro Asteroid Clusters scope is Pyro')
+const pyroWTag = miningChips.getOverallSpawnTag('Tungsten', 'asteroid', pyroScope)
+check(!/ARC-L1/i.test(pyroWTag.label), 'Pyro Tungsten asteroid Best-at is not ARC-L1')
+check(
+  /Pyro III|Lagrange/i.test(pyroWTag.label),
+  `Pyro Tungsten asteroid Best-at stays in Pyro (got ${pyroWTag.label})`
+)
+
+const pyroWSurface = miningChips.depositTypesForOreAtGuideLocation(
+  'Tungsten',
+  'uncommon',
+  'All Pyro Planets'
+)
+check(
+  pyroWSurface.length === 1 && pyroWSurface[0] === 'surface',
+  'All Pyro Planets chips are surface-only'
+)
+const pyroPlanetTag = miningChips.getOverallSpawnTag(
+  'Tungsten',
+  'surface',
+  miningChips.spawnScopeForGuideLocation('All Pyro Planets')
+)
+check(/Adir|Fairo|Pyro/i.test(pyroPlanetTag.label), 'All Pyro Planets Best-at stays in Pyro')
+check(!/ARC-L1/i.test(pyroPlanetTag.label), 'All Pyro Planets Best-at is not ARC-L1')
+
+const stantonMoonsScope = miningChips.spawnScopeForGuideLocation('All Moons/Planets/Caves')
+check(stantonMoonsScope.system === 'Stanton', 'All Moons/Planets/Caves scope is Stanton')
+const stantonSurface = miningChips.getScopedOverallProfile('Tungsten', 'surface', stantonMoonsScope)
+check(
+  stantonSurface == null || !/Adir/i.test(stantonSurface.bestLocationDisplayName ?? ''),
+  'Stanton surface Overall never names Adir'
+)
+
+const broadChipSites = [
+  'Pyro Asteroid Clusters',
+  'All Pyro Planets',
+  'All Moons/Planets/Caves',
+  'QV Breaker Stations (Nyx)',
+  'Found in All Stanton Deposits (Rare)',
+]
+for (const oreName of Object.keys(miningChips.miningSpawnData.ores ?? {})) {
+  for (const site of broadChipSites) {
+    const scope = miningChips.spawnScopeForGuideLocation(site)
+    const types = miningChips.depositTypesForOreAtGuideLocation(oreName, 'uncommon', site)
+    if (miningAliases.isAsteroidFieldGuideLocation(site)) {
+      check(
+        types.every((t) => t === 'asteroid'),
+        `${oreName} at ${site} has no surface chip`
+      )
+    }
+    if (miningAliases.isSurfaceBodyGuideLocation(site)) {
+      check(
+        types.every((t) => t === 'surface'),
+        `${oreName} at ${site} has no asteroid chip`
+      )
+    }
+    for (const dt of types) {
+      const scoped = miningChips.getScopedOverallProfile(oreName, dt, scope)
+      if (!scoped?.bestLocation || !scope.system) continue
+      const match = miningChips
+        .getLocationProfilesForOre(oreName)
+        .find(
+          (p) => p.spawnKey === scoped.bestLocation || p.locationName === scoped.bestLocation
+        )
+      check(
+        !match || match.system === scope.system,
+        `${oreName} ${dt} at ${site} Best-at ${scoped.bestLocation} stays in ${scope.system}`
+      )
+      check(
+        !/best at/i.test(miningChips.getOverallSpawnTag(oreName, dt, scope).label) ||
+          Boolean(match && match.system === scope.system),
+        `${oreName} ${dt} at ${site} tag system matches chip`
+      )
+    }
+  }
+}
 
 console.log(`Unit tests: ${pass} passed`)

@@ -30,16 +30,18 @@ import {
 import {
   depositTypeLabel,
   depositTypeUpper,
+  depositTypesForOreAtGuideLocation,
   getDepositTypes,
   getGuideLocationProfiles,
   getLocationProfile,
   getLocationSpawnTag,
-  getOverallProfile,
   getOverallSpawnTag,
+  getScopedOverallProfile,
   getTrackerProfile,
   getTrackerProfileMissingMessage,
   getTrackerSubtitle,
   isLocationTrackerEntry,
+  spawnScopeForGuideLocation,
 } from '../lib/miningClusterProfiles'
 import { isBroadGuideLocation } from '../lib/miningLocationAliases'
 import {
@@ -1064,20 +1066,6 @@ function getOreLocations(ore: MiningData): string[] {
   return ore.locations ?? []
 }
 
-/** Which deposit types an ore actually has at a specific guide location. */
-function depositTypesForOreAtGuideLocation(
-  oreName: string,
-  rarity: string,
-  location: string
-): DepositType[] {
-  if (isGuideLocationListOnlyOre(oreName, rarity)) return ['surface']
-  if (isBroadGuideLocation(location)) return getDepositTypes(oreName)
-  const profiles = getGuideLocationProfiles(oreName, location)
-  // Profile-less compendium entries render as surface "Broad spawn" chips.
-  if (profiles.length === 0) return ['surface']
-  return [...new Set(profiles.map((p) => p.depositType))]
-}
-
 function GuideOreCard({
   item,
   locationOresMap,
@@ -1138,18 +1126,22 @@ function GuideOreCard({
     }
 
     for (const location of item.locations ?? []) {
+      const types = depositTypesForOreAtGuideLocation(item.ore_name, item.rarity, location)
+      if (types.length === 0) continue
+
       if (isBroadGuideLocation(location)) {
         if (!canOpenGuideLocationModal(location, locationOresMap)) continue
-        for (const depositType of getDepositTypes(item.ore_name)) {
-          if (!getOverallProfile(item.ore_name, depositType)) continue
-          const tag = getOverallSpawnTag(item.ore_name, depositType)
-          const overall = getOverallProfile(item.ore_name, depositType)
+        const scope = spawnScopeForGuideLocation(location)
+        for (const depositType of types) {
+          const scoped = getScopedOverallProfile(item.ore_name, depositType, scope)
+          if (!scoped) continue
+          const tag = getOverallSpawnTag(item.ore_name, depositType, scope)
           chips.push({
             location,
             depositType,
             spawnLabel: tag.label,
             spawnTier: tag.tier,
-            maxNodes: overall?.maxNodes ?? 0,
+            maxNodes: scoped.maxNodes,
           })
         }
         continue
@@ -1157,6 +1149,7 @@ function GuideOreCard({
       const profiles = getGuideLocationProfiles(item.ore_name, location)
       if (profiles.length === 0) {
         if (!canOpenGuideLocationModal(location, locationOresMap)) continue
+        if (!types.includes('surface')) continue
         chips.push({
           location,
           depositType: 'surface',
@@ -1166,11 +1159,16 @@ function GuideOreCard({
         })
         continue
       }
-      for (const profile of profiles) {
-        const tag = getLocationSpawnTag(item.ore_name, location, profile.depositType)
+      for (const depositType of types) {
+        const matching = profiles.filter((p) => p.depositType === depositType)
+        const pool = matching.length > 0 ? matching : profiles
+        const profile = pool.reduce((best, loc) =>
+          loc.effectiveSpawnPercent > best.effectiveSpawnPercent ? loc : best
+        )
+        const tag = getLocationSpawnTag(item.ore_name, location, depositType)
         chips.push({
           location,
-          depositType: profile.depositType,
+          depositType,
           spawnLabel: tag.label,
           spawnTier: tag.tier,
           maxNodes: profile.maxNodes,
@@ -1372,14 +1370,21 @@ function GuideLocationCard({
           const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
           const signature = ORE_SIGNATURES[ore.ore_name]
           const habitatLabel = formatHandMineableHabitatAtSite(ore.ore_name, location)
-          const profile = getLocationProfile(ore.ore_name, location)
+          const types = depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, location)
+          const shownType = types[0]
+          const profile = shownType
+            ? getLocationProfile(ore.ore_name, location, shownType)
+            : getLocationProfile(ore.ore_name, location)
+          const scope = spawnScopeForGuideLocation(location)
           const spawnTag = isBroadGuideLocation(location)
-            ? getDepositTypes(ore.ore_name)
-                .map((dt) => getOverallSpawnTag(ore.ore_name, dt))
+            ? types
+                .map((dt) => getOverallSpawnTag(ore.ore_name, dt, scope))
                 .find(Boolean)
-            : profile
-              ? getLocationSpawnTag(ore.ore_name, location, profile.depositType)
-              : null
+            : shownType
+              ? getLocationSpawnTag(ore.ore_name, location, shownType)
+              : profile
+                ? getLocationSpawnTag(ore.ore_name, location, profile.depositType)
+                : null
           return (
             <SiteTooltip
               key={ore.id}
@@ -1536,12 +1541,14 @@ function GuideOreModal({
                   </div>
                 )
               }
-              const profiles = getGuideLocationProfiles(ore.ore_name, location)
-              if (profiles.length === 0 && isBroadGuideLocation(location)) {
-                return getDepositTypes(ore.ore_name).map((depositType) => {
-                  const overall = getOverallProfile(ore.ore_name, depositType)
-                  if (!overall) return null
-                  const tag = getOverallSpawnTag(ore.ore_name, depositType)
+              const types = depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, location)
+              if (types.length === 0) return null
+              if (isBroadGuideLocation(location)) {
+                const scope = spawnScopeForGuideLocation(location)
+                return types.map((depositType) => {
+                  const scoped = getScopedOverallProfile(ore.ore_name, depositType, scope)
+                  if (!scoped) return null
+                  const tag = getOverallSpawnTag(ore.ore_name, depositType, scope)
                   return (
                     <SiteTooltip
                       key={`${location}-${depositType}`}
@@ -1563,13 +1570,14 @@ function GuideOreModal({
                         </div>
                         <span className="block text-xs text-slate-400 mt-1">
                           {tag.label}
-                          {overall.maxNodes >= 2 ? ` · max ${overall.maxNodes}×` : ''}
+                          {scoped.maxNodes >= 2 ? ` · max ${scoped.maxNodes}×` : ''}
                         </span>
                       </div>
                     </SiteTooltip>
                   )
                 })
               }
+              const profiles = getGuideLocationProfiles(ore.ore_name, location)
               if (profiles.length === 0) {
                 return (
                   <div
@@ -1584,10 +1592,16 @@ function GuideOreModal({
                   </div>
                 )
               }
-              return profiles.map((profile) => (
+              return types.map((depositType) => {
+                const matching = profiles.filter((p) => p.depositType === depositType)
+                const pool = matching.length > 0 ? matching : profiles
+                const profile = pool.reduce((best, loc) =>
+                  loc.effectiveSpawnPercent > best.effectiveSpawnPercent ? loc : best
+                )
+                return (
                 <SiteTooltip
-                  key={`${location}-${profile.depositType}`}
-                  content={guideOreModalLocationTooltip(ore.ore_name, location, profile.depositType)}
+                  key={`${location}-${depositType}`}
+                  content={guideOreModalLocationTooltip(ore.ore_name, location, depositType)}
                   side="top"
                   className="block w-full"
                 >
@@ -1600,16 +1614,17 @@ function GuideOreModal({
                         )}
                       </div>
                       <span className="text-[10px] uppercase tracking-wider text-orange-300/80 shrink-0">
-                        {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'}
+                        {depositType === 'surface' ? 'Surface' : 'Asteroid'}
                       </span>
                     </div>
                     <span className="block text-xs text-slate-400 mt-1">
-                      {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                      {getLocationSpawnTag(ore.ore_name, location, depositType).label}
                       {profile.maxNodes >= 2 ? ` · max ${profile.maxNodes}×` : ''}
                     </span>
                   </div>
                 </SiteTooltip>
-              ))
+                )
+              })
             })}
           </div>
         </div>
@@ -1703,7 +1718,12 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
             {sortedOres.map((ore) => {
               const colors = MINING_RARITY_COLORS[ore.rarity] || MINING_RARITY_COLORS.common
               const signature = ORE_SIGNATURES[ore.ore_name]
-              const profile = getLocationProfile(ore.ore_name, location)
+              const types = depositTypesForOreAtGuideLocation(ore.ore_name, ore.rarity, location)
+              const shownType = types[0]
+              const profile = shownType
+                ? getLocationProfile(ore.ore_name, location, shownType)
+                : getLocationProfile(ore.ore_name, location)
+              const scope = spawnScopeForGuideLocation(location)
               return (
                 <div
                   key={ore.id}
@@ -1717,7 +1737,7 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                           oreName={ore.ore_name}
                           rarity={ore.rarity}
                           compact
-                          depositType={profile?.depositType}
+                          depositType={shownType ?? profile?.depositType}
                           locationName={location}
                         />
                       )}
@@ -1732,21 +1752,21 @@ function GuideLocationModal({ location, ores, onClose }: { location: string; ore
                     <span className="text-xs text-slate-500 uppercase">
                       {MINING_RARITY_LABELS[ore.rarity]}
                     </span>
-                    {profile && (
+                    {profile && shownType && (
                       <span className="text-[10px] text-slate-400">
-                        {profile.depositType === 'surface' ? 'Surface' : 'Asteroid'} ·{' '}
-                        {getLocationSpawnTag(ore.ore_name, location, profile.depositType).label}
+                        {shownType === 'surface' ? 'Surface' : 'Asteroid'} ·{' '}
+                        {getLocationSpawnTag(ore.ore_name, location, shownType).label}
                       </span>
                     )}
                   </div>
-                  {!profile && isBroadGuideLocation(location) && (
+                  {isBroadGuideLocation(location) && (
                     <div className="text-[10px] text-slate-400 mt-1 space-y-0.5">
-                      {getDepositTypes(ore.ore_name).map((dt) => {
-                        const overall = getOverallProfile(ore.ore_name, dt)
-                        if (!overall) return null
+                      {types.map((dt) => {
+                        const scoped = getScopedOverallProfile(ore.ore_name, dt, scope)
+                        if (!scoped) return null
                         return (
                           <div key={dt}>
-                            {depositTypeLabel(dt)} · {getOverallSpawnTag(ore.ore_name, dt).label}
+                            {depositTypeLabel(dt)} · {getOverallSpawnTag(ore.ore_name, dt, scope).label}
                           </div>
                         )
                       })}

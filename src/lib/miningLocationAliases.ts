@@ -36,6 +36,39 @@ export function isBroadGuideLocation(guideLocationName: string): boolean {
   return BROAD_GUIDE_LOCATIONS.has(guideLocationName)
 }
 
+/** Broad buckets that are planetary / cave bodies, never asteroid fields. */
+const SURFACE_BODY_GUIDE_LOCATIONS = new Set<string>([
+  'All Moons/Planets/Caves',
+  'All Pyro Planets',
+  'Found in All Stanton Deposits (Rare)',
+  'Found in All Stanton Deposits',
+])
+
+/** Broad buckets that are space rocks even when an HPP preset is tagged surface. */
+const ASTEROID_FIELD_GUIDE_LOCATIONS = new Set<string>([
+  'Pyro Asteroid Clusters',
+  'QV Breaker Stations (Nyx)',
+])
+
+const ASTEROID_FIELD_NAME_RE =
+  /(asteroid\s*clusters?|\bclusters?\b|\bbelt\b|\bring\b|\bhalo\b|lagrange|breaker|\b[A-Z]{2,4}-L[1-5]\b)/i
+
+/** Planetary / cave guide sites — never render on the Asteroid chip row. */
+export function isSurfaceBodyGuideLocation(guideLocationName: string): boolean {
+  return SURFACE_BODY_GUIDE_LOCATIONS.has(guideLocationName)
+}
+
+/**
+ * Belts, rings, clusters, L-points, and breaker stations.
+ * Location identity wins over harvestable-preset depositType (some belt HPPs
+ * use mining_uncommon_* and get tagged surface in spawn JSON).
+ */
+export function isAsteroidFieldGuideLocation(guideLocationName: string): boolean {
+  if (isSurfaceBodyGuideLocation(guideLocationName)) return false
+  if (ASTEROID_FIELD_GUIDE_LOCATIONS.has(guideLocationName)) return true
+  return ASTEROID_FIELD_NAME_RE.test(guideLocationName)
+}
+
 export function isNonSiteBroadGuideLocation(guideLocationName: string): boolean {
   return NON_SITE_BROAD_GUIDE_LOCATIONS.has(guideLocationName)
 }

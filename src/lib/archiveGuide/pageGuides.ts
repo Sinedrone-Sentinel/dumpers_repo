@@ -182,7 +182,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Belt and cluster tooltips include a 📍 **find-it-in-game** hint: which QT markers or starmap search terms to use (e.g. Akiro Cluster sits near Pyro I L3)',
       'Click a belt/cluster location to open its **QT markers & stations** panel — organized by belt L-point or Pyro region (PYAM stations per Lagrange point, RAB/RMB cluster bases per region, BRK breaker stations) instead of one long list',
       'Chips marked **trace spawn (<0.01%)** are technically possible but effectively never worth farming — they sort last and appear dimmed',
-      'Some regions use an **Overall** summary (e.g. broad asteroid cluster families) instead of listing every vague bucket as its own site',
+      'Some regions use an **Overall** summary (e.g. broad asteroid cluster families) instead of listing every vague bucket as its own site. **Overall · best at** always names a site in the **same star system** as the chip — a Pyro cluster never points at a Stanton L-point. Belt, ring, cluster, and L-point chips stay on the **Asteroid** row',
       'Hand-mineable **gems** show cave vs surface availability per planet. Gems and hand mineables are guide reference only — they are not in the RS signature grid yet',
       'Compare in-game cluster readings: cluster RS ≈ node count × base RS on your reference card',
       'A blue **UEX** chip appears on tracked ore cards, the ore detail popup, and each ledger row (for tradable commodities) — click it to see every terminal that buys/sells that ore plus SCU box sizes, without leaving the page. Powered by UEX',

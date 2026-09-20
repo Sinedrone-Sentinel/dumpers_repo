@@ -3,16 +3,19 @@ import type { DepositType, LocationSpawnProfile } from './miningClusterProfiles'
 import {
   depositTypeLabel,
   depositTypeUpper,
+  depositTypesForOreAtGuideLocation,
   getDepositTypes,
   getGuideLocationProfiles,
   getLocationProfile,
   getLocationProfilesForOre,
   getOverallProfile,
   getOverallSpawnTag,
+  getScopedOverallProfile,
   getTrackerProfile,
   getTrackerProfileMissingMessage,
   getTrackerSubtitle,
   isLocationTrackerEntry,
+  spawnScopeForGuideLocation,
 } from './miningClusterProfiles'
 import type { MiningTrackerEntry } from './localGuestCache'
 import {
@@ -200,7 +203,8 @@ export function guideLocationChipTooltip(
   }
 
   if (isBroadGuideLocation(guideLocationName)) {
-    const overall = getOverallProfile(oreName, depositType)
+    const scope = spawnScopeForGuideLocation(guideLocationName)
+    const overall = getScopedOverallProfile(oreName, depositType, scope)
     if (!overall) {
       return (
         <div className="space-y-1">
@@ -306,12 +310,13 @@ export function guideLocationOreTooltip(
     )
   }
 
-  const depositTypes = getDepositTypes(oreName)
+  const depositTypes = depositTypesForOreAtGuideLocation(oreName, '', locationName)
   if (isBroadGuideLocation(locationName)) {
+    const scope = spawnScopeForGuideLocation(locationName)
     const lines = depositTypes.flatMap((depositType) => {
-      const overall = getOverallProfile(oreName, depositType)
+      const overall = getScopedOverallProfile(oreName, depositType, scope)
       if (!overall) return []
-      const tag = getOverallSpawnTag(oreName, depositType)
+      const tag = getOverallSpawnTag(oreName, depositType, scope)
       const compendiumDetail = formatOverallCompendiumDetail(overall.bestLocation)
       return [
         `${depositTypeLabel(depositType)}: ${tag.label}${compendiumDetail ? ` — ${compendiumDetail}` : ''}`,
