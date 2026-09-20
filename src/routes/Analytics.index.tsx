@@ -73,6 +73,34 @@ type DumperTopUser = {
   invokes: number
 }
 
+type AiChatFeatureSummary = {
+  invokes: number
+  asks: number
+  blocked: number
+  unique_users: number
+  unique_keys: number
+}
+
+type AiChatUsageSummary = {
+  period_days: number
+  total_invokes: number
+  total_asks: number
+  blocked: number
+  gemini_fail: number
+  unique_users: number
+  unique_keys: number
+  saved_keys: number
+  avg_asks_per_day: number
+  avg_invokes_per_day: number
+  pace_invokes_7d?: number
+  avg_invokes_per_day_7d?: number
+  projected_monthly_invokes: number
+  features?: {
+    mining_advisor?: AiChatFeatureSummary
+    site_help?: AiChatFeatureSummary
+  }
+}
+
 type DumperUsageSummary = {
   period_days: number
   keys_issued: number
@@ -90,6 +118,14 @@ type DumperUsageSummary = {
   /** Always rolling 30d for per-user bars (independent of period filter). */
   top_users_period_days?: number
   top_users: DumperTopUser[]
+}
+
+const EMPTY_AI_CHAT_FEATURE: AiChatFeatureSummary = {
+  invokes: 0,
+  asks: 0,
+  blocked: 0,
+  unique_users: 0,
+  unique_keys: 0,
 }
 
 const PERIOD_OPTIONS = [1, 7, 30] as const
@@ -164,6 +200,7 @@ export default function AnalyticsRoute() {
   const [periodDays, setPeriodDays] = useState<number>(30)
   const [audience, setAudience] = useState<AudienceFilter>('all')
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null)
+  const [aiChatUsage, setAiChatUsage] = useState<AiChatUsageSummary | null>(null)
   const [dumperUsage, setDumperUsage] = useState<DumperUsageSummary | null>(null)
   const [topDumpersOpen, setTopDumpersOpen] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -174,8 +211,9 @@ export default function AnalyticsRoute() {
     setError(null)
 
     try {
-      const [siteRes, dumperRes] = await Promise.all([
+      const [siteRes, aiChatRes, dumperRes] = await Promise.all([
         supabase.rpc('get_site_analytics_summary', { p_days: periodDays }),
+        supabase.rpc('get_ai_chat_usage_summary', { p_days: periodDays }),
         supabase.rpc('get_dumper_usage_summary', { p_days: periodDays }),
       ])
       if (siteRes.error) throw siteRes.error
@@ -196,6 +234,19 @@ export default function AnalyticsRoute() {
         geo_cities: raw.geo_cities ?? [],
       })
 
+      if (aiChatRes.error) {
+        setAiChatUsage(null)
+        if (!aiChatRes.error.message.includes('get_ai_chat_usage_summary')) {
+          console.warn('get_ai_chat_usage_summary:', aiChatRes.error.message)
+        }
+      } else {
+        const chat = aiChatRes.data as AiChatUsageSummary
+        setAiChatUsage({
+          ...chat,
+          features: chat.features ?? {},
+        })
+      }
+
       if (dumperRes.error) {
         // Site analytics can still render if migration 145 is not applied yet.
         setDumperUsage(null)
@@ -211,6 +262,7 @@ export default function AnalyticsRoute() {
       }
     } catch (err) {
       setSummary(null)
+      setAiChatUsage(null)
       setDumperUsage(null)
       setError((err as Error).message)
     }
@@ -383,6 +435,67 @@ export default function AnalyticsRoute() {
     ]
   }, [summary, audience])
 
+  const aiChatStatCards = useMemo(() => {
+    if (!aiChatUsage) return [] as Array<{ label: string; value: number; hint: string }>
+    return [
+      {
+        label: 'Edge invokes (period)',
+        value: Number(aiChatUsage.total_invokes ?? 0),
+        hint: 'Accepted Advisor and Help Edge calls that passed sign-in, a Gemini key, and a question. Includes rate-limited asks and Gemini failures.',
+      },
+      {
+        label: 'Questions asked (period)',
+        value: Number(aiChatUsage.total_asks ?? 0),
+        hint: 'Asks that cleared the hourly cap and were sent to Gemini. Does not include the question text.',
+      },
+      {
+        label: 'Unique Gemini keys (period)',
+        value: Number(aiChatUsage.unique_keys ?? 0),
+        hint: 'Distinct SHA-256 fingerprints of keys that asked at least once. The key itself is never stored or shown.',
+      },
+      {
+        label: 'Unique users (period)',
+        value: Number(aiChatUsage.unique_users ?? 0),
+        hint: 'Distinct members who asked at least once. Names and per-user counts are not shown.',
+      },
+      {
+        label: 'Saved keys on profiles',
+        value: Number(aiChatUsage.saved_keys ?? 0),
+        hint: 'Profiles that currently have an encrypted Gemini key saved. Shared by both chats. Setup, not usage.',
+      },
+      {
+        label: 'Rate-limited (period)',
+        value: Number(aiChatUsage.blocked ?? 0),
+        hint: 'Asks that hit the 20/hour cap after sign-in. Still an Edge invoke.',
+      },
+      {
+        label: 'Gemini failures (period)',
+        value: Number(aiChatUsage.gemini_fail ?? 0),
+        hint: 'Asks that cleared the hourly cap but Gemini rejected or failed. The question still counted against the member.',
+      },
+      {
+        label: 'Avg asks / day',
+        value: Number(aiChatUsage.avg_asks_per_day ?? 0),
+        hint: 'Questions asked per day across the selected period only.',
+      },
+      {
+        label: 'Avg invokes / day',
+        value: Number(aiChatUsage.avg_invokes_per_day ?? 0),
+        hint: 'Edge calls per day across the selected period only (can look low on 30d if early days were quiet).',
+      },
+      {
+        label: 'Avg invokes / day (7d pace)',
+        value: Number(aiChatUsage.avg_invokes_per_day_7d ?? 0),
+        hint: 'Trailing 7 UTC days ÷ 7 — recent run-rate for capacity planning. Ignores the 1d/7d/30d period filter.',
+      },
+      {
+        label: 'Projected monthly Edge',
+        value: Number(aiChatUsage.projected_monthly_invokes ?? 0),
+        hint: 'If the last 7 days continue: (7d pace invokes/day) × 30. Use this vs Supabase Free ~500,000 Edge / month.',
+      },
+    ]
+  }, [aiChatUsage])
+
   const dumperStatCards = useMemo(() => {
     if (!dumperUsage) return [] as Array<{ label: string; value: number; hint: string }>
     return [
@@ -541,6 +654,67 @@ export default function AnalyticsRoute() {
               />
             ))}
           </div>
+
+          <section className="site-surface p-4">
+            <h2 className="text-sm font-semibold text-slate-200 mb-1">
+              AI chat Edge usage ({periodDays} days)
+            </h2>
+            <p className="text-xs text-slate-500 mb-4">
+              Counts accepted <code className="text-slate-400">mining-loadout-advisor</code> and{' '}
+              <code className="text-slate-400">site-help-bot</code> calls after sign-in, a Gemini key,
+              and a question. Rolling 30-day window — older daily rows are purged once per day by cron.
+              Question text, raw keys, and per-member lists are never stored or shown.
+            </p>
+            {!aiChatUsage ? (
+              <p className="text-sm text-slate-500">
+                No AI chat usage data yet. Apply migration{' '}
+                <code className="text-slate-400">196_ai_chat_invoke_analytics.sql</code> and redeploy{' '}
+                <code className="text-slate-400">mining-loadout-advisor</code> and{' '}
+                <code className="text-slate-400">site-help-bot</code>.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  {aiChatStatCards.map((card) => (
+                    <StatCard
+                      key={card.label}
+                      label={card.label}
+                      value={card.value}
+                      hint={card.hint}
+                    />
+                  ))}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {(
+                    [
+                      ['mining_advisor', 'Advisor'] as const,
+                      ['site_help', 'Help'] as const,
+                    ] as const
+                  ).map(([id, label]) => {
+                    const feature = aiChatUsage.features?.[id] ?? EMPTY_AI_CHAT_FEATURE
+                    return (
+                      <div key={id} className="site-section p-3 space-y-1">
+                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-300">
+                          {label}
+                        </h3>
+                        <p className="text-sm text-slate-200 tabular-nums">
+                          {Number(feature.invokes).toLocaleString()} invokes ·{' '}
+                          {Number(feature.asks).toLocaleString()} questions
+                        </p>
+                        <p className="text-[11px] text-slate-500 tabular-nums">
+                          {Number(feature.unique_keys).toLocaleString()} unique keys ·{' '}
+                          {Number(feature.unique_users).toLocaleString()} unique users
+                          {Number(feature.blocked) > 0
+                            ? ` · ${Number(feature.blocked).toLocaleString()} rate-limited`
+                            : ''}
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+          </section>
 
           <section className="site-surface p-4">
             <h2 className="text-sm font-semibold text-slate-200 mb-1">

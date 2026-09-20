@@ -268,7 +268,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 |------|-----|---------|
 | **Admin Panel** | Officers + super-admins | Approve `pending` users, promote/demote roles, ban/unban |
 | **Support Dashboard** | Officers + super-admins | Ticket queue |
-| **Site Analytics** (`/analytics`) | Super-admins | Visitors, tool-time, guest vs signed-in split, geo |
+| **Site Analytics** (`/analytics`) | Super-admins | Visitors, tool-time, guest vs signed-in split, geo, AI chat Edge aggregates (no questions or keys), BP Dumper Edge usage |
 | **DB Actions** | Super-admins | Game-data update runbook reference; wipe all personal inventory; revoke RSI verification; reset buyer/fulfiller rep |
 | **Discord** (modal) | Super-admins | Official webhook, queue status, coalesce minutes, manual send |
 | **Updates Ticker** (modal) | Super-admins | Create/edit/delete ticker messages; manage layout categories (label, accent color, TTL kind) |

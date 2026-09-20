@@ -103,6 +103,33 @@ type UsageSnapshot = {
   resetsInSec: number
 }
 
+type AdminClient = {
+  rpc: (
+    name: string,
+    args: Record<string, unknown>,
+  ) => Promise<{ error: { message?: string } | null }>
+}
+
+/** SHA-256 hex of the trimmed Gemini key — never log or persist the key itself. */
+async function sha256Hex(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+/** Non-fatal — a missing migration 196 must not take the chat down. */
+async function recordAiChatEvent(
+  admin: AdminClient,
+  input: { userId: string; feature: string; keySha256: string; event: string },
+): Promise<void> {
+  const { error } = await admin.rpc('record_ai_chat_event', {
+    p_user_id: input.userId,
+    p_feature: input.feature,
+    p_key_sha256: input.keySha256,
+    p_event: input.event,
+  })
+  if (error) console.warn('record_ai_chat_event failed')
+}
+
 /** Echoed to the client so the x/20 meter moves the moment a question is sent. */
 function usageFromRate(rate: unknown): UsageSnapshot | null {
   if (!rate || typeof rate !== 'object') return null
@@ -409,6 +436,7 @@ serve(async (req) => {
 
     const question = clip(body.question, MAX_QUESTION)
     if (!question) return json(400, { error: 'Ask a mining loadout question.' })
+    const keySha256 = await sha256Hex(apiKey)
     const { data: rate, error: rateError } = await admin.rpc('ai_chat_try_consume', {
       p_user_id: user.id,
       p_feature: RATE_FEATURE,
@@ -419,7 +447,19 @@ serve(async (req) => {
     }
     const usage = usageFromRate(rate)
     const allowed = (rate as { allowed?: boolean } | null)?.allowed
+    await recordAiChatEvent(admin, {
+      userId: user.id,
+      feature: RATE_FEATURE,
+      keySha256,
+      event: 'invoke',
+    })
     if (!allowed) {
+      await recordAiChatEvent(admin, {
+        userId: user.id,
+        feature: RATE_FEATURE,
+        keySha256,
+        event: 'blocked',
+      })
       const retry = Number((rate as { retry_after_sec?: unknown } | null)?.retry_after_sec)
       return json(429, {
         error: `Slow down — Advisor is limited to ${usage?.max ?? 20} questions per hour.`,
@@ -427,6 +467,12 @@ serve(async (req) => {
         usage,
       })
     }
+    await recordAiChatEvent(admin, {
+      userId: user.id,
+      feature: RATE_FEATURE,
+      keySha256,
+      event: 'asked',
+    })
 
     const useScannedInfo = body.useScannedInfo === true
     const scan = useScannedInfo ? parseScan(body.scan) : null
@@ -479,12 +525,24 @@ serve(async (req) => {
     }
     const generated = await generateAdvice(apiKey, payload)
     if (!generated.ok) {
+      await recordAiChatEvent(admin, {
+        userId: user.id,
+        feature: RATE_FEATURE,
+        keySha256,
+        event: 'gemini_fail',
+      })
       return json(generated.status === 429 ? 429 : 502, {
         error: memberSafeGeminiError(generated.status),
         usage,
       })
     }
 
+    await recordAiChatEvent(admin, {
+      userId: user.id,
+      feature: RATE_FEATURE,
+      keySha256,
+      event: 'gemini_ok',
+    })
     return json(200, { advice: generated.advice, usage })
   } catch (error) {
     console.error('advisor failed', error instanceof Error ? error.name : 'error')
