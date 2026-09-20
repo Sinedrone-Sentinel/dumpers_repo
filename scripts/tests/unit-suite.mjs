@@ -877,6 +877,7 @@ const advisorPromptText = advisorPrompt.buildSystemPrompt({
   gadgetsInUse: [],
   scan: null,
   gearShopBlock: '',
+  closer: 'Work safe out there.',
 })
 check(
   advisorPromptText.includes('Hard fit rules — never violate:'),
@@ -919,6 +920,39 @@ check(
 check(
   !/plus a short why/i.test(advisorPromptText),
   'advisor prompt no longer asks for a why essay',
+)
+check(
+  advisorPrompt.ADVISOR_SHUBIN_CLOSERS.some((line) => /P\.A\.T\. approach/.test(line)),
+  'Shubin closers include the P.A.T. approach',
+)
+check(
+  advisorPrompt.ADVISOR_SHUBIN_CLOSERS.some((line) => /good day/i.test(line)),
+  'Shubin closers include a have-a-good-day line',
+)
+check(
+  advisorPrompt.ADVISOR_SHUBIN_CLOSERS.some((line) => /safe/i.test(line)),
+  'Shubin closers include a stay-safe line',
+)
+check(
+  advisorPromptText.includes('[SHUBIN] Work safe out there.'),
+  'advisor prompt injects the chosen Shubin closer',
+)
+check(
+  advisorPromptText.includes(advisorPrompt.ADVISOR_TERM_INTRO),
+  'advisor prompt requires the Shubin terminal intro',
+)
+check(
+  advisorPromptText.includes('put one blank line, then the last line exactly'),
+  'advisor prompt requires a blank line before the Shubin sign-off',
+)
+check(
+  advisorPrompt.pickShubinCloser(() => 0) === advisorPrompt.ADVISOR_SHUBIN_CLOSERS[0],
+  'pickShubinCloser uses the first closer at random 0',
+)
+check(
+  advisorPrompt.pickShubinCloser(() => 0.999) ===
+    advisorPrompt.ADVISOR_SHUBIN_CLOSERS[advisorPrompt.ADVISOR_SHUBIN_CLOSERS.length - 1],
+  'pickShubinCloser uses the last closer near 1',
 )
 
 // --- Site Help bot knowledge base ------------------------------------------

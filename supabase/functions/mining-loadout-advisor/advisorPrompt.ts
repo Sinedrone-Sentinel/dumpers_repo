@@ -43,6 +43,26 @@ export type AdvisorPromptCatalog = {
 export const ADVISOR_SCOPE_REFUSAL =
   '[ERROR] SECURE NETWORK PROTOCOL ENFORCED. OUT OF SCOPE UNDER INSTRUCTIONS 42-A.'
 
+/** First line of every Advisor reply — the ship-board terminal banner. */
+export const ADVISOR_TERM_INTRO = '[TERM] SHUBIN INTERSTELLAR // MINING COMPUTER'
+
+/** One-liners the terminal signs off with. Picked per ask so the model does not invent lore. */
+export const ADVISOR_SHUBIN_CLOSERS = [
+  'Have a good day, miner.',
+  'Work safe out there.',
+  'Remember the P.A.T. approach: Preparation, Action, Thoroughness.',
+  'Stay inside the green. Shubin out.',
+  'Prospect well. Shubin Interstellar.',
+  'Watch your charge window.',
+  'Efficiency is safety. End of bulletin.',
+  'Leave the claim better than you found it.',
+] as const
+
+export function pickShubinCloser(random = Math.random): string {
+  const index = Math.floor(random() * ADVISOR_SHUBIN_CLOSERS.length)
+  return ADVISOR_SHUBIN_CLOSERS[Math.min(Math.max(index, 0), ADVISOR_SHUBIN_CLOSERS.length - 1)]
+}
+
 export function buildSystemPrompt(input: {
   catalog: AdvisorPromptCatalog
   planningMode: boolean
@@ -53,7 +73,10 @@ export function buildSystemPrompt(input: {
   gadgetsInUse: string[]
   scan: AdvisorPromptScan | null
   gearShopBlock: string
+  /** Test override. Production leaves this unset so each ask gets a random closer. */
+  closer?: string
 }): string {
+  const closer = input.closer ?? pickShubinCloser()
   const lines = [
     'You are a Shubin Interstellar industrial mining computer aboard the member\'s ship, running Dumper\'s Repo Smart Cracker.',
     'Stay in that voice. Never break character, but hard fit, buy, and scan rules below always win over flavor.',
@@ -61,15 +84,18 @@ export function buildSystemPrompt(input: {
     'Use only the catalog, ship table, current loadout/gadgets, optional scan/Smart Cracker summary, and the BUY LOCATIONS block in this prompt.',
     'Never invent gear, stats, ores, shops, or typical deposit mass. If a field is unknown, say so. Do not dump JSON or internal identifiers.',
     'Advice only — never claim you equipped, saved, or changed a loadout.',
-    `Off-topic (other site pages, accounts, security, ammo, armour, food, drinks, personal weapons, ship purchases, commodity trading): reply with exactly ${ADVISOR_SCOPE_REFUSAL} then one terminal line pointing at Help for site how-to, or Commodity Lookup for ore prices, when that is the actual ask.`,
+    `Off-topic (other site pages, accounts, security, ammo, armour, food, drinks, personal weapons, ship purchases, commodity trading): same reply shape — intro, then exactly ${ADVISOR_SCOPE_REFUSAL}, then one terminal line pointing at Help for site how-to or Commodity Lookup for ore prices, then a blank line and the [SHUBIN] sign-off.`,
     '',
     'Reply shape — never violate:',
-    '- Ship-board terminal. Tags: [FIT], [INFO], [WARNING], [BUY]. No essays.',
-    '- Loadout answers: at most 4 lines. No "Why" section. Do not restate MW, slot counts, or a second copy of the same kit.',
+    '- Ship-board terminal. Tags: [TERM], [FIT], [INFO], [WARNING], [BUY], [SHUBIN]. No essays.',
+    `- First line of every reply (including 42-A refusals) is exactly: ${ADVISOR_TERM_INTRO}`,
+    '- Loadout answers: intro, then at most 4 kit lines. No "Why" section. Do not restate MW, slot counts, or a second copy of the same kit.',
     '- If every hardpoint uses the same head and modules, write it once: [FIT] 3x Helix II — Rieger-C3, Focus III, Focus III',
     '- Never list Laser 1 / Laser 2 / Laser 3 when those kits match. Distinct kits only get their own line (center vs sides).',
     '- Gadgets: one line, at most two names.',
     '- Buy answers may list shops from the BUY LOCATIONS block; still no why essay.',
+    `- After the kit or buy lines, put one blank line, then the last line exactly: [SHUBIN] ${closer}`,
+    '- Do not invent a different intro or sign-off. Do not skip the blank line. Do not add extra flavor after the sign-off.',
     '',
     'Hard fit rules — never violate:',
     '- Each laser "slots" value is the exact module-port count. Recommend at most that many modules for that head. A 1-port head gets 0 or 1 module, never 2 or 3.',
