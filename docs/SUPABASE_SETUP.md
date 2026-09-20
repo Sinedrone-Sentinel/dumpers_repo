@@ -226,8 +226,9 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 158 | `193_tracked_resources_deduct_copy.sql` | Bazaar deduct shortage errors say Tracked Resources |
 | 159 | `194_ticker_game_error_category.sql` | Ticker layout **Game Error** (red `#EF4444`, 14-day TTL) for client-breaking game warnings |
 | 160 | `195_ai_chat_rate_buckets.sql` | Per-feature AI chat limiter: `ai_chat_rate_buckets` + `ai_chat_try_consume(user, feature)` (`service_role` only) and read-only `ai_chat_usage(feature)` for the member-facing meter (`authenticated`). Migrates 189's counters, rewrites `mining_advisor_try_consume` as a wrapper, drops `mining_advisor_rate_buckets` |
+| 161 | `196_ai_chat_invoke_analytics.sql` | Super-admin AI chat Edge usage: daily rollup (`ai_chat_invoke_daily`) + private identity fingerprints (`ai_chat_identity_daily`, SHA-256 of Gemini keys only). `record_ai_chat_event` (`service_role`) and `get_ai_chat_usage_summary` (`is_super_admin`). 30-day FIFO cron. No question text, no raw keys, no per-user rows |
 
-### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191)
+### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
 Migrations **065-068** schedule a cron job that calls the `send-discord` Edge Function. On Supabase:
 
@@ -332,8 +333,8 @@ npx supabase functions deploy site-help-bot
 | `link-citizenid` | Signed-in member starts Citizen iD OAuth (PKCE state stored server-side) |
 | `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
-| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190**, then **195** (moves it onto the shared limiter and returns the usage meter) |
-| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers only from the Information Archive baked into `knowledge.json`. Apply migrations **190** and **195** first |
+| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190**, **195**, then **196** (usage meter + super-admin Edge analytics) |
+| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers only from the Information Archive baked into `knowledge.json`. Apply migrations **190**, **195**, and **196** first |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
@@ -341,7 +342,7 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 
 ### Edge Function secrets
 
-**AI chats (Smart Cracker Advisor and site Help):** no site Gemini/OpenAI secret and no wrap secret. Members paste a key each visit, or save a copy they encrypt in the browser with a lock phrase (PBKDF2 + AES-GCM). The database stores ciphertext only, and one saved key serves both chats. Each chat gets its own 20/hour bucket from migration **195**, and both report usage back so the chat can show a live `x/20 this hour` meter. Apply migrations **189–190** and **195**, then:
+**AI chats (Smart Cracker Advisor and site Help):** no site Gemini/OpenAI secret and no wrap secret. Members paste a key each visit, or save a copy they encrypt in the browser with a lock phrase (PBKDF2 + AES-GCM). The database stores ciphertext only, and one saved key serves both chats. Each chat gets its own 20/hour bucket from migration **195**, and both report usage back so the chat can show a live `x/20 this hour` meter. Super-admin Site Analytics (`get_ai_chat_usage_summary`) needs migration **196** and a redeploy of both functions so invokes are recorded. Apply migrations **189–190**, **195**, and **196**, then:
 
 ```bash
 npm run copy-mining-advisor-catalog
