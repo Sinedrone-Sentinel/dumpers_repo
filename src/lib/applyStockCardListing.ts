@@ -82,7 +82,7 @@ export async function applyStockCardListing(input: {
   if (loaded.error) return { ok: false, error: loaded.error }
 
   let lineId = loaded.line?.id ?? null
-  let action: 'set' | 'append' = loaded.line ? 'set' : 'append'
+  const action: 'set' | 'append' = loaded.line ? 'set' : 'append'
 
   if (loaded.line) {
     const updated = await updateListingLine(loaded.line.id, 'resource', quantityScu)
