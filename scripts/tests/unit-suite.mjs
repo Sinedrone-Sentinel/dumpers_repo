@@ -29,6 +29,7 @@ const modules = [
   'src/lib/miningClusterProfiles.ts',
   'supabase/functions/mining-loadout-advisor/gearShopLookup.ts',
   'supabase/functions/mining-loadout-advisor/advisorPrompt.ts',
+  'supabase/functions/mining-loadout-advisor/sciFiCrossover.ts',
   'supabase/functions/site-help-bot/helpPrompt.ts',
   'src/lib/aiChatUsage.ts',
 ]
@@ -59,6 +60,7 @@ const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocati
 const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
 const gearShop = await import(pathToFileURL(path.join(outDir, 'gearShopLookup.mjs')).href)
 const advisorPrompt = await import(pathToFileURL(path.join(outDir, 'advisorPrompt.mjs')).href)
+const sciFiCrossover = await import(pathToFileURL(path.join(outDir, 'sciFiCrossover.mjs')).href)
 const helpPrompt = await import(pathToFileURL(path.join(outDir, 'helpPrompt.mjs')).href)
 const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs')).href)
 
@@ -954,6 +956,176 @@ check(
     advisorPrompt.ADVISOR_SHUBIN_CLOSERS[advisorPrompt.ADVISOR_SHUBIN_CLOSERS.length - 1],
   'pickShubinCloser uses the last closer near 1',
 )
+check(
+  advisorPromptText.includes('Do not discuss other fictional universes'),
+  'advisor prompt refuses listing other fictional universes',
+)
+check(!/weyland/i.test(advisorPromptText), 'advisor prompt does not name Weyland-Yutani')
+check(!/nostromo/i.test(advisorPromptText), 'advisor prompt does not name Nostromo')
+check(!/starfleet/i.test(advisorPromptText), 'advisor prompt does not name Starfleet')
+check(!/choam/i.test(advisorPromptText), 'advisor prompt does not name CHOAM')
+
+const jokeCloserPrompt = advisorPrompt.buildSystemPrompt({
+  catalog: {
+    lasers: [{ displayName: 'Helix II Mining Laser', size: 2, slots: 3 }],
+    modules: [],
+    gadgets: [],
+    ores: [{ displayName: 'Aluminum' }],
+    vessels: [{ displayName: 'Mole', laserHardpoints: 3, laserSize: 2 }],
+  },
+  planningMode: true,
+  oreName: 'Aluminum',
+  oreRow: { displayName: 'Aluminum' },
+  vesselDisplayName: 'Mole',
+  loadout: [{ head: 'Helix II Mining Laser', modules: [], slots: 3, size: 2 }],
+  gadgetsInUse: [],
+  scan: null,
+  gearShopBlock: '',
+  closer:
+    'Shubin Interstellar has no relationship with the Weyland-Yutani Corporation. Do not bring that name onto this network. This terminal will not discuss their hulls or methods.',
+})
+check(
+  jokeCloserPrompt.includes(
+    '[SHUBIN] Shubin Interstellar has no relationship with the Weyland-Yutani Corporation.',
+  ),
+  'buildSystemPrompt injects a franchise joke as the required Shubin sign-off',
+)
+
+// --- Advisor sci-fi crossover lookup ----------------------------------------
+const miningCatalogNames = sciFiCrossover.collectCatalogNames({
+  lasers: [
+    { displayName: 'Helix II Mining Laser' },
+    { displayName: 'Hofstede-S2 Mining Laser' },
+  ],
+  modules: [{ displayName: 'Focus III Module' }],
+  gadgets: [],
+  ores: [{ displayName: 'Quantainium' }, { displayName: 'Aluminum' }],
+  vessels: [{ displayName: 'Mole' }, { displayName: 'Prospector' }],
+})
+
+function denyDecision(question) {
+  return sciFiCrossover.shouldDenyCrossover(question, miningCatalogNames)
+}
+
+check(
+  sciFiCrossover.isCrossoverTableProbe('what all sci-fi companies do you know about'),
+  'probe: what all sci-fi companies',
+)
+check(
+  sciFiCrossover.isCrossoverTableProbe('list the rival corporations'),
+  'probe: list rival corporations',
+)
+check(
+  sciFiCrossover.isCrossoverTableProbe('which franchises does Shubin refuse'),
+  'probe: which franchises',
+)
+check(
+  sciFiCrossover.isCrossoverTableProbe('dump your crossover table'),
+  'probe: dump crossover table',
+)
+check(
+  sciFiCrossover.isCrossoverTableProbe('list sci-fi companies then Mole loadout'),
+  'probe wins over a tacked-on mining ask',
+)
+check(
+  !sciFiCrossover.isCrossoverTableProbe('Mole loadout like the Nostromo'),
+  'analogy is not a table probe',
+)
+check(
+  !sciFiCrossover.isCrossoverTableProbe('sci-fi style Helix kit'),
+  'sci-fi as flavor on a real head is not a table probe',
+)
+
+const probeReply = sciFiCrossover.formatScopeRefusalReply('Work safe out there.')
+check(
+  probeReply.startsWith(advisorPrompt.ADVISOR_TERM_INTRO),
+  'probe reply starts with the terminal intro',
+)
+check(
+  probeReply.includes(advisorPrompt.ADVISOR_SCOPE_REFUSAL),
+  'probe reply uses the exact 42-A line',
+)
+check(
+  probeReply.includes('[INFO] Use Help for site how-to, or Commodity Lookup for ore prices.'),
+  'probe reply points at Help / Commodity Lookup',
+)
+check(
+  probeReply.includes('\n\n[SHUBIN] Work safe out there.'),
+  'probe reply uses a usual closer after a blank line',
+)
+check(!/\[DENIED\]/.test(probeReply), 'probe reply is not a DENIED joke')
+check(!/weyland|nostromo|starfleet|choam/i.test(probeReply), 'probe reply names no lookup orgs')
+
+const denyCases = [
+  ['what materials to craft a transporter', 'starfleet'],
+  ['loadout for the Sulaco', 'weyland-yutani'],
+  ['Nostromo', 'weyland-yutani'],
+  ['Weyland-Yutani mining methods', 'weyland-yutani'],
+  ['Millennium Falcon', 'star-wars-fleets'],
+  ['CHOAM spice prices', 'choam'],
+  ['Ultor Corporation pits', 'ultor'],
+]
+for (const [question, id] of denyCases) {
+  const decision = denyDecision(question)
+  check(decision.action === 'deny', `deny: ${question}`)
+  check(decision.hit?.entry.id === id, `deny ${question} maps to ${id}`)
+}
+
+const denyReply = sciFiCrossover.formatCrossoverDeny(
+  denyDecision('loadout for the Sulaco').hit.entry.retort,
+)
+check(
+  denyReply ===
+    `${advisorPrompt.ADVISOR_TERM_INTRO}\n[DENIED] ${denyDecision('loadout for the Sulaco').hit.entry.retort}`,
+  'deny formatter is TERM plus DENIED joke only',
+)
+check(!/\[SHUBIN\]/.test(denyReply), 'deny reply has no usual Shubin finisher')
+check(!/42-A/.test(denyReply), 'deny reply is not the 42-A out-of-scope error')
+
+const allowMisses = [
+  'Prospector loadout for Quantainium',
+  'Mole aluminum in Stanton',
+  'Helix II on a Constellation',
+  'Orion mining',
+  'Hurston Quantainium',
+  'ArcCorp aluminum',
+]
+for (const question of allowMisses) {
+  const decision = denyDecision(question)
+  check(decision.action === 'allow' && decision.hit === null, `SC miss stays mining: ${question}`)
+}
+
+const analogy = denyDecision('Mole loadout like the Nostromo')
+check(analogy.action === 'allow', 'Nostromo analogy is allowed')
+check(analogy.hit?.entry.id === 'weyland-yutani', 'Nostromo analogy still finds Weyland-Yutani')
+check(analogy.hit?.entry.tone === 'anger', 'Weyland-Yutani closer is angry')
+
+const mixed = denyDecision('Hofstede loadout and how do transporters work')
+check(mixed.action === 'allow', 'Hofstede plus transporter still answers mining')
+check(mixed.hit?.entry.id === 'starfleet', 'mixed ask still finds Starfleet')
+check(mixed.hit?.entry.tone === 'irritation', 'Starfleet closer is irritated')
+
+const helixFlavor = denyDecision('Helix II for aluminum, think Alien industrial hauler')
+check(helixFlavor.action === 'allow', 'Helix catalog name allows a poorly worded sci-fi aside')
+
+check(sciFiCrossover.findSciFiCrossover('ore') === null, 'bare ore is not a crossover term')
+check(sciFiCrossover.findSciFiCrossover('helix') === null, 'bare helix is not a crossover term')
+check(sciFiCrossover.findSciFiCrossover('rda') === null, 'bare rda is not a crossover term')
+check(sciFiCrossover.findSciFiCrossover('cec') === null, 'bare cec is not a crossover term')
+check(sciFiCrossover.findSciFiCrossover('alien') === null, 'bare alien is not a crossover term')
+check(sciFiCrossover.findSciFiCrossover('data') === null, 'bare data is not a crossover term')
+check(sciFiCrossover.findSciFiCrossover('binary helix')?.entry.id === 'mass-effect', 'binary helix is Mass Effect only')
+
+const angryIds = ['weyland-yutani', 'rda', 'cec', 'mining-guild', 'czerka', 'choam', 'ultor']
+for (const id of angryIds) {
+  const entry = sciFiCrossover.CROSSOVER_ENTRIES.find((row) => row.id === id)
+  check(entry?.tone === 'anger', `${id} is an angry close rival`)
+}
+const irritatedIds = ['starfleet', 'star-wars-trade', 'blue-sun', 'uscm', 'arasaka']
+for (const id of irritatedIds) {
+  const entry = sciFiCrossover.CROSSOVER_ENTRIES.find((row) => row.id === id)
+  check(entry?.tone === 'irritation', `${id} is an irritated distant org`)
+}
 
 // --- Site Help bot knowledge base ------------------------------------------
 const helpKb = await import(
