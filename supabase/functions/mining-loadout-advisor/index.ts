@@ -28,7 +28,7 @@ const RATE_FEATURE = 'mining_advisor'
 const MAX_QUESTION = 2000
 const MAX_HISTORY = 8
 const MAX_MSG = 2000
-const MAX_OUTPUT_TOKENS = 1200
+const MAX_OUTPUT_TOKENS = 500
 
 type ChatRole = 'user' | 'advisor'
 

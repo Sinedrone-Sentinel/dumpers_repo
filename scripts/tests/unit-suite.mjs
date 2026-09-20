@@ -904,6 +904,22 @@ check(
   advisorPromptText.includes('Mode: planning'),
   'advisor prompt still marks planning mode',
 )
+check(
+  advisorPromptText.includes('Reply shape — never violate:'),
+  'advisor prompt requires compact reply shape',
+)
+check(
+  advisorPromptText.includes('If every hardpoint uses the same head and modules, write it once'),
+  'advisor prompt forbids repeating identical Mole kits',
+)
+check(
+  /No "Why" section/.test(advisorPromptText),
+  'advisor prompt forbids a Why section',
+)
+check(
+  !/plus a short why/i.test(advisorPromptText),
+  'advisor prompt no longer asks for a why essay',
+)
 
 // --- Site Help bot knowledge base ------------------------------------------
 const helpKb = await import(
