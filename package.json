@@ -41,6 +41,7 @@
     "rebuild-mission-rewards": "node scripts/rebuild-blueprint-reward-missions.mjs && node scripts/audit-blueprint-mission-rewards.mjs",
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs",
     "fetch-shop-data": "node scripts/fetch-shop-commodity-data.mjs",
+    "fetch-mining-gear-shops": "node scripts/fetch-mining-gear-shops.mjs",
     "verify-dfp-premiums": "node scripts/verify-dfp-acquisition-premiums.mjs",
     "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs",
     "copy-blueprint-lookup": "node scripts/copy-blueprint-lookup.mjs",

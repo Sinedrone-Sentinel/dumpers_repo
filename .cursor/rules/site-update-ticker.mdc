@@ -97,6 +97,7 @@ the digests do not already convey.
 - **SEO / discoverability** — crawlable catalogs, sitemap, prerender, meta/titles, robots, Search Console, JSON-LD, “so Google can find us”
 - **Metrics / tracking / analytics** — site analytics, pings, tool-time, dashboards, instrumentation
 - **Site maintenance & efficiency** — perf, refactors, cleanup, build pipeline, dependency bumps, dead-code removal, hosting/CDN tweaks with no new member capability
+- **UEX data refreshes** — commodity buy/sell index (`fetch-shop-data`), DFP Q0 bases, or the Smart Cracker Advisor mining-gear buy locations (`fetch-mining-gear-shops`). Prices and shop stock move constantly; a re-bake is never a ticker item. Announce only the first time a *capability* ships (e.g. "Advisor can tell you where to buy your mining gear"), never the refresh.
 - Security hardening, RLS, RPC locks, Edge auth
 - Officer/super-admin-only tooling with no member impact
 - Cursor rules, docs-only, deps, parser internals

@@ -51,13 +51,37 @@ The parser validates expected data paths exist. If the game data structure chang
 
 ---
 
-## Source: UEX Corp API (Commodity DFP bases)
+## Source: UEX Corp API
 
 **API:** [https://uexcorp.space/api/documentation](https://uexcorp.space/api/documentation)
 
-Crowdsourced live commodity prices. Used for Resource Tracker DFP Q0 base prices only:
+Crowdsourced prices and shop locations. Three separate bakes, all offline-first — nothing calls UEX at runtime:
 
-`npm run fetch-commodity-bases` (monthly refresh recommended).
+| Command | Output | Used by |
+|---|---|---|
+| `npm run fetch-commodity-bases` | `dfp-commodity-bases.json` | Resource Tracker DFP Q0 bases (monthly refresh) |
+| `npm run fetch-shop-data` | `shop-commodity-index.json` | Commodity Lookup terminals and buy/sell listings |
+| `npm run fetch-mining-gear-shops` | `mining-gear-shops.json` | Smart Cracker Advisor "where can I buy this head/module/gadget" |
+
+### Mining gear buy locations
+
+`fetch-mining-gear-shops.mjs` pulls only the UEX categories flagged `is_mining` in the Utility
+section — **Mining Laser Heads (29), Mining Modules (30), Gadgets (28)**. Armour, ammo, food,
+personal weapons and ships are never fetched, so the Advisor has no data to answer those with.
+
+Every item keeps **every** known terminal, not a sample. Items UEX knows of but no shop sells
+(Pitman, ROC Module — both vehicle-bundled) stay in the index with zero listings so the Advisor
+can say "no buy location on record" instead of treating them as unknown gear.
+
+`npm run copy-mining-advisor-catalog` joins that index onto the Advisor catalog by **Star Citizen
+uuid** and writes `supabase/functions/mining-loadout-advisor/shops.json`. UEX publishes the same
+uuid we parse from game files, so no fuzzy matching is needed; the one exception is Arbor MH1,
+which UEX files under the MPUV-arm variant, so a display-name fallback covers it. uuids are a
+build-time join key only and are stripped before anything reaches the model prompt.
+
+Redeploy after a refresh: `npx supabase functions deploy mining-loadout-advisor`
+
+These refreshes are **never** announced on the Updates ticker — prices and stock move constantly.
 
 Shop socpaks and ShopInventories are extracted locally with `.\scripts\extract-game-data.ps1 -IncludeShopData` into `extracted-data/` for a future separate project — not synced to this app.
 
@@ -111,6 +135,7 @@ Located in `/scripts/`:
 | `audit-alias-tables.mjs` | Report which manual alias/rarity tables are still required |
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `fetch-shop-commodity-data.mjs` | Refresh UEX commodity buy/sell locations → `shop-commodity-index.json` (`npm run fetch-shop-data`) |
+| `fetch-mining-gear-shops.mjs` | Refresh UEX buy locations for mining heads/modules/gadgets → `mining-gear-shops.json` (`npm run fetch-mining-gear-shops`) |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
 | `audit-blueprint-missions.mjs` | Fail if any mission faction is Unknown / unresolved; also system + title checks |
 | `verify-dfp-spotcheck.mjs` | Spot-check DFP engine output against catalog |
@@ -147,6 +172,9 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
 6. **Optional UEX refresh (Dumpers Repo):** run before step 7 when updating crowdsourced commodity data:
    - `npm run fetch-commodity-bases` — DFP Q0 bases → `dfp-commodity-bases.json`
    - `npm run fetch-shop-data` — Commodity Lookup terminals/listings → `shop-commodity-index.json`
+   - `npm run fetch-mining-gear-shops` — Advisor mining-gear buy locations → `mining-gear-shops.json`,
+     then `npm run copy-mining-advisor-catalog` and
+     `npx supabase functions deploy mining-loadout-advisor`
 7. **DFP engine (required when blueprints changed):** in sibling **`dfp-engine-private`** → `npm run build`
    - Regenerates acquisition premiums for every reward blueprint, component metadata, commodity bases, and Wikelo ammo pricing from the parsed `game-blueprints.json`
    - Writes `public/dfp-engine.js` + `public/dfp-version.json` here — commit both with the game-data commit

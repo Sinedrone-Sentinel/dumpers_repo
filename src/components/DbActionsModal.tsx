@@ -66,13 +66,25 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
   },
   {
     step: 8,
+    title: 'UEX mining gear buy locations',
+    description:
+      'Refresh Smart Cracker Advisor "where can I buy" answers for mining heads, modules and gadgets → mining-gear-shops.json, then rebake the Advisor payloads and redeploy. Powered by UEX. These price/location refreshes are never announced on the Updates ticker',
+    commands: [
+      'npm run fetch-mining-gear-shops',
+      'npm run copy-mining-advisor-catalog',
+      'npx supabase functions deploy mining-loadout-advisor',
+    ],
+    optional: true,
+  },
+  {
+    step: 9,
     title: 'DFP engine build',
     description:
       'Required when blueprints changed. Regenerates acquisition premiums, component metadata, commodity bases, Wikelo ammo pricing. Writes public/dfp-engine.js + public/dfp-version.json here — commit both. Pricing formulas live only in dfp-engine-private',
     commands: ['cd ..\\dfp-engine-private', 'npm run build'],
   },
   {
-    step: 9,
+    step: 10,
     title: 'BP Dumper name lookup',
     description:
       'Only if blueprints changed — refreshes blueprint-name-lookup.json for Game.log / webhook resolution, then redeploy log-watcher-webhook',
@@ -84,34 +96,34 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     optional: true,
   },
   {
-    step: 10,
+    step: 11,
     title: 'BP Dumper min game version',
     description: 'Only if game major.minor changed — bakes version into BP Dumper sources from game-build-version.json',
     commands: ['npm run sync-min-game-version'],
     optional: true,
   },
   {
-    step: 11,
+    step: 12,
     title: 'Sync resource catalog',
     description:
       'Push blueprint materials + extra commodities to Supabase blueprint_resources (use Sync from Blueprints button below). Run after parse when new craft materials appeared',
     commands: [],
   },
   {
-    step: 12,
+    step: 13,
     title: 'Production build',
     description: 'Vite build + version stamp + archive guide regeneration → dist/',
     commands: ['npm run build'],
   },
   {
-    step: 13,
+    step: 14,
     title: 'Commit & deploy',
     description:
       'Commit game-*.json, DFP bundle, shop/commodity data, and generated lookup files; deploy dist/. No other DB sync — catalogs bundle at build time',
     commands: [],
   },
   {
-    step: 14,
+    step: 15,
     title: 'Relink acquired blueprint IDs',
     description:
       'After the new catalog is in place: remap leftover acquired / target-list IDs onto current internal names (exact suffix/prefix only). Review any approval-list IDs — do not guess',
@@ -196,7 +208,7 @@ function PatchDayRunbookSection() {
         <>
           <PatchDayCommandList />
           <p className="text-[10px] text-slate-600 italic pt-1">
-            Steps 1–12 run locally in terminal (PowerShell for extract). All game catalogs bundle from
+            Steps 1–13 run locally in terminal (PowerShell for extract). All game catalogs bundle from
             parsed game-*.json at build time — no Supabase sync for blueprints/mining/components.
           </p>
           <p className="text-[10px] text-amber-400/70">

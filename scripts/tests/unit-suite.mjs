@@ -27,6 +27,7 @@ const modules = [
   'src/lib/bazaarStockDeduct.ts',
   'src/lib/miningLocationAliases.ts',
   'src/lib/miningClusterProfiles.ts',
+  'supabase/functions/mining-loadout-advisor/gearShopLookup.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -53,6 +54,7 @@ const advisorCrypto = await import(pathToFileURL(path.join(outDir, 'miningAdviso
 const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDeduct.mjs')).href)
 const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocationAliases.mjs')).href)
 const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
+const gearShop = await import(pathToFileURL(path.join(outDir, 'gearShopLookup.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -561,6 +563,95 @@ check(helix2?.slots === 3, 'Helix II catalog has three module ports')
 check(
   advisorCatalog.vessels.some((v) => v.displayName === 'Prospector' && v.laserHardpoints === 1 && v.laserSize === 1),
   'catalog includes Prospector hardpoints',
+)
+
+// --- UEX gear shop index (where-to-buy for mining gear) ---------------------
+const gearShopsRaw = JSON.parse(
+  readFileSync(path.join(root, 'src/data/mining-gear-shops.json'), 'utf8'),
+)
+const builtShops = advisorCatalogLib.buildAdvisorGearShops(advisorCatalog, gearShopsRaw)
+advisorCatalogLib.assertAdvisorGearShopsShape(builtShops.payload)
+
+const shippedShops = JSON.parse(
+  readFileSync(path.join(root, 'supabase/functions/mining-loadout-advisor/shops.json'), 'utf8'),
+)
+check(
+  JSON.stringify(shippedShops) === JSON.stringify(builtShops.payload),
+  'shipped shops.json matches a fresh build (run npm run copy-mining-advisor-catalog)',
+)
+check(
+  !JSON.stringify(advisorCatalogLib.stripCatalogUuids(advisorCatalog)).includes('uuid'),
+  'advisor prompt catalog carries no uuids',
+)
+check(!JSON.stringify(shippedShops).includes('uuid'), 'shipped gear shops carry no uuids')
+
+const hofstede = shippedShops.items.find((i) => i.displayName === 'Hofstede-S2 Mining Laser')
+const hofstedeSystems = new Set(
+  hofstede.listings.map((l) => shippedShops.terminals.find((t) => t.id === l.t)?.system),
+)
+check(hofstede.listings.length >= 10, 'Hofstede-S2 keeps every known terminal, not a sample')
+check(
+  hofstedeSystems.has('Stanton') && hofstedeSystems.has('Pyro') && hofstedeSystems.has('Nyx'),
+  'Hofstede-S2 buy locations span every system UEX lists',
+)
+check(
+  hofstede.listings.every((l, i) => i === 0 || l.buy >= hofstede.listings[i - 1].buy),
+  'gear listings are cheapest first',
+)
+check(
+  shippedShops.items.some((i) => i.displayName === 'Arbor MH1 Mining Laser' && i.listings.length),
+  'Arbor MH1 resolves by display name when UEX files it under a variant uuid',
+)
+check(
+  shippedShops.items.some((i) => i.displayName === 'Clearcut Module' && i.listings.length === 0),
+  'gear UEX has no seller for stays in the index with zero listings',
+)
+
+const buyHofstede = gearShop.resolveGearShopMatches(
+  shippedShops,
+  'where can I buy the hofstede-s2?',
+)
+check(
+  buyHofstede.length === 1 && buyHofstede[0].displayName === 'Hofstede-S2 Mining Laser',
+  'buy question resolves the named head',
+)
+const buyHelix2 = gearShop.resolveGearShopMatches(shippedShops, 'cheapest place for a helix 2')
+check(
+  buyHelix2.length === 1 && buyHelix2[0].displayName === 'Helix II Mining Laser',
+  'Helix 2 resolves to Helix II, not the Helix I substring',
+)
+check(
+  gearShop.resolveGearShopMatches(shippedShops, 'is the hofstede-s2 good for quantainium?')
+    .length === 0,
+  'advice questions do not pull in shop data',
+)
+check(
+  gearShop.resolveGearShopMatches(shippedShops, 'where can I buy ammo and a new helmet?')
+    .length === 0,
+  'non-mining shopping questions match nothing',
+)
+const buyEquipped = gearShop.resolveGearShopMatches(shippedShops, 'where do I buy these?', [
+  'Hofstede-S2 Mining Laser',
+  'Rieger-C3 Module',
+])
+check(
+  buyEquipped.length === 2 && buyEquipped[0].displayName === 'Hofstede-S2 Mining Laser',
+  'unnamed buy question falls back to equipped gear',
+)
+
+const shopBlock = gearShop.renderGearShopBlock(shippedShops, buyHofstede)
+check(shopBlock.includes('Powered by UEX'), 'shop block credits UEX')
+check(shopBlock.includes('Tammany and Sons'), 'shop block names real terminals')
+check(shopBlock.includes('21,613 aUEC'), 'shop block formats aUEC prices')
+check(/Stanton:/.test(shopBlock) && /Pyro:/.test(shopBlock), 'shop block groups by system')
+check(gearShop.renderGearShopBlock(shippedShops, []) === '', 'no matches renders no block')
+const unsoldBlock = gearShop.renderGearShopBlock(
+  shippedShops,
+  shippedShops.items.filter((i) => i.displayName === 'Clearcut Module'),
+)
+check(
+  unsoldBlock.includes('no buy location on record'),
+  'unsold gear tells the model to say there is no record',
 )
 
 check(advisorCrypto.isAdvisorLockPhrase('short') === false, 'lock phrase min length')

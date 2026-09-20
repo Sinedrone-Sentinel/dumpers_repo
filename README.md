@@ -132,7 +132,7 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - Reference grid of base RS signatures and cluster spawn odds; track up to two cards per ore (Surface / Asteroid) plus optional per-site location cards
 - Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
 - **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; pick up to two mining gadgets (they modify the rock's base stats before head/module math); inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
-- **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship sync across devices when signed in (RSI verification not required). Signed-in members can optionally open **Advisor** (own Gemini key: paste each visit, or save a client-encrypted copy unlocked with a lock phrase; clear from Settings)
+- **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship sync across devices when signed in (RSI verification not required). Signed-in members can optionally open **Advisor** (own Gemini key: paste each visit, or save a client-encrypted copy unlocked with a lock phrase; clear from Settings). Advisor also answers **where to buy** a mining head, module, or gadget from a baked UEX shop index (`npm run fetch-mining-gear-shops`) — mining gear only, and it declines shopping questions about anything else
 
 **Mining Guide**
 
@@ -401,6 +401,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | `npm run audit-ore-name-consistency` | Ore name cross-check |
 | `npm run fetch-commodity-bases` | Refresh UEX Q0 commodity DFP bases |
 | `npm run fetch-shop-data` | Refresh UEX commodity buy/sell locations for Commodity Lookup (`src/data/shop-commodity-index.json`) |
+| `npm run fetch-mining-gear-shops` | Refresh UEX buy locations for mining heads/modules/gadgets, used by Advisor (`src/data/mining-gear-shops.json`) |
 | `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
 | `npm run sync-min-game-version` | Bake game major.minor into BP Dumper sources |
 | `npm run release:dumper` | Manual semantic-release for BP Dumper |
