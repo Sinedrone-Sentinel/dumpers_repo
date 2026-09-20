@@ -28,6 +28,7 @@ const modules = [
   'src/lib/miningLocationAliases.ts',
   'src/lib/miningClusterProfiles.ts',
   'supabase/functions/mining-loadout-advisor/gearShopLookup.ts',
+  'supabase/functions/mining-loadout-advisor/advisorPrompt.ts',
   'supabase/functions/site-help-bot/helpPrompt.ts',
   'src/lib/aiChatUsage.ts',
 ]
@@ -57,6 +58,7 @@ const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDe
 const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocationAliases.mjs')).href)
 const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
 const gearShop = await import(pathToFileURL(path.join(outDir, 'gearShopLookup.mjs')).href)
+const advisorPrompt = await import(pathToFileURL(path.join(outDir, 'advisorPrompt.mjs')).href)
 const helpPrompt = await import(pathToFileURL(path.join(outDir, 'helpPrompt.mjs')).href)
 const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs')).href)
 
@@ -857,6 +859,51 @@ for (const oreName of Object.keys(miningChips.miningSpawnData.ores ?? {})) {
     }
   }
 }
+
+// --- Smart Cracker Advisor prompt (terminal voice) --------------------------
+const advisorPromptText = advisorPrompt.buildSystemPrompt({
+  catalog: {
+    lasers: [{ displayName: 'Hofstede-S2 Mining Laser', size: 2, slots: 2 }],
+    modules: [],
+    gadgets: [],
+    ores: [{ displayName: 'Quantainium' }],
+    vessels: [{ displayName: 'Mole', laserHardpoints: 3, laserSize: 2 }],
+  },
+  planningMode: true,
+  oreName: 'Quantainium',
+  oreRow: { displayName: 'Quantainium' },
+  vesselDisplayName: 'Mole',
+  loadout: [{ head: 'Hofstede-S2 Mining Laser', modules: [], slots: 2, size: 2 }],
+  gadgetsInUse: [],
+  scan: null,
+  gearShopBlock: '',
+})
+check(
+  advisorPromptText.includes('Hard fit rules — never violate:'),
+  'advisor prompt keeps hard fit rules',
+)
+check(
+  advisorPromptText.includes('Golem may only use Pitman Mining Laser'),
+  'advisor prompt keeps Golem/Pitman fit rule',
+)
+check(
+  advisorPromptText.includes('Where-to-buy rules — never violate:'),
+  'advisor prompt keeps where-to-buy rules',
+)
+check(
+  advisorPromptText.includes(advisorPrompt.ADVISOR_SCOPE_REFUSAL),
+  'advisor prompt includes the 42-A refusal line',
+)
+check(
+  advisorPromptText.includes('Shubin Interstellar'),
+  'advisor prompt stays in the Shubin terminal voice',
+)
+check(!/UEX API/i.test(advisorPromptText), 'advisor prompt does not claim a live UEX API')
+check(!/fallback JSON/i.test(advisorPromptText), 'advisor prompt does not mention fallback JSON')
+check(
+  advisorPromptText.includes('Mode: planning'),
+  'advisor prompt still marks planning mode',
+)
 
 // --- Site Help bot knowledge base ------------------------------------------
 const helpKb = await import(
