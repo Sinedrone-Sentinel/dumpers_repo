@@ -1043,6 +1043,111 @@
       inset 0 0 0 1px rgba(56, 189, 248, 0.12),
       inset 0 2px 28px rgba(0, 20, 40, 0.35);
   }
+
+  /* Shubin Advisor replies only — user bubbles keep the chat chrome. */
+  .advisor-shubin-reply {
+    font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    color: #fde68a;
+    background: #05080d;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    border-radius: 0.375rem;
+    padding: 0.4rem 0.55rem;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.12);
+  }
+
+  .advisor-shubin-line {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .advisor-shubin-tag {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .advisor-shubin-tag-term {
+    color: #f59e0b;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
+  }
+
+  .advisor-shubin-tag-fit {
+    color: #22d3ee;
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+  }
+
+  .advisor-shubin-tag-info {
+    color: #7dd3fc;
+    text-shadow: 0 0 10px rgba(125, 211, 252, 0.45);
+  }
+
+  .advisor-shubin-tag-warning {
+    color: #fbbf24;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  }
+
+  .advisor-shubin-tag-error {
+    color: #f87171;
+    text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+  }
+
+  .advisor-shubin-tag-denied {
+    color: #fb7185;
+    text-shadow: 0 0 10px rgba(251, 113, 133, 0.55);
+  }
+
+  .advisor-shubin-tag-buy {
+    color: #34d399;
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
+  }
+
+  .advisor-shubin-tag-shubin {
+    color: #fb923c;
+    text-shadow: 0 0 10px rgba(251, 146, 60, 0.5);
+  }
+
+  .advisor-shubin-tag-default {
+    color: #fcd34d;
+    text-shadow: 0 0 8px rgba(252, 211, 77, 0.4);
+  }
+
+  .advisor-shubin-body {
+    color: #fde68a;
+  }
+
+  .advisor-shubin-line-term .advisor-shubin-body {
+    color: #fcd34d;
+  }
+
+  .advisor-shubin-line-fit .advisor-shubin-body {
+    color: #a5f3fc;
+  }
+
+  .advisor-shubin-line-info .advisor-shubin-body {
+    color: #bae6fd;
+  }
+
+  .advisor-shubin-line-warning .advisor-shubin-body {
+    color: #fde68a;
+  }
+
+  .advisor-shubin-line-error .advisor-shubin-body {
+    color: #fecaca;
+  }
+
+  .advisor-shubin-line-denied .advisor-shubin-body {
+    color: #fecdd3;
+  }
+
+  .advisor-shubin-line-buy .advisor-shubin-body {
+    color: #a7f3d0;
+  }
+
+  .advisor-shubin-line-shubin .advisor-shubin-body {
+    color: #fdba74;
+  }
 }
 
 @keyframes site-btn-shimmer-sweep {
