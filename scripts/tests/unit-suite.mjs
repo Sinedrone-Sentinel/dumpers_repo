@@ -1064,6 +1064,8 @@ const denyCases = [
   ['Are there any weyland mining heads I can buy?', 'weyland-yutani'],
   ['I need to know the resources required for an AT-AT walker', 'star-wars-fleets'],
   ['AT-ST loadout', 'star-wars-fleets'],
+  ['which mining head is good for mining Turbinium', 'total-recall'],
+  ['dilithium loadout', 'foreign-ores'],
   ['Millennium Falcon', 'star-wars-fleets'],
   ['CHOAM spice prices', 'choam'],
   ['Ultor Corporation pits', 'ultor'],
@@ -1111,6 +1113,10 @@ check(mixed.hit?.entry.tone === 'irritation', 'Starfleet closer is irritated')
 const helixFlavor = denyDecision('Helix II for aluminum, think Alien industrial hauler')
 check(helixFlavor.action === 'allow', 'Helix catalog name allows a poorly worded sci-fi aside')
 
+const turbiniumKit = denyDecision('Helix for Turbinium')
+check(turbiniumKit.action === 'allow', 'Helix plus Turbinium still answers mining')
+check(turbiniumKit.hit?.entry.id === 'total-recall', 'Turbinium analogy uses the Mars-assay joke')
+
 check(sciFiCrossover.findSciFiCrossover('ore') === null, 'bare ore is not a crossover term')
 check(sciFiCrossover.findSciFiCrossover('helix') === null, 'bare helix is not a crossover term')
 check(sciFiCrossover.findSciFiCrossover('rda') === null, 'bare rda is not a crossover term')
@@ -1143,7 +1149,7 @@ check(sciFiCrossover.findSciFiCrossover('loadout') === null, 'loadout is not a f
 check(sciFiCrossover.findSciFiCrossover('Stanton') === null, 'Stanton is not a franchise typo')
 check(sciFiCrossover.findSciFiCrossover('Hofstede') === null, 'Hofstede is not a franchise typo')
 
-const angryIds = ['weyland-yutani', 'rda', 'cec', 'mining-guild', 'czerka', 'choam', 'ultor']
+const angryIds = ['weyland-yutani', 'rda', 'cec', 'mining-guild', 'czerka', 'choam', 'ultor', 'total-recall']
 for (const id of angryIds) {
   const entry = sciFiCrossover.CROSSOVER_ENTRIES.find((row) => row.id === id)
   check(entry?.tone === 'anger', `${id} is an angry close rival`)
