@@ -28,6 +28,8 @@ const modules = [
   'src/lib/miningLocationAliases.ts',
   'src/lib/miningClusterProfiles.ts',
   'supabase/functions/mining-loadout-advisor/gearShopLookup.ts',
+  'supabase/functions/site-help-bot/helpPrompt.ts',
+  'src/lib/aiChatUsage.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -55,6 +57,8 @@ const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDe
 const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocationAliases.mjs')).href)
 const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
 const gearShop = await import(pathToFileURL(path.join(outDir, 'gearShopLookup.mjs')).href)
+const helpPrompt = await import(pathToFileURL(path.join(outDir, 'helpPrompt.mjs')).href)
+const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -853,5 +857,109 @@ for (const oreName of Object.keys(miningChips.miningSpawnData.ores ?? {})) {
     }
   }
 }
+
+// --- Site Help bot knowledge base ------------------------------------------
+const helpKb = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/helpKnowledgeBase.mjs')).href
+)
+const archiveContentPath = path.join(outDir, 'archiveGuideContent.mjs')
+await esbuild.build({
+  entryPoints: [path.join(root, 'src/lib/archiveGuide/index.ts')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  outfile: archiveContentPath,
+  packages: 'external',
+})
+const archiveContent = await import(pathToFileURL(archiveContentPath).href)
+const freshKnowledge = helpKb.buildHelpKnowledgeBase(archiveContent)
+helpKb.assertHelpKnowledgeBase(freshKnowledge)
+
+const shippedKnowledge = JSON.parse(
+  readFileSync(path.join(root, 'supabase/functions/site-help-bot/knowledge.json'), 'utf8'),
+)
+check(
+  JSON.stringify(shippedKnowledge) === JSON.stringify(freshKnowledge),
+  'shipped knowledge.json matches a fresh build (run npm run build-help-knowledge-base)',
+)
+check(
+  shippedKnowledge.pages.length === archiveContent.PAGE_GUIDES.length,
+  'help knowledge base covers every Archive page guide',
+)
+check(
+  Buffer.byteLength(JSON.stringify(shippedKnowledge)) <= helpKb.HELP_KB_MAX_BYTES,
+  'help knowledge base stays inside the prompt budget',
+)
+check(
+  shippedKnowledge.pages.every((p) => p.howTo.length > 0),
+  'every help knowledge page carries how-to steps',
+)
+
+// The bot must answer from the Archive only, so the prompt has to carry it.
+const helpSystemPrompt = helpPrompt.buildHelpSystemPrompt({
+  knowledge: shippedKnowledge,
+  currentPath: '/mining-tracker?tab=rs_tracker',
+  displayName: 'Tester',
+})
+check(
+  helpSystemPrompt.includes('Mining Tracker page right now'),
+  'help prompt tells the model which page the member is on',
+)
+check(helpSystemPrompt.includes('SITE GUIDE'), 'help prompt injects the site guide')
+check(
+  helpSystemPrompt.includes('Never invent a page'),
+  'help prompt keeps the no-invention rule',
+)
+check(
+  helpPrompt.buildHelpSystemPrompt({
+    knowledge: shippedKnowledge,
+    currentPath: '/not-a-real-page',
+    displayName: '',
+  }).includes('do not know which page'),
+  'help prompt does not guess an unknown page',
+)
+
+check(helpPrompt.pageLabelForPath('/blueprints/p4-ar-rifle') === 'Blueprints', 'help page: sub-route')
+check(helpPrompt.pageLabelForPath('/') === 'Blueprints', 'help page: root')
+check(
+  helpPrompt.pageLabelForPath('/targets/live') === 'Mission Tracker (Live Tracker)',
+  'help page: live tracker beats the parent prefix',
+)
+check(helpPrompt.pageLabelForPath('/targets') === 'Mission Tracker', 'help page: parent route')
+check(helpPrompt.pageLabelForPath('/nope') === null, 'help page: unknown path is null')
+
+// --- AI chat usage meter ----------------------------------------------------
+check(
+  aiUsage.normalizeAiChatUsage({ used: 3, max: 20, resets_in_sec: 1800 })?.used === 3,
+  'usage accepts the snake_case RPC shape',
+)
+check(
+  aiUsage.normalizeAiChatUsage({ ask_count: 7, max: 20, resetsInSec: 60 })?.used === 7,
+  'usage accepts the camelCase Edge echo',
+)
+check(aiUsage.normalizeAiChatUsage(null) === null, 'usage ignores a missing snapshot')
+check(aiUsage.normalizeAiChatUsage({ used: 1 }) === null, 'usage ignores a snapshot with no cap')
+check(
+  aiUsage.normalizeAiChatUsage({ used: 99, max: 20, resets_in_sec: 10 })?.used === 20,
+  'usage never reports more asks than the cap',
+)
+check(
+  aiUsage.formatAiChatUsage({ used: 0, max: 20, resetsInSec: 0 }) === '0/20 this hour',
+  'usage label at zero',
+)
+check(
+  aiUsage.formatAiChatUsage({ used: 20, max: 20, resetsInSec: 5 }) === '20/20 this hour',
+  'usage label at the cap',
+)
+check(aiUsage.formatAiChatUsageReset(0) === null, 'no reset text on a fresh window')
+check(aiUsage.formatAiChatUsageReset(1380) === 'resets in 23m', 'reset countdown in minutes')
+check(aiUsage.formatAiChatUsageReset(3600) === 'resets in 1h', 'reset countdown caps at an hour')
+check(
+  aiUsage.formatAiChatUsageReset(20) === 'resets in under a minute',
+  'reset countdown under a minute',
+)
+check(aiUsage.aiChatUsageTone({ used: 2, max: 20, resetsInSec: 0 }) === 'ok', 'usage tone ok')
+check(aiUsage.aiChatUsageTone({ used: 17, max: 20, resetsInSec: 0 }) === 'warn', 'usage tone warn')
+check(aiUsage.aiChatUsageTone({ used: 20, max: 20, resetsInSec: 0 }) === 'full', 'usage tone full')
 
 console.log(`Unit tests: ${pass} passed`)

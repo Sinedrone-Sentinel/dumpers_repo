@@ -12,6 +12,7 @@ import AppNotificationBell from './AppNotificationBell'
 import AppFriendsMenu from './AppFriendsMenu'
 import RequestServicesControl from './RequestServicesControl'
 import AppUserMenu from './AppUserMenu'
+import SiteHelpChip from '../help/SiteHelpChip'
 import GuestPreviewBanner from './GuestPreviewBanner'
 import UpdateAvailableBanner from './UpdateAvailableBanner'
 import SignInMenu from '../auth/SignInMenu'
@@ -189,6 +190,7 @@ export default function AppChrome({
                     onOpenSupport={onOpenSupport}
                     onSignOut={onSignOut}
                   />
+                  <SiteHelpChip disabled={isPending} />
                 </>
               )}
             </div>

@@ -435,15 +435,15 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
           </SettingsSection>
 
           <SettingsSection
-            title="Advisor"
-            description="Smart Cracker Gemini access saved on this profile"
+            title="AI chats"
+            description="Gemini access saved on this profile, shared by Help and the Smart Cracker Advisor"
           >
             <SettingsField
-              label="Saved Advisor key"
+              label="Saved Gemini key"
               hint={
                 hasAdvisorSavedKey
-                  ? 'Removes the encrypted copy from your profile. The key itself is never shown here.'
-                  : 'No Advisor key is saved on this profile.'
+                  ? 'Removes the encrypted copy from your profile, for both Help and the Advisor. The key itself is never shown here.'
+                  : 'No Gemini key is saved on this profile.'
               }
             >
               <button
@@ -460,11 +460,11 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
                       return
                     }
                     setHasAdvisorSavedKey(false)
-                    setMessage({ type: 'success', text: 'Saved Advisor key removed.' })
+                    setMessage({ type: 'success', text: 'Saved Gemini key removed.' })
                   })
                 }}
               >
-                {clearingAdvisorKey ? 'Clearing…' : 'Clear saved Advisor key'}
+                {clearingAdvisorKey ? 'Clearing…' : 'Clear saved Gemini key'}
               </button>
             </SettingsField>
           </SettingsSection>

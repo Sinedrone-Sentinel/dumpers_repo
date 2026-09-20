@@ -1,4 +1,12 @@
-import { decryptAdvisorSecret, encryptAdvisorSecret, isAdvisorLockPhrase } from './miningAdvisorCrypto'
+import {
+  deleteSavedGeminiKey,
+  edgeInvokeError,
+  GEMINI_SAVED_KEY_EVENT,
+  hasSavedGeminiKey,
+  notifyGeminiSavedKeyChanged,
+  saveGeminiKey,
+  unlockGeminiKey,
+} from './geminiKeyVault'
 import { supabase } from './supabase'
 import { getMiningGadgetByName } from './miningGadgets'
 import type { SmartCrackerResult } from './miningGadgetRecommendations'
@@ -11,7 +19,7 @@ import { getMiningLaserByName, getMiningVessel, type MiningVesselId } from './mi
 export const MINING_ADVISOR_KEY_STORAGE = 'dumpers_mining_advisor_gemini_key'
 export const MINING_ADVISOR_THREAD_STORAGE = 'dumpers_mining_advisor_thread'
 export const MINING_ADVISOR_UI_STORAGE = 'dumpers_mining_advisor_ui'
-export const GEMINI_STUDIO_KEY_URL = 'https://aistudio.google.com/apikey'
+export { GEMINI_STUDIO_KEY_URL } from './geminiKeyVault'
 
 export type AdvisorChatRole = 'user' | 'advisor'
 
@@ -47,8 +55,8 @@ export interface AdvisorAskInput {
 }
 
 export type AdvisorAskResult =
-  | { ok: true; advice: string }
-  | { ok: false; error: string }
+  | { ok: true; advice: string; usage?: unknown }
+  | { ok: false; error: string; usage?: unknown }
 
 export function describeAdvisorLoadout(slots: MiningLaserSlotConfig[]): AdvisorHeadSession[] {
   return slots.map((slot) => {
@@ -104,74 +112,14 @@ export function buildAdvisorCrackSummary(
   return parts.join(' ')
 }
 
-async function advisorInvokeError(error: { message?: string; context?: Response }): Promise<string> {
-  const ctx = error.context
-  if (ctx && typeof ctx.json === 'function') {
-    try {
-      const payload = (await ctx.json()) as { error?: string }
-      if (payload?.error) return payload.error
-    } catch {
-      /* fall through */
-    }
-  }
-  return error.message || 'Advisor is unavailable right now.'
-}
-
-export const MINING_ADVISOR_SAVED_KEY_EVENT = 'dumpers:mining-advisor-saved-key'
-
-export function notifyMiningAdvisorSavedKeyChanged(): void {
-  window.dispatchEvent(new Event(MINING_ADVISOR_SAVED_KEY_EVENT))
-}
-
-export async function miningAdvisorHasSavedKey(): Promise<boolean> {
-  const { data, error } = await supabase.rpc('mining_advisor_has_saved_key')
-  if (error) return false
-  return data === true
-}
-
-export async function saveMiningAdvisorKey(apiKey: string, lockPhrase: string): Promise<AdvisorAskResult> {
-  if (!isAdvisorLockPhrase(lockPhrase)) {
-    return { ok: false, error: 'Choose a lock phrase of at least 10 characters.' }
-  }
-  let ciphertext: string
-  try {
-    ciphertext = await encryptAdvisorSecret(apiKey.trim(), lockPhrase)
-  } catch {
-    return { ok: false, error: 'Could not encrypt your key on this device.' }
-  }
-  const { data, error } = await supabase.rpc('mining_advisor_store_own_secret', {
-    p_ciphertext: ciphertext,
-  })
-  if (error || data !== true) {
-    return { ok: false, error: error?.message || 'Could not save your key. Try again.' }
-  }
-  notifyMiningAdvisorSavedKeyChanged()
-  return { ok: true, advice: '' }
-}
-
-export async function unlockMiningAdvisorKey(lockPhrase: string): Promise<AdvisorAskResult> {
-  if (!isAdvisorLockPhrase(lockPhrase)) {
-    return { ok: false, error: 'Enter the lock phrase you chose when you saved.' }
-  }
-  const { data, error } = await supabase.rpc('mining_advisor_load_own_secret')
-  if (error || typeof data !== 'string' || !data) {
-    return { ok: false, error: 'No saved key on this profile.' }
-  }
-  try {
-    const plain = (await decryptAdvisorSecret(data, lockPhrase)).trim()
-    if (plain.length < 20) return { ok: false, error: 'That lock phrase did not unlock the saved key.' }
-    return { ok: true, advice: plain }
-  } catch {
-    return { ok: false, error: 'That lock phrase did not unlock the saved key.' }
-  }
-}
-
-export async function deleteMiningAdvisorSavedKey(): Promise<AdvisorAskResult> {
-  const { error } = await supabase.rpc('mining_advisor_delete_saved_key')
-  if (error) return { ok: false, error: error.message || 'Could not remove the saved key.' }
-  notifyMiningAdvisorSavedKeyChanged()
-  return { ok: true, advice: '' }
-}
+// The saved Gemini key is shared with the site Help bot, so the storage helpers
+// live in geminiKeyVault. These keep their Advisor names for existing callers.
+export const MINING_ADVISOR_SAVED_KEY_EVENT = GEMINI_SAVED_KEY_EVENT
+export const notifyMiningAdvisorSavedKeyChanged = notifyGeminiSavedKeyChanged
+export const miningAdvisorHasSavedKey = hasSavedGeminiKey
+export const saveMiningAdvisorKey = saveGeminiKey
+export const unlockMiningAdvisorKey = unlockGeminiKey
+export const deleteMiningAdvisorSavedKey = deleteSavedGeminiKey
 
 export async function askMiningAdvisor(input: AdvisorAskInput): Promise<AdvisorAskResult> {
   const pasted = input.apiKey.trim()
@@ -189,9 +137,26 @@ export async function askMiningAdvisor(input: AdvisorAskInput): Promise<AdvisorA
     },
   })
 
-  if (error) return { ok: false, error: await advisorInvokeError(error) }
+  if (error) {
+    // A 429 still carries a usage snapshot; surface it so the meter shows the cap.
+    let usage: unknown = null
+    const ctx = (error as { context?: Response }).context
+    if (ctx && typeof ctx.clone === 'function') {
+      try {
+        usage = ((await ctx.clone().json()) as { usage?: unknown })?.usage ?? null
+      } catch {
+        /* no usage on this error */
+      }
+    }
+    return {
+      ok: false,
+      error: await edgeInvokeError(error, 'Advisor is unavailable right now.'),
+      usage,
+    }
+  }
 
-  const advice = (data as { advice?: string } | null)?.advice?.trim()
+  const payload = data as { advice?: string; usage?: unknown } | null
+  const advice = payload?.advice?.trim()
   if (!advice) return { ok: false, error: 'Advisor returned an empty answer.' }
-  return { ok: true, advice }
+  return { ok: true, advice, usage: payload?.usage ?? null }
 }

@@ -225,6 +225,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 157 | `192_bazaar_line_stock_deduct.sql` | Per-line WTB fulfill / WTS commodity deduct from My Resources at listed qualities (`deduct_from_stock` + `deduct_plan`). `complete_order_craft` no longer reads `profiles.craft_deduct_inventory` |
 | 158 | `193_tracked_resources_deduct_copy.sql` | Bazaar deduct shortage errors say Tracked Resources |
 | 159 | `194_ticker_game_error_category.sql` | Ticker layout **Game Error** (red `#EF4444`, 14-day TTL) for client-breaking game warnings |
+| 160 | `195_ai_chat_rate_buckets.sql` | Per-feature AI chat limiter: `ai_chat_rate_buckets` + `ai_chat_try_consume(user, feature)` (`service_role` only) and read-only `ai_chat_usage(feature)` for the member-facing meter (`authenticated`). Migrates 189's counters, rewrites `mining_advisor_try_consume` as a wrapper, drops `mining_advisor_rate_buckets` |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191)
 
@@ -312,6 +313,8 @@ npx supabase functions deploy citizenid-oauth-callback --no-verify-jwt
 npx supabase functions deploy unlink-citizenid
 npm run copy-mining-advisor-catalog
 npx supabase functions deploy mining-loadout-advisor
+npm run build-help-knowledge-base
+npx supabase functions deploy site-help-bot
 ```
 
 | Function | Purpose |
@@ -329,7 +332,8 @@ npx supabase functions deploy mining-loadout-advisor
 | `link-citizenid` | Signed-in member starts Citizen iD OAuth (PKCE state stored server-side) |
 | `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
-| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190** first |
+| `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190**, then **195** (moves it onto the shared limiter and returns the usage meter) |
+| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers only from the Information Archive baked into `knowledge.json`. Apply migrations **190** and **195** first |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
@@ -337,11 +341,13 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 
 ### Edge Function secrets
 
-**Smart Cracker Advisor:** no site Gemini/OpenAI secret and no wrap secret. Members paste a key each visit, or save a copy they encrypt in the browser with a lock phrase (PBKDF2 + AES-GCM). The database stores ciphertext only. Apply migrations **189–190**, then:
+**AI chats (Smart Cracker Advisor and site Help):** no site Gemini/OpenAI secret and no wrap secret. Members paste a key each visit, or save a copy they encrypt in the browser with a lock phrase (PBKDF2 + AES-GCM). The database stores ciphertext only, and one saved key serves both chats. Each chat gets its own 20/hour bucket from migration **195**, and both report usage back so the chat can show a live `x/20 this hour` meter. Apply migrations **189–190** and **195**, then:
 
 ```bash
 npm run copy-mining-advisor-catalog
 npx supabase functions deploy mining-loadout-advisor
+npm run build-help-knowledge-base
+npx supabase functions deploy site-help-bot
 ```
 
 **Contributor Team:** set Edge secret `GITHUB_CONTRIBUTORS_TOKEN` to a fine-scoped GitHub PAT (or GitHub App installation token) that can manage collaborators on the configured public repo. Without it, `manage-github-collaborator` returns 503 and marks sync error.
