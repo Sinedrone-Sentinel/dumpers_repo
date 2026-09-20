@@ -1109,6 +1109,17 @@ check(analogy.action === 'allow', 'Nostromo analogy is allowed')
 check(analogy.hit?.entry.id === 'weyland-yutani', 'Nostromo analogy still finds Weyland-Yutani')
 check(analogy.hit?.entry.tone === 'anger', 'Weyland-Yutani closer is angry')
 
+const unobtaniumAnalogue = denyDecision(
+  'What would be the most rare resource similar to unobtanium?',
+)
+check(unobtaniumAnalogue.action === 'allow', 'unobtanium analogue is allowed')
+check(unobtaniumAnalogue.hit?.entry.id === 'rda', 'unobtanium analogue still finds Avatar')
+const unobtaniumVersion = denyDecision("what's our version of unobtanium")
+check(unobtaniumVersion.action === 'allow', 'version-of unobtanium is allowed')
+check(unobtaniumVersion.hit?.entry.id === 'rda', 'version-of unobtanium still finds Avatar')
+check(denyDecision('unobtanium').action === 'deny', 'bare unobtanium stays denied')
+check(denyDecision('unobtanium loadout').action === 'deny', 'direct unobtanium loadout stays denied')
+
 const mixed = denyDecision('Hofstede loadout and how do transporters work')
 check(mixed.action === 'allow', 'Hofstede plus transporter still answers mining')
 check(mixed.hit?.entry.id === 'starfleet', 'mixed ask still finds Starfleet')
