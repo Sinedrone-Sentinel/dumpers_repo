@@ -1061,6 +1061,7 @@ const denyCases = [
   ['loadout for the Sulaco', 'weyland-yutani'],
   ['Nostromo', 'weyland-yutani'],
   ['Weyland-Yutani mining methods', 'weyland-yutani'],
+  ['Are there any weyland mining heads I can buy?', 'weyland-yutani'],
   ['Millennium Falcon', 'star-wars-fleets'],
   ['CHOAM spice prices', 'choam'],
   ['Ultor Corporation pits', 'ultor'],

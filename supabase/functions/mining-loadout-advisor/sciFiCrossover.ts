@@ -54,7 +54,9 @@ export const CROSSOVER_ENTRIES: CrossoverEntry[] = [
       'weyland-yutani',
       'weyland yutani',
       'weyland corp',
+      'weyland',
       'yutani corporation',
+      'yutani',
       'kelland mining',
       'nostromo',
       'sulaco',
@@ -91,7 +93,7 @@ export const CROSSOVER_ENTRIES: CrossoverEntry[] = [
     franchise: 'Red Faction',
     org: 'Ultor Corporation',
     tone: 'anger',
-    terms: ['ultor corporation', 'ultor corp'],
+    terms: ['ultor corporation', 'ultor corp', 'ultor'],
     retort: 'Ultor ruins claims and calls it industry. That name is not welcome on a Shubin terminal.',
   },
   {
@@ -116,7 +118,7 @@ export const CROSSOVER_ENTRIES: CrossoverEntry[] = [
     franchise: 'Star Wars',
     org: 'Czerka Corporation',
     tone: 'anger',
-    terms: ['czerka corporation', 'czerka corp'],
+    terms: ['czerka corporation', 'czerka corp', 'czerka'],
     retort: 'Czerka is a scavenger with a letterhead. This computer will not discuss their methods.',
   },
   {
