@@ -938,6 +938,14 @@ check(
   'advisor prompt injects the chosen Shubin closer',
 )
 check(
+  advisorPromptText.includes(advisorPrompt.ADVISOR_TERM_INTRO),
+  'advisor prompt requires the Shubin terminal intro',
+)
+check(
+  advisorPromptText.includes('put one blank line, then the last line exactly'),
+  'advisor prompt requires a blank line before the Shubin sign-off',
+)
+check(
   advisorPrompt.pickShubinCloser(() => 0) === advisorPrompt.ADVISOR_SHUBIN_CLOSERS[0],
   'pickShubinCloser uses the first closer at random 0',
 )
