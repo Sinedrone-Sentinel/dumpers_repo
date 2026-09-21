@@ -8,6 +8,8 @@ Windows member build of **DumperApps.exe** — Go port of the Python watcher in
 | Windows (GitHub Releases) | **This module** → `DumperApps.exe` |
 | macOS / Linux / scripts | `scripts/bp-dumper-py/dumper.py` |
 
+Only one instance at a time: this exe and `dumper.py` share the Windows mutex `Local\DumpersRepo.BPDumper`.
+
 Wire protocol: [`scripts/bp-dumper-shared/PROTOCOL.md`](../bp-dumper-shared/PROTOCOL.md).
 
 ## Why Go on Windows

@@ -75,6 +75,7 @@ Leave the watcher running while you play.
 | Dependency conflict / aider / other tools | Use `.venv` or `dumper.bat` — do not install into global Python |
 | `FileNotFoundError` / missing lookup | Put **`lookup.json` or `blueprint-name-lookup.json`** next to `dumper.py` (no rename needed). Prefer the release zip. Newer scripts auto-download once if online |
 | Star Citizen not detected | Paste your LIVE folder path when asked (folder that contains `Game.log`) |
+| BP Dumper is already running | Only one copy at a time — close the other `DumperApps.exe` or `dumper.py` window |
 
 ## Developer setup
 
