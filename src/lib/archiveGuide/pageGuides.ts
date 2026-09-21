@@ -431,6 +431,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'When a new Windows build is required, download DumperApps.exe from GitHub Releases and replace the old file yourself (no auto-download)',
       'Download panel shows OpenSSF badge images, expands the latest VirusTotal gate findings in-place (engine hits + stats), and links how to verify release checksums (SHA256SUMS + cosign; builds are not Authenticode-signed)',
       'Older builds are blocked by the server — download the latest release when prompted',
+      'Only one BP Dumper runs at a time — a second **DumperApps.exe** or `dumper.py` (or one of each) exits and tells you to close the other window',
       'While watch mode runs, use Live Tracker to see active missions and remaining pool blueprints',
       'Successful imports appear under BP Dumper — Success in the notification bell',
     ],

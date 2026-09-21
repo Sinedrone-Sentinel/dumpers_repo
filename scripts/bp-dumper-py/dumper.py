@@ -138,6 +138,61 @@ def _app_dir() -> Path:
         return Path(sys.executable).resolve().parent
     return Path(__file__).resolve().parent
 
+
+# Shared with scripts/bp-dumper-go/internal/singleinstance (Windows named mutex).
+DUMPER_INSTANCE_MUTEX = r"Local\DumpersRepo.BPDumper"
+_instance_lock_handle = None
+_instance_lock_file = None
+
+
+def _acquire_windows_mutex() -> bool:
+    """True if this process owns the mutex, or the API failed (do not brick startup)."""
+    global _instance_lock_handle
+    import ctypes
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateMutexW.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_wchar_p]
+    kernel32.CreateMutexW.restype = ctypes.c_void_p
+    handle = kernel32.CreateMutexW(None, 0, DUMPER_INSTANCE_MUTEX)
+    if not handle:
+        return True
+    if ctypes.get_last_error() == 183:  # ERROR_ALREADY_EXISTS
+        return False
+    _instance_lock_handle = handle
+    return True
+
+
+def _acquire_unix_flock() -> bool:
+    """True if this process owns the user-wide flock."""
+    global _instance_lock_file
+    import fcntl
+
+    base = Path(os.environ.get("XDG_DATA_HOME") or (Path.home() / ".local" / "share"))
+    path = base / "dumper-apps" / "instance.lock"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fp = open(path, "w", encoding="utf-8")
+    try:
+        fcntl.flock(fp.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        fp.close()
+        return False
+    except OSError:
+        fp.close()
+        return True
+    _instance_lock_file = fp
+    return True
+
+
+def _acquire_single_instance() -> bool:
+    """Block a second exe, a second script, or exe+script on this OS."""
+    try:
+        if sys.platform == "win32":
+            return _acquire_windows_mutex()
+        return _acquire_unix_flock()
+    except Exception:
+        return True
+
+
 _LOOKUP_CANDIDATES = (
     "lookup.json",
     "blueprint-name-lookup.json",
@@ -2237,6 +2292,13 @@ def main():
     )
 
     args = parser.parse_args()
+
+    if not _acquire_single_instance():
+        _press_any_key_to_exit(
+            "BP Dumper is already running.\n"
+            "Close the other window (DumperApps.exe or the Python script) before starting another.",
+            code=1,
+        )
 
     # Load configuration from .env file
     env_path = _app_dir() / ".env"

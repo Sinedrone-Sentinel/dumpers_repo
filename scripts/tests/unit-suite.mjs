@@ -1393,4 +1393,16 @@ check(
   'unknown note query has no suggestions',
 )
 
+const dumperMutexName = String.raw`Local\DumpersRepo.BPDumper`
+const goMutexSrc = readFileSync(
+  path.join(root, 'scripts/bp-dumper-go/internal/singleinstance/name.go'),
+  'utf8',
+)
+const pyMutexSrc = readFileSync(path.join(root, 'scripts/bp-dumper-py/dumper.py'), 'utf8')
+const goMutex = /MutexName = `([^`]+)`/.exec(goMutexSrc)?.[1]
+const pyMutex = /DUMPER_INSTANCE_MUTEX = r"([^"]+)"/.exec(pyMutexSrc)?.[1]
+check(goMutex === dumperMutexName, 'Go single-instance mutex name')
+check(pyMutex === dumperMutexName, 'Python single-instance mutex name')
+check(goMutex === pyMutex, 'Go and Python share the same instance mutex name')
+
 console.log(`Unit tests: ${pass} passed`)

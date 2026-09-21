@@ -18,6 +18,7 @@ import (
 	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/discover"
 	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/lookup"
 	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/parse"
+	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/singleinstance"
 	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/update"
 	"github.com/Sinedrone-Sentinel/dumpers_repo/scripts/bp-dumper-go/internal/watch"
 )
@@ -297,6 +298,16 @@ func main() {
 	fullHistoryFlag := flag.Bool("full-history-import", false, "One-time full history import (all logs, no version filter)")
 	configure := flag.Bool("configure", false, "Force configuration wizard")
 	flag.Parse()
+
+	if err := singleinstance.Acquire(); err != nil {
+		fmt.Printf(
+			"%sBP Dumper is already running.%s\n"+
+				"Close the other window (DumperApps.exe or the Python script) before starting another.\n",
+			colors.Yellow, colors.Reset,
+		)
+		pressAnyKey()
+		os.Exit(1)
+	}
 
 	filePathArg := ""
 	if flag.NArg() > 0 {
