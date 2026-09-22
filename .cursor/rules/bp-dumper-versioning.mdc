@@ -22,6 +22,8 @@ the exe.
   - `scripts/bp-dumper/CHANGELOG.md`
 - Do **not** create git tags or trigger the build workflow manually.
 
+The private GUI / MSIX is **not** in that list. A real dumper code change still has to move the GUI to the same next version and ship an MSIX. See `bp-dumper-version-sync.mdc`.
+
 ## How to ship a dumper change
 
 Commit dumper changes with a Conventional Commit **scoped to `dumper`**:
