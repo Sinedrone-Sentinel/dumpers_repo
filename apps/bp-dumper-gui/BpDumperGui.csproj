@@ -14,6 +14,11 @@
     <Product>BP Dumper-GUI</Product>
     <Description>Unpackaged BP Dumper GUI. FolderPicker + shared .env. Does not auto-start.</Description>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(StorePackage)'=='true'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+  </PropertyGroup>
   <ItemGroup>
     <Using Include="System.IO" />
     <Using Include="System.Net.Http" />

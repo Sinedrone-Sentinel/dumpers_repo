@@ -20,6 +20,14 @@ dotnet publish apps/bp-dumper-gui/BpDumperGui.csproj -c Release -r win-x64 --sel
 
 Output: `apps/bp-dumper-gui/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/BPDumperGUI.exe`
 
+## Store MSIX (AppContainer, no runFullTrust)
+
+```powershell
+powershell -File apps/bp-dumper-gui/build-msix.ps1
+```
+
+Writes `Coding Projects\APP_Store Code\BP Dumper\BPDumper.msix` for Partner Center (listing 9PMR8CPSB04K). Capabilities: `internetClient` only. Does not launch the app.
+
 ## Use
 
 1. Run the exe. It stays idle.
