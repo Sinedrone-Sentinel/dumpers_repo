@@ -1,13 +1,11 @@
 using System.Windows;
-using System.Windows.Interop;
+using Microsoft.Win32;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.Storage.Pickers;
-using WinRT.Interop;
 
 namespace BpDumperGui.Services;
 
-/// <summary>FolderPicker + FutureAccessList. Never scans drives.</summary>
+/// <summary>User-picked LIVE folder only. Never scans drives.</summary>
 internal sealed class FolderAccess
 {
     public const string AccessToken = "BpDumperGui.LiveFolder";
@@ -19,20 +17,20 @@ internal sealed class FolderAccess
         _window = window;
     }
 
-    public async Task<StorageFolder?> PickLiveFolderAsync()
+    public async Task<StorageFolder?> PickLiveFolderAsync(string? startPath = null)
     {
-        var picker = new FolderPicker();
-        picker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
-        picker.FileTypeFilter.Add("*");
-        picker.CommitButtonText = "Use this folder";
+        var dlg = new OpenFolderDialog
+        {
+            Title = "Select Star Citizen LIVE folder (the folder that contains Game.log)",
+            Multiselect = false,
+        };
+        if (!string.IsNullOrWhiteSpace(startPath) && Directory.Exists(startPath))
+            dlg.InitialDirectory = startPath;
 
-        var hwnd = new WindowInteropHelper(_window).EnsureHandle();
-        InitializeWithWindow.Initialize(picker, hwnd);
-
-        var folder = await picker.PickSingleFolderAsync();
-        if (folder is null)
+        if (dlg.ShowDialog(_window) != true || string.IsNullOrWhiteSpace(dlg.FolderName))
             return null;
 
+        var folder = await StorageFolder.GetFolderFromPathAsync(dlg.FolderName);
         try
         {
             StorageApplicationPermissions.FutureAccessList.AddOrReplace(AccessToken, folder);

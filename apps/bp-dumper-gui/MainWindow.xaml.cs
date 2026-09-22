@@ -123,7 +123,17 @@ public partial class MainWindow : Window
         FilePopup.IsOpen = false;
         if (_running)
             return;
-        var folder = await _folders.PickLiveFolderAsync();
+        StorageFolder? folder;
+        try
+        {
+            folder = await _folders.PickLiveFolderAsync(_logPath);
+        }
+        catch (Exception ex)
+        {
+            AppendLog("Folder browser failed: " + ex.Message);
+            return;
+        }
+
         if (folder is null)
         {
             AppendLog("Folder pick cancelled.");
