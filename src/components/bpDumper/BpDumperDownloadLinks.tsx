@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
   BP_DUMPER_DOWNLOADS,
   BP_DUMPER_RECOMMENDED_DOWNLOAD_ID,
+  BP_DUMPER_STORE_VERSION,
   BP_DUMPER_VERSION,
 } from '../../config/bpDumper'
 import { getDumperTrustLinks } from '../../config/trustBadges'
@@ -115,14 +116,15 @@ export default function BpDumperDownloadLinks({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-slate-300">
-        Current app version:{' '}
-        <span className="text-amber-300 font-medium">v{BP_DUMPER_VERSION}</span>
-      </p>
-
       <div className="space-y-2">
         {BP_DUMPER_DOWNLOADS.map((opt) => {
           const isPrimary = opt.id === BP_DUMPER_RECOMMENDED_DOWNLOAD_ID
+          const version =
+            opt.id === 'windows-store'
+              ? BP_DUMPER_STORE_VERSION
+              : opt.id === 'windows-exe'
+                ? BP_DUMPER_VERSION
+                : null
           return (
             <a
               key={opt.id}
@@ -143,6 +145,12 @@ export default function BpDumperDownloadLinks({
                   </span>
                 )}
               </span>
+              {version ? (
+                <span className="text-xs text-slate-300">
+                  Current app version:{' '}
+                  <span className="font-medium text-amber-300">v{version}</span>
+                </span>
+              ) : null}
               <span className="text-xs text-slate-400 leading-relaxed">{opt.description}</span>
             </a>
           )
