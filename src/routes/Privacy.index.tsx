@@ -158,9 +158,10 @@ export default function PrivacyRoute() {
               If you install and run BP Dumper, the app reads Star Citizen log files on your computer
               (such as Game.log / log backups) to detect blueprint unlocks, and may send unlock-related
               events to our services / organization webhook so features like Live Mission Tracker can stay
-              in sync. The app may auto-detect your Star Citizen LIVE folder (or you can paste a path).
-              Updates are manual downloads from GitHub Releases (the app does not auto-download or
-              replace itself).
+              in sync. The Microsoft Store app asks you to choose your Star Citizen LIVE folder. The
+              unsigned Windows exe and Python scripts may auto-detect that folder (or you can paste a
+              path). Store updates come from the Microsoft Store. The exe does not auto-download or
+              replace itself — download a new build from GitHub Releases.
             </p>
           </section>
 

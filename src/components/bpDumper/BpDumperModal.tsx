@@ -29,7 +29,7 @@ function SetupHowTo() {
         <span>
           <span className="text-sm font-semibold text-white">How to set up</span>
           <span className="mt-0.5 block text-xs text-slate-500">
-            Pick one path — Windows exe or Python scripts (not both)
+            Pick one path — Microsoft Store, Windows exe, or Python scripts (not more than one at a time)
           </span>
         </span>
         <span className="shrink-0 text-slate-400" aria-hidden>
@@ -40,10 +40,36 @@ function SetupHowTo() {
       {open && (
         <div className="space-y-5 border-t border-slate-700/60 px-4 py-4">
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-amber-300">Option A — Windows exe</h4>
+            <h4 className="text-sm font-semibold text-amber-300">Option A — Microsoft Store</h4>
+            <p className="text-xs text-slate-500">Recommended on Windows. Updates come from the Store.</p>
+            <SetupStepList>
+              <li>
+                Under Downloads, open <strong className="text-slate-300">Microsoft Store (Windows)</strong>{' '}
+                and install BP Dumper.
+              </li>
+              <li>Open the app. It stays idle until you press Start.</li>
+              <li>
+                <strong className="text-slate-300">File → Path to SC</strong> — choose the LIVE folder
+                that contains Game.log. The app does not scan your drives.
+              </li>
+              <li>
+                Paste your <strong className="text-slate-300">API key</strong> from this page into the
+                header (or <strong className="text-slate-300">File → Load Settings</strong> if you
+                already have a settings file).
+              </li>
+              <li>
+                Turn on <strong className="text-slate-300">Watch mode</strong>. Use{' '}
+                <strong className="text-slate-300">Full history import</strong> if you want older logs
+                scanned once. Then press <strong className="text-slate-300">Start</strong>.
+              </li>
+              <li>Leave the window running while you play.</li>
+            </SetupStepList>
+          </div>
+
+          <div className="space-y-2 border-t border-slate-700/50 pt-5">
+            <h4 className="text-sm font-semibold text-slate-200">Option B — Windows exe</h4>
             <p className="text-xs text-slate-500">
-              Recommended on Windows. Unsigned — Defender / SmartScreen often block this file (false
-              positive).
+              Unsigned alternate. Defender / SmartScreen often block this file (false positive).
             </p>
             <SetupStepList>
               <li>
@@ -71,7 +97,7 @@ function SetupHowTo() {
           </div>
 
           <div className="space-y-2 border-t border-slate-700/50 pt-5">
-            <h4 className="text-sm font-semibold text-sky-300">Option B — Python scripts</h4>
+            <h4 className="text-sm font-semibold text-sky-300">Option C — Python scripts</h4>
             <p className="text-xs text-slate-500">
               macOS / Linux / advanced Windows. You must install Python first.
             </p>
@@ -194,7 +220,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Windows exe (auto-detect) — finds your Star Citizen install, syncs unlocks, powers Live Mission Tracker."
+      subtitle="Microsoft Store on Windows (recommended) — choose your LIVE folder, sync unlocks, power Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >
@@ -203,9 +229,9 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <h3 className="text-sm font-semibold text-white">What you get</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-slate-400">
             <li>
-              <strong className="text-slate-300">Auto-find install</strong> — searches your drives for
-              Star Citizen and picks <strong className="text-slate-300">LIVE</strong> (or you can paste a
-              path). No manual folder hunt required.
+              <strong className="text-slate-300">Your LIVE folder</strong> — Microsoft Store
+              (recommended): you choose the folder that contains Game.log. The Windows exe and Python
+              scripts can search for that folder, or you can paste a path.
             </li>
             <li>
               <strong className="text-slate-300">Blueprint sync</strong> — reads unlock lines from your
@@ -239,7 +265,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <div>
             <h3 className="text-sm font-semibold text-white">Your API key</h3>
             <p className="text-xs text-slate-500 mt-1">
-              Paste this into Dumper Apps when the desktop window asks on first run. One key per account.
+              Paste this into Dumper Apps. The Store app has an API key field; the exe and Python scripts ask on first run. One key per account.
             </p>
           </div>
 

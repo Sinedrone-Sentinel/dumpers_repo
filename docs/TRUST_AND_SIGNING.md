@@ -4,12 +4,14 @@
 
 ## Product path
 
-**Canonical Windows download:** native Go client in `scripts/bp-dumper-go/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1` (no PyInstaller, no UPX).
+**Recommended Windows download:** Microsoft Store (member Dumper Apps modal). The unsigned GitHub Releases exe is the alternate.
 
-- Auto-detects Star Citizen installs (drive search for LIVE / Game.log); members can paste a path to override. Updates are manual GitHub downloads (no self-replace).
-- Member Windows download: GitHub Releases `DumperApps.exe` only (**no** Microsoft Store option in the member UI). The exe is unsigned; Defender/SmartScreen often flag it.
+**GitHub Releases Windows exe:** native Go client in `scripts/bp-dumper-go/`, packaged as `DumperApps.exe` via `scripts/installer/build-exe.ps1` (no PyInstaller, no UPX).
+
+- The exe auto-detects Star Citizen installs (drive search for LIVE / Game.log); members can paste a path to override. Exe updates are manual GitHub downloads (no self-replace).
+- Member Windows options: Microsoft Store (recommended) and GitHub Releases `DumperApps.exe` (unsigned; Defender/SmartScreen often flag it).
 - Member Python / non-Windows: GitHub Releases `BPDumper-python-scripts.zip` (includes `lookup.json`; do not use a bare GitHub tree copy of `scripts/bp-dumper-py/`).
-- Legacy Store / Partner Center packaging (`apps/bp-dumper-store/`) is **not** offered to members — do not re-add a Store download link without an explicit maintainer request.
+- Do not commit Store package source or attach an MSIX to GitHub Releases. `apps/bp-dumper-store/` is a parked experiment, not the live Store package.
 - Python watcher in `scripts/bp-dumper-py/` remains the protocol/reference client (and for non-Windows scripting).
 
 ### Why not PyInstaller on Windows
