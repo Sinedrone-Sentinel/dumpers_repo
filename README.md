@@ -317,14 +317,14 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 |------|--------|
 | **Canonical Windows client** | [`scripts/bp-dumper-go/`](scripts/bp-dumper-go/) → native `DumperApps.exe` via [`scripts/installer/build-exe.ps1`](scripts/installer/build-exe.ps1) (not PyInstaller) |
 | **Python reference / non-Windows** | [`scripts/bp-dumper-py/`](scripts/bp-dumper-py/) |
-| **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (unsigned — Defender often flags it); **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` |
-| **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
+| **Downloads (members)** | **Windows (recommended):** Microsoft Store; **Windows alternate:** GitHub Releases `DumperApps.exe` (unsigned — Defender often flags it); **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` |
+| **Member setup** | Store: install, choose LIVE folder, paste API key, Start. Exe: run → **auto-find install** (or paste path) → paste API key |
 | **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
 | **Store listing** | Legacy / not in member UI — `apps/bp-dumper-store/` parked; do not advertise |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version` (`426` if outdated); migration **174** IP auth-fail `429` + valid-key burst alerts to super-admins (see `SUPABASE_SETUP.md`) |
-| **Updates** | Manual: download new `DumperApps.exe` from GitHub Releases when prompted (no auto-download / self-replace) |
+| **Updates** | Store app: Microsoft Store. Exe: download new `DumperApps.exe` from GitHub Releases when prompted (no auto-download / self-replace) |
 | **Min game version** | Baked into each dumper build from `src/data/game-build-version.json` after parse |
 
 **Watch mode** feeds: acquired blueprint sync, Live Mission Tracker, session status bar, and BP Dumper success notifications. `session_ping` runs every 30s while in the PU; idle/not-in-PU pauses those pings (event POSTs still fire).

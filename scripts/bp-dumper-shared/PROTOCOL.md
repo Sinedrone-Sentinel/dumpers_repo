@@ -6,7 +6,7 @@ Contract for clients that talk to `log-watcher-webhook`:
 |---|---|
 | Native Windows exe (shipped) | `scripts/bp-dumper-go/` |
 | Standalone Python (reference / non-Windows) | `scripts/bp-dumper-py/` |
-| Store (sandboxed WinUI, parked) | `apps/bp-dumper-store/` |
+| Microsoft Store app | Packaged outside this repo (not `apps/bp-dumper-store/`) |
 
 When this document changes, update the **Go Windows** and **Python** clients (see `.cursor/rules/dumper-dual-client-sync.mdc`).
 
@@ -58,7 +58,7 @@ Prefer posting **internal** blueprint names after local lookup resolution.
 | Client | How the folder is chosen |
 |---|---|
 | Go Windows / Python | Auto-detect / drive scan / path prompt (manual override OK) |
-| Store | **FolderPicker** once → persist with **FutureAccessList**; user may change folder later |
+| Microsoft Store app | User picks the LIVE folder (no drive scan); they can change it later |
 
 Both must then:
 

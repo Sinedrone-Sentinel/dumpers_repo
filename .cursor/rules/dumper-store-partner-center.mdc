@@ -1,25 +1,26 @@
 ---
-description: Do NOT offer Microsoft Store in member UI; Store packaging is legacy/parked
+description: Microsoft Store is the recommended Windows Dumper Apps download; package source stays out of this public repo
 alwaysApply: true
 ---
 
-# BP Dumper — no Microsoft Store in member UI
+# BP Dumper — Microsoft Store is the recommended Windows download
 
-**Hard rule:** Do **not** add a Microsoft Store download, Store setup path, or Store "Recommended" badge to the member-facing Dumper Apps modal / Downloads.
+Member Dumper Apps downloads:
 
-Member Windows install is **GitHub Releases `DumperApps.exe` only** (plus Python scripts zip for non-Windows / advanced).
+1. **Microsoft Store** (`windows-store` in `BP_DUMPER_DOWNLOADS`) — **Recommended** on Windows
+2. GitHub Releases `DumperApps.exe` — unsigned alternate
+3. Python scripts zip — macOS / Linux / advanced
 
 ## Do not
 
-- Re-add `windows-store` / `BP_DUMPER_STORE_*` links to `BP_DUMPER_DOWNLOADS`
-- Tell members to install from Partner Center / apps.microsoft.com
-- Upload or copy `build-msix.ps1` (full-trust) packages for Store as if they were the member path
-- "Fix" Partner Center submissions unless the maintainer explicitly asks
+- Remove the Store download or its Recommended badge
+- Point members at Partner Center / the upload dashboard
+- Commit Store / MSIX packaging, Partner Center identity, or Store upload scripts to this public repo
+- Attach a Store package to GitHub Releases
+- Treat `apps/bp-dumper-store/` as the live Store app (that WinUI tree is parked)
 
-## Legacy code (parked)
+Store packaging stays in the private store repository. Do not copy it into this public repo.
 
-`apps/bp-dumper-store/` may remain in the repo for historical Partner Center work. It is **not** a member download route. Do not rebuild or promote it unless explicitly asked.
+## Portable exe note
 
-## Portable exe note (allowed)
-
-The unsigned `DumperApps.exe` description may warn that Windows Defender / SmartScreen often block it (false positive). That is fine — do not respond by bringing Store back.
+The unsigned `DumperApps.exe` description may warn that Windows Defender / SmartScreen often block it (false positive). That card stays the alternate, not the recommended Windows path.

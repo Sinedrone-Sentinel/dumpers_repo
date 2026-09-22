@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { BP_DUMPER_DOWNLOADS, BP_DUMPER_VERSION } from '../../config/bpDumper'
+import {
+  BP_DUMPER_DOWNLOADS,
+  BP_DUMPER_RECOMMENDED_DOWNLOAD_ID,
+  BP_DUMPER_VERSION,
+} from '../../config/bpDumper'
 import { getDumperTrustLinks } from '../../config/trustBadges'
 import { fetchBpDumperRelease, type BpDumperReleaseInfo } from '../../lib/bpDumperRelease'
 
@@ -118,7 +122,7 @@ export default function BpDumperDownloadLinks({
 
       <div className="space-y-2">
         {BP_DUMPER_DOWNLOADS.map((opt) => {
-          const isPrimary = opt.id === 'windows-exe'
+          const isPrimary = opt.id === BP_DUMPER_RECOMMENDED_DOWNLOAD_ID
           return (
             <a
               key={opt.id}
@@ -148,10 +152,12 @@ export default function BpDumperDownloadLinks({
       {afterDownloads}
 
       <p className="text-xs text-slate-500 leading-relaxed">
+        The Microsoft Store app (recommended on Windows) asks you to choose the LIVE folder that
+        contains Game.log. It does not scan your drives, and updates install from the Store. The
         Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your Star
-        Citizen install (searches for LIVE / Game.log). You can also paste a path if you prefer. When a
-        new Windows build is required, download <strong className="text-slate-400">DumperApps.exe</strong>{' '}
-        from GitHub Releases and replace the old file yourself. New Windows builds only go live after the
+        Citizen install (or you can paste a path). When a new exe build is required, download{' '}
+        <strong className="text-slate-400">DumperApps.exe</strong> from GitHub Releases and replace the
+        old file yourself. New exe builds only go live after the
         VirusTotal CI gate: <strong className="text-slate-400">named malware-family</strong> hits block
         publish; common <strong className="text-slate-400">generic/ML heuristic</strong> labels (e.g.
         Wacatac) are ignored — you may still see those on the VirusTotal report.

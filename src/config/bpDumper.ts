@@ -33,6 +33,14 @@ export function getDumperAppsInstallerFilename(version: string = BP_DUMPER_VERSI
 
 export const DUMPER_APPS_DISPLAY_NAME = 'Dumper Apps' as const
 
+/** Microsoft Store product BP Dumper. Recommended Windows install. */
+export const BP_DUMPER_STORE_PRODUCT_ID = '9PMR8CPSB04K' as const
+
+export const BP_DUMPER_STORE_URL =
+  `https://apps.microsoft.com/detail/${BP_DUMPER_STORE_PRODUCT_ID}` as const
+
+export const BP_DUMPER_RECOMMENDED_DOWNLOAD_ID = 'windows-store' as const
+
 export const BP_DUMPER_CALLOUT_DISMISS_KEY = 'dr_bp_dumper_callout_dismissed_v1' as const
 
 export type BpDumperDownloadOption = {
@@ -44,16 +52,25 @@ export type BpDumperDownloadOption = {
 }
 
 /**
- * Member-facing install options — no Microsoft Store link in the UI.
- * Portable exe is unsigned; Defender / SmartScreen often flag it.
+ * Member-facing install options.
+ * Microsoft Store is the recommended Windows install. The portable exe is an
+ * unsigned alternate; Defender / SmartScreen often flag it.
  */
 export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
+  {
+    id: 'windows-store',
+    kind: 'external',
+    label: 'Microsoft Store (Windows)',
+    description:
+      'Recommended on Windows. Install BP Dumper from the Microsoft Store, choose your LIVE folder, then paste your API key. Updates come from the Store.',
+    url: BP_DUMPER_STORE_URL,
+  },
   {
     id: 'windows-exe',
     kind: 'external',
     label: 'Windows exe (DumperApps.exe)',
     description:
-      'Native Windows build — auto-detects Star Citizen / LIVE (or paste a path), then asks for your API key. Unsigned: Windows Defender / SmartScreen often block or quarantine this exe (false positive).',
+      'Alternate Windows build — auto-detects Star Citizen / LIVE (or paste a path), then asks for your API key. Unsigned: Windows Defender / SmartScreen often block or quarantine this exe (false positive).',
     url: `${GITHUB_LATEST_DOWNLOAD_BASE}/${DUMPER_APPS_EXE_FILENAME}`,
   },
   {

@@ -1,5 +1,5 @@
 ---
-description: BP Dumper Windows exe is Go; Python remains for scripts / non-Windows; Store WinUI parked
+description: BP Dumper Windows exe is Go; Python remains for scripts / non-Windows; Store package is not in this repo
 globs: scripts/bp-dumper-py/**/*,scripts/bp-dumper-go/**/*,apps/bp-dumper-store/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
 alwaysApply: false
 ---
@@ -14,9 +14,10 @@ and as the behavioral source of truth when changing parse/webhook rules).
 
 | Client | Status | FS discovery |
 |---|---|---|
-| Native Go Windows exe | **Canonical Windows download** | Drive auto-scan / path prompt OK |
+| Microsoft Store | **Recommended member Windows install** | User picks the LIVE folder. Package source is not in this repo |
+| Native Go Windows exe | GitHub Releases alternate (unsigned) | Drive auto-scan / path prompt OK |
 | Standalone Python | Scripts / non-Windows; keep in sync with Go for protocol | Drive auto-scan / path prompt OK |
-| Store WinUI (`apps/bp-dumper-store/`) | **Parked** — listing may stay live; do not invest in feature parity | FolderPicker only (legacy sandbox experiment) |
+| Store WinUI (`apps/bp-dumper-store/`) | **Parked** — not the live Store package | Do not invest in that tree |
 
 Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 
