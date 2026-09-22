@@ -21,6 +21,8 @@ Member Dumper Apps downloads:
 
 Store packaging stays in the private store repository. Do not copy it into this public repo.
 
+When a new Store package is published, set `BP_DUMPER_STORE_VERSION` in `src/config/bpDumper.ts` to that package version. Do not reuse `BP_DUMPER_VERSION` for the Store card — that number is the GitHub exe.
+
 ## Portable exe note
 
 The unsigned `DumperApps.exe` description may warn that Windows Defender / SmartScreen often block it (false positive). That card stays the alternate, not the recommended Windows path.
