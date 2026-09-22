@@ -41,6 +41,15 @@ public partial class MainWindow : Window
         }
     }
 
+    private void FileButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (FileButton.ContextMenu is null)
+            return;
+        FileButton.ContextMenu.PlacementTarget = FileButton;
+        FileButton.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+        FileButton.ContextMenu.IsOpen = true;
+    }
+
     private async void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         await StopRunAsync();

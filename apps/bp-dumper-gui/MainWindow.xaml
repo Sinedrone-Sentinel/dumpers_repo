@@ -4,17 +4,23 @@
         Title="BP Dumper-GUI"
         Height="640" Width="980"
         MinHeight="480" MinWidth="820"
-        Background="{StaticResource BgBrush}"
-        Foreground="{StaticResource FgBrush}">
+        Background="{StaticResource BgBrush}">
   <DockPanel>
-    <Menu DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" Foreground="{StaticResource FgBrush}">
-      <MenuItem Header="_File">
-        <MenuItem x:Name="LoadMenu" Header="_Load" Click="LoadMenu_Click"/>
-        <MenuItem x:Name="SaveMenu" Header="_Save" Click="SaveMenu_Click"/>
-        <Separator/>
-        <MenuItem x:Name="PathMenu" Header="_Path" Click="PathMenu_Click"/>
-      </MenuItem>
-    </Menu>
+    <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" Padding="4,2">
+      <Button x:Name="FileButton" Content="File" Width="52" Height="26" HorizontalAlignment="Left"
+              Background="Transparent" Foreground="{StaticResource FgBrush}" BorderThickness="0"
+              Click="FileButton_Click">
+        <Button.ContextMenu>
+          <ContextMenu x:Name="FileMenu" MinWidth="180"
+                       Background="{StaticResource PanelBrush}" Foreground="{StaticResource FgBrush}">
+            <MenuItem x:Name="LoadMenu" Header="Load" Click="LoadMenu_Click"/>
+            <MenuItem x:Name="SaveMenu" Header="Save" Click="SaveMenu_Click"/>
+            <Separator/>
+            <MenuItem x:Name="PathMenu" Header="Path" Click="PathMenu_Click"/>
+          </ContextMenu>
+        </Button.ContextMenu>
+      </Button>
+    </Border>
 
     <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushKey}" BorderThickness="0,0,0,1" Padding="12,8">
       <Grid>
