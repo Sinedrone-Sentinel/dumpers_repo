@@ -39,6 +39,12 @@ export const BP_DUMPER_STORE_PRODUCT_ID = '9PMR8CPSB04K' as const
 export const BP_DUMPER_STORE_URL =
   `https://apps.microsoft.com/detail/${BP_DUMPER_STORE_PRODUCT_ID}` as const
 
+/**
+ * Version shown on the Store download card. Independent of BP_DUMPER_VERSION
+ * (GitHub exe / Python). Bump this when a new Store package is published.
+ */
+export const BP_DUMPER_STORE_VERSION = '1.21.0' as const
+
 export const BP_DUMPER_RECOMMENDED_DOWNLOAD_ID = 'windows-store' as const
 
 export const BP_DUMPER_CALLOUT_DISMISS_KEY = 'dr_bp_dumper_callout_dismissed_v1' as const

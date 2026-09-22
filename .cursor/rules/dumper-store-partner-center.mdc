@@ -22,7 +22,7 @@ Member Dumper Apps downloads:
 
 Store packaging stays in the private store repository. Do not copy it into this public repo.
 
-A real BP Dumper code change bumps that GUI and ships an MSIX at the same version as the scripts release (`bp-dumper-version-sync.mdc`).
+A real BP Dumper code change bumps the private GUI, ships an MSIX, and sets `BP_DUMPER_STORE_VERSION` in `src/config/bpDumper.ts` to that same version (`bp-dumper-version-sync.mdc`). Do not reuse `BP_DUMPER_VERSION` for the Store card — that number is the GitHub exe.
 
 ## Portable exe note
 
