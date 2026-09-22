@@ -1,0 +1,57 @@
+---
+description: BP Dumper code changes bump the scripts release and the private GUI MSIX to the same version
+alwaysApply: true
+---
+
+# BP Dumper — scripts version and GUI version move together
+
+**Hard rule:** An actual BP Dumper code change updates **all** of these to the **same** next version before the work is finished:
+
+1. **Scripts release** — Go exe + Python scripts (semantic-release).
+2. **GUI** — private Store app. It needs a new MSIX. Windows updates that package; it does not follow GitHub.
+
+Docs, site copy, ticker, and rule edits do **not** bump versions. Do not use a `dumper` commit scope for those.
+
+## What counts as a code change
+
+Log parse, webhook, `.env` keys, watch / import behavior, or path handling in:
+
+- `scripts/bp-dumper-go/`
+- `scripts/bp-dumper-py/`
+- the private GUI (`gui/` in the store repo)
+
+Port the behavior into **Go, Python, and the private GUI**. The parked `apps/bp-dumper-store/` WinUI tree is not that GUI.
+
+## Versions
+
+Read the current scripts version from `src/data/bp-dumper-version.json`.
+
+| Commit | Next version |
+|---|---|
+| `fix(dumper):` / `perf(dumper):` / `refactor(dumper):` | patch |
+| `feat(dumper):` | minor |
+| `feat(dumper)!:` or `BREAKING CHANGE:` | major |
+
+Do **not** hand-edit semantic-release files (`version.json`, `version.txt`, `_version.py`, `src/data/bp-dumper-version.json`, changelog). The `dumper`-scoped commit is the scripts bump. See `bp-dumper-versioning.mdc`.
+
+Set the **same** `X.Y.Z` on the GUI:
+
+- Private `packaging/Package.appxmanifest` → `Version="X.Y.Z.0"`
+- Private `version/bp-dumper-version.json`
+- Public `BP_DUMPER_STORE_VERSION` in `src/config/bpDumper.ts` — this is the number on the Microsoft Store card in Dumper Apps
+
+## GUI code stays private. The version number is public.
+
+**Never** commit the GUI source, manifest, pack script, or MSIX into this public repo.
+
+**Always** keep `BP_DUMPER_STORE_VERSION` in this public repo so Dumper Apps can show the Store version next to the exe version.
+
+Private repo (code and MSIX only):
+
+`Coding Projects/APP_Store Code/BP Dumper` — GitHub `bp-dumper-store`
+
+Build the MSIX, commit and push that private repo, and give the user the `.msix` path for Partner Center. Do not launch the app. Do not attach the MSIX to this public repo.
+
+```powershell
+powershell -File packaging\build-msix.ps1
+```

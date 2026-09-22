@@ -15,11 +15,14 @@ Member Dumper Apps downloads:
 
 - Remove the Store download or its Recommended badge
 - Point members at Partner Center / the upload dashboard
-- Commit Store / MSIX packaging, Partner Center identity, or Store upload scripts to this public repo
+- Commit the GUI source, MSIX manifest, pack script, or Store package to this public repo
+- Remove `BP_DUMPER_STORE_VERSION` from Dumper Apps — members need that Store version number on the download card
 - Attach a Store package to GitHub Releases
 - Treat `apps/bp-dumper-store/` as the live Store app (that WinUI tree is parked)
 
 Store packaging stays in the private store repository. Do not copy it into this public repo.
+
+A real BP Dumper code change bumps that GUI and ships an MSIX at the same version as the scripts release (`bp-dumper-version-sync.mdc`).
 
 ## Portable exe note
 
