@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>BpDumperGui</RootNamespace>
+    <AssemblyName>BPDumperGUI</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Product>BP Dumper-GUI</Product>
+    <Description>Unpackaged BP Dumper GUI. FolderPicker + shared .env. Does not auto-start.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.IO" />
+    <Using Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\src\data\bp-dumper-version.json" Link="Data\bp-dumper-version.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\src\data\game-build-version.json" Link="Data\game-build-version.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

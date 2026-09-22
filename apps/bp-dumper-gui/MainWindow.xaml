@@ -1,0 +1,49 @@
+<Window x:Class="BpDumperGui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="BP Dumper-GUI"
+        Height="640" Width="980"
+        MinHeight="480" MinWidth="820"
+        Background="{StaticResource BgBrush}"
+        Foreground="{StaticResource FgBrush}">
+  <DockPanel>
+    <Menu DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" Foreground="{StaticResource FgBrush}">
+      <MenuItem Header="_File">
+        <MenuItem x:Name="LoadMenu" Header="_Load" Click="LoadMenu_Click"/>
+        <MenuItem x:Name="SaveMenu" Header="_Save" Click="SaveMenu_Click"/>
+        <Separator/>
+        <MenuItem x:Name="PathMenu" Header="_Path" Click="PathMenu_Click"/>
+      </MenuItem>
+    </Menu>
+
+    <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushKey}" BorderThickness="0,0,0,1" Padding="12,8">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <CheckBox x:Name="WatchCheck" Content="Watch mode" Margin="0,0,16,0" Foreground="{StaticResource FgBrush}" VerticalAlignment="Center" IsChecked="True"/>
+          <CheckBox x:Name="ImportRecentCheck" Content="Import recent backups" Margin="0,0,16,0" Foreground="{StaticResource FgBrush}" VerticalAlignment="Center"/>
+          <CheckBox x:Name="FullHistoryCheck" Content="Full history import" Margin="0,0,16,0" Foreground="{StaticResource FgBrush}" VerticalAlignment="Center"/>
+          <TextBlock Text="API key" VerticalAlignment="Center" Margin="8,0,8,0" Foreground="{StaticResource MutedBrush}"/>
+          <TextBox x:Name="ApiKeyBox" Width="280" Height="26" VerticalContentAlignment="Center"
+                   Background="#0B1220" Foreground="{StaticResource FgBrush}" BorderBrush="{StaticResource BorderBrushKey}"/>
+        </StackPanel>
+        <Button x:Name="StartStopButton" Grid.Column="1" Content="Start" Width="96" Height="30"
+                Click="StartStopButton_Click" Background="{StaticResource AccentBrush}" Foreground="White" FontWeight="SemiBold"/>
+      </Grid>
+    </Border>
+
+    <Border DockPanel.Dock="Top" Padding="12,6,12,0">
+      <TextBlock x:Name="PathLabel" Text="LIVE path: (none — File → Path)" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}"/>
+    </Border>
+
+    <Border Margin="12" Background="#0B1220" BorderBrush="{StaticResource BorderBrushKey}" BorderThickness="1">
+      <TextBox x:Name="OutputBox" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
+               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+               FontFamily="Consolas" FontSize="12"
+               Background="Transparent" Foreground="{StaticResource FgBrush}" BorderThickness="0" Padding="8"/>
+    </Border>
+  </DockPanel>
+</Window>
