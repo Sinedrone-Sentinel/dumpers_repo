@@ -43,11 +43,7 @@ public partial class MainWindow : Window
 
     private void FileButton_Click(object sender, RoutedEventArgs e)
     {
-        if (FileButton.ContextMenu is null)
-            return;
-        FileButton.ContextMenu.PlacementTarget = FileButton;
-        FileButton.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-        FileButton.ContextMenu.IsOpen = true;
+        FilePopup.IsOpen = true;
     }
 
     private async void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -91,6 +87,7 @@ public partial class MainWindow : Window
 
     private async void LoadMenu_Click(object sender, RoutedEventArgs e)
     {
+        FilePopup.IsOpen = false;
         if (_running)
             return;
         var dlg = new OpenFileDialog
@@ -109,6 +106,7 @@ public partial class MainWindow : Window
 
     private void SaveMenu_Click(object sender, RoutedEventArgs e)
     {
+        FilePopup.IsOpen = false;
         try
         {
             EnvFile.Save(_envPath, ReadUi());
@@ -122,6 +120,7 @@ public partial class MainWindow : Window
 
     private async void PathMenu_Click(object sender, RoutedEventArgs e)
     {
+        FilePopup.IsOpen = false;
         if (_running)
             return;
         var folder = await _folders.PickLiveFolderAsync();

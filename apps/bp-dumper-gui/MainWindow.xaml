@@ -7,19 +7,28 @@
         Background="{StaticResource BgBrush}">
   <DockPanel>
     <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" Padding="4,2">
-      <Button x:Name="FileButton" Content="File" Width="52" Height="26" HorizontalAlignment="Left"
-              Background="Transparent" Foreground="{StaticResource FgBrush}" BorderThickness="0"
-              Click="FileButton_Click">
-        <Button.ContextMenu>
-          <ContextMenu x:Name="FileMenu" MinWidth="180"
-                       Background="{StaticResource PanelBrush}" Foreground="{StaticResource FgBrush}">
-            <MenuItem x:Name="LoadMenu" Header="Load" Click="LoadMenu_Click"/>
-            <MenuItem x:Name="SaveMenu" Header="Save" Click="SaveMenu_Click"/>
-            <Separator/>
-            <MenuItem x:Name="PathMenu" Header="Path" Click="PathMenu_Click"/>
-          </ContextMenu>
-        </Button.ContextMenu>
-      </Button>
+      <Grid HorizontalAlignment="Left">
+        <Button x:Name="FileButton" Content="File" Width="52" Height="26"
+                Background="Transparent" Foreground="#E2E8F0" BorderThickness="0"
+                Click="FileButton_Click"/>
+        <Popup x:Name="FilePopup" PlacementTarget="{Binding ElementName=FileButton}"
+               Placement="Bottom" StaysOpen="False" AllowsTransparency="True">
+          <Border Background="#F8FAFC" BorderBrush="#64748B" BorderThickness="1" MinWidth="200" Padding="2">
+            <StackPanel>
+              <Button x:Name="LoadMenu" Content="Load" Click="LoadMenu_Click"
+                      HorizontalContentAlignment="Left" Padding="14,8"
+                      Background="#F8FAFC" Foreground="#0F172A" BorderThickness="0" FontSize="14"/>
+              <Button x:Name="SaveMenu" Content="Save" Click="SaveMenu_Click"
+                      HorizontalContentAlignment="Left" Padding="14,8"
+                      Background="#F8FAFC" Foreground="#0F172A" BorderThickness="0" FontSize="14"/>
+              <Separator Margin="8,2" Background="#94A3B8"/>
+              <Button x:Name="PathMenu" Content="Path" Click="PathMenu_Click"
+                      HorizontalContentAlignment="Left" Padding="14,8"
+                      Background="#F8FAFC" Foreground="#0F172A" BorderThickness="0" FontSize="14"/>
+            </StackPanel>
+          </Border>
+        </Popup>
+      </Grid>
     </Border>
 
     <Border DockPanel.Dock="Top" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushKey}" BorderThickness="0,0,0,1" Padding="12,8">
