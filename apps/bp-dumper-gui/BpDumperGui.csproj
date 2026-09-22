@@ -10,6 +10,7 @@
     <RootNamespace>BpDumperGui</RootNamespace>
     <AssemblyName>BPDumperGUI</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\scripts\installer\dumper-apps.ico</ApplicationIcon>
     <Product>BP Dumper-GUI</Product>
     <Description>Unpackaged BP Dumper GUI. FolderPicker + shared .env. Does not auto-start.</Description>
   </PropertyGroup>
@@ -18,6 +19,7 @@
     <Using Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="..\..\scripts\installer\dumper-apps.ico" Link="dumper-apps.ico" />
     <Content Include="..\..\src\data\bp-dumper-version.json" Link="Data\bp-dumper-version.json" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="..\..\src\data\game-build-version.json" Link="Data\game-build-version.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

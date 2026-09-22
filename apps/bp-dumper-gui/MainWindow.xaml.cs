@@ -27,7 +27,7 @@ public partial class MainWindow : Window
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         AppendLog($"BP Dumper-GUI {DumperVersion.Current} — idle (does not start watching on launch).");
-        AppendLog("File → Load an existing .env, or fill the key / options and File → Save.");
+        AppendLog("File → Load Settings for an existing .env, or fill the key / options and File → Save Settings.");
         if (File.Exists(_envPath))
         {
             ApplySettings(EnvFile.Load(_envPath));
@@ -36,7 +36,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            PathLabel.Text = "LIVE path: (none — File → Path)";
+            PathLabel.Text = "LIVE path: (none — File → Path to SC)";
             AppendLog("No .env beside the exe yet.");
         }
     }
@@ -145,11 +145,11 @@ public partial class MainWindow : Window
         }
         else if (!string.IsNullOrWhiteSpace(_logPath))
         {
-            PathLabel.Text = "LIVE path: " + _logPath + " (File → Path to grant access)";
+            PathLabel.Text = "LIVE path: " + _logPath + " (File → Path to SC to grant access)";
         }
         else
         {
-            PathLabel.Text = "LIVE path: (none — File → Path)";
+            PathLabel.Text = "LIVE path: (none — File → Path to SC)";
         }
     }
 
@@ -177,7 +177,7 @@ public partial class MainWindow : Window
         var folder = await _folders.ResolveFolderAsync(_logPath);
         if (folder is null)
         {
-            AppendLog("Choose your LIVE folder with File → Path before starting.");
+            AppendLog("Choose your LIVE folder with File → Path to SC before starting.");
             return;
         }
 
