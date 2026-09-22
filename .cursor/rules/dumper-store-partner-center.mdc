@@ -13,12 +13,11 @@ Member Windows install is **GitHub Releases `DumperApps.exe` only** (plus Python
 
 - Re-add `windows-store` / `BP_DUMPER_STORE_*` links to `BP_DUMPER_DOWNLOADS`
 - Tell members to install from Partner Center / apps.microsoft.com
-- Upload or copy `build-msix.ps1` (full-trust) packages for Store as if they were the member path
+- Commit Store / MSIX packaging, Partner Center identity, or Store upload scripts to this public repo
+- Attach a Store package to GitHub Releases
 - "Fix" Partner Center submissions unless the maintainer explicitly asks
 
-## Legacy code (parked)
-
-`apps/bp-dumper-store/` may remain in the repo for historical Partner Center work. It is **not** a member download route. Do not rebuild or promote it unless explicitly asked.
+Store packaging stays **local only** (outside this repo). Do not rebuild or promote a Store client from GitHub.
 
 ## Portable exe note (allowed)
 

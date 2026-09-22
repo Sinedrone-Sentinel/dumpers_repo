@@ -320,7 +320,6 @@ Companion desktop app for blueprint farming — watches Star Citizen `Game.log` 
 | **Downloads (members)** | **Windows:** GitHub Releases `DumperApps.exe` (unsigned — Defender often flags it); **macOS/Linux/scripts:** `BPDumper-python-scripts.zip` |
 | **Member setup** | Run exe → **auto-find install** (or paste path) → paste API key |
 | **Trust / release integrity** | [`docs/TRUST_AND_SIGNING.md`](docs/TRUST_AND_SIGNING.md) — Scorecard + VirusTotal publish gate + SHA256SUMS/cosign (Authenticode not used) |
-| **Store listing** | Legacy / not in member UI — `apps/bp-dumper-store/` parked; do not advertise |
 | **Releases** | [`scripts/bp-dumper/README.md`](scripts/bp-dumper/README.md) — semantic-release on `feat(dumper)` / `fix(dumper)` commits |
 | **API key** | Per-user key in the BP Dumper modal (Settings / Mission Tracker); sent as `Authorization: Bearer dr_…` |
 | **Webhook** | `log-watcher-webhook` — requires `X-Dumper-Version` (`426` if outdated); migration **174** IP auth-fail `429` + valid-key burst alerts to super-admins (see `SUPABASE_SETUP.md`) |

@@ -1,16 +1,15 @@
-# BP Dumper-GUI (Phase 1 — unpackaged exe)
+# BP Dumper-GUI
 
 Windows desktop GUI for BP Dumper. **Does not start watching on launch.**
 
 Same `.env` keys as `DumperApps.exe` and `dumper.py`. Drop `BPDumperGUI.exe` next to an existing `.env` or use **File → Load Settings**.
 
-This is **not** the member GitHub download and **not** a Store package. Member Windows download stays `DumperApps.exe`.
+This is **not** the member GitHub download. Member Windows download stays `DumperApps.exe`.
 
 ## Rights model
 
 - You pick the Star Citizen LIVE folder (**File → Path to SC**). No drive scan.
 - API key is typed in the header.
-- Store / MSIX (Phase 2) stays AppContainer + `internetClient` + FolderPicker + FutureAccessList. Do not add `runFullTrust`.
 
 ## Build
 
@@ -19,14 +18,6 @@ dotnet publish apps/bp-dumper-gui/BpDumperGui.csproj -c Release -r win-x64 --sel
 ```
 
 Output: `apps/bp-dumper-gui/bin/Release/net8.0-windows10.0.19041.0/win-x64/publish/BPDumperGUI.exe`
-
-## Store MSIX (AppContainer, no runFullTrust)
-
-```powershell
-powershell -File apps/bp-dumper-gui/build-msix.ps1
-```
-
-Writes `Coding Projects\APP_Store Code\BP Dumper\BPDumper.msix` for Partner Center (listing 9PMR8CPSB04K). Capabilities: `internetClient` only. Does not launch the app.
 
 ## Use
 

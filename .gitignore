@@ -7,14 +7,9 @@ apps/bp-dumper-store/**/obj/
 apps/bp-dumper-store/**/AppPackages/
 apps/bp-dumper-store/**/BundleArtifacts/
 
-# BP Dumper-GUI (unpackaged WPF + Store MSIX outputs)
+# BP Dumper-GUI (unpackaged WPF build outputs)
 apps/bp-dumper-gui/**/bin/
 apps/bp-dumper-gui/**/obj/
-apps/bp-dumper-gui/**/AppPackages/
-apps/bp-dumper-gui/**/BundleArtifacts/
-apps/bp-dumper-gui/**/store-publish/
-apps/bp-dumper-gui/Package/layout/
-apps/bp-dumper-gui/Package/Assets/
 
 # Build output
 dist/

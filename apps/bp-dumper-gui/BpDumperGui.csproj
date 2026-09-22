@@ -12,12 +12,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>..\..\scripts\installer\dumper-apps.ico</ApplicationIcon>
     <Product>BP Dumper-GUI</Product>
-    <Description>Unpackaged BP Dumper GUI. FolderPicker + shared .env. Does not auto-start.</Description>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(StorePackage)'=='true'">
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SelfContained>true</SelfContained>
-    <PublishSingleFile>false</PublishSingleFile>
+    <Description>Unpackaged BP Dumper GUI. Folder picker + shared .env. Does not auto-start.</Description>
   </PropertyGroup>
   <ItemGroup>
     <Using Include="System.IO" />

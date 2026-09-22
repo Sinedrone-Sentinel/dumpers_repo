@@ -1,6 +1,6 @@
 ---
-description: BP Dumper Windows exe is Go; Python remains for scripts / non-Windows; GUI is Phase 1 unpackaged; Store WinUI parked
-globs: scripts/bp-dumper-py/**/*,scripts/bp-dumper-go/**/*,apps/bp-dumper-store/**/*,apps/bp-dumper-gui/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
+description: BP Dumper Windows exe is Go; Python remains for scripts / non-Windows; GUI is unpackaged
+globs: scripts/bp-dumper-py/**/*,scripts/bp-dumper-go/**/*,apps/bp-dumper-gui/**/*,scripts/bp-dumper-shared/**/*,scripts/installer/**
 alwaysApply: false
 ---
 
@@ -16,8 +16,7 @@ and as the behavioral source of truth when changing parse/webhook rules).
 |---|---|---|
 | Native Go Windows exe | **Canonical Windows download** | Drive auto-scan / path prompt OK |
 | Standalone Python | Scripts / non-Windows; keep in sync with Go for protocol | Drive auto-scan / path prompt OK |
-| GUI (`apps/bp-dumper-gui/`) | **Phase 1 unpackaged exe** — not a member download yet | FolderPicker only (no drive scan) |
-| Store WinUI (`apps/bp-dumper-store/`) | **Parked** — does not launch; do not invest in that tree | FolderPicker only (legacy sandbox experiment) |
+| GUI (`apps/bp-dumper-gui/`) | **Unpackaged exe** — not a member download yet | Folder picker only (no drive scan) |
 
 Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 
@@ -26,8 +25,7 @@ Shared wire notes (for webhook / Edge): `scripts/bp-dumper-shared/PROTOCOL.md`.
 - Member-facing Windows behavior must work in **`scripts/bp-dumper-go/`**.
 - Prefer updating **both** Go and Python when changing log regexes, webhook event
   shapes, wizard keys, update prompts, or path discovery.
-- Do **not** require Store WinUI or GUI updates for new member features.
-- GUI Phase 2 Store packaging is UWP AppContainer + `internetClient` + FolderPicker (no `runFullTrust`).
+- Do **not** require GUI updates for new member features.
 - Keep `feat(dumper)` / `fix(dumper)` Conventional Commits for semantic-release.
 - Release path triggers on dumper paths (see `release-dumper.yml`); include
   `scripts/bp-dumper-go/**` when shipping Windows binary changes.

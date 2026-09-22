@@ -6,8 +6,7 @@ Contract for clients that talk to `log-watcher-webhook`:
 |---|---|
 | Native Windows exe (shipped) | `scripts/bp-dumper-go/` |
 | Standalone Python (reference / non-Windows) | `scripts/bp-dumper-py/` |
-| GUI (unpackaged Phase 1) | `apps/bp-dumper-gui/` |
-| Store (sandboxed WinUI, parked) | `apps/bp-dumper-store/` |
+| GUI (unpackaged) | `apps/bp-dumper-gui/` |
 
 When this document changes, update the **Go Windows** and **Python** clients (see `.cursor/rules/dumper-dual-client-sync.mdc`).
 
@@ -59,13 +58,12 @@ Prefer posting **internal** blueprint names after local lookup resolution.
 | Client | How the folder is chosen |
 |---|---|
 | Go Windows / Python | Auto-detect / drive scan / path prompt (manual override OK) |
-| GUI (`apps/bp-dumper-gui/`) | **FolderPicker** (File → Path); persist path in the shared `.env`; FutureAccessList when available |
-| Store | **FolderPicker** once → persist with **FutureAccessList**; user may change folder later |
+| GUI (`apps/bp-dumper-gui/`) | **Folder picker** (File → Path); persist path in the shared `.env` |
 
 Both must then:
 
 1. Watch `Game.log` under that folder (tail / rotate).
-2. Optionally run one-time full-history import of `*.log` files **under the granted tree only** (Store) or discovered log dirs (Python).
+2. Optionally run one-time full-history import of `*.log` files under the chosen tree or discovered log dirs (Python).
 3. Never require CIG server inventory access.
 
 ## Fixtures
