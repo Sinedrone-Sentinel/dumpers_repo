@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import gameBlueprints from '../data/game-blueprints.json'
 import { isWholeUnitResource } from '../config/resourceTypes'
 import {
   craftMaterialLabel,
@@ -8,7 +7,7 @@ import {
   type BlueprintWithSlots,
 } from './blueprintResources'
 import { hasEnough, buildOwnedStockIndex, type CraftStockCardLite, type OwnedStockIndex } from './craftFromStock'
-import { calculateBlueprintDfpWithParts, calculateMaterialDfpLine, type BlueprintDfpInput } from './dfp'
+import { pricingForResourceLine } from './orderPricing'
 import { formatQuantityForResource, fromMilliScu, toMilliScu } from './resourceQuantity'
 import { supabase } from './supabase'
 
@@ -51,11 +50,6 @@ export interface Wishlist {
 export interface WishlistAddResult {
   wishlistId: string
   status: 'added' | 'stacked' | 'full' | 'missing'
-}
-
-const blueprintByKey = new Map<string, BlueprintDfpInput>()
-for (const bp of gameBlueprints.blueprints as BlueprintDfpInput[]) {
-  if (bp.internalName) blueprintByKey.set(bp.internalName, bp)
 }
 
 function oneCraftAmount(
@@ -270,23 +264,31 @@ export function useBpWishlists(userId: string | undefined) {
   return { lists, loading, error, reload, setError }
 }
 
-function slotQualityRecord(item: WishlistItem): Record<number, number> {
-  const out: Record<number, number> = {}
-  for (const [key, value] of Object.entries(item.slot_qualities)) {
-    const idx = Number(key)
-    if (Number.isFinite(idx)) out[idx] = value
-  }
-  return out
+function scaledMaterialAmount(material: WishlistMaterial, quantity: number): number {
+  if (isWholeUnitResource(material.resourceKey)) return Math.trunc(material.scu) * quantity
+  return fromMilliScu(toMilliScu(material.scu) * quantity)
 }
 
+/** Buy-price of one listed resource at its saved quality and shown amount. */
+export function wishlistResourceBuyDfp(
+  resourceKey: string,
+  label: string,
+  quality: number,
+  amount: number
+): number {
+  if (!(amount > 0)) return 0
+  return pricingForResourceLine(resourceKey, label, quality, amount).lineDfpAuec
+}
+
+/** Sum of resource buy-prices for a recipe. Omits crafted-item premiums. */
 export function wishlistItemDfp(item: WishlistItem): number {
-  const blueprint = blueprintByKey.get(item.blueprint_key)
-  if (blueprint) {
-    return calculateBlueprintDfpWithParts(blueprint, slotQualityRecord(item), item.quantity).total
-  }
   return item.materials.reduce((sum, material) => {
-    const line = calculateMaterialDfpLine(material.label, material.quality, material.scu * item.quantity)
-    return sum + line.lineTotal
+    return sum + wishlistResourceBuyDfp(
+      material.resourceKey,
+      material.label,
+      material.quality,
+      scaledMaterialAmount(material, item.quantity)
+    )
   }, 0)
 }
 
@@ -305,6 +307,8 @@ export interface WishlistResourceTotal {
   resourceKey: string
   amount: number
   wholeUnit: boolean
+  /** Buy-price of this pile. Qualities are priced separately, then added. */
+  dfp: number
 }
 
 /** One total per resource, qualities combined. Amounts include recipe quantity. */
@@ -316,9 +320,11 @@ export function combinedResourceTotals(items: WishlistItem[]): WishlistResourceT
       const extra = isWholeUnitResource(material.resourceKey)
         ? Math.trunc(material.scu) * item.quantity
         : fromMilliScu(toMilliScu(material.scu) * item.quantity)
+      const sliceDfp = wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, extra)
       const existing = map.get(key)
       if (existing) {
         existing.amount = addAmount(material.resourceKey, existing.amount, extra)
+        existing.dfp += sliceDfp
       } else {
         map.set(key, {
           key,
@@ -326,6 +332,7 @@ export function combinedResourceTotals(items: WishlistItem[]): WishlistResourceT
           resourceKey: material.resourceKey,
           amount: extra,
           wholeUnit: material.wholeUnit,
+          dfp: sliceDfp,
         })
       }
     }
@@ -349,6 +356,7 @@ export function qualityResourceTotals(items: WishlistItem[]): WishlistQualityTot
       const existing = map.get(key)
       if (existing) {
         existing.amount = addAmount(material.resourceKey, existing.amount, extra)
+        existing.dfp = wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, existing.amount)
       } else {
         map.set(key, {
           key,
@@ -357,6 +365,7 @@ export function qualityResourceTotals(items: WishlistItem[]): WishlistQualityTot
           quality: material.quality,
           amount: extra,
           wholeUnit: material.wholeUnit,
+          dfp: wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, extra),
         })
       }
     }
