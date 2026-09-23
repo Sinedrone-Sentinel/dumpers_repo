@@ -23,6 +23,7 @@ import {
   setBpWishlistUseTracked,
   wishlistItemDfp,
   wishlistQuantityTotal,
+  wishlistResourceBuyDfp,
   type Wishlist,
   type WishlistItem,
 } from '../../lib/bpWishlist'
@@ -74,7 +75,7 @@ export default function BpWishlistTab({
           <h2 className="text-lg font-semibold text-white">Crafting Wishlist</h2>
           <p className="text-sm text-slate-400">
             {lists.length}/{BP_WISHLIST_MAX_LISTS} Crafting Wishlists. Each list holds {BP_WISHLIST_MAX_RECIPES} unique recipes.
-            Stacking the same blueprint at the same qualities uses one slot.
+            Stacking the same blueprint at the same qualities uses one slot. The aUEC figure is the Dumper's Fair-Value Price of the resources, the cost to buy them.
           </p>
         </div>
         <form
@@ -166,7 +167,9 @@ function WishlistPanel({
         <span className="text-white font-semibold">{list.name}</span>
         <span className="text-xs text-slate-400">{list.items.length}/{BP_WISHLIST_MAX_RECIPES}</span>
         <span className="text-xs text-slate-300">{qtyTotal} blueprint{qtyTotal === 1 ? '' : 's'}</span>
-        <span className="text-xs text-amber-300">{formatDfpAuec(dfp)}</span>
+        <span className="text-xs text-amber-300" title="Dumper's Fair-Value Price to buy these resources">
+          {formatDfpAuec(dfp)}
+        </span>
         <span className="ml-auto text-slate-500 text-xs">{open ? 'Hide' : 'Open'}</span>
       </button>
       <div className="px-4 pb-3 flex flex-wrap gap-2">
@@ -174,8 +177,10 @@ function WishlistPanel({
           <span className="text-xs text-slate-500">No blueprints on this list yet.</span>
         ) : (
           overview.map((row) => (
-            <span key={row.key} className="site-badge-slate px-2 py-0.5 rounded text-xs font-mono">
+            <span key={row.key} className="site-badge-slate px-2 py-0.5 rounded text-xs font-mono" title="Dumper's Fair-Value Price to buy this resource">
               {row.label} {formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)}
+              {' · '}
+              {formatDfpAuec(row.dfp)}
             </span>
           ))
         )}
@@ -271,8 +276,10 @@ function WishlistPanel({
                       ? 'bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'
                       : 'bg-red-950/50 border border-red-500/40 text-red-300'
                   return (
-                    <span key={row.key} className={`${tone} px-2 py-1 rounded text-xs font-mono`}>
+                    <span key={row.key} className={`${tone} px-2 py-1 rounded text-xs font-mono`} title="Dumper's Fair-Value Price to buy this resource">
                       {row.label} Q{row.quality} {formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)}
+                      {' · '}
+                      {formatDfpAuec(row.dfp)}
                     </span>
                   )
                 })}
@@ -311,7 +318,9 @@ function RecipeRow({
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-medium text-white">{item.blueprint_name}</span>
         <span className="text-xs text-slate-400">×{item.quantity}</span>
-        <span className="text-xs text-amber-300">{formatDfpAuec(lineDfp)}</span>
+        <span className="text-xs text-amber-300" title="Dumper's Fair-Value Price to buy these resources">
+          {formatDfpAuec(lineDfp)}
+        </span>
         <label className="ml-auto flex items-center gap-2 text-xs text-slate-400">
           Qty
           <input
@@ -371,8 +380,10 @@ function RecipeRow({
               ? 'bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'
               : 'bg-red-950/50 border border-red-500/40 text-red-300'
           return (
-            <span key={`${material.slotIndex}-${key}`} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`}>
+            <span key={`${material.slotIndex}-${key}`} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`} title="Dumper's Fair-Value Price to buy this resource">
               {material.label} {formatWishlistAmount(material.resourceKey, shown, material.wholeUnit)} Q{material.quality}
+              {' · '}
+              {formatDfpAuec(wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, shown))}
             </span>
           )
         })}
