@@ -1,10 +1,10 @@
 -- =============================================================================
--- 197: BP Wishlist (Resource Tracker)
+-- 197: Crafting Wishlist (Resource Tracker)
 -- =============================================================================
 -- Members may SELECT their own lists and recipes only.
 -- Create, rename, delete, add, quantity, remove, Got it, and the
 -- Use My Tracked Resources flag go through SECURITY DEFINER RPCs.
--- Caps: 10 wishlists per account, 20 unique recipes per wishlist.
+-- Caps: 10 Crafting Wishlists per account, 20 unique recipes per list.
 -- Got it deducts one craft at the saved qualities (exact tier) then
 -- lowers that recipe by 1, in the same transaction.
 -- =============================================================================
@@ -40,7 +40,7 @@ CREATE INDEX IF NOT EXISTS bp_wishlist_items_user_id_idx ON public.bp_wishlist_i
 CREATE INDEX IF NOT EXISTS bp_wishlist_items_wishlist_id_idx ON public.bp_wishlist_items (wishlist_id);
 
 COMMENT ON TABLE public.bp_wishlists IS
-  'Named blueprint wishlists. Mutations are DEFINER RPCs only.';
+  'Named Crafting Wishlists. Mutations are DEFINER RPCs only.';
 COMMENT ON TABLE public.bp_wishlist_items IS
   'One row per unique recipe (blueprint + saved material qualities). Quantity stacks exact matches.';
 
@@ -74,7 +74,7 @@ SET search_path = public
 AS $$
 BEGIN
   IF auth.uid() IS NULL THEN
-    RAISE EXCEPTION 'Sign in to use BP Wishlist';
+    RAISE EXCEPTION 'Sign in to use Crafting Wishlist';
   END IF;
   PERFORM pg_advisory_xact_lock(hashtext(auth.uid()::text));
 END;
@@ -178,11 +178,11 @@ DECLARE
 BEGIN
   PERFORM public.bp_wishlist_lock_owner();
   IF char_length(v_name) < 1 OR char_length(v_name) > 40 THEN
-    RAISE EXCEPTION 'Wishlist names must be 1-40 characters';
+    RAISE EXCEPTION 'Crafting Wishlist names must be 1-40 characters';
   END IF;
   SELECT count(*) INTO v_count FROM public.bp_wishlists WHERE user_id = auth.uid();
   IF v_count >= 10 THEN
-    RAISE EXCEPTION 'You can keep up to 10 wishlists';
+    RAISE EXCEPTION 'You can keep up to 10 Crafting Wishlists';
   END IF;
   INSERT INTO public.bp_wishlists (user_id, name)
   VALUES (auth.uid(), v_name)
@@ -205,13 +205,13 @@ DECLARE
 BEGIN
   PERFORM public.bp_wishlist_lock_owner();
   IF char_length(v_name) < 1 OR char_length(v_name) > 40 THEN
-    RAISE EXCEPTION 'Wishlist names must be 1-40 characters';
+    RAISE EXCEPTION 'Crafting Wishlist names must be 1-40 characters';
   END IF;
   UPDATE public.bp_wishlists
   SET name = v_name, updated_at = now()
   WHERE id = p_wishlist_id AND user_id = auth.uid();
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Wishlist not found';
+    RAISE EXCEPTION 'Crafting Wishlist not found';
   END IF;
 END;
 $$;
@@ -230,7 +230,7 @@ BEGIN
   DELETE FROM public.bp_wishlists
   WHERE id = p_wishlist_id AND user_id = auth.uid();
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Wishlist not found';
+    RAISE EXCEPTION 'Crafting Wishlist not found';
   END IF;
 END;
 $$;
@@ -253,7 +253,7 @@ BEGIN
   SET use_tracked_resources = COALESCE(p_enabled, false), updated_at = now()
   WHERE id = p_wishlist_id AND user_id = auth.uid();
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Wishlist not found';
+    RAISE EXCEPTION 'Crafting Wishlist not found';
   END IF;
 END;
 $$;
@@ -301,7 +301,7 @@ BEGIN
     RAISE EXCEPTION 'This blueprint could not be saved';
   END IF;
   IF p_wishlist_ids IS NULL OR cardinality(p_wishlist_ids) = 0 THEN
-    RAISE EXCEPTION 'Pick at least one wishlist';
+    RAISE EXCEPTION 'Pick at least one Crafting Wishlist';
   END IF;
 
   v_materials := public.bp_wishlist_normalize_materials(p_materials);
@@ -394,7 +394,7 @@ BEGIN
   SET quantity = p_quantity
   WHERE id = p_item_id AND user_id = auth.uid();
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Blueprint not found on this wishlist';
+    RAISE EXCEPTION 'Blueprint not found on this Crafting Wishlist';
   END IF;
 END;
 $$;
@@ -413,7 +413,7 @@ BEGIN
   DELETE FROM public.bp_wishlist_items
   WHERE id = p_item_id AND user_id = auth.uid();
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Blueprint not found on this wishlist';
+    RAISE EXCEPTION 'Blueprint not found on this Crafting Wishlist';
   END IF;
 END;
 $$;
@@ -439,7 +439,7 @@ BEGIN
   WHERE id = p_item_id AND user_id = auth.uid()
   FOR UPDATE;
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Blueprint not found on this wishlist';
+    RAISE EXCEPTION 'Blueprint not found on this Crafting Wishlist';
   END IF;
 
   SELECT use_tracked_resources INTO v_use
@@ -447,7 +447,7 @@ BEGIN
   WHERE id = v_item.wishlist_id AND user_id = auth.uid()
   FOR UPDATE;
   IF NOT FOUND THEN
-    RAISE EXCEPTION 'Wishlist not found';
+    RAISE EXCEPTION 'Crafting Wishlist not found';
   END IF;
 
   IF v_use THEN

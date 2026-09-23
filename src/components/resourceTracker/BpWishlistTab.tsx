@@ -61,7 +61,7 @@ export default function BpWishlistTab({
       await onReload()
       if (refreshStock) await onStockChanged()
     } catch (err) {
-      onError(err instanceof Error ? err.message : 'Could not update this wishlist')
+      onError(err instanceof Error ? err.message : 'Could not update this Crafting Wishlist')
     } finally {
       setBusy(false)
     }
@@ -71,9 +71,9 @@ export default function BpWishlistTab({
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-white">BP Wishlist</h2>
+          <h2 className="text-lg font-semibold text-white">Crafting Wishlist</h2>
           <p className="text-sm text-slate-400">
-            {lists.length}/{BP_WISHLIST_MAX_LISTS} wishlists. Each list holds {BP_WISHLIST_MAX_RECIPES} unique recipes.
+            {lists.length}/{BP_WISHLIST_MAX_LISTS} Crafting Wishlists. Each list holds {BP_WISHLIST_MAX_RECIPES} unique recipes.
             Stacking the same blueprint at the same qualities uses one slot.
           </p>
         </div>
@@ -95,9 +95,9 @@ export default function BpWishlistTab({
             maxLength={40}
             disabled={atCap || busy}
             onChange={(event) => setNewName(event.target.value)}
-            placeholder={atCap ? '10/10 wishlists' : 'New wishlist name'}
+            placeholder={atCap ? '10/10 Crafting Wishlists' : 'New Crafting Wishlist name'}
             className="site-input px-3 py-2 text-sm w-52"
-            aria-label="New wishlist name"
+            aria-label="New Crafting Wishlist name"
           />
           <button
             type="submit"
@@ -110,9 +110,9 @@ export default function BpWishlistTab({
       </div>
 
       {error && <p className="site-error-text text-sm">{error}</p>}
-      {loading && lists.length === 0 && <p className="text-sm text-slate-400">Loading wishlists…</p>}
+      {loading && lists.length === 0 && <p className="text-sm text-slate-400">Loading Crafting Wishlists…</p>}
       {!loading && lists.length === 0 && (
-        <div className="site-empty">Name a wishlist, then add blueprints from their detail view.</div>
+        <div className="site-empty">Name a Crafting Wishlist, then add blueprints from their detail view.</div>
       )}
 
       {lists.map((list) => (
@@ -232,7 +232,7 @@ function WishlistPanel({
           </div>
 
           {list.items.length === 0 && (
-            <p className="text-sm text-slate-400">This wishlist is empty. Add blueprints from a blueprint’s detail view.</p>
+            <p className="text-sm text-slate-400">This Crafting Wishlist is empty. Add blueprints from a blueprint’s detail view.</p>
           )}
 
           <div className="space-y-3">

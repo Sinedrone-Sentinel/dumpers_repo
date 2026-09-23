@@ -45,7 +45,7 @@ export default function AddToWishlistButton({
           className="site-btn-secondary inline-flex items-center gap-2 px-3 py-2 text-sm opacity-70 cursor-not-allowed"
         >
           <LockIcon className="w-3.5 h-3.5 text-amber-500/80" />
-          Add to Wishlist
+          Add to Crafting Wishlist
         </button>
       </SiteTooltip>
     )
@@ -58,7 +58,7 @@ export default function AddToWishlistButton({
         onClick={() => setOpen(true)}
         className="site-btn-accent px-3 py-2 text-sm"
       >
-        Add to Wishlist
+        Add to Crafting Wishlist
       </button>
       {open && (
         <AddToWishlistModal
@@ -101,7 +101,7 @@ function AddToWishlistModal({
         if (!cancelled) setLists(rows)
       })
       .catch((err: unknown) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Could not load wishlists')
+        if (!cancelled) setError(err instanceof Error ? err.message : 'Could not load Crafting Wishlists')
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -125,7 +125,7 @@ function AddToWishlistModal({
       setSelected((prev) => new Set(prev).add(id))
       setNewName('')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not create that wishlist')
+      setError(err instanceof Error ? err.message : 'Could not create that Crafting Wishlist')
     } finally {
       setBusy(false)
     }
@@ -133,7 +133,7 @@ function AddToWishlistModal({
 
   async function handleAdd() {
     if (selected.size === 0) {
-      setError('Pick at least one wishlist')
+      setError('Pick at least one Crafting Wishlist')
       return
     }
     setBusy(true)
@@ -183,16 +183,16 @@ function AddToWishlistModal({
         onClick={(event) => event.stopPropagation()}
       >
         <h3 id="add-wishlist-title" className="text-base font-semibold text-white mb-1">
-          Add to Wishlist
+          Add to Crafting Wishlist
         </h3>
         <p className="text-sm text-slate-400 mb-4">{blueprintName}</p>
 
         {loading ? (
-          <p className="text-sm text-slate-400">Loading wishlists…</p>
+          <p className="text-sm text-slate-400">Loading Crafting Wishlists…</p>
         ) : (
           <div className="space-y-2 max-h-48 overflow-y-auto mb-4">
             {lists.length === 0 && (
-              <p className="text-sm text-slate-400">No wishlists yet. Name one below.</p>
+              <p className="text-sm text-slate-400">No Crafting Wishlists yet. Name one below.</p>
             )}
             {lists.map((list) => {
               const count = list.items.length
@@ -226,9 +226,9 @@ function AddToWishlistModal({
             maxLength={40}
             disabled={atCap || busy}
             onChange={(event) => setNewName(event.target.value)}
-            placeholder={atCap ? '10/10 wishlists' : 'New wishlist name'}
+            placeholder={atCap ? '10/10 Crafting Wishlists' : 'New Crafting Wishlist name'}
             className="site-input px-3 py-2 text-sm flex-1"
-            aria-label="New wishlist name"
+            aria-label="New Crafting Wishlist name"
           />
           <button
             type="button"
