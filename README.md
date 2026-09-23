@@ -114,6 +114,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - Mined/refined ore uses bands Q500–Q1000; salvage and trade goods use fixed **Purchased (Q0)** tiers
 - **Friends Resources** tab (when you have friends) — read-only list of a friend’s My Resources stock
 - **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); note chips plus **ALL** scope craftability and Craft deductions to one location; ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown; never uses friend stock
+- **Crafting Wishlist** (signed in) sits after Can Craft: up to 10 named lists, 20 unique recipes each. **Add to Crafting Wishlist** on a blueprint saves that blueprint with the material qualities selected and a quantity. **Got it** lowers one; with **Use My Tracked Resources** it also deducts one craft from My Resources at those exact qualities
 - **Site Total** rollup (officers and super-admins only) — org-wide inventory aggregate
 - Resource catalog ships with the site from parsed game data — no manual sync
 

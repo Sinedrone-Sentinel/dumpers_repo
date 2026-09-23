@@ -283,7 +283,7 @@ export const ANALYTICS_SUB_TOOL_LABELS: Record<string, string> = {
   my_resources: 'My Resources',
   friends_resources: 'Friends Resources',
   can_craft: 'Can Craft',
-  bp_wishlist: 'BP Wishlist',
+  bp_wishlist: 'Crafting Wishlist',
   site_total: 'Site Total',
   rs_tracker: 'RS Tracker',
   mining_guide: 'Mining Guide',

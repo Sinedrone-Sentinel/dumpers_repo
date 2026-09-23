@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `197_bp_wishlists.sql` (BP Wishlist lists and recipes; members select their own rows, and creates or edits go through the wishlist RPCs). Apply `196_ai_chat_invoke_analytics.sql` first. Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `197_bp_wishlists.sql` (Crafting Wishlist lists and recipes; members select their own rows, and creates or edits go through the wishlist RPCs). Apply `196_ai_chat_invoke_analytics.sql` first. Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -227,7 +227,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 159 | `194_ticker_game_error_category.sql` | Ticker layout **Game Error** (red `#EF4444`, 14-day TTL) for client-breaking game warnings |
 | 160 | `195_ai_chat_rate_buckets.sql` | Per-feature AI chat limiter: `ai_chat_rate_buckets` + `ai_chat_try_consume(user, feature)` (`service_role` only) and read-only `ai_chat_usage(feature)` for the member-facing meter (`authenticated`). Migrates 189's counters, rewrites `mining_advisor_try_consume` as a wrapper, drops `mining_advisor_rate_buckets` |
 | 161 | `196_ai_chat_invoke_analytics.sql` | Super-admin AI chat Edge usage: daily rollup (`ai_chat_invoke_daily`) + private identity fingerprints (`ai_chat_identity_daily`, SHA-256 of Gemini keys only). `record_ai_chat_event` (`service_role`) and `get_ai_chat_usage_summary` (`is_super_admin`). 30-day FIFO cron. No question text, no raw keys, no per-user rows |
-| 162 | `197_bp_wishlists.sql` | BP Wishlist: `bp_wishlists` + `bp_wishlist_items`. Members `SELECT` their own rows only. Create, rename, delete, add, quantity, remove, Got it, and Use My Tracked Resources are SECURITY DEFINER RPCs (10 lists, 20 unique recipes). Got it can deduct one craft from My Resources at the saved qualities |
+| 162 | `197_bp_wishlists.sql` | Crafting Wishlist: `bp_wishlists` + `bp_wishlist_items`. Members `SELECT` their own rows only. Create, rename, delete, add, quantity, remove, Got it, and Use My Tracked Resources are SECURITY DEFINER RPCs (10 lists, 20 unique recipes). Got it can deduct one craft from My Resources at the saved qualities |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

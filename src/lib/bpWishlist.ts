@@ -16,7 +16,7 @@ export const BP_WISHLIST_MAX_LISTS = 10
 export const BP_WISHLIST_MAX_RECIPES = 20
 
 export const BP_WISHLIST_LOCK_TOOLTIP =
-  'Sign in to save blueprints to a wishlist. Each list keeps the blueprint, the material qualities you picked, and how many you want to craft. You can keep 10 lists, with 20 unique recipes on each.'
+  'Sign in to save blueprints to a Crafting Wishlist. Each list keeps the blueprint, the material qualities you picked, and how many you want to craft. You can keep 10 lists, with 20 unique recipes on each.'
 
 export interface WishlistMaterial {
   slotIndex: number
@@ -166,7 +166,7 @@ export async function fetchBpWishlists(): Promise<Wishlist[]> {
 function rpcError(error: { message: string } | null): void {
   if (!error) return
   const message = error.message.replace(/^.*ERROR:\s*/i, '').trim()
-  throw new Error(message || 'Could not update this wishlist')
+  throw new Error(message || 'Could not update this Crafting Wishlist')
 }
 
 export async function createBpWishlist(name: string): Promise<string> {
@@ -257,7 +257,7 @@ export function useBpWishlists(userId: string | undefined) {
       setLists(await fetchBpWishlists())
       setError(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load wishlists')
+      setError(err instanceof Error ? err.message : 'Could not load Crafting Wishlists')
     } finally {
       setLoading(false)
     }
