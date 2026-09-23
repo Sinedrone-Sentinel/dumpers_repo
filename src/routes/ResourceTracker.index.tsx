@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import ResourceStockListView from '../components/ResourceStockListView'
 import CanCraftTab from '../components/resourceTracker/CanCraftTab'
+import BpWishlistTab from '../components/resourceTracker/BpWishlistTab'
+import SiteTooltip from '../components/SiteTooltip'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import UexLookupButton from '../components/shop/UexLookupButton'
 import { DEFAULT_STOCK_QUALITY } from '../config/dfp'
@@ -15,6 +17,7 @@ import { useFriends } from '../contexts/FriendsContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
+import { BP_WISHLIST_LOCK_TOOLTIP, BP_WISHLIST_MAX_LISTS, useBpWishlists } from '../lib/bpWishlist'
 import { friendLabel, getFriendPersonalInventory } from '../lib/friends'
 import StockCardListingShortcut from '../components/resourceTracker/StockCardListingShortcut'
 import StockNoteTypeahead from '../components/resourceTracker/StockNoteTypeahead'
@@ -50,7 +53,7 @@ import {
 } from '../lib/resourceQuantity'
 import type { CraftPlanReduction, CraftStockCardLite } from '../lib/craftFromStock'
 
-type ResourceTrackerTab = InventoryScope | 'can_craft' | 'friends'
+type ResourceTrackerTab = InventoryScope | 'can_craft' | 'friends' | 'wishlist'
 
 type FriendStockCard = {
   resource_key: string
@@ -69,6 +72,8 @@ export default function ResourceTrackerRoute() {
   const canListFromStock = !isGuest && canUseFeature('custom_orders', visibilityContext)
   const rsiVerified = Boolean(profile?.rsi_handle_verified)
   const showFriendsTab = !isGuest && friends.length > 0
+  const signedIn = Boolean(user?.id)
+  const wishlistsState = useBpWishlists(signedIn ? user?.id : undefined)
 
   const [activeTab, setActiveTab] = useState<ResourceTrackerTab>('personal')
   const [stockError, setStockError] = useState<string | null>(null)
@@ -79,12 +84,19 @@ export default function ResourceTrackerRoute() {
   const [friendError, setFriendError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isGuest && (activeTab === 'site' || activeTab === 'friends')) setActiveTab('personal')
-  }, [isGuest, activeTab])
+    if (!signedIn && (activeTab === 'site' || activeTab === 'friends' || activeTab === 'wishlist')) {
+      setActiveTab('personal')
+    }
+  }, [signedIn, activeTab])
 
   useEffect(() => {
     if (!showFriendsTab && activeTab === 'friends') setActiveTab('personal')
   }, [showFriendsTab, activeTab])
+
+  useEffect(() => {
+    if (activeTab !== 'wishlist' || !signedIn) return
+    void wishlistsState.reload()
+  }, [activeTab, signedIn, wishlistsState.reload])
 
   useEffect(() => {
     setAnalyticsSubTool(
@@ -94,7 +106,9 @@ export default function ResourceTrackerRoute() {
           ? 'can_craft'
           : activeTab === 'friends'
             ? 'friends_resources'
-            : 'my_resources'
+            : activeTab === 'wishlist'
+              ? 'bp_wishlist'
+              : 'my_resources'
     )
   }, [activeTab])
 
@@ -843,6 +857,30 @@ export default function ResourceTrackerRoute() {
         >
           Can Craft
         </button>
+        {signedIn ? (
+          <button
+            type="button"
+            onClick={() => setActiveTab('wishlist')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+              activeTab === 'wishlist' ? 'site-filter-selected-orange' : 'site-filter-idle'
+            }`}
+          >
+            BP Wishlist {wishlistsState.lists.length}/{BP_WISHLIST_MAX_LISTS}
+          </button>
+        ) : (
+          <SiteTooltip content={BP_WISHLIST_LOCK_TOOLTIP} side="bottom">
+            <button
+              type="button"
+              disabled
+              className="px-4 py-2 text-sm font-medium rounded-lg site-filter-idle inline-flex items-center gap-2 opacity-70 cursor-not-allowed"
+            >
+              <svg className="w-3.5 h-3.5 text-amber-500/80" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              BP Wishlist
+            </button>
+          </SiteTooltip>
+        )}
       </div>
 
       {isCanCraftTab ? (
@@ -850,6 +888,16 @@ export default function ResourceTrackerRoute() {
           hasTrackedStock={canCraftHasTrackedStock}
           stockCardsForCraft={craftStockCards}
           onCraft={handleCraft}
+        />
+      ) : activeTab === 'wishlist' && signedIn ? (
+        <BpWishlistTab
+          lists={wishlistsState.lists}
+          loading={wishlistsState.loading}
+          error={wishlistsState.error}
+          stockCards={craftStockCards}
+          onReload={wishlistsState.reload}
+          onStockChanged={refreshInventoryViews}
+          onError={wishlistsState.setError}
         />
       ) : (
         <>

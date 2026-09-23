@@ -34,6 +34,8 @@ import BrandRevealModalShell from './layout/BrandRevealModalShell'
 import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
+import { snapshotWishlistRecipe } from '../lib/bpWishlist'
+import AddToWishlistButton from './resourceTracker/AddToWishlistButton'
 
 interface SlotOption {
   type?: string
@@ -212,6 +214,22 @@ export default function BlueprintDetailsModal({
     if (!craftReady || !craftSelectedQualities) return effectiveSlotQualities
     return { ...effectiveSlotQualities, ...craftSelectedQualities }
   }, [craftReady, craftSelectedQualities, effectiveSlotQualities])
+
+  const wishlistSnapshot = useMemo(
+    () => snapshotWishlistRecipe(blueprintWithSlots, displaySlotQualities),
+    [blueprintWithSlots, displaySlotQualities]
+  )
+  const wishlistControl = (
+    <div className="mt-3 flex justify-end">
+      <AddToWishlistButton
+        signedIn={!isGuest}
+        blueprintKey={blueprint.internalName || blueprint.file || ''}
+        blueprintName={blueprint.blueprintName || blueprint.internalName || 'Blueprint'}
+        materials={wishlistSnapshot.materials}
+        slotQualities={wishlistSnapshot.slotQualities}
+      />
+    </div>
+  )
 
   // Check if any slot has modifiers
   const hasModifiers = useMemo(() => {
@@ -412,12 +430,14 @@ export default function BlueprintDetailsModal({
                 </p>
               </div>
             )}
+            {hasModifiers && aggregatedModifiers.length > 0 ? null : wishlistControl}
           </div>
         )}
 
         {hasModifiers && aggregatedModifiers.length > 0 && (
-          <CombinedModifiersSection modifiers={aggregatedModifiers} />
+          <CombinedModifiersSection modifiers={aggregatedModifiers} footer={wishlistControl} />
         )}
+        {(!blueprint.slots || blueprint.slots.length === 0) && wishlistControl}
 
         {hasRewardMissions && (
           <div className="bg-amber-950/20 border border-amber-500/25 rounded-xl p-3 sm:p-4">
@@ -582,9 +602,10 @@ export default function BlueprintDetailsModal({
 
 interface CombinedModifiersSectionProps {
   modifiers: ReturnType<typeof aggregateModifiers>
+  footer?: React.ReactNode
 }
 
-function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) {
+function CombinedModifiersSection({ modifiers, footer }: CombinedModifiersSectionProps) {
   if (modifiers.length === 0) return null
 
   return (
@@ -631,6 +652,7 @@ function CombinedModifiersSection({ modifiers }: CombinedModifiersSectionProps) 
       <p className="text-[10px] text-slate-500 mt-3">
         Select quality bands to simulate how mined ore quality affects final item stats.
       </p>
+      {footer}
     </div>
   )
 }

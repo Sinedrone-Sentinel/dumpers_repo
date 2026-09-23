@@ -40,7 +40,7 @@ export interface OwnedResourceStock {
 export type OwnedStockIndex = Map<string, OwnedResourceStock>
 
 /** True when `have` covers `need` for a resource (whole-unit vs SCU aware). */
-function hasEnough(resourceKey: string, need: number, have: number): boolean {
+export function hasEnough(resourceKey: string, need: number, have: number): boolean {
   if (need <= 0) return true
   if (isWholeUnitResource(resourceKey)) {
     return Math.trunc(have) >= Math.trunc(need)
