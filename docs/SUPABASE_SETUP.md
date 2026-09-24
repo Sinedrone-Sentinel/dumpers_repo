@@ -9,7 +9,7 @@ Use this guide when standing up or catching up the **official** Dumper's Repo Su
 3. In **SQL Editor**, run only the migration files you are **missing**, **in numeric order** (see full list below).
 4. Each file is idempotent where practical. Errors about existing objects usually mean that step already ran - verify with the sanity checks at the end.
 
-**Latest migration:** `198_admin_citizenid_members.sql` (Admin Panel splits Citizen iD members from legacy RSI verified and lets officers read one member's Citizen iD snapshot). Apply `197_bp_wishlists.sql` first. Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
+**Latest migration:** `199_admin_citizenid_badge_flags.sql` (Admin Panel RSI tags follow a Citizen iD link for officers and super-admins, who are not in the Members buckets). Apply `198_admin_citizenid_members.sql` first. Apply missing files in numeric order if catching up. Bot setup: [`docs/DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md).
 
 ---
 
@@ -229,6 +229,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 161 | `196_ai_chat_invoke_analytics.sql` | Super-admin AI chat Edge usage: daily rollup (`ai_chat_invoke_daily`) + private identity fingerprints (`ai_chat_identity_daily`, SHA-256 of Gemini keys only). `record_ai_chat_event` (`service_role`) and `get_ai_chat_usage_summary` (`is_super_admin`). 30-day FIFO cron. No question text, no raw keys, no per-user rows |
 | 162 | `197_bp_wishlists.sql` | Crafting Wishlist: `bp_wishlists` + `bp_wishlist_items`. Members `SELECT` their own rows only. Create, rename, delete, add, quantity, remove, Got it, and Use My Tracked Resources are SECURITY DEFINER RPCs (10 lists, 20 unique recipes). Got it can deduct one craft from My Resources at the saved qualities |
 | 163 | `198_admin_citizenid_members.sql` | Admin Panel member buckets: Citizen iD (`spectrum_citizens.citizenid_sub`), legacy RSI verified, and unverified. `admin_list_members_by_verification` and `admin_get_citizenid_stats` are officer / super-admin only. Refresh tokens are not returned |
+| 164 | `199_admin_citizenid_badge_flags.sql` | `admin_citizenid_linked_user_ids` tells officers which of the listed user ids have a Citizen iD link, so RSI tags stay gold for officers and super-admins outside the Members buckets. Officer / super-admin only |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
