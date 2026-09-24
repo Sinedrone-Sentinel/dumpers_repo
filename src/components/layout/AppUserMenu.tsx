@@ -4,6 +4,7 @@ import { useClickOutside } from '../../hooks/useClickOutside'
 import type { Profile } from '../../lib/supabase'
 import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
 import RsiVerifiedBadge from '../RsiVerifiedBadge'
+import { fetchMySpectrum } from '../../lib/spectrum'
 import OfficerToolsModal from '../OfficerToolsModal'
 
 interface AppUserMenuProps {
@@ -62,6 +63,7 @@ export default function AppUserMenu({
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
   const [showOfficerTools, setShowOfficerTools] = useState(false)
+  const [citizenIdLinked, setCitizenIdLinked] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const routerLocation = useRouterState({ select: (s) => s.location })
 
@@ -74,6 +76,20 @@ export default function AppUserMenu({
   useEffect(() => {
     close()
   }, [routerLocation.pathname, routerLocation.searchStr, close])
+
+  useEffect(() => {
+    if (!profile?.id) {
+      setCitizenIdLinked(false)
+      return
+    }
+    let cancelled = false
+    void fetchMySpectrum().then((result) => {
+      if (!cancelled) setCitizenIdLinked(result.ok && result.spectrum.linked)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [profile?.id, profile?.rsi_handle_verified, profile?.rsi_handle_verified_at])
 
   if (isPending) {
     return (
@@ -144,7 +160,9 @@ export default function AppUserMenu({
             <div className="p-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/35 to-transparent">
               <p className="text-white font-medium truncate flex items-center gap-1.5">
                 <span>{displayName}</span>
-                {profile?.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+                {(profile?.rsi_handle_verified || citizenIdLinked) && (
+                  <RsiVerifiedBadge size="sm" tone={citizenIdLinked ? 'citizenid' : 'legacy'} />
+                )}
               </p>
               {profile?.rsi_handle && (
                 <p className="text-slate-500 text-xs truncate">({profile.display_name})</p>

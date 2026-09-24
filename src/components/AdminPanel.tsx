@@ -17,6 +17,20 @@ type TabType = 'pending' | 'members' | 'officers' | 'banned'
 type MemberFilter = 'citizenid' | 'verified' | 'unverified'
 
 const PAGE_SIZE = 10
+
+async function citizenIdLinkedIds(ids: string[], assumeAllOnError: boolean): Promise<Set<string>> {
+  if (ids.length === 0) return new Set()
+  const { data, error } = await supabase.rpc('admin_citizenid_linked_user_ids', {
+    p_user_ids: ids,
+  })
+  if (error) {
+    console.error('Error fetching Citizen iD flags:', error)
+    return assumeAllOnError ? new Set(ids) : new Set()
+  }
+  const rows = Array.isArray(data) ? data : []
+  return new Set(rows.map((id) => String(id)))
+}
+
 const MEMBER_BUCKET: Record<MemberFilter, string> = {
   citizenid: 'citizenid',
   verified: 'rsi_verified',
@@ -31,6 +45,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const [bannedUsers, setBannedUsers] = useState<BannedUser[]>([])
   const [memberCounts, setMemberCounts] = useState({ citizenid: 0, verified: 0, unverified: 0 })
   const [statsUser, setStatsUser] = useState<Profile | null>(null)
+  const [citizenIdUserIds, setCitizenIdUserIds] = useState<Set<string>>(new Set())
   const [page, setPage] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -43,6 +58,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
 
   const fetchData = useCallback(async () => {
     setLoading(true)
+    setCitizenIdUserIds(new Set())
     const from = page * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
@@ -71,13 +87,18 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
         total?: number
         counts?: { citizenid?: number; rsi_verified?: number; unverified?: number }
       }
-      setUsers(error ? [] : payload.users ?? [])
+      const nextUsers = error ? [] : payload.users ?? []
+      setUsers(nextUsers)
       setTotalCount(error ? 0 : payload.total ?? 0)
       setMemberCounts({
         citizenid: payload.counts?.citizenid ?? 0,
         verified: payload.counts?.rsi_verified ?? 0,
         unverified: payload.counts?.unverified ?? 0,
       })
+      setCitizenIdUserIds(await citizenIdLinkedIds(
+        nextUsers.map((user) => user.id),
+        memberFilter === 'citizenid',
+      ))
       setLoading(false)
       return
     }
@@ -93,8 +114,10 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       .order('created_at', { ascending: false })
       .range(from, to)
     if (error) console.error('Error fetching users:', error)
-    setUsers(error ? [] : data || [])
+    const nextUsers = error ? [] : data || []
+    setUsers(nextUsers)
     setTotalCount(error ? 0 : count ?? 0)
+    setCitizenIdUserIds(await citizenIdLinkedIds(nextUsers.map((user) => user.id), false))
 
     setLoading(false)
   }, [activeTab, memberFilter, page])
@@ -365,7 +388,9 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
             </div>
           ) : (
             <div className="space-y-3">
-              {users.map(user => (
+              {users.map(user => {
+                const citizenLinked = citizenIdUserIds.has(user.id)
+                return (
                 <div
                   key={user.id}
                   className="site-card p-4"
@@ -386,22 +411,18 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                     <button
                       type="button"
                       className={`flex-1 min-w-0 text-left ${
-                        memberFilter === 'citizenid' && activeTab === 'members'
-                          ? 'cursor-pointer'
-                          : 'cursor-default'
+                        citizenLinked ? 'cursor-pointer' : 'cursor-default'
                       }`}
                       onClick={() => {
-                        if (activeTab === 'members' && memberFilter === 'citizenid') {
-                          setStatsUser(user)
-                        }
+                        if (citizenLinked) setStatsUser(user)
                       }}
                     >
                       <p className="text-white font-medium truncate flex items-center gap-1.5">
                         <span>{getDisplayName(user)}</span>
-                        {(user.rsi_handle_verified || (activeTab === 'members' && memberFilter === 'citizenid')) && (
+                        {(user.rsi_handle_verified || citizenLinked) && (
                           <RsiVerifiedBadge
                             size="sm"
-                            tone={activeTab === 'members' && memberFilter === 'citizenid' ? 'citizenid' : 'legacy'}
+                            tone={citizenLinked ? 'citizenid' : 'legacy'}
                           />
                         )}
                         {user.id === currentUser?.id && (
@@ -412,7 +433,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         <p className="text-slate-500 text-xs truncate">Google: {user.display_name}</p>
                       )}
                       <p className="text-slate-400 text-sm truncate">{user.email}</p>
-                      {activeTab === 'members' && memberFilter === 'citizenid' && (
+                      {citizenLinked && (
                         <p className="text-amber-300/80 text-xs">View Citizen iD stats</p>
                       )}
                       <p className="text-slate-500 text-xs">
@@ -473,7 +494,8 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                     </div>
                   </div>
                 </div>
-              ))}
+                )
+              })}
             </div>
           )}
       </AppModal>

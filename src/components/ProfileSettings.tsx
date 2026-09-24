@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { deleteAccount, supabase } from '../lib/supabase'
 import { notifyPersonalResourcesWiped } from '../lib/userDataEvents'
@@ -7,6 +7,8 @@ import SettingsField from './settings/SettingsField'
 import SettingsToggle from './settings/SettingsToggle'
 import ConnectedAccountsSettings from './settings/ConnectedAccountsSettings'
 import CitizenIdSettings from './settings/CitizenIdSettings'
+import RsiVerifiedBadge from './RsiVerifiedBadge'
+import { fetchMySpectrum } from '../lib/spectrum'
 import OrgLogoUploadField from './settings/OrgLogoUploadField'
 import AppModal from './layout/AppModal'
 import SiteTooltip from './SiteTooltip'
@@ -72,6 +74,16 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
   const [clearingAdvisorKey, setClearingAdvisorKey] = useState(false)
 
   const isVerified = profile?.rsi_handle_verified ?? false
+  const [citizenIdLinked, setCitizenIdLinked] = useState(false)
+
+  const reloadCitizenIdLink = useCallback(async () => {
+    const result = await fetchMySpectrum()
+    setCitizenIdLinked(result.ok && result.spectrum.linked)
+  }, [])
+
+  useEffect(() => {
+    void reloadCitizenIdLink()
+  }, [reloadCitizenIdLink, profile?.id, profile?.rsi_handle_verified, profile?.rsi_handle_verified_at])
 
   // Check if user has active orders (as buyer or fulfiller)
   useEffect(() => {
@@ -358,13 +370,8 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               label={
                 <span className="flex items-center gap-2">
                   RSI Handle
-                  {isVerified && (
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-cyan-900/50 border border-cyan-500/30 rounded text-[10px] text-cyan-400 font-semibold">
-                      <span className="italic">RSI</span>
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </span>
+                  {(isVerified || citizenIdLinked) && (
+                    <RsiVerifiedBadge size="sm" tone={citizenIdLinked ? 'citizenid' : 'legacy'} />
                   )}
                 </span>
               }
@@ -383,7 +390,10 @@ export default function ProfileSettings({ onClose }: { onClose: () => void }) {
               <CitizenIdSettings
                 isSuperAdmin={isSuperAdmin}
                 hasActiveOrders={hasLiveDeals}
-                onRefreshProfile={refreshProfile}
+                onRefreshProfile={async () => {
+                  await refreshProfile()
+                  await reloadCitizenIdLink()
+                }}
                 onMessage={setMessage}
               />
             </div>
