@@ -12,19 +12,25 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
 import RsiVerifiedBadge from './RsiVerifiedBadge'
+import CitizenIdStatsModal from './admin/CitizenIdStatsModal'
 type TabType = 'pending' | 'members' | 'officers' | 'banned'
-type MemberFilter = 'verified' | 'unverified'
+type MemberFilter = 'citizenid' | 'verified' | 'unverified'
 
 const PAGE_SIZE = 10
-const UNVERIFIED_FILTER = 'rsi_handle_verified.is.null,rsi_handle_verified.eq.false'
+const MEMBER_BUCKET: Record<MemberFilter, string> = {
+  citizenid: 'citizenid',
+  verified: 'rsi_verified',
+  unverified: 'unverified',
+}
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
   const { profile: currentUser, isOfficerOrAbove, isSuperAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<TabType>('members')
-  const [memberFilter, setMemberFilter] = useState<MemberFilter>('verified')
+  const [memberFilter, setMemberFilter] = useState<MemberFilter>('citizenid')
   const [users, setUsers] = useState<Profile[]>([])
   const [bannedUsers, setBannedUsers] = useState<BannedUser[]>([])
-  const [memberCounts, setMemberCounts] = useState({ verified: 0, unverified: 0 })
+  const [memberCounts, setMemberCounts] = useState({ citizenid: 0, verified: 0, unverified: 0 })
+  const [statsUser, setStatsUser] = useState<Profile | null>(null)
   const [page, setPage] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -53,15 +59,32 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
       return
     }
 
+    if (activeTab === 'members') {
+      const { data, error } = await supabase.rpc('admin_list_members_by_verification', {
+        p_bucket: MEMBER_BUCKET[memberFilter],
+        p_limit: PAGE_SIZE,
+        p_offset: from,
+      })
+      if (error) console.error('Error fetching members:', error)
+      const payload = (data ?? {}) as {
+        users?: Profile[]
+        total?: number
+        counts?: { citizenid?: number; rsi_verified?: number; unverified?: number }
+      }
+      setUsers(error ? [] : payload.users ?? [])
+      setTotalCount(error ? 0 : payload.total ?? 0)
+      setMemberCounts({
+        citizenid: payload.counts?.citizenid ?? 0,
+        verified: payload.counts?.rsi_verified ?? 0,
+        unverified: payload.counts?.unverified ?? 0,
+      })
+      setLoading(false)
+      return
+    }
+
     let query = supabase.from('profiles').select('*', { count: 'exact' })
     if (activeTab === 'pending') {
       query = query.eq('role', 'pending')
-    } else if (activeTab === 'members') {
-      query = query.eq('role', 'member')
-      query =
-        memberFilter === 'verified'
-          ? query.eq('rsi_handle_verified', true)
-          : query.or(UNVERIFIED_FILTER)
     } else if (activeTab === 'officers') {
       query = query.in('role', ['officer', 'super-admin'])
     }
@@ -72,22 +95,6 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
     if (error) console.error('Error fetching users:', error)
     setUsers(error ? [] : data || [])
     setTotalCount(error ? 0 : count ?? 0)
-
-    if (activeTab === 'members') {
-      const [verified, unverified] = await Promise.all([
-        supabase
-          .from('profiles')
-          .select('id', { count: 'exact', head: true })
-          .eq('role', 'member')
-          .eq('rsi_handle_verified', true),
-        supabase
-          .from('profiles')
-          .select('id', { count: 'exact', head: true })
-          .eq('role', 'member')
-          .or(UNVERIFIED_FILTER),
-      ])
-      setMemberCounts({ verified: verified.count ?? 0, unverified: unverified.count ?? 0 })
-    }
 
     setLoading(false)
   }, [activeTab, memberFilter, page])
@@ -225,23 +232,30 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
               ))}
             </div>
             {activeTab === 'members' && (
-              <div className="flex items-center gap-2 px-3 py-2 site-surface site-divider">
-                {(['verified', 'unverified'] as MemberFilter[]).map(filter => {
+              <div className="flex flex-wrap items-center gap-2 px-3 py-2 site-surface site-divider">
+                {(['citizenid', 'verified', 'unverified'] as MemberFilter[]).map(filter => {
                   const active = memberFilter === filter
-                  const count = filter === 'verified' ? memberCounts.verified : memberCounts.unverified
+                  const count = memberCounts[filter]
+                  const selectedClass =
+                    filter === 'citizenid'
+                      ? 'bg-amber-950/50 text-amber-200 border-amber-400/50'
+                      : filter === 'verified'
+                        ? 'bg-emerald-900/40 text-emerald-300 border-emerald-500/50'
+                        : 'site-filter-selected-slate'
                   return (
                     <button
                       key={filter}
                       onClick={() => changeMemberFilter(filter)}
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                        active
-                          ? filter === 'verified'
-                            ? 'bg-emerald-900/40 text-emerald-300 border-emerald-500/50'
-                            : 'site-filter-selected-slate'
-                          : 'site-filter-idle border-transparent'
+                        active ? selectedClass : 'site-filter-idle border-transparent'
                       }`}
                     >
-                      {filter === 'verified' ? (
+                      {filter === 'citizenid' ? (
+                        <>
+                          <RsiVerifiedBadge size="sm" tone="citizenid" />
+                          Citizen iD
+                        </>
+                      ) : filter === 'verified' ? (
                         <>
                           <RsiVerifiedBadge size="sm" />
                           RSI Verified
@@ -342,9 +356,11 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
           ) : users.length === 0 ? (
             <div className="text-center py-8 text-slate-400">
               {activeTab === 'members'
-                ? memberFilter === 'verified'
-                  ? 'No RSI verified members'
-                  : 'No unverified members'
+                ? memberFilter === 'citizenid'
+                  ? 'No Citizen iD members'
+                  : memberFilter === 'verified'
+                    ? 'No RSI verified members'
+                    : 'No unverified members'
                 : 'No users in this category'}
             </div>
           ) : (
@@ -367,10 +383,27 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                       </div>
                     )}
 
-                    <div className="flex-1 min-w-0">
+                    <button
+                      type="button"
+                      className={`flex-1 min-w-0 text-left ${
+                        memberFilter === 'citizenid' && activeTab === 'members'
+                          ? 'cursor-pointer'
+                          : 'cursor-default'
+                      }`}
+                      onClick={() => {
+                        if (activeTab === 'members' && memberFilter === 'citizenid') {
+                          setStatsUser(user)
+                        }
+                      }}
+                    >
                       <p className="text-white font-medium truncate flex items-center gap-1.5">
                         <span>{getDisplayName(user)}</span>
-                        {user.rsi_handle_verified && <RsiVerifiedBadge size="sm" />}
+                        {(user.rsi_handle_verified || (activeTab === 'members' && memberFilter === 'citizenid')) && (
+                          <RsiVerifiedBadge
+                            size="sm"
+                            tone={activeTab === 'members' && memberFilter === 'citizenid' ? 'citizenid' : 'legacy'}
+                          />
+                        )}
                         {user.id === currentUser?.id && (
                           <span className="text-xs text-slate-500">(you)</span>
                         )}
@@ -379,6 +412,9 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                         <p className="text-slate-500 text-xs truncate">Google: {user.display_name}</p>
                       )}
                       <p className="text-slate-400 text-sm truncate">{user.email}</p>
+                      {activeTab === 'members' && memberFilter === 'citizenid' && (
+                        <p className="text-amber-300/80 text-xs">View Citizen iD stats</p>
+                      )}
                       <p className="text-slate-500 text-xs">
                         Joined {new Date(user.created_at).toLocaleDateString()}
                         {user.role === 'super-admin' && (
@@ -392,7 +428,7 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
                           </span>
                         )}
                       </p>
-                    </div>
+                    </button>
 
                     <div className="flex flex-wrap gap-2 justify-end">
                       {activeTab === 'pending' && (
@@ -441,6 +477,14 @@ export default function AdminPanel({ onClose }: { onClose: () => void }) {
             </div>
           )}
       </AppModal>
+
+      {statsUser && (
+        <CitizenIdStatsModal
+          userId={statsUser.id}
+          title={getDisplayName(statsUser)}
+          onClose={() => setStatsUser(null)}
+        />
+      )}
 
       {banTarget && (
         <AppModal
