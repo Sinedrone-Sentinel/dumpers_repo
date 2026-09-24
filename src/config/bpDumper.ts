@@ -43,7 +43,7 @@ export const BP_DUMPER_STORE_URL =
  * Version shown on the Store download card. Independent of BP_DUMPER_VERSION
  * (GitHub exe / Python). Bump this when a new Store package is published.
  */
-export const BP_DUMPER_STORE_VERSION = '1.21.0' as const
+export const BP_DUMPER_STORE_VERSION = '1.22.1' as const
 
 export const BP_DUMPER_RECOMMENDED_DOWNLOAD_ID = 'windows-store' as const
 
