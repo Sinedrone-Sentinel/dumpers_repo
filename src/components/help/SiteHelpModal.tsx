@@ -127,7 +127,7 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
       zIndex={70}
       headerExtra={
         <div className="px-3 sm:px-4 pb-2 flex items-center justify-between gap-2">
-          <p className="text-[11px] text-slate-500">Answers come from the Information Archive.</p>
+          <p className="text-[11px] text-slate-500">Answers come from the site guide and the lists for what you ask about.</p>
           <AiChatUsageMeter usage={usage} />
         </div>
       }
