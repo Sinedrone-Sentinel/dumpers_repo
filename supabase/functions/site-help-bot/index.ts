@@ -274,6 +274,7 @@ serve(async (req) => {
       knowledge,
       currentPath: clip(body.currentPath, 200),
       displayName: clip((profile as { display_name?: unknown } | null)?.display_name, 60),
+      question,
     })
 
     const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = []

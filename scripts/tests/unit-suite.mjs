@@ -1252,6 +1252,35 @@ check(
 check(helpPrompt.pageLabelForPath('/targets') === 'Mission Tracker', 'help page: parent route')
 check(helpPrompt.pageLabelForPath('/nope') === null, 'help page: unknown path is null')
 
+const wikeloPrompt = helpPrompt.buildHelpSystemPrompt({
+  knowledge: shippedKnowledge,
+  currentPath: '/blueprints',
+  displayName: 'Tester',
+  question: 'What does the Asgard Fight Mod Wikelo trade ask me to turn in?',
+})
+check(wikeloPrompt.includes('Asgard Fight Mod'), 'wikelo question loads that trade')
+check(wikeloPrompt.includes('Wikelo'), 'wikelo question names the wikelo catalog')
+check(
+  !wikeloPrompt.includes('CK13-GID Seed Blend'),
+  'wikelo question does not load the lore catalog',
+)
+check(
+  Buffer.byteLength(wikeloPrompt) < 400_000,
+  'a single help question stays under the Gemini request size',
+)
+
+const missionPrompt = helpPrompt.buildHelpSystemPrompt({
+  knowledge: shippedKnowledge,
+  currentPath: '/orders',
+  displayName: 'Tester',
+  question: 'Which mission drops the P4-AR Rifle?',
+})
+check(missionPrompt.includes('P4-AR Rifle'), 'mission question can find that blueprint drop')
+check(
+  Buffer.byteLength(missionPrompt) < 400_000,
+  'a mission question does not attach every catalog',
+)
+
 // --- AI chat usage meter ----------------------------------------------------
 check(
   aiUsage.normalizeAiChatUsage({ used: 3, max: 20, resets_in_sec: 1800 })?.used === 3,
