@@ -455,7 +455,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'It can tell you what a Wikelo trade asks for, which mission drops a blueprint, and what a blueprint needs. It does not price items or build a mining loadout — use Commodity Lookup and Smart Cracker for those',
       'Runs on your own free Gemini API key — the same saved key the Smart Cracker Advisor uses, so setting it up once covers both',
       'Save the key encrypted with a lock phrase and only you can unlock it, or paste it fresh each visit',
-      'Limited to 20 questions an hour. The counter in the chat header shows where you are and when it resets',
+      'Limited to 20 questions an hour. The counter moves only when your question is sent to Gemini, and it shows where you are and when it resets',
       'If Help cannot answer, open a Support ticket from your avatar menu',
     ],
     relatesTo: ['Information Archive', 'Mining Tracker', 'Support', 'Settings'],

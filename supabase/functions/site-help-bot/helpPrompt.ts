@@ -174,6 +174,27 @@ function takeUntil(rows: unknown[], budget: number): unknown[] {
   return kept
 }
 
+/**
+ * "Turn in" and "components" also match Wikelo trades and the component stat
+ * list. Faction and contract questions are answered from mission rows. Those
+ * other lists stay out unless the question actually names them.
+ */
+function dropCatalogsForQuestion(question: string, keys: string[]): string[] {
+  const lower = String(question ?? '').toLowerCase()
+  const aboutContracts = /\b(?:missions?|contracts?|bount(?:y|ies)|mercenary)\b/.test(lower)
+  const aboutFaction = /\bfactions?\b/.test(lower) || /\b(?:standing|reputation)\b/.test(lower)
+  const namesWikelo = /\bwikelo\b|\bfavors?\b|\bemporium\b|\bbarter\b|\bhand[ -]?ins?\b/.test(lower)
+  const aboutComponentStats = /\b(?:coolers?|power plants?|quantum drives?|shields?|grades?)\b/.test(lower)
+  let next = keys
+  if ((aboutContracts || aboutFaction) && !namesWikelo) {
+    next = next.filter((key) => key !== 'wikelo')
+  }
+  if ((aboutContracts || aboutFaction) && /\bcomponents?\b/.test(lower) && !aboutComponentStats) {
+    next = next.filter((key) => key !== 'components')
+  }
+  return next
+}
+
 function wantedCatalogKeys(question: string, path: string): { keys: string[]; asked: boolean } {
   const lower = String(question ?? '').toLowerCase()
   const page = cleanPath(path)
@@ -196,7 +217,40 @@ function wantedCatalogKeys(question: string, path: string): { keys: string[]; as
       if (onPage) route.keys.forEach(add)
     }
   }
-  return { keys, asked }
+  return { keys: dropCatalogsForQuestion(question, keys), asked }
+}
+
+const CATALOG_PROMPT_ORDER = [
+  'missions',
+  'factions',
+  'wikelo',
+  'blueprints',
+  'components',
+  'weapons',
+  'ordnance',
+  'mining',
+  'miningLasers',
+  'miningModules',
+  'miningGadgets',
+  'manufacturers',
+  'lore',
+  'gameVersion',
+]
+
+function orderCatalogs(selected: Record<string, unknown>): Record<string, unknown> {
+  const ordered: Record<string, unknown> = {}
+  for (const key of CATALOG_PROMPT_ORDER) {
+    if (Object.prototype.hasOwnProperty.call(selected, key)) ordered[key] = selected[key]
+  }
+  for (const key of Object.keys(selected)) {
+    if (!Object.prototype.hasOwnProperty.call(ordered, key)) ordered[key] = selected[key]
+  }
+  return ordered
+}
+
+/** True when the question named a catalog, before the page fallback. */
+export function questionAskedForCatalog(question: string, path: string): boolean {
+  return wantedCatalogKeys(question, path).asked
 }
 
 function packCatalog(
@@ -274,7 +328,9 @@ export function buildHelpSystemPrompt(input: {
   question?: string
 }): string {
   const pageLabel = pageLabelForPath(input.currentPath)
-  const catalogs = selectHelpCatalogs(input.knowledge.catalogs, input.question ?? '', input.currentPath)
+  const catalogs = orderCatalogs(
+    selectHelpCatalogs(input.knowledge.catalogs, input.question ?? '', input.currentPath),
+  )
   const catalogNames = Object.keys(catalogs).filter((key) => key !== 'gameVersion')
   const promptKnowledge = {
     source: input.knowledge.source,
@@ -291,9 +347,11 @@ export function buildHelpSystemPrompt(input: {
     'You explain how to use this site: what each page does, how a workflow runs, and what a member needs before they can do something.',
     '',
     'Hard rules — never violate:',
-    '- Answer only from the SITE GUIDE and SITE CATALOG below. Together they are the documentation for this site.',
-    '- Never invent a page, button, tab, setting, or requirement. If the guide does not describe it, say you do not have it documented and suggest opening a Support ticket from the avatar menu.',
-    '- SITE CATALOG for this question only includes the lists named below. Answer catalog questions from those lists. If a name is not in the loaded lists, say it is not in the lists loaded for this question and point at the page that covers it. Do not invent it.',
+    '- Answer only from the SITE GUIDE and the SITE CATALOG lists loaded below. The guide is how the site works. The lists are the game data for this question.',
+    '- A row in a loaded list is documented. If a loaded list has a matching row, answer from that row. Do not say you do not have it documented when a loaded row matches.',
+    '- Say you do not have it documented, and suggest a Support ticket from the avatar menu, only when neither the guide nor the loaded lists contain the answer. Never invent a page, button, tab, setting, requirement, mission, faction, or trade.',
+    '- Contract, faction, and delivery questions are answered from the missions list. Each mission row has a title and a faction. A title that names components is a contract that asks for those components, and the faction on that row is who offers it. Do not answer those from Wikelo unless the Wikelo list was loaded for this question.',
+    '- If a name is not in the loaded lists, say it is not in the lists loaded for this question and point at the page that covers it. Do not invent it.',
     '- A notForRelease flag means the game files mark that row Not For Release. Say that. Do not claim it is offered on the live board.',
     '- Never invent an aUEC price, a Dumper\'s Fair-Value Price, or a drop chance. Commodity Lookup is where buy and sell prices live. Smart Cracker in the Mining Tracker is where mining loadouts are worked out.',
     '- Never discuss officer tools, admin panels, moderation, database internals, migrations, API keys, or anything about how the site is built. You help members use the site, nothing more.',

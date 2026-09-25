@@ -1,10 +1,16 @@
 // Site Help bot. Member JWT + their own Gemini key. Knowledge base is server-owned.
-// Answers from the Information Archive and the site catalogs baked into knowledge.json.
+// Catalogs for the question are chosen before Gemini is called. The hourly
+// counter moves only when that call is actually sent.
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import knowledgeJson from './knowledge.json' with { type: 'json' }
-import { buildHelpSystemPrompt, type HelpKnowledgeBase } from './helpPrompt.ts'
+import {
+  buildHelpSystemPrompt,
+  questionAskedForCatalog,
+  selectHelpCatalogs,
+  type HelpKnowledgeBase,
+} from './helpPrompt.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -92,6 +98,15 @@ type AdminClient = {
 async function sha256Hex(value: string): Promise<string> {
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
+/** Non-fatal — a missing migration 200 must not take the chat down. */
+async function releaseAiChatAsk(admin: AdminClient, userId: string): Promise<void> {
+  const { error } = await admin.rpc('ai_chat_release', {
+    p_user_id: userId,
+    p_feature: RATE_FEATURE,
+  })
+  if (error) console.warn('ai_chat_release failed')
 }
 
 /** Non-fatal — a missing migration 196 must not take the chat down. */
@@ -227,6 +242,50 @@ serve(async (req) => {
     })
 
     const keySha256 = await sha256Hex(apiKey)
+    const currentPath = clip(body.currentPath, 200)
+    const selectedCatalogs = selectHelpCatalogs(knowledge.catalogs, question, currentPath)
+    const catalogNames = Object.keys(selectedCatalogs).filter((key) => key !== 'gameVersion')
+    if (questionAskedForCatalog(question, currentPath) && catalogNames.length === 0) {
+      console.error('help catalogs empty', catalogNames.join(','))
+      return json(503, {
+        error: 'Help could not load the lists for that question. Try again in a moment.',
+      })
+    }
+
+    const { data: profile } = await userClient
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    const systemPrompt = buildHelpSystemPrompt({
+      knowledge,
+      currentPath,
+      displayName: clip((profile as { display_name?: unknown } | null)?.display_name, 60),
+      question,
+    })
+
+    const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = []
+    for (const msg of parseMessages(body.messages)) {
+      contents.push({
+        role: msg.role === 'advisor' ? 'model' : 'user',
+        parts: [{ text: msg.text }],
+      })
+    }
+    contents.push({ role: 'user', parts: [{ text: question }] })
+
+    const payload: Record<string, unknown> = {
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents,
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
+      },
+    }
+
+    // Lists are chosen above. The hourly counter moves only once this request
+    // is actually handed to Gemini.
+    console.info('help catalogs', catalogNames.join(',') || 'guide')
     const { data: rate, error: rateError } = await admin.rpc('ai_chat_try_consume', {
       p_user_id: user.id,
       p_feature: RATE_FEATURE,
@@ -264,38 +323,13 @@ serve(async (req) => {
       event: 'asked',
     })
 
-    const { data: profile } = await userClient
-      .from('profiles')
-      .select('display_name')
-      .eq('id', user.id)
-      .maybeSingle()
-
-    const systemPrompt = buildHelpSystemPrompt({
-      knowledge,
-      currentPath: clip(body.currentPath, 200),
-      displayName: clip((profile as { display_name?: unknown } | null)?.display_name, 60),
-      question,
-    })
-
-    const contents: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = []
-    for (const msg of parseMessages(body.messages)) {
-      contents.push({
-        role: msg.role === 'advisor' ? 'model' : 'user',
-        parts: [{ text: msg.text }],
-      })
+    let generated: { ok: true; answer: string } | { ok: false; status: number }
+    try {
+      generated = await generateAnswer(apiKey, payload)
+    } catch (error) {
+      await releaseAiChatAsk(admin, user.id)
+      throw error
     }
-    contents.push({ role: 'user', parts: [{ text: question }] })
-
-    const payload: Record<string, unknown> = {
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      contents,
-      generationConfig: {
-        temperature: 0.3,
-        maxOutputTokens: MAX_OUTPUT_TOKENS,
-      },
-    }
-
-    const generated = await generateAnswer(apiKey, payload)
     if (!generated.ok) {
       await recordAiChatEvent(admin, {
         userId: user.id,
