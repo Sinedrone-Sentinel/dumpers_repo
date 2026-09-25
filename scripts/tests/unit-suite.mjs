@@ -1295,6 +1295,22 @@ check(
   turnInPrompt.includes('RMC / UCM / Components'),
   'component turn-in question keeps the component salvage titles',
 )
+check(
+  turnInPrompt.includes('SITE CATALOG loaded for this question: missions, factions.'),
+  'component turn-in question loads missions and factions only',
+)
+check(
+  !turnInPrompt.includes('Asgard Fight Mod'),
+  'component turn-in question does not load Wikelo trades',
+)
+check(
+  turnInPrompt.includes('A row in a loaded list is documented'),
+  'help prompt answers from a loaded list instead of refusing',
+)
+check(
+  !turnInPrompt.includes('If the guide does not describe it, say you do not have it documented'),
+  'help prompt does not refuse just because the Archive page is silent',
+)
 
 // --- AI chat usage meter ----------------------------------------------------
 check(

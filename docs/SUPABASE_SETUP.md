@@ -230,6 +230,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 162 | `197_bp_wishlists.sql` | Crafting Wishlist: `bp_wishlists` + `bp_wishlist_items`. Members `SELECT` their own rows only. Create, rename, delete, add, quantity, remove, Got it, and Use My Tracked Resources are SECURITY DEFINER RPCs (10 lists, 20 unique recipes). Got it can deduct one craft from My Resources at the saved qualities |
 | 163 | `198_admin_citizenid_members.sql` | Admin Panel member buckets: Citizen iD (`spectrum_citizens.citizenid_sub`), legacy RSI verified, and unverified. `admin_list_members_by_verification` and `admin_get_citizenid_stats` are officer / super-admin only. Refresh tokens are not returned |
 | 164 | `199_admin_citizenid_badge_flags.sql` | `admin_citizenid_linked_user_ids` tells officers which of the listed user ids have a Citizen iD link, so RSI tags stay gold for officers and super-admins outside the Members buckets. Officer / super-admin only |
+| 165 | `200_ai_chat_release.sql` | `ai_chat_release(user, feature)` (`service_role` only) gives back one hourly ask when Help built the prompt but the Gemini request never went out. Apply after **195** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
@@ -337,7 +338,7 @@ npx supabase functions deploy site-help-bot
 | `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
 | `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190**, **195**, then **196** (usage meter + super-admin Edge analytics) |
-| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers from the Information Archive and the Wikelo, mission, blueprint, and other catalogs baked into `knowledge.json`. Apply migrations **190**, **195**, and **196** first |
+| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers from the Information Archive and only the catalogs that question needs, baked into `knowledge.json`. The hourly counter moves when the question is sent to Gemini. Apply migrations **190**, **195**, **196**, and **200** first |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
@@ -345,7 +346,7 @@ Edge Functions receive platform secrets automatically (`SUPABASE_SECRET_KEYS`, p
 
 ### Edge Function secrets
 
-**AI chats (Smart Cracker Advisor and site Help):** no site Gemini/OpenAI secret and no wrap secret. Members paste a key each visit, or save a copy they encrypt in the browser with a lock phrase (PBKDF2 + AES-GCM). The database stores ciphertext only, and one saved key serves both chats. Each chat gets its own 20/hour bucket from migration **195**, and both report usage back so the chat can show a live `x/20 this hour` meter. Super-admin Site Analytics (`get_ai_chat_usage_summary`) needs migration **196** and a redeploy of both functions so invokes are recorded. Apply migrations **189–190**, **195**, and **196**, then:
+**AI chats (Smart Cracker Advisor and site Help):** no site Gemini/OpenAI secret and no wrap secret. Members paste a key each visit, or save a copy they encrypt in the browser with a lock phrase (PBKDF2 + AES-GCM). The database stores ciphertext only, and one saved key serves both chats. Each chat gets its own 20/hour bucket from migration **195**, and both report usage back so the chat can show a live `x/20 this hour` meter. Help spends a question only when it sends the prompt to Gemini; migration **200** returns that question if the request never goes out. Super-admin Site Analytics (`get_ai_chat_usage_summary`) needs migration **196** and a redeploy of both functions so invokes are recorded. Apply migrations **189–190**, **195**, **196**, and **200**, then:
 
 ```bash
 npm run copy-mining-advisor-catalog

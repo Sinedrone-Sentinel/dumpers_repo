@@ -8,7 +8,7 @@ import type { AdvisorChatMessage } from './miningAdvisor'
  * Same security model as the Smart Cracker Advisor: the member's own Gemini key
  * travels with the request, the Edge Function checks their JWT and their hourly
  * allowance, and the knowledge base is server-owned so the answer can only come
- * from the Information Archive.
+ * from the Archive and the catalogs loaded for that question.
  */
 export const SITE_HELP_THREAD_STORAGE = 'dumpers_site_help_thread'
 
