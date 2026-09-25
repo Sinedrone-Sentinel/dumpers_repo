@@ -1,18 +1,23 @@
 /**
  * Shape the Information Archive into the Site Help bot's knowledge base.
  *
- * The Help bot answers "how do I do X on this site" and must answer ONLY from
- * what the Archive actually documents, so this is a straight re-shaping of the
- * same content the Archive page renders — no new prose, nothing invented here.
+ * The Help bot answers "how do I do X on this site" from the Archive, and
+ * "what does this Wikelo trade / mission / blueprint need" from the catalogs.
+ * No new prose — the Archive text is copied, and the catalogs are display
+ * names taken from the same JSON the site renders.
  *
  * Pure functions; the bake runner is scripts/build-help-knowledge-base.mjs.
  */
 
-/** The whole payload rides in every prompt, so keep it honest about its size. */
-export const HELP_KB_MAX_BYTES = 120_000
+/**
+ * The whole payload rides in every prompt. The Archive how-to is small.
+ * The catalogs (Wikelo, missions, blueprints, and the other reference pages)
+ * are the rest of the budget.
+ */
+export const HELP_KB_MAX_BYTES = 4_000_000
 const MIN_PAGE_GUIDES = 20
 
-export function buildHelpKnowledgeBase(source) {
+export function buildHelpKnowledgeBase(source, catalogs) {
   const pages = (source.PAGE_GUIDES ?? []).map((guide) => ({
     id: guide.id,
     title: guide.title,
@@ -22,9 +27,10 @@ export function buildHelpKnowledgeBase(source) {
   }))
 
   return {
-    source: "Dumper's Repo Information Archive",
+    source: "Dumper's Repo Information Archive and site catalogs",
     pageCount: pages.length,
     pages,
+    catalogs: catalogs ?? {},
     topics: {
       about: source.ABOUT_SECTION ?? null,
       offlineMode: source.OFFLINE_MODE_SECTION ?? null,
@@ -57,6 +63,14 @@ export function assertHelpKnowledgeBase(kb) {
   }
   if (!kb.topics?.siteRules || !kb.topics?.dfp) {
     throw new Error('Help knowledge base is missing site rules or DFP sections')
+  }
+  for (const key of ['wikelo', 'blueprints', 'missions', 'components', 'factions', 'lore']) {
+    if (!Array.isArray(kb.catalogs?.[key]) || kb.catalogs[key].length < 5) {
+      throw new Error(`Help knowledge base catalog "${key}" is missing`)
+    }
+  }
+  if (JSON.stringify(kb.catalogs).includes('file://')) {
+    throw new Error('Help knowledge base catalog leaked a file path')
   }
   const bytes = Buffer.byteLength(JSON.stringify(kb))
   if (bytes > HELP_KB_MAX_BYTES) {

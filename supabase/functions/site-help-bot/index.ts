@@ -1,5 +1,5 @@
 // Site Help bot. Member JWT + their own Gemini key. Knowledge base is server-owned.
-// Answers only from the Information Archive baked into knowledge.json.
+// Answers from the Information Archive and the site catalogs baked into knowledge.json.
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'

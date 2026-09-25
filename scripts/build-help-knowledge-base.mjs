@@ -1,5 +1,5 @@
 /**
- * Bake the Information Archive into the Site Help bot's knowledge base.
+ * Bake the Information Archive and the site catalogs into the Site Help bot's knowledge base.
  *
  * Bundles the same TypeScript the Archive page renders (esbuild -> dynamic import,
  * the trick generate-archive-guide.mjs already uses) and writes a compact JSON
@@ -14,6 +14,7 @@ import { buildSync } from 'esbuild'
 import { mkdirSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath, pathToFileURL } from 'url'
+import { buildHelpCatalogs } from './lib/helpCatalog.mjs'
 import { assertHelpKnowledgeBase, buildHelpKnowledgeBase } from './lib/helpKnowledgeBase.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -35,7 +36,8 @@ buildSync({
 })
 
 const content = await import(pathToFileURL(bundlePath).href)
-const knowledge = buildHelpKnowledgeBase(content)
+const catalogs = buildHelpCatalogs(join(root, 'src/data'))
+const knowledge = buildHelpKnowledgeBase(content, catalogs)
 assertHelpKnowledgeBase(knowledge)
 
 mkdirSync(destDir, { recursive: true })

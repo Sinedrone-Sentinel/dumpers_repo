@@ -449,10 +449,10 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Open it with the **?** button at the far right of the header — it is there on every page',
       'Ask how a page works, what a term means, or what you need before you can do something',
-      'Answers come from this Information Archive, so Help knows the same things you can read here',
+      'Answers come from this Information Archive, plus the Wikelo trades, missions, blueprints, components, and the other lists those pages show',
       'Help knows which page you are on, so you can ask "how do I use this?" without explaining where you are',
       'It explains the site only — it cannot click buttons, change settings, or post listings for you',
-      'For game questions use the page that covers them: Smart Cracker for mining loadouts, Commodity Lookup for ore prices, Blueprints for crafting',
+      'It can tell you what a Wikelo trade asks for, which mission drops a blueprint, and what a blueprint needs. It does not price items or build a mining loadout — use Commodity Lookup and Smart Cracker for those',
       'Runs on your own free Gemini API key — the same saved key the Smart Cracker Advisor uses, so setting it up once covers both',
       'Save the key encrypted with a lock phrase and only you can unlock it, or paste it fresh each visit',
       'Limited to 20 questions an hour. The counter in the chat header shows where you are and when it resets',
