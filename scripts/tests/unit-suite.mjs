@@ -1181,6 +1181,9 @@ for (const id of irritatedIds) {
 const helpKb = await import(
   pathToFileURL(path.join(root, 'scripts/lib/helpKnowledgeBase.mjs')).href
 )
+const helpCatalog = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/helpCatalog.mjs')).href
+)
 const archiveContentPath = path.join(outDir, 'archiveGuideContent.mjs')
 await esbuild.build({
   entryPoints: [path.join(root, 'src/lib/archiveGuide/index.ts')],
@@ -1191,7 +1194,8 @@ await esbuild.build({
   packages: 'external',
 })
 const archiveContent = await import(pathToFileURL(archiveContentPath).href)
-const freshKnowledge = helpKb.buildHelpKnowledgeBase(archiveContent)
+const freshCatalogs = helpCatalog.buildHelpCatalogs(path.join(root, 'src/data'))
+const freshKnowledge = helpKb.buildHelpKnowledgeBase(archiveContent, freshCatalogs)
 helpKb.assertHelpKnowledgeBase(freshKnowledge)
 
 const shippedKnowledge = JSON.parse(
@@ -1214,7 +1218,7 @@ check(
   'every help knowledge page carries how-to steps',
 )
 
-// The bot must answer from the Archive only, so the prompt has to carry it.
+// The bot must answer from the Archive and the baked catalogs, so the prompt carries both.
 const helpSystemPrompt = helpPrompt.buildHelpSystemPrompt({
   knowledge: shippedKnowledge,
   currentPath: '/mining-tracker?tab=rs_tracker',
@@ -1225,6 +1229,7 @@ check(
   'help prompt tells the model which page the member is on',
 )
 check(helpSystemPrompt.includes('SITE GUIDE'), 'help prompt injects the site guide')
+check(helpSystemPrompt.includes('SITE CATALOG'), 'help prompt injects the site catalogs')
 check(
   helpSystemPrompt.includes('Never invent a page'),
   'help prompt keeps the no-invention rule',

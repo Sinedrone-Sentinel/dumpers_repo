@@ -337,7 +337,7 @@ npx supabase functions deploy site-help-bot
 | `citizenid-oauth-callback` | Citizen iD redirect (no JWT); exchanges code and upserts Spectrum |
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
 | `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190**, **195**, then **196** (usage meter + super-admin Edge analytics) |
-| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers only from the Information Archive baked into `knowledge.json`. Apply migrations **190**, **195**, and **196** first |
+| `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers from the Information Archive and the Wikelo, mission, blueprint, and other catalogs baked into `knowledge.json`. Apply migrations **190**, **195**, and **196** first |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 
