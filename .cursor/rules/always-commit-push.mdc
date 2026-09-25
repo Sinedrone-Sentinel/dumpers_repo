@@ -22,11 +22,27 @@ As soon as a coherent unit of work is finished (feature, fix, docs/rule change y
    - Follow-up commits after a PR already merged → **new branch + new PR** (do not leave orphan commits on a dead branch).
 5. Reply with the **PR URL**. If `gh` auth fails, say so and give the compare URL — still do not treat push-only as done.
 
-Treat done implementing as implicit approval to ship to a PR branch.
+Treat done implementing as implicit approval to ship to a PR branch. It is **not** approval to merge.
+
+## Human approval is the security gate
+
+The user approves pull requests **by hand**. Merging is allowed only after that approval is already on the pull request.
+
+`gh` is logged in as them. An agent approval is recorded as their approval and bypasses the control.
+
+**Never:**
+
+- `gh pr review --approve`, the reviews API, or any other approving review
+- Enable auto-merge, auto-complete, or a merge queue
+- Merge before their approving review is already on the pull request
+- Approve it yourself so the merge can proceed
+
+**Merge is allowed** with `gh pr merge` only when `gh pr view` shows an `APPROVED` review from the user that this agent did not submit. If that review is missing, stop and leave the pull request open. CI being green is not their approval. "Ship it" is not their approval.
 
 ## Still forbidden
 
 - Force-push to main / master
+- Approving a pull request, enabling auto-merge, or merging before the user's own approval is on it (see above)
 - Skipping hooks unless the user explicitly orders it
 - Committing secrets (`.env`, service-role keys, PATs, webhook URLs)
 - Amending pushed commits unless the user amend rules are all met
