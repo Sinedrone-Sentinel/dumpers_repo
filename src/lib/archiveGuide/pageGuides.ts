@@ -421,7 +421,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Desktop app that reads your local Star Citizen Game.log — not CIG servers — to sync blueprint unlocks and power Live Mission Tracker.',
     details: [
       'Open from Mission Tracker header buttons — BP Dumper for setup, Live Tracker for the live page — or the avatar menu',
-      '**Windows (recommended):** install **BP Dumper** from the Microsoft Store. You choose the LIVE folder (the app does not scan your drives). It stays idle until you press Start. Paste your API key, then Start. Updates come from the Store',
+      '**Windows (recommended):** install **BP Dumper** from the Microsoft Store. Type the LIVE folder path (the app does not scan your drives). It stays idle until you press Start. Paste your API key, then Start. Updates come from the Store',
       '**Windows (alternate):** download **DumperApps.exe** — auto-detects LIVE (or paste a path), then paste your API key. This build is **unsigned**; Windows Defender / SmartScreen often block it (false positive)',
       'Published Windows builds only go live after the VirusTotal CI gate — named malware-family hits block publish; common generic/ML heuristic labels are ignored (you may still see them on the VirusTotal report)',
       '**macOS / Linux (or advanced Windows):** download **BPDumper-python-scripts.zip** from Downloads (includes `lookup.json`) — install Python 3 with PATH enabled, use a venv or `dumper.bat`, then `python -m pip install -r requirements.txt` and `python dumper.py --watch` (use `python -m pip` if bare `pip` is not recognized)',

@@ -43,7 +43,7 @@ export const BP_DUMPER_STORE_URL =
  * Version shown on the Store download card. Independent of BP_DUMPER_VERSION
  * (GitHub exe / Python). Bump this when a new Store package is published.
  */
-export const BP_DUMPER_STORE_VERSION = '1.22.2' as const
+export const BP_DUMPER_STORE_VERSION = '1.22.3' as const
 
 export const BP_DUMPER_RECOMMENDED_DOWNLOAD_ID = 'windows-store' as const
 
@@ -68,7 +68,7 @@ export const BP_DUMPER_DOWNLOADS: BpDumperDownloadOption[] = [
     kind: 'external',
     label: 'Microsoft Store (Windows)',
     description:
-      'Recommended on Windows. Install BP Dumper from the Microsoft Store, choose your LIVE folder, then paste your API key. Updates come from the Store.',
+      'Recommended on Windows. Install BP Dumper from the Microsoft Store, type your LIVE folder path, then paste your API key. Updates come from the Store.',
     url: BP_DUMPER_STORE_URL,
   },
   {

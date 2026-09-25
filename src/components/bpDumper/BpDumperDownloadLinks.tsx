@@ -160,7 +160,7 @@ export default function BpDumperDownloadLinks({
       {afterDownloads}
 
       <p className="text-xs text-slate-500 leading-relaxed">
-        The Microsoft Store app (recommended on Windows) asks you to choose the LIVE folder that
+        The Microsoft Store app (recommended on Windows) asks you to type the LIVE folder path that
         contains Game.log. It does not scan your drives, and updates install from the Store. The
         Windows exe and Python scripts <strong className="text-slate-400">auto-detect</strong> your Star
         Citizen install (or you can paste a path). When a new exe build is required, download{' '}

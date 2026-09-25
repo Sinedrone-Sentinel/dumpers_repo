@@ -49,8 +49,9 @@ function SetupHowTo() {
               </li>
               <li>Open the app. It stays idle until you press Start.</li>
               <li>
-                <strong className="text-slate-300">File → Path to SC</strong> — choose the LIVE folder
-                that contains Game.log. The app does not scan your drives.
+                Type the <strong className="text-slate-300">LIVE path</strong> — the folder that
+                contains Game.log. It must include Roberts Space Industries\StarCitizen\. The app
+                does not scan your drives.
               </li>
               <li>
                 Paste your <strong className="text-slate-300">API key</strong> from this page into the
@@ -220,7 +221,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
   return (
     <AppModal
       title={DUMPER_APPS_DISPLAY_NAME}
-      subtitle="Microsoft Store on Windows (recommended) — choose your LIVE folder, sync unlocks, power Live Mission Tracker."
+      subtitle="Microsoft Store on Windows (recommended) — type your LIVE folder path, sync unlocks, power Live Mission Tracker."
       onClose={onClose}
       size="lg"
     >
@@ -230,7 +231,7 @@ export default function BpDumperModal({ onClose }: BpDumperModalProps) {
           <ul className="list-disc list-inside space-y-1 text-sm text-slate-400">
             <li>
               <strong className="text-slate-300">Your LIVE folder</strong> — Microsoft Store
-              (recommended): you choose the folder that contains Game.log. The Windows exe and Python
+              (recommended): you type the folder path that contains Game.log. The Windows exe and Python
               scripts can search for that folder, or you can paste a path.
             </li>
             <li>
