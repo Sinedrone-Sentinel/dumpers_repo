@@ -147,7 +147,7 @@ function rankRows(rows: unknown[], tokens: string[]): unknown[] {
     const blob = rowText(row).toLowerCase()
     let score = 0
     for (const token of tokens) {
-      if (blob.includes(token)) score += 1
+      if (blob.includes(token)) score += token.length
     }
     if (score > 0) scored.push({ row, score })
   }

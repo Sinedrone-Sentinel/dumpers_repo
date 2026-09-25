@@ -1281,6 +1281,21 @@ check(
   'a mission question does not attach every catalog',
 )
 
+const turnInPrompt = helpPrompt.buildHelpSystemPrompt({
+  knowledge: shippedKnowledge,
+  currentPath: '/blueprints',
+  displayName: 'Tester',
+  question: 'what faction has contracts that ask for ship components for turn ins',
+})
+check(
+  turnInPrompt.includes('Adagio Holdings'),
+  'component turn-in question keeps the Adagio salvage contracts',
+)
+check(
+  turnInPrompt.includes('RMC / UCM / Components'),
+  'component turn-in question keeps the component salvage titles',
+)
+
 // --- AI chat usage meter ----------------------------------------------------
 check(
   aiUsage.normalizeAiChatUsage({ used: 3, max: 20, resets_in_sec: 1800 })?.used === 3,
