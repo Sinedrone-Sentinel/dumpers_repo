@@ -109,6 +109,7 @@ export default function MiningTrackerRoute() {
   const [viewMode, setViewMode] = useState<ViewMode>('tracker')
   const [oreSearch, setOreSearch] = useState('')
   const [rsSearch, setRsSearch] = useState('')
+  const [anomalyOverride, setAnomalyOverride] = useState(false)
   const [selectedOreName, setSelectedOreName] = useState<string>('')
   const [listRarityFilter, setListRarityFilter] = useState<string>('')
   const [calculatorEntryId, setCalculatorEntryId] = useState<string | null>(null)
@@ -175,8 +176,8 @@ export default function MiningTrackerRoute() {
 
   const rsReading = useMemo(() => parseRsSignatureInput(rsSearch), [rsSearch])
   const rsMatches = useMemo(
-    () => (rsReading == null ? [] : matchRsSignature(rsReading)),
-    [rsReading],
+    () => (rsReading == null ? [] : matchRsSignature(rsReading, { anomalyOverride })),
+    [rsReading, anomalyOverride],
   )
   const rsLookupReady = rsReading != null && rsReading >= 1000
 
@@ -645,6 +646,33 @@ export default function MiningTrackerRoute() {
                 <p className="text-xs text-slate-500 mt-1">No RS match</p>
               )}
             </div>
+            <SiteTooltip
+              side="bottom"
+              panelClassName="max-w-sm text-left"
+              content={
+                <div className="space-y-1.5 text-xs leading-snug">
+                  <p>
+                    Turn this on only when you trust the scanner number and the list stayed empty.
+                  </p>
+                  <p>
+                    The usual list only includes cluster sizes the game files actually spawn. With this
+                    checked, every ship ore whose base signature divides that number evenly is listed,
+                    including sizes those files never describe. Surface and Asteroid stay separate rows.
+                  </p>
+                  <p>Gems never appear. They do not have a ship RS signature.</p>
+                </div>
+              }
+            >
+              <label className="inline-flex items-center gap-2 h-9 cursor-pointer select-none whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  className="site-checkbox"
+                  checked={anomalyOverride}
+                  onChange={(event) => setAnomalyOverride(event.target.checked)}
+                />
+                <span className="text-xs text-slate-300">Anomaly Override</span>
+              </label>
+            </SiteTooltip>
             {selectedOreData && untrackedDepositTypes.length > 0 && (
               <TrackOreButtons oreName={selectedOreData.ore_name} rarity={selectedOreData.rarity} />
             )}

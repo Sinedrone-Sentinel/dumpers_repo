@@ -1502,4 +1502,39 @@ check(miningSignatures.matchRsSignature(3200 * 3).length === 0, 'Savrilium never
 check(miningSignatures.parseRsSignatureInput('10,155') === 10155, 'RS input accepts commas')
 check(miningSignatures.parseRsSignatureInput('10155x') === null, 'RS input rejects extra text')
 
+const override = { anomalyOverride: true }
+const riccite4 = miningSignatures.matchRsSignature(3385 * 4, override)
+check(
+  riccite4.some((m) => m.oreName === 'Riccite' && m.depositType === 'surface' && m.nodes === 4) &&
+    riccite4.some((m) => m.oreName === 'Riccite' && m.depositType === 'asteroid' && m.nodes === 4),
+  'Anomaly override includes a 4-rock Riccite reading on both deposit types',
+)
+const aluminum2 = miningSignatures.matchRsSignature(4285 * 2, override)
+check(
+  aluminum2.some((m) => m.oreName === 'Aluminum' && m.nodes === 2),
+  'Anomaly override includes the skipped 2-rock Aluminum size',
+)
+const gemNames = new Set([
+  'Aphorite',
+  'Dolivine',
+  'Hadanite',
+  'Janalite',
+  'Glacosite',
+  'Feynmaline',
+  'Sadaryx',
+  'Carinite',
+  'Beradom',
+])
+for (const reading of [3000, 6000, 9000, 3385 * 4, 4285 * 2]) {
+  const hits = miningSignatures.matchRsSignature(reading, override)
+  check(
+    hits.every((m) => !gemNames.has(m.oreName)),
+    `gems stay out of RS matches for ${reading}`,
+  )
+}
+check(
+  miningSignatures.matchRsSignature(3000, override).every((m) => m.oreName !== 'Aphorite'),
+  'the shared gem placeholder 3000 is not offered as Aphorite',
+)
+
 console.log(`Unit tests: ${pass} passed`)

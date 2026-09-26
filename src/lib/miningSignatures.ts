@@ -1,4 +1,5 @@
 import gameMiningSpawnsData from '../data/game-mining-spawns.json'
+import { isHandMineableType } from './handMineables'
 import { ORE_SIGNATURES } from './miningConstants'
 import { normalizeMiningOreName } from './miningOreCanonical'
 
@@ -47,6 +48,8 @@ function buildLegalSignatureIndex(): Map<number, RsSignatureMatch[]> {
     const oreName = ore.oreName
     const base = ore.baseSignature
     if (!oreName || !Number.isFinite(base) || base == null || base <= 0) continue
+    if (isHandMineableType(oreName)) continue
+    if (ORE_SIGNATURES[normalizeMiningOreName(oreName)] == null) continue
 
     for (const depositType of DEPOSIT_ORDER) {
       const profile = ore.overallByType?.[depositType]
@@ -65,22 +68,64 @@ function buildLegalSignatureIndex(): Map<number, RsSignatureMatch[]> {
     }
   }
 
-  for (const list of map.values()) {
-    list.sort(
-      (a, b) =>
-        a.oreName.localeCompare(b.oreName) ||
-        DEPOSIT_ORDER.indexOf(a.depositType) - DEPOSIT_ORDER.indexOf(b.depositType) ||
-        a.nodes - b.nodes,
-    )
-  }
+  for (const list of map.values()) sortMatches(list)
 
   return map
 }
 
 let legalSignatureIndex: Map<number, RsSignatureMatch[]> | null = null
 
-export function matchRsSignature(reading: number): RsSignatureMatch[] {
+function shipSpawnOres(): SpawnOre[] {
+  const ores = (gameMiningSpawnsData as { ores?: Record<string, SpawnOre> }).ores ?? {}
+  return Object.values(ores).filter((ore) => {
+    const oreName = ore.oreName
+    const base = ore.baseSignature
+    if (!oreName || !Number.isFinite(base) || base == null || base <= 0) return false
+    if (isHandMineableType(oreName)) return false
+    if (ORE_SIGNATURES[normalizeMiningOreName(oreName)] == null) return false
+    return true
+  })
+}
+
+function depositTypesFor(ore: SpawnOre): RsDepositType[] {
+  return DEPOSIT_ORDER.filter((depositType) => ore.overallByType?.[depositType] != null)
+}
+
+function sortMatches(list: RsSignatureMatch[]): RsSignatureMatch[] {
+  return list.sort(
+    (a, b) =>
+      a.oreName.localeCompare(b.oreName) ||
+      DEPOSIT_ORDER.indexOf(a.depositType) - DEPOSIT_ORDER.indexOf(b.depositType) ||
+      a.nodes - b.nodes,
+  )
+}
+
+/**
+ * Ignore cluster-size limits. Any whole rock count whose base signature
+ * divides the reading is included. Gems stay out — their entity files share
+ * a placeholder signature, not a ship scanner value.
+ */
+function matchAnomalyOverride(reading: number): RsSignatureMatch[] {
+  const matches: RsSignatureMatch[] = []
+  for (const ore of shipSpawnOres()) {
+    const base = ore.baseSignature
+    const oreName = ore.oreName
+    if (base == null || !oreName || reading % base !== 0) continue
+    const nodes = reading / base
+    if (!Number.isInteger(nodes) || nodes < 1) continue
+    for (const depositType of depositTypesFor(ore)) {
+      matches.push({ oreName, depositType, nodes, rs: reading })
+    }
+  }
+  return sortMatches(matches)
+}
+
+export function matchRsSignature(
+  reading: number,
+  options?: { anomalyOverride?: boolean },
+): RsSignatureMatch[] {
   if (!Number.isFinite(reading) || reading <= 0) return []
+  if (options?.anomalyOverride) return matchAnomalyOverride(reading)
   if (!legalSignatureIndex) legalSignatureIndex = buildLegalSignatureIndex()
   return legalSignatureIndex.get(reading) ?? []
 }
