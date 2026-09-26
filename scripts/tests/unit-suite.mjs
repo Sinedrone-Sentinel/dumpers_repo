@@ -1470,4 +1470,52 @@ check(goMutex === dumperMutexName, 'Go single-instance mutex name')
 check(pyMutex === dumperMutexName, 'Python single-instance mutex name')
 check(goMutex === pyMutex, 'Go and Python share the same instance mutex name')
 
+const missionLocality = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/missionLocality.mjs')).href
+)
+const locName = (token) =>
+  ({
+    pyro1: 'Pyro I',
+    pyro2: 'Monox',
+    pyro3: 'Bloom',
+    pyro5: 'Pyro V',
+    pyro6: 'Terminus',
+    stanton1: 'Hurston',
+  })[token] || null
+check(
+  missionLocality.buildLocalityLabel(
+    'pyro2',
+    [
+      'file://libs/foundry/records/starmap/pu/system/pyro/pyro2/pyro2.json',
+      'file://libs/foundry/records/starmap/pu/station/reststop/rr_p2_leo.json',
+      'file://libs/foundry/records/starmap/pu/station/reststop/rr_p1_l3.json',
+      'file://libs/foundry/records/starmap/pu/station/reststop/rr_p3_l3.json',
+    ],
+    locName,
+  ) === 'Monox, Pyro I L3, and Bloom L3',
+  'Monox locality also names the Bloom and Pyro I stops in that gate',
+)
+check(
+  missionLocality.buildLocalityLabel(
+    'regiona',
+    [
+      'file://libs/foundry/records/starmap/pu/system/pyro/pyro1/pyro1.json',
+      'file://libs/foundry/records/starmap/pu/system/pyro/pyro2/pyro2.json',
+      'file://libs/foundry/records/starmap/pu/system/pyro/pyro3/lagrange/pyro3_l3.json',
+      'file://libs/foundry/records/starmap/pu/system/pyro/pyro3/lagrange/pyro3_l4.json',
+      'file://libs/foundry/records/starmap/pu/system/pyro/pyro3/lagrange/pyro3_l5.json',
+    ],
+    locName,
+  ) === 'Pyro region A (near Pyro I, Monox, and Bloom L3-L5)',
+  'Pyro region A names Bloom lagrange points, not only Monox',
+)
+check(
+  missionLocality.buildLocalityLabel(
+    'stanton1',
+    ['file://libs/foundry/records/starmap/pu/system/stanton/stanton1/stanton1.json'],
+    locName,
+  ) === 'Hurston area',
+  'a single-planet gate stays one area tag',
+)
+
 console.log(`Unit tests: ${pass} passed`)

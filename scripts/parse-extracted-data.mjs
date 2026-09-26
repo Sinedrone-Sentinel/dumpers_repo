@@ -73,6 +73,7 @@ import { readGameBuildInfo } from './lib/gameBuildVersion.mjs'
 import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
 import { clearAppliedSpellingCorrections } from './lib/spellingCorrections.mjs'
 import { writeWhatsNewDigest } from './lib/writeWhatsNewDigest.mjs'
+import { buildLocalityLabel, describeLocalityPlaces } from './lib/missionLocality.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -484,6 +485,15 @@ function resolveMissionMenuCategory({
   return null
 }
 
+/** Localization sometimes stores a literal trailing \\n on an otherwise finished title. */
+function cleanContractTitle(value) {
+  return String(value || '')
+    .replace(/\\n/g, ' ')
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
 function resolveContractDisplayTitle({ title, titleKey, debugName, localization, category, system }) {
   const debugLower = (debugName || '').toLowerCase()
   const titleLower = (title || '').toLowerCase()
@@ -506,7 +516,7 @@ function resolveContractDisplayTitle({ title, titleKey, debugName, localization,
     for (const key of locCandidates) {
       const loc = localization[key]
       if (loc && !loc.includes('~mission') && !isUnresolvedDisplayName(loc)) {
-        return loc.trim()
+        return cleanContractTitle(loc)
       }
     }
     return `Nyx Bounty · ${diffLabel}`
@@ -547,13 +557,13 @@ function resolveContractDisplayTitle({ title, titleKey, debugName, localization,
     if (titleKey?.startsWith('@')) {
       const loc = localization[titleKey.slice(1)]
       if (loc && !loc.includes('~mission') && !isUnresolvedDisplayName(loc)) {
-        return loc.trim()
+        return cleanContractTitle(loc)
       }
     }
     return humanizeContractDebugName(debugName)
   }
 
-  return title.trim()
+  return cleanContractTitle(title)
 }
 
 /**
@@ -1709,6 +1719,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             } else {
               title = titleKey
             }
+            title = cleanContractTitle(title)
           }
           const descParam = contract.paramOverrides.stringParamOverrides.find(
             p => p.param === 'Description'
@@ -2093,51 +2104,19 @@ function buildMissionLocalityCatalog(localization) {
 
     const key = basename(file, '.json').toLowerCase()
     const systems = new Set()
-    const starNames = []
-    const planetNames = []
-    let hasMoons = false
-    let hasLagrange = false
-
     for (const ref of locations) {
-      const refPath = String(ref || '').toLowerCase()
-      const systemMatch = refPath.match(/\/system\/(stanton|pyro|nyx)\//)
+      const systemMatch = String(ref || '').toLowerCase().match(/\/system\/(stanton|pyro|nyx)\//)
       if (systemMatch) {
         systems.add(systemMatch[1].charAt(0).toUpperCase() + systemMatch[1].slice(1))
       }
-
-      // Normalize "starmapobject.stanton2" and "pyro1" style basenames to one token
-      const base = basename(refPath, '.json').replace(/^starmapobject\./, '')
-
-      if (/^(stanton|pyro|nyx)_?star$/.test(base)) {
-        starNames.push(base)
-      } else if (/^(stanton|pyro|nyx)\d+$/.test(base)) {
-        const name = locName(base)
-        if (name && !planetNames.includes(name)) planetNames.push(name)
-      } else if (/^(stanton|pyro|nyx)\d+[a-z]$/.test(base)) {
-        hasMoons = true
-      } else if (refPath.includes('/lagrange/')) {
-        hasLagrange = true
-      }
-      // Stations / asteroid clusters / clinics are omitted from the label
+    }
+    for (const system of describeLocalityPlaces(locations, key, locName).systems) {
+      systems.add(system)
     }
 
     const systemList = [...systems]
-    let label
-    const regionMatch = key.match(/^region([a-d])$/)
-    if (regionMatch) {
-      const around = planetNames.length > 0 ? ` (near ${planetNames.join(', ')})` : ''
-      label = `Pyro region ${regionMatch[1].toUpperCase()}${around}`
-      if (systemList.length === 0) systemList.push('Pyro')
-    } else if (starNames.length > 0 || planetNames.length === 0) {
-      // Star anchors (or nothing more specific) = system-wide availability
-      const names = systemList.length > 0 ? systemList : starNames
-      label = names.length > 0 ? `Anywhere in ${names.join(' or ')}` : null
-    } else {
-      // hasMoons/hasLagrange just confirm the gate covers the whole neighborhood
-      const suffix = hasMoons || hasLagrange ? ' area' : ''
-      label = `${planetNames.join(' / ')}${suffix}`
-    }
-
+    if (systemList.length === 0 && /^region[a-d]$/.test(key)) systemList.push('Pyro')
+    const label = buildLocalityLabel(key, locations, locName)
     if (!label) continue
     catalog[key] = { key, label, systems: systemList }
   }
