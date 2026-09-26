@@ -64,6 +64,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Faction cards show which star systems that faction appears in',
       'Filter Browse Missions by star system (Stanton / Pyro / Nyx) — faction cards and mission lists update to match',
       'Inside a faction, tag chips appear beside System (Verified, contract type, career path, standing, NFR, etc. — not system or refresh-time tags) and filter the mission list',
+      'Hide NFR, next to the faction filters, leaves out contracts marked Not For Release. Uncheck it to see them again',
       'Every contract with blueprint rewards is shown — nothing is hidden once you have collected all of a mission\'s blueprints (the count just turns green)',
       'See X/X progress (owned vs total) for each mission location',
       'Add unowned blueprints to your tracker directly from the browse view',

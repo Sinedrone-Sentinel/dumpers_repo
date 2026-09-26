@@ -216,12 +216,6 @@ interface FactionBrowseData {
   systems: Set<BrowseSystem>
 }
 
-function factionLawfulStatus(data: FactionBrowseData): 'lawful' | 'illegal' | 'mixed' {
-  if (data.hasLawful && data.hasIllegal) return 'mixed'
-  if (data.hasIllegal) return 'illegal'
-  return 'lawful'
-}
-
 function countMissionTypesByLawful(missions: MissionDisplay[]): { lawful: number; illegal: number } {
   const lawfulTitles = new Set<string>()
   const illegalTitles = new Set<string>()
@@ -253,6 +247,15 @@ function getMissionBrowseSystems(
 function missionMatchesSystem(mission: MissionDisplay, systemFilter: SystemFilter): boolean {
   if (systemFilter === 'all') return true
   return getMissionBrowseSystems(mission).includes(systemFilter)
+}
+
+function missionVisibleInBrowse(
+  mission: MissionDisplay,
+  systemFilter: SystemFilter,
+  hideNfr: boolean,
+): boolean {
+  if (hideNfr && mission.notForRelease) return false
+  return missionMatchesSystem(mission, systemFilter)
 }
 
 function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
@@ -300,6 +303,7 @@ export default function BrowseMissionsView({
     () => readMissionTrackerUiState().browse.selectedMissionKey
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
+  const [hideNfr, setHideNfr] = useState(() => readMissionTrackerUiState().browse.hideNfr)
   const [systemFilter, setSystemFilter] = useState<SystemFilter>('all')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [missionsModalBlueprint, setMissionsModalBlueprint] = useState<{
@@ -352,10 +356,19 @@ export default function BrowseMissionsView({
   const availableSystems = useMemo(() => {
     const present = new Set<BrowseSystem>()
     for (const data of Object.values(missionsByFaction)) {
-      for (const system of data.systems) present.add(system)
+      for (const mission of data.missions) {
+        if (!missionVisibleInBrowse(mission, 'all', hideNfr)) continue
+        for (const system of getMissionBrowseSystems(mission)) present.add(system)
+      }
     }
     return SYSTEM_FILTER_ORDER.filter((system) => present.has(system))
-  }, [missionsByFaction])
+  }, [missionsByFaction, hideNfr])
+
+  useEffect(() => {
+    if (systemFilter !== 'all' && !availableSystems.includes(systemFilter)) {
+      setSystemFilter('all')
+    }
+  }, [availableSystems, systemFilter])
 
   const selectedMission = useMemo(() => {
     if (!selectedMissionKey) return null
@@ -368,42 +381,47 @@ export default function BrowseMissionsView({
         selectedFaction,
         selectedMissionKey,
         searchTerm,
+        hideNfr,
       },
     })
-  }, [selectedFaction, selectedMissionKey, searchTerm])
+  }, [selectedFaction, selectedMissionKey, searchTerm, hideNfr])
 
   useEffect(() => {
     setSelectedTagIds([])
   }, [selectedFaction])
 
   const selectedFactionData = selectedFaction ? missionsByFaction[selectedFaction] : null
-  const isMixedFaction = selectedFactionData
-    ? factionLawfulStatus(selectedFactionData) === 'mixed'
-    : false
+  const isMixedFaction = useMemo(() => {
+    if (!selectedFactionData) return false
+    const visible = selectedFactionData.missions.filter((mission) =>
+      missionVisibleInBrowse(mission, systemFilter, hideNfr),
+    )
+    const hasLawful = visible.some((mission) => mission.isLawful)
+    const hasIllegal = visible.some((mission) => !mission.isLawful)
+    return hasLawful && hasIllegal
+  }, [selectedFactionData, systemFilter, hideNfr])
 
   const filteredFactionList = useMemo(() => {
-    let entries = Object.entries(missionsByFaction)
-
-    if (systemFilter !== 'all') {
-      entries = entries.filter(([, data]) => data.systems.has(systemFilter))
-    }
-
-    if (!searchTerm) return entries
-
     const term = searchTerm.toLowerCase()
-    return entries.filter(([faction, data]) =>
-      faction.toLowerCase().includes(term) ||
-      data.missions.some((m) => missionMatchesSearch(m, term))
-    )
-  }, [missionsByFaction, searchTerm, systemFilter])
+    return Object.entries(missionsByFaction).filter(([faction, data]) => {
+      const visible = data.missions.filter((mission) =>
+        missionVisibleInBrowse(mission, systemFilter, hideNfr),
+      )
+      if (visible.length === 0) return false
+      if (!term) return true
+      return (
+        faction.toLowerCase().includes(term) ||
+        visible.some((mission) => missionMatchesSearch(mission, term))
+      )
+    })
+  }, [missionsByFaction, searchTerm, systemFilter, hideNfr])
 
   const availableFactionTags = useMemo((): BrowseTagFilter[] => {
     if (!selectedFaction) return []
     const factionMissions = missionsByFaction[selectedFaction]?.missions || []
-    const pool =
-      systemFilter === 'all'
-        ? factionMissions
-        : factionMissions.filter((m) => missionMatchesSystem(m, systemFilter))
+    const pool = factionMissions.filter((mission) =>
+      missionVisibleInBrowse(mission, systemFilter, hideNfr),
+    )
 
     const byId = new Map<string, BrowseTagFilter>()
     for (const mission of pool) {
@@ -417,7 +435,7 @@ export default function BrowseMissionsView({
       if (kindDiff !== 0) return kindDiff
       return a.label.localeCompare(b.label)
     })
-  }, [selectedFaction, missionsByFaction, systemFilter])
+  }, [selectedFaction, missionsByFaction, systemFilter, hideNfr])
 
   const availableFactionTagById = useMemo(() => {
     const map = new Map<string, BrowseTagFilter>()
@@ -441,10 +459,9 @@ export default function BrowseMissionsView({
     if (!selectedFaction) return []
     const factionMissions = missionsByFaction[selectedFaction]?.missions || []
 
-    let filtered = factionMissions
-    if (systemFilter !== 'all') {
-      filtered = filtered.filter((m) => missionMatchesSystem(m, systemFilter))
-    }
+    let filtered = factionMissions.filter((mission) =>
+      missionVisibleInBrowse(mission, systemFilter, hideNfr),
+    )
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
       filtered = filtered.filter((m) => missionMatchesSearch(m, term))
@@ -461,6 +478,7 @@ export default function BrowseMissionsView({
     missionsByFaction,
     searchTerm,
     systemFilter,
+    hideNfr,
     selectedTagIdSet,
     availableFactionTagById,
   ])
@@ -709,6 +727,21 @@ export default function BrowseMissionsView({
     )
   }
 
+  const renderHideNfrToggle = () => (
+    <label
+      className="inline-flex items-center gap-2 cursor-pointer select-none"
+      title="Hide contracts marked Not For Release"
+    >
+      <input
+        type="checkbox"
+        className="site-checkbox"
+        checked={hideNfr}
+        onChange={(event) => setHideNfr(event.target.checked)}
+      />
+      <span className="text-xs text-slate-300">Hide NFR</span>
+    </label>
+  )
+
   const renderSystemFilter = () => {
     if (availableSystems.length <= 1) return null
 
@@ -830,11 +863,16 @@ export default function BrowseMissionsView({
             </svg>
           </div>
 
-          {renderSystemFilter()}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {renderSystemFilter()}
+            {renderHideNfrToggle()}
+          </div>
 
           {filteredFactionList.length === 0 && (
             <p className="text-sm text-slate-500 py-6 text-center">
-              No factions have missions{systemFilter !== 'all' ? ` in ${SYSTEM_LABELS[systemFilter]}` : ''}.
+              No factions have missions
+              {systemFilter !== 'all' ? ` in ${SYSTEM_LABELS[systemFilter]}` : ''}
+              {hideNfr ? ' with NFR hidden' : ''}.
             </p>
           )}
 
@@ -842,15 +880,23 @@ export default function BrowseMissionsView({
             {filteredFactionList
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
-                const displayMissions =
-                  systemFilter === 'all'
-                    ? data.missions
-                    : data.missions.filter((m) => missionMatchesSystem(m, systemFilter))
-                const status = factionLawfulStatus(data)
+                const displayMissions = data.missions.filter((mission) =>
+                  missionVisibleInBrowse(mission, systemFilter, hideNfr),
+                )
+                const hasLawful = displayMissions.some((mission) => mission.isLawful)
+                const hasIllegal = displayMissions.some((mission) => !mission.isLawful)
+                const status: 'lawful' | 'illegal' | 'mixed' =
+                  hasLawful && hasIllegal ? 'mixed' : hasIllegal ? 'illegal' : 'lawful'
                 const typeCounts = countMissionTypesByLawful(displayMissions)
                 const contractCount = displayMissions.length
                 const systemsArray =
-                  systemFilter === 'all' ? Array.from(data.systems) : [systemFilter]
+                  systemFilter === 'all'
+                    ? SYSTEM_FILTER_ORDER.filter((system) =>
+                        displayMissions.some((mission) =>
+                          getMissionBrowseSystems(mission).includes(system),
+                        ),
+                      )
+                    : [systemFilter]
                 const cardClass =
                   status === 'mixed'
                     ? 'site-surface hover:border-orange-500/30'
@@ -929,13 +975,15 @@ export default function BrowseMissionsView({
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {renderSystemFilter()}
+            {renderHideNfrToggle()}
             {renderFactionTagFilters()}
           </div>
 
           {selectedFactionMissionGroups.length === 0 ? (
             <p className="text-sm text-slate-500 py-6 text-center">
               No missions match your search
-              {selectedTagIds.length > 0 ? ' or selected tags' : ''}.
+              {selectedTagIds.length > 0 ? ' or selected tags' : ''}
+              {hideNfr ? ', with NFR hidden' : ''}.
             </p>
           ) : isMixedFaction ? (
             <div className="space-y-6">
