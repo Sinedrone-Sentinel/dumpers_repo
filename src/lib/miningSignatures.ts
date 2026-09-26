@@ -1,5 +1,98 @@
+import gameMiningSpawnsData from '../data/game-mining-spawns.json'
 import { ORE_SIGNATURES } from './miningConstants'
 import { normalizeMiningOreName } from './miningOreCanonical'
+
+export type RsDepositType = 'surface' | 'asteroid'
+
+/** One legal scanner reading: base RS, or a cluster size the game actually spawns. */
+export interface RsSignatureMatch {
+  oreName: string
+  depositType: RsDepositType
+  nodes: number
+  rs: number
+}
+
+const DEPOSIT_ORDER: RsDepositType[] = ['asteroid', 'surface']
+
+interface SpawnClusterRow {
+  nodes?: number
+  rs?: number
+  chancePercent?: number
+}
+
+interface SpawnOre {
+  oreName?: string
+  baseSignature?: number
+  overallByType?: Partial<
+    Record<RsDepositType, { clusterRows?: SpawnClusterRow[] }>
+  >
+}
+
+function addReading(map: Map<number, RsSignatureMatch[]>, match: RsSignatureMatch) {
+  const list = map.get(match.rs)
+  if (list) list.push(match)
+  else map.set(match.rs, [match])
+}
+
+/**
+ * Scanner values that can actually appear: one rock (base RS), plus cluster
+ * sizes whose game-file chance is above zero. A multiple that only exists
+ * because max-nodes × base divides evenly is left out when that size never spawns.
+ */
+function buildLegalSignatureIndex(): Map<number, RsSignatureMatch[]> {
+  const map = new Map<number, RsSignatureMatch[]>()
+  const ores = (gameMiningSpawnsData as { ores?: Record<string, SpawnOre> }).ores ?? {}
+
+  for (const ore of Object.values(ores)) {
+    const oreName = ore.oreName
+    const base = ore.baseSignature
+    if (!oreName || !Number.isFinite(base) || base == null || base <= 0) continue
+
+    for (const depositType of DEPOSIT_ORDER) {
+      const profile = ore.overallByType?.[depositType]
+      if (!profile) continue
+
+      addReading(map, { oreName, depositType, nodes: 1, rs: base })
+
+      for (const row of profile.clusterRows ?? []) {
+        const nodes = row.nodes
+        const rs = row.rs
+        if (nodes == null || nodes < 2 || !(row.chancePercent != null && row.chancePercent > 0)) continue
+        if (!Number.isFinite(rs) || rs == null || rs <= 0) continue
+        if (rs !== base * nodes) continue
+        addReading(map, { oreName, depositType, nodes, rs })
+      }
+    }
+  }
+
+  for (const list of map.values()) {
+    list.sort(
+      (a, b) =>
+        a.oreName.localeCompare(b.oreName) ||
+        DEPOSIT_ORDER.indexOf(a.depositType) - DEPOSIT_ORDER.indexOf(b.depositType) ||
+        a.nodes - b.nodes,
+    )
+  }
+
+  return map
+}
+
+let legalSignatureIndex: Map<number, RsSignatureMatch[]> | null = null
+
+export function matchRsSignature(reading: number): RsSignatureMatch[] {
+  if (!Number.isFinite(reading) || reading <= 0) return []
+  if (!legalSignatureIndex) legalSignatureIndex = buildLegalSignatureIndex()
+  return legalSignatureIndex.get(reading) ?? []
+}
+
+/** Whole scanner reading. Commas are allowed; anything else is not a signature yet. */
+export function parseRsSignatureInput(raw: string): number | null {
+  const digits = raw.trim().replace(/,/g, '')
+  if (!/^\d+$/.test(digits)) return null
+  const n = Number(digits)
+  if (!Number.isInteger(n) || n <= 0) return null
+  return n
+}
 
 /** First N cluster RS readings for ship mining: base × 1 … base × N (includes base). */
 export function getSignatureMultiples(baseSignature: number, count = 6): number[] {

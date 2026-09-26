@@ -27,6 +27,7 @@ const modules = [
   'src/lib/bazaarStockDeduct.ts',
   'src/lib/miningLocationAliases.ts',
   'src/lib/miningClusterProfiles.ts',
+  'src/lib/miningSignatures.ts',
   'supabase/functions/mining-loadout-advisor/gearShopLookup.ts',
   'supabase/functions/mining-loadout-advisor/advisorPrompt.ts',
   'supabase/functions/mining-loadout-advisor/sciFiCrossover.ts',
@@ -61,6 +62,7 @@ const advisorCrypto = await import(pathToFileURL(path.join(outDir, 'miningAdviso
 const bazaarDeduct = await import(pathToFileURL(path.join(outDir, 'bazaarStockDeduct.mjs')).href)
 const miningAliases = await import(pathToFileURL(path.join(outDir, 'miningLocationAliases.mjs')).href)
 const miningChips = await import(pathToFileURL(path.join(outDir, 'miningClusterProfiles.mjs')).href)
+const miningSignatures = await import(pathToFileURL(path.join(outDir, 'miningSignatures.mjs')).href)
 const gearShop = await import(pathToFileURL(path.join(outDir, 'gearShopLookup.mjs')).href)
 const advisorPrompt = await import(pathToFileURL(path.join(outDir, 'advisorPrompt.mjs')).href)
 const sciFiCrossover = await import(pathToFileURL(path.join(outDir, 'sciFiCrossover.mjs')).href)
@@ -1469,5 +1471,35 @@ const pyMutex = /DUMPER_INSTANCE_MUTEX = r"([^"]+)"/.exec(pyMutexSrc)?.[1]
 check(goMutex === dumperMutexName, 'Go single-instance mutex name')
 check(pyMutex === dumperMutexName, 'Python single-instance mutex name')
 check(goMutex === pyMutex, 'Go and Python share the same instance mutex name')
+
+const riccite3 = miningSignatures.matchRsSignature(10155)
+check(
+  riccite3.length === 2 &&
+    riccite3.every((m) => m.oreName === 'Riccite' && m.nodes === 3) &&
+    riccite3.some((m) => m.depositType === 'surface') &&
+    riccite3.some((m) => m.depositType === 'asteroid'),
+  'Riccite 3-rock RS matches surface and asteroid',
+)
+check(miningSignatures.matchRsSignature(3385 * 4).length === 0, 'Riccite 4-rock RS is not a real drop')
+check(miningSignatures.matchRsSignature(4285 * 2).length === 0, 'Aluminum 2-rock RS is a skipped cluster size')
+const aluminum4 = miningSignatures.matchRsSignature(4285 * 4)
+check(
+  aluminum4.length === 2 && aluminum4.every((m) => m.oreName === 'Aluminum' && m.nodes === 4),
+  'Aluminum 4-rock RS matches both deposit types',
+)
+check(miningSignatures.matchRsSignature(3885 * 2).length === 0, 'Agricium 2-rock RS is a skipped cluster size')
+const agricium3 = miningSignatures.matchRsSignature(3885 * 3)
+check(
+  agricium3.length === 2 && agricium3.every((m) => m.oreName === 'Agricium' && m.nodes === 3),
+  'Agricium 3-rock RS matches both deposit types',
+)
+const lindinium = miningSignatures.matchRsSignature(3400)
+check(
+  lindinium.length === 1 && lindinium[0].depositType === 'asteroid' && lindinium[0].nodes === 1,
+  'Lindinium base RS is asteroid only',
+)
+check(miningSignatures.matchRsSignature(3200 * 3).length === 0, 'Savrilium never drops 3 rocks')
+check(miningSignatures.parseRsSignatureInput('10,155') === 10155, 'RS input accepts commas')
+check(miningSignatures.parseRsSignatureInput('10155x') === null, 'RS input rejects extra text')
 
 console.log(`Unit tests: ${pass} passed`)
