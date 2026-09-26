@@ -26,6 +26,9 @@ import {
 import {
   formatRsReading,
   getOreBaseSignature,
+  matchRsSignature,
+  parseRsSignatureInput,
+  type RsSignatureMatch,
 } from '../lib/miningSignatures'
 import {
   depositTypeLabel,
@@ -105,6 +108,8 @@ export default function MiningTrackerRoute() {
 
   const [viewMode, setViewMode] = useState<ViewMode>('tracker')
   const [oreSearch, setOreSearch] = useState('')
+  const [rsSearch, setRsSearch] = useState('')
+  const [anomalyOverride, setAnomalyOverride] = useState(false)
   const [selectedOreName, setSelectedOreName] = useState<string>('')
   const [listRarityFilter, setListRarityFilter] = useState<string>('')
   const [calculatorEntryId, setCalculatorEntryId] = useState<string | null>(null)
@@ -169,10 +174,24 @@ export default function MiningTrackerRoute() {
       .slice(0, 15)
   }, [data, oreSearch, allOreNames])
 
+  const rsReading = useMemo(() => parseRsSignatureInput(rsSearch), [rsSearch])
+  const rsMatches = useMemo(
+    () => (rsReading == null ? [] : matchRsSignature(rsReading, { anomalyOverride })),
+    [rsReading, anomalyOverride],
+  )
+  const rsLookupReady = rsReading != null && rsReading >= 1000
+
+  const selectRsMatch = useCallback((match: RsSignatureMatch) => {
+    setRsSearch('')
+    setOreSearch(match.oreName)
+    setSelectedOreName('')
+  }, [])
+
   useEffect(() => {
     if (search.view === 'tracker') {
       setViewMode('tracker')
       setOreSearch('')
+      setRsSearch('')
       setSelectedOreName('')
     } else if (search.view === 'guide') {
       setViewMode('guide')
@@ -540,7 +559,7 @@ export default function MiningTrackerRoute() {
       {!loading && !error && data && viewMode === 'tracker' && (
         <div className="flex flex-col xl:flex-row gap-6 items-stretch xl:items-start min-w-0">
           <div className="flex-1 min-w-0 space-y-6">
-          <section className="flex flex-wrap items-end gap-3">
+          <section className="flex flex-wrap items-start gap-3">
             <div className="flex-1 min-w-[200px] max-w-sm">
               <input
                 type="text"
@@ -576,6 +595,84 @@ export default function MiningTrackerRoute() {
                 <p className="text-xs text-slate-500 mt-1">No matches</p>
               )}
             </div>
+            <div className="relative w-36 shrink-0">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={rsSearch}
+                onChange={(e) => setRsSearch(e.target.value)}
+                placeholder="RS signature"
+                aria-label="RS signature"
+                title="Match a scanner RS to ores that can actually spawn that many rocks"
+                autoComplete="off"
+                spellCheck={false}
+                className="site-input w-full px-3 py-2 text-sm"
+              />
+              {rsLookupReady && rsMatches.length > 0 && (
+                <ul className="site-dropdown-list left-0 z-30 mt-1 !w-72 max-h-60 overscroll-contain">
+                  {rsMatches.map((match) => {
+                    const ore = findOreByName(data, match.oreName)
+                    const rarity = ore
+                      ? (MINING_RARITY_LABELS[ore.rarity] ?? ore.rarity)
+                      : null
+                    const rockLabel = match.nodes === 1 ? '1 rock' : `${match.nodes} rocks`
+                    return (
+                      <li key={`${match.oreName}-${match.depositType}-${match.nodes}`}>
+                        <button
+                          type="button"
+                          className="site-dropdown-item px-3 py-1.5 text-left"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => selectRsMatch(match)}
+                        >
+                          <span
+                            className={`text-[10px] uppercase tracking-wider ${
+                              match.depositType === 'asteroid' ? 'text-amber-300' : 'text-sky-300'
+                            }`}
+                          >
+                            {depositTypeUpper(match.depositType)}
+                          </span>
+                          <span className="text-slate-200">
+                            {' '}
+                            · {match.oreName}
+                            {rarity ? ` (${rarity})` : ''} · {rockLabel}
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+              {rsLookupReady && rsMatches.length === 0 && (
+                <p className="text-xs text-slate-500 mt-1">No RS match</p>
+              )}
+            </div>
+            <SiteTooltip
+              side="bottom"
+              panelClassName="max-w-sm text-left"
+              content={
+                <div className="space-y-1.5 text-xs leading-snug">
+                  <p>
+                    Turn this on only when you trust the scanner number and the list stayed empty.
+                  </p>
+                  <p>
+                    The usual list only includes cluster sizes the game files actually spawn. With this
+                    checked, every ship ore whose base signature divides that number evenly is listed,
+                    including sizes those files never describe. Surface and Asteroid stay separate rows.
+                  </p>
+                  <p>Gems never appear. They do not have a ship RS signature.</p>
+                </div>
+              }
+            >
+              <label className="inline-flex items-center gap-2 h-9 cursor-pointer select-none whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  className="site-checkbox"
+                  checked={anomalyOverride}
+                  onChange={(event) => setAnomalyOverride(event.target.checked)}
+                />
+                <span className="text-xs text-slate-300">Anomaly Override</span>
+              </label>
+            </SiteTooltip>
             {selectedOreData && untrackedDepositTypes.length > 0 && (
               <TrackOreButtons oreName={selectedOreData.ore_name} rarity={selectedOreData.rarity} />
             )}
