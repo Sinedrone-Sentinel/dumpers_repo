@@ -6561,8 +6561,8 @@
     {
       "id": "cb582593-5230-4146-9e15-6e04e8cdcdac",
       "debugName": "Rayari_Rank1_Gems_Single_Saldynium",
-      "title": "Need Resource for Research\\n",
-      "displayTitle": "Need Resource for Research\\n",
+      "title": "Need Resource for Research",
+      "displayTitle": "Need Resource for Research",
       "titleKey": "@RAIN_collectresources_single_OLP_name_01",
       "description": "To all available contractors,\n\nOur research team at at <EM4>~mission(Destination|Address)</EM4> is working tirelessly on solving the current ‘Regen Crisis’ and addressing the issue of unstable imprints. Their work has produced promising results, but a lack of a key resource is impeding their ability to run further experiments. \n\nWe’ve received word from our supplier that increased demand combined with lower mining yields means that we won’t receive our scheduled shipment for another few months. Our research team can’t wait that long, and we’re hoping you can help.      \n\nThe resource is hard to come by, but we have it on good authority that the old Hathor mining facilities were built in areas with a high concentration of the ore. Since Hathor went defunct not long after establishing their operations in- system, there’s a good chance that activating one of these mining lasers could provide you with what we need.\n\nTogether we can make the universe better for all.\n\nNarina Lerrem\nSenior Manager\nClinical Research Outsourcing",
       "descriptionKey": "@RAIN_collectresources_single_OLP_desc_01",
@@ -6658,8 +6658,8 @@
     {
       "id": "0137aa6a-c647-4e30-92d5-5bd91acbd270",
       "debugName": "Rayari_Rank1_Gems_Single_Jaclium",
-      "title": "Need Resource for Research\\n",
-      "displayTitle": "Need Resource for Research\\n",
+      "title": "Need Resource for Research",
+      "displayTitle": "Need Resource for Research",
       "titleKey": "@RAIN_collectresources_single_OLP_name_01",
       "description": "To all available contractors,\n\nOur research team at at <EM4>~mission(Destination|Address)</EM4> is working tirelessly on solving the current ‘Regen Crisis’ and addressing the issue of unstable imprints. Their work has produced promising results, but a lack of a key resource is impeding their ability to run further experiments. \n\nWe’ve received word from our supplier that increased demand combined with lower mining yields means that we won’t receive our scheduled shipment for another few months. Our research team can’t wait that long, and we’re hoping you can help.      \n\nThe resource is hard to come by, but we have it on good authority that the old Hathor mining facilities were built in areas with a high concentration of the ore. Since Hathor went defunct not long after establishing their operations in- system, there’s a good chance that activating one of these mining lasers could provide you with what we need.\n\nTogether we can make the universe better for all.\n\nNarina Lerrem\nSenior Manager\nClinical Research Outsourcing",
       "descriptionKey": "@RAIN_collectresources_single_OLP_desc_01",
@@ -6852,8 +6852,8 @@
     {
       "id": "5e4608e6-cf31-4f36-a82a-9e8540934e0b",
       "debugName": "Rayari_Rank2_Gems_Single_Carinite",
-      "title": "Need Resource for Research\\n",
-      "displayTitle": "Need Resource for Research\\n",
+      "title": "Need Resource for Research",
+      "displayTitle": "Need Resource for Research",
       "titleKey": "@RAIN_collectresources_single_OLP_name_01",
       "description": "To all available contractors,\n\nOur research team at at <EM4>~mission(Destination|Address)</EM4> is working tirelessly on solving the current ‘Regen Crisis’ and addressing the issue of unstable imprints. Their work has produced promising results, but a lack of a key resource is impeding their ability to run further experiments. \n\nWe’ve received word from our supplier that increased demand combined with lower mining yields means that we won’t receive our scheduled shipment for another few months. Our research team can’t wait that long, and we’re hoping you can help.      \n\nThe resource is hard to come by, but we have it on good authority that the old Hathor mining facilities were built in areas with a high concentration of the ore. Since Hathor went defunct not long after establishing their operations in- system, there’s a good chance that activating one of these mining lasers could provide you with what we need.\n\nTogether we can make the universe better for all.\n\nNarina Lerrem\nSenior Manager\nClinical Research Outsourcing",
       "descriptionKey": "@RAIN_collectresources_single_OLP_desc_01",
@@ -15469,7 +15469,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -15534,7 +15534,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -15599,7 +15599,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -15664,7 +15664,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -15729,7 +15729,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -15794,7 +15794,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -15859,7 +15859,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -16119,7 +16119,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -16184,7 +16184,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -16249,7 +16249,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -16314,7 +16314,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -16379,7 +16379,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -16444,7 +16444,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -16509,7 +16509,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -16574,7 +16574,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -16639,7 +16639,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -16704,7 +16704,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -16769,7 +16769,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -16834,7 +16834,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -17159,7 +17159,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17224,7 +17224,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17289,7 +17289,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17354,7 +17354,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17419,7 +17419,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -17484,7 +17484,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17549,7 +17549,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -17744,7 +17744,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17809,7 +17809,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -17874,7 +17874,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -17998,7 +17998,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -18063,7 +18063,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -18128,7 +18128,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -18193,7 +18193,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -18258,7 +18258,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -18388,7 +18388,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -18453,7 +18453,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -18518,7 +18518,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -18648,7 +18648,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -18713,7 +18713,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -18778,7 +18778,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -18843,7 +18843,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -18908,7 +18908,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -18973,7 +18973,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19038,7 +19038,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19103,7 +19103,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19168,7 +19168,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19233,7 +19233,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19298,7 +19298,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19363,7 +19363,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19428,7 +19428,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19493,7 +19493,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19558,7 +19558,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -19688,7 +19688,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -19753,7 +19753,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -19862,7 +19862,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -19971,7 +19971,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -20080,7 +20080,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -20189,7 +20189,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -20298,7 +20298,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -25298,7 +25298,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -25407,7 +25407,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -25516,7 +25516,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -29020,7 +29020,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -29129,7 +29129,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -29280,7 +29280,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -29473,7 +29473,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -29708,7 +29708,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -29985,7 +29985,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -32002,7 +32002,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -32111,7 +32111,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -32298,7 +32298,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -32485,7 +32485,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -32672,7 +32672,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -32859,7 +32859,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -33664,7 +33664,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -33773,7 +33773,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -33882,7 +33882,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -33991,7 +33991,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -34100,7 +34100,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -34209,7 +34209,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35096,7 +35096,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35199,7 +35199,7 @@
       "repEffects": [],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35308,7 +35308,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35417,7 +35417,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35531,7 +35531,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35645,7 +35645,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -35759,7 +35759,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48460,7 +48460,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48525,7 +48525,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48590,7 +48590,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48655,7 +48655,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48725,7 +48725,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48795,7 +48795,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -48865,7 +48865,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -49400,7 +49400,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -49642,7 +49642,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50002,7 +50002,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50067,7 +50067,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50132,7 +50132,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50197,7 +50197,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50262,7 +50262,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50327,7 +50327,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50392,7 +50392,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50457,7 +50457,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50522,7 +50522,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -50587,7 +50587,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50652,7 +50652,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -50782,7 +50782,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -50847,7 +50847,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -50912,7 +50912,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -51042,7 +51042,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -51107,7 +51107,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -51172,7 +51172,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -51302,7 +51302,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -51432,7 +51432,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -51562,7 +51562,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -51692,7 +51692,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -51887,7 +51887,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -52082,7 +52082,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52147,7 +52147,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52212,7 +52212,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52277,7 +52277,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52342,7 +52342,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52407,7 +52407,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52472,7 +52472,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52537,7 +52537,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -52602,7 +52602,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52667,7 +52667,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -52797,7 +52797,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -52862,7 +52862,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -52927,7 +52927,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -52992,7 +52992,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -53240,7 +53240,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -53305,7 +53305,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -53370,7 +53370,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -53435,7 +53435,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -53565,7 +53565,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -53695,7 +53695,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -54008,7 +54008,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54132,7 +54132,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54197,7 +54197,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54262,7 +54262,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54327,7 +54327,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54392,7 +54392,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54457,7 +54457,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -54522,7 +54522,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -54587,7 +54587,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54652,7 +54652,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -54717,7 +54717,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -54782,7 +54782,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -55042,7 +55042,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -55107,7 +55107,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55172,7 +55172,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55237,7 +55237,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55302,7 +55302,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55367,7 +55367,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55432,7 +55432,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55497,7 +55497,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55562,7 +55562,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55627,7 +55627,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -55692,7 +55692,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -55757,7 +55757,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -55822,7 +55822,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -55887,7 +55887,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -55952,7 +55952,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -56017,7 +56017,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -56082,7 +56082,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -56147,7 +56147,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -56212,7 +56212,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -56277,7 +56277,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56342,7 +56342,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56407,7 +56407,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56472,7 +56472,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56537,7 +56537,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56602,7 +56602,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56667,7 +56667,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56732,7 +56732,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -56797,7 +56797,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -57447,7 +57447,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -57512,7 +57512,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -57577,7 +57577,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -57642,7 +57642,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -57707,7 +57707,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -57772,7 +57772,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -57967,7 +57967,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -58032,7 +58032,7 @@
       ],
       "locality": {
         "key": "regionb",
-        "label": "Pyro region B (near Bloom)",
+        "label": "Pyro region B (near Bloom and Pyro V L5)",
         "systems": [
           "Pyro"
         ]
@@ -58097,7 +58097,7 @@
       ],
       "locality": {
         "key": "regionc",
-        "label": "Pyro region C (near Pyro IV, Pyro V)",
+        "label": "Pyro region C (near Pyro IV and Pyro V)",
         "systems": [
           "Pyro"
         ]
@@ -61130,7 +61130,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -61304,7 +61304,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -61717,7 +61717,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -62042,7 +62042,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -63206,7 +63206,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -63346,7 +63346,7 @@
       ],
       "locality": {
         "key": "pyro6",
-        "label": "Terminus area",
+        "label": "Terminus and Pyro V L3",
         "systems": [
           "Pyro"
         ]
@@ -63556,7 +63556,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -63766,7 +63766,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -63906,7 +63906,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64046,7 +64046,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64186,7 +64186,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64326,7 +64326,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64466,7 +64466,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64536,7 +64536,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64606,7 +64606,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -64676,7 +64676,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -65516,7 +65516,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -65656,7 +65656,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -65866,7 +65866,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -66006,7 +66006,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -66356,7 +66356,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -67126,7 +67126,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -67406,7 +67406,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -67566,7 +67566,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -67806,7 +67806,7 @@
       ],
       "locality": {
         "key": "pyro2",
-        "label": "Monox area",
+        "label": "Monox, Pyro I L3, and Bloom L3",
         "systems": [
           "Pyro"
         ]
@@ -68046,7 +68046,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -68366,7 +68366,7 @@
       ],
       "locality": {
         "key": "pyro1",
-        "label": "Pyro I area",
+        "label": "Pyro I and Monox L3",
         "systems": [
           "Pyro"
         ]
@@ -71607,7 +71607,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -71716,7 +71716,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -71825,7 +71825,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -71934,7 +71934,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -72043,7 +72043,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -72152,7 +72152,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -72261,7 +72261,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -75422,7 +75422,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -75531,7 +75531,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -75640,7 +75640,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -75858,7 +75858,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -75967,7 +75967,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76076,7 +76076,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76185,7 +76185,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76294,7 +76294,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76403,7 +76403,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76512,7 +76512,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76621,7 +76621,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76730,7 +76730,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76839,7 +76839,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -76948,7 +76948,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -77057,7 +77057,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -77166,7 +77166,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -77275,7 +77275,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -77384,7 +77384,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -77493,7 +77493,7 @@
       ],
       "locality": {
         "key": "regiona",
-        "label": "Pyro region A (near Pyro I, Monox)",
+        "label": "Pyro region A (near Pyro I, Monox, and Bloom L3-L5)",
         "systems": [
           "Pyro"
         ]
@@ -81778,8 +81778,8 @@
     ],
     "rayari_recoveritem_hathorloot": [
       {
-        "title": "Need Resource for Research\\n",
-        "displayTitle": "Need Resource for Research\\n",
+        "title": "Need Resource for Research",
+        "displayTitle": "Need Resource for Research",
         "titleKey": "@RAIN_collectresources_single_OLP_name_01",
         "faction": "Rayari Incorporated",
         "factionKey": "lawful_rayariinc",
@@ -81825,8 +81825,8 @@
         }
       },
       {
-        "title": "Need Resource for Research\\n",
-        "displayTitle": "Need Resource for Research\\n",
+        "title": "Need Resource for Research",
+        "displayTitle": "Need Resource for Research",
         "titleKey": "@RAIN_collectresources_single_OLP_name_01",
         "faction": "Rayari Incorporated",
         "factionKey": "lawful_rayariinc",
@@ -81919,8 +81919,8 @@
         }
       },
       {
-        "title": "Need Resource for Research\\n",
-        "displayTitle": "Need Resource for Research\\n",
+        "title": "Need Resource for Research",
+        "displayTitle": "Need Resource for Research",
         "titleKey": "@RAIN_collectresources_single_OLP_name_01",
         "faction": "Rayari Incorporated",
         "factionKey": "lawful_rayariinc",

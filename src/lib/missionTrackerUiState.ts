@@ -9,6 +9,8 @@ export interface BrowseMissionNavState {
   selectedFaction: string | null
   selectedMissionKey: string | null
   searchTerm: string
+  /** When true, Browse Missions leaves out contracts marked Not For Release. */
+  hideNfr: boolean
 }
 
 export interface MissionTrackerUiState {
@@ -24,6 +26,7 @@ const DEFAULT_STATE: MissionTrackerUiState = {
     selectedFaction: null,
     selectedMissionKey: null,
     searchTerm: '',
+    hideNfr: false,
   },
 }
 
@@ -55,6 +58,7 @@ export function readMissionTrackerUiState(): MissionTrackerUiState {
       selectedFaction: typeof browse.selectedFaction === 'string' ? browse.selectedFaction : null,
       selectedMissionKey: typeof browse.selectedMissionKey === 'string' ? browse.selectedMissionKey : null,
       searchTerm: typeof browse.searchTerm === 'string' ? browse.searchTerm : '',
+      hideNfr: browse.hideNfr === true,
     },
   }
 }
