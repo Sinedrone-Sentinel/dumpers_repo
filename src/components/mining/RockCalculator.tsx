@@ -773,6 +773,9 @@ export default function RockCalculator({
               {requiredPowerLabel ? (
                 <p className="text-[11px] text-cyan-300/90 font-medium tabular-nums">
                   Power required {requiredPowerLabel}
+                  <span className="block text-[10px] font-normal text-slate-500">
+                    Scan only, before the mining laser&apos;s resistance shift
+                  </span>
                 </p>
               ) : null}
               {windowBarModel ? (

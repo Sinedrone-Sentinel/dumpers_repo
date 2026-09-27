@@ -39,24 +39,29 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
       ) : null}
       {!strategy.canBreak ? (
         <p className="text-xs text-red-400/90">
-          {strategy.soloMining
-            ? 'No head on this loadout can crack this rock solo at full throttle — check MW after modules and the pilot RES → mining-seat RES shift on each head. Open Smart Cracker to edit modules or try crew mode.'
-            : 'Even with every available seat at full blast, this loadout cannot crack this rock — check MW after modules and the pilot RES → mining-seat RES shift on each head, or bring another mining ship.'}
+          {!Number.isFinite(strategy.requiredPower)
+            ? 'No head on this loadout can crack this rock. A resistance penalty on the laser pushes this scan to 100%, and a rock at 100% resistance will not crack at any throttle. Power required in the calculator is the scan before that penalty.'
+            : strategy.soloMining
+              ? 'No head on this loadout can crack this rock solo at full throttle — check MW after modules and the pilot RES → mining-seat RES shift on each head. Open Smart Cracker to edit modules or try crew mode.'
+              : 'Even with every available seat at full blast, this loadout cannot crack this rock — check MW after modules and the pilot RES → mining-seat RES shift on each head, or bring another mining ship.'}
         </p>
       ) : null}
       <div className="space-y-1.5">
         {strategy.assignments.map((head) => {
+          const blocked = head.backupViability === 'cannot'
           const isWorkableBackup = head.role === 'idle' && head.backupViability === 'works'
-          const headClass =
-            head.role === 'primary'
+          const headClass = blocked
+            ? 'text-slate-500'
+            : head.role === 'primary'
               ? 'text-green-400/90'
               : head.role === 'support'
                 ? 'text-cyan-300/90'
                 : isWorkableBackup
                   ? 'text-yellow-400/80'
                   : 'text-slate-600'
-          const statusLabel =
-            head.role === 'primary'
+          const statusLabel = blocked
+            ? 'Cannot'
+            : head.role === 'primary'
               ? 'Drive'
               : head.role === 'support' && head.throttlePercent === 100
                 ? 'Full'
@@ -76,7 +81,7 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
                 <span className={isWorkableBackup ? 'text-yellow-600/80' : 'text-slate-500'}>
                   {' '}
                   · {statusLabel}
-                  {head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
+                  {!blocked && head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
                 </span>
               </p>
               {head.detail ? (
