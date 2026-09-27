@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { fetchUserNotifications } from '../lib/operations'
+import { NOTIFICATIONS_REFRESHED_EVENT } from '../hooks/useNotificationInbox'
+import { fetchUserNotifications, type UserNotification } from '../lib/operations'
 import {
   SERVICE_REQUEST_ACCEPTED_EVENT,
   SERVICE_REQUEST_ACCEPTED_TYPE,
@@ -11,8 +12,6 @@ import {
   type ServiceRequestAcceptedDetail,
 } from '../lib/serviceRequestAccepted'
 import ServiceRequestAcceptedModal from './ServiceRequestAcceptedModal'
-
-const POLL_MS = 15_000
 
 /**
  * Auto-opens the accept modal when a service_request_accepted notification arrives
@@ -45,11 +44,9 @@ export default function ServiceRequestAcceptedListener() {
 
     let cancelled = false
 
-    const scan = async () => {
-      if (document.visibilityState !== 'visible') return
-      const result = await fetchUserNotifications()
-      if (cancelled || result.error) return
-      const candidates = result.data
+    const scanRows = (rows: UserNotification[]) => {
+      if (cancelled || document.visibilityState !== 'visible') return
+      const candidates = rows
         .filter((n) => n.type === SERVICE_REQUEST_ACCEPTED_TYPE)
         .filter((n) => !hasSeenServiceRequestAccepted(n.id))
         .sort((a, b) => b.created_at.localeCompare(a.created_at))
@@ -62,15 +59,26 @@ export default function ServiceRequestAcceptedListener() {
       }
     }
 
-    void scan()
-    const timer = window.setInterval(() => void scan(), POLL_MS)
+    const onRefreshed = (event: Event) => {
+      const rows = (event as CustomEvent<UserNotification[]>).detail
+      if (Array.isArray(rows)) scanRows(rows)
+    }
+
+    const scanOnce = async () => {
+      if (document.visibilityState !== 'visible') return
+      const result = await fetchUserNotifications()
+      if (!cancelled && !result.error) scanRows(result.data)
+    }
+
+    window.addEventListener(NOTIFICATIONS_REFRESHED_EVENT, onRefreshed)
+    void scanOnce()
     const onVis = () => {
-      if (document.visibilityState === 'visible') void scan()
+      if (document.visibilityState === 'visible') void scanOnce()
     }
     document.addEventListener('visibilitychange', onVis)
     return () => {
       cancelled = true
-      window.clearInterval(timer)
+      window.removeEventListener(NOTIFICATIONS_REFRESHED_EVENT, onRefreshed)
       document.removeEventListener('visibilitychange', onVis)
     }
   }, [userId, isApproved])
