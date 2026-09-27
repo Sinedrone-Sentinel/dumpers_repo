@@ -4,7 +4,11 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import catalogJson from './catalog.json' with { type: 'json' }
 import shopsJson from './shops.json' with { type: 'json' }
-import { buildSystemPrompt } from './advisorPrompt.ts'
+import {
+  ADVISOR_CHANGE_NUDGE,
+  advisorNeedsChangeAdvice,
+  buildSystemPrompt,
+} from './advisorPrompt.ts'
 import {
   collectCatalogNames,
   formatCrossoverDeny,
@@ -467,7 +471,10 @@ serve(async (req) => {
         parts: [{ text: msg.text }],
       })
     }
-    contents.push({ role: 'user', parts: [{ text: question }] })
+    const asked = advisorNeedsChangeAdvice(question)
+      ? `${question}\n\n${ADVISOR_CHANGE_NUDGE}`
+      : question
+    contents.push({ role: 'user', parts: [{ text: asked }] })
 
     const payload: Record<string, unknown> = {
       systemInstruction: { parts: [{ text: systemPrompt }] },
