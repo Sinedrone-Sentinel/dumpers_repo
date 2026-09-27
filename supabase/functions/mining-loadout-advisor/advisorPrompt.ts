@@ -63,6 +63,18 @@ export function pickShubinCloser(random = Math.random): string {
   return ADVISOR_SHUBIN_CLOSERS[Math.min(Math.max(index, 0), ADVISOR_SHUBIN_CLOSERS.length - 1)]
 }
 
+const CHANGE_ASK =
+  /\b(suggest|suggestion|recommend|change|changes|swap|gadget|gadgets|resistance|instability|charge window|optimal window|optimal charge)\b/i
+
+/** True when the member asked what to change, not merely for a kit reprint. */
+export function advisorNeedsChangeAdvice(question: string): boolean {
+  return CHANGE_ASK.test(question)
+}
+
+/** Appended to the member's question so a change ask cannot end on the current kit. */
+export const ADVISOR_CHANGE_NUDGE =
+  'Answer the change. Do not stop after listing the current kit. Before the sign-off, write 1 to 3 short [INFO] or [WARNING] lines. Each line must say keep, swap, add, or drop, and name resistance, instability, or the charge window. Copying the gadgets already on the rock is not an answer.'
+
 export function buildSystemPrompt(input: {
   catalog: AdvisorPromptCatalog
   planningMode: boolean
@@ -90,11 +102,14 @@ export function buildSystemPrompt(input: {
     '- Ship-board terminal. Tags: [TERM], [FIT], [INFO], [WARNING], [BUY], [SHUBIN]. No essays.',
     `- First line of every reply (including 42-A refusals) is exactly: ${ADVISOR_TERM_INTRO}`,
     '- Loadout answers: intro, then at most 4 kit lines. No "Why" section. Do not restate MW, slot counts, or a second copy of the same kit.',
+    '- A question about what to change, what to suggest, resistance, instability, or the charge window is not finished by reprinting the current kit.',
+    '- On that question, before the sign-off, add 1 to 3 short [INFO] or [WARNING] lines. Each line says keep, swap, add, or drop, and names resistance, instability, or the charge window. One sentence per line. No "Why" section.',
     '- If every hardpoint uses the same head and modules, write it once: [FIT] 3x Helix II — Rieger-C3, Focus III, Focus III',
     '- Never list Laser 1 / Laser 2 / Laser 3 when those kits match. Distinct kits only get their own line (center vs sides).',
-    '- Gadgets: one line, at most two names.',
+    '- Never put two different heads on the same [FIT] line.',
+    '- Gadgets: one line, at most two names. On a change question that line must say keep, add, or drop. Copying the gadgets already on the rock is not an answer.',
     '- Buy answers may list shops from the BUY LOCATIONS block; still no why essay.',
-    `- After the kit or buy lines, put one blank line, then the last line exactly: [SHUBIN] ${closer}`,
+    `- After the kit, buy, or change lines, put one blank line, then the last line exactly: [SHUBIN] ${closer}`,
     '- Do not invent a different intro or sign-off. Do not skip the blank line. Do not add extra flavor after the sign-off.',
     '- Do not explain the sign-off. Do not discuss other fictional universes, franchises, or rival corporations.',
     '',
@@ -148,7 +163,8 @@ export function buildSystemPrompt(input: {
 
   if (input.planningMode) {
     lines.push(
-      'Mode: planning. Do not mention or use any HUD scan numbers.',
+      'Mode: planning. Do not invent HUD scan numbers, and do not treat the Rock Calculator as filled in.',
+      'If the member describes this rock in the question (mass, resistance, instability, charge window, yield), use that description.',
       'Typical deposit mass is not in game files. Say typical deposit size is unknown rather than inventing a number.',
     )
   } else if (input.scan) {

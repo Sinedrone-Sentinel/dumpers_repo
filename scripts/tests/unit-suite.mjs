@@ -958,6 +958,28 @@ check(
   'advisor prompt requires a blank line before the Shubin sign-off',
 )
 check(
+  advisorPromptText.includes('not finished by reprinting the current kit'),
+  'advisor prompt requires a real change answer',
+)
+check(
+  advisorPromptText.includes('Copying the gadgets already on the rock is not an answer'),
+  'advisor prompt rejects a gadget echo as the answer',
+)
+check(
+  advisorPromptText.includes('If the member describes this rock in the question'),
+  'planning mode still uses the member rock description',
+)
+check(
+  advisorPrompt.advisorNeedsChangeAdvice(
+    'the resistance, instability and small optimal charge window make it crazy to crack. what do you suggest? changes to my current setup? gadgets?',
+  ),
+  'a change question is flagged for advice',
+)
+check(
+  !advisorPrompt.advisorNeedsChangeAdvice('Quantainium loadout for a Mole'),
+  'a plain loadout ask is not a change question',
+)
+check(
   advisorPrompt.pickShubinCloser(() => 0) === advisorPrompt.ADVISOR_SHUBIN_CLOSERS[0],
   'pickShubinCloser uses the first closer at random 0',
 )
