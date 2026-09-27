@@ -132,7 +132,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'The aUEC on a Crafting Wishlist is the Dumper\'s Fair-Value Price of the resources on that list, so you can see what it would cost to buy them instead of mining',
       'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand; for two or more materials, also those fully stocked except one (that one may be missing). These do not get a Craft button until you have enough',
       'Switch between Cards (edit quantities) and List (read-only overview with notes) on My Resources / Site Total',
-      'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding, and the note box suggests your existing location tags as you type',
+      'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding, and the note box suggests your existing location tags as you type. You can edit a note at any time. If that location already has this resource and quality, the amounts are combined into one card',
       'On My Resources, stock notes (e.g. hangar / ship) automatically become location filter chips — variants like `arcL1`, `Arc l1`, and `ARC-l1` collapse into one; cards with no note use an **Empty** chip; chips refresh when you add or edit cards',
       'Filter by quality band on both views — each Q-tier stays on its own row',
       'Mined/refined ore uses quality bands (typically Q500–Q1000) — higher quality = exponentially higher DFP value',

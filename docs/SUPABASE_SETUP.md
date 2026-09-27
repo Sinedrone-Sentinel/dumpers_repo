@@ -232,6 +232,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 164 | `199_admin_citizenid_badge_flags.sql` | `admin_citizenid_linked_user_ids` tells officers which of the listed user ids have a Citizen iD link, so RSI tags stay gold for officers and super-admins outside the Members buckets. Officer / super-admin only |
 | 165 | `200_ai_chat_release.sql` | `ai_chat_release(user, feature)` (`service_role` only) gives back one hourly ask when Help built the prompt but the Gemini request never went out. Apply after **195** |
 | 166 | `201_wtb_scu_buy_range.sql` | WTB SCU lines store `max_quantity_scu`. A fractional minimum floors that max at the next whole SCU. One in-range offer closes the line. Open WTB rows are backfilled. Cancelling a fulfillment restores the original range |
+| 167 | `202_stock_card_location_unique.sql` | Drop the leftover user + resource + quality unique rule so the same resource and quality can sit on a second stock card when the location note differs. Identity stays `(user, resource, quality, note_key)` |
+| 168 | `203_merge_stock_cards_on_note.sql` | Editing a location note onto a note that already exists for that resource and quality adds the quantities together and keeps one card. Apply after **202** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
