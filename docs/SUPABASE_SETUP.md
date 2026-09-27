@@ -231,6 +231,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 163 | `198_admin_citizenid_members.sql` | Admin Panel member buckets: Citizen iD (`spectrum_citizens.citizenid_sub`), legacy RSI verified, and unverified. `admin_list_members_by_verification` and `admin_get_citizenid_stats` are officer / super-admin only. Refresh tokens are not returned |
 | 164 | `199_admin_citizenid_badge_flags.sql` | `admin_citizenid_linked_user_ids` tells officers which of the listed user ids have a Citizen iD link, so RSI tags stay gold for officers and super-admins outside the Members buckets. Officer / super-admin only |
 | 165 | `200_ai_chat_release.sql` | `ai_chat_release(user, feature)` (`service_role` only) gives back one hourly ask when Help built the prompt but the Gemini request never went out. Apply after **195** |
+| 166 | `201_wtb_scu_buy_range.sql` | WTB SCU lines store `max_quantity_scu`. A fractional minimum floors that max at the next whole SCU. One in-range offer closes the line. Open WTB rows are backfilled. Cancelling a fulfillment restores the original range |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

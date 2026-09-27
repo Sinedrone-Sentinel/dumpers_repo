@@ -14,6 +14,16 @@ import {
   toMilliScu,
 } from './resourceQuantity'
 import { inventoryLineKey, normalizeStockNoteKey } from './inventoryStock'
+import { isWholeUnitResource } from '../config/resourceTypes'
+import { normalizeWtbScuMax } from './wtbScuRange'
+function wtbMaxForRpc(
+  listingType: 'wtb' | 'wts' | undefined,
+  line: { resourceKey: string; quantityScu: number; maxQuantityScu?: number | null },
+): number | null {
+  if (listingType !== 'wtb' || isWholeUnitResource(line.resourceKey)) return null
+  return normalizeWtbScuMax(line.quantityScu, line.maxQuantityScu)
+}
+
 export type CustomOrderStatus =
   | 'pending'
   | 'accepted'
@@ -187,6 +197,8 @@ export interface CustomOrderResourceLine {
   resource_label: string
   min_quality: number
   quantity_scu: number
+  /** WTB SCU lines: most the buyer will accept. */
+  max_quantity_scu?: number | null
   unit_dfp_auec: number
   line_dfp_auec: number
   sort_order: number
@@ -199,6 +211,8 @@ export interface CustomOrderResourceInput {
   resourceLabel: string
   minQuality: number
   quantityScu: number
+  /** WTB SCU lines: most the buyer will accept. */
+  maxQuantityScu?: number | null
   unitDfpAuec: number
   lineDfpAuec: number
   /** WTS only — DFP base unit price for server-side list-price bounds validation. */
@@ -717,6 +731,7 @@ export async function createCustomOrder(input: {
       resource_label: line.resourceLabel,
       min_quality: line.minQuality,
       quantity_scu: normalizeResourceQuantity(line.quantityScu),
+      max_quantity_scu: wtbMaxForRpc(input.listingType, line),
       unit_dfp_auec: Math.round(line.unitDfpAuec),
       line_dfp_auec: Math.round(line.lineDfpAuec),
       base_unit_dfp_auec:
@@ -826,6 +841,7 @@ export async function updateCustomOrderRequester(input: {
       resource_label: line.resourceLabel,
       min_quality: line.minQuality,
       quantity_scu: normalizeResourceQuantity(line.quantityScu),
+      max_quantity_scu: wtbMaxForRpc(input.listingType, line),
       unit_dfp_auec: Math.round(line.unitDfpAuec),
       line_dfp_auec: Math.round(line.lineDfpAuec),
       base_unit_dfp_auec:
@@ -967,6 +983,7 @@ export async function appendToMyListing(input: {
       resource_label: line.resourceLabel,
       min_quality: line.minQuality,
       quantity_scu: normalizeResourceQuantity(line.quantityScu),
+      max_quantity_scu: wtbMaxForRpc(input.listingType, line),
       unit_dfp_auec: Math.round(line.unitDfpAuec),
       line_dfp_auec: Math.round(line.lineDfpAuec),
       base_unit_dfp_auec:

@@ -36,6 +36,7 @@ const modules = [
   'src/lib/shubinTerminalReply.ts',
   'src/lib/stockCardListing.ts',
   'src/lib/inventoryStock.ts',
+  'src/lib/wtbScuRange.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -71,6 +72,7 @@ const aiUsage = await import(pathToFileURL(path.join(outDir, 'aiChatUsage.mjs'))
 const shubinTerm = await import(pathToFileURL(path.join(outDir, 'shubinTerminalReply.mjs')).href)
 const stockCardListing = await import(pathToFileURL(path.join(outDir, 'stockCardListing.mjs')).href)
 const inventoryStock = await import(pathToFileURL(path.join(outDir, 'inventoryStock.mjs')).href)
+const wtbScuRange = await import(pathToFileURL(path.join(outDir, 'wtbScuRange.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -1583,6 +1585,29 @@ check(
     locName,
   ) === 'Hurston area',
   'a single-planet gate stays one area tag',
+)
+
+check(wtbScuRange.wtbScuMaxFloor(0.8) === 1, '0.8 SCU floors the buy max at 1')
+check(wtbScuRange.wtbScuMaxFloor(1.048) === 2, '1.048 SCU floors the buy max at 2')
+check(wtbScuRange.wtbScuMaxFloor(2) === 2, 'a whole SCU box keeps that amount as the max floor')
+check(wtbScuRange.wtbScuMaxFloor(1) === 1, '1.000 SCU stays 1')
+check(wtbScuRange.wtbScuMaxFloor(0.04) === 1, '0.04 SCU floors the buy max at 1')
+check(wtbScuRange.normalizeWtbScuMax(0.04, 0.5) === 1, 'a max under the floor snaps up to the next whole SCU')
+check(wtbScuRange.normalizeWtbScuMax(0.04, 2) === 2, 'a raised max above the floor is kept')
+check(wtbScuRange.clampWtbScuOffer(0.02, 0.04, 1) === 0.04, 'an offer under the minimum snaps to the minimum')
+check(wtbScuRange.clampWtbScuOffer(1.5, 0.04, 1) === 1, 'an offer over the maximum snaps to the maximum')
+check(wtbScuRange.clampWtbScuOffer(0.855, 0.04, 1) === 0.855, 'a partial box inside the range is kept')
+check(
+  wtbScuRange.formatListingQuantity('ore_iron', 0.04, 1, 'wtb') === '0.04–1 SCU',
+  'a WTB range shows minimum through maximum',
+)
+check(
+  wtbScuRange.formatListingQuantity('ore_iron', 2, 2, 'wtb') === '2 SCU',
+  'a whole-box WTB ask shows a single amount',
+)
+check(
+  wtbScuRange.formatListingQuantity('ore_iron', 0.04, 1, 'wts') === '0.04 SCU',
+  'a WTS line stays a single amount',
 )
 
 console.log(`Unit tests: ${pass} passed`)

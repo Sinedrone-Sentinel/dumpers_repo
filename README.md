@@ -184,7 +184,7 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 
 - Two tabs: **Fulfillment** (WTB listings) and **Store** (WTS listings)
 - Item-level **search** plus **minimum quality-band filter**; Fulfillment tab adds min buyer rep and "only listings with my blueprints" filters
-- Pick exact lines and quantities to buy or fulfill
+- Pick exact lines and quantities to buy or fulfill. WTB SCU lines carry a minimum and a maximum (a partial box cannot be split, so a fractional ask floors the max at the next whole SCU). The fulfiller types the amount they are bringing; the selected total follows that amount
 - WTB fulfill and WTS commodity lines can optionally **Deduct from Tracked Resources** at the listed qualities when the seller/fulfiller marks ready (not on the Store buy picker)
 - Marking blueprints acquired is optional: lines using untracked blueprints are flagged in amber and confirmed once before claiming, never blocked (`accept_wtb_partial` enforces no ownership check)
 - Every checkout/claim spawns a full child transaction (same handoff, deadlines, ratings)

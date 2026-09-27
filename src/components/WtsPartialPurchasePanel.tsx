@@ -6,7 +6,13 @@ import {
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
-import { formatQuantityForResource } from '../lib/resourceQuantity'
+import {
+  formatQuantityForResource,
+  formatResourceQuantity,
+  lockQuantityInput,
+  parseResourceQuantity,
+} from '../lib/resourceQuantity'
+import { clampWtbScuOffer, formatListingQuantity, normalizeWtbScuMax } from '../lib/wtbScuRange'
 import type { CustomOrder } from '../lib/operations'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
 import StockDeductCheckbox from './StockDeductCheckbox'
@@ -86,6 +92,10 @@ export default function WtsPartialPurchasePanel({
           resourceKey: row.resource_key,
           minQuality: row.min_quality,
           available: Number(row.quantity_scu),
+          maxAvailable: normalizeWtbScuMax(
+            Number(row.quantity_scu),
+            row.max_quantity_scu,
+          ),
           unitDfpAuec: Number(row.unit_dfp_auec),
           isBlueprint: false as const,
         })),
@@ -102,8 +112,13 @@ export default function WtsPartialPurchasePanel({
     isFulfill && !!acquiredBlueprints && acquiredBlueprints[blueprintId] !== true
 
   const resourceQtyForLine = (line: (typeof resourceLines)[number]) => {
-    // SCU ores/salvage/etc.: always the full remaining line (cannot split refined cargo).
-    if (!isWholeUnitResource(line.resourceKey)) return line.available
+    // WTS SCU lines stay whole-box. WTB SCU lines use the amount the fulfiller is bringing.
+    if (!isWholeUnitResource(line.resourceKey)) {
+      if (!isFulfill) return line.available
+      const parsed = parseResourceQuantity(quantities[line.lineId] ?? '')
+      if (parsed == null) return line.available
+      return clampWtbScuOffer(parsed, line.available, line.maxAvailable)
+    }
     return Math.min(
       line.available,
       Math.max(1, Math.trunc(Number(quantities[line.lineId]) || 0))
@@ -175,12 +190,14 @@ export default function WtsPartialPurchasePanel({
   const toggleLine = (lineId: string, defaultQty: number, wholeUnit = true) => {
     setSelected((prev) => {
       const next = { ...prev, [lineId]: !prev[lineId] }
-      if (next[lineId] && quantities[lineId] == null && wholeUnit) {
+      if (next[lineId] && quantities[lineId] == null) {
         setQuantities((q) => ({
           ...q,
-          [lineId]: String(
-            defaultQty === Math.trunc(defaultQty) ? Math.min(1, defaultQty) || 1 : defaultQty
-          ),
+          [lineId]: wholeUnit
+            ? String(
+                defaultQty === Math.trunc(defaultQty) ? Math.min(1, defaultQty) || 1 : defaultQty
+              )
+            : formatResourceQuantity(defaultQty),
         }))
       }
       return next
@@ -272,7 +289,7 @@ export default function WtsPartialPurchasePanel({
         </p>
         <p className="site-hint text-[11px] !mt-0.5">
           {isFulfill
-            ? 'Check the lines you will supply. Optionally deduct each selected line from Tracked Resources at that line’s listed qualities. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unclaimed lines stay open for others.'
+            ? 'Check the lines you will supply. For SCU, enter how much you are actually bringing. It has to sit between the minimum and the most they will take, and the total below follows that amount. Deduct from Tracked Resources uses the amount you enter. Unclaimed lines stay open for others.'
             : 'Check the lines you want. Whole-unit items can use a quantity; SCU resources are always the full listed amount (refined cargo cannot be split). Unsold lines stay listed.'}
         </p>
       </div>
@@ -375,15 +392,74 @@ export default function WtsPartialPurchasePanel({
                       {line.title}
                     </span>
                     <span className="text-slate-500 text-xs">
-                      {formatQuantityForResource(line.resourceKey, line.available)}{' '}
-                      {resourceQuantityUnitLabel(line.resourceKey)}{' '}
+                      {isFulfill
+                        ? formatListingQuantity(
+                            line.resourceKey,
+                            line.available,
+                            line.maxAvailable,
+                            'wtb',
+                          )
+                        : `${formatQuantityForResource(line.resourceKey, line.available)} ${resourceQuantityUnitLabel(line.resourceKey)}`}{' '}
                       {isFulfill ? 'requested' : 'listed'} ·{' '}
                       {formatResourceOrderQualityLabel(line.resourceKey, line.title, line.minQuality)}
-                      {!wholeUnit && (
+                      {!wholeUnit && !isFulfill && (
                         <span className="text-slate-400 ml-1">(full line only)</span>
                       )}
                     </span>
                   </div>
+                  {isOn && isFulfill && !wholeUnit && (
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <label className="text-slate-500 text-xs" htmlFor={`offer-${line.lineId}`}>
+                        You have
+                      </label>
+                      <input
+                        id={`offer-${line.lineId}`}
+                        type="text"
+                        inputMode="decimal"
+                        autoComplete="off"
+                        value={quantities[line.lineId] ?? formatResourceQuantity(line.available)}
+                        onChange={(e) => {
+                          const locked = lockQuantityInput(e.target.value)
+                          const parsed = parseResourceQuantity(locked)
+                          const decimals = locked.split('.')[1]?.length ?? 0
+                          if (
+                            parsed != null &&
+                            (parsed > line.maxAvailable ||
+                              (parsed < line.available && decimals >= 3))
+                          ) {
+                            setQuantities((q) => ({
+                              ...q,
+                              [line.lineId]: formatResourceQuantity(
+                                clampWtbScuOffer(parsed, line.available, line.maxAvailable),
+                              ),
+                            }))
+                            return
+                          }
+                          setQuantities((q) => ({ ...q, [line.lineId]: locked }))
+                        }}
+                        onBlur={() => {
+                          const parsed = parseResourceQuantity(quantities[line.lineId] ?? '')
+                          const next =
+                            parsed == null
+                              ? line.available
+                              : clampWtbScuOffer(parsed, line.available, line.maxAvailable)
+                          setQuantities((q) => ({
+                            ...q,
+                            [line.lineId]: formatResourceQuantity(next),
+                          }))
+                        }}
+                        className="site-input w-24 px-2 py-1 text-sm tabular-nums"
+                      />
+                      <span className="text-slate-500 text-xs">
+                        SCU · max {formatResourceQuantity(line.maxAvailable)}
+                        {showDfp && line.unitDfpAuec > 0 && (
+                          <span className="text-amber-300/90 ml-1">
+                            · {formatDfpAuec(Math.round(line.unitDfpAuec * resourceQtyForLine(line)))}
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  )}
                   {isOn && wholeUnit && (
                     <div className="mt-2 flex items-center gap-2">
                       <span className="text-slate-500 text-xs">{qtyVerb}</span>

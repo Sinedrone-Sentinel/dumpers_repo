@@ -5,6 +5,7 @@ import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import { isSalvageResource, SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import {
   isHarvestResource,
+  isWholeUnitResource,
   resourceLabelClassName,
   resourceQuantityUnitLabel,
 } from '../config/resourceTypes'
@@ -61,8 +62,11 @@ import ResourceTypeahead from './ResourceTypeahead'
 import { resourceChipClassName } from '../config/resourceTypes'
 import {
   formatQuantityForResource,
+  formatResourceQuantity,
   parseQuantityForResource,
+  parseResourceQuantity,
 } from '../lib/resourceQuantity'
+import { normalizeWtbScuMax, wtbScuMaxFloor } from '../lib/wtbScuRange'
 import AppModal from './layout/AppModal'
 
 type SubmitResultNotice = {
@@ -170,6 +174,7 @@ export default function ResourceBuyOrderPanel({
   const [resourceKey, setResourceKey] = useState('')
   const [resQuality, setResQuality] = useState(String(DEFAULT_STOCK_QUALITY))
   const [resQty, setResQty] = useState('1')
+  const [resMax, setResMax] = useState('1')
   const [notes, setNotes] = useState('')
   const [minFulfillerRep, setMinFulfillerRep] = useState('')
   const [bpCart, setBpCart] = useState<CartBlueprintLine[]>([])
@@ -235,6 +240,9 @@ export default function ResourceBuyOrderPanel({
         )
         return {
           ...line,
+          maxQuantityScu:
+            line.maxQuantityScu ??
+            (isWholeUnitResource(line.resourceKey) ? null : wtbScuMaxFloor(line.quantityScu)),
           cartKey: nextCartKey(),
           ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
         }
@@ -278,6 +286,9 @@ export default function ResourceBuyOrderPanel({
             resourceLabel: line.resourceLabel,
             minQuality: pricing.orderMinQuality,
             quantityScu: line.quantity,
+            maxQuantityScu: isWholeUnitResource(line.resourceKey)
+              ? null
+              : wtbScuMaxFloor(line.quantity),
             ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
           }
         })
@@ -326,6 +337,19 @@ export default function ResourceBuyOrderPanel({
   }, [selectedBlueprint, selectedIsAmmo, effectiveBpSlotQualities])
   const selectedResource = activeCatalog.find((r) => r.resource_key === resourceKey)
   const selectedResourceLabel = selectedResource?.label ?? ''
+  const selectedResIsScu = !!selectedResource && !isWholeUnitResource(selectedResource.resource_key)
+
+  useEffect(() => {
+    if (!selectedResIsScu || !selectedResource) return
+    const qty = parseQuantityForResource(selectedResource.resource_key, resQty)
+    if (qty == null || qty <= 0) return
+    const floor = wtbScuMaxFloor(qty)
+    setResMax((prev) => {
+      const current = parseResourceQuantity(prev)
+      if (current == null || current < floor) return formatResourceQuantity(floor)
+      return prev
+    })
+  }, [resQty, selectedResIsScu, selectedResource])
   const selectedResIsSalvage = selectedResource
     ? isSalvageResource(selectedResource.resource_key)
     : false
@@ -464,10 +488,14 @@ export default function ResourceBuyOrderPanel({
         resourceLabel: selectedResource.label,
         minQuality: pricing.orderMinQuality,
         quantityScu: qty,
+        maxQuantityScu: isWholeUnitResource(selectedResource.resource_key)
+          ? null
+          : normalizeWtbScuMax(qty, parseResourceQuantity(resMax)),
         ...createCartPricingFields(pricing.unitDfpAuec, pricing.lineDfpAuec),
       },
     ])
     setResQty('1')
+    setResMax('1')
   }
 
   const submitOrder = async (listingType: 'wtb' | 'wts') => {
@@ -482,6 +510,7 @@ export default function ResourceBuyOrderPanel({
       resourceLabel: line.resourceLabel,
       minQuality: line.minQuality,
       quantityScu: line.quantityScu,
+      maxQuantityScu: line.maxQuantityScu,
       unitDfpAuec: line.baseUnitDfpAuec,
       lineDfpAuec: line.baseLineDfpAuec,
       baseUnitDfpAuec: line.baseUnitDfpAuec,
@@ -785,6 +814,34 @@ export default function ResourceBuyOrderPanel({
                 Add
               </button>
                 </div>
+                {selectedResIsScu && selectedResource && editOrder?.listing_type !== 'wts' && (
+                  <div className="space-y-1">
+                    <label className="site-label" htmlFor="wtb-scu-max">
+                      Willing to accept up to
+                    </label>
+                    <ResourceQuantityInput
+                      id="wtb-scu-max"
+                      resourceKey={selectedResource?.resource_key}
+                      value={resMax}
+                      onValueChange={(value) => {
+                        const qty = parseQuantityForResource(selectedResource.resource_key, resQty)
+                        const floor = qty == null ? 0 : wtbScuMaxFloor(qty)
+                        const parsed = parseResourceQuantity(value)
+                        if (parsed != null && floor > 0 && parsed < floor) {
+                          setResMax(formatResourceQuantity(floor))
+                          return
+                        }
+                        setResMax(value)
+                      }}
+                      className="px-3 py-2 site-input text-white text-sm tabular-nums w-full sm:w-40"
+                    />
+                    <p className="site-hint">
+                      WTB only. The amount above is the least you will take. When that is not a full
+                      box, this starts at the next whole SCU because a partial only fits in a 1 SCU
+                      box. You can raise it. You cannot set it lower.
+                    </p>
+                  </div>
+                )}
                 {dfpDisplayEnabled &&
                   parseQuantityForResource(selectedResource.resource_key, resQty) != null && (
                   <p className="text-amber-200/90 text-xs">
@@ -888,8 +945,13 @@ export default function ResourceBuyOrderPanel({
                       <span className={resourceLabelClassName(line.resourceKey)}>
                         {line.resourceLabel}
                       </span>{' '}
-                      · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
-                      {resourceQuantityUnitLabel(line.resourceKey)} ·{' '}
+                      ·{' '}
+                      {isWholeUnitResource(line.resourceKey) ||
+                      line.maxQuantityScu == null ||
+                      line.maxQuantityScu <= line.quantityScu
+                        ? `${formatQuantityForResource(line.resourceKey, line.quantityScu)} ${resourceQuantityUnitLabel(line.resourceKey)}`
+                        : `${formatQuantityForResource(line.resourceKey, line.quantityScu)}–${formatQuantityForResource(line.resourceKey, line.maxQuantityScu)} ${resourceQuantityUnitLabel(line.resourceKey)}`}{' '}
+                      ·{' '}
                       {formatResourceOrderQualityLabel(
                         line.resourceKey,
                         line.resourceLabel,

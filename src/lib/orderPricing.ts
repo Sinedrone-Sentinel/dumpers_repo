@@ -40,6 +40,8 @@ export interface OrderResourceLine {
   resourceLabel: string
   minQuality: number
   quantityScu: number
+  /** WTB SCU lines: most the buyer will accept. */
+  maxQuantityScu?: number | null
   unitDfpAuec: number
   lineDfpAuec: number
 }
@@ -141,6 +143,10 @@ export function resolveOrderResourceLines(order: CustomOrder): OrderResourceLine
         resourceLabel: row.resource_label,
         minQuality: row.min_quality,
         quantityScu: normalizeResourceQuantity(Number(row.quantity_scu)),
+        maxQuantityScu:
+          row.max_quantity_scu == null
+            ? null
+            : normalizeResourceQuantity(Number(row.max_quantity_scu)),
         unitDfpAuec: Number(row.unit_dfp_auec),
         lineDfpAuec: Number(row.line_dfp_auec),
       }))
