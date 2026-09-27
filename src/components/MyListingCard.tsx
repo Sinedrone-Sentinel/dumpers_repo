@@ -4,8 +4,7 @@ import { formatDfpAuec } from '../lib/dfp'
 import { formatSlotQualitySummary, isUniformSlotQuality } from '../lib/blueprintQuality'
 import { orderListingType } from '../lib/listingType'
 import { orderTotalDfp } from '../lib/orderPricing'
-import { resourceQuantityUnitLabel } from '../config/resourceTypes'
-import { formatQuantityForResource } from '../lib/resourceQuantity'
+import { formatListingQuantity } from '../lib/wtbScuRange'
 import {
   removeListingLine,
   setListingLineStockDeduct,
@@ -226,8 +225,12 @@ export default function MyListingCard({
         <p className="text-white text-sm truncate">{line.resource_label}</p>
         <p className="text-slate-500 text-xs">
           Q{line.min_quality} ·{' '}
-          {formatQuantityForResource(line.resource_key, line.quantity_scu)}{' '}
-          {resourceQuantityUnitLabel(line.resource_key)}
+          {formatListingQuantity(
+            line.resource_key,
+            Number(line.quantity_scu),
+            line.max_quantity_scu,
+            order.listing_type,
+          )}
           {showDfp && ` · ${formatDfpAuec(line.line_dfp_auec)}`}
         </p>
         {isWts && (

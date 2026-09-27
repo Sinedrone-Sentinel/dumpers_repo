@@ -11,8 +11,8 @@ import {
   resolveOrderResourceLines,
   type OrderBlueprintLine,
 } from '../lib/orderPricing'
-import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
-import { formatQuantityForResource } from '../lib/resourceQuantity'
+import { resourceLabelClassName } from '../config/resourceTypes'
+import { formatListingQuantity } from '../lib/wtbScuRange'
 import type { CustomOrder } from '../lib/operations'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
 import {
@@ -148,8 +148,13 @@ export default function OrderRequestLines({
               <span className={resourceLabelClassName(line.resourceKey)}>{line.resourceLabel}</span>
               <span>
                 {' '}
-                · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
-                {resourceQuantityUnitLabel(line.resourceKey)}
+                ·{' '}
+                {formatListingQuantity(
+                  line.resourceKey,
+                  line.quantityScu,
+                  line.maxQuantityScu,
+                  order.listing_type,
+                )}
               </span>
               <span>
                 {' '}
@@ -209,8 +214,13 @@ export default function OrderRequestLines({
           >
             <span className={resourceLabelClassName(line.resourceKey)}>{line.resourceLabel}</span>
             <span>
-              · {formatQuantityForResource(line.resourceKey, line.quantityScu)}{' '}
-              {resourceQuantityUnitLabel(line.resourceKey)}
+              ·{' '}
+              {formatListingQuantity(
+                line.resourceKey,
+                line.quantityScu,
+                line.maxQuantityScu,
+                order.listing_type,
+              )}
             </span>
             <span>
               ·{' '}
