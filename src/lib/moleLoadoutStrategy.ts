@@ -735,6 +735,11 @@ function scoreSoloHeadStrategy(
   return score
 }
 
+function formatRequiredMw(requiredMw: number, requiredLabel: string): string {
+  if (!Number.isFinite(requiredMw)) return requiredLabel
+  return `${Math.round(requiredMw).toLocaleString()} MW ${requiredLabel}`
+}
+
 function soloHeadFractureNotes(
   profile: MoleHeadProfile,
   pilotResistancePercent: number,
@@ -748,7 +753,7 @@ function soloHeadFractureNotes(
   return [
     `pilot RES ${Math.round(pilotResistancePercent)}% → ${effectiveHudRes}% on this head`,
     `${profile.laserPower.toLocaleString()} MW after modules`,
-    `${requiredMw.toLocaleString()} MW ${requiredLabel}`,
+    formatRequiredMw(requiredMw, requiredLabel),
     `hold within ${profile.optimalRange}m — power falls off past optimal range`,
   ].join(' · ')
 }
@@ -768,7 +773,9 @@ function idleSoloBackupVerdict(
   const equalizingPower = equalizationPowerForHeads(mass, resistancePercent, profiles, activeIndices)
   const crackableThreshold = crackablePowerForHeads(mass, resistancePercent, instability, profiles, activeIndices)
 
-  const cannotDetail = `Off — cannot crack this rock (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
+  const cannotDetail = Number.isFinite(crackableThreshold)
+    ? `Off — cannot crack this rock (needs ~${crackableThreshold.toLocaleString()} MW · head max ${profile.laserPower.toLocaleString()} MW)`
+    : `Off — cannot crack this rock (head max ${profile.laserPower.toLocaleString()} MW)`
   if (profile.laserPower < crackableThreshold) {
     return { detail: cannotDetail, viability: 'cannot' }
   }
@@ -815,7 +822,7 @@ function evaluateSingleHeadOnly(
       return buildAssignment(
         profile,
         'primary',
-        canBreak ? throttlePercent! : 100,
+        canBreak ? throttlePercent! : 0,
         canBreak
           ? [
               `Drive @ ${throttlePercent}%`,
@@ -824,7 +831,8 @@ function evaluateSingleHeadOnly(
             ]
               .filter(Boolean)
               .join(' · ')
-          : `Cannot crack at full throttle — ${fractureNotes}${modDetail ? ` · ${modDetail}` : ''}`
+          : `Cannot crack — ${fractureNotes}${modDetail ? ` · ${modDetail}` : ''}`,
+        canBreak ? undefined : 'cannot'
       )
     }
     const verdict = idleSoloBackupVerdict(profile, profiles, mass, resistancePercent, instability)

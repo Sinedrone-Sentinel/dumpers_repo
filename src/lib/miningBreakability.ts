@@ -61,23 +61,33 @@ export function effectiveResistanceFraction(
 /**
  * Mining-seat HUD resistance from the pilot scan plus head/module resistance shift.
  * Example: pilot 74% with Helix −30% → ~52% on that turret.
+ * A penalty can read above 100% (pilot 83% with Arbor +25% → 104%).
  */
 export function effectiveHudResistancePercent(
   pilotResistancePercent: number,
   headResistanceModifierPercent: number
 ): number {
   return Math.round(
-    Math.max(
-      0,
-      Math.min(100, applyRockMultiplicativePercent(pilotResistancePercent, headResistanceModifierPercent))
-    )
+    Math.max(0, applyRockMultiplicativePercent(pilotResistancePercent, headResistanceModifierPercent))
   )
 }
 
 /**
- * Equalization power (MW) — the power at which charge rate equals decay rate.
- * At this power level, the rock's energy stays stable (no growth, no decay).
- * You CANNOT crack a rock at exactly equalization power — you need margin above it.
+ * Uncapped resistance product used by fracture power.
+ * `resistancePercent` is the HUD value (83 for 83%). `resistanceModifier` is the
+ * laser/module multiplier (Helix −30% → 0.7, Arbor +25% → 1.25).
+ */
+function resistanceDemandFactor(resistancePercent: number, resistanceModifier: number): number {
+  if (!Number.isFinite(resistancePercent) || !Number.isFinite(resistanceModifier)) return 1
+  return 1 + (resistancePercent / 100) * resistanceModifier
+}
+
+/**
+ * Equalization power (MW) — steady laser power that matches the rock's decay.
+ * Resistance raises that demand and stays finite above 100%:
+ *   mass × 0.2 × (1 + (resistancePercent / 100) × resistanceModifier)
+ * At this power the rock's energy stays stable. Cracking needs margin above it.
+ * Returns 0 when mass is not positive, or when a resistance reduction cancels the demand.
  */
 export function equalizationPower(
   scannerMass: number,
@@ -85,10 +95,8 @@ export function equalizationPower(
   resistanceModifier = 1
 ): number {
   if (!Number.isFinite(scannerMass) || scannerMass <= 0) return 0
-  const effective = effectiveResistanceFraction(resistancePercent, resistanceModifier)
-  const denominator = 1 - effective
-  if (denominator <= 0) return Infinity
-  return (scannerMass * MINING_MASS_COEFFICIENT) / denominator
+  const demand = resistanceDemandFactor(resistancePercent, resistanceModifier)
+  return Math.max(0, scannerMass * MINING_MASS_COEFFICIENT * demand)
 }
 
 /**
