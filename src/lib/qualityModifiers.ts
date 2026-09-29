@@ -363,6 +363,22 @@ export function calculateSlotModifiers(
 }
 
 /**
+ * Armour stats are read from the item's own clothing / suit armour params, so a
+ * missing armour stat means the item does not have it in game (backpacks, shoes).
+ * Crafting modifiers on such a stat do nothing and must not be shown.
+ */
+export function dropUnbackedArmorModifiers(
+  results: SlotModifierResult[],
+  baseStats: Record<string, number>
+): SlotModifierResult[] {
+  const recorded = new Set(Object.keys(baseStats).map((k) => k.toLowerCase()))
+  return results.filter((result) => {
+    const property = result.property.toLowerCase()
+    return !property.startsWith('armor_') || recorded.has(property)
+  })
+}
+
+/**
  * Aggregate modifiers from multiple slots by property.
  * Same properties are multiplied together.
  */
