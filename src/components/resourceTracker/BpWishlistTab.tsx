@@ -7,7 +7,6 @@ import { fromMilliScu, toMilliScu } from '../../lib/resourceQuantity'
 import {
   BP_WISHLIST_MAX_LISTS,
   BP_WISHLIST_MAX_RECIPES,
-  combinedResourceTotals,
   createBpWishlist,
   deleteBpWishlist,
   demandCovered,
@@ -21,6 +20,7 @@ import {
   renameBpWishlist,
   setBpWishlistItemQuantity,
   setBpWishlistUseTracked,
+  stockAtQuality,
   wishlistItemDfp,
   wishlistQuantityTotal,
   wishlistResourceBuyDfp,
@@ -147,14 +147,13 @@ function WishlistPanel({
   onRun: (task: () => Promise<void>, refreshStock?: boolean) => Promise<void>
 }) {
   const [draftName, setDraftName] = useState(list.name)
-  const [totalsOpen, setTotalsOpen] = useState(false)
   useEffect(() => {
     setDraftName(list.name)
   }, [list.name])
   const dfp = list.items.reduce((sum, item) => sum + wishlistItemDfp(item), 0)
   const qtyTotal = wishlistQuantityTotal(list.items)
-  const overview = combinedResourceTotals(list.items)
-  const qualityTotals = qualityResourceTotals(list.items)
+  const overview = qualityResourceTotals(list.items)
+  const useTracked = list.use_tracked_resources
 
   return (
     <section className="site-card overflow-hidden">
@@ -172,36 +171,50 @@ function WishlistPanel({
         </span>
         <span className="ml-auto text-slate-500 text-xs">{open ? 'Hide' : 'Open'}</span>
       </button>
-      <div className="px-4 pb-3 flex flex-wrap gap-2">
-        {overview.length === 0 ? (
-          <span className="text-xs text-slate-500">No blueprints on this list yet.</span>
-        ) : (
-          overview.map((row) => (
-            <span key={row.key} className="site-badge-slate px-2 py-0.5 rounded text-xs font-mono" title="Dumper's Fair-Value Price to buy this resource">
-              {row.label} {formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)}
-              {' · '}
-              {formatDfpAuec(row.dfp)}
-            </span>
-          ))
-        )}
+      <div className="px-4 pb-3 space-y-2">
+        <label className="flex w-fit items-center gap-2 text-sm text-slate-200">
+          <input
+            type="checkbox"
+            className="site-checkbox"
+            checked={useTracked}
+            disabled={busy}
+            onChange={(event) => {
+              const enabled = event.target.checked
+              void onRun(() => setBpWishlistUseTracked(list.id, enabled))
+            }}
+          />
+          Use My Tracked Resources
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {overview.length === 0 ? (
+            <span className="text-xs text-slate-500">No blueprints on this list yet.</span>
+          ) : (
+            overview.map((row) => {
+              const covered = !useTracked || demandCovered(owned, row.resourceKey, row.quality, row.amount)
+              const tone = !useTracked
+                ? 'site-badge-slate'
+                : covered
+                  ? 'bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'
+                  : 'bg-red-950/50 border border-red-500/40 text-red-300'
+              const have = stockAtQuality(owned, row.resourceKey, row.quality)
+              const title = useTracked
+                ? `You have ${formatWishlistAmount(row.resourceKey, have, row.wholeUnit)} of ${formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)} at Q${row.quality}`
+                : "Dumper's Fair-Value Price to buy this resource"
+              return (
+                <span key={row.key} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`} title={title}>
+                  {row.label} Q{row.quality} {formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)}
+                  {' · '}
+                  {formatDfpAuec(row.dfp)}
+                </span>
+              )
+            })
+          )}
+        </div>
       </div>
 
       {open && (
         <div className="px-4 pb-4 space-y-4 site-divider pt-3">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex items-center gap-2 text-sm text-slate-200">
-              <input
-                type="checkbox"
-                className="site-checkbox"
-                checked={list.use_tracked_resources}
-                disabled={busy}
-                onChange={(event) => {
-                  const enabled = event.target.checked
-                  void onRun(() => setBpWishlistUseTracked(list.id, enabled))
-                }}
-              />
-              Use My Tracked Resources
-            </label>
             <form
               className="flex gap-2 ml-auto"
               onSubmit={(event) => {
@@ -245,46 +258,12 @@ function WishlistPanel({
               <RecipeRow
                 key={item.id}
                 item={item}
-                useTracked={list.use_tracked_resources}
+                useTracked={useTracked}
                 owned={owned}
                 busy={busy}
                 onRun={onRun}
               />
             ))}
-          </div>
-
-          <div className="site-surface rounded-xl">
-            <button
-              type="button"
-              className="w-full text-left px-3 py-2 text-sm text-slate-300 flex items-center justify-between"
-              onClick={() => setTotalsOpen((value) => !value)}
-              aria-expanded={totalsOpen}
-            >
-              <span>Quality totals</span>
-              <span className="text-xs text-slate-500">{totalsOpen ? 'Hide' : 'Show'}</span>
-            </button>
-            {totalsOpen && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 px-3 pb-3">
-                {qualityTotals.length === 0 && (
-                  <p className="text-xs text-slate-500">No materials yet.</p>
-                )}
-                {qualityTotals.map((row) => {
-                  const covered = !list.use_tracked_resources || demandCovered(owned, row.resourceKey, row.quality, row.amount)
-                  const tone = !list.use_tracked_resources
-                    ? 'site-badge-slate'
-                    : covered
-                      ? 'bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'
-                      : 'bg-red-950/50 border border-red-500/40 text-red-300'
-                  return (
-                    <span key={row.key} className={`${tone} px-2 py-1 rounded text-xs font-mono`} title="Dumper's Fair-Value Price to buy this resource">
-                      {row.label} Q{row.quality} {formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)}
-                      {' · '}
-                      {formatDfpAuec(row.dfp)}
-                    </span>
-                  )
-                })}
-              </div>
-            )}
           </div>
         </div>
       )}
