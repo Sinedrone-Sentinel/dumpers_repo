@@ -487,7 +487,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
           <div>
             <h3 className="text-white font-medium text-sm">Reset User Reputation</h3>
             <p className="text-xs text-slate-400 mt-1">
-              Reset a user's buyer or fulfiller reputation. Optionally clear their archived orders.
+              Reset a user's buyer or seller reputation. Optionally clear their archived orders.
             </p>
           </div>
           <div className="flex gap-2">
@@ -520,7 +520,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
                   onChange={(e) => setClearArchived(e.target.checked)}
                   className="site-checkbox w-4 h-4 text-amber-500"
                 />
-                <span className="text-sm text-slate-400">Also clear archived orders/fulfillments</span>
+                <span className="text-sm text-slate-400">Also clear archived orders/sales</span>
               </label>
               <div className="flex gap-2">
                 <button
@@ -535,7 +535,7 @@ export default function DbActionsModal({ onClose }: { onClose: () => void }) {
                   disabled={resettingRep}
                   className="flex-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg disabled:opacity-50"
                 >
-                  Reset Fulfiller Rep
+                  Reset Seller Rep
                 </button>
               </div>
             </div>

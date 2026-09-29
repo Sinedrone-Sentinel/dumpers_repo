@@ -17,13 +17,13 @@ const COPY: Record<
   { title: string; subtitle: string; confirmLabel: string }
 > = {
   fulfiller: {
-    title: 'Rate your fulfiller',
+    title: 'Rate your seller',
     subtitle:
       'A star rating is required before this order moves to your archive. Comments are optional.',
     confirmLabel: 'Submit rating & archive',
   },
   customer: {
-    title: 'Rate your customer',
+    title: 'Rate your buyer',
     subtitle:
       'A star rating is required before this order moves to your archive. Comments are optional.',
     confirmLabel: 'Submit rating & archive',
@@ -76,7 +76,7 @@ export default function OrderRatingModal({
         <div>
           <p className="text-white text-sm">{orderTitle}</p>
           <p className="text-slate-400 text-xs mt-1">
-            {target === 'fulfiller' ? 'Fulfiller' : 'Customer'}: {rateeName}
+            {target === 'fulfiller' ? 'Seller' : 'Buyer'}: {rateeName}
           </p>
           <p className="text-slate-300 text-sm mt-3">{copy.subtitle}</p>
         </div>

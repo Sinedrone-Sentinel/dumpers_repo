@@ -60,7 +60,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Community marketplace',
-    body: 'Member WTB/WTS listings and The Bazaar — craft, list, and fulfill with your community after you sign in.',
+    body: 'Member WTB/WTS listings and The Bazaar — craft, buy, and sell with your community after you sign in.',
     action: 'signin',
     cta: 'Sign in to use the marketplace →',
   },

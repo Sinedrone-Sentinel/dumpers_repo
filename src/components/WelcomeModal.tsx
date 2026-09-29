@@ -173,7 +173,7 @@ export default function WelcomeModal({ onComplete }: WelcomeModalProps) {
                   </svg>
                   <span>
                     <strong>Note:</strong> A verified RSI Handle is <strong>required</strong> to create Custom Orders
-                    or participate in Fulfillment. You can skip this for now and Link later in Settings.
+                    or trade on The Bazaar. You can skip this for now and Link later in Settings.
                   </span>
                 </p>
               </div>

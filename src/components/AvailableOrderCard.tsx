@@ -104,7 +104,7 @@ export default function AvailableOrderCard({
 
             {allowsPartial ? (
               <span className="px-2 py-0.5 rounded text-[10px] font-medium border bg-cyan-950/40 text-cyan-200 border-cyan-500/30">
-                {isWts ? 'Pick items to buy' : 'Pick items to fulfill'}
+                {isWts ? 'Pick items to buy' : 'Pick items to sell'}
               </span>
             ) : null}
 
@@ -128,7 +128,7 @@ export default function AvailableOrderCard({
 
             {order.min_fulfiller_reputation != null ? (
               <span className="site-badge-slate text-[10px]">
-                Requires {isWts ? 'buyer' : 'fulfiller'} {order.min_fulfiller_reputation}+
+                Requires {isWts ? 'buyer' : 'seller'} {order.min_fulfiller_reputation}+
               </span>
             ) : null}
           </div>
@@ -150,7 +150,7 @@ export default function AvailableOrderCard({
         <div className="px-3 pb-3 pt-1 site-divider space-y-2">
           {!meetsMinRep ? (
             <p className="text-amber-400/90 text-xs">
-              Your {isWts ? 'buyer' : 'fulfiller'} reputation is below this order&apos;s minimum.
+              Your {isWts ? 'buyer' : 'seller'} reputation is below this order&apos;s minimum.
             </p>
           ) : null}
 

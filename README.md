@@ -182,14 +182,14 @@ Each member keeps at most **one open WTB listing** and **one open WTS listing** 
 
 ### The Bazaar (`/bazaar`)
 
-- Two tabs: **Fulfillment** (WTB listings) and **Store** (WTS listings)
-- Item-level **search** plus **minimum quality-band filter**; Fulfillment tab adds min buyer rep and "only listings with my blueprints" filters
-- Pick exact lines and quantities to buy or fulfill. WTB SCU lines carry a minimum and a maximum (a partial box cannot be split, so a fractional ask floors the max at the next whole SCU). The fulfiller types the amount they are bringing; the selected total follows that amount
-- WTB fulfill and WTS commodity lines can optionally **Deduct from Tracked Resources** at the listed qualities when the seller/fulfiller marks ready (not on the Store buy picker)
+- Two tabs: **Sell to Buyers** (WTB listings) and **Buy from Sellers** (WTS listings)
+- Item-level **search** plus **minimum quality-band filter**; Sell to Buyers tab adds min buyer rep and "only listings with my blueprints" filters
+- Pick exact lines and quantities to buy or sell. WTB SCU lines carry a minimum and a maximum (a partial box cannot be split, so a fractional ask floors the max at the next whole SCU). The seller types the amount they are bringing; the selected total follows that amount
+- WTB sell and WTS commodity lines can optionally **Deduct from Tracked Resources** at the listed qualities when the seller marks ready (not on the Buy from Sellers picker)
 - Marking blueprints acquired is optional: lines using untracked blueprints are flagged in amber and confirmed once before claiming, never blocked (`accept_wtb_partial` enforces no ownership check)
 - Every checkout/claim spawns a full child transaction (same handoff, deadlines, ratings)
 - Seller actions on-card: message the other party, start handoff, mark ready, cancel/release (items restore to the listing)
-- **Reputation badges** show buyer rep, fulfiller/seller rep, and average delivery time (after 5 completed trades)
+- **Reputation badges** show buyer rep, seller rep, and average delivery time (after 5 completed trades)
 - Offline users see open-listing **count only** — sign in to browse or trade
 
 ### Marketplace ads & purchase toasts
@@ -276,7 +276,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 | **Admin Panel** | Officers + super-admins | Approve `pending` users, promote/demote roles, ban/unban |
 | **Support Dashboard** | Officers + super-admins | Ticket queue |
 | **Site Analytics** (`/analytics`) | Super-admins | Visitors, tool-time, guest vs signed-in split, geo, AI chat Edge aggregates (no questions or keys), BP Dumper Edge usage |
-| **DB Actions** | Super-admins | Game-data update runbook reference; wipe all personal inventory; revoke RSI verification; reset buyer/fulfiller rep |
+| **DB Actions** | Super-admins | Game-data update runbook reference; wipe all personal inventory; revoke RSI verification; reset buyer/seller rep |
 | **Discord** (modal) | Super-admins | Official webhook, queue status, coalesce minutes, manual send |
 | **Updates Ticker** (modal) | Super-admins | Create/edit/delete ticker messages; manage layout categories (label, accent color, TTL kind) |
 
@@ -306,7 +306,7 @@ Signed-out visitors land on the public home page first. Choose **Browse tools of
 
 Requires a free member account:
 
-- My Listings, The Bazaar (shop/fulfill), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
+- My Listings, The Bazaar (buy/sell), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
 
 On **first sign-in** (welcome onboarding), valid offline data migrates to the account. Stale offline IDs from before an update are cleared automatically.
 

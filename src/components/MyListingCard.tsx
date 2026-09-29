@@ -300,7 +300,7 @@ export default function MyListingCard({
       <p className="text-slate-500 text-xs">
         {isWts
           ? 'Buyers pick items straight from this listing — each purchase becomes its own transaction below. Check Deduct from Tracked Resources on commodity lines to pull that stock when you mark the sale ready. Finished blueprint items are not deducted.'
-          : 'Fulfillers claim items from this listing — each claim becomes its own transaction below.'}
+          : 'Sellers claim items from this listing — each claim becomes its own transaction below.'}
       </p>
     </div>
   )

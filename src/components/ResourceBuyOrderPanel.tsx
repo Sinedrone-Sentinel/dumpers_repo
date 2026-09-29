@@ -676,7 +676,7 @@ export default function ResourceBuyOrderPanel({
               <>
                 {selectedIsAmmo && (
                   <p className="text-slate-400 text-xs">
-                    Ammo — no min quality on the order. Fulfiller may use lowest quality materials on
+                    Ammo — no min quality on the order. Seller may use lowest quality materials on
                     hand (in-game, ammo craft quality does not matter).
                   </p>
                 )}
@@ -987,10 +987,10 @@ export default function ResourceBuyOrderPanel({
 
         <div className="site-surface p-4 space-y-2">
           <label htmlFor="min-fulfiller-rep" className="text-slate-300 text-sm font-medium">
-            Min fulfiller reputation
+            Min seller reputation
           </label>
           <p className="text-slate-500 text-xs">
-            Whole-number minimum (1–5) after fulfillers have 5+ completed jobs. Unrated fulfillers
+            Whole-number minimum (1–5) after sellers have 5+ completed jobs. Unrated sellers
             are always eligible — they must be given a chance.
           </p>
           <select
@@ -1091,7 +1091,7 @@ export default function ResourceBuyOrderPanel({
               ))}
             </ul>
             <p className="text-slate-400 text-sm mb-4">
-              This order may take longer to fulfill since no one currently owns {noOwnerBlueprints.length > 1 ? 'these blueprints' : 'this blueprint'}.
+              This order may take longer to fill since no one currently owns {noOwnerBlueprints.length > 1 ? 'these blueprints' : 'this blueprint'}.
               Consider starting with easier items.
             </p>
             <a

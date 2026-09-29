@@ -39,7 +39,7 @@ export function getGuestFeatureCopy(featureId: FeatureId): GuestFeatureCopy {
       details: [
         'Free account — no subscriptions or paid tiers',
         'Track your own blueprints, targets, and resources',
-        'Participate in orders and fulfillment once approved',
+        'Buy and sell on The Bazaar once approved',
       ],
     }
   )

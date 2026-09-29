@@ -11,7 +11,7 @@ interface TimeoutWarningModalProps {
 
 function rolePhrase(role: TimeoutWarningRole): string {
   if (role === 'seller') return 'as the seller'
-  if (role === 'fulfiller') return 'as the fulfiller'
+  if (role === 'fulfiller') return 'as the seller'
   return 'as the buyer'
 }
 
@@ -65,7 +65,7 @@ export default function TimeoutWarningModal({ warning, onAcknowledge }: TimeoutW
             so buyer and seller alerts reach you even when you are away from the site.
           </p>
           <p>
-            Repeated ghosting on an order — whether you are the buyer, seller, or fulfiller — can
+            Repeated ghosting on an order — whether you are the buyer or seller — can
             lead to an account ban. Read{' '}
             <a href="/archive#site-rules" className="text-orange-400 hover:text-orange-300 underline">
               Site Rules

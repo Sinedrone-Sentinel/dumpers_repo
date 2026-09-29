@@ -271,7 +271,7 @@ export default function DiscordSubscribeRoute() {
                         </p>
                         <p className="text-amber-200/70 text-xs mt-1">
                           Personal deal alerts need a verified RSI Handle — the same requirement as
-                          Custom Orders and Fulfillment. Marketplace and Support webhooks below stay
+                          Custom Orders and The Bazaar. Marketplace and Support webhooks below stay
                           available.
                         </p>
                         <p className="text-amber-200/70 text-xs mt-2">

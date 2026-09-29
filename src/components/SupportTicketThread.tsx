@@ -475,7 +475,7 @@ export default function SupportTicketThread({
                 disabled={resolvingDispute}
                 className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
               >
-                Release to fulfiller
+                Release to seller
               </button>
               <button
                 onClick={() => void handleResolveDispute('cancel')}

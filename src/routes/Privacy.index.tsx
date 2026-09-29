@@ -123,7 +123,7 @@ export default function PrivacyRoute() {
               <li>Blueprint acquisitions, resource inventories, mission tracker data, mining ledger data</li>
               <li>Saved mining loadouts (synced across devices when you are signed in)</li>
               <li>
-                Custom orders, marketplace listings, fulfillments, ratings, related event history, and
+                Custom orders, marketplace listings, sales, ratings, related event history, and
                 private deal chat on accepted trades (removed when the deal ends)
               </li>
               <li>Support tickets and messages you submit</li>
@@ -183,7 +183,7 @@ export default function PrivacyRoute() {
             <p>We share information only as needed to run the service:</p>
             <ul className="list-disc space-y-1 pl-5">
               <li>
-                <strong className="text-slate-100">Other members:</strong> marketplace and fulfillment
+                <strong className="text-slate-100">Other members:</strong> marketplace and trade
                 flows may show your display name and RSI handle so counterparties can coordinate trades.
                 Accepted friends can browse each other&apos;s acquired blueprints and personal resources
               </li>

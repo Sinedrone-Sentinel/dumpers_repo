@@ -459,7 +459,7 @@ export default function BazaarRoute() {
       !window.confirm(
         order
           ? releaseOrderConfirmMessage(order)
-          : 'Release this order back to the fulfillment pool? Another member can accept it.'
+          : 'Release this order back to the Bazaar? Another member can accept it.'
       )
     ) {
       return
@@ -557,7 +557,7 @@ export default function BazaarRoute() {
       <FeaturePageLayout
         title="The Bazaar"
         subtitle="Star Citizen community WTB & WTS marketplace"
-        seoIntro="The Bazaar is a Star Citizen member marketplace for WTB craft requests and WTS stock listings — browse open trades, fulfill by item and quantity, and build buyer/seller reputation. Sign in to participate."
+        seoIntro="The Bazaar is a Star Citizen member marketplace for WTB craft requests and WTS stock listings — browse open trades, buy or sell by item and quantity, and build buyer/seller reputation. Sign in to participate."
       >
         <div className="max-w-2xl mx-auto py-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/30 mb-6">
@@ -588,13 +588,13 @@ export default function BazaarRoute() {
           <p className="text-slate-400 mb-6 max-w-md mx-auto">
             Members browse live <strong className="text-amber-300">WTB</strong> buy listings and{' '}
             <strong className="text-cyan-300">WTS</strong> sell listings, then pick the exact items
-            and quantities they want to fulfill or buy. Build reputation and earn aUEC — sign in to
+            and quantities they want to sell or buy. Build reputation and earn aUEC — sign in to
             participate.
           </p>
           <div className="p-4 site-surface text-left max-w-md mx-auto">
             <h3 className="text-white font-medium mb-2">What members can do:</h3>
             <ul className="text-sm text-slate-400 space-y-1">
-              <li>• Fulfill WTB craft requests that match your acquired blueprints</li>
+              <li>• Sell to WTB craft requests that match your acquired blueprints</li>
               <li>• Shop WTS listings from members selling stock on hand</li>
               <li>• Pick individual items and quantities — no all-or-nothing trades</li>
               <li>• Build buyer and seller reputation through ratings</li>
@@ -612,7 +612,7 @@ export default function BazaarRoute() {
     <FeaturePageLayout
       title="The Bazaar"
       subtitle="Star Citizen community WTB & WTS marketplace"
-      seoIntro="The Bazaar is a Star Citizen member marketplace for WTB craft requests and WTS stock listings — browse open trades, fulfill by item and quantity, and build buyer/seller reputation."
+      seoIntro="The Bazaar is a Star Citizen member marketplace for WTB craft requests and WTS stock listings — browse open trades, buy or sell by item and quantity, and build buyer/seller reputation."
       actions={
         <Link
           to="/orders"
@@ -697,7 +697,7 @@ export default function BazaarRoute() {
           </p>
 
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <ReputationBadge label="Your fulfiller rep" reputation={myFulfillerRep} type="fulfiller" userId={userId} />
+            <ReputationBadge label="Your seller rep" reputation={myFulfillerRep} type="fulfiller" userId={userId} />
             <ReputationBadge label="Your buyer rep" reputation={myBuyerRep} type="buyer" userId={userId} />
             {orderLimits?.has_pending_fulfiller_rep && (
               <>
@@ -730,8 +730,8 @@ export default function BazaarRoute() {
               <div className="flex flex-wrap gap-2 mb-4">
                 {(
                   [
-                    { id: 'fulfillment', label: 'Fulfillment (WTB)' },
-                    { id: 'store', label: 'Store (WTS)' },
+                    { id: 'fulfillment', label: 'Sell to Buyers (WTB)' },
+                    { id: 'store', label: 'Buy from Sellers (WTS)' },
                   ] as const
                 ).map((tab) => (
                   <button
@@ -812,7 +812,7 @@ export default function BazaarRoute() {
               {activeTab === 'fulfillment' && (
                 <p className="text-slate-500 text-xs mb-3">
                   Buyers without 5 completed items always appear — they cannot be filtered out.
-                  You only need the blueprints for the lines you choose to fulfill.
+                  You only need the blueprints for the lines you choose to sell.
                 </p>
               )}
 
@@ -939,7 +939,7 @@ export default function BazaarRoute() {
                 <div>
                   <h2 className="text-white font-medium mb-3">Orders you&apos;re buying</h2>
                   <p className="text-slate-500 text-xs mb-3">
-                    Fulfiller reputation appears after they claim items from your listing.
+                    Seller reputation appears after they claim items from your listing.
                   </p>
                   <div className="space-y-2">
                     {myBuyingOrders.map((order) => {
@@ -966,7 +966,7 @@ export default function BazaarRoute() {
                           )}
                           {order.assignee_id && (
                             <ReputationBadge
-                              label="Fulfiller rep"
+                              label="Seller rep"
                               reputation={fulfillerRep}
                               type="fulfiller"
                               userId={order.assignee_id}
@@ -1032,7 +1032,7 @@ export default function BazaarRoute() {
                     <h2 className="text-white font-medium mb-3">Awaiting pickup confirmation</h2>
                     {myFinishedOrders.length === 0 ? (
                       <div className="site-empty !py-6 mb-6 text-sm">
-                        No WTB orders waiting on customer pickup confirmation.
+                        No WTB orders waiting on buyer pickup confirmation.
                       </div>
                     ) : (
                       <div className="space-y-2 mb-6">
@@ -1062,7 +1062,7 @@ export default function BazaarRoute() {
                                   />
                                 </div>
                                 <p className="text-cyan-300/80 text-xs mt-2">
-                                  Waiting for customer pickup confirmation in My Listings.
+                                  Waiting for buyer pickup confirmation in My Listings.
                                 </p>
                                 <OrderDeadlineNotice order={order} role="fulfiller" />
                                 <div className="mt-2">
@@ -1080,11 +1080,11 @@ export default function BazaarRoute() {
 
               {activeTab === 'fulfillment' && (
                 <div>
-                  <h2 className="text-white font-medium mb-3">Fulfillment history</h2>
+                  <h2 className="text-white font-medium mb-3">Sales history</h2>
                   <p className="text-slate-500 text-xs mb-3">Your crafts from the last 30 days.</p>
                   {fulfillments.length === 0 ? (
                     <div className="site-empty !py-6 text-sm">
-                      No fulfillments in the last 30 days.
+                      No sales in the last 30 days.
                     </div>
                   ) : (
                     <div className="space-y-2 max-h-[600px] overflow-y-auto">

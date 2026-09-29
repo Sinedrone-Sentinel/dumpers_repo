@@ -679,7 +679,7 @@ export default function CustomOrdersRoute() {
         <div className="mb-6 site-surface border-orange-500/30 p-4">
           <h2 className="text-white font-medium mb-2">Edit order</h2>
           <p className="text-slate-500 text-xs mb-4">
-            Only pending orders with no fulfiller yet can be changed.
+            Only pending orders with no seller yet can be changed.
           </p>
           <ResourceBuyOrderPanel
             userId={user.id}
@@ -745,7 +745,7 @@ export default function CustomOrdersRoute() {
                       )}
                       {order.min_fulfiller_reputation != null && (
                         <span className="site-badge-slate">
-                          Min fulfiller rep {order.min_fulfiller_reputation}+
+                          Min {order.listing_type === 'wts' ? 'buyer' : 'seller'} rep {order.min_fulfiller_reputation}+
                         </span>
                       )}
                     </div>
@@ -941,7 +941,7 @@ export default function CustomOrdersRoute() {
             <textarea
               value={disputeDescription}
               onChange={(e) => setDisputeDescription(e.target.value)}
-              placeholder="e.g. Items were not ready, wrong quality, fulfiller not at location..."
+              placeholder="e.g. Items were not ready, wrong quality, seller not at location..."
               rows={4}
               className="site-textarea w-full px-3 py-2 mb-4 min-h-0 resize-none text-sm"
             />
