@@ -139,7 +139,7 @@ const soloHead2Only = findBestMoleLoadoutStrategy(
   ricciteRock,
   { soloMining: true }
 )
-assert(!soloHead2Only.canBreak, 'Helix II with −10% module power cannot solo-crack this pilot-scan rock')
+assert(soloHead2Only.canBreak, 'Helix II with −10% module power solo-cracks this pilot-scan rock')
 assert(
   soloHead2Only.assignments[0].detail?.includes('4,437 MW after modules'),
   'solo fracture notes should show module-adjusted MW'

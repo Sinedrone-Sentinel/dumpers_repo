@@ -46,17 +46,20 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
       ) : null}
       <div className="space-y-1.5">
         {strategy.assignments.map((head) => {
+          const blocked = head.backupViability === 'cannot'
           const isWorkableBackup = head.role === 'idle' && head.backupViability === 'works'
-          const headClass =
-            head.role === 'primary'
+          const headClass = blocked
+            ? 'text-slate-500'
+            : head.role === 'primary'
               ? 'text-green-400/90'
               : head.role === 'support'
                 ? 'text-cyan-300/90'
                 : isWorkableBackup
                   ? 'text-yellow-400/80'
                   : 'text-slate-600'
-          const statusLabel =
-            head.role === 'primary'
+          const statusLabel = blocked
+            ? 'Cannot'
+            : head.role === 'primary'
               ? 'Drive'
               : head.role === 'support' && head.throttlePercent === 100
                 ? 'Full'
@@ -76,7 +79,7 @@ export default function MoleHeadPlanPanel({ strategy, oreName = null, embedded =
                 <span className={isWorkableBackup ? 'text-yellow-600/80' : 'text-slate-500'}>
                   {' '}
                   · {statusLabel}
-                  {head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
+                  {!blocked && head.role !== 'idle' ? ` @ ${head.throttlePercent}%` : ''}
                 </span>
               </p>
               {head.detail ? (

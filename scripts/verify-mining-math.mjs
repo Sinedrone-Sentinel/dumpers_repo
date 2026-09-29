@@ -161,24 +161,27 @@ const arborResult = breakability.effectiveHudResistancePercent(50, 15)
 assert(arborResult === 57 || arborResult === 58, `Arbor +15% → 57-58% on turret (got ${arborResult})`)
 assert(breakability.effectiveHudResistancePercent(10, -50) === 5, 'Large negative on low RES → 5%')
 assert(breakability.effectiveHudResistancePercent(100, -30) === 70, '100% → 70% with Helix')
+assert(breakability.effectiveHudResistancePercent(83, 25) === 104, 'Pilot 83% with Arbor +25% → 104% on turret')
 
 // 1.3 requiredLaserPower (core fracture formula)
 console.log('\n1.3 requiredLaserPower')
-// Formula: (mass × 0.2) / (1 - effectiveResistanceFraction)
-// Easy rock: (5000 × 0.2) / (1 - 0.25) = 1000 / 0.75 = 1333.33 MW
-assertApprox(breakability.requiredLaserPower(5000, 25), 1333, 2, 'Easy rock (5k mass, 25% RES) ≈ 1,333 MW')
+// Formula: mass × 0.2 × (1 + (resistancePercent/100) × modifier)
+// Easy rock: 5000 × 0.2 × (1 + 0.25) = 1,250 MW
+assertApprox(breakability.requiredLaserPower(5000, 25), 1250, 2, 'Easy rock (5k mass, 25% RES) ≈ 1,250 MW')
 
-// Medium rock: (12000 × 0.2) / (1 - 0.45) = 2400 / 0.55 = 4363.64 MW
-assertApprox(breakability.requiredLaserPower(12000, 45), 4364, 2, 'Medium rock (12k mass, 45% RES) ≈ 4,364 MW')
+// Medium rock: 12000 × 0.2 × (1 + 0.45) = 3,480 MW
+assertApprox(breakability.requiredLaserPower(12000, 45), 3480, 2, 'Medium rock (12k mass, 45% RES) ≈ 3,480 MW')
 
-// High-res rock with modifier: (10849 × 0.2) / (1 - 0.518) = 2169.8 / 0.482 ≈ 4502 MW
+// High-res rock with modifier: 10849 × 0.2 × (1 + 0.74 × 0.7) ≈ 3,294 MW
 // Note: 74% × 0.7 (Helix) = 51.8% effective
-assertApprox(breakability.requiredLaserPower(10849, 74, 0.7), 4502, 10, 'High-RES rock with Helix modifier ≈ 4,502 MW')
+assertApprox(breakability.requiredLaserPower(10849, 74, 0.7), 3294, 10, 'High-RES rock with Helix modifier ≈ 3,294 MW')
 
 // Edge cases
 assert(breakability.requiredLaserPower(0, 50) === 0, 'Zero mass → 0 MW')
-assert(!Number.isFinite(breakability.requiredLaserPower(10000, 100)), '100% RES → Infinity (impossible)')
+assertApprox(breakability.requiredLaserPower(10000, 100), 4000, 2, '100% RES stays finite (0.4 × mass)')
 assert(breakability.requiredLaserPower(-100, 50) === 0, 'Negative mass → 0 MW')
+// Aslarite the player cracked on one Arbor MH2: 1102 kg, 83%, +25% → ~449 MW (under 2,900)
+assertApprox(breakability.requiredLaserPower(1102, 83, 1.25), 449, 2, 'Aslarite 1,102 kg / 83% with Arbor +25% ≈ 449 MW')
 
 // 1.4 equalizationPower vs crackablePower (±MW instability-assist model)
 console.log('\n1.4 equalizationPower / crackablePower (instability assist lowers the floor)')
@@ -188,7 +191,17 @@ assert(breakability.crackablePower(5000, 25, 0) === eq5k, 'Zero instability → 
 assertApprox(breakability.crackablePower(5000, 25, 500), eq5k - 500, 1, '500 inst → equalization − 500 (assist lowers floor)')
 assertApprox(breakability.crackablePower(5000, 25, 100), eq5k - 100, 1, '100 inst → equalization − 100')
 assert(breakability.crackablePower(5000, 25, 10000) === 0, 'Assist beyond equalization → floor clamps to 0')
-assert(!Number.isFinite(breakability.crackablePower(10000, 100, 300)), '100% RES → Infinity (impossible)')
+assertApprox(breakability.crackablePower(10000, 100, 300), 3700, 2, '100% RES stays finite; 300 inst lowers the floor')
+assertApprox(
+  breakability.equalizationPower(1102, 83, 1.25),
+  449,
+  2,
+  'Aslarite equalization with Arbor +25% ≈ 449 MW'
+)
+assert(
+  breakability.crackablePower(1102, 83, 27.67, 1.25) < 2900,
+  'Aslarite floor with Arbor MH2 is well under 2,900 MW'
+)
 
 // Three-zone band: clean requires overcoming the underswing (E + assist)
 const zClean = breakability.classifyCrackZone(eq5k + 600, 5000, 25, 500)
@@ -201,10 +214,10 @@ assert(zImposs.zone === 'impossible', 'Power below floor (E − assist) → impo
 // 1.5 crackablePower with resistance modifier (Riccite scenario, ±MW model)
 console.log('\n1.5 crackablePower with resistance modifier')
 // 10849 mass, 74% RES with Helix (-30% → 0.7), 515 instability
-// Equalization: (10849 × 0.2) / (1 - 0.518) ≈ 4,502 MW
-// Floor (min for a shot): 4,502 − 515 ≈ 3,987 MW (instability assist lowers it)
+// Equalization: 10849 × 0.2 × (1 + 0.74 × 0.7) ≈ 3,294 MW
+// Floor (min for a shot): 3,294 − 515 (instability assist lowers it)
 const userEq = breakability.equalizationPower(10849, 74, 0.7)
-assertApprox(userEq, 4502, 10, 'User scenario equalization ≈ 4,502 MW')
+assertApprox(userEq, 3294, 10, 'User scenario equalization ≈ 3,294 MW')
 const userRequired = breakability.crackablePower(10849, 74, 515, 0.7)
 assertApprox(userRequired, userEq - 515, 5, 'User scenario floor = equalization − 515 instability assist')
 assert(userRequired < userEq, 'Instability lowers the minimum below equalization (not above)')
@@ -453,11 +466,11 @@ const soloActive = easySoloStrategy.assignments.filter(a => a.role !== 'idle')
 assert(soloActive.length === 1, 'Solo should use exactly one head')
 console.log(`  → ${easySoloStrategy.summary}`)
 
-// 5.2 High-RES rock with Focus modules — should NOT be crackable
+// 5.2 High-RES rock with Focus modules — linear demand sits under the 4,437 MW head
 console.log('\n5.2 High-RES rock with Focus-pair heads (solo)')
 const highResSoloStrategy = moleStrategy.findBestMoleLoadoutStrategy(focusLoadout, HIGH_RES_ROCK, { soloMining: true })
 assert(highResSoloStrategy != null, 'High-RES solo strategy exists')
-assert(!highResSoloStrategy.canBreak, 'Focus-pair heads cannot crack 74% RES rock solo')
+assert(highResSoloStrategy.canBreak, 'Focus-pair Helix cracks the 74% RES rock solo')
 
 const primaryAssignment = highResSoloStrategy.assignments.find(a => a.role === 'primary')
 assert(primaryAssignment?.detail?.includes('4,437 MW'), 'Solo notes should show module-adjusted MW')
