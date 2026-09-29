@@ -37,6 +37,7 @@ const modules = [
   'src/lib/stockCardListing.ts',
   'src/lib/inventoryStock.ts',
   'src/lib/wtbScuRange.ts',
+  'src/lib/blueprintEffectiveStats.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -73,6 +74,7 @@ const shubinTerm = await import(pathToFileURL(path.join(outDir, 'shubinTerminalR
 const stockCardListing = await import(pathToFileURL(path.join(outDir, 'stockCardListing.mjs')).href)
 const inventoryStock = await import(pathToFileURL(path.join(outDir, 'inventoryStock.mjs')).href)
 const wtbScuRange = await import(pathToFileURL(path.join(outDir, 'wtbScuRange.mjs')).href)
+const effectiveStats = await import(pathToFileURL(path.join(outDir, 'blueprintEffectiveStats.mjs')).href)
 
 let pass = 0
 function check(cond, message) {
@@ -1630,6 +1632,55 @@ check(
 check(
   wtbScuRange.formatListingQuantity('ore_iron', 0.04, 1, 'wts') === '0.04 SCU',
   'a WTS line stays a single amount',
+)
+
+check(
+  Object.keys(
+    effectiveStats.mergeBlueprintBaseStats({
+      armorBaseStats: { Armor_Temperaturemin: 0, Armor_Radiationcapacity: 0 },
+    }),
+  ).length === 0,
+  'zero base stats are not recorded stats',
+)
+check(
+  effectiveStats.mergeBlueprintBaseStats({
+    armorBaseStats: { Armor_Temperaturemin: -30, Armor_Radiationcapacity: 0 },
+  }).Armor_Temperaturemin === -30,
+  'non-zero base stats are kept',
+)
+const backpackMods = quality.calculateSlotModifiers(500, [
+  { property: 'armor_damagemitigation', baseAmount: 0.85, perQuality: 0.0003 },
+  { property: 'weapon_recoil_kick', baseAmount: 0.9, perQuality: 0.0001 },
+])
+const keptMods = quality.dropUnbackedArmorModifiers(backpackMods, {})
+check(
+  keptMods.length === 1 && keptMods[0].property === 'weapon_recoil_kick',
+  'armour modifier on an item without that armour stat is dropped, weapon modifier kept',
+)
+check(
+  quality.dropUnbackedArmorModifiers(backpackMods, { Armor_Damagemitigation: 0.7 }).length === 2,
+  'armour modifier is kept when the item has that stat',
+)
+
+const blueprintData = JSON.parse(readFileSync(path.join(root, 'src/data/game-blueprints.json'), 'utf8'))
+const allBlueprints = blueprintData.blueprints || Object.values(blueprintData)
+const inertArmorShown = []
+for (const bp of allBlueprints) {
+  if (!bp?.entityClass) continue
+  for (const mod of effectiveStats.computeBlueprintEffectiveModifiers(bp)) {
+    if (mod.property.toLowerCase().startsWith('armor_') && mod.baseValue === undefined) {
+      inertArmorShown.push(`${bp.blueprintName}: ${mod.propertyLabel}`)
+    }
+  }
+}
+check(
+  inertArmorShown.length === 0,
+  `no blueprint shows an armour modifier for a stat the item lacks (${inertArmorShown.slice(0, 5).join('; ')})`,
+)
+const h4 = allBlueprints.find((bp) => bp?.entityClass === 'cds_combat_superheavy_backpack_01_01_01')
+check(
+  h4 && Object.keys(effectiveStats.mergeBlueprintBaseStats(h4)).length === 0,
+  'H4-PBF Ammo Carrier has no recorded base stats',
 )
 
 console.log(`Unit tests: ${pass} passed`)

@@ -3,6 +3,7 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import {
   aggregateModifiers,
   calculateSlotModifiers,
+  dropUnbackedArmorModifiers,
   formatPercentChange,
   formatStatValue,
   roundPercentChange,
@@ -34,6 +35,7 @@ export interface BlueprintForEffectiveStats extends BlueprintWithSlots {
   }>
 }
 
+/** Base stats the item actually has; a 0 means the game gives it none of that stat. */
 export function mergeBlueprintBaseStats(
   blueprint: BlueprintForEffectiveStats
 ): Record<string, number> {
@@ -44,7 +46,7 @@ export function mergeBlueprintBaseStats(
     ...blueprint.weaponBaseStats,
   }
   for (const [key, value] of Object.entries(allStats)) {
-    if (value !== null && value !== undefined) {
+    if (value !== null && value !== undefined && value !== 0) {
       stats[key] = value
     }
   }
@@ -99,7 +101,7 @@ export function computeBlueprintEffectiveModifiers(
   const allSlotModifiers = blueprint.slots.map((slot, idx) => {
     const quality = effectiveQualities[idx] ?? 500
     const modifiers = slot.options?.[0]?.modifiers
-    return calculateSlotModifiers(quality, modifiers)
+    return dropUnbackedArmorModifiers(calculateSlotModifiers(quality, modifiers), mergedBaseStats)
   })
 
   return aggregateModifiers(allSlotModifiers, mergedBaseStats)

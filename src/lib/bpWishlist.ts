@@ -311,35 +311,6 @@ export interface WishlistResourceTotal {
   dfp: number
 }
 
-/** One total per resource, qualities combined. Amounts include recipe quantity. */
-export function combinedResourceTotals(items: WishlistItem[]): WishlistResourceTotal[] {
-  const map = new Map<string, WishlistResourceTotal>()
-  for (const item of items) {
-    for (const material of item.materials) {
-      const key = material.resourceKey
-      const extra = isWholeUnitResource(material.resourceKey)
-        ? Math.trunc(material.scu) * item.quantity
-        : fromMilliScu(toMilliScu(material.scu) * item.quantity)
-      const sliceDfp = wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, extra)
-      const existing = map.get(key)
-      if (existing) {
-        existing.amount = addAmount(material.resourceKey, existing.amount, extra)
-        existing.dfp += sliceDfp
-      } else {
-        map.set(key, {
-          key,
-          label: material.label,
-          resourceKey: material.resourceKey,
-          amount: extra,
-          wholeUnit: material.wholeUnit,
-          dfp: sliceDfp,
-        })
-      }
-    }
-  }
-  return [...map.values()].sort((a, b) => a.label.localeCompare(b.label))
-}
-
 export interface WishlistQualityTotal extends WishlistResourceTotal {
   quality: number
 }

@@ -8,7 +8,9 @@ import {
   getAggregatedModifierColorClass,
   getPropertyLabel,
   calculateSlotModifiers,
+  dropUnbackedArmorModifiers,
 } from '../lib/qualityModifiers'
+import { mergeBlueprintBaseStats } from '../lib/blueprintEffectiveStats'
 import {
   buildDefaultSlotQualities,
   formatSlotQualitySummary,
@@ -238,21 +240,15 @@ export default function BlueprintDetailsModal({
     ) ?? false
   }, [blueprint.slots])
 
-  // Merge all base stats (vehicle, armor, weapon) into one object, filtering out nulls
-  const mergedBaseStats = useMemo(() => {
-    const stats: Record<string, number> = {}
-    const allStats = {
-      ...blueprint.vehicleBaseStats,
-      ...blueprint.armorBaseStats,
-      ...blueprint.weaponBaseStats,
-    }
-    for (const [key, value] of Object.entries(allStats)) {
-      if (value !== null && value !== undefined) {
-        stats[key] = value
-      }
-    }
-    return stats
-  }, [blueprint.vehicleBaseStats, blueprint.armorBaseStats, blueprint.weaponBaseStats])
+  const mergedBaseStats = useMemo(
+    () =>
+      mergeBlueprintBaseStats({
+        vehicleBaseStats: blueprint.vehicleBaseStats,
+        armorBaseStats: blueprint.armorBaseStats,
+        weaponBaseStats: blueprint.weaponBaseStats,
+      }),
+    [blueprint.vehicleBaseStats, blueprint.armorBaseStats, blueprint.weaponBaseStats]
+  )
 
   // Calculate modifiers for all slots based on current quality settings
   const allSlotModifiers = useMemo(() => {
@@ -261,9 +257,9 @@ export default function BlueprintDetailsModal({
     return blueprint.slots.map((slot, idx) => {
       const quality = displaySlotQualities[idx] ?? buildDefaultSlotQualities(blueprintWithSlots)[idx]
       const modifiers = slot.options?.[0]?.modifiers
-      return calculateSlotModifiers(quality, modifiers)
+      return dropUnbackedArmorModifiers(calculateSlotModifiers(quality, modifiers), mergedBaseStats)
     })
-  }, [blueprint.slots, displaySlotQualities, blueprintWithSlots])
+  }, [blueprint.slots, displaySlotQualities, blueprintWithSlots, mergedBaseStats])
 
   // Aggregate all modifiers across slots
   const aggregatedModifiers = useMemo(() => {
@@ -363,10 +359,9 @@ export default function BlueprintDetailsModal({
           </div>
         </div>
 
-        {/* Display base stats for components (mining lasers, etc.) */}
-        {Object.keys(mergedBaseStats).length > 0 && (
-          <div className="site-surface rounded-xl p-3 sm:p-4">
-            <h3 className="text-slate-400 text-sm mb-3">Base Specifications</h3>
+        <div className="site-surface rounded-xl p-3 sm:p-4">
+          <h3 className="text-slate-400 text-sm mb-3">Base Specifications</h3>
+          {Object.keys(mergedBaseStats).length > 0 ? (
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(mergedBaseStats).map(([key, value]) => (
                 <div key={key} className="flex justify-between items-center text-sm">
@@ -375,8 +370,10 @@ export default function BlueprintDetailsModal({
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <p className="site-hint text-sm">No Recorded Base Stats</p>
+          )}
+        </div>
 
         {blueprint.slots && blueprint.slots.length > 0 && (
           <div className="site-surface rounded-xl p-3 sm:p-4">
