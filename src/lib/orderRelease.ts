@@ -39,7 +39,7 @@ export function releaseOrderConfirmMessage(order: CustomOrder): string {
     return 'Cancel this partial purchase? Selected items will return to the seller\'s listing.'
   }
   if (order.listing_type === 'wts') {
-    return 'Release this listing back to the fulfillment pool? Another member can buy it.'
+    return 'Release this listing back to the Bazaar? Another member can buy it.'
   }
-  return 'Release this order back to the fulfillment pool? Another member can accept it.'
+  return 'Release this order back to the Bazaar? Another member can accept it.'
 }

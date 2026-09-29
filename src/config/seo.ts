@@ -96,13 +96,13 @@ const pages: Record<string, SeoPageConfig> = {
   '/bazaar': {
     title: "Star Citizen Community Marketplace — WTB & WTS | Dumper's Repo",
     description:
-      'The Bazaar — Star Citizen member WTB and WTS marketplace for crafted gear and blueprints. Sign in to shop, list, and fulfill with your community.',
+      'The Bazaar — Star Citizen member WTB and WTS marketplace for crafted gear and blueprints. Sign in to buy, sell, and list with your community.',
     canonicalPath: '/bazaar/',
   },
   '/orders': {
     title: "My Listings — WTB & WTS Orders | Dumper's Repo",
     description:
-      'Manage your Star Citizen WTB and WTS listings, fulfillments, and marketplace history on Dumper\'s Repo.',
+      'Manage your Star Citizen WTB and WTS listings, sales, and marketplace history on Dumper\'s Repo.',
     canonicalPath: '/orders/',
   },
   '/privacy': {

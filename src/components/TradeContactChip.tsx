@@ -6,8 +6,8 @@ export type TradeContactRole = 'buyer' | 'seller' | 'fulfiller' | 'customer'
 const ROLE_LABELS: Record<TradeContactRole, string> = {
   buyer: 'Buyer',
   seller: 'Seller',
-  fulfiller: 'Fulfiller',
-  customer: 'Customer',
+  fulfiller: 'Seller',
+  customer: 'Buyer',
 }
 
 interface TradeContactChipProps {

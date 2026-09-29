@@ -505,7 +505,7 @@ export default function BlueprintDetailsModal({
               {!isUniformQuality && (
                 <p className="text-xs text-slate-500">
                   Mixed quality — DFP prices each slot at its selected band. Minimum Q
-                  {minSlotQualityValue} is the fulfiller matching floor.
+                  {minSlotQualityValue} is the seller matching floor.
                 </p>
               )}
               <div className="flex items-center gap-3">

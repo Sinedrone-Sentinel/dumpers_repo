@@ -389,7 +389,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               <h4 className="text-sm font-medium text-amber-400 mb-2">Members-Only Features</h4>
               <ul className="text-xs text-slate-400 space-y-1">
                 <li>• My Listings — keep one WTB buy listing and one WTS sell listing (always item-by-item)</li>
-                <li>• The Bazaar — shop sell listings, fulfill buy listings, and complete trades</li>
+                <li>• The Bazaar — buy from WTS listings, sell to WTB listings, and complete trades</li>
                 <li>• BP Dumper + Live Mission Tracker — sync log unlocks and watch active missions</li>
                 <li>• Cross-device data sync</li>
               </ul>
@@ -530,33 +530,33 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
           </svg>
-          Buyer &amp; Fulfiller Ratings
+          Buyer &amp; Seller Ratings
         </h3>
         <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
             My Listings and The Bazaar use one <strong className="text-white">reputation rating system</strong> for
             both <strong className="text-amber-300">WTB</strong> (want to buy) and{' '}
             <strong className="text-cyan-300">WTS</strong> (want to sell) listings. There is no separate sell rating —
-            the same 1–5 star archive flow and buyer/fulfiller scores apply to both tags.
+            the same 1–5 star archive flow and buyer/seller scores apply to both tags.
           </p>
 
           <div className="p-3 site-surface">
             <h4 className="text-sm font-medium text-white mb-2">WTB vs WTS — who is the buyer?</h4>
             <ul className="text-xs text-slate-400 space-y-1.5">
               <li>
-                • <strong className="text-amber-300">WTB</strong> — you list items you want; fulfillers claim lines from
-                your listing on The Bazaar. You are the <strong className="text-slate-300">buyer</strong>; they are the seller/fulfiller.
+                • <strong className="text-amber-300">WTB</strong> — you list items you want; sellers claim lines from
+                your listing on The Bazaar. You are the <strong className="text-slate-300">buyer</strong>; they are the seller.
               </li>
               <li>
                 • <strong className="text-cyan-300">WTS</strong> — you list stock for sale; buyers pick lines from your
                 listing on The Bazaar. You are the <strong className="text-slate-300">seller</strong>; they are the buyer.
               </li>
               <li>
-                • Every purchase or fulfillment claim is a separate child transaction — same rating flow as any other deal.
+                • Every purchase or sale claim is a separate child transaction — same rating flow as any other deal.
               </li>
               <li>
                 • Ratings always land in the same two buckets: <strong className="text-slate-300">buyer rep</strong> and{' '}
-                <strong className="text-slate-300">fulfiller rep</strong> (seller side), regardless of tag.
+                <strong className="text-slate-300">seller rep</strong>, regardless of tag.
               </li>
             </ul>
           </div>
@@ -581,7 +581,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
-                As a Seller / Fulfiller
+                As a Seller
               </h4>
               <ul className="text-xs text-slate-400 space-y-1">
                 {RATINGS_SECTION.asSeller.items.map((item) => (
@@ -597,7 +597,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>
-                <strong>Note:</strong> Both buyers and fulfillers must have a verified RSI Handle to participate 
+                <strong>Note:</strong> Both buyers and sellers must have a verified RSI Handle to participate 
                 in the order system. This ensures accountability and helps prevent scams.
               </span>
             </p>
@@ -616,7 +616,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-400 leading-relaxed">
             New members start with <strong className="text-white">"Pending" reputation</strong> until they complete
-            5 successful marketplace transactions (as buyer or seller/fulfiller, on either WTB or WTS). During this
+            5 successful marketplace transactions (as buyer or seller, on either WTB or WTS). During this
             time, limits apply by <strong className="text-slate-300">role</strong>, not by tag:
           </p>
           
@@ -631,12 +631,12 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             </div>
             
             <div className="p-3 site-surface">
-              <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Seller / Fulfiller Limits</h4>
+              <h4 className="text-sm font-medium text-purple-400 mb-2">Pending Seller Limits</h4>
               <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Applies when you are the <strong className="text-slate-300">seller</strong> — WTB fulfillment claims and active WTS sales (each child transaction counts)</li>
+                <li>• Applies when you are the <strong className="text-slate-300">seller</strong> — WTB sale claims and active WTS sales (each child transaction counts)</li>
                 <li>• Can only have 1 active seller-side job at a time</li>
                 <li>• Complete or release it before starting another WTB or WTS handoff</li>
-                <li>• Limits lift after 5 completed transactions as a seller/fulfiller</li>
+                <li>• Limits lift after 5 completed transactions as a seller</li>
               </ul>
             </div>
           </div>
@@ -753,7 +753,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             items.
           </p>
           <p className="text-sm text-slate-400 leading-relaxed">
-            For WTB listings, follow these tips to get fulfilled faster and make it easier for sellers to help you.
+            For WTB listings, follow these tips to get filled faster and make it easier for sellers to help you.
           </p>
 
           <div className="space-y-3">
@@ -769,10 +769,10 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
 
             <div className="p-3 site-surface border-emerald-500/20">
               <h4 className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
-                <span>✓</span> Fulfillers Pick Line by Line
+                <span>✓</span> Sellers Pick Line by Line
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Fulfillers only need the blueprints for the <strong className="text-slate-300">lines they claim</strong> — your
+                Sellers only need the blueprints for the <strong className="text-slate-300">lines they claim</strong> — your
                 easy Q500–Q700 items can get crafted right away even if harder Q800+ lines wait for a specialist.
                 Mixing them on one listing no longer blocks anything.
               </p>
@@ -784,7 +784,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </h4>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Each blueprint card shows how many members own it. If <strong className="text-amber-400">no one owns a blueprint</strong>, 
-                that line may sit unfulfilled until someone acquires it — the rest of your listing stays claimable.
+                that line may sit unfilled until someone acquires it — the rest of your listing stays claimable.
                 You&apos;ll see a warning when posting such lines.
               </p>
             </div>
@@ -797,7 +797,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </svg>
               <span>
                 <strong>Tip:</strong> Keep your listing tidy — remove lines you no longer need and keep quantities realistic. 
-                Fulfillers can quickly see what they can help with and jump in immediately.
+                Sellers can quickly see what they can help with and jump in immediately.
               </span>
             </p>
           </div>
@@ -821,7 +821,7 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
             <li>• Record video of the exchange when possible</li>
             <li>• Note the other party&apos;s RSI Handle, location, and time</li>
             <li>• Keep Spectrum or in-game chat logs</li>
-            <li>• If a fulfiller marked ready but you didn&apos;t receive goods, use <strong className="text-slate-300">Report Problem</strong> on the order — do not wait for the 72-hour auto-complete</li>
+            <li>• If a seller marked ready but you didn&apos;t receive goods, use <strong className="text-slate-300">Report Problem</strong> on the order — do not wait for the 72-hour auto-complete</li>
           </ul>
           <p className="text-xs text-slate-500">
             Evidence is <strong className="text-slate-400">not uploaded on the site</strong>. If support needs proof

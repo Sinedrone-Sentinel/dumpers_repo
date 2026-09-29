@@ -32,7 +32,7 @@ export const OFFLINE_MODE_SECTION = {
   ],
   membersOnly: [
     'My Listings — keep one WTB buy listing and one WTS sell listing (always item-by-item)',
-    'The Bazaar — shop sell listings, fulfill buy listings, and complete trades',
+    'The Bazaar — buy from WTS listings, sell to WTB listings, and complete trades',
     'BP Dumper + Live Mission Tracker — sync log unlocks and watch active missions',
     'Mining Ledgers — crew payout tracking (requires verified RSI Handle on your account)',
     'View member directory / browse collections',
@@ -70,37 +70,37 @@ export const DFP_SECTION = {
 
 export const RATINGS_SECTION = {
   id: 'ratings',
-  title: 'Buyer & Fulfiller Ratings',
+  title: 'Buyer & Seller Ratings',
   intro:
-    'My Listings and The Bazaar use one **reputation rating system** for both **WTB** (want to buy) and **WTS** (want to sell) listings. There is no separate sell rating — the same 1–5 star archive flow and buyer/fulfiller scores apply to both tags.',
+    'My Listings and The Bazaar use one **reputation rating system** for both **WTB** (want to buy) and **WTS** (want to sell) listings. There is no separate sell rating — the same 1–5 star archive flow and buyer/seller scores apply to both tags.',
   wtbWts: {
     title: 'WTB vs WTS — who is the buyer?',
     items: [
-      '**WTB** — you list items you want; fulfillers claim lines from your listing on The Bazaar. You are the **buyer**; they are the seller/fulfiller.',
+      '**WTB** — you list items you want; sellers claim lines from your listing on The Bazaar. You are the **buyer**; they are the seller.',
       '**WTS** — you list stock for sale; buyers pick lines from your listing on The Bazaar. You are the **seller**; they are the buyer.',
-      'Every purchase or fulfillment claim is a separate child transaction — same rating flow as any other deal.',
-      'Ratings always land in the same two buckets: **buyer rep** and **fulfiller rep** (seller side), regardless of tag.',
+      'Every purchase or sale claim is a separate child transaction — same rating flow as any other deal.',
+      'Ratings always land in the same two buckets: **buyer rep** and **seller rep**, regardless of tag.',
     ],
   },
   asBuyer: {
     title: 'As a Buyer',
     items: [
       '**WTB:** post items on My Listings; after pickup confirm on **Active**, open **Completed** and click **Archive & rate**',
-      '**WTS:** buy items on The Bazaar Store tab; confirm pickup on My Listings → **Active**, then **Archive & rate** on **Completed**',
+      '**WTS:** buy items on The Bazaar Buy from Sellers tab; confirm pickup on My Listings → **Active**, then **Archive & rate** on **Completed**',
       'Rate the other party 1–5 stars in the archive modal — this is required, not optional',
-      'Your buyer rep helps sellers/fulfillers decide whether to trade with you',
+      'Your buyer rep helps sellers decide whether to trade with you',
     ],
   },
   asSeller: {
-    title: 'As a Seller / Fulfiller',
+    title: 'As a Seller',
     items: [
-      '**WTB:** claim lines on The Bazaar Fulfillment tab, complete craft, then **Archive & rate** the buyer from **Rate completed orders** or My Listings → **Completed**',
+      '**WTB:** claim lines on The Bazaar Sell to Buyers tab, complete craft, then **Archive & rate** the buyer from **Rate completed orders** or My Listings → **Completed**',
       '**WTS:** mark ready on The Bazaar when the buyer can pick up; after they confirm pickup, **Archive & rate** from **The Bazaar → Rate completed orders** or My Listings → **Completed**',
-      'Your fulfiller rep (seller side) is visible on listings and buy requests',
-      'Higher ratings build trust for both craft fulfillment and direct sales',
+      'Your seller rep is visible on listings and buy requests',
+      'Higher ratings build trust for both crafting for buyers and direct sales',
     ],
   },
-  note: 'Both buyers and fulfillers must have a verified RSI Handle to participate in the order system. This ensures accountability and helps prevent scams.',
+  note: 'Both buyers and sellers must have a verified RSI Handle to participate in the order system. This ensures accountability and helps prevent scams.',
 }
 
 export const ORDER_LIFECYCLE_SECTION = {
@@ -110,12 +110,12 @@ export const ORDER_LIFECYCLE_SECTION = {
     'Every marketplace trade follows the same stages on **My Listings** and **The Bazaar**. The physical handoff happens in Star Citizen; the site tracks status, deadlines, and reputation.',
   steps: [
     {
-      title: '1. Pick items to buy or fulfill',
-      body: 'A **WTB** fulfiller claims lines on The Bazaar Fulfillment tab, or a buyer picks items from a **WTS** listing on the Store tab. Each selection becomes its own transaction, and both sides see the other party’s **in-game name** on the order card — add them in Star Citizen to coordinate. After both are on the deal, **Message** opens a private chat (verified RSI Handle required on both sides).',
+      title: '1. Pick items to buy or sell',
+      body: 'A **WTB** seller claims lines on The Bazaar **Sell to Buyers** tab, or a buyer picks items from a **WTS** listing on the **Buy from Sellers** tab. Each selection becomes its own transaction, and both sides see the other party’s **in-game name** on the order card — add them in Star Citizen to coordinate. After both are on the deal, **Message** opens a private chat (verified RSI Handle required on both sides).',
     },
     {
       title: '2. Seller prepares the order',
-      body: 'WTB: fulfiller crafts and marks ready. WTS: seller marks ready for pickup. All seller actions appear **directly on the order card** on The Bazaar — status callouts explain what to do next.',
+      body: 'WTB: seller crafts and marks ready. WTS: seller marks ready for pickup. All seller actions appear **directly on the order card** on The Bazaar — status callouts explain what to do next.',
     },
     {
       title: '3. Buyer confirms pickup',
@@ -137,7 +137,7 @@ export const PENDING_REP_SECTION = {
   id: 'pending-rep',
   title: 'Building Your Reputation',
   intro:
-    'New members start with **"Pending" reputation** until they complete **5 items** as a buyer or as a seller/fulfiller (WTB or WTS). Quantity on a craft line counts — two of the same item on one deal is two. During this time, limits apply by **role**, not by tag:',
+    'New members start with **"Pending" reputation** until they complete **5 items** as a buyer or as a seller (WTB or WTS). Quantity on a craft line counts — two of the same item on one deal is two. During this time, limits apply by **role**, not by tag:',
   buyerLimits: {
     title: 'Pending Buyer Limits',
     items: [
@@ -149,12 +149,12 @@ export const PENDING_REP_SECTION = {
     ],
   },
   sellerLimits: {
-    title: 'Pending Seller / Fulfiller Limits',
+    title: 'Pending Seller Limits',
     items: [
-      'Applies when you are the **seller** — WTB fulfillment claims and active WTS sales (each selected item counts toward the 5)',
+      'Applies when you are the **seller** — WTB sale claims and active WTS sales (each selected item counts toward the 5)',
       'Can only have 1 active seller-side job at a time',
       'Complete or release it before starting another WTB or WTS handoff',
-      'Limits lift after 5 completed items as a seller/fulfiller',
+      'Limits lift after 5 completed items as a seller',
       'After that, others see your star rating (X.X) plus average delivery time (ddd:HH:mm from accept to ready). Click a visible star rating to read optional comments (reviewers stay anonymous); filter the list by star',
     ],
   },
@@ -180,7 +180,7 @@ export const SITE_RULES_SECTION = {
     },
     {
       id: 'marketplace',
-      title: 'Marketplace integrity (WTB / WTS / fulfillment)',
+      title: 'Marketplace integrity (WTB / WTS)',
       items: [
         'List **WTB** only for items you genuinely want; list **WTS** only for stock you actually have.',
         'No fake, bait, or throwaway listings, claims, or purchases to farm ratings, clog The Bazaar, or harass members.',
@@ -245,7 +245,7 @@ export const ORDER_RULES_SECTION = {
     items: [
       'List **WTB** items only when you genuinely want them crafted or supplied',
       'List **WTS** items only for stock you actually have on hand',
-      'All listings are item-by-item — buyers and fulfillers pick exactly the lines they want',
+      'All listings are item-by-item — buyers and sellers pick exactly the lines they want',
       'Complete transactions in good faith on both My Listings and The Bazaar',
       'Archive & rate promptly after pickup — purple button on Completed / Rate completed orders',
       'Add the other party in-game using the name shown on each order card',
@@ -266,8 +266,8 @@ export const ORDER_RULES_SECTION = {
   pendingRep: {
     title: 'Pending Rep Requirements',
     items: [
-      '**Buyer limits:** Max 2 active buyer-side transactions / 1M aUEC total (WTB fulfillments in progress + WTS purchases)',
-      '**Seller limits:** Max 1 active seller-side job (WTB fulfillment or WTS sale in progress; each transaction counts)',
+      '**Buyer limits:** Max 2 active buyer-side transactions / 1M aUEC total (your WTB listings being filled + WTS purchases)',
+      '**Seller limits:** Max 1 active seller-side job (selling to a WTB listing or a WTS sale in progress; each transaction counts)',
       'Open WTB/WTS **listings** do not count toward these caps — only started transactions do',
     ],
   },
@@ -280,7 +280,7 @@ export const ORDER_RULES_SECTION = {
       '**Archive & rate:** Required after pickup — both parties must click **Archive & rate** on completed orders',
       '**Rating deadline:** 24 hours after the other party rates, or a 5-star rating is auto-applied on your behalf',
       '**3 strikes in 30 days** may lead to account restrictions',
-      '**Ghosting** a trade (buyer, seller, or fulfiller missing a 72-hour deadline) shows a warning on your next sign-in; repeated ghosting can lead to an account ban',
+      '**Ghosting** a trade (buyer or seller missing a 72-hour deadline) shows a warning on your next sign-in; repeated ghosting can lead to an account ban',
     ],
   },
   consequences: {
@@ -301,7 +301,7 @@ export const ORDERING_TIPS_SECTION = {
   intros: [
     'These tips focus on **WTB** buy listings (Add to my WTB listing). See the My Listings page guide for the item builder and line management.',
     'For **WTS** sell listings: list only stock you have on hand — every listing is item-by-item, so buyers cherry-pick lines and quantities. Mark ready promptly once a buyer picks items.',
-    'For WTB listings, follow these tips to get fulfilled faster and make it easier for sellers to help you.',
+    'For WTB listings, follow these tips to get filled faster and make it easier for sellers to help you.',
   ],
   tips: [
     {
@@ -310,18 +310,18 @@ export const ORDERING_TIPS_SECTION = {
       variant: 'emerald' as const,
     },
     {
-      title: 'Fulfillers Pick Line by Line',
-      body: 'Fulfillers only need the blueprints for the **lines they claim** — your easy Q500–Q700 items can get crafted right away even if harder Q800+ lines wait for a specialist. Mixing them on one listing no longer blocks anything.',
+      title: 'Sellers Pick Line by Line',
+      body: 'Sellers only need the blueprints for the **lines they claim** — your easy Q500–Q700 items can get crafted right away even if harder Q800+ lines wait for a specialist. Mixing them on one listing no longer blocks anything.',
       variant: 'emerald' as const,
     },
     {
       title: 'Check Blueprint Ownership',
-      body: 'Each blueprint card shows how many members own it. If **no one owns a blueprint**, that line may sit unfulfilled until someone acquires it — the rest of your listing stays claimable. You\'ll see a warning when posting such lines.',
+      body: 'Each blueprint card shows how many members own it. If **no one owns a blueprint**, that line may sit unfilled until someone acquires it — the rest of your listing stays claimable. You\'ll see a warning when posting such lines.',
       variant: 'emerald' as const,
     },
   ],
   closingTip:
-    'Keep your listing tidy — remove lines you no longer need and keep quantities realistic. Fulfillers can quickly see what they can help with and jump in immediately.',
+    'Keep your listing tidy — remove lines you no longer need and keep quantities realistic. Sellers can quickly see what they can help with and jump in immediately.',
 }
 
 export const TRADE_PROTECTION_SECTION = {
@@ -334,7 +334,7 @@ export const TRADE_PROTECTION_SECTION = {
     'Record video of the exchange when possible',
     "Note the other party's RSI Handle, location, and time",
     'Keep Spectrum or in-game chat logs',
-    'If a fulfiller marked ready but you didn\'t receive goods, use **Report Problem** on the order — do not wait for the 72-hour auto-complete',
+    'If a seller marked ready but you didn\'t receive goods, use **Report Problem** on the order — do not wait for the 72-hour auto-complete',
   ],
   evidenceNote:
     'Evidence is **not uploaded on the site**. If support needs proof during a dispute, they may ask you to email screenshots or share a cloud storage link (Google Drive, Imgur, etc.).',
@@ -417,7 +417,7 @@ export const PRINTABLE_TOC = [
   { id: 'offline-mode', label: 'Offline Mode' },
   { id: 'dfp', label: "Why Dumper's Fair-Value Price (DFP)?" },
   { id: 'order-lifecycle', label: 'How a Deal Finishes' },
-  { id: 'ratings', label: 'Buyer & Fulfiller Ratings' },
+  { id: 'ratings', label: 'Buyer & Seller Ratings' },
   { id: 'pending-rep', label: 'Building Your Reputation' },
   { id: 'order-rules', label: 'Order System Rules' },
   { id: 'ordering-tips', label: 'Best Ordering Practices' },

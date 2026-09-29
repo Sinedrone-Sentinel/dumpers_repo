@@ -285,7 +285,7 @@ export default function WtsPartialPurchasePanel({
     >
       <div className="shrink-0">
         <p className="text-cyan-200 text-xs font-medium">
-          {isFulfill ? 'Select items to fulfill' : 'Partial purchase available'}
+          {isFulfill ? 'Select items to sell' : 'Partial purchase available'}
         </p>
         <p className="site-hint text-[11px] !mt-0.5">
           {isFulfill
@@ -330,7 +330,7 @@ export default function WtsPartialPurchasePanel({
                   </div>
                   {untracked && (
                     <p className="text-amber-400/80 text-[11px] mt-1">
-                      You need this blueprint to fulfill this line.
+                      You need this blueprint to craft this line.
                     </p>
                   )}
                   {isOn && (
@@ -515,7 +515,7 @@ export default function WtsPartialPurchasePanel({
               ? 'Claiming...'
               : 'Purchasing...'
             : isFulfill
-              ? 'Fulfill selected items'
+              ? 'Sell selected items'
               : 'Buy selected items'}
         </button>
       </div>
@@ -544,7 +544,7 @@ export default function WtsPartialPurchasePanel({
                   void onPurchase(selections)
                 }}
               >
-                Fulfill anyway
+                Sell anyway
               </button>
             </div>
           }

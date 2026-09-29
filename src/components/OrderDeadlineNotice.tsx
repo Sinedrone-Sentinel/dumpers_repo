@@ -79,8 +79,8 @@ export default function OrderDeadlineNotice({ order, role }: OrderDeadlineNotice
         : `Confirm pickup within ${formatHoursRemaining(hours)} or the order auto-completes (you may receive a strike).`
     const sellerCopy =
       hours === 0
-        ? 'Customer pickup deadline expired — this order will auto-complete shortly.'
-        : `Customer has ${formatHoursRemaining(hours)} to confirm pickup, or this auto-completes.`
+        ? 'Buyer pickup deadline expired — this order will auto-complete shortly.'
+        : `Buyer has ${formatHoursRemaining(hours)} to confirm pickup, or this auto-completes.`
     return (
       <div
         className={`mt-2 p-2 rounded-lg text-xs border ${

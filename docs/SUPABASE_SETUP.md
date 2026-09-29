@@ -234,6 +234,8 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 166 | `201_wtb_scu_buy_range.sql` | WTB SCU lines store `max_quantity_scu`. A fractional minimum floors that max at the next whole SCU. One in-range offer closes the line. Open WTB rows are backfilled. Cancelling a fulfillment restores the original range |
 | 167 | `202_stock_card_location_unique.sql` | Drop the leftover user + resource + quality unique rule so the same resource and quality can sit on a second stock card when the location note differs. Identity stays `(user, resource, quality, note_key)` |
 | 168 | `203_merge_stock_cards_on_note.sql` | Editing a location note onto a note that already exists for that resource and quality adds the quantities together and keeps one card. Apply after **202** |
+| 169 | `204_wts_auto_rating_bucket.sql` | Automatic ratings (buyer no-show, 24h rating deadline, account delete) now land in the same buyer / seller reputation as manual ratings on WTS deals. Swaps existing WTS auto-ratings into the right reputation, fixes the account-delete rating call, and limits `auto_apply_order_rating` to `service_role` |
+| 170 | `205_bazaar_buyer_seller_wording.sql` | Rewrites member-facing text inside existing order functions (errors, notifications, Discord) to say Buyer / Seller instead of fulfiller / customer, and updates stored order titles and notifications. Fails if any old phrase is left. Apply after **204** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
