@@ -78,6 +78,19 @@ export default function BlueprintSlotQualityCard({
   const craftResKey = craftResourceKey ?? slugifyResourceName(resourceName)
   const craftUnit = resourceQuantityUnitLabel(craftResKey)
   const craftQualityOptions = craftAvailableQualities ?? []
+  const modifierRows =
+    hasModifiers && modifierResults.length > 0 ? (
+      <div className="space-y-1">
+        {modifierResults.map((result, idx) => (
+          <div key={idx} className="flex justify-between items-center text-xs">
+            <span className="text-slate-400">{result.propertyLabel}</span>
+            <span className={getSlotModifierColorClass(result)}>
+              {formatSlotModifierDisplay(result)}
+            </span>
+          </div>
+        ))}
+      </div>
+    ) : null
 
   return (
     <div
@@ -150,6 +163,7 @@ export default function BlueprintSlotQualityCard({
               Have {formatQuantityForResource(craftResKey, craftHave ?? 0)} {craftUnit}
             </span>
           </div>
+          {modifierRows && <div className="mt-2">{modifierRows}</div>}
         </div>
       )}
 
@@ -206,18 +220,7 @@ export default function BlueprintSlotQualityCard({
             )}
           </div>
 
-          {hasModifiers && modifierResults.length > 0 && (
-            <div className="space-y-1">
-              {modifierResults.map((result, idx) => (
-                <div key={idx} className="flex justify-between items-center text-xs">
-                  <span className="text-slate-400">{result.propertyLabel}</span>
-                  <span className={getSlotModifierColorClass(result)}>
-                    {formatSlotModifierDisplay(result)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          {modifierRows}
         </div>
       )}
     </div>
