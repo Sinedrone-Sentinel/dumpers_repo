@@ -24,6 +24,26 @@ export function pickRsTrackerDepositType(depositTypes: DepositType[]): DepositTy
   return null
 }
 
+/** RS Tracker entry for one resource, or null when it is not a ship-mined RS ore. */
+export function trackableOreForResource(
+  label: string,
+  miningCatalog: MiningData[]
+): BlueprintTrackableOre | null {
+  const oreName = normalizeMiningOreName(label)
+  if (!isRsTrackerOre(oreName)) return null
+
+  const depositType = pickRsTrackerDepositType(getDepositTypes(oreName))
+  if (!depositType) return null
+
+  const catalogRow = findOreByName(miningCatalog, oreName)
+  return {
+    oreName,
+    label,
+    rarity: catalogRow?.rarity ?? 'common',
+    depositType,
+  }
+}
+
 /** Unique RS-trackable ores referenced by a blueprint's resource slots. */
 export function extractBlueprintTrackableOres(
   blueprint: BlueprintWithSlots,
@@ -36,22 +56,11 @@ export function extractBlueprintTrackableOres(
       const label = craftMaterialLabel(option)
       if (!label) continue
 
-      const oreName = normalizeMiningOreName(label)
-      if (!isRsTrackerOre(oreName)) continue
-
       const resourceKey = craftMaterialResourceKey(option)
       if (!resourceKey || byKey.has(resourceKey)) continue
 
-      const depositType = pickRsTrackerDepositType(getDepositTypes(oreName))
-      if (!depositType) continue
-
-      const catalogRow = findOreByName(miningCatalog, oreName)
-      byKey.set(resourceKey, {
-        oreName,
-        label,
-        rarity: catalogRow?.rarity ?? 'common',
-        depositType,
-      })
+      const ore = trackableOreForResource(label, miningCatalog)
+      if (ore) byKey.set(resourceKey, ore)
     }
   }
 
