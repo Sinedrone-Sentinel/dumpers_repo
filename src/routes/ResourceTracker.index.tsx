@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import { useFriends } from '../contexts/FriendsContext'
 import { useResourceCatalog } from '../hooks/useResourceCatalog'
+import { useBlueprintCraftTracker } from '../hooks/useBlueprintCraftTracker'
 import { canUseFeature } from '../lib/featureAccess'
 import { setAnalyticsSubTool } from '../lib/analytics'
 import { BP_WISHLIST_LOCK_TOOLTIP, BP_WISHLIST_MAX_LISTS, useBpWishlists } from '../lib/bpWishlist'
@@ -67,6 +68,13 @@ type FriendStockCard = {
 export default function ResourceTrackerRoute() {
   const { user, profile, visibilityContext, isSuperAdmin, isGuestPreview } = useAuth()
   const { friends } = useFriends()
+  const {
+    addResourceToRsTracker,
+    isPendingForResource,
+    isRsTrackableResource,
+    lastMessage: rsTrackerMessage,
+    clearLastMessage: clearRsTrackerMessage,
+  } = useBlueprintCraftTracker()
   const isGuest = !user && isGuestPreview
   const canViewSiteTotal = !isGuest && canUseFeature('site_total', visibilityContext)
   const canListFromStock = !isGuest && canUseFeature('custom_orders', visibilityContext)
@@ -573,6 +581,9 @@ export default function ResourceTrackerRoute() {
       const adjustSteps = adjustStepsForResource(card.resource_key)
       const lineKey = inventoryLineKey(card.resource_key, quality, card.note)
       const isEditing = editingKey === lineKey
+      const showNoteRow = isPersonalTab && (!isGuest || !!card.note)
+      const rsTrackable = isRsTrackableResource(card.label)
+      const rsPending = isPendingForResource(card.resource_key)
 
       return (
         <div
@@ -705,15 +716,14 @@ export default function ResourceTrackerRoute() {
             )}
           </div>
 
-          {isPersonalTab && isGuest && card.note && (
-            <div className="mt-3 pt-3 site-divider">
-              <p className="text-xs text-slate-400 italic">&quot;{card.note}&quot;</p>
-            </div>
-          )}
-
-          {isPersonalTab && !isGuest && (
-            <div className="mt-3 pt-3 site-divider">
-              {editingNoteKey === lineKey ? (
+          {(showNoteRow || rsTrackable) && (
+            <div className="mt-3 pt-3 site-divider flex items-center gap-2 min-w-0">
+              <div className="flex-1 min-w-0">
+              {!showNoteRow ? null : isGuest ? (
+                card.note ? (
+                  <p className="text-xs text-slate-400 italic">&quot;{card.note}&quot;</p>
+                ) : null
+              ) : editingNoteKey === lineKey ? (
                 <div className="flex gap-2 items-center">
                   <div className="flex-1 min-w-0">
                   <StockNoteTypeahead
@@ -767,12 +777,32 @@ export default function ResourceTrackerRoute() {
                   )}
                 </button>
               )}
+              </div>
+              {rsTrackable && editingNoteKey !== lineKey && (
+                <button
+                  type="button"
+                  onClick={() => void addResourceToRsTracker(card.resource_key, card.label)}
+                  disabled={rsPending}
+                  className={`shrink-0 text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
+                    rsPending
+                      ? 'site-filter-idle opacity-60 cursor-wait'
+                      : 'site-filter-idle hover:bg-purple-600/20 hover:text-purple-300 hover:border-purple-500/30'
+                  }`}
+                  title={`Add ${card.label} to Mining Tracker RS Tracker`}
+                >
+                  {rsPending ? 'Adding…' : 'RS Track'}
+                </button>
+              )}
             </div>
           )}
         </div>
       )
     },
     [
+      isGuest,
+      isRsTrackableResource,
+      isPendingForResource,
+      addResourceToRsTracker,
       editingKey,
       editValue,
       readOnly,
@@ -953,6 +983,19 @@ export default function ResourceTrackerRoute() {
           </div>
         ) : null}
       </div>
+
+      {rsTrackerMessage && (
+        <div className="mb-4 p-3 rounded-lg bg-purple-900/25 border border-purple-500/35 text-purple-100 text-sm flex items-start justify-between gap-3">
+          <span>{rsTrackerMessage}</span>
+          <button
+            type="button"
+            onClick={clearRsTrackerMessage}
+            className="text-purple-300/80 hover:text-purple-100 text-xs shrink-0"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {displayError && (
         <div className="mb-4 site-banner-error">
