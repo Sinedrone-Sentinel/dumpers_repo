@@ -1738,6 +1738,13 @@ check(fakeByKey.get('ship_ammunition')?.label === 'Ship Ammunition', 'resource t
 check(!fakeByKey.has('rmc') && !fakeByKey.has('recycled_material_composite'), 'resource types: RMC aliases to existing key')
 check(fakeByKey.get('uncut_slam')?.kind === 'vice', 'resource types: nested Vice group kind')
 check(fakeByKey.get('co2')?.label === 'CO2', 'resource types: markup stripped from labels')
+check(
+  resourceTypesLib.buildGameCommodities(
+    { _RecordValue_: { groups: [{ _RecordName_: 'ResourceTypeGroup.ProcessedGoods', resources: [{ _RecordName_: 'ResourceType.X', displayName: '@x', defaultCargoContainers: crate('x') }] }] } },
+    { x: 'Bad <scr<script>ipt>Crate' },
+  )[0]?.label === 'Bad iptCrate',
+  'resource types: nested tags cannot leave angle brackets',
+)
 check(!fakeByKey.has('heat'), 'resource types: non-cargo types skipped')
 check(!fakeByKey.has('gold_ore') && !fakeByKey.has('construction_material_rubble'), 'resource types: unrefined skipped')
 check(fakeCommodities.length === 3, 'resource types: placeholder records skipped')

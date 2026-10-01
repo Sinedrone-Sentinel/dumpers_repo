@@ -40,7 +40,11 @@ function resolveLabel(locKey, localization) {
   const key = locKey.slice(1)
   const value = localization[key] ?? localization._lowerMap?.[key.toLowerCase()] ?? null
   if (!value) return null
-  const cleaned = value.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+  const cleaned = value
+    .replace(/<[^>]*>/g, '')
+    .replace(/[<>]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
   if (!cleaned || cleaned.startsWith('@') || /placeholder/i.test(cleaned)) return null
   return cleaned
 }
