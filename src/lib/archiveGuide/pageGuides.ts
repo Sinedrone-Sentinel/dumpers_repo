@@ -120,6 +120,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Log quantities and quality levels of resources you\'ve collected',
       'Track store-purchased refined materials at Purchased (Q0)',
+      'Track any hauled cargo from the game, not just crafting materials. Ship Ammunition (every size), countermeasures, Combat Supplies, MedGel, HLX99 Hyperprocessors and other trade goods are in the add search and are logged at Purchased (Q0). The list refreshes each game patch',
       '**Friends Resources** tab (next to My Resources) appears when you have at least one friend — pick a friend from the Members dropdown to browse their stock in a read-only list (search, quality, and location chips); you cannot edit their inventory',
       '**Can Craft** always uses only your My Resources — never a friend’s stock',
       '**Can Craft** tab lists acquired blueprints you can make right now from your My Resources stock — including recipes that need gems or other whole-unit harvestables (same blueprint cards and filters as the Blueprints page)',
@@ -133,7 +134,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'The aUEC on a Crafting Wishlist is the Dumper\'s Fair-Value Price of the resources on that list, so you can see what it would cost to buy them instead of mining',
       'Optional **Close, no Cigar** includes nearly-ready recipes from your My Resources: every required material at least 70% on hand; for two or more materials, also those fully stocked except one (that one may be missing). These do not get a Craft button until you have enough',
       'Switch between Cards (edit quantities) and List (read-only overview with notes) on My Resources / Site Total',
-      '**RS Track** at the bottom right of a resource card adds that one ore to **Mining Tracker ? RS Tracker**. It only shows on ship-mined ores, and skips an ore you already track',
+      '**RS Track** at the bottom right of a resource card adds that one ore to **Mining Tracker → RS Tracker**. It only shows on ship-mined ores, and skips an ore you already track',
       'Optional notes (e.g. location) split the same resource and quality into separate stock cards — notes match case-insensitively when adding, and the note box suggests your existing location tags as you type. You can edit a note at any time. If that location already has this resource and quality, the amounts are combined into one card',
       'On My Resources, stock notes (e.g. hangar / ship) automatically become location filter chips — variants like `arcL1`, `Arc l1`, and `ARC-l1` collapse into one; cards with no note use an **Empty** chip; chips refresh when you add or edit cards',
       'Filter by quality band on both views — each Q-tier stays on its own row',

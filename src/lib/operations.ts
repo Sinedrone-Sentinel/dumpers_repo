@@ -1,6 +1,7 @@
 import type { MemberReputationRow } from './reputation'
 import { supabase } from './supabase'
 import { EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
+import { GAME_COMMODITY_RESOURCES } from '../config/gameCommodities'
 import {
   extractBlueprintResources,
   type BlueprintWithSlots,
@@ -224,9 +225,10 @@ export async function syncBlueprintResourceCatalog(
 ): Promise<{ result?: ResourceCatalogSyncResult; error?: string }> {
   const bpResources = extractBlueprintResources(blueprints)
 
-  // Dedupe by resourceKey - EXTRA_CATALOG takes priority over blueprint-extracted
+  // Dedupe by resourceKey - EXTRA_CATALOG > blueprint-extracted > game commodities
   // NOTE: WIKELO_ITEM_RESOURCES are gear (armor/weapons), NOT commodities - don't include them here
   const byKey = new Map<string, ExtractedBlueprintResource>()
+  for (const r of GAME_COMMODITY_RESOURCES) byKey.set(r.resourceKey, r)
   for (const r of bpResources) byKey.set(r.resourceKey, r)
   for (const r of EXTRA_CATALOG_RESOURCES) byKey.set(r.resourceKey, r)
 

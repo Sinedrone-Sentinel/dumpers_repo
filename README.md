@@ -116,7 +116,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); note chips plus **ALL** scope craftability and Craft deductions to one location; ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown; never uses friend stock
 - **Crafting Wishlist** (signed in) sits after Can Craft: up to 10 named lists, 20 unique recipes each. **Add to Crafting Wishlist** on a blueprint saves that blueprint with the material qualities selected and a quantity. The aUEC shown is the Dumper's Fair-Value Price of those resources, the cost to buy them. Each list shows an overview tag per resource and quality (red/green against My Resources when **Use My Tracked Resources** is on). **Got it** lowers one; with **Use My Tracked Resources** it also deducts one craft from My Resources at those exact qualities
 - **Site Total** rollup (officers and super-admins only) — org-wide inventory aggregate
-- Resource catalog ships with the site from parsed game data — no manual sync
+- Resource catalog = blueprint materials + `extraResources.ts` (UEX list) + every other in-game cargo commodity from `game-commodities.json` (Ship Ammunition, countermeasures, trade goods; unrefined ore excluded). After a patch parse, a super-admin runs **DB Actions → Sync** to push new rows to `blueprint_resources`
 
 ### Friends (header)
 
@@ -464,6 +464,7 @@ Full patch-day runbook (including how to verify removals vs CIG moving records a
 | `game-reputation.json` | Faction standings and mission brokers |
 | `game-quality-bands.json` | Crafting quality curves |
 | `game-lore.json` | Archive resource/item lore |
+| `game-commodities.json` | Cargo commodities from `resourcetypedatabase` not already tracked (Resource Tracker catalog + Q0 DFP base fetch) |
 | `dfp-commodity-bases.json` | UEX-backed Q0 bases |
 | `shop-commodity-index.json` | UEX-backed commodity buy/sell locations, per-SCU prices, and box sizes (Commodity Lookup) |
 | `blueprint-name-lookup.json` | BP Dumper / webhook Game.log name resolution (canonical; copies at build/deploy) |

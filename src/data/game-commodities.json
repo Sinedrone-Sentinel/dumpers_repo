@@ -1,0 +1,149 @@
+{
+  "_source": "Star Citizen Game Files (resourcetypedatabase)",
+  "_extracted": "2026-10-01T23:32:27.399Z",
+  "commodities": [
+    {
+      "key": "ace_interceptor_helmet",
+      "label": "Ace Interceptor Helmet",
+      "kind": "goods"
+    },
+    {
+      "key": "bluemoon_fungus",
+      "label": "Bluemoon Fungus",
+      "kind": "organic"
+    },
+    {
+      "key": "carinite_pure",
+      "label": "Carinite (Pure)",
+      "kind": "mineral"
+    },
+    {
+      "key": "combat_supplies",
+      "label": "Combat Supplies",
+      "kind": "goods"
+    },
+    {
+      "key": "desert_quasi_grazer_egg",
+      "label": "Desert Quasi Grazer Egg",
+      "kind": "organic"
+    },
+    {
+      "key": "eva_fuel",
+      "label": "EVA Fuel",
+      "kind": "goods"
+    },
+    {
+      "key": "fotia_seedpod",
+      "label": "Fotia Seedpod",
+      "kind": "organic"
+    },
+    {
+      "key": "hlx99_hyperprocessors",
+      "label": "HLX99 Hyperprocessors",
+      "kind": "goods"
+    },
+    {
+      "key": "medgel",
+      "label": "MedGel",
+      "kind": "goods"
+    },
+    {
+      "key": "mobyglass_personal_computers",
+      "label": "mobyGlass Personal Computers",
+      "kind": "goods"
+    },
+    {
+      "key": "organs",
+      "label": "Organs",
+      "kind": "goods"
+    },
+    {
+      "key": "oza",
+      "label": "Oza",
+      "kind": "food"
+    },
+    {
+      "key": "pingala_seeds",
+      "label": "Pingala Seeds",
+      "kind": "organic"
+    },
+    {
+      "key": "rs1_odysey_spacesuits",
+      "label": "RS1 Odysey Spacesuits",
+      "kind": "goods"
+    },
+    {
+      "key": "ship_ammunition",
+      "label": "Ship Ammunition",
+      "kind": "goods"
+    },
+    {
+      "key": "ship_ammunition_size_1",
+      "label": "Ship Ammunition - Size 1",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_2",
+      "label": "Ship Ammunition - Size 2",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_3",
+      "label": "Ship Ammunition - Size 3",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_4",
+      "label": "Ship Ammunition - Size 4",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_5",
+      "label": "Ship Ammunition - Size 5",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_6",
+      "label": "Ship Ammunition - Size 6",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_7",
+      "label": "Ship Ammunition - Size 7",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_8",
+      "label": "Ship Ammunition - Size 8",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_ammunition_size_9",
+      "label": "Ship Ammunition - Size 9",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_decoy_countermeasures",
+      "label": "Ship Decoy Countermeasures",
+      "kind": "supplies"
+    },
+    {
+      "key": "ship_noise_countermeasures",
+      "label": "Ship Noise Countermeasures",
+      "kind": "supplies"
+    },
+    {
+      "key": "uncut_slam",
+      "label": "Uncut SLAM",
+      "kind": "vice"
+    },
+    {
+      "key": "year_of_the_rat_envelope",
+      "label": "Year of the Rat Envelope",
+      "kind": "goods"
+    }
+  ],
+  "summary": {
+    "totalCommodities": 28
+  }
+}

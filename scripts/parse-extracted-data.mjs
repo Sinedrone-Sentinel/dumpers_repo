@@ -74,6 +74,11 @@ import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
 import { clearAppliedSpellingCorrections } from './lib/spellingCorrections.mjs'
 import { writeWhatsNewDigest } from './lib/writeWhatsNewDigest.mjs'
 import { buildLocalityLabel, describeLocalityPlaces } from './lib/missionLocality.mjs'
+import {
+  loadExistingTrackerKeys,
+  parseResourceTypes,
+  RESOURCE_TYPE_DATABASE_PATH,
+} from './lib/parseResourceTypes.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -96,11 +101,11 @@ const EXPECTED_PATHS = {
   missionLocality: 'libs/foundry/records/missiondata/pu_missionlocality',
   reputationRewards: 'libs/foundry/records/reputation/rewards',
   factionReputation: 'libs/foundry/records/factions/factionreputation',
+  resourceTypes: 'libs/foundry/records/resourcetypedatabase',
 }
 
 /** Present in full DCB extract but not parsed by this app — informational only. */
 const OPTIONAL_PATHS = {
-  resourceTypes: 'libs/foundry/records/resourcetypedatabase',
   commodities: 'libs/foundry/records/entities/commodities',
 }
 
@@ -5024,6 +5029,23 @@ async function main() {
     buildBlueprintNameLookup(cleanedBlueprints, contractData, missionBlueprints),
     join(dirname(fileURLToPath(import.meta.url)), '..')
   )
+
+  // Cargo commodities not already tracked via blueprints / extraResources.ts
+  const gameCommodities = parseResourceTypes({
+    extractedData: EXTRACTED_DATA,
+    localization,
+    existingKeys: loadExistingTrackerKeys(PROJECT_ROOT, cleanedBlueprints),
+  })
+  if (gameCommodities) {
+    saveJson('game-commodities.json', {
+      _source: 'Star Citizen Game Files (resourcetypedatabase)',
+      _extracted: new Date().toISOString(),
+      commodities: gameCommodities,
+      summary: { totalCommodities: gameCommodities.length },
+    })
+  } else {
+    validationIssues.push(`Missing resource type database: ${RESOURCE_TYPE_DATABASE_PATH}`)
+  }
   
   // Mining data (replaces mining-locations.json partially)
   saveJson('game-mining.json', {

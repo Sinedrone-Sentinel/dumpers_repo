@@ -1,5 +1,6 @@
 import gameBlueprints from '../data/game-blueprints.json'
 import { EXTRA_CATALOG_RESOURCE_KEYS } from '../config/extraResources'
+import { GAME_COMMODITY_RESOURCE_KEYS } from '../config/gameCommodities'
 import { extractBlueprintResources, slugifyResourceName } from './blueprintResources'
 import { exactRelinkBlueprintId } from './canonicalizeBlueprintId'
 import { MINING_RARITY_ORDER, ORE_SIGNATURES } from './miningConstants'
@@ -13,6 +14,7 @@ const blueprintInternalNames = new Set(
 const bundledResourceKeys = new Set([
   ...extractBlueprintResources(gameBlueprints.blueprints).map((r) => r.resourceKey),
   ...EXTRA_CATALOG_RESOURCE_KEYS,
+  ...GAME_COMMODITY_RESOURCE_KEYS,
 ])
 
 const validMiningRarities = new Set<string>(MINING_RARITY_ORDER)

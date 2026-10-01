@@ -1,5 +1,5 @@
 /**
- * Resource Tracker Q0 catalog — mirrors src/config/extraResources.ts + isNoQualityResource().
+ * Resource Tracker Q0 catalog — mirrors src/config/extraResources.ts, game-commodities.json + isNoQualityResource().
  * Used by fetch-commodity-dfp-bases.mjs so DFP commodity entries match tracker dropdown items.
  */
 import fs from 'fs'
@@ -32,10 +32,24 @@ export function parseExtraCatalog(extraResourcesPath) {
   return entries
 }
 
+/** Q0 game commodities from src/data/game-commodities.json (minerals keep quality bands). */
+export function parseGameCommodityCatalog(gameCommoditiesPath) {
+  if (!fs.existsSync(gameCommoditiesPath)) return []
+  const data = JSON.parse(fs.readFileSync(gameCommoditiesPath, 'utf8'))
+  return (data.commodities ?? [])
+    .filter((c) => c.kind !== 'mineral')
+    .map((c) => ({ resourceKey: c.key, label: c.label }))
+}
+
 /** Q0-only Resource Tracker extras (same scope as isNoQualityResource in dfp.ts). */
 export function getResourceTrackerQ0Catalog(repoRoot) {
   const extraResourcesPath = path.join(repoRoot, 'src/config/extraResources.ts')
-  const catalog = parseExtraCatalog(extraResourcesPath)
+  const extras = parseExtraCatalog(extraResourcesPath)
+  const extraKeys = new Set(extras.map((e) => e.resourceKey))
+  const commodities = parseGameCommodityCatalog(
+    path.join(repoRoot, 'src/data/game-commodities.json')
+  ).filter((c) => !extraKeys.has(c.resourceKey))
+  const catalog = [...extras, ...commodities]
   return catalog
     .filter(({ resourceKey }) => !HARVEST_KEYS.has(resourceKey))
     .map(({ resourceKey, label }) => ({
