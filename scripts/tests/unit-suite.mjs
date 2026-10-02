@@ -1742,7 +1742,7 @@ check(
   resourceTypesLib.buildGameCommodities(
     { _RecordValue_: { groups: [{ _RecordName_: 'ResourceTypeGroup.ProcessedGoods', resources: [{ _RecordName_: 'ResourceType.X', displayName: '@x', defaultCargoContainers: crate('x') }] }] } },
     { x: 'Bad <scr<script>ipt>Crate' },
-  )[0]?.label === 'Bad iptCrate',
+  )[0]?.label === 'Bad Crate',
   'resource types: nested tags cannot leave angle brackets',
 )
 check(!fakeByKey.has('heat'), 'resource types: non-cargo types skipped')
