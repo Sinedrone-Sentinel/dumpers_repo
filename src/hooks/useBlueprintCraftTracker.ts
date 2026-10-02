@@ -110,6 +110,38 @@ export function useBlueprintCraftTracker() {
     [addOres, catalog]
   )
 
+  const addResourcesToRsTracker = useCallback(
+    async (labels: string[], pendingKey: string): Promise<AddBlueprintToCraftTrackerResult> => {
+      if (!catalog.length) {
+        const error = 'Mining data is still loading — try again.'
+        setLastMessage(error)
+        return { added: [], skipped: [], error }
+      }
+
+      const byOre = new Map<string, BlueprintTrackableOre>()
+      for (const label of labels) {
+        const ore = trackableOreForResource(label, catalog)
+        if (ore && !byOre.has(ore.oreName)) byOre.set(ore.oreName, ore)
+      }
+      if (byOre.size === 0) {
+        const error = 'No RS-trackable ores here.'
+        setLastMessage(error)
+        return { added: [], skipped: [], error }
+      }
+
+      const result = await addOres([...byOre.values()], pendingKey)
+      setLastMessage(
+        result.added.length === 0
+          ? 'Those ores are already on your RS Tracker.'
+          : `Added ${result.added.length} ore${result.added.length === 1 ? '' : 's'} to RS Tracker.`
+      )
+      return result
+    },
+    [addOres, catalog]
+  )
+
+  const isPendingKey = useCallback((key: string) => pendingId === key, [pendingId])
+
   const isPendingForBlueprint = useCallback(
     (blueprintId: string) => pendingId === blueprintId,
     [pendingId]
@@ -134,6 +166,8 @@ export function useBlueprintCraftTracker() {
   return {
     addMaterialsFromBlueprint,
     addResourceToRsTracker,
+    addResourcesToRsTracker,
+    isPendingKey,
     isPendingForBlueprint,
     isPendingForResource,
     hasRsTrackableMaterials,

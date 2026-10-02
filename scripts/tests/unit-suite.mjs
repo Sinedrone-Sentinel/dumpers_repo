@@ -41,6 +41,7 @@ const modules = [
   'src/config/dfp.ts',
   'src/config/resourceTypes.ts',
   'src/lib/qualityBands.ts',
+  'src/lib/bpWishlistDemand.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -1811,6 +1812,47 @@ check(
   qualityBandsLib.getResourceBandRanges('Quantanium')?.length ===
     qualityBandsLib.getResourceBands('Quantanium')?.length,
   'band ranges resolve through the same name aliases as band values',
+)
+
+const wishlistDemand = await import(pathToFileURL(path.join(outDir, 'bpWishlistDemand.mjs')).href)
+const wlOwned = new Map([
+  ['riccite', { byQuality: new Map([[870, 0.2]]), qualities: [870], cardsByQuality: new Map() }],
+  ['tungsten', { byQuality: new Map([[500, 5]]), qualities: [500], cardsByQuality: new Map() }],
+])
+const wlMat = (resourceKey, label, quality, scu, slotIndex = 0) => ({
+  slotIndex, resourceKey, label, quality, scu, wholeUnit: false,
+})
+const wlItem = {
+  materials: [
+    wlMat('riccite', 'Riccite', 870, 0.15, 0),
+    wlMat('tungsten', 'Tungsten', 858, 0.08, 1),
+    wlMat('aslarite', 'Aslarite', 854, 0.02, 2),
+  ],
+}
+const wlMissingItem = wishlistDemand.missingRecipeMaterials(wlItem, wlOwned).map((m) => m.label)
+check(
+  wlMissingItem.join(',') === 'Tungsten,Aslarite',
+  'wishlist missing: one craft covered at exact quality is not missing; wrong quality or none is',
+)
+const wlDoubleSlot = {
+  materials: [wlMat('riccite', 'Riccite', 870, 0.15, 0), wlMat('riccite', 'Riccite', 870, 0.15, 1)],
+}
+check(
+  wishlistDemand.missingRecipeMaterials(wlDoubleSlot, wlOwned).length === 2,
+  'wishlist missing: two slots of the same quality add up before checking stock',
+)
+const wlOverview = [
+  { resourceKey: 'riccite', quality: 870, amount: 0.15, label: 'Riccite' },
+  { resourceKey: 'riccite', quality: 870, amount: 0.3, label: 'Riccite x2' },
+  { resourceKey: 'tungsten', quality: 500, amount: 4, label: 'Tungsten' },
+]
+check(
+  wishlistDemand.missingOverviewRows(wlOverview, wlOwned).map((r) => r.label).join(',') === 'Riccite x2',
+  'wishlist missing: header uses whole-list totals against stock',
+)
+check(
+  wishlistDemand.missingOverviewRows(wlOverview, new Map()).length === 3,
+  'wishlist missing: nothing tracked means every row is missing',
 )
 
 console.log(`Unit tests: ${pass} passed`)
