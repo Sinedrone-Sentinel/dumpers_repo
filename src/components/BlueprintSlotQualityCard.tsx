@@ -2,11 +2,16 @@ import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/res
 import { slugifyResourceName } from '../lib/blueprintResources'
 import {
   formatInventoryQualityLabel,
+  formatStockScu,
   getResourceBands,
   getQualityTier,
   getQualityTierColor,
+  isBandedStockQuality,
+  stockByBand,
 } from '../lib/qualityBands'
+import type { OwnedResourceStock } from '../lib/craftFromStock'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
+import QualityBandSelect from './QualityBandSelect'
 import {
   formatSlotModifierDisplay,
   getSlotModifierColorClass,
@@ -46,6 +51,8 @@ export interface BlueprintSlotQualityCardProps {
   craftHave?: number
   craftNeeded?: number
   craftEnough?: boolean
+  /** Signed-in member's stock for this slot's resource; shows per-option amounts in the open list. */
+  ownedStock?: OwnedResourceStock | null
 }
 
 export default function BlueprintSlotQualityCard({
@@ -62,6 +69,7 @@ export default function BlueprintSlotQualityCard({
   craftHave,
   craftNeeded,
   craftEnough,
+  ownedStock = null,
 }: BlueprintSlotQualityCardProps) {
   const option = slot.options?.[0]
   const resourceName =
@@ -78,6 +86,7 @@ export default function BlueprintSlotQualityCard({
   const craftResKey = craftResourceKey ?? slugifyResourceName(resourceName)
   const craftUnit = resourceQuantityUnitLabel(craftResKey)
   const craftQualityOptions = craftAvailableQualities ?? []
+  const bandStock = ownedStock && bands ? stockByBand(resourceName, ownedStock.byQuality) : null
   const modifierRows =
     hasModifiers && modifierResults.length > 0 ? (
       <div className="space-y-1">
@@ -140,17 +149,20 @@ export default function BlueprintSlotQualityCard({
               Use quality
             </label>
             {craftQualityOptions.length > 0 ? (
-              <select
+              <QualityBandSelect
                 value={quality}
-                onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                className="site-input w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono cursor-pointer"
-              >
-                {craftQualityOptions.map((q) => (
-                  <option key={q} value={q}>
-                    {formatInventoryQualityLabel(craftResKey, q)}
-                  </option>
-                ))}
-              </select>
+                onChange={(q) => onQualityChange(slotIndex, q)}
+                ariaLabel="Use quality"
+                className="w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono"
+                options={craftQualityOptions.map((q) => ({
+                  value: q,
+                  label: formatInventoryQualityLabel(craftResKey, q),
+                  stockLabel:
+                    ownedStock && isBandedStockQuality(q)
+                      ? formatStockScu(ownedStock.byQuality.get(q))
+                      : undefined,
+                }))}
+              />
             ) : (
               <span className="text-xs text-red-400 font-medium">None in stock</span>
             )}
@@ -174,24 +186,19 @@ export default function BlueprintSlotQualityCard({
               {qualityDisplay === 'q-values' ? 'Quality' : 'Quality Band'}
             </label>
             {bands ? (
-              <select
+              <QualityBandSelect
                 value={quality}
-                onChange={(e) => onQualityChange(slotIndex, parseInt(e.target.value, 10))}
-                className="site-input w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono cursor-pointer"
-              >
-                {bands.map((bandValue, idx) => {
-                  const tier = getQualityTier(bandValue)
-                  const label =
-                    qualityDisplay === 'q-values'
-                      ? `Q${bandValue}`
-                      : `Band ${idx + 1}: Q${bandValue}`
-                  return (
-                    <option key={idx} value={bandValue} className={getQualityTierColor(tier)}>
-                      {label}
-                    </option>
-                  )
-                })}
-              </select>
+                onChange={(q) => onQualityChange(slotIndex, q)}
+                ariaLabel={qualityDisplay === 'q-values' ? 'Quality' : 'Quality band'}
+                className="w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono"
+                options={bands.map((bandValue, idx) => ({
+                  value: bandValue,
+                  label:
+                    qualityDisplay === 'q-values' ? `Q${bandValue}` : `Band ${idx + 1}: Q${bandValue}`,
+                  className: getQualityTierColor(getQualityTier(bandValue)),
+                  stockLabel: bandStock ? formatStockScu(bandStock[idx]) : undefined,
+                }))}
+              />
             ) : (
               <>
                 <input

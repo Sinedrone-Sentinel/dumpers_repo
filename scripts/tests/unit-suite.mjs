@@ -40,6 +40,7 @@ const modules = [
   'src/lib/blueprintEffectiveStats.ts',
   'src/config/dfp.ts',
   'src/config/resourceTypes.ts',
+  'src/lib/qualityBands.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -1781,5 +1782,35 @@ check(dfpConfig.isNoQualityResource('ship_ammunition'), 'Ship Ammunition is Q0 o
 check(!dfpConfig.isNoQualityResource('carinite_pure'), 'mined game minerals keep quality bands')
 check(resourceTypeConfig.getResourceType('ship_ammunition') === 'trade_good', 'Ship Ammunition styled as trade good')
 check(resourceTypeConfig.getResourceType('uncut_slam') === 'contraband', 'Uncut SLAM styled as contraband')
+
+const qualityBandsLib = await import(pathToFileURL(path.join(outDir, 'qualityBands.mjs')).href)
+const riccite = qualityBandsLib.stockByBand(
+  'Riccite',
+  new Map([
+    [912, 1.5],
+    [905, 0.25],
+    [512, 1],
+    [1000, 0.041],
+    [500, 7],
+    [0, 3],
+  ]),
+)
+check(riccite.length === 8, 'band stock: one total per Riccite band')
+check(riccite[5] === 1.75, 'band stock: Q912 + Q905 add up in Band 6 (Q900-949)')
+check(riccite[1] === 1, 'band stock: mined Q512 lands in Band 2, Purchased (Q0) card is not counted')
+check(riccite[7] === 0.041, 'band stock: Q1000 lands in Band 8')
+check(
+  [0, 2, 3, 4, 6].every((i) => riccite[i] === 0),
+  'band stock: Purchased (Q0) and Q0 cards never counted in any band',
+)
+check(qualityBandsLib.stockByBand('Not A Resource', new Map([[700, 1]])).length === 0, 'band stock: unknown resource has no bands')
+check(qualityBandsLib.formatStockScu(0.041) === '0.041scu', 'stock label formats X.XXXscu')
+check(qualityBandsLib.formatStockScu(4) === '4.000scu', 'stock label pads to three decimals')
+check(qualityBandsLib.formatStockScu(0) === '' && qualityBandsLib.formatStockScu(undefined) === '', 'no stock label when nothing held')
+check(
+  qualityBandsLib.getResourceBandRanges('Quantanium')?.length ===
+    qualityBandsLib.getResourceBands('Quantanium')?.length,
+  'band ranges resolve through the same name aliases as band values',
+)
 
 console.log(`Unit tests: ${pass} passed`)
