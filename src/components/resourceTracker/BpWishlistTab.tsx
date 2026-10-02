@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { isWholeUnitResource } from '../../config/resourceTypes'
 import { formatDfpAuec } from '../../lib/dfp'
 import { useDfpEngineReady } from '../../hooks/useDfpEngineReady'
+import { useBlueprintCraftTracker } from '../../hooks/useBlueprintCraftTracker'
 import type { CraftStockCardLite } from '../../lib/craftFromStock'
 import { fromMilliScu, toMilliScu } from '../../lib/resourceQuantity'
 import {
@@ -12,6 +13,8 @@ import {
   demandCovered,
   formatWishlistAmount,
   gotItBpWishlistItem,
+  missingOverviewRows,
+  missingRecipeMaterials,
   oneCraftDemand,
   ownedIndexFromCards,
   qualityResourceTotals,
@@ -38,6 +41,12 @@ interface BpWishlistTabProps {
   onError: (message: string | null) => void
 }
 
+interface RsTrackApi {
+  add: (labels: string[], pendingKey: string) => Promise<unknown>
+  isPending: (pendingKey: string) => boolean
+  isTrackable: (label: string) => boolean
+}
+
 export default function BpWishlistTab({
   lists,
   loading,
@@ -51,6 +60,18 @@ export default function BpWishlistTab({
   const [newName, setNewName] = useState('')
   const [busy, setBusy] = useState(false)
   const owned = useMemo(() => ownedIndexFromCards(stockCards), [stockCards])
+  const {
+    addResourcesToRsTracker,
+    isPendingKey,
+    isRsTrackableResource,
+    lastMessage: rsMessage,
+    clearLastMessage: clearRsMessage,
+  } = useBlueprintCraftTracker()
+  const rsTrack: RsTrackApi = {
+    add: addResourcesToRsTracker,
+    isPending: isPendingKey,
+    isTrackable: isRsTrackableResource,
+  }
   useDfpEngineReady()
   const atCap = lists.length >= BP_WISHLIST_MAX_LISTS
 
@@ -110,6 +131,18 @@ export default function BpWishlistTab({
         </form>
       </div>
 
+      {rsMessage && (
+        <div className="p-3 rounded-lg bg-purple-900/25 border border-purple-500/35 text-purple-100 text-sm flex items-start justify-between gap-3">
+          <span>{rsMessage}</span>
+          <button
+            type="button"
+            onClick={clearRsMessage}
+            className="text-purple-300/80 hover:text-purple-100 text-xs shrink-0"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
       {error && <p className="site-error-text text-sm">{error}</p>}
       {loading && lists.length === 0 && <p className="text-sm text-slate-400">Loading Crafting Wishlists…</p>}
       {!loading && lists.length === 0 && (
@@ -123,6 +156,7 @@ export default function BpWishlistTab({
           open={openId === list.id}
           busy={busy}
           owned={owned}
+          rsTrack={rsTrack}
           onToggle={() => setOpenId((current) => (current === list.id ? null : list.id))}
           onRun={run}
         />
@@ -136,6 +170,7 @@ function WishlistPanel({
   open,
   busy,
   owned,
+  rsTrack,
   onToggle,
   onRun,
 }: {
@@ -143,6 +178,7 @@ function WishlistPanel({
   open: boolean
   busy: boolean
   owned: ReturnType<typeof ownedIndexFromCards>
+  rsTrack: RsTrackApi
   onToggle: () => void
   onRun: (task: () => Promise<void>, refreshStock?: boolean) => Promise<void>
 }) {
@@ -172,19 +208,31 @@ function WishlistPanel({
         <span className="ml-auto text-slate-500 text-xs">{open ? 'Hide' : 'Open'}</span>
       </button>
       <div className="px-4 pb-3 space-y-2">
-        <label className="flex w-fit items-center gap-2 text-sm text-slate-200">
-          <input
-            type="checkbox"
-            className="site-checkbox"
-            checked={useTracked}
-            disabled={busy}
-            onChange={(event) => {
-              const enabled = event.target.checked
-              void onRun(() => setBpWishlistUseTracked(list.id, enabled))
-            }}
-          />
-          Use My Tracked Resources
-        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex w-fit items-center gap-2 text-sm text-slate-200">
+            <input
+              type="checkbox"
+              className="site-checkbox"
+              checked={useTracked}
+              disabled={busy}
+              onChange={(event) => {
+                const enabled = event.target.checked
+                void onRun(() => setBpWishlistUseTracked(list.id, enabled))
+              }}
+            />
+            Use My Tracked Resources
+          </label>
+          {overview.length > 0 && (
+            <RsTrackButtons
+              allLabels={overview.map((row) => row.label)}
+              missingLabels={missingOverviewRows(overview, owned).map((row) => row.label)}
+              pendingKeyBase={`wl:${list.id}`}
+              scope="this list"
+              busy={busy}
+              rsTrack={rsTrack}
+            />
+          )}
+        </div>
         <div className="flex flex-wrap gap-2">
           {overview.length === 0 ? (
             <span className="text-xs text-slate-500">No blueprints on this list yet.</span>
@@ -260,6 +308,7 @@ function WishlistPanel({
                 item={item}
                 useTracked={useTracked}
                 owned={owned}
+                rsTrack={rsTrack}
                 busy={busy}
                 onRun={onRun}
               />
@@ -275,12 +324,14 @@ function RecipeRow({
   item,
   useTracked,
   owned,
+  rsTrack,
   busy,
   onRun,
 }: {
   item: WishlistItem
   useTracked: boolean
   owned: ReturnType<typeof ownedIndexFromCards>
+  rsTrack: RsTrackApi
   busy: boolean
   onRun: (task: () => Promise<void>, refreshStock?: boolean) => Promise<void>
 }) {
@@ -347,7 +398,7 @@ function RecipeRow({
           Got it
         </button>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {item.materials.map((material) => {
           const key = `${material.resourceKey}::${material.quality}`
           const need = demand.get(key)?.amount ?? material.scu
@@ -366,7 +417,76 @@ function RecipeRow({
             </span>
           )
         })}
+        {item.materials.length > 0 && (
+          <div className="ml-auto">
+            <RsTrackButtons
+              allLabels={item.materials.map((material) => material.label)}
+              missingLabels={missingRecipeMaterials(item, owned).map((material) => material.label)}
+              pendingKeyBase={`wli:${item.id}`}
+              scope="this blueprint"
+              busy={busy}
+              rsTrack={rsTrack}
+            />
+          </div>
+        )}
       </div>
+    </div>
+  )
+}
+
+function RsTrackButtons({
+  allLabels,
+  missingLabels,
+  pendingKeyBase,
+  scope,
+  busy,
+  rsTrack,
+}: {
+  allLabels: string[]
+  missingLabels: string[]
+  pendingKeyBase: string
+  scope: string
+  busy: boolean
+  rsTrack: RsTrackApi
+}) {
+  const trackableAll = [...new Set(allLabels)].filter(rsTrack.isTrackable)
+  const trackableMissing = [...new Set(missingLabels)].filter(rsTrack.isTrackable)
+  const allKey = `${pendingKeyBase}:all`
+  const missingKey = `${pendingKeyBase}:missing`
+  const allPending = rsTrack.isPending(allKey)
+  const missingPending = rsTrack.isPending(missingKey)
+  const anyPending = allPending || missingPending
+  const buttonClass = 'site-btn-accent px-2 py-1 text-xs rounded-lg disabled:opacity-40 disabled:cursor-not-allowed'
+
+  const allTitle = trackableAll.length
+    ? `Add every ore on ${scope} to Mining Tracker RS Tracker`
+    : `No RS-trackable ores on ${scope}`
+  const missingTitle = missingLabels.length === 0
+    ? `My Resources already covers ${scope}`
+    : trackableMissing.length
+      ? 'Add the ores My Resources is short on to Mining Tracker RS Tracker'
+      : 'None of the missing resources are RS-trackable ores'
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        className={buttonClass}
+        disabled={busy || anyPending || trackableAll.length === 0}
+        title={allTitle}
+        onClick={() => void rsTrack.add(trackableAll, allKey)}
+      >
+        {allPending ? 'Adding…' : 'RS Track ALL'}
+      </button>
+      <button
+        type="button"
+        className={buttonClass}
+        disabled={busy || anyPending || trackableMissing.length === 0}
+        title={missingTitle}
+        onClick={() => void rsTrack.add(trackableMissing, missingKey)}
+      >
+        {missingPending ? 'Adding…' : 'RS Track Missing'}
+      </button>
     </div>
   )
 }

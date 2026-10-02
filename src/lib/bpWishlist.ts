@@ -6,7 +6,16 @@ import {
   craftMaterialResourceKey,
   type BlueprintWithSlots,
 } from './blueprintResources'
-import { hasEnough, buildOwnedStockIndex, type CraftStockCardLite, type OwnedStockIndex } from './craftFromStock'
+import { buildOwnedStockIndex, type CraftStockCardLite, type OwnedStockIndex } from './craftFromStock'
+import { addWishlistAmount } from './bpWishlistDemand'
+export {
+  demandCovered,
+  missingOverviewRows,
+  missingRecipeMaterials,
+  oneCraftDemand,
+  recipeReadyForOneCraft,
+  stockAtQuality,
+} from './bpWishlistDemand'
 import { pricingForResourceLine } from './orderPricing'
 import { formatQuantityForResource, fromMilliScu, toMilliScu } from './resourceQuantity'
 import { supabase } from './supabase'
@@ -296,11 +305,6 @@ export function wishlistQuantityTotal(items: WishlistItem[]): number {
   return items.reduce((sum, item) => sum + item.quantity, 0)
 }
 
-function addAmount(resourceKey: string, current: number, extra: number): number {
-  if (isWholeUnitResource(resourceKey)) return Math.trunc(current) + Math.trunc(extra)
-  return fromMilliScu(toMilliScu(current) + toMilliScu(extra))
-}
-
 export interface WishlistResourceTotal {
   key: string
   label: string
@@ -326,7 +330,7 @@ export function qualityResourceTotals(items: WishlistItem[]): WishlistQualityTot
         : fromMilliScu(toMilliScu(material.scu) * item.quantity)
       const existing = map.get(key)
       if (existing) {
-        existing.amount = addAmount(material.resourceKey, existing.amount, extra)
+        existing.amount = addWishlistAmount(material.resourceKey, existing.amount, extra)
         existing.dfp = wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, existing.amount)
       } else {
         map.set(key, {
@@ -347,42 +351,6 @@ export function qualityResourceTotals(items: WishlistItem[]): WishlistQualityTot
 export function formatWishlistAmount(resourceKey: string, amount: number, wholeUnit: boolean): string {
   const qty = formatQuantityForResource(resourceKey, amount)
   return wholeUnit ? qty : `${qty} SCU`
-}
-
-/** One-craft need per resource+quality on a single recipe (chips share a color). */
-export function oneCraftDemand(item: WishlistItem): Map<string, { resourceKey: string; quality: number; amount: number }> {
-  const map = new Map<string, { resourceKey: string; quality: number; amount: number }>()
-  for (const material of item.materials) {
-    const key = `${material.resourceKey}::${material.quality}`
-    const existing = map.get(key)
-    if (existing) {
-      existing.amount = addAmount(material.resourceKey, existing.amount, material.scu)
-    } else {
-      map.set(key, { resourceKey: material.resourceKey, quality: material.quality, amount: material.scu })
-    }
-  }
-  return map
-}
-
-export function stockAtQuality(owned: OwnedStockIndex, resourceKey: string, quality: number): number {
-  return owned.get(resourceKey)?.byQuality.get(quality) ?? 0
-}
-
-export function demandCovered(
-  owned: OwnedStockIndex,
-  resourceKey: string,
-  quality: number,
-  amount: number
-): boolean {
-  return hasEnough(resourceKey, amount, stockAtQuality(owned, resourceKey, quality))
-}
-
-export function recipeReadyForOneCraft(item: WishlistItem, owned: OwnedStockIndex): boolean {
-  if (item.materials.length === 0) return true
-  for (const demand of oneCraftDemand(item).values()) {
-    if (!demandCovered(owned, demand.resourceKey, demand.quality, demand.amount)) return false
-  }
-  return true
 }
 
 export function ownedIndexFromCards(cards: CraftStockCardLite[]): OwnedStockIndex {
