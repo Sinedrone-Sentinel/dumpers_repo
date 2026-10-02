@@ -9,6 +9,7 @@ import {
   EXTRA_CATALOG_RESOURCE_KEYS,
 } from './extraResources'
 import { isHarvestResource, isWikeloItemResource } from './resourceTypes'
+import { isNoQualityGameCommodity } from './gameCommodities'
 
 /** Public DFP UX constants only — formula lives in dfp-engine-private → public/dfp-engine.js */
 export const DFP_VERSION = '1.7.5-no-drop-runs'
@@ -37,7 +38,8 @@ export function isNoQualityResource(resourceKey: string): boolean {
     isContrabandResource(resourceKey) ||
     isTradeGoodResource(resourceKey) ||
     isWikeloItemResource(resourceKey) ||
-    EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)
+    EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey) ||
+    isNoQualityGameCommodity(resourceKey)
   )
 }
 

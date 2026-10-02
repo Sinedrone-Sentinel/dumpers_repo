@@ -39,6 +39,7 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 | `game-reputation.json` | Reputation standings, contracts, mission broker entries | `reputation/standings/`, `missionbroker/`, contract generators |
 | `game-quality-bands.json` | Crafting quality quantization + distribution curves | `crafting/qualityquantization/`, `crafting/qualitydistribution/` |
 | `game-lore.json` | Resource/item lore for Archive | Game localization (`global.ini`) |
+| `game-commodities.json` | Cargo commodities not already tracked (Resource Tracker catalog; unrefined ore excluded) | `resourcetypedatabase/` + localization |
 | `dfp-commodity-bases.json` | Q0 commodity/salvage DFP bases (UEX-backed) | `fetch-commodity-dfp-bases.mjs` |
 | `component-metadata.json` | Component wiki metadata (DFP engine build input) | Star Citizen Wiki API |
 | `_extraction-validation.json` | Validation issues (if any) | Generated |
@@ -196,7 +197,7 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
    - `build-releases.yml` runs `copy-blueprint-lookup` before building the exe and before
      redeploying the Edge Function, so new blueprint names ship automatically. Only if you
      need it out-of-band: `npx supabase functions deploy log-watcher-webhook --no-verify-jwt`
-9. **Sync resource catalog:** use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials appeared after parse
+9. **Sync resource catalog:** once the new build is deployed (step 10), use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials or `game-commodities.json` cargo appeared after parse (the sync uploads the list bundled in the deployed site)
 10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
 11. **Relink acquired marks (after the rest):** `npm run relink-acquired-blueprint-ids -- --apply`
     - Runs last so it uses the just-parsed catalog

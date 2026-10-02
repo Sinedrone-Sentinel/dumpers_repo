@@ -38,6 +38,8 @@ const modules = [
   'src/lib/inventoryStock.ts',
   'src/lib/wtbScuRange.ts',
   'src/lib/blueprintEffectiveStats.ts',
+  'src/config/dfp.ts',
+  'src/config/resourceTypes.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -1682,5 +1684,102 @@ check(
   h4 && Object.keys(effectiveStats.mergeBlueprintBaseStats(h4)).length === 0,
   'H4-PBF Ammo Carrier has no recorded base stats',
 )
+
+const resourceTypesLib = await import(
+  pathToFileURL(path.join(root, 'scripts/lib/parseResourceTypes.mjs')).href
+)
+const crate = (name) => ({ _Type_: 'SResourceTypeDefaultCargoContainers', oneSCU: `${name}.json` })
+const fakeDb = {
+  _RecordValue_: {
+    groups: [
+      {
+        _RecordName_: 'ResourceTypeGroup.ProcessedGoods',
+        resources: [
+          { _RecordName_: 'ResourceType.ShipAmmunition', displayName: '@item_NameAmmoCrate', defaultCargoContainers: crate('a') },
+          { _RecordName_: 'ResourceType.RMC', displayName: '@items_commodities_type_RMC', defaultCargoContainers: crate('b') },
+          { _RecordName_: 'ResourceType.EvidenceBox', displayName: '@LOC_PLACEHOLDER', defaultCargoContainers: crate('c') },
+          { _RecordName_: 'ResourceType.Rubble', displayName: '@rubble', refinedVersion: 'x', defaultCargoContainers: crate('d') },
+        ],
+        groups: [
+          {
+            _RecordName_: 'ResourceTypeGroup.Vice',
+            resources: [{ _RecordName_: 'ResourceType.SlamUncut', displayName: '@uncut', defaultCargoContainers: crate('e') }],
+          },
+        ],
+      },
+      {
+        _RecordName_: 'ResourceTypeGroup.Metal',
+        resources: [
+          { _RecordName_: 'ResourceType.Heat', displayName: '@heat', defaultCargoContainers: null },
+          { _RecordName_: 'ResourceType.CO2', displayName: '@co2', defaultCargoContainers: crate('f') },
+        ],
+        groups: [
+          {
+            _RecordName_: 'ResourceTypeGroup.UnrefinedOres',
+            resources: [{ _RecordName_: 'ResourceType.Ore_Gold', displayName: '@gold_ore', defaultCargoContainers: crate('g') }],
+          },
+        ],
+      },
+    ],
+  },
+}
+const fakeLoc = {
+  item_NameAmmoCrate: 'Ship Ammunition',
+  items_commodities_type_RMC: 'Recycled Material Composite',
+  rubble: 'Construction Rubble',
+  uncut: 'Uncut SLAM',
+  heat: 'Heat',
+  co2: 'CO<font size="%d">2</font>',
+  gold_ore: 'Gold (Ore)',
+}
+const fakeCommodities = resourceTypesLib.buildGameCommodities(fakeDb, fakeLoc, new Set(['rmc']))
+const fakeByKey = new Map(fakeCommodities.map((c) => [c.key, c]))
+check(fakeByKey.get('ship_ammunition')?.label === 'Ship Ammunition', 'resource types: Ship Ammunition parsed')
+check(!fakeByKey.has('rmc') && !fakeByKey.has('recycled_material_composite'), 'resource types: RMC aliases to existing key')
+check(fakeByKey.get('uncut_slam')?.kind === 'vice', 'resource types: nested Vice group kind')
+check(fakeByKey.get('co2')?.label === 'CO2', 'resource types: markup stripped from labels')
+check(
+  resourceTypesLib.buildGameCommodities(
+    { _RecordValue_: { groups: [{ _RecordName_: 'ResourceTypeGroup.ProcessedGoods', resources: [{ _RecordName_: 'ResourceType.X', displayName: '@x', defaultCargoContainers: crate('x') }] }] } },
+    { x: 'Bad <scr<script>ipt>Crate' },
+  )[0]?.label === 'Bad Crate',
+  'resource types: nested tags cannot leave angle brackets',
+)
+check(!fakeByKey.has('heat'), 'resource types: non-cargo types skipped')
+check(!fakeByKey.has('gold_ore') && !fakeByKey.has('construction_material_rubble'), 'resource types: unrefined skipped')
+check(fakeCommodities.length === 3, 'resource types: placeholder records skipped')
+
+const gameCommodities = JSON.parse(
+  readFileSync(path.join(root, 'src/data/game-commodities.json'), 'utf8'),
+).commodities
+const trackerKeys = resourceTypesLib.loadExistingTrackerKeys(root, allBlueprints)
+check(
+  gameCommodities.some((c) => c.key === 'ship_ammunition' && c.label === 'Ship Ammunition'),
+  'game commodities include Ship Ammunition',
+)
+check(
+  gameCommodities.every((c) => !/\((?:ore|raw|r)\)\s*$/i.test(c.label) && !/placeholder/i.test(c.label)),
+  'game commodities exclude unrefined ore and placeholders',
+)
+const commodityCollisions = gameCommodities.filter((c) => trackerKeys.has(c.key)).map((c) => c.key)
+check(
+  commodityCollisions.length === 0,
+  `game commodities do not duplicate tracked keys (${commodityCollisions.join(', ')})`,
+)
+check(
+  gameCommodities.every((c) => !c.label.includes('@') && !c.label.includes('_') && !/<[^>]*>/.test(c.label)),
+  'game commodity labels are display names',
+)
+check(
+  new Set(gameCommodities.map((c) => c.key)).size === gameCommodities.length,
+  'game commodity keys are unique',
+)
+
+const dfpConfig = await import(pathToFileURL(path.join(outDir, 'dfp.mjs')).href)
+const resourceTypeConfig = await import(pathToFileURL(path.join(outDir, 'resourceTypes.mjs')).href)
+check(dfpConfig.isNoQualityResource('ship_ammunition'), 'Ship Ammunition is Q0 only')
+check(!dfpConfig.isNoQualityResource('carinite_pure'), 'mined game minerals keep quality bands')
+check(resourceTypeConfig.getResourceType('ship_ammunition') === 'trade_good', 'Ship Ammunition styled as trade good')
+check(resourceTypeConfig.getResourceType('uncut_slam') === 'contraband', 'Uncut SLAM styled as contraband')
 
 console.log(`Unit tests: ${pass} passed`)

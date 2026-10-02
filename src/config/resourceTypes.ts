@@ -8,6 +8,7 @@ import {
   isTradeGoodResource,
 } from './extraResources'
 import { WIKELO_ITEM_RESOURCE_KEYS } from './wikeloItems'
+import { gameCommodityKind } from './gameCommodities'
 
 function slugifyResourceName(name: string | null | undefined): string {
   if (!name) return ''
@@ -92,7 +93,17 @@ export function getResourceType(resourceKey: string): ResourceType {
   if (WIKELO_ITEM_RESOURCE_KEYS.has(resourceKey)) return 'wikelo_item'
   if (GEM_RESOURCE_KEYS.has(resourceKey)) return 'gem'
   if (EXTRA_CATALOG_RESOURCE_KEYS.has(resourceKey)) return 'trade_good'
-  return 'ore'
+  switch (gameCommodityKind(resourceKey)) {
+    case null:
+    case 'mineral':
+      return 'ore'
+    case 'vice':
+      return 'contraband'
+    case 'gas':
+      return 'gas'
+    default:
+      return 'trade_good'
+  }
 }
 
 export function getResourceTypeFromLabel(label: string): ResourceType {
