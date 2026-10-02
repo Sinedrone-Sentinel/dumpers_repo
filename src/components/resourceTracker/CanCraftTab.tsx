@@ -1189,6 +1189,7 @@ export default function CanCraftTab({
             ready: canCraftBlueprint(selectedBlueprint, quantityByKey, 1),
             onCraft,
           }}
+          ownedStock={user ? ownedStockIndex : null}
         />
       )}
 

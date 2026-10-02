@@ -19,6 +19,7 @@ import { useBlueprintOrderOverrides } from '../hooks/useBlueprintOrderOverrides'
 import { useBlueprintCraftTracker } from '../hooks/useBlueprintCraftTracker'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
+import { useMyStockIndex } from '../hooks/useMyStockIndex'
 import { fetchBlueprintOwnerCounts } from '../lib/operations'
 import {
   canAddBlueprintToOrder,
@@ -177,6 +178,7 @@ export default function BlueprintsRoute() {
   >(() => readBlueprintsUiState(uiScope).acquisitionFilter)
   const [selectedBlueprint, setSelectedBlueprint] = React.useState(null)
   const [modalOriginRect, setModalOriginRect] = React.useState(null)
+  const myStockIndex = useMyStockIndex(user?.id, !!selectedBlueprint)
 
   React.useEffect(() => {
     preloadOrgLogoCandidates(orgLogoUpdatedAt)
@@ -1224,6 +1226,7 @@ export default function BlueprintsRoute() {
           onAddToCraftTracker={() => void addMaterialsFromBlueprint(selectedBlueprint)}
           craftTrackerPending={isPendingForBlueprint(selectedBlueprint.internalName)}
           showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}
+          ownedStock={user ? myStockIndex : null}
         />
       )}
 

@@ -1,6 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { type BlueprintWithSlots } from '../lib/blueprintResources'
+import {
+  craftMaterialOptionsForSlot,
+  craftMaterialResourceKey,
+  type BlueprintWithSlots,
+} from '../lib/blueprintResources'
 import {
   aggregateModifiers,
   formatAggregatedModifierDisplay,
@@ -102,6 +106,8 @@ interface BlueprintDetailsModalProps {
   showCraftTrackerControl?: boolean
   /** Present only from the Can Craft tab — enables the CRAFT-from-stock button. */
   craftContext?: CraftContext
+  /** Signed-in member's stock — quality dropdowns show how much is held per option. */
+  ownedStock?: OwnedStockIndex | null
 }
 
 interface CraftContext {
@@ -128,6 +134,7 @@ export default function BlueprintDetailsModal({
   craftTrackerPending = false,
   showCraftTrackerControl = false,
   craftContext,
+  ownedStock = null,
 }: BlueprintDetailsModalProps) {
   const navigate = useNavigate()
   const [slotQualities, setSlotQualities] = useState<Record<number, number>>({})
@@ -381,6 +388,11 @@ export default function BlueprintDetailsModal({
             <div className="space-y-3">
               {blueprint.slots.map((slot, idx) => {
                 const craftStatus = craftStatusBySlot.get(idx)
+                const materialOption = craftMaterialOptionsForSlot(slot)[0]
+                const slotStock =
+                  ownedStock && materialOption
+                    ? ownedStock.get(craftMaterialResourceKey(materialOption)) ?? null
+                    : null
                 return (
                   <BlueprintSlotQualityCard
                     key={idx}
@@ -395,6 +407,7 @@ export default function BlueprintDetailsModal({
                     craftHave={craftStatus?.have}
                     craftNeeded={craftStatus?.needed}
                     craftEnough={craftStatus?.enough}
+                    ownedStock={slotStock}
                   />
                 )
               })}

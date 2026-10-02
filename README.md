@@ -73,6 +73,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - Mark blueprints **acquired**; starter defaults may reappear on refresh until marked
 - **Members** dropdown (when you have friends) — filter the grid by Mine or a friend’s acquired collection; checkboxes still update only yours
 - Blueprint detail modal: crafting materials, components, stats, **Dumper's Fair-Value Price (DFP)** at selectable quality bands
+- Signed in: the open quality dropdown shows My Resources stock per band as `X.XXXscu` (Purchased (Q0) not counted); also in the Can Craft modal, scoped to the location chip
 - **Missions** on each blueprint lists every contract that rewards it and opens Mission Tracker browse
 - Add blueprints to a session **order draft** (continues on My Listings) or **target list** (Mission Tracker)
 - Optional **Display** setting: group FPS weapon and armor variants into expandable family cards (off by default)

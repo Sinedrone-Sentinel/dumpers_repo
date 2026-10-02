@@ -11,6 +11,7 @@ import { stockQualityTiersForResource } from '../config/dfp'
 import { isSalvageResource } from '../config/extraResources'
 import { isHarvestResource } from '../config/resourceTypes'
 import qualityBandsData from '../data/game-quality-bands.json'
+import { fromMilliScu, toMilliScu } from './resourceQuantity'
 
 /** Terminal-purchased stock — Q0 in UI maps to exactly Q500 for DFP (not a mined band). */
 export const PURCHASED_STOCK_QUALITY = 500
@@ -63,31 +64,59 @@ const RESOURCE_ALIASES: Record<string, string> = {
  * Returns undefined if no bands are available for this resource
  */
 export function getResourceBands(resourceName: string): number[] | undefined {
+  const key = resolveBandKey(resourceName)
+  return key ? RESOURCE_QUALITY_BANDS[key] : undefined
+}
+
+function resolveBandKey(resourceName: string): string | undefined {
   const normalized = normalizeResourceName(resourceName)
-  
-  // Check alias first
   const aliased = RESOURCE_ALIASES[normalized] || normalized
-  
-  // Try direct match
-  if (RESOURCE_QUALITY_BANDS[aliased]) {
-    return RESOURCE_QUALITY_BANDS[aliased]
-  }
-  
-  // Try common variations
   const variations = [
     aliased,
     aliased.replace('ore', ''),
     aliased.replace('raw', ''),
     `raw${aliased}`,
   ]
-  
-  for (const v of variations) {
-    if (RESOURCE_QUALITY_BANDS[v]) {
-      return RESOURCE_QUALITY_BANDS[v]
-    }
+  return variations.find((v) => RESOURCE_QUALITY_BANDS[v])
+}
+
+/** Quality start/end per band (same order as getResourceBands). */
+export function getResourceBandRanges(
+  resourceName: string
+): { start: number; end: number }[] | undefined {
+  const key = resolveBandKey(resourceName)
+  if (!key) return undefined
+  const full = RESOURCE_QUALITY_BANDS_FULL[key as keyof typeof RESOURCE_QUALITY_BANDS_FULL] as
+    | { bands?: { start: number; end: number }[] }
+    | undefined
+  return full?.bands?.map(({ start, end }) => ({ start, end }))
+}
+
+/** Mined/refined stock only — Purchased (Q0) and Q0-only cards never count toward a band. */
+export function isBandedStockQuality(quality: number): boolean {
+  return quality > 0 && quality !== PURCHASED_STOCK_QUALITY
+}
+
+/** Stock held per band (index-aligned with getResourceBands), summed in thousandths of SCU. */
+export function stockByBand(
+  resourceName: string,
+  byQuality: ReadonlyMap<number, number>
+): number[] {
+  const ranges = getResourceBandRanges(resourceName)
+  if (!ranges) return []
+  const milli = ranges.map(() => 0)
+  for (const [quality, quantity] of byQuality) {
+    if (!isBandedStockQuality(quality) || !(quantity > 0)) continue
+    const idx = ranges.findIndex((r) => quality >= r.start && quality <= r.end)
+    if (idx >= 0) milli[idx] += toMilliScu(quantity)
   }
-  
-  return undefined
+  return milli.map(fromMilliScu)
+}
+
+/** Dropdown stock label: `1.000scu`, empty when nothing is held. */
+export function formatStockScu(quantity: number | undefined): string {
+  if (!quantity || !(quantity > 0)) return ''
+  return `${fromMilliScu(toMilliScu(quantity)).toFixed(3)}scu`
 }
 
 /**
