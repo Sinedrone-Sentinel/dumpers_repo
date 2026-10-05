@@ -11,6 +11,8 @@ interface MissionLocationTagsProps {
   system?: string | null
   poolKey?: string | null
   localitySystems?: (string | null)[] | null
+  /** Drop specific-place chips (e.g. Monox) and keep system / region chips only. */
+  omitSpecificLocations?: boolean
   className?: string
 }
 
@@ -20,9 +22,11 @@ export default function MissionLocationTags({
   system,
   poolKey,
   localitySystems,
+  omitSpecificLocations = false,
   className = '',
 }: MissionLocationTagsProps) {
-  const tags = buildMissionLocationTags({ regions, subRegion, system, poolKey, localitySystems })
+  const allTags = buildMissionLocationTags({ regions, subRegion, system, poolKey, localitySystems })
+  const tags = omitSpecificLocations ? allTags.filter((tag) => tag.kind !== 'location') : allTags
 
   return (
     <>
