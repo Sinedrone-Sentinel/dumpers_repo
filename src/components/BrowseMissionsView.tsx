@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useBlueprintData } from '../routes/blueprints'
 import MissionListingTags from './MissionListingTags'
 import BlueprintMissionMeta from './BlueprintMissionMeta'
@@ -18,6 +18,7 @@ import {
   readMissionTrackerUiState,
   stashBrowseMissionFromReward,
   writeMissionTrackerUiState,
+  type BrowseSortMode,
   type BrowseSystem,
 } from '../lib/missionTrackerUiState'
 import { MissionDescriptionText } from '../lib/missionDescriptionFormat'
@@ -259,7 +260,11 @@ function missionVisibleInBrowse(
   return missionMatchesSystem(mission, systemFilter)
 }
 
-function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
+function groupRepPoints(group: MissionGroup): number {
+  return Math.max(0, ...group.variants.map((mission) => mission.repPoints ?? 0))
+}
+
+function groupMissionsByTitle(missions: MissionDisplay[], sortMode: BrowseSortMode): MissionGroup[] {
   const map = new Map<string, MissionGroup>()
 
   for (const mission of missions) {
@@ -279,6 +284,10 @@ function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
 
   for (const group of map.values()) {
     group.variants.sort((a, b) => {
+      if (sortMode === 'rep') {
+        const awardCompare = (b.repPoints ?? 0) - (a.repPoints ?? 0)
+        if (awardCompare !== 0) return awardCompare
+      }
       const regionCompare = (a.region || '').localeCompare(b.region || '')
       if (regionCompare !== 0) return regionCompare
       const repCompare = (a.minStanding?.minReputation ?? 0) - (b.minStanding?.minReputation ?? 0)
@@ -287,7 +296,12 @@ function groupMissionsByTitle(missions: MissionDisplay[]): MissionGroup[] {
     })
   }
 
-  return [...map.values()].sort((a, b) => a.title.localeCompare(b.title))
+  return [...map.values()].sort((a, b) => {
+    const titleCompare = a.title.localeCompare(b.title)
+    const repCompare = groupRepPoints(b) - groupRepPoints(a)
+    if (sortMode === 'rep') return repCompare || titleCompare
+    return titleCompare || repCompare
+  })
 }
 
 export default function BrowseMissionsView({
@@ -305,6 +319,12 @@ export default function BrowseMissionsView({
   )
   const [searchTerm, setSearchTerm] = useState(() => readMissionTrackerUiState().browse.searchTerm)
   const [hideNfr, setHideNfr] = useState(() => readMissionTrackerUiState().browse.hideNfr)
+  const [hideCompleted, setHideCompleted] = useState(
+    () => readMissionTrackerUiState().browse.hideCompleted
+  )
+  const [sortMode, setSortMode] = useState<BrowseSortMode>(
+    () => readMissionTrackerUiState().browse.sortMode
+  )
   const [systemFilter, setSystemFilter] = useState<SystemFilter>('all')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
   const [missionsModalBlueprint, setMissionsModalBlueprint] = useState<{
@@ -336,6 +356,27 @@ export default function BrowseMissionsView({
     return map
   }, [blueprints])
 
+  const getMissionBlueprintStats = useCallback(
+    (mission: MissionDisplay) => {
+      const acquiredCount = mission.blueprints.filter((bp) => {
+        const fullBp = blueprintsByInternalName[bp.name.toLowerCase()]
+        return fullBp && acquiredBlueprints[fullBp.internalName]
+      }).length
+      return { acquiredCount, total: mission.blueprints.length }
+    },
+    [blueprintsByInternalName, acquiredBlueprints]
+  )
+
+  const visibleInBrowse = useCallback(
+    (mission: MissionDisplay, system: SystemFilter): boolean => {
+      if (!missionVisibleInBrowse(mission, system, hideNfr)) return false
+      if (!hideCompleted) return true
+      const { acquiredCount, total } = getMissionBlueprintStats(mission)
+      return total === 0 || acquiredCount < total
+    },
+    [hideNfr, hideCompleted, getMissionBlueprintStats]
+  )
+
   const missionsByFaction = useMemo(() => {
     const map: Record<string, FactionBrowseData> = {}
 
@@ -358,12 +399,12 @@ export default function BrowseMissionsView({
     const present = new Set<BrowseSystem>()
     for (const data of Object.values(missionsByFaction)) {
       for (const mission of data.missions) {
-        if (!missionVisibleInBrowse(mission, 'all', hideNfr)) continue
+        if (!visibleInBrowse(mission, 'all')) continue
         for (const system of getMissionBrowseSystems(mission)) present.add(system)
       }
     }
     return SYSTEM_FILTER_ORDER.filter((system) => present.has(system))
-  }, [missionsByFaction, hideNfr])
+  }, [missionsByFaction, visibleInBrowse])
 
   useEffect(() => {
     if (systemFilter !== 'all' && !availableSystems.includes(systemFilter)) {
@@ -383,9 +424,11 @@ export default function BrowseMissionsView({
         selectedMissionKey,
         searchTerm,
         hideNfr,
+        hideCompleted,
+        sortMode,
       },
     })
-  }, [selectedFaction, selectedMissionKey, searchTerm, hideNfr])
+  }, [selectedFaction, selectedMissionKey, searchTerm, hideNfr, hideCompleted, sortMode])
 
   useEffect(() => {
     setSelectedTagIds([])
@@ -395,18 +438,18 @@ export default function BrowseMissionsView({
   const isMixedFaction = useMemo(() => {
     if (!selectedFactionData) return false
     const visible = selectedFactionData.missions.filter((mission) =>
-      missionVisibleInBrowse(mission, systemFilter, hideNfr),
+      visibleInBrowse(mission, systemFilter),
     )
     const hasLawful = visible.some((mission) => mission.isLawful)
     const hasIllegal = visible.some((mission) => !mission.isLawful)
     return hasLawful && hasIllegal
-  }, [selectedFactionData, systemFilter, hideNfr])
+  }, [selectedFactionData, systemFilter, visibleInBrowse])
 
   const filteredFactionList = useMemo(() => {
     const term = searchTerm.toLowerCase()
     return Object.entries(missionsByFaction).filter(([faction, data]) => {
       const visible = data.missions.filter((mission) =>
-        missionVisibleInBrowse(mission, systemFilter, hideNfr),
+        visibleInBrowse(mission, systemFilter),
       )
       if (visible.length === 0) return false
       if (!term) return true
@@ -415,13 +458,13 @@ export default function BrowseMissionsView({
         visible.some((mission) => missionMatchesSearch(mission, term))
       )
     })
-  }, [missionsByFaction, searchTerm, systemFilter, hideNfr])
+  }, [missionsByFaction, searchTerm, systemFilter, visibleInBrowse])
 
   const availableFactionTags = useMemo((): BrowseTagFilter[] => {
     if (!selectedFaction) return []
     const factionMissions = missionsByFaction[selectedFaction]?.missions || []
     const pool = factionMissions.filter((mission) =>
-      missionVisibleInBrowse(mission, systemFilter, hideNfr),
+      visibleInBrowse(mission, systemFilter),
     )
 
     const byId = new Map<string, BrowseTagFilter>()
@@ -436,7 +479,7 @@ export default function BrowseMissionsView({
       if (kindDiff !== 0) return kindDiff
       return a.label.localeCompare(b.label)
     })
-  }, [selectedFaction, missionsByFaction, systemFilter, hideNfr])
+  }, [selectedFaction, missionsByFaction, systemFilter, visibleInBrowse])
 
   const availableFactionTagById = useMemo(() => {
     const map = new Map<string, BrowseTagFilter>()
@@ -461,7 +504,7 @@ export default function BrowseMissionsView({
     const factionMissions = missionsByFaction[selectedFaction]?.missions || []
 
     let filtered = factionMissions.filter((mission) =>
-      missionVisibleInBrowse(mission, systemFilter, hideNfr),
+      visibleInBrowse(mission, systemFilter),
     )
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
@@ -473,13 +516,14 @@ export default function BrowseMissionsView({
       )
     }
 
-    return groupMissionsByTitle(filtered)
+    return groupMissionsByTitle(filtered, sortMode)
   }, [
     selectedFaction,
     missionsByFaction,
     searchTerm,
     systemFilter,
-    hideNfr,
+    visibleInBrowse,
+    sortMode,
     selectedTagIdSet,
     availableFactionTagById,
   ])
@@ -493,14 +537,6 @@ export default function BrowseMissionsView({
     () => selectedFactionMissionGroups.filter((group) => !group.isLawful),
     [selectedFactionMissionGroups]
   )
-
-  const getMissionBlueprintStats = (mission: MissionDisplay) => {
-    const acquiredCount = mission.blueprints.filter((bp) => {
-      const fullBp = blueprintsByInternalName[bp.name.toLowerCase()]
-      return fullBp && acquiredBlueprints[fullBp.internalName]
-    }).length
-    return { acquiredCount, total: mission.blueprints.length }
-  }
 
   const selectedMissionBlueprints = useMemo(() => {
     if (!selectedMission) return []
@@ -743,6 +779,53 @@ export default function BrowseMissionsView({
     </label>
   )
 
+  const renderHideCompletedToggle = () => (
+    <label
+      className="inline-flex items-center gap-2 cursor-pointer select-none"
+      title="Hide contracts where you already have every blueprint reward"
+    >
+      <input
+        type="checkbox"
+        className="site-checkbox"
+        checked={hideCompleted}
+        onChange={(event) => setHideCompleted(event.target.checked)}
+      />
+      <span className="text-xs text-slate-300">Hide Completed</span>
+    </label>
+  )
+
+  const renderSortToggle = () => {
+    const buttonClass = (active: boolean) =>
+      active ? 'site-filter-selected-orange' : 'text-slate-400 hover:text-white'
+    const options: { mode: BrowseSortMode; label: string; title: string }[] = [
+      { mode: 'rep', label: 'Rep award', title: 'Highest rep award first, then A–Z by title' },
+      { mode: 'title', label: 'Title', title: 'A–Z by title, then highest rep award' },
+    ]
+
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Sort</span>
+        <div className="flex flex-wrap items-center gap-1 p-1 site-chip-strip w-fit">
+          {options.map((option) => (
+            <button
+              key={option.mode}
+              type="button"
+              title={option.title}
+              onClick={() => setSortMode(option.mode)}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${buttonClass(sortMode === option.mode)}`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  const hiddenFiltersSuffix = [hideNfr ? 'NFR' : null, hideCompleted ? 'completed' : null]
+    .filter(Boolean)
+    .join(' and ')
+
   const renderSystemFilter = () => {
     if (availableSystems.length <= 1) return null
 
@@ -867,13 +950,14 @@ export default function BrowseMissionsView({
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {renderSystemFilter()}
             {renderHideNfrToggle()}
+            {renderHideCompletedToggle()}
           </div>
 
           {filteredFactionList.length === 0 && (
             <p className="text-sm text-slate-500 py-6 text-center">
               No factions have missions
               {systemFilter !== 'all' ? ` in ${SYSTEM_LABELS[systemFilter]}` : ''}
-              {hideNfr ? ' with NFR hidden' : ''}.
+              {hiddenFiltersSuffix ? ` with ${hiddenFiltersSuffix} hidden` : ''}.
             </p>
           )}
 
@@ -882,7 +966,7 @@ export default function BrowseMissionsView({
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([faction, data]) => {
                 const displayMissions = data.missions.filter((mission) =>
-                  missionVisibleInBrowse(mission, systemFilter, hideNfr),
+                  visibleInBrowse(mission, systemFilter),
                 )
                 const hasLawful = displayMissions.some((mission) => mission.isLawful)
                 const hasIllegal = displayMissions.some((mission) => !mission.isLawful)
@@ -976,7 +1060,9 @@ export default function BrowseMissionsView({
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {renderSystemFilter()}
+            {renderSortToggle()}
             {renderHideNfrToggle()}
+            {renderHideCompletedToggle()}
             {renderFactionTagFilters()}
           </div>
 
@@ -984,7 +1070,7 @@ export default function BrowseMissionsView({
             <p className="text-sm text-slate-500 py-6 text-center">
               No missions match your search
               {selectedTagIds.length > 0 ? ' or selected tags' : ''}
-              {hideNfr ? ', with NFR hidden' : ''}.
+              {hiddenFiltersSuffix ? `, with ${hiddenFiltersSuffix} hidden` : ''}.
             </p>
           ) : isMixedFaction ? (
             <div className="space-y-6">

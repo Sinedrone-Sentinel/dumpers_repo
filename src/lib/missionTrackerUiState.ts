@@ -4,6 +4,8 @@ const STORAGE_KEY = 'dumpers_repo_mission_tracker_ui_v1'
 
 export type MissionTrackerTopView = 'tracker' | 'browse'
 export type BrowseSystem = 'stanton' | 'pyro' | 'nyx' | 'unknown'
+/** `rep`: highest rep award first, then title. `title`: A–Z, then rep award. */
+export type BrowseSortMode = 'rep' | 'title'
 
 export interface BrowseMissionNavState {
   selectedFaction: string | null
@@ -11,6 +13,9 @@ export interface BrowseMissionNavState {
   searchTerm: string
   /** When true, Browse Missions leaves out contracts marked Not For Release. */
   hideNfr: boolean
+  /** When true, Browse Missions leaves out contracts whose blueprints are all acquired. */
+  hideCompleted: boolean
+  sortMode: BrowseSortMode
 }
 
 export interface MissionTrackerUiState {
@@ -27,6 +32,8 @@ const DEFAULT_STATE: MissionTrackerUiState = {
     selectedMissionKey: null,
     searchTerm: '',
     hideNfr: false,
+    hideCompleted: false,
+    sortMode: 'rep',
   },
 }
 
@@ -59,12 +66,14 @@ export function readMissionTrackerUiState(): MissionTrackerUiState {
       selectedMissionKey: typeof browse.selectedMissionKey === 'string' ? browse.selectedMissionKey : null,
       searchTerm: typeof browse.searchTerm === 'string' ? browse.searchTerm : '',
       hideNfr: browse.hideNfr === true,
+      hideCompleted: browse.hideCompleted === true,
+      sortMode: browse.sortMode === 'title' ? 'title' : 'rep',
     },
   }
 }
 
 export function writeMissionTrackerUiState(
-  update: Partial<MissionTrackerUiState> & { browse?: Partial<BrowseMissionNavState> }
+  update: Partial<Omit<MissionTrackerUiState, 'browse'>> & { browse?: Partial<BrowseMissionNavState> }
 ): void {
   if (typeof localStorage === 'undefined') return
 
