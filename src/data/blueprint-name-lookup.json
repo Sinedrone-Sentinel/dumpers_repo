@@ -1,11 +1,11 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-09-16T23:11:35.651Z",
+  "_extracted": "2026-10-05T00:11:34.458Z",
   "stats": {
     "internalNames": 1607,
     "displayNames": 1594,
     "ambiguousDisplayNames": 13,
-    "contractDefinitions": 1979
+    "contractDefinitions": 1982
   },
   "byInternalName": {
     "behr_lmg_ballistic_01_mag": {
@@ -13030,7 +13030,7 @@
       "volt_smg_energy_01_mag",
       "volt_pistol_energy_01_mag"
     ],
-    "need resource for research\\n": [
+    "need resource for research": [
       "volt_pistol_energy_01",
       "volt_pistol_energy_01_tint01",
       "volt_pistol_energy_01_tint02",
@@ -13191,7 +13191,7 @@
       "shld_basl_s02_rampart",
       "shld_basl_s03_parapet"
     ],
-    "rank - direct cargo haul": [
+    "master rank - direct bulk cargo haul": [
       "qdrv_wetk_s01_vk00",
       "qdrv_wetk_s01_siren",
       "qdrv_wetk_s02_xl1",
@@ -13455,7 +13455,7 @@
       "shld_basl_s02_rampart",
       "shld_basl_s03_parapet"
     ],
-    "rank - cargo haul": [
+    "master rank - large cargo haul": [
       "qdrv_wetk_s01_vk00",
       "qdrv_wetk_s01_siren",
       "qdrv_wetk_s02_xl1",
@@ -14086,7 +14086,7 @@
       "shld_basl_s02_citadel",
       "shld_basl_s03_barbican"
     ],
-    "ling family cargo haul - scale": [
+    "ling family rookie cargo haul - small scale": [
       "qdrv_raco_s01_spectre",
       "qdrv_raco_s01_zephyr",
       "qdrv_raco_s02_bolt",
@@ -14150,6 +14150,15 @@
       "shld_basl_s03_barbican"
     ],
     "haulcargo_atob_interstellar_medium_distspri_partyfav_eleceq_souv": [
+      "qdrv_raco_s01_spectre",
+      "qdrv_raco_s01_zephyr",
+      "qdrv_raco_s02_bolt",
+      "qdrv_raco_s02_spicule",
+      "shld_basl_s01_guardian",
+      "shld_basl_s02_citadel",
+      "shld_basl_s03_barbican"
+    ],
+    "ling family rookie cargo haul - medium scale": [
       "qdrv_raco_s01_spectre",
       "qdrv_raco_s01_zephyr",
       "qdrv_raco_s02_bolt",
@@ -14982,7 +14991,7 @@
       "behr_shotgun_ballistic_01_mag",
       "klwe_rifle_energy_01_mag"
     ],
-    "take outlaws at offline": [
+    "take outlaws at [location] offline": [
       "behr_lmg_ballistic_01",
       "behr_shotgun_ballistic_01",
       "klwe_rifle_energy_01",
@@ -15576,7 +15585,7 @@
       "gmni_sniper_ballistic_01_mag",
       "behr_sniper_ballistic_01_mag"
     ],
-    "disable outlaw stronghold": [
+    "disable outlaw stronghold at [location]": [
       "behr_sniper_ballistic_01",
       "gmni_sniper_ballistic_01",
       "cds_legacy_armor_light_helmet_01_01_01",
@@ -16296,7 +16305,7 @@
       "qrt_specialist_medium_helmet_01_01_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "assistance needed": [
+    "assistance needed at [location]": [
       "ksar_rifle_energy_01",
       "qrt_specialist_medium_arms_01_01_01",
       "qrt_specialist_medium_core_01_01_01",
@@ -16544,7 +16553,7 @@
       "qrt_specialist_medium_helmet_01_01_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "headhunter attack on": [
+    "headhunter attack on [location]": [
       "ksar_rifle_energy_01",
       "qrt_specialist_medium_arms_01_01_01",
       "qrt_specialist_medium_core_01_01_01",
@@ -16576,7 +16585,7 @@
       "qrt_specialist_medium_helmet_01_01_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "needs assistance": [
+    "[location] needs assistance": [
       "ksar_rifle_energy_01",
       "qrt_specialist_medium_arms_01_01_01",
       "qrt_specialist_medium_core_01_01_01",
@@ -16608,7 +16617,7 @@
       "qrt_specialist_medium_helmet_01_01_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "protect from xenothreat incursion": [
+    "protect [location] from xenothreat incursion": [
       "ksar_rifle_energy_01",
       "qrt_specialist_medium_arms_01_01_01",
       "qrt_specialist_medium_core_01_01_01",
@@ -16640,7 +16649,7 @@
       "qrt_specialist_medium_helmet_01_01_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "protect from xenothreat raid": [
+    "protect [location] from xenothreat raid": [
       "ksar_rifle_energy_01",
       "qrt_specialist_medium_arms_01_01_01",
       "qrt_specialist_medium_core_01_01_01",
@@ -16680,7 +16689,7 @@
       "qrt_specialist_medium_arms_01_9tails_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "help defend from headhunters": [
+    "help defend [location] from headhunters": [
       "ksar_rifle_energy_01_pink_red01",
       "qrt_specialist_medium_core_01_9tails_01",
       "qrt_specialist_medium_arms_01_9tails_01",
@@ -16704,7 +16713,7 @@
       "qrt_specialist_medium_arms_01_9tails_01",
       "ksar_rifle_energy_01_mag"
     ],
-    "protect from xenothreat attack": [
+    "protect [location] from xenothreat attack": [
       "ksar_rifle_energy_01_pink_red01",
       "qrt_specialist_medium_core_01_9tails_01",
       "qrt_specialist_medium_arms_01_9tails_01",
@@ -16732,7 +16741,7 @@
       "qrt_specialist_medium_helmet_01_01_15",
       "ksar_rifle_energy_01_mag"
     ],
-    "alert: under attack": [
+    "alert: [location] under attack": [
       "ksar_rifle_energy_01_red01",
       "qrt_specialist_medium_core_01_01_15",
       "qrt_specialist_medium_arms_01_01_15",
@@ -16764,7 +16773,7 @@
       "qrt_specialist_medium_helmet_01_01_15",
       "ksar_rifle_energy_01_mag"
     ],
-    "outlaw attack": [
+    "outlaw attack at [location]": [
       "ksar_rifle_energy_01_red01",
       "qrt_specialist_medium_core_01_01_15",
       "qrt_specialist_medium_arms_01_01_15",
@@ -16922,7 +16931,7 @@
       "qrt_specialist_medium_helmet_01_01_15",
       "ksar_rifle_energy_01_mag"
     ],
-    "call for help": [
+    "call for help: [location]": [
       "ksar_rifle_energy_01_red01",
       "qrt_specialist_medium_core_01_01_15",
       "qrt_specialist_medium_arms_01_01_15",
@@ -16954,7 +16963,7 @@
       "qrt_specialist_medium_helmet_01_01_10",
       "ksar_rifle_energy_01_mag"
     ],
-    "needs help": [
+    "[location] needs help": [
       "ksar_rifle_energy_01_blue_gold",
       "qrt_specialist_medium_core_01_01_10",
       "qrt_specialist_medium_arms_01_01_10",
@@ -17716,7 +17725,7 @@
       "apar_ballisticgatling_s4",
       "apar_ballisticgatling_s6"
     ],
-    "deal with and support forces": [
+    "deal with [target] and support forces": [
       "powr_aegs_s01_fierellcascade",
       "powr_amrs_s02_ultraflux",
       "powr_amrs_s03_megaflux",
@@ -17752,7 +17761,7 @@
       "apar_ballisticgatling_s4",
       "apar_ballisticgatling_s6"
     ],
-    "high-risk bounty": [
+    "high-risk bounty: [target]": [
       "powr_aegs_s01_fierellcascade",
       "powr_amrs_s02_ultraflux",
       "powr_amrs_s03_megaflux",
@@ -18262,7 +18271,7 @@
       "qrt_specialist_heavy_core_01_02_16",
       "qrt_specialist_heavy_legs_01_02_16"
     ],
-    "orange level contract: needs assistance": [
+    "orange level contract: [ship] needs assistance": [
       "qrt_specialist_heavy_arms_01_01_13",
       "qrt_specialist_heavy_core_01_01_13",
       "qrt_specialist_heavy_legs_01_01_13",
@@ -18812,7 +18821,7 @@
       "qrt_specialist_heavy_core_01_02_16",
       "qrt_specialist_heavy_legs_01_02_16"
     ],
-    "track down": [
+    "track down [target]": [
       "qrt_specialist_heavy_arms_01_01_13",
       "qrt_specialist_heavy_core_01_01_13",
       "qrt_specialist_heavy_legs_01_01_13",
@@ -18852,7 +18861,7 @@
       "qrt_specialist_heavy_core_01_02_16",
       "qrt_specialist_heavy_legs_01_02_16"
     ],
-    "precision strike on": [
+    "precision strike on [target]": [
       "qrt_specialist_heavy_arms_01_01_13",
       "qrt_specialist_heavy_core_01_01_13",
       "qrt_specialist_heavy_legs_01_01_13",
@@ -19544,7 +19553,7 @@
       "qrt_specialist_heavy_helmet_01_01_01",
       "volt_rifle_energy_01_mag"
     ],
-    "yellow lvl. contract: defend": [
+    "yellow lvl. contract: defend fuel tanks": [
       "volt_rifle_energy_01",
       "qrt_specialist_heavy_arms_01_01_01",
       "qrt_specialist_heavy_core_01_01_01",
@@ -19576,7 +19585,7 @@
       "qrt_specialist_heavy_helmet_01_01_01",
       "volt_rifle_energy_01_mag"
     ],
-    "yellow lvl. contract: protect": [
+    "yellow lvl. contract: protect fuel tanks": [
       "volt_rifle_energy_01",
       "qrt_specialist_heavy_arms_01_01_01",
       "qrt_specialist_heavy_core_01_01_01",
@@ -19608,7 +19617,7 @@
       "qrt_specialist_heavy_helmet_01_01_01",
       "volt_rifle_energy_01_mag"
     ],
-    "orange lvl. contract: defend": [
+    "orange lvl. contract: defend fuel tanks": [
       "volt_rifle_energy_01",
       "qrt_specialist_heavy_arms_01_01_01",
       "qrt_specialist_heavy_core_01_01_01",
@@ -19640,7 +19649,7 @@
       "qrt_specialist_heavy_helmet_01_01_01",
       "volt_rifle_energy_01_mag"
     ],
-    "orange lvl. contract: protect": [
+    "orange lvl. contract: protect fuel tanks": [
       "volt_rifle_energy_01",
       "qrt_specialist_heavy_arms_01_01_01",
       "qrt_specialist_heavy_core_01_01_01",
@@ -19672,7 +19681,7 @@
       "qrt_specialist_heavy_helmet_01_01_01",
       "volt_rifle_energy_01_mag"
     ],
-    "red lvl. contract: defend": [
+    "red lvl. contract: defend fuel tanks": [
       "volt_rifle_energy_01",
       "qrt_specialist_heavy_arms_01_01_01",
       "qrt_specialist_heavy_core_01_01_01",
@@ -19704,7 +19713,7 @@
       "qrt_specialist_heavy_helmet_01_01_01",
       "volt_rifle_energy_01_mag"
     ],
-    "red lvl. contract: protect": [
+    "red lvl. contract: protect fuel tanks": [
       "volt_rifle_energy_01",
       "qrt_specialist_heavy_arms_01_01_01",
       "qrt_specialist_heavy_core_01_01_01",
@@ -19760,7 +19769,7 @@
       "qrt_specialist_heavy_helmet_01_01_10",
       "volt_rifle_energy_01_mag"
     ],
-    "yellow level contract: defend": [
+    "yellow level contract: defend [location]": [
       "volt_rifle_energy_01_camo01",
       "qrt_specialist_heavy_arms_01_01_10",
       "qrt_specialist_heavy_core_01_01_10",
@@ -19840,7 +19849,7 @@
       "qrt_specialist_heavy_helmet_01_01_10",
       "volt_rifle_energy_01_mag"
     ],
-    "red level contract: save ships": [
+    "red level contract: save ships at [location]": [
       "volt_rifle_energy_01_camo01",
       "qrt_specialist_heavy_arms_01_01_10",
       "qrt_specialist_heavy_core_01_01_10",
@@ -20696,7 +20705,7 @@
       "cool_wcpr_s03_elsen",
       "cool_wcpr_s03_kragen"
     ],
-    "yellow lvl. contract: defend and escort employees": [
+    "yellow lvl. contract: defend fuel tanks and escort employees": [
       "cool_jspn_s00_froststarsl",
       "cool_wcpr_s00_fridan",
       "cool_wcpr_s00_tepilo",
@@ -20768,7 +20777,7 @@
       "cool_wcpr_s03_elsen",
       "cool_wcpr_s03_kragen"
     ],
-    "yellow lvl. contract: protect and escort employees": [
+    "yellow lvl. contract: protect fuel tanks and escort employees": [
       "cool_jspn_s00_froststarsl",
       "cool_wcpr_s00_fridan",
       "cool_wcpr_s00_tepilo",
@@ -20840,7 +20849,7 @@
       "cool_wcpr_s03_elsen",
       "cool_wcpr_s03_kragen"
     ],
-    "orange lvl. contract: defend and escort employees": [
+    "orange lvl. contract: defend fuel tanks and escort employees": [
       "cool_jspn_s00_froststarsl",
       "cool_wcpr_s00_fridan",
       "cool_wcpr_s00_tepilo",
@@ -20926,7 +20935,7 @@
       "klwe_laserrepeater_s6",
       "radr_grnp_s00_v6026"
     ],
-    "orange lvl. contract: protect and escort employees": [
+    "orange lvl. contract: protect fuel tanks and escort employees": [
       "cool_jspn_s00_froststarsl",
       "cool_wcpr_s00_fridan",
       "cool_wcpr_s00_tepilo",
@@ -21026,7 +21035,7 @@
       "klwe_laserrepeater_s6",
       "radr_grnp_s00_v6026"
     ],
-    "red lvl. contract: defend and escort employees": [
+    "red lvl. contract: defend fuel tanks and escort employees": [
       "cool_jspn_s00_froststarsl",
       "cool_wcpr_s00_fridan",
       "cool_wcpr_s00_tepilo",
@@ -21126,7 +21135,7 @@
       "klwe_laserrepeater_s6",
       "radr_grnp_s00_v6026"
     ],
-    "red lvl. contract: protect and escort employees": [
+    "red lvl. contract: protect fuel tanks and escort employees": [
       "cool_jspn_s00_froststarsl",
       "cool_wcpr_s00_fridan",
       "cool_wcpr_s00_tepilo",
@@ -21557,7 +21566,7 @@
       "kap_combat_heavy_helmet_02_08_01",
       "gmni_shotgun_ballistic_01_mag"
     ],
-    "new defense contract: elimination": [
+    "new defense contract: [target] elimination": [
       "gmni_shotgun_ballistic_01",
       "kap_combat_heavy_arms_02_01_01",
       "kap_combat_heavy_core_02_01_01",
@@ -21605,7 +21614,7 @@
       "kap_combat_heavy_helmet_02_08_01",
       "gmni_shotgun_ballistic_01_mag"
     ],
-    "terrorist to be neutralized": [
+    "terrorist [target] to be neutralized": [
       "gmni_shotgun_ballistic_01",
       "kap_combat_heavy_arms_02_01_01",
       "kap_combat_heavy_core_02_01_01",
@@ -21653,7 +21662,7 @@
       "kap_combat_heavy_helmet_02_08_01",
       "gmni_shotgun_ballistic_01_mag"
     ],
-    "neutralize uee threat": [
+    "neutralize uee threat: [target]": [
       "gmni_shotgun_ballistic_01",
       "kap_combat_heavy_arms_02_01_01",
       "kap_combat_heavy_core_02_01_01",
@@ -21701,7 +21710,7 @@
       "kap_combat_heavy_helmet_02_08_01",
       "gmni_shotgun_ballistic_01_mag"
     ],
-    "preemptive strike on": [
+    "preemptive strike on [target]": [
       "gmni_shotgun_ballistic_01",
       "kap_combat_heavy_arms_02_01_01",
       "kap_combat_heavy_core_02_01_01",
@@ -22278,7 +22287,7 @@
       "hdtc_pants_01_01_01",
       "hdtc_shoes_01_01_01"
     ],
-    "bounty assignment: (hrt)": [
+    "bounty assignment: [target] (hrt)": [
       "gmni_lmg_ballistic_01",
       "gmni_pistol_ballistic_01",
       "slaver_armor_heavy_arms_01_01_01",
@@ -24830,7 +24839,7 @@
       "cool_lplt_s03_coldsurge",
       "cool_lplt_s03_frostbite"
     ],
-    "keep safe": [
+    "keep [location] safe": [
       "cool_jspn_s00_cryostarsl",
       "cool_jspn_s00_winterstarsl",
       "cool_wcpr_s00_kelvid",
@@ -24906,7 +24915,7 @@
       "cool_lplt_s03_coldsurge",
       "cool_lplt_s03_frostbite"
     ],
-    "provide protection": [
+    "provide protection at [location]": [
       "cool_jspn_s00_cryostarsl",
       "cool_jspn_s00_winterstarsl",
       "cool_wcpr_s00_kelvid",
@@ -24982,7 +24991,7 @@
       "cool_lplt_s03_coldsurge",
       "cool_lplt_s03_frostbite"
     ],
-    "secure from upstarts": [
+    "secure [location] from upstarts": [
       "cool_jspn_s00_cryostarsl",
       "cool_jspn_s00_winterstarsl",
       "cool_wcpr_s00_kelvid",
@@ -25072,7 +25081,7 @@
       "gats_ballisticgatling_s3",
       "radr_grnp_s03_v880"
     ],
-    "stop rival attack": [
+    "stop rival attack at [location]": [
       "cool_jspn_s00_cryostarsl",
       "cool_jspn_s00_winterstarsl",
       "cool_wcpr_s00_kelvid",
@@ -25176,7 +25185,7 @@
       "gats_ballisticgatling_s3",
       "radr_grnp_s03_v880"
     ],
-    "defend from mercs": [
+    "defend [location] from mercs": [
       "cool_jspn_s00_cryostarsl",
       "cool_jspn_s00_winterstarsl",
       "cool_wcpr_s00_kelvid",
@@ -25280,7 +25289,7 @@
       "gats_ballisticgatling_s3",
       "radr_grnp_s03_v880"
     ],
-    "guard from rivals": [
+    "guard [location] from rivals": [
       "cool_jspn_s00_cryostarsl",
       "cool_jspn_s00_winterstarsl",
       "cool_wcpr_s00_kelvid",
@@ -25402,7 +25411,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "under attack": [
+    "[location] under attack": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25582,7 +25591,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "rally": [
+    "rally at [location]": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25652,7 +25661,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "has been greenlit": [
+    "[location] has been greenlit": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25722,7 +25731,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "wipe out": [
+    "wipe [location] out": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25792,7 +25801,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "hit xenothreat": [
+    "hit xenothreat at [location]": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25832,7 +25841,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "deal with kopions": [
+    "deal with kopions at [location]": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25872,7 +25881,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "kill kopions": [
+    "kill kopions at [location]": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -25912,7 +25921,7 @@
       "slaver_armor_light_helmet_01_01_01",
       "lbco_sniper_energy_01_mag"
     ],
-    "butcher kopion pack": [
+    "butcher kopion pack at [location]": [
       "lbco_sniper_energy_01",
       "lbco_sniper_energy_01_sunset01",
       "lbco_sniper_energy_01_chromic01",
@@ -26263,6 +26272,16 @@
       "lbco_pistol_energy_01_mag"
     ],
     "hh_pyro_regionc_hhxsoutpost_eliminateall": [
+      "lbco_pistol_energy_01",
+      "lbco_pistol_energy_01_chromic01",
+      "lbco_pistol_energy_01_sunset01",
+      "slaver_armor_medium_arms_01_01_01",
+      "slaver_armor_medium_core_01_01_01",
+      "slaver_armor_medium_legs_01_01_01",
+      "slaver_armor_medium_helmet_01_01_01",
+      "lbco_pistol_energy_01_mag"
+    ],
+    "green light on [location]": [
       "lbco_pistol_energy_01",
       "lbco_pistol_energy_01_chromic01",
       "lbco_pistol_energy_01_sunset01",
@@ -26862,7 +26881,7 @@
       "ksar_shotgun_ballistic_01_mag",
       "none_shotgun_ballistic_01_mag"
     ],
-    "need a death": [
+    "need a death at [location]": [
       "ksar_shotgun_ballistic_01",
       "none_smg_energy_01",
       "srvl_armor_heavy_arms_02_01_01",
@@ -27063,6 +27082,18 @@
       "ksar_pistol_ballistic_01_mag"
     ],
     "hh_pyro_regiona_vh_lastditch_eliminatespecific": [
+      "ksar_sniper_ballistic_01",
+      "ksar_pistol_ballistic_01",
+      "ksar_pistol_ballistic_01_headhunters01",
+      "ksar_pistol_ballistic_01_yellow_black01",
+      "rrs_specialist_heavy_arms_01_01_01",
+      "rrs_specialist_heavy_core_01_01_01",
+      "rrs_specialist_heavy_legs_01_01_01",
+      "rrs_specialist_heavy_helmet_01_01_01",
+      "ksar_sniper_ballistic_01_mag",
+      "ksar_pistol_ballistic_01_mag"
+    ],
+    "green light on [target]": [
       "ksar_sniper_ballistic_01",
       "ksar_pistol_ballistic_01",
       "ksar_pistol_ballistic_01_headhunters01",
@@ -28336,7 +28367,7 @@
       "banu_tachyoncannon_s2",
       "banu_tachyoncannon_s3"
     ],
-    "wanted": [
+    "wanted: [target]": [
       "cool_tydt_s01_snowblind",
       "cool_tydt_s02_nightfall",
       "behr_lasercannon_s4",
@@ -35755,7 +35786,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "refuel request": [
+    "refuel request: [ship]": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -35795,7 +35826,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "urgent refuel request": [
+    "urgent refuel request: [ship]": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",
@@ -35865,7 +35896,7 @@
       "nozzle_fuelgiver_shin_nozzleexpensivesecure",
       "nozzle_fuelgiver_shin_nozzlemostexpensive"
     ],
-    "critical refuel request": [
+    "critical refuel request: [ship]": [
       "nozzle_fuelgiver_grin_nozzlefast",
       "nozzle_fuelgiver_grin_nozzlesecure",
       "nozzle_fuelgiver_grin_nozzleveryfast",

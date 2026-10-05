@@ -13,6 +13,7 @@ import {
   inheritSiblingBlueprintPools,
   activityVariantStem,
 } from './lib/contractBlueprintPools.mjs'
+import { fillMissionTitleTemplate } from './lib/missionTitleTemplate.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const extractRoot = join(root, 'extracted-data/libs/foundry/records/contracts/contractgenerator')
@@ -98,7 +99,7 @@ for (const file of walkJson(extractRoot)) {
       cloned.id = contract.id || contract.debugName
       cloned.debugName = contract.debugName
       cloned.title = title
-      cloned.displayTitle = title
+      cloned.displayTitle = fillMissionTitleTemplate(title) ?? title
       cloned.titleKey = titleKey || cloned.titleKey
       cloned.description = description
       cloned.descriptionKey = descKey || null

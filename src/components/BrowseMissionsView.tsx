@@ -21,6 +21,7 @@ import {
   type BrowseSystem,
 } from '../lib/missionTrackerUiState'
 import { MissionDescriptionText } from '../lib/missionDescriptionFormat'
+import { missionTitleMatchesSearch } from '../lib/missionDisplay'
 
 type BlueprintRecord = {
   file: string
@@ -37,8 +38,8 @@ function missionMatchesSearch(
   mission: Pick<ContractMissionBrowseEntry, 'title' | 'mission' | 'category'>,
   term: string
 ): boolean {
-  if (mission.title.toLowerCase().includes(term)) return true
-  if (mission.mission.toLowerCase().includes(term)) return true
+  if (missionTitleMatchesSearch(mission.title, term)) return true
+  if (missionTitleMatchesSearch(mission.mission, term)) return true
   if (mission.category?.toLowerCase().includes(term)) return true
   return false
 }

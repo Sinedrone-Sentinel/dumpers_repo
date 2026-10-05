@@ -19,7 +19,7 @@ Internal identifiers are for code and logs only.
 | Debug name | `FoxwellEnforcement_Nyx_DefendShipNamed_M` | `Foxwell Enforcement Defend Ship Named M` |
 | Pool key | `foxwellenforcement_ambush` | the mission's display title |
 | UUID / contract id | `41231c57-f186-…` | the record's title |
-| CIG placeholder | `~mission(Ship) Needs Assistance` | `Needs Assistance` |
+| CIG placeholder | `~mission(Ship) Needs Assistance` | `[Ship] Needs Assistance` |
 | Raw JSON blob | `{"entityClass":"…","amount":1}` | `Wikelo Favor x50` |
 
 ## How to resolve
@@ -30,7 +30,13 @@ Internal identifiers are for code and logs only.
   name, built from Wikelo trades, blueprints, components, weapons, mining and ordnance
 - `cleanDisplayLabel(label, resolve)` — strips `@` keys, debug names and CIG placeholders
 - `humanizeToken()` / `humanizeStatName()` — last-resort fallback for unknown ids
-- `cleanGameText()` — removes `~mission(...)` style placeholders
+- `cleanGameText()` — removes `~mission(...)` style placeholders from prose (ticker / descriptions)
+
+Mission **titles** never delete a blank — members match them against the in-game
+Contracts list. `scripts/lib/missionTitleTemplate.mjs` fills blanks the contract
+fixes (rank, cargo grade, objects) from its mission properties and turns per-spawn
+blanks into a bracket stand-in: `Keep ~mission(Location) Safe` → `Keep [Location] Safe`.
+The site copy lives in `src/lib/missionDisplay.ts`; keep both stand-in maps in sync.
 
 In app code, prefer the display field already on the record (`displayName`,
 `blueprintName`, `title`) and fall back to a resolver — never to the raw key.

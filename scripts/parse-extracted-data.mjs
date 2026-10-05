@@ -74,6 +74,7 @@ import { parseWikeloTrades } from './lib/wikeloTrades.mjs'
 import { clearAppliedSpellingCorrections } from './lib/spellingCorrections.mjs'
 import { writeWhatsNewDigest } from './lib/writeWhatsNewDigest.mjs'
 import { buildLocalityLabel, describeLocalityPlaces } from './lib/missionLocality.mjs'
+import { fillMissionTitleTemplate } from './lib/missionTitleTemplate.mjs'
 import {
   loadExistingTrackerKeys,
   parseResourceTypes,
@@ -372,17 +373,6 @@ function humanizeContractDebugName(debugName) {
     .join(' ')
 }
 
-function stripMissionTemplatePlaceholders(title) {
-  if (!title) return ''
-  return title
-    .replace(/~mission\s*\([^)]*\)/gi, '')
-    .replace(/\s*\|\s*/g, ' · ')
-    .replace(/\s*:\s*(\s|$)/g, ': ')
-    .replace(/\s+/g, ' ')
-    .replace(/\s+at\s*$/i, '')
-    .trim()
-}
-
 /**
  * Recover a mission's intent from an unresolved `~mission(Namespace|SomeTitle)`
  * token, e.g. `~mission(Contractor|RecoverItemTitle)` -> "Recover Item".
@@ -499,7 +489,37 @@ function cleanContractTitle(value) {
     .trim()
 }
 
-function resolveContractDisplayTitle({ title, titleKey, debugName, localization, category, system }) {
+/**
+ * Title blanks the contract fixes, e.g. CargoGradeToken -> "Bulk". Contract
+ * overrides win over generator defaults; a token with several distinct
+ * localized options changes per spawn and is left out.
+ */
+function collectTitleTokenValues(contract, generator, localization) {
+  const values = new Map()
+  const properties = [
+    ...(contract?.paramOverrides?.propertyOverrides || []),
+    ...(generator?.contractParams?.propertyOverrides || []),
+  ]
+  for (const property of properties) {
+    const token = String(property?.extendedTextToken || '').trim()
+    if (!token || values.has(token.toLowerCase())) continue
+    const value = property.value
+    if (value?._Type_ !== 'MissionPropertyValue_StringHash') continue
+    const texts = new Set()
+    for (const option of value.options || []) {
+      const id = String(option?.textId || '')
+      const text = id.startsWith('@') ? localization[id.slice(1)] : id
+      if (text) texts.add(cleanContractTitle(text))
+    }
+    if (texts.size !== 1) continue
+    const [text] = texts
+    if (!text || text.includes('~mission') || isUnresolvedDisplayName(text)) continue
+    values.set(token.toLowerCase(), text)
+  }
+  return values
+}
+
+function resolveContractDisplayTitle({ title, titleKey, debugName, localization, category, system, tokenValues }) {
   const debugLower = (debugName || '').toLowerCase()
   const titleLower = (title || '').toLowerCase()
 
@@ -548,11 +568,9 @@ function resolveContractDisplayTitle({ title, titleKey, debugName, localization,
   }
 
   if (title?.includes('~mission')) {
-    const cleaned = stripMissionTemplatePlaceholders(title).replace(/:\s*$/, '').trim()
-    if (cleaned.length >= 3 && !/^verified bounty:?$/i.test(cleaned) && !cleaned.includes('~mission')) {
-      return cleaned.charAt(0).toUpperCase() + cleaned.slice(1)
-    }
-    // Nothing usable survived stripping (pure token) — recover intent, then
+    const filled = fillMissionTitleTemplate(title, { tokenValues })
+    if (filled) return filled.charAt(0).toUpperCase() + filled.slice(1)
+    // Whole-title organization token — recover intent, then
     // fall back to localization / humanized debugName below.
     const tokenIntent = extractMissionTokenIntent(title)
     if (tokenIntent) return tokenIntent
@@ -1742,6 +1760,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
           titleKey = '@Hockrow_FacilityDelve_P3M1_title'
           title = localization.Hockrow_FacilityDelve_P3M1_title || title
         }
+        const titleTokenValues = collectTitleTokenValues(contract, generator, localization)
         // Normalize localization escapes for UI (keep paragraph breaks).
         if (description) {
           description = String(description).replace(/\\n/g, '\n').trim()
@@ -1879,6 +1898,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             localization,
             category,
             system,
+            tokenValues: titleTokenValues,
           })
           // Prereq chips must always be readable — placeholder-only titles fall back to debugName
           if (!emitterTitle || emitterTitle.includes('~mission')) {
@@ -1914,6 +1934,7 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             localization,
             category,
             system,
+            tokenValues: titleTokenValues,
           })
 
           const contractData = {
