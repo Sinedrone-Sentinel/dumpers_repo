@@ -29,7 +29,8 @@ const SOLO_TAG_CLASS =
 
 /**
  * overview — at-a-glance lists/modals: locality flag + Solo; no location chips; no time/count.
- * detail — Browse/tracker breakdowns: location chips + time/count + Solo; no locality flag.
+ * detail — Browse/tracker breakdowns: system/region chips + locality flag + time/count + Solo.
+ *   Specific-place chips only appear when the contract has no locality label.
  */
 export type MissionTagLayout = 'overview' | 'detail'
 
@@ -41,7 +42,7 @@ export type MissionTagLayout = 'overview' | 'detail'
  * Row 2 (overview): [Solo] only
  */
 export interface MissionListingTagsProps {
-  /** overview = flag + Solo; detail = location chips + time/count + Solo */
+  /** overview = flag + Solo; detail = system/region chips + flag + time/count + Solo */
   layout?: MissionTagLayout
   isLawful?: boolean
   /** Always show Verified/Unverified when true (Browse). Tracker historically hid Verified. */
@@ -170,17 +171,21 @@ export default function MissionListingTags({
           </span>
         ) : null}
 
-        {/* 3. Location — overview: flag only; detail: location chips only */}
+        {/* 3. Location — overview: area tag only; detail: system/region chips + area tag */}
         {isOverview ? (
           <MissionLocalityTag locality={locality} />
         ) : (
-          <MissionLocationTags
-            regions={regions}
-            subRegion={subRegion}
-            system={system}
-            poolKey={poolKey}
-            localitySystems={locality?.systems}
-          />
+          <>
+            <MissionLocationTags
+              regions={regions}
+              subRegion={subRegion}
+              system={system}
+              poolKey={poolKey}
+              localitySystems={locality?.systems}
+              omitSpecificLocations={Boolean(locality?.label)}
+            />
+            <MissionLocalityTag locality={locality} />
+          </>
         )}
 
         {/* 4. Career path (mobiGlas rep track — e.g. Standing, Security, Bounty Hunting) */}
