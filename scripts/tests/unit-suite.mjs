@@ -42,6 +42,7 @@ const modules = [
   'src/config/resourceTypes.ts',
   'src/lib/qualityBands.ts',
   'src/lib/bpWishlistDemand.ts',
+  'src/lib/missionDisplay.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -1853,6 +1854,69 @@ check(
 check(
   wishlistDemand.missingOverviewRows(wlOverview, new Map()).length === 3,
   'wishlist missing: nothing tracked means every row is missing',
+)
+
+const titleTemplate = await import(pathToFileURL(path.join(root, 'scripts/lib/missionTitleTemplate.mjs')).href)
+check(
+  titleTemplate.fillMissionTitleTemplate('Keep ~mission(Location) Safe') === 'Keep [Location] Safe',
+  'mission title: per-spawn location becomes [Location]',
+)
+check(
+  titleTemplate.fillMissionTitleTemplate('REFUEL REQUEST: ~mission(Ship)') === 'REFUEL REQUEST: [Ship]' &&
+    titleTemplate.fillMissionTitleTemplate('Green light on ~mission(TargetName|Last)') === 'Green light on [Target]' &&
+    titleTemplate.fillMissionTitleTemplate('~mission(Location|Address) needs help') === '[Location] needs help',
+  'mission title: ship, target and address variants get stand-ins',
+)
+check(
+  titleTemplate.fillMissionTitleTemplate(
+    '~mission(ReputationRank) Rank - Direct ~mission(CargoGradeToken) Cargo Haul',
+    { tokenValues: new Map([['reputationrank', 'Master'], ['cargogradetoken', 'Bulk']]) },
+  ) === 'Master Rank - Direct Bulk Cargo Haul',
+  'mission title: contract-fixed rank and grade use the real value',
+)
+check(
+  titleTemplate.fillMissionTitleTemplate('~mission(ReputationRank) Rank - ~mission(CargoGradeToken) Cargo Haul') ===
+    '[Rank] Rank - [Grade] Cargo Haul',
+  'mission title: unresolved rank and grade fall back to brackets',
+)
+check(
+  titleTemplate.fillMissionTitleTemplate('~mission(Contractor|RecoverItemTitle)') === null &&
+    titleTemplate.fillMissionTitleTemplate('Plain Title') === null,
+  'mission title: whole-title organization tokens and plain titles are left to the caller',
+)
+check(
+  titleTemplate.fillMissionTitleTemplate('Hit ~mission(SomeNewToken) now') === 'Hit [Some New Token] now',
+  'mission title: unknown tokens get humanized brackets, never raw ~mission',
+)
+
+const missionDisplay = await import(pathToFileURL(path.join(outDir, 'missionDisplay.mjs')).href)
+check(
+  missionDisplay.formatMissionDisplayTitle({ title: 'Keep ~mission(Location) Safe' }) === 'Keep [Location] Safe',
+  'site title fallback: stand-in instead of deleting the blank',
+)
+check(
+  missionDisplay.formatMissionDisplayTitle({ title: '~mission(Contractor|RecoverItemTitle)' }) === 'Recover Item',
+  'site title fallback: whole-title token still recovers intent',
+)
+check(
+  missionDisplay.missionTitleMatchesSearch('Keep [Location] Safe', 'keep mining base #igb-fxw safe'),
+  'mission search: pasted in-game title matches the bracket stand-in',
+)
+check(
+  missionDisplay.missionTitleMatchesSearch('REFUEL REQUEST: [Ship]', 'refuel request: cutlass black') &&
+    missionDisplay.missionTitleMatchesSearch('Keep [Location] Safe', 'keep'),
+  'mission search: trailing stand-in and plain substring both match',
+)
+check(
+  !missionDisplay.missionTitleMatchesSearch('Keep [Location] Safe', 'guard mining base safe') &&
+    !missionDisplay.missionTitleMatchesSearch('Keep [Location] Safe', 'keep safe now'),
+  'mission search: stand-in does not match unrelated titles',
+)
+
+const parsedMissions = JSON.parse(readFileSync(path.join(root, 'src/data/game-blueprint-missions.json'), 'utf8'))
+check(
+  !parsedMissions.contracts.some((c) => String(c.displayTitle || '').includes('~mission')),
+  'parsed missions: no displayTitle keeps a raw ~mission token',
 )
 
 console.log(`Unit tests: ${pass} passed`)

@@ -39,14 +39,68 @@ function humanizeContractDebugName(debugName: string | null | undefined): string
     .join(' ')
 }
 
-function stripMissionTemplatePlaceholders(title: string): string {
-  return title
-    .replace(/~mission\s*\([^)]*\)/gi, '')
-    .replace(/\s*\|\s*/g, ' · ')
-    .replace(/\s*:\s*(\s|$)/g, ': ')
+/** Per-spawn `~mission(...)` blanks → bracket label (keep in sync with scripts/lib/missionTitleTemplate.mjs). */
+const MISSION_TOKEN_STAND_INS: Record<string, string> = {
+  location: 'Location',
+  'location|address': 'Location',
+  defendlocationwrapperlocation: 'Location',
+  ship: 'Ship',
+  targetname: 'Target',
+  'targetname|last': 'Target',
+  objects: 'Objects',
+  danger: 'Danger',
+  reputationrank: 'Rank',
+  cargogradetoken: 'Grade',
+}
+
+function missionTokenStandIn(inner: string): string {
+  const key = inner.trim().toLowerCase()
+  const label = MISSION_TOKEN_STAND_INS[key] ?? MISSION_TOKEN_STAND_INS[key.split('|')[0]]
+  if (label) return `[${label}]`
+  const words = (inner.split('|').pop() ?? '')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/_/g, ' ')
     .replace(/\s+/g, ' ')
-    .replace(/\s+at\s*$/i, '')
     .trim()
+  return `[${words ? capitalizeFirst(words) : 'Value'}]`
+}
+
+function isWholeTitleToken(title: string): boolean {
+  const match = title.trim().match(/^~mission\s*\(([^)]*)\)$/i)
+  if (!match) return false
+  const key = match[1].trim().toLowerCase()
+  return !(key in MISSION_TOKEN_STAND_INS) && !(key.split('|')[0] in MISSION_TOKEN_STAND_INS)
+}
+
+/** "Keep ~mission(Location) Safe" → "Keep [Location] Safe". Null for whole-title tokens. */
+function fillMissionTitleTemplate(title: string): string | null {
+  if (!title.includes('~mission') || isWholeTitleToken(title)) return null
+  return title
+    .replace(/~mission\s*\(([^)]*)\)/gi, (_whole, inner: string) => missionTokenStandIn(inner))
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * Search match for a mission title. Bracket stand-ins such as `[Location]`
+ * match any words, so a pasted in-game title ("Keep Mining Base #IGB-FXW Safe")
+ * finds "Keep [Location] Safe". `term` must already be lowercase.
+ */
+export function missionTitleMatchesSearch(title: string | null | undefined, term: string): boolean {
+  const lowerTitle = (title || '').toLowerCase()
+  const needle = term.trim()
+  if (!needle) return true
+  if (lowerTitle.includes(needle)) return true
+  if (!/\[[^\]]+\]/.test(lowerTitle)) return false
+  const pattern = lowerTitle
+    .split(/\[[^\]]+\]/)
+    .map((part) => escapeRegExp(part.trim()).replace(/\s+/g, '\\s+'))
+    .join('\\s*.+?\\s*')
+  return new RegExp(`^\\s*${pattern}\\s*$`, 'i').test(needle)
 }
 
 export interface MissionDisplayTitleInput {
@@ -54,18 +108,6 @@ export interface MissionDisplayTitleInput {
   displayTitle?: string | null
   titleKey?: string | null
   debugName?: string | null
-}
-
-/**
- * Strip leftover template artifacts from an already-humanized title, e.g. the
- * dangling "Rank -" left behind when the `~mission(ReputationRank) Rank` token
- * is removed (Covalex hauling contracts).
- */
-function cleanTitleArtifacts(title: string): string {
-  return title
-    .replace(/^\s*Rank\s*-\s*/i, '')
-    .replace(/\s+/g, ' ')
-    .trim()
 }
 
 function capitalizeFirst(value: string): string {
@@ -94,10 +136,8 @@ function extractTemplateTokenIntent(raw: string): string | null {
  * member-facing. Returns null when nothing usable can be recovered.
  */
 function resolveTemplateTitle(raw: string): string | null {
-  const stripped = cleanTitleArtifacts(stripMissionTemplatePlaceholders(raw)).replace(/:\s*$/, '').trim()
-  if (stripped.length >= 3 && !/^verified bounty:?$/i.test(stripped) && !stripped.includes('~mission')) {
-    return capitalizeFirst(stripped)
-  }
+  const filled = fillMissionTitleTemplate(raw)
+  if (filled) return capitalizeFirst(filled)
   return extractTemplateTokenIntent(raw)
 }
 
@@ -106,7 +146,7 @@ export function formatMissionDisplayTitle(input: MissionDisplayTitleInput): stri
   const displayTitle = input.displayTitle?.trim()
   if (displayTitle) {
     if (!displayTitle.includes('~mission') && !displayTitle.includes('~(')) {
-      return cleanTitleArtifacts(displayTitle)
+      return displayTitle
     }
     // displayTitle still carries an unresolved template token — recover intent.
     const recovered = resolveTemplateTitle(displayTitle)

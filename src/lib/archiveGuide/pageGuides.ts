@@ -60,6 +60,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Track blueprints from the main Blueprints page',
       'Browse Missions: pick a faction, then browse its mission pools',
+      'Mission titles follow the in-game Contracts wording. Words in brackets, like **[Location]**, **[Ship]** or **[Target]**, are filled in by the game when the contract spawns (e.g. Keep [Location] Safe). Paste the title you see in-game into search to find its mission',
       'Open a contract to expand Mission text (collapsed by default) — violet chips mark values the game fills in when you take the contract',
       'Missions with multiple regional pools are grouped under one title with location rows underneath',
       'Faction cards show which star systems that faction appears in',
