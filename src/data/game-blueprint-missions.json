@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-10-05T00:11:34.511Z",
+  "_extracted": "2026-10-10T00:43:14.405Z",
   "missionBlueprints": {
     "adagioresourcegatheringshipsalvage": [
       {
@@ -3913,6 +3913,48 @@
         "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/missionitems/bp_craft_carryable_2h_sq_collectormaterial_002.json"
       }
     ],
+    "bp_reward_gmni_lmg_ballistic_01_collector02": [
+      {
+        "name": "gmni_lmg_ballistic_01_collector02",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/lmg/bp_craft_gmni_lmg_ballistic_01_collector02.json"
+      }
+    ],
+    "bp_reward_kap_combat_heavy_arms_01_04_01": [
+      {
+        "name": "kap_combat_heavy_arms_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_arms_01_04_01.json"
+      }
+    ],
+    "bp_reward_kap_combat_heavy_backpack_01_04_01": [
+      {
+        "name": "kap_combat_heavy_backpack_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_backpack_01_04_01.json"
+      }
+    ],
+    "bp_reward_kap_combat_heavy_core_01_04_01": [
+      {
+        "name": "kap_combat_heavy_core_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_core_01_04_01.json"
+      }
+    ],
+    "bp_reward_kap_combat_heavy_helmet_01_04_01": [
+      {
+        "name": "kap_combat_heavy_helmet_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/kap_combat_heavy_helmet_01_04_01.json"
+      }
+    ],
+    "bp_reward_kap_combat_heavy_legs_01_04_01": [
+      {
+        "name": "kap_combat_heavy_legs_01_04_01",
+        "weight": 1,
+        "path": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_legs_01_04_01.json"
+      }
+    ],
     "bp_reward_none_rifle_multi_01_collector01": [
       {
         "name": "none_rifle_multi_01_collector01",
@@ -6245,6 +6287,24 @@
     ],
     "carryable_2h_sq_collectormaterial_002": [
       "bp_reward_collectormaterial_002"
+    ],
+    "gmni_lmg_ballistic_01_collector02": [
+      "bp_reward_gmni_lmg_ballistic_01_collector02"
+    ],
+    "kap_combat_heavy_arms_01_04_01": [
+      "bp_reward_kap_combat_heavy_arms_01_04_01"
+    ],
+    "kap_combat_heavy_backpack_01_04_01": [
+      "bp_reward_kap_combat_heavy_backpack_01_04_01"
+    ],
+    "kap_combat_heavy_core_01_04_01": [
+      "bp_reward_kap_combat_heavy_core_01_04_01"
+    ],
+    "kap_combat_heavy_helmet_01_04_01": [
+      "bp_reward_kap_combat_heavy_helmet_01_04_01"
+    ],
+    "kap_combat_heavy_legs_01_04_01": [
+      "bp_reward_kap_combat_heavy_legs_01_04_01"
     ],
     "none_rifle_multi_01_collector01": [
       "bp_reward_none_rifle_multi_01_collector01"
@@ -44200,114 +44260,6 @@
       "repCareerLabel": null
     },
     {
-      "id": "0dcf38f8-ddca-4c63-9e5a-990b95cedde2",
-      "debugName": "ORS_Cr_Small",
-      "title": "Orison Relief: Small Fabrication Order",
-      "displayTitle": "Orison Relief: Small Fabrication Order",
-      "titleKey": "@ORS_Construct_Small_Title",
-      "description": "Now then,\n \nAfter the Nine Tails attack, the folks at Crusader could do with more than just a helping hand. What they need are proper propulsors to help replace the ones damaged in the attacks.\n \nWe've attached a blueprint for the TH-01 Propulsor that you can access at an <EM4>Item Fabricator.</EM4> Just search for it on the fabricator's terminal and you'll be able to see what materials are needed. Up to you whether you go out and find those materials yourself or buy them from a trader. (And if you don't have a fabricator yet, you'll have to purchase one at a shop, unload it at a freight elevator, and then set it up in a hangar or ship's cargo bay.) \n \nOnce you're done bring them to <EM4>~mission(Destination|Target|Address)</EM4> and one of the team will sort out the rest.\n \nTa very much,\nHal Grimsby\nContracts Manager\n\nCORNERSTONE DEVELOPMENTS\n\"Building on the Foundations of our Past.\"",
-      "descriptionKey": "@ORS_Construct_Small_Desc",
-      "faction": "Crusader Industries",
-      "factionKey": "crusader_industries",
-      "system": "Stanton",
-      "region": null,
-      "category": "Priority",
-      "blueprintPools": [
-        {
-          "key": "carryable_2h_fl_missionitem_prototype_ship_component_2_a",
-          "chance": 1,
-          "path": "file://./../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_carryable_2h_fl_missionitem_prototype_ship_component_2_a.json"
-        }
-      ],
-      "minStanding": null,
-      "maxStanding": null,
-      "repPoints": 0,
-      "repEffects": [],
-      "locality": {
-        "key": "stanton1",
-        "label": "Hurston area",
-        "systems": [
-          "Stanton"
-        ]
-      },
-      "frequency": {
-        "maxInstances": -1,
-        "maxInstancesPerPlayer": 1,
-        "respawnTimeMinutes": 5,
-        "respawnTimeVariationMinutes": 2,
-        "instanceLifeTimeMinutes": null,
-        "instanceLifeTimeVariationMinutes": null,
-        "hasPersonalCooldown": false,
-        "personalCooldownSeconds": 1,
-        "personalCooldownVariationSeconds": 1,
-        "abandonedCooldownSeconds": 1,
-        "abandonedCooldownVariationSeconds": 1,
-        "onceOnly": false,
-        "canReacceptAfterAbandoning": false,
-        "canReacceptAfterFailing": false,
-        "canBeShared": true
-      },
-      "notForRelease": false,
-      "isLawful": true,
-      "__minStandingPath": null,
-      "__maxStandingPath": null,
-      "__repScopePath": null
-    },
-    {
-      "id": "a8da4735-d681-4fa4-945c-cd44596f959a",
-      "debugName": "ORS_Cr_Medium",
-      "title": "Orison Relief: Medium Fabrication Order",
-      "displayTitle": "Orison Relief: Medium Fabrication Order",
-      "titleKey": "@ORS_Construct_Medium_Title",
-      "description": "Hullo,\n\nCrusader have been in touch to say that the scale of the damage to their platforms is greater than they initially thought and they'll need more propulsors than they originally estimated for.\n\nWe're contracting out their request to anyone with an available Item Fabricator standing by. Though I guess you could source the propulsors some other way, but that's on you.\n\nOnce ready, deliver them to <EM4>~mission(Destination|Target|Address)</EM4>. Payment sent on completion.\n\nTa very much,\nHal Grimsby\nContracts Manager\n\nCORNERSTONE DEVELOPMENTS\n\"Building on the Foundations of our Past.\"",
-      "descriptionKey": "@ORS_Construct_Medium_Desc",
-      "faction": "Crusader Industries",
-      "factionKey": "crusader_industries",
-      "system": "Stanton",
-      "region": null,
-      "category": "Priority",
-      "blueprintPools": [
-        {
-          "key": "carryable_2h_fl_missionitem_prototype_ship_component_2_a",
-          "chance": 1,
-          "path": "file://./../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_carryable_2h_fl_missionitem_prototype_ship_component_2_a.json"
-        }
-      ],
-      "minStanding": null,
-      "maxStanding": null,
-      "repPoints": 0,
-      "repEffects": [],
-      "locality": {
-        "key": "stanton1",
-        "label": "Hurston area",
-        "systems": [
-          "Stanton"
-        ]
-      },
-      "frequency": {
-        "maxInstances": -1,
-        "maxInstancesPerPlayer": 1,
-        "respawnTimeMinutes": 5,
-        "respawnTimeVariationMinutes": 2,
-        "instanceLifeTimeMinutes": null,
-        "instanceLifeTimeVariationMinutes": null,
-        "hasPersonalCooldown": false,
-        "personalCooldownSeconds": 1,
-        "personalCooldownVariationSeconds": 1,
-        "abandonedCooldownSeconds": 1,
-        "abandonedCooldownVariationSeconds": 1,
-        "onceOnly": false,
-        "canReacceptAfterAbandoning": false,
-        "canReacceptAfterFailing": false,
-        "canBeShared": true
-      },
-      "notForRelease": false,
-      "isLawful": true,
-      "__minStandingPath": null,
-      "__maxStandingPath": null,
-      "__repScopePath": null
-    },
-    {
       "id": "9a92d449-f8d1-4766-bae1-462e1a2cab71",
       "debugName": "ORS_Cr_Large",
       "title": "Orison Relief: Large Fabrication Order",
@@ -44670,6 +44622,210 @@
           "key": "bp_reward_cds_combat_superheavy_helmet_01_03_01",
           "chance": 1,
           "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_cds_combat_superheavy_helmet_01_03_01.json"
+        }
+      ],
+      "minStanding": null,
+      "maxStanding": null,
+      "repPoints": 10,
+      "repEffects": [
+        {
+          "factionKey": "wikelo",
+          "faction": "Wikelo Emporium",
+          "amount": 10
+        }
+      ],
+      "locality": null,
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 0,
+        "respawnTimeVariationMinutes": 0,
+        "instanceLifeTimeMinutes": null,
+        "instanceLifeTimeVariationMinutes": null,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 0,
+        "personalCooldownVariationSeconds": 0,
+        "abandonedCooldownSeconds": 0,
+        "abandonedCooldownVariationSeconds": 0,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": true,
+        "canReacceptAfterFailing": false,
+        "canBeShared": false
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "__minStandingPath": null,
+      "__maxStandingPath": null,
+      "__repScopePath": null,
+      "prereqMissions": [
+        {
+          "requiredCount": 1,
+          "missions": [
+            {
+              "debugName": "TheCollector_Intro",
+              "title": "Wikelo Arrive to System",
+              "faction": "Wikelo Emporium",
+              "factionKey": "wikelo",
+              "system": "Stanton",
+              "region": null,
+              "category": "Collection",
+              "locality": null,
+              "isLawful": true,
+              "hasBlueprints": false,
+              "isIntro": false,
+              "frequency": {
+                "maxInstances": -1,
+                "maxInstancesPerPlayer": 1,
+                "respawnTimeMinutes": 1,
+                "respawnTimeVariationMinutes": 1,
+                "instanceLifeTimeMinutes": 15,
+                "instanceLifeTimeVariationMinutes": 0,
+                "hasPersonalCooldown": false,
+                "personalCooldownSeconds": 0,
+                "personalCooldownVariationSeconds": 0,
+                "abandonedCooldownSeconds": 0,
+                "abandonedCooldownVariationSeconds": 0,
+                "onceOnly": false,
+                "canReacceptAfterAbandoning": true,
+                "canReacceptAfterFailing": false,
+                "canBeShared": false
+              }
+            }
+          ],
+          "totalEmitters": 1
+        }
+      ]
+    },
+    {
+      "id": "b46612e0-4eae-4827-8038-e460e00f8967",
+      "debugName": "TheCollector_GMNI_LMG",
+      "title": "Big Style LMG",
+      "displayTitle": "Big Style LMG",
+      "titleKey": "@TheCollector_Recipes_Title_GMNI_LMG",
+      "description": "Warriors should feel strong, yes? What makes you feel more very strong than looking amazing? Wikelo will make your gun look like different gun. Bring me item on list and I give to you. Bye.",
+      "descriptionKey": "@TheCollector_Recipes_Desc_GMNI_LMG",
+      "faction": "Wikelo Emporium",
+      "factionKey": "wikelo",
+      "system": "Stanton",
+      "region": null,
+      "category": "Wikelo Small Items",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_gmni_lmg_ballistic_01_collector02",
+          "chance": 1,
+          "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_gmni_lmg_ballistic_01_collector02.json"
+        }
+      ],
+      "minStanding": null,
+      "maxStanding": null,
+      "repPoints": 10,
+      "repEffects": [
+        {
+          "factionKey": "wikelo",
+          "faction": "Wikelo Emporium",
+          "amount": 10
+        }
+      ],
+      "locality": null,
+      "frequency": {
+        "maxInstances": -1,
+        "maxInstancesPerPlayer": 1,
+        "respawnTimeMinutes": 0,
+        "respawnTimeVariationMinutes": 0,
+        "instanceLifeTimeMinutes": null,
+        "instanceLifeTimeVariationMinutes": null,
+        "hasPersonalCooldown": false,
+        "personalCooldownSeconds": 0,
+        "personalCooldownVariationSeconds": 0,
+        "abandonedCooldownSeconds": 0,
+        "abandonedCooldownVariationSeconds": 0,
+        "onceOnly": false,
+        "canReacceptAfterAbandoning": true,
+        "canReacceptAfterFailing": false,
+        "canBeShared": false
+      },
+      "notForRelease": false,
+      "isLawful": true,
+      "__minStandingPath": null,
+      "__maxStandingPath": null,
+      "__repScopePath": null,
+      "prereqMissions": [
+        {
+          "requiredCount": 1,
+          "missions": [
+            {
+              "debugName": "TheCollector_Intro",
+              "title": "Wikelo Arrive to System",
+              "faction": "Wikelo Emporium",
+              "factionKey": "wikelo",
+              "system": "Stanton",
+              "region": null,
+              "category": "Collection",
+              "locality": null,
+              "isLawful": true,
+              "hasBlueprints": false,
+              "isIntro": false,
+              "frequency": {
+                "maxInstances": -1,
+                "maxInstancesPerPlayer": 1,
+                "respawnTimeMinutes": 1,
+                "respawnTimeVariationMinutes": 1,
+                "instanceLifeTimeMinutes": 15,
+                "instanceLifeTimeVariationMinutes": 0,
+                "hasPersonalCooldown": false,
+                "personalCooldownSeconds": 0,
+                "personalCooldownVariationSeconds": 0,
+                "abandonedCooldownSeconds": 0,
+                "abandonedCooldownVariationSeconds": 0,
+                "onceOnly": false,
+                "canReacceptAfterAbandoning": true,
+                "canReacceptAfterFailing": false,
+                "canBeShared": false
+              }
+            }
+          ],
+          "totalEmitters": 1
+        }
+      ]
+    },
+    {
+      "id": "c99e22e9-643c-4822-9f06-8c119722caee",
+      "debugName": "TheCollector_GreyHeavyCombatArmour",
+      "title": "Monolith Armor Very Smooth",
+      "displayTitle": "Monolith Armor Very Smooth",
+      "titleKey": "@TheCollector_Recipes_Title_GreyHeavyCombat",
+      "description": "When fight, you want armor that solid. Keep gun from helpful organ you need to live, yes, but should be impressive too. Wikelo make version of Monolith armor that do both.\n\nYou want? Bring me things I need for new project and I will give. Show you how to make too. More happy.",
+      "descriptionKey": "@TheCollector_Recipes_Desc_GreyHeavyCombat",
+      "faction": "Wikelo Emporium",
+      "factionKey": "wikelo",
+      "system": "Stanton",
+      "region": null,
+      "category": "Wikelo Small Items",
+      "blueprintPools": [
+        {
+          "key": "bp_reward_kap_combat_heavy_arms_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_kap_combat_heavy_arms_01_04_01.json"
+        },
+        {
+          "key": "bp_reward_kap_combat_heavy_legs_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_kap_combat_heavy_legs_01_04_01.json"
+        },
+        {
+          "key": "bp_reward_kap_combat_heavy_helmet_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_kap_combat_heavy_helmet_01_04_01.json"
+        },
+        {
+          "key": "bp_reward_kap_combat_heavy_core_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_kap_combat_heavy_core_01_04_01.json"
+        },
+        {
+          "key": "bp_reward_kap_combat_heavy_backpack_01_04_01",
+          "chance": 1,
+          "path": "file://./../../../../../libs/foundry/records/crafting/blueprintrewards/collectorwikelo/bp_reward_kap_combat_heavy_backpack_01_04_01.json"
         }
       ],
       "minStanding": null,
@@ -98030,76 +98186,6 @@
     ],
     "carryable_2h_fl_missionitem_prototype_ship_component_2_a": [
       {
-        "title": "Orison Relief: Small Fabrication Order",
-        "displayTitle": "Orison Relief: Small Fabrication Order",
-        "titleKey": "@ORS_Construct_Small_Title",
-        "faction": "Crusader Industries",
-        "factionKey": "crusader_industries",
-        "debugName": "ORS_Cr_Small",
-        "isLawful": true,
-        "system": "Stanton",
-        "region": null,
-        "category": "Priority",
-        "minStanding": null,
-        "maxStanding": null,
-        "repPoints": 0,
-        "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
-        "frequency": {
-          "maxInstances": -1,
-          "maxInstancesPerPlayer": 1,
-          "respawnTimeMinutes": 5,
-          "respawnTimeVariationMinutes": 2,
-          "instanceLifeTimeMinutes": null,
-          "instanceLifeTimeVariationMinutes": null,
-          "hasPersonalCooldown": false,
-          "personalCooldownSeconds": 1,
-          "personalCooldownVariationSeconds": 1,
-          "abandonedCooldownSeconds": 1,
-          "abandonedCooldownVariationSeconds": 1,
-          "onceOnly": false,
-          "canReacceptAfterAbandoning": false,
-          "canReacceptAfterFailing": false,
-          "canBeShared": true
-        }
-      },
-      {
-        "title": "Orison Relief: Medium Fabrication Order",
-        "displayTitle": "Orison Relief: Medium Fabrication Order",
-        "titleKey": "@ORS_Construct_Medium_Title",
-        "faction": "Crusader Industries",
-        "factionKey": "crusader_industries",
-        "debugName": "ORS_Cr_Medium",
-        "isLawful": true,
-        "system": "Stanton",
-        "region": null,
-        "category": "Priority",
-        "minStanding": null,
-        "maxStanding": null,
-        "repPoints": 0,
-        "repEffects": [],
-        "repCareerLabel": null,
-        "repScopeKey": null,
-        "frequency": {
-          "maxInstances": -1,
-          "maxInstancesPerPlayer": 1,
-          "respawnTimeMinutes": 5,
-          "respawnTimeVariationMinutes": 2,
-          "instanceLifeTimeMinutes": null,
-          "instanceLifeTimeVariationMinutes": null,
-          "hasPersonalCooldown": false,
-          "personalCooldownSeconds": 1,
-          "personalCooldownVariationSeconds": 1,
-          "abandonedCooldownSeconds": 1,
-          "abandonedCooldownVariationSeconds": 1,
-          "onceOnly": false,
-          "canReacceptAfterAbandoning": false,
-          "canReacceptAfterFailing": false,
-          "canBeShared": true
-        }
-      },
-      {
         "title": "Orison Relief: Large Fabrication Order",
         "displayTitle": "Orison Relief: Large Fabrication Order",
         "titleKey": "@ORS_Construct_Large_Title",
@@ -98401,6 +98487,264 @@
         "faction": "Wikelo Emporium",
         "factionKey": "wikelo",
         "debugName": "TheCollector_SuperHeavyCombat",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Wikelo Small Items",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 10,
+        "repEffects": [
+          {
+            "factionKey": "wikelo",
+            "faction": "Wikelo Emporium",
+            "amount": 10
+          }
+        ],
+        "repCareerLabel": null,
+        "repScopeKey": null,
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 0,
+          "personalCooldownVariationSeconds": 0,
+          "abandonedCooldownSeconds": 0,
+          "abandonedCooldownVariationSeconds": 0,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_gmni_lmg_ballistic_01_collector02": [
+      {
+        "title": "Big Style LMG",
+        "displayTitle": "Big Style LMG",
+        "titleKey": "@TheCollector_Recipes_Title_GMNI_LMG",
+        "faction": "Wikelo Emporium",
+        "factionKey": "wikelo",
+        "debugName": "TheCollector_GMNI_LMG",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Wikelo Small Items",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 10,
+        "repEffects": [
+          {
+            "factionKey": "wikelo",
+            "faction": "Wikelo Emporium",
+            "amount": 10
+          }
+        ],
+        "repCareerLabel": null,
+        "repScopeKey": null,
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 0,
+          "personalCooldownVariationSeconds": 0,
+          "abandonedCooldownSeconds": 0,
+          "abandonedCooldownVariationSeconds": 0,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_kap_combat_heavy_arms_01_04_01": [
+      {
+        "title": "Monolith Armor Very Smooth",
+        "displayTitle": "Monolith Armor Very Smooth",
+        "titleKey": "@TheCollector_Recipes_Title_GreyHeavyCombat",
+        "faction": "Wikelo Emporium",
+        "factionKey": "wikelo",
+        "debugName": "TheCollector_GreyHeavyCombatArmour",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Wikelo Small Items",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 10,
+        "repEffects": [
+          {
+            "factionKey": "wikelo",
+            "faction": "Wikelo Emporium",
+            "amount": 10
+          }
+        ],
+        "repCareerLabel": null,
+        "repScopeKey": null,
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 0,
+          "personalCooldownVariationSeconds": 0,
+          "abandonedCooldownSeconds": 0,
+          "abandonedCooldownVariationSeconds": 0,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_kap_combat_heavy_legs_01_04_01": [
+      {
+        "title": "Monolith Armor Very Smooth",
+        "displayTitle": "Monolith Armor Very Smooth",
+        "titleKey": "@TheCollector_Recipes_Title_GreyHeavyCombat",
+        "faction": "Wikelo Emporium",
+        "factionKey": "wikelo",
+        "debugName": "TheCollector_GreyHeavyCombatArmour",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Wikelo Small Items",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 10,
+        "repEffects": [
+          {
+            "factionKey": "wikelo",
+            "faction": "Wikelo Emporium",
+            "amount": 10
+          }
+        ],
+        "repCareerLabel": null,
+        "repScopeKey": null,
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 0,
+          "personalCooldownVariationSeconds": 0,
+          "abandonedCooldownSeconds": 0,
+          "abandonedCooldownVariationSeconds": 0,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_kap_combat_heavy_helmet_01_04_01": [
+      {
+        "title": "Monolith Armor Very Smooth",
+        "displayTitle": "Monolith Armor Very Smooth",
+        "titleKey": "@TheCollector_Recipes_Title_GreyHeavyCombat",
+        "faction": "Wikelo Emporium",
+        "factionKey": "wikelo",
+        "debugName": "TheCollector_GreyHeavyCombatArmour",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Wikelo Small Items",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 10,
+        "repEffects": [
+          {
+            "factionKey": "wikelo",
+            "faction": "Wikelo Emporium",
+            "amount": 10
+          }
+        ],
+        "repCareerLabel": null,
+        "repScopeKey": null,
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 0,
+          "personalCooldownVariationSeconds": 0,
+          "abandonedCooldownSeconds": 0,
+          "abandonedCooldownVariationSeconds": 0,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_kap_combat_heavy_core_01_04_01": [
+      {
+        "title": "Monolith Armor Very Smooth",
+        "displayTitle": "Monolith Armor Very Smooth",
+        "titleKey": "@TheCollector_Recipes_Title_GreyHeavyCombat",
+        "faction": "Wikelo Emporium",
+        "factionKey": "wikelo",
+        "debugName": "TheCollector_GreyHeavyCombatArmour",
+        "isLawful": true,
+        "system": "Stanton",
+        "region": null,
+        "category": "Wikelo Small Items",
+        "minStanding": null,
+        "maxStanding": null,
+        "repPoints": 10,
+        "repEffects": [
+          {
+            "factionKey": "wikelo",
+            "faction": "Wikelo Emporium",
+            "amount": 10
+          }
+        ],
+        "repCareerLabel": null,
+        "repScopeKey": null,
+        "frequency": {
+          "maxInstances": -1,
+          "maxInstancesPerPlayer": 1,
+          "respawnTimeMinutes": 0,
+          "respawnTimeVariationMinutes": 0,
+          "instanceLifeTimeMinutes": null,
+          "instanceLifeTimeVariationMinutes": null,
+          "hasPersonalCooldown": false,
+          "personalCooldownSeconds": 0,
+          "personalCooldownVariationSeconds": 0,
+          "abandonedCooldownSeconds": 0,
+          "abandonedCooldownVariationSeconds": 0,
+          "onceOnly": false,
+          "canReacceptAfterAbandoning": true,
+          "canReacceptAfterFailing": false,
+          "canBeShared": false
+        }
+      }
+    ],
+    "bp_reward_kap_combat_heavy_backpack_01_04_01": [
+      {
+        "title": "Monolith Armor Very Smooth",
+        "displayTitle": "Monolith Armor Very Smooth",
+        "titleKey": "@TheCollector_Recipes_Title_GreyHeavyCombat",
+        "faction": "Wikelo Emporium",
+        "factionKey": "wikelo",
+        "debugName": "TheCollector_GreyHeavyCombatArmour",
         "isLawful": true,
         "system": "Stanton",
         "region": null,
@@ -129148,9 +129492,9 @@
     ]
   },
   "summary": {
-    "totalPools": 131,
-    "totalBlueprints": 712,
+    "totalPools": 137,
+    "totalBlueprints": 718,
     "contractsWithBlueprints": 797,
-    "poolsWithMissionData": 131
+    "poolsWithMissionData": 137
   }
 }

@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-09-16T23:09:45.336Z",
+  "_extracted": "2026-10-10T00:43:14.331Z",
   "version": "4.10.x",
   "blueprints": [
     {
@@ -19660,6 +19660,191 @@
       "rewardMissions": []
     },
     {
+      "id": "e0583206-e742-482e-9f11-da869ae2ac06",
+      "file": "kap_combat_heavy_arms_01_01_01",
+      "name": "BP_CRAFT_kap_combat_heavy_arms_01_01_01",
+      "internalName": "kap_combat_heavy_arms_01_01_01",
+      "blueprintName": "Monolith Armor Arms",
+      "entityClass": "kap_combat_heavy_arms_01_01_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "arms",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 0
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.85,
+                  "perQuality": 0.0002999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.02,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "7985ff3c-ab96-4bed-8358-9de570b2c7cf",
+      "file": "kap_combat_heavy_arms_01_04_01",
+      "name": "BP_CRAFT_kap_combat_heavy_arms_01_04_01",
+      "internalName": "kap_combat_heavy_arms_01_04_01",
+      "blueprintName": "Monolith Armor Arms Shadowflux",
+      "entityClass": "kap_combat_heavy_arms_01_04_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "arms",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 0
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.85,
+                  "perQuality": 0.0002999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.02,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Wikelo Emporium: Monolith Armor Very Smooth",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "bp_reward_kap_combat_heavy_arms_01_04_01",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Wikelo Small Items",
+          "repPoints": 10,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "bp_reward_kap_combat_heavy_arms_01_04_01"
+      ]
+    },
+    {
       "id": "2d5a4987-c430-4f28-9a74-7cb95d9020db",
       "file": "kap_combat_heavy_arms_02_01_01",
       "name": "BP_CRAFT_kap_combat_heavy_arms_02_01_01",
@@ -21654,6 +21839,312 @@
       ],
       "missionPools": [
         "xenothreat2_50_02"
+      ]
+    },
+    {
+      "id": "12c76130-5690-4a84-8e75-e8938e482e55",
+      "file": "kap_combat_heavy_backpack_01_01_01",
+      "name": "BP_CRAFT_kap_combat_heavy_backpack_01_01_01",
+      "internalName": "kap_combat_heavy_backpack_01_01_01",
+      "blueprintName": "Monolith Backpack",
+      "entityClass": "kap_combat_heavy_backpack_01_01_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "backpack",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 1.8,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 48
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "16c6b960-827d-45e9-9967-ad07982d7ad4",
+      "file": "kap_combat_heavy_backpack_01_04_01",
+      "name": "BP_CRAFT_kap_combat_heavy_backpack_01_04_01",
+      "internalName": "kap_combat_heavy_backpack_01_04_01",
+      "blueprintName": "Monolith Backpack Shadowflux",
+      "entityClass": "kap_combat_heavy_backpack_01_04_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "backpack",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 1.8,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 1,
+        "seconds": 48
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Wikelo Emporium: Monolith Armor Very Smooth",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "bp_reward_kap_combat_heavy_backpack_01_04_01",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Wikelo Small Items",
+          "repPoints": 10,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "bp_reward_kap_combat_heavy_backpack_01_04_01"
+      ]
+    },
+    {
+      "id": "09816997-514c-4dce-afb0-f663a1e5d922",
+      "file": "kap_combat_heavy_core_01_01_01",
+      "name": "BP_CRAFT_kap_combat_heavy_core_01_01_01",
+      "internalName": "kap_combat_heavy_core_01_01_01",
+      "blueprintName": "Monolith Armor Core",
+      "entityClass": "kap_combat_heavy_core_01_01_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "core",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4.2,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 12
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.07,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.9,
+                  "perQuality": 0.00020000000000000006
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.02,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 500,
+                  "endQuality": 1000,
+                  "baseAmount": 1,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 500,
+                  "endQuality": 1000,
+                  "baseAmount": 1,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Support Structure",
+          "slotDebugName": "SUPPORT STRUCTURE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Titanium",
+              "standardCargoUnits": 0.07,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -77,
+        "Armor_Temperaturemax": 107,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "4d28a0a6-4626-457e-b4f6-171dab12cdac",
+      "file": "kap_combat_heavy_core_01_04_01",
+      "name": "BP_CRAFT_kap_combat_heavy_core_01_04_01",
+      "internalName": "kap_combat_heavy_core_01_04_01",
+      "blueprintName": "Monolith Armor Core Shadowflux",
+      "entityClass": "kap_combat_heavy_core_01_04_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "core",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4.2,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 12
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.07,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.9,
+                  "perQuality": 0.00020000000000000006
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.02,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 500,
+                  "endQuality": 1000,
+                  "baseAmount": 1,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 500,
+                  "endQuality": 1000,
+                  "baseAmount": 1,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Support Structure",
+          "slotDebugName": "SUPPORT STRUCTURE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Titanium",
+              "standardCargoUnits": 0.07,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -77,
+        "Armor_Temperaturemax": 107,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Wikelo Emporium: Monolith Armor Very Smooth",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "bp_reward_kap_combat_heavy_core_01_04_01",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Wikelo Small Items",
+          "repPoints": 10,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "bp_reward_kap_combat_heavy_core_01_04_01"
       ]
     },
     {
@@ -23654,6 +24145,100 @@
       ]
     },
     {
+      "id": "108b503e-8b7a-4994-98fe-fd2d65e46e3c",
+      "file": "kap_combat_heavy_helmet_01_01_01",
+      "name": "BP_CRAFT_kap_combat_heavy_helmet_01_01_01",
+      "internalName": "kap_combat_heavy_helmet_01_01_01",
+      "blueprintName": "Monolith Helmet",
+      "entityClass": "kap_combat_heavy_helmet_01_01_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "helmet",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4.2,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 12
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.05,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.9,
+                  "perQuality": 0.00020000000000000006
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.01,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Support Structure",
+          "slotDebugName": "SUPPORT STRUCTURE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Titanium",
+              "standardCargoUnits": 0.05,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": 3,
+        "Armor_Temperaturemax": 33,
+        "Armor_Radiationdissipation": 0,
+        "Armor_Radiationcapacity": 0,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
       "id": "029d8838-3f83-4d3c-b44e-ba388cb5e347",
       "file": "kap_combat_heavy_helmet_02_01_01",
       "name": "BP_CRAFT_kap_combat_heavy_helmet_02_01_01",
@@ -25648,6 +26233,217 @@
       ],
       "missionPools": [
         "xenothreat2_50_05"
+      ]
+    },
+    {
+      "id": "eee81318-049f-4c08-912d-ef940b7e3ca9",
+      "file": "kap_combat_heavy_legs_01_01_01",
+      "name": "BP_CRAFT_kap_combat_heavy_legs_01_01_01",
+      "internalName": "kap_combat_heavy_legs_01_01_01",
+      "blueprintName": "Monolith Armor Legs",
+      "entityClass": "kap_combat_heavy_legs_01_01_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "legs",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4.2,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 12
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.9,
+                  "perQuality": 0.00020000000000000006
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.02,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Support Structure",
+          "slotDebugName": "SUPPORT STRUCTURE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Titanium",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": false,
+      "rewardMissions": []
+    },
+    {
+      "id": "b0183159-9bf0-4b53-8bc0-643a258a7032",
+      "file": "kap_combat_heavy_legs_01_04_01",
+      "name": "BP_CRAFT_kap_combat_heavy_legs_01_04_01",
+      "internalName": "kap_combat_heavy_legs_01_04_01",
+      "blueprintName": "Monolith Armor Legs Shadowflux",
+      "entityClass": "kap_combat_heavy_legs_01_04_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "legs",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4.2,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 12
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.9,
+                  "perQuality": 0.00020000000000000006
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.02,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Support Structure",
+          "slotDebugName": "SUPPORT STRUCTURE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Titanium",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": -70,
+        "Armor_Temperaturemax": 100,
+        "Armor_Radiationdissipation": 145.8,
+        "Armor_Radiationcapacity": 26800,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Wikelo Emporium: Monolith Armor Very Smooth",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "bp_reward_kap_combat_heavy_legs_01_04_01",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Wikelo Small Items",
+          "repPoints": 10,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "bp_reward_kap_combat_heavy_legs_01_04_01"
       ]
     },
     {
@@ -31745,6 +32541,123 @@
       ],
       "missionPools": [
         "xenothreat2_50_01"
+      ]
+    },
+    {
+      "id": "129eaa5c-b5a5-4ce6-809f-c90949178625",
+      "file": "kap_combat_heavy_helmet_01_04_01",
+      "name": "kap_combat_heavy_helmet_01_04_01",
+      "internalName": "kap_combat_heavy_helmet_01_04_01",
+      "blueprintName": "Monolith Helmet Shadowflux",
+      "entityClass": "kap_combat_heavy_helmet_01_04_01",
+      "category": "FPSArmours",
+      "categoryName": "FPSArmours",
+      "subtype": "standard",
+      "armorSlot": "helmet",
+      "armorWeight": "heavy",
+      "craftTimeMinutes": 4.2,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 12
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Armored Carapace",
+          "slotDebugName": "ARMOURED CARAPACE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Ouratite",
+              "standardCargoUnits": 0.05,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_damagemitigation",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.9,
+                  "perQuality": 0.00020000000000000006
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Insulative Liner",
+          "slotDebugName": "INSULATIVE LINER",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Aslarite",
+              "standardCargoUnits": 0.01,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "armor_temperaturemin",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                },
+                {
+                  "property": "armor_temperaturemax",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.8,
+                  "perQuality": 0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Support Structure",
+          "slotDebugName": "SUPPORT STRUCTURE",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Titanium",
+              "standardCargoUnits": 0.05,
+              "minQuality": 1
+            }
+          ]
+        }
+      ],
+      "armorBaseStats": {
+        "Armor_Temperaturemin": 3,
+        "Armor_Temperaturemax": 33,
+        "Armor_Radiationdissipation": 0,
+        "Armor_Radiationcapacity": 0,
+        "Armor_Damagemitigation": 0.6
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Wikelo Emporium: Monolith Armor Very Smooth",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "bp_reward_kap_combat_heavy_helmet_01_04_01",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Wikelo Small Items",
+          "repPoints": 10,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "bp_reward_kap_combat_heavy_helmet_01_04_01"
       ]
     },
     {
@@ -121953,6 +122866,160 @@
       "rewardMissions": []
     },
     {
+      "id": "d5e951bf-f079-4dfb-9b95-39676059fdf1",
+      "file": "gmni_lmg_ballistic_01_collector02",
+      "name": "BP_CRAFT_gmni_lmg_ballistic_01_collector02",
+      "internalName": "gmni_lmg_ballistic_01_collector02",
+      "blueprintName": "F55 \"Shadowflux\" LMG",
+      "entityClass": "gmni_lmg_ballistic_01_collector02",
+      "category": "FPSWeapons",
+      "categoryName": "FPSWeapons",
+      "subtype": "lmg",
+      "armorSlot": null,
+      "armorWeight": null,
+      "craftTimeMinutes": 4,
+      "craftTime": {
+        "hours": 0,
+        "minutes": 4,
+        "seconds": 0
+      },
+      "slots": [
+        {
+          "slotDisplayName": "Frame",
+          "slotDebugName": "FRAME",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Lindinium",
+              "standardCargoUnits": 0.06,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "weapon_recoil_smoothness",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 1.2,
+                  "perQuality": -0.0003999999999999999
+                },
+                {
+                  "property": "weapon_recoil_handling",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 1.2,
+                  "perQuality": -0.0003999999999999999
+                },
+                {
+                  "property": "weapon_recoil_kick",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 1.2,
+                  "perQuality": -0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Stock",
+          "slotDebugName": "STOCK:",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Hephaestanite",
+              "standardCargoUnits": 0.04,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "weapon_recoil_smoothness",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 1.2,
+                  "perQuality": -0.0003999999999999999
+                },
+                {
+                  "property": "weapon_recoil_handling",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 1.2,
+                  "perQuality": -0.0003999999999999999
+                },
+                {
+                  "property": "weapon_recoil_kick",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 1.2,
+                  "perQuality": -0.0003999999999999999
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slotDisplayName": "Barrel",
+          "slotDebugName": "BARREL:",
+          "requiredCount": 1,
+          "options": [
+            {
+              "type": "resource",
+              "resourceName": "Iron",
+              "standardCargoUnits": 0.03,
+              "minQuality": 1,
+              "modifiers": [
+                {
+                  "property": "weapon_damage",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.925,
+                  "perQuality": 0.0001499999999999999
+                },
+                {
+                  "property": "weapon_firerate",
+                  "startQuality": 0,
+                  "endQuality": 1000,
+                  "baseAmount": 0.88,
+                  "perQuality": 0.00024000000000000011
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "weaponBaseStats": {
+        "Weapon_Damage": 10,
+        "Weapon_Firerate": 1200,
+        "Weapon_Recoil_Smoothness": 1,
+        "Weapon_Recoil_Handling": 0.75,
+        "Weapon_Recoil_Kick": 0.8
+      },
+      "isReward": true,
+      "rewardMissions": [
+        {
+          "mission": "Wikelo Emporium: Big Style LMG",
+          "chance": 1,
+          "poolChance": 1,
+          "poolKey": "bp_reward_gmni_lmg_ballistic_01_collector02",
+          "locations": [
+            "Stanton"
+          ],
+          "system": "Stanton",
+          "region": null,
+          "category": "Wikelo Small Items",
+          "repPoints": 10,
+          "minReputation": null,
+          "maxReputation": null,
+          "standingName": null,
+          "maxStandingName": null,
+          "repCareerLabel": null,
+          "repScopeKey": null
+        }
+      ],
+      "missionPools": [
+        "bp_reward_gmni_lmg_ballistic_01_collector02"
+      ]
+    },
+    {
       "id": "c9d98450-88f4-4f0d-a9aa-41e4cc1c06c6",
       "file": "gmni_lmg_ballistic_01_firerats01",
       "name": "BP_CRAFT_gmni_lmg_ballistic_01_firerats01",
@@ -151928,44 +152995,6 @@
       "rewardMissions": [
         {
           "mission": "Crusader Industries: Orison Relief: Large Fabrication Order",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "carryable_2h_fl_missionitem_prototype_ship_component_2_a",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Priority",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        },
-        {
-          "mission": "Crusader Industries: Orison Relief: Medium Fabrication Order",
-          "chance": 1,
-          "poolChance": 1,
-          "poolKey": "carryable_2h_fl_missionitem_prototype_ship_component_2_a",
-          "locations": [
-            "Stanton"
-          ],
-          "system": "Stanton",
-          "region": null,
-          "category": "Priority",
-          "repPoints": 0,
-          "minReputation": null,
-          "maxReputation": null,
-          "standingName": null,
-          "maxStandingName": null,
-          "repCareerLabel": null,
-          "repScopeKey": null
-        },
-        {
-          "mission": "Crusader Industries: Orison Relief: Small Fabrication Order",
           "chance": 1,
           "poolChance": 1,
           "poolKey": "carryable_2h_fl_missionitem_prototype_ship_component_2_a",
@@ -184010,8 +185039,8 @@
       "file": "powr_sasu_s02_daybreak",
       "name": "BP_CRAFT_POWR_SASU_S02_DayBreak_SCItem",
       "internalName": "powr_sasu_s02_daybreak",
-      "blueprintName": "FullForce",
-      "entityClass": "powr_lplt_s02_fullforce_scitem",
+      "blueprintName": "DayBreak",
+      "entityClass": "powr_sasu_s02_daybreak_scitem",
       "category": "VehicleComponentS2",
       "categoryName": "Veh. Comp. S2",
       "subtype": "powerplant",
@@ -184149,7 +185178,7 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 540,
+        "Health_Maxhealth": 470,
         "Itemresource_Powergeneration": 18
       },
       "isReward": true,
@@ -187863,8 +188892,8 @@
       "file": "qdrv_just_s01_goliath",
       "name": "BP_CRAFT_QDRV_JUST_S01_Goliath_SCItem",
       "internalName": "qdrv_just_s01_goliath",
-      "blueprintName": "FoxFire",
-      "entityClass": "qdrv_acas_s01_foxfire_scitem",
+      "blueprintName": "Goliath",
+      "entityClass": "qdrv_just_s01_goliath_scitem",
       "category": "VehicleComponentS1",
       "categoryName": "Veh. Comp. S1",
       "subtype": "quantumdrive",
@@ -187966,9 +188995,9 @@
         }
       ],
       "vehicleBaseStats": {
-        "Health_Maxhealth": 120,
-        "Quantum_Speed": 263040000,
-        "Quantum_Fuelrequirement": 0.00588
+        "Health_Maxhealth": 180,
+        "Quantum_Speed": 219200000,
+        "Quantum_Fuelrequirement": 0.0058
       },
       "isReward": false,
       "rewardMissions": []
@@ -239579,9 +240608,9 @@
     "cds_armor_light_legs_01_01_01"
   ],
   "summary": {
-    "totalBlueprints": 1607,
+    "totalBlueprints": 1618,
     "defaultBlueprints": 8,
-    "blueprintsWithRewards": 712,
+    "blueprintsWithRewards": 718,
     "rewardBlueprintsNeedingLocalization": 0,
     "nonRewardBlueprintsWithFallback": 0
   }
