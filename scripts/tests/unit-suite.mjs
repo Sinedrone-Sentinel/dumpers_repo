@@ -389,6 +389,30 @@ check(
   'digest omits NFR from added'
 )
 
+const weaponLabel = (rec) => rec.displayName
+const bpTagEntries = digestMod.buildWhatsNewEntriesFromDiff(
+  {
+    collections: [
+      {
+        category: 'FPS Weapons',
+        label: weaponLabel,
+        added: [
+          { key: 'gmni_lmg_ballistic_01_collector02', rec: { name: 'gmni_lmg_ballistic_01_collector02', displayName: 'F55 LMG' } },
+          { key: 'grin_tractor_01_IASI', rec: { name: 'grin_tractor_01_IASI', displayName: 'MaxLift-II Tractor Beam' } },
+        ],
+        removed: [],
+        changed: [],
+      },
+    ],
+  },
+  { resolve: (key) => key, blueprintEntityClasses: new Set(['gmni_lmg_ballistic_01_collector02']) }
+)
+const bpTagLabels = bpTagEntries.find((e) => e.category === 'FPS Weapons')?.items.map((i) => i.label) ?? []
+check(
+  bpTagLabels.includes('F55 LMG (Blueprint)') && bpTagLabels.includes('MaxLift-II Tractor Beam'),
+  'digest tags craftable items as (Blueprint) and leaves plain items alone'
+)
+
 const taxonomy = await import(pathToFileURL(path.join(outDir, 'blueprintTaxonomy.mjs')).href)
 const carnifexTags = taxonomy.getBlueprintDisplayTags({
   categoryName: 'FPSArmours',
