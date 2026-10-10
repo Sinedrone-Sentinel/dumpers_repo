@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-09-16T23:09:45.391Z",
+  "_extracted": "2026-10-10T00:43:14.381Z",
   "components": [
     {
       "id": "f59a0b33-5bbe-439e-8bd5-111db00b5ff6",
@@ -239,6 +239,42 @@
       "grade": 1,
       "manufacturerCode": null,
       "manufacturer": null,
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "ce9384b7-b7b8-4ac3-9a9f-47d47aaa3de3",
+      "name": "COOL_IASI_S01_Name",
+      "type": "cooler",
+      "displayName": "BriskAir IC-10",
+      "size": 1,
+      "grade": 2,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "be8b5a16-51ed-4d1a-abc2-53aeb137c6cb",
+      "name": "COOL_IASI_S02_Name",
+      "type": "cooler",
+      "displayName": "BriskAir IC-20",
+      "size": 2,
+      "grade": 2,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "f927a3d6-1c15-4d6f-ae34-5dfcf04a6bd2",
+      "name": "COOL_IASI_S03_Name",
+      "type": "cooler",
+      "displayName": "BriskAir IC-30",
+      "size": 3,
+      "grade": 2,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
       "tags": "",
       "typeParams": null
     },
@@ -1629,6 +1665,78 @@
       "displayName": "Stellate",
       "size": 4,
       "grade": 1,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "297e9974-65ff-45e9-8801-2e710e0eede5",
+      "name": "POWR_S01_IASI_NameA_SCItem",
+      "type": "powerplant",
+      "displayName": "Helios IP-10",
+      "size": 1,
+      "grade": 1,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "3493c2d7-9b7f-43ca-aebb-8019fbcc9ef4",
+      "name": "POWR_S01_IASI_Name_SCItem",
+      "type": "powerplant",
+      "displayName": "Sovereign IP-10",
+      "size": 1,
+      "grade": 2,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "c764fc13-638e-45ec-a906-8a9503049c72",
+      "name": "POWR_S02_IASI_NameA_SCItem",
+      "type": "powerplant",
+      "displayName": "Helios IP-20",
+      "size": 2,
+      "grade": 1,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "fb8629ce-b1ce-47cf-bfdd-94aaa9bf9aa0",
+      "name": "POWR_S02_IASI_Name_SCItem",
+      "type": "powerplant",
+      "displayName": "Sovereign IP-20",
+      "size": 2,
+      "grade": 2,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "f86e3f6c-2c38-47dc-bbcf-93d6201289d1",
+      "name": "POWR_S03_IASI_NameA_SCItem",
+      "type": "powerplant",
+      "displayName": "Helios IP-30",
+      "size": 3,
+      "grade": 1,
+      "manufacturerCode": "RSI",
+      "manufacturer": "Roberts Space Industries",
+      "tags": "",
+      "typeParams": null
+    },
+    {
+      "id": "86e578cf-3b09-4b7c-b60f-fb9c33bb4597",
+      "name": "POWR_S03_IASI_Name_SCItem",
+      "type": "powerplant",
+      "displayName": "Sovereign IP-30",
+      "size": 3,
+      "grade": 2,
       "manufacturerCode": "RSI",
       "manufacturer": "Roberts Space Industries",
       "tags": "",
@@ -13886,10 +13994,10 @@
     }
   ],
   "summary": {
-    "totalComponents": 277,
+    "totalComponents": 286,
     "byType": {
-      "cooler": 74,
-      "powerplant": 78,
+      "cooler": 77,
+      "powerplant": 84,
       "shieldgenerator": 67,
       "quantumdrive": 58
     }

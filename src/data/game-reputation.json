@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-09-16T23:09:45.393Z",
+  "_extracted": "2026-10-10T00:43:14.382Z",
   "factions": {
     "factionreputation_aciedo": {
       "id": "f088575d-92ea-40e4-8d52-ce83884a11dd",
@@ -71,6 +71,16 @@
       "recordName": "FactionReputation.FactionReputation_HurstonDynamics",
       "filePath": "libs/foundry/records/factions/factionreputation/factionreputation_hurstondynamics.json",
       "reputationContextFile": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_bounty-security.json"
+    },
+    "factionreputation_iasi": {
+      "id": "33e7f581-52d1-4609-8b86-5b5f7c7838be",
+      "key": "factionreputation_iasi",
+      "name": "Iasi",
+      "displayNameKey": "@LOC_PLACEHOLDER",
+      "descriptionKey": "",
+      "recordName": "FactionReputation.FactionReputation_Iasi",
+      "filePath": "libs/foundry/records/factions/factionreputation/factionreputation_iasi.json",
+      "reputationContextFile": null
     },
     "factionreputation_klescherrehabilitationservices": {
       "id": "cfe06ba5-968d-4e27-b738-7cc7abfb511f",
@@ -50635,7 +50645,7 @@
       "label": "PU_CertificationMission_PVE_Super",
       "title": "Master Tracker License Certification",
       "titleKey": "@BHG_Certification_Super_Title",
-      "description": "--------------------------------------------------------\\n----------------- BOUNTY CONTRACT -----------------\\n--------------------------------------------------------\\n\\nBOUNTY HUNTERS GUILD\\nPROCESSING & DISTRIBUTION\\n\\nThe Bounty Hunters Guild has authorized an official bounty.\\n\\nNAME: ~mission(TargetName) \\nSYSTEM: ~mission(System) \\nRISK ASSESSMENT: Extreme\\nLAST KNOWN LOCATION: ~mission(Location)\\nKNOWN AFFILIATIONS: <None>\\nNOTES: As acknowledgment of your expertise in the craft, the Bounty Hunters Guild would like to offer you the chance to earn a Master Tracker License.\\n\\nThis license would signify that you are qualified to track and apprehend Extreme-Risk Targets (ERT). These are criminals who travel in sub-capital ships with heavy escorts. This class of bounty only gets assigned to the most experienced of trackers.\\n\\nTo successfully complete this certification process, you must apprehend an ERT ranked criminal by the name of <EM4>~mission(TargetName)</EM4> last seen at <EM4>~mission(Location|Address)</EM4>.\\n\\n\\nBOUNTY HUNTERS GUILD\\nIn Pursuit of Justice\\n\\nThe Bounty Hunters Guild is a security service sanctioned by the Mercenary Guild and authorized to operate in both the UEE and beyond in accordance with Xenotrade Authority Acts.",
+      "description": "--------------------------------------------------------\\n----------------- BOUNTY CONTRACT -----------------\\n--------------------------------------------------------\\n\\nBOUNTY HUNTERS GUILD\\nPROCESSING & DISTRIBUTION\\n\\nThe Bounty Hunters Guild has authorized an official bounty.\\n\\nNAME: ~mission(TargetName) \\nSYSTEM: ~mission(System) \\nRISK ASSESSMENT: Extreme\\nLAST KNOWN LOCATION: ~mission(Location)\\nKNOWN AFFILIATIONS: <None>\\nNOTES: As acknowledgment of your expertise in the craft, the Bounty Hunters Guild would like to offer you the chance to earn a Master Tracker License.\\n\\nThis license would signify that you are qualified to track and apprehend Extreme-Risk Targets (ERT). These are criminals who travel in powerful ships with heavy escorts. This class of bounty only gets assigned to the most experienced of trackers.\\n\\nTo successfully complete this certification process, you must apprehend an ERT ranked criminal by the name of <EM4>~mission(TargetName)</EM4> last seen at <EM4>~mission(Location|Address)</EM4>.\\n\\n\\nBOUNTY HUNTERS GUILD\\nIn Pursuit of Justice\\n\\nThe Bounty Hunters Guild is a security service sanctioned by the Mercenary Guild and authorized to operate in both the UEE and beyond in accordance with Xenotrade Authority Acts.",
       "faction": "lawful_bountyhuntersguild",
       "missionGiver": "Bounty Hunters Guild",
       "missionType": "bountyhunter",
@@ -140590,7 +140600,7 @@
   "summary": {
     "totalStandings": 380,
     "totalScopes": 46,
-    "totalFactions": 38,
+    "totalFactions": 39,
     "totalContexts": 27,
     "totalRewardTypes": 57,
     "totalMissions": 2584,

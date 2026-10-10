@@ -1,10 +1,10 @@
 {
   "_source": "Generated from game-blueprints.json + contract data",
-  "_extracted": "2026-10-05T00:11:34.458Z",
+  "_extracted": "2026-10-10T00:45:11.161Z",
   "stats": {
-    "internalNames": 1607,
-    "displayNames": 1594,
-    "ambiguousDisplayNames": 13,
+    "internalNames": 1618,
+    "displayNames": 1607,
+    "ambiguousDisplayNames": 11,
     "contractDefinitions": 1982
   },
   "byInternalName": {
@@ -592,6 +592,14 @@
       "blueprintName": "ADP Legs Crusader Edition",
       "categoryName": "FPSArmours"
     },
+    "kap_combat_heavy_arms_01_01_01": {
+      "blueprintName": "Monolith Armor Arms",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_arms_01_04_01": {
+      "blueprintName": "Monolith Armor Arms Shadowflux",
+      "categoryName": "FPSArmours"
+    },
     "kap_combat_heavy_arms_02_01_01": {
       "blueprintName": "Monde Arms",
       "categoryName": "FPSArmours"
@@ -618,6 +626,22 @@
     },
     "kap_combat_heavy_arms_02_09_01": {
       "blueprintName": "Monde Arms Purgatory Camo",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_backpack_01_01_01": {
+      "blueprintName": "Monolith Backpack",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_backpack_01_04_01": {
+      "blueprintName": "Monolith Backpack Shadowflux",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_core_01_01_01": {
+      "blueprintName": "Monolith Armor Core",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_core_01_04_01": {
+      "blueprintName": "Monolith Armor Core Shadowflux",
       "categoryName": "FPSArmours"
     },
     "kap_combat_heavy_core_02_01_01": {
@@ -648,6 +672,10 @@
       "blueprintName": "Monde Core Purgatory Camo",
       "categoryName": "FPSArmours"
     },
+    "kap_combat_heavy_helmet_01_01_01": {
+      "blueprintName": "Monolith Helmet",
+      "categoryName": "FPSArmours"
+    },
     "kap_combat_heavy_helmet_02_01_01": {
       "blueprintName": "Monde Helmet",
       "categoryName": "FPSArmours"
@@ -674,6 +702,14 @@
     },
     "kap_combat_heavy_helmet_02_09_01": {
       "blueprintName": "Monde Helmet Purgatory Camo",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_legs_01_01_01": {
+      "blueprintName": "Monolith Armor Legs",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_legs_01_04_01": {
+      "blueprintName": "Monolith Armor Legs Shadowflux",
       "categoryName": "FPSArmours"
     },
     "kap_combat_heavy_legs_02_01_01": {
@@ -878,6 +914,10 @@
     },
     "vgl_combat_heavy_backpack_01_12_01": {
       "blueprintName": "Warden Backpack Purgatory Camo",
+      "categoryName": "FPSArmours"
+    },
+    "kap_combat_heavy_helmet_01_04_01": {
+      "blueprintName": "Monolith Helmet Shadowflux",
       "categoryName": "FPSArmours"
     },
     "cds_armor_light_arms_01_01_01": {
@@ -3868,6 +3908,10 @@
       "blueprintName": "F55 \"Mark I\" LMG",
       "categoryName": "FPSWeapons"
     },
+    "gmni_lmg_ballistic_01_collector02": {
+      "blueprintName": "F55 \"Shadowflux\" LMG",
+      "categoryName": "FPSWeapons"
+    },
     "gmni_lmg_ballistic_01_firerats01": {
       "blueprintName": "F55 \"Scorched\" LMG",
       "categoryName": "FPSWeapons"
@@ -5189,7 +5233,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "powr_sasu_s02_daybreak": {
-      "blueprintName": "FullForce",
+      "blueprintName": "DayBreak",
       "categoryName": "Veh. Comp. S2"
     },
     "powr_sasu_s02_lotus": {
@@ -5261,7 +5305,7 @@
       "categoryName": "Veh. Comp. S1"
     },
     "qdrv_just_s01_goliath": {
-      "blueprintName": "FoxFire",
+      "blueprintName": "Goliath",
       "categoryName": "Veh. Comp. S1"
     },
     "qdrv_just_s01_vulcan": {
@@ -7022,6 +7066,14 @@
       "internalName": "cds_legacy_armor_heavy_legs_01_crus01_01",
       "blueprintName": "ADP Legs Crusader Edition"
     },
+    "monolith armor arms": {
+      "internalName": "kap_combat_heavy_arms_01_01_01",
+      "blueprintName": "Monolith Armor Arms"
+    },
+    "monolith armor arms shadowflux": {
+      "internalName": "kap_combat_heavy_arms_01_04_01",
+      "blueprintName": "Monolith Armor Arms Shadowflux"
+    },
     "monde arms": {
       "internalName": "kap_combat_heavy_arms_02_01_01",
       "blueprintName": "Monde Arms"
@@ -7049,6 +7101,22 @@
     "monde arms purgatory camo": {
       "internalName": "kap_combat_heavy_arms_02_09_01",
       "blueprintName": "Monde Arms Purgatory Camo"
+    },
+    "monolith backpack": {
+      "internalName": "kap_combat_heavy_backpack_01_01_01",
+      "blueprintName": "Monolith Backpack"
+    },
+    "monolith backpack shadowflux": {
+      "internalName": "kap_combat_heavy_backpack_01_04_01",
+      "blueprintName": "Monolith Backpack Shadowflux"
+    },
+    "monolith armor core": {
+      "internalName": "kap_combat_heavy_core_01_01_01",
+      "blueprintName": "Monolith Armor Core"
+    },
+    "monolith armor core shadowflux": {
+      "internalName": "kap_combat_heavy_core_01_04_01",
+      "blueprintName": "Monolith Armor Core Shadowflux"
     },
     "monde core": {
       "internalName": "kap_combat_heavy_core_02_01_01",
@@ -7078,6 +7146,10 @@
       "internalName": "kap_combat_heavy_core_02_09_01",
       "blueprintName": "Monde Core Purgatory Camo"
     },
+    "monolith helmet": {
+      "internalName": "kap_combat_heavy_helmet_01_01_01",
+      "blueprintName": "Monolith Helmet"
+    },
     "monde helmet": {
       "internalName": "kap_combat_heavy_helmet_02_01_01",
       "blueprintName": "Monde Helmet"
@@ -7105,6 +7177,14 @@
     "monde helmet purgatory camo": {
       "internalName": "kap_combat_heavy_helmet_02_09_01",
       "blueprintName": "Monde Helmet Purgatory Camo"
+    },
+    "monolith armor legs": {
+      "internalName": "kap_combat_heavy_legs_01_01_01",
+      "blueprintName": "Monolith Armor Legs"
+    },
+    "monolith armor legs shadowflux": {
+      "internalName": "kap_combat_heavy_legs_01_04_01",
+      "blueprintName": "Monolith Armor Legs Shadowflux"
     },
     "monde legs": {
       "internalName": "kap_combat_heavy_legs_02_01_01",
@@ -7309,6 +7389,10 @@
     "warden backpack purgatory camo": {
       "internalName": "vgl_combat_heavy_backpack_01_12_01",
       "blueprintName": "Warden Backpack Purgatory Camo"
+    },
+    "monolith helmet shadowflux": {
+      "internalName": "kap_combat_heavy_helmet_01_04_01",
+      "blueprintName": "Monolith Helmet Shadowflux"
     },
     "field recon suit arms": {
       "internalName": "cds_armor_light_arms_01_01_01",
@@ -10346,6 +10430,10 @@
       "internalName": "gmni_lmg_ballistic_01_collector01",
       "blueprintName": "F55 \"Mark I\" LMG"
     },
+    "f55 \"shadowflux\" lmg": {
+      "internalName": "gmni_lmg_ballistic_01_collector02",
+      "blueprintName": "F55 \"Shadowflux\" LMG"
+    },
     "f55 \"scorched\" lmg": {
       "internalName": "gmni_lmg_ballistic_01_firerats01",
       "blueprintName": "F55 \"Scorched\" LMG"
@@ -11639,20 +11727,8 @@
       "blueprintName": "ZapJet"
     },
     "fullforce": {
-      "ambiguous": true,
-      "displayName": "FullForce",
-      "candidates": [
-        {
-          "internalName": "powr_lplt_s02_fullforce",
-          "blueprintName": "FullForce",
-          "categoryName": "Veh. Comp. S2"
-        },
-        {
-          "internalName": "powr_sasu_s02_daybreak",
-          "blueprintName": "FullForce",
-          "categoryName": "Veh. Comp. S2"
-        }
-      ]
+      "internalName": "powr_lplt_s02_fullforce",
+      "blueprintName": "FullForce"
     },
     "ionsurge": {
       "internalName": "powr_lplt_s02_ionsurge",
@@ -11702,6 +11778,10 @@
       "internalName": "powr_sasu_s01_whiterose",
       "blueprintName": "WhiteRose"
     },
+    "daybreak": {
+      "internalName": "powr_sasu_s02_daybreak",
+      "blueprintName": "DayBreak"
+    },
     "lotus": {
       "internalName": "powr_sasu_s02_lotus",
       "blueprintName": "Lotus"
@@ -11747,20 +11827,8 @@
       "blueprintName": "GammaMax"
     },
     "foxfire": {
-      "ambiguous": true,
-      "displayName": "FoxFire",
-      "candidates": [
-        {
-          "internalName": "qdrv_acas_s01_foxfire",
-          "blueprintName": "FoxFire",
-          "categoryName": "Veh. Comp. S1"
-        },
-        {
-          "internalName": "qdrv_just_s01_goliath",
-          "blueprintName": "FoxFire",
-          "categoryName": "Veh. Comp. S1"
-        }
-      ]
+      "internalName": "qdrv_acas_s01_foxfire",
+      "blueprintName": "FoxFire"
     },
     "lightfire": {
       "internalName": "qdrv_acas_s01_lightfire",
@@ -11781,6 +11849,10 @@
     "colossus": {
       "internalName": "qdrv_just_s01_colossus",
       "blueprintName": "Colossus"
+    },
+    "goliath": {
+      "internalName": "qdrv_just_s01_goliath",
+      "blueprintName": "Goliath"
     },
     "vulcan": {
       "internalName": "qdrv_just_s01_vulcan",
@@ -23355,24 +23427,6 @@
       "klwe_laserrepeater_s3_mr01",
       "behr_rifle_ballistic_03"
     ],
-    "0dcf38f8-ddca-4c63-9e5a-990b95cedde2": [
-      "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
-    ],
-    "ors_cr_small": [
-      "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
-    ],
-    "orison relief: small fabrication order": [
-      "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
-    ],
-    "a8da4735-d681-4fa4-945c-cd44596f959a": [
-      "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
-    ],
-    "ors_cr_medium": [
-      "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
-    ],
-    "orison relief: medium fabrication order": [
-      "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
-    ],
     "9a92d449-f8d1-4766-bae1-462e1a2cab71": [
       "carryable_2h_fl_missionitem_prototype_ship_component_2_a"
     ],
@@ -23426,6 +23480,36 @@
       "cds_combat_superheavy_backpack_01_03_01",
       "cds_combat_superheavy_suit_01_03_01",
       "cds_combat_superheavy_helmet_01_03_01"
+    ],
+    "b46612e0-4eae-4827-8038-e460e00f8967": [
+      "gmni_lmg_ballistic_01_collector02"
+    ],
+    "thecollector_gmni_lmg": [
+      "gmni_lmg_ballistic_01_collector02"
+    ],
+    "big style lmg": [
+      "gmni_lmg_ballistic_01_collector02"
+    ],
+    "c99e22e9-643c-4822-9f06-8c119722caee": [
+      "kap_combat_heavy_arms_01_04_01",
+      "kap_combat_heavy_legs_01_04_01",
+      "kap_combat_heavy_helmet_01_04_01",
+      "kap_combat_heavy_core_01_04_01",
+      "kap_combat_heavy_backpack_01_04_01"
+    ],
+    "thecollector_greyheavycombatarmour": [
+      "kap_combat_heavy_arms_01_04_01",
+      "kap_combat_heavy_legs_01_04_01",
+      "kap_combat_heavy_helmet_01_04_01",
+      "kap_combat_heavy_core_01_04_01",
+      "kap_combat_heavy_backpack_01_04_01"
+    ],
+    "monolith armor very smooth": [
+      "kap_combat_heavy_arms_01_04_01",
+      "kap_combat_heavy_legs_01_04_01",
+      "kap_combat_heavy_helmet_01_04_01",
+      "kap_combat_heavy_core_01_04_01",
+      "kap_combat_heavy_backpack_01_04_01"
     ],
     "d4d26850-d4f4-4549-a0af-a478ee0be480": [
       "carryable_2h_cy_collectormaterial_001"

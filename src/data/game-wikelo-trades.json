@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (TheCollector contract generator)",
-  "_extracted": "2026-09-16T23:09:45.433Z",
+  "_extracted": "2026-10-10T00:43:14.423Z",
   "trades": [
     {
       "id": "5bf19672-f057-4ccf-bdd4-d309edfeea15",
@@ -1850,8 +1850,8 @@
       ],
       "rewards": [
         {
-          "entityClass": "rsi_constellation_taurus_military",
-          "name": "RSI Constellation Taurus Wikelo War Special",
+          "entityClass": "rsi_constellation_taurus_gs_military",
+          "name": "RSI Constellation Mk IV Taurus Wikelo War Special",
           "amount": 1,
           "kind": "vehicle"
         }
@@ -2311,6 +2311,55 @@
       ],
       "blueprintPools": [],
       "repReward": 25,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "b46612e0-4eae-4827-8038-e460e00f8967",
+      "debugName": "TheCollector_GMNI_LMG",
+      "title": "Big Style LMG",
+      "description": "Warriors should feel strong, yes? What makes you feel more very strong than looking amazing? Wikelo will make your gun look like different gun. Bring me item on list and I give to you. Bye.",
+      "category": "gear",
+      "subCategory": "weapon",
+      "costs": [
+        {
+          "entityClass": "gmni_lmg_ballistic_01",
+          "name": "F55 LMG",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 5
+        },
+        {
+          "entityClass": "harvestable_ore_1h_jacliumore",
+          "name": "Jaclium (Ore)",
+          "amount": 20
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "gmni_lmg_ballistic_01_collector02",
+          "name": "F55 \"Shadowflux\" LMG",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "gmni_lmg_ballistic_01_mag",
+          "name": "F55 LMG Magazine (150 cap)",
+          "amount": 20,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_gmni_lmg_ballistic_01_collector02"
+      ],
+      "repReward": 10,
       "minStanding": null,
       "maxStanding": null,
       "requiresIntro": false,
@@ -3407,6 +3456,97 @@
         }
       ],
       "blueprintPools": [],
+      "repReward": 10,
+      "minStanding": null,
+      "maxStanding": null,
+      "requiresIntro": false,
+      "maxPerPlayer": 1,
+      "isVehicleReward": false,
+      "notForRelease": false
+    },
+    {
+      "id": "c99e22e9-643c-4822-9f06-8c119722caee",
+      "debugName": "TheCollector_GreyHeavyCombatArmour",
+      "title": "Monolith Armor Very Smooth",
+      "description": "When fight, you want armor that solid. Keep gun from helpful organ you need to live, yes, but should be impressive too. Wikelo make version of Monolith armor that do both.\n\nYou want? Bring me things I need for new project and I will give. Show you how to make too. More happy.",
+      "category": "gear",
+      "subCategory": "armor",
+      "costs": [
+        {
+          "entityClass": "kap_combat_heavy_legs_01_01_01",
+          "name": "Monolith Armor Legs",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_arms_01_01_01",
+          "name": "Monolith Armor Arms",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_core_01_01_01",
+          "name": "Monolith Armor Core",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_helmet_01_01_01",
+          "name": "Monolith Helmet",
+          "amount": 1
+        },
+        {
+          "entityClass": "kap_combat_heavy_backpack_01_01_01",
+          "name": "Monolith Backpack",
+          "amount": 1
+        },
+        {
+          "entityClass": "carryable_1h_cy_armor_vanduul_1_b",
+          "name": "Vanduul Metal",
+          "amount": 10
+        },
+        {
+          "entityClass": "harvestable_ore_1h_saldyniumore",
+          "name": "Saldynium (Ore)",
+          "amount": 25
+        }
+      ],
+      "rewards": [
+        {
+          "entityClass": "kap_combat_heavy_legs_01_04_01",
+          "name": "Monolith Armor Legs Shadowflux",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_core_01_04_01",
+          "name": "Monolith Armor Core Shadowflux",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_backpack_01_04_01",
+          "name": "Monolith Backpack Shadowflux",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_arms_01_04_01",
+          "name": "Monolith Armor Arms Shadowflux",
+          "amount": 1,
+          "kind": "item"
+        },
+        {
+          "entityClass": "kap_combat_heavy_helmet_01_04_01",
+          "name": "Monolith Helmet Shadowflux",
+          "amount": 1,
+          "kind": "item"
+        }
+      ],
+      "blueprintPools": [
+        "bp_reward_kap_combat_heavy_arms_01_04_01",
+        "bp_reward_kap_combat_heavy_legs_01_04_01",
+        "bp_reward_kap_combat_heavy_helmet_01_04_01",
+        "bp_reward_kap_combat_heavy_core_01_04_01",
+        "bp_reward_kap_combat_heavy_backpack_01_04_01"
+      ],
       "repReward": 10,
       "minStanding": null,
       "maxStanding": null,
@@ -4597,9 +4737,9 @@
     }
   },
   "summary": {
-    "totalTrades": 86,
+    "totalTrades": 88,
     "vehicleTrades": 42,
-    "gearTrades": 37,
+    "gearTrades": 39,
     "favorTrades": 5
   }
 }

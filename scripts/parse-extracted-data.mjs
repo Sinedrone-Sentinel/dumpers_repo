@@ -2852,6 +2852,22 @@ function resolveArmorBlueprintName(internalName, localization) {
     }
   }
 
+  // CIG mislabel (e.g. 4.10.2 Antium arms named "Helmet Jet"): borrow the colourway from a
+  // sibling piece of the same variant and swap in this slot's label.
+  const targetLabel = ARMOR_SLOT_DISPLAY[parsed.slot]
+  if (targetLabel && ['helmet', 'core', 'arms', 'legs'].includes(parsed.slot)) {
+    const slotWord = { helmet: /\bhelmet\b/i, core: /\bcore\b/i, arms: /\barms\b/i, legs: /\blegs\b/i }
+    for (const sibling of ['core', 'legs', 'arms', 'helmet']) {
+      if (sibling === parsed.slot) continue
+      for (const key of buildArmorLocalizationKeys({ ...parsed, slot: sibling })) {
+        const value = lookupLocalizationKey(key, localization)
+        if (value && nameImpliesArmorSlot(value) === sibling && slotWord[sibling].test(value)) {
+          return value.replace(slotWord[sibling], targetLabel)
+        }
+      }
+    }
+  }
+
   return null
 }
 

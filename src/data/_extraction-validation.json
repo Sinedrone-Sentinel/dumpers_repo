@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-09-16T23:09:45.438Z",
+  "_generated": "2026-10-10T00:43:14.427Z",
   "issues": [],
   "expectedPaths": {
     "blueprints": "libs/foundry/records/crafting/blueprints/crafting",
@@ -15,6 +15,7 @@
     "contractScenarios": "libs/foundry/records/contracts/contractscenarios",
     "missionLocality": "libs/foundry/records/missiondata/pu_missionlocality",
     "reputationRewards": "libs/foundry/records/reputation/rewards",
-    "factionReputation": "libs/foundry/records/factions/factionreputation"
+    "factionReputation": "libs/foundry/records/factions/factionreputation",
+    "resourceTypes": "libs/foundry/records/resourcetypedatabase"
   }
 }

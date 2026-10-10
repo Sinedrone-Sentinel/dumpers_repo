@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (extracted)",
-  "_extracted": "2026-09-16T23:09:45.434Z",
+  "_extracted": "2026-10-10T00:43:14.424Z",
   "weapons": [
     {
       "id": "e302c7ae-b850-412d-983e-36dbf04f98fe",
@@ -705,6 +705,19 @@
       "tags": "stocked behr_smg_ballistic_01 smg"
     },
     {
+      "id": "478af1eb-51a8-4a11-9c2c-6f795e36bc2d",
+      "name": "behr_smg_ballistic_01_iasi",
+      "displayName": "P8-SC \"Echo\" SMG",
+      "type": "Medium",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked behr_smg_ballistic_01 smg"
+    },
+    {
       "id": "1c3b69e0-3162-40ba-afab-f9d48da6b1dc",
       "name": "behr_smg_ballistic_01_tan01",
       "displayName": "P8-SC \"Desert Shadow\" SMG",
@@ -929,6 +942,19 @@
       "id": "8260cda3-1bbf-4f0e-9162-0bd921b5ff4d",
       "name": "gmni_lmg_ballistic_01_collector01",
       "displayName": "F55 \"Mark I\" LMG",
+      "type": "Medium",
+      "size": 4,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked lmg gmni_lmg_ballistic_01"
+    },
+    {
+      "id": "ddb8eb6e-a55d-4846-90f3-5adda9ea8e9d",
+      "name": "gmni_lmg_ballistic_01_collector02",
+      "displayName": "F55 \"Shadowflux\" LMG",
       "type": "Medium",
       "size": 4,
       "fireRate": 0,
@@ -1719,9 +1745,35 @@
       "tags": "stocked grin_salvage_01"
     },
     {
+      "id": "0e259726-3ea6-4b0d-98da-afad3eeccff6",
+      "name": "grin_salvage_repair_IASI",
+      "displayName": "Cambio-II \"Glacier\" SRT",
+      "type": "Gadget",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked grin_salvage_01"
+    },
+    {
       "id": "27adea05-f94d-4439-872d-b043a631c34f",
       "name": "grin_tractor_01",
       "displayName": "MaxLift Tractor Beam",
+      "type": "Gadget",
+      "size": 2,
+      "fireRate": 0,
+      "idealCombatRange": 30,
+      "maxFiringRange": 50,
+      "damageMultiplier": 1,
+      "combatRangeCategory": "Unknown",
+      "tags": "stocked grin_tractor_01"
+    },
+    {
+      "id": "604fc3ff-4237-433d-b053-5bf365a16141",
+      "name": "grin_tractor_01_IASI",
+      "displayName": "MaxLift-II \"Keelback\" Tractor Beam",
       "type": "Gadget",
       "size": 2,
       "fireRate": 0,
@@ -4099,6 +4151,6 @@
     }
   ],
   "summary": {
-    "totalWeapons": 315
+    "totalWeapons": 319
   }
 }
