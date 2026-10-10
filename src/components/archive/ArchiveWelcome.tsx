@@ -3,6 +3,7 @@ import type { ArchiveSection } from '../../routes/Archive.index'
 import { MISSION_LOCATION_TAG_STYLES } from '../../lib/missionLocations'
 import { PAGE_GUIDES } from '../../lib/archiveGuide/pageGuides'
 import {
+  OFFLINE_MODE_SECTION,
   SITE_RULES_SECTION,
   ORDER_RULES_SECTION,
   ORDER_LIFECYCLE_SECTION,
@@ -368,30 +369,26 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
         </h3>
         <div className="p-4 site-surface space-y-4">
           <p className="text-sm text-slate-300 leading-relaxed">
-            Want to try out the tools before signing up? <strong className="text-white">Offline Mode</strong> lets 
-            you explore most features without creating an account.
+            {renderRich(OFFLINE_MODE_SECTION.intro)}
           </p>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="p-3 site-surface border-green-500/20">
               <h4 className="text-sm font-medium text-green-400 mb-2">What Works Offline</h4>
-              <ul className="text-xs text-slate-400 space-y-1">
-                <li>• Browse all blueprints and archive data</li>
-                <li>• Mark blueprints as acquired (local only)</li>
-                <li>• Build your Mission Tracker list (local only)</li>
-                <li>• Track resources in Resource Tracker (local only)</li>
-                <li>• Use the Mining Tracker for RS references</li>
-                <li>• Preview The Bazaar — see how many WTB/WTS listings are open (sign in to trade)</li>
+              <ul className="text-xs text-slate-400 space-y-1.5">
+                {OFFLINE_MODE_SECTION.worksOffline.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
-            
+
             <div className="p-3 site-surface border-amber-500/20">
               <h4 className="text-sm font-medium text-amber-400 mb-2">Members-Only Features</h4>
-              <ul className="text-xs text-slate-400 space-y-1">
-                <li>• My Listings — keep one WTB buy listing and one WTS sell listing (always item-by-item)</li>
-                <li>• The Bazaar — buy from WTS listings, sell to WTB listings, and complete trades</li>
-                <li>• BP Dumper + Live Mission Tracker — sync log unlocks and watch active missions</li>
-                <li>• Cross-device data sync</li>
+              <p className="text-[11px] text-slate-500 mb-2">Free account — sign in with Google or Discord.</p>
+              <ul className="text-xs text-slate-400 space-y-1.5">
+                {OFFLINE_MODE_SECTION.membersOnly.map((item) => (
+                  <li key={item}>• {renderRich(item)}</li>
+                ))}
               </ul>
             </div>
           </div>
@@ -403,19 +400,10 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
               </svg>
               Data Migration
             </h4>
-            <p className="text-xs text-slate-400">
-              Offline progress is stored in your browser using the same IDs as member accounts. 
-              Old offline data from before a recent update is cleared automatically when you visit. 
-              On your <strong className="text-blue-300">first sign-in</strong> (when the welcome onboarding appears), 
-              valid offline data migrates to your account — unmatched or outdated items are skipped, not forced in. 
-              If you already have an account, your offline stash stays separate in the browser.
-            </p>
+            <p className="text-xs text-slate-400">{renderRich(OFFLINE_MODE_SECTION.migration)}</p>
           </div>
 
-          <p className="text-xs text-slate-500">
-            Offline data is stored in your browser. It persists across sessions but won't sync 
-            between devices or browsers until you create an account.
-          </p>
+          <p className="text-xs text-slate-500">{renderRich(OFFLINE_MODE_SECTION.footnote)}</p>
         </div>
       </section>
 
