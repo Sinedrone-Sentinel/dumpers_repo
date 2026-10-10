@@ -46,6 +46,32 @@ function labelOf(specLabel, rec, key, resolve) {
   return cleanDisplayLabel(raw, resolve) || String(key)
 }
 
+/** Item collections whose entries may also be craftable — tag those so members can tell. */
+const BLUEPRINT_TAGGED_CATEGORIES = new Set(['FPS Weapons', 'Components', 'Salvage', 'Ordnance'])
+
+function collectBlueprintEntityClasses(diffResult, dataDir) {
+  const classes = new Set()
+  const add = (rec) => {
+    const ec = rec?.entityClass
+    if (ec) classes.add(String(ec).toLowerCase())
+  }
+  const current = dataDir ? readJsonSafe(join(dataDir, 'game-blueprints.json')) : null
+  for (const rec of current?.blueprints ?? []) add(rec)
+  // Items removed this patch lose their blueprint too; keep those entity classes.
+  for (const col of diffResult.collections) {
+    if (col.category !== 'Blueprints') continue
+    for (const r of col.removed) add(r.rec)
+  }
+  return classes
+}
+
+function isBlueprintItem(rec, key, blueprintClasses) {
+  for (const id of [rec?.entityClass, rec?.name, key]) {
+    if (id && blueprintClasses.has(String(id).toLowerCase())) return true
+  }
+  return false
+}
+
 function readJsonSafe(path) {
   if (!existsSync(path)) return null
   try {
@@ -121,13 +147,23 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
     return buckets.get(id)
   }
 
+  const blueprintClasses =
+    options.blueprintEntityClasses ?? collectBlueprintEntityClasses(diffResult, options.dataDir)
+
   for (const col of diffResult.collections) {
     const labelFn = col.label
+    const tagBlueprints = BLUEPRINT_TAGGED_CATEGORIES.has(col.category)
+    const itemLabel = (rec, key) => {
+      const label = labelOf(labelFn, rec, key, resolve)
+      return tagBlueprints && isBlueprintItem(rec, key, blueprintClasses)
+        ? `${label} (Blueprint)`
+        : label
+    }
     for (const a of col.added) {
       if (isUnreleasedRecord(a.rec)) continue
       ensure(col.category, 'added').items.push({
         key: a.key,
-        label: labelOf(labelFn, a.rec, a.key, resolve),
+        label: itemLabel(a.rec, a.key),
         summary: null,
       })
     }
@@ -135,7 +171,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       if (isUnreleasedRecord(r.rec)) continue
       ensure(col.category, 'removed').items.push({
         key: r.key,
-        label: labelOf(labelFn, r.rec, r.key, resolve),
+        label: itemLabel(r.rec, r.key),
         summary: null,
       })
     }
@@ -147,7 +183,7 @@ export function buildWhatsNewEntriesFromDiff(diffResult, options = {}) {
       if (!summary) continue
       ensure(col.category, 'changed').items.push({
         key: c.key,
-        label: labelOf(labelFn, c.rec, c.key, resolve),
+        label: itemLabel(c.rec, c.key),
         summary,
       })
     }
