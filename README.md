@@ -130,6 +130,13 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - Friends organize private groups (Default + custom bands); accepted friends can browse and trade each other’s Bazaar listings
 - Optional Discord Webhooks (My activity): friend request received / accepted (RSI Handle only)
 
+### Notepad (header)
+
+- Pen-and-pad button pinned to the far right of the header slides a see-through note pad over the right side of the page; only that button opens or closes it, and the rest of the page stays usable
+- Plain text up to 2,000 characters, line breaks and spacing kept exactly; **Save** (or Ctrl+S) and **Clear**
+- Signed in: `user_notepads` (one row per member, saved via `save_my_notepad`). Offline Mode: `localStorage`, copied to the account on first sign-in when the account has no note yet
+- Unsaved edits survive page changes; leaving the site, refreshing, or signing out warns first
+
 ### Mining Tracker (`/mining-tracker`)
 
 Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).

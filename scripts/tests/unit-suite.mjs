@@ -43,6 +43,7 @@ const modules = [
   'src/lib/qualityBands.ts',
   'src/lib/bpWishlistDemand.ts',
   'src/lib/missionDisplay.ts',
+  'src/lib/notepadText.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -1942,5 +1943,14 @@ check(
   !parsedMissions.contracts.some((c) => String(c.displayTitle || '').includes('~mission')),
   'parsed missions: no displayTitle keeps a raw ~mission token',
 )
+
+const notepadText = await import(pathToFileURL(path.join(outDir, 'notepadText.mjs')).href)
+check(notepadText.NOTEPAD_MAX_CHARS === 2000, 'notepad: 2000 character limit')
+check(
+  notepadText.clampNotepad('  line one\r\n\n    indented\t \n') === '  line one\r\n\n    indented\t \n',
+  'notepad: spacing and line breaks are kept exactly',
+)
+check(notepadText.clampNotepad(null) === '', 'notepad: null becomes empty')
+check(notepadText.clampNotepad('x'.repeat(2005)).length === 2000, 'notepad: over-limit text is capped')
 
 console.log(`Unit tests: ${pass} passed`)

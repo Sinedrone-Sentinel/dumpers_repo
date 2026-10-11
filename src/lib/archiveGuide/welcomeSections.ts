@@ -30,6 +30,7 @@ export const OFFLINE_MODE_SECTION = {
     '**Information Archive** — site guide plus component, ordnance, faction, and lore references',
     '**Request Services** — call 3rd party services like Medrunner',
     '**The Bazaar** — see how many listings are open',
+    '**Notepad** — the pen-and-pad button in the top right corner opens a quick note pad (saved in this browser)',
   ],
   membersOnly: [
     '**Smart Cracker** — save mining ship loadouts (a factory Default plus 3 custom slots per ship), load premade builds, and get crack plans, throttle, and gadget advice for each rock',
@@ -45,7 +46,7 @@ export const OFFLINE_MODE_SECTION = {
     '**Notifications + Discord Webhooks** — trade, friend, and BP Dumper alerts in the site and in your own Discord channel',
     '**Partnership + Contribute** — org leaders can offer services to members; members can apply to help build the site on GitHub',
     '**Support tickets** — get help from site staff',
-    '**Sync everywhere** — your blueprints, tracker, resources, and loadouts follow you to any device',
+    '**Sync everywhere** — your blueprints, tracker, resources, loadouts, and Notepad follow you to any device',
   ],
   migration:
     'Offline progress is stored in your browser using the same IDs as member accounts. Old offline data from before a recent update is cleared automatically when you visit. On your **first sign-in**, you must finish welcome onboarding before member tools unlock; when that flow appears, valid offline data migrates to your account — unmatched or outdated items are skipped, not forced in. If you already have an account, your offline stash stays separate in the browser.',
