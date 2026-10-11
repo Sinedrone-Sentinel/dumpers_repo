@@ -1830,9 +1830,15 @@ check(
   'band stock: Purchased (Q0) and Q0 cards never counted in any band',
 )
 check(qualityBandsLib.stockByBand('Not A Resource', new Map([[700, 1]])).length === 0, 'band stock: unknown resource has no bands')
-check(qualityBandsLib.formatStockScu(0.041) === '0.041scu', 'stock label formats X.XXXscu')
-check(qualityBandsLib.formatStockScu(4) === '4.000scu', 'stock label pads to three decimals')
-check(qualityBandsLib.formatStockScu(0) === '' && qualityBandsLib.formatStockScu(undefined) === '', 'no stock label when nothing held')
+check(qualityBandsLib.formatStockAmount('riccite', 0.041) === '0.041scu', 'stock label formats X.XXXscu')
+check(qualityBandsLib.formatStockAmount('riccite', 4) === '4.000scu', 'stock label pads to three decimals')
+check(
+  qualityBandsLib.formatStockAmount('riccite', 0) === '' &&
+    qualityBandsLib.formatStockAmount('riccite', undefined) === '',
+  'no stock label when nothing held',
+)
+check(qualityBandsLib.formatStockAmount('hadanite', 59) === '59 units', 'gem stock label is whole units')
+check(qualityBandsLib.formatStockAmount('hadanite', 1) === '1 unit', 'single gem reads 1 unit')
 check(
   qualityBandsLib.getResourceBandRanges('Quantanium')?.length ===
     qualityBandsLib.getResourceBands('Quantanium')?.length,
