@@ -2,7 +2,7 @@ import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/res
 import { slugifyResourceName } from '../lib/blueprintResources'
 import {
   formatInventoryQualityLabel,
-  formatStockScu,
+  formatStockAmount,
   getResourceBands,
   getQualityTier,
   getQualityTierColor,
@@ -159,7 +159,7 @@ export default function BlueprintSlotQualityCard({
                   label: formatInventoryQualityLabel(craftResKey, q),
                   stockLabel:
                     ownedStock && isBandedStockQuality(q)
-                      ? formatStockScu(ownedStock.byQuality.get(q))
+                      ? formatStockAmount(craftResKey, ownedStock.byQuality.get(q))
                       : undefined,
                 }))}
               />
@@ -196,7 +196,7 @@ export default function BlueprintSlotQualityCard({
                   label:
                     qualityDisplay === 'q-values' ? `Q${bandValue}` : `Band ${idx + 1}: Q${bandValue}`,
                   className: getQualityTierColor(getQualityTier(bandValue)),
-                  stockLabel: bandStock ? formatStockScu(bandStock[idx]) : undefined,
+                  stockLabel: bandStock ? formatStockAmount(craftResKey, bandStock[idx]) : undefined,
                 }))}
               />
             ) : (
