@@ -237,6 +237,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 169 | `204_wts_auto_rating_bucket.sql` | Automatic ratings (buyer no-show, 24h rating deadline, account delete) now land in the same buyer / seller reputation as manual ratings on WTS deals. Swaps existing WTS auto-ratings into the right reputation, fixes the account-delete rating call, and limits `auto_apply_order_rating` to `service_role` |
 | 170 | `205_bazaar_buyer_seller_wording.sql` | Rewrites member-facing text inside existing order functions (errors, notifications, Discord) to say Buyer / Seller instead of fulfiller / customer, and updates stored order titles and notifications. Fails if any old phrase is left. Apply after **204** |
 | 171 | `206_wts_buyer_report_problem.sql` | **Report problem** follows buyer / seller by listing type, so WTS buyers can report (they were always refused). Officer **cancel** on a deal taken from a listing returns the items to that listing. Apply after **205** |
+| 172 | `207_user_notepads.sql` | Header **Notepad**: `user_notepads` (one row per member, 2,000-character cap). Members `SELECT` their own row only; saving goes through the SECURITY DEFINER `save_my_notepad` RPC |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

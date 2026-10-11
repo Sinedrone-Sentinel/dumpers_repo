@@ -33,6 +33,10 @@ import {
   WHATS_NEW_CHANGED_EVENT,
 } from '../../lib/tickerLayout'
 import type { PendingQuestionnaire } from '../../lib/questionnaires'
+import { useNotepad } from '../../contexts/NotepadContext'
+import NotepadToggle from '../notepad/NotepadToggle'
+import NotepadPanel from '../notepad/NotepadPanel'
+import NotepadLeaveModal from '../notepad/NotepadLeaveModal'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -88,6 +92,7 @@ export default function AppChrome({
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const updateAvailable = useAppUpdateAvailable()
   const liveGameVersion = getLiveGameVersionLabel()
+  const { runIfNoUnsavedNotes } = useNotepad()
   const headerRef = useRef<HTMLElement>(null)
   const [whatsNew, setWhatsNew] = useState<WhatsNewEntry[]>([])
   const [tickerItems, setTickerItems] = useState<SiteTickerItem[]>([])
@@ -143,7 +148,8 @@ export default function AppChrome({
         className="fixed top-0 inset-x-0 z-40 flex flex-col overflow-visible isolate"
       >
         {updateAvailable && <UpdateAvailableBanner />}
-        <div className="site-app-header">
+        <div className="site-app-header relative pr-11">
+          <NotepadToggle className="absolute right-1 top-1/2 -translate-y-1/2" />
           <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
             <AppSidebar groups={navGroups} />
             <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
@@ -188,7 +194,7 @@ export default function AppChrome({
                     onOpenQuestionnairesAdmin={onOpenQuestionnairesAdmin}
                     onOpenTickerAdmin={onOpenTickerAdmin}
                     onOpenSupport={onOpenSupport}
-                    onSignOut={onSignOut}
+                    onSignOut={() => runIfNoUnsavedNotes(onSignOut)}
                   />
                   <SiteHelpChip disabled={isPending} />
                 </>
@@ -218,6 +224,8 @@ export default function AppChrome({
         <DfpOptOutFooter />
       </footer>
 
+      <NotepadPanel />
+      <NotepadLeaveModal />
       <SiteTicker
         items={tickerItems}
         onOpenQuestionnaire={(id) => onOpenQuestionnaire?.(id)}

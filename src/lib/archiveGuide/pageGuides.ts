@@ -539,6 +539,20 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     relatesTo: ['Resource Tracker', 'Mining Tracker'],
   },
   {
+    id: 'notepad',
+    title: 'Notepad',
+    description: 'A quick see-through note pad you can open from any page with the pen-and-pad button in the top right corner.',
+    details: [
+      'Click the pen-and-pad button to slide the pad out; click it again to slide it away',
+      'The rest of the page stays usable while the pad is open — change pages and your notes come with you',
+      'Up to 2,000 characters of plain text; line breaks and spacing are kept exactly as you type them',
+      'Press Save (or Ctrl+S) to keep your notes; Clear empties the pad, then Save makes it stick',
+      'Signed in: saved to your account on every device. Offline Mode: saved in this browser, and moved to your account the first time you sign in',
+      'Unsaved notes trigger a warning before you leave the site, refresh, or sign out',
+    ],
+    relatesTo: ['Mission Tracker', 'Mining Tracker'],
+  },
+  {
     id: 'general',
     title: 'General Archive',
     description: 'External resources, quick tips, and data attribution.',

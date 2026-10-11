@@ -45,6 +45,8 @@ export interface GuestTargetListData {
 
 export const GUEST_RESOURCES_STORAGE_KEY = 'dumpers_guest_resources'
 export const GUEST_GROUP_BLUEPRINT_VARIANTS_KEY = 'dumpers_guest_group_blueprint_variants'
+/** Not part of the cache-version wipe — guest notes survive site updates. */
+export const GUEST_NOTEPAD_STORAGE_KEY = 'dumpers_guest_notepad'
 
 export interface GuestResourceEntry {
   resource_key: string
@@ -373,6 +375,17 @@ export function sanitizeMigrationBatch<T>(items: T[]): T[] {
 export function sanitizeBlueprintId(id: unknown): string | null {
   if (typeof id !== 'string') return null
   return normalizeGuestBlueprintId(id)
+}
+
+export function readGuestNotepad(): string {
+  if (typeof localStorage === 'undefined') return ''
+  return localStorage.getItem(GUEST_NOTEPAD_STORAGE_KEY) ?? ''
+}
+
+export function writeGuestNotepad(content: string): void {
+  if (typeof localStorage === 'undefined') return
+  if (content) localStorage.setItem(GUEST_NOTEPAD_STORAGE_KEY, content)
+  else localStorage.removeItem(GUEST_NOTEPAD_STORAGE_KEY)
 }
 
 export function readGuestGroupBlueprintVariants(): boolean {

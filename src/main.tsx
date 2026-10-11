@@ -6,6 +6,7 @@ import { FriendsProvider } from './contexts/FriendsContext'
 import { OrderDraftProvider } from './contexts/OrderDraftContext'
 import { MiningTrackerProvider } from './contexts/MiningTrackerContext'
 import { MiningLoadoutProvider } from './contexts/MiningLoadoutContext'
+import { NotepadProvider } from './contexts/NotepadContext'
 import RouterApp from './components/RouterApp'
 import DfpInitGate from './components/DfpInitGate'
 import './index.css'
@@ -22,19 +23,21 @@ if (appElement) {
   root.render(
     <React.StrictMode>
       <AuthProvider>
-        <FriendsProvider>
-          <MiningTrackerProvider>
-            <MiningLoadoutProvider>
-              <OrderDraftProvider>
-                <DfpInitGate>
-                  <QueryClientProvider>
-                    <RouterApp />
-                  </QueryClientProvider>
-                </DfpInitGate>
-              </OrderDraftProvider>
-            </MiningLoadoutProvider>
-          </MiningTrackerProvider>
-        </FriendsProvider>
+        <NotepadProvider>
+          <FriendsProvider>
+            <MiningTrackerProvider>
+              <MiningLoadoutProvider>
+                <OrderDraftProvider>
+                  <DfpInitGate>
+                    <QueryClientProvider>
+                      <RouterApp />
+                    </QueryClientProvider>
+                  </DfpInitGate>
+                </OrderDraftProvider>
+              </MiningLoadoutProvider>
+            </MiningTrackerProvider>
+          </FriendsProvider>
+        </NotepadProvider>
       </AuthProvider>
     </React.StrictMode>
   )
