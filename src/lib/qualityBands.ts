@@ -9,7 +9,7 @@
 import { SALVAGE_ORDER_MIN_QUALITY } from '../config/extraResources'
 import { stockQualityTiersForResource } from '../config/dfp'
 import { isSalvageResource } from '../config/extraResources'
-import { isHarvestResource } from '../config/resourceTypes'
+import { isHarvestResource, isWholeUnitResource } from '../config/resourceTypes'
 import qualityBandsData from '../data/game-quality-bands.json'
 import { fromMilliScu, toMilliScu } from './resourceQuantity'
 
@@ -113,9 +113,13 @@ export function stockByBand(
   return milli.map(fromMilliScu)
 }
 
-/** Dropdown stock label: `1.000scu`, empty when nothing is held. */
-export function formatStockScu(quantity: number | undefined): string {
+/** Dropdown stock label: `1.000scu`, or `59 units` for whole-unit items; empty when nothing is held. */
+export function formatStockAmount(resourceKey: string, quantity: number | undefined): string {
   if (!quantity || !(quantity > 0)) return ''
+  if (isWholeUnitResource(resourceKey)) {
+    const units = Math.trunc(quantity)
+    return `${units} ${units === 1 ? 'unit' : 'units'}`
+  }
   return `${fromMilliScu(toMilliScu(quantity)).toFixed(3)}scu`
 }
 
