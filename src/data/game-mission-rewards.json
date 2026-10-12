@@ -1,6 +1,7 @@
 {
   "_source": "Star Citizen Game Files (contract generators)",
-  "_extracted": "2026-10-12T00:04:14.722Z",
+  "_extracted": "2026-10-12T00:44:27.131Z",
+  "gameBuild": "4.10.2-live.12881860",
   "byId": {
     "e870c6b4-9632-4ff9-ab2e-bb8ba72a25aa": {
       "rep": [

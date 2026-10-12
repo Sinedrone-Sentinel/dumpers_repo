@@ -103,7 +103,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 ### Live Mission Tracker (`/targets/live`)
 
 - Real-time columns: **active in-game missions** (left) and **pool blueprints still to acquire** (right)
-- Every active mission lists its completion rewards (faction rep, plus event track points such as RSI Discovery Transport / Collection / Defense and the Personal total) from `src/data/game-mission-rewards.json`, which parse builds for all contracts, not just blueprint ones. Sub-contract ids from the game log resolve to their parent contract
+- Every active mission lists its completion rewards (faction rep, plus event track points such as RSI Discovery Transport / Collection / Defense and the Personal total) from `src/data/game-mission-rewards.json`, which parse builds for all contracts, not just blueprint ones. Sub-contract ids from the game log resolve to their parent contract. `npm run patch-audit` fails if that file is not rebuilt for the current game build or no longer matches the game files (added, removed, or changed rewards)
 - Requires **BP Dumper** in watch mode with your personal API key
 - **Session status bar**: connected in the PU, quit to menu, game closed, crash recovery window (one hour), reconnected
 - Uses Supabase Realtime on `dumper_active_missions`; clears when watch mode stops

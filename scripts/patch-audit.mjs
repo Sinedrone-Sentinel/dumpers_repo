@@ -28,6 +28,7 @@ const STEPS = [
   { script: 'validate-blueprints.mjs', label: 'Blueprint data validation' },
   { script: 'audit-blueprint-mission-rewards.mjs', label: 'Blueprint mission rewards' },
   { script: 'audit-blueprint-missions.mjs', label: 'Mission factions / systems / titles' },
+  { script: 'audit-live-mission-rewards.mjs', label: 'Live Mission Tracker rewards (rep + event points)' },
   { script: 'verify-wikelo-donor-craft-bps.mjs', label: 'Wikelo donor craft BP paths' },
   { script: 'verify-dfp-acquisition-premiums.mjs', label: 'DFP acquisition premiums (sibling build)' },
 
