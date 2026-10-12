@@ -1,4 +1,5 @@
 import lookupData from '../data/blueprint-name-lookup.json'
+import missionRewardsData from '../data/game-mission-rewards.json'
 import {
   findContractForLiveMission,
   findMissionHintByTitle,
@@ -40,12 +41,83 @@ export interface LiveMissionRow {
   remainingCount: number
   hasZeroRemaining: boolean
   hasBlueprintPool: boolean
+  /** Rep and event-track points awarded on completion (empty when none). */
+  rewards: LiveMissionReward[]
+}
+
+export interface LiveMissionReward {
+  key: string
+  label: string
+  title?: string
+  isLoss: boolean
 }
 
 export interface RemainingBlueprintRow {
   internalName: string
   blueprintName: string
   categoryName: string | null
+}
+
+interface MissionRewardEntry {
+  rep?: { faction: string; amount: number }[]
+  scenario?: { track: string; points: number; event?: string }[]
+}
+
+const missionRewardsById = missionRewardsData.byId as Record<string, MissionRewardEntry>
+const missionRewardAliases = missionRewardsData.aliases as Record<string, string>
+
+/** The game log reports some spawns by sub-contract id; map those to the parent contract. */
+export function resolveLiveContractId(contractDefinitionId: string | null | undefined): string | null {
+  const id = contractDefinitionId?.trim()
+  if (!id) return null
+  return missionRewardAliases[id] ?? missionRewardAliases[id.toLowerCase()] ?? id
+}
+
+function formatAmount(amount: number): string {
+  return `${amount < 0 ? '−' : '+'}${Math.abs(amount).toLocaleString()}`
+}
+
+/** Reward chips: own-faction rep first, other factions named, then event track points. */
+export function liveMissionRewards(
+  contractIds: (string | null | undefined)[],
+  fallbackRep?: { faction: string; amount: number }[] | null,
+  missionFaction?: string | null
+): LiveMissionReward[] {
+  const entryId = contractIds.find((id) => id && missionRewardsById[id])
+  const entry = entryId ? missionRewardsById[entryId] : undefined
+  const rep = entry?.rep ?? fallbackRep ?? []
+  const out: LiveMissionReward[] = []
+
+  rep.forEach((effect, idx) => {
+    if (!effect.amount) return
+    const isOwn = idx === 0 || !effect.faction || effect.faction === missionFaction
+    const isLoss = effect.amount < 0
+    out.push({
+      key: `rep:${effect.faction}`,
+      label: isOwn
+        ? `${formatAmount(effect.amount)} rep`
+        : `${formatAmount(effect.amount)} ${effect.faction} rep`,
+      title: isLoss
+        ? `Completing this mission LOWERS your ${effect.faction} reputation`
+        : effect.faction
+          ? `${effect.faction} reputation on completion`
+          : undefined,
+      isLoss,
+    })
+  })
+
+  for (const award of entry?.scenario ?? []) {
+    out.push({
+      key: `scenario:${award.event ?? ''}:${award.track}`,
+      label: `${formatAmount(award.points)} ${award.track}`,
+      title: award.event
+        ? `${award.event}: ${award.points.toLocaleString()} ${award.track} points on completion`
+        : `${award.points.toLocaleString()} ${award.track} points on completion`,
+      isLoss: false,
+    })
+  }
+
+  return out
 }
 
 const byContractDefinitionId = lookupData.byContractDefinitionId as Record<string, string[]>
@@ -89,29 +161,39 @@ export function poolInternalNamesForContract(
   contractDefinitionId: string | null | undefined,
   debugName?: string | null
 ): string[] {
-  const contract = findContractForLiveMission(contractDefinitionId, debugName)
+  const contractId = resolveLiveContractId(contractDefinitionId)
+  const contract = findContractForLiveMission(contractId, debugName)
   if (contract) return getContractPoolInternalNames(contract)
-  return lookupPoolFallback(contractDefinitionId, debugName)
+  return lookupPoolFallback(contractId, debugName)
 }
 
 function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
   LiveMissionRow,
   'missionGuid' | 'remainingCount' | 'hasZeroRemaining' | 'hasBlueprintPool'
 > {
-  const contract = findContractForLiveMission(
-    mission.contract_definition_id,
-    mission.debug_name
-  )
+  const contractId = resolveLiveContractId(mission.contract_definition_id)
+  const contract = findContractForLiveMission(contractId, mission.debug_name)
 
   if (contract) {
     const missionLabel = getContractMissionLabel(contract)
+    const rewards = liveMissionRewards(
+      [contractId, contract.id],
+      contract.repEffects?.length
+        ? contract.repEffects
+        : contract.repPoints
+          ? [{ faction: contract.faction ?? '', amount: contract.repPoints }]
+          : null,
+      contract.faction
+    )
     const rewardText =
       contract.scenarioPointsRequired != null
         ? formatScenarioPointsRequirement(
             contract.scenarioPointsRequired,
             contract.scenarioProgressLabel
           )
-        : formatRepReward(contract.repPoints, contract.repPoints)
+        : rewards.length
+          ? null
+          : formatRepReward(contract.repPoints, contract.repPoints)
     const displayLabel = rewardText ? `${missionLabel} · ${rewardText}` : missionLabel
 
     return {
@@ -130,13 +212,16 @@ function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
       regions: categorizeRegions(contract.system ? [contract.system] : []),
       subRegion: contract.region,
       system: contract.system || null,
+      rewards,
     }
   }
 
   const parsed = parseLiveMissionLabel(mission.debug_name)
   const hint = findMissionHintByTitle(parsed.title)
   const missionLabel = hint ? `${hint.faction}: ${parsed.title}` : parsed.title
-  const displayLabel = parsed.rewardText ? `${missionLabel} · ${parsed.rewardText}` : missionLabel
+  const rewards = liveMissionRewards([contractId], null, hint?.faction ?? null)
+  const showTitleRep = parsed.rewardText && !rewards.some((r) => r.key.startsWith('rep:'))
+  const displayLabel = showTitleRep ? `${missionLabel} · ${parsed.rewardText}` : missionLabel
 
   return {
     displayLabel,
@@ -148,6 +233,7 @@ function resolveLiveMissionDisplay(mission: DumperActiveMission): Omit<
     regions: categorizeRegions(hint?.system ? [hint.system] : []),
     subRegion: hint?.region ?? null,
     system: hint?.system || null,
+    rewards,
   }
 }
 

@@ -341,6 +341,25 @@ check(
   'unknown Lab Sample title does not invent a blueprint pool'
 )
 
+const refuelView = live.computeLiveTrackerView(
+  [
+    {
+      user_id: 'u',
+      mission_guid: 'iasi-refuel',
+      contract_definition_id: '0990d89e-ff98-4919-9081-5562b2935734',
+      debug_name: 'RSI Disc. Month: Critical Refuel Request (Crusader Ares Star Fighter Ion)',
+      started_at: '',
+    },
+  ],
+  {}
+)
+const refuelLabels = (refuelView.missions[0]?.rewards ?? []).map((r) => r.label)
+check(
+  refuelLabels.includes('+271 Transport') && refuelLabels.includes('+271 Personal'),
+  'RSI Discovery refuel (sub-contract id) shows Transport and Personal event points'
+)
+check(refuelView.missions[0]?.hasBlueprintPool === false, 'RSI Discovery refuel has no blueprint pool')
+
 const diffMod = await import(pathToFileURL(path.join(root, 'scripts/lib/diffGameData.mjs')).href)
 const digestMod = await import(pathToFileURL(path.join(root, 'scripts/lib/writeWhatsNewDigest.mjs')).href)
 const wikeloSpec = { path: 'trades', key: 'id', category: 'Wikelo', label: (r) => r.title }
