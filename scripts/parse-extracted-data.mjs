@@ -75,6 +75,7 @@ import { clearAppliedSpellingCorrections } from './lib/spellingCorrections.mjs'
 import { writeWhatsNewDigest } from './lib/writeWhatsNewDigest.mjs'
 import { buildLocalityLabel, describeLocalityPlaces } from './lib/missionLocality.mjs'
 import { fillMissionTitleTemplate } from './lib/missionTitleTemplate.mjs'
+import { buildMissionRewardEntry, createScenarioPointsResolver } from './lib/missionRewardsIndex.mjs'
 import {
   loadExistingTrackerKeys,
   parseResourceTypes,
@@ -1499,10 +1500,22 @@ function parseContractGenerators(localization, reputationCaches = {}) {
   const contractFiles = findJsonFiles(EXPECTED_PATHS.contractGenerators)
   if (contractFiles.length === 0) {
     validationIssues.push('No contract generator files found')
-    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {}, factionNames: {}, standingDefs: {}, repRewardAmounts: {} }
+    return { contracts: [], missionsByPool: {}, poolsByBlueprint: {}, factionNames: {}, standingDefs: {}, repRewardAmounts: {}, missionRewards: { byId: {}, aliases: {} } }
   }
   
   console.log(`  Found ${contractFiles.length} contract generator files`)
+
+  // Live Mission Tracker: rewards for every contract, keyed by contract id.
+  // Sub-contract ids (what the game log reports for some spawns) alias their parent.
+  const missionRewards = { byId: {}, aliases: {} }
+  const resolveScenarioPoints = createScenarioPointsResolver({
+    recordsRoot: join(EXTRACTED_DATA, 'libs/foundry/records'),
+    localization,
+    eventLabelFor: (scenarioKey) => {
+      const { eventLabel } = resolveScenarioEventMeta(scenarioKey, localization)
+      return eventLabel === 'Scenario Progress' ? null : eventLabel
+    },
+  })
   
   const repRewardAmounts = reputationCaches.repRewardAmounts ?? {}
   if (reputationCaches.repRewardAmounts) {
@@ -1813,6 +1826,21 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             if (!isUnresolvedDisplayName(primary.faction)) factionName = primary.faction
           }
         }
+
+        const rewardKey = contract.id || contract.debugName
+        const rewardEntry = rewardKey
+          ? buildMissionRewardEntry({
+              repEffects,
+              scenarioPoints: resolveScenarioPoints(contract),
+              notForRelease: contract.notForRelease === true,
+            })
+          : null
+        if (rewardEntry) missionRewards.byId[rewardKey] = rewardEntry
+        if (rewardKey && (rewardEntry || blueprintPools.length > 0)) {
+          for (const sub of contract.subContracts || []) {
+            if (sub?.id && sub.id !== rewardKey) missionRewards.aliases[sub.id] = rewardKey
+          }
+        }
         
         // Extract standing requirements (direct fields or ContractPrerequisite_Reputation)
         const repPrereq = extractContractReputationPrerequisite(contract)
@@ -2031,7 +2059,11 @@ function parseContractGenerators(localization, reputationCaches = {}) {
     }
   }
 
-  return { contracts, missionsByPool, poolsByBlueprint, factionNames, standingDefs, repRewardAmounts }
+  console.log(
+    `  Mission rewards index: ${Object.keys(missionRewards.byId).length} contract(s), ${Object.keys(missionRewards.aliases).length} sub-contract alias(es)`
+  )
+
+  return { contracts, missionsByPool, poolsByBlueprint, factionNames, standingDefs, repRewardAmounts, missionRewards }
 }
 
 function resolveStandingFromPath(standingPath, standingDefs, localization) {
@@ -2416,6 +2448,12 @@ function resolveScenarioFaction(factionPath, factionNames, hints = '') {
  */
 function resolveScenarioEventMeta(scenarioKey, localization) {
   const key = String(scenarioKey || '').toLowerCase()
+  if (key.startsWith('iasi')) {
+    return {
+      eventLabel: localization.iasi_Journal_Title || 'RSI Discovery Event',
+      system: 'Stanton',
+    }
+  }
   if (key.startsWith('ors')) {
     return {
       eventLabel: localization.ORS_JournalTracker_Title || 'Orison Relief',
@@ -5149,6 +5187,14 @@ async function main() {
     }
   })
   
+  // Completion rewards for every contract (Live Mission Tracker), BP or not
+  saveJson('game-mission-rewards.json', {
+    _source: 'Star Citizen Game Files (contract generators)',
+    _extracted: new Date().toISOString(),
+    byId: contractData.missionRewards?.byId ?? {},
+    aliases: contractData.missionRewards?.aliases ?? {},
+  })
+
   // Wikelo Emporium trades (barter contracts at TheCollector)
   saveJson('game-wikelo-trades.json', {
     _source: 'Star Citizen Game Files (TheCollector contract generator)',

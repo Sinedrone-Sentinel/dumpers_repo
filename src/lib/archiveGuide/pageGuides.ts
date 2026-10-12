@@ -102,6 +102,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Open from Mission Tracker header buttons (BP Dumper + Live Tracker) or the avatar menu (BP Dumper only)',
       'Requires BP Dumper running in watch mode with your API key',
       'Left column: missions you accepted in-game right now',
+      'Each mission shows the reputation it awards in blue (losses in red), whether or not it drops blueprints',
+      'Event missions show their event points too — e.g. RSI Discovery Month refuels show Transport points plus the same points on your Personal total',
       'Right column: pool blueprints from those missions you have not acquired yet',
       'Updates instantly when you accept missions, finish them, or receive blueprints',
       'ReSync button (header, shown while connected) re-pulls your active missions if the page shows connected but a mission is missing',

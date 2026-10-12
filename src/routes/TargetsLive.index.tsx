@@ -106,6 +106,19 @@ export default function TargetsLiveRoute() {
                         >
                           {mission.displayLabel}
                         </p>
+                        {mission.rewards.length > 0 && (
+                          <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs font-medium tabular-nums">
+                            {mission.rewards.map((reward) => (
+                              <span
+                                key={reward.key}
+                                className={reward.isLoss ? 'text-red-400' : 'text-sky-400'}
+                                title={reward.title}
+                              >
+                                {reward.label}
+                              </span>
+                            ))}
+                          </p>
+                        )}
                         {mission.hasBlueprintPool && (
                           <p className="text-xs mt-1.5 text-slate-500">
                             {mission.remainingCount} blueprint{mission.remainingCount === 1 ? '' : 's'}{' '}
