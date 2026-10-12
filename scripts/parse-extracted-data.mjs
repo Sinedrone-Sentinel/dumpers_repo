@@ -5191,6 +5191,8 @@ async function main() {
   saveJson('game-mission-rewards.json', {
     _source: 'Star Citizen Game Files (contract generators)',
     _extracted: new Date().toISOString(),
+    /** Must match game-build-version.json — checked by audit-live-mission-rewards. */
+    gameBuild: gameBuildInfo?.launcherVersion || gameBuildInfo?.version || null,
     byId: contractData.missionRewards?.byId ?? {},
     aliases: contractData.missionRewards?.aliases ?? {},
   })
