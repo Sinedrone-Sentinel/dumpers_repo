@@ -1,5 +1,6 @@
 import React from 'react'
 import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
+import BelowMinQualityTag from './BelowMinQualityTag'
 import { formatDfpAuec } from '../lib/dfp'
 import type { OrderBlueprintLine } from '../lib/orderPricing'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
@@ -49,6 +50,7 @@ export default function BlueprintOrderLineCard({
       <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5">
         <span className="text-slate-200 text-xs font-medium">
           {line.blueprintTitle} × {line.quantity}
+          <BelowMinQualityTag blueprint={blueprint} slotQualities={line.slotQualities} uniformQuality={line.minQuality} className="ml-1.5" />
         </span>
         {showDfp && line.lineDfpAuec > 0 && (
           <span className="text-amber-300/90 text-xs">{formatDfpAuec(line.lineDfpAuec)}</span>

@@ -4,6 +4,8 @@ import { formatDfpAuec } from '../../lib/dfp'
 import { useDfpEngineReady } from '../../hooks/useDfpEngineReady'
 import { useBlueprintCraftTracker } from '../../hooks/useBlueprintCraftTracker'
 import type { CraftStockCardLite } from '../../lib/craftFromStock'
+import { useBlueprintData } from '../../routes/blueprints'
+import BelowMinQualityTag from '../BelowMinQualityTag'
 import { fromMilliScu, toMilliScu } from '../../lib/resourceQuantity'
 import {
   BP_WISHLIST_MAX_LISTS,
@@ -342,11 +344,17 @@ function RecipeRow({
   const demand = oneCraftDemand(item)
   const ready = !useTracked || recipeReadyForOneCraft(item, owned)
   const lineDfp = wishlistItemDfp(item)
+  const { data: blueprints = [] } = useBlueprintData()
+  const blueprint = useMemo(
+    () => blueprints.find((bp) => bp.internalName === item.blueprint_key),
+    [blueprints, item.blueprint_key]
+  )
 
   return (
     <div className="site-surface rounded-xl p-3 space-y-2">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-medium text-white">{item.blueprint_name}</span>
+        <BelowMinQualityTag blueprint={blueprint} slotQualities={item.slot_qualities} />
         <span className="text-xs text-slate-400">×{item.quantity}</span>
         <span className="text-xs text-amber-300" title="Dumper's Fair-Value Price to buy these resources">
           {formatDfpAuec(lineDfp)}

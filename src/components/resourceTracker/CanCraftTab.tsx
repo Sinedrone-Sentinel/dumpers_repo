@@ -260,9 +260,9 @@ export default function CanCraftTab({
         !!displayAcquiredBlueprints[bp.internalName] || isDefaultBlueprint(bp.internalName)
       if (!acquired) return false
 
-      return matchesCanCraftTabBlueprint(bp, quantityByKey, closeNoCigar, 1)
+      return matchesCanCraftTabBlueprint(bp, quantityByKey, closeNoCigar, 1, ownedStockIndex)
     })
-  }, [blueprints, displayAcquiredBlueprints, quantityByKey, closeNoCigar])
+  }, [blueprints, displayAcquiredBlueprints, quantityByKey, closeNoCigar, ownedStockIndex])
 
   const readyToCraftCount = React.useMemo(() => {
     if (!blueprints) return 0
@@ -272,9 +272,9 @@ export default function CanCraftTab({
       const acquired =
         !!displayAcquiredBlueprints[bp.internalName] || isDefaultBlueprint(bp.internalName)
       if (!acquired) return false
-      return canCraftBlueprint(bp, quantityByKey, 1)
+      return canCraftBlueprint(bp, quantityByKey, 1, ownedStockIndex)
     }).length
-  }, [blueprints, displayAcquiredBlueprints, quantityByKey])
+  }, [blueprints, displayAcquiredBlueprints, quantityByKey, ownedStockIndex])
 
   const closeNoCigarCount = React.useMemo(() => {
     if (!blueprints || !closeNoCigar) return 0
@@ -284,9 +284,9 @@ export default function CanCraftTab({
       const acquired =
         !!displayAcquiredBlueprints[bp.internalName] || isDefaultBlueprint(bp.internalName)
       if (!acquired) return false
-      return isNearlyCraftableBlueprint(bp, quantityByKey, 1)
+      return isNearlyCraftableBlueprint(bp, quantityByKey, 1, ownedStockIndex)
     }).length
-  }, [blueprints, displayAcquiredBlueprints, quantityByKey, closeNoCigar])
+  }, [blueprints, displayAcquiredBlueprints, quantityByKey, closeNoCigar, ownedStockIndex])
 
   const baseFilteredBlueprints = React.useMemo(() => {
     return craftableBlueprints.filter((bp) => {
@@ -1186,7 +1186,7 @@ export default function CanCraftTab({
           showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}
           craftContext={{
             owned: ownedStockIndex,
-            ready: canCraftBlueprint(selectedBlueprint, quantityByKey, 1),
+            ready: canCraftBlueprint(selectedBlueprint, quantityByKey, 1, ownedStockIndex),
             onCraft,
           }}
           ownedStock={user ? ownedStockIndex : null}

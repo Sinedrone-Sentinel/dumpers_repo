@@ -9,6 +9,8 @@ export interface BlueprintRequirementOption {
   displayName?: string
   standardCargoUnits?: number
   quantity?: number
+  /** Game recipe floor; 0 / 1 mean no limit. */
+  minQuality?: number
 }
 
 export interface BlueprintSlot {

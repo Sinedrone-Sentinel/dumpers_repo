@@ -26,6 +26,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'View the resources and components required to craft each item',
       'Click any blueprint to see detailed crafting requirements and DFP values',
       'Use the quality sliders to preview how resource quality affects final stats and DFP pricing',
+      'A few recipes need a minimum material quality (e.g. Clearcut Module needs Q800 Iron and Copper). Those slots show **Min Q###** and only offer qualities at or above it — on Blueprints, Can Craft, Crafting Wishlist and WTS/WTB listings. Can Craft only counts stock that meets the minimum, and older saved recipes or listings below it show a **Below minimum quality** tag',
       'When signed in, opening a material\'s Quality Band dropdown shows how much of that resource you hold in each band (e.g. 1.000scu, or whole units like 12 units for gems) from My Resources. Purchased (Q0) stock is not counted. The same amounts appear in the Can Craft blueprint view, following the selected location chip',
       'Add a blueprint to your order draft from the detail view — continue on My Listings',
       '**RS Track** on a blueprint card or detail modal footer adds that blueprint\'s mineable ores to **Mining Tracker → RS Tracker** in one click — skips ores you already track',

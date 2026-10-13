@@ -20,6 +20,7 @@ import {
   type BlueprintForEffectiveStats,
 } from '../lib/blueprintEffectiveStats'
 import BlueprintOrderLineCard from './BlueprintOrderLineCard'
+import BelowMinQualityTag from './BelowMinQualityTag'
 
 function formatBlueprintQuality(line: OrderBlueprintLine): string {
   const sq = line.slotQualities
@@ -203,6 +204,11 @@ export default function OrderRequestLines({
                 {showDfp && line.lineDfpAuec > 0 && (
                   <span className="text-amber-300/90">· {formatDfpAuec(line.lineDfpAuec)}</span>
                 )}
+                <BelowMinQualityTag
+                  blueprint={blueprintById?.get(line.blueprintId)}
+                  slotQualities={line.slotQualities}
+                  uniformQuality={line.minQuality}
+                />
               </div>
             </li>
           )

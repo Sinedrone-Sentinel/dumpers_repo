@@ -8,6 +8,7 @@ import {
 } from './blueprintResources'
 import { buildOwnedStockIndex, type CraftStockCardLite, type OwnedStockIndex } from './craftFromStock'
 import { addWishlistAmount } from './bpWishlistDemand'
+import { clampSlotQuality } from './blueprintQuality'
 export {
   demandCovered,
   missingOverviewRows,
@@ -84,8 +85,9 @@ export function snapshotWishlistRecipe(
     const label = craftMaterialLabel(option)
     const resourceKey = craftMaterialResourceKey(option)
     if (!label || !resourceKey) return
-    const quality = slotQualities[slotIndex]
-    if (quality == null || !Number.isFinite(quality)) return
+    const picked = slotQualities[slotIndex]
+    if (picked == null || !Number.isFinite(picked)) return
+    const quality = clampSlotQuality(slot, picked)
     const slotCount = slot.requiredCount ?? 1
     materials.push({
       slotIndex,
