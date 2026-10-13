@@ -1096,14 +1096,6 @@
       "anchor": "sell",
       "category": "commodity",
       "fallback": true
-    },
-    "year_of_the_rat_envelope": {
-      "internalName": "year_of_the_rat_envelope",
-      "displayName": "Year of the Rat Envelope",
-      "uexName": "Year of the Rat Envelope",
-      "basePerScu": 2027450,
-      "anchor": "sell",
-      "category": "commodity"
     }
   },
   "priceFallbacks": [

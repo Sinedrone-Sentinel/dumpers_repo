@@ -5,6 +5,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { isAccountBoundResourceKey } from './accountBoundResources.mjs'
 
 const SALVAGE_KEYS = new Set([
   'rmc',
@@ -51,7 +52,7 @@ export function getResourceTrackerQ0Catalog(repoRoot) {
   ).filter((c) => !extraKeys.has(c.resourceKey))
   const catalog = [...extras, ...commodities]
   return catalog
-    .filter(({ resourceKey }) => !HARVEST_KEYS.has(resourceKey))
+    .filter(({ resourceKey }) => !HARVEST_KEYS.has(resourceKey) && !isAccountBoundResourceKey(resourceKey))
     .map(({ resourceKey, label }) => ({
       internalName: resourceKey,
       displayName: label,
