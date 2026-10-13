@@ -122,7 +122,9 @@ export interface CraftSlotRequirement {
   resourceLabel: string
   needed: number
   wholeUnit: boolean
-  /** quality tiers the member holds for this resource (ascending). */
+  /** Recipe floor for this slot; 0 when there is none. */
+  minQuality: number
+  /** quality tiers the member holds for this resource at/above the floor (ascending). */
   availableQualities: number[]
 }
 
@@ -144,6 +146,7 @@ export function buildCraftSlotRequirements(
 
     const slotCount = slot.requiredCount ?? 1
     const slotDisplayName = (slot as { slotDisplayName?: string }).slotDisplayName ?? label
+    const minQuality = (option.minQuality ?? 0) > 1 ? option.minQuality ?? 0 : 0
     requirements.push({
       slotIndex,
       slotDisplayName,
@@ -151,7 +154,8 @@ export function buildCraftSlotRequirements(
       resourceLabel: label,
       needed: neededForOption(option, slotCount, resourceKey),
       wholeUnit: isWholeUnitResource(resourceKey),
-      availableQualities: owned.get(resourceKey)?.qualities ?? [],
+      minQuality,
+      availableQualities: (owned.get(resourceKey)?.qualities ?? []).filter((q) => q >= minQuality),
     })
   })
 
@@ -168,17 +172,18 @@ export function defaultCraftQuality(
   owned: OwnedStockIndex
 ): number | null {
   const stock = owned.get(req.resourceKey)
-  if (!stock || stock.qualities.length === 0) return null
+  const qualities = req.availableQualities
+  if (!stock || qualities.length === 0) return null
 
-  for (const quality of stock.qualities) {
+  for (const quality of qualities) {
     if (hasEnough(req.resourceKey, req.needed, stock.byQuality.get(quality) ?? 0)) {
       return quality
     }
   }
 
-  let best = stock.qualities[0]
+  let best = qualities[0]
   let bestQty = stock.byQuality.get(best) ?? 0
-  for (const quality of stock.qualities) {
+  for (const quality of qualities) {
     const value = stock.byQuality.get(quality) ?? 0
     if (value > bestQty) {
       best = quality

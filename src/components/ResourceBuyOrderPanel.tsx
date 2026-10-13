@@ -32,6 +32,7 @@ import {
 } from '../lib/blueprintEffectiveStats'
 import BlueprintEffectiveStatsSummary from './BlueprintEffectiveStatsSummary'
 import CartBlueprintLineEditor from './CartBlueprintLineEditor'
+import BelowMinQualityTag from './BelowMinQualityTag'
 import { REPUTATION_STAR_OPTIONS } from '../config/reputation'
 import { getResourceLabel, type BlueprintWithSlots } from '../lib/blueprintResources'
 import {
@@ -908,6 +909,11 @@ export default function ResourceBuyOrderPanel({
                         <span className={`text-xs ${isMixed ? 'text-orange-300' : 'text-slate-400'}`}>
                           {formatSlotQualityLabel(line)}
                         </span>
+                        <BelowMinQualityTag
+                          blueprint={blueprint}
+                          slotQualities={line.slotQualities}
+                          className="ml-1.5"
+                        />
                         <CartBlueprintLineStats line={line} blueprintById={blueprintById} />
                       </div>
                       <div className="flex flex-col items-end gap-1 shrink-0 self-start">

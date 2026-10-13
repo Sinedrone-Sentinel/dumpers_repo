@@ -14,6 +14,8 @@ import {
   type CustomOrderResourceLine,
 } from '../lib/operations'
 import StockDeductCheckbox from './StockDeductCheckbox'
+import BelowMinQualityTag from './BelowMinQualityTag'
+import type { BlueprintWithSlots } from '../lib/blueprintResources'
 import {
   evaluateDeductCheckboxes,
   formatDeductPlanHint,
@@ -23,6 +25,7 @@ import {
 
 interface MyListingCardProps {
   order: CustomOrder
+  blueprintById?: Map<string, BlueprintWithSlots>
   showDfp: boolean
   inventory: StockDeductCard[]
   labelMap: Record<string, string>
@@ -45,6 +48,7 @@ function blueprintQualityLabel(line: CustomOrderBlueprint): string {
  */
 export default function MyListingCard({
   order,
+  blueprintById,
   showDfp,
   inventory,
   labelMap,
@@ -203,6 +207,12 @@ export default function MyListingCard({
         <p className="text-slate-500 text-xs">
           {blueprintQualityLabel(line)}
           {showDfp && ` · ${formatDfpAuec(line.line_dfp_auec)}`}
+          <BelowMinQualityTag
+            blueprint={blueprintById?.get(line.blueprint_id)}
+            slotQualities={line.slot_qualities}
+            uniformQuality={line.min_quality}
+            className="ml-1.5"
+          />
         </p>
       </div>
       {renderLineControls(line.id, 'blueprint', line.quantity, '1')}

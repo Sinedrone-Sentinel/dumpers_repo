@@ -8,6 +8,7 @@ import {
   craftMaterialOptionsForSlot,
   craftMaterialResourceKey,
 } from './blueprintResources'
+import type { OwnedStockIndex } from './craftFromStock'
 import { fromMilliScu, toMilliScu } from './resourceQuantity'
 
 /** Minimum stock ratio (have ÷ need) to count as "within 30% of enough". */
@@ -44,11 +45,32 @@ function stockRatio(resourceKey: string, need: number, have: number): number {
   return have / need
 }
 
+/** Stock usable for an option: everything, or only tiers at/above the recipe floor when one exists. */
+function haveForOption(
+  option: BlueprintRequirementOption,
+  resourceKey: string,
+  quantityByKey: Record<string, number>,
+  owned?: OwnedStockIndex | null
+): number {
+  const min = (option.minQuality ?? 0) > 1 ? option.minQuality ?? 0 : 0
+  if (!min || !owned) return quantityByKey[resourceKey] ?? 0
+  const stock = owned.get(resourceKey)
+  if (!stock) return 0
+  const whole = isWholeUnitResource(resourceKey)
+  let total = 0
+  for (const [quality, qty] of stock.byQuality) {
+    if (quality < min || !(qty > 0)) continue
+    total += whole ? Math.trunc(qty) : toMilliScu(qty)
+  }
+  return whole ? total : fromMilliScu(total)
+}
+
 /** Best OR choice per slot — option with the highest have÷need ratio. */
 function aggregateBestSlotRequirements(
   blueprint: BlueprintWithSlots,
   quantityByKey: Record<string, number>,
-  craftQuantity: number
+  craftQuantity: number,
+  owned?: OwnedStockIndex | null
 ): Map<string, { need: number; have: number }> | null {
   const slots = blueprint.slots ?? []
   if (slots.length === 0) return null
@@ -71,7 +93,7 @@ function aggregateBestSlotRequirements(
       if (!resourceKey) continue
 
       const need = quantityPerCraftForOption(option, slotCount, resourceKey) * craftQty
-      const have = quantityByKey[resourceKey] ?? 0
+      const have = haveForOption(option, resourceKey, quantityByKey, owned)
       const ratio = stockRatio(resourceKey, need, have)
 
       if (
@@ -88,6 +110,7 @@ function aggregateBestSlotRequirements(
     const existing = totals.get(best.resourceKey)
     if (existing) {
       existing.need += best.need
+      existing.have = Math.min(existing.have, best.have)
     } else {
       totals.set(best.resourceKey, { need: best.need, have: best.have })
     }
@@ -100,9 +123,10 @@ function aggregateBestSlotRequirements(
 export function canCraftBlueprint(
   blueprint: BlueprintWithSlots,
   quantityByKey: Record<string, number>,
-  craftQuantity = 1
+  craftQuantity = 1,
+  owned?: OwnedStockIndex | null
 ): boolean {
-  const requirements = aggregateBestSlotRequirements(blueprint, quantityByKey, craftQuantity)
+  const requirements = aggregateBestSlotRequirements(blueprint, quantityByKey, craftQuantity, owned)
   if (!requirements) return false
 
   for (const [resourceKey, { need, have }] of requirements.entries()) {
@@ -122,11 +146,12 @@ export function canCraftBlueprint(
 export function isNearlyCraftableBlueprint(
   blueprint: BlueprintWithSlots,
   quantityByKey: Record<string, number>,
-  craftQuantity = 1
+  craftQuantity = 1,
+  owned?: OwnedStockIndex | null
 ): boolean {
-  if (canCraftBlueprint(blueprint, quantityByKey, craftQuantity)) return false
+  if (canCraftBlueprint(blueprint, quantityByKey, craftQuantity, owned)) return false
 
-  const requirements = aggregateBestSlotRequirements(blueprint, quantityByKey, craftQuantity)
+  const requirements = aggregateBestSlotRequirements(blueprint, quantityByKey, craftQuantity, owned)
   if (!requirements) return false
 
   const ratios: number[] = []
@@ -150,9 +175,10 @@ export function matchesCanCraftTabBlueprint(
   blueprint: BlueprintWithSlots,
   quantityByKey: Record<string, number>,
   includeCloseNoCigar: boolean,
-  craftQuantity = 1
+  craftQuantity = 1,
+  owned?: OwnedStockIndex | null
 ): boolean {
-  if (canCraftBlueprint(blueprint, quantityByKey, craftQuantity)) return true
+  if (canCraftBlueprint(blueprint, quantityByKey, craftQuantity, owned)) return true
   if (!includeCloseNoCigar) return false
-  return isNearlyCraftableBlueprint(blueprint, quantityByKey, craftQuantity)
+  return isNearlyCraftableBlueprint(blueprint, quantityByKey, craftQuantity, owned)
 }

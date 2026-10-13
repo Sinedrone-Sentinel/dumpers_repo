@@ -44,6 +44,9 @@ const modules = [
   'src/lib/bpWishlistDemand.ts',
   'src/lib/missionDisplay.ts',
   'src/lib/notepadText.ts',
+  'src/lib/blueprintQuality.ts',
+  'src/lib/canCraft.ts',
+  'src/lib/craftFromStock.ts',
 ]
 
 console.log('Unit tests: bundling modules...')
@@ -1977,5 +1980,65 @@ check(
 )
 check(notepadText.clampNotepad(null) === '', 'notepad: null becomes empty')
 check(notepadText.clampNotepad('x'.repeat(2005)).length === 2000, 'notepad: over-limit text is capped')
+
+const bpQuality = await import(pathToFileURL(path.join(outDir, 'blueprintQuality.mjs')).href)
+const canCraftLib = await import(pathToFileURL(path.join(outDir, 'canCraft.mjs')).href)
+const craftStock = await import(pathToFileURL(path.join(outDir, 'craftFromStock.mjs')).href)
+const gameBps = JSON.parse(readFileSync(path.join(root, 'src/data/game-blueprints.json'), 'utf8')).blueprints
+const clearcut = gameBps.find((bp) => bp.internalName === 'mining_modules_active_clearcut')
+check(
+  clearcut && clearcut.slots.every((slot) => bpQuality.slotMinQuality(slot) === 800),
+  'min quality: Clearcut Module case and wiring both need Q800',
+)
+const clearcutDefaults = bpQuality.buildDefaultSlotQualities(clearcut)
+check(
+  Object.values(clearcutDefaults).every((q) => q >= 800),
+  'min quality: default picks start at or above the recipe floor',
+)
+check(
+  clearcut.slots.every((slot) => {
+    const bands = bpQuality.allowedBandsForSlot(slot)
+    return bands.length > 0 && bands.every((q) => q >= 800)
+  }),
+  'min quality: picker bands drop everything under the floor',
+)
+check(
+  bpQuality.clampSlotQuality(clearcut.slots[0], 300) >= 800 &&
+    bpQuality.clampSlotQuality(clearcut.slots[0], 950) === 950,
+  'min quality: clamp raises low picks and leaves valid ones alone',
+)
+check(
+  bpQuality.slotQualitiesBelowMin(clearcut, { 0: 500, 1: 900 }).join(',') === '0',
+  'min quality: saved recipe flags only the slot under the floor',
+)
+const clearcutKeys = clearcut.slots.map((slot) => slugifyClearcutKey(slot))
+function slugifyClearcutKey(slot) {
+  return String(slot.options[0].resourceName).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')
+}
+const lowCards = clearcutKeys.map((key) => ({ resource_key: key, quality: 500, note: null, quantity: 100 }))
+const lowOwned = craftStock.buildOwnedStockIndex(lowCards)
+const lowTotals = Object.fromEntries(clearcutKeys.map((key) => [key, 100]))
+check(
+  !canCraftLib.canCraftBlueprint(clearcut, lowTotals, 1, lowOwned),
+  'min quality: Can Craft ignores stock under the floor',
+)
+check(
+  craftStock.buildCraftSlotRequirements(clearcut, lowOwned).every((req) => req.availableQualities.length === 0),
+  'min quality: craft picker offers no tiers under the floor',
+)
+const highOwned = craftStock.buildOwnedStockIndex(lowCards.map((card) => ({ ...card, quality: 900 })))
+check(
+  canCraftLib.canCraftBlueprint(clearcut, lowTotals, 1, highOwned),
+  'min quality: Can Craft counts stock at or above the floor',
+)
+const noFloorBp = gameBps.find(
+  (bp) => bp.categoryName !== 'Ammo' && (bp.slots ?? []).length > 0 && bp.slots.every((slot) => bpQuality.slotMinQuality(slot) === 0) &&
+    bp.slots.every((slot) => slot.options?.[0]?.resourceName),
+)
+check(
+  noFloorBp && JSON.stringify(bpQuality.buildDefaultSlotQualities(noFloorBp)) ===
+    JSON.stringify(Object.fromEntries(noFloorBp.slots.map((slot, i) => [i, bpQuality.defaultQualityForSlotResource(slot.options[0].resourceName)]))),
+  'min quality: blueprints without a floor keep their normal defaults',
+)
 
 console.log(`Unit tests: ${pass} passed`)

@@ -587,6 +587,7 @@ export default function CustomOrdersRoute() {
               <MyListingCard
                 key={listing.id}
                 order={listing}
+                blueprintById={blueprintById}
                 showDfp={dfpDisplayEnabled}
                 inventory={inventory}
                 labelMap={labelMap}

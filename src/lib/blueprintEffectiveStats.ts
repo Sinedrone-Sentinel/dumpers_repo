@@ -1,4 +1,4 @@
-import { mergeSlotQualities } from './blueprintQuality'
+import { buildDefaultSlotQualities, mergeSlotQualities } from './blueprintQuality'
 import type { BlueprintWithSlots } from './blueprintResources'
 import {
   aggregateModifiers,
@@ -68,7 +68,8 @@ export function resolveEffectiveSlotQualities(
   minQuality?: number
 ): Record<number, number> {
   if (slotQualities && Object.keys(slotQualities).length > 0) {
-    return mergeSlotQualities(blueprint, slotQualities)
+    // Saved lines keep what was listed (even below a recipe floor) so the warning tag stays honest.
+    return { ...buildDefaultSlotQualities(blueprint), ...slotQualities }
   }
 
   if (minQuality != null && blueprint.slots?.length) {

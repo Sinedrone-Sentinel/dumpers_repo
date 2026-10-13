@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { resourceLabelClassName, resourceQuantityUnitLabel } from '../config/resourceTypes'
 import { slugifyResourceName } from '../lib/blueprintResources'
+import { clampSlotQuality, slotMinQuality } from '../lib/blueprintQuality'
 import {
   formatInventoryQualityLabel,
   formatStockAmount,
@@ -26,6 +28,7 @@ export interface BlueprintSlotQualityOption {
   itemName?: string
   quantity?: number
   standardCargoUnits?: number
+  minQuality?: number
   modifiers?: unknown[]
 }
 
@@ -85,8 +88,28 @@ export default function BlueprintSlotQualityCard({
   const showQualitySelector = hasModifiers || (isMineable && !isItem)
   const craftResKey = craftResourceKey ?? slugifyResourceName(resourceName)
   const craftUnit = resourceQuantityUnitLabel(craftResKey)
-  const craftQualityOptions = craftAvailableQualities ?? []
+  const minQuality = slotMinQuality(slot)
+  const craftQualityOptions = (craftAvailableQualities ?? []).filter((q) => q >= minQuality)
   const bandStock = ownedStock && bands ? stockByBand(resourceName, ownedStock.byQuality) : null
+  const indexedBands = (bands ?? []).map((bandValue, idx) => ({ bandValue, idx }))
+  const allowedBands = indexedBands.filter(({ bandValue }) => bandValue >= minQuality)
+  const pickableBands = allowedBands.length > 0 ? allowedBands : indexedBands.slice(-1)
+  const sliderMin = Math.max(1, minQuality)
+  const firstCraftQuality = craftQualityOptions[0]
+
+  useEffect(() => {
+    if (!minQuality || quality >= minQuality) return
+    if (craftMode) {
+      if (firstCraftQuality != null) onQualityChange(slotIndex, firstCraftQuality)
+      return
+    }
+    const clamped = clampSlotQuality(slot, quality)
+    if (clamped !== quality) onQualityChange(slotIndex, clamped)
+  }, [minQuality, quality, craftMode, firstCraftQuality, onQualityChange, slot, slotIndex])
+
+  const minHint = minQuality ? (
+    <p className="site-hint text-xs text-amber-400 mt-1">Min Q{minQuality} required by this recipe</p>
+  ) : null
   const modifierRows =
     hasModifiers && modifierResults.length > 0 ? (
       <div className="space-y-1">
@@ -164,9 +187,12 @@ export default function BlueprintSlotQualityCard({
                 }))}
               />
             ) : (
-              <span className="text-xs text-red-400 font-medium">None in stock</span>
+              <span className="text-xs text-red-400 font-medium">
+                {minQuality ? `None in stock at Q${minQuality}+` : 'None in stock'}
+              </span>
             )}
           </div>
+          {minHint}
           <div className="flex items-center justify-between gap-2 text-xs">
             <span className="text-slate-500">
               Need {formatQuantityForResource(craftResKey, craftNeeded ?? 0)} {craftUnit}
@@ -191,7 +217,7 @@ export default function BlueprintSlotQualityCard({
                 onChange={(q) => onQualityChange(slotIndex, q)}
                 ariaLabel={qualityDisplay === 'q-values' ? 'Quality' : 'Quality band'}
                 className="w-full min-w-0 sm:flex-1 px-2 py-1 text-sm font-mono"
-                options={bands.map((bandValue, idx) => ({
+                options={pickableBands.map(({ bandValue, idx }) => ({
                   value: bandValue,
                   label:
                     qualityDisplay === 'q-values' ? `Q${bandValue}` : `Band ${idx + 1}: Q${bandValue}`,
@@ -203,7 +229,7 @@ export default function BlueprintSlotQualityCard({
               <>
                 <input
                   type="range"
-                  min={1}
+                  min={sliderMin}
                   max={1000}
                   step={1}
                   value={quality}
@@ -212,12 +238,12 @@ export default function BlueprintSlotQualityCard({
                 />
                 <input
                   type="number"
-                  min={1}
+                  min={sliderMin}
                   max={1000}
                   value={quality}
                   onChange={(e) => {
                     const val = parseInt(e.target.value, 10)
-                    if (!isNaN(val) && val >= 1 && val <= 1000) {
+                    if (!isNaN(val) && val >= sliderMin && val <= 1000) {
                       onQualityChange(slotIndex, val)
                     }
                   }}
@@ -226,6 +252,7 @@ export default function BlueprintSlotQualityCard({
               </>
             )}
           </div>
+          {minHint}
 
           {modifierRows}
         </div>
