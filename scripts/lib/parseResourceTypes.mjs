@@ -8,6 +8,7 @@
 import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { slugifyResourceKey } from './commodityLocalization.mjs'
+import { ACCOUNT_BOUND_RECORD_NAMES, isAccountBoundResourceKey } from './accountBoundResources.mjs'
 
 export const RESOURCE_TYPE_DATABASE_PATH =
   'libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json'
@@ -89,13 +90,14 @@ export function buildGameCommodities(database, localization, existingKeys = new 
       if (!resource || cargoContainerCount(resource) === 0) continue
       if (resource.refinedVersion) continue
       if (UNREFINED_RECORD_NAMES.has(recordShortName(resource))) continue
+      if (ACCOUNT_BOUND_RECORD_NAMES.has(recordShortName(resource))) continue
       if (groupPath.some((name) => UNREFINED_GROUPS.has(name))) continue
 
       const label = resolveLabel(resource.displayName, localization)
       if (!label || UNREFINED_LABEL.test(label)) continue
 
       const key = resourceTypeKeyForLabel(label)
-      if (!key || existingKeys.has(key) || byKey.has(key)) continue
+      if (!key || existingKeys.has(key) || byKey.has(key) || isAccountBoundResourceKey(key)) continue
       byKey.set(key, { key, label, kind: commodityKind(groupPath) })
     }
     for (const child of group?.groups ?? []) walk(child, groupPath)

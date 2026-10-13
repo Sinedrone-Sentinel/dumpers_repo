@@ -1,6 +1,6 @@
 {
   "_source": "Star Citizen Game Files (resourcetypedatabase)",
-  "_extracted": "2026-10-10T00:43:14.380Z",
+  "_extracted": "2026-10-13T23:04:10.639Z",
   "commodities": [
     {
       "key": "ace_interceptor_helmet",
@@ -136,14 +136,9 @@
       "key": "uncut_slam",
       "label": "Uncut SLAM",
       "kind": "vice"
-    },
-    {
-      "key": "year_of_the_rat_envelope",
-      "label": "Year of the Rat Envelope",
-      "kind": "goods"
     }
   ],
   "summary": {
-    "totalCommodities": 28
+    "totalCommodities": 27
   }
 }

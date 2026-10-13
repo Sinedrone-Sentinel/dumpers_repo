@@ -19,6 +19,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { isAccountBoundResourceName } from './lib/accountBoundResources.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
@@ -67,6 +68,7 @@ async function main() {
   const commodityById = new Map()
   for (const c of commoditiesRaw) {
     if (!bool(c.is_available) || !bool(c.is_visible)) continue
+    if (isAccountBoundResourceName(c.name)) continue
     const entry = {
       id: c.id,
       name: c.name,

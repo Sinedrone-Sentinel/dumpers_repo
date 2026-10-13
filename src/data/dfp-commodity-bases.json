@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26",
+  "generatedAt": "2026-10-13",
   "source": "UEX /2.0/commodities",
   "catalogSource": "Resource Tracker Q0 (extraResources.ts)",
   "resources": {
@@ -7,7 +7,7 @@
       "internalName": "rmc",
       "displayName": "RMC (Recycled Material Composite)",
       "uexName": "Recycled Material Composite",
-      "basePerScu": 8346,
+      "basePerScu": 8241,
       "anchor": "buy",
       "category": "salvage"
     },
@@ -15,7 +15,7 @@
       "internalName": "construction_material",
       "displayName": "Construction Material",
       "uexName": "Construction Materials",
-      "basePerScu": 10591,
+      "basePerScu": 10772,
       "anchor": "buy",
       "category": "salvage"
     },
@@ -47,16 +47,15 @@
       "internalName": "compboard",
       "displayName": "Compboard",
       "uexName": "Compboard",
-      "basePerScu": 9000,
+      "basePerScu": 28499,
       "anchor": "buy",
-      "category": "salvage",
-      "fallback": true
+      "category": "salvage"
     },
     "scrap": {
       "internalName": "scrap",
       "displayName": "Scrap",
       "uexName": "Scrap",
-      "basePerScu": 3012,
+      "basePerScu": 3009,
       "anchor": "buy",
       "category": "salvage"
     },
@@ -64,7 +63,7 @@
       "internalName": "waste",
       "displayName": "Waste",
       "uexName": "Waste",
-      "basePerScu": 214,
+      "basePerScu": 216,
       "anchor": "buy",
       "category": "salvage"
     },
@@ -106,7 +105,7 @@
       "internalName": "argon",
       "displayName": "Argon",
       "uexName": "Argon",
-      "basePerScu": 433,
+      "basePerScu": 468,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -114,7 +113,7 @@
       "internalName": "helium",
       "displayName": "Helium",
       "uexName": "Helium",
-      "basePerScu": 993,
+      "basePerScu": 1038,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -122,7 +121,7 @@
       "internalName": "hydrogen",
       "displayName": "Hydrogen",
       "uexName": "Hydrogen",
-      "basePerScu": 1067,
+      "basePerScu": 1054,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -139,7 +138,7 @@
       "internalName": "methane",
       "displayName": "Methane",
       "uexName": "Methane",
-      "basePerScu": 3633,
+      "basePerScu": 3612,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -147,7 +146,7 @@
       "internalName": "nitrogen",
       "displayName": "Nitrogen",
       "uexName": "Nitrogen",
-      "basePerScu": 3100,
+      "basePerScu": 3095,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -155,7 +154,7 @@
       "internalName": "partillium",
       "displayName": "Partillium",
       "uexName": "Partillium",
-      "basePerScu": 97500,
+      "basePerScu": 89875,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -163,7 +162,7 @@
       "internalName": "tritium",
       "displayName": "Tritium",
       "uexName": "Tritium",
-      "basePerScu": 33280,
+      "basePerScu": 25667,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -180,7 +179,7 @@
       "internalName": "astatine",
       "displayName": "Astatine",
       "uexName": "Astatine",
-      "basePerScu": 3550,
+      "basePerScu": 3521,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -188,7 +187,7 @@
       "internalName": "chlorine",
       "displayName": "Chlorine",
       "uexName": "Chlorine",
-      "basePerScu": 1443,
+      "basePerScu": 1489,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -196,7 +195,7 @@
       "internalName": "fluorine",
       "displayName": "Fluorine",
       "uexName": "Fluorine",
-      "basePerScu": 1300,
+      "basePerScu": 1285,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -204,7 +203,7 @@
       "internalName": "iodine",
       "displayName": "Iodine",
       "uexName": "Iodine",
-      "basePerScu": 10500,
+      "basePerScu": 11167,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -212,7 +211,7 @@
       "internalName": "altruciatoxin",
       "displayName": "Altruciatoxin",
       "uexName": "Altruciatoxin",
-      "basePerScu": 6200,
+      "basePerScu": 6450,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -237,7 +236,7 @@
       "internalName": "e_tam",
       "displayName": "E'tam",
       "uexName": "E'tam",
-      "basePerScu": 23000,
+      "basePerScu": 23727,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -280,7 +279,7 @@
       "internalName": "neon",
       "displayName": "Neon",
       "uexName": "Neon",
-      "basePerScu": 18000,
+      "basePerScu": 18200,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -288,7 +287,7 @@
       "internalName": "slam",
       "displayName": "SLAM",
       "uexName": "SLAM",
-      "basePerScu": 42000,
+      "basePerScu": 41467,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -305,7 +304,7 @@
       "internalName": "widow",
       "displayName": "WiDoW",
       "uexName": "WiDoW",
-      "basePerScu": 7143,
+      "basePerScu": 7310,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -322,7 +321,7 @@
       "internalName": "distilled_spirits",
       "displayName": "Distilled Spirits",
       "uexName": "Distilled Spirits",
-      "basePerScu": 1867,
+      "basePerScu": 1882,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -330,7 +329,7 @@
       "internalName": "stims",
       "displayName": "Stims",
       "uexName": "Stims",
-      "basePerScu": 5500,
+      "basePerScu": 5419,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -338,7 +337,7 @@
       "internalName": "revenant_tree_pollen",
       "displayName": "Revenant Tree Pollen",
       "uexName": "Revenant Tree Pollen",
-      "basePerScu": 1333,
+      "basePerScu": 1220,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -346,7 +345,7 @@
       "internalName": "agricultural_supplies",
       "displayName": "Agricultural Supplies",
       "uexName": "Agricultural Supplies",
-      "basePerScu": 1350,
+      "basePerScu": 1391,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -363,7 +362,7 @@
       "internalName": "fresh_food",
       "displayName": "Fresh Food",
       "uexName": "Fresh Food",
-      "basePerScu": 24250,
+      "basePerScu": 24533,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -371,7 +370,7 @@
       "internalName": "human_food_bars",
       "displayName": "Human Food Bars",
       "uexName": "Human Food Bars",
-      "basePerScu": 485,
+      "basePerScu": 488,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -397,7 +396,7 @@
       "internalName": "pitambu",
       "displayName": "Pitambu",
       "uexName": "Pitambu",
-      "basePerScu": 53000,
+      "basePerScu": 61900,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -405,7 +404,7 @@
       "internalName": "processed_food",
       "displayName": "Processed Food",
       "uexName": "Processed Food",
-      "basePerScu": 1442,
+      "basePerScu": 1447,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -413,7 +412,7 @@
       "internalName": "sunset_berries",
       "displayName": "Sunset Berries",
       "uexName": "Sunset Berries",
-      "basePerScu": 79000,
+      "basePerScu": 80056,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -448,7 +447,7 @@
       "internalName": "kopion_horn",
       "displayName": "Kopion Horn",
       "uexName": "Kopion Horn",
-      "basePerScu": 32000,
+      "basePerScu": 33750,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -464,7 +463,7 @@
       "internalName": "medical_supplies",
       "displayName": "Medical Supplies",
       "uexName": "Medical Supplies",
-      "basePerScu": 5414,
+      "basePerScu": 5157,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -508,7 +507,7 @@
       "internalName": "atlasium",
       "displayName": "Atlasium",
       "uexName": "Atlasium",
-      "basePerScu": 92667,
+      "basePerScu": 90000,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -516,7 +515,7 @@
       "internalName": "cobalt",
       "displayName": "Cobalt",
       "uexName": "Cobalt",
-      "basePerScu": 20667,
+      "basePerScu": 20222,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -524,7 +523,7 @@
       "internalName": "diamond",
       "displayName": "Diamond",
       "uexName": "Diamond",
-      "basePerScu": 7800,
+      "basePerScu": 7581,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -559,7 +558,7 @@
       "internalName": "mercury",
       "displayName": "Mercury",
       "uexName": "Mercury",
-      "basePerScu": 1020,
+      "basePerScu": 996,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -567,7 +566,7 @@
       "internalName": "potassium",
       "displayName": "Potassium",
       "uexName": "Potassium",
-      "basePerScu": 584,
+      "basePerScu": 569,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -575,7 +574,7 @@
       "internalName": "steel",
       "displayName": "Steel",
       "uexName": "Steel",
-      "basePerScu": 1870,
+      "basePerScu": 1925,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -592,7 +591,7 @@
       "internalName": "ammonia",
       "displayName": "Ammonia",
       "uexName": "Ammonia",
-      "basePerScu": 1022,
+      "basePerScu": 989,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -609,7 +608,7 @@
       "internalName": "carbon",
       "displayName": "Carbon",
       "uexName": "Carbon",
-      "basePerScu": 367,
+      "basePerScu": 368,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -671,7 +670,7 @@
       "internalName": "bioplastic",
       "displayName": "Bioplastic",
       "uexName": "Bioplastic",
-      "basePerScu": 7167,
+      "basePerScu": 7578,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -688,7 +687,7 @@
       "internalName": "diamond_laminate",
       "displayName": "Diamond Laminate",
       "uexName": "Diamond Laminate",
-      "basePerScu": 80000,
+      "basePerScu": 85889,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -705,7 +704,7 @@
       "internalName": "dynaflex",
       "displayName": "DynaFlex",
       "uexName": "DynaFlex",
-      "basePerScu": 1940,
+      "basePerScu": 1988,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -713,10 +712,9 @@
       "internalName": "elespo",
       "displayName": "Elespo",
       "uexName": "Elespo",
-      "basePerScu": 6000,
+      "basePerScu": 16500,
       "anchor": "sell",
-      "category": "commodity",
-      "fallback": true
+      "category": "commodity"
     },
     "hexapolymesh_coating": {
       "internalName": "hexapolymesh_coating",
@@ -748,7 +746,7 @@
       "internalName": "neograph",
       "displayName": "Neograph",
       "uexName": "Neograph",
-      "basePerScu": 92773,
+      "basePerScu": 90364,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -756,7 +754,7 @@
       "internalName": "omnapoxy",
       "displayName": "Omnapoxy",
       "uexName": "Omnapoxy",
-      "basePerScu": 4375,
+      "basePerScu": 4605,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -782,7 +780,7 @@
       "internalName": "thermalfoam",
       "displayName": "ThermalFoam",
       "uexName": "Thermalfoam",
-      "basePerScu": 6360,
+      "basePerScu": 6213,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -799,7 +797,7 @@
       "internalName": "xa_pyen",
       "displayName": "Xa'Pyen",
       "uexName": "Xa'Pyen",
-      "basePerScu": 4733,
+      "basePerScu": 4900,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -807,7 +805,7 @@
       "internalName": "amioshi_plague",
       "displayName": "Amioshi Plague",
       "uexName": "Amioshi Plague",
-      "basePerScu": 24886,
+      "basePerScu": 23846,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -815,7 +813,7 @@
       "internalName": "carbon_silk",
       "displayName": "Carbon-Silk",
       "uexName": "Carbon-Silk",
-      "basePerScu": 20333,
+      "basePerScu": 20300,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -832,7 +830,7 @@
       "internalName": "degnous_root",
       "displayName": "Degnous Root",
       "uexName": "Degnous Root",
-      "basePerScu": 59667,
+      "basePerScu": 59000,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -840,7 +838,7 @@
       "internalName": "golden_medmon",
       "displayName": "Golden Medmon",
       "uexName": "Golden Medmon",
-      "basePerScu": 54000,
+      "basePerScu": 57680,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -848,7 +846,7 @@
       "internalName": "heart_of_the_woods",
       "displayName": "Heart of the Woods",
       "uexName": "Heart of the Woods",
-      "basePerScu": 36000,
+      "basePerScu": 35600,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -856,7 +854,7 @@
       "internalName": "marok_gem",
       "displayName": "Marok Gem",
       "uexName": "Marok Gem",
-      "basePerScu": 46667,
+      "basePerScu": 50100,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -864,7 +862,7 @@
       "internalName": "organics",
       "displayName": "Organics",
       "uexName": "Organics",
-      "basePerScu": 12563,
+      "basePerScu": 12429,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -880,7 +878,7 @@
       "internalName": "prota",
       "displayName": "Prota",
       "uexName": "Prota",
-      "basePerScu": 55333,
+      "basePerScu": 61860,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -888,7 +886,7 @@
       "internalName": "revenant_pod",
       "displayName": "Revenant Pod",
       "uexName": "Revenant Pod",
-      "basePerScu": 9100,
+      "basePerScu": 9927,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -914,7 +912,7 @@
       "internalName": "gasping_weevil_eggs",
       "displayName": "Gasping Weevil Eggs",
       "uexName": "Gasping Weevil Eggs",
-      "basePerScu": 56000,
+      "basePerScu": 64000,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -922,7 +920,7 @@
       "internalName": "ck13_gid_seed_blend",
       "displayName": "CK13-GID Seed Blend",
       "uexName": "CK13-GID Seed Blend",
-      "basePerScu": 11000,
+      "basePerScu": 8100,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -930,7 +928,7 @@
       "internalName": "ranta_dung",
       "displayName": "Ranta Dung",
       "uexName": "Ranta Dung",
-      "basePerScu": 33000,
+      "basePerScu": 36168,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -956,7 +954,7 @@
       "internalName": "dymantium",
       "displayName": "Dymantium",
       "uexName": "Dymantium",
-      "basePerScu": 22333,
+      "basePerScu": 22941,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -964,7 +962,7 @@
       "internalName": "audio_visual_equipment",
       "displayName": "Audio-Visual Equipment",
       "uexName": "Audio-Visual Equipment",
-      "basePerScu": 33571,
+      "basePerScu": 35098,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -990,7 +988,7 @@
       "internalName": "luminalia_gift",
       "displayName": "Luminalia Gift",
       "uexName": "Luminalia Gift",
-      "basePerScu": 5075000,
+      "basePerScu": 5112000,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -998,7 +996,7 @@
       "internalName": "party_favors",
       "displayName": "Party Favors",
       "uexName": "Party Favors",
-      "basePerScu": 4813,
+      "basePerScu": 4736,
       "anchor": "sell",
       "category": "commodity"
     },
@@ -1006,18 +1004,101 @@
       "internalName": "souvenirs",
       "displayName": "Souvenirs",
       "uexName": "Souvenirs",
-      "basePerScu": 19000,
+      "basePerScu": 18300,
       "anchor": "sell",
       "category": "commodity"
+    },
+    "ship_ammunition": {
+      "internalName": "ship_ammunition",
+      "displayName": "Ship Ammunition",
+      "uexName": "Ship Ammunition",
+      "basePerScu": 11,
+      "anchor": "sell",
+      "category": "commodity"
+    },
+    "ship_ammunition_size_1": {
+      "internalName": "ship_ammunition_size_1",
+      "displayName": "Ship Ammunition - Size 1",
+      "uexName": "Ship Ammunition - Size 1",
+      "basePerScu": 6868,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_ammunition_size_2": {
+      "internalName": "ship_ammunition_size_2",
+      "displayName": "Ship Ammunition - Size 2",
+      "uexName": "Ship Ammunition - Size 2",
+      "basePerScu": 7126,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_ammunition_size_3": {
+      "internalName": "ship_ammunition_size_3",
+      "displayName": "Ship Ammunition - Size 3",
+      "uexName": "Ship Ammunition - Size 3",
+      "basePerScu": 7384,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_ammunition_size_4": {
+      "internalName": "ship_ammunition_size_4",
+      "displayName": "Ship Ammunition - Size 4",
+      "uexName": "Ship Ammunition - Size 4",
+      "basePerScu": 7641,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_ammunition_size_5": {
+      "internalName": "ship_ammunition_size_5",
+      "displayName": "Ship Ammunition - Size 5",
+      "uexName": "Ship Ammunition - Size 5",
+      "basePerScu": 7985,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_ammunition_size_6": {
+      "internalName": "ship_ammunition_size_6",
+      "displayName": "Ship Ammunition - Size 6",
+      "uexName": "Ship Ammunition - Size 6",
+      "basePerScu": 8324,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_ammunition_size_7": {
+      "internalName": "ship_ammunition_size_7",
+      "displayName": "Ship Ammunition - Size 7",
+      "uexName": "Ship Ammunition - Size 7",
+      "basePerScu": 8671,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_decoy_countermeasures": {
+      "internalName": "ship_decoy_countermeasures",
+      "displayName": "Ship Decoy Countermeasures",
+      "uexName": "Ship Decoy Countermeasures",
+      "basePerScu": 4293,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
+    },
+    "ship_noise_countermeasures": {
+      "internalName": "ship_noise_countermeasures",
+      "displayName": "Ship Noise Countermeasures",
+      "uexName": "Ship Noise Countermeasures",
+      "basePerScu": 8585,
+      "anchor": "sell",
+      "category": "commodity",
+      "fallback": true
     }
   },
   "priceFallbacks": [
-    {
-      "internalName": "compboard",
-      "displayName": "Compboard",
-      "basePerScu": 9000,
-      "uexName": "Compboard"
-    },
     {
       "internalName": "inert_materials",
       "displayName": "Inert Materials",
@@ -1214,12 +1295,6 @@
       "uexName": "Diluthermex"
     },
     {
-      "internalName": "elespo",
-      "displayName": "Elespo",
-      "basePerScu": 6000,
-      "uexName": "Elespo"
-    },
-    {
       "internalName": "lastaphrene",
       "displayName": "Lastaphrene",
       "basePerScu": 5000,
@@ -1290,6 +1365,60 @@
       "displayName": "Fireworks",
       "basePerScu": 5000,
       "uexName": "Fireworks"
+    },
+    {
+      "internalName": "ship_ammunition_size_1",
+      "displayName": "Ship Ammunition - Size 1",
+      "basePerScu": 6868,
+      "uexName": "Ship Ammunition - Size 1"
+    },
+    {
+      "internalName": "ship_ammunition_size_2",
+      "displayName": "Ship Ammunition - Size 2",
+      "basePerScu": 7126,
+      "uexName": "Ship Ammunition - Size 2"
+    },
+    {
+      "internalName": "ship_ammunition_size_3",
+      "displayName": "Ship Ammunition - Size 3",
+      "basePerScu": 7384,
+      "uexName": "Ship Ammunition - Size 3"
+    },
+    {
+      "internalName": "ship_ammunition_size_4",
+      "displayName": "Ship Ammunition - Size 4",
+      "basePerScu": 7641,
+      "uexName": "Ship Ammunition - Size 4"
+    },
+    {
+      "internalName": "ship_ammunition_size_5",
+      "displayName": "Ship Ammunition - Size 5",
+      "basePerScu": 7985,
+      "uexName": "Ship Ammunition - Size 5"
+    },
+    {
+      "internalName": "ship_ammunition_size_6",
+      "displayName": "Ship Ammunition - Size 6",
+      "basePerScu": 8324,
+      "uexName": "Ship Ammunition - Size 6"
+    },
+    {
+      "internalName": "ship_ammunition_size_7",
+      "displayName": "Ship Ammunition - Size 7",
+      "basePerScu": 8671,
+      "uexName": "Ship Ammunition - Size 7"
+    },
+    {
+      "internalName": "ship_decoy_countermeasures",
+      "displayName": "Ship Decoy Countermeasures",
+      "basePerScu": 4293,
+      "uexName": "Ship Decoy Countermeasures"
+    },
+    {
+      "internalName": "ship_noise_countermeasures",
+      "displayName": "Ship Noise Countermeasures",
+      "basePerScu": 8585,
+      "uexName": "Ship Noise Countermeasures"
     }
   ],
   "unmatched": [
@@ -1316,6 +1445,86 @@
     {
       "internalName": "mg_scrip",
       "displayName": "MG Scrip",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "ace_interceptor_helmet",
+      "displayName": "Ace Interceptor Helmet",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "bluemoon_fungus",
+      "displayName": "Bluemoon Fungus",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "combat_supplies",
+      "displayName": "Combat Supplies",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "desert_quasi_grazer_egg",
+      "displayName": "Desert Quasi Grazer Egg",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "eva_fuel",
+      "displayName": "EVA Fuel",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "fotia_seedpod",
+      "displayName": "Fotia Seedpod",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "hlx99_hyperprocessors",
+      "displayName": "HLX99 Hyperprocessors",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "medgel",
+      "displayName": "MedGel",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "mobyglass_personal_computers",
+      "displayName": "mobyGlass Personal Computers",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "organs",
+      "displayName": "Organs",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "oza",
+      "displayName": "Oza",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "pingala_seeds",
+      "displayName": "Pingala Seeds",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "rs1_odysey_spacesuits",
+      "displayName": "RS1 Odysey Spacesuits",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "ship_ammunition_size_8",
+      "displayName": "Ship Ammunition - Size 8",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "ship_ammunition_size_9",
+      "displayName": "Ship Ammunition - Size 9",
+      "reason": "no UEX row"
+    },
+    {
+      "internalName": "uncut_slam",
+      "displayName": "Uncut SLAM",
       "reason": "no UEX row"
     }
   ]

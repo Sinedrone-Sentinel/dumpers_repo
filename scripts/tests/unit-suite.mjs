@@ -1981,6 +1981,27 @@ check(
 check(notepadText.clampNotepad(null) === '', 'notepad: null becomes empty')
 check(notepadText.clampNotepad('x'.repeat(2005)).length === 2000, 'notepad: over-limit text is capped')
 
+const resourceTypes = await import(pathToFileURL(path.join(root, 'scripts/lib/parseResourceTypes.mjs')).href)
+const cargoBox = { _Type_: 'SResourceTypeDefaultCargoContainers', oneSCU: 'file://box.json' }
+const rtDb = {
+  _RecordValue_: {
+    groups: [{
+      _RecordName_: 'ResourceTypeGroup.ProcessedGoods',
+      resources: [
+        { _RecordName_: 'ResourceType.HolidayLetter', displayName: '@env', defaultCargoContainers: cargoBox },
+        { _RecordName_: 'ResourceType.Stims', displayName: '@stims', defaultCargoContainers: cargoBox },
+      ],
+    }],
+  },
+}
+const rtKeys = resourceTypes.buildGameCommodities(rtDb, { env: 'Year of the Rat Envelope', stims: 'Stims' }).map((c) => c.key)
+check(rtKeys.join(',') === 'stims', 'account-bound: Year of the Rat Envelope never enters the commodity catalog')
+const parsedCommodities = JSON.parse(readFileSync(path.join(root, 'src/data/game-commodities.json'), 'utf8'))
+check(
+  !parsedCommodities.commodities.some((c) => c.key === 'year_of_the_rat_envelope'),
+  'account-bound: parsed commodity catalog has no account-bound cargo',
+)
+
 const bpQuality = await import(pathToFileURL(path.join(outDir, 'blueprintQuality.mjs')).href)
 const canCraftLib = await import(pathToFileURL(path.join(outDir, 'canCraft.mjs')).href)
 const craftStock = await import(pathToFileURL(path.join(outDir, 'craftFromStock.mjs')).href)
