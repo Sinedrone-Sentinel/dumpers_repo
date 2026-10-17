@@ -14,6 +14,7 @@ import {
   emptySnapshot,
   itemIsEquippable,
   powerColumns,
+  powerGenerated,
   radarRangeForPips,
   resolvedPower,
   segmentScale,
