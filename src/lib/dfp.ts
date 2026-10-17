@@ -97,7 +97,7 @@ export function resolveDfpTypeKey(blueprint: BlueprintDfpInput): string {
   if (cat === 'FPSArmours') return 'armor'
   if (cat === 'FPSWeapons') return 'fps_weapon'
   if (cat === 'MissionItem') return 'mission_item'
-  if (cat.startsWith('Veh. Comp.')) {
+  if (cat.startsWith('Veh. Comp.') || cat.startsWith('Ind. Comp.')) {
     const sub = blueprint.subCategoryName ?? blueprint.subtype ?? 'default'
     const match = cat.match(/S(\d+)/i)
     return match ? `ship_component:${sub}:S${match[1]}` : `ship_component:${sub}`

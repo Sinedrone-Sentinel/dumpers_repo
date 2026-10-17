@@ -112,6 +112,7 @@ export function formatTaxonomyLabel(value: string | null | undefined): string | 
 /** Subtype chip labels (matches blueprint filter formatting). */
 export function formatSubtypeLabel(sub: string | null | undefined): string | null {
   if (!sub) return null
+  if (sub === 'orepod') return 'Ore Pod'
   return sub.charAt(0).toUpperCase() + sub.slice(1).replace(/([A-Z])/g, ' $1')
 }
 
@@ -164,6 +165,7 @@ export function getBlueprintDisplayTags(bp: BlueprintTaxonomyInput): BlueprintDi
   if (garment) {
     tags.push({ kind: 'subtype', label: 'Combat Clothing' })
     tags.push({ kind: 'garment', label: formatSubtypeLabel(garment) ?? garment })
+    tags.push({ kind: 'subtype', label: 'Standard' })
     return tags
   }
 

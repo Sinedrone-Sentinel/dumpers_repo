@@ -9,6 +9,7 @@
  * Output: src/data/*.json files
  */
 
+import { spawnSync } from 'child_process'
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
 import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
@@ -3904,11 +3905,24 @@ function parseBlueprintDefinitions(localization = {}) {
       }
 
       armorSlot = detectArmorSlotFromInternalName(internalName || entityClass, blueprintName) || armorSlot
+
+      const displayLower = (blueprintName || '').toLowerCase()
+      const flightOrRacingHelmet =
+        armorSlot === 'helmet' &&
+        (displayLower.includes('flight') || displayLower.includes('racing') || displayLower.includes('racer'))
+      if (flightOrRacingHelmet && (armorWeight === 'light' || !armorWeight || subtype === 'undersuit')) {
+        armorWeight = 'flight'
+        subtype = 'standard'
+      } else if (armorSlot === 'undersuit' && (!subtype || subtype === 'undersuit')) {
+        subtype = 'standard'
+      }
     }
     // Vehicle component types - detect from internalName prefix
     if (category.startsWith('VehicleComponent')) {
       const nameLower = (internalName || '').toLowerCase()
-      if (nameLower.startsWith('cool_') || nameLower.includes('cooler')) subtype = 'cooler'
+      if (nameLower.startsWith('mining_modules')) subtype = 'modules'
+      else if (nameLower.startsWith('cargo_shipmining_pod')) subtype = 'orepod'
+      else if (nameLower.startsWith('cool_') || nameLower.includes('cooler')) subtype = 'cooler'
       else if (nameLower.startsWith('powr_') || nameLower.includes('powerplant')) subtype = 'powerplant'
       else if (nameLower.startsWith('shld_') || nameLower.includes('shield')) subtype = 'shield'
       else if (nameLower.startsWith('qdrv_') || nameLower.includes('quantum')) subtype = 'quantumdrive'
@@ -3936,7 +3950,8 @@ function parseBlueprintDefinitions(localization = {}) {
     let categoryName = category
     if (category.startsWith('VehicleComponent')) {
       const size = category.replace('VehicleComponent', '')
-      categoryName = `Veh. Comp. ${size}`
+      const industrial = new Set(['mininglaser', 'refuelling', 'salvage', 'tractorbeam', 'modules', 'orepod'])
+      categoryName = industrial.has(subtype) ? `Ind. Comp. ${size}` : `Veh. Comp. ${size}`
     } else if (category.startsWith('VehicleWeapons')) {
       const size = category.replace('VehicleWeapons', '')
       categoryName = `Veh. Weapons ${size}`
@@ -5313,6 +5328,14 @@ async function main() {
     }
   } catch (err) {
     console.warn(`\n⚠️  Could not build/push What's New: ${err?.message || err}`)
+  }
+
+  const tagAudit = spawnSync(process.execPath, [join(__dirname, 'audit-blueprint-tags.mjs')], {
+    cwd: PROJECT_ROOT,
+    stdio: 'inherit',
+  })
+  if (tagAudit.status !== 0) {
+    process.exitCode = 1
   }
 
   console.log('\nOutput files written to: src/data/')

@@ -1,0 +1,33 @@
+---
+description: Blueprint category tag minimums — every listed blueprint must stay filterable
+alwaysApply: true
+---
+
+# Blueprint category tags
+
+Members filter blueprints by the chips on the card. A listed blueprint (`entityClass` present) that is short of its family's minimum cannot be found. WIP rows with a null `entityClass` stay hidden and are not counted.
+
+## Minimums
+
+| Family | Tags | Chips |
+|---|---|---|
+| FPS Weapons and Ammo | 2 | category, weapon type |
+| FPS Armour | 4 | category, weight, slot, style |
+| Vehicle Weapons | 3 | category, size, type |
+| Vehicle Components | 5 | category, size, type, class, grade |
+| Industrial Components | 3 | category, size, type |
+
+Industrial Components is the main filter after Vehicle Weapons. Stored categories are `Ind. Comp. S0`–`S3`. It holds mining lasers, mining modules (`modules`), ore pods (`orepod`, label **Ore Pod**), salvage scrapers, refuelling nozzles, and tractor beams. Grade still shows when the wiki already has one. Do not invent a class or a grade. The Military / Civilian filter stays on Vehicle Components only.
+
+Capital vehicle components that were left without a class or grade stay in Vehicle Components. `scripts/audit-blueprint-tags.mjs` prints them every parse under "Still open" and does not fail on that allowlist. A new shortfall is a failure.
+
+## When adding or changing a blueprint
+
+- Assign the chips in `scripts/parse-extracted-data.mjs` so the next parse keeps them. Patching `game-blueprints.json` alone is not enough.
+- Compare a short row with fully tagged siblings. If nothing comparable exists, add a subtype under an existing family (Modules, Ore Pod) instead of inventing class or grade.
+- Armour style is `standard` when the piece is an undersuit or combat clothing needs its fourth chip. A flight or racing helmet that is still Light, or still tagged as an undersuit, uses weight **Flight** and style **Standard**. Leave a helmet that already has its own style, such as Racer, alone.
+- `resolveDfpTypeKey` treats `Ind. Comp.` like `Veh. Comp.` Component-metadata indexing includes `Ind. Comp.` so grades survive a DFP rebuild.
+
+## Check
+
+`npm run parse-game-data` runs `scripts/audit-blueprint-tags.mjs` last and prints every blueprint that still needs a category. `npm run patch-audit` runs the same check and fails when anything outside the capital allowlist is short.

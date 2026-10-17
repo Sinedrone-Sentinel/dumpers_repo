@@ -16,7 +16,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Browse and filter blueprints by type, manufacturer, and availability',
       'Vehicle Components: pick a type (Cooler, Shield, …) to filter by class (Military, Civilian, Stealth, Industrial, Competition) and grade (A–D). Cards show those as chips next to size and type',
-      'FPS Armour includes combat clothing (armored apparel like the Bellator set): these show a Combat Clothing tag plus a garment type (Shirt, Jacket, Pants, Shoes, Gloves) instead of an armor weight/slot, and you can filter by garment type',
+      'Industrial Components (after Vehicle Weapons) holds mining lasers, mining modules, ore pods, salvage scrapers, refuelling nozzles, and tractor beams. Filter those by size and type',
+      'FPS Armour includes combat clothing (armored apparel like the Bellator set): these show a Combat Clothing tag, a garment type (Shirt, Jacket, Pants, Shoes, Gloves), and Standard instead of an armor weight/slot, and you can filter by garment type',
       'Material filter (cyan): type or pick any crafting material to show blueprints that require it — runs before category filters',
       'Search, category, material, and acquisition filters are remembered when you return (per account in this browser; Offline Mode uses local guest storage)',
       'See what reputation level is required to unlock each blueprint',

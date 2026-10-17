@@ -114,7 +114,7 @@ function peerKey(bp) {
     return `FPSArmours:${weight}:${slot}`
   }
   if (cat === 'Ammo') return `Ammo:${inferWeaponSubtype(bp)}`
-  if (cat.startsWith('Veh. Comp.')) {
+  if (cat.startsWith('Veh. Comp.') || cat.startsWith('Ind. Comp.')) {
     const size = cat.match(/S\d+/)?.[0] || '?'
     return `VehComp:${size}:${bp.subCategoryName || bp.subtype || 'component'}`
   }

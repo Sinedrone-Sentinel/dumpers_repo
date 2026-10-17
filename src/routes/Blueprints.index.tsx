@@ -73,6 +73,7 @@ const MAIN_CATEGORY_GROUPS = {
   'Ammo': ['Ammo'],
   'Vehicle Components': ['Veh. Comp. S0', 'Veh. Comp. S1', 'Veh. Comp. S2', 'Veh. Comp. S3', 'Veh. Comp. S4'],
   'Vehicle Weapons': ['Veh. Weapons S1', 'Veh. Weapons S2', 'Veh. Weapons S3', 'Veh. Weapons S4', 'Veh. Weapons S5', 'Veh. Weapons S6'],
+  'Industrial Components': ['Ind. Comp. S0', 'Ind. Comp. S1', 'Ind. Comp. S2', 'Ind. Comp. S3'],
   'Mission Items': ['MissionItem'],
 }
 
@@ -86,6 +87,7 @@ const ARMOR_SLOT_LABELS: Record<string, string> = {
 const VEHICLE_SIZE_OPTIONS = {
   'Vehicle Components': ['S0', 'S1', 'S2', 'S3', 'S4'],
   'Vehicle Weapons': ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
+  'Industrial Components': ['S0', 'S1', 'S2', 'S3'],
 }
 const STATIC_SUBTYPE_OPTIONS = {
   'FPS Weapons': FPS_WEAPON_TYPE_OPTIONS,
@@ -103,6 +105,7 @@ const STATIC_SUBTYPE_OPTIONS = {
     'shoes',
     'gloves',
   ],
+  'Industrial Components': ['mininglaser', 'modules', 'orepod', 'refuelling', 'salvage', 'tractorbeam'],
 }
 
 const formatSubType = formatSubtypeLabel
@@ -395,7 +398,11 @@ export default function BlueprintsRoute() {
       }
       
       // Count for sizes (Vehicle categories)
-      if (mainCat === 'Vehicle Components' || mainCat === 'Vehicle Weapons') {
+      if (
+        mainCat === 'Vehicle Components' ||
+        mainCat === 'Vehicle Weapons' ||
+        mainCat === 'Industrial Components'
+      ) {
         if (!sizes[mainCat]) sizes[mainCat] = {}
         const sizeMatch = bp.categoryName.match(/S(\d)/)
         if (sizeMatch) {

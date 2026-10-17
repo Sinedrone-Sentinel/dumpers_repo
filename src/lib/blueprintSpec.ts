@@ -50,6 +50,10 @@ function isVehicleComponent(categoryName?: string): boolean {
   return categoryName?.startsWith('Veh. Comp.') === true
 }
 
+function isIndexedComponent(categoryName?: string): boolean {
+  return isVehicleComponent(categoryName) || categoryName?.startsWith('Ind. Comp.') === true
+}
+
 function normalizeMetadataKey(raw: string): string {
   return raw.toLowerCase().replace(/_scitem$/, '')
 }
@@ -86,7 +90,7 @@ export function getComponentItemClass(bp: BlueprintSpecInput): string | null {
 }
 
 export function getComponentGrade(bp: BlueprintSpecInput): string | null {
-  if (!isVehicleComponent(bp.categoryName)) return null
+  if (!isIndexedComponent(bp.categoryName)) return null
   const grade = resolveComponentMeta(bp)?.grade
   if (!grade) return null
   const letter = grade.toUpperCase()
@@ -95,20 +99,21 @@ export function getComponentGrade(bp: BlueprintSpecInput): string | null {
 
 /** Size + class + grade + component type subline, e.g. "S2 Military A Cooler". */
 export function formatBlueprintSpecLine(bp: BlueprintSpecInput): string | null {
-  if ((!bp.file && !bp.internalName) || !isVehicleComponent(bp.categoryName)) return null
+  if ((!bp.file && !bp.internalName) || !isIndexedComponent(bp.categoryName)) return null
 
   const subTypeLabel = formatSubtypeLabel(getBlueprintSubType(bp))
   const meta = resolveComponentMeta(bp)
   const size = resolveComponentSize(bp)
+  const vehicle = isVehicleComponent(bp.categoryName)
 
   const parts: string[] = []
   if (size) parts.push(size)
 
-  if (meta?.itemClass && meta?.grade) {
+  if (vehicle && meta?.itemClass && meta?.grade) {
     parts.push(`${formatItemClass(meta.itemClass)} ${meta.grade}`)
   } else if (meta?.grade) {
     parts.push(meta.grade)
-  } else if (meta?.itemClass) {
+  } else if (vehicle && meta?.itemClass) {
     parts.push(formatItemClass(meta.itemClass))
   }
 
