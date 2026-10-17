@@ -18,6 +18,7 @@ const modules = [
   'src/lib/listingType.ts',
   'src/lib/liveMissionTracker.ts',
   'src/lib/blueprintTaxonomy.ts',
+  'src/lib/blueprintCategoryTags.ts',
   'src/lib/qualityModifiers.ts',
   'src/lib/inAppBrowser.ts',
   'src/lib/oauthReturn.ts',
@@ -2060,6 +2061,55 @@ check(
   noFloorBp && JSON.stringify(bpQuality.buildDefaultSlotQualities(noFloorBp)) ===
     JSON.stringify(Object.fromEntries(noFloorBp.slots.map((slot, i) => [i, bpQuality.defaultQualityForSlotResource(slot.options[0].resourceName)]))),
   'min quality: blueprints without a floor keep their normal defaults',
+)
+
+const bpTags = await import(pathToFileURL(path.join(outDir, 'blueprintCategoryTags.mjs')).href)
+const overrun = gameBps.find((bp) => bp.internalName === 'mining_modules_passive_overrun')
+const orePod = gameBps.find((bp) => bp.internalName === 'cargo_shipmining_pod_golem')
+const helix = gameBps.find((bp) => bp.internalName === 'mining_laser_thcn_helix_s2')
+const a23 = gameBps.find((bp) => bp.internalName === 'cds_undersuit_helmet_01_01_01')
+const tcs4 = gameBps.find((bp) => bp.blueprintName === 'TCS-4 Undersuit')
+const bellator = gameBps.find((bp) => bp.blueprintName === 'Bellator Jacket')
+check(
+  overrun?.categoryName === 'Ind. Comp. S0' && overrun?.subtype === 'modules',
+  'industrial: Overrun is an S0 module',
+)
+check(
+  bpTags.collectBlueprintCategoryTags(overrun).length === 3,
+  'industrial: a module has category, size, and type',
+)
+check(
+  orePod?.categoryName === 'Ind. Comp. S0' && orePod?.subtype === 'orepod',
+  'industrial: Drake Ore Pod is an ore pod',
+)
+check(
+  bpTags.formatSubtypeLabel?.(orePod?.subtype) === 'Ore Pod' ||
+    bpTags.collectBlueprintCategoryTags(orePod).some((tag) => tag.label === 'Ore Pod'),
+  'industrial: ore pod chip reads Ore Pod',
+)
+check(
+  helix?.categoryName?.startsWith('Ind. Comp.') &&
+    bpTags.collectBlueprintCategoryTags(helix).some((tag) => tag.label === 'A'),
+  'industrial: mining lasers keep their grade chip',
+)
+check(
+  a23?.armorWeight === 'flight' && a23?.subtype === 'standard' &&
+    bpTags.collectBlueprintCategoryTags(a23).length === 4,
+  'armour: flight helmets use Flight and Standard',
+)
+check(
+  tcs4?.subtype === 'standard' && bpTags.collectBlueprintCategoryTags(tcs4).length === 4,
+  'armour: undersuits add Standard',
+)
+check(
+  bpTags.collectBlueprintCategoryTags(bellator).some((tag) => tag.label === 'Standard') &&
+    bpTags.collectBlueprintCategoryTags(bellator).length === 4,
+  'armour: combat clothing adds Standard',
+)
+check(
+  bpTags.blueprintTagRequirement({ categoryName: 'Veh. Comp. S1' })?.required === 5 &&
+    bpTags.blueprintTagRequirement({ categoryName: 'Ind. Comp. S2' })?.required === 3,
+  'tag minimums: vehicle components are 5 and industrial components are 3',
 )
 
 console.log(`Unit tests: ${pass} passed`)

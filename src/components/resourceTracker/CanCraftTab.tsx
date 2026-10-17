@@ -83,6 +83,7 @@ const MAIN_CATEGORY_GROUPS: Record<string, string[]> = {
     'Veh. Weapons S5',
     'Veh. Weapons S6',
   ],
+  'Industrial Components': ['Ind. Comp. S0', 'Ind. Comp. S1', 'Ind. Comp. S2', 'Ind. Comp. S3'],
   'Mission Items': ['MissionItem'],
 }
 
@@ -97,6 +98,7 @@ const ARMOR_SLOT_LABELS: Record<string, string> = {
 const VEHICLE_SIZE_OPTIONS: Record<string, string[]> = {
   'Vehicle Components': ['S0', 'S1', 'S2', 'S3', 'S4'],
   'Vehicle Weapons': ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'],
+  'Industrial Components': ['S0', 'S1', 'S2', 'S3'],
 }
 
 const STATIC_SUBTYPE_OPTIONS: Record<string, string[]> = {
@@ -115,6 +117,7 @@ const STATIC_SUBTYPE_OPTIONS: Record<string, string[]> = {
     'shoes',
     'gloves',
   ],
+  'Industrial Components': ['mininglaser', 'modules', 'orepod', 'refuelling', 'salvage', 'tractorbeam'],
 }
 
 const formatSubType = formatSubtypeLabel
@@ -336,7 +339,11 @@ export default function CanCraftTab({
         subTypes[mainCat][sub] = (subTypes[mainCat][sub] || 0) + 1
       }
 
-      if (mainCat === 'Vehicle Components' || mainCat === 'Vehicle Weapons') {
+      if (
+        mainCat === 'Vehicle Components' ||
+        mainCat === 'Vehicle Weapons' ||
+        mainCat === 'Industrial Components'
+      ) {
         if (!sizes[mainCat]) sizes[mainCat] = {}
         const sizeMatch = bp.categoryName.match(/S(\d)/)
         if (sizeMatch) {
