@@ -194,7 +194,7 @@ export default function MiningAdvisorChat({
     if (ui.dock === 'right') {
       return { ...base, top: 72, right: 12, bottom: 12, width: 'min(22rem, 46%)' }
     }
-    return { ...base, right: 12, bottom: 12, width: 'min(22rem, 92%)', height: 'min(26rem, 70%)' }
+    return { ...base, right: 12, bottom: 12, width: 'min(22rem, 92%)', height: 'min(65rem, 85%)' }
   }, [ui.dock, ui.offsetX, ui.offsetY])
 
   const sendQuestion = async () => {

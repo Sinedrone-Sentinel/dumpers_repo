@@ -7,13 +7,13 @@ import { getShipItem, shipItems } from './shipItemCatalog'
 import {
   addPartToSnapshot,
   assignedSegments,
-  columnSelected,
   columnTotal,
   effectivePartStats,
   emptySnapshot,
   itemIsEquippable,
   powerColumns,
   radarRangeForPips,
+  resolvedPower,
   segmentScale,
   type FittedPart,
   type MissileMount,
@@ -89,6 +89,8 @@ export const SHIP_SECTIONS = [
   { id: 'quantum', label: 'Quantum Drives' },
   { id: 'flight', label: 'Flight Blades' },
   { id: 'radar', label: 'Radar' },
+  { id: 'tractor', label: 'Tractor Beams' },
+  { id: 'interdiction', label: 'Interdiction' },
 ] as const
 
 const SECTION_KIND: Record<string, string> = {
@@ -100,6 +102,32 @@ const SECTION_KIND: Record<string, string> = {
   quantum: 'quantum',
   flight: 'flight',
   radar: 'radar',
+  tractor: 'tractor',
+  interdiction: 'qed',
+}
+
+export interface WeaponNode {
+  port: ShipPort
+  children: WeaponNode[]
+}
+
+/** Turrets and mounts group the guns that sit on them. A turret with no guns stays out of this list. */
+export function weaponTree(ship: GameShip): WeaponNode[] {
+  const ports = ship.ports.filter((port) => port.kind === 'turret' || port.kind === 'weaponMount' || port.kind === 'weapon')
+  const ids = new Set(ports.map((port) => port.id))
+  const childMap = new Map<string, ShipPort[]>()
+  const roots: ShipPort[] = []
+  for (const port of ports) {
+    const parentId = [...ids].filter((id) => id !== port.id && port.id.startsWith(`${id}/`)).sort((a, b) => b.length - a.length)[0]
+    if (!parentId) roots.push(port)
+    else childMap.set(parentId, [...(childMap.get(parentId) || []), port])
+  }
+  const build = (port: ShipPort): WeaponNode => ({
+    port,
+    children: (childMap.get(port.id) || []).map(build),
+  })
+  const hasGun = (node: WeaponNode): boolean => node.port.kind !== 'turret' || node.children.some(hasGun)
+  return roots.map(build).filter(hasGun)
 }
 
 export const SHIPS: GameShip[] = (gameShips as { ships: GameShip[] }).ships
@@ -347,14 +375,15 @@ export function snapshotForBuild(
   if (!ship) return snapshot
   const parts = fittedPowerParts(ship, ports)
   const columns = powerColumns(ship.weaponPowerPool || 0, parts)
+  const assignedPower = resolvedPower(columns, power, powerGenerated(parts))
   const scales = new Map<string, number>()
   const pipCounts = new Map<string, number>()
   const weaponColumn = columns.find((column) => column.id === 'weapons')
   const weaponTotal = weaponColumn ? columnTotal(weaponColumn) : 0
-  const weaponFraction = weaponColumn ? columnSelected(weaponColumn, power?.[weaponColumn.id]) / Math.max(1, weaponTotal) : 1
+  const weaponFraction = weaponColumn ? (assignedPower[weaponColumn.id] || 0) / Math.max(1, weaponTotal) : 1
   for (const column of columns) {
     if (column.id === 'weapons') continue
-    const selected = columnSelected(column, power?.[column.id])
+    const selected = assignedPower[column.id] || 0
     const assigned = assignedSegments(column, selected)
     for (const [portId, count] of assigned) {
       pipCounts.set(portId, count)

@@ -1407,6 +1407,52 @@
       ]
     },
     {
+      "entityClass": "aegs_idris_lower_camera_mount",
+      "displayName": "Aegs Idris Lower Camera Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2000
+      },
+      "burstDps": 0,
+      "tags": "Idris_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "aegs_idris_upper_camera_mount",
+      "displayName": "Aegs Idris Upper Camera Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2000
+      },
+      "burstDps": 0,
+      "tags": "Idris_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "aegs_reclaimer_salvage_arm",
+      "displayName": "Aegs Reclaimer Salvage Arm",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount",
+      "grade": "A"
+    },
+    {
       "entityClass": "qdrv_just_s03_agni_scitem",
       "displayName": "Agni",
       "kind": "quantum",
@@ -1621,6 +1667,22 @@
       "burstDps": 0,
       "itemClass": "Military",
       "grade": "C"
+    },
+    {
+      "entityClass": "anvl_arrow_turret",
+      "displayName": "Anvil Arrow Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1000
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount",
+      "requiredTags": "ANVL_Arrow_Base",
+      "grade": "A"
     },
     {
       "entityClass": "controller_flight_anvl_asgard_blade_hnd",
@@ -1900,6 +1962,38 @@
       "grade": "A"
     },
     {
+      "entityClass": "anvl_hornet_f7a_mk1_nose_turret",
+      "displayName": "Anvil F7A Hornet Mk I Nose Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 650
+      },
+      "burstDps": 0,
+      "tags": "ANVL_Hornet_Center flightReady",
+      "requiredTags": "ANVL_Hornet_F7A_Mk1",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_hornet_f7cm_mk2_ball_turret",
+      "displayName": "Anvil F7C-M Mk II Ball Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady $ANVL_Hornet_Mk2_Center",
+      "requiredTags": "ANVL_Hornet_Mk2_Center",
+      "grade": "A"
+    },
+    {
       "entityClass": "mrck_s04_anvl_hornet_f7cm_mk2_turret",
       "displayName": "Anvil F7C-M Mk II Missile Rack",
       "kind": "missileRack",
@@ -2022,6 +2116,133 @@
           "maxSize": 5
         }
       ]
+    },
+    {
+      "entityClass": "anvl_hornet_f7c_nose_turret",
+      "displayName": "Anvil Hornet F7C Nose Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 600
+      },
+      "burstDps": 0,
+      "tags": "ANVL_Hornet_Center flightReady",
+      "requiredTags": "ANVL_Hornet_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "umnt_anvl_s5_cap",
+      "displayName": "Anvil Hornet Ghost Center Cap",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "ANVL_Hornet_Center flightReady ANVL_Hornet_Base",
+      "requiredTags": "ANVL_Hornet_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "umnt_anvl_s5_cap_mk2",
+      "displayName": "Anvil Hornet Ghost Mk II Center Cap",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "flightReady $ANVL_Hornet_Mk2_Center",
+      "requiredTags": "ANVL_Hornet_Mk2_Center",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_hornet_f7c_mk2_nose_turret",
+      "displayName": "Anvil Hornet Mk II S2 Nose Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 650
+      },
+      "burstDps": 0,
+      "tags": "flightReady ANVL_Hornet_F7A_Mk2 ANVL_Hornet_Mk2",
+      "requiredTags": "ANVL_Hornet_Mk2",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_hornet_f7a_nose_turret",
+      "displayName": "Anvil Hornet Mk II S3 Nose Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 700
+      },
+      "burstDps": 0,
+      "tags": "flightReady ANVL_Hornet_F7A_Mk2 ANVL_Hornet_Mk2",
+      "requiredTags": "ANVL_Hornet_F7A_Mk2",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_lightning_f8_turret_s5",
+      "displayName": "Anvil Lightning F8 Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 400
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount",
+      "requiredTags": "ANVL_Lightning_F8",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_lightning_f8c_turret_s3",
+      "displayName": "Anvil Lightning F8C Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 3500
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount",
+      "requiredTags": "ANVL_Lightning_F8",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_terrapin_nose_turret_s3",
+      "displayName": "Anvil Terrapin Nose Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 3000
+      },
+      "burstDps": 0,
+      "requiredTags": "ANVL_Terrapin_Base",
+      "grade": "A"
     },
     {
       "entityClass": "armr_anvl_hornet_f7cs",
@@ -2542,6 +2763,22 @@
           "maxSize": 2
         }
       ]
+    },
+    {
+      "entityClass": "argo_moth_salvage_arm",
+      "displayName": "Argo Moth Salvage Arm",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount",
+      "grade": "A"
     },
     {
       "entityClass": "armr_argo_mole",
@@ -8794,6 +9031,22 @@
       "grade": "C"
     },
     {
+      "entityClass": "qdmp_wetk_s01_burke",
+      "displayName": "Burke QD",
+      "kind": "qed",
+      "size": 1,
+      "manufacturer": "Wei-Tek",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 3,
+        "Power_Segments": 3
+      },
+      "burstDps": 0,
+      "itemClass": "Military",
+      "grade": "A"
+    },
+    {
       "entityClass": "qdrv_arcc_s01_burst_scitem",
       "displayName": "Burst",
       "kind": "quantum",
@@ -8874,6 +9127,54 @@
       },
       "burstDps": 813,
       "tags": "BEHR BallisticCannon flightReady weaponMountUsable",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_hornet_f7c_ball_turret",
+      "displayName": "C4-160f S5 Hornet Ball Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1250
+      },
+      "burstDps": 0,
+      "tags": "$ANVL_Hornet_Base",
+      "requiredTags": "ANVL_Hornet_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_hornet_f7a_mk1_ball_turret",
+      "displayName": "C4-163f S5 Hornet Mk I Ball Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1300
+      },
+      "burstDps": 0,
+      "tags": "$ANVL_Hornet_F7A_Base",
+      "requiredTags": "ANVL_Hornet_F7A_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_hornet_f7a_ball_turret",
+      "displayName": "C5-173f S5 Hornet Mk II Ball Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1350
+      },
+      "burstDps": 0,
+      "tags": "flightReady $ANVL_Hornet_Mk2_Center",
+      "requiredTags": "ANVL_Hornet_Mk2_Center",
       "grade": "A"
     },
     {
@@ -9123,6 +9424,23 @@
       "tags": "flightReady",
       "itemClass": "Civilian",
       "grade": "B"
+    },
+    {
+      "entityClass": "qdmp_rsi_s03_captor",
+      "displayName": "Captor QD",
+      "kind": "qed",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1100,
+        "Power_Min": 3,
+        "Power_Segments": 3
+      },
+      "burstDps": 0,
+      "tags": "flightReady",
+      "grade": "C"
     },
     {
       "entityClass": "qdrv_arcc_s02_cascade_scitem",
@@ -10053,6 +10371,22 @@
       "grade": "A"
     },
     {
+      "entityClass": "cnou_mustang_nose_turret_s3",
+      "displayName": "Consolidated Outland Mustang Nose Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Consolidated Outland",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1000
+      },
+      "burstDps": 0,
+      "tags": "flightReady",
+      "requiredTags": "CNOU_Mustang_Base",
+      "grade": "A"
+    },
+    {
       "entityClass": "armr_rsi_constellation_andromeda",
       "displayName": "Constellation Andromeda Ship Armor",
       "kind": "armor",
@@ -10953,6 +11287,30 @@
       "grade": "A"
     },
     {
+      "entityClass": "controller_salvage_tractorbeamonly",
+      "displayName": "Controller Salvage Tractorbeamonly",
+      "kind": "tractor",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {},
+      "burstDps": 0,
+      "grade": "A"
+    },
+    {
+      "entityClass": "controller_salvage_tractorbeamonly_powersuit",
+      "displayName": "Controller Salvage Tractorbeamonly Powersuit",
+      "kind": "tractor",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {},
+      "burstDps": 0,
+      "grade": "A"
+    },
+    {
       "entityClass": "cool_aegs_s04_javelin_scitem",
       "displayName": "Cool Aegs S04 Javelin",
       "kind": "cooler",
@@ -11300,6 +11658,22 @@
       },
       "burstDps": 0,
       "tags": "DRAK_Cutlass_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_fixed_mount_s4",
+      "displayName": "Cutlass Flashfire Specialty Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": "Drake Interplanetary",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 400
+      },
+      "burstDps": 0,
+      "tags": "fixedMount flightReady",
+      "requiredTags": "DRAK_Cutlass_Base",
       "grade": "A"
     },
     {
@@ -11983,6 +12357,38 @@
       "grade": "A"
     },
     {
+      "entityClass": "drak_vulture_salvage_arm_left",
+      "displayName": "Drak Vulture Salvage Arm Left",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_vulture_salvage_arm_right",
+      "displayName": "Drak Vulture Salvage Arm Right",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount",
+      "grade": "A"
+    },
+    {
       "entityClass": "controller_flight_drak_buccaneer_blade_hnd",
       "displayName": "Drake Buccaneer PHB Flight Blade",
       "kind": "flight",
@@ -12003,6 +12409,22 @@
       "burstDps": 0,
       "tags": "$DRAK_Buccaneer_Blade",
       "requiredTags": "DRAK_Buccaneer_Blade",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_buccaneer_dual_s2",
+      "displayName": "Drake Buccaneer Spinal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Drake Interplanetary",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1200
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "DRAK_Buccaneer_Base",
       "grade": "A"
     },
     {
@@ -12072,6 +12494,38 @@
       "burstDps": 0,
       "tags": "$DRAK_Buccaneer_Blade",
       "requiredTags": "DRAK_Buccaneer_Blade",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_dual_s1",
+      "displayName": "Drake Caterpillar Weapon Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "DRAK_Caterpillar_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_dual_s3",
+      "displayName": "Drake Caterpillar Weapon Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "DRAK_Caterpillar_Base",
       "grade": "A"
     },
     {
@@ -12210,6 +12664,22 @@
       "burstDps": 0,
       "tags": "$DRAK_Corsair_Blade",
       "requiredTags": "DRAK_Corsair_Blade",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_cutlass_steel_rear_remote_dual_turret_s4",
+      "displayName": "Drake Cutlass Steel Remote Turret",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Drake Interplanetary",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 3500
+      },
+      "burstDps": 0,
+      "tags": "DRAK_Cutlass_Steel_Mount",
+      "requiredTags": "DRAK_Cutlass_Base DRAK_Cutlass_Steel_Mount",
       "grade": "A"
     },
     {
@@ -12470,10 +12940,10 @@
     {
       "entityClass": "argo_atls_tractorbeam_s1",
       "displayName": "Durus Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 1,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -12796,6 +13266,22 @@
       },
       "burstDps": 0,
       "itemClass": "Civilian",
+      "grade": "A"
+    },
+    {
+      "entityClass": "espr_prowler_remote_turret_s5",
+      "displayName": "Esperia Prowler Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8000
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount",
+      "requiredTags": "ESPR_Prowler_Base",
       "grade": "A"
     },
     {
@@ -25042,6 +25528,36 @@
       "grade": "C"
     },
     {
+      "entityClass": "crus_star_runner_nose_turret_s5",
+      "displayName": "Mercury Dual S3 Nose Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "requiredTags": "CRUS_Star_Runner",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_hull_a_nose_turret_s5",
+      "displayName": "Mercury Dual S3 Nose Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2500
+      },
+      "burstDps": 0,
+      "tags": "$MISC_Hull_A_Turret",
+      "grade": "A"
+    },
+    {
       "entityClass": "armr_krig_archimedes",
       "displayName": "Merlin Ship Armor",
       "kind": "armor",
@@ -25296,6 +25812,22 @@
           "maxSize": 2
         }
       ]
+    },
+    {
+      "entityClass": "misc_fortune_salvage_arm",
+      "displayName": "Misc Fortune Salvage Arm",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount",
+      "grade": "A"
     },
     {
       "entityClass": "mrck_s05_crus_starfighter_left",
@@ -25766,6 +26298,86 @@
           "maxSize": 2
         }
       ]
+    },
+    {
+      "entityClass": "mount_gimbal_mining",
+      "displayName": "Mount Gimbal Mining",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "flightReady miningMount",
+      "requiredTags": "miningMount",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_mining_golem",
+      "displayName": "Mount Gimbal Mining Golem",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "flightReady miningMount",
+      "requiredTags": "miningMount",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_mining_mpuv",
+      "displayName": "Mount Gimbal Mining Mpuv",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "flightReady miningMount",
+      "requiredTags": "miningMount",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_mining_s0",
+      "displayName": "Mount Gimbal Mining S0",
+      "kind": "weaponMount",
+      "size": 0,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "flightReady miningMount",
+      "requiredTags": "miningMount",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_salvage",
+      "displayName": "Mount Gimbal Salvage",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "flightReady salvageMount",
+      "requiredTags": "salvageMount",
+      "grade": "A"
     },
     {
       "entityClass": "controller_flight_argo_mpuv_flight_blade_hnd",
@@ -29100,6 +29712,22 @@
       "grade": "A"
     },
     {
+      "entityClass": "drak_cutlass_red_sensor_turret_s4",
+      "displayName": "Nav-E7 Echo Scanner",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Drake Interplanetary",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2000
+      },
+      "burstDps": 0,
+      "tags": "DRAK_Cutlass_Remote_Turret",
+      "requiredTags": "DRAK_Cutlass_Remote_Turret",
+      "grade": "A"
+    },
+    {
       "entityClass": "mxox_neutronrepeater_s1",
       "displayName": "NDB-26 Repeater",
       "kind": "weapon",
@@ -30000,6 +30628,20 @@
       "grade": "A"
     },
     {
+      "entityClass": "orig_85x_turret",
+      "displayName": "Origin Jumpworks 85X Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {},
+      "burstDps": 0,
+      "tags": "flightReady $ORIG_85x_Turret",
+      "requiredTags": "ORIG_85x_Turret",
+      "grade": "A"
+    },
+    {
       "entityClass": "powr_amrs_s01_overdrive_scitem",
       "displayName": "OverDrive",
       "kind": "power",
@@ -30122,6 +30764,148 @@
       "grade": "A",
       "ordnance": "missile",
       "guidance": "IR"
+    },
+    {
+      "entityClass": "behr_pc2_dual_s1",
+      "displayName": "PC2 Dual S1 Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 150
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_asgard_nose_turret_s4",
+      "displayName": "PC2 Dual S3 Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8000
+      },
+      "burstDps": 0,
+      "tags": "$anvl_asgard",
+      "requiredTags": "anvl_asgard",
+      "grade": "A"
+    },
+    {
+      "entityClass": "anvl_valkyrie_nose_turret_s3",
+      "displayName": "PC2 Dual S3 Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8000
+      },
+      "burstDps": 0,
+      "tags": "$ANVL_Valkyrie",
+      "requiredTags": "ANVL_Valkyrie",
+      "grade": "A"
+    },
+    {
+      "entityClass": "behr_pc2_dual_s3",
+      "displayName": "PC2 Dual S3 Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2500
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $MISC_Freelancer_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "behr_pc2_dual_s4_fixed",
+      "displayName": "PC2 Dual S4 Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 400
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "MISC_Freelancer_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "behr_pc2_dual_s4",
+      "displayName": "PC2 Dual S4 Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 600
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $MISC_Starfarer_Base",
+      "requiredTags": "MISC_Starfarer_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_starlancer_dual_gimbal",
+      "displayName": "PC2 Dual S4 Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 600
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $MISC_Starlancer_Weapon",
+      "requiredTags": "MISC_Starlancer_Weapon",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_starlancer_tac_missile_gimbal",
+      "displayName": "PC2 Dual S4 Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 600
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $MISC_Starlancer_TAC_Missile_Gimbal",
+      "requiredTags": "MISC_Starlancer_TAC_Missile_Gimbal",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_starlancer_tac_missile_gimbal_r",
+      "displayName": "PC2 Dual S4 Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 600
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $MISC_Starlancer_TAC_Missile_Gimbal_R",
+      "requiredTags": "MISC_Starlancer_TAC_Missile_Gimbal_R",
+      "grade": "A"
     },
     {
       "entityClass": "radr_bltr_s01_pelerous",
@@ -31509,6 +32293,54 @@
       "grade": "B"
     },
     {
+      "entityClass": "misc_reliant_mako_camera_mount",
+      "displayName": "Reliant Cernan Camera Package",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1000
+      },
+      "burstDps": 0,
+      "tags": "MISC_Reliant_Mount",
+      "requiredTags": "MISC_Reliant_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "gmnt_misc_s03_pl01",
+      "displayName": "Reliant Gilroy Gimbal",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 150
+      },
+      "burstDps": 0,
+      "tags": "MISC_Reliant_Mount",
+      "requiredTags": "MISC_Reliant_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_reliant_sen_sensor_mount",
+      "displayName": "Reliant Samos Sensor Suite",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1000
+      },
+      "burstDps": 0,
+      "tags": "MISC_Reliant_Mount",
+      "requiredTags": "MISC_Reliant_Base",
+      "grade": "A"
+    },
+    {
       "entityClass": "gmrck_s06_tmbl_nova_custom",
       "displayName": "Reliant Tana Missile Launcher",
       "kind": "missileRack",
@@ -31781,6 +32613,305 @@
       ]
     },
     {
+      "entityClass": "misc_reliant_remote_tractor_turret",
+      "displayName": "Reliant Toshima Turret",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1000
+      },
+      "burstDps": 0,
+      "tags": "MISC_Reliant_Mount",
+      "requiredTags": "MISC_Reliant_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_reliant_wing_dual_turret_s4",
+      "displayName": "Reliant Toshima Turret",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1000
+      },
+      "burstDps": 0,
+      "tags": "MISC_Reliant_Mount",
+      "requiredTags": "MISC_Reliant_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "umnt_misc_s03_pl01",
+      "displayName": "Reliant Utility Mount Cap",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "MISC_Reliant_Mount",
+      "requiredTags": "MISC_Reliant_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "drak_corsair_remote_turret_s4",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Drake Interplanetary",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 4000
+      },
+      "burstDps": 0,
+      "tags": "DRAK_Corsair_Remote_Turret",
+      "requiredTags": "DRAK_Corsair_Remote_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "gama_tyilui_remote_turret_bottom_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "GAMA_Tyilui_Turret",
+      "requiredTags": "GAMA_Tyilui_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "gama_tyilui_remote_turret_top_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "GAMA_Tyilui_Turret",
+      "requiredTags": "GAMA_Tyilui_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "misc_hull_c_nose_turret_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Musashi Industrial & Starflight Concern",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8500
+      },
+      "burstDps": 0,
+      "requiredTags": "MISC_Hull_C",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_600i_scitem_remote_turret_bottom_exec_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10000
+      },
+      "burstDps": 0,
+      "requiredTags": "ORIG_600i_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_600i_scitem_remote_turret_bottom_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10000
+      },
+      "burstDps": 0,
+      "requiredTags": "ORIG_600i_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_600i_scitem_remote_turret_exec_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10000
+      },
+      "burstDps": 0,
+      "requiredTags": "ORIG_600i_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_600i_scitem_remote_turret_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10000
+      },
+      "burstDps": 0,
+      "requiredTags": "ORIG_600i_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_890j_scitem_remote_turret_2_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10000
+      },
+      "burstDps": 0,
+      "tags": "$ORIG_890Jump",
+      "requiredTags": "ORIG_890Jump",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_890j_scitem_remote_turret_s5",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10000
+      },
+      "burstDps": 0,
+      "tags": "$ORIG_890Jump",
+      "requiredTags": "ORIG_890Jump",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_constellation_mk5_remote_turret_bottom_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Constellation_Mk5_Remote_Turret_Bottom",
+      "requiredTags": "RSI_Constellation_Mk5_Remote_Turret_Bottom",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_constellation_mk5_remote_turret_top_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Constellation_Mk5_Remote_Turret_Top",
+      "requiredTags": "RSI_Constellation_Mk5_Remote_Turret_Top",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_perseus_remote_turret_bottom_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Perseus_Remote_Turret_Bottom",
+      "requiredTags": "RSI_Perseus_Remote_Turret_Bottom",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_perseus_remote_turret_top_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Perseus_Remote_Turret_Top",
+      "requiredTags": "RSI_Perseus_Remote_Turret_Top",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_zeus_remote_turret_bottom_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Zeus_Remote_Turret_Bottom",
+      "requiredTags": "RSI_Zeus_Remote_Turret_Bottom",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_zeus_remote_turret_top_s3",
+      "displayName": "Remote Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 8000
+      },
+      "burstDps": 0,
+      "tags": "RSI_Zeus_Remote_Turret_Top",
+      "requiredTags": "RSI_Zeus_Remote_Turret_Top",
+      "grade": "A"
+    },
+    {
       "entityClass": "aegs_emp_device_s4",
       "displayName": "REP-8 EMP Generator",
       "kind": "weapon",
@@ -31955,6 +33086,40 @@
       },
       "burstDps": 2849,
       "tags": "BEHR BallisticGatling flightReady weaponMountUsable",
+      "grade": "A"
+    },
+    {
+      "entityClass": "qed_wetk_s03_reynie",
+      "displayName": "Reynie QED",
+      "kind": "qed",
+      "size": 1,
+      "manufacturer": "Wei-Tek",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 1,
+        "Weapon_Em": 17000,
+        "Signature_Em": 17000,
+        "Power_Segments": 1
+      },
+      "burstDps": 0,
+      "itemClass": "Military",
+      "grade": "C"
+    },
+    {
+      "entityClass": "grin_roc_mining_turret",
+      "displayName": "ROC Mining Arm",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady miningMount",
+      "requiredTags": "GRIN_ROC",
       "grade": "A"
     },
     {
@@ -33491,6 +34656,38 @@
       ]
     },
     {
+      "entityClass": "rsi_salvation_salvage_arm_left",
+      "displayName": "Rsi Salvation Salvage Arm Left",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount RSI_Salvation",
+      "grade": "A"
+    },
+    {
+      "entityClass": "rsi_salvation_salvage_arm_right",
+      "displayName": "Rsi Salvation Salvage Arm Right",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "salvageMount",
+      "requiredTags": "salvageMount RSI_Salvation",
+      "grade": "A"
+    },
+    {
       "entityClass": "mrck_s03_rsi_skylark_five_s01",
       "displayName": "RSI Skylark Missile Launcher",
       "kind": "missileRack",
@@ -33927,6 +35124,38 @@
       },
       "burstDps": 480,
       "tags": "PRAR DistortionScatterGun flightReady weaponMountUsable",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mrai_pulse_mount_gimbal_s2",
+      "displayName": "San'tok.yāi Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 850
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady MRAI_Pulse",
+      "requiredTags": "MRAI_Pulse",
+      "grade": "A"
+    },
+    {
+      "entityClass": "xnaa_santokyai_mount_gimbal_s3",
+      "displayName": "San'tok.yāi Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 150
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $XNAA_SanTokYai",
+      "requiredTags": "XNAA_SanTokYai",
       "grade": "A"
     },
     {
@@ -34964,6 +36193,36 @@
       "grade": "B"
     },
     {
+      "entityClass": "default_fixed_mount_s3",
+      "displayName": "Size 3 Fixed Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 250
+      },
+      "burstDps": 0,
+      "tags": "turretMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "default_fixed_mount_s4",
+      "displayName": "Size 4 Fixed Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 400
+      },
+      "burstDps": 0,
+      "tags": "turretMount flightReady",
+      "grade": "A"
+    },
+    {
       "entityClass": "bengal_turret_ballisticcannon_s8",
       "displayName": "Slayer Cannon",
       "kind": "weapon",
@@ -35660,6 +36919,22 @@
       "burstDps": 0,
       "itemClass": "Civilian",
       "grade": "D"
+    },
+    {
+      "entityClass": "anvl_fixed_mount_hornet_ball_s4",
+      "displayName": "Specialty Hornet S5 VariPuck Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1400
+      },
+      "burstDps": 0,
+      "tags": "turretMount flightReady $ANVL_Hornet_Base",
+      "requiredTags": "ANVL_Hornet_Base",
+      "grade": "A"
     },
     {
       "entityClass": "qdrv_raco_s01_spectre_scitem",
@@ -36462,6 +37737,22 @@
       "ordnance": "missile"
     },
     {
+      "entityClass": "mount_gimbal_s2_stingray",
+      "displayName": "STR-E2 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 850
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady Merlin_Nose",
+      "requiredTags": "Merlin_Nose",
+      "grade": "A"
+    },
+    {
       "entityClass": "apar_massdriver_s2",
       "displayName": "Strife Mass Driver Cannon",
       "kind": "weapon",
@@ -36805,10 +38096,10 @@
     {
       "entityClass": "wep_tractorbeam_s1_utility_1",
       "displayName": "SureGrip HV-S1 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 1,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36822,10 +38113,10 @@
     {
       "entityClass": "wep_tractorbeam_s2_utility_1",
       "displayName": "SureGrip HV-S2 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 2,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36839,10 +38130,10 @@
     {
       "entityClass": "wep_tractorbeam_s3_utility_1",
       "displayName": "SureGrip HV-S3 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 3,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36856,10 +38147,10 @@
     {
       "entityClass": "wep_tractorbeam_s1_utility_2",
       "displayName": "SureGrip PR-S1 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 1,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36873,10 +38164,10 @@
     {
       "entityClass": "wep_tractorbeam_s2_utility_2",
       "displayName": "SureGrip PR-S2 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 2,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36890,10 +38181,10 @@
     {
       "entityClass": "wep_tractorbeam_s3_utility_2",
       "displayName": "SureGrip PR-S3 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 3,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36907,10 +38198,10 @@
     {
       "entityClass": "grin_tractorbeam_s1",
       "displayName": "SureGrip S1 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 1,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36924,10 +38215,10 @@
     {
       "entityClass": "grin_tractorbeam_s2",
       "displayName": "SureGrip S2 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 2,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -36941,10 +38232,10 @@
     {
       "entityClass": "grin_tractorbeam_s3",
       "displayName": "SureGrip S3 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 3,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -37706,6 +38997,22 @@
       "guidance": "EM"
     },
     {
+      "entityClass": "qed_rsi_s03_scorpius",
+      "displayName": "Tidelock QD",
+      "kind": "qed",
+      "size": 3,
+      "manufacturer": "Roberts Space Industries",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Power_Min": 3,
+        "Power_Segments": 3
+      },
+      "burstDps": 0,
+      "tags": "flightReady",
+      "grade": "C"
+    },
+    {
       "entityClass": "radr_grnp_s01_tige",
       "displayName": "Tige",
       "kind": "radar",
@@ -37783,6 +39090,22 @@
       "grade": "A"
     },
     {
+      "entityClass": "anvl_hornet_f7cm_mk2_ball_turret_bespoke",
+      "displayName": "TMSB-5 Ball Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady $ANVL_Hornet_Mk2_Center",
+      "requiredTags": "ANVL_Hornet_Mk2_Center",
+      "grade": "A"
+    },
+    {
       "entityClass": "behr_ballisticgatling_hornet_bespoke",
       "displayName": "TMSB-5 Gatling",
       "kind": "weapon",
@@ -37808,6 +39131,22 @@
       },
       "burstDps": 922,
       "tags": "GATS BallisticGatling flightReady weaponMountUsable ANVL_BallisticGatling_Bespoke",
+      "requiredTags": "ANVL_BallisticGatling_Bespoke",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_behr_ballisticgatling_hornet_bespoke",
+      "displayName": "TMSB-5 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady ANVL_BallisticGatling_Bespoke",
       "requiredTags": "ANVL_BallisticGatling_Bespoke",
       "grade": "A"
     },
@@ -38159,6 +39498,86 @@
       "grade": "C"
     },
     {
+      "entityClass": "crus_spirit_nose_turret_s3",
+      "displayName": "Turret",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 5000
+      },
+      "burstDps": 0,
+      "tags": "CRUS_Spirit_Turret",
+      "requiredTags": "CRUS_Spirit_Turret",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_890j_scitem_remote_turret_missile_lower_left",
+      "displayName": "Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "$ORIG_890Jump",
+      "requiredTags": "ORIG_890Jump",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_890j_scitem_remote_turret_missile_lower_right",
+      "displayName": "Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "$ORIG_890Jump",
+      "requiredTags": "ORIG_890Jump",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_890j_scitem_remote_turret_missile_top_left",
+      "displayName": "Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "$ORIG_890Jump",
+      "requiredTags": "ORIG_890Jump",
+      "grade": "A"
+    },
+    {
+      "entityClass": "orig_890j_scitem_remote_turret_missile_top_right",
+      "displayName": "Turret",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "ORIG",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 15000
+      },
+      "burstDps": 0,
+      "tags": "$ORIG_890Jump",
+      "requiredTags": "ORIG_890Jump",
+      "grade": "A"
+    },
+    {
       "entityClass": "qdrv_rsi_s03_tyche_scitem",
       "displayName": "Tyche",
       "kind": "quantum",
@@ -38299,6 +39718,22 @@
       },
       "burstDps": 0,
       "itemClass": "Stealth",
+      "grade": "A"
+    },
+    {
+      "entityClass": "umnt_anvl_s5_rotodome_mk2",
+      "displayName": "Umnt Anvl S5 Rotodome Mk2",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "flightReady $ANVL_Hornet_Mk2_Center",
+      "requiredTags": "ANVL_Hornet_Mk2_Center",
       "grade": "A"
     },
     {
@@ -38785,6 +40220,698 @@
       "grade": "B"
     },
     {
+      "entityClass": "mount_gimbal_s1",
+      "displayName": "VariPuck S1 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 525
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s1_nosafety",
+      "displayName": "VariPuck S1 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 525
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s1_tractor",
+      "displayName": "VariPuck S1 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 1,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 525
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s2",
+      "displayName": "VariPuck S2 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 850
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s2_mining",
+      "displayName": "VariPuck S2 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "miningMount flightReady",
+      "requiredTags": "miningMount",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s2_tractor",
+      "displayName": "VariPuck S2 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 850
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s2_vncl_blade",
+      "displayName": "VariPuck S2 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 850
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "VNCL_Blade_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s2_vng_s2",
+      "displayName": "VariPuck S2 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 2,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 850
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady VanguardNose AEGS_Vanguard_Base",
+      "requiredTags": "AEGS_Vanguard_Base VanguardNose",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_315p",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_allsizes",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_perseus",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_perseus_bottom",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_perseus_bottom_left",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_perseus_remote_l",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_perseus_remote_r",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_perseus_right",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_polaris",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "RSI_Polaris",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_sabre_raven_ex",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "RSI_Sabre_Raven_EX",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s3_vncl_blade",
+      "displayName": "VariPuck S3 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 3,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1024
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "VNCL_Blade_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1650
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4_crus_intrepid",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1650
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4_orig_m80",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1650
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady ORIG_m80_Base",
+      "requiredTags": "ORIG_m80_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4_paladin_turret",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1650
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4_polaris",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1650
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "requiredTags": "RSI_Polaris",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4_vncl_stinger",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": "Vanduul",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1650
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s4_wolf",
+      "displayName": "VariPuck S4 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 4,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 800
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady Wolf_Gun",
+      "requiredTags": "Wolf_Gun",
+      "grade": "A"
+    },
+    {
+      "entityClass": "aegs_javelin_manned_turret_gimbal_s5",
+      "displayName": "VariPuck S5 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 400
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s5",
+      "displayName": "VariPuck S5 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2640
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s5_invsi",
+      "displayName": "VariPuck S5 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2640
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s5_orig_m80",
+      "displayName": "VariPuck S5 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2640
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady ORIG_m80_Base",
+      "requiredTags": "ORIG_m80_Base",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s5_rsi_meteor",
+      "displayName": "VariPuck S5 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2640
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady RSI_Meteor",
+      "requiredTags": "RSI_Meteor",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s6",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 4224
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s6_mauler",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 4224
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s6_polaris",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 4224
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady RSI_Polaris_Bespoke",
+      "requiredTags": "RSI_Polaris_Bespoke",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s6_polaris_right",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 6,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 4224
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady RSI_Polaris_Bespoke",
+      "requiredTags": "RSI_Polaris_Bespoke",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s7",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 7,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 6750
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s7_mauler",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 7,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 6750
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s8",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 8,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10240
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s8_mauler",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 8,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10240
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s8_perseus",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 8,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10240
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady RSI_Perseus_Bespoke",
+      "requiredTags": "RSI_Perseus_Bespoke",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s8_perseus_bottom",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 8,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 10240
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady RSI_Perseus_Bespoke",
+      "requiredTags": "RSI_Perseus_Bespoke",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s9_mauler",
+      "displayName": "VariPuck S6 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 9,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 6750
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s7_idris",
+      "displayName": "VariPuck S7 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 7,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 6750
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady $Idris_T_TurretGun",
+      "requiredTags": "Idris_T_TurretGun",
+      "grade": "A"
+    },
+    {
+      "entityClass": "mount_gimbal_s7_tiburon",
+      "displayName": "VariPuck S7 Gimbal Mount",
+      "kind": "weaponMount",
+      "size": 7,
+      "manufacturer": null,
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 6750
+      },
+      "burstDps": 0,
+      "tags": "gimbalMount flightReady AEGS_tiburon",
+      "requiredTags": "AEGS_tiburon",
+      "grade": "A"
+    },
+    {
       "entityClass": "shld_asas_s01_veil_scitem",
       "displayName": "Veil",
       "kind": "shield",
@@ -38813,6 +40940,23 @@
       "burstDps": 0,
       "itemClass": "Stealth",
       "grade": "B"
+    },
+    {
+      "entityClass": "qdmp_wetk_s02_raven_x",
+      "displayName": "Vertine QD",
+      "kind": "qed",
+      "size": 2,
+      "manufacturer": "Wei-Tek",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1550,
+        "Power_Min": 3,
+        "Power_Segments": 3
+      },
+      "burstDps": 0,
+      "tags": "AEGS_Sabre_Raven_EX",
+      "grade": "A"
     },
     {
       "entityClass": "qdrv_just_s03_vesta_scitem",
@@ -38906,10 +41050,10 @@
     {
       "entityClass": "wep_tractorbeam_s1_military_1",
       "displayName": "ViseLock S1 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 1,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -38923,10 +41067,10 @@
     {
       "entityClass": "wep_tractorbeam_s2_military_1",
       "displayName": "ViseLock S2 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 2,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -38940,10 +41084,10 @@
     {
       "entityClass": "wep_tractorbeam_s3_military_1",
       "displayName": "ViseLock S3 Tractor Beam",
-      "kind": "weapon",
+      "kind": "tractor",
       "size": 3,
       "manufacturer": null,
-      "weaponClass": "Gun",
+      "weaponClass": null,
       "damageType": null,
       "stats": {
         "Health_Maxhealth": 1050,
@@ -39652,6 +41796,22 @@
       },
       "burstDps": 0,
       "itemClass": "Civilian",
+      "grade": "A"
+    },
+    {
+      "entityClass": "umnt_anvl_s5_rotodome",
+      "displayName": "WillsOp Long Look Radar",
+      "kind": "weaponMount",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 100
+      },
+      "burstDps": 0,
+      "tags": "ANVL_Hornet_Center flightReady ANVL_Hornet_Base",
+      "requiredTags": "ANVL_Hornet_Base",
       "grade": "A"
     },
     {

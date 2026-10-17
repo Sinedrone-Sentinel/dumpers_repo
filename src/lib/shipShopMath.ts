@@ -39,6 +39,8 @@ export function itemIsEquippable(item: ShipItemStats): boolean {
   if (item.kind === 'quantum') return (stats.Quantum_Speed || 0) > 0
   if (item.kind === 'flight') return (stats.Flight_Pitch || 0) > 0 || (stats.Flight_ScmSpeed || 0) > 0
   if (item.kind === 'missileRack') return (item.mounts?.length || 0) > 0
+  if (item.kind === 'weaponMount') return true
+  if (item.kind === 'tractor' || item.kind === 'qed') return (stats.Power_Segments || 0) > 0
   if (item.kind === 'life') return (stats.Power_Segments || 0) > 0
   return Object.keys(stats).length > 0
 }
@@ -203,8 +205,16 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
   if (kind === 'quantum' && stats.Quantum_Speed) {
     return formatQuantumSpeed(stats.Quantum_Speed)
   }
-  if (kind === 'flight' && stats.Flight_Pitch) {
-    return `Pitch ${round(stats.Flight_Pitch)}`
+  if (kind === 'flight' && (stats.Flight_Pitch || stats.Flight_ScmSpeed)) {
+    const bits = [
+      stats.Flight_ScmSpeed ? `SCM ${round(stats.Flight_ScmSpeed)}` : '',
+      stats.Flight_BoostSpeed ? `Boost ${round(stats.Flight_BoostSpeed)}` : '',
+      stats.Flight_MaxSpeed ? `NAV ${round(stats.Flight_MaxSpeed)}` : '',
+      stats.Flight_Pitch ? `Pitch ${round(stats.Flight_Pitch)}` : '',
+      stats.Flight_Yaw ? `Yaw ${round(stats.Flight_Yaw)}` : '',
+      stats.Flight_Roll ? `Roll ${round(stats.Flight_Roll)}` : '',
+    ].filter(Boolean)
+    return bits.join(' · ')
   }
   if (kind === 'radar' && stats.Radar_DistanceMax) {
     const min = stats.Radar_DistanceMin || stats.Radar_DistanceMax
@@ -215,6 +225,22 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
 }
 
 /** Quantum drive speed is stored in metres per second. Large drives read as megametres per second. */
+/** Stock blade, or Handling / Speed when the file name or the numbers say so. */
+export function flightRole(item: ShipItemStats, stock: ShipItemStats | null | undefined): string {
+  if (stock && item.entityClass === stock.entityClass) return 'Stock'
+  const key = item.entityClass.toLowerCase()
+  if (/_hnd|agility|_phb|handling/.test(key)) return 'Handling'
+  if (/_spd|speed|_tsb/.test(key)) return 'Speed'
+  if (!stock) return 'Stock'
+  const scm = (item.stats.Flight_ScmSpeed || 0) - (stock.stats.Flight_ScmSpeed || 0)
+  const nav = (item.stats.Flight_MaxSpeed || 0) - (stock.stats.Flight_MaxSpeed || 0)
+  const pitch = (item.stats.Flight_Pitch || 0) - (stock.stats.Flight_Pitch || 0)
+  const yaw = (item.stats.Flight_Yaw || 0) - (stock.stats.Flight_Yaw || 0)
+  if (scm + nav > pitch + yaw && scm + nav > 0) return 'Speed'
+  if (pitch + yaw > scm + nav && pitch + yaw > 0) return 'Handling'
+  return 'Alternate'
+}
+
 export function formatQuantumSpeed(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value)) return '—'
   if (value <= 0) return '0'
@@ -338,8 +364,8 @@ export function addPartToSnapshot(
   }
   if (kind === 'cooler' && scale > 0) snapshot.coolant += (stats.Itemresource_Coolantgeneration || 0) * scale
   if (scale > 0) {
-    snapshot.signatureEm += stats.Signature_Em || stats.Weapon_Em || 0
-    snapshot.signatureIr += stats.Signature_Ir || 0
+    snapshot.signatureEm += (stats.Signature_Em || stats.Weapon_Em || 0) * scale
+    snapshot.signatureIr += (stats.Signature_Ir || 0) * scale
   }
   if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
     snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
@@ -370,6 +396,8 @@ const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
   { id: 'engines', label: 'Engines', kinds: ['flight'] },
   { id: 'shields', label: 'Shields', kinds: ['shield'] },
   { id: 'quantum', label: 'Quantum', kinds: ['quantum'] },
+  { id: 'interdiction', label: 'Interdiction', kinds: ['qed'] },
+  { id: 'tractor', label: 'Tractor', kinds: ['tractor'] },
   { id: 'radar', label: 'Radar', kinds: ['radar'] },
   { id: 'life', label: 'Life support', kinds: ['life'] },
   { id: 'coolers', label: 'Coolers', kinds: ['cooler'] },
@@ -408,23 +436,21 @@ export function powerColumns(weaponPowerPool: number, parts: PowerPart[]): Power
   for (const group of POWER_GROUPS) {
     const members = parts.filter((part) => group.kinds.includes(part.kind) && pipDemand(part.stats) > 0)
     if (members.length === 0) continue
-    const minimums: PowerBlock[] = []
-    const extras: PowerBlock[] = []
+    const blocks: PowerBlock[] = []
     members.forEach((part, memberIndex) => {
       const max = pipDemand(part.stats)
       const min = Math.min(max, Math.max(1, part.stats.Power_Min || 1))
       const gap = memberIndex > 0
       if (min > 1) {
-        minimums.push({ size: min, portId: part.portId, groupStart: gap })
-        for (let index = min; index < max; index += 1) extras.push({ size: 1, portId: part.portId })
+        blocks.push({ size: min, portId: part.portId, groupStart: gap })
+        for (let index = min; index < max; index += 1) blocks.push({ size: 1, portId: part.portId })
       } else {
         for (let index = 0; index < max; index += 1) {
-          extras.push({ size: 1, portId: part.portId, groupStart: gap && index === 0 })
+          blocks.push({ size: 1, portId: part.portId, groupStart: gap && index === 0 })
         }
       }
     })
-    if (minimums.length > 0 && extras.length > 0) extras[0].groupStart = true
-    columns.push({ id: group.id, label: group.label, blocks: [...minimums, ...extras] })
+    columns.push({ id: group.id, label: group.label, blocks })
   }
   return columns
 }
@@ -462,6 +488,62 @@ export function powerGenerated(parts: PowerPart[]): number {
   const rounded = plants.reduce((sum, plant) => sum + Math.round(plant.stats.Itemresource_Powergeneration / count), 0)
   const sizes = plants.reduce((sum, plant) => sum + (plant.size || 0), 0)
   return rounded + (count - 1) * sizes
+}
+
+/** Minimum draw for a column: the first block of each component, which is its minimum. */
+export function columnMinimum(column: PowerColumn): number {
+  const seen = new Set<string>()
+  let total = 0
+  for (const block of column.blocks) {
+    const key = block.portId || column.id
+    if (seen.has(key)) continue
+    seen.add(key)
+    total += block.size
+  }
+  return total
+}
+
+/**
+ * Stock power leaves every component on its minimum block and leaves the quantum drive off.
+ * Later groups are left short when the plant budget cannot cover every minimum.
+ */
+export function defaultPower(columns: PowerColumn[], generated: number): Record<string, number> {
+  const next: Record<string, number> = {}
+  let budget = Math.max(0, generated)
+  for (const column of columns) {
+    if (column.id === 'quantum') {
+      next[column.id] = 0
+      continue
+    }
+    const take = Math.min(columnMinimum(column), budget)
+    next[column.id] = take
+    budget -= take
+  }
+  return next
+}
+
+/** Saved assignments stay, but the total in use cannot pass the plants' budget. */
+export function resolvedPower(
+  columns: PowerColumn[],
+  stored: Record<string, number> | null | undefined,
+  generated: number,
+): Record<string, number> {
+  const base = defaultPower(columns, generated)
+  const cap = Math.max(0, generated)
+  const rawSum = columns.reduce((sum, column) => {
+    if (!stored || stored[column.id] == null) return sum
+    return sum + Math.min(columnTotal(column), Math.max(0, Math.round(stored[column.id])))
+  }, 0)
+  const source = stored && rawSum > cap ? base : { ...base, ...(stored || {}) }
+  let budget = Math.max(0, generated)
+  const next: Record<string, number> = {}
+  for (const column of columns) {
+    const want = Math.min(columnTotal(column), Math.max(0, Math.round(source[column.id] ?? 0)))
+    const take = Math.min(want, budget)
+    next[column.id] = take
+    budget -= take
+  }
+  return next
 }
 
 export function powerUsed(columns: PowerColumn[], stored: Record<string, number> | null | undefined): number {
