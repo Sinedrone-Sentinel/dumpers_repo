@@ -171,7 +171,7 @@ A blue **UEX** chip on tracked ore cards, the ore detail popup, and ledger rows 
 
 ### Fuzy's Ship Shop (`/ship-shop`)
 
-Officer-only ship builder. Guests and members do not see the menu item, and a direct visit sends them home. Each officer can keep four builds. A new ship starts with its stock parts. A fitted part can be swapped for another part of the same kind and size. Stock uses the game-file stats. Crafted is available when that part has a blueprint, and the snapshot uses the material qualities on that recipe. Saves go through `get_ship_shop_loadouts` / `save_ship_shop_loadouts` (migration `208_ship_shop_loadouts.sql`).
+Officer-only ship builder. Guests and members do not see the menu item, and a direct visit sends them home. Each officer can keep four builds. A new ship starts with its stock parts. A fitted part can be swapped for another part of the same kind and size, or cleared so the slot stays empty. Personal weapon racks and other empty non-equipment ports are omitted. Missile slots follow the rack that is fitted. Flight blades stay in that ship's blade family, and lists omit file stubs that have no usable stats. Hull HP is the ship's structural total. Stock uses the game-file stats. Crafted is available when that part has a blueprint, and the snapshot uses the material qualities on that recipe. Saves go through `get_ship_shop_loadouts` / `save_ship_shop_loadouts` (migration `208_ship_shop_loadouts.sql`).
 
 ### Commodity Lookup (`/commodity-lookup`)
 

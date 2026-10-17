@@ -9,7 +9,7 @@ assert.ok(stalker, 'Avenger Stalker is a flyable ship')
 assert.equal(stalker.pitch, 53)
 assert.equal(stalker.yaw, 48)
 assert.equal(stalker.roll, 190)
-assert.equal(stalker.hullHp, null)
+assert.ok(stalker.hullHp > 1, 'Avenger Stalker hull HP comes from the vehicle structure')
 
 const nose = stalker.ports.find((port) => port.id === 'hardpoint_weapon_class2_nose')
 assert.equal(nose.defaultEntityClass, 'apar_ballisticgatling_s4')
@@ -61,9 +61,24 @@ const regulus = items.find((item) => item.entityClass === 'powr_aegs_s01_regulus
 assert.equal(regulus.stats.Itemresource_Powergeneration, 16)
 
 const raven = ships.find((ship) => ship.id === 'aegs_sabre_raven_ex')
+assert.equal(raven.hullHp, 13116)
+assert.equal(raven.noise, 5)
+assert.equal(raven.decoy, 48)
 assert.equal(raven.weaponPowerPool, 4)
+assert.equal(raven.ports.some((port) => port.id === 'hardpoint_weapon_rack'), false)
+assert.equal(ships.some((ship) => ship.ports.some((port) => port.size <= 0 && !port.defaultEntityClass)), false)
+assert.equal(raven.ports.some((port) => port.kind === 'armor'), true)
 const ravenFlight = items.find((item) => item.entityClass === 'controller_flight_aegs_sabre_raven_ex')
 assert.equal(ravenFlight.stats.Power_Segments, 4)
+assert.equal(ravenFlight.tags, 'AEGS_Sabre_Raven_Blade')
+
+const dualRack = items.find((item) => item.entityClass === 'mrck_s04_behr_dual_s03')
+assert.equal(dualRack.mounts.length, 2)
+assert.equal(dualRack.mounts[0].name, 'missile_01_attach')
+assert.equal(dualRack.mounts[0].maxSize, 3)
+
+const powerarray = items.find((item) => item.entityClass === 'espr_ballisticcannon_powerarray_s1')
+assert.deepEqual(powerarray.stats, {})
 
 const ignite = items.find((item) => item.entityClass === 'misl_s02_ir_fski_ignite')
 assert.ok(ignite.stats.Missile_Damage > 0, 'Ignite has missile damage')
