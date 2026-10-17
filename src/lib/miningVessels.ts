@@ -107,6 +107,25 @@ export function getMiningLaserByName(name: string): MiningLaser | undefined {
   return gameMining.miningLasers.find((laser) => laser.name === name)
 }
 
+const lasersByBlueprintKey = new Map<string, MiningLaser>()
+const lasersByDisplayName = new Map<string, MiningLaser>()
+for (const laser of gameMining.miningLasers) {
+  const key = laser.name.replace(/^Mining_Laser_/i, 'mining_laser_').toLowerCase()
+  if (!lasersByBlueprintKey.has(key)) lasersByBlueprintKey.set(key, laser)
+  if (!lasersByDisplayName.has(laser.displayName)) lasersByDisplayName.set(laser.displayName, laser)
+}
+
+/** Craft blueprint → parsed mining head, by internal name or display name. */
+export function getMiningLaserForBlueprint(blueprint: {
+  blueprintName?: string
+  internalName?: string
+}): MiningLaser | undefined {
+  const key = blueprint.internalName?.toLowerCase()
+  if (key && lasersByBlueprintKey.has(key)) return lasersByBlueprintKey.get(key)
+  if (blueprint.blueprintName) return lasersByDisplayName.get(blueprint.blueprintName)
+  return undefined
+}
+
 export function vesselDefaultLoadoutLabel(vesselId: MiningVesselId): string {
   const vessel = getMiningVessel(vesselId)
   return vessel ? `${vessel.displayName} Default` : 'Default'

@@ -1,4 +1,4 @@
-import type { MiningModule, MiningModuleKind } from '../data'
+import type { MiningLaser, MiningModule, MiningModuleKind } from '../data'
 import {
   computeEffectiveLaserStats,
   getBlueprintForLaser,
@@ -9,9 +9,11 @@ import {
   combinePassiveModuleModifiers,
   getActivePortIndices,
   getMiningModuleByName,
+  getMiningModuleForBlueprint,
   normalizeModuleSelection,
 } from './miningModules'
-import { getMiningLaserByName } from './miningVessels'
+import { getMiningLaserByName, getMiningLaserForBlueprint } from './miningVessels'
+import { displayMinThrottlePercent } from './miningThrottleDisplay'
 import { computeBlueprintEffectiveModifiers } from './blueprintEffectiveStats'
 
 function headPowerMultiplier(slot: MiningLaserSlotConfig): number {
@@ -268,6 +270,72 @@ function effectiveHeadLines(
   }
 
   return lines
+}
+
+export interface MiningCraftEffectLine {
+  key: string
+  label: string
+  value: string
+}
+
+export interface MiningCraftEffects {
+  /** Set for a module. A mining head has no active/passive kind. */
+  kind: MiningModuleKind | null
+  lines: MiningCraftEffectLine[]
+}
+
+function nonzeroLines(lines: ModifierStatLine[]): MiningCraftEffectLine[] {
+  return lines
+    .filter((line) => line.value !== '0%' && line.value !== '0')
+    .map(({ key, label, value }) => ({ key, label, value }))
+}
+
+/** Module effects that actually change something. Zeros and a 1.0 power multiplier are dropped. */
+export function miningModuleCraftEffects(mod: MiningModule): MiningCraftEffects {
+  return { kind: mod.kind, lines: nonzeroLines(moduleStatLines(mod)) }
+}
+
+/**
+ * Mining-head stats besides the health and power already on the blueprint.
+ * Power (MW) is omitted. A 0% modifier, a 0 range, and a 0 minimum throttle are omitted.
+ */
+export function miningHeadCraftEffects(laser: MiningLaser): MiningCraftEffects {
+  const lines = nonzeroLines(
+    PERCENT_STAT_DEFS.map((def) => percentLine(def, fieldValue(laser, def.laserField)))
+  )
+  if (laser.optimalRange > 0) {
+    lines.push({ key: 'optimal-range', label: 'Optimal range', value: `${laser.optimalRange} m` })
+  }
+  if (laser.maxRange > 0) {
+    lines.push({ key: 'max-range', label: 'Max range', value: `${laser.maxRange} m` })
+  }
+  if (laser.moduleSlotCount > 0) {
+    lines.push({
+      key: 'module-slots',
+      label: 'Module slots',
+      value: String(laser.moduleSlotCount),
+    })
+  }
+  if (laser.throttleMinimum > 0) {
+    lines.push({
+      key: 'min-throttle',
+      label: 'Minimum throttle',
+      value: `${displayMinThrottlePercent(laser.throttleMinimum)}%`,
+    })
+  }
+  return { kind: null, lines }
+}
+
+/** Effects for a mining module or mining head blueprint. Null for anything else. */
+export function miningBlueprintCraftEffects(blueprint: {
+  blueprintName?: string
+  internalName?: string
+}): MiningCraftEffects | null {
+  const mod = getMiningModuleForBlueprint(blueprint)
+  if (mod) return miningModuleCraftEffects(mod)
+  const laser = getMiningLaserForBlueprint(blueprint)
+  if (laser) return miningHeadCraftEffects(laser)
+  return null
 }
 
 export function computeLaserLoadoutBreakdown(

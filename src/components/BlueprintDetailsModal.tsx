@@ -41,6 +41,7 @@ import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { snapshotWishlistRecipe } from '../lib/bpWishlist'
+import { miningBlueprintCraftEffects } from '../lib/miningLoadoutStats'
 import AddToWishlistButton from './resourceTracker/AddToWishlistButton'
 
 interface SlotOption {
@@ -247,6 +248,8 @@ export default function BlueprintDetailsModal({
     ) ?? false
   }, [blueprint.slots])
 
+  const miningEffects = useMemo(() => miningBlueprintCraftEffects(blueprint), [blueprint])
+
   const mergedBaseStats = useMemo(
     () =>
       mergeBlueprintBaseStats({
@@ -377,8 +380,25 @@ export default function BlueprintDetailsModal({
                 </div>
               ))}
             </div>
-          ) : (
+          ) : miningEffects ? null : (
             <p className="site-hint text-sm">No Recorded Base Stats</p>
+          )}
+          {miningEffects && miningEffects.lines.length > 0 && (
+            <div className={Object.keys(mergedBaseStats).length > 0 ? 'mt-3 pt-3 site-divider' : ''}>
+              {miningEffects.kind && (
+                <p className="text-xs uppercase tracking-wide text-slate-500 mb-2">
+                  {miningEffects.kind === 'active' ? 'Active' : 'Passive'}
+                </p>
+              )}
+              <div className="grid grid-cols-2 gap-2">
+                {miningEffects.lines.map((line) => (
+                  <div key={line.key} className="flex justify-between items-center text-sm gap-2">
+                    <span className="text-slate-400">{line.label}</span>
+                    <span className="text-white font-mono shrink-0">{line.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
 
