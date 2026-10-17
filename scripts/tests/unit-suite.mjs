@@ -2276,8 +2276,36 @@ const coolerColumn = shipShopMath.powerColumns(0, [
   { portId: 'c2', kind: 'cooler', size: 1, stats: { Power_Segments: 5, Power_Min: 3 } },
 ])[0]
 check(
-  coolerColumn.blocks.map((block) => block.size).join(',') === '3,3,1,1,1,1',
-  'ship shop: a cooler minimum above one pip stays one block, then the extra pips split',
+  coolerColumn.blocks.map((block) => block.size).join(',') === '3,1,1,3,1,1' &&
+    coolerColumn.blocks[3].groupStart === true,
+  'ship shop: each cooler keeps its own pip group, with the minimum as one block',
+)
+const budgetColumns = shipShopMath.powerColumns(4, [
+  { portId: 'eng', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } },
+  { portId: 'qd', kind: 'quantum', size: 1, stats: { Power_Segments: 1, Power_Min: 1 } },
+  { portId: 'c1', kind: 'cooler', size: 1, stats: { Power_Segments: 3, Power_Min: 1 } },
+])
+const generated = 6
+const defaults = shipShopMath.defaultPower(budgetColumns, generated)
+check(
+  defaults.quantum === 0 &&
+    defaults.weapons === 1 &&
+    defaults.engines === 1 &&
+    defaults.coolers === 1 &&
+    Object.values(defaults).reduce((sum, value) => sum + value, 0) <= generated,
+  'ship shop: default power is each minimum block, quantum stays off, and the total stays inside the budget',
+)
+check(
+  shipShopMath.resolvedPower(budgetColumns, { weapons: 4, engines: 4, quantum: 1, coolers: 3 }, generated).weapons +
+    shipShopMath.resolvedPower(budgetColumns, { weapons: 4, engines: 4, quantum: 1, coolers: 3 }, generated).engines <= generated,
+  'ship shop: an over-budget save falls back inside the plant budget',
+)
+check(
+  shipShopMath.flightRole(
+    { entityClass: 'controller_flight_aegs_sabre_raven', displayName: 'Flight Blade', kind: 'flight', size: 1, stats: { Flight_ScmSpeed: 240, Flight_MaxSpeed: 1400, Flight_Pitch: 52, Flight_Yaw: 43 }, burstDps: 0 },
+    { entityClass: 'controller_flight_aegs_sabre_raven_ex', displayName: 'Flight Blade', kind: 'flight', size: 1, stats: { Flight_ScmSpeed: 233, Flight_MaxSpeed: 1320, Flight_Pitch: 56, Flight_Yaw: 45 }, burstDps: 0 },
+  ) === 'Speed',
+  'ship shop: a faster blade with less pitch reads as a speed blade',
 )
 check(
   shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 6000, Weapon_Damage_Energy: 10, Weapon_RegenPerSec: 20 }, 1) === 200 &&

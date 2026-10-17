@@ -23,6 +23,7 @@ const INDEX_DIRS = [
   'entities/scitem/ships/controller',
   'entities/scitem/ships/countermeasures',
   'entities/scitem/ships/lifesupport',
+  'entities/scitem/ships/quantumenforcementdevice',
 ]
 
 function readJson(path) {
@@ -159,6 +160,8 @@ function kindForItem(filePath, entityKey) {
   if (id.includes('/armor/')) return 'armor'
   if (id.includes('/controller/') && id.includes('flight')) return 'flight'
   if (id.includes('/lifesupport/')) return 'life'
+  if (id.includes('/quantumenforcementdevice/') || /(?:^|_)(?:qed|qdmp)_/.test(entityKey.toLowerCase())) return 'qed'
+  if (/tractorbeam/.test(entityKey.toLowerCase())) return 'tractor'
   if (id.includes('/weapons/') && !id.includes('/missiles/')) return 'weapon'
   if (/mrck_|missilerack/.test(id)) return 'missileRack'
   return null
@@ -168,17 +171,21 @@ function classifyPort(name, entityKey) {
   const n = name.toLowerCase()
   const e = (entityKey || '').toLowerCase()
   if (n.includes('weapon_rack') || n.includes('weaponrack')) return null
+  if (n.includes('seat') || n.includes('dashboard') || n.includes('seataccess') || n.includes('camera')) return null
   if (n.includes('controller_flight')) return { section: 'systems', kind: 'flight' }
   if (n.includes('controller')) return null
+  if (e.includes('tractorbeam')) return { section: 'systems', kind: 'tractor' }
+  if (n === 'hardpoint_qed' || e.includes('qed_') || e.includes('qdmp_')) return { section: 'systems', kind: 'qed' }
   if (n.includes('missilerack') || e.includes('mrck_') || e.includes('missilerack')) {
     return { section: 'missiles', kind: 'missileRack' }
   }
   if (n.includes('missile') || e.includes('misl_') || e.includes('gmisl_')) {
     return { section: 'missiles', kind: 'missile' }
   }
-  if ((n.includes('weapon') && (e.includes('mount_') || e.includes('gimbal'))) || e.includes('weapon_mount')) {
+  if (e.includes('mount_gimbal') || e.includes('mount_fixed') || e.includes('varipuck') || n.includes('varipuck')) {
     return { section: 'weapons', kind: 'weaponMount' }
   }
+  if (n.includes('turret') && !n.includes('tractor') && !n.includes('relay')) return { section: 'weapons', kind: 'turret' }
   if (n.includes('weapon') || n.includes('hardpoint_class_')) return { section: 'weapons', kind: 'weapon' }
   if (n.includes('shield_generator')) return { section: 'defense', kind: 'shield' }
   if (n.includes('armor') || n.includes('armour')) return { section: 'defense', kind: 'armor' }
@@ -224,6 +231,7 @@ function shapePort(name, port, portDefs) {
     if (def.portTags) next.portTags = def.portTags
   }
   if (next.kind === 'torpedo' || next.kind === 'life') next.locked = true
+  if (def && /uneditable/i.test(def.flags || '') && next.kind !== 'flight') next.locked = true
   return next
 }
 
@@ -409,7 +417,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     if (!json) continue
     const entityClass = basename(filePath, '.json').toLowerCase()
     const kind = kindForItem(filePath, entityClass)
-    if (!kind || kind === 'weaponMount') continue
+    if (!kind) continue
     const def = attachDef(json)
     const resolvedName = resolveName(def?.Localization?.Name, localization)
     const displayName = usableName(resolvedName) ? resolvedName : humanizeEntity(entityClass)
@@ -509,36 +517,9 @@ export function parseShipShop({ extractedRoot, localization }) {
         flight = { ...flight, ...flightStats(loaded.json) }
       }
 
-      if (classed.kind === 'weaponMount') {
-        const child = entries.find(
-          (candidate) =>
-            candidate.path.startsWith(`${entry.path}/`) &&
-            !candidate.path.slice(entry.path.length + 1).includes('/') &&
-            classifyPort(candidate.name, entityKeyFromEntry(candidate.entry))?.kind === 'weapon',
-        )
-        const childKey = child ? entityKeyFromEntry(child.entry) : ''
-        const childItem = catalogByKey.get(childKey.toLowerCase()) || null
-        const size = sizeFromName(entityKey) || childItem?.size || 0
-        if (size <= 0 && !childItem?.entityClass) continue
-        const shaped = shapePort(entry.name, {
-          id: entry.path,
-          label: portTitle(entry.name),
-          section: 'weapons',
-          kind: 'weapon',
-          size,
-          minSize: size,
-          maxSize: size,
-          defaultEntityClass: childItem?.entityClass || null,
-        }, portDefs)
-        if (shaped) ports.push(shaped)
-        continue
-      }
-
-      if (classed.kind === 'weapon' && entry.path.includes('/')) continue
-
       const item = catalogByKey.get(entityKey.toLowerCase()) || null
-      const size = item?.size || sizeFromName(entityKey) || 0
-      if (size <= 0 && !item?.entityClass) continue
+      const size = item?.size || sizeFromName(entityKey) || (classed.kind === 'turret' ? 1 : 0)
+      if (size <= 0 && !item?.entityClass && classed.kind !== 'turret') continue
       const shaped = shapePort(entry.name, {
         id: entry.path,
         label: portTitle(entry.name),
@@ -549,7 +530,13 @@ export function parseShipShop({ extractedRoot, localization }) {
         maxSize: size,
         defaultEntityClass: item?.entityClass || null,
       }, portDefs)
+      if (shaped.kind === 'turret' && !shaped.defaultEntityClass) shaped.locked = true
       if (shaped) ports.push(shaped)
+    }
+
+    for (const port of ports) {
+      const parentLocked = ports.some((other) => other.locked && other.kind !== 'turret' && port.id.startsWith(`${other.id}/`))
+      if (parentLocked) port.locked = true
     }
 
     const ship = {
