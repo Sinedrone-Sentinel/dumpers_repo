@@ -238,6 +238,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 170 | `205_bazaar_buyer_seller_wording.sql` | Rewrites member-facing text inside existing order functions (errors, notifications, Discord) to say Buyer / Seller instead of fulfiller / customer, and updates stored order titles and notifications. Fails if any old phrase is left. Apply after **204** |
 | 171 | `206_wts_buyer_report_problem.sql` | **Report problem** follows buyer / seller by listing type, so WTS buyers can report (they were always refused). Officer **cancel** on a deal taken from a listing returns the items to that listing. Apply after **205** |
 | 172 | `207_user_notepads.sql` | Header **Notepad**: `user_notepads` (one row per member, 2,000-character cap). Members `SELECT` their own row only; saving goes through the SECURITY DEFINER `save_my_notepad` RPC |
+| 173 | `208_ship_shop_loadouts.sql` | Fuzy's Ship Shop: `ship_shop_loadouts` (one jsonb row per officer, four builds). No client table writes. `get_ship_shop_loadouts` and `save_ship_shop_loadouts` are SECURITY DEFINER and reject anyone who is not an officer or super-admin |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

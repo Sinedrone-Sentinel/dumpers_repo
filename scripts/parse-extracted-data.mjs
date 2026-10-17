@@ -19,6 +19,7 @@ import { HATHOR_PAF_OLP_MARKERS } from './lib/hathorPafSites.mjs'
 import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import { mergeSpawnOreLocations, rebuildRarityTiers } from './lib/mergeSpawnOreLocations.mjs'
 import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
+import { parseShipShop } from './lib/parseShipShop.mjs'
 import {
   buildGuideToSpawnKeys,
   buildLocationAliases,
@@ -5286,6 +5287,17 @@ async function main() {
   console.log('  Extraction Summary')
   console.log('='.repeat(60))
   
+  const shipShop = parseShipShop({ extractedRoot: EXTRACTED_DATA, localization })
+  saveJson('game-ships.json', {
+    _source: 'Star Citizen Game Files (extracted spaceships)',
+    ships: shipShop.ships,
+  })
+  saveJson('game-ship-item-stats.json', {
+    _source: 'Star Citizen Game Files (extracted ship items)',
+    items: shipShop.catalog,
+  })
+  console.log(`  Parsed ${shipShop.ships.length} ships and ${shipShop.catalog.length} ship items`)
+
   if (validationIssues.length > 0) {
     console.log('\n⚠️  VALIDATION ISSUES DETECTED:')
     for (const issue of validationIssues) {

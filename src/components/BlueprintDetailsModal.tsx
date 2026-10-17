@@ -15,6 +15,7 @@ import {
   dropUnbackedArmorModifiers,
 } from '../lib/qualityModifiers'
 import { mergeBlueprintBaseStats } from '../lib/blueprintEffectiveStats'
+import { catalogStatsForEntity, showsShipCatalogStats } from '../lib/shipItemCatalog'
 import {
   buildDefaultSlotQualities,
   formatSlotQualitySummary,
@@ -87,6 +88,7 @@ interface BlueprintRecord {
   vehicleBaseStats?: Record<string, number | null>
   armorBaseStats?: Record<string, number | null>
   weaponBaseStats?: Record<string, number | null>
+  entityClass?: string | null
 }
 
 interface BlueprintDetailsModalProps {
@@ -250,15 +252,23 @@ export default function BlueprintDetailsModal({
 
   const miningEffects = useMemo(() => miningBlueprintCraftEffects(blueprint), [blueprint])
 
-  const mergedBaseStats = useMemo(
-    () =>
-      mergeBlueprintBaseStats({
-        vehicleBaseStats: blueprint.vehicleBaseStats,
-        armorBaseStats: blueprint.armorBaseStats,
-        weaponBaseStats: blueprint.weaponBaseStats,
-      }),
-    [blueprint.vehicleBaseStats, blueprint.armorBaseStats, blueprint.weaponBaseStats]
-  )
+  const mergedBaseStats = useMemo(() => {
+    const base = mergeBlueprintBaseStats({
+      vehicleBaseStats: blueprint.vehicleBaseStats,
+      armorBaseStats: blueprint.armorBaseStats,
+      weaponBaseStats: blueprint.weaponBaseStats,
+    })
+    if (!showsShipCatalogStats(blueprint.categoryName)) return base
+    const catalog = catalogStatsForEntity(blueprint.entityClass)
+    if (!catalog) return base
+    return { ...catalog, ...base }
+  }, [
+    blueprint.vehicleBaseStats,
+    blueprint.armorBaseStats,
+    blueprint.weaponBaseStats,
+    blueprint.categoryName,
+    blueprint.entityClass,
+  ])
 
   // Calculate modifiers for all slots based on current quality settings
   const allSlotModifiers = useMemo(() => {

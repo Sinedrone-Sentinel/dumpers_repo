@@ -46,6 +46,7 @@ const modules = [
   'src/lib/missionDisplay.ts',
   'src/lib/notepadText.ts',
   'src/lib/miningLoadoutStats.ts',
+  'src/lib/shipShopMath.ts',
   'src/lib/blueprintQuality.ts',
   'src/lib/canCraft.ts',
   'src/lib/craftFromStock.ts',
@@ -2164,6 +2165,37 @@ check(
   bpTags.blueprintTagRequirement({ categoryName: 'Veh. Comp. S1' })?.required === 5 &&
     bpTags.blueprintTagRequirement({ categoryName: 'Ind. Comp. S2' })?.required === 3,
   'tag minimums: vehicle components are 5 and industrial components are 3',
+)
+
+const shipShopMath = await import(pathToFileURL(path.join(outDir, 'shipShopMath.mjs')).href)
+check(
+  Math.round(shipShopMath.weaponBurstDps({ Weapon_Damage: 63.3, Weapon_Firerate: 1200 })) === 1266,
+  'ship shop: gatling burst DPS is damage times fire rate',
+)
+check(
+  shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_Pellets: 2 }) === 20,
+  'ship shop: burst DPS counts pellets',
+)
+const crafted = shipShopMath.applyCraftedStats(
+  { Weapon_Damage: 100 },
+  {
+    slots: [{
+      options: [{
+        modifiers: [{
+          gameplayProperty: 'Weapon_Damage',
+          startQuality: 0,
+          endQuality: 1000,
+          modifierAtStart: 1,
+          modifierAtEnd: 1.2,
+        }],
+      }],
+    }],
+  },
+  { 0: 1000 },
+)
+check(
+  crafted.Weapon_Damage === 120,
+  'ship shop: crafted quality scales the stock stat',
 )
 
 console.log(`Unit tests: ${pass} passed`)
