@@ -41,6 +41,44 @@ function walkFiles(dir, acc = []) {
   return acc
 }
 
+function usableName(name) {
+  const text = String(name || '').trim()
+  if (!text || text.startsWith('@') || text.startsWith('<=')) return false
+  if (/placeholder/i.test(text)) return false
+  return true
+}
+
+function humanizeEntity(entityClass) {
+  return String(entityClass || '')
+    .replace(/_scitem$/i, '')
+    .split('_')
+    .filter((word) => word && !/^\d+$/.test(word))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
+function weaponClassFromName(entityClass, displayName) {
+  const text = `${entityClass} ${displayName}`.toLowerCase()
+  if (text.includes('scatter')) return 'Scattergun'
+  if (text.includes('gatling')) return 'Gatling'
+  if (text.includes('repeater')) return 'Repeater'
+  if (text.includes('cannon')) return 'Cannon'
+  if (text.includes('distortion')) return 'Distortion'
+  return 'Gun'
+}
+
+function damageTypeFromStats(stats) {
+  const physical = stats.Weapon_Damage_Physical || 0
+  const energy = stats.Weapon_Damage_Energy || 0
+  const distortion = stats.Weapon_Damage_Distortion || 0
+  const ranked = [
+    ['Physical', physical],
+    ['Energy', energy],
+    ['Distortion', distortion],
+  ].sort((a, b) => b[1] - a[1])
+  return ranked[0][1] > 0 ? ranked[0][0] : null
+}
+
 function resolveName(key, localization) {
   if (!key || typeof key !== 'string') return null
   if (!key.startsWith('@')) return key
@@ -235,7 +273,8 @@ export function parseShipShop({ extractedRoot, localization }) {
     const kind = kindForItem(filePath, entityClass)
     if (!kind || kind === 'weaponMount') continue
     const def = attachDef(json)
-    const displayName = resolveName(def?.Localization?.Name, localization)
+    const resolvedName = resolveName(def?.Localization?.Name, localization)
+    const displayName = usableName(resolvedName) ? resolvedName : humanizeEntity(entityClass)
     if (!displayName) continue
     const stats = extractShipItemStats(json, {
       readRef: (ref) => readRef(ref, filePath),
@@ -251,11 +290,15 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (flight.maxSpeed) stats.Flight_MaxSpeed = flight.maxSpeed
     }
     const size = def?.Size || sizeFromName(entityClass) || 0
+    const manufacturerCode = String(def?.Manufacturer || '').match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const item = {
       entityClass,
       displayName,
       kind,
       size,
+      manufacturer: manufacturerCode ? localization[`manufacturer_Name${manufacturerCode}`] || manufacturerCode : null,
+      weaponClass: kind === 'weapon' ? weaponClassFromName(entityClass, displayName) : null,
+      damageType: kind === 'weapon' || kind === 'missile' ? damageTypeFromStats(stats) : null,
       stats,
       burstDps: kind === 'weapon' ? Math.round(weaponBurstDps(stats)) : 0,
     }
@@ -277,7 +320,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     const vehicle = firstComponent(json, 'VehicleComponentParams')
     if (!vehicle || vehicle.movementClass !== 'Spaceship') continue
     const displayName = resolveName(vehicle.vehicleName, localization)
-    if (!displayName) continue
+    if (!usableName(displayName)) continue
     const id = basename(filePath, '.json').toLowerCase()
     const previous = seenNames.get(displayName.toLowerCase())
     if (previous && previous.length <= id.length) continue

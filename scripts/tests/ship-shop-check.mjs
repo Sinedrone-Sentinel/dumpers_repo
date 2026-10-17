@@ -33,6 +33,15 @@ const shimmer = items.find((item) => item.entityClass === 'shld_asas_s01_shimmer
 assert.equal(shimmer.stats.Shield_Maxhealth, 2244)
 assert.equal(shimmer.stats.Shield_Regen, 426)
 
+const cannon = items.find((item) => item.entityClass === 'amrs_lasercannon_s3')
+assert.equal(cannon.stats.Weapon_Firerate, 150)
+assert.equal(Math.round(weaponBurstDps(cannon.stats)), 547)
+assert.equal(items.some((item) => /placeholder/i.test(item.displayName)), false)
+
+const ravenArmor = items.find((item) => item.entityClass === 'armr_aegs_sabreraven_ex')
+assert.equal(Math.round(ravenArmor.stats.Armor_PhysicalReduction), 25)
+assert.equal(Math.round(ravenArmor.stats.Armor_EnergyReduction), 40)
+
 const ignite = items.find((item) => item.entityClass === 'misl_s02_ir_fski_ignite')
 assert.ok(ignite.stats.Missile_Damage > 0, 'Ignite has missile damage')
 
