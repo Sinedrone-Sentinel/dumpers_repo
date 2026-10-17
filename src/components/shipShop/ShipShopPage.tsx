@@ -15,6 +15,7 @@ import {
   fittedPowerParts,
   snapshotForBuild,
   statsForFitted,
+  type ShipSnapshotNumbers,
   stockPorts,
   type FittedPart,
   type GameShip,
@@ -67,22 +68,92 @@ function itemTitle(item: { displayName: string; kind?: string; itemClass?: strin
   return rank ? `${item.displayName} - ${rank}` : item.displayName
 }
 
-function ShipSnapshot({
-  ship,
-  build,
+function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
+  if (snapshot.coolant <= 0 && snapshot.coolantDemand <= 0) return null
+  const ratio = snapshot.coolantDemand > 0 ? snapshot.coolant / snapshot.coolantDemand : 1
+  const covered = ratio >= 1
+  const percent = Math.round(ratio * 100)
+  return (
+    <div className="mt-4">
+      <div className="flex items-baseline justify-between gap-3 text-sm">
+        <span className="text-slate-400">Coolant</span>
+        <span className="font-mono text-white">{percent}%</span>
+      </div>
+      <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-800">
+        <div className="h-full rounded-full" style={{ width: `${Math.max(0, Math.min(100, percent))}%`, background: covered ? '#FBBF24' : '#EF4444' }} />
+      </div>
+    </div>
+  )
+}
+
+function PipBoard({
+  columns,
+  power,
+  remaining,
+  generated,
   onPower,
 }: {
-  ship: GameShip | null
-  build: ShipBuild
+  columns: ReturnType<typeof powerColumns>
+  power: Record<string, number>
+  remaining: number
+  generated: number
   onPower: (groupId: string, count: number) => void
 }) {
-  const snapshot = snapshotForBuild(ship, build.ports, build.power)
-  const powerParts = ship ? fittedPowerParts(ship, build.ports) : []
-  const columns = powerColumns(ship?.weaponPowerPool || 0, powerParts)
-  const generated = powerGenerated(powerParts)
-  const power = resolvedPower(columns, build.power, generated)
   const used = powerUsed(columns, power)
-  const remaining = Math.max(0, generated - used)
+  if (columns.length === 0) return null
+  return (
+    <div className="flex items-end gap-3 overflow-x-auto pb-1">
+      <p className="self-center font-mono text-xs text-slate-300 whitespace-nowrap">
+        {generated > 0 ? `${remaining} / ${generated}` : `${used}`}
+      </p>
+      {columns.map((column) => {
+        const total = columnTotal(column)
+        const selected = power[column.id] || 0
+        const flags = blockFlags(column.blocks, selected)
+        const top = flags.lastIndexOf(true)
+        const groups = pipGroups(column.blocks)
+        return (
+          <div key={column.id} className="flex flex-col items-center">
+            <div className="flex items-end gap-1">
+              {groups.map((group, groupIndex) => (
+                <div key={`${column.id}-${groupIndex}`} className="flex flex-col-reverse items-center gap-0.5">
+                  {group.map((block) => {
+                    const index = column.blocks.indexOf(block)
+                    const on = flags[index]
+                    const target = on && index === top ? index - 1 : index
+                    return (
+                      <button
+                        key={`${column.id}-${index}`}
+                        type="button"
+                        aria-pressed={on}
+                        aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
+                        className={`w-3.5 rounded-sm border text-[10px] font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                        style={{ height: block.size > 1 ? `${block.size * 14 + 6}px` : '14px' }}
+                        onClick={() => onPower(column.id, clickPowerColumn(column.blocks, selected, target, remaining))}
+                      >
+                        {block.size > 1 ? block.size : ''}
+                      </button>
+                    )
+                  })}
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="mt-1 text-[11px] text-slate-400 hover:text-white whitespace-nowrap"
+              onClick={() => onPower(column.id, togglePowerColumn(column.blocks, selected, remaining))}
+            >
+              {column.label}
+            </button>
+            <span className="font-mono text-[10px] text-slate-500">{selected}/{total}</span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   const rows = [
     {
       title: 'Signatures',
@@ -135,7 +206,7 @@ function ShipSnapshot({
   ] as const
 
   return (
-    <aside className="site-surface rounded-xl p-4 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100dvh-var(--site-header-height,3.5rem)-1.5rem)] max-h-[42vh] overflow-y-auto shrink-0 lg:w-80">
+    <aside className="site-surface rounded-xl p-4 max-h-[42vh] overflow-y-auto shrink-0 lg:max-h-none lg:w-80">
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
       <div className="space-y-4">
         {rows.map((group) => (
@@ -169,63 +240,7 @@ function ShipSnapshot({
           </section>
         ))}
       </div>
-      {columns.length > 0 && (
-        <section className="mt-5">
-          <div className="flex items-baseline justify-between gap-3 mb-2">
-            <h3 className="text-xs uppercase tracking-wide text-slate-500">Power</h3>
-            <p className="font-mono text-xs text-slate-300">
-              {generated > 0 ? `${remaining} / ${generated} pips` : `${used} pips`}
-            </p>
-          </div>
-          <div className="space-y-2">
-            {columns.map((column) => {
-              const total = columnTotal(column)
-              const selected = power[column.id] || 0
-              const flags = blockFlags(column.blocks, selected)
-              const top = flags.lastIndexOf(true)
-              const groups = pipGroups(column.blocks)
-              return (
-                <div key={column.id} className="pt-1">
-                  <div className="flex flex-wrap items-end gap-x-4 gap-y-2">
-                    {groups.map((group, groupIndex) => (
-                      <div key={`${column.id}-${groupIndex}`} className="flex items-end gap-1">
-                        {group.map((block) => {
-                          const index = column.blocks.indexOf(block)
-                          const on = flags[index]
-                          const target = on && index === top ? index - 1 : index
-                          return (
-                            <button
-                              key={`${column.id}-${index}`}
-                              type="button"
-                              aria-pressed={on}
-                              aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
-                              className={`h-5 rounded-sm border text-[10px] font-semibold leading-none ${on ? 'border-orange-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
-                              style={{ width: block.size > 1 ? `${block.size * 14 + 10}px` : '14px' }}
-                              onClick={() => onPower(column.id, clickPowerColumn(column.blocks, selected, target, remaining))}
-                        >
-                          {block.size > 1 ? block.size : ''}
-                        </button>
-                          )
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    className="mt-1 text-xs text-slate-400 hover:text-white"
-                    onClick={() => onPower(column.id, togglePowerColumn(column.blocks, selected, remaining))}
-                  >
-                    {column.label} {selected}/{total}
-                  </button>
-                  {column.id === 'coolers' && snapshot.coolant > 0 && (
-                    <p className="text-xs text-slate-300">Coolant {formatNumber(snapshot.coolant)}</p>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
+      <CoolantBar snapshot={snapshot} />
     </aside>
   )
 }
@@ -475,6 +490,14 @@ export default function ShipShopPage() {
   }, [shipQuery])
 
   if (!isOfficerOrAbove) return null
+  if (!build) return null
+
+  const powerParts = ship ? fittedPowerParts(ship, build.ports) : []
+  const columns = powerColumns(ship?.weaponPowerPool || 0, powerParts)
+  const generated = powerGenerated(powerParts)
+  const power = resolvedPower(columns, build.power, generated)
+  const remaining = Math.max(0, generated - powerUsed(columns, power))
+  const snapshot = snapshotForBuild(ship, build.ports, build.power)
 
   function updateBuild(next: ShipBuild) {
     setStore((prev) => {
@@ -501,20 +524,13 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-      <ShipSnapshot
-        ship={ship}
-        build={build}
-        onPower={(groupId, count) => {
-          if (!build) return
-          updateBuild({ shipId: build.shipId, ports: build.ports, power: { ...build.power, [groupId]: count } })
-        }}
-      />
-      <div className="min-w-0 flex-1 space-y-4">
-        <div className="site-surface rounded-xl p-4 space-y-3">
+    <div className="space-y-4">
+      <div className="sticky top-[var(--site-header-height,3.5rem)] z-20 site-surface-solid p-4">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1>
-              <img src="/fuzys-ship-shop.jpg" alt="Fuzy's Ship Shop" className="h-14 w-auto object-contain" />
+              <img src="/fuzys-ship-shop.jpg" alt="Fuzy's Ship Shop" className="h-20 w-auto object-contain" />
             </h1>
             <p className="site-hint text-sm">{saveNote || (ready ? 'Builds save on this account.' : 'Loading builds…')}</p>
           </div>
@@ -571,8 +587,22 @@ export default function ShipShopPage() {
               ))}
             </div>
           )}
+          </div>
+          <PipBoard
+            columns={columns}
+            power={power}
+            remaining={remaining}
+            generated={generated}
+            onPower={(groupId, count) => {
+              updateBuild({ shipId: build.shipId, ports: build.ports, power: { ...build.power, [groupId]: count } })
+            }}
+          />
         </div>
+      </div>
 
+      <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+      <ShipSnapshot snapshot={snapshot} />
+      <div className="min-w-0 flex-1 space-y-4">
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
           const ports = portsForSection(ship, section.id)
           const renderPort = (port: ShipPort, nested = false) => {
@@ -659,7 +689,7 @@ export default function ShipShopPage() {
             </div>
           ))
           return (
-            <section key={section.id} id={`ship-section-${section.id}`} className="site-surface rounded-xl p-4 scroll-mt-24">
+            <section key={section.id} id={`ship-section-${section.id}`} className="site-surface rounded-xl p-4 scroll-mt-64">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-sm font-semibold text-slate-200">{section.label}</h2>
                 <button
@@ -690,6 +720,7 @@ export default function ShipShopPage() {
             </section>
           )
         })}
+      </div>
       </div>
     </div>
   )
