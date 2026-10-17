@@ -3,6 +3,12 @@ import {
   type BlueprintForEffectiveStats,
 } from './blueprintEffectiveStats'
 
+export interface MissileMount {
+  name: string
+  minSize: number
+  maxSize: number
+}
+
 export interface ShipItemStats {
   entityClass: string
   displayName: string
@@ -11,8 +17,24 @@ export interface ShipItemStats {
   manufacturer?: string | null
   weaponClass?: string | null
   damageType?: string | null
+  tags?: string
+  mounts?: MissileMount[]
   stats: Record<string, number>
   burstDps: number
+}
+
+/** A catalog row with no usable numbers is a file stub, not an item a ship can mount. */
+export function itemIsEquippable(item: ShipItemStats): boolean {
+  const stats = item.stats || {}
+  if (item.kind === 'weapon') return (stats.Weapon_Damage || 0) > 0 && (stats.Weapon_Firerate || 0) > 0
+  if (item.kind === 'missile') return (stats.Missile_Damage || stats.Weapon_Damage || 0) > 0
+  if (item.kind === 'shield') return (stats.Shield_Maxhealth || 0) > 0
+  if (item.kind === 'cooler') return (stats.Itemresource_Coolantgeneration || 0) > 0
+  if (item.kind === 'power') return (stats.Itemresource_Powergeneration || 0) > 0
+  if (item.kind === 'quantum') return (stats.Quantum_Speed || 0) > 0
+  if (item.kind === 'flight') return (stats.Flight_Pitch || 0) > 0 || (stats.Flight_ScmSpeed || 0) > 0
+  if (item.kind === 'missileRack') return (item.mounts?.length || 0) > 0
+  return Object.keys(stats).length > 0
 }
 
 export interface FittedPart {
@@ -132,8 +154,9 @@ export function weaponStatBits(stats: Record<string, number>): string[] {
 export function partStatLine(kind: string, stats: Record<string, number>): string {
   const round = (value: number) => Math.round(value).toLocaleString()
   if (kind === 'weapon') {
-    const dps = weaponBurstDps(stats)
-    return dps > 0 ? `${round(dps)} burst DPS` : ''
+    const burst = weaponBurstDps(stats)
+    if (burst <= 0) return ''
+    return `${round(burst)} burst · ${round(weaponSustainedDps(stats))} sustained`
   }
   if (kind === 'missile') {
     const damage = stats.Missile_Damage || stats.Weapon_Damage || 0
@@ -157,12 +180,23 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
     return `${round(stats.Itemresource_Coolantgeneration)} coolant`
   }
   if (kind === 'quantum' && stats.Quantum_Speed) {
-    return `${round(stats.Quantum_Speed)} m/s`
+    return formatQuantumSpeed(stats.Quantum_Speed)
   }
   if (kind === 'flight' && stats.Flight_Pitch) {
     return `Pitch ${round(stats.Flight_Pitch)}`
   }
   return ''
+}
+
+/** Quantum drive speed is stored in metres per second. Large drives read as megametres per second. */
+export function formatQuantumSpeed(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
+  if (value <= 0) return '0'
+  if (value >= 1_000_000) {
+    const mega = value / 1_000_000
+    return `${mega.toFixed(1)} Mm/s`
+  }
+  return `${Math.round(value).toLocaleString()} m/s`
 }
 
 export interface ShipSnapshotNumbers {
@@ -181,6 +215,9 @@ export interface ShipSnapshotNumbers {
   signalCs: number | null
   damageReduction: number | null
   hullHp: number | null
+  noise: number
+  decoy: number
+  quantumSpeed: number | null
   pitch: number | null
   yaw: number | null
   roll: number | null
@@ -189,6 +226,8 @@ export interface ShipSnapshotNumbers {
 export function emptySnapshot(ship?: {
   damageReduction?: number | null
   hullHp?: number | null
+  noise?: number | null
+  decoy?: number | null
   pitch?: number | null
   yaw?: number | null
   roll?: number | null
@@ -209,6 +248,9 @@ export function emptySnapshot(ship?: {
     signalCs: null,
     damageReduction: ship?.damageReduction ?? null,
     hullHp: ship?.hullHp ?? null,
+    noise: ship?.noise ?? 0,
+    decoy: ship?.decoy ?? 0,
+    quantumSpeed: null,
     pitch: ship?.pitch ?? null,
     yaw: ship?.yaw ?? null,
     roll: ship?.roll ?? null,
@@ -244,6 +286,9 @@ export function addPartToSnapshot(
     if (stats.Flight_Pitch) snapshot.pitch = stats.Flight_Pitch * scale
     if (stats.Flight_Yaw) snapshot.yaw = stats.Flight_Yaw * scale
     if (stats.Flight_Roll) snapshot.roll = stats.Flight_Roll * scale
+  }
+  if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
+    snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
   }
 }
 

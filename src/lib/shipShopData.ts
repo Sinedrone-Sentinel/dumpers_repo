@@ -10,9 +10,11 @@ import {
   columnSelected,
   effectivePartStats,
   emptySnapshot,
+  itemIsEquippable,
   powerColumns,
   segmentScale,
   type FittedPart,
+  type MissileMount,
   type PowerPart,
   type ShipItemStats,
   type ShipSnapshotNumbers,
@@ -40,6 +42,8 @@ export interface GameShip {
   career: string
   crew: number
   hullHp: number | null
+  noise?: number
+  decoy?: number
   damageReduction: number | null
   pitch: number | null
   yaw: number | null
@@ -73,10 +77,24 @@ export const SHIP_SHOP_BUILD_COUNT = 4
 export const SHIP_SECTIONS = [
   { id: 'weapons', label: 'Weapons' },
   { id: 'missiles', label: 'Missiles' },
-  { id: 'defense', label: 'Defense' },
-  { id: 'systems', label: 'Systems' },
-  { id: 'hull', label: 'Hull and flight' },
+  { id: 'shields', label: 'Shields' },
+  { id: 'power', label: 'Power Plants' },
+  { id: 'coolers', label: 'Coolers' },
+  { id: 'quantum', label: 'Quantum Drives' },
+  { id: 'flight', label: 'Flight Blades' },
+  { id: 'radar', label: 'Radar' },
 ] as const
+
+const SECTION_KIND: Record<string, string> = {
+  weapons: 'weapon',
+  missiles: 'missileRack',
+  shields: 'shield',
+  power: 'power',
+  coolers: 'cooler',
+  quantum: 'quantum',
+  flight: 'flight',
+  radar: 'radar',
+}
 
 export const SHIPS: GameShip[] = (gameShips as { ships: GameShip[] }).ships
 
@@ -110,17 +128,76 @@ export function blueprintForEntity(entityClass: string | null | undefined): Craf
   return blueprintsByClass.get(entityClass.toLowerCase()) ?? null
 }
 
+function tagList(value: string | null | undefined): string[] {
+  return (value || '').split(/\s+/).filter(Boolean)
+}
+
 export function partsForPort(port: ShipPort): ShipItemStats[] {
   const min = port.minSize || port.size
   const max = port.maxSize || port.size
+  const stock = port.kind === 'flight' && port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+  const flightTags = port.kind === 'flight' ? tagList(stock?.tags) : null
   return shipItems()
     .filter((item) => {
       if (item.kind !== port.kind) return false
-      if (!min) return true
-      return item.size >= min && item.size <= max
+      if (!itemIsEquippable(item)) return false
+      if (min && (item.size < min || item.size > max)) return false
+      if (flightTags) {
+        if (flightTags.length === 0) return item.entityClass === port.defaultEntityClass
+        const tags = tagList(item.tags)
+        return flightTags.some((tag) => tags.includes(tag))
+      }
+      return true
     })
     .filter((item, index, list) => list.findIndex((other) => other.entityClass === item.entityClass) === index)
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
+}
+
+export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: FittedPart | undefined): ShipPort[] {
+  if (!fitted) return []
+  const mounts: MissileMount[] = getShipItem(fitted.entityClass)?.mounts || []
+  if (mounts.length === 0) {
+    return ship.ports.filter((port) => port.kind === 'missile' && port.id.startsWith(`${rack.id}/`))
+  }
+  return mounts.map((mount) => {
+    const id = `${rack.id}/${mount.name}`
+    const stock = ship.ports.find((port) => port.id === id)
+    const maxSize = mount.maxSize || mount.minSize
+    const minSize = mount.minSize || maxSize
+    return {
+      id,
+      label: mount.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase()),
+      section: 'missiles',
+      kind: 'missile',
+      size: maxSize,
+      minSize,
+      maxSize,
+      defaultEntityClass: stock?.defaultEntityClass ?? null,
+    }
+  })
+}
+
+export function applyPortFit(
+  ship: GameShip | null,
+  ports: Record<string, FittedPart>,
+  port: ShipPort,
+  part: FittedPart | null,
+): Record<string, FittedPart> {
+  const next = { ...ports }
+  if (!part) delete next[port.id]
+  else next[port.id] = part
+  if (port.kind !== 'missileRack' || !ship) return next
+  const mounts = part ? getShipItem(part.entityClass)?.mounts || [] : []
+  const allowed = new Map(mounts.map((mount) => [`${port.id}/${mount.name}`, mount]))
+  for (const key of Object.keys(next)) {
+    if (!key.startsWith(`${port.id}/`)) continue
+    const mount = allowed.get(key)
+    const item = getShipItem(next[key].entityClass)
+    const min = mount ? mount.minSize || mount.maxSize : 0
+    const max = mount ? mount.maxSize || mount.minSize : 0
+    if (!mount || !item || (max > 0 && (item.size < min || item.size > max))) delete next[key]
+  }
+  return next
 }
 
 export function emptyBuild(): ShipBuild {
@@ -254,7 +331,7 @@ export function snapshotForBuild(
 }
 
 export function portsForSection(ship: GameShip, sectionId: string): ShipPort[] {
-  if (sectionId === 'hull') return ship.ports.filter((port) => port.kind === 'flight')
-  if (sectionId === 'systems') return ship.ports.filter((port) => port.section === 'systems' && port.kind !== 'flight')
-  return ship.ports.filter((port) => port.section === sectionId)
+  const kind = SECTION_KIND[sectionId]
+  if (!kind) return []
+  return ship.ports.filter((port) => port.kind === kind)
 }

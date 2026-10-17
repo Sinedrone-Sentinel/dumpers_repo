@@ -2244,5 +2244,16 @@ check(
     shipShopMath.togglePowerColumn(four, 0, 4) === 4,
   'ship shop: pip clicks fill from the bottom inside the power budget',
 )
+check(
+  shipShopMath.itemIsEquippable({ entityClass: 'stub', displayName: 'Stub', kind: 'weapon', size: 1, stats: {}, burstDps: 0 }) === false &&
+    shipShopMath.itemIsEquippable({ entityClass: 'gun', displayName: 'Gun', kind: 'weapon', size: 1, stats: { Weapon_Damage: 10, Weapon_Firerate: 60 }, burstDps: 10 }) === true &&
+    shipShopMath.itemIsEquippable({ entityClass: 'rack', displayName: 'Rack', kind: 'missileRack', size: 4, stats: { Health_Maxhealth: 200 }, burstDps: 0, mounts: [{ name: 'missile_01_attach', minSize: 3, maxSize: 3 }] }) === true,
+  'ship shop: parts with no firing stats stay out of the lists',
+)
+check(
+  shipShopMath.formatQuantumSpeed(161410900) === '161.4 Mm/s' &&
+    shipShopMath.partStatLine('weapon', { Weapon_Damage: 10, Weapon_Firerate: 60 }).includes('sustained'),
+  'ship shop: quantum speed and sustained DPS use plain labels',
+)
 
 console.log(`Unit tests: ${pass} passed`)

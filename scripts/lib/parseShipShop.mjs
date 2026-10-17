@@ -21,6 +21,7 @@ const INDEX_DIRS = [
   'entities/scitem/ships/weapon_mounts',
   'entities/scitem/ships/missile_racks',
   'entities/scitem/ships/controller',
+  'entities/scitem/ships/countermeasures',
 ]
 
 function readJson(path) {
@@ -164,6 +165,7 @@ function kindForItem(filePath, entityKey) {
 function classifyPort(name, entityKey) {
   const n = name.toLowerCase()
   const e = (entityKey || '').toLowerCase()
+  if (n.includes('weapon_rack') || n.includes('weaponrack')) return null
   if (n.includes('controller_flight')) return { section: 'systems', kind: 'flight' }
   if (n.includes('controller')) return null
   if (n.includes('missilerack') || e.includes('mrck_') || e.includes('missilerack')) {
@@ -240,6 +242,48 @@ function damageReduction(vehicle) {
   return typeof gun?.modifier === 'number' && gun.modifier > 0 ? gun.modifier : null
 }
 
+/** Hull HP is the sum of structural damageMax values in the vehicle XML. */
+function hullHpFromDefinition(extractedRoot, vehicle) {
+  const def = vehicle?.vehicleDefinition
+  if (!def || typeof def !== 'string') return null
+  const path = join(extractedRoot, 'vehicle-xml', basename(def))
+  if (!existsSync(path)) return null
+  const text = readFileSync(path, 'utf8')
+  if (!text.includes('<Vehicle')) return null
+  let total = 0
+  for (const match of text.matchAll(/damageMax="([\d.]+)"/g)) {
+    const value = Number(match[1])
+    if (value > 0) total += value
+  }
+  return total > 1 ? Math.round(total) : null
+}
+
+function missileMounts(json) {
+  const container = firstComponent(json, 'SItemPortContainerComponentParams')
+  const mounts = []
+  for (const port of container?.Ports || []) {
+    const types = Array.isArray(port.Types) ? port.Types : []
+    if (!types.some((entry) => String(entry?.Type || '').toLowerCase() === 'missile')) continue
+    const name = port.Name || port.AttachmentImplementation?.Helper?.Helper?.Name
+    if (!name) continue
+    const maxSize = Number(port.MaxSize) || 0
+    const minSize = Number(port.MinSize) || maxSize
+    if (!maxSize && !minSize) continue
+    mounts.push({ name, minSize: minSize || maxSize, maxSize: maxSize || minSize })
+  }
+  return mounts
+}
+
+function countermeasureCounts(json) {
+  const ammo = firstComponent(json, 'SAmmoContainerComponentParams')
+  const count = Number(ammo?.maxAmmoCount) || 0
+  if (count <= 0) return { noise: 0, decoy: 0 }
+  const short = String(attachDef(json)?.Localization?.ShortName || '').toLowerCase()
+  if (short.includes('decoy')) return { noise: 0, decoy: count }
+  if (short.includes('smokescreen') || short.includes('noise')) return { noise: count, decoy: 0 }
+  return { noise: 0, decoy: 0 }
+}
+
 export function parseShipShop({ extractedRoot, localization }) {
   const records = join(extractedRoot, 'libs/foundry/records')
   const byKey = new Map()
@@ -304,6 +348,8 @@ export function parseShipShop({ extractedRoot, localization }) {
     }
     const size = def?.Size || sizeFromName(entityClass) || 0
     const manufacturerCode = String(def?.Manufacturer || '').match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
+    const tags = typeof def?.Tags === 'string' ? def.Tags.trim() : ''
+    const mounts = kind === 'missileRack' ? missileMounts(json) : []
     const item = {
       entityClass,
       displayName,
@@ -315,6 +361,8 @@ export function parseShipShop({ extractedRoot, localization }) {
       stats,
       burstDps: kind === 'weapon' ? Math.round(weaponBurstDps(stats)) : 0,
     }
+    if (tags) item.tags = tags
+    if (mounts.length > 0) item.mounts = mounts
     seenFiles.add(filePath)
     catalog.push(item)
     catalogByKey.set(entityClass, item)
@@ -341,19 +389,25 @@ export function parseShipShop({ extractedRoot, localization }) {
     const manufacturer = vehicle.manufacturer?.match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const role = resolveName(vehicle.vehicleRole, localization)
     const career = resolveName(vehicle.vehicleCareer, localization)
-    const health = firstComponent(json, 'SHealthComponentParams')
-    const hullHp = health?.Health > 1 ? health.Health : null
+    const hullHp = hullHpFromDefinition(extractedRoot, vehicle)
 
     const loadout = firstComponent(json, 'SEntityComponentDefaultLoadoutParams')
     const entries = []
     walkEntries(loadout?.loadout, '', entries)
 
     let flight = { pitch: null, yaw: null, roll: null, scmSpeed: null, boostSpeed: null, maxSpeed: null }
+    let noise = 0
+    let decoy = 0
     const ports = []
 
     for (const entry of entries) {
       const entityKey = entityKeyFromEntry(entry.entry)
       const loaded = loadKey(entityKey)
+      if (loaded?.filePath.replace(/\\/g, '/').toLowerCase().includes('/countermeasures/')) {
+        const counts = countermeasureCounts(loaded.json)
+        noise += counts.noise
+        decoy += counts.decoy
+      }
       const classed = classifyPort(entry.name, entityKey)
       if (!classed) continue
 
@@ -371,6 +425,7 @@ export function parseShipShop({ extractedRoot, localization }) {
         const childKey = child ? entityKeyFromEntry(child.entry) : ''
         const childItem = catalogByKey.get(childKey.toLowerCase()) || null
         const size = sizeFromName(entityKey) || childItem?.size || 0
+        if (size <= 0 && !childItem?.entityClass) continue
         ports.push({
           id: entry.path,
           label: portTitle(entry.name),
@@ -388,6 +443,7 @@ export function parseShipShop({ extractedRoot, localization }) {
 
       const item = catalogByKey.get(entityKey.toLowerCase()) || null
       const size = item?.size || sizeFromName(entityKey) || 0
+      if (size <= 0 && !item?.entityClass) continue
       ports.push({
         id: entry.path,
         label: portTitle(entry.name),
@@ -409,6 +465,8 @@ export function parseShipShop({ extractedRoot, localization }) {
       career,
       crew: vehicle.crewSize || null,
       hullHp,
+      noise,
+      decoy,
       damageReduction: damageReduction(vehicle),
       weaponPowerPool: weaponPowerPool(json),
       ...flight,

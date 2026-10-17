@@ -4,9 +4,11 @@ import { useAuth } from '../../contexts/AuthContext'
 import {
   SHIP_SECTIONS,
   SHIPS,
+  applyPortFit,
   blueprintForEntity,
   defaultCraftQualities,
   getShip,
+  missileSlotsForRack,
   partsForPort,
   portsForSection,
   fittedPowerParts,
@@ -24,6 +26,7 @@ import {
   columnSelected,
   columnTotal,
   compareToStock,
+  formatQuantumSpeed,
   formatSignedPercent,
   partStatLine,
   powerColumns,
@@ -90,13 +93,14 @@ function ShipSnapshot({
         ['EM signature', formatSignedPercent(snapshot.signalEm), compareToStock(snapshot.signalEm, stock.signalEm, true)],
         ['IR signature', formatSignedPercent(snapshot.signalIr), compareToStock(snapshot.signalIr, stock.signalIr, true)],
         ['CS signature', formatSignedPercent(snapshot.signalCs), compareToStock(snapshot.signalCs, stock.signalCs, true)],
+        ['Noise', formatNumber(snapshot.noise), compareToStock(snapshot.noise, stock.noise)],
+        ['Decoy', formatNumber(snapshot.decoy), compareToStock(snapshot.decoy, stock.decoy)],
       ],
     },
     {
       title: 'Hull',
       lines: [
         ['Hull HP', formatNumber(snapshot.hullHp), compareToStock(snapshot.hullHp, stock.hullHp)],
-        ['Vital HP', '—', 'same'],
       ],
     },
     {
@@ -105,6 +109,7 @@ function ShipSnapshot({
         ['Pitch', formatNumber(snapshot.pitch), compareToStock(snapshot.pitch, stock.pitch)],
         ['Yaw', formatNumber(snapshot.yaw), compareToStock(snapshot.yaw, stock.yaw)],
         ['Roll', formatNumber(snapshot.roll), compareToStock(snapshot.roll, stock.roll)],
+        ['Quantum', formatQuantumSpeed(snapshot.quantumSpeed), compareToStock(snapshot.quantumSpeed, stock.quantumSpeed)],
       ],
     },
   ] as const
@@ -229,7 +234,7 @@ function PartPicker({
         placeholder={`Search size ${port.size || ''} parts`}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <div className="site-dropdown-list max-h-56">
+      <div className="site-dropdown-list max-h-56" style={{ position: 'static' }}>
         <button type="button" className="site-dropdown-item" onClick={() => onSelect(null)}>
           Empty mount
         </button>
@@ -326,7 +331,6 @@ export default function ShipShopPage() {
 
   const build = store.builds[buildIndex] ?? store.builds[0]
   const ship = getShip(build?.shipId)
-  const pickerPort = ship?.ports.find((port) => port.id === pickerPortId) ?? null
   const shipChoices = useMemo(() => {
     const needle = shipQuery.trim().toLowerCase()
     return SHIPS.filter((entry) => {
@@ -352,12 +356,13 @@ export default function ShipShopPage() {
     setShipQuery('')
   }
 
-  function setFitted(portId: string, part: FittedPart | null) {
+  function setFitted(port: ShipPort, part: FittedPart | null) {
     if (!build) return
-    const ports = { ...build.ports }
-    if (!part) delete ports[portId]
-    else ports[portId] = part
-    updateBuild({ shipId: build.shipId, ports, power: build.power })
+    updateBuild({
+      shipId: build.shipId,
+      ports: applyPortFit(ship, build.ports, port, part),
+      power: build.power,
+    })
   }
 
   return (
@@ -416,7 +421,7 @@ export default function ShipShopPage() {
           </div>
           {ship && (
             <div className="site-chip-strip w-fit max-w-full">
-              {SHIP_SECTIONS.map((section) => (
+              {SHIP_SECTIONS.filter((section) => portsForSection(ship, section.id).length > 0).map((section) => (
                 <button
                   key={section.id}
                   type="button"
@@ -430,74 +435,83 @@ export default function ShipShopPage() {
           )}
         </div>
 
-        {ship && SHIP_SECTIONS.map((section) => {
+        {ship && SHIP_SECTIONS.filter((section) => portsForSection(ship, section.id).length > 0).map((section) => {
           const ports = portsForSection(ship, section.id)
+          const renderPort = (port: ShipPort, nested = false) => {
+            const fitted = statsForFitted(build.ports[port.id])
+            const line = fitted ? partStatLine(fitted.item.kind, fitted.stats) : ''
+            const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
+            const open = pickerPortId === port.id
+            const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
+            return (
+              <div key={port.id} className={`${nested ? 'ml-6 border-l border-orange-500/30 pl-3' : ''}`}>
+                <div className="site-card rounded-xl p-3">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-xs uppercase tracking-wide text-slate-500">S{port.size || '—'}</span>
+                    <span className="text-xs text-slate-500">{port.label}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left"
+                    onClick={() => setPickerPortId(open ? null : port.id)}
+                  >
+                    <span className="text-lg font-medium text-white">{fitted?.item.displayName || 'Empty mount'}</span>
+                    <span className="text-base text-slate-300">{info}</span>
+                  </button>
+                  {fitted && (
+                    <div className="mt-2">
+                      <button type="button" className="site-btn-ghost px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
+                        Clear
+                      </button>
+                    </div>
+                  )}
+                  {open && (
+                    <PartPicker
+                      port={port}
+                      fitted={build.ports[port.id]}
+                      onClose={() => setPickerPortId(null)}
+                      onSelect={(entityClass) => {
+                        if (!entityClass) {
+                          setFitted(port, null)
+                          return
+                        }
+                        setFitted(port, { entityClass, source: 'stock' })
+                      }}
+                      onSource={(source) => {
+                        const current = build.ports[port.id]
+                        if (!current) return
+                        setFitted(port, {
+                          ...current,
+                          source,
+                          qualities: source === 'crafted' ? (current.qualities ?? defaultCraftQualities(current.entityClass)) : current.qualities,
+                        })
+                      }}
+                      onQualities={(qualities) => {
+                        const current = build.ports[port.id]
+                        if (!current) return
+                        setFitted(port, { ...current, source: 'crafted', qualities })
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            )
+          }
           return (
             <section key={section.id} id={`ship-section-${section.id}`} className="site-surface rounded-xl p-4 scroll-mt-24">
               <h2 className="text-sm font-semibold text-slate-200 mb-3">{section.label}</h2>
-              {section.id === 'hull' && (
-                <p className="text-sm text-slate-400 mb-3">
-                  Hull {formatNumber(ship.hullHp)} · SCM {formatNumber(ship.scmSpeed)} · Boost {formatNumber(ship.boostSpeed)}
-                </p>
-              )}
               <div className="space-y-2">
-                {ports.map((port) => {
-                  const fitted = statsForFitted(build.ports[port.id])
-                  const line = fitted ? partStatLine(fitted.item.kind, fitted.stats) : ''
-                  return (
-                    <button
-                      key={port.id}
-                      type="button"
-                      className="site-card w-full rounded-xl p-3 text-left"
-                      onClick={() => setPickerPortId(port.id)}
-                    >
-                      <div className="flex items-baseline justify-between gap-3">
-                        <span className="text-xs uppercase tracking-wide text-slate-500">S{port.size || '—'}</span>
-                        <span className="text-xs text-slate-500">{port.label}</span>
-                      </div>
-                      <p className="text-white mt-1">{fitted?.item.displayName || 'Empty mount'}</p>
-                      <p className="text-sm text-slate-400 mt-1">
-                        {fitted
-                          ? [line, build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock'].filter(Boolean).join(' · ')
-                          : 'Open port'}
-                      </p>
-                    </button>
-                  )
-                })}
-                {ports.length === 0 && <p className="site-hint text-sm">No ports in this section.</p>}
+                {ports.map((port) => (
+                  <div key={port.id} className="space-y-2">
+                    {renderPort(port)}
+                    {port.kind === 'missileRack' && missileSlotsForRack(ship, port, build.ports[port.id]).map((slot) => renderPort(slot, true))}
+                  </div>
+                ))}
               </div>
             </section>
           )
         })}
       </div>
-      {pickerPort && (
-        <PartPicker
-          port={pickerPort}
-          fitted={build.ports[pickerPort.id]}
-          onClose={() => setPickerPortId(null)}
-          onSelect={(entityClass) => {
-            if (!entityClass) {
-              setFitted(pickerPort.id, null)
-              return
-            }
-            setFitted(pickerPort.id, { entityClass, source: 'stock' })
-          }}
-          onSource={(source) => {
-            const current = build.ports[pickerPort.id]
-            if (!current) return
-            setFitted(pickerPort.id, {
-              ...current,
-              source,
-              qualities: source === 'crafted' ? (current.qualities ?? defaultCraftQualities(current.entityClass)) : current.qualities,
-            })
-          }}
-          onQualities={(qualities) => {
-            const current = build.ports[pickerPort.id]
-            if (!current) return
-            setFitted(pickerPort.id, { ...current, source: 'crafted', qualities })
-          }}
-        />
-      )}
     </div>
   )
 }

@@ -9,7 +9,9 @@
       "role": "Interceptor",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 11900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -209,7 +211,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 11900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -409,7 +413,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 11900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -629,7 +635,9 @@
       "role": "Interdiction",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 11900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -839,7 +847,9 @@
       "role": "Stealth Bomber",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 27564,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 38,
@@ -979,7 +989,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6110,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 68,
@@ -1178,16 +1190,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -1199,7 +1201,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6110,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 68,
@@ -1398,16 +1402,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -1419,7 +1413,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6110,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 68,
@@ -1678,16 +1674,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -1699,7 +1685,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6110,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 68,
@@ -1938,16 +1926,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_em_behr_pioneer"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -1959,7 +1937,9 @@
       "role": "Heavy Gunship",
       "career": "Combat",
       "crew": 9,
-      "hullHp": null,
+      "hullHp": 295600,
+      "noise": 24,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 20,
@@ -2719,7 +2699,9 @@
       "role": "Frigate",
       "career": "Combat",
       "crew": 28,
-      "hullHp": null,
+      "hullHp": 15515000,
+      "noise": 600,
+      "decoy": 1200,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 6,
@@ -3089,7 +3071,9 @@
       "role": "Frigate",
       "career": "Combat",
       "crew": 28,
-      "hullHp": null,
+      "hullHp": 15515000,
+      "noise": 600,
+      "decoy": 1200,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 6,
@@ -3358,16 +3342,6 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "klwe_laserrepeater_s5"
-        },
-        {
-          "id": "hardpoint_missile_door_cap",
-          "label": "Missile Door Cap",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -3379,7 +3353,9 @@
       "role": "Destroyer",
       "career": "Destroyer",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7852400,
+      "noise": 0,
+      "decoy": 736,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 7,
@@ -3839,7 +3815,9 @@
       "role": "Heavy Salvage",
       "career": "Industrial",
       "crew": 5,
-      "hullHp": null,
+      "hullHp": 123002,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 11,
@@ -3929,7 +3907,9 @@
       "role": "Gunship",
       "career": "Combat",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 66700,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 36,
@@ -4230,16 +4210,6 @@
           "defaultEntityClass": "armr_aegs_redeemer"
         },
         {
-          "id": "hardpoint_weaponlocker",
-          "label": "Weaponlocker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator_3",
           "label": "Shield Generator 3",
           "section": "defense",
@@ -4289,7 +4259,9 @@
       "role": "Modular",
       "career": "Combat",
       "crew": 7,
-      "hullHp": null,
+      "hullHp": 219381,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -4389,7 +4361,9 @@
       "role": "Stealth Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 37013,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 62,
@@ -4598,16 +4572,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -4619,7 +4583,9 @@
       "role": "Stealth Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 37013,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 62,
@@ -4828,16 +4794,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -4849,7 +4805,9 @@
       "role": "Stealth Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 15510,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 49,
@@ -5228,16 +5186,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "gats_ballisticgatling_s3"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -5249,7 +5197,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 13550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 61,
@@ -5358,26 +5308,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "shld_asas_s01_shimmer_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_missilerack",
-          "label": "Weapon Missilerack",
-          "section": "missiles",
-          "kind": "missileRack",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -5389,7 +5319,9 @@
       "role": "Interdiction",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 12516,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 52,
@@ -5530,26 +5462,6 @@
           "defaultEntityClass": "mxox_emp_device_s2"
         },
         {
-          "id": "hardpoint_weapon_missilerack_left/missile_01_attach",
-          "label": "Missile 01 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_missilerack_left/missile_02_attach",
-          "label": "Missile 02 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_missilerack_right",
           "label": "Weapon Missilerack Right",
           "section": "missiles",
@@ -5558,36 +5470,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "mxox_emp_device_s2"
-        },
-        {
-          "id": "hardpoint_weapon_missilerack_right/missile_01_attach",
-          "label": "Missile 01 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_missilerack_right/missile_02_attach",
-          "label": "Missile 02 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -5599,7 +5481,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 13116,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 56,
@@ -5808,16 +5692,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -5829,7 +5703,9 @@
       "role": "Heavy Gunship",
       "career": "Combat",
       "crew": 7,
-      "hullHp": null,
+      "hullHp": 187200,
+      "noise": 24,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 13,
@@ -6439,7 +6315,9 @@
       "role": "Heavy Fighter / Bomber",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 42800,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 41,
@@ -6788,16 +6666,6 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "misl_s05_cs_taln_stalker"
-        },
-        {
-          "id": "hardpoint_weapon_locker_harbinger",
-          "label": "Weapon Locker Harbinger",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -6809,7 +6677,9 @@
       "role": "Dropship",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 42800,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -7058,16 +6928,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_em_taln_dominator"
-        },
-        {
-          "id": "hardpoint_weapon_locker_hoplite",
-          "label": "Weapon Locker Hoplite",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -7079,7 +6939,9 @@
       "role": "Heavy Fighter / Bomber",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 42800,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 44,
@@ -7390,26 +7252,6 @@
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         },
         {
-          "id": "hardpoint_weapon_missilelauncher",
-          "label": "Weapon Missilelauncher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_sentinel",
-          "label": "Weapon Locker Sentinel",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_emp",
           "label": "Weapon Emp",
           "section": "weapons",
@@ -7418,16 +7260,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "aegs_emp_sentinel_s4"
-        },
-        {
-          "id": "hardpoint_powerplant_rear",
-          "label": "Powerplant Rear",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -7439,7 +7271,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 42800,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 44,
@@ -7748,16 +7582,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_locker_warden",
-          "label": "Weapon Locker Warden",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -7769,7 +7593,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7130,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 75,
@@ -7989,7 +7815,9 @@
       "role": "Dropship",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 77000,
+      "noise": 20,
+      "decoy": 192,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 32.5,
@@ -8369,7 +8197,9 @@
       "role": "Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6250,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 60,
@@ -8508,26 +8338,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool",
-          "label": "Weapon Regen Pool",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool_turrets",
-          "label": "Weapon Regen Pool Turrets",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -8539,7 +8349,9 @@
       "role": "Medical",
       "career": "Support",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6250,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 56,
@@ -8678,26 +8490,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool",
-          "label": "Weapon Regen Pool",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool_turrets",
-          "label": "Weapon Regen Pool Turrets",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -8709,7 +8501,9 @@
       "role": "Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6250,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 60,
@@ -8868,26 +8662,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "kron_lasercannon_s1"
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool",
-          "label": "Weapon Regen Pool",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool_turrets",
-          "label": "Weapon Regen Pool Turrets",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -8899,7 +8673,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 6,
-      "hullHp": null,
+      "hullHp": 88000,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 16,
@@ -9008,26 +8784,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "radr_chco_s02_surveyor"
-        },
-        {
-          "id": "hardpoint_weapon_locker_01",
-          "label": "Weapon Locker 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_02",
-          "label": "Weapon Locker 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -9039,7 +8795,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 6,
-      "hullHp": null,
+      "hullHp": 88000,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 16,
@@ -9148,26 +8906,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "radr_chco_s02_surveyor"
-        },
-        {
-          "id": "hardpoint_weapon_locker_01",
-          "label": "Weapon Locker 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_02",
-          "label": "Weapon Locker 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -9179,7 +8917,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 16758,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -9280,16 +9020,6 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
-          "id": "hardpoint_class_4_nose",
-          "label": "Class 4 Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_class_2_left_wing",
           "label": "Class 2 Left Wing",
           "section": "weapons",
@@ -9307,16 +9037,6 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_class_4_center",
-          "label": "Class 4 Center",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
           "defaultEntityClass": null
         },
         {
@@ -9489,7 +9209,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 14103,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 50,
@@ -9590,16 +9312,6 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_left_wing",
           "label": "Weapon Left Wing",
           "section": "weapons",
@@ -9618,16 +9330,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "apar_ballisticgatling_s4"
-        },
-        {
-          "id": "hardpoint_weapon_center",
-          "label": "Weapon Center",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -9739,7 +9441,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 15550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 55,
@@ -9840,16 +9544,6 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
-          "id": "hardpoint_class_4_nose",
-          "label": "Class 4 Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_class_2_left_wing",
           "label": "Class 2 Left Wing",
           "section": "weapons",
@@ -9867,16 +9561,6 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_class_4_center",
-          "label": "Class 4 Center",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
           "defaultEntityClass": null
         },
         {
@@ -10009,7 +9693,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 14103,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 52,
@@ -10110,16 +9796,6 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_left_wing",
           "label": "Weapon Left Wing",
           "section": "weapons",
@@ -10138,16 +9814,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "apar_ballisticgatling_s4"
-        },
-        {
-          "id": "hardpoint_weapon_center",
-          "label": "Weapon Center",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -10269,7 +9935,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 15550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 55,
@@ -10368,16 +10036,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
-        },
-        {
-          "id": "hardpoint_class_4_nose",
-          "label": "Class 4 Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_class_2_left_wing",
@@ -10539,7 +10197,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 15550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -10670,26 +10330,6 @@
           "defaultEntityClass": "misl_s02_ir_novp_rattler"
         },
         {
-          "id": "hardpoint_missile_left/missile_03_attach",
-          "label": "Missile 03 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_missile_left/missile_04_attach",
-          "label": "Missile 04 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_missile_right",
           "label": "Missile Right",
           "section": "missiles",
@@ -10718,26 +10358,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_novp_rattler"
-        },
-        {
-          "id": "hardpoint_missile_right/missile_03_attach",
-          "label": "Missile 03 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_missile_right/missile_04_attach",
-          "label": "Missile 04 Attach",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -10749,7 +10369,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 15250,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 50,
@@ -10850,16 +10472,6 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_left_wing",
           "label": "Weapon Left Wing",
           "section": "weapons",
@@ -10878,16 +10490,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "apar_ballisticgatling_s4"
-        },
-        {
-          "id": "hardpoint_weapon_center",
-          "label": "Weapon Center",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -11009,7 +10611,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 15550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 53,
@@ -11219,7 +10823,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 15250,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 50,
@@ -11320,16 +10926,6 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_left_wing",
           "label": "Weapon Left Wing",
           "section": "weapons",
@@ -11348,16 +10944,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "apar_ballisticgatling_s4"
-        },
-        {
-          "id": "hardpoint_weapon_center",
-          "label": "Weapon Center",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_weapon_left",
@@ -11589,7 +11175,9 @@
       "role": "Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 15550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 56,
@@ -11688,16 +11276,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
-        },
-        {
-          "id": "hardpoint_class_4_nose",
-          "label": "Class 4 Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_class_2_left_wing",
@@ -11859,7 +11437,9 @@
       "role": "Pathfinder",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 14103,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 52,
@@ -11958,16 +11538,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_left_wing",
@@ -12119,7 +11689,9 @@
       "role": "Stealth Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 15550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 55,
@@ -12227,16 +11799,6 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_class_4_nose",
-          "label": "Class 4 Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
           "defaultEntityClass": null
         },
         {
@@ -12389,7 +11951,9 @@
       "role": "Stealth Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 14103,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 51,
@@ -12488,16 +12052,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_raco_s01_drift_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_left_wing",
@@ -12649,7 +12203,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 40220,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -12929,7 +12485,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 40220,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -13209,7 +12767,9 @@
       "role": "Bomber",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 34800,
+      "noise": 5,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 40,
@@ -13519,7 +13079,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 16600,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 63,
@@ -13688,16 +13250,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "anvl_hawk_emp_device_s2"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -13709,7 +13261,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 18386,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 46,
@@ -13939,7 +13493,9 @@
       "role": "Gunship",
       "career": "Gunship",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 149819,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 23,
@@ -14299,7 +13855,9 @@
       "role": "Pathfinder",
       "career": "Support",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 173201,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -14419,7 +13977,9 @@
       "role": "Medical",
       "career": "Support",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 173201,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 35,
@@ -14539,7 +14099,9 @@
       "role": "Dropship",
       "career": "Combat",
       "crew": 5,
-      "hullHp": null,
+      "hullHp": 90053,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 34,
@@ -14650,26 +14212,6 @@
           "defaultEntityClass": "armr_anvl_valkyrie"
         },
         {
-          "id": "hardpoint_weapon_wing_left",
-          "label": "Weapon Wing Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_right",
-          "label": "Weapon Wing Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_turret_bottom/hardpoint_weapon_left",
           "label": "Weapon Left",
           "section": "weapons",
@@ -14688,206 +14230,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_01",
-          "label": "Weapon Cabinet 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_02",
-          "label": "Weapon Cabinet 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_03",
-          "label": "Weapon Cabinet 03",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_04",
-          "label": "Weapon Cabinet 04",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_05",
-          "label": "Weapon Cabinet 05",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_11",
-          "label": "Weapon Cabinet 11",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_12",
-          "label": "Weapon Cabinet 12",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_13",
-          "label": "Weapon Cabinet 13",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_14",
-          "label": "Weapon Cabinet 14",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_15",
-          "label": "Weapon Cabinet 15",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_06",
-          "label": "Weapon Cabinet 06",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_07",
-          "label": "Weapon Cabinet 07",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_08",
-          "label": "Weapon Cabinet 08",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_09",
-          "label": "Weapon Cabinet 09",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_10",
-          "label": "Weapon Cabinet 10",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_16",
-          "label": "Weapon Cabinet 16",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_17",
-          "label": "Weapon Cabinet 17",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_18",
-          "label": "Weapon Cabinet 18",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_19",
-          "label": "Weapon Cabinet 19",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_20",
-          "label": "Weapon Cabinet 20",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -14899,7 +14241,9 @@
       "role": "Dropship",
       "career": "Combat",
       "crew": 5,
-      "hullHp": null,
+      "hullHp": 90053,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 34,
@@ -15010,26 +14354,6 @@
           "defaultEntityClass": "armr_anvl_valkyrie"
         },
         {
-          "id": "hardpoint_weapon_wing_left",
-          "label": "Weapon Wing Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_right",
-          "label": "Weapon Wing Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_turret_bottom/hardpoint_weapon_left",
           "label": "Weapon Left",
           "section": "weapons",
@@ -15048,206 +14372,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_01",
-          "label": "Weapon Cabinet 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_02",
-          "label": "Weapon Cabinet 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_03",
-          "label": "Weapon Cabinet 03",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_04",
-          "label": "Weapon Cabinet 04",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_05",
-          "label": "Weapon Cabinet 05",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_11",
-          "label": "Weapon Cabinet 11",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_12",
-          "label": "Weapon Cabinet 12",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_13",
-          "label": "Weapon Cabinet 13",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_14",
-          "label": "Weapon Cabinet 14",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_15",
-          "label": "Weapon Cabinet 15",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_06",
-          "label": "Weapon Cabinet 06",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_07",
-          "label": "Weapon Cabinet 07",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_08",
-          "label": "Weapon Cabinet 08",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_09",
-          "label": "Weapon Cabinet 09",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_10",
-          "label": "Weapon Cabinet 10",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_16",
-          "label": "Weapon Cabinet 16",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_17",
-          "label": "Weapon Cabinet 17",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_18",
-          "label": "Weapon Cabinet 18",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_19",
-          "label": "Weapon Cabinet 19",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_Weapon_Cabinet_20",
-          "label": "Weapon Cabinet 20",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -15259,7 +14383,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 14100,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 67,
@@ -15369,7 +14495,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2231,
+      "noise": 1,
+      "decoy": 5,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 89,
@@ -15459,7 +14587,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2231,
+      "noise": 1,
+      "decoy": 5,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 89,
@@ -15518,26 +14648,6 @@
           "minSize": 0,
           "maxSize": 0,
           "defaultEntityClass": "radr_wlop_s00_denning"
-        },
-        {
-          "id": "hardpoint_weapon_right",
-          "label": "Weapon Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_left",
-          "label": "Weapon Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -15549,7 +14659,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10976,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 58,
@@ -15808,26 +14920,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
-        },
-        {
-          "id": "hardpoint_weapon_rack_01",
-          "label": "Weapon Rack 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_02",
-          "label": "Weapon Rack 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -15839,7 +14931,9 @@
       "role": "Medium Mining",
       "career": "Industrial",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 130000,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 30,
@@ -15959,7 +15053,9 @@
       "role": "Medium Mining",
       "career": "Industrial",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 130000,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 30,
@@ -16079,7 +15175,9 @@
       "role": "Medium Salvage",
       "career": "Industrial",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 130000,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 30,
@@ -16339,7 +15437,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6820,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 30,
@@ -16419,7 +15519,9 @@
       "role": "Passenger",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6820,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 30,
@@ -16499,7 +15601,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7280,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 35,
@@ -16569,7 +15673,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 115700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 30,
@@ -16719,7 +15825,9 @@
       "role": "Recovery",
       "career": "Support",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 34500,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 30,
@@ -16798,16 +15906,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "shld_behr_s02_5ma_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -16819,7 +15917,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 13800,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 61,
@@ -17020,16 +16120,6 @@
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         },
         {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_missile_rack_outer",
           "label": "Missile Rack Outer",
           "section": "missiles",
@@ -17069,7 +16159,9 @@
       "role": "Passenger",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 3500,
+      "noise": 4,
+      "decoy": 12,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 70,
@@ -17139,7 +16231,9 @@
       "role": "Starter / Light Freight",
       "career": "Multi-Role",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10080,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 70,
@@ -17248,26 +16342,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_left",
-          "label": "Weapon Wing Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_right",
-          "label": "Weapon Wing Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -17279,7 +16353,9 @@
       "role": "Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10080,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 70,
@@ -17388,26 +16464,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_left",
-          "label": "Weapon Wing Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_right",
-          "label": "Weapon Wing Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -17419,7 +16475,9 @@
       "role": "Starter / Light Freight",
       "career": "Multi-Role",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10080,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 70,
@@ -17528,26 +16586,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_left",
-          "label": "Weapon Wing Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_wing_right",
-          "label": "Weapon Wing Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -17559,7 +16597,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10080,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 69,
@@ -17699,7 +16739,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10080,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 84,
@@ -17800,16 +16842,6 @@
           "defaultEntityClass": "qdrv_arcc_s01_rush_scitem"
         },
         {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_wing_left",
           "label": "Weapon Wing Left",
           "section": "weapons",
@@ -17839,7 +16871,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10080,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 84,
@@ -17940,16 +16974,6 @@
           "defaultEntityClass": "qdrv_arcc_s01_rush_scitem"
         },
         {
-          "id": "hardpoint_weapon_nose",
-          "label": "Weapon Nose",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_weapon_wing_left",
           "label": "Weapon Wing Left",
           "section": "weapons",
@@ -17979,7 +17003,9 @@
       "role": "Starter / Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 9800,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 45,
@@ -18218,36 +17244,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
-        },
-        {
-          "id": "hardpoint_weapon_rack_01",
-          "label": "Weapon Rack 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_02",
-          "label": "Weapon Rack 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_power_plant_rack",
-          "label": "Power Plant Rack",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -18259,7 +17255,9 @@
       "role": "Bomber",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 67600,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -18539,7 +17537,9 @@
       "role": "Heavy Bomber",
       "career": "Combat",
       "crew": 8,
-      "hullHp": null,
+      "hullHp": 78400,
+      "noise": 40,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 20,
@@ -18670,86 +17670,6 @@
           "defaultEntityClass": "radr_chco_s02_surveyor"
         },
         {
-          "id": "hardpoint_bridge_weapon_locker",
-          "label": "Bridge Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_rifle_1",
-          "label": "Weapon Rack Rifle 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_rifle_2",
-          "label": "Weapon Rack Rifle 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_special_1",
-          "label": "Weapon Rack Special 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_special_2",
-          "label": "Weapon Rack Special 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_armory_cargo_01",
-          "label": "Armory Cargo 01",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_armory_cargo_02",
-          "label": "Armory Cargo 02",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_armory_cargo_03",
-          "label": "Armory Cargo 03",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_bombrack_left/missile_01_attach",
           "label": "Missile 01 Attach",
           "section": "missiles",
@@ -18790,26 +17710,6 @@
           "defaultEntityClass": "bomb_s10_fski_colossus"
         },
         {
-          "id": "hardpoint_bomb_turret/hardpoint_missile_rack1",
-          "label": "Missile Rack1",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_bomb_turret/hardpoint_missile_rack2",
-          "label": "Missile Rack2",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator_c",
           "label": "Shield Generator C",
           "section": "defense",
@@ -18829,7 +17729,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 38600,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 36,
@@ -19199,7 +18101,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 38600,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 36,
@@ -19569,7 +18473,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 67600,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -19749,7 +18655,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 67600,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -19929,7 +18837,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 78400,
+      "noise": 40,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 20,
@@ -20058,36 +18968,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "radr_chco_s02_surveyor"
-        },
-        {
-          "id": "hardpoint_bridge_weapon_locker",
-          "label": "Bridge Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_pod_weapon_locker_right",
-          "label": "Pod Weapon Locker Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_pod_weapon_locker_left",
-          "label": "Pod Weapon Locker Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -20099,7 +18979,9 @@
       "role": "Starter / Light Freight",
       "career": "Starter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 15350,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 48,
@@ -20239,7 +19121,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 78400,
+      "noise": 40,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 20,
@@ -20368,86 +19252,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "radr_chco_s02_surveyor"
-        },
-        {
-          "id": "hardpoint_bridge_weapon_locker",
-          "label": "Bridge Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_rifle_1",
-          "label": "Weapon Rack Rifle 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_rifle_2",
-          "label": "Weapon Rack Rifle 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_special_1",
-          "label": "Weapon Rack Special 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_special_2",
-          "label": "Weapon Rack Special 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_armory_cargo_01",
-          "label": "Armory Cargo 01",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_armory_cargo_02",
-          "label": "Armory Cargo 02",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_armory_cargo_03",
-          "label": "Armory Cargo 03",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -20459,7 +19263,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 41400,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 25,
@@ -20709,7 +19515,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7980,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 49,
@@ -20869,7 +19677,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 91500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 16,
@@ -21018,16 +19828,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
-        },
-        {
-          "id": "hardpoint_relay_powerplant",
-          "label": "Relay Powerplant",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -21039,7 +19839,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 91500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 16,
@@ -21188,16 +19990,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
-        },
-        {
-          "id": "hardpoint_relay_powerplant",
-          "label": "Relay Powerplant",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -21209,7 +20001,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 91500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 16,
@@ -21358,16 +20152,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
-        },
-        {
-          "id": "hardpoint_relay_powerplant",
-          "label": "Relay Powerplant",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -21379,7 +20163,9 @@
       "role": "Generalist",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 31551,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 38,
@@ -21799,7 +20585,9 @@
       "role": "Transport",
       "career": "Transport",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 6700,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 25,
@@ -21909,7 +20697,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 91000,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 26,
@@ -22248,46 +21038,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_rack_01",
-          "label": "Weapon Rack 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_02",
-          "label": "Weapon Rack 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_03",
-          "label": "Weapon Rack 03",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_special",
-          "label": "Weapon Rack Special",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -22299,7 +21049,9 @@
       "role": "Light Freight / Medium Fighter",
       "career": "Multi-Role",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 29760,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 39,
@@ -22679,7 +21431,9 @@
       "role": "Light Freight / Medium Fighter",
       "career": "Multi-Role",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 29760,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 39,
@@ -23059,7 +21813,9 @@
       "role": "Interdiction",
       "career": "Combat",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 35770,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -23519,7 +22275,9 @@
       "role": "Medical",
       "career": "Support",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 34520,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 37,
@@ -23659,7 +22417,9 @@
       "role": "Dropship",
       "career": "Combat",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 29760,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -24039,7 +22799,9 @@
       "role": "Starter / Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 17100,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 36,
@@ -24118,16 +22880,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_acas_s01_foxfire_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_left",
@@ -24219,7 +22971,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 17100,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 36,
@@ -24278,16 +23032,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_acas_s01_foxfire_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_left",
@@ -24370,16 +23114,6 @@
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
-          "id": "hardpoint_weapon_locker_expo",
-          "label": "Weapon Locker Expo",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_expo_powerplant",
           "label": "Expo Powerplant",
           "section": "systems",
@@ -24399,7 +23133,9 @@
       "role": "Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 17100,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 36,
@@ -24428,16 +23164,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "controller_flight_drak_cutter_scout"
-        },
-        {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_left",
@@ -24529,7 +23255,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2120,
+      "noise": 1,
+      "decoy": 5,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 70,
@@ -24619,7 +23347,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2120,
+      "noise": 1,
+      "decoy": 5,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 70,
@@ -24709,7 +23439,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2120,
+      "noise": 1,
+      "decoy": 5,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 70,
@@ -24799,7 +23531,9 @@
       "role": "Starter / Light Mining",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": 1234,
+      "hullHp": 17300,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 43,
@@ -24938,26 +23672,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
-        },
-        {
-          "id": "hardpoint_weapon_rack_left",
-          "label": "Weapon Rack Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_right",
-          "label": "Weapon Rack Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -24969,7 +23683,9 @@
       "role": "Starter / Light Mining",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": 1234,
+      "hullHp": 17300,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 43,
@@ -25108,26 +23824,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
-        },
-        {
-          "id": "hardpoint_weapon_rack_left",
-          "label": "Weapon Rack Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_right",
-          "label": "Weapon Rack Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -25139,7 +23835,9 @@
       "role": "Light Freight",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": 1234,
+      "hullHp": 20700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 40,
@@ -25278,26 +23976,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
-        },
-        {
-          "id": "hardpoint_weapon_rack_left",
-          "label": "Weapon Rack Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_right",
-          "label": "Weapon Rack Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -25309,7 +23987,9 @@
       "role": "Medium Data",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6420,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 47,
@@ -25649,7 +24329,9 @@
       "role": "Heavy Freight",
       "career": "Transporter",
       "crew": 7,
-      "hullHp": null,
+      "hullHp": 258000,
+      "noise": 30,
+      "decoy": 60,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 10,
@@ -25919,7 +24601,9 @@
       "role": "Heavy Dropship",
       "career": "Combat",
       "crew": 7,
-      "hullHp": null,
+      "hullHp": 258000,
+      "noise": 30,
+      "decoy": 60,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 12,
@@ -26189,7 +24873,9 @@
       "role": "Snub Fighter",
       "career": "Snub Fighter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 1950,
+      "noise": 8,
+      "decoy": 24,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 77,
@@ -26258,16 +24944,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "shld_seco_s01_web_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_weapon_right_wing",
@@ -26459,7 +25135,9 @@
       "role": "Light Salvage",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 43700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 55,
@@ -26590,16 +25268,6 @@
           "defaultEntityClass": "klwe_laserrepeater_s1"
         },
         {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator_rear",
           "label": "Shield Generator Rear",
           "section": "defense",
@@ -26619,7 +25287,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7950,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 70,
@@ -26869,7 +25539,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 12401,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 60,
@@ -27089,7 +25761,9 @@
       "role": "Dropship",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 76900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 38,
@@ -27240,166 +25914,6 @@
           "defaultEntityClass": "espr_lasercannon_s3"
         },
         {
-          "id": "hardpoint_weapon_rack_01",
-          "label": "Weapon Rack 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_02",
-          "label": "Weapon Rack 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_03",
-          "label": "Weapon Rack 03",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_04",
-          "label": "Weapon Rack 04",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_05",
-          "label": "Weapon Rack 05",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_06",
-          "label": "Weapon Rack 06",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_07",
-          "label": "Weapon Rack 07",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_08",
-          "label": "Weapon Rack 08",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_09",
-          "label": "Weapon Rack 09",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_10",
-          "label": "Weapon Rack 10",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_11",
-          "label": "Weapon Rack 11",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_12",
-          "label": "Weapon Rack 12",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_13",
-          "label": "Weapon Rack 13",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_14",
-          "label": "Weapon Rack 14",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_15",
-          "label": "Weapon Rack 15",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_16",
-          "label": "Weapon Rack 16",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator_03",
           "label": "Shield Generator 03",
           "section": "defense",
@@ -27429,7 +25943,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 69300,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -27580,46 +26096,6 @@
           "defaultEntityClass": "espr_ballisticcannon_s3"
         },
         {
-          "id": "hardpoint_weapon_rack_01",
-          "label": "Weapon Rack 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_02",
-          "label": "Weapon Rack 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_03",
-          "label": "Weapon Rack 03",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_04",
-          "label": "Weapon Rack 04",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator_03",
           "label": "Shield Generator 03",
           "section": "defense",
@@ -27649,7 +26125,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 47314,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 34,
@@ -27959,7 +26437,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 24930,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 68,
@@ -28100,16 +26580,6 @@
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         },
         {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_leg_blankingplate_right",
           "label": "Leg Blankingplate Right",
           "section": "missiles",
@@ -28139,7 +26609,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 24930,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 68,
@@ -28218,36 +26690,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_raco_s01_drift_scitem"
-        },
-        {
-          "id": "hardpoint_missile_left",
-          "label": "Missile Left",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_missile_right",
-          "label": "Missile Right",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_leg_blankingplate_right",
@@ -28519,7 +26961,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 62168,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 22,
@@ -28949,7 +27393,9 @@
       "role": "Starter / Pathfinder",
       "career": "Multi-Role",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 11740,
+      "noise": 10,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 42,
@@ -29229,7 +27675,9 @@
       "role": "Snub Carrier",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 70460,
+      "noise": 10,
+      "decoy": 96,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 22,
@@ -29659,7 +28107,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 5194,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 67,
@@ -29810,16 +28260,6 @@
           "defaultEntityClass": "glsn_laserrepeater_s2"
         },
         {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_missile_left",
           "label": "Missile Left",
           "section": "missiles",
@@ -29889,7 +28329,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 34300,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 50,
@@ -30269,7 +28711,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 8523,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 72,
@@ -30488,16 +28932,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapons_locker",
-          "label": "Weapons Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -30509,7 +28943,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7722,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 74,
@@ -30708,16 +29144,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_em_taln_dominator"
-        },
-        {
-          "id": "hardpoint_weapons_locker",
-          "label": "Weapons Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -30729,7 +29155,9 @@
       "role": "Snub Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2430,
+      "noise": 2,
+      "decoy": 24,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 58,
@@ -30849,7 +29277,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2430,
+      "noise": 2,
+      "decoy": 24,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 57,
@@ -30979,7 +29409,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2430,
+      "noise": 2,
+      "decoy": 24,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 57,
@@ -31109,7 +29541,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 10859,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 55,
@@ -31368,16 +29802,6 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "krig_laserrepeater_bespoke_s4"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 65,
-          "minSize": 65,
-          "maxSize": 65,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -31389,7 +29813,9 @@
       "role": "Snub Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 5830,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 69,
@@ -31599,7 +30025,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2160,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 72,
@@ -31689,7 +30117,9 @@
       "role": "Snub Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 5830,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 69,
@@ -32099,7 +30529,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 69200,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 45,
@@ -32188,16 +30620,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_locker_ext",
-          "label": "Weapon Locker Ext",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_top_left",
@@ -32409,7 +30831,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 89300,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 39,
@@ -32458,16 +30882,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "radr_grnp_s02_epier"
-        },
-        {
-          "id": "hardpoint_weapon_locker_ext",
-          "label": "Weapon Locker Ext",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_top_left",
@@ -32790,16 +31204,6 @@
           "defaultEntityClass": "klwe_laserrepeater_s4"
         },
         {
-          "id": "hardpoint_cockpit_armor",
-          "label": "Cockpit Armor",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_cooler_s1",
           "label": "Cooler S1",
           "section": "systems",
@@ -32839,7 +31243,9 @@
       "role": "Interdiction",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 69200,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 42,
@@ -32928,16 +31334,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_locker_ext",
-          "label": "Weapon Locker Ext",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_top_left",
@@ -33069,7 +31465,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 69200,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 45,
@@ -33158,16 +31556,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "shld_godi_s02_fr76_scitem"
-        },
-        {
-          "id": "hardpoint_weapon_locker_ext",
-          "label": "Weapon Locker Ext",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_top_left",
@@ -33379,7 +31767,9 @@
       "role": "Pathfinder",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 1550,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 84,
@@ -33459,7 +31849,9 @@
       "role": "Racing",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 1550,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 97,
@@ -33518,16 +31910,6 @@
           "minSize": 0,
           "maxSize": 0,
           "defaultEntityClass": "radr_wlop_s00_denning"
-        },
-        {
-          "id": "hardpoint_weapon",
-          "label": "Weapon",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -33539,7 +31921,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7200,
+      "noise": 2,
+      "decoy": 20,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 59,
@@ -33699,7 +32083,9 @@
       "role": "Stealth Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7200,
+      "noise": 2,
+      "decoy": 20,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 59,
@@ -33859,7 +32245,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 7200,
+      "noise": 2,
+      "decoy": 20,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 62,
@@ -34019,7 +32407,9 @@
       "role": "Light Salvage",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 59500,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 32,
@@ -34149,7 +32539,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 34900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 32,
@@ -34399,7 +32791,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 34900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 32,
@@ -34649,7 +33043,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 34900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 30,
@@ -34899,7 +33295,9 @@
       "role": "Gunship",
       "career": "Combat",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 34900,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -35369,7 +33767,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 91400,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 42,
@@ -35448,16 +33848,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_misc_hull_a"
-        },
-        {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -35469,7 +33859,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 72789,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 33,
@@ -35718,16 +34110,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool",
-          "label": "Weapon Regen Pool",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -35739,7 +34121,9 @@
       "role": "Heavy Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 323500,
+      "noise": 60,
+      "decoy": 100,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 16,
@@ -35840,16 +34224,6 @@
           "defaultEntityClass": "armr_misc_hull_c"
         },
         {
-          "id": "hardpoint_weapons_locker",
-          "label": "Weapons Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator03",
           "label": "Shield Generator03",
           "section": "defense",
@@ -35889,7 +34263,9 @@
       "role": "Light Mining",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 34150,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -36019,7 +34395,9 @@
       "role": "Light Mining",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 34150,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -36149,7 +34527,9 @@
       "role": "Starter / Light Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 16260,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 54,
@@ -36280,36 +34660,6 @@
           "defaultEntityClass": null
         },
         {
-          "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
-          "label": "Hardpoint Weapon Wing Tip S3 Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_left_wing_missile_launcher",
-          "label": "Left Wing Missile Launcher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_right_wing_missile_launcher",
-          "label": "Right Wing Missile Launcher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_missilerack_wing_left",
           "label": "Missilerack Wing Left",
           "section": "missiles",
@@ -36379,7 +34729,9 @@
       "role": "Reporting",
       "career": "Support",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 16260,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 54,
@@ -36510,36 +34862,6 @@
           "defaultEntityClass": null
         },
         {
-          "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
-          "label": "Hardpoint Weapon Wing Tip S3 Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_left_wing_missile_launcher",
-          "label": "Left Wing Missile Launcher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_right_wing_missile_launcher",
-          "label": "Right Wing Missile Launcher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_missilerack_wing_left",
           "label": "Missilerack Wing Left",
           "section": "missiles",
@@ -36609,7 +34931,9 @@
       "role": "Light Science",
       "career": "Industrial",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 16260,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 54,
@@ -36740,36 +35064,6 @@
           "defaultEntityClass": null
         },
         {
-          "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
-          "label": "Hardpoint Weapon Wing Tip S3 Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_left_wing_missile_launcher",
-          "label": "Left Wing Missile Launcher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_right_wing_missile_launcher",
-          "label": "Right Wing Missile Launcher",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_missilerack_wing_left",
           "label": "Missilerack Wing Left",
           "section": "missiles",
@@ -36839,7 +35133,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 16260,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 58,
@@ -37218,16 +35514,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -37239,7 +35525,9 @@
       "role": "Heavy Refueling",
       "career": "Support",
       "crew": 8,
-      "hullHp": null,
+      "hullHp": 76900,
+      "noise": 20,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 23,
@@ -37369,7 +35657,9 @@
       "role": "Heavy Refueling",
       "career": "Support",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 76900,
+      "noise": 20,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 23,
@@ -37599,7 +35889,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 84200,
+      "noise": 60,
+      "decoy": 100,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 31,
@@ -37918,16 +36210,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
-        },
-        {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -37939,7 +36221,9 @@
       "role": "Gunship",
       "career": "Combat",
       "crew": 8,
-      "hullHp": null,
+      "hullHp": 116600,
+      "noise": 60,
+      "decoy": 100,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 27,
@@ -38240,16 +36524,6 @@
           "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
         },
         {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_shield_generator_right",
           "label": "Shield Generator Right",
           "section": "defense",
@@ -38298,26 +36572,6 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "klwe_laserrepeater_s5"
-        },
-        {
-          "id": "hardpoint_missile_turret_camera",
-          "label": "Missile Turret Camera",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_missile_turret_right",
-          "label": "Missile Turret Right",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_turret_right/turret_missile_rack",
@@ -38388,16 +36642,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
-        },
-        {
-          "id": "hardpoint_missile_turret_left",
-          "label": "Missile Turret Left",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missile_turret_left/turret_missile_rack",
@@ -38479,7 +36723,9 @@
       "role": "Light Refueling",
       "career": "Support",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 68250,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 35,
@@ -38649,7 +36895,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 450000,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 30,
@@ -38719,7 +36967,9 @@
       "role": "Starter / Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": 10,
+      "hullHp": 4550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 60,
@@ -38738,26 +36988,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "controller_flight_orig_100i"
-        },
-        {
-          "id": "hardpoint_cooler_door_left",
-          "label": "Cooler Door Left",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_cooler_door_right",
-          "label": "Cooler Door Right",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_cooler_left",
@@ -38808,16 +37038,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "radr_grnp_s01_ecouter"
-        },
-        {
-          "id": "hardpoint_radar_door",
-          "label": "Radar Door",
-          "section": "systems",
-          "kind": "radar",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_shield_generator",
@@ -38899,7 +37119,9 @@
       "role": "Light Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 4550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 65,
@@ -38918,26 +37140,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "controller_flight_orig_125a"
-        },
-        {
-          "id": "hardpoint_cooler_door_left",
-          "label": "Cooler Door Left",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_cooler_door_right",
-          "label": "Cooler Door Right",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_cooler_left",
@@ -38988,16 +37190,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "radr_grnp_s01_ecouter"
-        },
-        {
-          "id": "hardpoint_radar_door",
-          "label": "Radar Door",
-          "section": "systems",
-          "kind": "radar",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_shield_generator",
@@ -39129,7 +37321,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 4550,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 60,
@@ -39148,26 +37342,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "controller_flight_orig_135c"
-        },
-        {
-          "id": "hardpoint_cooler_door_left",
-          "label": "Cooler Door Left",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_cooler_door_right",
-          "label": "Cooler Door Right",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_cooler_left",
@@ -39218,16 +37392,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "radr_grnp_s01_ecouter"
-        },
-        {
-          "id": "hardpoint_radar_door",
-          "label": "Radar Door",
-          "section": "systems",
-          "kind": "radar",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_shield_generator",
@@ -39309,7 +37473,9 @@
       "role": "Luxury Touring",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 8700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 50,
@@ -39478,26 +37644,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_mount",
-          "label": "Weapon Mount",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -39509,7 +37655,9 @@
       "role": "Pathfinder",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 8700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 50,
@@ -39668,16 +37816,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -39689,7 +37827,9 @@
       "role": "Interceptor",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 8700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 54,
@@ -39928,26 +38068,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_mount",
-          "label": "Weapon Mount",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -39959,7 +38079,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 8700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 56,
@@ -40128,16 +38250,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
-        },
-        {
-          "id": "hardpoint_weapon_mount",
-          "label": "Weapon Mount",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -40149,7 +38261,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 81500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 35,
@@ -40639,7 +38753,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 5,
-      "hullHp": null,
+      "hullHp": 198500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 19,
@@ -40968,36 +39084,6 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "behr_lasercannon_s5"
-        },
-        {
-          "id": "hardpoint_weapon_rack_1",
-          "label": "Weapon Rack 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_2",
-          "label": "Weapon Rack 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_relay_armory",
-          "label": "Relay Armory",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -41009,7 +39095,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 5,
-      "hullHp": null,
+      "hullHp": 198500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 19,
@@ -41338,36 +39426,6 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "behr_lasercannon_s5"
-        },
-        {
-          "id": "hardpoint_weapon_rack_1",
-          "label": "Weapon Rack 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_2",
-          "label": "Weapon Rack 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_relay_armory",
-          "label": "Relay Armory",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -41379,7 +39437,9 @@
       "role": "Luxury Touring",
       "career": "Exploration",
       "crew": 5,
-      "hullHp": null,
+      "hullHp": 198500,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 19,
@@ -41708,36 +39768,6 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "behr_lasercannon_s5"
-        },
-        {
-          "id": "hardpoint_weapon_rack_1",
-          "label": "Weapon Rack 1",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_rack_2",
-          "label": "Weapon Rack 2",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_relay_armory",
-          "label": "Relay Armory",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -41749,7 +39779,9 @@
       "role": "Touring",
       "career": "Exploration",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 3000,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 75,
@@ -41869,7 +39901,9 @@
       "role": "Luxury Touring",
       "career": "Exploration",
       "crew": 8,
-      "hullHp": null,
+      "hullHp": 153200,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 10,
@@ -41970,16 +40004,6 @@
           "defaultEntityClass": "controller_flight_orig_890j"
         },
         {
-          "id": "hardpoint_remote_missile_turret_left",
-          "label": "Remote Missile Turret Left",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_remote_missile_turret_left/turret_missile_rack",
           "label": "Turret Missile Rack",
           "section": "missiles",
@@ -42068,16 +40092,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
-        },
-        {
-          "id": "hardpoint_remote_missile_turret_right",
-          "label": "Remote Missile Turret Right",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_remote_missile_turret_right/turret_missile_rack",
@@ -42170,16 +40184,6 @@
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         },
         {
-          "id": "hardpoint_remote_missile_turret_leftL",
-          "label": "Remote Missile Turret LeftL",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_remote_missile_turret_leftL/turret_missile_rack",
           "label": "Turret Missile Rack",
           "section": "missiles",
@@ -42268,16 +40272,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
-        },
-        {
-          "id": "hardpoint_remote_missile_turret_rightL",
-          "label": "Remote Missile Turret RightL",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_remote_missile_turret_rightL/turret_missile_rack",
@@ -42468,56 +40462,6 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
-        },
-        {
-          "id": "hardpoint_weapon_locker_01",
-          "label": "Weapon Locker 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_02",
-          "label": "Weapon Locker 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_03",
-          "label": "Weapon Locker 03",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_04",
-          "label": "Weapon Locker 04",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_relay_Crewarmory",
-          "label": "Relay Crewarmory",
-          "section": "defense",
-          "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -42529,7 +40473,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2281,
+      "noise": 2,
+      "decoy": 24,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 55,
@@ -42689,7 +40635,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 17000,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 38,
@@ -43079,7 +41027,9 @@
       "role": "Passenger",
       "career": "Exploration",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2820,
+      "noise": 4,
+      "decoy": 12,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 80,
@@ -43148,16 +41098,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "behr_lasercannon_s1"
-        },
-        {
-          "id": "hardpoint_shield_generator",
-          "label": "Shield Generator",
-          "section": "defense",
-          "kind": "shield",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -43169,7 +41109,9 @@
       "role": "Passenger",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2820,
+      "noise": 4,
+      "decoy": 12,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 80,
@@ -43259,7 +41201,9 @@
       "role": "Racing",
       "career": "Competition",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 2820,
+      "noise": 4,
+      "decoy": 12,
       "damageReduction": 0.2,
       "weaponPowerPool": 2,
       "pitch": 93,
@@ -43318,16 +41262,6 @@
           "minSize": 0,
           "maxSize": 0,
           "defaultEntityClass": "radr_wlop_s00_denning"
-        },
-        {
-          "id": "hardpoint_shield_generator",
-          "label": "Shield Generator",
-          "section": "defense",
-          "kind": "shield",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -43339,7 +41273,9 @@
       "role": "Light Freight",
       "career": "Transporter",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 700001,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": null,
@@ -43358,7 +41294,9 @@
       "role": "Medical",
       "career": "Support",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 116700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 27,
@@ -43718,7 +41656,9 @@
       "role": "Medical",
       "career": "Support",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 116700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 24,
@@ -43998,7 +41938,9 @@
       "role": "Starter / Light Fighter",
       "career": "Multi-Role",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 19417,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 58,
@@ -44268,7 +42210,9 @@
       "role": "Medium Freight / Gun Ship",
       "career": "Multi-Role",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 201844,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -45007,16 +42951,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -45028,7 +42962,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 201844,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -45427,16 +43363,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -45448,7 +43374,9 @@
       "role": "Luxury Touring",
       "career": "Exploration",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 201844,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -45907,16 +43835,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -45928,7 +43846,9 @@
       "role": "Luxury Touring",
       "career": "Exploration",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 201844,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -46387,16 +44307,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -46408,7 +44318,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 201844,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -46807,16 +44719,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -46828,7 +44730,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 201844,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 8,
       "pitch": 25,
@@ -47227,16 +45131,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
-        },
-        {
-          "id": "hardpoint_weapon_rack",
-          "label": "Weapon Rack",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -47248,7 +45142,9 @@
       "role": "Medium Freight / Gun Ship",
       "career": "Multi-Role",
       "crew": 4,
-      "hullHp": null,
+      "hullHp": 170500,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 22,
@@ -47708,7 +45604,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 116700,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 26,
@@ -48068,7 +45966,9 @@
       "role": "Interdiction",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 32500,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 50,
@@ -48318,7 +46218,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 30150,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 46,
@@ -48628,7 +46530,9 @@
       "role": "Heavy Gunship",
       "career": "Combat",
       "crew": 6,
-      "hullHp": null,
+      "hullHp": 389204,
+      "noise": 20,
+      "decoy": 50,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 15,
@@ -48968,7 +46872,9 @@
       "role": "Corvette",
       "career": "Combat",
       "crew": 12,
-      "hullHp": null,
+      "hullHp": 3947100,
+      "noise": 30,
+      "decoy": 120,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": 10,
@@ -49788,7 +47694,9 @@
       "role": "Starter / Light Salvage",
       "career": "Industrial",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 5503,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 45,
@@ -49897,26 +47805,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "klwe_laserrepeater_s1"
-        },
-        {
-          "id": "hardpoint_weapon_locker_left",
-          "label": "Weapon Locker Left",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_weapon_locker_right",
-          "label": "Weapon Locker Right",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -49928,7 +47816,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 43660,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 42,
@@ -50069,26 +47959,6 @@
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         },
         {
-          "id": "hardpoint_powerplant_left",
-          "label": "Powerplant Left",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_powerplant_right",
-          "label": "Powerplant Right",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_quantum_drive",
           "label": "Quantum Drive",
           "section": "systems",
@@ -50167,16 +48037,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_rsi_scorpius"
-        },
-        {
-          "id": "hardpoint_weaponlocker",
-          "label": "Weaponlocker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom",
@@ -50308,7 +48168,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 43660,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 42,
@@ -50459,16 +48321,6 @@
           "defaultEntityClass": "powr_aegs_s01_regulus_scitem"
         },
         {
-          "id": "hardpoint_powerplant_right",
-          "label": "Powerplant Right",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_quantum_drive",
           "label": "Quantum Drive",
           "section": "systems",
@@ -50547,16 +48399,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_rsi_scorpius"
-        },
-        {
-          "id": "hardpoint_weaponlocker",
-          "label": "Weaponlocker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom",
@@ -50677,16 +48519,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "powr_aegs_s01_regulus_scitem"
-        },
-        {
-          "id": "hardpoint_turret_missile_camera",
-          "label": "Turret Missile Camera",
-          "section": "missiles",
-          "kind": "missile",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         }
       ]
     },
@@ -50698,7 +48530,9 @@
       "role": "Heavy Fighter",
       "career": "Combat",
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 43660,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 42,
@@ -50839,26 +48673,6 @@
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         },
         {
-          "id": "hardpoint_powerplant_left",
-          "label": "Powerplant Left",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
-          "id": "hardpoint_powerplant_right",
-          "label": "Powerplant Right",
-          "section": "systems",
-          "kind": "power",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
-        },
-        {
           "id": "hardpoint_quantum_drive",
           "label": "Quantum Drive",
           "section": "systems",
@@ -50937,16 +48751,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_rsi_scorpius"
-        },
-        {
-          "id": "hardpoint_weaponlocker",
-          "label": "Weaponlocker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom",
@@ -51078,7 +48882,9 @@
       "role": "Snub Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 6230,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 4,
       "pitch": 70,
@@ -51197,16 +49003,6 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "klwe_laserrepeater_s2"
-        },
-        {
-          "id": "hardpoint_weapon_locker",
-          "label": "Weapon Locker",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
         },
         {
           "id": "hardpoint_missiles_right",
@@ -51338,7 +49134,9 @@
       "role": "Medium Freight",
       "career": "Transporter",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 32000,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 32,
@@ -51568,7 +49366,9 @@
       "role": "Expedition",
       "career": "Exploration",
       "crew": 3,
-      "hullHp": null,
+      "hullHp": 32000,
+      "noise": 10,
+      "decoy": 25,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 32,
@@ -51808,7 +49608,9 @@
       "role": "Destroyer",
       "career": "Combat",
       "crew": 19,
-      "hullHp": null,
+      "hullHp": 5370010,
+      "noise": 30,
+      "decoy": 80,
       "damageReduction": 0.2,
       "weaponPowerPool": 20,
       "pitch": 3.5,
@@ -51948,7 +49750,9 @@
       "role": "Medium Fighter",
       "career": "Combat",
       "crew": 1,
-      "hullHp": null,
+      "hullHp": 12401,
+      "noise": 5,
+      "decoy": 48,
       "damageReduction": 0.2,
       "weaponPowerPool": 6,
       "pitch": 56,
@@ -52168,7 +49972,9 @@
       "role": null,
       "career": null,
       "crew": 2,
-      "hullHp": null,
+      "hullHp": 76900,
+      "noise": 0,
+      "decoy": 0,
       "damageReduction": 0.2,
       "weaponPowerPool": 10,
       "pitch": null,
