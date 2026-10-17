@@ -9,6 +9,7 @@ import {
   getShip,
   partsForPort,
   portsForSection,
+  fittedPowerParts,
   snapshotForBuild,
   statsForFitted,
   stockPorts,
@@ -18,7 +19,19 @@ import {
   type ShipPort,
   type ShipShopStore,
 } from '../../lib/shipShopData'
-import { compareToStock, partStatLine, weaponStatBits } from '../../lib/shipShopMath'
+import {
+  clickPowerColumn,
+  columnSelected,
+  columnTotal,
+  compareToStock,
+  formatSignedPercent,
+  partStatLine,
+  powerColumns,
+  powerGenerated,
+  powerUsed,
+  togglePowerColumn,
+  weaponStatBits,
+} from '../../lib/shipShopMath'
 import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
 
 const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
@@ -39,9 +52,23 @@ function toneClass(tone: 'up' | 'down' | 'same'): string {
   return 'text-white'
 }
 
-function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild }) {
-  const snapshot = snapshotForBuild(ship, build.ports)
-  const stock = snapshotForBuild(ship, ship ? stockPorts(ship) : {})
+function ShipSnapshot({
+  ship,
+  build,
+  onPower,
+}: {
+  ship: GameShip | null
+  build: ShipBuild
+  onPower: (groupId: string, count: number) => void
+}) {
+  const snapshot = snapshotForBuild(ship, build.ports, build.power)
+  const stockPortsForShip = ship ? stockPorts(ship) : {}
+  const stock = snapshotForBuild(ship, stockPortsForShip, null)
+  const powerParts = ship ? fittedPowerParts(ship, build.ports) : []
+  const columns = powerColumns(ship?.weaponPowerPool || 0, powerParts)
+  const generated = powerGenerated(powerParts)
+  const used = powerUsed(columns, build.power)
+  const remaining = generated > 0 ? generated - used : Number.POSITIVE_INFINITY
   const rows = [
     {
       title: 'Offense',
@@ -57,8 +84,12 @@ function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild
         ['Shield HP', formatNumber(snapshot.shieldHp), compareToStock(snapshot.shieldHp, stock.shieldHp)],
         ['Shield regen', snapshot.shieldRegen ? `${formatNumber(snapshot.shieldRegen)}/s` : '—', compareToStock(snapshot.shieldRegen, stock.shieldRegen)],
         ['Armor', formatNumber(snapshot.armorHp), compareToStock(snapshot.armorHp, stock.armorHp)],
+        ['Deflection', 'deflection', 'same'],
         ['Physical reduction', formatPercent(snapshot.physicalReduction), compareToStock(snapshot.physicalReduction, stock.physicalReduction)],
         ['Energy reduction', formatPercent(snapshot.energyReduction), compareToStock(snapshot.energyReduction, stock.energyReduction)],
+        ['EM signature', formatSignedPercent(snapshot.signalEm), compareToStock(snapshot.signalEm, stock.signalEm, true)],
+        ['IR signature', formatSignedPercent(snapshot.signalIr), compareToStock(snapshot.signalIr, stock.signalIr, true)],
+        ['CS signature', formatSignedPercent(snapshot.signalCs), compareToStock(snapshot.signalCs, stock.signalCs, true)],
       ],
     },
     {
@@ -81,6 +112,49 @@ function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild
   return (
     <aside className="site-surface rounded-xl p-4 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100dvh-var(--site-header-height,3.5rem)-1.5rem)] max-h-[42vh] overflow-y-auto shrink-0 lg:w-80">
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
+      {columns.length > 0 && (
+        <section className="mb-4">
+          <div className="flex items-baseline justify-between gap-3 mb-2">
+            <h3 className="text-xs uppercase tracking-wide text-slate-500">Power</h3>
+            <p className={`font-mono text-xs ${remaining < 0 ? 'text-red-400' : 'text-slate-300'}`} title={remaining < 0 ? `${Math.abs(remaining)} pips beyond what the ship generates` : undefined}>
+              {generated > 0 ? `${remaining} / ${generated} pips` : `${used} pips`}
+            </p>
+          </div>
+          <div className="space-y-2">
+            {columns.map((column) => {
+              const total = columnTotal(column)
+              const selected = columnSelected(column, build.power?.[column.id])
+              return (
+                <div key={column.id}>
+                  <button
+                    type="button"
+                    className="text-xs text-slate-400 hover:text-white"
+                    onClick={() => onPower(column.id, togglePowerColumn(column.blocks, selected, remaining))}
+                  >
+                    {column.label} {selected}/{total}
+                  </button>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {column.blocks.map((_, index) => {
+                      const on = index < selected
+                      const target = on && index === selected - 1 ? index - 1 : index
+                      return (
+                        <button
+                          key={`${column.id}-${index}`}
+                          type="button"
+                          aria-pressed={on}
+                          aria-label={`${column.label} pip ${index + 1}`}
+                          className={`h-4 w-4 rounded-sm border ${on ? 'site-filter-selected-orange border-transparent' : 'site-filter-idle'}`}
+                          onClick={() => onPower(column.id, clickPowerColumn(column.blocks, selected, target, remaining))}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
       <div className="space-y-4">
         {rows.map((group) => (
           <section key={group.title}>
@@ -89,7 +163,25 @@ function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild
               {group.lines.map(([label, value, tone]) => (
                 <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
                   <dt className="text-slate-400">{label}</dt>
-                  <dd className={`font-mono ${toneClass(tone)}`}>{value}</dd>
+                  {value === 'deflection' ? (
+                    <dd className="font-mono text-right">
+                      {snapshot.deflectionPhysical == null && snapshot.deflectionEnergy == null ? (
+                        <span className="text-white">—</span>
+                      ) : (
+                        <>
+                          <span className={toneClass(compareToStock(snapshot.deflectionPhysical, stock.deflectionPhysical))}>
+                            Phys {formatNumber(snapshot.deflectionPhysical)}
+                          </span>
+                          <span className="text-slate-500"> · </span>
+                          <span className={toneClass(compareToStock(snapshot.deflectionEnergy, stock.deflectionEnergy))}>
+                            Energy {formatNumber(snapshot.deflectionEnergy)}
+                          </span>
+                        </>
+                      )}
+                    </dd>
+                  ) : (
+                    <dd className={`font-mono ${toneClass(tone)}`}>{value}</dd>
+                  )}
                 </div>
               ))}
             </dl>
@@ -265,16 +357,25 @@ export default function ShipShopPage() {
     const ports = { ...build.ports }
     if (!part) delete ports[portId]
     else ports[portId] = part
-    updateBuild({ shipId: build.shipId, ports })
+    updateBuild({ shipId: build.shipId, ports, power: build.power })
   }
 
   return (
     <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-      <ShipSnapshot ship={ship} build={build} />
+      <ShipSnapshot
+        ship={ship}
+        build={build}
+        onPower={(groupId, count) => {
+          if (!build) return
+          updateBuild({ shipId: build.shipId, ports: build.ports, power: { ...build.power, [groupId]: count } })
+        }}
+      />
       <div className="min-w-0 flex-1 space-y-4">
         <div className="site-surface rounded-xl p-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h1 className="text-xl font-semibold text-white">Fuzy&apos;s Ship Shop</h1>
+            <h1>
+              <img src="/fuzys-ship-shop.jpg" alt="Fuzy's Ship Shop" className="h-14 w-auto object-contain" />
+            </h1>
             <p className="site-hint text-sm">{saveNote || (ready ? 'Builds save on this account.' : 'Loading builds…')}</p>
           </div>
           <label className="block">

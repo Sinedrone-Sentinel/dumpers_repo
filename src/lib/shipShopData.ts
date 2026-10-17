@@ -6,9 +6,14 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import { getShipItem, shipItems } from './shipItemCatalog'
 import {
   addPartToSnapshot,
+  assignedSegments,
+  columnSelected,
   effectivePartStats,
   emptySnapshot,
+  powerColumns,
+  segmentScale,
   type FittedPart,
+  type PowerPart,
   type ShipItemStats,
   type ShipSnapshotNumbers,
 } from './shipShopMath'
@@ -42,12 +47,14 @@ export interface GameShip {
   scmSpeed: number | null
   boostSpeed: number | null
   maxSpeed: number | null
+  weaponPowerPool?: number
   ports: ShipPort[]
 }
 
 export interface ShipBuild {
   shipId: string | null
   ports: Record<string, FittedPart>
+  power?: Record<string, number>
 }
 
 export interface ShipShopStore {
@@ -148,9 +155,18 @@ function normalizeQualities(raw: unknown): Record<number, number> | undefined {
   return Object.keys(qualities).length > 0 ? qualities : undefined
 }
 
+function normalizePower(raw: unknown): Record<string, number> | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const power: Record<string, number> = {}
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (typeof value === 'number' && Number.isFinite(value) && value >= 0) power[key] = value
+  }
+  return Object.keys(power).length > 0 ? power : undefined
+}
+
 function normalizeBuild(raw: unknown): ShipBuild {
   if (!raw || typeof raw !== 'object') return emptyBuild()
-  const record = raw as { shipId?: unknown; ports?: unknown }
+  const record = raw as { shipId?: unknown; ports?: unknown; power?: unknown }
   const shipId = typeof record.shipId === 'string' && getShip(record.shipId) ? record.shipId : null
   const ports: Record<string, FittedPart> = {}
   if (record.ports && typeof record.ports === 'object') {
@@ -165,7 +181,7 @@ function normalizeBuild(raw: unknown): ShipBuild {
       }
     }
   }
-  return { shipId, ports }
+  return { shipId, ports, power: normalizePower(record.power) }
 }
 
 export function parseShipShopStore(raw: unknown): ShipShopStore {
@@ -196,13 +212,43 @@ export function statsForFitted(part: FittedPart | undefined): { item: ShipItemSt
   }
 }
 
-export function snapshotForBuild(ship: GameShip | null, ports: Record<string, FittedPart>): ShipSnapshotNumbers {
-  const snapshot = emptySnapshot(ship)
-  if (!ship) return snapshot
+export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPart>): PowerPart[] {
+  const parts: PowerPart[] = []
   for (const port of ship.ports) {
     const fitted = statsForFitted(ports[port.id])
     if (!fitted) continue
-    addPartToSnapshot(snapshot, port.kind, fitted.stats)
+    parts.push({ portId: port.id, kind: port.kind, stats: fitted.stats })
+  }
+  return parts
+}
+
+export function snapshotForBuild(
+  ship: GameShip | null,
+  ports: Record<string, FittedPart>,
+  power?: Record<string, number> | null,
+): ShipSnapshotNumbers {
+  const snapshot = emptySnapshot(ship)
+  if (!ship) return snapshot
+  const parts = fittedPowerParts(ship, ports)
+  const columns = powerColumns(ship.weaponPowerPool || 0, parts)
+  const scales = new Map<string, number>()
+  let weaponsOn = true
+  for (const column of columns) {
+    const selected = columnSelected(column, power?.[column.id])
+    if (column.id === 'weapons') {
+      weaponsOn = selected > 0
+      continue
+    }
+    const assigned = assignedSegments(column, selected)
+    for (const [portId, count] of assigned) {
+      const part = parts.find((entry) => entry.portId === portId)
+      scales.set(portId, part ? segmentScale(part.stats, count) : 0)
+    }
+  }
+  for (const part of parts) {
+    let scale = scales.get(part.portId) ?? 1
+    if (part.kind === 'weapon') scale *= weaponsOn ? 1 : 0
+    addPartToSnapshot(snapshot, part.kind, part.stats, scale)
   }
   return snapshot
 }

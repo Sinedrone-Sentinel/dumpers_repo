@@ -220,6 +220,19 @@ function flightStats(json) {
   }
 }
 
+function weaponPowerPool(json) {
+  let pool = 0
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return
+    if (node._Type_ === 'FixedPowerPool' && node.itemType === 'WeaponGun' && typeof node.poolSize === 'number') {
+      pool = Math.max(pool, node.poolSize)
+    }
+    for (const value of Object.values(node)) walk(value)
+  }
+  walk(json)
+  return pool
+}
+
 function damageReduction(vehicle) {
   const mods = vehicle?.vehicleArmourModifiers
   if (!Array.isArray(mods)) return null
@@ -397,6 +410,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       crew: vehicle.crewSize || null,
       hullHp,
       damageReduction: damageReduction(vehicle),
+      weaponPowerPool: weaponPowerPool(json),
       ...flight,
       ports,
     }

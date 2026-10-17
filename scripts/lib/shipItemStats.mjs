@@ -90,6 +90,12 @@ export function extractShipItemStats(json, options = {}) {
 
   const powerRange = firstOfType(root, 'PowerRangeParams')
   if (powerRange?.high?.registerRange) setStat(stats, 'Component_PowerSegments', powerRange.high.start)
+  for (const [band, prefix] of [['low', 'Low'], ['medium', 'Med'], ['high', 'High']]) {
+    const row = powerRange?.[band]
+    if (!row?.registerRange || typeof row.start !== 'number' || typeof row.modifier !== 'number') continue
+    stats[`Power_${prefix}Start`] = row.start
+    stats[`Power_${prefix}Mod`] = row.modifier
+  }
 
   const quantum = firstOfType(root, 'SCItemQuantumDriveParams')
   if (quantum) {
@@ -165,6 +171,20 @@ export function extractShipItemStats(json, options = {}) {
     if (typeof physical === 'number') stats.Armor_PhysicalReduction = (1 - physical) * 100
     if (typeof energy === 'number') stats.Armor_EnergyReduction = (1 - energy) * 100
   }
+  if (armor) {
+    const signalPercent = (multiplier) => (
+      typeof multiplier === 'number' ? Math.round((multiplier - 1) * 1000) / 10 : null
+    )
+    const infrared = signalPercent(armor.signalInfrared)
+    const electromagnetic = signalPercent(armor.signalElectromagnetic)
+    const crossSection = signalPercent(armor.signalCrossSection)
+    if (infrared != null) stats.Armor_SignalIr = infrared
+    if (electromagnetic != null) stats.Armor_SignalEm = electromagnetic
+    if (crossSection != null) stats.Armor_SignalCs = crossSection
+    const deflection = armor.armorDeflection?.deflectionValue
+    if (typeof deflection?.DamagePhysical === 'number') stats.Armor_DeflectionPhysical = deflection.DamagePhysical
+    if (typeof deflection?.DamageEnergy === 'number') stats.Armor_DeflectionEnergy = deflection.DamageEnergy
+  }
 
   const shieldResistance = firstOfType(root, 'SCItemShieldGeneratorParams')?.ShieldResistance
   if (Array.isArray(shieldResistance)) {
@@ -174,10 +194,15 @@ export function extractShipItemStats(json, options = {}) {
     if (typeof energy === 'number') stats.Shield_EnergyReduction = energy * 100
   }
 
+  let powerSegments = 0
   walk(root, (node) => {
-    if (node._Type_ === 'ItemResourceDeltaConsumption' && node.consumption?.resource === 'Power') {
+    const drawsPower = node._Type_ === 'ItemResourceDeltaConsumption' || node._Type_ === 'ItemResourceDeltaConversion'
+    if (drawsPower && node.consumption?.resource === 'Power') {
       const amount = node.consumption.resourceAmountPerSecond
       if (amount?._Type_ === 'SStandardResourceUnit') setStat(stats, 'Weapon_Power', amount.standardResourceUnits)
+      if (amount?._Type_ === 'SPowerSegmentResourceUnit' && amount.units > powerSegments) {
+        powerSegments = amount.units
+      }
     }
     if (node._Type_ === 'ItemResourceSignatureParams') {
       setStat(stats, 'Weapon_Em', node.EMSignature?.nominalSignature)
@@ -192,6 +217,7 @@ export function extractShipItemStats(json, options = {}) {
       setStat(stats, 'Itemresource_Coolantgeneration', amount.standardResourceUnits)
     }
   })
+  if (powerSegments > 0) stats.Power_Segments = powerSegments
 
   return stats
 }
