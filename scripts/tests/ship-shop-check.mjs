@@ -116,6 +116,15 @@ assert.equal(polaris.ports.find((port) => port.id === 'hardpoint_turret_remote_b
 assert.equal(polaris.ports.some((port) => port.kind === 'weapon' && port.id.startsWith('hardpoint_turret_remote_bottom/')), true)
 assert.equal(polaris.ports.some((port) => port.kind === 'tractor'), true)
 
+const bracer = items.find((item) => item.entityClass === 'cool_aegs_s01_bracer_scitem')
+assert.equal(bracer.stats.Itemresource_Coolantgeneration, 34)
+assert.equal(bracer.stats.Temp_Enabled, undefined)
+assert.equal(allstop.stats.Coolant_Dynamic, 1)
+assert.equal(allstop.stats.Coolant_PowerDraw, 3)
+assert.equal(allstop.stats.Temp_Enabled, 1)
+const massDriver = items.find((item) => item.entityClass === 'klwe_massdriver_s1')
+assert.equal(massDriver.stats.Weapon_ChargeTime, 1)
+
 const ravenQed = raven.ports.find((port) => port.kind === 'qed')
 assert.equal(ravenQed.defaultEntityClass, 'qdmp_wetk_s02_raven_x')
 assert.equal(items.find((item) => item.entityClass === 'qdmp_wetk_s02_raven_x').stats.Power_Segments, 3)

@@ -2312,5 +2312,32 @@ check(
     shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 6000, Weapon_Damage_Energy: 10, Weapon_RegenPerSec: 20 }, 0.5) === 100,
   'ship shop: energy sustained DPS follows capacitor regen at the weapon power share',
 )
+check(
+  shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60 }) === 10 &&
+    shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_ChargeTime: 2.5 }) === 4 &&
+    shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 30, Weapon_ChargeTime: 1 }) === 5,
+  'ship shop: a charge replaces burst DPS only when it is slower than the fire rate',
+)
+check(
+  Math.round(shipShopMath.coolantDemand(
+    [{ portId: 's', kind: 'shield', size: 1, stats: { Coolant_Dynamic: 1, Coolant_PowerDraw: 3 } }],
+    new Map([['s', 0.7]]),
+  ) * 10) === 21 &&
+    Math.round(shipShopMath.coolantSupply(
+      [{ portId: 'c', kind: 'cooler', size: 1, stats: { Itemresource_Coolantgeneration: 34 } }],
+      new Map([['c', 0.7]]),
+    ) * 10) === 238 &&
+    shipShopMath.coolantDemand(
+      [{ portId: 'q', kind: 'quantum', size: 1, stats: { Coolant_Dynamic: 1, Coolant_PowerDraw: 3 } }],
+      new Map([['q', 0]]),
+    ) === 0,
+  'ship shop: coolant demand follows the pip band and cooler supply follows coolant generation',
+)
+check(
+  shipShopMath.temperatureInfrared({ Temp_Enabled: 1, Temp_IrPerDegree: 6, Temp_IrMinimum: 333, Temp_MinCooling: 303, Temp_Overheat: 423 }, 1) === 540 &&
+    shipShopMath.temperatureInfrared({ Temp_Enabled: 1, Temp_IrPerDegree: 6, Temp_IrMinimum: 333, Temp_MinCooling: 303, Temp_Overheat: 423 }, 0) === 0 &&
+    shipShopMath.temperatureInfrared({ Temp_IrPerDegree: 6, Temp_MinCooling: 303, Temp_Overheat: 423 }, 1) === 0,
+  'ship shop: temperature IR is added only while cooling is short and the item emits it',
+)
 
 console.log(`Unit tests: ${pass} passed`)

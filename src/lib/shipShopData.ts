@@ -8,6 +8,8 @@ import {
   addPartToSnapshot,
   assignedSegments,
   columnTotal,
+  coolantDemand,
+  coolantSupply,
   effectivePartStats,
   emptySnapshot,
   itemIsEquippable,
@@ -15,6 +17,7 @@ import {
   radarRangeForPips,
   resolvedPower,
   segmentScale,
+  temperatureInfrared,
   type FittedPart,
   type MissileMount,
   type PowerPart,
@@ -351,8 +354,9 @@ export function statsForFitted(part: FittedPart | undefined): { item: ShipItemSt
   }
 }
 
-export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPart>): PowerPart[] {
+export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPart> | null | undefined): PowerPart[] {
   const parts: PowerPart[] = []
+  if (!ports) return parts
   for (const port of ship.ports) {
     const fitted = statsForFitted(ports[port.id])
     if (!fitted) continue
@@ -372,7 +376,7 @@ export function snapshotForBuild(
   power?: Record<string, number> | null,
 ): ShipSnapshotNumbers {
   const snapshot = emptySnapshot(ship)
-  if (!ship) return snapshot
+  if (!ship || !ports) return snapshot
   const parts = fittedPowerParts(ship, ports)
   const columns = powerColumns(ship.weaponPowerPool || 0, parts)
   const assignedPower = resolvedPower(columns, power, powerGenerated(parts))
@@ -381,23 +385,42 @@ export function snapshotForBuild(
   const weaponColumn = columns.find((column) => column.id === 'weapons')
   const weaponTotal = weaponColumn ? columnTotal(weaponColumn) : 0
   const weaponFraction = weaponColumn ? (assignedPower[weaponColumn.id] || 0) / Math.max(1, weaponTotal) : 1
+  const poweredPorts = new Set(columns.flatMap((column) => column.blocks.map((block) => block.portId).filter((portId): portId is string => Boolean(portId))))
   for (const column of columns) {
     if (column.id === 'weapons') continue
     const selected = assignedPower[column.id] || 0
     const assigned = assignedSegments(column, selected)
-    for (const [portId, count] of assigned) {
-      pipCounts.set(portId, count)
+    for (const portId of poweredPorts) {
+      if (!column.blocks.some((block) => block.portId === portId)) continue
       const part = parts.find((entry) => entry.portId === portId)
+      const count = assigned.get(portId) || 0
+      pipCounts.set(portId, count)
       scales.set(portId, part ? segmentScale(part.stats, count) : 0)
     }
   }
+  const scaleFor = (part: PowerPart) => {
+    if (part.kind === 'weapon') return weaponColumn ? weaponFraction : 1
+    if (scales.has(part.portId)) return scales.get(part.portId) || 0
+    return poweredPorts.has(part.portId) ? 0 : 1
+  }
   for (const part of parts) {
-    let scale = scales.get(part.portId) ?? 1
-    if (part.kind === 'weapon') scale = weaponColumn ? weaponFraction : 1
+    const scale = scaleFor(part)
     addPartToSnapshot(snapshot, part.kind, part.stats, scale)
     if (part.kind === 'radar') {
       const range = radarRangeForPips(part.stats, pipCounts.get(part.portId) || 0)
       if (range != null) snapshot.radarRange = Math.max(snapshot.radarRange || 0, range)
+    }
+  }
+  const supply = coolantSupply(parts, scales)
+  const demand = coolantDemand(parts, new Map(parts.map((part) => [part.portId, scaleFor(part)])))
+  snapshot.coolant = supply
+  snapshot.coolantDemand = demand
+  snapshot.coolantRatio = demand > 0 ? supply / demand : (supply > 0 ? 1 : 0)
+  if (demand > 0 && supply < demand) {
+    const shortfall = 1 - supply / demand
+    for (const part of parts) {
+      if (scaleFor(part) <= 0) continue
+      snapshot.signatureIr += temperatureInfrared(part.stats, shortfall)
     }
   }
   const armor = parts.find((part) => part.kind === 'armor')

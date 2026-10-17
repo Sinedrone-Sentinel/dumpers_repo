@@ -51,14 +51,22 @@ export interface FittedPart {
   qualities?: Record<number, number>
 }
 
-/** Burst damage per second: damage × pellets × rounds per minute / 60. Missiles are not included. */
+/** Burst damage per second. A charge or a seconds-long delay replaces the fire rate when it is the slower wait. */
 export function weaponBurstDps(stats: Record<string, number> | null | undefined): number {
   if (!stats) return 0
   const damage = stats.Weapon_Damage || 0
   const rate = stats.Weapon_Firerate || 0
   const pellets = stats.Weapon_Pellets || 1
-  if (damage <= 0 || rate <= 0) return 0
-  return (damage * pellets * rate) / 60
+  if (damage <= 0) return 0
+  const rpmInterval = rate > 0 ? 60 / rate : 0
+  const charge = (stats.Weapon_ChargeTime || 0) + (stats.Weapon_CooldownTime || 0) + (stats.Weapon_SequenceDelay || 0)
+  if (charge <= 0) {
+    if (rate <= 0) return 0
+    return (damage * pellets * rate) / 60
+  }
+  const interval = Math.max(rpmInterval, charge)
+  if (interval <= 0) return 0
+  return (damage * pellets) / interval
 }
 
 /** Burst, reduced by overheat and, for energy guns, by how fast the capacitor refills at this power. */
@@ -278,6 +286,8 @@ export interface ShipSnapshotNumbers {
   signatureIr: number
   signatureCs: number | null
   coolant: number
+  coolantDemand: number
+  coolantRatio: number
   pitch: number | null
   yaw: number | null
   roll: number | null
@@ -323,6 +333,8 @@ export function emptySnapshot(ship?: {
     signatureIr: 0,
     signatureCs: ship?.crossSection ?? null,
     coolant: 0,
+    coolantDemand: 0,
+    coolantRatio: 0,
     pitch: null,
     yaw: null,
     roll: null,
@@ -544,6 +556,38 @@ export function resolvedPower(
     budget -= take
   }
   return next
+}
+
+/** Extra IR from a hot component. Zero when cooling covers the draw or the item's temperature signature is off. */
+export function temperatureInfrared(stats: Record<string, number> | null | undefined, shortfall: number): number {
+  if (!stats?.Temp_Enabled || !stats.Temp_IrPerDegree || shortfall <= 0) return 0
+  const floor = stats.Temp_MinCooling || 0
+  const ceiling = stats.Temp_Overheat || floor
+  const temperature = floor + Math.min(1, shortfall) * Math.max(0, ceiling - floor)
+  const infraredFloor = stats.Temp_IrMinimum || temperature
+  if (temperature <= infraredFloor) return 0
+  return (temperature - infraredFloor) * stats.Temp_IrPerDegree
+}
+
+/** Coolant the fitted coolers are making at their current pip band. */
+export function coolantSupply(parts: PowerPart[], scales: Map<string, number>): number {
+  return parts.reduce((sum, part) => {
+    if (part.kind !== 'cooler') return sum
+    const scale = Math.max(0, scales.get(part.portId) ?? 1)
+    return sum + (part.stats.Itemresource_Coolantgeneration || 0) * scale
+  }, 0)
+}
+
+/**
+ * Coolant plants, shields, and quantum drives draw at the pips assigned now.
+ * The stored amount is dynamic, so the power that state draws is scaled by the pip band.
+ */
+export function coolantDemand(parts: PowerPart[], scales: Map<string, number>): number {
+  return parts.reduce((sum, part) => {
+    if (!part.stats.Coolant_Dynamic || !part.stats.Coolant_PowerDraw) return sum
+    const scale = Math.max(0, scales.get(part.portId) ?? 1)
+    return sum + part.stats.Coolant_PowerDraw * scale
+  }, 0)
 }
 
 export function powerUsed(columns: PowerColumn[], stored: Record<string, number> | null | undefined): number {
