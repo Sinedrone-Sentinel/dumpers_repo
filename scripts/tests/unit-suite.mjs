@@ -2215,5 +2215,34 @@ check(
   crafted.Weapon_Damage === 120,
   'ship shop: crafted quality scales the stock stat',
 )
+check(
+  shipShopMath.compareToStock(13, 20, true) === 'up' && shipShopMath.compareToStock(20, 13, true) === 'down',
+  'ship shop: a lower signature reads as better than stock',
+)
+check(
+  shipShopMath.formatSignedPercent(13) === '+13%' && shipShopMath.formatSignedPercent(-28) === '−28%',
+  'ship shop: signature percent keeps its sign',
+)
+const shieldBands = { Power_Segments: 3, Power_LowStart: 1, Power_LowMod: 0.7, Power_MedStart: 2, Power_MedMod: 0.85, Power_HighStart: 3, Power_HighMod: 1 }
+check(
+  shipShopMath.segmentScale(shieldBands, 3) === 1 &&
+    shipShopMath.segmentScale(shieldBands, 2) === 0.85 &&
+    shipShopMath.segmentScale(shieldBands, 1) === 0.7 &&
+    shipShopMath.segmentScale(shieldBands, 0) === 0,
+  'ship shop: shield pips use the power-range modifier',
+)
+check(
+  shipShopMath.pipDemand({ Power_HighStart: 1 }) === 1 &&
+    shipShopMath.pipDemand({ Power_Segments: 5, Power_HighStart: 1 }) === 5,
+  'ship shop: pip count is the segment draw, or the full-power band when that is all the item registers',
+)
+const four = [{ size: 1, portId: null }, { size: 1, portId: null }, { size: 1, portId: null }, { size: 1, portId: null }]
+check(
+  shipShopMath.clickPowerColumn(four, 4, 1, 0) === 2 &&
+    shipShopMath.clickPowerColumn(four, 2, 3, 0) === 2 &&
+    shipShopMath.togglePowerColumn(four, 4, 0) === 0 &&
+    shipShopMath.togglePowerColumn(four, 0, 4) === 4,
+  'ship shop: pip clicks fill from the bottom inside the power budget',
+)
 
 console.log(`Unit tests: ${pass} passed`)
