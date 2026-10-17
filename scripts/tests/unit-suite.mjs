@@ -2173,6 +2173,24 @@ check(
   'ship shop: gatling burst DPS is damage times fire rate',
 )
 check(
+  Math.round(shipShopMath.weaponSustainedDps({
+    Weapon_Damage: 63.3,
+    Weapon_Firerate: 1200,
+    Weapon_HeatPerShot: 0.5309735,
+    Weapon_Overheat: 100,
+    Weapon_OverheatFix: 4.21,
+  })) === 875,
+  'ship shop: sustained DPS drops for the time a gun is cooling',
+)
+check(
+  shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 60 }) === 10,
+  'ship shop: a gun with no heat keeps its burst as sustained',
+)
+check(
+  shipShopMath.compareToStock(120, 100) === 'up' && shipShopMath.compareToStock(80, 100) === 'down',
+  'ship shop: snapshot color compares against the stock number',
+)
+check(
   shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_Pellets: 2 }) === 20,
   'ship shop: burst DPS counts pellets',
 )

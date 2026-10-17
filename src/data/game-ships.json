@@ -2726,7 +2726,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": null
+          "defaultEntityClass": "radr_gnrp_s03_idris_temp"
         },
         {
           "id": "hardpoint_controller_flight",
@@ -3095,7 +3095,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": null
+          "defaultEntityClass": "radr_gnrp_s03_idris_temp"
         },
         {
           "id": "hardpoint_controller_flight",
@@ -47133,7 +47133,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": null
+          "defaultEntityClass": "radr_wlop_s03_lephari"
         },
         {
           "id": "hardpoint_shield_generator_01",
@@ -48549,7 +48549,7 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": null
+          "defaultEntityClass": "mrck_s05_rsi_perseus_torpedo_r"
         },
         {
           "id": "hardpoint_torpedo_rack_r/missile_01_attach",
@@ -48659,7 +48659,7 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": null
+          "defaultEntityClass": "mrck_s05_rsi_perseus_torpedo_l"
         },
         {
           "id": "hardpoint_torpedo_rack_l/missile_01_attach",
@@ -48828,7 +48828,7 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": null
+          "defaultEntityClass": "radr_rsi_s04_polaris"
         },
         {
           "id": "hardpoint_armor",
@@ -49963,10 +49963,10 @@
           "label": "Armour",
           "section": "defense",
           "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "armr_rsi_scorpius"
         },
         {
           "id": "hardpoint_weaponlocker",
@@ -50342,10 +50342,10 @@
           "label": "Armour",
           "section": "defense",
           "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "armr_rsi_scorpius"
         },
         {
           "id": "hardpoint_weaponlocker",
@@ -50731,10 +50731,10 @@
           "label": "Armour",
           "section": "defense",
           "kind": "armor",
-          "size": 0,
-          "minSize": 0,
-          "maxSize": 0,
-          "defaultEntityClass": null
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "armr_rsi_scorpius"
         },
         {
           "id": "hardpoint_weaponlocker",
@@ -51441,7 +51441,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": null
+          "defaultEntityClass": "radr_wlop_s03_lephari"
         },
         {
           "id": "hardpoint_quantum_drive",

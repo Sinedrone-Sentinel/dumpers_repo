@@ -23,6 +23,14 @@ function setStat(stats, key, value) {
   stats[key] = value
 }
 
+function firstNumber(root, key) {
+  let found = 0
+  walk(root, (node) => {
+    if (!found && typeof node?.[key] === 'number' && node[key] > 0) found = node[key]
+  })
+  return found
+}
+
 function ammoNumber(ammoJson, key) {
   let found = 0
   walk(ammoJson, (node) => {
@@ -92,19 +100,30 @@ export function extractShipItemStats(json, options = {}) {
   let fireRate = 0
   let pellets = 1
   let heat = 0
+  let spread = 0
   walk(root, (node) => {
-    if (node._Type_ === 'SWeaponActionFireRapidParams' || node._Type_ === 'SWeaponActionFireParams') {
-      if (typeof node.fireRate === 'number' && node.fireRate > fireRate) {
-        fireRate = node.fireRate
-        heat = typeof node.heatPerShot === 'number' ? node.heatPerShot : heat
-        const pelletCount = node.launchParams?.pelletCount
-        if (typeof pelletCount === 'number' && pelletCount > 0) pellets = pelletCount
-      }
+    const type = String(node._Type_ || '')
+    if (!type.startsWith('SWeaponActionFire')) return
+    if (typeof node.fireRate === 'number' && node.fireRate > fireRate) {
+      fireRate = node.fireRate
+      heat = typeof node.heatPerShot === 'number' ? node.heatPerShot : heat
+      const pelletCount = node.launchParams?.pelletCount
+      if (typeof pelletCount === 'number' && pelletCount > 0) pellets = pelletCount
+      const spreadMin = node.launchParams?.spreadParams?.min
+      if (typeof spreadMin === 'number') spread = spreadMin
     }
   })
   setStat(stats, 'Weapon_Firerate', fireRate)
   setStat(stats, 'Weapon_HeatPerShot', heat)
+  setStat(stats, 'Weapon_Spread', spread)
   if (pellets > 1) setStat(stats, 'Weapon_Pellets', pellets)
+
+  const heatParams = firstOfType(root, 'SWeaponSimplifiedHeatParams')
+  if (heatParams) {
+    setStat(stats, 'Weapon_Overheat', heatParams.overheatTemperature)
+    setStat(stats, 'Weapon_Cooling', heatParams.coolingPerSecond)
+    setStat(stats, 'Weapon_OverheatFix', heatParams.overheatFixTime)
+  }
 
   const ammo = firstOfType(root, 'SAmmoContainerComponentParams')
   if (ammo) {
@@ -120,7 +139,10 @@ export function extractShipItemStats(json, options = {}) {
       const ammoRoot = ammoJson?._RecordValue_
       const speed = ammoRoot?.speed || ammoJsonSpeed(ammoJson)
       const lifetime = ammoRoot?.lifetime || ammoJsonLifetime(ammoJson)
+      if (speed) setStat(stats, 'Weapon_Speed', speed)
       if (speed && lifetime) setStat(stats, 'Weapon_Range', Math.round(speed * lifetime))
+      const penetration = firstNumber(ammoJson, 'basePenetrationDistance')
+      if (penetration) setStat(stats, 'Weapon_Penetration', penetration)
     }
   }
 
@@ -137,8 +159,29 @@ export function extractShipItemStats(json, options = {}) {
 
   const armor = firstOfType(root, 'SCItemVehicleArmorParams')
   if (armor && health?.Health > 1) setStat(stats, 'Armor_Health', health.Health)
+  if (armor?.damageMultiplier) {
+    const physical = armor.damageMultiplier.DamagePhysical
+    const energy = armor.damageMultiplier.DamageEnergy
+    if (typeof physical === 'number') stats.Armor_PhysicalReduction = (1 - physical) * 100
+    if (typeof energy === 'number') stats.Armor_EnergyReduction = (1 - energy) * 100
+  }
+
+  const shieldResistance = firstOfType(root, 'SCItemShieldGeneratorParams')?.ShieldResistance
+  if (Array.isArray(shieldResistance)) {
+    const physical = shieldResistance[0]?.Max
+    const energy = shieldResistance[1]?.Max
+    if (typeof physical === 'number') stats.Shield_PhysicalReduction = physical * 100
+    if (typeof energy === 'number') stats.Shield_EnergyReduction = energy * 100
+  }
 
   walk(root, (node) => {
+    if (node._Type_ === 'ItemResourceDeltaConsumption' && node.consumption?.resource === 'Power') {
+      const amount = node.consumption.resourceAmountPerSecond
+      if (amount?._Type_ === 'SStandardResourceUnit') setStat(stats, 'Weapon_Power', amount.standardResourceUnits)
+    }
+    if (node._Type_ === 'ItemResourceSignatureParams') {
+      setStat(stats, 'Weapon_Em', node.EMSignature?.nominalSignature)
+    }
     if (node._Type_ !== 'ItemResourceDeltaGeneration' && node._Type_ !== 'ItemResourceDeltaConversion') return
     const gen = node.generation
     const amount = gen?.resourceAmountPerSecond

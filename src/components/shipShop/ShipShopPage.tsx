@@ -18,47 +18,62 @@ import {
   type ShipPort,
   type ShipShopStore,
 } from '../../lib/shipShopData'
-import { partStatLine } from '../../lib/shipShopMath'
+import { compareToStock, partStatLine, weaponStatBits } from '../../lib/shipShopMath'
 import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
+
+const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
 
 function formatNumber(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value)) return '—'
   return Math.round(value).toLocaleString()
 }
 
+function formatPercent(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
+  return `${Math.round(value)}%`
+}
+
+function toneClass(tone: 'up' | 'down' | 'same'): string {
+  if (tone === 'up') return 'text-emerald-400'
+  if (tone === 'down') return 'text-red-400'
+  return 'text-white'
+}
+
 function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild }) {
   const snapshot = snapshotForBuild(ship, build.ports)
-  const reduction = snapshot.damageReduction != null ? `${Math.round(snapshot.damageReduction * 100)}%` : '—'
-  const groups = [
+  const stock = snapshotForBuild(ship, ship ? stockPorts(ship) : {})
+  const rows = [
     {
       title: 'Offense',
-      rows: [
-        ['Burst DPS', formatNumber(snapshot.burstDps)],
-        ['Missile volley', formatNumber(snapshot.missileVolley)],
+      lines: [
+        ['Burst DPS', formatNumber(snapshot.burstDps), compareToStock(snapshot.burstDps, stock.burstDps)],
+        ['Sustained DPS', formatNumber(snapshot.sustainedDps), compareToStock(snapshot.sustainedDps, stock.sustainedDps)],
+        ['Missile volley', formatNumber(snapshot.missileVolley), compareToStock(snapshot.missileVolley, stock.missileVolley)],
       ],
     },
     {
       title: 'Defense',
-      rows: [
-        ['Shield HP', formatNumber(snapshot.shieldHp)],
-        ['Shield regen', snapshot.shieldRegen ? `${formatNumber(snapshot.shieldRegen)}/s` : '—'],
-        ['Armor', formatNumber(snapshot.armorHp)],
-        ['Damage reduction', reduction],
+      lines: [
+        ['Shield HP', formatNumber(snapshot.shieldHp), compareToStock(snapshot.shieldHp, stock.shieldHp)],
+        ['Shield regen', snapshot.shieldRegen ? `${formatNumber(snapshot.shieldRegen)}/s` : '—', compareToStock(snapshot.shieldRegen, stock.shieldRegen)],
+        ['Armor', formatNumber(snapshot.armorHp), compareToStock(snapshot.armorHp, stock.armorHp)],
+        ['Physical reduction', formatPercent(snapshot.physicalReduction), compareToStock(snapshot.physicalReduction, stock.physicalReduction)],
+        ['Energy reduction', formatPercent(snapshot.energyReduction), compareToStock(snapshot.energyReduction, stock.energyReduction)],
       ],
     },
     {
       title: 'Hull',
-      rows: [
-        ['Total HP', formatNumber(snapshot.hullHp)],
-        ['Vital HP', '—'],
+      lines: [
+        ['Hull HP', formatNumber(snapshot.hullHp), compareToStock(snapshot.hullHp, stock.hullHp)],
+        ['Vital HP', '—', 'same'],
       ],
     },
     {
       title: 'Maneuverability',
-      rows: [
-        ['Pitch', formatNumber(snapshot.pitch)],
-        ['Yaw', formatNumber(snapshot.yaw)],
-        ['Roll', formatNumber(snapshot.roll)],
+      lines: [
+        ['Pitch', formatNumber(snapshot.pitch), compareToStock(snapshot.pitch, stock.pitch)],
+        ['Yaw', formatNumber(snapshot.yaw), compareToStock(snapshot.yaw, stock.yaw)],
+        ['Roll', formatNumber(snapshot.roll), compareToStock(snapshot.roll, stock.roll)],
       ],
     },
   ] as const
@@ -67,14 +82,14 @@ function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild
     <aside className="site-surface rounded-xl p-4 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100dvh-var(--site-header-height,3.5rem)-1.5rem)] max-h-[42vh] overflow-y-auto shrink-0 lg:w-80">
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
       <div className="space-y-4">
-        {groups.map((group) => (
+        {rows.map((group) => (
           <section key={group.title}>
             <h3 className="text-xs uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
             <dl className="space-y-1">
-              {group.rows.map(([label, value]) => (
+              {group.lines.map(([label, value, tone]) => (
                 <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
                   <dt className="text-slate-400">{label}</dt>
-                  <dd className="font-mono text-white">{value}</dd>
+                  <dd className={`font-mono ${toneClass(tone)}`}>{value}</dd>
                 </div>
               ))}
             </dl>
@@ -83,6 +98,11 @@ function ShipSnapshot({ ship, build }: { ship: GameShip | null; build: ShipBuild
       </div>
     </aside>
   )
+}
+
+function listedPart(item: { displayName: string }) {
+  const name = item.displayName.trim()
+  return name.length > 0 && !/placeholder/i.test(name) && !name.startsWith('<=')
 }
 
 function PartPicker({
@@ -103,85 +123,74 @@ function PartPicker({
   const [query, setQuery] = useState('')
   const options = useMemo(() => {
     const needle = query.trim().toLowerCase()
-    return partsForPort(port).filter((item) => !needle || item.displayName.toLowerCase().includes(needle))
+    return partsForPort(port).filter((item) => listedPart(item) && (!needle || item.displayName.toLowerCase().includes(needle)))
   }, [port, query])
   const current = statsForFitted(fitted)
   const blueprint = fitted ? blueprintForEntity(fitted.entityClass) : null
+  const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats) : []
 
   return (
-    <div className="site-modal-backdrop fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-3" onClick={onClose}>
-      <div
-        className="site-modal-shell w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-xl p-4"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div>
-            <h3 className="text-white font-semibold">{port.label}</h3>
-            <p className="site-hint text-sm">Size {port.size || '—'}</p>
-          </div>
-          <button type="button" className="site-btn-ghost" onClick={onClose}>Close</button>
-        </div>
-        <input
-          className="site-input w-full px-3 py-2 mb-3"
-          value={query}
-          placeholder="Search parts"
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        <button type="button" className="site-btn-secondary w-full mb-3" onClick={() => onSelect(null)}>
+    <div className="relative mt-2 space-y-2">
+      <input
+        className="site-input w-full px-3 py-2"
+        value={query}
+        placeholder={`Search size ${port.size || ''} parts`}
+        onChange={(event) => setQuery(event.target.value)}
+      />
+      <div className="site-dropdown-list max-h-56">
+        <button type="button" className="site-dropdown-item" onClick={() => onSelect(null)}>
           Empty mount
         </button>
-        <div className="space-y-1 mb-4">
-          {options.map((item) => (
+        {options.map((item) => {
+          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats) : [partStatLine(item.kind, item.stats)].filter(Boolean)
+          const meta = [item.size ? `S${item.size}` : '', item.damageType, item.manufacturer, item.weaponClass].filter(Boolean).join(' · ')
+          return (
             <button
               key={item.entityClass}
               type="button"
-              className={`site-dropdown-item w-full text-left ${fitted?.entityClass === item.entityClass ? 'site-menu-item-active' : ''}`}
+              className={`site-dropdown-item ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
               onClick={() => onSelect(item.entityClass)}
             >
               <span className="block text-white">{item.displayName}</span>
-              <span className="block text-xs text-slate-400">
-                S{item.size}{partStatLine(item.kind, item.stats) ? ` · ${partStatLine(item.kind, item.stats)}` : ''}
-              </span>
+              {meta && <span className="block text-xs text-slate-400">{meta}</span>}
+              {bits.length > 0 && <span className="block text-xs text-slate-500">{bits.join(' · ')}</span>}
             </button>
-          ))}
-          {options.length === 0 && <p className="site-empty">No parts of this size.</p>}
-        </div>
-        {current && (
-          <div className="site-card rounded-xl p-3 space-y-3">
-            <div className="flex gap-2">
-              <button
-                type="button"
-                className={fitted?.source === 'stock' ? 'site-btn-primary' : 'site-btn-secondary'}
-                onClick={() => onSource('stock')}
-              >
-                Stock
-              </button>
-              <button
-                type="button"
-                className={fitted?.source === 'crafted' ? 'site-btn-primary' : 'site-btn-secondary'}
-                disabled={!blueprint}
-                onClick={() => blueprint && onSource('crafted')}
-              >
-                Crafted
-              </button>
-            </div>
-            {!blueprint && <p className="site-hint text-sm">This part has no blueprint, so it stays stock.</p>}
-            {fitted?.source === 'crafted' && blueprint?.slots?.map((slot, index) => (
-              <BlueprintSlotQualityCard
-                key={index}
-                slot={slot}
-                slotIndex={index}
-                quality={fitted.qualities?.[index] ?? defaultCraftQualities(fitted.entityClass)?.[index] ?? 0}
-                onQualityChange={(slotIndex, quality) => {
-                  onQualities({ ...(fitted.qualities ?? defaultCraftQualities(fitted.entityClass) ?? {}), [slotIndex]: quality })
-                }}
-                compact
-              />
-            ))}
-            <p className="text-sm text-slate-300">{partStatLine(current.item.kind, current.stats) || current.item.displayName}</p>
-          </div>
-        )}
+          )
+        })}
+        {options.length === 0 && <p className="site-empty px-3 py-2">No parts of this size.</p>}
       </div>
+      {current && (
+        <div className="site-card rounded-xl p-3 space-y-3">
+          <div className="site-chip-strip w-fit">
+            <button type="button" className={`${CHIP} ${fitted?.source !== 'crafted' ? 'site-filter-selected-orange' : 'site-filter-idle'}`} onClick={() => onSource('stock')}>
+              Stock
+            </button>
+            <button
+              type="button"
+              className={`${CHIP} ${fitted?.source === 'crafted' ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
+              disabled={!blueprint}
+              onClick={() => blueprint && onSource('crafted')}
+            >
+              Crafted
+            </button>
+          </div>
+          {!blueprint && <p className="site-hint text-sm">This part has no blueprint, so it stays stock.</p>}
+          {fitted?.source === 'crafted' && blueprint?.slots?.map((slot, index) => (
+            <BlueprintSlotQualityCard
+              key={index}
+              slot={slot}
+              slotIndex={index}
+              quality={fitted.qualities?.[index] ?? defaultCraftQualities(fitted.entityClass)?.[index] ?? 0}
+              onQualityChange={(slotIndex, quality) => {
+                onQualities({ ...(fitted.qualities ?? defaultCraftQualities(fitted.entityClass) ?? {}), [slotIndex]: quality })
+              }}
+              compact
+            />
+          ))}
+          {detail.length > 0 && <p className="text-xs text-slate-400">{detail.join(' · ')}</p>}
+          <button type="button" className="site-btn-ghost" onClick={onClose}>Close</button>
+        </div>
+      )}
     </div>
   )
 }
@@ -291,13 +300,13 @@ export default function ShipShopPage() {
               {ship.manufacturer} · {ship.role || ship.career || 'Ship'}
             </p>
           )}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm text-slate-300">Build {buildIndex + 1} of 4</span>
+          <div className="site-chip-strip w-fit max-w-full">
+            <span className="px-2 text-sm text-slate-400">Build {buildIndex + 1} of 4</span>
             {store.builds.map((entry, index) => (
               <button
                 key={index}
                 type="button"
-                className={index === buildIndex ? 'site-btn-primary' : 'site-btn-secondary'}
+                className={`${CHIP} ${index === buildIndex ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
                 onClick={() => setBuildIndex(index)}
               >
                 {entry.shipId ? getShip(entry.shipId)?.displayName || `Build ${index + 1}` : `Build ${index + 1}`}
@@ -305,12 +314,12 @@ export default function ShipShopPage() {
             ))}
           </div>
           {ship && (
-            <div className="site-chip-strip">
+            <div className="site-chip-strip w-fit max-w-full">
               {SHIP_SECTIONS.map((section) => (
                 <button
                   key={section.id}
                   type="button"
-                  className="site-filter-idle"
+                  className={`${CHIP} site-filter-idle`}
                   onClick={() => document.getElementById(`ship-section-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                 >
                   {section.label}
