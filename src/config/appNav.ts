@@ -12,6 +12,8 @@ export interface AppNavItem {
   icon?: string
   featureId?: FeatureId
   minRole?: UserRole
+  /** Hidden from guests and members until the page is opened up. */
+  officerOnly?: boolean
   /** Nested child items (for expandable menus) */
   children?: AppNavItem[]
 }
@@ -86,6 +88,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     featureId: 'fulfillment',
   },
   {
+    id: 'ship-shop',
+    label: "Fuzy's Ship Shop",
+    path: '/ship-shop',
+    icon: 'ship',
+    officerOnly: true,
+    minRole: 'officer',
+  },
+  {
     id: 'archive',
     label: 'Info Archive',
     path: '/archive',
@@ -112,7 +122,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['commodity-lookup', 'custom-orders', 'fulfillment'],
+    itemIds: ['commodity-lookup', 'custom-orders', 'fulfillment', 'ship-shop'],
   },
   {
     id: 'reference',
@@ -126,6 +136,8 @@ export function canSeeNavItem(
   ctx: VisibilityContext,
   canAccess: (minRole: UserRole) => boolean
 ): boolean {
+  if (item.officerOnly) return canAccess('officer')
+
   // Guests see the full menu — locked items show a preview page when clicked
   if (ctx.isGuestPreview) return true
 

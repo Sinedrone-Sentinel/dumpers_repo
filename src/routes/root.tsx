@@ -23,7 +23,8 @@ import ContributorTeamAdminRoute from './ContributorTeamAdmin.index'
 import ThemePreviewRoute from './ThemePreview.index'
 import AuthCallbackRoute from './AuthCallback.index'
 import PrivacyRoute from './Privacy.index'
-import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
+import ShipShopRoute from './ShipShop.index'
+import { requireFeature, requireMinRole, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
 const rootRoute = createRootRoute({
@@ -207,6 +208,13 @@ const authCallbackRoute = createRoute({
 })
 
 /** Public Privacy Policy — no auth / Offline Mode required (footer / onboarding). */
+const shipShopRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/ship-shop',
+  component: ShipShopRoute,
+  beforeLoad: requireMinRole('officer'),
+})
+
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/privacy',
@@ -236,6 +244,7 @@ export const routeTree = rootRoute.addChildren([
   contributorTeamAdminRoute,
   themePreviewRoute,
   authCallbackRoute,
+  shipShopRoute,
 ])
 
 export default routeTree

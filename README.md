@@ -48,6 +48,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/resources` | Resource Tracker | Offline + members |
 | `/mining-tracker` | Mining Tracker | Offline + members |
 | `/commodity-lookup` | Commodity Lookup | Offline + members |
+| `/ship-shop` | Fuzy's Ship Shop | Officers and super-admins |
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
@@ -167,6 +168,10 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 Game mining data is bundled with the site (see [Game data](#game-data)).
 
 A blue **UEX** chip on tracked ore cards, the ore detail popup, and ledger rows opens the Commodity Lookup popup for that ore (see below).
+
+### Fuzy's Ship Shop (`/ship-shop`)
+
+Officer-only ship builder. Guests and members do not see the menu item, and a direct visit sends them home. Each officer can keep four builds. A new ship starts with its stock parts. A fitted part can be swapped for another part of the same kind and size. Stock uses the game-file stats. Crafted is available when that part has a blueprint, and the snapshot uses the material qualities on that recipe. Saves go through `get_ship_shop_loadouts` / `save_ship_shop_loadouts` (migration `208_ship_shop_loadouts.sql`).
 
 ### Commodity Lookup (`/commodity-lookup`)
 

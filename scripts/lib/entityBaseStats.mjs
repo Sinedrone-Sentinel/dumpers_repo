@@ -4,6 +4,7 @@
  */
 
 import { existsSync, readFileSync, readdirSync } from 'fs'
+import { extractShipItemStats } from './shipItemStats.mjs'
 import { join, basename, dirname, normalize, sep } from 'path'
 
 function readJson(path) {
@@ -499,6 +500,11 @@ export function extractEntityBaseStats(
       includeTractor: isTractor,
     })
   )
+
+  const shipItemStats = extractShipItemStats(json)
+  for (const [key, value] of Object.entries(shipItemStats)) {
+    if (stats[key] == null) stats[key] = value
+  }
 
   if (isFpsWeapon) {
     Object.assign(

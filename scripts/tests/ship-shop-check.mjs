@@ -1,0 +1,39 @@
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { weaponBurstDps } from '../lib/shipItemStats.mjs'
+
+const ships = JSON.parse(readFileSync('src/data/game-ships.json', 'utf8')).ships
+const items = JSON.parse(readFileSync('src/data/game-ship-item-stats.json', 'utf8')).items
+const stalker = ships.find((ship) => ship.id === 'aegs_avenger_stalker')
+assert.ok(stalker, 'Avenger Stalker is a flyable ship')
+assert.equal(stalker.pitch, 53)
+assert.equal(stalker.yaw, 48)
+assert.equal(stalker.roll, 190)
+assert.equal(stalker.hullHp, null)
+
+const nose = stalker.ports.find((port) => port.id === 'hardpoint_weapon_class2_nose')
+assert.equal(nose.defaultEntityClass, 'apar_ballisticgatling_s4')
+assert.equal(nose.size, 4)
+
+const gatling = items.find((item) => item.entityClass === 'apar_ballisticgatling_s4')
+assert.equal(gatling.displayName, 'Revenant Gatling')
+assert.equal(gatling.burstDps, 1266)
+assert.equal(Math.round(weaponBurstDps(gatling.stats)), 1266)
+assert.equal(gatling.stats.Weapon_Range, 2799)
+
+const armor = items.find((item) => item.entityClass === 'armr_aegs_avenger_stalker')
+assert.equal(armor.stats.Armor_Health, 1232)
+
+const flight = items.find((item) => item.entityClass === 'controller_flight_aegs_avenger_stalker')
+assert.equal(flight.stats.Flight_Pitch, 53)
+assert.equal(flight.stats.Flight_Yaw, 48)
+assert.equal(flight.stats.Flight_Roll, 190)
+
+const shimmer = items.find((item) => item.entityClass === 'shld_asas_s01_shimmer_scitem')
+assert.equal(shimmer.stats.Shield_Maxhealth, 2244)
+assert.equal(shimmer.stats.Shield_Regen, 426)
+
+const ignite = items.find((item) => item.entityClass === 'misl_s02_ir_fski_ignite')
+assert.ok(ignite.stats.Missile_Damage > 0, 'Ignite has missile damage')
+
+console.log('ship shop catalog checks passed')
