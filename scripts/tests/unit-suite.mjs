@@ -2255,5 +2255,34 @@ check(
     shipShopMath.partStatLine('weapon', { Weapon_Damage: 10, Weapon_Firerate: 60 }).includes('sustained'),
   'ship shop: quantum speed and sustained DPS use plain labels',
 )
+const plant = (generation, size) => ({ portId: 'p', kind: 'power', size, stats: { Itemresource_Powergeneration: generation } })
+check(
+  shipShopMath.powerGenerated([plant(23, 3), plant(23, 3)]) === 30 &&
+    shipShopMath.powerGenerated([plant(25, 3), plant(25, 3)]) === 32 &&
+    shipShopMath.powerGenerated([plant(19, 2), plant(19, 2)]) === 24 &&
+    shipShopMath.powerGenerated([plant(16, 1), plant(16, 1)]) === 18 &&
+    shipShopMath.powerGenerated([plant(14, 1), plant(14, 1)]) === 16 &&
+    shipShopMath.powerGenerated([plant(17, 1)]) === 17,
+  'ship shop: two plants share a rounded budget plus a size bonus',
+)
+check(
+  shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5 }, 2) === 910 &&
+    shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5 }, 5) === 1105 &&
+    shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5 }, 0) === null,
+  'ship shop: radar distance moves from the minimum assignment toward the maximum',
+)
+const coolerColumn = shipShopMath.powerColumns(0, [
+  { portId: 'c1', kind: 'cooler', size: 1, stats: { Power_Segments: 5, Power_Min: 3 } },
+  { portId: 'c2', kind: 'cooler', size: 1, stats: { Power_Segments: 5, Power_Min: 3 } },
+])[0]
+check(
+  coolerColumn.blocks.map((block) => block.size).join(',') === '3,3,1,1,1,1',
+  'ship shop: a cooler minimum above one pip stays one block, then the extra pips split',
+)
+check(
+  shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 6000, Weapon_Damage_Energy: 10, Weapon_RegenPerSec: 20 }, 1) === 200 &&
+    shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 6000, Weapon_Damage_Energy: 10, Weapon_RegenPerSec: 20 }, 0.5) === 100,
+  'ship shop: energy sustained DPS follows capacitor regen at the weapon power share',
+)
 
 console.log(`Unit tests: ${pass} passed`)

@@ -82,5 +82,32 @@ assert.deepEqual(powerarray.stats, {})
 
 const ignite = items.find((item) => item.entityClass === 'misl_s02_ir_fski_ignite')
 assert.ok(ignite.stats.Missile_Damage > 0, 'Ignite has missile damage')
+assert.equal(ignite.guidance, 'IR')
+assert.equal(ignite.ordnance, 'missile')
+
+const slipstream = items.find((item) => item.entityClass === 'powr_tydt_s01_slipstream_scitem')
+assert.equal(slipstream.itemClass, 'Stealth')
+assert.equal(slipstream.grade, 'A')
+
+const ecouter = items.find((item) => item.entityClass === 'radr_grnp_s01_ecouter')
+assert.equal(ecouter.stats.Radar_DistanceMin, 845)
+assert.equal(ecouter.stats.Radar_DistanceMax, 1105)
+
+const railen = items.find((item) => item.entityClass === 'mrck_s04_gama_railen_octo_s01')
+assert.match(railen.requiredTags || '', /gama_railen/)
+
+const ravenRack = raven.ports.find((port) => port.id === 'hardpoint_weapon_missilerack_left')
+assert.equal(ravenRack.minSize, 3)
+assert.equal(ravenRack.maxSize, 4)
+assert.equal(raven.crossSection, 5528)
+const ravenLife = raven.ports.find((port) => port.kind === 'life')
+assert.equal(ravenLife.locked, true)
+assert.equal(ravenLife.defaultEntityClass, 'lfsp_tydt_s01_comfortair')
+
+const polaris = ships.find((ship) => ship.id === 'rsi_polaris')
+const polarisTorpedo = polaris.ports.find((port) => port.kind === 'torpedo')
+assert.equal(polarisTorpedo.locked, true)
+assert.equal(polarisTorpedo.minSize, 10)
+assert.equal(polarisTorpedo.maxSize, 10)
 
 console.log('ship shop catalog checks passed')
