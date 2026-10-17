@@ -178,7 +178,7 @@ export function weaponStatBits(stats: Record<string, number>): string[] {
   return bits
 }
 
-export function partStatLine(kind: string, stats: Record<string, number>): string {
+export function partStatLine(kind: string, stats: Record<string, number>, scale = 1): string {
   const round = (value: number) => Math.round(value).toLocaleString()
   if (kind === 'weapon') {
     const burst = weaponBurstDps(stats)
@@ -190,9 +190,12 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
     return damage > 0 ? `${round(damage)} damage` : ''
   }
   if (kind === 'shield') {
+    const regen = shieldRegenRate(stats, scale)
+    const charge = shieldFullChargeSeconds(stats, scale)
     const parts = [
       stats.Shield_Maxhealth ? `${round(stats.Shield_Maxhealth)} HP` : '',
-      stats.Shield_Regen ? `${round(stats.Shield_Regen)}/s` : '',
+      stats.Shield_Regen ? `${round(regen)}/s` : '',
+      stats.Shield_Maxhealth && stats.Shield_Regen ? `full charge ${charge == null ? '—' : `${charge.toFixed(1)}s`}` : '',
       stats.Shield_DamagedRegenDelay ? `damaged ${stats.Shield_DamagedRegenDelay.toFixed(1)}s` : '',
       stats.Shield_DownedRegenDelay ? `downed ${stats.Shield_DownedRegenDelay.toFixed(1)}s` : '',
     ].filter(Boolean)
@@ -353,8 +356,8 @@ export function addPartToSnapshot(
   }
   if (kind === 'missile') snapshot.missileVolley += stats.Missile_Damage || stats.Weapon_Damage || 0
   if (kind === 'shield') {
-    snapshot.shieldHp += (stats.Shield_Maxhealth || 0) * scale
-    snapshot.shieldRegen += (stats.Shield_Regen || 0) * scale
+    snapshot.shieldHp += stats.Shield_Maxhealth || 0
+    snapshot.shieldRegen += shieldRegenRate(stats, scale)
   }
   if (kind === 'armor') {
     snapshot.armorHp += stats.Armor_Health || stats.Health_Maxhealth || 0
@@ -419,6 +422,20 @@ const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
 export function pipDemand(stats: Record<string, number>): number {
   if (stats.Power_Segments > 0) return stats.Power_Segments
   return stats.Power_HighStart || stats.Power_MedStart || stats.Power_LowStart || 0
+}
+
+/** Shield face refill per second at the pips assigned to this generator. */
+export function shieldRegenRate(stats: Record<string, number> | null | undefined, scale = 1): number {
+  if (!stats) return 0
+  return (stats.Shield_Regen || 0) * Math.max(0, scale)
+}
+
+/** Seconds to fill the shield pool at the current regen. Null when the generator is off. */
+export function shieldFullChargeSeconds(stats: Record<string, number> | null | undefined, scale = 1): number | null {
+  const regen = shieldRegenRate(stats, scale)
+  const hp = stats?.Shield_Maxhealth || 0
+  if (regen <= 0 || hp <= 0) return null
+  return hp / regen
 }
 
 /** Output multiplier for the pips actually given to one component. */

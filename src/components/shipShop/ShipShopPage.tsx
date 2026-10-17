@@ -24,6 +24,7 @@ import {
   type ShipShopStore,
 } from '../../lib/shipShopData'
 import {
+  assignedSegments,
   clickPowerColumn,
   columnTotal,
   flightRole,
@@ -33,6 +34,7 @@ import {
   powerGenerated,
   powerUsed,
   resolvedPower,
+  segmentScale,
   togglePowerColumn,
   weaponBurstDps,
   weaponStatBits,
@@ -605,9 +607,16 @@ export default function ShipShopPage() {
       <div className="min-w-0 flex-1 space-y-4">
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
           const ports = portsForSection(ship, section.id)
+          const shieldScale = (portId: string) => {
+            const column = columns.find((entry) => entry.blocks.some((block) => block.portId === portId))
+            const part = powerParts.find((entry) => entry.portId === portId)
+            if (!column || !part) return 1
+            const assigned = assignedSegments(column, power[column.id] || 0)
+            return segmentScale(part.stats, assigned.get(portId) || 0)
+          }
           const renderPort = (port: ShipPort, nested = false) => {
             const fitted = statsForFitted(build.ports[port.id])
-            const line = fitted ? partStatLine(fitted.item.kind, fitted.stats) : ''
+            const line = fitted ? partStatLine(fitted.item.kind, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
             const open = pickerPortId === port.id && !port.locked
             const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
