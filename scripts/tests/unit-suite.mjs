@@ -2339,5 +2339,18 @@ check(
     shipShopMath.temperatureInfrared({ Temp_IrPerDegree: 6, Temp_MinCooling: 303, Temp_Overheat: 423 }, 1) === 0,
   'ship shop: temperature IR is added only while cooling is short and the item emits it',
 )
+const allstopShield = { Shield_Maxhealth: 3168, Shield_Regen: 602, Shield_DamagedRegenDelay: 5.75, Shield_DownedRegenDelay: 11.5 }
+check(
+  shipShopMath.shieldRegenRate(allstopShield, 0) === 0 &&
+    Math.round(shipShopMath.shieldRegenRate(allstopShield, 0.7)) === 421 &&
+    Math.round(shipShopMath.shieldRegenRate(allstopShield, 0.85)) === 512 &&
+    shipShopMath.shieldRegenRate(allstopShield, 1) === 602 &&
+    Math.round(shipShopMath.shieldFullChargeSeconds(allstopShield, 1) * 10) === 53 &&
+    shipShopMath.shieldFullChargeSeconds(allstopShield, 0) == null &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('full charge 5.3s') &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('damaged 5.8s') &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('downed 11.5s'),
+  'ship shop: shield regen and full charge follow the pip band',
+)
 
 console.log(`Unit tests: ${pass} passed`)
