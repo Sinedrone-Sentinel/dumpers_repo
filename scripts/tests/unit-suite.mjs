@@ -44,6 +44,7 @@ const modules = [
   'src/lib/bpWishlistDemand.ts',
   'src/lib/missionDisplay.ts',
   'src/lib/notepadText.ts',
+  'src/lib/miningLoadoutStats.ts',
   'src/lib/blueprintQuality.ts',
   'src/lib/canCraft.ts',
   'src/lib/craftFromStock.ts',
@@ -2000,6 +2001,59 @@ const parsedCommodities = JSON.parse(readFileSync(path.join(root, 'src/data/game
 check(
   !parsedCommodities.commodities.some((c) => c.key === 'year_of_the_rat_envelope'),
   'account-bound: parsed commodity catalog has no account-bound cargo',
+)
+
+const miningEffects = await import(pathToFileURL(path.join(outDir, 'miningLoadoutStats.mjs')).href)
+const clearcutEffects = miningEffects.miningBlueprintCraftEffects({
+  blueprintName: 'Clearcut Module',
+  internalName: 'mining_modules_active_clearcut',
+})
+check(
+  clearcutEffects?.kind === 'active' &&
+    clearcutEffects.lines.length === 1 &&
+    clearcutEffects.lines[0].label === 'Optimal charge window' &&
+    clearcutEffects.lines[0].value === '+30%' &&
+    clearcutEffects.lines.every((line) => line.value !== '0%' && line.value !== '0'),
+  'mining module effects: Clearcut shows only its +30% charge window',
+)
+const rimeEffects = miningEffects.miningModuleCraftEffects({
+  id: 'x',
+  name: 'Mining_Modules_Active_Rime',
+  displayName: 'Rime Module',
+  kind: 'active',
+  size: 1,
+  grade: 1,
+  powerMultiplier: 1,
+  resistanceModifier: -24.8,
+  optimalWindowModifier: 0,
+  optimalWindowRateModifier: 0,
+  filterModifier: 0,
+  instabilityModifier: 0,
+  shatterDamageModifier: 0,
+  clusterFactorModifier: 0,
+  catastrophicChargeWindowRateModifier: 0,
+})
+check(
+  rimeEffects.lines.some((line) => line.label === 'Resistance' && line.value === '-25%') &&
+    !rimeEffects.lines.some((line) => line.label === 'Laser power'),
+  'mining module effects: -24.8 resistance rounds to -25%, and unchanged power is omitted',
+)
+const helixEffects = miningEffects.miningBlueprintCraftEffects({
+  blueprintName: 'Helix II Mining Laser',
+  internalName: 'mining_laser_thcn_helix_s2',
+})
+check(
+  helixEffects?.kind === null &&
+    helixEffects.lines.some((line) => line.label === 'Resistance' && line.value === '-30%') &&
+    helixEffects.lines.some((line) => line.label === 'Optimal range' && line.value === '30 m') &&
+    helixEffects.lines.some((line) => line.label === 'Module slots' && line.value === '3') &&
+    !helixEffects.lines.some((line) => line.label === 'Laser power' || line.key === 'power') &&
+    helixEffects.lines.every((line) => line.value !== '0%' && line.value !== '0'),
+  'mining head effects: Helix II lists non-zero stats besides health and power',
+)
+check(
+  miningEffects.miningBlueprintCraftEffects({ blueprintName: 'S-38 Pistol', internalName: 'behr_pistol_ballistic_01' }) === null,
+  'mining effects: a non-mining blueprint matches nothing',
 )
 
 const bpQuality = await import(pathToFileURL(path.join(outDir, 'blueprintQuality.mjs')).href)

@@ -1,12 +1,29 @@
 import { gameMining, type MiningModule } from '../data'
 
 const modulesByName = new Map<string, MiningModule>()
+const modulesByDisplayName = new Map<string, MiningModule>()
+const modulesByLowerName = new Map<string, MiningModule>()
 for (const mod of gameMining.miningModules) {
   modulesByName.set(mod.name, mod)
+  modulesByDisplayName.set(mod.displayName, mod)
+  modulesByLowerName.set(mod.name.toLowerCase(), mod)
 }
 
 export function getMiningModuleByName(name: string): MiningModule | undefined {
   return modulesByName.get(name)
+}
+
+/** Craft blueprint → parsed mining module, by display name or internal name. */
+export function getMiningModuleForBlueprint(blueprint: {
+  blueprintName?: string
+  internalName?: string
+}): MiningModule | undefined {
+  const byDisplay = blueprint.blueprintName
+    ? modulesByDisplayName.get(blueprint.blueprintName)
+    : undefined
+  if (byDisplay) return byDisplay
+  const key = blueprint.internalName?.toLowerCase()
+  return key ? modulesByLowerName.get(key) : undefined
 }
 
 export function listMiningModules(): MiningModule[] {
