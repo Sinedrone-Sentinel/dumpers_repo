@@ -8,10 +8,12 @@ import {
   addPartToSnapshot,
   assignedSegments,
   columnSelected,
+  columnTotal,
   effectivePartStats,
   emptySnapshot,
   itemIsEquippable,
   powerColumns,
+  radarRangeForPips,
   segmentScale,
   type FittedPart,
   type MissileMount,
@@ -31,6 +33,9 @@ export interface ShipPort {
   minSize: number
   maxSize: number
   defaultEntityClass: string | null
+  locked?: boolean
+  requiredTags?: string
+  portTags?: string
 }
 
 export interface GameShip {
@@ -42,6 +47,7 @@ export interface GameShip {
   career: string
   crew: number
   hullHp: number | null
+  crossSection?: number | null
   noise?: number
   decoy?: number
   damageReduction: number | null
@@ -128,29 +134,53 @@ export function blueprintForEntity(entityClass: string | null | undefined): Craf
   return blueprintsByClass.get(entityClass.toLowerCase()) ?? null
 }
 
+const GENERIC_PORT_TAGS = new Set(['flightready', 'weaponmountusable'])
+
 function tagList(value: string | null | undefined): string[] {
-  return (value || '').split(/\s+/).filter(Boolean)
+  return (value || '')
+    .split(/\s+/)
+    .map((tag) => tag.replace(/^\$/, ''))
+    .filter((tag) => tag && !GENERIC_PORT_TAGS.has(tag.toLowerCase()))
+}
+
+function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
+  const portGives = tagList(port.portTags)
+  const itemNeeds = tagList(item.requiredTags)
+  if (itemNeeds.length > 0 && !itemNeeds.every((tag) => portGives.includes(tag))) return false
+  const portNeeds = tagList(port.requiredTags)
+  const itemGives = tagList(item.tags)
+  if (portNeeds.length > 0 && !portNeeds.some((tag) => itemGives.includes(tag))) return false
+  if (port.kind === 'torpedo') return item.ordnance === 'torpedo'
+  if (port.kind === 'missile') return item.ordnance !== 'torpedo'
+  return true
+}
+
+function sameKind(item: ShipItemStats, port: ShipPort): boolean {
+  if (port.kind === 'torpedo' || port.kind === 'missile') return item.kind === 'missile'
+  return item.kind === port.kind
 }
 
 export function partsForPort(port: ShipPort): ShipItemStats[] {
+  if (port.locked) {
+    const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+    return stock ? [stock] : []
+  }
   const min = port.minSize || port.size
   const max = port.maxSize || port.size
-  const stock = port.kind === 'flight' && port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
-  const flightTags = port.kind === 'flight' ? tagList(stock?.tags) : null
-  return shipItems()
-    .filter((item) => {
-      if (item.kind !== port.kind) return false
-      if (!itemIsEquippable(item)) return false
-      if (min && (item.size < min || item.size > max)) return false
-      if (flightTags) {
-        if (flightTags.length === 0) return item.entityClass === port.defaultEntityClass
-        const tags = tagList(item.tags)
-        return flightTags.some((tag) => tags.includes(tag))
-      }
-      return true
-    })
-    .filter((item, index, list) => list.findIndex((other) => other.entityClass === item.entityClass) === index)
-    .sort((a, b) => a.displayName.localeCompare(b.displayName))
+  const pool = shipItems().filter((item, index, list) => {
+    if (!sameKind(item, port) || !itemIsEquippable(item)) return false
+    if (min && (item.size < min || item.size > max)) return false
+    return list.findIndex((other) => other.entityClass === item.entityClass) === index
+  })
+  let matched = pool.filter((item) => itemFitsPort(item, port))
+  if (matched.length === 0) {
+    const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+    const stockTags = tagList(stock?.tags)
+    matched = stockTags.length > 0
+      ? pool.filter((item) => tagList(item.tags).some((tag) => stockTags.includes(tag)))
+      : pool.filter((item) => item.entityClass === port.defaultEntityClass)
+  }
+  return matched.sort((a, b) => a.displayName.localeCompare(b.displayName))
 }
 
 export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: FittedPart | undefined): ShipPort[] {
@@ -168,11 +198,14 @@ export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: Fitt
       id,
       label: mount.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase()),
       section: 'missiles',
-      kind: 'missile',
+      kind: rack.kind === 'torpedo' ? 'torpedo' : 'missile',
+      locked: rack.locked,
       size: maxSize,
       minSize,
       maxSize,
       defaultEntityClass: stock?.defaultEntityClass ?? null,
+      requiredTags: stock?.requiredTags,
+      portTags: stock?.portTags,
     }
   })
 }
@@ -251,6 +284,7 @@ function normalizeBuild(raw: unknown): ShipBuild {
       if (!value || typeof value !== 'object') continue
       const fitted = value as { entityClass?: unknown; source?: unknown; qualities?: unknown }
       if (typeof fitted.entityClass !== 'string' || !getShipItem(fitted.entityClass)) continue
+      if (!itemIsEquippable(getShipItem(fitted.entityClass)!)) continue
       ports[portId] = {
         entityClass: fitted.entityClass,
         source: fitted.source === 'crafted' && blueprintForEntity(fitted.entityClass) ? 'crafted' : 'stock',
@@ -294,7 +328,12 @@ export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPar
   for (const port of ship.ports) {
     const fitted = statsForFitted(ports[port.id])
     if (!fitted) continue
-    parts.push({ portId: port.id, kind: port.kind, stats: fitted.stats })
+    parts.push({
+      portId: port.id,
+      kind: port.kind,
+      size: fitted.item.size || port.size || port.maxSize || 0,
+      stats: fitted.stats,
+    })
   }
   return parts
 }
@@ -309,28 +348,39 @@ export function snapshotForBuild(
   const parts = fittedPowerParts(ship, ports)
   const columns = powerColumns(ship.weaponPowerPool || 0, parts)
   const scales = new Map<string, number>()
-  let weaponsOn = true
+  const pipCounts = new Map<string, number>()
+  const weaponColumn = columns.find((column) => column.id === 'weapons')
+  const weaponTotal = weaponColumn ? columnTotal(weaponColumn) : 0
+  const weaponFraction = weaponColumn ? columnSelected(weaponColumn, power?.[weaponColumn.id]) / Math.max(1, weaponTotal) : 1
   for (const column of columns) {
+    if (column.id === 'weapons') continue
     const selected = columnSelected(column, power?.[column.id])
-    if (column.id === 'weapons') {
-      weaponsOn = selected > 0
-      continue
-    }
     const assigned = assignedSegments(column, selected)
     for (const [portId, count] of assigned) {
+      pipCounts.set(portId, count)
       const part = parts.find((entry) => entry.portId === portId)
       scales.set(portId, part ? segmentScale(part.stats, count) : 0)
     }
   }
   for (const part of parts) {
     let scale = scales.get(part.portId) ?? 1
-    if (part.kind === 'weapon') scale *= weaponsOn ? 1 : 0
+    if (part.kind === 'weapon') scale = weaponColumn ? weaponFraction : 1
     addPartToSnapshot(snapshot, part.kind, part.stats, scale)
+    if (part.kind === 'radar') {
+      const range = radarRangeForPips(part.stats, pipCounts.get(part.portId) || 0)
+      if (range != null) snapshot.radarRange = Math.max(snapshot.radarRange || 0, range)
+    }
   }
+  const armor = parts.find((part) => part.kind === 'armor')
+  const multiplier = (percent?: number) => 1 + (percent || 0) / 100
+  snapshot.signatureEm *= multiplier(armor?.stats.Armor_SignalEm)
+  snapshot.signatureIr *= multiplier(armor?.stats.Armor_SignalIr)
+  if (snapshot.signatureCs != null) snapshot.signatureCs *= multiplier(armor?.stats.Armor_SignalCs)
   return snapshot
 }
 
 export function portsForSection(ship: GameShip, sectionId: string): ShipPort[] {
+  if (sectionId === 'missiles') return ship.ports.filter((port) => port.kind === 'missileRack' || port.kind === 'torpedo')
   const kind = SECTION_KIND[sectionId]
   if (!kind) return []
   return ship.ports.filter((port) => port.kind === kind)

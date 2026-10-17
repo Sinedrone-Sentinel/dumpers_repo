@@ -25,15 +25,15 @@ import {
   clickPowerColumn,
   columnSelected,
   columnTotal,
-  compareToStock,
   formatQuantumSpeed,
-  formatSignedPercent,
   partStatLine,
   powerColumns,
   powerGenerated,
   powerUsed,
   togglePowerColumn,
+  weaponBurstDps,
   weaponStatBits,
+  type PowerBlock,
 } from '../../lib/shipShopMath'
 import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
 
@@ -49,10 +49,15 @@ function formatPercent(value: number | null | undefined): string {
   return `${Math.round(value)}%`
 }
 
-function toneClass(tone: 'up' | 'down' | 'same'): string {
-  if (tone === 'up') return 'text-emerald-400'
-  if (tone === 'down') return 'text-red-400'
-  return 'text-white'
+function formatSignature(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value) || value <= 0) return '—'
+  if (value >= 1000) return `${(value / 1000).toFixed(1)}k`
+  return Math.round(value).toLocaleString()
+}
+
+function itemTitle(item: { displayName: string; itemClass?: string | null; grade?: string | null }): string {
+  const rank = [item.itemClass, item.grade].filter(Boolean).join(' ')
+  return rank ? `${item.displayName} - ${rank}` : item.displayName
 }
 
 function ShipSnapshot({
@@ -65,8 +70,6 @@ function ShipSnapshot({
   onPower: (groupId: string, count: number) => void
 }) {
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
-  const stockPortsForShip = ship ? stockPorts(ship) : {}
-  const stock = snapshotForBuild(ship, stockPortsForShip, null)
   const powerParts = ship ? fittedPowerParts(ship, build.ports) : []
   const columns = powerColumns(ship?.weaponPowerPool || 0, powerParts)
   const generated = powerGenerated(powerParts)
@@ -74,42 +77,51 @@ function ShipSnapshot({
   const remaining = generated > 0 ? generated - used : Number.POSITIVE_INFINITY
   const rows = [
     {
+      title: 'Signatures',
+      lines: [
+        ['IR', formatSignature(snapshot.signatureIr), 'same'],
+        ['EM', formatSignature(snapshot.signatureEm), 'same'],
+        ['CS', formatSignature(snapshot.signatureCs), 'same'],
+      ],
+    },
+    {
       title: 'Offense',
       lines: [
-        ['Burst DPS', formatNumber(snapshot.burstDps), compareToStock(snapshot.burstDps, stock.burstDps)],
-        ['Sustained DPS', formatNumber(snapshot.sustainedDps), compareToStock(snapshot.sustainedDps, stock.sustainedDps)],
-        ['Missile volley', formatNumber(snapshot.missileVolley), compareToStock(snapshot.missileVolley, stock.missileVolley)],
+        ['Burst DPS', formatNumber(snapshot.burstDps), 'same'],
+        ['Sustained DPS', formatNumber(snapshot.sustainedDps), 'same'],
+        ['Missile volley', formatNumber(snapshot.missileVolley), 'same'],
+        ['Radar', snapshot.radarRange ? `${formatNumber(snapshot.radarRange)} m` : '—', 'same'],
       ],
     },
     {
       title: 'Defense',
       lines: [
-        ['Shield HP', formatNumber(snapshot.shieldHp), compareToStock(snapshot.shieldHp, stock.shieldHp)],
-        ['Shield regen', snapshot.shieldRegen ? `${formatNumber(snapshot.shieldRegen)}/s` : '—', compareToStock(snapshot.shieldRegen, stock.shieldRegen)],
-        ['Armor', formatNumber(snapshot.armorHp), compareToStock(snapshot.armorHp, stock.armorHp)],
+        ['Shield HP', formatNumber(snapshot.shieldHp), 'same'],
+        ['Shield regen', snapshot.shieldRegen ? `${formatNumber(snapshot.shieldRegen)}/s` : '—', 'same'],
+        ['Armor', formatNumber(snapshot.armorHp), 'same'],
         ['Deflection', 'deflection', 'same'],
-        ['Physical reduction', formatPercent(snapshot.physicalReduction), compareToStock(snapshot.physicalReduction, stock.physicalReduction)],
-        ['Energy reduction', formatPercent(snapshot.energyReduction), compareToStock(snapshot.energyReduction, stock.energyReduction)],
-        ['EM signature', formatSignedPercent(snapshot.signalEm), compareToStock(snapshot.signalEm, stock.signalEm, true)],
-        ['IR signature', formatSignedPercent(snapshot.signalIr), compareToStock(snapshot.signalIr, stock.signalIr, true)],
-        ['CS signature', formatSignedPercent(snapshot.signalCs), compareToStock(snapshot.signalCs, stock.signalCs, true)],
-        ['Noise', formatNumber(snapshot.noise), compareToStock(snapshot.noise, stock.noise)],
-        ['Decoy', formatNumber(snapshot.decoy), compareToStock(snapshot.decoy, stock.decoy)],
+        ['Physical reduction', formatPercent(snapshot.physicalReduction), 'same'],
+        ['Energy reduction', formatPercent(snapshot.energyReduction), 'same'],
+        ['Noise', formatNumber(snapshot.noise), 'same'],
+        ['Decoy', formatNumber(snapshot.decoy), 'same'],
       ],
     },
     {
       title: 'Hull',
       lines: [
-        ['Hull HP', formatNumber(snapshot.hullHp), compareToStock(snapshot.hullHp, stock.hullHp)],
+        ['Hull HP', formatNumber(snapshot.hullHp), 'same'],
       ],
     },
     {
       title: 'Maneuverability',
       lines: [
-        ['Pitch', formatNumber(snapshot.pitch), compareToStock(snapshot.pitch, stock.pitch)],
-        ['Yaw', formatNumber(snapshot.yaw), compareToStock(snapshot.yaw, stock.yaw)],
-        ['Roll', formatNumber(snapshot.roll), compareToStock(snapshot.roll, stock.roll)],
-        ['Quantum', formatQuantumSpeed(snapshot.quantumSpeed), compareToStock(snapshot.quantumSpeed, stock.quantumSpeed)],
+        ['SCM', formatNumber(snapshot.scmSpeed), 'same'],
+        ['Boosted', formatNumber(snapshot.boostSpeed), 'same'],
+        ['NAV', formatNumber(snapshot.navSpeed), 'same'],
+        ['Pitch', formatNumber(snapshot.pitch), 'same'],
+        ['Yaw', formatNumber(snapshot.yaw), 'same'],
+        ['Roll', formatNumber(snapshot.roll), 'same'],
+        ['Quantum', formatQuantumSpeed(snapshot.quantumSpeed), 'same'],
       ],
     },
   ] as const
@@ -117,11 +129,43 @@ function ShipSnapshot({
   return (
     <aside className="site-surface rounded-xl p-4 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100dvh-var(--site-header-height,3.5rem)-1.5rem)] max-h-[42vh] overflow-y-auto shrink-0 lg:w-80">
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
+      <div className="space-y-4">
+        {rows.map((group) => (
+          <section key={group.title}>
+            <h3 className="text-xs uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
+            <dl className="space-y-1">
+              {group.lines.map(([label, value]) => (
+                <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
+                  <dt className="text-slate-400 inline-flex items-center gap-1.5">
+                    {group.title === 'Signatures' && <SignatureMark kind={label} />}
+                    {label}
+                  </dt>
+                  {value === 'deflection' ? (
+                    <dd className="font-mono text-right text-white">
+                      {snapshot.deflectionPhysical == null && snapshot.deflectionEnergy == null ? (
+                        <span>—</span>
+                      ) : (
+                        <>
+                          <span>Phys {formatNumber(snapshot.deflectionPhysical)}</span>
+                          <span className="text-slate-500"> · </span>
+                          <span>Energy {formatNumber(snapshot.deflectionEnergy)}</span>
+                        </>
+                      )}
+                    </dd>
+                  ) : (
+                    <dd className="font-mono text-white">{value}</dd>
+                  )}
+                </div>
+              ))}
+            </dl>
+          </section>
+        ))}
+      </div>
       {columns.length > 0 && (
-        <section className="mb-4">
+        <section className="mt-5">
           <div className="flex items-baseline justify-between gap-3 mb-2">
             <h3 className="text-xs uppercase tracking-wide text-slate-500">Power</h3>
-            <p className={`font-mono text-xs ${remaining < 0 ? 'text-red-400' : 'text-slate-300'}`} title={remaining < 0 ? `${Math.abs(remaining)} pips beyond what the ship generates` : undefined}>
+            <p className="font-mono text-xs text-slate-300">
               {generated > 0 ? `${remaining} / ${generated} pips` : `${used} pips`}
             </p>
           </div>
@@ -129,6 +173,8 @@ function ShipSnapshot({
             {columns.map((column) => {
               const total = columnTotal(column)
               const selected = columnSelected(column, build.power?.[column.id])
+              const flags = blockFlags(column.blocks, selected)
+              const top = flags.lastIndexOf(true)
               return (
                 <div key={column.id}>
                   <button
@@ -138,68 +184,92 @@ function ShipSnapshot({
                   >
                     {column.label} {selected}/{total}
                   </button>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {column.blocks.map((_, index) => {
-                      const on = index < selected
-                      const target = on && index === selected - 1 ? index - 1 : index
+                  <div className="flex flex-wrap items-end gap-1 mt-1">
+                    {column.blocks.map((block, index) => {
+                      const on = flags[index]
+                      const target = on && index === top ? index - 1 : index
                       return (
                         <button
                           key={`${column.id}-${index}`}
                           type="button"
                           aria-pressed={on}
-                          aria-label={`${column.label} pip ${index + 1}`}
-                          className={`h-4 w-4 rounded-sm border ${on ? 'site-filter-selected-orange border-transparent' : 'site-filter-idle'}`}
+                          aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
+                          className={`h-5 rounded-sm border text-[10px] font-semibold leading-none ${block.groupStart ? 'ml-2' : ''} ${on ? 'border-orange-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                          style={{ width: block.size > 1 ? `${block.size * 14 + 10}px` : '14px' }}
                           onClick={() => onPower(column.id, clickPowerColumn(column.blocks, selected, target, remaining))}
-                        />
+                        >
+                          {block.size > 1 ? block.size : ''}
+                        </button>
                       )
                     })}
                   </div>
+                  {column.id === 'coolers' && snapshot.coolant > 0 && (
+                    <p className="mt-1 text-xs text-slate-300">Coolant {formatNumber(snapshot.coolant)}</p>
+                  )}
                 </div>
               )
             })}
           </div>
         </section>
       )}
-      <div className="space-y-4">
-        {rows.map((group) => (
-          <section key={group.title}>
-            <h3 className="text-xs uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
-            <dl className="space-y-1">
-              {group.lines.map(([label, value, tone]) => (
-                <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
-                  <dt className="text-slate-400">{label}</dt>
-                  {value === 'deflection' ? (
-                    <dd className="font-mono text-right">
-                      {snapshot.deflectionPhysical == null && snapshot.deflectionEnergy == null ? (
-                        <span className="text-white">—</span>
-                      ) : (
-                        <>
-                          <span className={toneClass(compareToStock(snapshot.deflectionPhysical, stock.deflectionPhysical))}>
-                            Phys {formatNumber(snapshot.deflectionPhysical)}
-                          </span>
-                          <span className="text-slate-500"> · </span>
-                          <span className={toneClass(compareToStock(snapshot.deflectionEnergy, stock.deflectionEnergy))}>
-                            Energy {formatNumber(snapshot.deflectionEnergy)}
-                          </span>
-                        </>
-                      )}
-                    </dd>
-                  ) : (
-                    <dd className={`font-mono ${toneClass(tone)}`}>{value}</dd>
-                  )}
-                </div>
-              ))}
-            </dl>
-          </section>
-        ))}
-      </div>
     </aside>
+  )
+}
+
+function blockFlags(blocks: PowerBlock[], selected: number): boolean[] {
+  let left = selected
+  return blocks.map((block) => {
+    const on = left >= block.size
+    if (on) left -= block.size
+    return on
+  })
+}
+
+function SignatureMark({ kind }: { kind: string }) {
+  const color = kind === 'EM' ? '#FBBF24' : '#FB923C'
+  if (kind === 'CS') {
+    return (
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path d="M7 1.2 12.2 7 7 12.8 1.8 7 Z" fill="none" stroke={color} strokeWidth="1.4" />
+      </svg>
+    )
+  }
+  if (kind === 'EM') {
+    return (
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+        <path d="M8 1.2 4.2 7.2h2.4L5.6 12.8 10.2 6.2H7.6Z" fill={color} />
+      </svg>
+    )
+  }
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+      <path d="M2 9.2c1.6-2.4 2.4-2.4 4 0s2.4 2.4 4 0" fill="none" stroke={color} strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M2 6.2c1.6-2.4 2.4-2.4 4 0s2.4 2.4 4 0" fill="none" stroke={color} strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
   )
 }
 
 function listedPart(item: { displayName: string }) {
   const name = item.displayName.trim()
   return name.length > 0 && !/placeholder/i.test(name) && !name.startsWith('<=')
+}
+
+function listChip(item: { kind: string; weaponClass?: string | null; guidance?: string | null }): string | null {
+  if (item.kind === 'weapon') return item.weaponClass || null
+  if (item.kind === 'missile') return item.guidance || null
+  return null
+}
+
+function listScore(item: { kind: string; stats: Record<string, number> }): number {
+  const stats = item.stats
+  if (item.kind === 'weapon') return weaponBurstDps(stats)
+  if (item.kind === 'missile') return stats.Missile_Damage || stats.Weapon_Damage || 0
+  if (item.kind === 'shield') return stats.Shield_Maxhealth || 0
+  if (item.kind === 'power') return stats.Itemresource_Powergeneration || 0
+  if (item.kind === 'cooler') return stats.Itemresource_Coolantgeneration || 0
+  if (item.kind === 'quantum') return stats.Quantum_Speed || 0
+  if (item.kind === 'radar') return stats.Radar_DistanceMax || 0
+  return 0
 }
 
 function PartPicker({
@@ -218,10 +288,20 @@ function PartPicker({
   onSource: (source: 'stock' | 'crafted') => void
 }) {
   const [query, setQuery] = useState('')
+  const [chip, setChip] = useState<string | null>(null)
+  const pool = useMemo(() => partsForPort(port).filter(listedPart), [port])
+  const chips = useMemo(() => {
+    const values = pool.map(listChip).filter((value): value is string => Boolean(value))
+    return [...new Set(values)]
+  }, [pool])
   const options = useMemo(() => {
     const needle = query.trim().toLowerCase()
-    return partsForPort(port).filter((item) => listedPart(item) && (!needle || item.displayName.toLowerCase().includes(needle)))
-  }, [port, query])
+    const ranked = port.kind === 'missileRack'
+    return pool
+      .filter((item) => !chip || listChip(item) === chip)
+      .filter((item) => !needle || itemTitle(item).toLowerCase().includes(needle))
+      .sort((a, b) => (ranked ? a.displayName.localeCompare(b.displayName) : listScore(b) - listScore(a) || a.displayName.localeCompare(b.displayName)))
+  }, [pool, query, chip, port.kind])
   const current = statsForFitted(fitted)
   const blueprint = fitted ? blueprintForEntity(fitted.entityClass) : null
   const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats) : []
@@ -231,16 +311,27 @@ function PartPicker({
       <input
         className="site-input w-full px-3 py-2"
         value={query}
-        placeholder={`Search size ${port.size || ''} parts`}
+        placeholder="Search parts"
         onChange={(event) => setQuery(event.target.value)}
       />
+      {chips.length > 1 && (
+        <div className="site-chip-strip w-fit max-w-full">
+          <button type="button" className={`${CHIP} ${chip == null ? 'site-filter-selected-orange' : 'site-filter-idle'}`} onClick={() => setChip(null)}>
+            All
+          </button>
+          {chips.map((value) => (
+            <button key={value} type="button" className={`${CHIP} ${chip === value ? 'site-filter-selected-orange' : 'site-filter-idle'}`} onClick={() => setChip(value)}>
+              {value}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="site-dropdown-list max-h-56" style={{ position: 'static' }}>
         <button type="button" className="site-dropdown-item" onClick={() => onSelect(null)}>
           Empty mount
         </button>
         {options.map((item) => {
           const bits = item.kind === 'weapon' ? weaponStatBits(item.stats) : [partStatLine(item.kind, item.stats)].filter(Boolean)
-          const meta = [item.size ? `S${item.size}` : '', item.damageType, item.manufacturer, item.weaponClass].filter(Boolean).join(' · ')
           return (
             <button
               key={item.entityClass}
@@ -248,13 +339,12 @@ function PartPicker({
               className={`site-dropdown-item ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
               onClick={() => onSelect(item.entityClass)}
             >
-              <span className="block text-white">{item.displayName}</span>
-              {meta && <span className="block text-xs text-slate-400">{meta}</span>}
-              {bits.length > 0 && <span className="block text-xs text-slate-500">{bits.join(' · ')}</span>}
+              <span className="block text-white">{itemTitle(item)}</span>
+              {bits.length > 0 && <span className="block text-sm text-slate-200">{bits.join(' · ')}</span>}
             </button>
           )
         })}
-        {options.length === 0 && <p className="site-empty px-3 py-2">No parts of this size.</p>}
+        {options.length === 0 && <p className="site-empty px-3 py-2">No parts fit this mount.</p>}
       </div>
       {current && (
         <div className="site-card rounded-xl p-3 space-y-3">
@@ -300,6 +390,17 @@ export default function ShipShopPage() {
   const [saveNote, setSaveNote] = useState<string | null>(null)
   const [shipQuery, setShipQuery] = useState('')
   const [pickerPortId, setPickerPortId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!pickerPortId) return
+    function onPointer(event: PointerEvent) {
+      const target = event.target
+      if (!(target instanceof Element) || target.closest('[data-ship-port]')) return
+      setPickerPortId(null)
+    }
+    document.addEventListener('pointerdown', onPointer)
+    return () => document.removeEventListener('pointerdown', onPointer)
+  }, [pickerPortId])
 
   useEffect(() => {
     if (!isOfficerOrAbove) return
@@ -441,24 +542,35 @@ export default function ShipShopPage() {
             const fitted = statsForFitted(build.ports[port.id])
             const line = fitted ? partStatLine(fitted.item.kind, fitted.stats) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
-            const open = pickerPortId === port.id
+            const open = pickerPortId === port.id && !port.locked
             const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
+            const sizeLabel = port.minSize && port.maxSize && port.minSize !== port.maxSize
+              ? `S${port.minSize}–${port.maxSize}`
+              : `S${port.size || port.maxSize || '—'}`
+            const name = fitted ? itemTitle(fitted.item) : 'Empty mount'
             return (
               <div key={port.id} className={`${nested ? 'ml-6 border-l border-orange-500/30 pl-3' : ''}`}>
-                <div className="site-card rounded-xl p-3">
+                <div className="site-card rounded-xl p-3" data-ship-port={port.id}>
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-xs uppercase tracking-wide text-slate-500">S{port.size || '—'}</span>
+                    <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
                     <span className="text-xs text-slate-500">{port.label}</span>
                   </div>
-                  <button
-                    type="button"
-                    className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left"
-                    onClick={() => setPickerPortId(open ? null : port.id)}
-                  >
-                    <span className="text-lg font-medium text-white">{fitted?.item.displayName || 'Empty mount'}</span>
-                    <span className="text-base text-slate-300">{info}</span>
-                  </button>
-                  {fitted && (
+                  {port.locked ? (
+                    <div className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left">
+                      <span className="text-lg font-medium text-white">{name}</span>
+                      <span className="text-base text-slate-300">{info}</span>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left"
+                      onClick={() => setPickerPortId(open ? null : port.id)}
+                    >
+                      <span className="text-lg font-medium text-white">{name}</span>
+                      <span className="text-base text-slate-300">{info}</span>
+                    </button>
+                  )}
+                  {fitted && !port.locked && (
                     <div className="mt-2">
                       <button type="button" className="site-btn-ghost px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
                         Clear
@@ -504,7 +616,7 @@ export default function ShipShopPage() {
                 {ports.map((port) => (
                   <div key={port.id} className="space-y-2">
                     {renderPort(port)}
-                    {port.kind === 'missileRack' && missileSlotsForRack(ship, port, build.ports[port.id]).map((slot) => renderPort(slot, true))}
+                    {(port.kind === 'missileRack' || port.kind === 'torpedo') && missileSlotsForRack(ship, port, build.ports[port.id]).map((slot) => renderPort(slot, true))}
                   </div>
                 ))}
               </div>

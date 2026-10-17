@@ -103,6 +103,19 @@ export function extractShipItemStats(json, options = {}) {
     setStat(stats, 'Quantum_Fuelrequirement', quantum.quantumFuelRequirement)
   }
 
+  const radar = firstOfType(root, 'SCItemRadarComponentParams')
+  const aim = radar?.aimAssist
+  if (aim) {
+    setStat(stats, 'Radar_DistanceMin', aim.distanceMinAssignment)
+    setStat(stats, 'Radar_DistanceMax', aim.distanceMaxAssignment)
+  }
+
+  const regen = firstOfType(root, 'SWeaponRegenConsumerParams')
+  if (regen) {
+    setStat(stats, 'Weapon_CapacitorShots', regen.maxAmmoLoad)
+    setStat(stats, 'Weapon_RegenPerSec', regen.maxRegenPerSec)
+  }
+
   let fireRate = 0
   let pellets = 1
   let heat = 0
@@ -206,6 +219,18 @@ export function extractShipItemStats(json, options = {}) {
     }
     if (node._Type_ === 'ItemResourceSignatureParams') {
       setStat(stats, 'Weapon_Em', node.EMSignature?.nominalSignature)
+      setStat(stats, 'Signature_Em', node.EMSignature?.nominalSignature)
+      setStat(stats, 'Signature_Ir', node.IRSignature?.nominalSignature)
+    }
+    if (node._Type_ === 'ItemResourceDeltaConsumption' || node._Type_ === 'ItemResourceDeltaConversion') {
+      const units = node.consumption?.resource === 'Power' && node.consumption.resourceAmountPerSecond?._Type_ === 'SPowerSegmentResourceUnit'
+        ? node.consumption.resourceAmountPerSecond.units
+        : 0
+      const fraction = node.minimumConsumptionFraction
+      if (units > 0 && typeof fraction === 'number' && fraction > 0) {
+        const minimum = Math.max(1, Math.round(units * fraction))
+        if (!stats.Power_Min || minimum < stats.Power_Min) stats.Power_Min = minimum
+      }
     }
     if (node._Type_ !== 'ItemResourceDeltaGeneration' && node._Type_ !== 'ItemResourceDeltaConversion') return
     const gen = node.generation

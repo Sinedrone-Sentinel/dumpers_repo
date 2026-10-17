@@ -18,7 +18,12 @@ export interface ShipItemStats {
   weaponClass?: string | null
   damageType?: string | null
   tags?: string
+  requiredTags?: string
   mounts?: MissileMount[]
+  itemClass?: string | null
+  grade?: string | null
+  guidance?: string | null
+  ordnance?: 'missile' | 'torpedo' | null
   stats: Record<string, number>
   burstDps: number
 }
@@ -34,6 +39,7 @@ export function itemIsEquippable(item: ShipItemStats): boolean {
   if (item.kind === 'quantum') return (stats.Quantum_Speed || 0) > 0
   if (item.kind === 'flight') return (stats.Flight_Pitch || 0) > 0 || (stats.Flight_ScmSpeed || 0) > 0
   if (item.kind === 'missileRack') return (item.mounts?.length || 0) > 0
+  if (item.kind === 'life') return (stats.Power_Segments || 0) > 0
   return Object.keys(stats).length > 0
 }
 
@@ -53,18 +59,29 @@ export function weaponBurstDps(stats: Record<string, number> | null | undefined)
   return (damage * pellets * rate) / 60
 }
 
-/** Burst, reduced by the time the gun spends cooling after it overheats. */
-export function weaponSustainedDps(stats: Record<string, number> | null | undefined): number {
+/** Burst, reduced by overheat and, for energy guns, by how fast the capacitor refills at this power. */
+export function weaponSustainedDps(stats: Record<string, number> | null | undefined, powerFraction = 1): number {
   const burst = weaponBurstDps(stats)
   if (!burst || !stats) return 0
+  const fraction = Math.max(0, Math.min(1, powerFraction))
+  if (fraction <= 0) return 0
+  let sustained = burst
   const heat = stats.Weapon_HeatPerShot || 0
   const rate = stats.Weapon_Firerate || 0
   const overheat = stats.Weapon_Overheat || 0
-  if (!heat || !rate || !overheat) return burst
-  const timeHot = overheat / (heat * (rate / 60))
-  const downtime = stats.Weapon_OverheatFix || (stats.Weapon_Cooling ? overheat / stats.Weapon_Cooling : 0)
-  if (!downtime) return burst
-  return (burst * timeHot) / (timeHot + downtime)
+  if (heat && rate && overheat) {
+    const timeHot = overheat / (heat * (rate / 60))
+    const downtime = stats.Weapon_OverheatFix || (stats.Weapon_Cooling ? overheat / stats.Weapon_Cooling : 0)
+    if (downtime) sustained = (burst * timeHot) / (timeHot + downtime)
+  }
+  const regenCap = stats.Weapon_RegenPerSec || 0
+  const energy = stats.Weapon_Damage_Energy || 0
+  if (regenCap > 0 && energy > 0) {
+    const regen = regenCap * fraction
+    const perShot = stats.Weapon_Damage || 0
+    sustained = Math.min(sustained, perShot * regen)
+  }
+  return sustained
 }
 
 export function applyCraftedStats(
@@ -166,6 +183,8 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
     const parts = [
       stats.Shield_Maxhealth ? `${round(stats.Shield_Maxhealth)} HP` : '',
       stats.Shield_Regen ? `${round(stats.Shield_Regen)}/s` : '',
+      stats.Shield_DamagedRegenDelay ? `damaged ${stats.Shield_DamagedRegenDelay.toFixed(1)}s` : '',
+      stats.Shield_DownedRegenDelay ? `downed ${stats.Shield_DownedRegenDelay.toFixed(1)}s` : '',
     ].filter(Boolean)
     return parts.join(' · ')
   }
@@ -174,10 +193,12 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
     return hp > 0 ? `${round(hp)} HP` : ''
   }
   if (kind === 'power' && stats.Itemresource_Powergeneration) {
-    return `${round(stats.Itemresource_Powergeneration)} power pips`
+    return `${round(stats.Itemresource_Powergeneration)} pips`
   }
   if (kind === 'cooler' && stats.Itemresource_Coolantgeneration) {
-    return `${round(stats.Itemresource_Coolantgeneration)} coolant`
+    const min = stats.Power_Min || 1
+    const max = stats.Power_Segments || min
+    return `${round(stats.Itemresource_Coolantgeneration)} coolant · ${min}–${max} pips`
   }
   if (kind === 'quantum' && stats.Quantum_Speed) {
     return formatQuantumSpeed(stats.Quantum_Speed)
@@ -185,6 +206,11 @@ export function partStatLine(kind: string, stats: Record<string, number>): strin
   if (kind === 'flight' && stats.Flight_Pitch) {
     return `Pitch ${round(stats.Flight_Pitch)}`
   }
+  if (kind === 'radar' && stats.Radar_DistanceMax) {
+    const min = stats.Radar_DistanceMin || stats.Radar_DistanceMax
+    return `${round(min)}–${round(stats.Radar_DistanceMax)} m`
+  }
+  if (kind === 'life') return stats.Power_Segments ? `${round(stats.Power_Segments)} pips` : ''
   return ''
 }
 
@@ -218,6 +244,14 @@ export interface ShipSnapshotNumbers {
   noise: number
   decoy: number
   quantumSpeed: number | null
+  scmSpeed: number | null
+  boostSpeed: number | null
+  navSpeed: number | null
+  radarRange: number | null
+  signatureEm: number
+  signatureIr: number
+  signatureCs: number | null
+  coolant: number
   pitch: number | null
   yaw: number | null
   roll: number | null
@@ -228,9 +262,13 @@ export function emptySnapshot(ship?: {
   hullHp?: number | null
   noise?: number | null
   decoy?: number | null
+  crossSection?: number | null
   pitch?: number | null
   yaw?: number | null
   roll?: number | null
+  scmSpeed?: number | null
+  boostSpeed?: number | null
+  maxSpeed?: number | null
 } | null): ShipSnapshotNumbers {
   return {
     burstDps: 0,
@@ -251,9 +289,17 @@ export function emptySnapshot(ship?: {
     noise: ship?.noise ?? 0,
     decoy: ship?.decoy ?? 0,
     quantumSpeed: null,
-    pitch: ship?.pitch ?? null,
-    yaw: ship?.yaw ?? null,
-    roll: ship?.roll ?? null,
+    scmSpeed: null,
+    boostSpeed: null,
+    navSpeed: null,
+    radarRange: null,
+    signatureEm: 0,
+    signatureIr: 0,
+    signatureCs: ship?.crossSection ?? null,
+    coolant: 0,
+    pitch: null,
+    yaw: null,
+    roll: null,
   }
 }
 
@@ -264,8 +310,8 @@ export function addPartToSnapshot(
   scale = 1,
 ): void {
   if (kind === 'weapon') {
-    snapshot.burstDps += weaponBurstDps(stats) * scale
-    snapshot.sustainedDps += weaponSustainedDps(stats) * scale
+    snapshot.burstDps += weaponBurstDps(stats) * (scale > 0 ? 1 : 0)
+    snapshot.sustainedDps += weaponSustainedDps(stats, scale)
   }
   if (kind === 'missile') snapshot.missileVolley += stats.Missile_Damage || stats.Weapon_Damage || 0
   if (kind === 'shield') {
@@ -286,6 +332,14 @@ export function addPartToSnapshot(
     if (stats.Flight_Pitch) snapshot.pitch = stats.Flight_Pitch * scale
     if (stats.Flight_Yaw) snapshot.yaw = stats.Flight_Yaw * scale
     if (stats.Flight_Roll) snapshot.roll = stats.Flight_Roll * scale
+    if (stats.Flight_ScmSpeed) snapshot.scmSpeed = stats.Flight_ScmSpeed * (scale > 0 ? 1 : 0)
+    if (stats.Flight_BoostSpeed) snapshot.boostSpeed = stats.Flight_BoostSpeed * (scale > 0 ? 1 : 0)
+    if (stats.Flight_MaxSpeed) snapshot.navSpeed = stats.Flight_MaxSpeed
+  }
+  if (kind === 'cooler' && scale > 0) snapshot.coolant += (stats.Itemresource_Coolantgeneration || 0) * scale
+  if (scale > 0) {
+    snapshot.signatureEm += stats.Signature_Em || stats.Weapon_Em || 0
+    snapshot.signatureIr += stats.Signature_Ir || 0
   }
   if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
     snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
@@ -295,6 +349,8 @@ export function addPartToSnapshot(
 export interface PowerBlock {
   size: number
   portId: string | null
+  /** First block of a component that follows another component in the same group. */
+  groupStart?: boolean
 }
 
 export interface PowerColumn {
@@ -306,6 +362,7 @@ export interface PowerColumn {
 export interface PowerPart {
   portId: string
   kind: string
+  size: number
   stats: Record<string, number>
 }
 
@@ -314,6 +371,7 @@ const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
   { id: 'shields', label: 'Shields', kinds: ['shield'] },
   { id: 'quantum', label: 'Quantum', kinds: ['quantum'] },
   { id: 'radar', label: 'Radar', kinds: ['radar'] },
+  { id: 'life', label: 'Life support', kinds: ['life'] },
   { id: 'coolers', label: 'Coolers', kinds: ['cooler'] },
 ]
 
@@ -348,13 +406,25 @@ export function powerColumns(weaponPowerPool: number, parts: PowerPart[]): Power
     })
   }
   for (const group of POWER_GROUPS) {
-    const blocks: PowerBlock[] = []
-    for (const part of parts) {
-      if (!group.kinds.includes(part.kind)) continue
-      const demand = pipDemand(part.stats)
-      for (let index = 0; index < demand; index += 1) blocks.push({ size: 1, portId: part.portId })
-    }
-    if (blocks.length > 0) columns.push({ id: group.id, label: group.label, blocks })
+    const members = parts.filter((part) => group.kinds.includes(part.kind) && pipDemand(part.stats) > 0)
+    if (members.length === 0) continue
+    const minimums: PowerBlock[] = []
+    const extras: PowerBlock[] = []
+    members.forEach((part, memberIndex) => {
+      const max = pipDemand(part.stats)
+      const min = Math.min(max, Math.max(1, part.stats.Power_Min || 1))
+      const gap = memberIndex > 0
+      if (min > 1) {
+        minimums.push({ size: min, portId: part.portId, groupStart: gap })
+        for (let index = min; index < max; index += 1) extras.push({ size: 1, portId: part.portId })
+      } else {
+        for (let index = 0; index < max; index += 1) {
+          extras.push({ size: 1, portId: part.portId, groupStart: gap && index === 0 })
+        }
+      }
+    })
+    if (minimums.length > 0 && extras.length > 0) extras[0].groupStart = true
+    columns.push({ id: group.id, label: group.label, blocks: [...minimums, ...extras] })
   }
   return columns
 }
@@ -369,8 +439,29 @@ export function columnSelected(column: PowerColumn, stored: number | undefined):
   return Math.max(0, Math.min(total, Math.round(stored)))
 }
 
+/** Aim-assist distance moves from the radar's minimum assignment at 1 pip to its maximum at full pips. */
+export function radarRangeForPips(stats: Record<string, number>, assigned: number): number | null {
+  if (!stats.Radar_DistanceMax || assigned <= 0) return null
+  const maxPips = stats.Power_Segments || 1
+  const minDistance = stats.Radar_DistanceMin || stats.Radar_DistanceMax
+  const span = Math.max(1, maxPips - 1)
+  const blend = Math.max(0, Math.min(1, (Math.min(assigned, maxPips) - 1) / span))
+  return minDistance + (stats.Radar_DistanceMax - minDistance) * blend
+}
+
+/**
+ * Installed plants are not added together.
+ * For n plants the budget is round(each / n), plus (n - 1) times each plant's size.
+ * One plant contributes its own generation.
+ */
 export function powerGenerated(parts: PowerPart[]): number {
-  return parts.reduce((sum, part) => sum + (part.kind === 'power' ? part.stats.Itemresource_Powergeneration || 0 : 0), 0)
+  const plants = parts.filter((part) => part.kind === 'power' && (part.stats.Itemresource_Powergeneration || 0) > 0)
+  const count = plants.length
+  if (count === 0) return 0
+  if (count === 1) return Math.round(plants[0].stats.Itemresource_Powergeneration)
+  const rounded = plants.reduce((sum, plant) => sum + Math.round(plant.stats.Itemresource_Powergeneration / count), 0)
+  const sizes = plants.reduce((sum, plant) => sum + (plant.size || 0), 0)
+  return rounded + (count - 1) * sizes
 }
 
 export function powerUsed(columns: PowerColumn[], stored: Record<string, number> | null | undefined): number {

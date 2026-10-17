@@ -22,6 +22,7 @@ const INDEX_DIRS = [
   'entities/scitem/ships/missile_racks',
   'entities/scitem/ships/controller',
   'entities/scitem/ships/countermeasures',
+  'entities/scitem/ships/lifesupport',
 ]
 
 function readJson(path) {
@@ -157,6 +158,7 @@ function kindForItem(filePath, entityKey) {
   if (id.includes('/radar/')) return 'radar'
   if (id.includes('/armor/')) return 'armor'
   if (id.includes('/controller/') && id.includes('flight')) return 'flight'
+  if (id.includes('/lifesupport/')) return 'life'
   if (id.includes('/weapons/') && !id.includes('/missiles/')) return 'weapon'
   if (/mrck_|missilerack/.test(id)) return 'missileRack'
   return null
@@ -184,7 +186,68 @@ function classifyPort(name, entityKey) {
   if (n.includes('power_plant') || n.includes('powerplant')) return { section: 'systems', kind: 'power' }
   if (n.includes('quantum_drive')) return { section: 'systems', kind: 'quantum' }
   if (n.includes('hardpoint_radar')) return { section: 'systems', kind: 'radar' }
+  if (n.includes('lifesupport') || n.includes('life_support')) return { section: 'systems', kind: 'life' }
+  if (n.includes('torpedo')) return { section: 'missiles', kind: 'torpedo' }
   return null
+}
+
+function classAndGrade(description, gradeNumber) {
+  const text = String(description || '')
+  const grade = text.match(/Grade:\s*([A-D])/i)?.[1]?.toUpperCase()
+  const itemClass = text.match(/Class:\s*([A-Za-z]+)/)?.[1] || null
+  const letters = { 1: 'A', 2: 'B', 3: 'C', 4: 'D' }
+  return { itemClass, grade: grade || letters[gradeNumber] || null }
+}
+
+function missileGuidance(entityClass) {
+  const key = String(entityClass || '').toLowerCase()
+  if (/(?:^|_)em(?:_|$)/.test(key)) return 'EM'
+  if (/(?:^|_)ir(?:_|$)/.test(key)) return 'IR'
+  if (/(?:^|_)cs(?:_|$)/.test(key)) return 'CS'
+  return null
+}
+
+function attrValue(source, key) {
+  const found = String(source || '').match(new RegExp(`${key}="([^"]*)"`, 'i'))
+  return found ? found[1] : ''
+}
+
+function shapePort(name, port, portDefs) {
+  const def = portDefs.get(String(name || '').toLowerCase())
+  const next = { ...port }
+  if (/torpedo/i.test(name)) next.kind = 'torpedo'
+  if (def) {
+    if (def.minSize) next.minSize = def.minSize
+    if (def.maxSize) next.maxSize = def.maxSize
+    if (def.minSize && def.maxSize && def.minSize === def.maxSize) next.size = def.maxSize
+    if (def.requiredTags) next.requiredTags = def.requiredTags
+    if (def.portTags) next.portTags = def.portTags
+  }
+  if (next.kind === 'torpedo' || next.kind === 'life') next.locked = true
+  return next
+}
+
+function portDefsFromXml(text) {
+  const defs = new Map()
+  if (!text) return defs
+  let part = ''
+  for (const line of text.split('\n')) {
+    const partMatch = line.match(/<Part name="([^"]+)"/i)
+    if (partMatch) part = partMatch[1]
+    const portMatch = line.match(/<ItemPort\s+([^>]+)>/i)
+    if (!portMatch || !part) continue
+    const attrs = portMatch[1]
+    const minSize = Number(attrValue(attrs, 'minSize')) || 0
+    const maxSize = Number(attrValue(attrs, 'maxSize')) || minSize
+    defs.set(part.toLowerCase(), {
+      minSize,
+      maxSize,
+      flags: attrValue(attrs, 'flags'),
+      requiredTags: attrValue(attrs, 'requiredTags'),
+      portTags: attrValue(attrs, 'portTags'),
+    })
+  }
+  return defs
 }
 
 function portTitle(name) {
@@ -242,20 +305,38 @@ function damageReduction(vehicle) {
   return typeof gun?.modifier === 'number' && gun.modifier > 0 ? gun.modifier : null
 }
 
-/** Hull HP is the sum of structural damageMax values in the vehicle XML. */
-function hullHpFromDefinition(extractedRoot, vehicle) {
+function vehicleXml(extractedRoot, vehicle) {
   const def = vehicle?.vehicleDefinition
-  if (!def || typeof def !== 'string') return null
+  if (!def || typeof def !== 'string') return ''
   const path = join(extractedRoot, 'vehicle-xml', basename(def))
-  if (!existsSync(path)) return null
+  if (!existsSync(path)) return ''
   const text = readFileSync(path, 'utf8')
-  if (!text.includes('<Vehicle')) return null
+  return text.includes('<Vehicle') ? text : ''
+}
+
+/** Hull HP is the sum of structural damageMax values in the vehicle XML. */
+function hullHpFromXml(text) {
+  if (!text) return null
   let total = 0
   for (const match of text.matchAll(/damageMax="([\d.]+)"/g)) {
     const value = Number(match[1])
     if (value > 0) total += value
   }
   return total > 1 ? Math.round(total) : null
+}
+
+function crossSectionFromShip(json) {
+  let found = null
+  const walk = (node) => {
+    if (!node || typeof node !== 'object' || found) return
+    if (node._Type_ === 'SSCSignatureSystemManualCrossSectionParams' && node.crossSection) {
+      const axes = [node.crossSection.x, node.crossSection.y, node.crossSection.z].filter((value) => typeof value === 'number')
+      if (axes.length) found = Math.max(...axes)
+    }
+    for (const value of Object.values(node)) walk(value)
+  }
+  walk(json)
+  return found
 }
 
 function missileMounts(json) {
@@ -349,7 +430,9 @@ export function parseShipShop({ extractedRoot, localization }) {
     const size = def?.Size || sizeFromName(entityClass) || 0
     const manufacturerCode = String(def?.Manufacturer || '').match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const tags = typeof def?.Tags === 'string' ? def.Tags.trim() : ''
+    const requiredTags = typeof def?.RequiredTags === 'string' ? def.RequiredTags.trim() : ''
     const mounts = kind === 'missileRack' ? missileMounts(json) : []
+    const described = classAndGrade(resolveName(def?.Localization?.Description, localization), def?.Grade)
     const item = {
       entityClass,
       displayName,
@@ -362,6 +445,14 @@ export function parseShipShop({ extractedRoot, localization }) {
       burstDps: kind === 'weapon' ? Math.round(weaponBurstDps(stats)) : 0,
     }
     if (tags) item.tags = tags
+    if (requiredTags) item.requiredTags = requiredTags
+    if (described.itemClass) item.itemClass = described.itemClass
+    if (described.grade) item.grade = described.grade
+    if (kind === 'missile') {
+      item.ordnance = /torpedo/.test(entityClass) ? 'torpedo' : 'missile'
+      const guidance = missileGuidance(entityClass)
+      if (guidance) item.guidance = guidance
+    }
     if (mounts.length > 0) item.mounts = mounts
     seenFiles.add(filePath)
     catalog.push(item)
@@ -389,7 +480,10 @@ export function parseShipShop({ extractedRoot, localization }) {
     const manufacturer = vehicle.manufacturer?.match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const role = resolveName(vehicle.vehicleRole, localization)
     const career = resolveName(vehicle.vehicleCareer, localization)
-    const hullHp = hullHpFromDefinition(extractedRoot, vehicle)
+    const xml = vehicleXml(extractedRoot, vehicle)
+    const hullHp = hullHpFromXml(xml)
+    const portDefs = portDefsFromXml(xml)
+    const crossSection = crossSectionFromShip(json)
 
     const loadout = firstComponent(json, 'SEntityComponentDefaultLoadoutParams')
     const entries = []
@@ -426,7 +520,7 @@ export function parseShipShop({ extractedRoot, localization }) {
         const childItem = catalogByKey.get(childKey.toLowerCase()) || null
         const size = sizeFromName(entityKey) || childItem?.size || 0
         if (size <= 0 && !childItem?.entityClass) continue
-        ports.push({
+        const shaped = shapePort(entry.name, {
           id: entry.path,
           label: portTitle(entry.name),
           section: 'weapons',
@@ -435,7 +529,8 @@ export function parseShipShop({ extractedRoot, localization }) {
           minSize: size,
           maxSize: size,
           defaultEntityClass: childItem?.entityClass || null,
-        })
+        }, portDefs)
+        if (shaped) ports.push(shaped)
         continue
       }
 
@@ -444,7 +539,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       const item = catalogByKey.get(entityKey.toLowerCase()) || null
       const size = item?.size || sizeFromName(entityKey) || 0
       if (size <= 0 && !item?.entityClass) continue
-      ports.push({
+      const shaped = shapePort(entry.name, {
         id: entry.path,
         label: portTitle(entry.name),
         section: classed.section,
@@ -453,7 +548,8 @@ export function parseShipShop({ extractedRoot, localization }) {
         minSize: size,
         maxSize: size,
         defaultEntityClass: item?.entityClass || null,
-      })
+      }, portDefs)
+      if (shaped) ports.push(shaped)
     }
 
     const ship = {
@@ -465,6 +561,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       career,
       crew: vehicle.crewSize || null,
       hullHp,
+      crossSection,
       noise,
       decoy,
       damageReduction: damageReduction(vehicle),
