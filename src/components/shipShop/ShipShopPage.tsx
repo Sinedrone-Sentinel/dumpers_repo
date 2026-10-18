@@ -41,13 +41,31 @@ import {
   togglePowerColumn,
   weaponBurstDps,
   weaponStatBits,
-  type PowerBlock,
+  wrapPipBlocks,
   type ShipItemStats,
 } from '../../lib/shipShopMath'
 import { getShipItem } from '../../lib/shipItemCatalog'
 import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
 
 const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
+const PIP_WRAP_LIMIT = 8
+
+function stackedPartKind(kind: string): boolean {
+  return kind === 'weapon' || kind === 'missile' || kind === 'torpedo' || kind === 'missileRack'
+}
+
+function useCompactPipWrap(): boolean {
+  const query = '(max-width: 1920px)'
+  const [compact, setCompact] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    const onChange = () => setCompact(media.matches)
+    onChange()
+    media.addEventListener('change', onChange)
+    return () => media.removeEventListener('change', onChange)
+  }, [])
+  return compact
+}
 
 function formatNumber(value: number | null | undefined): string {
   return formatShopNumber(value)
@@ -111,6 +129,7 @@ function PipBoard({
   onPower: (patch: Record<string, number>, columnId: string) => void
 }) {
   const used = powerUsed(columns, power)
+  const wrap = useCompactPipWrap()
   if (columns.length === 0) return null
   return (
     <div className="flex min-w-0 max-w-full items-end gap-4 overflow-x-auto pb-1">
@@ -131,30 +150,35 @@ function PipBoard({
                 const full = groups.length === 1 && column.fullPower != null ? column.fullPower : usable
                 return (
                   <div key={group.key} className="flex flex-col items-center">
-                    <div className="flex flex-col-reverse items-center gap-0.5">
-                      {group.blocks.map((block, index) => {
-                        const on = flags[index]
-                        const target = on && index === top ? index - 1 : index
-                        return (
-                          <button
-                            key={`${group.key}-${index}`}
-                            type="button"
-                            aria-pressed={on}
-                            disabled={block.disabled}
-                            aria-label={`${column.label} ${block.disabled ? 'unused pip' : block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
-                            className={`ship-shop-pip rounded-sm border font-semibold leading-none ${block.disabled ? 'ship-shop-pip-disabled' : on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
-                            style={{
-                              width: 'var(--ship-pip-size)',
-                              height: block.size > 1
-                                ? `calc(${block.size} * var(--ship-pip-size) + ${block.size - 1} * var(--ship-pip-gap))`
-                                : 'var(--ship-pip-size)',
-                            }}
-                            onClick={() => onPower({ [group.key]: clickPowerColumn(group.blocks, count, target, remaining) }, column.id)}
-                          >
-                            {block.size > 1 ? block.size : ''}
-                          </button>
-                        )
-                      })}
+                    <div className="flex items-end gap-px">
+                      {(wrap ? wrapPipBlocks(group.blocks, PIP_WRAP_LIMIT) : [group.blocks]).map((columnBlocks, columnIndex) => (
+                        <div key={`${group.key}-${columnIndex}`} className="flex flex-col-reverse items-center gap-0.5">
+                          {columnBlocks.map((block) => {
+                            const index = group.blocks.indexOf(block)
+                            const on = flags[index]
+                            const target = on && index === top ? index - 1 : index
+                            return (
+                              <button
+                                key={`${group.key}-${index}`}
+                                type="button"
+                                aria-pressed={on}
+                                disabled={block.disabled}
+                                aria-label={`${column.label} ${block.disabled ? 'unused pip' : block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
+                                className={`ship-shop-pip rounded-sm border font-semibold leading-none ${block.disabled ? 'ship-shop-pip-disabled' : on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                                style={{
+                                  width: 'var(--ship-pip-size)',
+                                  height: block.size > 1
+                                    ? `calc(${block.size} * var(--ship-pip-size) + ${block.size - 1} * var(--ship-pip-gap))`
+                                    : 'var(--ship-pip-size)',
+                                }}
+                                onClick={() => onPower({ [group.key]: clickPowerColumn(group.blocks, count, target, remaining) }, column.id)}
+                              >
+                                {block.size > 1 ? block.size : ''}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      ))}
                     </div>
                     <span className="ship-shop-pip-count font-mono text-slate-500">{count}/{full}</span>
                   </div>
@@ -415,15 +439,16 @@ function PartPicker({
         </button>
         {options.map((item) => {
           const bits = item.kind === 'weapon' ? weaponStatBits(item.stats) : [partStatLine(item.kind, item.stats)].filter(Boolean)
+          const inline = !stackedPartKind(port.kind)
           return (
             <button
               key={item.entityClass}
               type="button"
-              className={`site-dropdown-item ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
+              className={`site-dropdown-item ${inline ? 'flex items-baseline gap-3' : ''} ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
               onClick={() => onSelect(item.entityClass)}
             >
-              <span className="block text-white">{titled(item)}</span>
-              {bits.length > 0 && <span className="block text-sm text-slate-200">{bits.join(' · ')}</span>}
+              <span className={inline ? 'shrink-0 text-white' : 'block text-white'}>{titled(item)}</span>
+              {bits.length > 0 && <span className={inline ? 'truncate text-sm text-slate-200' : 'block text-sm text-slate-200'}>{bits.join(' · ')}</span>}
             </button>
           )
         })}
@@ -726,6 +751,7 @@ export default function ShipShopPage() {
               if (target instanceof Element && target.closest('button, input, a, label')) return
               setPickerPortId(open ? null : port.id)
             }
+            const inline = !stackedPartKind(port.kind)
             return (
               <div
                 key={port.id}
@@ -751,11 +777,16 @@ export default function ShipShopPage() {
                       <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
                       <span className="text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     </div>
-                    <div className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left">
-                      <span className="ship-shop-part-name font-medium text-white">{name}</span>
-                      <span className="text-base text-slate-300">{info}</span>
+                    <div className={`mt-1 flex w-full gap-3 text-left ${inline ? 'flex-nowrap items-center' : 'flex-wrap items-baseline gap-y-1'}`}>
+                      <span className="ship-shop-part-name min-w-0 truncate font-medium text-white">{name}</span>
+                      <span className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`}>{info}</span>
+                      {inline && fitted && !port.locked && (
+                        <button type="button" className="site-btn-ghost ml-auto shrink-0 px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
+                          Clear
+                        </button>
+                      )}
                     </div>
-                    {fitted && !port.locked && (
+                    {!inline && fitted && !port.locked && (
                       <div className="mt-2">
                         <button type="button" className="site-btn-ghost px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
                           Clear

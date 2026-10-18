@@ -2218,6 +2218,13 @@ check(
   'ship shop: flight blades stay in the ship family named on the blade',
 )
 check(
+  shipShopMath.wrapPipBlocks(Array.from({ length: 23 }, () => ({ size: 1 })), 8).map((column) => column.length).join(',') === '8,8,7' &&
+    shipShopMath.wrapPipBlocks([{ size: 3 }, { size: 1 }, { size: 1 }, { size: 1 }, { size: 1 }, { size: 1 }, { size: 1 }], 8).map((column) => column.reduce((sum, block) => sum + block.size, 0)).join(',') === '8,1' &&
+    shipShopMath.wrapPipBlocks([{ size: 11 }], 8).length === 1 &&
+    shipShopMath.wrapPipBlocks([{ size: 1 }, { size: 1 }], 0).length === 1,
+  'ship shop: a tall pip stack wraps after 8 units without splitting a block',
+)
+check(
   shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_Pellets: 2 }) === 20,
   'ship shop: burst DPS counts pellets',
 )
