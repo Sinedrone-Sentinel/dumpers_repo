@@ -104,6 +104,32 @@ function sizeFromName(name) {
   return match ? Number(match[1]) : null
 }
 
+/** An empty loadout entry still names its class, as in hardpoint_class_4_nose. */
+function sizeFromClass(name) {
+  const match = String(name || '').match(/class_(\d+)/i)
+  return match ? Number(match[1]) : null
+}
+
+/** XML port types for a slot that has no item fitted. */
+function kindFromPortDef(def) {
+  if (!def?.accepts?.length) return null
+  const types = def.accepts.map((entry) => String(entry.type || '').toLowerCase())
+  const has = (name) => types.includes(name)
+  if (has('missilelauncher') || has('bomblauncher')) return { section: 'missiles', kind: 'missileRack' }
+  if (has('torpedo') && !has('missilelauncher')) return { section: 'missiles', kind: 'torpedo' }
+  if (has('turret')) return { section: 'weapons', kind: 'weaponMount' }
+  if (has('weapongun')) return { section: 'weapons', kind: 'weapon' }
+  if (has('shield')) return { section: 'defense', kind: 'shield' }
+  if (has('cooler')) return { section: 'systems', kind: 'cooler' }
+  if (has('powerplant')) return { section: 'systems', kind: 'power' }
+  if (has('quantumdrive')) return { section: 'systems', kind: 'quantum' }
+  if (has('radar')) return { section: 'systems', kind: 'radar' }
+  if (has('lifesupport')) return { section: 'systems', kind: 'life' }
+  if (has('armor') || has('armour')) return { section: 'defense', kind: 'armor' }
+  if (has('flightcontroller')) return { section: 'systems', kind: 'flight' }
+  return null
+}
+
 function entityKeyFromEntry(entry) {
   if (entry?.entityClassName) return entry.entityClassName
   const ref = entry?.entityClassReference
@@ -223,7 +249,7 @@ function classifyPort(name, entityKey, itemKind) {
   if (itemKind === 'weapon' && !/salvage|mining_laser|rpod_|massdriver|railgun|(?:^|_)emp(?:_|$)/.test(`${n} ${e}`)) {
     return { section: 'weapons', kind: 'weapon' }
   }
-  if (n.includes('armor') || n.includes('armour')) return { section: 'defense', kind: 'armor' }
+  if (/(^|_)armou?r(_|$)/.test(n)) return { section: 'defense', kind: 'armor' }
   if (n.includes('cooler')) return { section: 'systems', kind: 'cooler' }
   if (n.includes('power_plant') || n.includes('powerplant')) return { section: 'systems', kind: 'power' }
   if (isQuantumPortName(n)) return { section: 'systems', kind: 'quantum' }
@@ -256,7 +282,9 @@ function attrValue(source, key) {
 function shapePort(name, port, portDefs) {
   const def = portDefs.get(String(name || '').toLowerCase())
   const next = { ...port }
-  if (/torpedo/i.test(name)) next.kind = 'torpedo'
+  const acceptTypes = (def?.accepts || []).map((entry) => String(entry.type || '').toLowerCase())
+  const turretMount = acceptTypes.includes('turret') && !acceptTypes.some((type) => type.includes('missile') || type.includes('bomb') || type === 'torpedo')
+  if (/torpedo/i.test(name) && !turretMount) next.kind = 'torpedo'
   if (def) {
     if (def.minSize) next.minSize = def.minSize
     if (def.maxSize) next.maxSize = def.maxSize
@@ -488,6 +516,7 @@ function missileMounts(json) {
     const ordnance = ordnanceKind(accepts)
     if (!ordnance) continue
     row.kind = ordnance
+    if (/uneditable/i.test(String(port.Flags || ''))) row.locked = true
     mounts.push(row)
   }
   return mounts
@@ -717,15 +746,23 @@ export function parseShipShop({ extractedRoot, localization }) {
         decoy += counts.decoy
       }
       const item = catalogByKey.get(entityKey.toLowerCase()) || null
-      const classed = classifyPort(entry.name, entityKey, item?.kind)
+      const portDef = portDefs.get(String(entry.name || '').toLowerCase())
+      const classed = item
+        ? classifyPort(entry.name, entityKey, item.kind)
+        : (kindFromPortDef(portDef) || classifyPort(entry.name, entityKey, null))
       if (!classed) continue
 
       if (classed.kind === 'flight' && loaded?.json) {
         flight = { ...flight, ...flightStats(loaded.json) }
       }
 
-      const size = item?.size || sizeFromName(entityKey) || (classed.kind === 'turret' ? 1 : 0)
-      if (size <= 0 && !item?.entityClass && classed.kind !== 'turret') continue
+      const acceptTypes = (portDef?.accepts || []).map((entry) => String(entry.type || '').toLowerCase())
+      const notAComponent = acceptTypes.length > 0 && acceptTypes.every((type) => (
+        type === 'display' || type === 'door' || type === 'cargo' || type === 'room' || type === 'seat' || type === 'light' || type === 'toolarm' || type === 'paint' || type === 'flair'
+      ))
+      if (!item?.entityClass && notAComponent) continue
+      const size = item?.size || portDef?.maxSize || sizeFromName(entityKey) || sizeFromClass(entry.name) || (classed.kind === 'turret' ? 1 : 0)
+      if (size <= 0 && !item?.entityClass && classed.kind !== 'turret' && classed.kind !== 'weaponMount') continue
       const shaped = shapePort(entry.name, {
         id: entry.path,
         label: portTitle(entry.name),
