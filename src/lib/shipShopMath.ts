@@ -31,7 +31,10 @@ export interface ShipItemStats {
 /** A catalog row with no usable numbers is a file stub, not an item a ship can mount. */
 export function itemIsEquippable(item: ShipItemStats): boolean {
   const stats = item.stats || {}
-  if (item.kind === 'weapon') return (stats.Weapon_Damage || 0) > 0 && (stats.Weapon_Firerate || 0) > 0
+  if (item.kind === 'weapon') {
+    if ((stats.Power_Segments || 0) > 0) return true
+    return (stats.Weapon_Damage || 0) > 0 && (stats.Weapon_Firerate || 0) > 0
+  }
   if (item.kind === 'missile') return (stats.Missile_Damage || stats.Weapon_Damage || 0) > 0
   if (item.kind === 'shield') return (stats.Shield_Maxhealth || 0) > 0
   if (item.kind === 'cooler') return (stats.Itemresource_Coolantgeneration || 0) > 0
@@ -409,10 +412,13 @@ export interface PowerPart {
 }
 
 const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
+  { id: 'engines', label: 'Engines', kinds: ['flight'] },
   { id: 'shields', label: 'Shields', kinds: ['shield'] },
   { id: 'quantum', label: 'Quantum', kinds: ['quantum'] },
   { id: 'interdiction', label: 'Interdiction', kinds: ['qed'] },
   { id: 'tractor', label: 'Tractor', kinds: ['tractor'] },
+  { id: 'towing', label: 'Towing', kinds: ['towing'] },
+  { id: 'mining', label: 'Mining', kinds: ['mining'] },
   { id: 'radar', label: 'Radar', kinds: ['radar'] },
   { id: 'life', label: 'Life support', kinds: ['life'] },
   { id: 'coolers', label: 'Coolers', kinds: ['cooler'] },
@@ -713,7 +719,8 @@ export function coolantSupply(parts: PowerPart[], pips: Map<string, number>): nu
  * Cooling load is the pips in use, plus another `pips * band` for shields,
  * life support, radar, and the quantum drive. Powered coolers also add their
  * own minimum once, on top of the pips assigned to them. Plants do not draw
- * coolant. Weapon pips count up to the pips those guns need for full power.
+ * coolant. Engines count the pips assigned to the flight blade. Weapon pips count
+ * up to the pips those guns need for full power.
  */
 export function coolantDemand(
   parts: PowerPart[],
@@ -724,7 +731,7 @@ export function coolantDemand(
   let extra = 0
   let coolerSelf = 0
   for (const part of parts) {
-    if (part.kind === 'weapon' || part.kind === 'power' || part.kind === 'flight' || part.kind === 'missile') continue
+    if (part.kind === 'weapon' || part.kind === 'power' || part.kind === 'missile') continue
     const count = assignedPips(pips, part.portId)
     if (count <= 0) continue
     drawn += count

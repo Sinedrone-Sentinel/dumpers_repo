@@ -2280,6 +2280,25 @@ check(
     coolerColumn.blocks[3].groupStart === true,
   'ship shop: each cooler keeps its own pip group, with the minimum as one block',
 )
+const engineColumn = shipShopMath.powerColumns(0, [
+  { portId: 'blade', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } },
+])[0]
+check(
+  engineColumn.label === 'Engines' &&
+    engineColumn.blocks.length === 4 &&
+    shipShopMath.coolantDemand(
+      [{ portId: 'blade', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } }],
+      new Map([['blade', 4]]),
+    ) === 4,
+  'ship shop: the flight blade is the engines stack and those pips draw coolant',
+)
+check(
+  shipShopMath.weaponFullPips([{ portId: 'm', kind: 'mining', size: 2, stats: { Power_Segments: 2 } }]) === 0 &&
+    shipShopMath.powerColumns(4, [
+      { portId: 'm', kind: 'mining', size: 2, stats: { Power_Segments: 2, Power_Min: 1 } },
+    ]).some((column) => column.label === 'Mining' && column.blocks.length === 2),
+  'ship shop: a mining laser keeps its own pip stack',
+)
 const budgetColumns = shipShopMath.powerColumns(4, [
   { portId: 'eng', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } },
   { portId: 'qd', kind: 'quantum', size: 1, stats: { Power_Segments: 1, Power_Min: 1 } },
@@ -2290,7 +2309,7 @@ const defaults = shipShopMath.defaultPower(budgetColumns, generated)
 check(
   defaults.qd === 0 &&
     defaults.weapons === 0 &&
-    defaults.eng == null &&
+    defaults.eng === 1 &&
     defaults.c1 === 1 &&
     Object.values(defaults).reduce((sum, value) => sum + value, 0) <= generated,
   'ship shop: default power is each minimum block, quantum stays off, and unused weapon pips stay off',
