@@ -432,6 +432,58 @@ assert.equal(leonids.stats.Weapon_CycleShots, 2)
 assert.ok(Math.abs(leonids.stats.Weapon_CycleSeconds - (60 / 40 + 60 / 225)) < 0.0001)
 assert.equal(leonids.burstDps, 1811)
 
+const retaliatorFront = retaliator.ports.find((port) => port.id === 'hardpoint_front_module')
+const retaliatorRear = retaliator.ports.find((port) => port.id === 'hardpoint_rear_module')
+assert.equal(retaliatorFront?.kind, 'module')
+assert.equal(retaliatorRear?.kind, 'module')
+const frontModules = shop.partsForPort(retaliatorFront, shop.getShip('aegs_retaliator'))
+assert.ok(frontModules.some((item) => item.entityClass === 'aegs_retaliator_module_front_cargo' && item.feature === '+38 SCU cargo'))
+assert.ok(frontModules.some((item) => item.entityClass === 'aegs_retaliator_module_front_bomber' && item.feature === '4 × missiles'))
+assert.ok(frontModules.some((item) => item.entityClass === 'aegs_retaliator_module_front_base'))
+const rearModules = shop.partsForPort(retaliatorRear, shop.getShip('aegs_retaliator'))
+assert.ok(rearModules.some((item) => item.feature === '+36 SCU cargo'))
+assert.ok(rearModules.some((item) => item.feature === '2 × missiles'))
+const ordnanceFit = shop.applyPortFit(
+  shop.getShip('aegs_retaliator'),
+  shop.stockPorts(shop.getShip('aegs_retaliator')),
+  retaliatorFront,
+  { entityClass: 'aegs_retaliator_module_front_bomber', source: 'stock' },
+)
+const retaliatorRacks = shop.portsForSection(shop.getShip('aegs_retaliator'), 'missiles', ordnanceFit)
+assert.ok(retaliatorRacks.some((port) => port.id === 'hardpoint_front_module/hardpoint_torpedo_launcher_fore'))
+assert.equal(shop.missileSlotsForRack(shop.getShip('aegs_retaliator'), retaliatorRacks.find((port) => port.id.endsWith('hardpoint_torpedo_launcher_fore')), ordnanceFit[retaliatorRacks.find((port) => port.id.endsWith('hardpoint_torpedo_launcher_fore')).id]).length, 4)
+
+for (const id of ['rsi_apollo_medivac', 'rsi_apollo_triage']) {
+  const apollo = shop.getShip(id)
+  const left = apollo.ports.find((port) => port.id === 'hardpoint_modular_room_left')
+  const right = apollo.ports.find((port) => port.id === 'hardpoint_modular_room_right')
+  assert.equal(left?.kind, 'module', `${id} left module`)
+  assert.equal(right?.kind, 'module', `${id} right module`)
+  const choices = shop.partsForPort(left, apollo)
+  assert.ok(choices.some((item) => item.feature === '1 × Tier 1 med bed'), `${id} lists the tier 1 bed`)
+  assert.ok(choices.some((item) => item.feature === '3 × Tier 3 med beds'), `${id} lists the tier 3 beds`)
+}
+
+assert.equal(shop.getShip('anvl_hawk').ports.find((port) => port.id === 'hardpoint_missile_emp')?.kind, 'emp')
+assert.equal(shop.getShip('aegs_sabre_raven').ports.filter((port) => port.kind === 'emp').length, 2)
+const warlock = shop.getShip('aegs_avenger_warlock')
+const warlockEmp = warlock.ports.find((port) => port.kind === 'emp')
+assert.ok(warlockEmp?.defaultEntityClass, 'Avenger Warlock has an EMP hardpoint')
+const warlockFitted = shop.stockPorts(warlock)
+const warlockWithout = { ...warlockFitted }
+delete warlockWithout[warlockEmp.id]
+const warlockWithEmp = shop.snapshotForBuild(warlock, warlockFitted)
+const warlockNoEmp = shop.snapshotForBuild(warlock, warlockWithout)
+assert.ok(warlockWithEmp.coolantDemand > warlockNoEmp.coolantDemand, 'Warlock EMP pips add to the cooling load')
+
+assert.equal(items.some((item) => item.displayName === 'Slayer Cannon'), false)
+assert.equal(size5Guns.some((item) => item.displayName === 'Slayer Cannon'), false)
+
+const hornetCenter = shop.getShip('anvl_hornet_f7cm_mk2').ports.find((port) => port.id === 'hardpoint_weapon_center')
+assert.equal(hornetCenter?.kind, 'weaponMount')
+const hornetCargoSlot = shop.getShip('anvl_hornet_f7c').ports.find((port) => port.id === 'hardpoint_class_4_center')
+assert.equal(hornetCargoSlot?.kind, 'weaponMount')
+
 assert.equal(items.some((item) => item.entityClass === 'misl_s02_cs_fski_tempest_citcon'), false)
 const eclipse = shop.getShip('aegs_eclipse')
 const eclipseBay = eclipse.ports.find((port) => port.id === 'hardpoint_torpedorack')
