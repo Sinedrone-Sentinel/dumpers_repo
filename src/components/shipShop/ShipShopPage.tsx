@@ -106,7 +106,7 @@ function PipBoard({
   const used = powerUsed(columns, power)
   if (columns.length === 0) return null
   return (
-    <div className="flex items-end gap-4 overflow-x-auto pb-1">
+    <div className="flex min-w-0 max-w-full items-end gap-4 overflow-x-auto pb-1">
       <p className="self-center font-mono text-lg text-slate-300 whitespace-nowrap">
         {generated > 0 ? `${remaining} / ${generated}` : `${used}`}
       </p>
@@ -543,7 +543,7 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div className="ship-shop-fit flex flex-col gap-4 lg:flex-row lg:items-start">
+    <div className="flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-start">
       <div className="shrink-0 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100vh-var(--site-header-height,3.5rem)-1rem)] lg:w-[22rem] lg:overflow-y-auto">
         <ShipSnapshot snapshot={snapshot} />
       </div>
@@ -687,6 +687,7 @@ export default function ShipShopPage() {
             return (
               <div
                 key={port.id}
+                data-ship-port={port.id}
                 className={depth > 0 ? 'border-l border-orange-500/30 pl-3' : ''}
                 style={depth > 0 ? { marginLeft: `${depth * 1.5}rem` } : undefined}
               >
