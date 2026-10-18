@@ -147,8 +147,8 @@
 
   @media (min-width: 1921px) {
     .ship-shop-page {
-      --ship-pip-size: 42px;
-      --ship-pip-gap: 4px;
+      --ship-pip-size: 30px;
+      --ship-pip-gap: 3px;
       --ship-logo-h: 7rem;
       --ship-snap-w: 22rem;
     }
@@ -1290,14 +1290,17 @@
 
 @media (min-width: 1921px) {
   .ship-shop-pip {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .ship-shop-pip-label {
-    font-size: 22px;
+    font-size: 16px;
   }
 
-  .ship-shop-pip-remain,
+  .ship-shop-pip-remain {
+    font-size: 0.8rem;
+  }
+
   .ship-shop-part-name {
     font-size: 1.125rem;
   }
