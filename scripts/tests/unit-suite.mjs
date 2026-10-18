@@ -2355,8 +2355,8 @@ const ravenCoolers = [
   { portId: 'c2', kind: 'cooler', size: 1, stats: bracer },
 ]
 check(
-  Math.floor(shipShopMath.coolantDemand(ravenCoolers, oneCooler) / shipShopMath.coolantSupply(ravenCoolers, oneCooler) * 100) === 10 &&
-    Math.floor(shipShopMath.coolantDemand(ravenCoolers, splitCoolers) / shipShopMath.coolantSupply(ravenCoolers, splitCoolers) * 100) === 12 &&
+  Math.floor(shipShopMath.coolantDemand(ravenCoolers, oneCooler) / shipShopMath.coolantSupply(ravenCoolers, oneCooler) * 100) === 15 &&
+    Math.floor(shipShopMath.coolantDemand(ravenCoolers, splitCoolers) / shipShopMath.coolantSupply(ravenCoolers, splitCoolers) * 100) === 18 &&
     shipShopMath.coolantDemand(
       [{ portId: 'q', kind: 'quantum', size: 1, stats: { Power_Segments: 3, Power_LowStart: 1, Power_LowMod: 0.7 } }],
       new Map([['q', 0]]),

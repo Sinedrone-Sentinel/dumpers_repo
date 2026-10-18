@@ -670,8 +670,9 @@ export function coolantSupply(parts: PowerPart[], pips: Map<string, number>): nu
 
 /**
  * Cooling load is the pips in use, plus another `pips * band` for shields,
- * life support, radar, and the quantum drive. Plants do not draw coolant.
- * Weapon pips count only up to the guns' own segment total.
+ * life support, radar, and the quantum drive. Powered coolers also add their
+ * own minimum once, on top of the pips assigned to them. Plants do not draw
+ * coolant. Weapon pips count only up to the guns' own segment total.
  */
 export function coolantDemand(
   parts: PowerPart[],
@@ -681,13 +682,19 @@ export function coolantDemand(
 ): number {
   let drawn = 0
   let extra = 0
+  let coolerSelf = 0
   for (const part of parts) {
     if (part.kind === 'weapon' || part.kind === 'power' || part.kind === 'flight' || part.kind === 'missile') continue
     const count = assignedPips(pips, part.portId)
     if (count <= 0) continue
     drawn += count
+    if (part.kind === 'cooler') {
+      const own = Math.min(count, Math.max(1, part.stats.Power_Min || 1))
+      coolerSelf = coolerSelf === 0 ? own : Math.min(coolerSelf, own)
+    }
     if (COOLING_BAND_KINDS.has(part.kind)) extra += count * segmentScale(part.stats, count)
   }
+  drawn += coolerSelf
   drawn += Math.min(Math.max(0, weaponSelected), Math.max(0, weaponRaw))
   return drawn + extra
 }
