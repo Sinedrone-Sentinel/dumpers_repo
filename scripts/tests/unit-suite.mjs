@@ -2199,6 +2199,12 @@ check(
     deadboltSnapshot.burstDps === 5200 && deadboltSnapshot.sustainedDps === 3934,
     'ship shop: the snapshot sums those cannons to burst 5200 and sustained 3934',
   )
+  const unpoweredDrive = shipShopMath.emptySnapshot()
+  shipShopMath.addPartToSnapshot(unpoweredDrive, 'quantum', { Quantum_Speed: 283_000_000 }, 0)
+  check(
+    unpoweredDrive.quantumSpeed === 283_000_000,
+    'ship shop: quantum speed stays on the snapshot when the drive has no pips',
+  )
 }
 check(
   shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 60 }) === 10,

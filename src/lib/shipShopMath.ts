@@ -409,7 +409,7 @@ export function addPartToSnapshot(
     if (stats.Flight_BoostSpeed) snapshot.boostSpeed = stats.Flight_BoostSpeed * (scale > 0 ? 1 : 0)
     if (stats.Flight_MaxSpeed) snapshot.navSpeed = stats.Flight_MaxSpeed
   }
-  if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
+  if (kind === 'quantum' && stats.Quantum_Speed) {
     snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
   }
 }

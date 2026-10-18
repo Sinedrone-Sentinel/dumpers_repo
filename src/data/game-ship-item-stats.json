@@ -1831,12 +1831,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 32.5,
-        "Flight_Yaw": 27.5,
-        "Flight_Roll": 95,
-        "Flight_ScmSpeed": 203,
-        "Flight_BoostSpeed": 425,
-        "Flight_MaxSpeed": 1075
+        "Flight_Pitch": 33.5,
+        "Flight_Yaw": 28.5,
+        "Flight_Roll": 97,
+        "Flight_ScmSpeed": 195,
+        "Flight_BoostSpeed": 415,
+        "Flight_MaxSpeed": 1050
       },
       "burstDps": 0,
       "tags": "ANVL_Asgard_Blade",
@@ -1877,12 +1877,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 32.5,
-        "Flight_Yaw": 27.5,
-        "Flight_Roll": 95,
-        "Flight_ScmSpeed": 203,
-        "Flight_BoostSpeed": 425,
-        "Flight_MaxSpeed": 1075
+        "Flight_Pitch": 31.5,
+        "Flight_Yaw": 26.5,
+        "Flight_Roll": 93,
+        "Flight_ScmSpeed": 211,
+        "Flight_BoostSpeed": 435,
+        "Flight_MaxSpeed": 1100
       },
       "burstDps": 0,
       "tags": "ANVL_Asgard_Blade",
@@ -2039,12 +2039,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 8,
-        "Flight_Pitch": 16,
-        "Flight_Yaw": 16,
-        "Flight_Roll": 30,
-        "Flight_ScmSpeed": 140,
-        "Flight_BoostSpeed": 315,
-        "Flight_MaxSpeed": 1050
+        "Flight_Pitch": 17,
+        "Flight_Yaw": 17,
+        "Flight_Roll": 32,
+        "Flight_ScmSpeed": 132,
+        "Flight_BoostSpeed": 305,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "tags": "ANVL_Carrack_Blade",
@@ -2085,12 +2085,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 8,
-        "Flight_Pitch": 16,
-        "Flight_Yaw": 16,
-        "Flight_Roll": 30,
-        "Flight_ScmSpeed": 140,
-        "Flight_BoostSpeed": 315,
-        "Flight_MaxSpeed": 1050
+        "Flight_Pitch": 15,
+        "Flight_Yaw": 15,
+        "Flight_Roll": 28,
+        "Flight_ScmSpeed": 148,
+        "Flight_BoostSpeed": 325,
+        "Flight_MaxSpeed": 1075
       },
       "burstDps": 0,
       "tags": "ANVL_Carrack_Blade",
@@ -6000,12 +6000,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 75,
-        "Flight_Yaw": 57,
-        "Flight_Roll": 205,
-        "Flight_ScmSpeed": 229,
-        "Flight_BoostSpeed": 515,
-        "Flight_MaxSpeed": 1215
+        "Flight_Pitch": 76,
+        "Flight_Yaw": 58,
+        "Flight_Roll": 207,
+        "Flight_ScmSpeed": 221,
+        "Flight_BoostSpeed": 505,
+        "Flight_MaxSpeed": 1190
       },
       "burstDps": 0,
       "tags": "ANVL_Arrow_Blade",
@@ -6046,12 +6046,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 75,
-        "Flight_Yaw": 57,
-        "Flight_Roll": 205,
-        "Flight_ScmSpeed": 229,
-        "Flight_BoostSpeed": 515,
-        "Flight_MaxSpeed": 1215
+        "Flight_Pitch": 74,
+        "Flight_Yaw": 56,
+        "Flight_Roll": 203,
+        "Flight_ScmSpeed": 237,
+        "Flight_BoostSpeed": 525,
+        "Flight_MaxSpeed": 1240
       },
       "burstDps": 0,
       "tags": "ANVL_Arrow_Blade",
@@ -6743,12 +6743,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 58,
-        "Flight_Yaw": 52,
-        "Flight_Roll": 140,
-        "Flight_ScmSpeed": 225,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1230
+        "Flight_Pitch": 59,
+        "Flight_Yaw": 53,
+        "Flight_Roll": 142,
+        "Flight_ScmSpeed": 217,
+        "Flight_BoostSpeed": 450,
+        "Flight_MaxSpeed": 1205
       },
       "burstDps": 0,
       "tags": "$RSI_Aurora_mk2_Blade",
@@ -6789,12 +6789,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 58,
-        "Flight_Yaw": 52,
-        "Flight_Roll": 140,
-        "Flight_ScmSpeed": 225,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1230
+        "Flight_Pitch": 57,
+        "Flight_Yaw": 51,
+        "Flight_Roll": 138,
+        "Flight_ScmSpeed": 233,
+        "Flight_BoostSpeed": 470,
+        "Flight_MaxSpeed": 1255
       },
       "burstDps": 0,
       "tags": "$RSI_Aurora_mk2_Blade",
@@ -6840,12 +6840,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 53,
-        "Flight_Yaw": 48,
-        "Flight_Roll": 190,
-        "Flight_ScmSpeed": 262,
-        "Flight_BoostSpeed": 610,
-        "Flight_MaxSpeed": 1425
+        "Flight_Pitch": 54,
+        "Flight_Yaw": 49,
+        "Flight_Roll": 192,
+        "Flight_ScmSpeed": 254,
+        "Flight_BoostSpeed": 600,
+        "Flight_MaxSpeed": 1400
       },
       "burstDps": 0,
       "tags": "AEGS_Avenger_Stalker_Blade",
@@ -6940,12 +6940,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 53,
-        "Flight_Yaw": 48,
-        "Flight_Roll": 190,
-        "Flight_ScmSpeed": 262,
-        "Flight_BoostSpeed": 610,
-        "Flight_MaxSpeed": 1425
+        "Flight_Pitch": 52,
+        "Flight_Yaw": 47,
+        "Flight_Roll": 188,
+        "Flight_ScmSpeed": 270,
+        "Flight_BoostSpeed": 620,
+        "Flight_MaxSpeed": 1450
       },
       "burstDps": 0,
       "tags": "AEGS_Avenger_Stalker_Blade",
@@ -6963,12 +6963,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 53,
-        "Flight_Yaw": 48,
-        "Flight_Roll": 190,
-        "Flight_ScmSpeed": 262,
-        "Flight_BoostSpeed": 610,
-        "Flight_MaxSpeed": 1425
+        "Flight_Pitch": 54,
+        "Flight_Yaw": 49,
+        "Flight_Roll": 192,
+        "Flight_ScmSpeed": 254,
+        "Flight_BoostSpeed": 600,
+        "Flight_MaxSpeed": 1400
       },
       "burstDps": 0,
       "tags": "AEGS_Avenger_Titan_Blade",
@@ -7036,12 +7036,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 53,
-        "Flight_Yaw": 48,
-        "Flight_Roll": 190,
-        "Flight_ScmSpeed": 262,
-        "Flight_BoostSpeed": 610,
-        "Flight_MaxSpeed": 1425
+        "Flight_Pitch": 52,
+        "Flight_Yaw": 47,
+        "Flight_Roll": 188,
+        "Flight_ScmSpeed": 270,
+        "Flight_BoostSpeed": 620,
+        "Flight_MaxSpeed": 1450
       },
       "burstDps": 0,
       "tags": "AEGS_Avenger_Titan_Blade",
@@ -7059,12 +7059,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 53,
-        "Flight_Yaw": 48,
-        "Flight_Roll": 190,
-        "Flight_ScmSpeed": 262,
-        "Flight_BoostSpeed": 610,
-        "Flight_MaxSpeed": 1425
+        "Flight_Pitch": 54,
+        "Flight_Yaw": 49,
+        "Flight_Roll": 192,
+        "Flight_ScmSpeed": 254,
+        "Flight_BoostSpeed": 600,
+        "Flight_MaxSpeed": 1400
       },
       "burstDps": 0,
       "tags": "AEGS_Avenger_Warlock_Blade",
@@ -7132,12 +7132,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 53,
-        "Flight_Yaw": 48,
-        "Flight_Roll": 190,
-        "Flight_ScmSpeed": 262,
-        "Flight_BoostSpeed": 610,
-        "Flight_MaxSpeed": 1425
+        "Flight_Pitch": 52,
+        "Flight_Yaw": 47,
+        "Flight_Roll": 188,
+        "Flight_ScmSpeed": 270,
+        "Flight_BoostSpeed": 620,
+        "Flight_MaxSpeed": 1450
       },
       "burstDps": 0,
       "tags": "AEGS_Avenger_Warlock_Blade",
@@ -9500,12 +9500,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 56,
-        "Flight_Yaw": 56,
-        "Flight_Roll": 142,
-        "Flight_ScmSpeed": 220,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1150
+        "Flight_Pitch": 57,
+        "Flight_Yaw": 57,
+        "Flight_Roll": 144,
+        "Flight_ScmSpeed": 212,
+        "Flight_BoostSpeed": 450,
+        "Flight_MaxSpeed": 1125
       },
       "burstDps": 0,
       "tags": "ANVL_Pisces_C8R_Blade",
@@ -9546,12 +9546,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 56,
-        "Flight_Yaw": 56,
-        "Flight_Roll": 142,
-        "Flight_ScmSpeed": 220,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1150
+        "Flight_Pitch": 55,
+        "Flight_Yaw": 55,
+        "Flight_Roll": 140,
+        "Flight_ScmSpeed": 228,
+        "Flight_BoostSpeed": 470,
+        "Flight_MaxSpeed": 1175
       },
       "burstDps": 0,
       "tags": "ANVL_Pisces_C8R_Blade",
@@ -9569,12 +9569,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 60,
-        "Flight_Yaw": 60,
-        "Flight_Roll": 150,
-        "Flight_ScmSpeed": 220,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1150
+        "Flight_Pitch": 61,
+        "Flight_Yaw": 61,
+        "Flight_Roll": 152,
+        "Flight_ScmSpeed": 212,
+        "Flight_BoostSpeed": 450,
+        "Flight_MaxSpeed": 1125
       },
       "burstDps": 0,
       "tags": "ANVL_Pisces_C8X_Blade",
@@ -9615,12 +9615,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 60,
-        "Flight_Yaw": 60,
-        "Flight_Roll": 150,
-        "Flight_ScmSpeed": 220,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1150
+        "Flight_Pitch": 59,
+        "Flight_Yaw": 59,
+        "Flight_Roll": 148,
+        "Flight_ScmSpeed": 228,
+        "Flight_BoostSpeed": 470,
+        "Flight_MaxSpeed": 1175
       },
       "burstDps": 0,
       "tags": "ANVL_Pisces_C8X_Blade",
@@ -11196,12 +11196,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 190,
-        "Flight_BoostSpeed": 390,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 182,
+        "Flight_BoostSpeed": 380,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "grade": "A"
@@ -11217,12 +11217,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 190,
-        "Flight_BoostSpeed": 390,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 182,
+        "Flight_BoostSpeed": 380,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Andromeda_Blade",
@@ -11305,12 +11305,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 190,
-        "Flight_BoostSpeed": 390,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 198,
+        "Flight_BoostSpeed": 400,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "grade": "A"
@@ -11326,12 +11326,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 190,
-        "Flight_BoostSpeed": 390,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 198,
+        "Flight_BoostSpeed": 400,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Andromeda_Blade",
@@ -11349,12 +11349,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 1075
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 172,
+        "Flight_BoostSpeed": 370,
+        "Flight_MaxSpeed": 1050
       },
       "burstDps": 0,
       "grade": "A"
@@ -11370,12 +11370,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 1075
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 172,
+        "Flight_BoostSpeed": 370,
+        "Flight_MaxSpeed": 1050
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Aquila_Blade",
@@ -11437,12 +11437,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 1075
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 188,
+        "Flight_BoostSpeed": 390,
+        "Flight_MaxSpeed": 1100
       },
       "burstDps": 0,
       "grade": "A"
@@ -11458,12 +11458,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 1075
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 188,
+        "Flight_BoostSpeed": 390,
+        "Flight_MaxSpeed": 1100
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Aquila_Blade",
@@ -11481,12 +11481,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 185,
-        "Flight_BoostSpeed": 385,
-        "Flight_MaxSpeed": 995
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 177,
+        "Flight_BoostSpeed": 375,
+        "Flight_MaxSpeed": 970
       },
       "burstDps": 0,
       "grade": "A"
@@ -11502,12 +11502,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 185,
-        "Flight_BoostSpeed": 385,
-        "Flight_MaxSpeed": 995
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 177,
+        "Flight_BoostSpeed": 375,
+        "Flight_MaxSpeed": 970
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Phoenix_Blade",
@@ -11569,12 +11569,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 185,
-        "Flight_BoostSpeed": 385,
-        "Flight_MaxSpeed": 995
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 193,
+        "Flight_BoostSpeed": 395,
+        "Flight_MaxSpeed": 1020
       },
       "burstDps": 0,
       "grade": "A"
@@ -11590,12 +11590,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 185,
-        "Flight_BoostSpeed": 385,
-        "Flight_MaxSpeed": 995
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 193,
+        "Flight_BoostSpeed": 395,
+        "Flight_MaxSpeed": 1020
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Phoenix_Blade",
@@ -11613,12 +11613,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 950
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 172,
+        "Flight_BoostSpeed": 370,
+        "Flight_MaxSpeed": 925
       },
       "burstDps": 0,
       "grade": "A"
@@ -11634,12 +11634,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 950
+        "Flight_Pitch": 26,
+        "Flight_Yaw": 22,
+        "Flight_Roll": 47,
+        "Flight_ScmSpeed": 172,
+        "Flight_BoostSpeed": 370,
+        "Flight_MaxSpeed": 925
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Taurus_Blade",
@@ -11701,12 +11701,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 950
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 188,
+        "Flight_BoostSpeed": 390,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "grade": "A"
@@ -11722,12 +11722,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 25,
-        "Flight_Yaw": 21,
-        "Flight_Roll": 45,
-        "Flight_ScmSpeed": 180,
-        "Flight_BoostSpeed": 380,
-        "Flight_MaxSpeed": 950
+        "Flight_Pitch": 24,
+        "Flight_Yaw": 20,
+        "Flight_Roll": 43,
+        "Flight_ScmSpeed": 188,
+        "Flight_BoostSpeed": 390,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "tags": "$RSI_Constellation_Taurus_Blade",
@@ -12937,12 +12937,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 49,
-        "Flight_Yaw": 42,
-        "Flight_Roll": 155,
-        "Flight_ScmSpeed": 240,
-        "Flight_BoostSpeed": 600,
-        "Flight_MaxSpeed": 1400
+        "Flight_Pitch": 50,
+        "Flight_Yaw": 43,
+        "Flight_Roll": 157,
+        "Flight_ScmSpeed": 232,
+        "Flight_BoostSpeed": 590,
+        "Flight_MaxSpeed": 1375
       },
       "burstDps": 0,
       "tags": "$DRAK_Buccaneer_Blade",
@@ -13022,12 +13022,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 49,
-        "Flight_Yaw": 42,
-        "Flight_Roll": 155,
-        "Flight_ScmSpeed": 240,
-        "Flight_BoostSpeed": 600,
-        "Flight_MaxSpeed": 1400
+        "Flight_Pitch": 48,
+        "Flight_Yaw": 41,
+        "Flight_Roll": 153,
+        "Flight_ScmSpeed": 248,
+        "Flight_BoostSpeed": 610,
+        "Flight_MaxSpeed": 1425
       },
       "burstDps": 0,
       "tags": "$DRAK_Buccaneer_Blade",
@@ -13077,12 +13077,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 38,
-        "Flight_Yaw": 38,
-        "Flight_Roll": 125,
-        "Flight_ScmSpeed": 205,
-        "Flight_BoostSpeed": 405,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 39,
+        "Flight_Yaw": 39,
+        "Flight_Roll": 127,
+        "Flight_ScmSpeed": 197,
+        "Flight_BoostSpeed": 395,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "tags": "$DRAK_Clipper_Blade",
@@ -13123,12 +13123,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 38,
-        "Flight_Yaw": 38,
-        "Flight_Roll": 125,
-        "Flight_ScmSpeed": 205,
-        "Flight_BoostSpeed": 405,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 37,
+        "Flight_Yaw": 37,
+        "Flight_Roll": 123,
+        "Flight_ScmSpeed": 213,
+        "Flight_BoostSpeed": 415,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "tags": "$DRAK_Clipper_Blade",
@@ -13146,12 +13146,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 26,
-        "Flight_Yaw": 20,
-        "Flight_Roll": 44,
-        "Flight_ScmSpeed": 190,
-        "Flight_BoostSpeed": 390,
-        "Flight_MaxSpeed": 1025
+        "Flight_Pitch": 27,
+        "Flight_Yaw": 21,
+        "Flight_Roll": 46,
+        "Flight_ScmSpeed": 182,
+        "Flight_BoostSpeed": 380,
+        "Flight_MaxSpeed": 1000
       },
       "burstDps": 0,
       "tags": "$DRAK_Corsair_Blade",
@@ -13192,12 +13192,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 26,
-        "Flight_Yaw": 20,
-        "Flight_Roll": 44,
-        "Flight_ScmSpeed": 190,
-        "Flight_BoostSpeed": 390,
-        "Flight_MaxSpeed": 1025
+        "Flight_Pitch": 25,
+        "Flight_Yaw": 19,
+        "Flight_Roll": 42,
+        "Flight_ScmSpeed": 198,
+        "Flight_BoostSpeed": 400,
+        "Flight_MaxSpeed": 1050
       },
       "burstDps": 0,
       "tags": "$DRAK_Corsair_Blade",
@@ -20658,12 +20658,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 68,
-        "Flight_Yaw": 52,
-        "Flight_Roll": 200,
-        "Flight_ScmSpeed": 226,
-        "Flight_BoostSpeed": 520,
-        "Flight_MaxSpeed": 1193
+        "Flight_Pitch": 69,
+        "Flight_Yaw": 53,
+        "Flight_Roll": 202,
+        "Flight_ScmSpeed": 218,
+        "Flight_BoostSpeed": 510,
+        "Flight_MaxSpeed": 1168
       },
       "burstDps": 0,
       "tags": "AEGS_Gladius_Blade",
@@ -20777,12 +20777,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 68,
-        "Flight_Yaw": 52,
-        "Flight_Roll": 200,
-        "Flight_ScmSpeed": 226,
-        "Flight_BoostSpeed": 520,
-        "Flight_MaxSpeed": 1193
+        "Flight_Pitch": 67,
+        "Flight_Yaw": 51,
+        "Flight_Roll": 198,
+        "Flight_ScmSpeed": 234,
+        "Flight_BoostSpeed": 530,
+        "Flight_MaxSpeed": 1218
       },
       "burstDps": 0,
       "tags": "AEGS_Gladius_Blade",
@@ -21431,12 +21431,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 8,
-        "Flight_Pitch": 20,
-        "Flight_Yaw": 20,
-        "Flight_Roll": 30,
-        "Flight_ScmSpeed": 160,
-        "Flight_BoostSpeed": 340,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 21,
+        "Flight_Yaw": 21,
+        "Flight_Roll": 32,
+        "Flight_ScmSpeed": 152,
+        "Flight_BoostSpeed": 330,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "tags": "AEGS_Hammerhead_Blade",
@@ -21712,12 +21712,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 8,
-        "Flight_Pitch": 20,
-        "Flight_Yaw": 20,
-        "Flight_Roll": 30,
-        "Flight_ScmSpeed": 160,
-        "Flight_BoostSpeed": 340,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 19,
+        "Flight_Yaw": 19,
+        "Flight_Roll": 28,
+        "Flight_ScmSpeed": 168,
+        "Flight_BoostSpeed": 350,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "tags": "AEGS_Hammerhead_Blade",
@@ -24947,12 +24947,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 72,
-        "Flight_Yaw": 52,
-        "Flight_Roll": 210,
-        "Flight_ScmSpeed": 230,
-        "Flight_BoostSpeed": 510,
-        "Flight_MaxSpeed": 1225
+        "Flight_Pitch": 73,
+        "Flight_Yaw": 53,
+        "Flight_Roll": 212,
+        "Flight_ScmSpeed": 222,
+        "Flight_BoostSpeed": 500,
+        "Flight_MaxSpeed": 1200
       },
       "burstDps": 0,
       "tags": "KRIG_Wolf_Blade",
@@ -24993,12 +24993,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 72,
-        "Flight_Yaw": 52,
-        "Flight_Roll": 210,
-        "Flight_ScmSpeed": 230,
-        "Flight_BoostSpeed": 510,
-        "Flight_MaxSpeed": 1225
+        "Flight_Pitch": 71,
+        "Flight_Yaw": 51,
+        "Flight_Roll": 208,
+        "Flight_ScmSpeed": 238,
+        "Flight_BoostSpeed": 520,
+        "Flight_MaxSpeed": 1250
       },
       "burstDps": 0,
       "tags": "KRIG_Wolf_Blade",
@@ -25016,12 +25016,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 74,
-        "Flight_Yaw": 54,
-        "Flight_Roll": 210,
-        "Flight_ScmSpeed": 225,
-        "Flight_BoostSpeed": 500,
-        "Flight_MaxSpeed": 1225
+        "Flight_Pitch": 75,
+        "Flight_Yaw": 55,
+        "Flight_Roll": 212,
+        "Flight_ScmSpeed": 217,
+        "Flight_BoostSpeed": 490,
+        "Flight_MaxSpeed": 1200
       },
       "burstDps": 0,
       "tags": "KRIG_AlphaWolf_Blade",
@@ -25062,12 +25062,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 74,
-        "Flight_Yaw": 54,
-        "Flight_Roll": 210,
-        "Flight_ScmSpeed": 225,
-        "Flight_BoostSpeed": 500,
-        "Flight_MaxSpeed": 1225
+        "Flight_Pitch": 73,
+        "Flight_Yaw": 53,
+        "Flight_Roll": 208,
+        "Flight_ScmSpeed": 233,
+        "Flight_BoostSpeed": 510,
+        "Flight_MaxSpeed": 1250
       },
       "burstDps": 0,
       "tags": "KRIG_AlphaWolf_Blade",
@@ -26434,12 +26434,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 50,
-        "Flight_Yaw": 42,
-        "Flight_Roll": 160,
-        "Flight_ScmSpeed": 236,
-        "Flight_BoostSpeed": 605,
-        "Flight_MaxSpeed": 1400
+        "Flight_Pitch": 51,
+        "Flight_Yaw": 43,
+        "Flight_Roll": 162,
+        "Flight_ScmSpeed": 228,
+        "Flight_BoostSpeed": 595,
+        "Flight_MaxSpeed": 1375
       },
       "burstDps": 0,
       "tags": "$RSI_Mantis_Blade",
@@ -26480,12 +26480,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 50,
-        "Flight_Yaw": 42,
-        "Flight_Roll": 160,
-        "Flight_ScmSpeed": 236,
-        "Flight_BoostSpeed": 605,
-        "Flight_MaxSpeed": 1400
+        "Flight_Pitch": 49,
+        "Flight_Yaw": 41,
+        "Flight_Roll": 158,
+        "Flight_ScmSpeed": 244,
+        "Flight_BoostSpeed": 615,
+        "Flight_MaxSpeed": 1425
       },
       "burstDps": 0,
       "tags": "$RSI_Mantis_Blade",
@@ -26872,12 +26872,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 46,
-        "Flight_Yaw": 38,
-        "Flight_Roll": 155,
-        "Flight_ScmSpeed": 229,
-        "Flight_BoostSpeed": 570,
-        "Flight_MaxSpeed": 1405
+        "Flight_Pitch": 47,
+        "Flight_Yaw": 39,
+        "Flight_Roll": 157,
+        "Flight_ScmSpeed": 221,
+        "Flight_BoostSpeed": 560,
+        "Flight_MaxSpeed": 1380
       },
       "burstDps": 0,
       "tags": "$RSI_Meteor_Blade",
@@ -26918,12 +26918,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 46,
-        "Flight_Yaw": 38,
-        "Flight_Roll": 155,
-        "Flight_ScmSpeed": 229,
-        "Flight_BoostSpeed": 570,
-        "Flight_MaxSpeed": 1405
+        "Flight_Pitch": 45,
+        "Flight_Yaw": 37,
+        "Flight_Roll": 153,
+        "Flight_ScmSpeed": 237,
+        "Flight_BoostSpeed": 580,
+        "Flight_MaxSpeed": 1430
       },
       "burstDps": 0,
       "tags": "$RSI_Meteor_Blade",
@@ -27656,12 +27656,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 30,
-        "Flight_Yaw": 30,
-        "Flight_Roll": 85,
-        "Flight_ScmSpeed": 170,
-        "Flight_BoostSpeed": 360,
-        "Flight_MaxSpeed": 890
+        "Flight_Pitch": 31,
+        "Flight_Yaw": 31,
+        "Flight_Roll": 87,
+        "Flight_ScmSpeed": 162,
+        "Flight_BoostSpeed": 350,
+        "Flight_MaxSpeed": 865
       },
       "burstDps": 0,
       "tags": "ARGO_MPUV_Base_Blade",
@@ -27702,12 +27702,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 30,
-        "Flight_Yaw": 30,
-        "Flight_Roll": 85,
-        "Flight_ScmSpeed": 170,
-        "Flight_BoostSpeed": 360,
-        "Flight_MaxSpeed": 890
+        "Flight_Pitch": 29,
+        "Flight_Yaw": 29,
+        "Flight_Roll": 83,
+        "Flight_ScmSpeed": 178,
+        "Flight_BoostSpeed": 370,
+        "Flight_MaxSpeed": 915
       },
       "burstDps": 0,
       "tags": "ARGO_MPUV_Base_Blade",
@@ -27725,12 +27725,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 30,
-        "Flight_Yaw": 30,
-        "Flight_Roll": 85,
-        "Flight_ScmSpeed": 170,
-        "Flight_BoostSpeed": 360,
-        "Flight_MaxSpeed": 890
+        "Flight_Pitch": 31,
+        "Flight_Yaw": 31,
+        "Flight_Roll": 87,
+        "Flight_ScmSpeed": 162,
+        "Flight_BoostSpeed": 350,
+        "Flight_MaxSpeed": 865
       },
       "burstDps": 0,
       "tags": "ARGO_MPUV_Transport_Blade",
@@ -27771,12 +27771,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 30,
-        "Flight_Yaw": 30,
-        "Flight_Roll": 85,
-        "Flight_ScmSpeed": 170,
-        "Flight_BoostSpeed": 360,
-        "Flight_MaxSpeed": 890
+        "Flight_Pitch": 29,
+        "Flight_Yaw": 29,
+        "Flight_Roll": 83,
+        "Flight_ScmSpeed": 178,
+        "Flight_BoostSpeed": 370,
+        "Flight_MaxSpeed": 915
       },
       "burstDps": 0,
       "tags": "ARGO_MPUV_Transport_Blade",
@@ -27794,12 +27794,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 2,
-        "Flight_Pitch": 35,
-        "Flight_Yaw": 35,
-        "Flight_Roll": 85,
-        "Flight_ScmSpeed": 175,
-        "Flight_BoostSpeed": 365,
-        "Flight_MaxSpeed": 895
+        "Flight_Pitch": 36,
+        "Flight_Yaw": 36,
+        "Flight_Roll": 87,
+        "Flight_ScmSpeed": 167,
+        "Flight_BoostSpeed": 355,
+        "Flight_MaxSpeed": 870
       },
       "burstDps": 0,
       "tags": "ARGO_MPUV_1T_Blade",
@@ -27840,12 +27840,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 2,
-        "Flight_Pitch": 35,
-        "Flight_Yaw": 35,
-        "Flight_Roll": 85,
-        "Flight_ScmSpeed": 175,
-        "Flight_BoostSpeed": 365,
-        "Flight_MaxSpeed": 895
+        "Flight_Pitch": 34,
+        "Flight_Yaw": 34,
+        "Flight_Roll": 83,
+        "Flight_ScmSpeed": 183,
+        "Flight_BoostSpeed": 375,
+        "Flight_MaxSpeed": 920
       },
       "burstDps": 0,
       "tags": "ARGO_MPUV_1T_Blade",
@@ -32411,12 +32411,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 60,
-        "Flight_Yaw": 60,
-        "Flight_Roll": 150,
-        "Flight_ScmSpeed": 220,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1150
+        "Flight_Pitch": 61,
+        "Flight_Yaw": 61,
+        "Flight_Roll": 152,
+        "Flight_ScmSpeed": 212,
+        "Flight_BoostSpeed": 450,
+        "Flight_MaxSpeed": 1125
       },
       "burstDps": 0,
       "tags": "ANVL_Pisces_Base_Blade",
@@ -32457,12 +32457,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 60,
-        "Flight_Yaw": 60,
-        "Flight_Roll": 150,
-        "Flight_ScmSpeed": 220,
-        "Flight_BoostSpeed": 460,
-        "Flight_MaxSpeed": 1150
+        "Flight_Pitch": 59,
+        "Flight_Yaw": 59,
+        "Flight_Roll": 148,
+        "Flight_ScmSpeed": 228,
+        "Flight_BoostSpeed": 470,
+        "Flight_MaxSpeed": 1175
       },
       "burstDps": 0,
       "tags": "ANVL_Pisces_Base_Blade",
@@ -33727,12 +33727,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 8,
-        "Flight_Pitch": 36,
-        "Flight_Yaw": 30,
-        "Flight_Roll": 115,
-        "Flight_ScmSpeed": 203,
-        "Flight_BoostSpeed": 400,
-        "Flight_MaxSpeed": 1050
+        "Flight_Pitch": 37,
+        "Flight_Yaw": 31,
+        "Flight_Roll": 117,
+        "Flight_ScmSpeed": 195,
+        "Flight_BoostSpeed": 390,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "tags": "AEGS_Redeemer_Blade",
@@ -33773,12 +33773,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 8,
-        "Flight_Pitch": 36,
-        "Flight_Yaw": 30,
-        "Flight_Roll": 115,
-        "Flight_ScmSpeed": 203,
-        "Flight_BoostSpeed": 400,
-        "Flight_MaxSpeed": 1050
+        "Flight_Pitch": 35,
+        "Flight_Yaw": 29,
+        "Flight_Roll": 113,
+        "Flight_ScmSpeed": 211,
+        "Flight_BoostSpeed": 410,
+        "Flight_MaxSpeed": 1075
       },
       "burstDps": 0,
       "tags": "AEGS_Redeemer_Blade",
@@ -36972,12 +36972,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 42,
-        "Flight_Yaw": 34,
-        "Flight_Roll": 145,
-        "Flight_ScmSpeed": 230,
-        "Flight_BoostSpeed": 590,
-        "Flight_MaxSpeed": 1385
+        "Flight_Pitch": 43,
+        "Flight_Yaw": 35,
+        "Flight_Roll": 147,
+        "Flight_ScmSpeed": 222,
+        "Flight_BoostSpeed": 580,
+        "Flight_MaxSpeed": 1360
       },
       "burstDps": 0,
       "tags": "RSI_Scorpius_Antares_Blade",
@@ -37018,12 +37018,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 42,
-        "Flight_Yaw": 34,
-        "Flight_Roll": 145,
-        "Flight_ScmSpeed": 230,
-        "Flight_BoostSpeed": 590,
-        "Flight_MaxSpeed": 1385
+        "Flight_Pitch": 41,
+        "Flight_Yaw": 33,
+        "Flight_Roll": 143,
+        "Flight_ScmSpeed": 238,
+        "Flight_BoostSpeed": 600,
+        "Flight_MaxSpeed": 1410
       },
       "burstDps": 0,
       "tags": "RSI_Scorpius_Antares_Blade",
@@ -37041,12 +37041,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 42,
-        "Flight_Yaw": 34,
-        "Flight_Roll": 145,
-        "Flight_ScmSpeed": 230,
-        "Flight_BoostSpeed": 590,
-        "Flight_MaxSpeed": 1385
+        "Flight_Pitch": 43,
+        "Flight_Yaw": 35,
+        "Flight_Roll": 147,
+        "Flight_ScmSpeed": 222,
+        "Flight_BoostSpeed": 580,
+        "Flight_MaxSpeed": 1360
       },
       "burstDps": 0,
       "tags": "RSI_Scorpius_Base_Blade",
@@ -37087,12 +37087,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 4,
-        "Flight_Pitch": 42,
-        "Flight_Yaw": 34,
-        "Flight_Roll": 145,
-        "Flight_ScmSpeed": 230,
-        "Flight_BoostSpeed": 590,
-        "Flight_MaxSpeed": 1385
+        "Flight_Pitch": 41,
+        "Flight_Yaw": 33,
+        "Flight_Roll": 143,
+        "Flight_ScmSpeed": 238,
+        "Flight_BoostSpeed": 600,
+        "Flight_MaxSpeed": 1410
       },
       "burstDps": 0,
       "tags": "RSI_Scorpius_Base_Blade",
@@ -37667,12 +37667,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 50,
-        "Flight_Yaw": 42,
-        "Flight_Roll": 137,
-        "Flight_ScmSpeed": 219,
-        "Flight_BoostSpeed": 479,
-        "Flight_MaxSpeed": 1175
+        "Flight_Pitch": 51,
+        "Flight_Yaw": 43,
+        "Flight_Roll": 139,
+        "Flight_ScmSpeed": 211,
+        "Flight_BoostSpeed": 469,
+        "Flight_MaxSpeed": 1150
       },
       "burstDps": 0,
       "tags": "GLSN_Shiv_Blade",
@@ -37713,12 +37713,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 50,
-        "Flight_Yaw": 42,
-        "Flight_Roll": 137,
-        "Flight_ScmSpeed": 219,
-        "Flight_BoostSpeed": 479,
-        "Flight_MaxSpeed": 1175
+        "Flight_Pitch": 49,
+        "Flight_Yaw": 41,
+        "Flight_Roll": 135,
+        "Flight_ScmSpeed": 227,
+        "Flight_BoostSpeed": 489,
+        "Flight_MaxSpeed": 1200
       },
       "burstDps": 0,
       "tags": "GLSN_Shiv_Blade",
@@ -44532,12 +44532,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 32,
-        "Flight_Yaw": 32,
-        "Flight_Roll": 105,
-        "Flight_ScmSpeed": 200,
-        "Flight_BoostSpeed": 400,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 33,
+        "Flight_Yaw": 33,
+        "Flight_Roll": 107,
+        "Flight_ScmSpeed": 192,
+        "Flight_BoostSpeed": 390,
+        "Flight_MaxSpeed": 975
       },
       "burstDps": 0,
       "tags": "$RSI_Zeus_CL_Blade",
@@ -44578,12 +44578,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 32,
-        "Flight_Yaw": 32,
-        "Flight_Roll": 105,
-        "Flight_ScmSpeed": 200,
-        "Flight_BoostSpeed": 400,
-        "Flight_MaxSpeed": 1000
+        "Flight_Pitch": 31,
+        "Flight_Yaw": 31,
+        "Flight_Roll": 103,
+        "Flight_ScmSpeed": 208,
+        "Flight_BoostSpeed": 410,
+        "Flight_MaxSpeed": 1025
       },
       "burstDps": 0,
       "tags": "$RSI_Zeus_CL_Blade",
@@ -44601,12 +44601,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 32,
-        "Flight_Yaw": 32,
-        "Flight_Roll": 110,
-        "Flight_ScmSpeed": 205,
-        "Flight_BoostSpeed": 405,
-        "Flight_MaxSpeed": 1100
+        "Flight_Pitch": 33,
+        "Flight_Yaw": 33,
+        "Flight_Roll": 112,
+        "Flight_ScmSpeed": 197,
+        "Flight_BoostSpeed": 395,
+        "Flight_MaxSpeed": 1075
       },
       "burstDps": 0,
       "tags": "$RSI_Zeus_ES_Blade",
@@ -44647,12 +44647,12 @@
       "stats": {
         "Power_Min": 1,
         "Power_Segments": 6,
-        "Flight_Pitch": 32,
-        "Flight_Yaw": 32,
-        "Flight_Roll": 110,
-        "Flight_ScmSpeed": 205,
-        "Flight_BoostSpeed": 405,
-        "Flight_MaxSpeed": 1100
+        "Flight_Pitch": 31,
+        "Flight_Yaw": 31,
+        "Flight_Roll": 108,
+        "Flight_ScmSpeed": 213,
+        "Flight_BoostSpeed": 415,
+        "Flight_MaxSpeed": 1125
       },
       "burstDps": 0,
       "tags": "$RSI_Zeus_ES_Blade",
