@@ -1796,7 +1796,7 @@
           "id": "hardpoint_torpedorack",
           "label": "Torpedorack",
           "section": "missiles",
-          "kind": "torpedo",
+          "kind": "missileRack",
           "size": 9,
           "minSize": 3,
           "maxSize": 10,
@@ -1816,8 +1816,7 @@
                 "BombRack"
               ]
             }
-          ],
-          "locked": true
+          ]
         },
         {
           "id": "hardpoint_lifesupport",
@@ -36128,7 +36127,7 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": null,
+          "defaultEntityClass": "bmbrck_crus_spirit_a1",
           "portTags": "$Spirit_Bomb_Rack",
           "accepts": [
             {
@@ -36934,7 +36933,7 @@
           "size": 10,
           "minSize": 10,
           "maxSize": 10,
-          "defaultEntityClass": null,
+          "defaultEntityClass": "bmbrck_crus_starl_left",
           "accepts": [
             {
               "type": "BombLauncher",
@@ -36979,7 +36978,7 @@
           "size": 10,
           "minSize": 10,
           "maxSize": 10,
-          "defaultEntityClass": null,
+          "defaultEntityClass": "bmbrck_crus_starl_right",
           "accepts": [
             {
               "type": "BombLauncher",

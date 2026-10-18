@@ -965,6 +965,167 @@
       "uuid": "85fd75f8-6c6c-4d3f-839f-988ae7660617"
     },
     {
+      "entityClass": "bmbrck_crus_spirit_a1",
+      "displayName": "A1 Spirit Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 200
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Spirit_Bomb_Rack",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "7a8d5207-e203-4bbc-8cec-6956b4129a7e",
+      "exclusiveHull": "spirit_a1"
+    },
+    {
       "entityClass": "radr_wlop_s01_abetti",
       "displayName": "Abetti",
       "kind": "radar",
@@ -1155,6 +1316,419 @@
       "attachSubType": "Gun",
       "grade": "A",
       "uuid": "6c46b8e3-81c8-4018-bce2-740b81174a00"
+    },
+    {
+      "entityClass": "bmbrck_s10_aegs_eclipse",
+      "displayName": "Aegis Eclipse 1xS10 Bomb Rack",
+      "kind": "missileRack",
+      "size": 10,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady Eclipse_BombRack",
+      "requiredTags": "Eclipse_BombRack",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 10,
+          "maxSize": 10,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "a1a64d9f-3d18-4dcb-b0a1-a5c424ff7475"
+    },
+    {
+      "entityClass": "bmbrck_s03_aegs_eclipse",
+      "displayName": "Aegis Eclipse 20xS3 Bomb Rack",
+      "kind": "missileRack",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady Eclipse_BombRack",
+      "requiredTags": "Eclipse_BombRack",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_11_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_12_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_13_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_14_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_15_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_16_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_17_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_18_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_19_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_20_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "99835689-e405-4e03-9e1d-d460c1c377c7"
+    },
+    {
+      "entityClass": "bmbrck_s05_aegs_eclipse",
+      "displayName": "Aegis Eclipse 4xS5 Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady Eclipse_BombRack",
+      "requiredTags": "Eclipse_BombRack",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "e14daa17-8663-4e8f-8a5b-983b2530b1c6"
     },
     {
       "entityClass": "mrck_s09_aegs_eclipse",
@@ -1545,6 +2119,1882 @@
       "grade": "A",
       "uuid": "fa5be128-c861-4d4e-a44f-34832937a1aa",
       "exclusiveHull": "redeemer"
+    },
+    {
+      "entityClass": "bmbrck_s03_aegs_retaliator_rear",
+      "displayName": "Aegis Retaliator 48xS3 Rear Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2500
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Retaliator_BombRack_Rear",
+      "requiredTags": "Retaliator_BombRack_Rear",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_11_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_12_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_13_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_14_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_15_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_16_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_17_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_18_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_19_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_20_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_21_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_22_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_23_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_24_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_25_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_26_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_27_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_28_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_29_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_30_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_31_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_32_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_33_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_34_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_35_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_36_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_37_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_38_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_39_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_40_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_41_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_42_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_43_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_44_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_45_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_46_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_47_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_48_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "005126e9-6067-4f05-9933-ad6a0cc28fd0"
+    },
+    {
+      "entityClass": "bmbrck_s03_aegs_retaliator_front",
+      "displayName": "Aegis Retaliator 64xS3 Front Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2500
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Retaliator_BombRack_Front",
+      "requiredTags": "Retaliator_BombRack_Front",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_11_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_12_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_13_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_14_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_15_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_16_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_17_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_18_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_19_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_20_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_21_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_22_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_23_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_24_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_25_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_26_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_27_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_28_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_29_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_30_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_31_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_32_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_33_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_34_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_35_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_36_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_37_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_38_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_39_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_40_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_41_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_42_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_43_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_44_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_45_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_46_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_47_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_48_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_49_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_50_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_51_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_52_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_53_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_54_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_55_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_56_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_57_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_58_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_59_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_60_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_61_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_62_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_63_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_64_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "3c4d48e6-49dd-4b1a-b9fe-b10c9ced8f65"
+    },
+    {
+      "entityClass": "bmbrck_s05_aegs_retaliator_front",
+      "displayName": "Aegis Retaliator 8xS5 Front Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2500
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Retaliator_BombRack_Front",
+      "requiredTags": "Retaliator_BombRack_Front",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "f9538502-dd71-48f7-8ee7-fa7f4492c7bf"
+    },
+    {
+      "entityClass": "bmbrck_s05_aegs_retaliator_rear",
+      "displayName": "Aegis Retaliator 8xS5 Rear Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 2500
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Retaliator_BombRack_Rear",
+      "requiredTags": "Retaliator_BombRack_Rear",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "627a12eb-3be1-4e2e-8008-cbe502d52b8c"
     },
     {
       "entityClass": "mrck_s09_aegs_retaliator_fore",
@@ -3334,6 +5784,244 @@
         }
       ],
       "uuid": "d0cc229d-53f9-485d-8242-9c7fbfa586a4"
+    },
+    {
+      "entityClass": "bmbrck_s03_anvl_gladiator",
+      "displayName": "Anvil Gladiator S3 Bomb Rack",
+      "kind": "missileRack",
+      "size": 3,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady Gladiator_BombRack",
+      "requiredTags": "Gladiator_BombRack",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_03_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_04_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_05_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_06_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_07_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_08_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_09_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_10_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_11_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_12_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "a59e4b9a-66d1-43f2-bbb1-4eb50c9bf489"
+    },
+    {
+      "entityClass": "bmbrck_s05_anvl_gladiator",
+      "displayName": "Anvil Gladiator S5 Bomb Rack",
+      "kind": "missileRack",
+      "size": 5,
+      "manufacturer": "Anvil Aerospace",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady Gladiator_BombRack",
+      "requiredTags": "Gladiator_BombRack",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 5,
+          "maxSize": 5,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "ed3435e9-8caf-44d6-a327-051e61c88d64"
     },
     {
       "entityClass": "mrck_s06_anvl_gladiator",
@@ -15324,6 +18012,40 @@
         }
       ],
       "uuid": "549964bb-a674-41ba-86d5-55a6d3c25931"
+    },
+    {
+      "entityClass": "bmbrck_s03_behr_single_s03",
+      "displayName": "CST-313 \"Castillo\"",
+      "kind": "missileRack",
+      "size": 3,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 200
+      },
+      "burstDps": 0,
+      "tags": "flightReady",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 3,
+          "maxSize": 3,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "c9686715-884f-456a-afbe-054107c8c54a"
     },
     {
       "entityClass": "armr_drak_cutlass_black",
@@ -55529,6 +58251,104 @@
       "uuid": "41a56edf-ce69-4638-9c80-1692c3d345c6"
     },
     {
+      "entityClass": "bmbrck_crus_starl_left",
+      "displayName": "Starlancer Left Bomb Rack",
+      "kind": "missileRack",
+      "size": 10,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 3600
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Starlifter_A2_Bomb_Rack_Left",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 10,
+          "maxSize": 10,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 10,
+          "maxSize": 10,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "4394a178-7e74-4943-9538-2139f65839fd",
+      "exclusiveHull": "starlancer"
+    },
+    {
+      "entityClass": "bmbrck_crus_starl_right",
+      "displayName": "Starlancer Right Bomb Rack",
+      "kind": "missileRack",
+      "size": 10,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 3600
+      },
+      "burstDps": 0,
+      "tags": "flightReady $Starlifter_A2_Bomb_Rack_Right",
+      "attachType": "BombLauncher",
+      "attachSubType": "BombRack",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "missile_01_attach",
+          "minSize": 10,
+          "maxSize": 10,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        },
+        {
+          "name": "missile_02_attach",
+          "minSize": 10,
+          "maxSize": 10,
+          "accepts": [
+            {
+              "type": "Bomb",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ],
+          "kind": "bomb"
+        }
+      ],
+      "uuid": "8352da44-4b63-4a4b-8397-734dfb11698b",
+      "exclusiveHull": "starlancer"
+    },
+    {
       "entityClass": "powr_just_s00_steadfast_scitem",
       "displayName": "Steadfast",
       "kind": "power",
@@ -57071,31 +59891,6 @@
       "ordnance": "missile",
       "guidance": "CS",
       "uuid": "4317f2fc-4044-454e-8400-25c2e3c65136"
-    },
-    {
-      "entityClass": "misl_s02_cs_fski_tempest_citcon",
-      "displayName": "Tempest II Missile",
-      "kind": "missile",
-      "size": 2,
-      "manufacturer": null,
-      "weaponClass": null,
-      "damageType": "Energy",
-      "stats": {
-        "Weapon_Damage_Physical": 3508.92,
-        "Weapon_Damage_Energy": 14035.68,
-        "Weapon_Damage": 17544.6,
-        "Weapon_Speed": 1029,
-        "Health_Maxhealth": 25,
-        "Missile_Damage": 17544.6
-      },
-      "burstDps": 0,
-      "tags": "FSKI CS flightReady",
-      "attachType": "Missile",
-      "attachSubType": "Missile",
-      "grade": "A",
-      "ordnance": "missile",
-      "guidance": "CS",
-      "uuid": "a655616b-772f-4760-b6a1-404497eb10ec"
     },
     {
       "entityClass": "gmisl_s02_cs_fski_tempest",
