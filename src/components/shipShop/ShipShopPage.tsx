@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from 'react'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
 import { useAuth } from '../../contexts/AuthContext'
 import {
@@ -9,6 +9,7 @@ import {
   defaultCraftQualities,
   getShip,
   missileSlotsForRack,
+  effectivePortKind,
   partsForPort,
   portsForSection,
   weaponTree,
@@ -24,9 +25,9 @@ import {
   type ShipShopStore,
 } from '../../lib/shipShopData'
 import {
-  assignedSegments,
   clickPowerColumn,
   columnTotal,
+  componentGroups,
   flightRole,
   formatQuantumSpeed,
   partStatLine,
@@ -72,9 +73,11 @@ function itemTitle(item: { displayName: string; kind?: string; itemClass?: strin
 
 function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   if (snapshot.coolant <= 0 && snapshot.coolantDemand <= 0) return null
-  const ratio = snapshot.coolantDemand > 0 ? snapshot.coolant / snapshot.coolantDemand : 1
-  const covered = ratio >= 1
-  const percent = Math.round(ratio * 100)
+  const supply = snapshot.coolant
+  const demand = snapshot.coolantDemand
+  const percent = supply > 0 ? Math.round((demand / supply) * 100) : 0
+  const over = supply > 0 && demand > supply
+  const width = supply > 0 ? Math.max(0, Math.min(100, percent)) : 0
   return (
     <div className="mt-4">
       <div className="flex items-baseline justify-between gap-3 text-sm">
@@ -82,7 +85,7 @@ function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
         <span className="font-mono text-white">{percent}%</span>
       </div>
       <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-800">
-        <div className="h-full rounded-full" style={{ width: `${Math.max(0, Math.min(100, percent))}%`, background: covered ? '#FBBF24' : '#EF4444' }} />
+        <div className="h-full rounded-full" style={{ width: `${width}%`, background: over ? '#EF4444' : '#FBBF24' }} />
       </div>
     </div>
   )
@@ -99,55 +102,77 @@ function PipBoard({
   power: Record<string, number>
   remaining: number
   generated: number
-  onPower: (groupId: string, count: number) => void
+  onPower: (patch: Record<string, number>, columnId: string) => void
 }) {
   const used = powerUsed(columns, power)
   if (columns.length === 0) return null
   return (
-    <div className="flex items-end gap-3 overflow-x-auto pb-1">
-      <p className="self-center font-mono text-xs text-slate-300 whitespace-nowrap">
+    <div className="flex items-end gap-4 overflow-x-auto pb-1">
+      <p className="self-center font-mono text-lg text-slate-300 whitespace-nowrap">
         {generated > 0 ? `${remaining} / ${generated}` : `${used}`}
       </p>
       {columns.map((column) => {
+        const groups = componentGroups(column)
         const total = columnTotal(column)
-        const selected = power[column.id] || 0
-        const flags = blockFlags(column.blocks, selected)
-        const top = flags.lastIndexOf(true)
-        const groups = pipGroups(column.blocks)
+        const selected = groups.reduce((sum, group) => sum + (power[group.key] || 0), 0)
         return (
           <div key={column.id} className="flex flex-col items-center">
             <div className="flex items-end gap-1">
-              {groups.map((group, groupIndex) => (
-                <div key={`${column.id}-${groupIndex}`} className="flex flex-col-reverse items-center gap-0.5">
-                  {group.map((block) => {
-                    const index = column.blocks.indexOf(block)
-                    const on = flags[index]
-                    const target = on && index === top ? index - 1 : index
-                    return (
-                      <button
-                        key={`${column.id}-${index}`}
-                        type="button"
-                        aria-pressed={on}
-                        aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
-                        className={`w-3.5 rounded-sm border text-[10px] font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
-                        style={{ height: block.size > 1 ? `${block.size * 14 + 6}px` : '14px' }}
-                        onClick={() => onPower(column.id, clickPowerColumn(column.blocks, selected, target, remaining))}
-                      >
-                        {block.size > 1 ? block.size : ''}
-                      </button>
-                    )
-                  })}
-                </div>
-              ))}
+              {groups.map((group) => {
+                const count = power[group.key] || 0
+                const flags = blockFlags(group.blocks, count)
+                const top = flags.lastIndexOf(true)
+                const groupTotal = group.blocks.reduce((sum, block) => sum + block.size, 0)
+                return (
+                  <div key={group.key} className="flex flex-col items-center">
+                    <div className="flex flex-col-reverse items-center gap-0.5">
+                      {group.blocks.map((block, index) => {
+                        const on = flags[index]
+                        const target = on && index === top ? index - 1 : index
+                        return (
+                          <button
+                            key={`${group.key}-${index}`}
+                            type="button"
+                            aria-pressed={on}
+                            aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
+                            className={`w-[42px] rounded-sm border text-[20px] font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                            style={{ height: block.size > 1 ? `${block.size * 42 + (block.size - 1) * 4}px` : '42px' }}
+                            onClick={() => onPower({ [group.key]: clickPowerColumn(group.blocks, count, target, remaining) }, column.id)}
+                          >
+                            {block.size > 1 ? block.size : ''}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <span className="font-mono text-[20px] text-slate-500">{count}/{groupTotal}</span>
+                  </div>
+                )
+              })}
             </div>
             <button
               type="button"
-              className="mt-1 text-[11px] text-slate-400 hover:text-white whitespace-nowrap"
-              onClick={() => onPower(column.id, togglePowerColumn(column.blocks, selected, remaining))}
+              className="mt-1 text-[22px] text-slate-400 hover:text-white whitespace-nowrap"
+              onClick={() => {
+                const patch: Record<string, number> = {}
+                if (groups.length === 1) {
+                  const group = groups[0]
+                  patch[group.key] = togglePowerColumn(group.blocks, power[group.key] || 0, remaining)
+                } else if (selected > 0) {
+                  for (const group of groups) patch[group.key] = 0
+                } else {
+                  let left = remaining
+                  for (const group of groups) {
+                    const next = togglePowerColumn(group.blocks, 0, left)
+                    patch[group.key] = next
+                    left = Math.max(0, left - next)
+                  }
+                }
+                onPower(patch, column.id)
+              }}
             >
               {column.label}
             </button>
-            <span className="font-mono text-[10px] text-slate-500">{selected}/{total}</span>
+            <span className="font-mono text-lg text-slate-500">{selected}/{total}</span>
           </div>
         )
       })}
@@ -247,15 +272,6 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   )
 }
 
-function pipGroups(blocks: PowerBlock[]): PowerBlock[][] {
-  const groups: PowerBlock[][] = []
-  for (const block of blocks) {
-    if (block.groupStart || groups.length === 0) groups.push([])
-    groups[groups.length - 1].push(block)
-  }
-  return groups
-}
-
 function blockFlags(blocks: PowerBlock[], selected: number): boolean[] {
   let left = selected
   return blocks.map((block) => {
@@ -299,10 +315,10 @@ function listedPart(item: { displayName: string }) {
   return name.length > 0 && !/placeholder/i.test(name) && !name.startsWith('<=')
 }
 
-function listChip(item: { kind: string; weaponClass?: string | null; guidance?: string | null }): string | null {
+function listChip(item: { kind: string; weaponClass?: string | null; guidance?: string | null; itemClass?: string | null }): string | null {
   if (item.kind === 'weapon') return item.weaponClass || null
   if (item.kind === 'missile') return item.guidance || null
-  return null
+  return item.itemClass || null
 }
 
 function listScore(item: { kind: string; stats: Record<string, number> }): number {
@@ -377,7 +393,15 @@ function PartPicker({
         </div>
       )}
       <div className="site-dropdown-list max-h-56" style={{ position: 'static' }}>
-        <button type="button" className="site-dropdown-item" onClick={() => onSelect(null)}>
+        <button
+          type="button"
+          className="site-dropdown-item"
+          onClick={() => onSelect(null)}
+          onDoubleClick={() => {
+            onSelect(null)
+            onClose()
+          }}
+        >
           Empty mount
         </button>
         {options.map((item) => {
@@ -388,6 +412,10 @@ function PartPicker({
               type="button"
               className={`site-dropdown-item ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
               onClick={() => onSelect(item.entityClass)}
+              onDoubleClick={() => {
+                onSelect(item.entityClass)
+                onClose()
+              }}
             >
               <span className="block text-white">{titled(item)}</span>
               {bits.length > 0 && <span className="block text-sm text-slate-200">{bits.join(' · ')}</span>}
@@ -526,13 +554,17 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+      <div className="shrink-0 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100vh-var(--site-header-height,3.5rem)-1rem)] lg:w-80 lg:overflow-y-auto">
+        <ShipSnapshot snapshot={snapshot} />
+      </div>
+      <div className="min-w-0 flex-1 space-y-4">
       <div className="sticky top-[var(--site-header-height,3.5rem)] z-20 site-surface-solid p-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1>
-              <img src="/fuzys-ship-shop.jpg" alt="Fuzy's Ship Shop" className="h-20 w-auto object-contain" />
+              <img src="/fuzys-ship-shop.png" alt="Fuzy's Ship Shop" className="h-28 w-auto object-contain" />
             </h1>
             <p className="site-hint text-sm">{saveNote || (ready ? 'Builds save on this account.' : 'Loading builds…')}</p>
           </div>
@@ -595,26 +627,23 @@ export default function ShipShopPage() {
             power={power}
             remaining={remaining}
             generated={generated}
-            onPower={(groupId, count) => {
-              updateBuild({ shipId: build.shipId, ports: build.ports, power: { ...build.power, [groupId]: count } })
+            onPower={(patch, columnId) => {
+              const next = { ...(build.power || {}), ...patch }
+              if (!Object.prototype.hasOwnProperty.call(patch, columnId)) delete next[columnId]
+              updateBuild({ shipId: build.shipId, ports: build.ports, power: next })
             }}
           />
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-      <ShipSnapshot snapshot={snapshot} />
-      <div className="min-w-0 flex-1 space-y-4">
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
           const ports = portsForSection(ship, section.id)
           const shieldScale = (portId: string) => {
-            const column = columns.find((entry) => entry.blocks.some((block) => block.portId === portId))
             const part = powerParts.find((entry) => entry.portId === portId)
-            if (!column || !part) return 1
-            const assigned = assignedSegments(column, power[column.id] || 0)
-            return segmentScale(part.stats, assigned.get(portId) || 0)
+            if (!part) return 1
+            return segmentScale(part.stats, power[portId] || 0)
           }
-          const renderPort = (port: ShipPort, nested = false) => {
+          const renderPort = (port: ShipPort, depth = 0) => {
             const fitted = statsForFitted(build.ports[port.id])
             const line = fitted ? partStatLine(fitted.item.kind, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
@@ -631,70 +660,87 @@ export default function ShipShopPage() {
               : port.kind === 'turret'
                 ? port.label
                 : 'Empty mount'
+            const attachment = port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount'
+            const picker = open ? (
+              <PartPicker
+                port={port}
+                fitted={build.ports[port.id]}
+                onClose={() => setPickerPortId(null)}
+                onSelect={(entityClass) => {
+                  if (!entityClass) {
+                    setFitted(port, null)
+                    return
+                  }
+                  setFitted(port, { entityClass, source: 'stock' })
+                }}
+                onSource={(source) => {
+                  const current = build.ports[port.id]
+                  if (!current) return
+                  setFitted(port, {
+                    ...current,
+                    source,
+                    qualities: source === 'crafted' ? (current.qualities ?? defaultCraftQualities(current.entityClass)) : current.qualities,
+                  })
+                }}
+                onQualities={(qualities) => {
+                  const current = build.ports[port.id]
+                  if (!current) return
+                  setFitted(port, { ...current, source: 'crafted', qualities })
+                }}
+              />
+            ) : null
+            const openPicker = (event: MouseEvent) => {
+              if (port.locked) return
+              const target = event.target
+              if (target instanceof Element && target.closest('button, input, a, label')) return
+              setPickerPortId(open ? null : port.id)
+            }
             return (
-              <div key={port.id} className={`${nested ? 'ml-6 border-l border-orange-500/30 pl-3' : ''}`}>
-                <div
-                  className="site-card rounded-xl p-3"
-                  data-ship-port={port.id}
-                  onClick={(event) => {
-                    if (port.locked) return
-                    const target = event.target
-                    if (target instanceof Element && target.closest('button, input, a, label')) return
-                    setPickerPortId(open ? null : port.id)
-                  }}
-                >
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
-                    <span className="text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
-                  </div>
-                  <div className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left">
-                    <span className="text-lg font-medium text-white">{name}</span>
-                    <span className="text-base text-slate-300">{info}</span>
-                  </div>
-                  {fitted && !port.locked && (
-                    <div className="mt-2">
-                      <button type="button" className="site-btn-ghost px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
+              <div
+                key={port.id}
+                className={depth > 0 ? 'border-l border-orange-500/30 pl-3' : ''}
+                style={depth > 0 ? { marginLeft: `${depth * 1.5}rem` } : undefined}
+              >
+                {attachment ? (
+                  <div className="site-card flex items-center gap-3 rounded-lg px-3 py-1" data-ship-port={port.id} onClick={openPicker}>
+                    <span className="shrink-0 text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
+                    <span className="truncate text-sm font-medium text-white">{name}</span>
+                    <span className="truncate text-sm text-slate-300">{info}</span>
+                    <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
+                    {fitted && !port.locked && (
+                      <button type="button" className="site-btn-ghost shrink-0 px-2 py-0.5 text-xs" onClick={() => setFitted(port, null)}>
                         Clear
                       </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="site-card rounded-xl p-3" data-ship-port={port.id} onClick={openPicker}>
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
+                      <span className="text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     </div>
-                  )}
-                  {open && (
-                    <PartPicker
-                      port={port}
-                      fitted={build.ports[port.id]}
-                      onClose={() => setPickerPortId(null)}
-                      onSelect={(entityClass) => {
-                        if (!entityClass) {
-                          setFitted(port, null)
-                          return
-                        }
-                        setFitted(port, { entityClass, source: 'stock' })
-                      }}
-                      onSource={(source) => {
-                        const current = build.ports[port.id]
-                        if (!current) return
-                        setFitted(port, {
-                          ...current,
-                          source,
-                          qualities: source === 'crafted' ? (current.qualities ?? defaultCraftQualities(current.entityClass)) : current.qualities,
-                        })
-                      }}
-                      onQualities={(qualities) => {
-                        const current = build.ports[port.id]
-                        if (!current) return
-                        setFitted(port, { ...current, source: 'crafted', qualities })
-                      }}
-                    />
-                  )}
-                </div>
+                    <div className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left">
+                      <span className="text-lg font-medium text-white">{name}</span>
+                      <span className="text-base text-slate-300">{info}</span>
+                    </div>
+                    {fitted && !port.locked && (
+                      <div className="mt-2">
+                        <button type="button" className="site-btn-ghost px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
+                          Clear
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {picker}
               </div>
             )
           }
           const openSection = expanded.has(section.id)
-          const renderWeaponNodes = (nodes: ReturnType<typeof weaponTree>, nested = false): ReactNode => nodes.map((node) => (
-            <div key={node.port.id} className="space-y-2">
-              {renderPort(node.port, nested)}
-              {node.children.length > 0 && renderWeaponNodes(node.children, true)}
+          const renderWeaponNodes = (nodes: ReturnType<typeof weaponTree>, depth = 0): ReactNode => nodes.map((node) => (
+            <div key={node.port.id} className="space-y-1">
+              {renderPort(node.port, depth)}
+              {node.children.length > 0 && renderWeaponNodes(node.children, depth + 1)}
             </div>
           ))
           return (
@@ -703,7 +749,7 @@ export default function ShipShopPage() {
                 <h2 className="text-sm font-semibold text-slate-200">{section.label}</h2>
                 <button
                   type="button"
-                  className="site-btn-ghost px-3 py-1 text-sm"
+                  className="site-btn-ghost px-12 py-2 text-[1.75rem]"
                   onClick={() => setExpanded((current) => {
                     const next = new Set(current)
                     if (next.has(section.id)) next.delete(section.id)
@@ -721,7 +767,7 @@ export default function ShipShopPage() {
                     : ports.map((port) => (
                       <div key={port.id} className="space-y-2">
                         {renderPort(port)}
-                        {(port.kind === 'missileRack' || port.kind === 'torpedo') && missileSlotsForRack(ship, port, build.ports[port.id]).map((slot) => renderPort(slot, true))}
+                        {(port.kind === 'missileRack' || port.kind === 'torpedo') && missileSlotsForRack(ship, port, build.ports[port.id]).map((slot) => renderPort(slot, 1))}
                       </div>
                     ))}
                 </div>
@@ -729,7 +775,6 @@ export default function ShipShopPage() {
             </section>
           )
         })}
-      </div>
       </div>
     </div>
   )

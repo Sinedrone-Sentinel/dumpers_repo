@@ -2288,17 +2288,31 @@ const budgetColumns = shipShopMath.powerColumns(4, [
 const generated = 6
 const defaults = shipShopMath.defaultPower(budgetColumns, generated)
 check(
-  defaults.quantum === 0 &&
+  defaults.qd === 0 &&
     defaults.weapons === 1 &&
-    defaults.engines === 1 &&
-    defaults.coolers === 1 &&
+    defaults.eng === 1 &&
+    defaults.c1 === 1 &&
     Object.values(defaults).reduce((sum, value) => sum + value, 0) <= generated,
   'ship shop: default power is each minimum block, quantum stays off, and the total stays inside the budget',
 )
 check(
-  shipShopMath.resolvedPower(budgetColumns, { weapons: 4, engines: 4, quantum: 1, coolers: 3 }, generated).weapons +
-    shipShopMath.resolvedPower(budgetColumns, { weapons: 4, engines: 4, quantum: 1, coolers: 3 }, generated).engines <= generated,
+  Object.values(shipShopMath.resolvedPower(budgetColumns, { weapons: 4, engines: 4, quantum: 1, coolers: 3 }, generated)).reduce((sum, value) => sum + value, 0) <= generated,
   'ship shop: an over-budget save falls back inside the plant budget',
+)
+const twoShields = shipShopMath.powerColumns(0, [
+  { portId: 's1', kind: 'shield', size: 1, stats: { Power_Segments: 3, Power_Min: 1 } },
+  { portId: 's2', kind: 'shield', size: 1, stats: { Power_Segments: 3, Power_Min: 1 } },
+])
+const shieldDefaults = shipShopMath.defaultPower(twoShields, 10)
+const splitShields = shipShopMath.resolvedPower(twoShields, { shields: 2 }, 10)
+const ownShields = shipShopMath.resolvedPower(twoShields, { s1: 1, s2: 3 }, 10)
+check(
+  shieldDefaults.s1 === 1 && shieldDefaults.s2 === 1 && splitShields.s1 === 1 && splitShields.s2 === 1 && ownShields.s1 === 1 && ownShields.s2 === 3,
+  'ship shop: each shield keeps its own pip stack, and a shared save splits across them',
+)
+check(
+  shipShopMath.partStatLine('radar', { Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Min: 2, Power_Segments: 5 }).includes('2–5 pips'),
+  'ship shop: radar line includes the minimum and maximum pip usage',
 )
 check(
   shipShopMath.flightRole(

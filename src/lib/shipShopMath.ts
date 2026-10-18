@@ -229,7 +229,9 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
   }
   if (kind === 'radar' && stats.Radar_DistanceMax) {
     const min = stats.Radar_DistanceMin || stats.Radar_DistanceMax
-    return `${round(min)}–${round(stats.Radar_DistanceMax)} m`
+    const minPips = stats.Power_Min || 1
+    const maxPips = stats.Power_Segments || stats.Power_HighStart || minPips
+    return `${round(min)}–${round(stats.Radar_DistanceMax)} m · ${minPips}–${maxPips} pips`
   }
   if (kind === 'life') return stats.Power_Segments ? `${round(stats.Power_Segments)} pips` : ''
   return ''
@@ -379,9 +381,10 @@ export function addPartToSnapshot(
   }
   if (kind === 'cooler' && scale > 0) snapshot.coolant += (stats.Itemresource_Coolantgeneration || 0) * scale
   if (scale > 0) {
-    snapshot.signatureEm += (stats.Signature_Em || stats.Weapon_Em || 0) * scale
+    snapshot.signatureEm += (stats.Signature_Em || stats.Weapon_Em || stats.Signature_Electromagnetic || 0) * scale
     snapshot.signatureIr += (stats.Signature_Ir || 0) * scale
   }
+  snapshot.signatureIr += stats.Signature_Infrared || 0
   if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
     snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
   }
@@ -408,7 +411,7 @@ export interface PowerPart {
 }
 
 const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
-  { id: 'engines', label: 'Engines', kinds: ['flight'] },
+  { id: 'engines', label: 'Flight Blades', kinds: ['flight'] },
   { id: 'shields', label: 'Shields', kinds: ['shield'] },
   { id: 'quantum', label: 'Quantum', kinds: ['quantum'] },
   { id: 'interdiction', label: 'Interdiction', kinds: ['qed'] },
@@ -519,6 +522,39 @@ export function powerGenerated(parts: PowerPart[]): number {
   return rounded + (count - 1) * sizes
 }
 
+/** One stack per fitted component. Weapons share a pool, so they stay on the column id. */
+export function componentGroups(column: PowerColumn): { key: string, blocks: PowerBlock[] }[] {
+  const groups: { key: string, blocks: PowerBlock[] }[] = []
+  for (const block of column.blocks) {
+    const key = block.portId || column.id
+    const last = groups[groups.length - 1]
+    if (last && last.key === key) last.blocks.push(block)
+    else groups.push({ key, blocks: [block] })
+  }
+  return groups
+}
+
+function groupTotal(blocks: PowerBlock[]): number {
+  return blocks.reduce((sum, block) => sum + block.size, 0)
+}
+
+/** Spread a legacy column total across its components, one pip layer at a time. */
+function splitLegacyTotal(column: PowerColumn, total: number): Map<string, number> {
+  const groups = componentGroups(column)
+  const counts = new Map(groups.map((group) => [group.key, 0]))
+  let left = Math.max(0, total)
+  const depth = groups.reduce((max, group) => Math.max(max, group.blocks.length), 0)
+  for (let rank = 0; rank < depth && left > 0; rank += 1) {
+    for (const group of groups) {
+      const block = group.blocks[rank]
+      if (!block || left < block.size) continue
+      counts.set(group.key, (counts.get(group.key) || 0) + block.size)
+      left -= block.size
+    }
+  }
+  return counts
+}
+
 /** Minimum draw for a column: the first block of each component, which is its minimum. */
 export function columnMinimum(column: PowerColumn): number {
   const seen = new Set<string>()
@@ -540,13 +576,16 @@ export function defaultPower(columns: PowerColumn[], generated: number): Record<
   const next: Record<string, number> = {}
   let budget = Math.max(0, generated)
   for (const column of columns) {
-    if (column.id === 'quantum') {
-      next[column.id] = 0
-      continue
+    for (const group of componentGroups(column)) {
+      if (column.id === 'quantum') {
+        next[group.key] = 0
+        continue
+      }
+      const min = group.blocks[0]?.size || 0
+      const take = Math.min(min, budget)
+      next[group.key] = take
+      budget -= take
     }
-    const take = Math.min(columnMinimum(column), budget)
-    next[column.id] = take
-    budget -= take
   }
   return next
 }
@@ -559,18 +598,35 @@ export function resolvedPower(
 ): Record<string, number> {
   const base = defaultPower(columns, generated)
   const cap = Math.max(0, generated)
-  const rawSum = columns.reduce((sum, column) => {
-    if (!stored || stored[column.id] == null) return sum
-    return sum + Math.min(columnTotal(column), Math.max(0, Math.round(stored[column.id])))
-  }, 0)
-  const source = stored && rawSum > cap ? base : { ...base, ...(stored || {}) }
-  let budget = Math.max(0, generated)
+  const legacy = new Map<string, Map<string, number>>()
+  for (const column of columns) {
+    const groups = componentGroups(column)
+    const hasOwn = groups.some((group) => stored && stored[group.key] != null && group.key !== column.id)
+    if (stored && stored[column.id] != null && !hasOwn && groups.some((group) => group.key !== column.id)) {
+      legacy.set(column.id, splitLegacyTotal(column, stored[column.id]))
+    }
+  }
+  const desired: Record<string, number> = {}
+  for (const column of columns) {
+    for (const group of componentGroups(column)) {
+      const max = groupTotal(group.blocks)
+      let want = base[group.key] ?? 0
+      if (stored && stored[group.key] != null) want = stored[group.key]
+      else if (legacy.get(column.id)) want = legacy.get(column.id)?.get(group.key) || 0
+      desired[group.key] = Math.min(max, Math.max(0, Math.round(want)))
+    }
+  }
+  const rawSum = Object.values(desired).reduce((sum, value) => sum + value, 0)
+  const source = stored && rawSum > cap ? base : desired
+  let budget = cap
   const next: Record<string, number> = {}
   for (const column of columns) {
-    const want = Math.min(columnTotal(column), Math.max(0, Math.round(source[column.id] ?? 0)))
-    const take = Math.min(want, budget)
-    next[column.id] = take
-    budget -= take
+    for (const group of componentGroups(column)) {
+      const want = Math.min(groupTotal(group.blocks), Math.max(0, Math.round(source[group.key] ?? 0)))
+      const take = Math.min(want, budget)
+      next[group.key] = take
+      budget -= take
+    }
   }
   return next
 }
@@ -607,8 +663,8 @@ export function coolantDemand(parts: PowerPart[], scales: Map<string, number>): 
   }, 0)
 }
 
-export function powerUsed(columns: PowerColumn[], stored: Record<string, number> | null | undefined): number {
-  return columns.reduce((sum, column) => sum + columnSelected(column, stored?.[column.id]), 0)
+export function powerUsed(_columns: PowerColumn[], stored: Record<string, number> | null | undefined): number {
+  return Object.values(stored || {}).reduce((sum, value) => sum + (Number.isFinite(value) ? value : 0), 0)
 }
 
 function bottomFlags(blocks: PowerBlock[], selected: number): boolean[] {
