@@ -389,12 +389,16 @@ export interface PowerBlock {
   portId: string | null
   /** First block of a component that follows another component in the same group. */
   groupStart?: boolean
+  /** Above the pips this stack needs for full power. Shown, but not assignable. */
+  disabled?: boolean
 }
 
 export interface PowerColumn {
   id: string
   label: string
   blocks: PowerBlock[]
+  /** Pips required for full output. Weapons can need more than the ship's pool. */
+  fullPower?: number
 }
 
 export interface PowerPart {
@@ -457,13 +461,41 @@ export function segmentScale(stats: Record<string, number>, assigned: number): n
   return hit ? (hit.mod as number) : 0
 }
 
+/**
+ * Pips the fitted guns need for full power. Each gun's draw is summed, then
+ * rounded up, so 1.3 pips takes 2. The ship's weapon pool is only the stack size.
+ */
+export function weaponFullPips(parts: PowerPart[]): number {
+  const sum = parts.reduce((total, part) => {
+    if (part.kind !== 'weapon') return total
+    return total + Math.max(0, part.stats.Weapon_Power || 0)
+  }, 0)
+  if (sum <= 0) return 0
+  return Math.ceil(Math.round(sum * 1000) / 1000)
+}
+
+/** Pips past `full` stay on the stack and cannot be assigned. */
+function disableAbove(blocks: PowerBlock[], full: number): PowerBlock[] {
+  let cursor = 0
+  return blocks.map((block) => {
+    const disabled = cursor >= full
+    cursor += block.size
+    return disabled ? { ...block, disabled: true } : block
+  })
+}
+
 export function powerColumns(weaponPowerPool: number, parts: PowerPart[]): PowerColumn[] {
   const columns: PowerColumn[] = []
   if (weaponPowerPool > 0) {
+    const full = weaponFullPips(parts)
     columns.push({
       id: 'weapons',
       label: 'Weapons',
-      blocks: Array.from({ length: weaponPowerPool }, () => ({ size: 1, portId: null })),
+      fullPower: full,
+      blocks: disableAbove(
+        Array.from({ length: weaponPowerPool }, () => ({ size: 1, portId: null })),
+        full,
+      ),
     })
   }
   for (const group of POWER_GROUPS) {
@@ -474,18 +506,25 @@ export function powerColumns(weaponPowerPool: number, parts: PowerPart[]): Power
       const max = pipDemand(part.stats)
       const min = Math.min(max, Math.max(1, part.stats.Power_Min || 1))
       const gap = memberIndex > 0
+      const partBlocks: PowerBlock[] = []
       if (min > 1) {
-        blocks.push({ size: min, portId: part.portId, groupStart: gap })
-        for (let index = min; index < max; index += 1) blocks.push({ size: 1, portId: part.portId })
+        partBlocks.push({ size: min, portId: part.portId, groupStart: gap })
+        for (let index = min; index < max; index += 1) partBlocks.push({ size: 1, portId: part.portId })
       } else {
         for (let index = 0; index < max; index += 1) {
-          blocks.push({ size: 1, portId: part.portId, groupStart: gap && index === 0 })
+          partBlocks.push({ size: 1, portId: part.portId, groupStart: gap && index === 0 })
         }
       }
+      blocks.push(...disableAbove(partBlocks, max))
     })
     columns.push({ id: group.id, label: group.label, blocks })
   }
   return columns
+}
+
+/** Pips that can still be assigned. Blocks above full power are left out. */
+export function assignableTotal(blocks: PowerBlock[]): number {
+  return blocks.reduce((sum, block) => sum + (block.disabled ? 0 : block.size), 0)
 }
 
 export function columnTotal(column: PowerColumn): number {
@@ -566,6 +605,7 @@ export function columnMinimum(column: PowerColumn): number {
     const key = block.portId || column.id
     if (seen.has(key)) continue
     seen.add(key)
+    if (block.disabled) continue
     total += block.size
   }
   return total
@@ -584,7 +624,8 @@ export function defaultPower(columns: PowerColumn[], generated: number): Record<
         next[group.key] = 0
         continue
       }
-      const min = group.blocks[0]?.size || 0
+      const first = group.blocks[0]
+      const min = first && !first.disabled ? first.size : 0
       const take = Math.min(min, budget)
       next[group.key] = take
       budget -= take
@@ -612,7 +653,7 @@ export function resolvedPower(
   const desired: Record<string, number> = {}
   for (const column of columns) {
     for (const group of componentGroups(column)) {
-      const max = groupTotal(group.blocks)
+      const max = assignableTotal(group.blocks)
       let want = base[group.key] ?? 0
       if (stored && stored[group.key] != null) want = stored[group.key]
       else if (legacy.get(column.id)) want = legacy.get(column.id)?.get(group.key) || 0
@@ -625,7 +666,7 @@ export function resolvedPower(
   const next: Record<string, number> = {}
   for (const column of columns) {
     for (const group of componentGroups(column)) {
-      const want = Math.min(groupTotal(group.blocks), Math.max(0, Math.round(source[group.key] ?? 0)))
+      const want = Math.min(assignableTotal(group.blocks), Math.max(0, Math.round(source[group.key] ?? 0)))
       const take = Math.min(want, budget)
       next[group.key] = take
       budget -= take
@@ -672,13 +713,12 @@ export function coolantSupply(parts: PowerPart[], pips: Map<string, number>): nu
  * Cooling load is the pips in use, plus another `pips * band` for shields,
  * life support, radar, and the quantum drive. Powered coolers also add their
  * own minimum once, on top of the pips assigned to them. Plants do not draw
- * coolant. Weapon pips count only up to the guns' own segment total.
+ * coolant. Weapon pips count up to the pips those guns need for full power.
  */
 export function coolantDemand(
   parts: PowerPart[],
   pips: Map<string, number>,
   weaponSelected = 0,
-  weaponRaw = 0,
 ): number {
   let drawn = 0
   let extra = 0
@@ -695,7 +735,7 @@ export function coolantDemand(
     if (COOLING_BAND_KINDS.has(part.kind)) extra += count * segmentScale(part.stats, count)
   }
   drawn += coolerSelf
-  drawn += Math.min(Math.max(0, weaponSelected), Math.max(0, weaponRaw))
+  drawn += Math.min(Math.max(0, weaponSelected), weaponFullPips(parts))
   return drawn + extra
 }
 
@@ -712,18 +752,15 @@ export function electromagneticSignature(
   pips: Map<string, number>,
   generated: number,
   weaponSelected: number,
-  weaponEnabled: number,
   armorMultiplier: number,
 ): number {
-  const weaponRaw = parts
-    .filter((part) => part.kind === 'weapon')
-    .reduce((sum, part) => sum + (part.stats.Power_Segments || 0), 0)
+  const weaponFull = weaponFullPips(parts)
   let drawn = 0
   for (const part of parts) {
     if (part.kind === 'weapon' || part.kind === 'power') continue
     drawn += assignedPips(pips, part.portId)
   }
-  drawn += Math.min(Math.max(0, weaponSelected), weaponRaw)
+  drawn += Math.min(Math.max(0, weaponSelected), weaponFull)
   const ratio = generated > 0 ? drawn / generated : 0
   let total = 0
   const plants = parts.filter((part) => part.kind === 'power' && (part.stats.Itemresource_Powergeneration || 0) > 0)
@@ -738,8 +775,8 @@ export function electromagneticSignature(
     }
     total += plantEm * ratio
   }
-  if (weaponEnabled > 0 && weaponSelected > 0) {
-    const share = weaponSelected / weaponEnabled
+  if (weaponFull > 0 && weaponSelected > 0) {
+    const share = Math.min(weaponSelected, weaponFull) / weaponFull
     for (const weapon of parts) {
       if (weapon.kind !== 'weapon') continue
       const nominal = nominalEm(weapon.stats)
@@ -800,7 +837,7 @@ function bottomFlags(blocks: PowerBlock[], selected: number): boolean[] {
 
 /** Click sets how high this column stays filled, using only unassigned pips plus pips this click releases. */
 export function clickPowerColumn(blocks: PowerBlock[], selected: number, blockIndex: number, remaining: number): number {
-  if (blockIndex < 0) return 0
+  if (blockIndex < 0 || blocks[blockIndex]?.disabled) return selected
   const flags = bottomFlags(blocks, selected)
   let budget = remaining
   for (let index = blockIndex + 1; index < blocks.length; index += 1) {
@@ -808,6 +845,7 @@ export function clickPowerColumn(blocks: PowerBlock[], selected: number, blockIn
   }
   const next = blocks.map(() => false)
   for (let index = 0; index <= blockIndex && index < blocks.length; index += 1) {
+    if (blocks[index].disabled) break
     if (flags[index]) {
       next[index] = true
       continue
@@ -822,8 +860,12 @@ export function clickPowerColumn(blocks: PowerBlock[], selected: number, blockIn
 
 export function togglePowerColumn(blocks: PowerBlock[], selected: number, remaining: number): number {
   if (selected > 0) return 0
-  if (blocks.length === 0) return 0
-  return clickPowerColumn(blocks, 0, blocks.length - 1, remaining)
+  let last = -1
+  for (let index = 0; index < blocks.length; index += 1) {
+    if (!blocks[index].disabled) last = index
+  }
+  if (last < 0) return 0
+  return clickPowerColumn(blocks, 0, last, remaining)
 }
 
 export function assignedSegments(column: PowerColumn, selected: number): Map<string, number> {

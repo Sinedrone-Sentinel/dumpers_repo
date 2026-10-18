@@ -10,6 +10,7 @@ import {
   getShip,
   missileSlotsForRack,
   effectivePortKind,
+  emptyBuild,
   partsForPort,
   portsForSection,
   weaponTree,
@@ -25,6 +26,7 @@ import {
   type ShipShopStore,
 } from '../../lib/shipShopData'
 import {
+  assignableTotal,
   clickPowerColumn,
   componentGroups,
   flightRole,
@@ -120,7 +122,8 @@ function PipBoard({
                 const count = power[group.key] || 0
                 const flags = blockFlags(group.blocks, count)
                 const top = flags.lastIndexOf(true)
-                const groupTotal = group.blocks.reduce((sum, block) => sum + block.size, 0)
+                const usable = assignableTotal(group.blocks)
+                const full = groups.length === 1 && column.fullPower != null ? column.fullPower : usable
                 return (
                   <div key={group.key} className="flex flex-col items-center">
                     <div className="flex flex-col-reverse items-center gap-0.5">
@@ -132,8 +135,9 @@ function PipBoard({
                             key={`${group.key}-${index}`}
                             type="button"
                             aria-pressed={on}
-                            aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
-                            className={`ship-shop-pip rounded-sm border font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                            disabled={block.disabled}
+                            aria-label={`${column.label} ${block.disabled ? 'unused pip' : block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
+                            className={`ship-shop-pip rounded-sm border font-semibold leading-none ${block.disabled ? 'ship-shop-pip-disabled' : on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
                             style={{
                               width: 'var(--ship-pip-size)',
                               height: block.size > 1
@@ -147,7 +151,7 @@ function PipBoard({
                         )
                       })}
                     </div>
-                    <span className="ship-shop-pip-count font-mono text-slate-500">{count}/{groupTotal}</span>
+                    <span className="ship-shop-pip-count font-mono text-slate-500">{count}/{full}</span>
                   </div>
                 )
               })}
@@ -533,6 +537,15 @@ export default function ShipShopPage() {
     })
   }
 
+  function clearBuild(index: number) {
+    setStore((prev) => {
+      const builds = prev.builds.slice()
+      builds[index] = emptyBuild()
+      return { version: 1, builds }
+    })
+    if (index === buildIndex) setShipQuery('')
+  }
+
   function chooseShip(shipId: string) {
     const nextShip = getShip(shipId)
     if (!nextShip) return
@@ -589,16 +602,33 @@ export default function ShipShopPage() {
           )}
           <div className="site-chip-strip w-fit max-w-full">
             <span className="px-2 text-sm text-slate-400">Build {buildIndex + 1} of 4</span>
-            {store.builds.map((entry, index) => (
-              <button
-                key={index}
-                type="button"
-                className={`${CHIP} ${index === buildIndex ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
-                onClick={() => setBuildIndex(index)}
-              >
-                {entry.shipId ? getShip(entry.shipId)?.displayName || `Build ${index + 1}` : `Build ${index + 1}`}
-              </button>
-            ))}
+            {store.builds.map((entry, index) => {
+              const used = Boolean(entry.shipId)
+              const tone = index === buildIndex ? 'site-filter-selected-orange' : 'site-filter-idle'
+              const label = entry.shipId ? getShip(entry.shipId)?.displayName || `Build ${index + 1}` : `Build ${index + 1}`
+              return (
+                <span key={index} className={used ? 'ship-shop-build' : 'inline-flex'}>
+                  <button
+                    type="button"
+                    className={`${CHIP} ${tone} ${used ? 'ship-shop-build-name' : ''}`}
+                    onClick={() => setBuildIndex(index)}
+                  >
+                    {label}
+                  </button>
+                  {used && (
+                    <button
+                      type="button"
+                      className={`ship-shop-build-clear ${tone}`}
+                      aria-label={`Clear ${label}`}
+                      title="Clear build"
+                      onClick={() => clearBuild(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </span>
+              )
+            })}
           </div>
           {ship && (
             <div className="site-chip-strip w-fit max-w-full">
