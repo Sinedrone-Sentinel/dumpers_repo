@@ -107,7 +107,7 @@ function PipBoard({
   if (columns.length === 0) return null
   return (
     <div className="flex min-w-0 max-w-full items-end gap-4 overflow-x-auto pb-1">
-      <p className="self-center font-mono text-lg text-slate-300 whitespace-nowrap">
+      <p className="ship-shop-pip-remain self-center font-mono text-slate-300 whitespace-nowrap">
         {generated > 0 ? `${remaining} / ${generated}` : `${used}`}
       </p>
       {columns.map((column) => {
@@ -133,7 +133,7 @@ function PipBoard({
                             type="button"
                             aria-pressed={on}
                             aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
-                            className={`rounded-sm border text-[20px] font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                            className={`ship-shop-pip rounded-sm border font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
                             style={{
                               width: 'var(--ship-pip-size)',
                               height: block.size > 1
@@ -147,14 +147,14 @@ function PipBoard({
                         )
                       })}
                     </div>
-                    <span className="ship-shop-pip-count font-mono text-[20px] text-slate-500">{count}/{groupTotal}</span>
+                    <span className="ship-shop-pip-count font-mono text-slate-500">{count}/{groupTotal}</span>
                   </div>
                 )
               })}
             </div>
             <button
               type="button"
-              className="ship-shop-pip-label mt-1 text-[22px] text-slate-400 hover:text-white whitespace-nowrap"
+              className="ship-shop-pip-label mt-1 text-slate-400 hover:text-white whitespace-nowrap"
               onClick={() => {
                 const patch: Record<string, number> = {}
                 if (groups.length === 1) {
@@ -715,7 +715,7 @@ export default function ShipShopPage() {
                       <span className="text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     </div>
                     <div className="mt-1 flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 text-left">
-                      <span className="text-lg font-medium text-white">{name}</span>
+                      <span className="ship-shop-part-name font-medium text-white">{name}</span>
                       <span className="text-base text-slate-300">{info}</span>
                     </div>
                     {fitted && !port.locked && (
@@ -744,7 +744,7 @@ export default function ShipShopPage() {
                 <h2 className="text-sm font-semibold text-slate-200">{section.label}</h2>
                 <button
                   type="button"
-                  className="ship-shop-expand site-btn-ghost px-12 py-2 text-[1.75rem]"
+                  className="ship-shop-expand site-btn-ghost"
                   onClick={() => setExpanded((current) => {
                     const next = new Set(current)
                     if (next.has(section.id)) next.delete(section.id)
