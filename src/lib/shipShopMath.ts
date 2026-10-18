@@ -7,6 +7,10 @@ export interface MissileMount {
   name: string
   minSize: number
   maxSize: number
+  locked?: boolean
+  kind?: 'missile'
+  defaultEntityClass?: string
+  child?: { name: string; defaultEntityClass: string }
 }
 
 export interface ShipItemStats {

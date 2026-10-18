@@ -9784,7 +9784,8 @@
           "size": 7,
           "minSize": 7,
           "maxSize": 7,
-          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon"
+          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_front_right",
@@ -9817,7 +9818,8 @@
           "size": 7,
           "minSize": 7,
           "maxSize": 7,
-          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon"
+          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_left",
@@ -9850,7 +9852,8 @@
           "size": 7,
           "minSize": 7,
           "maxSize": 7,
-          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon"
+          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_right",
@@ -9883,7 +9886,8 @@
           "size": 7,
           "minSize": 7,
           "maxSize": 7,
-          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon"
+          "defaultEntityClass": "behr_ballisticcannon_s7_tiburon",
+          "locked": true
         }
       ]
     },
@@ -12105,7 +12109,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_pilot/hardpoint_left/hardpoint_class_2",
@@ -12125,7 +12130,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_pilot/hardpoint_right/hardpoint_class_2",
@@ -15324,6 +15330,17 @@
           "portTags": "ANVL_Hornet_Base"
         },
         {
+          "id": "hardpoint_class_4_center/hardpoint_size_4",
+          "label": "Size 4",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "apar_ballisticgatling_s4",
+          "locked": true
+        },
+        {
           "id": "hardpoint_class_3_left_bay_door",
           "label": "Class 3 Left Bay Door",
           "section": "missiles",
@@ -15660,7 +15677,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mount_gimbal_s4"
+          "defaultEntityClass": "mount_gimbal_s4",
+          "locked": true
         },
         {
           "id": "hardpoint_gun_center/hardpoint_size_4/hardpoint_class_2",
@@ -20714,6 +20732,26 @@
           "locked": true
         },
         {
+          "id": "hardpoint_turret_pilot/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
           "id": "hardpoint_weapon_wing_left/turret_gun",
           "label": "Turret Gun",
           "section": "weapons",
@@ -21074,6 +21112,26 @@
           "requiredTags": "$ANVL_Valkyrie",
           "portTags": "ANVL_Valkyrie",
           "locked": true
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_weapon_wing_left/turret_gun",
@@ -25310,7 +25368,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_nose/hardpoint_left/hardpoint_class_2",
@@ -25330,7 +25389,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_nose/hardpoint_right/hardpoint_class_2",
@@ -27066,7 +27126,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_nose/hardpoint_left/hardpoint_class_2",
@@ -27086,7 +27147,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_nose/hardpoint_right/hardpoint_class_2",
@@ -27353,7 +27415,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_nose/hardpoint_left/hardpoint_class_2",
@@ -27373,7 +27436,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_nose/hardpoint_right/hardpoint_class_2",
@@ -28517,6 +28581,26 @@
           "defaultEntityClass": "crus_star_runner_nose_turret_s5",
           "portTags": "CRUS_Star_Runner",
           "locked": true
+        },
+        {
+          "id": "hardpoint_front_turret/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_front_turret/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_missilerack_left_02",
@@ -37177,7 +37261,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "vncl_plasmacannon_s3"
+          "defaultEntityClass": "vncl_plasmacannon_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_front_right",
@@ -37198,7 +37283,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "vncl_plasmacannon_s3"
+          "defaultEntityClass": "vncl_plasmacannon_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_wing_left",
@@ -37219,7 +37305,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "vncl_plasmacannon_s2"
+          "defaultEntityClass": "vncl_plasmacannon_s2",
+          "locked": true
         },
         {
           "id": "hardpoint_weapon_wing_right",
@@ -37240,7 +37327,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "vncl_plasmacannon_s2"
+          "defaultEntityClass": "vncl_plasmacannon_s2",
+          "locked": true
         },
         {
           "id": "hardpoint_missile_rack_left",
@@ -37471,6 +37559,52 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_vncl_glaive",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_left",
+          "label": "Gun Nose Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_right",
+          "label": "Gun Nose Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_left",
+          "label": "Gun Wing Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_plasmacannon_s5",
+          "portTags": "War",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_right",
+          "label": "Gun Wing Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_plasmacannon_s5",
+          "portTags": "Wrath",
           "locked": true
         },
         {
@@ -38350,7 +38484,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s5"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s5",
+          "locked": true
         },
         {
           "id": "hardpoint_missile_rack_left",
@@ -40725,7 +40860,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_remote_top/hardpoint_gimbal_left/hardpoint_class_2",
@@ -40745,7 +40881,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_remote_top/hardpoint_gimbal_right/hardpoint_class_2",
@@ -40778,7 +40915,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_remote_bottom/hardpoint_gimbal_left/hardpoint_class_2",
@@ -40798,7 +40936,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_remote_bottom/hardpoint_gimbal_right/hardpoint_class_2",
@@ -45423,7 +45562,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "toag_lasergatling_s2"
+          "defaultEntityClass": "toag_lasergatling_s2",
+          "locked": true
         }
       ]
     },
@@ -48013,6 +48153,26 @@
           "locked": true
         },
         {
+          "id": "hardpoint_turret_nose/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "klwe_laserrepeater_s1"
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "klwe_laserrepeater_s1"
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -48586,6 +48746,26 @@
           "maxSize": 5,
           "defaultEntityClass": "misc_hull_c_nose_turret_s5",
           "locked": true
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_turret_tractor_beam_top_front/turret_left",
@@ -52198,7 +52378,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_misc_starlancer_tac_turret"
+          "defaultEntityClass": "mrck_s04_misc_starlancer_tac_turret",
+          "locked": true
         },
         {
           "id": "hardpoint_missile_turret_right/turret_missile_rack/missile_01_attach",
@@ -52281,7 +52462,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_misc_starlancer_tac_turret"
+          "defaultEntityClass": "mrck_s04_misc_starlancer_tac_turret",
+          "locked": true
         },
         {
           "id": "hardpoint_missile_turret_left/turret_missile_rack/missile_01_attach",
@@ -56833,7 +57015,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_orig_octo_s01"
+          "defaultEntityClass": "mrck_s04_orig_octo_s01",
+          "locked": true
         },
         {
           "id": "hardpoint_remote_missile_turret_left/turret_missile_rack/missile_01_attach",
@@ -56936,7 +57119,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_orig_octo_s01"
+          "defaultEntityClass": "mrck_s04_orig_octo_s01",
+          "locked": true
         },
         {
           "id": "hardpoint_remote_missile_turret_right/turret_missile_rack/missile_01_attach",
@@ -57039,7 +57223,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_orig_octo_s01"
+          "defaultEntityClass": "mrck_s04_orig_octo_s01",
+          "locked": true
         },
         {
           "id": "hardpoint_remote_missile_turret_leftL/turret_missile_rack/missile_01_attach",
@@ -57142,7 +57327,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_orig_octo_s01"
+          "defaultEntityClass": "mrck_s04_orig_octo_s01",
+          "locked": true
         },
         {
           "id": "hardpoint_remote_missile_turret_rightL/turret_missile_rack/missile_01_attach",
@@ -65557,7 +65743,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8"
+          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_manned_top/turret_right",
@@ -65577,7 +65764,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8"
+          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_manned_top/hardpoint_secondary_gun_left",
@@ -65650,7 +65838,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8"
+          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_manned_bottom/turret_right",
@@ -65670,7 +65859,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8"
+          "defaultEntityClass": "rsi_perseus_ballisticcannon_b_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_manned_bottom/hardpoint_secondary_gun_left",
@@ -67175,7 +67365,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "rsi_bespoke_ballisticcannon_a"
+          "defaultEntityClass": "rsi_bespoke_ballisticcannon_a",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_lower_front/hardpoint_weapon_right",
@@ -67195,7 +67386,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "rsi_bespoke_ballisticcannon_a"
+          "defaultEntityClass": "rsi_bespoke_ballisticcannon_a",
+          "locked": true
         },
         {
           "id": "hardpoint_quantum_drive",
@@ -69884,7 +70076,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_bottom_front_right",
@@ -69915,7 +70108,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_front_top_left",
@@ -69946,7 +70140,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_front_top_right",
@@ -69977,7 +70172,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_top_mid",
@@ -70090,7 +70286,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_top_rear_right",
@@ -70121,7 +70318,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_side_left_1",
@@ -70152,7 +70350,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s8"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_side_left_2",
@@ -70183,7 +70382,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s8"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_side_left_3",
@@ -70214,7 +70414,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s8"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_side_right_1",
@@ -70245,7 +70446,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s8"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_side_right_2",
@@ -70276,7 +70478,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s8"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_side_right_3",
@@ -70307,7 +70510,8 @@
           "size": 8,
           "minSize": 8,
           "maxSize": 8,
-          "defaultEntityClass": "vncl_gen2_plasmacannon_s8"
+          "defaultEntityClass": "vncl_gen2_plasmacannon_s8",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_top_left",
@@ -70338,7 +70542,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_mid_top_right",
@@ -70369,7 +70574,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_bottom_rear_right",
@@ -70400,7 +70606,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         },
         {
           "id": "hardpoint_turret_bottom_rear_left",
@@ -70431,7 +70638,8 @@
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
-          "defaultEntityClass": "vncl_gen2_laserrepeater_s6"
+          "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
+          "locked": true
         }
       ]
     },
@@ -70545,6 +70753,52 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_vncl_scythe",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_left",
+          "label": "Gun Nose Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_right",
+          "label": "Gun Nose Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_left",
+          "label": "Gun Wing Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_neutroncannon_s5",
+          "portTags": "War",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_right",
+          "label": "Gun Wing Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_plasmacannon_s5",
+          "portTags": "Wrath",
           "locked": true
         },
         {

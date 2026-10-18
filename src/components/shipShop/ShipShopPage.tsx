@@ -7,12 +7,15 @@ import {
   applyPortFit,
   blueprintForEntity,
   defaultCraftQualities,
+  fitPartOnPorts,
   getShip,
+  matchingCopyPorts,
   missileSlotsForRack,
   effectivePortKind,
   emptyBuild,
   partsForPort,
   portsForSection,
+  weaponCopyGroups,
   weaponTree,
   fittedPowerParts,
   snapshotForBuild,
@@ -51,6 +54,18 @@ const PIP_WRAP_LIMIT = 8
 
 function stackedPartKind(kind: string): boolean {
   return kind === 'weapon' || kind === 'missile' || kind === 'torpedo' || kind === 'missileRack'
+}
+
+function findRenderedPort(ship: GameShip, fitted: Record<string, FittedPart>, portId: string): ShipPort | null {
+  const walk = (nodes: ReturnType<typeof weaponTree>): ShipPort | null => {
+    for (const node of nodes) {
+      if (node.port.id === portId) return node.port
+      const child = walk(node.children)
+      if (child) return child
+    }
+    return null
+  }
+  return ship.ports.find((port) => port.id === portId) || walk(weaponTree(ship, fitted))
 }
 
 function useCompactPipWrap(): boolean {
@@ -495,6 +510,7 @@ export default function ShipShopPage() {
   const [saveNote, setSaveNote] = useState<string | null>(null)
   const [shipQuery, setShipQuery] = useState('')
   const [pickerPortId, setPickerPortId] = useState<string | null>(null)
+  const [copyPortId, setCopyPortId] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
@@ -666,7 +682,15 @@ export default function ShipShopPage() {
                   className={`${CHIP} ${expanded.size === 1 && expanded.has(section.id) ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
                   onClick={() => {
                     setExpanded(new Set([section.id]))
-                    document.getElementById(`ship-section-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    const sectionId = section.id
+                    window.requestAnimationFrame(() => {
+                      const target = document.getElementById(`ship-section-${sectionId}`)
+                      const header = document.querySelector('.ship-shop-header')
+                      if (!target) return
+                      const offset = header instanceof HTMLElement ? header.getBoundingClientRect().bottom : 0
+                      const top = target.getBoundingClientRect().top + window.scrollY - offset - 8
+                      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+                    })
                   }}
                 >
                   {section.label}
@@ -690,7 +714,7 @@ export default function ShipShopPage() {
       </div>
 
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
-          const ports = portsForSection(ship, section.id)
+          const ports = portsForSection(ship, section.id, build.ports)
           const shieldScale = (portId: string) => {
             const part = powerParts.find((entry) => entry.portId === portId)
             if (!part) return 1
@@ -749,6 +773,28 @@ export default function ShipShopPage() {
               setPickerPortId(open ? null : port.id)
             }
             const inline = !stackedPartKind(port.kind)
+            const copyTargets = port.kind === 'weapon' ? [] : matchingCopyPorts(ship, build.ports, port)
+            const addToAll = fitted && !port.locked && (port.kind === 'weapon' || copyTargets.length > 0) ? (
+              <button
+                type="button"
+                className="site-btn-ghost shrink-0 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+                onClick={() => {
+                  if (port.kind === 'weapon') {
+                    setCopyPortId(port.id)
+                    return
+                  }
+                  const part = build.ports[port.id]
+                  if (!part) return
+                  updateBuild({
+                    shipId: build.shipId,
+                    ports: fitPartOnPorts(ship, build.ports, copyTargets, { ...part }),
+                    power: build.power,
+                  })
+                }}
+              >
+                Add to All
+              </button>
+            ) : null
             return (
               <div
                 key={port.id}
@@ -758,7 +804,10 @@ export default function ShipShopPage() {
               >
                 {attachment ? (
                   <div className="site-card flex items-center gap-3 rounded-lg px-3 py-1" data-ship-port={port.id} onClick={openPicker}>
-                    <span className="shrink-0 text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
+                    <span className="flex shrink-0 items-center gap-2">
+                      <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
+                      {addToAll}
+                    </span>
                     <span className="truncate text-sm font-medium text-white">{name}</span>
                     <span className="truncate text-sm text-slate-300">{info}</span>
                     <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
@@ -770,8 +819,11 @@ export default function ShipShopPage() {
                   </div>
                 ) : (
                   <div className="site-card rounded-xl p-3" data-ship-port={port.id} onClick={openPicker}>
-                    <div className="flex items-baseline justify-between gap-3">
-                      <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-2">
+                        <span className="text-xs uppercase tracking-wide text-slate-500">{sizeLabel}</span>
+                        {addToAll}
+                      </span>
                       <span className="text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     </div>
                     <div className={`mt-1 flex w-full gap-3 text-left ${inline ? 'flex-nowrap items-center' : 'flex-wrap items-baseline gap-y-1'}`}>
@@ -823,7 +875,7 @@ export default function ShipShopPage() {
               {openSection && (
                 <div className="space-y-2 mt-3">
                   {section.id === 'weapons'
-                    ? renderWeaponNodes(weaponTree(ship))
+                    ? renderWeaponNodes(weaponTree(ship, build.ports))
                     : ports.map((port) => (
                       <div key={port.id} className="space-y-2">
                         {renderPort(port)}
@@ -836,6 +888,75 @@ export default function ShipShopPage() {
           )
         })}
       </div>
+      {copyPortId && (() => {
+        const source = findRenderedPort(ship, build.ports, copyPortId)
+        const part = source ? build.ports[source.id] : null
+        const groups = source && part ? weaponCopyGroups(ship, build.ports, source) : []
+        if (!source || !part) return null
+        const paint = (slots: ShipPort[], on: boolean) => {
+          const targets = slots.filter((slot) => {
+            const current = build.ports[slot.id]?.entityClass
+            return on ? current !== part.entityClass : current === part.entityClass
+          })
+          if (targets.length === 0) return
+          updateBuild({
+            shipId: build.shipId,
+            ports: fitPartOnPorts(
+              ship,
+              build.ports,
+              targets,
+              on ? { entityClass: part.entityClass, source: part.source, qualities: part.qualities } : null,
+            ),
+            power: build.power,
+          })
+        }
+        return (
+          <div className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6" onClick={() => setCopyPortId(null)}>
+            <div
+              className="site-modal-shell mt-16 w-full max-w-3xl p-4"
+              role="dialog"
+              aria-label="Add to all"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="mb-4 flex items-center justify-end gap-2">
+                <button type="button" className="site-btn-secondary px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), true)}>
+                  Mark all
+                </button>
+                <button type="button" className="site-btn-secondary px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), false)}>
+                  Unmark all
+                </button>
+                <button type="button" className="site-btn-ghost px-3 py-1 text-sm" aria-label="Close" onClick={() => setCopyPortId(null)}>
+                  ×
+                </button>
+              </div>
+              <div className="space-y-4">
+                {groups.length === 0 && <p className="site-hint text-sm">No mount of this type can take this weapon.</p>}
+                {groups.map((group) => (
+                  <div key={group.rootId} className="flex items-start gap-4">
+                    <p className="w-44 shrink-0 text-sm font-medium text-slate-100">{group.rootName}</p>
+                    <div className="grid flex-1 grid-cols-2 gap-2">
+                      {group.slots.map((slot) => {
+                        const on = build.ports[slot.id]?.entityClass === part.entityClass
+                        return (
+                          <button
+                            key={slot.id}
+                            type="button"
+                            className={`${on ? 'site-filter-selected-orange' : 'site-filter-idle'} flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm`}
+                            onClick={() => paint([slot], !on)}
+                          >
+                            <span className={`h-3 w-3 shrink-0 rounded-sm ${on ? 'bg-orange-400' : 'bg-slate-700'}`} />
+                            <span className="truncate">{slot.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }

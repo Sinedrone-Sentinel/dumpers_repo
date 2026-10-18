@@ -158,4 +158,23 @@ const andromeda = ships.find((ship) => ship.id === 'rsi_constellation_andromeda'
 assert.equal(andromeda.ports.some((port) => port.kind === 'weaponMount'), true)
 assert.equal(andromeda.ports.some((port) => port.kind === 'weapon' && port.id.includes('/')), true)
 
+const wildfire = ships.find((ship) => ship.id === 'anvl_hornet_f7c_wildfire')
+const wildfireGun = wildfire.ports.find((port) => port.id === 'hardpoint_class_4_center/hardpoint_size_4')
+assert.equal(wildfireGun.kind, 'weapon')
+assert.equal(wildfireGun.locked, true)
+assert.equal(wildfireGun.defaultEntityClass, 'apar_ballisticgatling_s4')
+assert.equal(wildfireGun.size, 4)
+
+const ball = items.find((item) => item.entityClass === 'anvl_hornet_f7cm_mk2_ball_turret')
+assert.deepEqual(
+  ball.mounts.map((mount) => mount.name),
+  ['hardpoint_weapon_left', 'hardpoint_weapon_right', 'hardpoint_missile_rack'],
+)
+assert.equal(ball.mounts[0].maxSize, 3)
+assert.equal(ball.mounts[2].kind, 'missile')
+
+const gimbal = items.find((item) => item.entityClass === 'mount_gimbal_s4')
+assert.equal(gimbal.mounts.length, 1)
+assert.equal(gimbal.mounts[0].maxSize, 4)
+
 console.log('ship shop catalog checks passed')
