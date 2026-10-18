@@ -26,7 +26,6 @@ import {
   type ShipShopStore,
 } from '../../lib/shipShopData'
 import {
-  assignableTotal,
   clickPowerColumn,
   componentGroups,
   flightRole,
@@ -146,8 +145,6 @@ function PipBoard({
                 const count = power[group.key] || 0
                 const flags = blockFlags(group.blocks, count)
                 const top = flags.lastIndexOf(true)
-                const usable = assignableTotal(group.blocks)
-                const full = groups.length === 1 && column.fullPower != null ? column.fullPower : usable
                 return (
                   <div key={group.key} className="flex flex-col items-center">
                     <div className="flex items-end gap-px">
@@ -180,7 +177,6 @@ function PipBoard({
                         </div>
                       ))}
                     </div>
-                    <span className="ship-shop-pip-count font-mono text-slate-500">{count}/{full}</span>
                   </div>
                 )
               })}

@@ -1207,7 +1207,6 @@
 
 /* Unlayered so these beat utility font/padding classes. Large only above 1920px. */
 .ship-shop-pip,
-.ship-shop-pip-count,
 .ship-shop-pip-label,
 .ship-shop-pip-remain,
 .ship-shop-part-name {
@@ -1290,8 +1289,7 @@
 }
 
 @media (min-width: 1921px) {
-  .ship-shop-pip,
-  .ship-shop-pip-count {
+  .ship-shop-pip {
     font-size: 20px;
   }
 
