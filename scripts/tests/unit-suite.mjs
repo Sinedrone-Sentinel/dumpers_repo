@@ -2289,11 +2289,11 @@ const generated = 6
 const defaults = shipShopMath.defaultPower(budgetColumns, generated)
 check(
   defaults.qd === 0 &&
-    defaults.weapons === 1 &&
+    defaults.weapons === 0 &&
     defaults.eng == null &&
     defaults.c1 === 1 &&
     Object.values(defaults).reduce((sum, value) => sum + value, 0) <= generated,
-  'ship shop: default power is each minimum block, quantum stays off, and the total stays inside the budget',
+  'ship shop: default power is each minimum block, quantum stays off, and unused weapon pips stay off',
 )
 check(
   Object.values(shipShopMath.resolvedPower(budgetColumns, { weapons: 4, engines: 4, quantum: 1, coolers: 3 }, generated)).reduce((sum, value) => sum + value, 0) <= generated,
@@ -2370,8 +2370,8 @@ check(
 check(
   Math.round(shipShopMath.infraredSignature(ravenCoolers, oneCooler, 2, shipShopMath.coolantSupply(ravenCoolers, oneCooler), 0.72) * 10) ===
     Math.round(shipShopMath.infraredSignature(ravenCoolers, splitCoolers, 2, shipShopMath.coolantSupply(ravenCoolers, splitCoolers), 0.72) * 10) &&
-    Math.floor(shipShopMath.electromagneticSignature(ravenCoolers, oneCooler, 18, 0, 0, 0.72) / 100) / 10 === 1.8 &&
-    Math.floor(shipShopMath.electromagneticSignature(ravenCoolers, splitCoolers, 18, 0, 0, 0.72) / 100) / 10 === 1.7,
+    Math.floor(shipShopMath.electromagneticSignature(ravenCoolers, oneCooler, 18, 0, 0.72) / 100) / 10 === 1.8 &&
+    Math.floor(shipShopMath.electromagneticSignature(ravenCoolers, splitCoolers, 18, 0, 0.72) / 100) / 10 === 1.7,
   'ship shop: IR stays put when the same coolers only move pips, and EM follows the plant budget plus cooler fraction',
 )
 check(
@@ -2392,6 +2392,37 @@ check(
     shipShopMath.partStatLine('shield', allstopShield).includes('damaged 5.8s') &&
     shipShopMath.partStatLine('shield', allstopShield).includes('downed 11.5s'),
   'ship shop: shield regen and full charge follow the pip band',
+)
+const ballisticGun = (portId) => ({ portId, kind: 'weapon', size: 3, stats: { Weapon_Power: 0.1, Signature_Em: 100 } })
+const ballisticGuns = [ballisticGun('g1'), ballisticGun('g2'), ballisticGun('g3'), ballisticGun('g4')]
+const ballisticColumn = shipShopMath.powerColumns(4, ballisticGuns)[0]
+const energyGuns = [
+  { portId: 'n1', kind: 'weapon', size: 3, stats: { Weapon_Power: 1.5, Signature_Em: 743 } },
+  { portId: 'n2', kind: 'weapon', size: 3, stats: { Weapon_Power: 1.5, Signature_Em: 743 } },
+  { portId: 'w1', kind: 'weapon', size: 3, stats: { Weapon_Power: 1 } },
+  { portId: 'w2', kind: 'weapon', size: 3, stats: { Weapon_Power: 1 } },
+]
+check(
+  shipShopMath.weaponFullPips([{ portId: 'g', kind: 'weapon', size: 1, stats: { Weapon_Power: 1.3 } }]) === 2 &&
+    shipShopMath.weaponFullPips(ballisticGuns) === 1 &&
+    shipShopMath.weaponFullPips(energyGuns) === 5 &&
+    ballisticColumn.blocks.filter((block) => !block.disabled).length === 1 &&
+    ballisticColumn.blocks.filter((block) => block.disabled).length === 3 &&
+    shipShopMath.powerColumns(4, energyGuns)[0].blocks.every((block) => !block.disabled) &&
+    shipShopMath.powerColumns(0, [
+      { portId: 's', kind: 'shield', size: 1, stats: { Power_Segments: 3, Power_Min: 1 } },
+    ])[0].blocks.every((block) => !block.disabled),
+  'ship shop: weapon pips round up to full power, and pips above that stay disabled',
+)
+check(
+  shipShopMath.resolvedPower(shipShopMath.powerColumns(4, ballisticGuns), { weapons: 4 }, 20).weapons === 1 &&
+    shipShopMath.togglePowerColumn(ballisticColumn.blocks, 0, 20) === 1 &&
+    shipShopMath.clickPowerColumn(ballisticColumn.blocks, 1, 3, 10) === 1 &&
+    shipShopMath.coolantDemand(ballisticGuns, new Map(), 1) === 1 &&
+    shipShopMath.coolantDemand(ballisticGuns, new Map(), 0) === 0 &&
+    shipShopMath.electromagneticSignature(ballisticGuns, new Map(), 18, 1, 1) >
+      shipShopMath.electromagneticSignature(ballisticGuns, new Map(), 18, 0, 1),
+  'ship shop: ballistic guns fill on one pip, and that pip moves cooling and EM',
 )
 
 console.log(`Unit tests: ${pass} passed`)

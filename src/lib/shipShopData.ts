@@ -6,7 +6,6 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import { getShipItem, shipItems } from './shipItemCatalog'
 import {
   addPartToSnapshot,
-  columnTotal,
   coolantDemand,
   coolantSupply,
   effectivePartStats,
@@ -404,13 +403,9 @@ export function snapshotForBuild(
   const scales = new Map<string, number>()
   const pipCounts = new Map<string, number>()
   const weaponColumn = columns.find((column) => column.id === 'weapons')
-  const weaponTotal = weaponColumn ? columnTotal(weaponColumn) : 0
   const weaponSelected = weaponColumn ? (assignedPower[weaponColumn.id] || 0) : 0
-  const weaponRaw = parts
-    .filter((part) => part.kind === 'weapon')
-    .reduce((sum, part) => sum + (part.stats.Power_Segments || 0), 0)
-  const weaponEnabled = weaponColumn ? Math.min(weaponTotal, Math.ceil(weaponRaw)) : 0
-  const weaponFraction = weaponEnabled > 0 ? weaponSelected / weaponEnabled : 0
+  const weaponFull = weaponColumn?.fullPower || 0
+  const weaponFraction = weaponFull > 0 ? Math.min(weaponSelected, weaponFull) / weaponFull : 0
   const poweredPorts = new Set(columns.flatMap((column) => column.blocks.map((block) => block.portId).filter((portId): portId is string => Boolean(portId))))
   for (const column of columns) {
     if (column.id === 'weapons') continue
@@ -440,7 +435,7 @@ export function snapshotForBuild(
   }
   const generated = powerGenerated(parts)
   const supply = coolantSupply(parts, pipCounts)
-  const demand = coolantDemand(parts, pipCounts, weaponSelected, weaponRaw)
+  const demand = coolantDemand(parts, pipCounts, weaponSelected)
   const armor = parts.find((part) => part.kind === 'armor')
   const multiplier = (percent?: number) => 1 + (percent || 0) / 100
   const armorEm = multiplier(armor?.stats.Armor_SignalEm)
@@ -448,7 +443,7 @@ export function snapshotForBuild(
   snapshot.coolant = supply
   snapshot.coolantDemand = demand
   snapshot.coolantRatio = supply > 0 ? Math.min(demand / supply, 1) : 0
-  snapshot.signatureEm = electromagneticSignature(parts, pipCounts, generated, weaponSelected, weaponEnabled, armorEm)
+  snapshot.signatureEm = electromagneticSignature(parts, pipCounts, generated, weaponSelected, armorEm)
   snapshot.signatureIr = infraredSignature(parts, pipCounts, demand, supply, armorIr)
   if (snapshot.signatureCs != null) snapshot.signatureCs *= multiplier(armor?.stats.Armor_SignalCs)
   return snapshot
