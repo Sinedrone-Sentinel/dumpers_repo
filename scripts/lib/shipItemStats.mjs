@@ -23,6 +23,54 @@ function setStat(stats, key, value) {
   stats[key] = value
 }
 
+function delaySeconds(delay, unit) {
+  if (typeof delay !== 'number' || !(delay > 0)) return 0
+  if (unit === 'RPM') return 60 / delay
+  if (unit === 'Seconds') return delay
+  return 0
+}
+
+/** One pass of a fire sequence: each step waits for its delay, its own fire rate, or its charge. */
+export function fireSequenceCycle(root) {
+  let chosen = null
+  walk(root, (node) => {
+    if (chosen || !Array.isArray(node.fireActions)) return
+    for (const action of node.fireActions) {
+      if (action?._Type_ !== 'SWeaponActionSequenceParams' || !Array.isArray(action.sequenceEntries)) continue
+      let seconds = 0
+      let shots = 0
+      for (const entry of action.sequenceEntries) {
+        if (!entry || entry._Type_ !== 'SWeaponSequenceEntryParams') continue
+        const shot = entry.weaponAction || {}
+        const reps = typeof entry.repetitions === 'number' && entry.repetitions > 0 ? entry.repetitions : 1
+        const delay = delaySeconds(entry.delay, entry.unit)
+        const rate = typeof shot.fireRate === 'number' && shot.fireRate > 0 ? 60 / shot.fireRate : 0
+        const charge = (Number(shot.chargeTime) || 0) + (Number(shot.cooldownTime) || 0)
+        const one = Math.max(delay, rate, charge)
+        if (one <= 0) continue
+        seconds += one * reps
+        shots += reps
+      }
+      if (shots > 0 && seconds > 0) {
+        chosen = { shots, seconds }
+        return
+      }
+    }
+  })
+  return chosen
+}
+
+/** Keep a cycle only when it is slower than firing every shot at the stored fire rate. */
+export function applyWeaponCycle(stats, cycle) {
+  if (!stats || !cycle || cycle.shots <= 0 || cycle.seconds <= 0) return stats
+  const rate = stats.Weapon_Firerate || 0
+  const plain = rate > 0 ? (cycle.shots * 60) / rate : Number.POSITIVE_INFINITY
+  if (cycle.seconds <= plain * 1.001) return stats
+  stats.Weapon_CycleShots = cycle.shots
+  stats.Weapon_CycleSeconds = Math.round(cycle.seconds * 1e6) / 1e6
+  return stats
+}
+
 function firstNumber(root, key) {
   let found = 0
   walk(root, (node) => {
@@ -288,16 +336,20 @@ export function extractShipItemStats(json, options = {}) {
     if (draw > (stats.Coolant_PowerDraw || 0)) stats.Coolant_PowerDraw = draw
   })
 
+  applyWeaponCycle(stats, fireSequenceCycle(root))
   return stats
 }
 
-/** Burst damage per second. A charge or a seconds-long delay replaces the fire rate when it is the slower wait. */
+/** Burst damage per second. A sequenced gun uses its own shot waits before the fire rate. */
 export function weaponBurstDps(stats) {
   if (!stats) return 0
   const damage = stats.Weapon_Damage || 0
   const rate = stats.Weapon_Firerate || 0
   const pellets = stats.Weapon_Pellets || 1
   if (damage <= 0) return 0
+  const cycleShots = stats.Weapon_CycleShots || 0
+  const cycleSeconds = stats.Weapon_CycleSeconds || 0
+  if (cycleShots > 0 && cycleSeconds > 0) return (damage * pellets * cycleShots) / cycleSeconds
   const rpmInterval = rate > 0 ? 60 / rate : 0
   const charge = (stats.Weapon_ChargeTime || 0) + (stats.Weapon_CooldownTime || 0) + (stats.Weapon_SequenceDelay || 0)
   if (charge <= 0) {

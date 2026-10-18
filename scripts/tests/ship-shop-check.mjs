@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import * as esbuild from 'esbuild'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { weaponBurstDps } from '../lib/shipItemStats.mjs'
+import { fireSequenceCycle, weaponBurstDps } from '../lib/shipItemStats.mjs'
 import { applyShipPartRules } from '../lib/shipPartRules.mjs'
 
 const ruled = applyShipPartRules(
@@ -339,5 +339,14 @@ const bombFit = {
   [bombSlots[0].id]: { entityClass: bombs[0].entityClass, source: 'stock' },
 }
 assert.equal(shop.matchingCopyPorts(gladius, bombFit, bombSlots[0]).length, Math.max(0, bombSlots.length - 1))
+
+const leonids = items.find((item) => item.entityClass === 'rsi_ballisticcannon_s5_meteor_bespoke')
+assert.equal(leonids.stats.Weapon_CycleShots, 2)
+assert.ok(Math.abs(leonids.stats.Weapon_CycleSeconds - (60 / 40 + 60 / 225)) < 0.0001)
+assert.equal(leonids.burstDps, 1811)
+const leonidsFile = JSON.parse(readFileSync('extracted-data/libs/foundry/records/entities/scitem/ships/weapons/rsi_ballisticcannon_s5_meteor_bespoke.json', 'utf8'))
+const leonidsCycle = fireSequenceCycle(leonidsFile)
+assert.equal(leonidsCycle.shots, 2)
+assert.ok(Math.abs(leonidsCycle.seconds - (60 / 40 + 60 / 225)) < 0.0001)
 
 console.log('ship shop catalog checks passed')

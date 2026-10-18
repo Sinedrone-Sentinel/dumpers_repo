@@ -24,11 +24,13 @@ import {
   snapshotForBuild,
   statsForFitted,
   type ShipSnapshotNumbers,
+  nonStockPartCounts,
   stockPorts,
   type FittedPart,
   type GameShip,
   type ShipBuild,
   type ShipPort,
+  type ShopCartLine,
   type ShipShopStore,
 } from '../../lib/shipShopData'
 import {
@@ -53,6 +55,8 @@ import {
 } from '../../lib/shipShopMath'
 import { getShipItem } from '../../lib/shipItemCatalog'
 import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
+import { isForSale, listingsFor, partListings, shipListings, type ShopListing } from '../../lib/shipShopShops'
+import { ShopBuyButtons, ShopCartModal, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 
 const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
 const PIP_WRAP_LIMIT = 8
@@ -540,6 +544,12 @@ export default function ShipShopPage() {
   const [shipQuery, setShipQuery] = useState('')
   const [pickerPortId, setPickerPortId] = useState<string | null>(null)
   const [copyWeapon, setCopyWeapon] = useState<{ portId: string; part: FittedPart } | null>(null)
+  const [shopModal, setShopModal] = useState<
+    | null
+    | { mode: 'where'; title: string; listings: ShopListing[]; craftable: boolean; ship: boolean }
+    | { mode: 'qty'; title: string; id: string; lineKind: 'ship' | 'part' }
+    | { mode: 'cart' }
+  >(null)
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
@@ -604,7 +614,14 @@ export default function ShipShopPage() {
   function updateBuild(next: ShipBuild) {
     setStore((prev) => {
       const builds = prev.builds.slice()
-      builds[buildIndex] = next
+      const current = builds[buildIndex]
+      const cart = Object.prototype.hasOwnProperty.call(next, 'cart')
+        ? (next.cart && next.cart.length > 0 ? next.cart : undefined)
+        : current?.cart
+      const saved: ShipBuild = { shipId: next.shipId, ports: next.ports }
+      if (next.power !== undefined) saved.power = next.power
+      if (cart) saved.cart = cart
+      builds[buildIndex] = saved
       return { version: 1, builds }
     })
   }
@@ -621,7 +638,7 @@ export default function ShipShopPage() {
   function chooseShip(shipId: string) {
     const nextShip = getShip(shipId)
     if (!nextShip) return
-    updateBuild({ shipId: nextShip.id, ports: stockPorts(nextShip) })
+    updateBuild({ shipId: nextShip.id, ports: stockPorts(nextShip), cart: [] })
     setShipQuery('')
   }
 
@@ -668,9 +685,26 @@ export default function ShipShopPage() {
             </div>
           )}
           {ship && (
-            <p className="text-sm text-slate-300">
-              {ship.manufacturer} · {ship.role || ship.career || 'Ship'}
-            </p>
+            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-300">
+              <span>{ship.manufacturer} · {ship.role || ship.career || 'Ship'}</span>
+              <ShopBuyButtons
+                listings={shipListings(ship.id)}
+                showBuild
+                cartCount={(build.cart || []).reduce((sum, line) => sum + line.qty, 0)}
+                onWhere={() => setShopModal({ mode: 'where', title: ship.displayName, listings: shipListings(ship.id), craftable: false, ship: true })}
+                onAdd={() => setShopModal({ mode: 'qty', title: ship.displayName, id: ship.id, lineKind: 'ship' })}
+                onAddBuild={() => {
+                  const cart: ShopCartLine[] = []
+                  if (isForSale(shipListings(ship.id))) cart.push({ id: ship.id, kind: 'ship', qty: 1 })
+                  for (const row of nonStockPartCounts(ship, build.ports)) {
+                    if (!isForSale(partListings(row.entityClass))) continue
+                    cart.push({ id: row.entityClass, kind: 'part', qty: row.qty })
+                  }
+                  updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+                }}
+                onViewCart={() => setShopModal({ mode: 'cart' })}
+              />
+            </div>
           )}
           <div className="site-chip-strip w-fit max-w-full">
             <span className="px-2 text-sm text-slate-400">Build {buildIndex + 1} of 4</span>
@@ -803,6 +837,19 @@ export default function ShipShopPage() {
               setPickerPortId(open ? null : port.id)
             }
             const inline = !stackedPartKind(port.kind)
+            const buy = fitted ? (
+              <ShopBuyButtons
+                listings={partListings(fitted.item.entityClass)}
+                onWhere={() => setShopModal({
+                  mode: 'where',
+                  title: name,
+                  listings: partListings(fitted.item.entityClass),
+                  craftable: Boolean(blueprintForEntity(fitted.item.entityClass)),
+                  ship: false,
+                })}
+                onAdd={() => setShopModal({ mode: 'qty', title: name, id: fitted.item.entityClass, lineKind: 'part' })}
+              />
+            ) : null
             const rackCard = port.kind === 'missileRack' || fitted?.item.kind === 'missileRack'
             const copyTargets = port.kind === 'weapon' || rackCard ? [] : matchingCopyPorts(ship, build.ports, port)
             const addToAll = fitted && !port.locked && !rackCard && (port.kind === 'weapon' || copyTargets.length > 0) ? (
@@ -842,6 +889,7 @@ export default function ShipShopPage() {
                     </span>
                     <span className="truncate text-sm font-medium text-white">{name}</span>
                     <span className="truncate text-sm text-slate-300">{info}</span>
+                    {buy}
                     <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
                     {fitted && !port.locked && (
                       <button type="button" className="site-btn-ghost shrink-0 px-2 py-0.5 text-xs" onClick={() => setFitted(port, null)}>
@@ -861,6 +909,7 @@ export default function ShipShopPage() {
                     <div className={`mt-1 flex w-full gap-3 text-left ${inline ? 'flex-nowrap items-center' : 'flex-wrap items-baseline gap-y-1'}`}>
                       <span className="ship-shop-part-name min-w-0 truncate font-medium text-white">{name}</span>
                       <span className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`}>{info}</span>
+                      {buy}
                       {inline && fitted && !port.locked && (
                         <button type="button" className="site-btn-ghost ml-auto shrink-0 px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
                           Clear
@@ -1000,6 +1049,49 @@ export default function ShipShopPage() {
           </div>
         )
       })()}
+      {shopModal?.mode === 'where' && (
+        <ShopWhereModal
+          title={shopModal.title}
+          listings={shopModal.listings}
+          craftable={shopModal.craftable}
+          ship={shopModal.ship}
+          onClose={() => setShopModal(null)}
+        />
+      )}
+      {shopModal?.mode === 'qty' && (
+        <ShopQtyModal
+          title={shopModal.title}
+          onClose={() => setShopModal(null)}
+          onAdd={(qty) => {
+            const cart = [...(build.cart || [])]
+            const found = cart.find((line) => line.kind === shopModal.lineKind && line.id === shopModal.id)
+            if (found) found.qty += qty
+            else cart.push({ id: shopModal.id, kind: shopModal.lineKind, qty })
+            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+            setShopModal(null)
+          }}
+        />
+      )}
+      {shopModal?.mode === 'cart' && (
+        <ShopCartModal
+          lines={(build.cart || []).map((line) => ({
+            ...line,
+            name: line.kind === 'ship' ? (getShip(line.id)?.displayName || 'Ship') : (getShipItem(line.id)?.displayName || 'Part'),
+            listings: listingsFor(line.kind, line.id),
+          }))}
+          onClose={() => setShopModal(null)}
+          onQty={(line, qty) => {
+            const cart = (build.cart || [])
+              .map((entry) => entry.kind === line.kind && entry.id === line.id ? { ...entry, qty } : entry)
+              .filter((entry) => entry.qty > 0)
+            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+          }}
+          onRemove={(line) => {
+            const cart = (build.cart || []).filter((entry) => !(entry.kind === line.kind && entry.id === line.id))
+            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -43,6 +43,7 @@
     "fetch-commodity-bases": "node scripts/fetch-commodity-dfp-bases.mjs",
     "fetch-shop-data": "node scripts/fetch-shop-commodity-data.mjs",
     "fetch-mining-gear-shops": "node scripts/fetch-mining-gear-shops.mjs",
+    "fetch-ship-shop-shops": "node scripts/fetch-ship-shop-shops.mjs",
     "verify-dfp-premiums": "node scripts/verify-dfp-acquisition-premiums.mjs",
     "generate-dumper-mappings": "node scripts/generate-blueprint-name-lookup.mjs",
     "copy-blueprint-lookup": "node scripts/copy-blueprint-lookup.mjs",
