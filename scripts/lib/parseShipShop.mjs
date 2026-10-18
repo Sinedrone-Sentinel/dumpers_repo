@@ -292,6 +292,7 @@ export function applyLegacyFlightModifiers(flight, modifier) {
   const numbers = modifier.numbers || []
   flight.scmSpeed = applyNumberModifier(flight.scmSpeed, numbers[0])
   flight.boostSpeed = applyNumberModifier(flight.boostSpeed, numbers[1])
+  flight.boostBack = applyNumberModifier(flight.boostBack, numbers[2])
   flight.maxSpeed = applyNumberModifier(flight.maxSpeed, numbers[3])
   const angular = modifier.vectors?.[0]
   if (angular?.value) {
@@ -307,6 +308,7 @@ function flightStats(json) {
   let angular = null
   let scm = null
   let boost = null
+  let boostBack = null
   let maxSpeed = null
   const walk = (node) => {
     if (!node || typeof node !== 'object') return
@@ -315,6 +317,7 @@ function flightStats(json) {
       if (node.maxAngularVelocity?.x != null) angular = node.maxAngularVelocity
     }
     if (typeof node.boostSpeedForward === 'number') boost = node.boostSpeedForward
+    if (typeof node.boostSpeedBackward === 'number') boostBack = node.boostSpeedBackward
     if (typeof node.maxSpeed === 'number' && node.scmSpeed != null) maxSpeed = node.maxSpeed
     for (const value of Object.values(node)) walk(value)
   }
@@ -325,6 +328,7 @@ function flightStats(json) {
     roll: angular?.y ?? null,
     scmSpeed: scm,
     boostSpeed: boost,
+    boostBack,
     maxSpeed,
   }
 }
@@ -469,6 +473,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (flight.roll) stats.Flight_Roll = flight.roll
       if (flight.scmSpeed) stats.Flight_ScmSpeed = flight.scmSpeed
       if (flight.boostSpeed) stats.Flight_BoostSpeed = flight.boostSpeed
+      if (flight.boostBack) stats.Flight_BoostBackward = flight.boostBack
       if (flight.maxSpeed) stats.Flight_MaxSpeed = flight.maxSpeed
     }
     const size = def?.Size || sizeFromName(entityClass) || 0

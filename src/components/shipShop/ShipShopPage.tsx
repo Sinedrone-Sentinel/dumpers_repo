@@ -254,6 +254,7 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
       lines: [
         ['SCM', formatNumber(snapshot.scmSpeed), 'same'],
         ['Boosted', formatNumber(snapshot.boostSpeed), 'same'],
+        ['Reverse', formatNumber(snapshot.reverseSpeed), 'same'],
         ['NAV', formatNumber(snapshot.navSpeed), 'same'],
         ['Pitch', formatNumber(snapshot.pitch), 'same'],
         ['Yaw', formatNumber(snapshot.yaw), 'same'],

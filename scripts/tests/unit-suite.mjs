@@ -2199,6 +2199,26 @@ check(
     deadboltSnapshot.burstDps === 5200 && deadboltSnapshot.sustainedDps === 3934,
     'ship shop: the snapshot sums those cannons to burst 5200 and sustained 3934',
   )
+  const unpoweredBlade = shipShopMath.emptySnapshot()
+  shipShopMath.addPartToSnapshot(unpoweredBlade, 'flight', {
+    Flight_ScmSpeed: 221,
+    Flight_BoostSpeed: 505,
+    Flight_BoostBackward: 255,
+    Flight_MaxSpeed: 1190,
+    Flight_Pitch: 76,
+    Flight_Yaw: 58,
+    Flight_Roll: 207,
+  }, 0)
+  check(
+    unpoweredBlade.scmSpeed === 221 &&
+      unpoweredBlade.boostSpeed === 505 &&
+      unpoweredBlade.reverseSpeed === 255 &&
+      unpoweredBlade.navSpeed === 1190 &&
+      unpoweredBlade.pitch === 76 &&
+      unpoweredBlade.yaw === 58 &&
+      unpoweredBlade.roll === 207,
+    'ship shop: a flight blade puts every speed and turn rate on the snapshot with the engines off',
+  )
   const unpoweredDrive = shipShopMath.emptySnapshot()
   shipShopMath.addPartToSnapshot(unpoweredDrive, 'quantum', { Quantum_Speed: 283_000_000 }, 0)
   check(
