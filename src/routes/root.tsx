@@ -24,7 +24,7 @@ import ThemePreviewRoute from './ThemePreview.index'
 import AuthCallbackRoute from './AuthCallback.index'
 import PrivacyRoute from './Privacy.index'
 import ShipShopRoute from './ShipShop.index'
-import { requireFeature, requireMinRole, requireSuperAdmin } from '../lib/routeGuards'
+import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
 const rootRoute = createRootRoute({
@@ -212,7 +212,6 @@ const shipShopRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/ship-shop',
   component: ShipShopRoute,
-  beforeLoad: requireMinRole('officer'),
 })
 
 const privacyRoute = createRoute({

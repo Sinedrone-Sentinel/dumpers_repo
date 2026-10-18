@@ -18,6 +18,7 @@ export type FeatureId =
   | 'site_analytics'
   | 'mining_tracker'
   | 'commodity_lookup'
+  | 'ship_shop'
   | 'partnership'
   | 'contribute'
   | 'contributor_team_admin'
@@ -65,7 +66,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'target_bp_list' ||
       featureId === 'resource_tracker' ||
       featureId === 'fulfillment' ||
-      featureId === 'commodity_lookup'
+      featureId === 'commodity_lookup' ||
+      featureId === 'ship_shop'
     )
   }
 
@@ -117,6 +119,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'commodity_lookup':
       return !!ctx.role
+
+    case 'ship_shop':
+      return true
 
     case 'partnership':
       return ctx.isApproved

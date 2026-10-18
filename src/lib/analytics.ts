@@ -13,7 +13,6 @@ const SKIP_PATH_PREFIXES = [
   '/privacy',
   '/contributor-team',
   '/auth/callback',
-  '/ship-shop',
 ]
 
 export type AnalyticsContext = {
@@ -116,6 +115,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/resources')) return 'resource_tracker'
   if (pathname.startsWith('/mining-tracker')) return 'mining_tracker'
   if (pathname.startsWith('/commodity-lookup')) return 'commodity_lookup'
+  if (pathname.startsWith('/ship-shop')) return 'ship_shop'
   if (pathname.startsWith('/orders')) return 'custom_orders'
   if (pathname.startsWith('/bazaar')) return 'fulfillment'
   if (pathname.startsWith('/archive')) return 'archive'
@@ -269,6 +269,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   resource_tracker: 'Resource Tracker',
   mining_tracker: 'Mining Tracker',
   commodity_lookup: 'Commodity Lookup',
+  ship_shop: "Fuzy's Ship Shop",
   custom_orders: 'My Listings',
   fulfillment: 'The Bazaar',
   archive: 'Info Archive',

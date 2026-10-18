@@ -63,7 +63,7 @@ import {
   type ShipItemStats,
 } from '../../lib/shipShopMath'
 import { getShipItem } from '../../lib/shipItemCatalog'
-import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
+import { defaultShipShopLoadouts, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore } from '../../lib/shipShopOps'
 import { isForSale, listingsFor, partListings, shipListings, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 
@@ -544,12 +544,14 @@ function PartPicker({
 }
 
 export default function ShipShopPage() {
-  const { isOfficerOrAbove } = useAuth()
+  const { user, loading: authLoading } = useAuth()
+  const userId = user?.id ?? null
   const navigate = useNavigate()
   const { clearDraft, addToDraft } = useOrderDraft()
   const [store, setStore] = useState<ShipShopStore>(() => defaultShipShopLoadouts())
   const [buildIndex, setBuildIndex] = useState(0)
   const [ready, setReady] = useState(false)
+  const [accountSave, setAccountSave] = useState(false)
   const [saveNote, setSaveNote] = useState<string | null>(null)
   const [shipQuery, setShipQuery] = useState('')
   const [pickerPortId, setPickerPortId] = useState<string | null>(null)
@@ -574,32 +576,60 @@ export default function ShipShopPage() {
   }, [pickerPortId])
 
   useEffect(() => {
-    if (!isOfficerOrAbove) return
+    if (authLoading) return
     let cancelled = false
+    if (!userId) {
+      setAccountSave(false)
+      setStore(readGuestShipShopStore())
+      setReady(true)
+      return
+    }
+    setReady(false)
     fetchShipShopLoadouts()
-      .then((loaded) => {
-        if (!cancelled) {
+      .then(async (loaded) => {
+        if (cancelled) return
+        if (loaded == null) {
+          const guest = readGuestShipShopStore()
+          if (shipShopStoreHasShip(guest)) {
+            await saveShipShopLoadouts(guest)
+            clearGuestShipShopStore()
+            if (cancelled) return
+            setStore(guest)
+          } else {
+            setStore(defaultShipShopLoadouts())
+          }
+        } else {
           setStore(loaded)
-          setReady(true)
         }
+        setAccountSave(true)
+        setReady(true)
       })
       .catch(() => {
-        if (!cancelled) setSaveNote('Builds could not be loaded yet.')
+        if (cancelled) return
+        setAccountSave(false)
+        setStore(readGuestShipShopStore())
+        setReady(true)
+        setSaveNote('Builds are saved in this browser until the account can be reached.')
       })
     return () => {
       cancelled = true
     }
-  }, [isOfficerOrAbove])
+  }, [authLoading, userId])
 
   useEffect(() => {
-    if (!ready || !isOfficerOrAbove) return
+    if (!ready || authLoading) return
     const timer = window.setTimeout(() => {
-      saveShipShopLoadouts(store)
-        .then(() => setSaveNote(null))
-        .catch(() => setSaveNote('The latest build was not saved.'))
+      if (accountSave) {
+        saveShipShopLoadouts(store)
+          .then(() => setSaveNote(null))
+          .catch(() => setSaveNote('The latest build was not saved.'))
+        return
+      }
+      writeGuestShipShopStore(store)
+      setSaveNote(null)
     }, 400)
     return () => window.clearTimeout(timer)
-  }, [store, ready, isOfficerOrAbove])
+  }, [store, ready, authLoading, accountSave])
 
   const build = store.builds[buildIndex] ?? store.builds[0]
   const ship = getShip(build?.shipId)
@@ -611,7 +641,6 @@ export default function ShipShopPage() {
     }).slice(0, 40)
   }, [shipQuery])
 
-  if (!isOfficerOrAbove) return null
   if (!build) return null
 
   const powerParts = ship ? fittedPowerParts(ship, build.ports) : []
@@ -674,7 +703,7 @@ export default function ShipShopPage() {
             <h1>
               <img src="/fuzys-ship-shop.png" alt="Fuzy's Ship Shop" className="w-auto object-contain" style={{ height: 'var(--ship-logo-h)' }} />
             </h1>
-            <p className="site-hint text-sm">{saveNote || (ready ? 'Builds save on this account.' : 'Loading builds…')}</p>
+            <p className="site-hint text-sm">{saveNote || (ready ? (accountSave ? 'Builds save on this account.' : 'Builds save in this browser.') : 'Loading builds…')}</p>
           </div>
           <div className="relative z-30">
             <label className="block">
