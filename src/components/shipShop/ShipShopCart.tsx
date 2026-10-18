@@ -62,11 +62,14 @@ export function ShopModalFrame({ onClose, children }: { onClose: () => void; chi
   )
 }
 
+const LINE_ICON = 'inline-flex h-5 shrink-0 items-center justify-center px-0.5 leading-none disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100 hover:brightness-125'
+
 export function ShopBuyButtons({
   listings,
   showBuild,
   cartCount,
   addEnabled,
+  icons,
   onWhere,
   onAdd,
   onAddBuild,
@@ -77,6 +80,8 @@ export function ShopBuyButtons({
   cartCount?: number
   /** Crafted parts can be added even when the shop does not sell them. */
   addEnabled?: boolean
+  /** Fitted lines use symbols. The ship header keeps the labeled buttons. */
+  icons?: boolean
   onWhere: () => void
   onAdd: () => void
   onAddBuild?: () => void
@@ -86,11 +91,17 @@ export function ShopBuyButtons({
   const canAdd = addEnabled ?? forSale
   return (
     <>
-      <button type="button" className={`${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} onClick={onWhere}>
-        Where to Buy
+      <button type="button" className={icons ? `${LINE_ICON} text-xs font-bold text-red-400` : `${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} aria-label="Where to buy" onClick={onWhere}>
+        {icons ? '$$$' : 'Where to Buy'}
       </button>
-      <button type="button" className={`${CHIP} site-filter-selected-green`} disabled={!canAdd} title={canAdd ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
-        Add to Cart
+      <button type="button" className={icons ? `${LINE_ICON} text-green-400` : `${CHIP} site-filter-selected-green`} disabled={!canAdd} title={canAdd ? 'Add to cart' : 'Not sold in a shop'} aria-label="Add to cart" onClick={onAdd}>
+        {icons ? (
+          <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <circle cx="9" cy="20" r="1.5" fill="currentColor" stroke="none" />
+            <circle cx="18" cy="20" r="1.5" fill="currentColor" stroke="none" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h2l2.2 11h11.3l2-7H7" />
+          </svg>
+        ) : 'Add to Cart'}
       </button>
       {showBuild && (
         <button type="button" className={`${CHIP} site-filter-selected-blue`} onClick={onAddBuild}>
