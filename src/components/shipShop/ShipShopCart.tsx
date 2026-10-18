@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useId, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import { formatShopNumber } from '../../lib/shipShopMath'
 import {
   SHOP_ATTRIBUTION,
@@ -12,6 +15,40 @@ import {
 import type { ShopCartLine } from '../../lib/shipShopData'
 
 const BUY = 'site-btn-ghost shrink-0 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-40'
+
+/** Backdrop stays fixed. The page behind it does not scroll. */
+export function ShopModalFrame({ onClose, children }: { onClose: () => void; children: ReactNode }) {
+  useBodyScrollLock(true)
+  const overlayId = useId()
+  useUiOverlayRegistration(overlayId, true)
+  useEffect(() => {
+    const block = (event: WheelEvent) => {
+      const target = event.target
+      const scroller = target instanceof Element ? target.closest('[data-shop-modal-scroll]') : null
+      if (!(scroller instanceof HTMLElement)) {
+        event.preventDefault()
+        return
+      }
+      const atTop = scroller.scrollTop <= 0
+      const atBottom = scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 1
+      if ((event.deltaY < 0 && atTop) || (event.deltaY > 0 && atBottom)) event.preventDefault()
+    }
+    document.addEventListener('wheel', block, { passive: false, capture: true })
+    return () => document.removeEventListener('wheel', block, { capture: true })
+  }, [])
+  if (typeof document === 'undefined') return null
+  return createPortal(
+    <div
+      className="site-modal-backdrop z-[70] flex items-start justify-center overflow-hidden overscroll-none p-6"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      {children}
+    </div>,
+    document.body,
+  )
+}
 
 export function ShopBuyButtons({
   listings,
@@ -68,8 +105,8 @@ export function ShopWhereModal({
 }) {
   const rows = [...listings].filter((row) => row.price > 0).sort((a, b) => locationLine(a).localeCompare(locationLine(b)) || a.price - b.price)
   return (
-    <div className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}>
-      <div className="site-modal-shell mt-16 flex max-h-[70vh] w-full max-w-xl flex-col p-4" role="dialog" aria-label={`Where to buy ${title}`} onClick={(event) => event.stopPropagation()}>
+    <ShopModalFrame onClose={onClose}>
+      <div className="site-modal-shell mt-16 flex max-h-[min(70dvh,calc(100dvh-6rem))] w-full max-w-xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label={`Where to buy ${title}`}>
         <div className="mb-3 flex items-center gap-3">
           <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">Where to buy {title}</h3>
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
@@ -83,7 +120,7 @@ export function ShopWhereModal({
                 : 'This is not sold in a shop. It has to be found in the game.'}
           </p>
         ) : (
-          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto">
+          <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
             {rows.map((row) => (
               <div key={`${locationLine(row)}-${row.price}`} className="flex items-baseline justify-between gap-3 py-1 text-sm">
                 <span className="text-slate-100">{locationLine(row)}</span>
@@ -92,9 +129,9 @@ export function ShopWhereModal({
             ))}
           </div>
         )}
-        <p className="site-hint mt-3 text-xs">{SHOP_ATTRIBUTION}</p>
+        <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
-    </div>
+    </ShopModalFrame>
   )
 }
 
@@ -109,8 +146,8 @@ export function ShopQtyModal({
 }) {
   const [qty, setQty] = useState(1)
   return (
-    <div className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}>
-      <div className="site-modal-shell mt-16 w-full max-w-sm p-4" role="dialog" aria-label={`Add ${title} to cart`} onClick={(event) => event.stopPropagation()}>
+    <ShopModalFrame onClose={onClose}>
+      <div className="site-modal-shell mt-16 w-full max-w-sm overflow-hidden p-4" role="dialog" aria-modal="true" aria-label={`Add ${title} to cart`}>
         <h3 className="truncate text-base font-semibold text-white">Add {title}</h3>
         <label className="mt-3 block">
           <span className="site-label">How many</span>
@@ -127,7 +164,7 @@ export function ShopQtyModal({
           <button type="button" className="site-btn-primary px-3 py-1.5 text-sm" onClick={() => onAdd(qty)}>Add</button>
         </div>
       </div>
-    </div>
+    </ShopModalFrame>
   )
 }
 
@@ -145,8 +182,8 @@ export function ShopCartModal({
   const stops = planStops(lines)
   const text = itineraryText(stops)
   return (
-    <div className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}>
-      <div className="site-modal-shell mt-16 flex max-h-[80vh] w-full max-w-2xl flex-col p-4" role="dialog" aria-label="View cart" onClick={(event) => event.stopPropagation()}>
+    <ShopModalFrame onClose={onClose}>
+      <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-2xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
         <div className="mb-3 flex items-center gap-3">
           <h3 className="min-w-0 flex-1 text-base font-semibold text-white">Cart</h3>
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
@@ -155,22 +192,24 @@ export function ShopCartModal({
           <p className="text-sm text-slate-200">The cart is empty.</p>
         ) : (
           <>
-            <p className="text-sm text-slate-100">{text}</p>
-            <div className="mt-4 min-h-0 flex-1 space-y-2 overflow-y-auto">
-              {lines.map((line) => (
-                <div key={`${line.kind}:${line.id}`} className="flex items-center gap-3 text-sm">
-                  <span className="min-w-0 flex-1 truncate text-white">{line.name}</span>
-                  <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Decrease ${line.name}`} onClick={() => onQty(line, line.qty - 1)}>−</button>
-                  <span className="w-8 text-center text-slate-100">{line.qty}</span>
-                  <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => onQty(line, line.qty + 1)}>+</button>
-                  <button type="button" className="site-btn-ghost px-2 py-0.5" onClick={() => onRemove(line)}>Remove</button>
-                </div>
-              ))}
+            <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
+              <p className="text-sm text-slate-100">{text}</p>
+              <div className="space-y-2">
+                {lines.map((line) => (
+                  <div key={`${line.kind}:${line.id}`} className="flex items-center gap-3 text-sm">
+                    <span className="min-w-0 flex-1 truncate text-white">{line.name}</span>
+                    <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Decrease ${line.name}`} onClick={() => onQty(line, line.qty - 1)}>−</button>
+                    <span className="w-8 text-center text-slate-100">{line.qty}</span>
+                    <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => onQty(line, line.qty + 1)}>+</button>
+                    <button type="button" className="site-btn-ghost px-2 py-0.5" onClick={() => onRemove(line)}>Remove</button>
+                  </div>
+                ))}
+              </div>
             </div>
           </>
         )}
-        <p className="site-hint mt-3 text-xs">{SHOP_ATTRIBUTION}</p>
+        <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
-    </div>
+    </ShopModalFrame>
   )
 }

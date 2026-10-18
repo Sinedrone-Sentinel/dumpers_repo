@@ -56,7 +56,7 @@ import {
 import { getShipItem } from '../../lib/shipItemCatalog'
 import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } from '../../lib/shipShopOps'
 import { isForSale, listingsFor, partListings, shipListings, type ShopListing } from '../../lib/shipShopShops'
-import { ShopBuyButtons, ShopCartModal, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
+import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 
 const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
 const PIP_WRAP_LIMIT = 8
@@ -997,17 +997,12 @@ export default function ShipShopPage() {
           })
         }
         return (
-          <div
-            className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6"
-            onClick={(event) => {
-              if (event.target === event.currentTarget) setCopyWeapon(null)
-            }}
-          >
+          <ShopModalFrame onClose={() => setCopyWeapon(null)}>
             <div
-              className="site-modal-shell mt-16 w-full max-w-3xl p-4"
+              className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-3xl flex-col overflow-hidden p-4"
               role="dialog"
+              aria-modal="true"
               aria-label={itemName}
-              onClick={(event) => event.stopPropagation()}
             >
               <div className="mb-4 flex items-center gap-3">
                 <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">{itemName}</h3>
@@ -1021,7 +1016,7 @@ export default function ShipShopPage() {
                   ×
                 </button>
               </div>
-              <div className="space-y-4">
+              <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
                 {groups.length === 0 && <p className="site-hint text-sm">No mount of this type can take this weapon.</p>}
                 {groups.map((group) => (
                   <div key={group.rootId} className="flex items-start gap-4">
@@ -1046,7 +1041,7 @@ export default function ShipShopPage() {
                 ))}
               </div>
             </div>
-          </div>
+          </ShopModalFrame>
         )
       })()}
       {shopModal?.mode === 'where' && (
