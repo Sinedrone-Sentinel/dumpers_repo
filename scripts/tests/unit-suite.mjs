@@ -1716,6 +1716,12 @@ check(
   quality.dropUnbackedArmorModifiers(backpackMods, { Armor_Damagemitigation: 0.7 }).length === 2,
   'armour modifier is kept when the item has that stat',
 )
+check(!quality.isLowerBetter('Weapon_Recoil_Handling'), 'recoil handling is better when the number goes up')
+check(!quality.isLowerBetter('Weapon_Recoil_Smoothness'), 'recoil smoothness is better when the number goes up')
+check(quality.isLowerBetter('Weapon_Recoil_Kick'), 'recoil kick is better when the number goes down')
+check(quality.getModifierColorClass(0.7, 'Weapon_Recoil_Handling') === 'text-red-400', 'a drop in recoil handling is red')
+check(quality.getModifierColorClass(1.2, 'Weapon_Recoil_Smoothness') === 'text-green-400', 'a rise in recoil smoothness is green')
+check(quality.getModifierColorClass(0.7, 'Weapon_Recoil_Kick') === 'text-green-400', 'a drop in recoil kick stays green')
 
 const blueprintData = JSON.parse(readFileSync(path.join(root, 'src/data/game-blueprints.json'), 'utf8'))
 const allBlueprints = blueprintData.blueprints || Object.values(blueprintData)

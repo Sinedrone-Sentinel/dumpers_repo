@@ -210,8 +210,6 @@ const PROPERTY_LABELS: Record<string, string> = {
  * For these, a negative percentage is good (green) and positive is bad (red).
  */
 const LOWER_IS_BETTER_STATS = new Set([
-  'weapon_recoil_smoothness',
-  'weapon_recoil_handling',
   'weapon_recoil_kick',
   'weapon_spread',
   'quantum_fuelrequirement',
