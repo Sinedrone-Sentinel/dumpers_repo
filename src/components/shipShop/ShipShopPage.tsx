@@ -548,7 +548,8 @@ export default function ShipShopPage() {
         <ShipSnapshot snapshot={snapshot} />
       </div>
       <div className="min-w-0 flex-1 space-y-4">
-      <div className="sticky top-[var(--site-header-height,3.5rem)] z-20 site-surface-solid p-4">
+      <div className="ship-shop-header-clip sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full">
+      <div className="ship-shop-header site-surface-solid p-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -623,6 +624,7 @@ export default function ShipShopPage() {
             }}
           />
         </div>
+      </div>
       </div>
 
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
