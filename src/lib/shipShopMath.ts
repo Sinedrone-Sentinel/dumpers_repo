@@ -237,6 +237,7 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
     const bits = [
       stats.Flight_ScmSpeed ? `SCM ${round(stats.Flight_ScmSpeed)}` : '',
       stats.Flight_BoostSpeed ? `Boost ${round(stats.Flight_BoostSpeed)}` : '',
+      stats.Flight_BoostBackward ? `Reverse ${round(stats.Flight_BoostBackward)}` : '',
       stats.Flight_MaxSpeed ? `NAV ${round(stats.Flight_MaxSpeed)}` : '',
       stats.Flight_Pitch ? `Pitch ${round(stats.Flight_Pitch)}` : '',
       stats.Flight_Yaw ? `Yaw ${round(stats.Flight_Yaw)}` : '',
@@ -315,6 +316,7 @@ export interface ShipSnapshotNumbers {
   quantumSpeed: number | null
   scmSpeed: number | null
   boostSpeed: number | null
+  reverseSpeed: number | null
   navSpeed: number | null
   radarRange: number | null
   signatureEm: number
@@ -362,6 +364,7 @@ export function emptySnapshot(ship?: {
     quantumSpeed: null,
     scmSpeed: null,
     boostSpeed: null,
+    reverseSpeed: null,
     navSpeed: null,
     radarRange: null,
     signatureEm: 0,
@@ -402,14 +405,15 @@ export function addPartToSnapshot(
     if (typeof stats.Armor_SignalCs === 'number') snapshot.signalCs = stats.Armor_SignalCs
   }
   if (kind === 'flight') {
-    if (stats.Flight_Pitch) snapshot.pitch = stats.Flight_Pitch * scale
-    if (stats.Flight_Yaw) snapshot.yaw = stats.Flight_Yaw * scale
-    if (stats.Flight_Roll) snapshot.roll = stats.Flight_Roll * scale
-    if (stats.Flight_ScmSpeed) snapshot.scmSpeed = stats.Flight_ScmSpeed * (scale > 0 ? 1 : 0)
-    if (stats.Flight_BoostSpeed) snapshot.boostSpeed = stats.Flight_BoostSpeed * (scale > 0 ? 1 : 0)
+    if (stats.Flight_Pitch) snapshot.pitch = stats.Flight_Pitch
+    if (stats.Flight_Yaw) snapshot.yaw = stats.Flight_Yaw
+    if (stats.Flight_Roll) snapshot.roll = stats.Flight_Roll
+    if (stats.Flight_ScmSpeed) snapshot.scmSpeed = stats.Flight_ScmSpeed
+    if (stats.Flight_BoostSpeed) snapshot.boostSpeed = stats.Flight_BoostSpeed
+    if (stats.Flight_BoostBackward) snapshot.reverseSpeed = stats.Flight_BoostBackward
     if (stats.Flight_MaxSpeed) snapshot.navSpeed = stats.Flight_MaxSpeed
   }
-  if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
+  if (kind === 'quantum' && stats.Quantum_Speed) {
     snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
   }
 }

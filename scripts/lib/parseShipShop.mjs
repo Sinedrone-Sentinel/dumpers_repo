@@ -267,10 +267,48 @@ function portTitle(name) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
+function applyNumberModifier(base, modifier) {
+  if (base == null || !modifier || typeof modifier.value !== 'number') return base
+  return modifier.type === 'Scalar' ? base * modifier.value : base + modifier.value
+}
+
+function legacyFlightModifier(json, readRef) {
+  let ref = null
+  const walk = (node) => {
+    if (!node || typeof node !== 'object') return
+    if (typeof node.modifiersLegacy === 'string') ref = node.modifiersLegacy
+    for (const value of Object.values(node)) walk(value)
+  }
+  walk(json)
+  if (!ref) return null
+  const record = readRef(ref)
+  const value = record?._RecordValue_ || null
+  return value?._Type_ === 'SIFCSModifiersLegacy' ? value : null
+}
+
+/** Handling and speed blades store a change on top of the stock speeds and turn rates. */
+export function applyLegacyFlightModifiers(flight, modifier) {
+  if (!modifier) return flight
+  const numbers = modifier.numbers || []
+  flight.scmSpeed = applyNumberModifier(flight.scmSpeed, numbers[0])
+  flight.boostSpeed = applyNumberModifier(flight.boostSpeed, numbers[1])
+  flight.boostBack = applyNumberModifier(flight.boostBack, numbers[2])
+  flight.maxSpeed = applyNumberModifier(flight.maxSpeed, numbers[3])
+  const angular = modifier.vectors?.[0]
+  if (angular?.value) {
+    const scale = angular.type === 'Scalar'
+    if (flight.pitch != null) flight.pitch = scale ? flight.pitch * angular.value.x : flight.pitch + angular.value.x
+    if (flight.roll != null) flight.roll = scale ? flight.roll * angular.value.y : flight.roll + angular.value.y
+    if (flight.yaw != null) flight.yaw = scale ? flight.yaw * angular.value.z : flight.yaw + angular.value.z
+  }
+  return flight
+}
+
 function flightStats(json) {
   let angular = null
   let scm = null
   let boost = null
+  let boostBack = null
   let maxSpeed = null
   const walk = (node) => {
     if (!node || typeof node !== 'object') return
@@ -279,6 +317,7 @@ function flightStats(json) {
       if (node.maxAngularVelocity?.x != null) angular = node.maxAngularVelocity
     }
     if (typeof node.boostSpeedForward === 'number') boost = node.boostSpeedForward
+    if (typeof node.boostSpeedBackward === 'number') boostBack = node.boostSpeedBackward
     if (typeof node.maxSpeed === 'number' && node.scmSpeed != null) maxSpeed = node.maxSpeed
     for (const value of Object.values(node)) walk(value)
   }
@@ -289,6 +328,7 @@ function flightStats(json) {
     roll: angular?.y ?? null,
     scmSpeed: scm,
     boostSpeed: boost,
+    boostBack,
     maxSpeed,
   }
 }
@@ -427,12 +467,13 @@ export function parseShipShop({ extractedRoot, localization }) {
     })
     if (kind === 'missile' && stats.Weapon_Damage) stats.Missile_Damage = stats.Weapon_Damage
     if (kind === 'flight') {
-      const flight = flightStats(json)
+      const flight = applyLegacyFlightModifiers(flightStats(json), legacyFlightModifier(json, (ref) => readRef(ref, filePath)))
       if (flight.pitch) stats.Flight_Pitch = flight.pitch
       if (flight.yaw) stats.Flight_Yaw = flight.yaw
       if (flight.roll) stats.Flight_Roll = flight.roll
       if (flight.scmSpeed) stats.Flight_ScmSpeed = flight.scmSpeed
       if (flight.boostSpeed) stats.Flight_BoostSpeed = flight.boostSpeed
+      if (flight.boostBack) stats.Flight_BoostBackward = flight.boostBack
       if (flight.maxSpeed) stats.Flight_MaxSpeed = flight.maxSpeed
     }
     const size = def?.Size || sizeFromName(entityClass) || 0
