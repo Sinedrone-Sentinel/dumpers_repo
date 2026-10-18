@@ -619,6 +619,30 @@ export function powerGenerated(parts: PowerPart[]): number {
   return rounded + (count - 1) * sizes
 }
 
+/**
+ * Split one component's blocks into columns of at most `limit` pip units.
+ * A connected block stays whole. `limit` of 0 keeps a single column.
+ */
+export function wrapPipBlocks(blocks: PowerBlock[], limit: number): PowerBlock[][] {
+  if (blocks.length === 0) return []
+  if (limit <= 0) return [blocks]
+  const columns: PowerBlock[][] = []
+  let current: PowerBlock[] = []
+  let height = 0
+  for (const block of blocks) {
+    const size = Math.max(1, block.size || 1)
+    if (current.length > 0 && height + size > limit) {
+      columns.push(current)
+      current = []
+      height = 0
+    }
+    current.push(block)
+    height += size
+  }
+  if (current.length > 0) columns.push(current)
+  return columns
+}
+
 /** One stack per fitted component. Weapons share a pool, so they stay on the column id. */
 export function componentGroups(column: PowerColumn): { key: string, blocks: PowerBlock[] }[] {
   const groups: { key: string, blocks: PowerBlock[] }[] = []
