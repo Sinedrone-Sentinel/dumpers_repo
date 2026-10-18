@@ -43,6 +43,7 @@ import {
 import {
   clickPowerColumn,
   componentGroups,
+  coolantBarPercent,
   flightRole,
   formatQuantumSpeed,
   formatShopNumber,
@@ -129,12 +130,10 @@ function itemTitle(item: { displayName: string; kind?: string; itemClass?: strin
 }
 
 function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
-  if (snapshot.coolant <= 0 && snapshot.coolantDemand <= 0) return null
-  const supply = snapshot.coolant
-  const demand = snapshot.coolantDemand
-  const percent = supply > 0 ? Math.floor((demand / supply) * 100) : 0
-  const over = supply > 0 && percent >= 100
-  const width = supply > 0 ? Math.max(0, Math.min(100, percent)) : 0
+  const percent = coolantBarPercent(snapshot.coolant, snapshot.coolantDemand, snapshot.coolantShutOff)
+  if (percent == null) return null
+  const over = percent >= 100
+  const width = Math.max(0, Math.min(100, percent))
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 text-sm">
@@ -708,7 +707,6 @@ export default function ShipShopPage() {
                 onAdd={() => setShopModal({ mode: 'qty', title: ship.displayName, id: ship.id, lineKind: 'ship' })}
                 onAddBuild={() => {
                   const cart: ShopCartLine[] = []
-                  if (isForSale(shipListings(ship.id))) cart.push({ id: ship.id, kind: 'ship', qty: 1 })
                   const crafted = craftedLinesFromPorts(build.ports)
                   const craftedQty = new Map<string, number>()
                   for (const line of crafted) craftedQty.set(line.id, (craftedQty.get(line.id) || 0) + line.qty)

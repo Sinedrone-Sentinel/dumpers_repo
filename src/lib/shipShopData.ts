@@ -15,6 +15,7 @@ import {
   addPartToSnapshot,
   coolantDemand,
   coolantSupply,
+  coolersShutOff,
   effectivePartStats,
   electromagneticSignature,
   emptySnapshot,
@@ -1369,6 +1370,7 @@ export function snapshotForBuild(
   snapshot.coolant = supply
   snapshot.coolantDemand = demand
   snapshot.coolantRatio = supply > 0 ? Math.min(demand / supply, 1) : 0
+  snapshot.coolantShutOff = coolersShutOff(parts, pipCounts)
   snapshot.signatureEm = electromagneticSignature(parts, pipCounts, generated, weaponSelected, armorEm)
   snapshot.signatureIr = infraredSignature(parts, pipCounts, demand, supply, armorIr)
   if (snapshot.signatureCs != null) snapshot.signatureCs *= multiplier(armor?.stats.Armor_SignalCs)
