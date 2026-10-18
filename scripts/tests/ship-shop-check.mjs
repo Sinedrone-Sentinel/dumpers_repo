@@ -432,4 +432,22 @@ assert.equal(leonids.stats.Weapon_CycleShots, 2)
 assert.ok(Math.abs(leonids.stats.Weapon_CycleSeconds - (60 / 40 + 60 / 225)) < 0.0001)
 assert.equal(leonids.burstDps, 1811)
 
+assert.equal(items.some((item) => item.entityClass === 'misl_s02_cs_fski_tempest_citcon'), false)
+const eclipse = shop.getShip('aegs_eclipse')
+const eclipseBay = eclipse.ports.find((port) => port.id === 'hardpoint_torpedorack')
+assert.equal(eclipseBay.kind, 'missileRack')
+assert.notEqual(eclipseBay.locked, true)
+const eclipseRacks = shop.partsForPort(eclipseBay, eclipse).map((item) => item.entityClass)
+for (const id of ['mrck_s09_aegs_eclipse', 'bmbrck_s03_aegs_eclipse', 'bmbrck_s05_aegs_eclipse', 'bmbrck_s10_aegs_eclipse']) {
+  assert.ok(eclipseRacks.includes(id), id)
+}
+const spirit = shop.getShip('crus_spirit_a1')
+const spiritBay = spirit.ports.find((port) => port.id === 'hardpoint_bomb_system')
+assert.equal(spiritBay.defaultEntityClass, 'bmbrck_crus_spirit_a1')
+assert.equal(spiritBay.locked, true)
+assert.deepEqual(shop.partsForPort(spiritBay, spirit).map((item) => item.entityClass), ['bmbrck_crus_spirit_a1'])
+const spiritTubes = shop.missileSlotsForRack(spirit, spiritBay, { entityClass: 'bmbrck_crus_spirit_a1', source: 'stock' })
+assert.equal(spiritTubes.length, 10)
+assert.deepEqual(shop.partsForPort(spiritTubes[0], spirit).map((item) => item.displayName), ['Stormburst Bomb'])
+
 console.log('ship shop catalog checks passed')

@@ -21,6 +21,7 @@ const INDEX_DIRS = [
   'entities/scitem/ships/armor',
   'entities/scitem/ships/weapon_mounts',
   'entities/scitem/ships/missile_racks',
+  'entities/scitem/ships/bombcompartments',
   'entities/scitem/ships/controller',
   'entities/scitem/ships/countermeasures',
   'entities/scitem/ships/lifesupport',
@@ -50,6 +51,14 @@ function usableName(name) {
   if (!text || text.startsWith('@') || text.startsWith('<=')) return false
   if (/placeholder/i.test(text)) return false
   return true
+}
+
+function bombRackFallbackName(entityClass) {
+  const id = entityClass.toLowerCase()
+  if (id.includes('spirit_a1')) return 'A1 Spirit Bomb Rack'
+  if (id.includes('starl_left')) return 'Starlancer Left Bomb Rack'
+  if (id.includes('starl_right')) return 'Starlancer Right Bomb Rack'
+  return humanizeEntity(entityClass.replace(/^bmbrck_/, 'bomb_rack_'))
 }
 
 function humanizeEntity(entityClass) {
@@ -190,6 +199,7 @@ function kindForItem(filePath, entityKey) {
   if (id.includes('/quantumenforcementdevice/') || /(?:^|_)(?:qed|qdmp)_/.test(entityKey.toLowerCase())) return 'qed'
   if (/tractorbeam/.test(entityKey.toLowerCase())) return 'tractor'
   if (id.includes('/weapons/') && !id.includes('/missiles/')) return 'weapon'
+  if (id.includes('/bombcompartments/') || /(?:^|_)bmbrck_/.test(entityKey.toLowerCase())) return 'missileRack'
   if (/mrck_|missilerack/.test(id)) return 'missileRack'
   return null
 }
@@ -229,7 +239,7 @@ function classifyPort(name, entityKey, itemKind) {
   if (n.includes('controller')) return null
   if (e.includes('tractorbeam')) return { section: 'systems', kind: 'tractor' }
   if (n === 'hardpoint_qed' || e.includes('qed_') || e.includes('qdmp_')) return { section: 'systems', kind: 'qed' }
-  if (n.includes('missilerack') || e.includes('mrck_') || e.includes('missilerack')) {
+  if (n.includes('missilerack') || e.includes('mrck_') || e.includes('missilerack') || e.includes('bmbrck_') || itemKind === 'missileRack' || n.includes('bombrack') || n.includes('bomb_system') || n.includes('bomb_rack')) {
     return { section: 'missiles', kind: 'missileRack' }
   }
   if (n.includes('missile') || e.includes('misl_') || e.includes('gmisl_')) {
@@ -284,7 +294,8 @@ function shapePort(name, port, portDefs) {
   const next = { ...port }
   const acceptTypes = (def?.accepts || []).map((entry) => String(entry.type || '').toLowerCase())
   const turretMount = acceptTypes.includes('turret') && !acceptTypes.some((type) => type.includes('missile') || type.includes('bomb') || type === 'torpedo')
-  if (/torpedo/i.test(name) && !turretMount) next.kind = 'torpedo'
+  const bombBay = acceptTypes.some((type) => type === 'bomblauncher')
+  if (/torpedo/i.test(name) && !turretMount && !bombBay) next.kind = 'torpedo'
   if (def) {
     if (def.minSize) next.minSize = def.minSize
     if (def.maxSize) next.maxSize = def.maxSize
@@ -293,7 +304,7 @@ function shapePort(name, port, portDefs) {
     if (def.portTags) next.portTags = def.portTags
     if (def.accepts?.length) next.accepts = def.accepts
   }
-  if (next.kind === 'torpedo' || next.kind === 'life') next.locked = true
+  if ((next.kind === 'torpedo' || next.kind === 'life') && !bombBay) next.locked = true
   if (def && /uneditable/i.test(def.flags || '') && next.kind !== 'flight') next.locked = true
   return next
 }
@@ -622,16 +633,19 @@ export function parseShipShop({ extractedRoot, localization }) {
   for (const [key, filePath] of byKey) {
     if (seenFiles.has(filePath)) continue
     const normalized = filePath.replace(/\\/g, '/').toLowerCase()
-    if (normalized.includes('/ammoparams/') || normalized.includes('lowpoly') || normalized.includes('template')) continue
+    if (normalized.includes('/ammoparams/') || normalized.includes('lowpoly') || normalized.includes('template') || normalized.includes('citcon')) continue
     const json = readJson(filePath)
     if (!json) continue
     const entityClass = basename(filePath, '.json').toLowerCase()
     const kind = kindForItem(filePath, entityClass)
     if (!kind) continue
     const def = attachDef(json)
+    const locKey = String(def?.Localization?.Name || '')
     const resolvedName = entityClass === 'mrck_s03_temp_bomb'
       ? (localization.item_NameBEHR_BombRack_S3 || 'CST-313 "Castillo"')
-      : resolveName(def?.Localization?.Name, localization)
+      : kind === 'missileRack' && /bmbrck_/.test(entityClass) && !/bomb/i.test(locKey)
+        ? bombRackFallbackName(entityClass)
+        : resolveName(locKey, localization)
     const displayName = usableName(resolvedName) ? resolvedName : humanizeEntity(entityClass)
     if (!displayName) continue
     const stats = extractShipItemStats(json, {
