@@ -313,13 +313,17 @@ function nameHullToken(value: string | null | undefined): string | null {
 }
 
 /**
- * A part with no required tags is exclusive to a hull when its entity name or
- * display name contains that hull. Parts that already list required tags stay
- * on the tag rule.
+ * A part with no required tags is exclusive to a hull when its entity name
+ * contains that hull. A mount-ready gun is not locked by its product name.
+ * Parts that already list required tags stay on the tag rule.
  */
 function namedHullLock(item: ShipItemStats): string | null {
   if (tagList(item.requiredTags).length > 0) return null
-  return nameHullToken(item.entityClass) || nameHullToken(item.displayName)
+  const fromClass = nameHullToken(item.entityClass)
+  if (fromClass) return fromClass
+  // A mount-ready gun keeps its product name. Mantis GT-220 is not the RSI Mantis.
+  if (hasRawTag(item.tags, 'weaponMountUsable')) return null
+  return nameHullToken(item.displayName)
 }
 
 function keepHullParts(ship: GameShip | null | undefined, items: ShipItemStats[]): ShipItemStats[] {
