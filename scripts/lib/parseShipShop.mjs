@@ -6,6 +6,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { extractShipItemStats, weaponBurstDps } from './shipItemStats.mjs'
+import { applyShipPartRules } from './shipPartRules.mjs'
 
 const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs(?:_|$)|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d|eaobjective|derelict)/i
 
@@ -599,7 +600,9 @@ export function parseShipShop({ extractedRoot, localization }) {
     const kind = kindForItem(filePath, entityClass)
     if (!kind) continue
     const def = attachDef(json)
-    const resolvedName = resolveName(def?.Localization?.Name, localization)
+    const resolvedName = entityClass === 'mrck_s03_temp_bomb'
+      ? (localization.item_NameBEHR_BombRack_S3 || 'CST-313 "Castillo"')
+      : resolveName(def?.Localization?.Name, localization)
     const displayName = usableName(resolvedName) ? resolvedName : humanizeEntity(entityClass)
     if (!displayName) continue
     const stats = extractShipItemStats(json, {
@@ -621,6 +624,12 @@ export function parseShipShop({ extractedRoot, localization }) {
     const tags = typeof def?.Tags === 'string' ? def.Tags.trim() : ''
     const requiredTags = typeof def?.RequiredTags === 'string' ? def.RequiredTags.trim() : ''
     const mounts = kind === 'missileRack' ? missileMounts(json) : kind === 'weaponMount' ? weaponMountPorts(json) : []
+    if (entityClass === 'mrck_s03_temp_bomb') {
+      for (const mount of mounts) {
+        mount.minSize = 3
+        mount.maxSize = 3
+      }
+    }
     const described = classAndGrade(resolveName(def?.Localization?.Description, localization), def?.Grade)
     const item = {
       entityClass,
@@ -759,6 +768,7 @@ export function parseShipShop({ extractedRoot, localization }) {
 
   ships.sort((a, b) => a.displayName.localeCompare(b.displayName))
   catalog.sort((a, b) => a.displayName.localeCompare(b.displayName))
+  applyShipPartRules(ships, catalog)
 
   return { ships, catalog }
 }
@@ -811,5 +821,6 @@ export function enrichShipShopData(extractedRoot, ships, items) {
       if (def?.accepts?.length) port.accepts = def.accepts
     }
   }
+  applyShipPartRules(ships, items)
   return { ships, items }
 }

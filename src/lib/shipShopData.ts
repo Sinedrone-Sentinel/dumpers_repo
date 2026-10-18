@@ -245,7 +245,12 @@ function shipHullTokens(shipId: string): string[] {
   if (series && series[1].length >= 3) tokens.push(series[1])
   const split = token.match(/^(.*)_([a-z])$/)
   if (split && split[1].length >= 3) tokens.push(split[1])
-  return tokens
+  const parts = token.split('_').filter(Boolean)
+  for (let index = parts.length - 1; index >= 1; index -= 1) {
+    const stem = parts.slice(0, index).join('_')
+    if (stem.length >= 3) tokens.push(stem)
+  }
+  return [...new Set(tokens)]
 }
 
 const HULL_TOKENS = [...new Set(SHIPS.flatMap((ship) => shipHullTokens(ship.id)))].sort((a, b) => b.length - a.length)
@@ -266,6 +271,97 @@ function limitBespoke(port: ShipPort, items: ShipItemStats[]): ShipItemStats[] {
   const stockToken = stock ? bespokeHullToken(stock.entityClass) : null
   if (stockToken) return items.filter((item) => bespokeHullToken(item.entityClass) === stockToken)
   return items.filter((item) => !bespokeHullToken(item.entityClass))
+}
+
+const CASTILLO_RACK = 'mrck_s03_temp_bomb'
+const CHOICE_KINDS = new Set(['weaponMount', 'missileRack', 'turret'])
+
+function nameHullToken(value: string | null | undefined): string | null {
+  const normalized = String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '_')
+  return bespokeHullToken(normalized)
+}
+
+/**
+ * A part with no required tags is exclusive to a hull when its entity name or
+ * display name contains that hull. Parts that already list required tags stay
+ * on the tag rule.
+ */
+function namedHullLock(item: ShipItemStats): string | null {
+  if (tagList(item.requiredTags).length > 0) return null
+  return nameHullToken(item.entityClass) || nameHullToken(item.displayName)
+}
+
+function keepHullParts(ship: GameShip | null | undefined, items: ShipItemStats[]): ShipItemStats[] {
+  if (!ship) return items
+  const tokens = new Set(shipHullTokens(ship.id))
+  return items.filter((item) => {
+    const token = namedHullLock(item)
+    return !token || tokens.has(token)
+  })
+}
+
+function choiceRank(item: ShipItemStats): number {
+  const name = item.entityClass.toLowerCase()
+  let rank = name.length
+  if (bespokeHullToken(item.entityClass)) rank += 500
+  if (/_(?:left|right|nosafety|tractor|allsizes|bottom|top)$/.test(name)) rank += 80
+  return rank
+}
+
+/** Same display name on a gimbal or rack is one choice. The stock part wins when it is in the set. */
+function collapseSameChoice(port: ShipPort, items: ShipItemStats[]): ShipItemStats[] {
+  const groups = new Map<string, ShipItemStats[]>()
+  const rest: ShipItemStats[] = []
+  for (const item of items) {
+    if (!CHOICE_KINDS.has(item.kind)) {
+      rest.push(item)
+      continue
+    }
+    const key = `${item.kind}|${item.size}|${item.displayName.trim().toLowerCase()}`
+    const group = groups.get(key)
+    if (group) group.push(item)
+    else groups.set(key, [item])
+  }
+  const kept: ShipItemStats[] = []
+  for (const group of groups.values()) {
+    const stock = group.find((item) => item.entityClass === port.defaultEntityClass)
+    if (stock) {
+      kept.push(stock)
+      continue
+    }
+    kept.push(group.slice().sort((a, b) => choiceRank(a) - choiceRank(b) || a.entityClass.localeCompare(b.entityClass))[0])
+  }
+  return [...rest, ...kept]
+}
+
+function portTagsAllow(item: ShipItemStats, port: ShipPort): boolean {
+  const portGives = tagList(port.portTags)
+  const itemNeeds = tagList(item.requiredTags)
+  if (itemNeeds.length > 0 && !itemNeeds.every((tag) => portGives.includes(tag))) return false
+  const portNeeds = tagList(port.requiredTags)
+  const itemGives = tagList(item.tags)
+  if (portNeeds.length > 0 && !portNeeds.some((tag) => itemGives.includes(tag))) return false
+  return true
+}
+
+/** The Castillo is the size 3 bomb rack for a hardpoint that can hold a size 3 missile rack. */
+function withCastillo(port: ShipPort, items: ShipItemStats[]): ShipItemStats[] {
+  if (port.locked || effectivePortKind(port) !== 'missileRack') return items
+  const min = port.minSize || port.size
+  const max = port.maxSize || port.size
+  if (min > 3 || max < 3) return items
+  const accepts = port.accepts || []
+  const missileHardpoint = accepts.length === 0 || accepts.some((rule) => {
+    const type = rule.type.toLowerCase()
+    if (type === 'bomblauncher') return true
+    if (type !== 'missilelauncher') return false
+    const subtypes = (rule.subtypes || []).filter((entry) => entry && entry.toLowerCase() !== 'undefined')
+    return subtypes.length === 0 || subtypes.some((entry) => entry.toLowerCase() === 'missilerack')
+  })
+  if (!missileHardpoint || items.some((item) => item.entityClass === CASTILLO_RACK)) return items
+  const castillo = shipItems().find((item) => item.entityClass === CASTILLO_RACK)
+  if (!castillo || !itemIsEquippable(castillo) || !portTagsAllow(castillo, port)) return items
+  return [...items, castillo]
 }
 
 const blueprintsByClass = new Map<string, CraftBlueprint>()
@@ -362,7 +458,7 @@ function ordnancePort(port: ShipPort): boolean {
   return port.kind === 'missile' || port.kind === 'torpedo' || port.kind === 'bomb'
 }
 
-export function partsForPort(port: ShipPort): ShipItemStats[] {
+export function partsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats[] {
   if (port.locked) {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
     return stock ? [stock] : []
@@ -382,8 +478,7 @@ export function partsForPort(port: ShipPort): ShipItemStats[] {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
     if (!stock) return []
     const family = flightBladeFamily(stock.entityClass, stock.tags, stock.requiredTags)
-    return pool
-      .filter((item) => flightBladeFamily(item.entityClass, item.tags, item.requiredTags) === family)
+    return keepHullParts(ship, pool.filter((item) => flightBladeFamily(item.entityClass, item.tags, item.requiredTags) === family))
       .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
   }
   let matched = pool.filter((item) => itemFitsPort(item, port))
@@ -394,7 +489,8 @@ export function partsForPort(port: ShipPort): ShipItemStats[] {
       ? pool.filter((item) => tagList(item.tags).some((tag) => stockTags.includes(tag)))
       : pool.filter((item) => item.entityClass === port.defaultEntityClass)
   }
-  return limitBespoke(port, matched).sort((a, b) => a.displayName.localeCompare(b.displayName))
+  return collapseSameChoice(port, withCastillo(port, keepHullParts(ship, limitBespoke(port, matched))))
+    .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
 }
 
 export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: FittedPart | undefined): ShipPort[] {
@@ -558,14 +654,14 @@ export function matchingCopyPorts(ship: GameShip, fitted: Record<string, FittedP
   const part = fitted[source.id]
   const item = part ? getShipItem(part.entityClass) : null
   if (!item || source.locked) return []
-  const accepts = (port: ShipPort) => port.id !== source.id && !port.locked && partsForPort(port).some((entry) => entry.entityClass === item.entityClass)
-  if (source.kind === 'missile') {
+  const accepts = (port: ShipPort) => port.id !== source.id && !port.locked && partsForPort(port, ship).some((entry) => entry.entityClass === item.entityClass)
+  if (source.kind === 'missile' || source.kind === 'torpedo' || source.kind === 'bomb') {
     const rackId = source.id.slice(0, source.id.lastIndexOf('/'))
-    const rack = ship.ports.find((port) => port.id === rackId)
+    const rack = rackId ? ship.ports.find((port) => port.id === rackId) : undefined
     if (!rack) return []
     return missileSlotsForRack(ship, rack, fitted[rack.id]).filter(accepts)
   }
-  if (source.kind === 'weapon' || source.kind === 'torpedo' || source.kind === 'missileRack' || source.kind === 'weaponMount' || source.kind === 'turret') return []
+  if (source.kind === 'weapon' || source.kind === 'missileRack' || source.kind === 'weaponMount' || source.kind === 'turret') return []
   return ship.ports.filter((port) => port.kind === source.kind && accepts(port))
 }
 
@@ -622,7 +718,7 @@ export function weaponCopyGroups(
   const groups: WeaponCopyGroup[] = []
   for (const node of tree) {
     if (mountFamily(node.port, fitted[node.port.id]) !== family) continue
-    const slots = gunLeaves(node).filter((port) => !port.locked && partsForPort(port).some((entry) => entry.entityClass === item.entityClass))
+    const slots = gunLeaves(node).filter((port) => !port.locked && partsForPort(port, ship).some((entry) => entry.entityClass === item.entityClass))
     if (slots.length === 0) continue
     const fittedRoot = getShipItem(fitted[node.port.id]?.entityClass)
     groups.push({

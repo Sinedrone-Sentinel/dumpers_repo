@@ -278,6 +278,32 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
   return ''
 }
 
+/** Tube size and count for a rack, such as S1 x 8. */
+export function rackLoadLine(mounts: MissileMount[] | undefined): string {
+  const groups = new Map<string, number>()
+  const order: string[] = []
+  for (const mount of mounts || []) {
+    const max = mount.maxSize || mount.minSize
+    const min = mount.minSize || max
+    if (!max) continue
+    const label = min && min !== max ? `S${min}–S${max}` : `S${max}`
+    if (!groups.has(label)) {
+      groups.set(label, 0)
+      order.push(label)
+    }
+    groups.set(label, (groups.get(label) || 0) + 1)
+  }
+  return order.map((label) => `${label} x ${groups.get(label)}`).join(' · ')
+}
+
+/** Guidance (EM, IR, or CS) sits with the missile's damage. */
+export function missileTypeLine(stats: Record<string, number>, guidance?: string | null): string {
+  const damage = partStatLine('missile', stats)
+  const type = guidance?.trim()
+  if (!type) return damage
+  return damage ? `${damage} · ${type}` : type
+}
+
 /** Blades that share a tag are one ship family. Untagged blades stay with their own controller name. */
 export function flightBladeFamily(entityClass: string, tags?: string | null, requiredTags?: string | null): string {
   const tag = `${tags || ''} ${requiredTags || ''}`

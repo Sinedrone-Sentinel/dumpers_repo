@@ -37,7 +37,9 @@ import {
   flightRole,
   formatQuantumSpeed,
   formatShopNumber,
+  missileTypeLine,
   partStatLine,
+  rackLoadLine,
   powerColumns,
   powerGenerated,
   powerUsed,
@@ -368,6 +370,14 @@ function listedPart(item: { displayName: string }) {
   return name.length > 0 && !/placeholder/i.test(name) && !name.startsWith('<=')
 }
 
+function partInfo(item: ShipItemStats, stats: Record<string, number>, scale = 1): string {
+  if (item.kind === 'missileRack') return rackLoadLine(item.mounts)
+  if (item.kind === 'missile' && item.ordnance !== 'bomb' && item.ordnance !== 'torpedo') {
+    return missileTypeLine(stats, item.guidance)
+  }
+  return partStatLine(item.kind, stats, scale)
+}
+
 function listChip(item: { kind: string; weaponClass?: string | null; guidance?: string | null; itemClass?: string | null }): string | null {
   if (item.kind === 'weapon') return item.weaponClass || null
   if (item.kind === 'missile') return item.guidance || null
@@ -387,6 +397,7 @@ function listScore(item: { kind: string; stats: Record<string, number> }): numbe
 }
 
 function PartPicker({
+  ship,
   port,
   fitted,
   onClose,
@@ -394,6 +405,7 @@ function PartPicker({
   onQualities,
   onSource,
 }: {
+  ship: GameShip | null
   port: ShipPort
   fitted: FittedPart | undefined
   onClose: () => void
@@ -403,7 +415,7 @@ function PartPicker({
 }) {
   const [query, setQuery] = useState('')
   const [chip, setChip] = useState<string | null>(null)
-  const pool = useMemo(() => partsForPort(port).filter(listedPart), [port])
+  const pool = useMemo(() => partsForPort(port, ship).filter(listedPart), [port, ship])
   const chips = useMemo(() => {
     const values = pool.map(listChip).filter((value): value is string => Boolean(value))
     return [...new Set(values)]
@@ -456,7 +468,7 @@ function PartPicker({
           Empty mount
         </button>
         {options.map((item) => {
-          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats) : [partStatLine(item.kind, item.stats)].filter(Boolean)
+          const bits = item.kind === 'weapon' ? weaponStatBits(item.stats) : [partInfo(item, item.stats)].filter(Boolean)
           const inline = !stackedPartKind(port.kind)
           return (
             <button
@@ -739,7 +751,7 @@ export default function ShipShopPage() {
           }
           const renderPort = (port: ShipPort, depth = 0) => {
             const fitted = statsForFitted(build.ports[port.id])
-            const line = fitted ? partStatLine(fitted.item.kind, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
+            const line = fitted ? partInfo(fitted.item, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
             const open = pickerPortId === port.id && !port.locked
             const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
@@ -757,6 +769,7 @@ export default function ShipShopPage() {
             const attachment = port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount'
             const picker = open ? (
               <PartPicker
+                ship={ship}
                 port={port}
                 fitted={build.ports[port.id]}
                 onClose={() => setPickerPortId(null)}
@@ -790,8 +803,9 @@ export default function ShipShopPage() {
               setPickerPortId(open ? null : port.id)
             }
             const inline = !stackedPartKind(port.kind)
-            const copyTargets = port.kind === 'weapon' ? [] : matchingCopyPorts(ship, build.ports, port)
-            const addToAll = fitted && !port.locked && (port.kind === 'weapon' || copyTargets.length > 0) ? (
+            const rackCard = port.kind === 'missileRack' || fitted?.item.kind === 'missileRack'
+            const copyTargets = port.kind === 'weapon' || rackCard ? [] : matchingCopyPorts(ship, build.ports, port)
+            const addToAll = fitted && !port.locked && !rackCard && (port.kind === 'weapon' || copyTargets.length > 0) ? (
               <button
                 type="button"
                 className="site-btn-ghost shrink-0 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-[#fbbf24]"
