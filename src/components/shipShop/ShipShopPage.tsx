@@ -39,6 +39,7 @@ import {
   formatShopNumber,
   missileTypeLine,
   partStatLine,
+  rackLoadLine,
   powerColumns,
   powerGenerated,
   powerUsed,
@@ -370,6 +371,7 @@ function listedPart(item: { displayName: string }) {
 }
 
 function partInfo(item: ShipItemStats, stats: Record<string, number>, scale = 1): string {
+  if (item.kind === 'missileRack') return rackLoadLine(item.mounts)
   if (item.kind === 'missile' && item.ordnance !== 'bomb' && item.ordnance !== 'torpedo') {
     return missileTypeLine(stats, item.guidance)
   }
