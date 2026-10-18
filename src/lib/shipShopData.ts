@@ -464,7 +464,35 @@ function ordnancePort(port: ShipPort): boolean {
   return port.kind === 'missile' || port.kind === 'torpedo' || port.kind === 'bomb'
 }
 
+const partsForPortCache = new Map<string, ShipItemStats[]>()
+
+function partsForPortKey(port: ShipPort, ship?: GameShip | null): string {
+  const accepts = (port.accepts || [])
+    .map((rule) => `${rule.type}:${(rule.subtypes || []).join(',')}`)
+    .join('|')
+  return [
+    ship?.id || '',
+    port.kind,
+    port.minSize || port.size || 0,
+    port.maxSize || port.size || 0,
+    port.defaultEntityClass || '',
+    port.portTags || '',
+    port.requiredTags || '',
+    accepts,
+    port.locked ? '1' : '0',
+  ].join('\n')
+}
+
 export function partsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats[] {
+  const key = partsForPortKey(port, ship)
+  const cached = partsForPortCache.get(key)
+  if (cached) return cached
+  const result = listPartsForPort(port, ship)
+  partsForPortCache.set(key, result)
+  return result
+}
+
+function listPartsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats[] {
   if (port.locked) {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
     return stock ? [stock] : []
@@ -472,13 +500,13 @@ export function partsForPort(port: ShipPort, ship?: GameShip | null): ShipItemSt
   const min = port.minSize || port.size
   const max = port.maxSize || port.size
   const typed = Boolean(port.accepts && port.accepts.length > 0)
-  const pool = shipItems().filter((item, index, list) => {
+  const pool = shipItems().filter((item) => {
     if (!itemIsEquippable(item)) return false
     if (typed) {
       if (!attachmentFits(item, port.accepts)) return false
     } else if (!sameKind(item, port)) return false
     if (min && (item.size < min || item.size > max)) return false
-    return list.findIndex((other) => other.entityClass === item.entityClass) === index
+    return true
   })
   if (port.kind === 'flight') {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null

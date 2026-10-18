@@ -284,6 +284,22 @@ assert.ok(scytheTubes.every((slot) => slot.locked !== true), 'a locked rack does
 const scytheMissiles = shop.partsForPort(scytheTubes[0], scythe)
 assert.ok(scytheMissiles.length > 1)
 
+const polarisShip = shop.getShip('rsi_polaris')
+const polarisFit = shop.stockPorts(polarisShip)
+const missileStarted = performance.now()
+for (const rack of polarisShip.ports) {
+  if (rack.kind !== 'missileRack' && rack.kind !== 'torpedo') continue
+  const tubes = shop.missileSlotsForRack(polarisShip, rack, polarisFit[rack.id])
+  for (const tube of tubes) {
+    if (!polarisFit[tube.id] && tube.defaultEntityClass) {
+      polarisFit[tube.id] = { entityClass: tube.defaultEntityClass, source: 'stock' }
+    }
+    shop.matchingCopyPorts(polarisShip, polarisFit, tube)
+  }
+}
+const missileMs = performance.now() - missileStarted
+assert.ok(missileMs < 1000, `Polaris missile list took ${Math.round(missileMs)}ms`)
+
 const ghost = shop.getShip('anvl_hornet_f7cs')
 const ghostNose = ghost.ports.find((port) => port.id === 'hardpoint_class_4_nose')
 assert.equal(ghostNose.kind, 'weaponMount')
