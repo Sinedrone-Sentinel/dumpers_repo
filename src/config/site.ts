@@ -27,7 +27,7 @@ export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const
 export const SITE_COPYRIGHT =
   '© 2026 Sinedrone Sentinel - All data is subject to change every patch' as const
 /**
- * Optional support / tip page (e.g. Ko-fi). Shown as a quiet footer link when set.
+ * Optional support / tip page (e.g. Ko-fi). Shown after the header version and in the footer when set.
  * Clear to hide the link.
  */
 export const SITE_SUPPORT_URL = 'https://ko-fi.com/dumpers_repo' as const
