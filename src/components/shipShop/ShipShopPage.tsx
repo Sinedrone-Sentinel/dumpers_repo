@@ -546,7 +546,7 @@ export default function ShipShopPage() {
   const [copyWeapon, setCopyWeapon] = useState<{ portId: string; part: FittedPart } | null>(null)
   const [shopModal, setShopModal] = useState<
     | null
-    | { mode: 'where'; title: string; listings: ShopListing[]; craftable: boolean; ship: boolean }
+    | { mode: 'where'; title: string; listings: ShopListing[] }
     | { mode: 'qty'; title: string; id: string; lineKind: 'ship' | 'part' }
     | { mode: 'cart' }
   >(null)
@@ -691,7 +691,7 @@ export default function ShipShopPage() {
                 listings={shipListings(ship.id)}
                 showBuild
                 cartCount={(build.cart || []).reduce((sum, line) => sum + line.qty, 0)}
-                onWhere={() => setShopModal({ mode: 'where', title: ship.displayName, listings: shipListings(ship.id), craftable: false, ship: true })}
+                onWhere={() => setShopModal({ mode: 'where', title: ship.displayName, listings: shipListings(ship.id) })}
                 onAdd={() => setShopModal({ mode: 'qty', title: ship.displayName, id: ship.id, lineKind: 'ship' })}
                 onAddBuild={() => {
                   const cart: ShopCartLine[] = []
@@ -844,8 +844,6 @@ export default function ShipShopPage() {
                   mode: 'where',
                   title: name,
                   listings: partListings(fitted.item.entityClass),
-                  craftable: Boolean(blueprintForEntity(fitted.item.entityClass)),
-                  ship: false,
                 })}
                 onAdd={() => setShopModal({ mode: 'qty', title: name, id: fitted.item.entityClass, lineKind: 'part' })}
               />
@@ -1048,8 +1046,6 @@ export default function ShipShopPage() {
         <ShopWhereModal
           title={shopModal.title}
           listings={shopModal.listings}
-          craftable={shopModal.craftable}
-          ship={shopModal.ship}
           onClose={() => setShopModal(null)}
         />
       )}

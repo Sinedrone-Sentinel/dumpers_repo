@@ -6,15 +6,27 @@ import { formatShopNumber } from '../../lib/shipShopMath'
 import {
   SHOP_ATTRIBUTION,
   isForSale,
-  itineraryText,
   locationLine,
   planStops,
   type CartPlanLine,
+  type PlannedPurchase,
   type ShopListing,
 } from '../../lib/shipShopShops'
 import type { ShopCartLine } from '../../lib/shipShopData'
 
-const BUY = 'site-btn-ghost shrink-0 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-40'
+const CHIP = 'shrink-0 rounded-lg px-2 py-0.5 text-xs font-semibold uppercase tracking-wide transition hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100'
+
+const FEWEST_STOPS_NOTICE = 'This list uses the fewest stops. These are not the only locations where these items and ships can be bought.'
+
+function purchasesByStore(lines: PlannedPurchase[]): Array<{ store: string; lines: PlannedPurchase[] }> {
+  const groups: Array<{ store: string; lines: PlannedPurchase[] }> = []
+  for (const line of lines) {
+    const found = groups.find((group) => group.store === line.store)
+    if (found) found.lines.push(line)
+    else groups.push({ store: line.store, lines: [line] })
+  }
+  return groups
+}
 
 /** Backdrop stays fixed. The page behind it does not scroll. */
 export function ShopModalFrame({ onClose, children }: { onClose: () => void; children: ReactNode }) {
@@ -70,19 +82,19 @@ export function ShopBuyButtons({
   const forSale = isForSale(listings)
   return (
     <>
-      <button type="button" className={BUY} onClick={onWhere}>
+      <button type="button" className={`${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} onClick={onWhere}>
         Where to Buy
       </button>
-      <button type="button" className={BUY} disabled={!forSale} title={forSale ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
+      <button type="button" className={`${CHIP} site-filter-selected-green`} disabled={!forSale} title={forSale ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
         Add to Cart
       </button>
       {showBuild && (
-        <button type="button" className={BUY} onClick={onAddBuild}>
+        <button type="button" className={`${CHIP} site-filter-selected-blue`} onClick={onAddBuild}>
           Add Build to Cart
         </button>
       )}
       {onViewCart && (
-        <button type="button" className={BUY} onClick={onViewCart}>
+        <button type="button" className={`${CHIP} site-filter-selected-amber`} onClick={onViewCart}>
           {cartCount ? `View Cart (${cartCount})` : 'View Cart'}
         </button>
       )}
@@ -93,17 +105,14 @@ export function ShopBuyButtons({
 export function ShopWhereModal({
   title,
   listings,
-  craftable,
-  ship,
   onClose,
 }: {
   title: string
   listings: ShopListing[]
-  craftable: boolean
-  ship: boolean
   onClose: () => void
 }) {
   const rows = [...listings].filter((row) => row.price > 0).sort((a, b) => locationLine(a).localeCompare(locationLine(b)) || a.price - b.price)
+  if (rows.length === 0) return null
   return (
     <ShopModalFrame onClose={onClose}>
       <div className="site-modal-shell mt-16 flex max-h-[min(70dvh,calc(100dvh-6rem))] w-full max-w-xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label={`Where to buy ${title}`}>
@@ -111,24 +120,14 @@ export function ShopWhereModal({
           <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">Where to buy {title}</h3>
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
         </div>
-        {rows.length === 0 ? (
-          <p className="text-sm text-slate-200">
-            {ship
-              ? 'This ship is not sold in a shop.'
-              : craftable
-                ? 'This is not sold in a shop. Craft it.'
-                : 'This is not sold in a shop. It has to be found in the game.'}
-          </p>
-        ) : (
-          <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
-            {rows.map((row) => (
-              <div key={`${locationLine(row)}-${row.price}`} className="flex items-baseline justify-between gap-3 py-1 text-sm">
-                <span className="text-slate-100">{locationLine(row)}</span>
-                <span className="shrink-0 text-slate-300">{formatShopNumber(row.price)} aUEC</span>
-              </div>
-            ))}
-          </div>
-        )}
+        <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
+          {rows.map((row) => (
+            <div key={`${locationLine(row)}-${row.price}`} className="flex items-baseline justify-between gap-3 py-1 text-sm">
+              <span className="text-slate-100">{locationLine(row)}</span>
+              <span className="shrink-0 text-slate-300">{formatShopNumber(row.price)} aUEC</span>
+            </div>
+          ))}
+        </div>
         <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
     </ShopModalFrame>
@@ -180,10 +179,9 @@ export function ShopCartModal({
   onRemove: (line: ShopCartLine) => void
 }) {
   const stops = planStops(lines)
-  const text = itineraryText(stops)
   return (
     <ShopModalFrame onClose={onClose}>
-      <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-2xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
+      <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-3xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
         <div className="mb-3 flex items-center gap-3">
           <h3 className="min-w-0 flex-1 text-base font-semibold text-white">Cart</h3>
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
@@ -191,22 +189,53 @@ export function ShopCartModal({
         {lines.length === 0 ? (
           <p className="text-sm text-slate-200">The cart is empty.</p>
         ) : (
-          <>
-            <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
-              <p className="text-sm text-slate-100">{text}</p>
-              <div className="space-y-2">
-                {lines.map((line) => (
-                  <div key={`${line.kind}:${line.id}`} className="flex items-center gap-3 text-sm">
-                    <span className="min-w-0 flex-1 truncate text-white">{line.name}</span>
-                    <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Decrease ${line.name}`} onClick={() => onQty(line, line.qty - 1)}>−</button>
-                    <span className="w-8 text-center text-slate-100">{line.qty}</span>
-                    <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => onQty(line, line.qty + 1)}>+</button>
-                    <button type="button" className="site-btn-ghost px-2 py-0.5" onClick={() => onRemove(line)}>Remove</button>
-                  </div>
-                ))}
-              </div>
+          <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
+            {stops.length > 0 && (
+              <>
+                <p className="site-banner-info">{FEWEST_STOPS_NOTICE}</p>
+                <section>
+                  <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">Stops</h4>
+                  <ol className="mt-2 space-y-3">
+                    {stops.map((stop, index) => (
+                      <li key={`${stop.place}-${index}`} className="site-card p-3">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <p className="text-sm font-semibold text-white">Stop {index + 1}</p>
+                          <p className="shrink-0 text-sm text-slate-300">{formatShopNumber(stop.total)} aUEC</p>
+                        </div>
+                        <p className="mt-0.5 text-sm text-slate-200">{stop.place}</p>
+                        <div className="mt-3 space-y-3">
+                          {purchasesByStore(stop.lines).map((group) => (
+                            <div key={group.store}>
+                              <p className="text-sm font-medium text-slate-100">{group.store}</p>
+                              <ul className="mt-1 space-y-1">
+                                {group.lines.map((line) => (
+                                  <li key={`${group.store}:${line.name}`} className="flex items-baseline justify-between gap-3 pl-3 text-sm">
+                                    <span className="min-w-0 text-slate-200">{line.name} × {line.qty}</span>
+                                    <span className="shrink-0 text-slate-400">{formatShopNumber(line.lineTotal)} aUEC</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              </>
+            )}
+            <div className={stops.length > 0 ? 'site-divider space-y-2 pt-4' : 'space-y-2'}>
+              {lines.map((line) => (
+                <div key={`${line.kind}:${line.id}`} className="flex items-center gap-3 text-sm">
+                  <span className="min-w-0 flex-1 truncate text-white">{line.name}</span>
+                  <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Decrease ${line.name}`} onClick={() => onQty(line, line.qty - 1)}>−</button>
+                  <span className="w-8 text-center text-slate-100">{line.qty}</span>
+                  <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => onQty(line, line.qty + 1)}>+</button>
+                  <button type="button" className="site-btn-ghost px-2 py-0.5" onClick={() => onRemove(line)}>Remove</button>
+                </div>
+              ))}
             </div>
-          </>
+          </div>
         )}
         <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
