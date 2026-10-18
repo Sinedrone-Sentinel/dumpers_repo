@@ -5350,6 +5350,14 @@ async function main() {
     process.exitCode = 1
   }
 
+  const shipListAudit = spawnSync(process.execPath, [join(__dirname, 'audit-ship-shop-lists.mjs')], {
+    cwd: PROJECT_ROOT,
+    stdio: 'inherit',
+  })
+  if (shipListAudit.status !== 0) {
+    process.exitCode = 1
+  }
+
   console.log('\nOutput files written to: src/data/')
   console.log(
     'Note: public /blueprints/{slug}/ SEO HTML is regenerated on the next `npm run build` from game-blueprints.json (no hand-maintained page list).'

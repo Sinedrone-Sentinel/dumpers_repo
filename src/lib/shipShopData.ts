@@ -492,15 +492,11 @@ export function partsForPort(port: ShipPort, ship?: GameShip | null): ShipItemSt
   return result
 }
 
-function listPartsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats[] {
-  if (port.locked) {
-    const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
-    return stock ? [stock] : []
-  }
+function portPool(port: ShipPort): ShipItemStats[] {
   const min = port.minSize || port.size
   const max = port.maxSize || port.size
   const typed = Boolean(port.accepts && port.accepts.length > 0)
-  const pool = shipItems().filter((item) => {
+  return shipItems().filter((item) => {
     if (!itemIsEquippable(item)) return false
     if (typed) {
       if (!attachmentFits(item, port.accepts)) return false
@@ -508,6 +504,14 @@ function listPartsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats
     if (min && (item.size < min || item.size > max)) return false
     return true
   })
+}
+
+function listPartsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats[] {
+  if (port.locked) {
+    const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+    return stock ? [stock] : []
+  }
+  const pool = portPool(port)
   if (port.kind === 'flight') {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
     if (!stock) return []
@@ -525,6 +529,219 @@ function listPartsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats
   }
   return collapseSameChoice(port, withCastillo(port, keepHullParts(ship, limitBespoke(port, matched))))
     .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
+}
+
+export type ShipListGapReason =
+  | 'hull-lock'
+  | 'required-tags'
+  | 'port-tags'
+  | 'ship-locked'
+  | 'bespoke'
+  | 'collapsed'
+  | 'ordnance'
+  | 'attach'
+  | 'no-port'
+
+export interface ShipListGap {
+  entityClass: string
+  displayName: string
+  kind: string
+  size: number
+  reason: ShipListGapReason
+  /** Why the list dropped it, in plain language. */
+  detail: string
+  /** Ports that should show it once that block is fixed. */
+  availableIn: string[]
+  portCount: number
+  /** Same display name is already on a list under this entity. */
+  representedBy: string | null
+}
+
+function listingPorts(): Array<{ ship: GameShip; port: ShipPort }> {
+  const rows: Array<{ ship: GameShip; port: ShipPort }> = []
+  const seen = new Set<string>()
+  for (const ship of SHIPS) {
+    const queue: ShipPort[] = [...ship.ports]
+    let guard = 0
+    while (queue.length > 0 && guard < 8000) {
+      guard += 1
+      const port = queue.shift()!
+      const key = `${ship.id}\n${partsForPortKey(port, ship)}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      rows.push({ ship, port })
+      const choices = partsForPort(port, ship)
+      const rackPort = port.kind === 'missileRack' || port.kind === 'torpedo' || effectivePortKind(port) === 'missileRack'
+      if (rackPort) {
+        for (const rack of choices) {
+          if (rack.kind !== 'missileRack') continue
+          for (const tube of missileSlotsForRack(ship, port, { entityClass: rack.entityClass, source: 'stock' })) {
+            queue.push(tube)
+          }
+        }
+      }
+      const mountPort = port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount'
+      if (mountPort) {
+        for (const mount of choices) {
+          if (mount.kind !== 'weaponMount') continue
+          for (const child of mount.mounts || []) queue.push(slotFromMount(ship, port.id, child))
+        }
+      }
+    }
+  }
+  return rows
+}
+
+function fitBlock(item: ShipItemStats, port: ShipPort): ShipListGapReason | null {
+  const itemNeeds = tagList(item.requiredTags)
+  const portGives = tagList(port.portTags)
+  if (itemNeeds.length > 0 && !itemNeeds.every((tag) => portGives.includes(tag))) return 'required-tags'
+  const portNeeds = tagList(port.requiredTags)
+  const itemGives = tagList(item.tags)
+  if (portNeeds.length > 0 && !portNeeds.some((tag) => itemGives.includes(tag))) return 'port-tags'
+  if (port.accepts && port.accepts.length > 0 && !attachmentFits(item, port.accepts)) return 'attach'
+  const kind = effectivePortKind(port)
+  if (kind === 'weapon' && item.kind === 'weapon') {
+    const stockClass = (port.defaultEntityClass || '').toLowerCase()
+    const shipLocked = item.entityClass.toLowerCase() !== stockClass && itemNeeds.length === 0 && !hasRawTag(item.tags, 'weaponMountUsable')
+    if (shipLocked) return 'ship-locked'
+  }
+  if (!(port.accepts && port.accepts.length > 0)) {
+    if (port.kind === 'torpedo' && item.ordnance !== 'torpedo') return 'ordnance'
+    if (port.kind === 'bomb' && item.ordnance !== 'bomb') return 'ordnance'
+    if (port.kind === 'missile' && item.ordnance !== 'missile' && !(item.kind === 'missile' && item.ordnance == null)) return 'ordnance'
+  }
+  return null
+}
+
+function blockReason(item: ShipItemStats, ship: GameShip, port: ShipPort): ShipListGapReason {
+  const token = namedHullLock(item)
+  if (token && !shipHullTokens(ship.id).includes(token)) return 'hull-lock'
+  if (limitBespoke(port, [item]).length === 0) return 'bespoke'
+  return fitBlock(item, port) || 'collapsed'
+}
+
+function portPlace(ship: GameShip, port: ShipPort): string {
+  const min = port.minSize || port.size
+  const max = port.maxSize || port.size
+  const size = min && max && min !== max ? `S${min}–S${max}` : `S${max || min || '?'}`
+  return `${ship.displayName} · ${port.label} ${size}`
+}
+
+const GAP_DETAIL: Record<ShipListGapReason, string> = {
+  'hull-lock': 'A token in the name is treated as a hull, so the part is kept off every other ship.',
+  'required-tags': 'The part asks for tags the port does not provide.',
+  'port-tags': 'The port asks for a tag the part does not carry.',
+  'ship-locked': 'The gun has no weapon-mount tag, so it only stays on the hardpoint that stocks it.',
+  bespoke: 'The hardpoint is locked to another hull’s components.',
+  collapsed: 'Another part with the same name already fills this list.',
+  ordnance: 'The missile, torpedo, or bomb type does not match the tube.',
+  attach: 'The attachment type does not match what the hardpoint accepts.',
+  'no-port': 'No ship hardpoint is the right kind and size.',
+}
+
+/**
+ * Equippable catalog rows that never appear on a ship-shop list.
+ * Includes guns under a swapped mount and tubes on every rack that fits.
+ */
+export function shipShopListGaps(): ShipListGap[] {
+  const ports = listingPorts()
+  const listed = new Set<string>()
+  const hits = new Map<string, Map<ShipListGapReason, { count: number; rows: Array<{ ship: GameShip; port: ShipPort; winner: string | null }> }>>()
+
+  const remember = (item: ShipItemStats, reason: ShipListGapReason, ship: GameShip, port: ShipPort, winner: string | null) => {
+    let byReason = hits.get(item.entityClass)
+    if (!byReason) {
+      byReason = new Map()
+      hits.set(item.entityClass, byReason)
+    }
+    const entry = byReason.get(reason) || { count: 0, rows: [] }
+    entry.count += 1
+    if (entry.rows.length < 6) entry.rows.push({ ship, port, winner })
+    byReason.set(reason, entry)
+  }
+
+  for (const { ship, port } of ports) {
+    const shown = partsForPort(port, ship)
+    const shownIds = new Set<string>()
+    for (const item of shown) {
+      listed.add(item.entityClass)
+      shownIds.add(item.entityClass)
+    }
+    if (port.locked) continue
+    let pool = portPool(port)
+    if (port.kind === 'flight') {
+      const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+      if (!stock) continue
+      const family = flightBladeFamily(stock.entityClass, stock.tags, stock.requiredTags)
+      pool = pool.filter((item) => flightBladeFamily(item.entityClass, item.tags, item.requiredTags) === family)
+    }
+    for (const item of pool) {
+      if (shownIds.has(item.entityClass)) continue
+      const reason = blockReason(item, ship, port)
+      const winner = reason === 'collapsed'
+        ? shown.find((row) => row.kind === item.kind && row.size === item.size && row.displayName.trim().toLowerCase() === item.displayName.trim().toLowerCase())?.entityClass || null
+        : null
+      remember(item, reason, ship, port, winner)
+    }
+  }
+
+  const gaps: ShipListGap[] = []
+  for (const item of shipItems()) {
+    if (!itemIsEquippable(item) || listed.has(item.entityClass)) continue
+    const byReason = hits.get(item.entityClass)
+    if (!byReason || byReason.size === 0) {
+      gaps.push({
+        entityClass: item.entityClass,
+        displayName: item.displayName,
+        kind: item.kind,
+        size: item.size,
+        reason: 'no-port',
+        detail: GAP_DETAIL['no-port'],
+        availableIn: [],
+        portCount: 0,
+        representedBy: null,
+      })
+      continue
+    }
+    let reason: ShipListGapReason = 'collapsed'
+    let best = { count: 0, rows: [] as Array<{ ship: GameShip; port: ShipPort; winner: string | null }> }
+    for (const [key, value] of byReason) {
+      if (value.count > best.count) {
+        reason = key
+        best = value
+      }
+    }
+    const names: string[] = []
+    const seenNames = new Set<string>()
+    for (const row of best.rows) {
+      const label = portPlace(row.ship, row.port)
+      if (seenNames.has(label)) continue
+      seenNames.add(label)
+      names.push(label)
+    }
+    let detail = GAP_DETAIL[reason]
+    if (reason === 'hull-lock') {
+      const token = namedHullLock(item)
+      if (token) detail = `The name token "${token}" is treated as a hull, so this part is kept off every other ship.`
+    } else if (reason === 'required-tags') {
+      const needs = tagList(item.requiredTags)
+      if (needs.length > 0) detail = `The part asks for ${needs.join(', ')}, and these hardpoints do not provide it.`
+    }
+    gaps.push({
+      entityClass: item.entityClass,
+      displayName: item.displayName,
+      kind: item.kind,
+      size: item.size,
+      reason,
+      detail,
+      availableIn: names,
+      portCount: best.count,
+      representedBy: best.rows.find((row) => row.winner)?.winner || null,
+    })
+  }
+  gaps.sort((a, b) => a.reason.localeCompare(b.reason) || a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
+  return gaps
 }
 
 export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: FittedPart | undefined): ShipPort[] {

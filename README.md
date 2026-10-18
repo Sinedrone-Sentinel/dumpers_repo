@@ -452,6 +452,8 @@ npm run fetch-ship-shop-shops # every patch, after parse: Fuzy's Ship Shop UEX b
 npm run push-whats-new        # retry pending What's New ingest if parse could not reach DB
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
 npm run patch-audit           # full audit battery: data consistency + math verifiers + diff
+# parse and patch-audit also run scripts/audit-ship-shop-lists.mjs
+# It fails when an equippable ship item never appears on a Fuzy's Ship Shop list.
 npm run relink-acquired-blueprint-ids -- --apply  # last: remap leftover acquired IDs (exact only)
 # After parse (when blueprints changed): npm run build in sibling dfp-engine-private, then commit public/dfp-engine.js + dfp-version.json
 npm run sync-min-game-version # optional: update dumper min game version in source

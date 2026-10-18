@@ -27,6 +27,7 @@ const STEPS = [
   { script: 'audit-broad-mining-locations.mjs', label: 'Broad mining locations' },
   { script: 'validate-blueprints.mjs', label: 'Blueprint data validation' },
   { script: 'audit-blueprint-tags.mjs', label: 'Blueprint category tag minimums' },
+  { script: 'audit-ship-shop-lists.mjs', label: 'Ship shop item lists' },
   { script: 'audit-blueprint-mission-rewards.mjs', label: 'Blueprint mission rewards' },
   { script: 'audit-blueprint-missions.mjs', label: 'Mission factions / systems / titles' },
   { script: 'audit-live-mission-rewards.mjs', label: 'Live Mission Tracker rewards (rep + event points)' },
