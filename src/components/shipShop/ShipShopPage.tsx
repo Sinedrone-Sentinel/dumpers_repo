@@ -133,8 +133,13 @@ function PipBoard({
                             type="button"
                             aria-pressed={on}
                             aria-label={`${column.label} ${block.size > 1 ? `${block.size} connected pips` : `pip ${index + 1}`}`}
-                            className={`w-[42px] rounded-sm border text-[20px] font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
-                            style={{ height: block.size > 1 ? `${block.size * 42 + (block.size - 1) * 4}px` : '42px' }}
+                            className={`rounded-sm border text-[20px] font-semibold leading-none ${on ? 'border-amber-200 bg-orange-400 text-slate-950' : 'border-slate-500 bg-slate-950 text-slate-600'}`}
+                            style={{
+                              width: 'var(--ship-pip-size)',
+                              height: block.size > 1
+                                ? `calc(${block.size} * var(--ship-pip-size) + ${block.size - 1} * var(--ship-pip-gap))`
+                                : 'var(--ship-pip-size)',
+                            }}
                             onClick={() => onPower({ [group.key]: clickPowerColumn(group.blocks, count, target, remaining) }, column.id)}
                           >
                             {block.size > 1 ? block.size : ''}
@@ -142,14 +147,14 @@ function PipBoard({
                         )
                       })}
                     </div>
-                    <span className="font-mono text-[20px] text-slate-500">{count}/{groupTotal}</span>
+                    <span className="ship-shop-pip-count font-mono text-[20px] text-slate-500">{count}/{groupTotal}</span>
                   </div>
                 )
               })}
             </div>
             <button
               type="button"
-              className="mt-1 text-[22px] text-slate-400 hover:text-white whitespace-nowrap"
+              className="ship-shop-pip-label mt-1 text-[22px] text-slate-400 hover:text-white whitespace-nowrap"
               onClick={() => {
                 const patch: Record<string, number> = {}
                 if (groups.length === 1) {
@@ -230,7 +235,7 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   ] as const
 
   return (
-    <aside className="site-surface rounded-xl p-4 max-h-[42vh] overflow-y-auto shrink-0 lg:max-h-none lg:w-full">
+    <aside className="site-surface rounded-xl p-4 max-h-[42vh] overflow-y-auto shrink-0 lg:min-h-full lg:max-h-none lg:w-full">
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
       <div className="space-y-4">
         {rows.map((group) => (
@@ -543,18 +548,17 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div className="flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-start">
-      <div className="shrink-0 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100vh-var(--site-header-height,3.5rem)-1rem)] lg:w-[22rem] lg:overflow-y-auto">
+    <div className="ship-shop-page flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-start">
+      <div className="ship-shop-snap shrink-0">
         <ShipSnapshot snapshot={snapshot} />
       </div>
       <div className="min-w-0 flex-1 space-y-4">
-      <div className="ship-shop-header-clip sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full">
-      <div className="ship-shop-header site-surface-solid p-4">
+      <div className="ship-shop-header site-surface-solid sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full p-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h1>
-              <img src="/fuzys-ship-shop.png" alt="Fuzy's Ship Shop" className="h-28 w-auto object-contain" />
+              <img src="/fuzys-ship-shop.png" alt="Fuzy's Ship Shop" className="w-auto object-contain" style={{ height: 'var(--ship-logo-h)' }} />
             </h1>
             <p className="site-hint text-sm">{saveNote || (ready ? 'Builds save on this account.' : 'Loading builds…')}</p>
           </div>
@@ -624,7 +628,6 @@ export default function ShipShopPage() {
             }}
           />
         </div>
-      </div>
       </div>
 
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
@@ -736,12 +739,12 @@ export default function ShipShopPage() {
             </div>
           ))
           return (
-            <section key={section.id} id={`ship-section-${section.id}`} className="site-surface rounded-xl p-4 scroll-mt-64">
+            <section key={section.id} id={`ship-section-${section.id}`} className="ship-shop-section site-surface rounded-xl p-4 scroll-mt-64">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-sm font-semibold text-slate-200">{section.label}</h2>
                 <button
                   type="button"
-                  className="site-btn-ghost px-12 py-2 text-[1.75rem]"
+                  className="ship-shop-expand site-btn-ghost px-12 py-2 text-[1.75rem]"
                   onClick={() => setExpanded((current) => {
                     const next = new Set(current)
                     if (next.has(section.id)) next.delete(section.id)
