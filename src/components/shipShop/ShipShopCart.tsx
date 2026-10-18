@@ -198,12 +198,16 @@ export function ShopCartModal({
   const buyLines = lines.filter((line) => !line.crafted)
   const crafted = lines.filter((line) => line.crafted)
   const stops = planStops(buyLines)
+  const cartTotal = stops.reduce((sum, stop) => sum + stop.total, 0)
   const canOrder = crafted.some((line) => craftedDraftFields(line.id, line.qualities, line.qty))
   return (
     <ShopModalFrame onClose={onClose}>
       <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-3xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
         <div className="mb-3 flex items-center gap-3">
           <h3 className="min-w-0 flex-1 text-base font-semibold text-white">Cart</h3>
+          {cartTotal > 0 && (
+            <p className="shrink-0 text-sm font-semibold text-white">{formatShopNumber(cartTotal)} aUEC</p>
+          )}
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
         </div>
         {lines.length === 0 ? (
