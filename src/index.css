@@ -122,12 +122,12 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  /* Normal sizes. The large set is only for a 1440p screen (wider than 1920px). */
+  /* 1080p matches a browser zoom of 80%. Snapshot stays a little wider than that. */
   .ship-shop-page {
-    --ship-pip-size: 28px;
+    --ship-pip-size: 22px;
     --ship-pip-gap: 2px;
-    --ship-logo-h: 4.5rem;
-    --ship-snap-w: 16.5rem;
+    --ship-logo-h: 3.6rem;
+    --ship-snap-w: 15.5rem;
   }
 
   .ship-shop-snap {
@@ -1211,13 +1211,52 @@
 .ship-shop-pip-label,
 .ship-shop-pip-remain,
 .ship-shop-part-name {
-  font-size: 0.875rem;
+  font-size: 0.7rem;
 }
 
 .ship-shop-expand {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
+  line-height: 1rem;
+}
+
+@media (max-width: 1920px) {
+  .ship-shop-page.gap-4,
+  .ship-shop-page .gap-4 {
+    gap: 0.65rem;
+  }
+
+  .ship-shop-page .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.65rem;
+  }
+
+  .ship-shop-page .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.45rem;
+  }
+
+  .ship-shop-page .text-xs {
+    font-size: 0.6rem;
+  }
+
+  .ship-shop-page .text-sm,
+  .ship-shop-page .text-base,
+  .ship-shop-page .site-label,
+  .ship-shop-page .site-hint,
+  .ship-shop-page .site-input {
+    font-size: 0.7rem;
+  }
+
+  .ship-shop-page .py-1\.5,
+  .ship-shop-page .py-2 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .ship-shop-header,
+  .ship-shop-section,
+  .ship-shop-snap aside {
+    padding: 0.65rem;
+  }
 }
 
 @media (min-width: 1921px) {
