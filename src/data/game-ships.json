@@ -21,6 +21,7 @@
       "scmSpeed": 262,
       "boostSpeed": 610,
       "maxSpeed": 1425,
+      "boostBack": 280,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -269,6 +270,7 @@
       "scmSpeed": 262,
       "boostSpeed": 610,
       "maxSpeed": 1425,
+      "boostBack": 280,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -517,6 +519,7 @@
       "scmSpeed": 262,
       "boostSpeed": 610,
       "maxSpeed": 1425,
+      "boostBack": 280,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -765,6 +768,7 @@
       "scmSpeed": 262,
       "boostSpeed": 610,
       "maxSpeed": 1425,
+      "boostBack": 280,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -1025,6 +1029,7 @@
       "scmSpeed": 210,
       "boostSpeed": 510,
       "maxSpeed": 1100,
+      "boostBack": 215,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -1205,6 +1210,7 @@
       "scmSpeed": 226,
       "boostSpeed": 520,
       "maxSpeed": 1193,
+      "boostBack": 268,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -1492,6 +1498,7 @@
       "scmSpeed": 226,
       "boostSpeed": 520,
       "maxSpeed": 1193,
+      "boostBack": 268,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -1779,6 +1786,7 @@
       "scmSpeed": 226,
       "boostSpeed": 520,
       "maxSpeed": 1193,
+      "boostBack": 268,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -2126,6 +2134,7 @@
       "scmSpeed": 226,
       "boostSpeed": 520,
       "maxSpeed": 1193,
+      "boostBack": 268,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -2453,6 +2462,7 @@
       "scmSpeed": 160,
       "boostSpeed": 340,
       "maxSpeed": 1000,
+      "boostBack": 170,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -3580,6 +3590,7 @@
       "scmSpeed": 110,
       "boostSpeed": 220,
       "maxSpeed": 850,
+      "boostBack": 125,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -4359,6 +4370,18 @@
           "defaultEntityClass": "misl_s05_cs_taln_stalker"
         },
         {
+          "id": "hardpoint_nose_railgun",
+          "label": "Nose Railgun",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 10,
+          "minSize": 10,
+          "maxSize": 10,
+          "defaultEntityClass": "klwe_massdriver_s10",
+          "requiredTags": "$AEGS_Idris_Nose",
+          "portTags": "AEGS_Idris_Nose"
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -4402,6 +4425,7 @@
       "scmSpeed": 110,
       "boostSpeed": 220,
       "maxSpeed": 850,
+      "boostBack": 125,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -5153,6 +5177,7 @@
       "scmSpeed": 50,
       "boostSpeed": 290,
       "maxSpeed": 900,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -6068,6 +6093,7 @@
       "scmSpeed": 110,
       "boostSpeed": 290,
       "maxSpeed": 870,
+      "boostBack": 115,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -6544,6 +6570,18 @@
           "locked": true
         },
         {
+          "id": "hardpoint_claw",
+          "label": "Claw",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "aegs_reclaimer_salvage_arm",
+          "portTags": "salvageMount",
+          "locked": true
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -6576,6 +6614,7 @@
       "scmSpeed": 203,
       "boostSpeed": 400,
       "maxSpeed": 1050,
+      "boostBack": 215,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -6964,7 +7003,7 @@
           "id": "hardpoint_turret_remote_front/turret_left",
           "label": "Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -6974,7 +7013,7 @@
           "id": "hardpoint_turret_remote_front/turret_right",
           "label": "Turret Right",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -7157,6 +7196,7 @@
       "scmSpeed": 205,
       "boostSpeed": 400,
       "maxSpeed": 1100,
+      "boostBack": 206,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -7229,6 +7269,26 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "qdrv_wetk_s02_crossfield_scitem"
+        },
+        {
+          "id": "hardpoint_shieldgenerator_right_top",
+          "label": "Shieldgenerator Right Top",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
+          "id": "hardpoint_shieldgenerator_right_bottom",
+          "label": "Shieldgenerator Right Bottom",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
         },
         {
           "id": "hardpoint_armour",
@@ -7497,6 +7557,46 @@
           "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
+          "id": "hardpoint_shieldgenerator_left_bottom",
+          "label": "Shieldgenerator Left Bottom",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
+          "id": "hardpoint_shieldgenerator_left_top",
+          "label": "Shieldgenerator Left Top",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
+          "id": "hardpoint_shieldgenerator_middle_bottom",
+          "label": "Shieldgenerator Middle Bottom",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
+          "id": "hardpoint_shieldgenerator_middle_top",
+          "label": "Shieldgenerator Middle Top",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -7529,6 +7629,7 @@
       "scmSpeed": 223,
       "boostSpeed": 480,
       "maxSpeed": 1235,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -7806,6 +7907,7 @@
       "scmSpeed": 223,
       "boostSpeed": 480,
       "maxSpeed": 1235,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -8083,6 +8185,7 @@
       "scmSpeed": 240,
       "boostSpeed": 600,
       "maxSpeed": 1400,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -8513,6 +8616,7 @@
       "scmSpeed": 267,
       "boostSpeed": 655,
       "maxSpeed": 1447,
+      "boostBack": 277,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -8650,6 +8754,7 @@
       "scmSpeed": 240,
       "boostSpeed": 600,
       "maxSpeed": 1400,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -8847,6 +8952,7 @@
       "scmSpeed": 233,
       "boostSpeed": 560,
       "maxSpeed": 1320,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -9136,6 +9242,7 @@
       "scmSpeed": 150,
       "boostSpeed": 330,
       "maxSpeed": 975,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -9907,6 +10014,7 @@
       "scmSpeed": 212,
       "boostSpeed": 462,
       "maxSpeed": 1085,
+      "boostBack": 224,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -10129,7 +10237,7 @@
           "id": "hardpoint_turret/turret_left",
           "label": "Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -10139,7 +10247,7 @@
           "id": "hardpoint_turret/turret_right",
           "label": "Turret Right",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -10386,6 +10494,7 @@
       "scmSpeed": 209,
       "boostSpeed": 435,
       "maxSpeed": 1115,
+      "boostBack": 246,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -10779,6 +10888,7 @@
       "scmSpeed": 217,
       "boostSpeed": 462,
       "maxSpeed": 1075,
+      "boostBack": 224,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -11246,6 +11356,7 @@
       "scmSpeed": 210,
       "boostSpeed": 458,
       "maxSpeed": 1075,
+      "boostBack": 220,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -11701,6 +11812,7 @@
       "scmSpeed": 229,
       "boostSpeed": 515,
       "maxSpeed": 1215,
+      "boostBack": 265,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -11784,6 +11896,17 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_wetk_s01_beacon_scitem"
+        },
+        {
+          "id": "hardpoint_gimbal_mount",
+          "label": "Gimbal Mount",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "anvl_arrow_turret",
+          "locked": true
         },
         {
           "id": "hardpoint_gimbal_mount/hardpoint_weapon_01",
@@ -11980,6 +12103,7 @@
       "scmSpeed": 203,
       "boostSpeed": 425,
       "maxSpeed": 1075,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -12088,7 +12212,7 @@
           "id": "hardpoint_turret_pilot",
           "label": "Turret Pilot",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 1,
           "maxSize": 4,
@@ -12536,6 +12660,7 @@
       "scmSpeed": 220,
       "boostSpeed": 460,
       "maxSpeed": 1150,
+      "boostBack": 300,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -12702,17 +12827,6 @@
           "maxSize": 1,
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool_turrets",
-          "label": "Weapon Regen Pool Turrets",
-          "section": "weapons",
-          "kind": "turret",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": null,
-          "locked": true
         }
       ]
     },
@@ -12736,6 +12850,7 @@
       "scmSpeed": 220,
       "boostSpeed": 460,
       "maxSpeed": 1150,
+      "boostBack": 300,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -12902,17 +13017,6 @@
           "maxSize": 1,
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool_turrets",
-          "label": "Weapon Regen Pool Turrets",
-          "section": "weapons",
-          "kind": "turret",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": null,
-          "locked": true
         }
       ]
     },
@@ -12936,6 +13040,7 @@
       "scmSpeed": 220,
       "boostSpeed": 460,
       "maxSpeed": 1150,
+      "boostBack": 300,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -13142,17 +13247,6 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "kron_lasercannon_s1"
-        },
-        {
-          "id": "hardpoint_weapon_regen_pool_turrets",
-          "label": "Weapon Regen Pool Turrets",
-          "section": "weapons",
-          "kind": "turret",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": null,
-          "locked": true
         }
       ]
     },
@@ -13176,6 +13270,7 @@
       "scmSpeed": 140,
       "boostSpeed": 315,
       "maxSpeed": 1050,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -13530,6 +13625,7 @@
       "scmSpeed": 140,
       "boostSpeed": 315,
       "maxSpeed": 1050,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -13884,6 +13980,7 @@
       "scmSpeed": 220,
       "boostSpeed": 479,
       "maxSpeed": 1146,
+      "boostBack": 249,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -13982,7 +14079,7 @@
           "id": "hardpoint_class_4_nose",
           "label": "Class 4 Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -14054,7 +14151,7 @@
           "id": "hardpoint_class_4_center",
           "label": "Class 4 Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -14066,7 +14163,7 @@
           "id": "hardpoint_class_4_center/turret_left",
           "label": "Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -14076,7 +14173,7 @@
           "id": "hardpoint_class_4_center/turret_right",
           "label": "Turret Right",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -14275,6 +14372,7 @@
       "scmSpeed": 220,
       "boostSpeed": 479,
       "maxSpeed": 1146,
+      "boostBack": 249,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -14373,7 +14471,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -14446,7 +14544,7 @@
           "id": "hardpoint_weapon_center",
           "label": "Weapon Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -14607,6 +14705,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -14896,6 +14995,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -15175,6 +15275,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -15315,13 +15416,23 @@
           "id": "hardpoint_class_4_center",
           "label": "Class 4 Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "anvl_fixed_mount_hornet_ball_s4",
           "requiredTags": "$ANVL_Hornet_Base",
           "portTags": "ANVL_Hornet_Base"
+        },
+        {
+          "id": "hardpoint_class_4_center/hardpoint_size_4",
+          "label": "Size 4",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "apar_ballisticgatling_s4"
         },
         {
           "id": "hardpoint_class_3_left_bay_door",
@@ -15476,6 +15587,7 @@
       "scmSpeed": 219,
       "boostSpeed": 477,
       "maxSpeed": 1142,
+      "boostBack": 249,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -15571,6 +15683,16 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
+          "id": "hardpoint_gun_nose",
+          "label": "Gun Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "anvl_hornet_f7c_nose_turret"
+        },
+        {
           "id": "hardpoint_gun_nose/hardpoint_class_1_left",
           "label": "Class 1 Left",
           "section": "weapons",
@@ -15629,6 +15751,16 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "gats_ballisticgatling_s3"
+        },
+        {
+          "id": "hardpoint_gun_center",
+          "label": "Gun Center",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "anvl_fixed_mount_hornet_ball_s4"
         },
         {
           "id": "hardpoint_gun_center/turret_left",
@@ -15765,6 +15897,7 @@
       "scmSpeed": 215,
       "boostSpeed": 465,
       "maxSpeed": 1125,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -15863,7 +15996,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -15936,7 +16069,7 @@
           "id": "hardpoint_weapon_center",
           "label": "Weapon Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -16089,6 +16222,7 @@
       "scmSpeed": 219,
       "boostSpeed": 477,
       "maxSpeed": 1142,
+      "boostBack": 249,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -16184,6 +16318,16 @@
           "defaultEntityClass": "qdrv_rsi_s01_eos_scitem"
         },
         {
+          "id": "hardpoint_gun_nose",
+          "label": "Gun Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "anvl_hornet_f7c_nose_turret"
+        },
+        {
           "id": "hardpoint_gun_nose/hardpoint_class_1_left",
           "label": "Class 1 Left",
           "section": "weapons",
@@ -16244,10 +16388,20 @@
           "defaultEntityClass": "gats_ballisticgatling_s3"
         },
         {
+          "id": "hardpoint_gun_center",
+          "label": "Gun Center",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "anvl_hornet_f7c_ball_turret"
+        },
+        {
           "id": "hardpoint_gun_center/turret_left",
           "label": "Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -16257,7 +16411,7 @@
           "id": "hardpoint_gun_center/turret_right",
           "label": "Turret Right",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -16396,6 +16550,7 @@
       "scmSpeed": 215,
       "boostSpeed": 465,
       "maxSpeed": 1125,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -16494,7 +16649,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -16567,7 +16722,7 @@
           "id": "hardpoint_weapon_center",
           "label": "Weapon Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -16850,6 +17005,7 @@
       "scmSpeed": 219,
       "boostSpeed": 477,
       "maxSpeed": 1142,
+      "boostBack": 249,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -16990,7 +17146,7 @@
           "id": "hardpoint_class_4_center",
           "label": "Class 4 Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -17151,6 +17307,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -17291,7 +17448,7 @@
           "id": "hardpoint_weapon_center",
           "label": "Weapon Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -17442,6 +17599,7 @@
       "scmSpeed": 219,
       "boostSpeed": 477,
       "maxSpeed": 1142,
+      "boostBack": 249,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -17540,7 +17698,7 @@
           "id": "hardpoint_class_4_center",
           "label": "Class 4 Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -17743,6 +17901,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -17883,7 +18042,7 @@
           "id": "hardpoint_weapon_center",
           "label": "Weapon Center",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -18034,6 +18193,7 @@
       "scmSpeed": 210,
       "boostSpeed": 445,
       "maxSpeed": 1075,
+      "boostBack": 218,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -18252,7 +18412,7 @@
           "id": "hardpoint_weapon_turret",
           "label": "Weapon Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -18418,6 +18578,7 @@
       "scmSpeed": 210,
       "boostSpeed": 445,
       "maxSpeed": 1075,
+      "boostBack": 218,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -18636,7 +18797,7 @@
           "id": "hardpoint_weapon_turret",
           "label": "Weapon Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -18802,6 +18963,7 @@
       "scmSpeed": 210,
       "boostSpeed": 480,
       "maxSpeed": 1125,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -19184,6 +19346,7 @@
       "scmSpeed": 225,
       "boostSpeed": 490,
       "maxSpeed": 1217,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -19442,6 +19605,7 @@
       "scmSpeed": 214,
       "boostSpeed": 480,
       "maxSpeed": 1125,
+      "boostBack": 225,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -19780,6 +19944,7 @@
       "scmSpeed": 175,
       "boostSpeed": 340,
       "maxSpeed": 950,
+      "boostBack": 200,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -20269,6 +20434,7 @@
       "scmSpeed": 200,
       "boostSpeed": 320,
       "maxSpeed": 1150,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -20389,7 +20555,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -20438,6 +20604,7 @@
       "scmSpeed": 200,
       "boostSpeed": 320,
       "maxSpeed": 1150,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -20537,7 +20704,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -20596,6 +20763,7 @@
       "scmSpeed": 207,
       "boostSpeed": 431,
       "maxSpeed": 1110,
+      "boostBack": 245,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -20704,7 +20872,7 @@
           "id": "hardpoint_turret_pilot",
           "label": "Turret Pilot",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -20712,6 +20880,26 @@
           "requiredTags": "$ANVL_Valkyrie",
           "portTags": "ANVL_Valkyrie",
           "locked": true
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_weapon_wing_left/turret_gun",
@@ -20924,6 +21112,26 @@
           "defaultEntityClass": null,
           "requiredTags": "$ANVL_Valkyrie",
           "locked": true
+        },
+        {
+          "id": "hardpoint_shield_03",
+          "label": "Shield 03",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
+          "id": "hardpoint_shield_04",
+          "label": "Shield 04",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
         },
         {
           "id": "hardpoint_lifesupport",
@@ -20958,6 +21166,7 @@
       "scmSpeed": 207,
       "boostSpeed": 431,
       "maxSpeed": 1110,
+      "boostBack": 245,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -21066,7 +21275,7 @@
           "id": "hardpoint_turret_pilot",
           "label": "Turret Pilot",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -21074,6 +21283,26 @@
           "requiredTags": "$ANVL_Valkyrie",
           "portTags": "ANVL_Valkyrie",
           "locked": true
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_pilot/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_weapon_wing_left/turret_gun",
@@ -21288,6 +21517,26 @@
           "locked": true
         },
         {
+          "id": "hardpoint_shield_03",
+          "label": "Shield 03",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
+          "id": "hardpoint_shield_04",
+          "label": "Shield 04",
+          "section": "defense",
+          "kind": "shield",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -21320,6 +21569,7 @@
       "scmSpeed": 224,
       "boostSpeed": 504,
       "maxSpeed": 1183,
+      "boostBack": 254,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -21485,6 +21735,7 @@
       "scmSpeed": 225,
       "boostSpeed": 305,
       "maxSpeed": 619,
+      "boostBack": 145,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -21599,6 +21850,7 @@
       "scmSpeed": 225,
       "boostSpeed": 305,
       "maxSpeed": 619,
+      "boostBack": 145,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -21673,6 +21925,7 @@
       "scmSpeed": 227,
       "boostSpeed": 493,
       "maxSpeed": 1161,
+      "boostBack": 225,
       "ports": [
         {
           "id": "hardpoint_life_support",
@@ -22024,6 +22277,7 @@
       "scmSpeed": 140,
       "boostSpeed": 340,
       "maxSpeed": 960,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -22236,6 +22490,7 @@
       "scmSpeed": 140,
       "boostSpeed": 340,
       "maxSpeed": 960,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -22448,6 +22703,7 @@
       "scmSpeed": 140,
       "boostSpeed": 340,
       "maxSpeed": 960,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -22757,6 +23013,18 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "klwe_laserrepeater_s2"
+        },
+        {
+          "id": "hardpoint_tool_arm",
+          "label": "Tool Arm",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "argo_moth_salvage_arm",
+          "portTags": "salvageMount",
+          "locked": true
         }
       ]
     },
@@ -22780,6 +23048,7 @@
       "scmSpeed": 170,
       "boostSpeed": 360,
       "maxSpeed": 890,
+      "boostBack": 140,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -22792,6 +23061,17 @@
           "defaultEntityClass": "controller_flight_argo_mpuv",
           "requiredTags": "$ARGO_MPUV_Base_Blade",
           "portTags": "ARGO_MPUV_Base_Blade"
+        },
+        {
+          "id": "hardpoint_scanner",
+          "label": "Scanner",
+          "section": "systems",
+          "kind": "radar",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "radr_wlop_s01_capstan",
+          "locked": true
         },
         {
           "id": "hardpoint_powerplant",
@@ -22877,6 +23157,7 @@
       "scmSpeed": 170,
       "boostSpeed": 360,
       "maxSpeed": 890,
+      "boostBack": 140,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -22889,6 +23170,17 @@
           "defaultEntityClass": "controller_flight_argo_mpuv_transport",
           "requiredTags": "$ARGO_MPUV_Base_Blade",
           "portTags": "ARGO_MPUV_Base_Blade"
+        },
+        {
+          "id": "hardpoint_scanner",
+          "label": "Scanner",
+          "section": "systems",
+          "kind": "radar",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "radr_wlop_s01_capstan",
+          "locked": true
         },
         {
           "id": "hardpoint_powerplant",
@@ -22974,6 +23266,7 @@
       "scmSpeed": 175,
       "boostSpeed": 365,
       "maxSpeed": 895,
+      "boostBack": 145,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -22986,6 +23279,17 @@
           "defaultEntityClass": "controller_flight_argo_mpuv_1t",
           "requiredTags": "$ARGO_MPUV_1T_Blade",
           "portTags": "ARGO_MPUV_1T_Blade"
+        },
+        {
+          "id": "hardpoint_scanner",
+          "label": "Scanner",
+          "section": "systems",
+          "kind": "radar",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "radr_wlop_s01_capstan",
+          "locked": true
         },
         {
           "id": "hardpoint_cooler_left",
@@ -23093,6 +23397,7 @@
       "scmSpeed": 140,
       "boostSpeed": 340,
       "maxSpeed": 990,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_weapon_right",
@@ -23324,12 +23629,13 @@
       "scmSpeed": 200,
       "boostSpeed": 460,
       "maxSpeed": 1100,
+      "boostBack": 235,
       "ports": [
         {
           "id": "hardpoint_MainTractorBeamArm/hardpoint_tractorbeam/turret_left",
           "label": "Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -23441,6 +23747,7 @@
       "scmSpeed": 222,
       "boostSpeed": 480,
       "maxSpeed": 1175,
+      "boostBack": 255,
       "ports": [
         {
           "id": "hardpoint_powerplant_01",
@@ -23744,6 +24051,7 @@
       "scmSpeed": 200,
       "boostSpeed": 280,
       "maxSpeed": 550,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -23820,6 +24128,7 @@
       "scmSpeed": 228,
       "boostSpeed": 500,
       "maxSpeed": 1218,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -23918,7 +24227,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -23978,6 +24287,7 @@
       "scmSpeed": 228,
       "boostSpeed": 500,
       "maxSpeed": 1218,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -24076,7 +24386,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -24136,6 +24446,7 @@
       "scmSpeed": 228,
       "boostSpeed": 500,
       "maxSpeed": 1218,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -24234,7 +24545,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -24294,6 +24605,7 @@
       "scmSpeed": 226,
       "boostSpeed": 500,
       "maxSpeed": 1195,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -24392,7 +24704,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -24460,6 +24772,28 @@
           "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
+          "id": "hardpoint_rocket_wing_right",
+          "label": "Rocket Wing Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "rpod_s3_hrst_18x_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_rocket_wing_left",
+          "label": "Rocket Wing Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "rpod_s3_hrst_18x_s1",
+          "locked": true
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -24492,6 +24826,7 @@
       "scmSpeed": 244,
       "boostSpeed": 533,
       "maxSpeed": 1230,
+      "boostBack": 273,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -24659,6 +24994,7 @@
       "scmSpeed": 244,
       "boostSpeed": 533,
       "maxSpeed": 1230,
+      "boostBack": 273,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -24826,6 +25162,7 @@
       "scmSpeed": 205,
       "boostSpeed": 450,
       "maxSpeed": 1100,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -25151,6 +25488,7 @@
       "scmSpeed": 204,
       "boostSpeed": 405,
       "maxSpeed": 1130,
+      "boostBack": 212,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -25293,7 +25631,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -25568,6 +25906,7 @@
       "scmSpeed": 160,
       "boostSpeed": 320,
       "maxSpeed": 950,
+      "boostBack": 170,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -26155,6 +26494,7 @@
       "scmSpeed": 205,
       "boostSpeed": 385,
       "maxSpeed": 1050,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -26546,6 +26886,7 @@
       "scmSpeed": 205,
       "boostSpeed": 385,
       "maxSpeed": 1050,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -26937,6 +27278,7 @@
       "scmSpeed": 204,
       "boostSpeed": 405,
       "maxSpeed": 1130,
+      "boostBack": 212,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -27049,7 +27391,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -27224,6 +27566,7 @@
       "scmSpeed": 204,
       "boostSpeed": 405,
       "maxSpeed": 1130,
+      "boostBack": 212,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -27336,7 +27679,7 @@
           "id": "hardpoint_weapon_nose",
           "label": "Weapon Nose",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -27511,6 +27854,7 @@
       "scmSpeed": 160,
       "boostSpeed": 320,
       "maxSpeed": 950,
+      "boostBack": 170,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -27805,6 +28149,7 @@
       "scmSpeed": 227,
       "boostSpeed": 455,
       "maxSpeed": 1225,
+      "boostBack": 255,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -27975,6 +28320,7 @@
       "scmSpeed": 160,
       "boostSpeed": 320,
       "maxSpeed": 950,
+      "boostBack": 170,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -28321,6 +28667,7 @@
       "scmSpeed": 217,
       "boostSpeed": 510,
       "maxSpeed": 1300,
+      "boostBack": 218,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -28510,13 +28857,33 @@
           "id": "hardpoint_front_turret",
           "label": "Front Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "crus_star_runner_nose_turret_s5",
           "portTags": "CRUS_Star_Runner",
           "locked": true
+        },
+        {
+          "id": "hardpoint_front_turret/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_front_turret/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_missilerack_left_02",
@@ -28640,6 +29007,7 @@
       "scmSpeed": 240,
       "boostSpeed": 600,
       "maxSpeed": 1400,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -28917,6 +29285,7 @@
       "scmSpeed": 130,
       "boostSpeed": 300,
       "maxSpeed": 900,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -29004,8 +29373,8 @@
         {
           "id": "hardpoint_radar_turret_bottom",
           "label": "Radar Turret Bottom",
-          "section": "weapons",
-          "kind": "turret",
+          "section": "systems",
+          "kind": "radar",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -29166,6 +29535,7 @@
       "scmSpeed": 130,
       "boostSpeed": 300,
       "maxSpeed": 900,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -29253,8 +29623,8 @@
         {
           "id": "hardpoint_radar_turret_bottom",
           "label": "Radar Turret Bottom",
-          "section": "weapons",
-          "kind": "turret",
+          "section": "systems",
+          "kind": "radar",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -29415,6 +29785,7 @@
       "scmSpeed": 130,
       "boostSpeed": 300,
       "maxSpeed": 900,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -29502,8 +29873,8 @@
         {
           "id": "hardpoint_radar_turret_bottom",
           "label": "Radar Turret Bottom",
-          "section": "weapons",
-          "kind": "turret",
+          "section": "systems",
+          "kind": "radar",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -29664,6 +30035,7 @@
       "scmSpeed": 205,
       "boostSpeed": 405,
       "maxSpeed": 1000,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -30141,6 +30513,7 @@
       "scmSpeed": 200,
       "boostSpeed": 350,
       "maxSpeed": 1100,
+      "boostBack": 220,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -30352,6 +30725,7 @@
       "scmSpeed": 190,
       "boostSpeed": 390,
       "maxSpeed": 1025,
+      "boostBack": 205,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -30672,7 +31046,7 @@
           "id": "hardpoint_tail_turret",
           "label": "Tail Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -30874,6 +31248,7 @@
       "scmSpeed": 217,
       "boostSpeed": 465,
       "maxSpeed": 1150,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armour",
@@ -31352,6 +31727,7 @@
       "scmSpeed": 217,
       "boostSpeed": 465,
       "maxSpeed": 1150,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armour",
@@ -31830,6 +32206,7 @@
       "scmSpeed": 220,
       "boostSpeed": 467,
       "maxSpeed": 1165,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armour",
@@ -32389,6 +32766,7 @@
       "scmSpeed": 212,
       "boostSpeed": 460,
       "maxSpeed": 1125,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -32488,7 +32866,7 @@
           "id": "hardpoint_turret",
           "label": "Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 1,
           "maxSize": 4,
@@ -32599,6 +32977,7 @@
       "scmSpeed": 200,
       "boostSpeed": 420,
       "maxSpeed": 1100,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_armour",
@@ -32760,7 +33139,7 @@
           "id": "hardpoint_tail_remote_turret",
           "label": "Tail Remote Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -33131,6 +33510,7 @@
       "scmSpeed": 180,
       "boostSpeed": 380,
       "maxSpeed": 1010,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -33338,6 +33718,7 @@
       "scmSpeed": 180,
       "boostSpeed": 380,
       "maxSpeed": 1010,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -33504,6 +33885,16 @@
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
+          "id": "hardpoint_expo_shield",
+          "label": "Expo Shield",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_seco_s01_hex_scitem"
+        },
+        {
           "id": "hardpoint_expo_powerplant",
           "label": "Expo Powerplant",
           "section": "systems",
@@ -33535,6 +33926,7 @@
       "scmSpeed": 180,
       "boostSpeed": 380,
       "maxSpeed": 1010,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -33669,6 +34061,36 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "powr_amrs_s02_exogen_scitem"
+        },
+        {
+          "id": "hardpoint_scout_quantumdrive",
+          "label": "Scout Quantumdrive",
+          "section": "systems",
+          "kind": "quantum",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "qdrv_acas_s01_foxfire_scitem"
+        },
+        {
+          "id": "hardpoint_scout_shieldgen",
+          "label": "Scout Shieldgen",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_seco_s01_hex_scitem"
+        },
+        {
+          "id": "hardpoint_scout_radar",
+          "label": "Scout Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": "radr_chco_s02_surveyor"
         }
       ]
     },
@@ -33692,6 +34114,7 @@
       "scmSpeed": 190,
       "boostSpeed": 270,
       "maxSpeed": 523,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -33808,6 +34231,7 @@
       "scmSpeed": 190,
       "boostSpeed": 270,
       "maxSpeed": 523,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -33924,6 +34348,7 @@
       "scmSpeed": 190,
       "boostSpeed": 270,
       "maxSpeed": 523,
+      "boostBack": 120,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -34040,6 +34465,7 @@
       "scmSpeed": 203,
       "boostSpeed": 280,
       "maxSpeed": 1010,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -34176,6 +34602,16 @@
           "defaultEntityClass": "mount_gimbal_mining_golem"
         },
         {
+          "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
+          "label": "Mining Laser",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "mining_laser_drak_golem_s1"
+        },
+        {
           "id": "hardpoint_missile_left",
           "label": "Missile Left",
           "section": "missiles",
@@ -34237,6 +34673,7 @@
       "scmSpeed": 203,
       "boostSpeed": 280,
       "maxSpeed": 1010,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -34373,6 +34810,16 @@
           "defaultEntityClass": "mount_gimbal_mining_golem"
         },
         {
+          "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
+          "label": "Mining Laser",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "mining_laser_drak_golem_s1"
+        },
+        {
           "id": "hardpoint_missile_left",
           "label": "Missile Left",
           "section": "missiles",
@@ -34434,6 +34881,7 @@
       "scmSpeed": 200,
       "boostSpeed": 280,
       "maxSpeed": 1000,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_dashboard_pilot/turret_label",
@@ -34655,6 +35103,7 @@
       "scmSpeed": 245,
       "boostSpeed": 670,
       "maxSpeed": 1450,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -35048,6 +35497,7 @@
       "scmSpeed": 110,
       "boostSpeed": 290,
       "maxSpeed": 900,
+      "boostBack": 130,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -35664,6 +36114,7 @@
       "scmSpeed": 130,
       "boostSpeed": 320,
       "maxSpeed": 940,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -36536,6 +36987,7 @@
       "scmSpeed": 232,
       "boostSpeed": 555,
       "maxSpeed": 1275,
+      "boostBack": 270,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -36879,6 +37331,7 @@
       "scmSpeed": 200,
       "boostSpeed": 350,
       "maxSpeed": 1100,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_power_plant_01",
@@ -37024,6 +37477,30 @@
           "defaultEntityClass": "klwe_laserrepeater_s1"
         },
         {
+          "id": "hardpoint_salvage_arm_left",
+          "label": "Salvage Arm Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "drak_vulture_salvage_arm_left",
+          "portTags": "salvageMount",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_salvage_arm_right",
+          "label": "Salvage Arm Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "drak_vulture_salvage_arm_right",
+          "portTags": "salvageMount",
+          "locked": true
+        },
+        {
           "id": "hardpoint_shield_generator_rear",
           "label": "Shield Generator Rear",
           "section": "defense",
@@ -37066,6 +37543,7 @@
       "scmSpeed": 227,
       "boostSpeed": 500,
       "maxSpeed": 1191,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -37381,6 +37859,7 @@
       "scmSpeed": 218,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -37471,6 +37950,52 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_vncl_glaive",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_left",
+          "label": "Gun Nose Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_right",
+          "label": "Gun Nose Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_left",
+          "label": "Gun Wing Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_plasmacannon_s5",
+          "portTags": "War",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_right",
+          "label": "Gun Wing Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_plasmacannon_s5",
+          "portTags": "Wrath",
           "locked": true
         },
         {
@@ -37624,6 +38149,7 @@
       "scmSpeed": 212,
       "boostSpeed": 450,
       "maxSpeed": 1200,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -37762,7 +38288,7 @@
           "id": "hardpoint_weapon_spine",
           "label": "Weapon Spine",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -37862,6 +38388,7 @@
       "scmSpeed": 208,
       "boostSpeed": 437,
       "maxSpeed": 1110,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -38000,7 +38527,7 @@
           "id": "hardpoint_weapon_spine",
           "label": "Weapon Spine",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -38110,6 +38637,7 @@
       "scmSpeed": 207,
       "boostSpeed": 440,
       "maxSpeed": 1050,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armour",
@@ -38598,6 +39126,7 @@
       "scmSpeed": 225,
       "boostSpeed": 500,
       "maxSpeed": 1190,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -38628,6 +39157,26 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "cool_tydt_s01_vaporblock_scitem"
+        },
+        {
+          "id": "hardpoint_shield_left",
+          "label": "Shield Left",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_asas_s01_shimmer_scitem"
+        },
+        {
+          "id": "hardpoint_shield_right",
+          "label": "Shield Right",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_asas_s01_shimmer_scitem"
         },
         {
           "id": "hardpoint_armour",
@@ -38831,6 +39380,7 @@
       "scmSpeed": 225,
       "boostSpeed": 500,
       "maxSpeed": 1190,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -38861,6 +39411,26 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "cool_tydt_s01_vaporblock_scitem"
+        },
+        {
+          "id": "hardpoint_shield_left",
+          "label": "Shield Left",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_asas_s01_shimmer_scitem"
+        },
+        {
+          "id": "hardpoint_shield_right",
+          "label": "Shield Right",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_asas_s01_shimmer_scitem"
         },
         {
           "id": "hardpoint_armour",
@@ -39244,6 +39814,7 @@
       "scmSpeed": 170,
       "boostSpeed": 340,
       "maxSpeed": 1000,
+      "boostBack": 190,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -39827,6 +40398,7 @@
       "scmSpeed": 225,
       "boostSpeed": 450,
       "maxSpeed": 1175,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -40163,6 +40735,7 @@
       "scmSpeed": 165,
       "boostSpeed": 335,
       "maxSpeed": 980,
+      "boostBack": 175,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -40708,7 +41281,7 @@
           "id": "hardpoint_turret_remote_top",
           "label": "Turret Remote Top",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -40761,7 +41334,7 @@
           "id": "hardpoint_turret_remote_bottom",
           "label": "Turret Remote Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -40842,6 +41415,7 @@
       "scmSpeed": 220,
       "boostSpeed": 500,
       "maxSpeed": 1180,
+      "boostBack": 24,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -41145,6 +41719,7 @@
       "scmSpeed": 219,
       "boostSpeed": 479,
       "maxSpeed": 1175,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armour",
@@ -41615,6 +42190,7 @@
       "scmSpeed": 230,
       "boostSpeed": 510,
       "maxSpeed": 1225,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -41894,6 +42470,7 @@
       "scmSpeed": 225,
       "boostSpeed": 500,
       "maxSpeed": 1225,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -42153,6 +42730,7 @@
       "scmSpeed": 275,
       "boostSpeed": 605,
       "maxSpeed": 1450,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -42323,6 +42901,7 @@
       "scmSpeed": 270,
       "boostSpeed": 620,
       "maxSpeed": 1550,
+      "boostBack": 295,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -42510,6 +43089,7 @@
       "scmSpeed": 270,
       "boostSpeed": 620,
       "maxSpeed": 1550,
+      "boostBack": 295,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -42697,6 +43277,7 @@
       "scmSpeed": 218,
       "boostSpeed": 485,
       "maxSpeed": 1200,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -43066,6 +43647,7 @@
       "scmSpeed": 230,
       "boostSpeed": 550,
       "maxSpeed": 1263,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -43339,6 +43921,7 @@
       "scmSpeed": 900,
       "boostSpeed": 1280,
       "maxSpeed": 1280,
+      "boostBack": 900,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -43444,6 +44027,7 @@
       "scmSpeed": 230,
       "boostSpeed": 550,
       "maxSpeed": 1263,
+      "boostBack": 260,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -43885,6 +44469,7 @@
       "scmSpeed": 213,
       "boostSpeed": 465,
       "maxSpeed": 1125,
+      "boostBack": 225,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -44240,6 +44825,7 @@
       "scmSpeed": 208,
       "boostSpeed": 455,
       "maxSpeed": 1100,
+      "boostBack": 221,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -44709,6 +45295,7 @@
       "scmSpeed": 210,
       "boostSpeed": 460,
       "maxSpeed": 1100,
+      "boostBack": 223,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -44995,6 +45582,7 @@
       "scmSpeed": 213,
       "boostSpeed": 465,
       "maxSpeed": 1125,
+      "boostBack": 225,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -45350,6 +45938,7 @@
       "scmSpeed": 204,
       "boostSpeed": 284,
       "maxSpeed": 561,
+      "boostBack": 124,
       "ports": [
         {
           "id": "hardpoint_powerplant",
@@ -45447,6 +46036,7 @@
       "scmSpeed": 218,
       "boostSpeed": 298,
       "maxSpeed": 600,
+      "boostBack": 138,
       "ports": [
         {
           "id": "hardpoint_powerplant",
@@ -45521,6 +46111,7 @@
       "scmSpeed": 265,
       "boostSpeed": 595,
       "maxSpeed": 1450,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -45716,6 +46307,7 @@
       "scmSpeed": 265,
       "boostSpeed": 595,
       "maxSpeed": 1450,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -45911,6 +46503,7 @@
       "scmSpeed": 275,
       "boostSpeed": 490,
       "maxSpeed": 1525,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -46106,6 +46699,7 @@
       "scmSpeed": 143,
       "boostSpeed": 350,
       "maxSpeed": 975,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -46158,6 +46752,18 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "qdrv_just_s01_goliath_scitem"
+        },
+        {
+          "id": "hardpoint_salvage_arm",
+          "label": "Salvage Arm",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "misc_fortune_salvage_arm",
+          "portTags": "salvageMount",
+          "locked": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -46275,6 +46881,7 @@
       "scmSpeed": 197,
       "boostSpeed": 400,
       "maxSpeed": 1050,
+      "boostBack": 205,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -46370,6 +46977,19 @@
           "locked": true
         },
         {
+          "id": "hardpoint_sidecannon_right",
+          "label": "Sidecannon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
+        },
+        {
           "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
           "label": "Weapon 01",
           "section": "weapons",
@@ -46388,6 +47008,19 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "behr_lasercannon_s3"
+        },
+        {
+          "id": "hardpoint_sidecannon_left",
+          "label": "Sidecannon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
         },
         {
           "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
@@ -46633,6 +47266,7 @@
       "scmSpeed": 200,
       "boostSpeed": 403,
       "maxSpeed": 1100,
+      "boostBack": 205,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -46728,6 +47362,19 @@
           "locked": true
         },
         {
+          "id": "hardpoint_sidecannon_right",
+          "label": "Sidecannon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
+        },
+        {
           "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
           "label": "Weapon 01",
           "section": "weapons",
@@ -46746,6 +47393,19 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "hrst_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_sidecannon_left",
+          "label": "Sidecannon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
         },
         {
           "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
@@ -46991,6 +47651,7 @@
       "scmSpeed": 195,
       "boostSpeed": 395,
       "maxSpeed": 1025,
+      "boostBack": 205,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -47086,6 +47747,19 @@
           "locked": true
         },
         {
+          "id": "hardpoint_sidecannon_right",
+          "label": "Sidecannon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
+        },
+        {
           "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
           "label": "Weapon 01",
           "section": "weapons",
@@ -47104,6 +47778,19 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "amrs_lasercannon_s3"
+        },
+        {
+          "id": "hardpoint_sidecannon_left",
+          "label": "Sidecannon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
         },
         {
           "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
@@ -47349,6 +48036,7 @@
       "scmSpeed": 204,
       "boostSpeed": 410,
       "maxSpeed": 1000,
+      "boostBack": 205,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -47444,6 +48132,19 @@
           "locked": true
         },
         {
+          "id": "hardpoint_sidecannon_right",
+          "label": "Sidecannon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
+        },
+        {
           "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
           "label": "Weapon 01",
           "section": "weapons",
@@ -47462,6 +48163,19 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "behr_lasercannon_s3"
+        },
+        {
+          "id": "hardpoint_sidecannon_left",
+          "label": "Sidecannon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 1,
+          "maxSize": 5,
+          "defaultEntityClass": "behr_pc2_dual_s3",
+          "requiredTags": "$MISC_Freelancer_Base",
+          "portTags": "$MISC_Freelancer_Base",
+          "locked": true
         },
         {
           "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
@@ -47927,6 +48641,7 @@
       "scmSpeed": 185,
       "boostSpeed": 385,
       "maxSpeed": 1050,
+      "boostBack": 195,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -47937,6 +48652,17 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "controller_flight_misc_hull_a"
+        },
+        {
+          "id": "hardpoint_cockpit_radar",
+          "label": "Cockpit Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "radr_chco_s01_surveyorlite",
+          "locked": true
         },
         {
           "id": "hardpoint_power_plant",
@@ -48003,7 +48729,7 @@
           "id": "hardpoint_turret_nose",
           "label": "Turret Nose",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
@@ -48011,6 +48737,26 @@
           "requiredTags": "$MISC_Hull_A_Turret",
           "portTags": "$MISC_Hull_A_Turret",
           "locked": true
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "klwe_laserrepeater_s1"
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "klwe_laserrepeater_s1"
         },
         {
           "id": "hardpoint_lifesupport",
@@ -48045,6 +48791,7 @@
       "scmSpeed": 145,
       "boostSpeed": 340,
       "maxSpeed": 960,
+      "boostBack": 180,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -48393,6 +49140,7 @@
       "scmSpeed": 110,
       "boostSpeed": 290,
       "maxSpeed": 890,
+      "boostBack": 100,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -48580,12 +49328,32 @@
           "id": "hardpoint_turret_nose",
           "label": "Turret Nose",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "misc_hull_c_nose_turret_s5",
           "locked": true
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_left",
+          "label": "Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_nose/hardpoint_right",
+          "label": "Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_turret_tractor_beam_top_front/turret_left",
@@ -48700,6 +49468,7 @@
       "scmSpeed": 156,
       "boostSpeed": 371,
       "maxSpeed": 994,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -48760,6 +49529,16 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "mount_gimbal_mining"
+        },
+        {
+          "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
+          "label": "Mining Laser",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "mining_laser_grin_arbor_s1"
         },
         {
           "id": "hardpoint_shield_generator",
@@ -48875,6 +49654,7 @@
       "scmSpeed": 156,
       "boostSpeed": 371,
       "maxSpeed": 994,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -48935,6 +49715,16 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "mount_gimbal_mining"
+        },
+        {
+          "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
+          "label": "Mining Laser",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "mining_laser_thcn_helix_s1"
         },
         {
           "id": "hardpoint_shield_generator",
@@ -49050,6 +49840,7 @@
       "scmSpeed": 218,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -49189,7 +49980,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left",
           "label": "Hardpoint Weapon Wing Tip S3 Left",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49200,7 +49991,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left/turret_right",
           "label": "Turret Right",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -49210,7 +50001,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left/turret_left",
           "label": "Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weapon",
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
@@ -49220,7 +50011,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
           "label": "Hardpoint Weapon Wing Tip S3 Right",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49330,6 +50121,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -49469,7 +50261,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left",
           "label": "Hardpoint Weapon Wing Tip S3 Left",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49480,7 +50272,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
           "label": "Hardpoint Weapon Wing Tip S3 Right",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49580,6 +50372,7 @@
       "scmSpeed": 220,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -49719,7 +50512,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left",
           "label": "Hardpoint Weapon Wing Tip S3 Left",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49730,7 +50523,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
           "label": "Hardpoint Weapon Wing Tip S3 Right",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49830,6 +50623,7 @@
       "scmSpeed": 222,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -49969,7 +50763,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left",
           "label": "Hardpoint Weapon Wing Tip S3 Left",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -49990,7 +50784,7 @@
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
           "label": "Hardpoint Weapon Wing Tip S3 Right",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
@@ -50284,6 +51078,7 @@
       "scmSpeed": 106,
       "boostSpeed": 295,
       "maxSpeed": 845,
+      "boostBack": 106,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -50367,6 +51162,18 @@
           "defaultEntityClass": "qdrv_just_s03_kama_scitem"
         },
         {
+          "id": "hardpoint_sidecannon_left",
+          "label": "Sidecannon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": "behr_pc2_dual_s4",
+          "requiredTags": "$MISC_Starfarer_Base",
+          "portTags": "$MISC_Starfarer_Base"
+        },
+        {
           "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
           "label": "Weapon 01",
           "section": "weapons",
@@ -50385,6 +51192,18 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "behr_lasercannon_s4"
+        },
+        {
+          "id": "hardpoint_sidecannon_right",
+          "label": "Sidecannon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": "behr_pc2_dual_s4",
+          "requiredTags": "$MISC_Starfarer_Base",
+          "portTags": "$MISC_Starfarer_Base"
         },
         {
           "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
@@ -50622,6 +51441,7 @@
       "scmSpeed": 106,
       "boostSpeed": 295,
       "maxSpeed": 845,
+      "boostBack": 106,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -50808,6 +51628,18 @@
           "defaultEntityClass": "qdrv_wetk_s03_pontes_scitem"
         },
         {
+          "id": "hardpoint_sidecannon_left",
+          "label": "Sidecannon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": "behr_pc2_dual_s4",
+          "requiredTags": "$MISC_Starfarer_Base",
+          "portTags": "$MISC_Starfarer_Base"
+        },
+        {
           "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
           "label": "Weapon 01",
           "section": "weapons",
@@ -50826,6 +51658,18 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "behr_lasercannon_s4"
+        },
+        {
+          "id": "hardpoint_sidecannon_right",
+          "label": "Sidecannon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": "behr_pc2_dual_s4",
+          "requiredTags": "$MISC_Starfarer_Base",
+          "portTags": "$MISC_Starfarer_Base"
         },
         {
           "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
@@ -51063,6 +51907,7 @@
       "scmSpeed": 160,
       "boostSpeed": 325,
       "maxSpeed": 990,
+      "boostBack": 165,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -51159,7 +52004,7 @@
           "id": "hardpoint_weapon_left",
           "label": "Weapon Left",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
@@ -51191,7 +52036,7 @@
           "id": "hardpoint_weapon_right",
           "label": "Weapon Right",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
@@ -51570,6 +52415,7 @@
       "scmSpeed": 150,
       "boostSpeed": 315,
       "maxSpeed": 960,
+      "boostBack": 155,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -51646,7 +52492,7 @@
           "id": "hardpoint_weapon_left",
           "label": "Weapon Left",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
@@ -51678,7 +52524,7 @@
           "id": "hardpoint_weapon_right",
           "label": "Weapon Right",
           "section": "weapons",
-          "kind": "weapon",
+          "kind": "weaponMount",
           "size": 6,
           "minSize": 6,
           "maxSize": 6,
@@ -52365,6 +53211,7 @@
       "scmSpeed": 150,
       "boostSpeed": 340,
       "maxSpeed": 970,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -52406,6 +53253,26 @@
           "maxSize": 1,
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
+        },
+        {
+          "id": "hardpoint_shield_gen_bottom",
+          "label": "Shield Gen Bottom",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_basl_s01_bulwark_scitem"
+        },
+        {
+          "id": "hardpoint_shield_gen_top",
+          "label": "Shield Gen Top",
+          "section": "defense",
+          "kind": "shield",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "shld_basl_s01_bulwark_scitem"
         },
         {
           "id": "hardpoint_cooler_right",
@@ -52590,80 +53457,6 @@
       ]
     },
     {
-      "id": "eaobjectivedestructable_mininglaser",
-      "displayName": "Orbital Mining Laser",
-      "manufacturer": "Argo Astronautics",
-      "manufacturerCode": "ARGO",
-      "role": "Light Freight",
-      "career": "Transporter",
-      "crew": 1,
-      "hullHp": 450000,
-      "crossSection": null,
-      "noise": 0,
-      "decoy": 0,
-      "damageReduction": 0.2,
-      "weaponPowerPool": 4,
-      "pitch": 30,
-      "yaw": 30,
-      "roll": 85,
-      "scmSpeed": 170,
-      "boostSpeed": 360,
-      "maxSpeed": 890,
-      "ports": [
-        {
-          "id": "hardpoint_controller_flight",
-          "label": "Controller Flight",
-          "section": "systems",
-          "kind": "flight",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": "controller_flight_argo_mpuv"
-        },
-        {
-          "id": "hardpoint_radar",
-          "label": "Radar",
-          "section": "systems",
-          "kind": "radar",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": "radr_chco_s01_observerlite",
-          "locked": true
-        },
-        {
-          "id": "hardpoint_powerplant",
-          "label": "Powerplant",
-          "section": "systems",
-          "kind": "power",
-          "size": 3,
-          "minSize": 1,
-          "maxSize": 3,
-          "defaultEntityClass": "powr_lplt_s03_fullforcepro_scitem"
-        },
-        {
-          "id": "hardpoint_cooler",
-          "label": "Cooler",
-          "section": "systems",
-          "kind": "cooler",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 1,
-          "defaultEntityClass": "cool_just_s01_hydrocel_scitem"
-        },
-        {
-          "id": "hardpoint_shield_generator",
-          "label": "Shield Generator",
-          "section": "defense",
-          "kind": "shield",
-          "size": 1,
-          "minSize": 1,
-          "maxSize": 4,
-          "defaultEntityClass": "shld_seco_s01_web_scitem"
-        }
-      ]
-    },
-    {
       "id": "orig_100i",
       "displayName": "Origin 100i",
       "manufacturer": "ORIG",
@@ -52683,6 +53476,7 @@
       "scmSpeed": 223,
       "boostSpeed": 610,
       "maxSpeed": 1230,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -52871,6 +53665,7 @@
       "scmSpeed": 230,
       "boostSpeed": 610,
       "maxSpeed": 1260,
+      "boostBack": 300,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -53112,6 +53907,7 @@
       "scmSpeed": 220,
       "boostSpeed": 610,
       "maxSpeed": 1250,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -53300,6 +54096,7 @@
       "scmSpeed": 258,
       "boostSpeed": 550,
       "maxSpeed": 1440,
+      "boostBack": 270,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -53525,6 +54322,7 @@
       "scmSpeed": 258,
       "boostSpeed": 550,
       "maxSpeed": 1460,
+      "boostBack": 270,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -53740,6 +54538,7 @@
       "scmSpeed": 260,
       "boostSpeed": 600,
       "maxSpeed": 1430,
+      "boostBack": 270,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -54036,6 +54835,7 @@
       "scmSpeed": 265,
       "boostSpeed": 490,
       "maxSpeed": 1500,
+      "boostBack": 270,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -54261,6 +55061,7 @@
       "scmSpeed": 215,
       "boostSpeed": 500,
       "maxSpeed": 1225,
+      "boostBack": 216,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -54902,6 +55703,7 @@
       "scmSpeed": 165,
       "boostSpeed": 325,
       "maxSpeed": 975,
+      "boostBack": 185,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -54998,7 +55800,7 @@
           "id": "hardpoint_remote_turret_top",
           "label": "Remote Turret Top",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -55050,7 +55852,7 @@
           "id": "hardpoint_remote_turret_bottom",
           "label": "Remote Turret Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -55403,6 +56205,7 @@
       "scmSpeed": 165,
       "boostSpeed": 325,
       "maxSpeed": 975,
+      "boostBack": 185,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -55499,7 +56302,7 @@
           "id": "hardpoint_remote_turret_top",
           "label": "Remote Turret Top",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -55551,7 +56354,7 @@
           "id": "hardpoint_remote_turret_bottom",
           "label": "Remote Turret Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -55904,6 +56707,7 @@
       "scmSpeed": 165,
       "boostSpeed": 325,
       "maxSpeed": 975,
+      "boostBack": 185,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -56000,7 +56804,7 @@
           "id": "hardpoint_remote_turret_top",
           "label": "Remote Turret Top",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -56052,7 +56856,7 @@
           "id": "hardpoint_remote_turret_bottom",
           "label": "Remote Turret Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -56405,6 +57209,7 @@
       "scmSpeed": 235,
       "boostSpeed": 560,
       "maxSpeed": 1250,
+      "boostBack": 270,
       "ports": [
         {
           "id": "hardpoint_radar",
@@ -56531,7 +57336,7 @@
           "id": "hardpoint_turret",
           "label": "Turret",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 1,
           "maxSize": 3,
@@ -56613,6 +57418,7 @@
       "scmSpeed": 110,
       "boostSpeed": 280,
       "maxSpeed": 915,
+      "boostBack": 115,
       "ports": [
         {
           "id": "hardpoint_radar_01",
@@ -56710,7 +57516,7 @@
           "id": "hardpoint_remote_turret_left",
           "label": "Remote Turret Left",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -56763,7 +57569,7 @@
           "id": "hardpoint_remote_turret_right",
           "label": "Remote Turret Right",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 5,
           "minSize": 2,
           "maxSize": 6,
@@ -57469,6 +58275,7 @@
       "scmSpeed": 280,
       "boostSpeed": 490,
       "maxSpeed": 1575,
+      "boostBack": 290,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -57666,6 +58473,7 @@
       "scmSpeed": 225,
       "boostSpeed": 560,
       "maxSpeed": 1400,
+      "boostBack": 250,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -58129,6 +58937,7 @@
       "scmSpeed": 207,
       "boostSpeed": 287,
       "maxSpeed": 569,
+      "boostBack": 127,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -58225,6 +59034,7 @@
       "scmSpeed": 207,
       "boostSpeed": 287,
       "maxSpeed": 569,
+      "boostBack": 127,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -58341,6 +59151,7 @@
       "scmSpeed": 222,
       "boostSpeed": 302,
       "maxSpeed": 611,
+      "boostBack": 142,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -58398,28 +59209,6 @@
       ]
     },
     {
-      "id": "eaobjectivedestructable_satellite",
-      "displayName": "Radar Dish",
-      "manufacturer": "Argo Astronautics",
-      "manufacturerCode": "ARGO",
-      "role": "Light Freight",
-      "career": "Transporter",
-      "crew": 1,
-      "hullHp": 700001,
-      "crossSection": null,
-      "noise": 0,
-      "decoy": 0,
-      "damageReduction": 0.2,
-      "weaponPowerPool": 4,
-      "pitch": null,
-      "yaw": null,
-      "roll": null,
-      "scmSpeed": null,
-      "boostSpeed": null,
-      "maxSpeed": null,
-      "ports": []
-    },
-    {
       "id": "rsi_apollo_medivac",
       "displayName": "RSI Apollo Medivac",
       "manufacturer": null,
@@ -58439,6 +59228,7 @@
       "scmSpeed": 175,
       "boostSpeed": 340,
       "maxSpeed": 1000,
+      "boostBack": 180,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -58871,6 +59661,7 @@
       "scmSpeed": 170,
       "boostSpeed": 345,
       "maxSpeed": 1025,
+      "boostBack": 180,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -59223,6 +60014,7 @@
       "scmSpeed": 225,
       "boostSpeed": 460,
       "maxSpeed": 1230,
+      "boostBack": 240,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -59550,6 +60342,7 @@
       "scmSpeed": 190,
       "boostSpeed": 390,
       "maxSpeed": 1000,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -60465,6 +61258,7 @@
       "scmSpeed": 180,
       "boostSpeed": 380,
       "maxSpeed": 1075,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -61027,6 +61821,7 @@
       "scmSpeed": 185,
       "boostSpeed": 385,
       "maxSpeed": 995,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -61658,6 +62453,7 @@
       "scmSpeed": 185,
       "boostSpeed": 385,
       "maxSpeed": 995,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -62289,6 +63085,7 @@
       "scmSpeed": 180,
       "boostSpeed": 380,
       "maxSpeed": 950,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -62850,6 +63647,7 @@
       "scmSpeed": 180,
       "boostSpeed": 380,
       "maxSpeed": 950,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -63411,6 +64209,7 @@
       "scmSpeed": 170,
       "boostSpeed": 365,
       "maxSpeed": 1075,
+      "boostBack": 191,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -63954,7 +64753,7 @@
           "id": "hardpoint_turret_upper",
           "label": "Turret Upper",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -64047,7 +64846,7 @@
           "id": "hardpoint_turret_lower",
           "label": "Turret Lower",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -64158,6 +64957,7 @@
       "scmSpeed": 180,
       "boostSpeed": 370,
       "maxSpeed": 1200,
+      "boostBack": 170,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -64611,6 +65411,7 @@
       "scmSpeed": 236,
       "boostSpeed": 605,
       "maxSpeed": 1400,
+      "boostBack": 257,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -64912,6 +65713,7 @@
       "scmSpeed": 229,
       "boostSpeed": 570,
       "maxSpeed": 1405,
+      "boostBack": 235,
       "ports": [
         {
           "id": "hardpoint_power_plant",
@@ -65307,6 +66109,7 @@
       "scmSpeed": 150,
       "boostSpeed": 350,
       "maxSpeed": 1050,
+      "boostBack": 160,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -65424,7 +66227,7 @@
           "id": "hardpoint_turret_remote_top",
           "label": "Turret Remote Top",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -65477,7 +66280,7 @@
           "id": "hardpoint_turret_remote_bottom",
           "label": "Turret Remote Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -65960,6 +66763,7 @@
       "scmSpeed": 145,
       "boostSpeed": 250,
       "maxSpeed": 940,
+      "boostBack": 155,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -67261,6 +68065,7 @@
       "scmSpeed": 205,
       "boostSpeed": 290,
       "maxSpeed": 1150,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -67394,6 +68199,30 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "klwe_laserrepeater_s1"
+        },
+        {
+          "id": "hardpoint_salvage_arm_left",
+          "label": "Salvage Arm Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "rsi_salvation_salvage_arm_left",
+          "portTags": "salvageMount RSI_Salvation",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_salvage_arm_right",
+          "label": "Salvage Arm Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "rsi_salvation_salvage_arm_right",
+          "portTags": "salvageMount RSI_Salvation",
+          "locked": true
         }
       ]
     },
@@ -67417,6 +68246,7 @@
       "scmSpeed": 230,
       "boostSpeed": 590,
       "maxSpeed": 1385,
+      "boostBack": 235,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -67849,6 +68679,7 @@
       "scmSpeed": 230,
       "boostSpeed": 590,
       "maxSpeed": 1385,
+      "boostBack": 235,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -68266,6 +69097,18 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "powr_aegs_s01_regulus_scitem"
+        },
+        {
+          "id": "hardpoint_EMP",
+          "label": "EMP",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "rsi_scorpius_emp_device",
+          "portTags": "Scorpius_EMP",
+          "locked": true
         }
       ]
     },
@@ -68289,6 +69132,7 @@
       "scmSpeed": 230,
       "boostSpeed": 590,
       "maxSpeed": 1385,
+      "boostBack": 235,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -68721,6 +69565,7 @@
       "scmSpeed": 227,
       "boostSpeed": 535,
       "maxSpeed": 1240,
+      "boostBack": 255,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -69024,6 +69869,7 @@
       "scmSpeed": 200,
       "boostSpeed": 400,
       "maxSpeed": 1000,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -69193,7 +70039,7 @@
           "id": "hardpoint_turret_bottom",
           "label": "Turret Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -69378,6 +70224,7 @@
       "scmSpeed": 205,
       "boostSpeed": 405,
       "maxSpeed": 1100,
+      "boostBack": 210,
       "ports": [
         {
           "id": "hardpoint_armor",
@@ -69557,7 +70404,7 @@
           "id": "hardpoint_turret_bottom",
           "label": "Turret Bottom",
           "section": "weapons",
-          "kind": "turret",
+          "kind": "weaponMount",
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
@@ -69732,6 +70579,7 @@
       "scmSpeed": 140,
       "boostSpeed": 270,
       "maxSpeed": 850,
+      "boostBack": 150,
       "ports": [
         {
           "id": "hardpoint_controller_flight",
@@ -70455,6 +71303,7 @@
       "scmSpeed": 222,
       "boostSpeed": 480,
       "maxSpeed": 1150,
+      "boostBack": 230,
       "ports": [
         {
           "id": "hardpoint_powerplant_left",
@@ -70545,6 +71394,52 @@
           "minSize": 1,
           "maxSize": 1,
           "defaultEntityClass": "armr_vncl_scythe",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_left",
+          "label": "Gun Nose Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_nose_right",
+          "label": "Gun Nose Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": "vncl_lasercannon_s1",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_left",
+          "label": "Gun Wing Left",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_neutroncannon_s5",
+          "portTags": "War",
+          "locked": true
+        },
+        {
+          "id": "hardpoint_gun_wing_right",
+          "label": "Gun Wing Right",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": "vncl_plasmacannon_s5",
+          "portTags": "Wrath",
           "locked": true
         },
         {
@@ -70675,110 +71570,6 @@
           "maxSize": 1,
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
-        }
-      ]
-    },
-    {
-      "id": "misc_starfarer_gemini_derelict_nose",
-      "displayName": "Wreckage",
-      "manufacturer": "Musashi Industrial & Starflight Concern",
-      "manufacturerCode": "MISC",
-      "role": null,
-      "career": null,
-      "crew": 2,
-      "hullHp": 76900,
-      "crossSection": 20138,
-      "noise": 0,
-      "decoy": 0,
-      "damageReduction": 0.2,
-      "weaponPowerPool": 10,
-      "pitch": null,
-      "yaw": null,
-      "roll": null,
-      "scmSpeed": null,
-      "boostSpeed": null,
-      "maxSpeed": null,
-      "ports": [
-        {
-          "id": "hardpoint_sidecannon_left/hardpoint_weapon_01",
-          "label": "Weapon 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 4,
-          "minSize": 4,
-          "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
-        },
-        {
-          "id": "hardpoint_sidecannon_left/hardpoint_weapon_02",
-          "label": "Weapon 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 4,
-          "minSize": 4,
-          "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
-        },
-        {
-          "id": "hardpoint_sidecannon_right/hardpoint_weapon_01",
-          "label": "Weapon 01",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 4,
-          "minSize": 4,
-          "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
-        },
-        {
-          "id": "hardpoint_sidecannon_right/hardpoint_weapon_02",
-          "label": "Weapon 02",
-          "section": "weapons",
-          "kind": "weapon",
-          "size": 4,
-          "minSize": 4,
-          "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
-        },
-        {
-          "id": "hardpoint_shield_generator_B",
-          "label": "Shield Generator B",
-          "section": "defense",
-          "kind": "shield",
-          "size": 3,
-          "minSize": 3,
-          "maxSize": 3,
-          "defaultEntityClass": "shld_basl_s03_stronghold_scitem"
-        },
-        {
-          "id": "hardpoint_shield_generator_C",
-          "label": "Shield Generator C",
-          "section": "defense",
-          "kind": "shield",
-          "size": 3,
-          "minSize": 3,
-          "maxSize": 3,
-          "defaultEntityClass": "shld_basl_s03_stronghold_scitem"
-        },
-        {
-          "id": "hardpoint_lifesupport",
-          "label": "Lifesupport",
-          "section": "systems",
-          "kind": "life",
-          "size": 3,
-          "minSize": 3,
-          "maxSize": 3,
-          "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
-          "locked": true
-        },
-        {
-          "id": "hardpoint_powerplant_B",
-          "label": "Powerplant B",
-          "section": "systems",
-          "kind": "power",
-          "size": 3,
-          "minSize": 3,
-          "maxSize": 3,
-          "defaultEntityClass": "powr_amrs_s03_superdrive_scitem"
         }
       ]
     }
