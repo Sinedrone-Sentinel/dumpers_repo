@@ -527,7 +527,7 @@ export default function ShipShopPage() {
   const [saveNote, setSaveNote] = useState<string | null>(null)
   const [shipQuery, setShipQuery] = useState('')
   const [pickerPortId, setPickerPortId] = useState<string | null>(null)
-  const [copyPortId, setCopyPortId] = useState<string | null>(null)
+  const [copyWeapon, setCopyWeapon] = useState<{ portId: string; part: FittedPart } | null>(null)
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
@@ -794,10 +794,11 @@ export default function ShipShopPage() {
             const addToAll = fitted && !port.locked && (port.kind === 'weapon' || copyTargets.length > 0) ? (
               <button
                 type="button"
-                className="site-btn-ghost shrink-0 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+                className="site-btn-ghost shrink-0 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-[#fbbf24]"
                 onClick={() => {
-                  if (port.kind === 'weapon') {
-                    setCopyPortId(port.id)
+                  const current = build.ports[port.id]
+                  if (port.kind === 'weapon' && current) {
+                    setCopyWeapon({ portId: port.id, part: current })
                     return
                   }
                   const part = build.ports[port.id]
@@ -910,11 +911,11 @@ export default function ShipShopPage() {
           )
         })}
       </div>
-      {copyPortId && (() => {
-        const source = findRenderedPort(ship, build.ports, copyPortId)
-        const part = source ? build.ports[source.id] : null
-        const groups = source && part ? weaponCopyGroups(ship, build.ports, source) : []
-        if (!source || !part) return null
+      {copyWeapon && (() => {
+        const source = findRenderedPort(ship, build.ports, copyWeapon.portId)
+        const part = copyWeapon.part
+        const itemName = getShipItem(part.entityClass)?.displayName || 'Weapon'
+        const groups = source ? weaponCopyGroups(ship, build.ports, source, part.entityClass) : []
         const paint = (slots: ShipPort[], on: boolean) => {
           const targets = slots.filter((slot) => {
             const current = build.ports[slot.id]?.entityClass
@@ -933,21 +934,27 @@ export default function ShipShopPage() {
           })
         }
         return (
-          <div className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6" onClick={() => setCopyPortId(null)}>
+          <div
+            className="site-modal-backdrop z-50 flex items-start justify-center overflow-y-auto p-6"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) setCopyWeapon(null)
+            }}
+          >
             <div
               className="site-modal-shell mt-16 w-full max-w-3xl p-4"
               role="dialog"
-              aria-label="Add to all"
+              aria-label={itemName}
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="mb-4 flex items-center justify-end gap-2">
-                <button type="button" className="site-btn-secondary px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), true)}>
+              <div className="mb-4 flex items-center gap-3">
+                <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">{itemName}</h3>
+                <button type="button" className="site-btn-secondary shrink-0 px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), true)}>
                   Mark all
                 </button>
-                <button type="button" className="site-btn-secondary px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), false)}>
+                <button type="button" className="site-btn-secondary shrink-0 px-3 py-1 text-sm" onClick={() => paint(groups.flatMap((group) => group.slots), false)}>
                   Unmark all
                 </button>
-                <button type="button" className="site-btn-ghost px-3 py-1 text-sm" aria-label="Close" onClick={() => setCopyPortId(null)}>
+                <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={() => setCopyWeapon(null)}>
                   ×
                 </button>
               </div>

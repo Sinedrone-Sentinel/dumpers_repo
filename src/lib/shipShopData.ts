@@ -607,9 +607,13 @@ function rootWeaponNode(nodes: WeaponNode[], portId: string): WeaponNode | null 
 }
 
 /** Root mounts of the same type as this gun, with each gun slot that can take it. */
-export function weaponCopyGroups(ship: GameShip, fitted: Record<string, FittedPart>, source: ShipPort): WeaponCopyGroup[] {
-  const part = fitted[source.id]
-  const item = part ? getShipItem(part.entityClass) : null
+export function weaponCopyGroups(
+  ship: GameShip,
+  fitted: Record<string, FittedPart>,
+  source: ShipPort,
+  entityClass?: string,
+): WeaponCopyGroup[] {
+  const item = getShipItem(entityClass || fitted[source.id]?.entityClass || '')
   if (!item || source.kind !== 'weapon' || source.locked) return []
   const tree = weaponTree(ship, fitted)
   const root = rootWeaponNode(tree, source.id)
