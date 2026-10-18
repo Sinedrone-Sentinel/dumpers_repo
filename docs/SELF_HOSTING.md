@@ -87,7 +87,7 @@ Both platforms detect Vite projects automatically and handle SPA routing. Just c
 | `SITE_DESCRIPTION` | Default meta description / OG fallback |
 | `SEO_GOOGLE_SITE_VERIFICATION` | Optional Search Console HTML-tag token (`src/config/seo.ts`) |
 | `SITE_COPYRIGHT` | Footer copyright text |
-| `SITE_SUPPORT_URL` / `SITE_SUPPORT_LABEL` | Optional quiet footer tip link (e.g. Ko-fi); clear URL to hide |
+| `SITE_SUPPORT_URL` / `SITE_SUPPORT_LABEL` | Optional tip link after the header version and in the footer (e.g. Ko-fi); clear URL to hide |
 | `SITE_SLOGAN` | Tagline displayed in UI |
 | `SITE_BRAND_*` | Dumper's Repo header colors, fonts, product mark |
 | `DFP_OFFICIAL_HOSTS` | Official production hostnames |

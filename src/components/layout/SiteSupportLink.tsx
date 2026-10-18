@@ -1,6 +1,6 @@
 import { SITE_SUPPORT_LABEL, SITE_SUPPORT_URL } from '../../config/site'
 
-/** Quiet footer link to an optional tip page. Hidden when SITE_SUPPORT_URL is empty. */
+/** Quiet header and footer link to an optional tip page. Hidden when SITE_SUPPORT_URL is empty. */
 export default function SiteSupportLink({ className = '' }: { className?: string }) {
   const url = SITE_SUPPORT_URL.trim()
   if (!url) return null

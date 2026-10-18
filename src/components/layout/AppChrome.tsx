@@ -162,6 +162,7 @@ export default function AppChrome({
                   {liveGameVersion}
                 </span>
               ) : null}
+              <SiteSupportLink className="shrink-0 whitespace-nowrap text-[10px] sm:text-xs" />
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {isGuestPreview ? (
