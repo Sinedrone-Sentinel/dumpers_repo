@@ -858,6 +858,7 @@ export default function ShipShopPage() {
             const craftedFit = build.ports[port.id]?.source === 'crafted'
             const buy = fitted ? (
               <ShopBuyButtons
+                icons
                 listings={partListings(fitted.item.entityClass)}
                 addEnabled={craftedFit || isForSale(partListings(fitted.item.entityClass))}
                 onWhere={() => setShopModal({
