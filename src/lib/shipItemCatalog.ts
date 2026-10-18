@@ -34,8 +34,16 @@ export function showsShipCatalogStats(categoryName?: string | null): boolean {
   return SHIP_SPEC_PREFIXES.some((prefix) => categoryName.startsWith(prefix))
 }
 
+let uniqueItems: ShipItemStats[] | null = null
+
 export function shipItems(): ShipItemStats[] {
-  return [...itemsByClass.values()].filter(
-    (item, index, list) => list.findIndex((other) => other.entityClass === item.entityClass) === index,
-  )
+  if (uniqueItems) return uniqueItems
+  const seen = new Set<string>()
+  uniqueItems = []
+  for (const item of itemsByClass.values()) {
+    if (seen.has(item.entityClass)) continue
+    seen.add(item.entityClass)
+    uniqueItems.push(item)
+  }
+  return uniqueItems
 }
