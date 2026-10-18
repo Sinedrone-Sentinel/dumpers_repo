@@ -234,6 +234,11 @@ export function extractShipItemStats(json, options = {}) {
     setStat(stats, 'Weapon_Damage', direct.physical + direct.energy + direct.distortion)
   }
 
+  if (!stats.Weapon_Speed) {
+    const guidance = firstOfType(root, 'SGuidanceAndControlParams')
+    if (typeof guidance?.linearSpeed === 'number') setStat(stats, 'Weapon_Speed', guidance.linearSpeed)
+  }
+
   const health = firstOfType(root, 'SHealthComponentParams')
   if (health && health.Health > 1) setStat(stats, 'Health_Maxhealth', health.Health)
 

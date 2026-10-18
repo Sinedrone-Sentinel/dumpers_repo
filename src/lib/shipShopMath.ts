@@ -322,6 +322,17 @@ export function rackLoadLine(mounts: MissileMount[] | undefined): string {
   return order.map((label) => `${label} x ${groups.get(label)}`).join(' · ')
 }
 
+/** Torpedo names need the seeker and the flight speed. Names that already say CS, EM, or IR are left as they are. */
+export function torpedoTitle(displayName: string, guidance?: string | null, speed?: number | null): string {
+  const name = String(displayName || '').trim()
+  const type = guidance?.trim().toUpperCase()
+  const marked = type && !new RegExp(`(?:^|[\\s\\-"])${type}(?:$|[\\s\\-"])`, 'i').test(name)
+    ? `${name} ${type}`
+    : name
+  if (speed == null || !Number.isFinite(speed) || speed <= 0) return marked
+  return `${marked} · ${formatShopNumber(speed)} m/s`
+}
+
 /** Guidance (EM, IR, or CS) sits with the missile's damage. */
 export function missileTypeLine(stats: Record<string, number>, guidance?: string | null): string {
   const damage = partStatLine('missile', stats)

@@ -228,6 +228,11 @@ async function main() {
   if (!deadbolt || deadbolt.length === 0) {
     throw new Error('Deadbolt V has no buy locations. The UEX join did not land.')
   }
+  for (const key of ['klwe_laserrepeater_s5', 'klwe_laserrepeater_s5_idris_m', 'klwe_laserrepeater_s5_turret']) {
+    if (!items[key] || items[key].length === 0) {
+      throw new Error(`${key} has no buy locations. UEX sells the CF-557 Galdereen Repeater.`)
+    }
+  }
   const hundred = shipShops.orig_100i
   if (!hundred || hundred.length === 0) {
     throw new Error('The 100i has no purchase rows. Vehicle prices did not land.')

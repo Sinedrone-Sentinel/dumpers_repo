@@ -5,6 +5,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { weaponBurstDps } from '../lib/shipItemStats.mjs'
 import { applyShipPartRules } from '../lib/shipPartRules.mjs'
+import { matchShopRow } from '../lib/uexShopJoin.mjs'
 
 const ruled = applyShipPartRules(
   [
@@ -306,6 +307,41 @@ assert.equal(ghostNose.kind, 'weaponMount')
 assert.equal(ghostNose.minSize, 2)
 assert.equal(ghostNose.maxSize, 3)
 assert.equal(ghostNose.defaultEntityClass, null)
+
+const ghost2 = shop.getShip('anvl_hornet_f7cs_mk2')
+const ghostNose2 = ghost2.ports.find((port) => port.id === 'hardpoint_weapon_nose')
+assert.equal(ghostNose2.label, 'Weapon Nose')
+const ghostMk2Nose = shop.partsForPort(ghostNose2, ghost2)
+assert.ok(ghostMk2Nose.some((item) => item.entityClass === 'anvl_hornet_f7c_mk2_nose_turret'), 'Ghost Mk II nose lists the Mk II nose turret')
+assert.ok(ghostMk2Nose.some((item) => item.entityClass === 'anvl_hornet_f7c_nose_turret'), 'Mark I nose turret fits the Mark II Ghost')
+assert.ok(
+  shop.getShip('aegs_gladius').ports.every((port) => !shop.partsForPort(port, shop.getShip('aegs_gladius')).some((item) => item.entityClass === 'anvl_hornet_f7c_nose_turret')),
+  'an F7 nose turret stays off a ship that is not an F7',
+)
+
+const size5Host = ships.find((ship) => !ship.id.startsWith('espr_') && ship.ports.some((port) => {
+  if (port.locked || port.kind !== 'weapon') return false
+  const min = port.minSize || port.size
+  const max = port.maxSize || port.size
+  return min <= 5 && max >= 5
+}))
+assert.ok(size5Host, 'a non-Esperia ship has an unlocked size 5 gun')
+const size5Port = size5Host.ports.find((port) => {
+  if (port.locked || port.kind !== 'weapon') return false
+  const min = port.minSize || port.size
+  const max = port.maxSize || port.size
+  return min <= 5 && max >= 5
+})
+const size5Guns = shop.partsForPort(size5Port, shop.getShip(size5Host.id))
+assert.ok(size5Guns.some((item) => item.entityClass === 'espr_ballisticcannon_s5'), 'Deadbolt V is listed on a size 5 gun outside Esperia')
+
+assert.equal(
+  matchShopRow(
+    [{ uuid: 'uex-cf557', name: 'CF-557 Galdereen Repeater', nameFull: 'CF-557 Galdereen Repeater' }],
+    { uuid: 'game-record-does-not-match', displayName: 'CF-557 Galdereen Repeater' },
+  )?.name,
+  'CF-557 Galdereen Repeater',
+)
 
 const jump = shop.getShip('orig_890jump')
 const quantum = jump.ports.find((port) => port.kind === 'quantum')

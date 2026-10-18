@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { useOrderDraft } from '../../contexts/OrderDraftContext'
+import { pricingForBlueprintLine } from '../../lib/orderPricing'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
 import { useAuth } from '../../contexts/AuthContext'
 import { useMyStockIndex } from '../../hooks/useMyStockIndex'
@@ -9,8 +12,12 @@ import {
   SHIPS,
   applyPortFit,
   blueprintForEntity,
+  cartLineKey,
+  craftedDraftFields,
+  craftedLinesFromPorts,
   defaultCraftQualities,
   fitPartOnPorts,
+  upsertCartLine,
   getShip,
   matchingCopyPorts,
   missileSlotsForRack,
@@ -40,6 +47,7 @@ import {
   formatQuantumSpeed,
   formatShopNumber,
   missileTypeLine,
+  torpedoTitle,
   partStatLine,
   rackLoadLine,
   powerColumns,
@@ -113,7 +121,8 @@ function formatSignature(value: number | null | undefined): string {
 
 const PLAIN_KINDS = new Set(['weapon', 'missile', 'torpedo', 'flight', 'missileRack', 'weaponMount'])
 
-function itemTitle(item: { displayName: string; kind?: string; itemClass?: string | null; grade?: string | null }): string {
+function itemTitle(item: { displayName: string; kind?: string; itemClass?: string | null; grade?: string | null; ordnance?: string | null; guidance?: string | null; stats?: Record<string, number> }): string {
+  if (item.ordnance === 'torpedo') return torpedoTitle(item.displayName, item.guidance, item.stats?.Weapon_Speed)
   if (item.kind && PLAIN_KINDS.has(item.kind)) return item.displayName
   const rank = [item.itemClass, item.grade].filter(Boolean).join(' ')
   return rank ? `${item.displayName} - ${rank}` : item.displayName
@@ -537,6 +546,8 @@ function PartPicker({
 
 export default function ShipShopPage() {
   const { isOfficerOrAbove } = useAuth()
+  const navigate = useNavigate()
+  const { clearDraft, addToDraft } = useOrderDraft()
   const [store, setStore] = useState<ShipShopStore>(() => defaultShipShopLoadouts())
   const [buildIndex, setBuildIndex] = useState(0)
   const [ready, setReady] = useState(false)
@@ -547,7 +558,7 @@ export default function ShipShopPage() {
   const [shopModal, setShopModal] = useState<
     | null
     | { mode: 'where'; title: string; listings: ShopListing[] }
-    | { mode: 'qty'; title: string; id: string; lineKind: 'ship' | 'part' }
+    | { mode: 'qty'; title: string; id: string; lineKind: 'ship' | 'part'; crafted?: boolean; qualities?: Record<number, number> }
     | { mode: 'cart' }
   >(null)
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
@@ -698,10 +709,15 @@ export default function ShipShopPage() {
                 onAddBuild={() => {
                   const cart: ShopCartLine[] = []
                   if (isForSale(shipListings(ship.id))) cart.push({ id: ship.id, kind: 'ship', qty: 1 })
+                  const crafted = craftedLinesFromPorts(build.ports)
+                  const craftedQty = new Map<string, number>()
+                  for (const line of crafted) craftedQty.set(line.id, (craftedQty.get(line.id) || 0) + line.qty)
                   for (const row of nonStockPartCounts(ship, build.ports)) {
-                    if (!isForSale(partListings(row.entityClass))) continue
-                    cart.push({ id: row.entityClass, kind: 'part', qty: row.qty })
+                    const buy = row.qty - (craftedQty.get(row.entityClass) || 0)
+                    if (buy <= 0 || !isForSale(partListings(row.entityClass))) continue
+                    cart.push({ id: row.entityClass, kind: 'part', qty: buy })
                   }
+                  cart.push(...crafted)
                   updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
                 }}
                 onViewCart={() => setShopModal({ mode: 'cart' })}
@@ -839,15 +855,24 @@ export default function ShipShopPage() {
               setPickerPortId(open ? null : port.id)
             }
             const inline = !stackedPartKind(port.kind)
+            const craftedFit = build.ports[port.id]?.source === 'crafted'
             const buy = fitted ? (
               <ShopBuyButtons
                 listings={partListings(fitted.item.entityClass)}
+                addEnabled={craftedFit || isForSale(partListings(fitted.item.entityClass))}
                 onWhere={() => setShopModal({
                   mode: 'where',
                   title: name,
                   listings: partListings(fitted.item.entityClass),
                 })}
-                onAdd={() => setShopModal({ mode: 'qty', title: name, id: fitted.item.entityClass, lineKind: 'part' })}
+                onAdd={() => setShopModal({
+                  mode: 'qty',
+                  title: name,
+                  id: fitted.item.entityClass,
+                  lineKind: 'part',
+                  crafted: craftedFit,
+                  qualities: craftedFit ? (build.ports[port.id]?.qualities ?? defaultCraftQualities(fitted.item.entityClass)) : undefined,
+                })}
               />
             ) : null
             const rackCard = port.kind === 'missileRack' || fitted?.item.kind === 'missileRack'
@@ -1056,11 +1081,18 @@ export default function ShipShopPage() {
           title={shopModal.title}
           onClose={() => setShopModal(null)}
           onAdd={(qty) => {
-            const cart = [...(build.cart || [])]
-            const found = cart.find((line) => line.kind === shopModal.lineKind && line.id === shopModal.id)
-            if (found) found.qty += qty
-            else cart.push({ id: shopModal.id, kind: shopModal.lineKind, qty })
-            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+            const incoming: ShopCartLine = {
+              id: shopModal.id,
+              kind: shopModal.lineKind,
+              qty,
+              ...(shopModal.crafted ? { crafted: true, qualities: shopModal.qualities } : {}),
+            }
+            updateBuild({
+              shipId: build.shipId,
+              ports: build.ports,
+              power: build.power,
+              cart: upsertCartLine(build.cart || [], incoming),
+            })
             setShopModal(null)
           }}
         />
@@ -1074,14 +1106,36 @@ export default function ShipShopPage() {
           }))}
           onClose={() => setShopModal(null)}
           onQty={(line, qty) => {
+            const key = cartLineKey(line)
             const cart = (build.cart || [])
-              .map((entry) => entry.kind === line.kind && entry.id === line.id ? { ...entry, qty } : entry)
+              .map((entry) => cartLineKey(entry) === key ? { ...entry, qty } : entry)
               .filter((entry) => entry.qty > 0)
             updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
           }}
           onRemove={(line) => {
-            const cart = (build.cart || []).filter((entry) => !(entry.kind === line.kind && entry.id === line.id))
+            const key = cartLineKey(line)
+            const cart = (build.cart || []).filter((entry) => cartLineKey(entry) !== key)
             updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+          }}
+          onAddToOrders={() => {
+            clearDraft()
+            for (const line of build.cart || []) {
+              if (!line.crafted) continue
+              const fields = craftedDraftFields(line.id, line.qualities, line.qty)
+              const blueprint = blueprintForEntity(line.id)
+              if (!fields || !blueprint) continue
+              const pricing = pricingForBlueprintLine(blueprint, fields.slotQualities, fields.quantity)
+              addToDraft({
+                blueprintId: fields.blueprintId,
+                blueprintTitle: fields.blueprintTitle,
+                slotQualities: fields.slotQualities,
+                quantity: fields.quantity,
+                unitDfpAuec: pricing.unitDfpAuec,
+                lineDfpAuec: pricing.lineDfpAuec,
+              })
+            }
+            setShopModal(null)
+            void navigate({ to: '/orders' })
           }}
         />
       )}

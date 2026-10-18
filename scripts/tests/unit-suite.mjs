@@ -2425,6 +2425,9 @@ check(
     shipShopMath.partStatLine('weapon', { Weapon_Damage: 10, Weapon_Firerate: 60 }).includes('sustained') &&
     shipShopMath.partStatLine('weapon', { Weapon_Damage: 10, Weapon_Firerate: 60 }).includes('10 alpha') &&
     shipShopMath.missileTypeLine({ Missile_Damage: 750 }, 'EM') === '750 damage · EM' &&
+    shipShopMath.torpedoTitle('Argos IX Torpedo', 'CS', 350) === 'Argos IX Torpedo CS · 350 m/s' &&
+    shipShopMath.torpedoTitle('Calamity XII-CS Torpedo', 'CS', 280) === 'Calamity XII-CS Torpedo · 280 m/s' &&
+    shipShopMath.torpedoTitle('EX-T10-EM "Executor" Torpedo', 'EM', 350) === 'EX-T10-EM "Executor" Torpedo · 350 m/s' &&
     shipShopMath.rackLoadLine(Array.from({ length: 8 }, () => ({ name: 'tube', minSize: 1, maxSize: 1 }))) === 'S1 x 8' &&
     shipShopMath.rackLoadLine([{ name: 'a', minSize: 2, maxSize: 2 }, { name: 'b', minSize: 2, maxSize: 2 }, { name: 'c', minSize: 1, maxSize: 1 }]) === 'S2 x 2 · S1 x 1',
   'ship shop: quantum speed and sustained DPS use plain labels',
