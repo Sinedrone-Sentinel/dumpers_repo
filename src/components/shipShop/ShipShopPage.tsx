@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from 'react'
 import BlueprintSlotQualityCard from '../BlueprintSlotQualityCard'
 import { useAuth } from '../../contexts/AuthContext'
+import { useMyStockIndex } from '../../hooks/useMyStockIndex'
+import { craftMaterialOptionsForSlot, craftMaterialResourceKey } from '../../lib/blueprintResources'
+import { calculateSlotModifiers, dropUnbackedArmorModifiers } from '../../lib/qualityModifiers'
 import {
   SHIP_SECTIONS,
   SHIPS,
@@ -418,8 +421,10 @@ function PartPicker({
       .filter((item) => !needle || titled(item).toLowerCase().includes(needle))
       .sort((a, b) => (ranked ? a.displayName.localeCompare(b.displayName) : listScore(b) - listScore(a) || a.displayName.localeCompare(b.displayName)))
   }, [pool, query, chip, port.kind, port.defaultEntityClass])
+  const { user } = useAuth()
   const current = statsForFitted(fitted)
   const blueprint = fitted ? blueprintForEntity(fitted.entityClass) : null
+  const owned = useMyStockIndex(user?.id, Boolean(fitted?.source === 'crafted' && blueprint))
   const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats) : []
 
   return (
@@ -483,18 +488,29 @@ function PartPicker({
             </button>
           </div>
           {!blueprint && <p className="site-hint text-sm">This part has no blueprint, so it stays stock.</p>}
-          {fitted?.source === 'crafted' && blueprint?.slots?.map((slot, index) => (
-            <BlueprintSlotQualityCard
-              key={index}
-              slot={slot}
-              slotIndex={index}
-              quality={fitted.qualities?.[index] ?? defaultCraftQualities(fitted.entityClass)?.[index] ?? 0}
-              onQualityChange={(slotIndex, quality) => {
-                onQualities({ ...(fitted.qualities ?? defaultCraftQualities(fitted.entityClass) ?? {}), [slotIndex]: quality })
-              }}
-              compact
-            />
-          ))}
+          {fitted?.source === 'crafted' && blueprint?.slots && blueprint.slots.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="text-sm text-slate-400">Required Resources</h3>
+              {blueprint.slots.map((slot, index) => {
+                const quality = fitted.qualities?.[index] ?? defaultCraftQualities(fitted.entityClass)?.[index] ?? 0
+                const material = craftMaterialOptionsForSlot(slot)[0]
+                const slotStock = owned && material ? owned.get(craftMaterialResourceKey(material)) ?? null : null
+                return (
+                  <BlueprintSlotQualityCard
+                    key={index}
+                    slot={slot}
+                    slotIndex={index}
+                    quality={quality}
+                    onQualityChange={(slotIndex, next) => {
+                      onQualities({ ...(fitted.qualities ?? defaultCraftQualities(fitted.entityClass) ?? {}), [slotIndex]: next })
+                    }}
+                    modifierResults={dropUnbackedArmorModifiers(calculateSlotModifiers(quality, slot.options?.[0]?.modifiers), current?.stats ?? {})}
+                    ownedStock={slotStock}
+                  />
+                )
+              })}
+            </div>
+          )}
           {detail.length > 0 && <p className="text-xs text-slate-400">{detail.join(' · ')}</p>}
           <button type="button" className="site-btn-ghost" onClick={onClose}>Close</button>
         </div>
@@ -851,12 +867,17 @@ export default function ShipShopPage() {
             )
           }
           const openSection = expanded.has(section.id)
-          const renderWeaponNodes = (nodes: ReturnType<typeof weaponTree>, depth = 0): ReactNode => nodes.map((node) => (
-            <div key={node.port.id} className="space-y-1">
-              {renderPort(node.port, depth)}
-              {node.children.length > 0 && renderWeaponNodes(node.children, depth + 1)}
-            </div>
-          ))
+          const renderWeaponNodes = (nodes: ReturnType<typeof weaponTree>, depth = 0): ReactNode => nodes.map((node) => {
+            const fittedItem = getShipItem(build.ports[node.port.id]?.entityClass)
+            const tubes = fittedItem?.kind === 'missileRack' ? missileSlotsForRack(ship, node.port, build.ports[node.port.id]) : []
+            return (
+              <div key={node.port.id} className="space-y-1">
+                {renderPort(node.port, depth)}
+                {node.children.length > 0 && renderWeaponNodes(node.children, depth + 1)}
+                {tubes.map((slot) => renderPort(slot, depth + 1))}
+              </div>
+            )
+          })
           return (
             <section key={section.id} id={`ship-section-${section.id}`} className="ship-shop-section site-surface rounded-xl p-4 scroll-mt-64">
               <div className="flex items-center justify-between gap-3">
