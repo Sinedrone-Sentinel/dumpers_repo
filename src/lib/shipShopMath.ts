@@ -278,6 +278,14 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
   return ''
 }
 
+/** Guidance (EM, IR, or CS) sits with the missile's damage. */
+export function missileTypeLine(stats: Record<string, number>, guidance?: string | null): string {
+  const damage = partStatLine('missile', stats)
+  const type = guidance?.trim()
+  if (!type) return damage
+  return damage ? `${damage} · ${type}` : type
+}
+
 /** Blades that share a tag are one ship family. Untagged blades stay with their own controller name. */
 export function flightBladeFamily(entityClass: string, tags?: string | null, requiredTags?: string | null): string {
   const tag = `${tags || ''} ${requiredTags || ''}`

@@ -35581,7 +35581,7 @@
     },
     {
       "entityClass": "mrck_s03_temp_bomb",
-      "displayName": "MSD-313 Missile Rack",
+      "displayName": "CST-313 \"Castillo\"",
       "kind": "missileRack",
       "size": 3,
       "manufacturer": "Behring",
@@ -35598,8 +35598,8 @@
       "mounts": [
         {
           "name": "missile_01_attach",
-          "minSize": 1,
-          "maxSize": 10,
+          "minSize": 3,
+          "maxSize": 3,
           "accepts": [
             {
               "type": "Bomb",

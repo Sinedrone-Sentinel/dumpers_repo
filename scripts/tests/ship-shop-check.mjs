@@ -4,6 +4,22 @@ import * as esbuild from 'esbuild'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { weaponBurstDps } from '../lib/shipItemStats.mjs'
+import { applyShipPartRules } from '../lib/shipPartRules.mjs'
+
+const ruled = applyShipPartRules(
+  [
+    { id: 'aegs_idris_m', manufacturerCode: 'AEGS' },
+    { id: 'aegs_gladius', manufacturerCode: 'AEGS' },
+  ],
+  [
+    { entityClass: 'aegs_idris_lower_camera_mount', displayName: 'Aegs Idris Lower Camera Mount', requiredTags: '' },
+    { entityClass: 'mount_gimbal_s4', displayName: 'VariPuck S4 Gimbal Mount', requiredTags: '' },
+    { entityClass: 'behr_ballisticgatling_hornet_bespoke', displayName: 'TMSB-5 Gatling', requiredTags: 'ANVL_BallisticGatling_Bespoke' },
+  ],
+)
+assert.equal(ruled[0].exclusiveHull, 'idris')
+assert.equal(ruled[1].exclusiveHull, undefined)
+assert.equal(ruled[2].exclusiveHull, undefined)
 
 const ships = JSON.parse(readFileSync('src/data/game-ships.json', 'utf8')).ships
 const items = JSON.parse(readFileSync('src/data/game-ship-item-stats.json', 'utf8')).items
@@ -224,7 +240,8 @@ await esbuild.build({
 })
 const shop = await import(`${pathToFileURL(path.resolve(outfile)).href}?t=${Date.now()}`)
 
-const noseParts = shop.partsForPort(idrisNose).map((item) => item.entityClass)
+const idrisShip = shop.getShip('aegs_idris_m')
+const noseParts = shop.partsForPort(idrisNose, idrisShip).map((item) => item.entityClass)
 assert.ok(noseParts.includes('klwe_massdriver_s10'), 'Idris nose lists the railgun')
 assert.ok(noseParts.includes('hrst_laserbeam_bespoke'), 'Idris nose lists the laser')
 assert.ok(noseParts.includes('mrck_s10_aegs_idris_nose_s12_torpedo'), 'Idris nose lists the torpedo launcher')
@@ -237,7 +254,7 @@ assert.ok(torpedoes.every((item) => item.ordnance === 'torpedo' && item.size ===
 
 const gladius = shop.getShip('aegs_gladius')
 const wingRack = gladius.ports.find((port) => port.id === 'hardpoint_missilerack_left_wing_outer')
-const rackChoices = shop.partsForPort(wingRack)
+const rackChoices = shop.partsForPort(wingRack, gladius)
 assert.equal(rackChoices.some((item) => item.attachType === 'BombLauncher'), true)
 assert.equal(rackChoices.some((item) => item.kind === 'missile'), false)
 const quad = rackChoices.find((item) => item.entityClass === 'mrck_s03_behr_quad_s01')
@@ -259,7 +276,7 @@ assert.ok(bombs.every((item) => item.ordnance === 'bomb'))
 
 const jump = shop.getShip('orig_890jump')
 const quantum = jump.ports.find((port) => port.kind === 'quantum')
-const drives = shop.partsForPort(quantum)
+const drives = shop.partsForPort(quantum, jump)
 assert.ok(drives.some((item) => item.entityClass === 'qdrv_orig_s04_890j_scitem'))
 assert.equal(drives.some((item) => item.entityClass === 'qdrv_aegs_s04_javelin_scitem'), false)
 assert.ok(drives.every((item) => item.entityClass.includes('890')))
@@ -275,5 +292,52 @@ assert.equal(
   fitted['hardpoint_weapon_center/hardpoint_weapon_left/hardpoint_class_2']?.entityClass,
   'behr_ballisticgatling_hornet_bespoke',
 )
+
+const castillo = items.find((item) => item.entityClass === 'mrck_s03_temp_bomb')
+assert.equal(castillo.displayName, 'CST-313 "Castillo"')
+assert.equal(castillo.mounts[0].minSize, 3)
+assert.equal(castillo.mounts[0].maxSize, 3)
+assert.ok(rackChoices.some((item) => item.entityClass === 'mrck_s03_temp_bomb'), 'Castillo fits a size 3 rack hardpoint')
+const meteor = shop.getShip('rsi_meteor')
+const meteorRack = meteor.ports.find((port) => port.id === 'hardpoint_missile_rack_01')
+const meteorChoices = shop.partsForPort(meteorRack, meteor)
+assert.ok(meteorChoices.some((item) => item.entityClass === 'mrck_s03_temp_bomb'), 'Castillo fits a size 3 missile hardpoint that does not list a bomb launcher')
+assert.equal(new Set(meteorChoices.map((item) => item.displayName)).size, meteorChoices.length)
+
+const size4RackShip = ships.find((ship) => ship.ports.some((port) => port.kind === 'missileRack' && !port.locked && (port.minSize || port.size) <= 4 && (port.maxSize || port.size) >= 4))
+const size4Rack = size4RackShip.ports.find((port) => port.kind === 'missileRack' && !port.locked && (port.minSize || port.size) <= 4 && (port.maxSize || port.size) >= 4)
+const size4Choices = shop.partsForPort(size4Rack, shop.getShip(size4RackShip.id))
+assert.equal(size4Choices.filter((item) => item.displayName === 'MSD-442 Missile Rack').length <= 1, true)
+assert.equal(new Set(size4Choices.map((item) => `${item.displayName}|${item.size}`)).size, size4Choices.length)
+
+function takesSize4Turret(port) {
+  if (port.locked) return false
+  const min = port.minSize || port.size
+  const max = port.maxSize || port.size
+  if (min > 4 || max < 4) return false
+  return (port.accepts || []).some((rule) => String(rule.type).toLowerCase() === 'turret')
+}
+const foreign = ships.find((ship) => ship.id !== 'aegs_idris_m' && ship.ports.some(takesSize4Turret))
+const foreignPort = foreign.ports.find(takesSize4Turret)
+const foreignMounts = shop.partsForPort(foreignPort, shop.getShip(foreign.id))
+assert.equal(foreignMounts.some((item) => item.entityClass === 'aegs_idris_lower_camera_mount' || item.entityClass === 'aegs_idris_upper_camera_mount'), false)
+assert.equal(new Set(foreignMounts.filter((item) => item.displayName.startsWith('VariPuck ')).map((item) => item.displayName)).size, foreignMounts.filter((item) => item.displayName.startsWith('VariPuck ')).length)
+const idrisGimbal = idris.ports.find((port) => port.id === 'hardpoint_front_left_turret/turret_left')
+const idrisGimbals = shop.partsForPort(idrisGimbal, idrisShip)
+assert.ok(idrisGimbals.some((item) => item.entityClass === 'aegs_idris_lower_camera_mount'))
+assert.ok(idrisGimbals.some((item) => item.entityClass === 'aegs_idris_upper_camera_mount'))
+assert.equal(idrisGimbals.filter((item) => item.displayName === 'VariPuck S4 Gimbal Mount').length, 1)
+
+const torpedoFit = {
+  [idrisNose.id]: { entityClass: 'mrck_s10_aegs_idris_nose_s12_torpedo', source: 'stock' },
+  [tubes[0].id]: { entityClass: torpedoes[0].entityClass, source: 'stock' },
+}
+assert.equal(shop.matchingCopyPorts(idrisShip, torpedoFit, tubes[0]).length, tubes.length - 1)
+assert.equal(shop.matchingCopyPorts(idrisShip, torpedoFit, idrisNose).length, 0)
+const bombFit = {
+  [wingRack.id]: { entityClass: bombRack.entityClass, source: 'stock' },
+  [bombSlots[0].id]: { entityClass: bombs[0].entityClass, source: 'stock' },
+}
+assert.equal(shop.matchingCopyPorts(gladius, bombFit, bombSlots[0]).length, Math.max(0, bombSlots.length - 1))
 
 console.log('ship shop catalog checks passed')
