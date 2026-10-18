@@ -183,8 +183,10 @@ export default function QualityBandSelect({
             id={listId}
             role="listbox"
             aria-label={ariaLabel}
+            data-quality-band-list
             className="site-dropdown-list overscroll-contain"
             style={listStyle}
+            onPointerDown={(event) => event.stopPropagation()}
           >
             {options.map((opt, idx) => (
               <li
