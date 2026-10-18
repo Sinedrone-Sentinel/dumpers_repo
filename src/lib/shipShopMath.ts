@@ -379,12 +379,6 @@ export function addPartToSnapshot(
     if (stats.Flight_BoostSpeed) snapshot.boostSpeed = stats.Flight_BoostSpeed * (scale > 0 ? 1 : 0)
     if (stats.Flight_MaxSpeed) snapshot.navSpeed = stats.Flight_MaxSpeed
   }
-  if (kind === 'cooler' && scale > 0) snapshot.coolant += (stats.Itemresource_Coolantgeneration || 0) * scale
-  if (scale > 0) {
-    snapshot.signatureEm += (stats.Signature_Em || stats.Weapon_Em || stats.Signature_Electromagnetic || 0) * scale
-    snapshot.signatureIr += (stats.Signature_Ir || 0) * scale
-  }
-  snapshot.signatureIr += stats.Signature_Infrared || 0
   if (kind === 'quantum' && stats.Quantum_Speed && scale > 0) {
     snapshot.quantumSpeed = Math.max(snapshot.quantumSpeed || 0, stats.Quantum_Speed)
   }
@@ -411,7 +405,6 @@ export interface PowerPart {
 }
 
 const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
-  { id: 'engines', label: 'Flight Blades', kinds: ['flight'] },
   { id: 'shields', label: 'Shields', kinds: ['shield'] },
   { id: 'quantum', label: 'Quantum', kinds: ['quantum'] },
   { id: 'interdiction', label: 'Interdiction', kinds: ['qed'] },
@@ -427,10 +420,18 @@ export function pipDemand(stats: Record<string, number>): number {
   return stats.Power_HighStart || stats.Power_MedStart || stats.Power_LowStart || 0
 }
 
-/** Shield face refill per second at the pips assigned to this generator. */
+/** Shield face refill per second. `scale` is already the pip fraction times the band. */
 export function shieldRegenRate(stats: Record<string, number> | null | undefined, scale = 1): number {
   if (!stats) return 0
   return (stats.Shield_Regen || 0) * Math.max(0, scale)
+}
+
+/** Erkul shield factor: assigned pips divided by the item's segments, times that band. */
+export function shieldPowerFactor(stats: Record<string, number>, assigned: number): number {
+  const units = stats.Power_Segments || 0
+  if (assigned <= 0 || units <= 0) return 0
+  const pips = Math.min(assigned, units)
+  return (pips / units) * segmentScale(stats, pips)
 }
 
 /** Seconds to fill the shield pool at the current regen. Null when the generator is off. */
@@ -497,14 +498,16 @@ export function columnSelected(column: PowerColumn, stored: number | undefined):
   return Math.max(0, Math.min(total, Math.round(stored)))
 }
 
-/** Aim-assist distance moves from the radar's minimum assignment at 1 pip to its maximum at full pips. */
+/** Aim assist is the minimum distance plus the span times pip fraction times the band. */
 export function radarRangeForPips(stats: Record<string, number>, assigned: number): number | null {
   if (!stats.Radar_DistanceMax || assigned <= 0) return null
-  const maxPips = stats.Power_Segments || 1
+  const units = stats.Power_Segments || 1
+  const pips = Math.min(assigned, units)
+  const minimum = Math.min(units, Math.max(1, stats.Power_Min || 1))
+  if (pips < minimum) return null
   const minDistance = stats.Radar_DistanceMin || stats.Radar_DistanceMax
-  const span = Math.max(1, maxPips - 1)
-  const blend = Math.max(0, Math.min(1, (Math.min(assigned, maxPips) - 1) / span))
-  return minDistance + (stats.Radar_DistanceMax - minDistance) * blend
+  const span = Math.max(0, stats.Radar_DistanceMax - minDistance)
+  return minDistance + span * (pips / units) * segmentScale(stats, pips)
 }
 
 /**
@@ -642,25 +645,135 @@ export function temperatureInfrared(stats: Record<string, number> | null | undef
   return (temperature - infraredFloor) * stats.Temp_IrPerDegree
 }
 
-/** Coolant the fitted coolers are making at their current pip band. */
-export function coolantSupply(parts: PowerPart[], scales: Map<string, number>): number {
+const COOLING_BAND_KINDS = new Set(['shield', 'life', 'radar', 'quantum'])
+
+function assignedPips(pips: Map<string, number>, portId: string): number {
+  return Math.max(0, pips.get(portId) || 0)
+}
+
+/** Cooler output is rated generation times the pip fraction times that pip's band. */
+export function coolerOutput(stats: Record<string, number>, assigned: number): number {
+  const units = stats.Power_Segments || 0
+  const rated = stats.Itemresource_Coolantgeneration || 0
+  if (assigned <= 0 || units <= 0 || rated <= 0) return 0
+  const pips = Math.min(assigned, units)
+  return rated * (pips / units) * segmentScale(stats, pips)
+}
+
+/** Coolant the fitted coolers are making at their current pips. */
+export function coolantSupply(parts: PowerPart[], pips: Map<string, number>): number {
   return parts.reduce((sum, part) => {
     if (part.kind !== 'cooler') return sum
-    const scale = Math.max(0, scales.get(part.portId) ?? 1)
-    return sum + (part.stats.Itemresource_Coolantgeneration || 0) * scale
+    return sum + coolerOutput(part.stats, assignedPips(pips, part.portId))
   }, 0)
 }
 
 /**
- * Coolant plants, shields, and quantum drives draw at the pips assigned now.
- * The stored amount is dynamic, so the power that state draws is scaled by the pip band.
+ * Cooling load is the pips in use, plus another `pips * band` for shields,
+ * life support, radar, and the quantum drive. Plants do not draw coolant.
+ * Weapon pips count only up to the guns' own segment total.
  */
-export function coolantDemand(parts: PowerPart[], scales: Map<string, number>): number {
-  return parts.reduce((sum, part) => {
-    if (!part.stats.Coolant_Dynamic || !part.stats.Coolant_PowerDraw) return sum
-    const scale = Math.max(0, scales.get(part.portId) ?? 1)
-    return sum + part.stats.Coolant_PowerDraw * scale
-  }, 0)
+export function coolantDemand(
+  parts: PowerPart[],
+  pips: Map<string, number>,
+  weaponSelected = 0,
+  weaponRaw = 0,
+): number {
+  let drawn = 0
+  let extra = 0
+  for (const part of parts) {
+    if (part.kind === 'weapon' || part.kind === 'power' || part.kind === 'flight' || part.kind === 'missile') continue
+    const count = assignedPips(pips, part.portId)
+    if (count <= 0) continue
+    drawn += count
+    if (COOLING_BAND_KINDS.has(part.kind)) extra += count * segmentScale(part.stats, count)
+  }
+  drawn += Math.min(Math.max(0, weaponSelected), Math.max(0, weaponRaw))
+  return drawn + extra
+}
+
+function nominalEm(stats: Record<string, number>): number {
+  return stats.Signature_Em || stats.Weapon_Em || stats.Signature_Electromagnetic || 0
+}
+
+/**
+ * EM is the plant signature times how full the power budget is, plus each
+ * powered part's signature times its pip fraction and band, then the armor multiplier.
+ */
+export function electromagneticSignature(
+  parts: PowerPart[],
+  pips: Map<string, number>,
+  generated: number,
+  weaponSelected: number,
+  weaponEnabled: number,
+  armorMultiplier: number,
+): number {
+  const weaponRaw = parts
+    .filter((part) => part.kind === 'weapon')
+    .reduce((sum, part) => sum + (part.stats.Power_Segments || 0), 0)
+  let drawn = 0
+  for (const part of parts) {
+    if (part.kind === 'weapon' || part.kind === 'power') continue
+    drawn += assignedPips(pips, part.portId)
+  }
+  drawn += Math.min(Math.max(0, weaponSelected), weaponRaw)
+  const ratio = generated > 0 ? drawn / generated : 0
+  let total = 0
+  const plants = parts.filter((part) => part.kind === 'power' && (part.stats.Itemresource_Powergeneration || 0) > 0)
+  if (plants.length > 0 && ratio > 0) {
+    const perPlant = Math.round(generated * ratio) / plants.length
+    let plantEm = 0
+    for (const plant of plants) {
+      const nominal = nominalEm(plant.stats)
+      if (nominal <= 0) continue
+      const band = plant.stats.Power_Segments > 0 ? segmentScale(plant.stats, perPlant) : 1
+      plantEm += nominal * (band || 1)
+    }
+    total += plantEm * ratio
+  }
+  if (weaponEnabled > 0 && weaponSelected > 0) {
+    const share = weaponSelected / weaponEnabled
+    for (const weapon of parts) {
+      if (weapon.kind !== 'weapon') continue
+      const nominal = nominalEm(weapon.stats)
+      if (nominal <= 0) continue
+      total += nominal * segmentScale(weapon.stats, weaponSelected) * share
+    }
+  }
+  for (const part of parts) {
+    if (part.kind === 'weapon' || part.kind === 'power') continue
+    const count = assignedPips(pips, part.portId)
+    const units = part.stats.Power_Segments || 0
+    if (count <= 0 || units <= 0) continue
+    const nominal = nominalEm(part.stats)
+    if (nominal <= 0) continue
+    total += nominal * segmentScale(part.stats, count) * (Math.min(count, units) / units)
+  }
+  return total * armorMultiplier
+}
+
+/**
+ * IR comes from coolers only. Each cooler adds its nominal IR times the pip
+ * fraction and band, and the whole sum is multiplied by the cooling ratio and armor.
+ */
+export function infraredSignature(
+  parts: PowerPart[],
+  pips: Map<string, number>,
+  demand: number,
+  supply: number,
+  armorMultiplier: number,
+): number {
+  const ratio = supply > 0 ? Math.min(demand / supply, 1) : 0
+  let total = 0
+  for (const part of parts) {
+    if (part.kind !== 'cooler') continue
+    const count = assignedPips(pips, part.portId)
+    const units = part.stats.Power_Segments || 0
+    const nominal = part.stats.Signature_Ir || 0
+    if (count <= 0 || units <= 0 || nominal <= 0) continue
+    total += nominal * (Math.min(count, units) / units) * segmentScale(part.stats, count)
+  }
+  return total * ratio * armorMultiplier
 }
 
 export function powerUsed(_columns: PowerColumn[], stored: Record<string, number> | null | undefined): number {
