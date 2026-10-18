@@ -2266,7 +2266,7 @@ check(
   'ship shop: two plants share a rounded budget plus a size bonus',
 )
 check(
-  shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5 }, 2) === 910 &&
+  shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5, Power_Min: 2 }, 2) === 949 &&
     shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5 }, 5) === 1105 &&
     shipShopMath.radarRangeForPips({ Radar_DistanceMin: 845, Radar_DistanceMax: 1105, Power_Segments: 5 }, 0) === null,
   'ship shop: radar distance moves from the minimum assignment toward the maximum',
@@ -2290,7 +2290,7 @@ const defaults = shipShopMath.defaultPower(budgetColumns, generated)
 check(
   defaults.qd === 0 &&
     defaults.weapons === 1 &&
-    defaults.eng === 1 &&
+    defaults.eng == null &&
     defaults.c1 === 1 &&
     Object.values(defaults).reduce((sum, value) => sum + value, 0) <= generated,
   'ship shop: default power is each minimum block, quantum stays off, and the total stays inside the budget',
@@ -2332,20 +2332,47 @@ check(
     shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 30, Weapon_ChargeTime: 1 }) === 5,
   'ship shop: a charge replaces burst DPS only when it is slower than the fire rate',
 )
+const bracer = {
+  Power_Segments: 3,
+  Power_Min: 1,
+  Power_LowStart: 1,
+  Power_LowMod: 0.7,
+  Power_MedStart: 2,
+  Power_MedMod: 0.85,
+  Power_HighStart: 3,
+  Power_HighMod: 1,
+  Itemresource_Coolantgeneration: 34,
+  Signature_Ir: 7260,
+  Signature_Em: 1490,
+}
+const regulus = { portId: 'p', kind: 'power', size: 1, stats: { Itemresource_Powergeneration: 16, Signature_Em: 7920 } }
+const oneCooler = new Map([['c1', 2], ['c2', 0]])
+const splitCoolers = new Map([['c1', 1], ['c2', 1]])
+const ravenCoolers = [
+  regulus,
+  { ...regulus, portId: 'p2' },
+  { portId: 'c1', kind: 'cooler', size: 1, stats: bracer },
+  { portId: 'c2', kind: 'cooler', size: 1, stats: bracer },
+]
 check(
-  Math.round(shipShopMath.coolantDemand(
-    [{ portId: 's', kind: 'shield', size: 1, stats: { Coolant_Dynamic: 1, Coolant_PowerDraw: 3 } }],
-    new Map([['s', 0.7]]),
-  ) * 10) === 21 &&
-    Math.round(shipShopMath.coolantSupply(
-      [{ portId: 'c', kind: 'cooler', size: 1, stats: { Itemresource_Coolantgeneration: 34 } }],
-      new Map([['c', 0.7]]),
-    ) * 10) === 238 &&
+  Math.floor(shipShopMath.coolantDemand(ravenCoolers, oneCooler) / shipShopMath.coolantSupply(ravenCoolers, oneCooler) * 100) === 10 &&
+    Math.floor(shipShopMath.coolantDemand(ravenCoolers, splitCoolers) / shipShopMath.coolantSupply(ravenCoolers, splitCoolers) * 100) === 12 &&
     shipShopMath.coolantDemand(
-      [{ portId: 'q', kind: 'quantum', size: 1, stats: { Coolant_Dynamic: 1, Coolant_PowerDraw: 3 } }],
+      [{ portId: 'q', kind: 'quantum', size: 1, stats: { Power_Segments: 3, Power_LowStart: 1, Power_LowMod: 0.7 } }],
       new Map([['q', 0]]),
-    ) === 0,
-  'ship shop: coolant demand follows the pip band and cooler supply follows coolant generation',
+    ) === 0 &&
+    Math.round(shipShopMath.coolantDemand(
+      [{ portId: 's', kind: 'shield', size: 1, stats: { Power_Segments: 3, Power_LowStart: 1, Power_LowMod: 0.7 } }],
+      new Map([['s', 1]]),
+    ) * 10) === 17,
+  'ship shop: cooling is pips in use over cooler output, and shields add pips times the band',
+)
+check(
+  Math.round(shipShopMath.infraredSignature(ravenCoolers, oneCooler, 2, shipShopMath.coolantSupply(ravenCoolers, oneCooler), 0.72) * 10) ===
+    Math.round(shipShopMath.infraredSignature(ravenCoolers, splitCoolers, 2, shipShopMath.coolantSupply(ravenCoolers, splitCoolers), 0.72) * 10) &&
+    Math.floor(shipShopMath.electromagneticSignature(ravenCoolers, oneCooler, 18, 0, 0, 0.72) / 100) / 10 === 1.8 &&
+    Math.floor(shipShopMath.electromagneticSignature(ravenCoolers, splitCoolers, 18, 0, 0, 0.72) / 100) / 10 === 1.7,
+  'ship shop: IR stays put when the same coolers only move pips, and EM follows the plant budget plus cooler fraction',
 )
 check(
   shipShopMath.temperatureInfrared({ Temp_Enabled: 1, Temp_IrPerDegree: 6, Temp_IrMinimum: 333, Temp_MinCooling: 303, Temp_Overheat: 423 }, 1) === 540 &&

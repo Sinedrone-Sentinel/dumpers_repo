@@ -123,6 +123,18 @@
   }
 
   /* Floating overlay on top of other cards — no glass bleed-through */
+  /* 1440p is the shop layout width. 1080p zooms that same layout down. */
+  .ship-shop-fit {
+    width: 100%;
+  }
+
+  @media (max-width: 2200px) {
+    .ship-shop-fit {
+      zoom: 0.75;
+      width: calc(100% / 0.75);
+    }
+  }
+
   .site-surface-solid {
     @apply rounded-xl border border-orange-500/30 overflow-hidden;
     background: rgb(8, 12, 22);

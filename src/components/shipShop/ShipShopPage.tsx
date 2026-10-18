@@ -26,7 +26,6 @@ import {
 } from '../../lib/shipShopData'
 import {
   clickPowerColumn,
-  columnTotal,
   componentGroups,
   flightRole,
   formatQuantumSpeed,
@@ -35,7 +34,7 @@ import {
   powerGenerated,
   powerUsed,
   resolvedPower,
-  segmentScale,
+  shieldPowerFactor,
   togglePowerColumn,
   weaponBurstDps,
   weaponStatBits,
@@ -59,8 +58,8 @@ function formatPercent(value: number | null | undefined): string {
 
 function formatSignature(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value) || value <= 0) return '—'
-  if (value >= 1000) return `${(value / 1000).toFixed(1)}k`
-  return Math.round(value).toLocaleString()
+  if (value < 1000) return value.toFixed(1)
+  return `${(Math.floor(value / 100) / 10).toFixed(1)}k`
 }
 
 const PLAIN_KINDS = new Set(['weapon', 'missile', 'torpedo', 'flight', 'missileRack', 'weaponMount'])
@@ -75,8 +74,8 @@ function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   if (snapshot.coolant <= 0 && snapshot.coolantDemand <= 0) return null
   const supply = snapshot.coolant
   const demand = snapshot.coolantDemand
-  const percent = supply > 0 ? Math.round((demand / supply) * 100) : 0
-  const over = supply > 0 && demand > supply
+  const percent = supply > 0 ? Math.floor((demand / supply) * 100) : 0
+  const over = supply > 0 && percent >= 100
   const width = supply > 0 ? Math.max(0, Math.min(100, percent)) : 0
   return (
     <div className="mt-4">
@@ -113,7 +112,6 @@ function PipBoard({
       </p>
       {columns.map((column) => {
         const groups = componentGroups(column)
-        const total = columnTotal(column)
         const selected = groups.reduce((sum, group) => sum + (power[group.key] || 0), 0)
         return (
           <div key={column.id} className="flex flex-col items-center">
@@ -172,7 +170,6 @@ function PipBoard({
             >
               {column.label}
             </button>
-            <span className="font-mono text-lg text-slate-500">{selected}/{total}</span>
           </div>
         )
       })}
@@ -233,7 +230,7 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   ] as const
 
   return (
-    <aside className="site-surface rounded-xl p-4 max-h-[42vh] overflow-y-auto shrink-0 lg:max-h-none lg:w-80">
+    <aside className="site-surface rounded-xl p-4 max-h-[42vh] overflow-y-auto shrink-0 lg:max-h-none lg:w-full">
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
       <div className="space-y-4">
         {rows.map((group) => (
@@ -373,7 +370,7 @@ function PartPicker({
   const detail = current?.item.kind === 'weapon' ? weaponStatBits(current.stats) : []
 
   return (
-    <div className="relative mt-2 space-y-2">
+    <div className="relative mt-2 space-y-2" onClick={(event) => event.stopPropagation()}>
       <input
         className="site-input w-full px-3 py-2"
         value={query}
@@ -397,10 +394,6 @@ function PartPicker({
           type="button"
           className="site-dropdown-item"
           onClick={() => onSelect(null)}
-          onDoubleClick={() => {
-            onSelect(null)
-            onClose()
-          }}
         >
           Empty mount
         </button>
@@ -412,10 +405,6 @@ function PartPicker({
               type="button"
               className={`site-dropdown-item ${fitted?.entityClass === item.entityClass ? 'site-dropdown-item-active' : ''}`}
               onClick={() => onSelect(item.entityClass)}
-              onDoubleClick={() => {
-                onSelect(item.entityClass)
-                onClose()
-              }}
             >
               <span className="block text-white">{titled(item)}</span>
               {bits.length > 0 && <span className="block text-sm text-slate-200">{bits.join(' · ')}</span>}
@@ -554,8 +543,8 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-      <div className="shrink-0 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100vh-var(--site-header-height,3.5rem)-1rem)] lg:w-80 lg:overflow-y-auto">
+    <div className="ship-shop-fit flex flex-col gap-4 lg:flex-row lg:items-start">
+      <div className="shrink-0 lg:sticky lg:top-[var(--site-header-height,3.5rem)] lg:max-h-[calc(100vh-var(--site-header-height,3.5rem)-1rem)] lg:w-[22rem] lg:overflow-y-auto">
         <ShipSnapshot snapshot={snapshot} />
       </div>
       <div className="min-w-0 flex-1 space-y-4">
@@ -641,7 +630,7 @@ export default function ShipShopPage() {
           const shieldScale = (portId: string) => {
             const part = powerParts.find((entry) => entry.portId === portId)
             if (!part) return 1
-            return segmentScale(part.stats, power[portId] || 0)
+            return shieldPowerFactor(part.stats, power[portId] || 0)
           }
           const renderPort = (port: ShipPort, depth = 0) => {
             const fitted = statsForFitted(build.ports[port.id])
