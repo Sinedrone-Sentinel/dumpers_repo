@@ -31,7 +31,10 @@ export interface ShipItemStats {
 /** A catalog row with no usable numbers is a file stub, not an item a ship can mount. */
 export function itemIsEquippable(item: ShipItemStats): boolean {
   const stats = item.stats || {}
-  if (item.kind === 'weapon') return (stats.Weapon_Damage || 0) > 0 && (stats.Weapon_Firerate || 0) > 0
+  if (item.kind === 'weapon') {
+    if ((stats.Power_Segments || 0) > 0) return true
+    return (stats.Weapon_Damage || 0) > 0 && (stats.Weapon_Firerate || 0) > 0
+  }
   if (item.kind === 'missile') return (stats.Missile_Damage || stats.Weapon_Damage || 0) > 0
   if (item.kind === 'shield') return (stats.Shield_Maxhealth || 0) > 0
   if (item.kind === 'cooler') return (stats.Itemresource_Coolantgeneration || 0) > 0
@@ -419,10 +422,13 @@ export interface PowerPart {
 }
 
 const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
+  { id: 'engines', label: 'Engines', kinds: ['flight'] },
   { id: 'shields', label: 'Shields', kinds: ['shield'] },
   { id: 'quantum', label: 'Quantum', kinds: ['quantum'] },
   { id: 'interdiction', label: 'Interdiction', kinds: ['qed'] },
   { id: 'tractor', label: 'Tractor', kinds: ['tractor'] },
+  { id: 'towing', label: 'Towing', kinds: ['towing'] },
+  { id: 'mining', label: 'Mining', kinds: ['mining'] },
   { id: 'radar', label: 'Radar', kinds: ['radar'] },
   { id: 'life', label: 'Life support', kinds: ['life'] },
   { id: 'coolers', label: 'Coolers', kinds: ['cooler'] },
@@ -471,17 +477,31 @@ export function segmentScale(stats: Record<string, number>, assigned: number): n
   return hit ? (hit.mod as number) : 0
 }
 
+function weaponPowerSum(parts: PowerPart[]): number {
+  return parts.reduce((total, part) => {
+    if (part.kind !== 'weapon') return total
+    return total + Math.max(0, part.stats.Weapon_Power || 0)
+  }, 0)
+}
+
 /**
  * Pips the fitted guns need for full power. Each gun's draw is summed, then
  * rounded up, so 1.3 pips takes 2. The ship's weapon pool is only the stack size.
  */
 export function weaponFullPips(parts: PowerPart[]): number {
-  const sum = parts.reduce((total, part) => {
-    if (part.kind !== 'weapon') return total
-    return total + Math.max(0, part.stats.Weapon_Power || 0)
-  }, 0)
+  const sum = weaponPowerSum(parts)
   if (sum <= 0) return 0
   return Math.ceil(Math.round(sum * 1000) / 1000)
+}
+
+/**
+ * Power the guns draw at the assigned pips. A full stack still draws the power
+ * sum, so four 0.1 guns on their one pip count as 0.4, not 1.
+ */
+export function weaponPowerDraw(parts: PowerPart[], selected: number): number {
+  const full = weaponFullPips(parts)
+  if (full <= 0 || selected <= 0) return 0
+  return weaponPowerSum(parts) * (Math.min(selected, full) / full)
 }
 
 /** Pips past `full` stay on the stack and cannot be assigned. */
@@ -723,7 +743,8 @@ export function coolantSupply(parts: PowerPart[], pips: Map<string, number>): nu
  * Cooling load is the pips in use, plus another `pips * band` for shields,
  * life support, radar, and the quantum drive. Powered coolers also add their
  * own minimum once, on top of the pips assigned to them. Plants do not draw
- * coolant. Weapon pips count up to the pips those guns need for full power.
+ * coolant. Engines count the pips assigned to the flight blade. Weapons count
+ * their power sum at the assigned share, not the rounded pip.
  */
 export function coolantDemand(
   parts: PowerPart[],
@@ -734,7 +755,7 @@ export function coolantDemand(
   let extra = 0
   let coolerSelf = 0
   for (const part of parts) {
-    if (part.kind === 'weapon' || part.kind === 'power' || part.kind === 'flight' || part.kind === 'missile') continue
+    if (part.kind === 'weapon' || part.kind === 'power' || part.kind === 'missile') continue
     const count = assignedPips(pips, part.portId)
     if (count <= 0) continue
     drawn += count
@@ -745,7 +766,7 @@ export function coolantDemand(
     if (COOLING_BAND_KINDS.has(part.kind)) extra += count * segmentScale(part.stats, count)
   }
   drawn += coolerSelf
-  drawn += Math.min(Math.max(0, weaponSelected), weaponFullPips(parts))
+  drawn += weaponPowerDraw(parts, weaponSelected)
   return drawn + extra
 }
 
@@ -770,7 +791,7 @@ export function electromagneticSignature(
     if (part.kind === 'weapon' || part.kind === 'power') continue
     drawn += assignedPips(pips, part.portId)
   }
-  drawn += Math.min(Math.max(0, weaponSelected), weaponFull)
+  drawn += weaponPowerDraw(parts, weaponSelected)
   const ratio = generated > 0 ? drawn / generated : 0
   let total = 0
   const plants = parts.filter((part) => part.kind === 'power' && (part.stats.Itemresource_Powergeneration || 0) > 0)

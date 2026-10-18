@@ -374,6 +374,14 @@ export function statsForFitted(part: FittedPart | undefined): { item: ShipItemSt
   }
 }
 
+/** Mining lasers and the towing beam draw their own segments. They are not gun-pool weapons. */
+function pipKind(portKind: string, entityClass: string): string {
+  const id = entityClass.toLowerCase()
+  if (id.includes('towingbeam')) return 'towing'
+  if (id.includes('mining_laser')) return 'mining'
+  return portKind
+}
+
 export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPart> | null | undefined): PowerPart[] {
   const parts: PowerPart[] = []
   if (!ports) return parts
@@ -382,7 +390,7 @@ export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPar
     if (!fitted) continue
     parts.push({
       portId: port.id,
-      kind: port.kind,
+      kind: pipKind(port.kind, fitted.item.entityClass),
       size: fitted.item.size || port.size || port.maxSize || 0,
       stats: fitted.stats,
     })

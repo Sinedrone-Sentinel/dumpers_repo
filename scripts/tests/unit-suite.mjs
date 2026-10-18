@@ -2285,6 +2285,25 @@ check(
     coolerColumn.blocks[3].groupStart === true,
   'ship shop: each cooler keeps its own pip group, with the minimum as one block',
 )
+const engineColumn = shipShopMath.powerColumns(0, [
+  { portId: 'blade', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } },
+])[0]
+check(
+  engineColumn.label === 'Engines' &&
+    engineColumn.blocks.length === 4 &&
+    shipShopMath.coolantDemand(
+      [{ portId: 'blade', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } }],
+      new Map([['blade', 4]]),
+    ) === 4,
+  'ship shop: the flight blade is the engines stack and those pips draw coolant',
+)
+check(
+  shipShopMath.weaponFullPips([{ portId: 'm', kind: 'mining', size: 2, stats: { Power_Segments: 2 } }]) === 0 &&
+    shipShopMath.powerColumns(4, [
+      { portId: 'm', kind: 'mining', size: 2, stats: { Power_Segments: 2, Power_Min: 1 } },
+    ]).some((column) => column.label === 'Mining' && column.blocks.length === 2),
+  'ship shop: a mining laser keeps its own pip stack',
+)
 const budgetColumns = shipShopMath.powerColumns(4, [
   { portId: 'eng', kind: 'flight', size: 1, stats: { Power_Segments: 4, Power_Min: 1 } },
   { portId: 'qd', kind: 'quantum', size: 1, stats: { Power_Segments: 1, Power_Min: 1 } },
@@ -2295,7 +2314,7 @@ const defaults = shipShopMath.defaultPower(budgetColumns, generated)
 check(
   defaults.qd === 0 &&
     defaults.weapons === 0 &&
-    defaults.eng == null &&
+    defaults.eng === 1 &&
     defaults.c1 === 1 &&
     Object.values(defaults).reduce((sum, value) => sum + value, 0) <= generated,
   'ship shop: default power is each minimum block, quantum stays off, and unused weapon pips stay off',
@@ -2423,11 +2442,40 @@ check(
   shipShopMath.resolvedPower(shipShopMath.powerColumns(4, ballisticGuns), { weapons: 4 }, 20).weapons === 1 &&
     shipShopMath.togglePowerColumn(ballisticColumn.blocks, 0, 20) === 1 &&
     shipShopMath.clickPowerColumn(ballisticColumn.blocks, 1, 3, 10) === 1 &&
-    shipShopMath.coolantDemand(ballisticGuns, new Map(), 1) === 1 &&
+    shipShopMath.weaponPowerDraw(ballisticGuns, 1) === 0.4 &&
+    shipShopMath.weaponPowerDraw([{ portId: 'g', kind: 'weapon', size: 1, stats: { Weapon_Power: 1.3 } }], 2) === 1.3 &&
+    shipShopMath.coolantDemand(ballisticGuns, new Map(), 1) === 0.4 &&
     shipShopMath.coolantDemand(ballisticGuns, new Map(), 0) === 0 &&
     shipShopMath.electromagneticSignature(ballisticGuns, new Map(), 18, 1, 1) >
       shipShopMath.electromagneticSignature(ballisticGuns, new Map(), 18, 0, 1),
-  'ship shop: ballistic guns fill on one pip, and that pip moves cooling and EM',
+  'ship shop: ballistic guns fill on one pip, and cooling uses their 0.4 power sum',
+)
+const nightfall = {
+  Power_Segments: 2,
+  Power_Min: 1,
+  Power_MedStart: 1,
+  Power_MedMod: 0.85,
+  Power_HighStart: 2,
+  Power_HighMod: 1,
+  Itemresource_Coolantgeneration: 34,
+  Signature_Ir: 3670,
+  Signature_Em: 500,
+}
+const m80Parts = [
+  { portId: 'p', kind: 'power', size: 2, stats: { Itemresource_Powergeneration: 18, Signature_Em: 7430 } },
+  { portId: 'c', kind: 'cooler', size: 2, stats: nightfall },
+  { portId: 'r', kind: 'radar', size: 2, stats: { Power_Segments: 8, Power_Min: 2, Power_HighStart: 1, Power_HighMod: 1, Signature_Em: 2160, Radar_DistanceMin: 1300, Radar_DistanceMax: 2184 } },
+  ...[1, 2, 3, 4].map((index) => ({ portId: `d${index}`, kind: 'weapon', size: 5, stats: { Weapon_Power: 0.1, Signature_Em: 41.3 } })),
+]
+const m80Pips = new Map([['c', 1], ['r', 2]])
+const m80Demand = shipShopMath.coolantDemand(m80Parts, m80Pips, 1)
+const m80Supply = shipShopMath.coolantSupply(m80Parts, m80Pips)
+check(
+  m80Demand === 6.4 &&
+    Math.floor((m80Demand / m80Supply) * 100) === 44 &&
+    shipShopMath.formatShopNumber(shipShopMath.infraredSignature(m80Parts, m80Pips, m80Demand, m80Supply, 1)) === '690.8' &&
+    shipShopMath.radarRangeForPips(m80Parts[2].stats, 2) === 1521,
+  'ship shop: one NightFall and four ballistic guns cool at 44 percent with IR 690.8',
 )
 
 console.log(`Unit tests: ${pass} passed`)
