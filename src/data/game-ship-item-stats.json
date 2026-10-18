@@ -98,6 +98,8 @@
       "weaponClass": "Cannon",
       "damageType": "Energy",
       "stats": {
+        "Weapon_CycleShots": 1,
+        "Weapon_CycleSeconds": 1.2,
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
         "Weapon_Firerate": 200,
@@ -112,7 +114,7 @@
         "Weapon_Em": 578,
         "Signature_Em": 578
       },
-      "burstDps": 1890,
+      "burstDps": 473,
       "tags": "VNCL NeutronCannon flightReady weaponMountUsable",
       "requiredTags": "VNCL_Scythe_Base",
       "grade": "A",
@@ -9014,6 +9016,8 @@
       "weaponClass": "Repeater",
       "damageType": "Energy",
       "stats": {
+        "Weapon_CycleShots": 2,
+        "Weapon_CycleSeconds": 0.218182,
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
         "Weapon_Firerate": 750,
@@ -9026,7 +9030,7 @@
         "Health_Maxhealth": 1650,
         "Weapon_Power": 1.2
       },
-      "burstDps": 1063,
+      "burstDps": 779,
       "tags": "LaserRepeater flightReady weaponMountUsable Wolf_Gun",
       "requiredTags": "Wolf_Gun",
       "grade": "A",
@@ -11545,6 +11549,8 @@
       "weaponClass": "Cannon",
       "damageType": "Physical",
       "stats": {
+        "Weapon_CycleShots": 1,
+        "Weapon_CycleSeconds": 1.5,
         "Weapon_Firerate": 50,
         "Weapon_HeatPerShot": 12,
         "Weapon_Spread": 0.2,
@@ -11562,7 +11568,7 @@
         "Weapon_Em": 49.5,
         "Signature_Em": 49.5
       },
-      "burstDps": 813,
+      "burstDps": 650,
       "tags": "BEHR BallisticCannon flightReady weaponMountUsable",
       "grade": "A",
       "attachType": "WeaponGun",
@@ -15391,6 +15397,8 @@
       "weaponClass": "Repeater",
       "damageType": "Distortion",
       "stats": {
+        "Weapon_CycleShots": 2,
+        "Weapon_CycleSeconds": 0.342857,
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
         "Weapon_Firerate": 400,
@@ -15404,7 +15412,7 @@
         "Weapon_Em": 167,
         "Signature_Em": 167
       },
-      "burstDps": 171,
+      "burstDps": 150,
       "tags": "ASAD DistortionRepeater flightReady weaponMountUsable",
       "grade": "A",
       "attachType": "WeaponGun",
@@ -15419,6 +15427,8 @@
       "weaponClass": "Repeater",
       "damageType": "Distortion",
       "stats": {
+        "Weapon_CycleShots": 2,
+        "Weapon_CycleSeconds": 0.342857,
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
         "Weapon_Firerate": 400,
@@ -15432,7 +15442,7 @@
         "Weapon_Em": 223,
         "Signature_Em": 223
       },
-      "burstDps": 257,
+      "burstDps": 225,
       "tags": "ASAD DistortionRepeater flightReady weaponMountUsable",
       "grade": "A",
       "attachType": "WeaponGun",
@@ -15447,6 +15457,8 @@
       "weaponClass": "Repeater",
       "damageType": "Distortion",
       "stats": {
+        "Weapon_CycleShots": 2,
+        "Weapon_CycleSeconds": 0.342857,
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
         "Weapon_Firerate": 400,
@@ -15461,7 +15473,7 @@
         "Weapon_Em": 278,
         "Signature_Em": 278
       },
-      "burstDps": 386,
+      "burstDps": 338,
       "tags": "ASAD DistortionRepeater flightReady weaponMountUsable",
       "grade": "A",
       "attachType": "WeaponGun",
@@ -16420,6 +16432,8 @@
       "weaponClass": "Repeater",
       "damageType": "Energy",
       "stats": {
+        "Weapon_CycleShots": 3,
+        "Weapon_CycleSeconds": 0.341667,
         "Weapon_CapacitorShots": 225,
         "Weapon_RegenPerSec": 2787,
         "Weapon_Firerate": 800,
@@ -16432,7 +16446,7 @@
         "Health_Maxhealth": 1550,
         "Weapon_Power": 1.2
       },
-      "burstDps": 1267,
+      "burstDps": 834,
       "tags": "RSI LaserRepeater flightReady weaponMountUsable $RSI_Meteor",
       "requiredTags": "RSI_Meteor",
       "grade": "A",
@@ -31033,6 +31047,8 @@
       "weaponClass": "Cannon",
       "damageType": "Physical",
       "stats": {
+        "Weapon_CycleShots": 2,
+        "Weapon_CycleSeconds": 1.766667,
         "Weapon_Firerate": 225,
         "Weapon_HeatPerShot": 6,
         "Weapon_Spread": 0.2,
@@ -31048,7 +31064,7 @@
         "Health_Maxhealth": 2500,
         "Weapon_Power": 0.1
       },
-      "burstDps": 6000,
+      "burstDps": 1811,
       "tags": "RSI BallisticCannon flightReady weaponMountUsable $RSI_Meteor",
       "requiredTags": "RSI_Meteor",
       "grade": "A",
@@ -31844,6 +31860,8 @@
       "weaponClass": "Cannon",
       "damageType": "Energy",
       "stats": {
+        "Weapon_CycleShots": 1,
+        "Weapon_CycleSeconds": 0.6,
         "Weapon_CapacitorShots": 25,
         "Weapon_RegenPerSec": 3,
         "Weapon_Firerate": 120,
@@ -31858,7 +31876,7 @@
         "Weapon_Em": 1090,
         "Signature_Em": 1090
       },
-      "burstDps": 1800,
+      "burstDps": 1500,
       "tags": "BEHR LaserCannon flightReady weaponMountUsable",
       "grade": "A",
       "attachType": "WeaponGun",
@@ -31905,6 +31923,8 @@
       "weaponClass": "Cannon",
       "damageType": null,
       "stats": {
+        "Weapon_CycleShots": 1,
+        "Weapon_CycleSeconds": 1.578947,
         "Weapon_Firerate": 90,
         "Weapon_HeatPerShot": 17500,
         "Weapon_Overheat": 100,
@@ -55471,6 +55491,8 @@
       "weaponClass": "Repeater",
       "damageType": "Energy",
       "stats": {
+        "Weapon_CycleShots": 2,
+        "Weapon_CycleSeconds": 0.150588,
         "Weapon_CapacitorShots": 75,
         "Weapon_RegenPerSec": 15,
         "Weapon_Firerate": 850,
@@ -55483,7 +55505,7 @@
         "Health_Maxhealth": 1200,
         "Weapon_Power": 1
       },
-      "burstDps": 560,
+      "burstDps": 525,
       "tags": "GLSN LaserRepeater flightReady weaponMountUsable",
       "grade": "A",
       "attachType": "WeaponGun",

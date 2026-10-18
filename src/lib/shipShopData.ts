@@ -68,10 +68,17 @@ export interface GameShip {
   ports: ShipPort[]
 }
 
+export interface ShopCartLine {
+  id: string
+  kind: 'ship' | 'part'
+  qty: number
+}
+
 export interface ShipBuild {
   shipId: string | null
   ports: Record<string, FittedPart>
   power?: Record<string, number>
+  cart?: ShopCartLine[]
 }
 
 export interface ShipShopStore {
@@ -741,6 +748,24 @@ export function emptyShipShopStore(): ShipShopStore {
   }
 }
 
+/** How many of each part the build has beyond the ship's stock fit. Stock pieces are not bought again. */
+export function nonStockPartCounts(ship: GameShip, ports: Record<string, FittedPart>): { entityClass: string; qty: number }[] {
+  const stockCounts = new Map<string, number>()
+  const fittedCounts = new Map<string, number>()
+  for (const part of Object.values(stockPorts(ship))) {
+    stockCounts.set(part.entityClass, (stockCounts.get(part.entityClass) || 0) + 1)
+  }
+  for (const part of Object.values(ports)) {
+    fittedCounts.set(part.entityClass, (fittedCounts.get(part.entityClass) || 0) + 1)
+  }
+  const rows: { entityClass: string; qty: number }[] = []
+  for (const [entityClass, qty] of fittedCounts) {
+    const extra = qty - (stockCounts.get(entityClass) || 0)
+    if (extra > 0) rows.push({ entityClass, qty: extra })
+  }
+  return rows
+}
+
 export function stockPorts(ship: GameShip): Record<string, FittedPart> {
   const ports: Record<string, FittedPart> = {}
   for (const port of ship.ports) {
@@ -775,9 +800,26 @@ function normalizePower(raw: unknown): Record<string, number> | undefined {
   return Object.keys(power).length > 0 ? power : undefined
 }
 
+function normalizeCart(raw: unknown): ShopCartLine[] | undefined {
+  if (!Array.isArray(raw)) return undefined
+  const lines: ShopCartLine[] = []
+  for (const row of raw) {
+    if (!row || typeof row !== 'object') continue
+    const record = row as { id?: unknown; kind?: unknown; qty?: unknown }
+    const id = typeof record.id === 'string' ? record.id : ''
+    const kind = record.kind === 'ship' || record.kind === 'part' ? record.kind : null
+    const qty = typeof record.qty === 'number' && Number.isFinite(record.qty) ? Math.floor(record.qty) : 0
+    if (!kind || !id || qty <= 0) continue
+    if (kind === 'ship' && !getShip(id)) continue
+    if (kind === 'part' && !getShipItem(id)) continue
+    lines.push({ id, kind, qty })
+  }
+  return lines.length > 0 ? lines : undefined
+}
+
 function normalizeBuild(raw: unknown): ShipBuild {
   if (!raw || typeof raw !== 'object') return emptyBuild()
-  const record = raw as { shipId?: unknown; ports?: unknown; power?: unknown }
+  const record = raw as { shipId?: unknown; ports?: unknown; power?: unknown; cart?: unknown }
   const shipId = typeof record.shipId === 'string' && getShip(record.shipId) ? record.shipId : null
   const ports: Record<string, FittedPart> = {}
   if (record.ports && typeof record.ports === 'object') {
@@ -793,7 +835,8 @@ function normalizeBuild(raw: unknown): ShipBuild {
       }
     }
   }
-  return { shipId, ports, power: normalizePower(record.power) }
+  const cart = normalizeCart(record.cart)
+  return cart ? { shipId, ports, power: normalizePower(record.power), cart } : { shipId, ports, power: normalizePower(record.power) }
 }
 
 export function parseShipShopStore(raw: unknown): ShipShopStore {

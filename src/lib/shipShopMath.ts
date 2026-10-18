@@ -70,13 +70,24 @@ export interface FittedPart {
   qualities?: Record<number, number>
 }
 
-/** Burst damage per second. A charge or a seconds-long delay replaces the fire rate when it is the slower wait. */
+function roundsPerSecond(stats: Record<string, number>): number {
+  const shots = stats.Weapon_CycleShots || 0
+  const seconds = stats.Weapon_CycleSeconds || 0
+  if (shots > 0 && seconds > 0) return shots / seconds
+  const rate = stats.Weapon_Firerate || 0
+  return rate > 0 ? rate / 60 : 0
+}
+
+/** Burst damage per second. A sequenced gun uses its own shot waits before the fire rate. */
 export function weaponBurstDps(stats: Record<string, number> | null | undefined): number {
   if (!stats) return 0
   const damage = stats.Weapon_Damage || 0
   const rate = stats.Weapon_Firerate || 0
   const pellets = stats.Weapon_Pellets || 1
   if (damage <= 0) return 0
+  const cycleShots = stats.Weapon_CycleShots || 0
+  const cycleSeconds = stats.Weapon_CycleSeconds || 0
+  if (cycleShots > 0 && cycleSeconds > 0) return (damage * pellets * cycleShots) / cycleSeconds
   const rpmInterval = rate > 0 ? 60 / rate : 0
   const charge = (stats.Weapon_ChargeTime || 0) + (stats.Weapon_CooldownTime || 0) + (stats.Weapon_SequenceDelay || 0)
   if (charge <= 0) {
@@ -96,15 +107,14 @@ export function weaponSustainedDps(stats: Record<string, number> | null | undefi
   if (fraction <= 0) return 0
   let sustained = burst
   const heat = stats.Weapon_HeatPerShot || 0
-  const rate = stats.Weapon_Firerate || 0
   const overheat = stats.Weapon_Overheat || 0
-  if (heat && rate && overheat) {
-    const roundsPerSecond = rate / 60
-    const timeHot = overheat / (heat * roundsPerSecond)
+  const firing = roundsPerSecond(stats)
+  if (heat && firing && overheat) {
+    const timeHot = overheat / (heat * firing)
     const downtime = stats.Weapon_OverheatFix || (stats.Weapon_Cooling ? overheat / stats.Weapon_Cooling : 0)
     if (downtime && timeHot > 0) {
       const shots = Math.ceil(overheat / heat - 1e-9)
-      sustained = (burst * shots) / (roundsPerSecond * (timeHot + downtime))
+      sustained = (burst * shots) / (firing * (timeHot + downtime))
     }
   }
   const regenCap = stats.Weapon_RegenPerSec || 0

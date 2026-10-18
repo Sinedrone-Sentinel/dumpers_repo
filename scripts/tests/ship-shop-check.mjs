@@ -340,4 +340,9 @@ const bombFit = {
 }
 assert.equal(shop.matchingCopyPorts(gladius, bombFit, bombSlots[0]).length, Math.max(0, bombSlots.length - 1))
 
+const leonids = items.find((item) => item.entityClass === 'rsi_ballisticcannon_s5_meteor_bespoke')
+assert.equal(leonids.stats.Weapon_CycleShots, 2)
+assert.ok(Math.abs(leonids.stats.Weapon_CycleSeconds - (60 / 40 + 60 / 225)) < 0.0001)
+assert.equal(leonids.burstDps, 1811)
+
 console.log('ship shop catalog checks passed')

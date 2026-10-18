@@ -47,6 +47,7 @@ const modules = [
   'src/lib/notepadText.ts',
   'src/lib/miningLoadoutStats.ts',
   'src/lib/shipShopMath.ts',
+  'src/lib/shipShopShops.ts',
   'src/lib/blueprintQuality.ts',
   'src/lib/canCraft.ts',
   'src/lib/craftFromStock.ts',
@@ -2235,6 +2236,58 @@ check(
 check(
   shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 60 }) === 10,
   'ship shop: a gun with no heat keeps its burst as sustained',
+)
+const leonidsCycle = {
+  Weapon_Damage: 1600,
+  Weapon_Firerate: 225,
+  Weapon_HeatPerShot: 6,
+  Weapon_Overheat: 100,
+  Weapon_OverheatFix: 6.5,
+  Weapon_CycleShots: 2,
+  Weapon_CycleSeconds: 60 / 40 + 60 / 225,
+}
+check(
+  shipShopMath.formatShopNumber(shipShopMath.weaponBurstDps(leonidsCycle)) === '1,811.3' &&
+    shipShopMath.formatShopNumber(shipShopMath.weaponSustainedDps(leonidsCycle)) === '1,281.6',
+  'ship shop: a two-step shot delay slows burst and sustained',
+)
+check(
+  shipShopMath.weaponBurstDps({ Weapon_Damage: 950, Weapon_Firerate: 100 }) === 1583.3333333333333 ||
+    Math.round(shipShopMath.weaponBurstDps({ Weapon_Damage: 950, Weapon_Firerate: 100 }) * 10) / 10 === 1583.3,
+  'ship shop: a single fire rate without a slower cycle stays on that rate',
+)
+const shipShops = await import(pathToFileURL(path.join(outDir, 'shipShopShops.mjs')).href)
+const { matchShopRow } = await import('../lib/uexShopJoin.mjs')
+const seraphim = { system: 'Stanton', station: 'Seraphim Station', store: 'Platinum Bay', price: 100 }
+const grimWeapons = { system: 'Stanton', station: 'Grim Hex', store: 'Live Fire Weapons', price: 50 }
+const grimArmor = { system: 'Stanton', station: 'Grim Hex', store: 'CenterMass', price: 40 }
+const shopLines = [
+  { name: 'Cooler', qty: 1, listings: [seraphim] },
+  { name: 'Shield', qty: 1, listings: [seraphim] },
+  { name: 'Gun', qty: 1, listings: [seraphim] },
+  { name: 'Missile', qty: 1, listings: [grimWeapons] },
+  { name: 'Rack', qty: 1, listings: [grimArmor] },
+]
+const twoStops = shipShops.planStops(shopLines)
+check(
+  twoStops.length === 2 && twoStops[0].place.includes('Seraphim') && twoStops[1].place.includes('Grim Hex'),
+  'ship shop: three Seraphim lines and two Grim Hex lines are two stops',
+)
+const oneStop = shipShops.planStops(shopLines.slice(0, 3))
+check(oneStop.length === 1 && oneStop[0].lines.length === 3, 'ship shop: dropping the Grim Hex lines drops that stop')
+check(
+  shipShops.isForSale([]) === false && shipShops.isForSale([{ store: 'Platinum Bay', price: 10 }]) === true,
+  'ship shop: no purchase rows means the item is not for sale',
+)
+const sharedUuid = [
+  { uuid: 'abc', name: 'Lightstrike I' },
+  { uuid: 'abc', name: 'Leonids Cannon' },
+]
+check(
+  matchShopRow(sharedUuid, { uuid: 'abc', displayName: 'Leonids Cannon' })?.name === 'Leonids Cannon' &&
+    matchShopRow(sharedUuid, { uuid: 'abc', displayName: 'Other Gun' }) == null &&
+    matchShopRow([{ uuid: '', name: 'M80', nameFull: 'Origin M80' }], { uuid: '', displayName: 'Origin M80' })?.name === 'M80',
+  'ship shop: a shared uuid matches the display name, and a blank uuid can match a name',
 )
 check(
   shipShopMath.compareToStock(120, 100) === 'up' && shipShopMath.compareToStock(80, 100) === 'down',

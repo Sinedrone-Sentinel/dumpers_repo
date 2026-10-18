@@ -25,7 +25,7 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 2,
     title: 'Parse extracted data',
     description:
-      'Regenerates all src/data/game-*.json (blueprints, mining, components, lore, etc.) from scratch. Also appends What\'s New lines and pushes to Supabase (needs SUPABASE_SERVICE_ROLE_KEY in .env); same issue+version is skipped so mid-patch re-parses do not duplicate',
+      'Regenerates all src/data/game-*.json from scratch, including ship catalogs. Guns keep a slower shot-sequence wait for DPS, and ship items keep their record id. Also appends What\'s New lines and pushes to Supabase (needs SUPABASE_SERVICE_ROLE_KEY in .env); same issue+version is skipped so mid-patch re-parses do not duplicate',
     commands: ['npm run parse-game-data'],
   },
   {
@@ -78,13 +78,20 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
   },
   {
     step: 9,
+    title: 'UEX ship shop buy locations',
+    description:
+      'Every patch, after parse. Refresh Fuzy\'s Ship Shop Where to Buy and cart → ship-shop-shops.json. Joins the catalogs parse just wrote. Powered by UEX. Do not fold this into the mining-gear bake. Price refreshes are never announced on the Updates ticker',
+    commands: ['npm run fetch-ship-shop-shops'],
+  },
+  {
+    step: 10,
     title: 'DFP engine build',
     description:
       'Required when blueprints changed. Regenerates acquisition premiums, component metadata, commodity bases, Wikelo ammo pricing. Writes public/dfp-engine.js + public/dfp-version.json here — commit both. Pricing formulas live only in dfp-engine-private',
     commands: ['cd ..\\dfp-engine-private', 'npm run build'],
   },
   {
-    step: 10,
+    step: 11,
     title: 'BP Dumper name lookup',
     description:
       'Only if blueprints changed — refreshes blueprint-name-lookup.json for Game.log / webhook resolution, then redeploy log-watcher-webhook',
@@ -96,34 +103,34 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     optional: true,
   },
   {
-    step: 11,
+    step: 12,
     title: 'BP Dumper min game version',
     description: 'Only if game major.minor changed — bakes version into BP Dumper sources from game-build-version.json',
     commands: ['npm run sync-min-game-version'],
     optional: true,
   },
   {
-    step: 12,
+    step: 13,
     title: 'Sync resource catalog',
     description:
       'Push blueprint materials + extra commodities to Supabase blueprint_resources (use Sync from Blueprints button below). Run after parse when new craft materials appeared',
     commands: [],
   },
   {
-    step: 13,
+    step: 14,
     title: 'Production build',
     description: 'Vite build + version stamp + archive guide regeneration → dist/',
     commands: ['npm run build'],
   },
   {
-    step: 14,
+    step: 15,
     title: 'Commit & deploy',
     description:
-      'Commit game-*.json, DFP bundle, shop/commodity data, and generated lookup files; deploy dist/. No other DB sync — catalogs bundle at build time',
+      'Commit game-*.json, DFP bundle, shop/commodity data, ship-shop-shops.json, and generated lookup files; deploy dist/. No other DB sync — catalogs bundle at build time',
     commands: [],
   },
   {
-    step: 15,
+    step: 16,
     title: 'Relink acquired blueprint IDs',
     description:
       'After the new catalog is in place: remap leftover acquired / target-list IDs onto current internal names (exact suffix/prefix only). Review any approval-list IDs — do not guess',

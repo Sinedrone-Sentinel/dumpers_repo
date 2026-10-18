@@ -656,6 +656,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (guidance) item.guidance = guidance
     }
     if (mounts.length > 0) item.mounts = mounts
+    if (typeof json._RecordId_ === 'string' && json._RecordId_) item.uuid = json._RecordId_
     seenFiles.add(filePath)
     catalog.push(item)
     catalogByKey.set(entityClass, item)
@@ -745,6 +746,7 @@ export function parseShipShop({ extractedRoot, localization }) {
 
     const ship = {
       id,
+      uuid: typeof json._RecordId_ === 'string' ? json._RecordId_ : null,
       displayName,
       manufacturer: manufacturer ? localization[`manufacturer_Name${manufacturer}`] || manufacturer : null,
       manufacturerCode: manufacturer,

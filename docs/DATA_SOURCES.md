@@ -63,6 +63,7 @@ Crowdsourced prices and shop locations. Three separate bakes, all offline-first 
 | `npm run fetch-commodity-bases` | `dfp-commodity-bases.json` | Resource Tracker DFP Q0 bases (monthly refresh) |
 | `npm run fetch-shop-data` | `shop-commodity-index.json` | Commodity Lookup terminals and buy/sell listings |
 | `npm run fetch-mining-gear-shops` | `mining-gear-shops.json` | Smart Cracker Advisor "where can I buy this head/module/gadget" |
+| `npm run fetch-ship-shop-shops` | `ship-shop-shops.json` | Fuzy's Ship Shop Where to Buy and cart (ships, components, weapons, racks, ordnance, gimbals) |
 
 ### Mining gear buy locations
 
@@ -81,6 +82,12 @@ which UEX files under the MPUV-arm variant, so a display-name fallback covers it
 build-time join key only and are stripped before anything reaches the model prompt.
 
 Redeploy after a refresh: `npx supabase functions deploy mining-loadout-advisor`
+
+### Ship shop buy locations
+
+`fetch-ship-shop-shops.mjs` is a separate bake. Do not add ships or ship parts to the mining-gear script. It joins UEX vehicles and the ship-part categories to the parsed ship catalog on the game record id, and writes `src/data/ship-shop-shops.json`. A ship or part with no purchase price is left out, which is what disables Add to Cart.
+
+Run it **every patch, after** `npm run parse-game-data`. The join reads the catalogs that parse just wrote, plus `extracted-data/` record ids. Shot-sequence waits and those record ids are written by the parse itself (`game-ships.json`, `game-ship-item-stats.json`). There is no second script for them on patch day.
 
 These refreshes are **never** announced on the Updates ticker — prices and stock move constantly.
 
@@ -137,6 +144,7 @@ Located in `/scripts/`:
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `fetch-shop-commodity-data.mjs` | Refresh UEX commodity buy/sell locations → `shop-commodity-index.json` (`npm run fetch-shop-data`) |
 | `fetch-mining-gear-shops.mjs` | Refresh UEX buy locations for mining heads/modules/gadgets → `mining-gear-shops.json` (`npm run fetch-mining-gear-shops`) |
+| `fetch-ship-shop-shops.mjs` | Refresh UEX buy locations for ships and ship-shop parts → `ship-shop-shops.json` (`npm run fetch-ship-shop-shops`). Every patch, after parse |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
 | `audit-blueprint-missions.mjs` | Fail if any mission faction is Unknown / unresolved; also system + title checks |
 | `verify-dfp-spotcheck.mjs` | Spot-check DFP engine output against catalog |
@@ -152,7 +160,8 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
 **keep both in sync** (see `.cursor/rules/db-actions-patch-runbook.mdc`).
 
 1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`)
-2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
+2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch, including `game-ships.json` and `game-ship-item-stats.json`; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
+   - Ship items keep their game record id, and a gun whose shot sequence is slower than its fire rate stores that wait so burst and sustained DPS follow it. Do not run a separate cycle patch after this.
 3. **Review the patch diff:** `npm run diff-game-data`
    - Compares fresh parse output against the last commit (`--ref <ref>` for another baseline)
    - Reports **ADDED / REMOVED / RENAMED-MOVED / CHANGED** records per file, with field-level stat changes
@@ -176,6 +185,7 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
    - `npm run fetch-mining-gear-shops` — Advisor mining-gear buy locations → `mining-gear-shops.json`,
      then `npm run copy-mining-advisor-catalog` and
      `npx supabase functions deploy mining-loadout-advisor`
+   - `npm run fetch-ship-shop-shops` — **every patch, after parse** — Fuzy's Ship Shop buy locations → `ship-shop-shops.json`. This one is not optional. It must see the catalogs from step 2.
 7. **DFP engine (required when blueprints changed):** in sibling **`dfp-engine-private`** → `npm run build`
    - Regenerates acquisition premiums for every reward blueprint, component metadata, commodity bases, and Wikelo ammo pricing from the parsed `game-blueprints.json`
    - Writes `public/dfp-engine.js` + `public/dfp-version.json` here — commit both with the game-data commit
@@ -198,7 +208,7 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
      redeploying the Edge Function, so new blueprint names ship automatically. Only if you
      need it out-of-band: `npx supabase functions deploy log-watcher-webhook --no-verify-jwt`
 9. **Sync resource catalog:** once the new build is deployed (step 10), use **DB Actions → Sync from Blueprints** in the super-admin panel when new craft materials or `game-commodities.json` cargo appeared after parse (the sync uploads the list bundled in the deployed site)
-10. **Deploy:** Commit updated `game-*.json`, DFP bundle, and any UEX/lookup JSON; `npm run build`, deploy `dist/`
+10. **Deploy:** Commit updated `game-*.json`, DFP bundle, `ship-shop-shops.json`, and any other UEX/lookup JSON; `npm run build`, deploy `dist/`
 11. **Relink acquired marks (after the rest):** `npm run relink-acquired-blueprint-ids -- --apply`
     - Runs last so it uses the just-parsed catalog
     - Auto-remaps only exact mechanical aliases (`_scitem` suffix, unique `bp_` prefix, legacy `bp_craft_` paths)
