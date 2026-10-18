@@ -219,6 +219,9 @@ function classifyPort(name, entityKey, itemKind) {
   if (isShieldPortName(n)) return { section: 'defense', kind: 'shield' }
   if (n.includes('turret') && !n.includes('tractor') && !n.includes('relay')) return { section: 'weapons', kind: 'turret' }
   if (n.includes('weapon') || n.includes('hardpoint_class_') || n.includes('hardpoint_gun')) return { section: 'weapons', kind: 'weapon' }
+  if (itemKind === 'weapon' && !/salvage|mining_laser|rpod_|massdriver|railgun|(?:^|_)emp(?:_|$)/.test(`${n} ${e}`)) {
+    return { section: 'weapons', kind: 'weapon' }
+  }
   if (n.includes('armor') || n.includes('armour')) return { section: 'defense', kind: 'armor' }
   if (n.includes('cooler')) return { section: 'systems', kind: 'cooler' }
   if (n.includes('power_plant') || n.includes('powerplant')) return { section: 'systems', kind: 'power' }
@@ -433,6 +436,56 @@ function missileMounts(json) {
   return mounts
 }
 
+/** Gun and missile slots that belong to a turret or mount, including locked guns. */
+function weaponMountPorts(json) {
+  const container = firstComponent(json, 'SItemPortContainerComponentParams')
+  const defaults = new Map()
+  const loadout = firstComponent(json, 'SEntityComponentDefaultLoadoutParams')
+  const entries = []
+  walkEntries(loadout?.loadout, '', entries)
+  for (const entry of entries) {
+    if (String(entry.path).includes('/')) continue
+    const key = entityKeyFromEntry(entry.entry).toLowerCase()
+    if (key) defaults.set(entry.name.toLowerCase(), key)
+  }
+  const mounts = []
+  for (const port of container?.Ports || []) {
+    const types = Array.isArray(port.Types) ? port.Types : []
+    const typeNames = types.map((entry) => String(entry?.Type || '').toLowerCase())
+    const gun = typeNames.includes('weapongun') || typeNames.includes('turret')
+    const missile = typeNames.includes('missilelauncher')
+    if (!gun && !missile) continue
+    const name = port.Name || port.AttachmentImplementation?.Helper?.Helper?.Name
+    if (!name) continue
+    const maxSize = Number(port.MaxSize) || 0
+    const minSize = Number(port.MinSize) || maxSize
+    if (!maxSize && !minSize) continue
+    const row = { name, minSize: minSize || maxSize, maxSize: maxSize || minSize }
+    if (/uneditable/i.test(String(port.Flags || ''))) row.locked = true
+    if (missile && !gun) row.kind = 'missile'
+    const fallback = defaults.get(String(name).toLowerCase())
+    if (fallback) row.defaultEntityClass = fallback
+    const nested = entries.find((entry) => {
+      const path = String(entry.path)
+      return path.toLowerCase().startsWith(`${String(name).toLowerCase()}/`) && path.split('/').length === 2
+    })
+    const nestedKey = nested ? entityKeyFromEntry(nested.entry).toLowerCase() : ''
+    if (nested && nestedKey) {
+      row.child = { name: nested.name, defaultEntityClass: nestedKey }
+    }
+    mounts.push(row)
+  }
+  return mounts
+}
+
+function itemPortLocks(json) {
+  const locks = new Map()
+  for (const mount of weaponMountPorts(json)) {
+    if (mount.locked) locks.set(String(mount.name).toLowerCase(), mount)
+  }
+  return locks
+}
+
 function countermeasureCounts(json) {
   const ammo = firstComponent(json, 'SAmmoContainerComponentParams')
   const count = Number(ammo?.maxAmmoCount) || 0
@@ -510,7 +563,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     const manufacturerCode = String(def?.Manufacturer || '').match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const tags = typeof def?.Tags === 'string' ? def.Tags.trim() : ''
     const requiredTags = typeof def?.RequiredTags === 'string' ? def.RequiredTags.trim() : ''
-    const mounts = kind === 'missileRack' ? missileMounts(json) : []
+    const mounts = kind === 'missileRack' ? missileMounts(json) : kind === 'weaponMount' ? weaponMountPorts(json) : []
     const described = classAndGrade(resolveName(def?.Localization?.Description, localization), def?.Grade)
     const item = {
       entityClass,
@@ -567,6 +620,17 @@ export function parseShipShop({ extractedRoot, localization }) {
     const loadout = firstComponent(json, 'SEntityComponentDefaultLoadoutParams')
     const entries = []
     walkEntries(loadout?.loadout, '', entries)
+    const entryByPath = new Map(entries.map((entry) => [entry.path, entry]))
+    const parentLocks = new Map()
+    function locksFor(entityKey) {
+      const key = String(entityKey || '').toLowerCase()
+      if (!key) return null
+      if (parentLocks.has(key)) return parentLocks.get(key)
+      const loadedParent = loadKey(key)
+      const locks = loadedParent?.json ? itemPortLocks(loadedParent.json) : new Map()
+      parentLocks.set(key, locks)
+      return locks
+    }
 
     let flight = { pitch: null, yaw: null, roll: null, scmSpeed: null, boostSpeed: null, maxSpeed: null }
     let noise = 0
@@ -602,6 +666,10 @@ export function parseShipShop({ extractedRoot, localization }) {
         defaultEntityClass: item?.entityClass || null,
       }, portDefs)
       if (shaped.kind === 'turret' && !shaped.defaultEntityClass) shaped.locked = true
+      const parentPath = entry.path.includes('/') ? entry.path.slice(0, entry.path.lastIndexOf('/')) : ''
+      const parent = parentPath ? entryByPath.get(parentPath) : null
+      const parentLock = parent ? locksFor(entityKeyFromEntry(parent.entry))?.get(entry.name.toLowerCase()) : null
+      if (parentLock?.locked && shaped.kind !== 'flight') shaped.locked = true
       if (shaped) ports.push(shaped)
     }
 

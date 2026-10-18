@@ -1499,7 +1499,19 @@
       },
       "burstDps": 0,
       "tags": "Idris_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "turret_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "aegs_idris_upper_camera_mount",
@@ -1514,7 +1526,19 @@
       },
       "burstDps": 0,
       "tags": "Idris_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "turret_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "aegs_reclaimer_salvage_arm",
@@ -1818,7 +1842,19 @@
       "burstDps": 0,
       "tags": "gimbalMount",
       "requiredTags": "ANVL_Arrow_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 1,
+          "maxSize": 1
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "controller_flight_anvl_asgard_blade_hnd",
@@ -2117,7 +2153,19 @@
       "burstDps": 0,
       "tags": "ANVL_Hornet_Center flightReady",
       "requiredTags": "ANVL_Hornet_F7A_Mk1",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_1_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_class_1_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "anvl_hornet_f7cm_mk2_ball_turret",
@@ -2133,7 +2181,25 @@
       "burstDps": 0,
       "tags": "flightReady $ANVL_Hornet_Mk2_Center",
       "requiredTags": "ANVL_Hornet_Mk2_Center",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_right",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "mrck_s04_anvl_hornet_f7cm_mk2_turret",
@@ -2273,7 +2339,19 @@
       "burstDps": 0,
       "tags": "ANVL_Hornet_Center flightReady",
       "requiredTags": "ANVL_Hornet_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_1_left",
+          "minSize": 1,
+          "maxSize": 1
+        },
+        {
+          "name": "hardpoint_class_1_right",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "umnt_anvl_s5_cap",
@@ -2321,7 +2399,19 @@
       "burstDps": 0,
       "tags": "flightReady ANVL_Hornet_F7A_Mk2 ANVL_Hornet_Mk2",
       "requiredTags": "ANVL_Hornet_Mk2",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_S1_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_weapon_S1_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "anvl_hornet_f7a_nose_turret",
@@ -2337,7 +2427,19 @@
       "burstDps": 0,
       "tags": "flightReady ANVL_Hornet_F7A_Mk2 ANVL_Hornet_Mk2",
       "requiredTags": "ANVL_Hornet_F7A_Mk2",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_S1_left",
+          "minSize": 2,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_S1_right",
+          "minSize": 2,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "anvl_lightning_f8_turret_s5",
@@ -2353,7 +2455,19 @@
       "burstDps": 0,
       "tags": "gimbalMount",
       "requiredTags": "ANVL_Lightning_F8",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "anvl_lightning_f8c_turret_s3",
@@ -2369,7 +2483,19 @@
       "burstDps": 0,
       "tags": "gimbalMount",
       "requiredTags": "ANVL_Lightning_F8",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "anvl_terrapin_nose_turret_s3",
@@ -2384,7 +2510,19 @@
       },
       "burstDps": 0,
       "requiredTags": "ANVL_Terrapin_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "armr_anvl_hornet_f7cs",
@@ -9476,7 +9614,19 @@
       "burstDps": 0,
       "tags": "$ANVL_Hornet_Base",
       "requiredTags": "ANVL_Hornet_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "turret_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "anvl_hornet_f7a_mk1_ball_turret",
@@ -9492,7 +9642,19 @@
       "burstDps": 0,
       "tags": "$ANVL_Hornet_F7A_Base",
       "requiredTags": "ANVL_Hornet_F7A_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "anvl_hornet_f7a_ball_turret",
@@ -9508,7 +9670,19 @@
       "burstDps": 0,
       "tags": "flightReady $ANVL_Hornet_Mk2_Center",
       "requiredTags": "ANVL_Hornet_Mk2_Center",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_S3_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_S3_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "controller_flight_anvl_pisces_c8r_flight_blade_hnd",
@@ -10859,7 +11033,19 @@
       "burstDps": 0,
       "tags": "flightReady",
       "requiredTags": "CNOU_Mustang_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_1_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_class_1_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "armr_rsi_constellation_andromeda",
@@ -12190,7 +12376,14 @@
       "burstDps": 0,
       "tags": "fixedMount flightReady",
       "requiredTags": "DRAK_Cutlass_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_size_4",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "behr_ballisticcannon_vng_s2",
@@ -13016,7 +13209,19 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "DRAK_Buccaneer_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "controller_flight_drak_buccaneer",
@@ -13104,7 +13309,19 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "DRAK_Caterpillar_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 1,
+          "maxSize": 1
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "drak_dual_s3",
@@ -13120,7 +13337,19 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "DRAK_Caterpillar_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "controller_flight_drak_clipper_blade_hnd",
@@ -13280,7 +13509,19 @@
       "burstDps": 0,
       "tags": "DRAK_Cutlass_Steel_Mount",
       "requiredTags": "DRAK_Cutlass_Base DRAK_Cutlass_Steel_Mount",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "turret_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "mrck_s05_drak_ironclad_torpedo_silo_l",
@@ -13994,7 +14235,19 @@
       "burstDps": 0,
       "tags": "gimbalMount",
       "requiredTags": "ESPR_Prowler_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mrck_s05_vncl_stinger_s02",
@@ -27028,7 +27281,19 @@
       },
       "burstDps": 0,
       "requiredTags": "CRUS_Star_Runner",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "misc_hull_a_nose_turret_s5",
@@ -27043,7 +27308,19 @@
       },
       "burstDps": 0,
       "tags": "$MISC_Hull_A_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_left",
+          "minSize": 1,
+          "maxSize": 1
+        },
+        {
+          "name": "hardpoint_right",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "armr_krig_archimedes",
@@ -32219,7 +32496,19 @@
       "burstDps": 0,
       "tags": "flightReady $ORIG_85x_Turret",
       "requiredTags": "ORIG_85x_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_turret_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_turret_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "powr_amrs_s01_overdrive_scitem",
@@ -32382,7 +32671,19 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 1,
+          "maxSize": 1
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "anvl_asgard_nose_turret_s4",
@@ -32398,7 +32699,21 @@
       "burstDps": 0,
       "tags": "$anvl_asgard",
       "requiredTags": "anvl_asgard",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_left",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        },
+        {
+          "name": "hardpoint_right",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "anvl_valkyrie_nose_turret_s3",
@@ -32414,7 +32729,19 @@
       "burstDps": 0,
       "tags": "$ANVL_Valkyrie",
       "requiredTags": "ANVL_Valkyrie",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "behr_pc2_dual_s3",
@@ -32429,7 +32756,19 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady $MISC_Freelancer_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "behr_pc2_dual_s4_fixed",
@@ -32445,7 +32784,19 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "MISC_Freelancer_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 4,
+          "maxSize": 4
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "behr_pc2_dual_s4",
@@ -32461,7 +32812,19 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady $MISC_Starfarer_Base",
       "requiredTags": "MISC_Starfarer_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 4,
+          "maxSize": 4
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "misc_starlancer_dual_gimbal",
@@ -32477,7 +32840,19 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady $MISC_Starlancer_Weapon",
       "requiredTags": "MISC_Starlancer_Weapon",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_01",
+          "minSize": 4,
+          "maxSize": 4
+        },
+        {
+          "name": "hardpoint_weapon_02",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "misc_starlancer_tac_missile_gimbal",
@@ -32493,7 +32868,16 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady $MISC_Starlancer_TAC_Missile_Gimbal",
       "requiredTags": "MISC_Starlancer_TAC_Missile_Gimbal",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "misc_starlancer_tac_missile_gimbal_r",
@@ -32509,7 +32893,16 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady $MISC_Starlancer_TAC_Missile_Gimbal_R",
       "requiredTags": "MISC_Starlancer_TAC_Missile_Gimbal_R",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "radr_bltr_s01_pelerous",
@@ -34186,7 +34579,14 @@
       "burstDps": 0,
       "tags": "MISC_Reliant_Mount",
       "requiredTags": "MISC_Reliant_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "Hardpoint_Weapon_S2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "misc_reliant_sen_sensor_mount",
@@ -34506,7 +34906,19 @@
       "burstDps": 0,
       "tags": "MISC_Reliant_Mount",
       "requiredTags": "MISC_Reliant_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "turret_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "umnt_misc_s03_pl01",
@@ -34538,7 +34950,19 @@
       "burstDps": 0,
       "tags": "DRAK_Corsair_Remote_Turret",
       "requiredTags": "DRAK_Corsair_Remote_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_left",
+          "minSize": 2,
+          "maxSize": 2
+        },
+        {
+          "name": "hardpoint_weapon_right",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "gama_tyilui_remote_turret_bottom_s3",
@@ -34554,7 +34978,21 @@
       "burstDps": 0,
       "tags": "GAMA_Tyilui_Turret",
       "requiredTags": "GAMA_Tyilui_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "gama_tyilui_remote_turret_top_s3",
@@ -34570,7 +35008,21 @@
       "burstDps": 0,
       "tags": "GAMA_Tyilui_Turret",
       "requiredTags": "GAMA_Tyilui_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "misc_hull_c_nose_turret_s5",
@@ -34585,7 +35037,19 @@
       },
       "burstDps": 0,
       "requiredTags": "MISC_Hull_C",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "orig_600i_scitem_remote_turret_bottom_exec_s5",
@@ -34600,7 +35064,19 @@
       },
       "burstDps": 0,
       "requiredTags": "ORIG_600i_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "orig_600i_scitem_remote_turret_bottom_s5",
@@ -34615,7 +35091,19 @@
       },
       "burstDps": 0,
       "requiredTags": "ORIG_600i_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "orig_600i_scitem_remote_turret_exec_s5",
@@ -34630,7 +35118,19 @@
       },
       "burstDps": 0,
       "requiredTags": "ORIG_600i_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "orig_600i_scitem_remote_turret_s5",
@@ -34645,7 +35145,19 @@
       },
       "burstDps": 0,
       "requiredTags": "ORIG_600i_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "orig_890j_scitem_remote_turret_2_s5",
@@ -34661,7 +35173,19 @@
       "burstDps": 0,
       "tags": "$ORIG_890Jump",
       "requiredTags": "ORIG_890Jump",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "orig_890j_scitem_remote_turret_s5",
@@ -34677,7 +35201,19 @@
       "burstDps": 0,
       "tags": "$ORIG_890Jump",
       "requiredTags": "ORIG_890Jump",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "turret_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "rsi_constellation_mk5_remote_turret_bottom_s3",
@@ -34725,7 +35261,19 @@
       "burstDps": 0,
       "tags": "RSI_Perseus_Remote_Turret_Bottom",
       "requiredTags": "RSI_Perseus_Remote_Turret_Bottom",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "rsi_perseus_remote_turret_top_s3",
@@ -34741,7 +35289,19 @@
       "burstDps": 0,
       "tags": "RSI_Perseus_Remote_Turret_Top",
       "requiredTags": "RSI_Perseus_Remote_Turret_Top",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gimbal_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_gimbal_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "rsi_zeus_remote_turret_bottom_s3",
@@ -34757,7 +35317,19 @@
       "burstDps": 0,
       "tags": "RSI_Zeus_Remote_Turret_Bottom",
       "requiredTags": "RSI_Zeus_Remote_Turret_Bottom",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gun_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_gun_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "rsi_zeus_remote_turret_top_s3",
@@ -34773,7 +35345,19 @@
       "burstDps": 0,
       "tags": "RSI_Zeus_Remote_Turret_Top",
       "requiredTags": "RSI_Zeus_Remote_Turret_Top",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_gun_left",
+          "minSize": 3,
+          "maxSize": 3
+        },
+        {
+          "name": "hardpoint_gun_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "aegs_emp_device_s4",
@@ -37068,7 +37652,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady MRAI_Pulse",
       "requiredTags": "MRAI_Pulse",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_mount_pos",
+          "minSize": 2,
+          "maxSize": 2,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "xnaa_santokyai_mount_gimbal_s3",
@@ -37084,7 +37676,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady $XNAA_SanTokYai",
       "requiredTags": "XNAA_SanTokYai",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mrck_s03_xnaa_santokyai",
@@ -38241,7 +38840,14 @@
       },
       "burstDps": 0,
       "tags": "turretMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "default_fixed_mount_s4",
@@ -38256,7 +38862,14 @@
       },
       "burstDps": 0,
       "tags": "turretMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_size_4",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "bengal_turret_ballisticcannon_s8",
@@ -39119,7 +39732,15 @@
       "burstDps": 0,
       "tags": "turretMount flightReady $ANVL_Hornet_Base",
       "requiredTags": "ANVL_Hornet_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_size_4",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "qdrv_raco_s01_spectre_scitem",
@@ -40015,7 +40636,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady Merlin_Nose",
       "requiredTags": "Merlin_Nose",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "apar_massdriver_s2",
@@ -41482,7 +42110,29 @@
       "burstDps": 0,
       "tags": "flightReady $ANVL_Hornet_Mk2_Center",
       "requiredTags": "ANVL_Hornet_Mk2_Center",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_left",
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_behr_ballisticgatling_hornet_bespoke",
+          "child": {
+            "name": "hardpoint_class_2",
+            "defaultEntityClass": "behr_ballisticgatling_hornet_bespoke"
+          }
+        },
+        {
+          "name": "hardpoint_weapon_right",
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": "mount_gimbal_behr_ballisticgatling_hornet_bespoke",
+          "child": {
+            "name": "hardpoint_class_2",
+            "defaultEntityClass": "behr_ballisticgatling_hornet_bespoke"
+          }
+        }
+      ]
     },
     {
       "entityClass": "behr_ballisticgatling_hornet_bespoke",
@@ -41527,7 +42177,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady ANVL_BallisticGatling_Bespoke",
       "requiredTags": "ANVL_BallisticGatling_Bespoke",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "toag_lasergatling_barrel_s2",
@@ -41930,7 +42587,21 @@
       "burstDps": 0,
       "tags": "CRUS_Spirit_Turret",
       "requiredTags": "CRUS_Spirit_Turret",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_left",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        },
+        {
+          "name": "hardpoint_right",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "orig_890j_scitem_remote_turret_missile_lower_left",
@@ -41946,7 +42617,16 @@
       "burstDps": 0,
       "tags": "$ORIG_890Jump",
       "requiredTags": "ORIG_890Jump",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "orig_890j_scitem_remote_turret_missile_lower_right",
@@ -41962,7 +42642,16 @@
       "burstDps": 0,
       "tags": "$ORIG_890Jump",
       "requiredTags": "ORIG_890Jump",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "orig_890j_scitem_remote_turret_missile_top_left",
@@ -41978,7 +42667,16 @@
       "burstDps": 0,
       "tags": "$ORIG_890Jump",
       "requiredTags": "ORIG_890Jump",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "orig_890j_scitem_remote_turret_missile_top_right",
@@ -41994,7 +42692,16 @@
       "burstDps": 0,
       "tags": "$ORIG_890Jump",
       "requiredTags": "ORIG_890Jump",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_missile_rack",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true,
+          "kind": "missile"
+        }
+      ]
     },
     {
       "entityClass": "qdrv_rsi_s03_tyche_scitem",
@@ -42707,7 +43414,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s1_nosafety",
@@ -42722,7 +43436,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 1,
+          "maxSize": 1
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s1_tractor",
@@ -42752,7 +43473,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s2_mining",
@@ -42799,7 +43527,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "VNCL_Blade_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 2,
+          "maxSize": 2,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s2_vng_s2",
@@ -42815,7 +43551,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady VanguardNose AEGS_Vanguard_Base",
       "requiredTags": "AEGS_Vanguard_Base VanguardNose",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 2,
+          "maxSize": 2
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3",
@@ -42830,7 +43573,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_315p",
@@ -42860,7 +43610,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 1,
+          "maxSize": 13
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_perseus",
@@ -42875,7 +43632,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_perseus_bottom",
@@ -42890,7 +43654,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_perseus_bottom_left",
@@ -42905,7 +43676,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_perseus_remote_l",
@@ -42920,7 +43698,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_left",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_perseus_remote_r",
@@ -42935,7 +43720,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_weapon_right",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_perseus_right",
@@ -42950,7 +43742,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_polaris",
@@ -42966,7 +43765,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "RSI_Polaris",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_sabre_raven_ex",
@@ -42982,7 +43788,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "RSI_Sabre_Raven_EX",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s3_vncl_blade",
@@ -42998,7 +43811,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "VNCL_Blade_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 3,
+          "maxSize": 3,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4",
@@ -43013,7 +43834,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4_crus_intrepid",
@@ -43028,7 +43856,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4_orig_m80",
@@ -43044,7 +43879,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady ORIG_m80_Base",
       "requiredTags": "ORIG_m80_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4_paladin_turret",
@@ -43059,7 +43901,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4_polaris",
@@ -43075,7 +43924,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
       "requiredTags": "RSI_Polaris",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4_vncl_stinger",
@@ -43090,7 +43946,15 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s4_wolf",
@@ -43106,7 +43970,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady Wolf_Gun",
       "requiredTags": "Wolf_Gun",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "aegs_javelin_manned_turret_gimbal_s5",
@@ -43121,7 +43992,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 4,
+          "maxSize": 4
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s5",
@@ -43136,7 +44014,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 5,
+          "maxSize": 5
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s5_invsi",
@@ -43151,7 +44036,15 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s5_orig_m80",
@@ -43167,7 +44060,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady ORIG_m80_Base",
       "requiredTags": "ORIG_m80_Base",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 5,
+          "maxSize": 5
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s5_rsi_meteor",
@@ -43183,7 +44083,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady RSI_Meteor",
       "requiredTags": "RSI_Meteor",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 5,
+          "maxSize": 5
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s6",
@@ -43198,7 +44105,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 6,
+          "maxSize": 6
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s6_mauler",
@@ -43213,7 +44127,15 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 6,
+          "maxSize": 6,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s6_polaris",
@@ -43229,7 +44151,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady RSI_Polaris_Bespoke",
       "requiredTags": "RSI_Polaris_Bespoke",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 6,
+          "maxSize": 6,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s6_polaris_right",
@@ -43245,7 +44175,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady RSI_Polaris_Bespoke",
       "requiredTags": "RSI_Polaris_Bespoke",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 6,
+          "maxSize": 6,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s7",
@@ -43260,7 +44198,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 7,
+          "maxSize": 7
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s7_mauler",
@@ -43275,7 +44220,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 7,
+          "maxSize": 7
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s8",
@@ -43290,7 +44242,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 8,
+          "maxSize": 8
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s8_mauler",
@@ -43305,7 +44264,15 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 8,
+          "maxSize": 8,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s8_perseus",
@@ -43321,7 +44288,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady RSI_Perseus_Bespoke",
       "requiredTags": "RSI_Perseus_Bespoke",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 8,
+          "maxSize": 8,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s8_perseus_bottom",
@@ -43337,7 +44312,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady RSI_Perseus_Bespoke",
       "requiredTags": "RSI_Perseus_Bespoke",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 8,
+          "maxSize": 8,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s9_mauler",
@@ -43352,7 +44335,14 @@
       },
       "burstDps": 0,
       "tags": "gimbalMount flightReady",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 9,
+          "maxSize": 9
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s7_idris",
@@ -43368,7 +44358,14 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady $Idris_T_TurretGun",
       "requiredTags": "Idris_T_TurretGun",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 7,
+          "maxSize": 7
+        }
+      ]
     },
     {
       "entityClass": "mount_gimbal_s7_tiburon",
@@ -43384,7 +44381,15 @@
       "burstDps": 0,
       "tags": "gimbalMount flightReady AEGS_tiburon",
       "requiredTags": "AEGS_tiburon",
-      "grade": "A"
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_class_2",
+          "minSize": 7,
+          "maxSize": 7,
+          "locked": true
+        }
+      ]
     },
     {
       "entityClass": "shld_asas_s01_veil_scitem",
