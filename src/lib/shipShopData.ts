@@ -22,6 +22,7 @@ import {
   shieldPowerFactor,
   type FittedPart,
   type MissileMount,
+  type PortAccept,
   type PowerPart,
   type ShipItemStats,
   type ShipSnapshotNumbers,
@@ -41,6 +42,7 @@ export interface ShipPort {
   locked?: boolean
   requiredTags?: string
   portTags?: string
+  accepts?: PortAccept[]
 }
 
 export interface GameShip {
@@ -127,25 +129,32 @@ function humanMountName(name: string): string {
   return name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
+function ordnanceSlotKind(mount: MissileMount): 'missile' | 'torpedo' | 'bomb' | null {
+  if (mount.kind === 'bomb' || mount.kind === 'torpedo' || mount.kind === 'missile') return mount.kind
+  return null
+}
+
 function slotFromMount(ship: GameShip, parentId: string, mount: MissileMount, fitted?: Record<string, FittedPart>): ShipPort {
   const id = `${parentId}/${mount.name}`
   const stock = ship.ports.find((port) => port.id === id)
   const fittedItem = fitted ? getShipItem(fitted[id]?.entityClass) : null
   const stockItem = getShipItem(mount.defaultEntityClass || stock?.defaultEntityClass || '')
   const shown = fittedItem || stockItem
-  const kind = mount.kind === 'missile' ? 'missile' : shown?.kind === 'weaponMount' || stock?.kind === 'weaponMount' ? 'weaponMount' : 'weapon'
+  const ordnance = ordnanceSlotKind(mount)
+  const kind = ordnance || (shown?.kind === 'weaponMount' || stock?.kind === 'weaponMount' ? 'weaponMount' : 'weapon')
   return {
     id,
     label: stock?.label || humanMountName(mount.name),
-    section: kind === 'missile' ? 'missiles' : 'weapons',
+    section: ordnance ? 'missiles' : 'weapons',
     kind,
     size: mount.maxSize || mount.minSize,
     minSize: mount.minSize || mount.maxSize,
     maxSize: mount.maxSize || mount.minSize,
     defaultEntityClass: mount.defaultEntityClass || stock?.defaultEntityClass || null,
     locked: Boolean(mount.locked || stock?.locked),
-    requiredTags: stock?.requiredTags,
-    portTags: stock?.portTags,
+    requiredTags: mount.requiredTags || stock?.requiredTags,
+    portTags: mount.portTags || stock?.portTags,
+    accepts: mount.accepts?.length ? mount.accepts : stock?.accepts,
   }
 }
 
@@ -156,7 +165,7 @@ function resolveWeaponPorts(ship: GameShip, fitted?: Record<string, FittedPart>)
   const generated: ShipPort[] = []
   const visit = (parentId: string, item: ShipItemStats) => {
     for (const mount of item.mounts || []) {
-      if (mount.kind === 'missile') continue
+      if (ordnanceSlotKind(mount)) continue
       const slot = slotFromMount(ship, parentId, mount, fitted)
       generated.push(slot)
       const child = getShipItem(fitted[slot.id]?.entityClass)
@@ -193,7 +202,8 @@ function childAllowed(ship: GameShip, ports: Record<string, FittedPart>, portId:
   if (!mount) return false
   const item = getShipItem(ports[portId]?.entityClass)
   if (!item) return true
-  return mountSizeFits(item.size, mount)
+  if (!mountSizeFits(item.size, mount)) return false
+  return itemFitsPort(item, slotFromMount(ship, parentId, mount, ports))
 }
 
 /** Turrets and mounts group the guns that sit on them. A turret with no guns stays out of this list. */
@@ -218,6 +228,45 @@ export function weaponTree(ship: GameShip, fitted?: Record<string, FittedPart>):
 export const SHIPS: GameShip[] = (gameShips as { ships: GameShip[] }).ships
 
 const shipById = new Map(SHIPS.map((ship) => [ship.id, ship]))
+
+const BESPOKE_KINDS = new Set(['quantum', 'shield', 'cooler', 'power', 'radar', 'life', 'armor'])
+
+const MAKER_CODES = new Set(
+  SHIPS.map((ship) => ship.manufacturerCode?.toLowerCase()).filter((code): code is string => Boolean(code)),
+)
+
+function shipHullTokens(shipId: string): string[] {
+  let token = shipId.toLowerCase()
+  const maker = [...MAKER_CODES].sort((a, b) => b.length - a.length).find((code) => token.startsWith(`${code}_`))
+  if (maker) token = token.slice(maker.length + 1)
+  if (token.length < 3) return []
+  const tokens = [token]
+  const series = token.match(/^(.*\d)[a-z]$/)
+  if (series && series[1].length >= 3) tokens.push(series[1])
+  const split = token.match(/^(.*)_([a-z])$/)
+  if (split && split[1].length >= 3) tokens.push(split[1])
+  return tokens
+}
+
+const HULL_TOKENS = [...new Set(SHIPS.flatMap((ship) => shipHullTokens(ship.id)))].sort((a, b) => b.length - a.length)
+
+/** Ship-named parts (Allegro, a Javelin drive) stay on the hull they were built for. */
+export function bespokeHullToken(entityClass: string): string | null {
+  const hay = `_${entityClass.toLowerCase()}_`
+  for (const token of HULL_TOKENS) {
+    if (hay.includes(`_${token}_`)) return token
+  }
+  return null
+}
+
+function limitBespoke(port: ShipPort, items: ShipItemStats[]): ShipItemStats[] {
+  const kind = effectivePortKind(port)
+  if (!BESPOKE_KINDS.has(port.kind) && !BESPOKE_KINDS.has(kind)) return items
+  const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+  const stockToken = stock ? bespokeHullToken(stock.entityClass) : null
+  if (stockToken) return items.filter((item) => bespokeHullToken(item.entityClass) === stockToken)
+  return items.filter((item) => !bespokeHullToken(item.entityClass))
+}
 
 const blueprintsByClass = new Map<string, CraftBlueprint>()
 for (const blueprint of (gameBlueprints as { blueprints: CraftBlueprint[] }).blueprints) {
@@ -268,6 +317,19 @@ export function effectivePortKind(port: ShipPort): string {
   return port.kind
 }
 
+function attachmentFits(item: ShipItemStats, accepts: PortAccept[] | undefined): boolean {
+  if (!accepts || accepts.length === 0) return true
+  const type = (item.attachType || '').toLowerCase()
+  const subtype = (item.attachSubType || '').toLowerCase()
+  if (!type) return false
+  return accepts.some((rule) => {
+    if (rule.type.toLowerCase() !== type) return false
+    const subtypes = (rule.subtypes || []).filter((entry) => entry && entry.toLowerCase() !== 'undefined')
+    if (subtypes.length === 0 || !subtype || subtype === 'undefined') return true
+    return subtypes.some((entry) => entry.toLowerCase() === subtype)
+  })
+}
+
 function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
   const portGives = tagList(port.portTags)
   const itemNeeds = tagList(item.requiredTags)
@@ -275,21 +337,29 @@ function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
   const portNeeds = tagList(port.requiredTags)
   const itemGives = tagList(item.tags)
   if (portNeeds.length > 0 && !portNeeds.some((tag) => itemGives.includes(tag))) return false
+  if (port.accepts && port.accepts.length > 0 && !attachmentFits(item, port.accepts)) return false
   const kind = effectivePortKind(port)
   if (kind === 'weapon' && item.kind === 'weapon') {
     const stockClass = (port.defaultEntityClass || '').toLowerCase()
     const shipLocked = item.entityClass.toLowerCase() !== stockClass && itemNeeds.length === 0 && !hasRawTag(item.tags, 'weaponMountUsable')
     if (shipLocked) return false
   }
-  if (port.kind === 'torpedo') return item.ordnance === 'torpedo'
-  if (port.kind === 'missile') return item.ordnance !== 'torpedo'
+  if (!(port.accepts && port.accepts.length > 0)) {
+    if (port.kind === 'torpedo') return item.ordnance === 'torpedo'
+    if (port.kind === 'bomb') return item.ordnance === 'bomb'
+    if (port.kind === 'missile') return item.ordnance === 'missile' || (item.kind === 'missile' && item.ordnance == null)
+  }
   return true
 }
 
 function sameKind(item: ShipItemStats, port: ShipPort): boolean {
   const kind = effectivePortKind(port)
-  if (kind === 'torpedo' || kind === 'missile') return item.kind === 'missile'
+  if (kind === 'torpedo' || kind === 'missile' || kind === 'bomb') return item.kind === 'missile'
   return item.kind === kind
+}
+
+function ordnancePort(port: ShipPort): boolean {
+  return port.kind === 'missile' || port.kind === 'torpedo' || port.kind === 'bomb'
 }
 
 export function partsForPort(port: ShipPort): ShipItemStats[] {
@@ -299,8 +369,12 @@ export function partsForPort(port: ShipPort): ShipItemStats[] {
   }
   const min = port.minSize || port.size
   const max = port.maxSize || port.size
+  const typed = Boolean(port.accepts && port.accepts.length > 0)
   const pool = shipItems().filter((item, index, list) => {
-    if (!sameKind(item, port) || !itemIsEquippable(item)) return false
+    if (!itemIsEquippable(item)) return false
+    if (typed) {
+      if (!attachmentFits(item, port.accepts)) return false
+    } else if (!sameKind(item, port)) return false
     if (min && (item.size < min || item.size > max)) return false
     return list.findIndex((other) => other.entityClass === item.entityClass) === index
   })
@@ -313,14 +387,14 @@ export function partsForPort(port: ShipPort): ShipItemStats[] {
       .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
   }
   let matched = pool.filter((item) => itemFitsPort(item, port))
-  if (matched.length === 0) {
+  if (matched.length === 0 && !ordnancePort(port)) {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
     const stockTags = tagList(stock?.tags)
     matched = stockTags.length > 0
       ? pool.filter((item) => tagList(item.tags).some((tag) => stockTags.includes(tag)))
       : pool.filter((item) => item.entityClass === port.defaultEntityClass)
   }
-  return matched.sort((a, b) => a.displayName.localeCompare(b.displayName))
+  return limitBespoke(port, matched).sort((a, b) => a.displayName.localeCompare(b.displayName))
 }
 
 export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: FittedPart | undefined): ShipPort[] {
@@ -334,18 +408,22 @@ export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: Fitt
     const stock = ship.ports.find((port) => port.id === id)
     const maxSize = mount.maxSize || mount.minSize
     const minSize = mount.minSize || maxSize
+    const kind = mount.kind === 'bomb' || mount.kind === 'torpedo' || mount.kind === 'missile'
+      ? mount.kind
+      : rack.kind === 'torpedo' ? 'torpedo' : 'missile'
     return {
       id,
       label: mount.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase()),
       section: 'missiles',
-      kind: rack.kind === 'torpedo' ? 'torpedo' : 'missile',
+      kind,
       locked: rack.locked,
       size: maxSize,
       minSize,
       maxSize,
-      defaultEntityClass: stock?.defaultEntityClass ?? null,
-      requiredTags: stock?.requiredTags,
-      portTags: stock?.portTags,
+      defaultEntityClass: stock?.defaultEntityClass ?? mount.defaultEntityClass ?? null,
+      requiredTags: mount.requiredTags || stock?.requiredTags,
+      portTags: mount.portTags || stock?.portTags,
+      accepts: mount.accepts?.length ? mount.accepts : stock?.accepts,
     }
   })
 }
@@ -364,6 +442,31 @@ function lockedFit(mount: MissileMount, stock: ShipPort | undefined): FittedPart
   return { entityClass: item.entityClass, source: 'stock' }
 }
 
+function mountFit(ship: GameShip, parentId: string, mount: MissileMount, stock: ShipPort | undefined): FittedPart | null {
+  const fit = lockedFit(mount, stock)
+  if (!fit) return null
+  const item = getShipItem(fit.entityClass)
+  if (!item || !itemFitsPort(item, slotFromMount(ship, parentId, mount))) return null
+  return fit
+}
+
+function missileTubeOk(item: ShipItemStats | null, mount: MissileMount): boolean {
+  if (!item || !mountSizeFits(item.size, mount)) return false
+  if (mount.accepts?.length && !attachmentFits(item, mount.accepts)) return false
+  return true
+}
+
+function syncMissileTubes(ports: Record<string, FittedPart>, parentId: string, item: ShipItemStats | null) {
+  const mounts = item?.kind === 'missileRack' ? item.mounts || [] : []
+  const allowed = new Map(mounts.map((mount) => [`${parentId}/${mount.name}`, mount]))
+  for (const key of Object.keys(ports)) {
+    if (!key.startsWith(`${parentId}/`)) continue
+    const mount = allowed.get(key)
+    const child = getShipItem(ports[key].entityClass)
+    if (!mount || !missileTubeOk(child, mount)) delete ports[key]
+  }
+}
+
 /** Keep a child gun when it still fits the new mount. Locked guns are filled from the mount. */
 function syncMountChildren(ship: GameShip, ports: Record<string, FittedPart>, parentId: string, item: ShipItemStats | null) {
   const mounts = item?.kind === 'weaponMount' ? item.mounts || [] : []
@@ -380,8 +483,9 @@ function syncMountChildren(ship: GameShip, ports: Record<string, FittedPart>, pa
   for (const mount of mounts) {
     const id = `${parentId}/${mount.name}`
     const stock = ship.ports.find((port) => port.id === id)
+    const slot = slotFromMount(ship, parentId, mount)
     const current = ports[id] ? getShipItem(ports[id].entityClass) : null
-    const currentFits = Boolean(current && mountSizeFits(current.size, mount))
+    const currentFits = Boolean(current && mountSizeFits(current.size, mount) && itemFitsPort(current, slot))
     if (mount.locked) {
       const fit = lockedFit(mount, stock)
       if (fit) ports[id] = fit
@@ -390,27 +494,29 @@ function syncMountChildren(ship: GameShip, ports: Record<string, FittedPart>, pa
         deleteDescendants(ports, id)
       }
     } else if (!currentFits) {
-      delete ports[id]
-      deleteDescendants(ports, id)
+      const fit = mountFit(ship, parentId, mount, stock)
+      if (fit) ports[id] = fit
+      else {
+        delete ports[id]
+        deleteDescendants(ports, id)
+      }
     }
     const fittedNow = ports[id] ? getShipItem(ports[id].entityClass) : null
     if (fittedNow?.kind === 'weaponMount') {
-      if (mount.locked && mount.child) {
+      if (mount.child) {
         const childMount = (fittedNow.mounts || []).find((entry) => entry.name === mount.child?.name) || fittedNow.mounts?.[0]
         const childItem = getShipItem(mount.child.defaultEntityClass)
-        if (childMount && childItem && mountSizeFits(childItem.size, childMount)) {
+        const childId = childMount ? `${id}/${childMount.name}` : ''
+        const childCurrent = childId && ports[childId] ? getShipItem(ports[childId].entityClass) : null
+        const childSlot = childMount ? slotFromMount(ship, id, childMount) : null
+        const childFits = Boolean(childCurrent && childMount && childSlot && mountSizeFits(childCurrent.size, childMount) && itemFitsPort(childCurrent, childSlot))
+        if (childMount && childItem && childSlot && mountSizeFits(childItem.size, childMount) && itemFitsPort(childItem, childSlot) && (mount.locked || !childFits)) {
           ports[`${id}/${childMount.name}`] = { entityClass: childItem.entityClass, source: 'stock' }
         }
       }
       syncMountChildren(ship, ports, id, fittedNow)
     } else if (fittedNow?.kind === 'missileRack') {
-      const allowed = new Map((fittedNow.mounts || []).map((entry) => [`${id}/${entry.name}`, entry]))
-      for (const key of Object.keys(ports)) {
-        if (!key.startsWith(`${id}/`)) continue
-        const childMount = allowed.get(key)
-        const child = getShipItem(ports[key].entityClass)
-        if (!childMount || !child || !mountSizeFits(child.size, childMount)) delete ports[key]
-      }
+      syncMissileTubes(ports, id, fittedNow)
     } else {
       deleteDescendants(ports, id)
     }
@@ -423,25 +529,17 @@ export function applyPortFit(
   port: ShipPort,
   part: FittedPart | null,
 ): Record<string, FittedPart> {
+  const previous = getShipItem(ports[port.id]?.entityClass)
   const next = { ...ports }
   if (!part) delete next[port.id]
   else next[port.id] = part
   if (!ship) return next
-  if (port.kind === 'missileRack') {
-    const mounts = part ? getShipItem(part.entityClass)?.mounts || [] : []
-    const allowed = new Map(mounts.map((mount) => [`${port.id}/${mount.name}`, mount]))
-    for (const key of Object.keys(next)) {
-      if (!key.startsWith(`${port.id}/`)) continue
-      const mount = allowed.get(key)
-      const item = getShipItem(next[key].entityClass)
-      const min = mount ? mount.minSize || mount.maxSize : 0
-      const max = mount ? mount.maxSize || mount.minSize : 0
-      if (!mount || !item || (max > 0 && (item.size < min || item.size > max))) delete next[key]
-    }
+  const item = part ? getShipItem(part.entityClass) : null
+  if (port.kind === 'missileRack' || item?.kind === 'missileRack' || previous?.kind === 'missileRack') {
+    syncMissileTubes(next, port.id, item?.kind === 'missileRack' ? item : null)
     return next
   }
-  const item = part ? getShipItem(part.entityClass) : null
-  const mountParent = port.kind === 'weapon' || port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount' || item?.kind === 'weaponMount'
+  const mountParent = port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount' || item?.kind === 'weaponMount'
   if (mountParent) syncMountChildren(ship, next, port.id, item)
   return next
 }
@@ -549,6 +647,10 @@ export function stockPorts(ship: GameShip): Record<string, FittedPart> {
     if (!port.defaultEntityClass || !getShipItem(port.defaultEntityClass)) continue
     ports[port.id] = { entityClass: port.defaultEntityClass, source: 'stock' }
   }
+  for (const port of ship.ports) {
+    const item = getShipItem(ports[port.id]?.entityClass)
+    if (item?.kind === 'weaponMount') syncMountChildren(ship, ports, port.id, item)
+  }
   return ports
 }
 
@@ -627,6 +729,8 @@ function pipKind(portKind: string, entityClass: string): string {
   const id = entityClass.toLowerCase()
   if (id.includes('towingbeam')) return 'towing'
   if (id.includes('mining_laser')) return 'mining'
+  const item = getShipItem(entityClass)
+  if (item?.kind === 'missileRack' || item?.kind === 'missile') return item.kind
   return portKind
 }
 

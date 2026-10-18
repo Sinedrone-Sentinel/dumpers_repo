@@ -3,14 +3,22 @@ import {
   type BlueprintForEffectiveStats,
 } from './blueprintEffectiveStats'
 
+export interface PortAccept {
+  type: string
+  subtypes: string[]
+}
+
 export interface MissileMount {
   name: string
   minSize: number
   maxSize: number
   locked?: boolean
-  kind?: 'missile'
+  kind?: 'missile' | 'torpedo' | 'bomb'
   defaultEntityClass?: string
   child?: { name: string; defaultEntityClass: string }
+  portTags?: string
+  requiredTags?: string
+  accepts?: PortAccept[]
 }
 
 export interface ShipItemStats {
@@ -27,7 +35,9 @@ export interface ShipItemStats {
   itemClass?: string | null
   grade?: string | null
   guidance?: string | null
-  ordnance?: 'missile' | 'torpedo' | null
+  ordnance?: 'missile' | 'torpedo' | 'bomb' | null
+  attachType?: string
+  attachSubType?: string
   stats: Record<string, number>
   burstDps: number
 }
@@ -37,7 +47,9 @@ export function itemIsEquippable(item: ShipItemStats): boolean {
   const stats = item.stats || {}
   if (item.kind === 'weapon') {
     if ((stats.Power_Segments || 0) > 0) return true
-    return (stats.Weapon_Damage || 0) > 0 && (stats.Weapon_Firerate || 0) > 0
+    const damage = stats.Weapon_Damage || 0
+    if (damage <= 0) return false
+    return (stats.Weapon_Firerate || 0) > 0 || (stats.Weapon_RegenPerSec || 0) > 0 || (stats.Weapon_CapacitorShots || 0) > 0
   }
   if (item.kind === 'missile') return (stats.Missile_Damage || stats.Weapon_Damage || 0) > 0
   if (item.kind === 'shield') return (stats.Shield_Maxhealth || 0) > 0
@@ -203,8 +215,15 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
   const round = (value: number) => formatShopNumber(value)
   if (kind === 'weapon') {
     const burst = weaponBurstDps(stats)
-    if (burst <= 0) return ''
-    return `${round(burst)} burst · ${round(weaponSustainedDps(stats))} sustained`
+    const alpha = stats.Weapon_Damage || 0
+    if (burst <= 0 && alpha <= 0) return ''
+    const parts = []
+    if (burst > 0) {
+      parts.push(`${round(burst)} burst`)
+      parts.push(`${round(weaponSustainedDps(stats))} sustained`)
+    }
+    if (alpha > 0) parts.push(`${round(alpha)} alpha`)
+    return parts.join(' · ')
   }
   if (kind === 'missile') {
     const damage = stats.Missile_Damage || stats.Weapon_Damage || 0

@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import * as esbuild from 'esbuild'
+import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { weaponBurstDps } from '../lib/shipItemStats.mjs'
 
 const ships = JSON.parse(readFileSync('src/data/game-ships.json', 'utf8')).ships
@@ -192,5 +195,85 @@ assert.equal(mpuv.ports.some((port) => port.kind === 'radar'), true)
 const glaive = ships.find((ship) => ship.id === 'vncl_glaive')
 assert.equal(glaive.ports.some((port) => port.kind === 'weapon'), true)
 assert.equal(ships.some((ship) => ship.id.startsWith('eaobjective') || ship.id.includes('derelict')), false)
+
+const idris = ships.find((ship) => ship.id === 'aegs_idris_m')
+const idrisNose = idris.ports.find((port) => port.id === 'hardpoint_nose_railgun')
+assert.ok(idrisNose.accepts.some((rule) => rule.type === 'WeaponGun' && rule.subtypes.includes('Gun')))
+assert.ok(idrisNose.accepts.some((rule) => rule.type === 'MissileLauncher' && rule.subtypes.includes('MissileRack')))
+const hammer = items.find((item) => item.entityClass === 'mrck_s10_aegs_idris_nose_s12_torpedo')
+assert.equal(hammer.attachType, 'MissileLauncher')
+assert.equal(hammer.mounts.length, 20)
+assert.equal(hammer.mounts[0].kind, 'torpedo')
+assert.equal(hammer.mounts[0].maxSize, 12)
+assert.equal(items.find((item) => item.entityClass === 'bomb_s03_fski_thunderball').ordnance, 'bomb')
+assert.equal(items.find((item) => item.entityClass === 'misl_s12_cs_behr_executor').ordnance, 'torpedo')
+assert.equal(items.find((item) => item.entityClass === 'misl_s02_ir_fski_ignite').ordnance, 'missile')
+const tmsb = items.find((item) => item.entityClass === 'anvl_hornet_f7cm_mk2_ball_turret_bespoke')
+assert.equal(tmsb.mounts[0].portTags, 'ANVL_BallisticGatling_Bespoke')
+assert.equal(tmsb.mounts[0].defaultEntityClass, 'mount_gimbal_behr_ballisticgatling_hornet_bespoke')
+assert.equal(tmsb.mounts[0].child.defaultEntityClass, 'behr_ballisticgatling_hornet_bespoke')
+
+const outfile = path.join('node_modules', '.cache', 'ship-shop-fit.mjs')
+await esbuild.build({
+  entryPoints: [path.join('src', 'lib', 'shipShopData.ts')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  outfile,
+  packages: 'external',
+})
+const shop = await import(`${pathToFileURL(path.resolve(outfile)).href}?t=${Date.now()}`)
+
+const noseParts = shop.partsForPort(idrisNose).map((item) => item.entityClass)
+assert.ok(noseParts.includes('klwe_massdriver_s10'), 'Idris nose lists the railgun')
+assert.ok(noseParts.includes('hrst_laserbeam_bespoke'), 'Idris nose lists the laser')
+assert.ok(noseParts.includes('mrck_s10_aegs_idris_nose_s12_torpedo'), 'Idris nose lists the torpedo launcher')
+const tubes = shop.missileSlotsForRack(idris, idrisNose, { entityClass: hammer.entityClass, source: 'stock' })
+assert.equal(tubes[0].kind, 'torpedo')
+assert.equal(tubes[0].size, 12)
+const torpedoes = shop.partsForPort(tubes[0])
+assert.ok(torpedoes.length > 0)
+assert.ok(torpedoes.every((item) => item.ordnance === 'torpedo' && item.size === 12))
+
+const gladius = shop.getShip('aegs_gladius')
+const wingRack = gladius.ports.find((port) => port.id === 'hardpoint_missilerack_left_wing_outer')
+const rackChoices = shop.partsForPort(wingRack)
+assert.equal(rackChoices.some((item) => item.attachType === 'BombLauncher'), true)
+assert.equal(rackChoices.some((item) => item.kind === 'missile'), false)
+const quad = rackChoices.find((item) => item.entityClass === 'mrck_s03_behr_quad_s01')
+assert.ok(quad, 'a size 3 rack that holds more size 1 missiles stays selectable')
+const dualSlots = shop.missileSlotsForRack(gladius, wingRack, { entityClass: 'mrck_s03_behr_dual_s02', source: 'stock' })
+const dualMissiles = shop.partsForPort(dualSlots[0])
+assert.ok(dualMissiles.length > 0)
+assert.ok(dualMissiles.every((item) => item.ordnance === 'missile' && item.size === dualSlots[0].size))
+const quadSlots = shop.missileSlotsForRack(gladius, wingRack, { entityClass: quad.entityClass, source: 'stock' })
+assert.ok(quadSlots.length > dualSlots.length)
+assert.equal(quadSlots[0].size, 1)
+assert.ok(shop.partsForPort(quadSlots[0]).every((item) => item.ordnance === 'missile' && item.size === 1))
+const bombRack = rackChoices.find((item) => item.attachType === 'BombLauncher')
+const bombSlots = shop.missileSlotsForRack(gladius, wingRack, { entityClass: bombRack.entityClass, source: 'stock' })
+assert.equal(bombSlots[0].kind, 'bomb')
+const bombs = shop.partsForPort(bombSlots[0])
+assert.ok(bombs.length > 0)
+assert.ok(bombs.every((item) => item.ordnance === 'bomb'))
+
+const jump = shop.getShip('orig_890jump')
+const quantum = jump.ports.find((port) => port.kind === 'quantum')
+const drives = shop.partsForPort(quantum)
+assert.ok(drives.some((item) => item.entityClass === 'qdrv_orig_s04_890j_scitem'))
+assert.equal(drives.some((item) => item.entityClass === 'qdrv_aegs_s04_javelin_scitem'), false)
+assert.ok(drives.every((item) => item.entityClass.includes('890')))
+
+const hornet = shop.getShip('anvl_hornet_f7cm_mk2')
+const center = hornet.ports.find((port) => port.id === 'hardpoint_weapon_center')
+const fitted = shop.applyPortFit(hornet, shop.stockPorts(hornet), center, {
+  entityClass: 'anvl_hornet_f7cm_mk2_ball_turret_bespoke',
+  source: 'stock',
+})
+assert.equal(fitted['hardpoint_weapon_center/hardpoint_weapon_left']?.entityClass, 'mount_gimbal_behr_ballisticgatling_hornet_bespoke')
+assert.equal(
+  fitted['hardpoint_weapon_center/hardpoint_weapon_left/hardpoint_class_2']?.entityClass,
+  'behr_ballisticgatling_hornet_bespoke',
+)
 
 console.log('ship shop catalog checks passed')

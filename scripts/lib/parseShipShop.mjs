@@ -262,6 +262,7 @@ function shapePort(name, port, portDefs) {
     if (def.minSize && def.maxSize && def.minSize === def.maxSize) next.size = def.maxSize
     if (def.requiredTags) next.requiredTags = def.requiredTags
     if (def.portTags) next.portTags = def.portTags
+    if (def.accepts?.length) next.accepts = def.accepts
   }
   if (next.kind === 'torpedo' || next.kind === 'life') next.locked = true
   if (def && /uneditable/i.test(def.flags || '') && next.kind !== 'flight') next.locked = true
@@ -272,21 +273,38 @@ function portDefsFromXml(text) {
   const defs = new Map()
   if (!text) return defs
   let part = ''
+  let current = null
   for (const line of text.split('\n')) {
     const partMatch = line.match(/<Part name="([^"]+)"/i)
     if (partMatch) part = partMatch[1]
     const portMatch = line.match(/<ItemPort\s+([^>]+)>/i)
-    if (!portMatch || !part) continue
-    const attrs = portMatch[1]
-    const minSize = Number(attrValue(attrs, 'minSize')) || 0
-    const maxSize = Number(attrValue(attrs, 'maxSize')) || minSize
-    defs.set(part.toLowerCase(), {
-      minSize,
-      maxSize,
-      flags: attrValue(attrs, 'flags'),
-      requiredTags: attrValue(attrs, 'requiredTags'),
-      portTags: attrValue(attrs, 'portTags'),
-    })
+    if (portMatch && part) {
+      const attrs = portMatch[1]
+      const minSize = Number(attrValue(attrs, 'minSize')) || 0
+      const maxSize = Number(attrValue(attrs, 'maxSize')) || minSize
+      current = {
+        minSize,
+        maxSize,
+        flags: attrValue(attrs, 'flags'),
+        requiredTags: attrValue(attrs, 'requiredTags'),
+        portTags: attrValue(attrs, 'portTags'),
+        accepts: [],
+      }
+      defs.set(part.toLowerCase(), current)
+    }
+    if (!current) continue
+    const typeMatch = line.match(/<Type\s+([^>]*?)\s*\/?>/i)
+    if (typeMatch) {
+      const type = attrValue(typeMatch[1], 'type')
+      if (type) {
+        const subtypes = attrValue(typeMatch[1], 'subtypes')
+          .split(',')
+          .map((value) => value.trim())
+          .filter(Boolean)
+        current.accepts.push({ type, subtypes })
+      }
+    }
+    if (/<\/ItemPort>/i.test(line)) current = null
   }
   return defs
 }
@@ -420,18 +438,56 @@ function crossSectionFromShip(json) {
   return found
 }
 
+function portAccepts(port) {
+  const types = Array.isArray(port?.Types) ? port.Types : []
+  return types
+    .map((entry) => ({
+      type: String(entry?.Type || ''),
+      subtypes: (Array.isArray(entry?.SubTypes) ? entry.SubTypes : [])
+        .map((value) => String(value || '').trim())
+        .filter(Boolean),
+    }))
+    .filter((entry) => entry.type)
+}
+
+/** Missile, torpedo, and bomb tubes are different port types. A torpedo is a Missile whose subtype is Torpedo. */
+function ordnanceKind(accepts) {
+  const missile = accepts.filter((entry) => entry.type.toLowerCase() === 'missile')
+  const bomb = accepts.some((entry) => entry.type.toLowerCase() === 'bomb')
+  const torpedoType = accepts.some((entry) => entry.type.toLowerCase() === 'torpedo')
+  const subtypes = missile.flatMap((entry) => entry.subtypes.map((value) => value.toLowerCase()))
+  if (bomb && missile.length === 0 && !torpedoType) return 'bomb'
+  if (torpedoType && missile.length === 0 && !bomb) return 'torpedo'
+  if (subtypes.length > 0 && subtypes.every((value) => value === 'torpedo')) return 'torpedo'
+  if (missile.length > 0 || torpedoType) return 'missile'
+  return null
+}
+
+function copyPortRules(row, port) {
+  const tags = typeof port?.PortTags === 'string' ? port.PortTags.trim() : ''
+  const required = typeof port?.RequiredPortTags === 'string' ? port.RequiredPortTags.trim() : ''
+  if (tags) row.portTags = tags
+  if (required) row.requiredTags = required
+  const accepts = portAccepts(port)
+  if (accepts.length > 0) row.accepts = accepts
+  return accepts
+}
+
 function missileMounts(json) {
   const container = firstComponent(json, 'SItemPortContainerComponentParams')
   const mounts = []
   for (const port of container?.Ports || []) {
-    const types = Array.isArray(port.Types) ? port.Types : []
-    if (!types.some((entry) => String(entry?.Type || '').toLowerCase() === 'missile')) continue
     const name = port.Name || port.AttachmentImplementation?.Helper?.Helper?.Name
     if (!name) continue
     const maxSize = Number(port.MaxSize) || 0
     const minSize = Number(port.MinSize) || maxSize
     if (!maxSize && !minSize) continue
-    mounts.push({ name, minSize: minSize || maxSize, maxSize: maxSize || minSize })
+    const row = { name, minSize: minSize || maxSize, maxSize: maxSize || minSize }
+    const accepts = copyPortRules(row, port)
+    const ordnance = ordnanceKind(accepts)
+    if (!ordnance) continue
+    row.kind = ordnance
+    mounts.push(row)
   }
   return mounts
 }
@@ -463,6 +519,7 @@ function weaponMountPorts(json) {
     const row = { name, minSize: minSize || maxSize, maxSize: maxSize || minSize }
     if (/uneditable/i.test(String(port.Flags || ''))) row.locked = true
     if (missile && !gun) row.kind = 'missile'
+    copyPortRules(row, port)
     const fallback = defaults.get(String(name).toLowerCase())
     if (fallback) row.defaultEntityClass = fallback
     const nested = entries.find((entry) => {
@@ -578,10 +635,14 @@ export function parseShipShop({ extractedRoot, localization }) {
     }
     if (tags) item.tags = tags
     if (requiredTags) item.requiredTags = requiredTags
+    if (def?.Type) item.attachType = def.Type
+    if (def?.SubType) item.attachSubType = def.SubType
     if (described.itemClass) item.itemClass = described.itemClass
     if (described.grade) item.grade = described.grade
     if (kind === 'missile') {
-      item.ordnance = /torpedo/.test(entityClass) ? 'torpedo' : 'missile'
+      const attachType = String(def?.Type || '').toLowerCase()
+      const attachSubType = String(def?.SubType || '').toLowerCase()
+      item.ordnance = attachType === 'bomb' ? 'bomb' : attachSubType === 'torpedo' ? 'torpedo' : 'missile'
       const guidance = missileGuidance(entityClass)
       if (guidance) item.guidance = guidance
     }
@@ -700,4 +761,55 @@ export function parseShipShop({ extractedRoot, localization }) {
   catalog.sort((a, b) => a.displayName.localeCompare(b.displayName))
 
   return { ships, catalog }
+}
+
+/** Add attach types, port rules, and rack tubes onto an existing catalog without rewriting item stats. */
+export function enrichShipShopData(extractedRoot, ships, items) {
+  const records = join(extractedRoot, 'libs/foundry/records')
+  const byKey = new Map()
+  const remember = (filePath) => {
+    const json = readJson(filePath)
+    if (!json?._RecordValue_) return
+    const recordName = String(json._RecordName_ || '').replace(/^EntityClassDefinition\./i, '')
+    for (const key of [basename(filePath, '.json'), recordName]) {
+      if (key) byKey.set(key.toLowerCase(), filePath)
+    }
+  }
+  for (const dir of INDEX_DIRS) walkFiles(join(records, dir)).forEach(remember)
+
+  for (const item of items) {
+    const filePath = byKey.get(String(item.entityClass || '').toLowerCase())
+    if (!filePath) continue
+    const json = readJson(filePath)
+    if (!json) continue
+    const def = attachDef(json)
+    if (def?.Type) item.attachType = def.Type
+    if (def?.SubType) item.attachSubType = def.SubType
+    if (item.kind === 'missile') {
+      const attachType = String(def?.Type || '').toLowerCase()
+      const attachSubType = String(def?.SubType || '').toLowerCase()
+      item.ordnance = attachType === 'bomb' ? 'bomb' : attachSubType === 'torpedo' ? 'torpedo' : 'missile'
+    }
+    if (item.kind === 'missileRack' || item.kind === 'weaponMount') {
+      const mounts = item.kind === 'missileRack' ? missileMounts(json) : weaponMountPorts(json)
+      if (mounts.length > 0) item.mounts = mounts
+    }
+  }
+
+  const shipFiles = new Map()
+  for (const filePath of walkFiles(join(records, 'entities/spaceships'))) {
+    shipFiles.set(basename(filePath, '.json').toLowerCase(), filePath)
+  }
+  for (const ship of ships) {
+    const filePath = shipFiles.get(String(ship.id || '').toLowerCase())
+    if (!filePath) continue
+    const json = readJson(filePath)
+    const defs = portDefsFromXml(vehicleXml(extractedRoot, firstComponent(json, 'VehicleComponentParams')))
+    for (const port of ship.ports || []) {
+      const leaf = String(port.id || '').split('/').pop().toLowerCase()
+      const def = defs.get(leaf)
+      if (def?.accepts?.length) port.accepts = def.accepts
+    }
+  }
+  return { ships, items }
 }
