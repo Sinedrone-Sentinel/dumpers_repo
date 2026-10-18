@@ -7,7 +7,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { extractShipItemStats, weaponBurstDps } from './shipItemStats.mjs'
 
-const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs(?:_|$)|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d)/i
+const SKIP_SHIP = /(?:^|_)(?:pu(?:_|$)|ai(?:_|$)|unmanned|template|display|showdown|gamemaster|fleetweek|tutorial|hijacked|teach|boarded|nointerior|swarm|defendship|collector|lowpoly|invictus|restoration|ninetails|temp(?:_|$)|test(?:_|$)|gs(?:_|$)|ea(?:_|$)|exec(?:_|$)|plat(?:_|$)|bis\d|eaobjective|derelict)/i
 
 const INDEX_DIRS = [
   'entities/scitem/ships/weapons',
@@ -167,10 +167,36 @@ function kindForItem(filePath, entityKey) {
   return null
 }
 
+const ITEM_KIND_PORT = {
+  shield: ['defense', 'shield'],
+  armor: ['defense', 'armor'],
+  cooler: ['systems', 'cooler'],
+  power: ['systems', 'power'],
+  quantum: ['systems', 'quantum'],
+  radar: ['systems', 'radar'],
+  life: ['systems', 'life'],
+  flight: ['systems', 'flight'],
+  weapon: ['weapons', 'weapon'],
+}
+
+function isShieldPortName(name) {
+  return name.includes('shieldgenerator') || name.includes('shield_generator') || name.includes('shield_gen') || name.includes('shieldgen')
+}
+
+function isRadarPortName(name) {
+  if (!name.includes('radar') || !name.includes('hardpoint')) return false
+  return !name.includes('display') && !name.includes('helper') && !name.includes('screen')
+}
+
+function isQuantumPortName(name) {
+  if (name.includes('fuel') || name.includes('tank')) return false
+  return name.includes('quantumdrive') || name.includes('quantum_drive')
+}
+
 function classifyPort(name, entityKey, itemKind) {
   const n = name.toLowerCase()
   const e = (entityKey || '').toLowerCase()
-  if (n.includes('weapon_rack') || n.includes('weaponrack')) return null
+  if (n.includes('weapon_rack') || n.includes('weaponrack') || n.includes('weapon_locker') || n.includes('weaponlocker') || n.includes('weapons_locker') || n.includes('gun_rack') || n.includes('gunrack') || n.includes('regen_pool')) return null
   if (n.includes('seat') || n.includes('dashboard') || n.includes('seataccess') || n.includes('camera')) return null
   if (n.includes('controller_flight')) return { section: 'systems', kind: 'flight' }
   if (n.includes('controller')) return null
@@ -185,14 +211,18 @@ function classifyPort(name, entityKey, itemKind) {
   if (itemKind === 'weaponMount' || e.includes('mount_gimbal') || e.includes('mount_fixed') || e.includes('varipuck') || n.includes('varipuck')) {
     return { section: 'weapons', kind: 'weaponMount' }
   }
+  const fromItem = ITEM_KIND_PORT[itemKind]
+  if (fromItem) return { section: fromItem[0], kind: fromItem[1] }
+  // Radar ports are sometimes named like a turret. The fitted item wins above;
+  // the name check still has to beat the turret rule when the item is unnamed.
+  if (isRadarPortName(n)) return { section: 'systems', kind: 'radar' }
+  if (isShieldPortName(n)) return { section: 'defense', kind: 'shield' }
   if (n.includes('turret') && !n.includes('tractor') && !n.includes('relay')) return { section: 'weapons', kind: 'turret' }
-  if (n.includes('weapon') || n.includes('hardpoint_class_')) return { section: 'weapons', kind: 'weapon' }
-  if (n.includes('shield_generator')) return { section: 'defense', kind: 'shield' }
+  if (n.includes('weapon') || n.includes('hardpoint_class_') || n.includes('hardpoint_gun')) return { section: 'weapons', kind: 'weapon' }
   if (n.includes('armor') || n.includes('armour')) return { section: 'defense', kind: 'armor' }
   if (n.includes('cooler')) return { section: 'systems', kind: 'cooler' }
   if (n.includes('power_plant') || n.includes('powerplant')) return { section: 'systems', kind: 'power' }
-  if (n.includes('quantum_drive')) return { section: 'systems', kind: 'quantum' }
-  if (n.includes('hardpoint_radar')) return { section: 'systems', kind: 'radar' }
+  if (isQuantumPortName(n)) return { section: 'systems', kind: 'quantum' }
   if (n.includes('lifesupport') || n.includes('life_support')) return { section: 'systems', kind: 'life' }
   if (n.includes('torpedo')) return { section: 'missiles', kind: 'torpedo' }
   return null
