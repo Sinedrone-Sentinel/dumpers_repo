@@ -12,6 +12,7 @@ import {
   electromagneticSignature,
   emptySnapshot,
   infraredSignature,
+  flightBladeFamily,
   itemIsEquippable,
   powerColumns,
   powerGenerated,
@@ -223,6 +224,14 @@ export function partsForPort(port: ShipPort): ShipItemStats[] {
     if (min && (item.size < min || item.size > max)) return false
     return list.findIndex((other) => other.entityClass === item.entityClass) === index
   })
+  if (port.kind === 'flight') {
+    const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+    if (!stock) return []
+    const family = flightBladeFamily(stock.entityClass, stock.tags, stock.requiredTags)
+    return pool
+      .filter((item) => flightBladeFamily(item.entityClass, item.tags, item.requiredTags) === family)
+      .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
+  }
   let matched = pool.filter((item) => itemFitsPort(item, port))
   if (matched.length === 0) {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
