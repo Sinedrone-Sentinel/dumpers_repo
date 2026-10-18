@@ -18,7 +18,7 @@ export interface MissileMount {
   minSize: number
   maxSize: number
   locked?: boolean
-  kind?: 'missile' | 'torpedo' | 'bomb'
+  kind?: 'missile' | 'torpedo' | 'bomb' | 'missileRack' | 'weapon'
   defaultEntityClass?: string
   child?: { name: string; defaultEntityClass: string }
   portTags?: string
@@ -43,6 +43,8 @@ export interface ShipItemStats {
   ordnance?: 'missile' | 'torpedo' | 'bomb' | null
   attachType?: string
   attachSubType?: string
+  /** Short listing line for a module, such as cargo or a med-bed count. */
+  feature?: string
   stats: Record<string, number>
   burstDps: number
 }
@@ -66,6 +68,8 @@ export function itemIsEquippable(item: ShipItemStats): boolean {
   if (item.kind === 'weaponMount') return true
   if (item.kind === 'tractor' || item.kind === 'qed') return (stats.Power_Segments || 0) > 0
   if (item.kind === 'life') return (stats.Power_Segments || 0) > 0
+  if (item.kind === 'emp') return (stats.Weapon_Power || 0) > 0 || (stats.Emp_Radius || 0) > 0
+  if (item.kind === 'module') return true
   return Object.keys(stats).length > 0
 }
 
@@ -301,6 +305,16 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
     return `${round(min)}–${round(stats.Radar_DistanceMax)} m · ${minPips}–${maxPips} pips`
   }
   if (kind === 'life') return stats.Power_Segments ? `${round(stats.Power_Segments)} pips` : ''
+  if (kind === 'emp') {
+    const parts = [
+      stats.Emp_Damage ? `${round(stats.Emp_Damage)} distortion` : '',
+      stats.Emp_Radius ? `${round(stats.Emp_Radius)} m` : '',
+      stats.Emp_Charge ? `${round(stats.Emp_Charge)}s charge` : '',
+      stats.Weapon_Power ? `${round(stats.Weapon_Power)} power` : '',
+    ].filter(Boolean)
+    return parts.join(' · ')
+  }
+  if (kind === 'module') return ''
   return ''
 }
 
@@ -540,6 +554,7 @@ const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
   { id: 'mining', label: 'Mining', kinds: ['mining'] },
   { id: 'radar', label: 'Radar', kinds: ['radar'] },
   { id: 'life', label: 'Life support', kinds: ['life'] },
+  { id: 'emp', label: 'EMP', kinds: ['emp'] },
   { id: 'coolers', label: 'Coolers', kinds: ['cooler'] },
 ]
 

@@ -372,9 +372,9 @@ function SignatureMark({ kind }: { kind: string }) {
   )
 }
 
-function sectionHasPorts(ship: GameShip, sectionId: string): boolean {
-  if (sectionId === 'weapons') return weaponTree(ship).length > 0
-  return portsForSection(ship, sectionId).length > 0
+function sectionHasPorts(ship: GameShip, sectionId: string, fitted?: Record<string, FittedPart>): boolean {
+  if (sectionId === 'weapons') return weaponTree(ship, fitted).length > 0
+  return portsForSection(ship, sectionId, fitted).length > 0
 }
 
 function listedPart(item: { displayName: string }) {
@@ -383,6 +383,7 @@ function listedPart(item: { displayName: string }) {
 }
 
 function partInfo(item: ShipItemStats, stats: Record<string, number>, scale = 1): string {
+  if (item.kind === 'module' && item.feature) return item.feature
   if (item.kind === 'missileRack') return rackLoadLine(item.mounts)
   if (item.kind === 'missile' && item.ordnance !== 'bomb' && item.ordnance !== 'torpedo') {
     return missileTypeLine(stats, item.guidance)
@@ -783,7 +784,7 @@ export default function ShipShopPage() {
           </div>
           {ship && (
             <div className="site-chip-strip w-fit max-w-full">
-              {SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => (
+              {SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id, build.ports)).map((section) => (
                 <button
                   key={section.id}
                   type="button"
@@ -821,7 +822,7 @@ export default function ShipShopPage() {
         </div>
       </div>
 
-        {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id)).map((section) => {
+        {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id, build.ports)).map((section) => {
           const ports = portsForSection(ship, section.id, build.ports)
           const shieldScale = (portId: string) => {
             const part = powerParts.find((entry) => entry.portId === portId)
@@ -844,7 +845,9 @@ export default function ShipShopPage() {
                 : itemTitle(fitted.item)
               : port.kind === 'turret'
                 ? port.label
-                : 'Empty mount'
+                : port.kind === 'module'
+                  ? 'Empty module'
+                  : 'Empty mount'
             const attachment = port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount'
             const picker = open ? (
               <PartPicker

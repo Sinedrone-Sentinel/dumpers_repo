@@ -26,6 +26,7 @@ const INDEX_DIRS = [
   'entities/scitem/ships/countermeasures',
   'entities/scitem/ships/lifesupport',
   'entities/scitem/ships/quantumenforcementdevice',
+  'entities/scitem/ships/module',
 ]
 
 function readJson(path) {
@@ -128,6 +129,8 @@ function kindFromPortDef(def) {
   if (has('torpedo') && !has('missilelauncher')) return { section: 'missiles', kind: 'torpedo' }
   if (has('turret')) return { section: 'weapons', kind: 'weaponMount' }
   if (has('weapongun')) return { section: 'weapons', kind: 'weapon' }
+  if (has('emp')) return { section: 'emp', kind: 'emp' }
+  if (has('module')) return { section: 'modules', kind: 'module' }
   if (has('shield')) return { section: 'defense', kind: 'shield' }
   if (has('cooler')) return { section: 'systems', kind: 'cooler' }
   if (has('powerplant')) return { section: 'systems', kind: 'power' }
@@ -198,6 +201,8 @@ function kindForItem(filePath, entityKey) {
   if (id.includes('/lifesupport/')) return 'life'
   if (id.includes('/quantumenforcementdevice/') || /(?:^|_)(?:qed|qdmp)_/.test(entityKey.toLowerCase())) return 'qed'
   if (/tractorbeam/.test(entityKey.toLowerCase())) return 'tractor'
+  if (id.includes('/weapons/emp/') || /(?:^|_)emp_device/.test(entityKey.toLowerCase())) return 'emp'
+  if (id.includes('/ships/module/')) return 'module'
   if (id.includes('/weapons/') && !id.includes('/missiles/')) return 'weapon'
   if (id.includes('/bombcompartments/') || /(?:^|_)bmbrck_/.test(entityKey.toLowerCase())) return 'missileRack'
   if (/mrck_|missilerack/.test(id)) return 'missileRack'
@@ -214,6 +219,8 @@ const ITEM_KIND_PORT = {
   life: ['systems', 'life'],
   flight: ['systems', 'flight'],
   weapon: ['weapons', 'weapon'],
+  emp: ['emp', 'emp'],
+  module: ['modules', 'module'],
 }
 
 function isShieldPortName(name) {
@@ -237,6 +244,7 @@ function classifyPort(name, entityKey, itemKind) {
   if (n.includes('seat') || n.includes('dashboard') || n.includes('seataccess') || n.includes('camera')) return null
   if (n.includes('controller_flight')) return { section: 'systems', kind: 'flight' }
   if (n.includes('controller')) return null
+  if (itemKind === 'emp' || /(?:^|_)emp_device(?:_|$)/.test(e)) return { section: 'emp', kind: 'emp' }
   if (e.includes('tractorbeam')) return { section: 'systems', kind: 'tractor' }
   if (n === 'hardpoint_qed' || e.includes('qed_') || e.includes('qdmp_')) return { section: 'systems', kind: 'qed' }
   if (n.includes('missilerack') || e.includes('mrck_') || e.includes('missilerack') || e.includes('bmbrck_') || itemKind === 'missileRack' || n.includes('bombrack') || n.includes('bomb_system') || n.includes('bomb_rack')) {
@@ -513,6 +521,104 @@ function copyPortRules(row, port) {
   return accepts
 }
 
+/** One SCU is a 1.25 m cube. Grid volume is that many boxes. */
+function cargoScu(container) {
+  const value = container?._RecordValue_ || container
+  const dims = value?.interiorDimensions
+  const edge = Number(value?.inventoryType?.minPermittedItemSize?.x) || 1.25
+  if (!dims || edge <= 0) return 0
+  const axes = ['x', 'y', 'z'].map((axis) => Math.round((Number(dims[axis]) || 0) / edge))
+  if (axes.some((count) => count <= 0)) return 0
+  return axes.reduce((total, count) => total * count, 1)
+}
+
+function cargoGrids(extractedRoot) {
+  const root = join(extractedRoot, 'libs/foundry/records/entities/scitem/ships/cargogrid')
+  const rows = []
+  for (const filePath of walkFiles(root)) {
+    const json = readJson(filePath)
+    const ref = firstComponent(json, 'SCItemInventoryContainerComponentParams')?.containerParams
+    const containerPath = refPath(ref, filePath, extractedRoot)
+    const scu = cargoScu(containerPath ? readJson(containerPath) : null)
+    if (scu <= 0) continue
+    rows.push({ name: basename(filePath, '.json').toLowerCase(), scu })
+  }
+  return rows
+}
+
+/** Cargo grids that share the module's hull and side, such as the Retaliator front bay. */
+function cargoForModule(entityClass, grids) {
+  const name = String(entityClass || '').toLowerCase()
+  if (!name.includes('cargo')) return 0
+  const skip = new Set(['module', 'cargo', 'front', 'rear', 'left', 'right', 'top', 'bottom', 'center'])
+  const tokens = name.split('_').filter((token) => token.length >= 3 && !skip.has(token))
+  const side = ['front', 'rear', 'left', 'right', 'top', 'bottom', 'center'].find((token) => name.includes(`_${token}_`) || name.endsWith(`_${token}`))
+  const matched = grids.filter((grid) => {
+    if (tokens.some((token) => !grid.name.includes(token))) return false
+    if (side && !grid.name.includes(side)) return false
+    return true
+  })
+  const split = matched.filter((grid) => /_(?:main|left|right|top|bottom)$/.test(grid.name))
+  const chosen = split.length > 0 ? split : matched
+  return chosen.reduce((total, grid) => total + grid.scu, 0)
+}
+
+function medFeature(description) {
+  const match = String(description || '').match(/(\d+)\s*x\s*(tier\s*\d+)\s*medical beds?/i)
+  if (!match) return ''
+  const count = Number(match[1])
+  const tier = match[2].replace(/\s+/g, ' ').replace(/tier/i, 'Tier')
+  return `${count} × ${tier} med bed${count === 1 ? '' : 's'}`
+}
+
+/** Editable racks and guns a module brings with it. Doors and the object container stay off the list. */
+function moduleMounts(json) {
+  const container = firstComponent(json, 'SItemPortContainerComponentParams')
+  const entries = []
+  walkEntries(firstComponent(json, 'SEntityComponentDefaultLoadoutParams')?.loadout, '', entries)
+  const defaults = new Map()
+  for (const entry of entries) {
+    const key = entityKeyFromEntry(entry.entry)
+    if (key) defaults.set(String(entry.name).toLowerCase(), key.toLowerCase())
+  }
+  const mounts = []
+  for (const port of container?.Ports || []) {
+    if (/uneditable/i.test(String(port.Flags || ''))) continue
+    const name = port.Name
+    if (!name) continue
+    const row = { name, minSize: 0, maxSize: 0 }
+    const accepts = copyPortRules(row, port)
+    const types = accepts.map((entry) => entry.type.toLowerCase())
+    const launcher = types.includes('missilelauncher') || types.includes('bomblauncher')
+    const gun = types.includes('weapongun') || types.includes('turret')
+    if (!launcher && !gun) continue
+    const maxSize = Number(port.MaxSize) || 0
+    const minSize = Number(port.MinSize) || maxSize
+    if (!maxSize && !minSize) continue
+    row.minSize = minSize || maxSize
+    row.maxSize = maxSize || minSize
+    row.kind = launcher ? 'missileRack' : 'weapon'
+    const fallback = defaults.get(String(name).toLowerCase())
+    if (fallback) row.defaultEntityClass = fallback
+    mounts.push(row)
+  }
+  return mounts
+}
+
+function moduleFitsPort(item, port) {
+  const tokens = (value) => String(value || '')
+    .split(/\s+/)
+    .map((tag) => tag.replace(/^\$/, '').toLowerCase())
+    .filter(Boolean)
+  const needs = tokens(item.requiredTags)
+  const portGives = new Set(tokens(`${port.portTags || ''} ${port.requiredTags || ''}`))
+  if (needs.length > 0 && !needs.every((tag) => portGives.has(tag))) return false
+  const portNeeds = tokens(port.requiredTags)
+  const gives = new Set(tokens(item.tags))
+  if (portNeeds.length > 0 && !portNeeds.some((tag) => gives.has(tag))) return false
+  return true
+}
+
 function missileMounts(json) {
   const container = firstComponent(json, 'SItemPortContainerComponentParams')
   const mounts = []
@@ -629,6 +735,7 @@ export function parseShipShop({ extractedRoot, localization }) {
   const catalog = []
   const catalogByKey = new Map()
   const seenFiles = new Set()
+  const grids = cargoGrids(extractedRoot)
 
   for (const [key, filePath] of byKey) {
     if (seenFiles.has(filePath)) continue
@@ -640,7 +747,10 @@ export function parseShipShop({ extractedRoot, localization }) {
     const kind = kindForItem(filePath, entityClass)
     if (!kind) continue
     const def = attachDef(json)
+    if (kind === 'module' && String(def?.Type || '').toLowerCase() !== 'module') continue
     const locKey = String(def?.Localization?.Name || '')
+    const moduleNameKey = locKey.replace(/^@/, '')
+    if (kind === 'module' && (!moduleNameKey || /^loc_(?:placeholder|empty)$/i.test(moduleNameKey))) continue
     const resolvedName = entityClass === 'mrck_s03_temp_bomb'
       ? (localization.item_NameBEHR_BombRack_S3 || 'CST-313 "Castillo"')
       : kind === 'missileRack' && /bmbrck_/.test(entityClass) && !/bomb/i.test(locKey)
@@ -648,10 +758,18 @@ export function parseShipShop({ extractedRoot, localization }) {
         : resolveName(locKey, localization)
     const displayName = usableName(resolvedName) ? resolvedName : humanizeEntity(entityClass)
     if (!displayName) continue
+    if (kind === 'weapon' && (/slayer cannon/i.test(displayName) || /^(?:bengal_turret_ballisticcannon|hrst_nova_ballisticcannon)/.test(entityClass))) continue
     const stats = extractShipItemStats(json, {
       readRef: (ref) => readRef(ref, filePath),
     })
     if (kind === 'missile' && stats.Weapon_Damage) stats.Missile_Damage = stats.Weapon_Damage
+    if (kind === 'emp') {
+      const emp = firstComponent(json, 'SCItemEMPParams')
+      if (emp?.chargeTime) stats.Emp_Charge = emp.chargeTime
+      if (emp?.distortionDamage) stats.Emp_Damage = emp.distortionDamage
+      if (emp?.empRadius) stats.Emp_Radius = emp.empRadius
+      if (emp?.cooldownTime) stats.Emp_Cooldown = emp.cooldownTime
+    }
     if (kind === 'flight') {
       const flight = applyLegacyFlightModifiers(flightStats(json), legacyFlightModifier(json, (ref) => readRef(ref, filePath)))
       if (flight.pitch) stats.Flight_Pitch = flight.pitch
@@ -666,7 +784,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     const manufacturerCode = String(def?.Manufacturer || '').match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const tags = typeof def?.Tags === 'string' ? def.Tags.trim() : ''
     const requiredTags = typeof def?.RequiredTags === 'string' ? def.RequiredTags.trim() : ''
-    const mounts = kind === 'missileRack' ? missileMounts(json) : kind === 'weaponMount' ? weaponMountPorts(json) : []
+    const mounts = kind === 'missileRack' ? missileMounts(json) : kind === 'weaponMount' ? weaponMountPorts(json) : kind === 'module' ? moduleMounts(json) : []
     if (entityClass === 'mrck_s03_temp_bomb') {
       for (const mount of mounts) {
         mount.minSize = 3
@@ -699,6 +817,20 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (guidance) item.guidance = guidance
     }
     if (mounts.length > 0) item.mounts = mounts
+    if (kind === 'module') {
+      const cargo = cargoForModule(entityClass, grids)
+      let tubes = 0
+      for (const mount of mounts) {
+        if (mount.kind !== 'missileRack' || !mount.defaultEntityClass) continue
+        tubes += catalogByKey.get(String(mount.defaultEntityClass).toLowerCase())?.mounts?.length || 0
+      }
+      const feature = cargo > 0
+        ? `+${cargo} SCU cargo`
+        : tubes > 0
+          ? `${tubes} × missiles`
+          : medFeature(resolveName(def?.Localization?.Description, localization))
+      if (feature) item.feature = feature
+    }
     if (typeof json._RecordId_ === 'string' && json._RecordId_) item.uuid = json._RecordId_
     seenFiles.add(filePath)
     catalog.push(item)
@@ -761,16 +893,23 @@ export function parseShipShop({ extractedRoot, localization }) {
       }
       const item = catalogByKey.get(entityKey.toLowerCase()) || null
       const portDef = portDefs.get(String(entry.name || '').toLowerCase())
-      const classed = item
+      const fromDef = kindFromPortDef(portDef)
+      let classed = item
         ? classifyPort(entry.name, entityKey, item.kind)
-        : (kindFromPortDef(portDef) || classifyPort(entry.name, entityKey, null))
+        : (fromDef || classifyPort(entry.name, entityKey, null))
+      if (!classed) classed = fromDef
+      if (fromDef && fromDef.kind !== 'module' && classed?.kind === 'module') classed = fromDef
+      const acceptTypes = (portDef?.accepts || []).map((row) => String(row.type || '').toLowerCase())
+      const mixedTurret = acceptTypes.some((type) => type === 'module' || type === 'weapongun' || type === 'missilelauncher' || type === 'bomblauncher')
+      if (!item && classed?.kind === 'weaponMount' && /turret/i.test(entry.name) && !/tractor|relay/i.test(entry.name) && !mixedTurret) {
+        classed = { section: 'weapons', kind: 'turret' }
+      }
       if (!classed) continue
 
       if (classed.kind === 'flight' && loaded?.json) {
         flight = { ...flight, ...flightStats(loaded.json) }
       }
 
-      const acceptTypes = (portDef?.accepts || []).map((entry) => String(entry.type || '').toLowerCase())
       const notAComponent = acceptTypes.length > 0 && acceptTypes.every((type) => (
         type === 'display' || type === 'door' || type === 'cargo' || type === 'room' || type === 'seat' || type === 'light' || type === 'toolarm' || type === 'paint' || type === 'flair'
       ))
@@ -785,7 +924,7 @@ export function parseShipShop({ extractedRoot, localization }) {
         size,
         minSize: size,
         maxSize: size,
-        defaultEntityClass: item?.entityClass || null,
+        defaultEntityClass: classed.kind !== 'module' && item?.kind === 'module' ? null : (item?.entityClass || null),
       }, portDefs)
       if (shaped.kind === 'turret' && !shaped.defaultEntityClass) shaped.locked = true
       const parentPath = entry.path.includes('/') ? entry.path.slice(0, entry.path.lastIndexOf('/')) : ''
@@ -817,6 +956,20 @@ export function parseShipShop({ extractedRoot, localization }) {
     const existing = ships.findIndex((row) => row.displayName.toLowerCase() === displayName.toLowerCase())
     if (existing >= 0) ships.splice(existing, 1)
     ships.push(ship)
+  }
+
+  const modulePorts = ships.flatMap((ship) => (ship.ports || []).filter((port) => port.kind === 'module'))
+  const functional = (item) => Boolean(item.feature) || (item.mounts || []).some((mount) => mount.kind === 'missileRack' || mount.kind === 'weapon')
+  const shopPorts = new Set(modulePorts.filter((port) => catalog.some((item) => item.kind === 'module' && moduleFitsPort(item, port) && functional(item))))
+  for (const ship of ships) {
+    ship.ports = ship.ports.filter((port) => port.kind !== 'module' || shopPorts.has(port))
+  }
+  for (let index = catalog.length - 1; index >= 0; index -= 1) {
+    const item = catalog[index]
+    if (item.kind !== 'module') continue
+    if ([...shopPorts].some((port) => moduleFitsPort(item, port))) continue
+    catalog.splice(index, 1)
+    catalogByKey.delete(item.entityClass)
   }
 
   ships.sort((a, b) => a.displayName.localeCompare(b.displayName))

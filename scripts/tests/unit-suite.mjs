@@ -2610,6 +2610,17 @@ check(
     ])[0].blocks.every((block) => !block.disabled),
   'ship shop: weapon pips round up to full power, and pips above that stay disabled',
 )
+const empPart = [{ portId: 'emp', kind: 'emp', size: 4, stats: { Weapon_Power: 1, Emp_Damage: 2750, Emp_Radius: 750, Emp_Charge: 20 } }]
+const empColumn = shipShopMath.powerColumns(0, empPart).find((column) => column.id === 'emp')
+check(
+  empColumn?.blocks.length === 1 &&
+    empColumn.blocks[0].size === 1 &&
+    shipShopMath.coolantDemand(empPart, new Map([['emp', 1]])) === 1 &&
+    shipShopMath.coolantDemand(empPart, new Map([['emp', 0]])) === 0 &&
+    shipShopMath.partStatLine('emp', empPart[0].stats).includes('distortion') &&
+    shipShopMath.partStatLine('emp', empPart[0].stats).includes('750 m'),
+  'ship shop: EMP has its own pip and that pip counts toward cooling',
+)
 check(
   shipShopMath.resolvedPower(shipShopMath.powerColumns(4, ballisticGuns), { weapons: 4 }, 20).weapons === 1 &&
     shipShopMath.togglePowerColumn(ballisticColumn.blocks, 0, 20) === 1 &&
