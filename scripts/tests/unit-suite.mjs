@@ -2179,9 +2179,27 @@ check(
     Weapon_HeatPerShot: 0.5309735,
     Weapon_Overheat: 100,
     Weapon_OverheatFix: 4.21,
-  })) === 875,
-  'ship shop: sustained DPS drops for the time a gun is cooling',
+  })) === 878,
+  'ship shop: sustained DPS counts the shot that crosses the heat cap',
 )
+const deadboltV = { Weapon_Damage: 950, Weapon_Firerate: 100, Weapon_HeatPerShot: 6, Weapon_Overheat: 100, Weapon_OverheatFix: 3.59 }
+const deadboltIV = { Weapon_Damage: 610, Weapon_Firerate: 100, Weapon_HeatPerShot: 6, Weapon_Overheat: 100, Weapon_OverheatFix: 3.32 }
+check(
+  Math.round(2 * shipShopMath.weaponBurstDps(deadboltV) + 2 * shipShopMath.weaponBurstDps(deadboltIV)) === 5200 &&
+    2 * Math.round(shipShopMath.weaponSustainedDps(deadboltV)) + 2 * Math.round(shipShopMath.weaponSustainedDps(deadboltIV)) === 3934,
+  'ship shop: two size-5 and two size-4 ballistic cannons sustain at 3934',
+)
+{
+  const deadboltSnapshot = shipShopMath.emptySnapshot()
+  shipShopMath.addPartToSnapshot(deadboltSnapshot, 'weapon', deadboltV)
+  shipShopMath.addPartToSnapshot(deadboltSnapshot, 'weapon', deadboltV)
+  shipShopMath.addPartToSnapshot(deadboltSnapshot, 'weapon', deadboltIV)
+  shipShopMath.addPartToSnapshot(deadboltSnapshot, 'weapon', deadboltIV)
+  check(
+    deadboltSnapshot.burstDps === 5200 && deadboltSnapshot.sustainedDps === 3934,
+    'ship shop: the snapshot sums those cannons to burst 5200 and sustained 3934',
+  )
+}
 check(
   shipShopMath.weaponSustainedDps({ Weapon_Damage: 10, Weapon_Firerate: 60 }) === 10,
   'ship shop: a gun with no heat keeps its burst as sustained',
@@ -2189,6 +2207,15 @@ check(
 check(
   shipShopMath.compareToStock(120, 100) === 'up' && shipShopMath.compareToStock(80, 100) === 'down',
   'ship shop: snapshot color compares against the stock number',
+)
+check(
+  shipShopMath.flightBladeFamily('controller_flight_orig_m80') === 'controller_flight_orig_m80' &&
+    shipShopMath.flightBladeFamily('controller_flight_anvl_arrow_flight_blade_spd', 'ANVL_Arrow_Blade', 'ANVL_Arrow_Blade') === 'anvl_arrow_blade' &&
+    shipShopMath.flightBladeFamily('controller_flight_anvl_arrow', 'ANVL_Arrow_Blade') === 'anvl_arrow_blade' &&
+    shipShopMath.flightBladeFamily('controller_flight_rsi_constellation_andromeda_mm_322') === 'controller_flight_rsi_constellation_andromeda' &&
+    shipShopMath.flightBladeFamily('controller_flight_rsi_constellation_andromeda_gs', '$RSI_Constellation_Andromeda_Blade') !==
+      shipShopMath.flightBladeFamily('controller_flight_rsi_constellation_andromeda'),
+  'ship shop: flight blades stay in the ship family named on the blade',
 )
 check(
   shipShopMath.weaponBurstDps({ Weapon_Damage: 10, Weapon_Firerate: 60, Weapon_Pellets: 2 }) === 20,
@@ -2237,16 +2264,28 @@ check(
 )
 check(
   shipShopMath.pipDemand({ Power_HighStart: 1 }) === 1 &&
-    shipShopMath.pipDemand({ Power_Segments: 5, Power_HighStart: 1 }) === 5,
-  'ship shop: pip count is the segment draw, or the full-power band when that is all the item registers',
+    shipShopMath.pipDemand({ Power_Segments: 5, Power_HighStart: 1 }) === 5 &&
+    shipShopMath.pipDemand({ Weapon_Power: 3, Power_HighStart: 1 }) === 3,
+  'ship shop: pip count is the segment draw, the power draw, or the full-power band',
+)
+const sunfireDrive = [{ portId: 'q', kind: 'quantum', size: 2, stats: { Weapon_Power: 3, Power_HighStart: 1, Power_HighMod: 1 } }]
+const sunfireColumn = shipShopMath.powerColumns(0, sunfireDrive).find((column) => column.id === 'quantum')
+check(
+  sunfireColumn.blocks.length === 1 &&
+    sunfireColumn.blocks[0].size === 3 &&
+    shipShopMath.coolantDemand(sunfireDrive, new Map([['q', 3]])) === 6 &&
+    shipShopMath.coolantDemand(sunfireDrive, new Map([['q', 0]])) === 0,
+  'ship shop: a quantum drive is one block for its whole power draw',
 )
 const four = [{ size: 1, portId: null }, { size: 1, portId: null }, { size: 1, portId: null }, { size: 1, portId: null }]
 check(
   shipShopMath.clickPowerColumn(four, 4, 1, 0) === 2 &&
     shipShopMath.clickPowerColumn(four, 2, 3, 0) === 2 &&
+    shipShopMath.clickPowerColumn(four, 1, -1, 0) === 0 &&
+    shipShopMath.clickPowerColumn([{ size: 2, portId: 'c' }], 2, -1, 4) === 0 &&
     shipShopMath.togglePowerColumn(four, 4, 0) === 0 &&
     shipShopMath.togglePowerColumn(four, 0, 4) === 4,
-  'ship shop: pip clicks fill from the bottom inside the power budget',
+  'ship shop: pip clicks fill from the bottom, and the last lit pip turns off',
 )
 check(
   shipShopMath.itemIsEquippable({ entityClass: 'stub', displayName: 'Stub', kind: 'weapon', size: 1, stats: {}, burstDps: 0 }) === false &&

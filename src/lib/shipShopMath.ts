@@ -72,7 +72,7 @@ export function weaponBurstDps(stats: Record<string, number> | null | undefined)
   return (damage * pellets) / interval
 }
 
-/** Burst, reduced by overheat and, for energy guns, by how fast the capacitor refills at this power. */
+/** Burst, reduced by the shots that land before the heat cap and the cool-down after. Energy guns also follow capacitor regen. */
 export function weaponSustainedDps(stats: Record<string, number> | null | undefined, powerFraction = 1): number {
   const burst = weaponBurstDps(stats)
   if (!burst || !stats) return 0
@@ -83,9 +83,13 @@ export function weaponSustainedDps(stats: Record<string, number> | null | undefi
   const rate = stats.Weapon_Firerate || 0
   const overheat = stats.Weapon_Overheat || 0
   if (heat && rate && overheat) {
-    const timeHot = overheat / (heat * (rate / 60))
+    const roundsPerSecond = rate / 60
+    const timeHot = overheat / (heat * roundsPerSecond)
     const downtime = stats.Weapon_OverheatFix || (stats.Weapon_Cooling ? overheat / stats.Weapon_Cooling : 0)
-    if (downtime) sustained = (burst * timeHot) / (timeHot + downtime)
+    if (downtime && timeHot > 0) {
+      const shots = Math.ceil(overheat / heat - 1e-9)
+      sustained = (burst * shots) / (roundsPerSecond * (timeHot + downtime))
+    }
   }
   const regenCap = stats.Weapon_RegenPerSec || 0
   const energy = stats.Weapon_Damage_Energy || 0
@@ -250,7 +254,19 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
   return ''
 }
 
-/** Quantum drive speed is stored in metres per second. Large drives read as megametres per second. */
+/** Blades that share a tag are one ship family. Untagged blades stay with their own controller name. */
+export function flightBladeFamily(entityClass: string, tags?: string | null, requiredTags?: string | null): string {
+  const tag = `${tags || ''} ${requiredTags || ''}`
+    .split(/\s+/)
+    .map((entry) => entry.replace(/^\$/, ''))
+    .find(Boolean)
+  if (tag) return tag.toLowerCase()
+  return entityClass
+    .toLowerCase()
+    .replace(/(?:_flight)?_blade_(?:hnd|spd)$/, '')
+    .replace(/_mm(?:_[a-z0-9]+)+$/, '')
+}
+
 /** Stock blade, or Handling / Speed when the file name or the numbers say so. */
 export function flightRole(item: ShipItemStats, stock: ShipItemStats | null | undefined): string {
   if (stock && item.entityClass === stock.entityClass) return 'Stock'
@@ -267,6 +283,7 @@ export function flightRole(item: ShipItemStats, stock: ShipItemStats | null | un
   return 'Alternate'
 }
 
+/** Quantum drive speed is stored in metres per second. Large drives read as megametres per second. */
 export function formatQuantumSpeed(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value)) return '—'
   if (value <= 0) return '0'
@@ -367,7 +384,7 @@ export function addPartToSnapshot(
 ): void {
   if (kind === 'weapon') {
     snapshot.burstDps += weaponBurstDps(stats) * (scale > 0 ? 1 : 0)
-    snapshot.sustainedDps += weaponSustainedDps(stats, scale)
+    snapshot.sustainedDps += Math.round(weaponSustainedDps(stats, scale))
   }
   if (kind === 'missile') snapshot.missileVolley += stats.Missile_Damage || stats.Weapon_Damage || 0
   if (kind === 'shield') {
@@ -434,9 +451,14 @@ const POWER_GROUPS: { id: string; label: string; kinds: string[] }[] = [
   { id: 'coolers', label: 'Coolers', kinds: ['cooler'] },
 ]
 
-/** Pips a component draws: its power-segment consumption, or the registered full-power band. */
+/**
+ * Pips a component draws. Segment items use that consumption. A standard-unit
+ * item, such as a quantum drive, uses its power draw. Otherwise the full-power band.
+ */
 export function pipDemand(stats: Record<string, number>): number {
   if (stats.Power_Segments > 0) return stats.Power_Segments
+  const rated = stats.Weapon_Power || 0
+  if (rated > 0) return Math.ceil(Math.round(rated * 1000) / 1000)
   return stats.Power_HighStart || stats.Power_MedStart || stats.Power_LowStart || 0
 }
 
@@ -534,7 +556,10 @@ export function powerColumns(weaponPowerPool: number, parts: PowerPart[]): Power
     const blocks: PowerBlock[] = []
     members.forEach((part, memberIndex) => {
       const max = pipDemand(part.stats)
-      const min = Math.min(max, Math.max(1, part.stats.Power_Min || 1))
+      const publishedMin = part.stats.Power_Min || 0
+      const min = publishedMin > 0
+        ? Math.min(max, Math.max(1, publishedMin))
+        : (!(part.stats.Power_Segments > 0) && (part.stats.Weapon_Power || 0) > 0 ? max : Math.min(max, 1))
       const gap = memberIndex > 0
       const partBlocks: PowerBlock[] = []
       if (min > 1) {
@@ -868,7 +893,8 @@ function bottomFlags(blocks: PowerBlock[], selected: number): boolean[] {
 
 /** Click sets how high this column stays filled, using only unassigned pips plus pips this click releases. */
 export function clickPowerColumn(blocks: PowerBlock[], selected: number, blockIndex: number, remaining: number): number {
-  if (blockIndex < 0 || blocks[blockIndex]?.disabled) return selected
+  if (blockIndex < 0) return 0
+  if (blocks[blockIndex]?.disabled) return selected
   const flags = bottomFlags(blocks, selected)
   let budget = remaining
   for (let index = blockIndex + 1; index < blocks.length; index += 1) {
