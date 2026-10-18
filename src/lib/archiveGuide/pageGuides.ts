@@ -233,6 +233,19 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     relatesTo: ['Mining Tracker', 'Resource Tracker'],
   },
   {
+    id: 'ship-shop',
+    title: "Fuzy's Ship Shop",
+    description: 'Build a ship loadout, compare parts, and see where to buy them.',
+    details: [
+      'Pick a ship and start from its stock parts. You can keep four builds',
+      'Swap any part the hardpoint accepts, or clear a slot. Locked hardpoints stay as the ship ships them',
+      'Power pips, cooling, and signatures update as you change the fit',
+      'Where to Buy shows UEX shops for the ship or the fitted part. Add to Cart collects the parts that differ from stock',
+      'Signed in: the four builds save on your account. Offline Mode: they save in this browser, and move onto your account the first time you sign in if that account has no builds yet',
+    ],
+    relatesTo: ['Commodity Lookup'],
+  },
+  {
     id: 'orders',
     title: 'My Listings',
     description: 'Manage your one WTB buy listing and one WTS sell listing, plus every transaction they create.',

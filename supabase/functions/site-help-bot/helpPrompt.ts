@@ -37,6 +37,7 @@ const PATH_LABELS: Array<[string, string]> = [
   ['/resources', 'Resource Tracker'],
   ['/mining-tracker', 'Mining Tracker'],
   ['/commodity-lookup', 'Commodity Lookup'],
+  ['/ship-shop', "Fuzy's Ship Shop"],
   ['/orders', 'My Listings'],
   ['/bazaar', 'The Bazaar'],
   ['/archive', 'Information Archive'],

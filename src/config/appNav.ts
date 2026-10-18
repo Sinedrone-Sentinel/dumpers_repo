@@ -92,8 +92,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     label: "Fuzy's Ship Shop",
     path: '/ship-shop',
     icon: 'ship',
-    officerOnly: true,
-    minRole: 'officer',
+    featureId: 'ship_shop',
   },
   {
     id: 'archive',
