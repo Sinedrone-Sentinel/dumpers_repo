@@ -1791,14 +1791,13 @@
           "id": "hardpoint_torpedorack",
           "label": "Torpedorack",
           "section": "missiles",
-          "kind": "torpedo",
+          "kind": "missileRack",
           "size": 9,
           "minSize": 3,
           "maxSize": 10,
           "defaultEntityClass": "mrck_s09_aegs_eclipse",
           "requiredTags": "$Eclipse_BombRack",
           "portTags": "Eclipse_BombRack",
-          "locked": true,
           "accepts": [
             {
               "type": "MissileLauncher",
@@ -36183,7 +36182,7 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": null,
+          "defaultEntityClass": "bmbrck_crus_spirit_a1",
           "portTags": "$Spirit_Bomb_Rack",
           "locked": true,
           "accepts": [
@@ -36988,7 +36987,7 @@
           "size": 10,
           "minSize": 10,
           "maxSize": 10,
-          "defaultEntityClass": null,
+          "defaultEntityClass": "bmbrck_crus_starl_left",
           "locked": true,
           "accepts": [
             {
@@ -37033,7 +37032,7 @@
           "size": 10,
           "minSize": 10,
           "maxSize": 10,
-          "defaultEntityClass": null,
+          "defaultEntityClass": "bmbrck_crus_starl_right",
           "locked": true,
           "accepts": [
             {
