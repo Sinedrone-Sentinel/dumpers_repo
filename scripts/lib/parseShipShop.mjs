@@ -167,7 +167,7 @@ function kindForItem(filePath, entityKey) {
   return null
 }
 
-function classifyPort(name, entityKey) {
+function classifyPort(name, entityKey, itemKind) {
   const n = name.toLowerCase()
   const e = (entityKey || '').toLowerCase()
   if (n.includes('weapon_rack') || n.includes('weaponrack')) return null
@@ -182,7 +182,7 @@ function classifyPort(name, entityKey) {
   if (n.includes('missile') || e.includes('misl_') || e.includes('gmisl_')) {
     return { section: 'missiles', kind: 'missile' }
   }
-  if (e.includes('mount_gimbal') || e.includes('mount_fixed') || e.includes('varipuck') || n.includes('varipuck')) {
+  if (itemKind === 'weaponMount' || e.includes('mount_gimbal') || e.includes('mount_fixed') || e.includes('varipuck') || n.includes('varipuck')) {
     return { section: 'weapons', kind: 'weaponMount' }
   }
   if (n.includes('turret') && !n.includes('tractor') && !n.includes('relay')) return { section: 'weapons', kind: 'turret' }
@@ -510,14 +510,14 @@ export function parseShipShop({ extractedRoot, localization }) {
         noise += counts.noise
         decoy += counts.decoy
       }
-      const classed = classifyPort(entry.name, entityKey)
+      const item = catalogByKey.get(entityKey.toLowerCase()) || null
+      const classed = classifyPort(entry.name, entityKey, item?.kind)
       if (!classed) continue
 
       if (classed.kind === 'flight' && loaded?.json) {
         flight = { ...flight, ...flightStats(loaded.json) }
       }
 
-      const item = catalogByKey.get(entityKey.toLowerCase()) || null
       const size = item?.size || sizeFromName(entityKey) || (classed.kind === 'turret' ? 1 : 0)
       if (size <= 0 && !item?.entityClass && classed.kind !== 'turret') continue
       const shaped = shapePort(entry.name, {
@@ -532,11 +532,6 @@ export function parseShipShop({ extractedRoot, localization }) {
       }, portDefs)
       if (shaped.kind === 'turret' && !shaped.defaultEntityClass) shaped.locked = true
       if (shaped) ports.push(shaped)
-    }
-
-    for (const port of ports) {
-      const parentLocked = ports.some((other) => other.locked && other.kind !== 'turret' && port.id.startsWith(`${other.id}/`))
-      if (parentLocked) port.locked = true
     }
 
     const ship = {

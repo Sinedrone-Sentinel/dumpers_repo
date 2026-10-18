@@ -129,7 +129,7 @@ const ravenQed = raven.ports.find((port) => port.kind === 'qed')
 assert.equal(ravenQed.defaultEntityClass, 'qdmp_wetk_s02_raven_x')
 assert.equal(items.find((item) => item.entityClass === 'qdmp_wetk_s02_raven_x').stats.Power_Segments, 3)
 assert.equal(raven.ports.find((port) => port.id === 'hardpoint_weapon_left_wing')?.locked, true)
-assert.equal(raven.ports.find((port) => port.id === 'hardpoint_weapon_left_wing/hardpoint_class_2')?.locked, true)
+assert.notEqual(raven.ports.find((port) => port.id === 'hardpoint_weapon_left_wing/hardpoint_class_2')?.locked, true)
 assert.notEqual(raven.ports.find((port) => port.id === 'hardpoint_weapon_left_nose/hardpoint_class_2')?.locked, true)
 
 const andromeda = ships.find((ship) => ship.id === 'rsi_constellation_andromeda')

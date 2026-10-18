@@ -6,7 +6,6 @@ import type { BlueprintWithSlots } from './blueprintResources'
 import { getShipItem, shipItems } from './shipItemCatalog'
 import {
   addPartToSnapshot,
-  assignedSegments,
   columnTotal,
   coolantDemand,
   coolantSupply,
@@ -175,6 +174,18 @@ function tagList(value: string | null | undefined): string[] {
     .filter((tag) => tag && !GENERIC_PORT_TAGS.has(tag.toLowerCase()))
 }
 
+function hasRawTag(value: string | null | undefined, tag: string): boolean {
+  const needle = tag.toLowerCase()
+  return (value || '').split(/\s+/).some((entry) => entry.replace(/^\$/, '').toLowerCase() === needle)
+}
+
+/** A gun hardpoint whose stock item is a mount (F7 ball turret) is a mount port. */
+export function effectivePortKind(port: ShipPort): string {
+  const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
+  if (stock?.kind === 'weaponMount') return 'weaponMount'
+  return port.kind
+}
+
 function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
   const portGives = tagList(port.portTags)
   const itemNeeds = tagList(item.requiredTags)
@@ -182,14 +193,21 @@ function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
   const portNeeds = tagList(port.requiredTags)
   const itemGives = tagList(item.tags)
   if (portNeeds.length > 0 && !portNeeds.some((tag) => itemGives.includes(tag))) return false
+  const kind = effectivePortKind(port)
+  if (kind === 'weapon' && item.kind === 'weapon') {
+    const stockClass = (port.defaultEntityClass || '').toLowerCase()
+    const shipLocked = item.entityClass.toLowerCase() !== stockClass && itemNeeds.length === 0 && !hasRawTag(item.tags, 'weaponMountUsable')
+    if (shipLocked) return false
+  }
   if (port.kind === 'torpedo') return item.ordnance === 'torpedo'
   if (port.kind === 'missile') return item.ordnance !== 'torpedo'
   return true
 }
 
 function sameKind(item: ShipItemStats, port: ShipPort): boolean {
-  if (port.kind === 'torpedo' || port.kind === 'missile') return item.kind === 'missile'
-  return item.kind === port.kind
+  const kind = effectivePortKind(port)
+  if (kind === 'torpedo' || kind === 'missile') return item.kind === 'missile'
+  return item.kind === kind
 }
 
 export function partsForPort(port: ShipPort): ShipItemStats[] {
@@ -389,14 +407,14 @@ export function snapshotForBuild(
   const poweredPorts = new Set(columns.flatMap((column) => column.blocks.map((block) => block.portId).filter((portId): portId is string => Boolean(portId))))
   for (const column of columns) {
     if (column.id === 'weapons') continue
-    const selected = assignedPower[column.id] || 0
-    const assigned = assignedSegments(column, selected)
-    for (const portId of poweredPorts) {
-      if (!column.blocks.some((block) => block.portId === portId)) continue
-      const part = parts.find((entry) => entry.portId === portId)
-      const count = assigned.get(portId) || 0
-      pipCounts.set(portId, count)
-      scales.set(portId, part ? segmentScale(part.stats, count) : 0)
+    const seen = new Set<string>()
+    for (const block of column.blocks) {
+      if (!block.portId || seen.has(block.portId)) continue
+      seen.add(block.portId)
+      const part = parts.find((entry) => entry.portId === block.portId)
+      const count = assignedPower[block.portId] || 0
+      pipCounts.set(block.portId, count)
+      scales.set(block.portId, part ? segmentScale(part.stats, count) : 0)
     }
   }
   const scaleFor = (part: PowerPart) => {
