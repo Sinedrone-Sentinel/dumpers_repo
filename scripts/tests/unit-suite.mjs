@@ -2649,5 +2649,14 @@ check(
     shipShopMath.radarRangeForPips(m80Parts[2].stats, 2) === 1521,
   'ship shop: one NightFall and four ballistic guns cool at 44 percent with IR 690.8',
 )
+check(
+  shipShopMath.coolantBarPercent(m80Supply, m80Demand, false) === 44 &&
+    shipShopMath.coolersShutOff(m80Parts, m80Pips) === false &&
+    shipShopMath.coolersShutOff(m80Parts, new Map([['r', 2]])) === true &&
+    shipShopMath.coolantBarPercent(0, 6.4, true) === shipShopMath.COOLANT_SHUTOFF_PERCENT &&
+    shipShopMath.coolantBarPercent(0, 0, false) == null &&
+    shipShopMath.coolersShutOff(m80Parts.filter((part) => part.kind !== 'cooler'), new Map()) === false,
+  'ship shop: removing every cooler pip shows 999 percent because coolant is shut off',
+)
 
 console.log(`Unit tests: ${pass} passed`)
