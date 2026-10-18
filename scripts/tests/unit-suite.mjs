@@ -2220,7 +2220,11 @@ check(
   'ship shop: a lower signature reads as better than stock',
 )
 check(
-  shipShopMath.formatSignedPercent(13) === '+13%' && shipShopMath.formatSignedPercent(-28) === '−28%',
+  shipShopMath.formatSignedPercent(13) === '+13%' &&
+    shipShopMath.formatSignedPercent(13.26) === '+13.2%' &&
+    shipShopMath.formatSignedPercent(-28.19) === '−28.1%' &&
+    shipShopMath.formatShopNumber(1.99) === '1.9' &&
+    shipShopMath.formatShopNumber(13116) === (13116).toLocaleString(),
   'ship shop: signature percent keeps its sign',
 )
 const shieldBands = { Power_Segments: 3, Power_LowStart: 1, Power_LowMod: 0.7, Power_MedStart: 2, Power_MedMod: 0.85, Power_HighStart: 3, Power_HighMod: 1 }
@@ -2252,6 +2256,7 @@ check(
 )
 check(
   shipShopMath.formatQuantumSpeed(161410900) === '161.4 Mm/s' &&
+    shipShopMath.formatQuantumSpeed(161460000) === '161.4 Mm/s' &&
     shipShopMath.partStatLine('weapon', { Weapon_Damage: 10, Weapon_Firerate: 60 }).includes('sustained'),
   'ship shop: quantum speed and sustained DPS use plain labels',
 )
@@ -2388,8 +2393,8 @@ check(
     shipShopMath.shieldRegenRate(allstopShield, 1) === 602 &&
     Math.round(shipShopMath.shieldFullChargeSeconds(allstopShield, 1) * 10) === 53 &&
     shipShopMath.shieldFullChargeSeconds(allstopShield, 0) == null &&
-    shipShopMath.partStatLine('shield', allstopShield).includes('full charge 5.3s') &&
-    shipShopMath.partStatLine('shield', allstopShield).includes('damaged 5.8s') &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('full charge 5.2s') &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('damaged 5.7s') &&
     shipShopMath.partStatLine('shield', allstopShield).includes('downed 11.5s'),
   'ship shop: shield regen and full charge follow the pip band',
 )

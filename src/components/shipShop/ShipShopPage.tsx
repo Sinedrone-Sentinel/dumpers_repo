@@ -31,6 +31,7 @@ import {
   componentGroups,
   flightRole,
   formatQuantumSpeed,
+  formatShopNumber,
   partStatLine,
   powerColumns,
   powerGenerated,
@@ -49,19 +50,23 @@ import { defaultShipShopLoadouts, fetchShipShopLoadouts, saveShipShopLoadouts } 
 const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
 
 function formatNumber(value: number | null | undefined): string {
-  if (value == null || !Number.isFinite(value)) return '—'
-  return Math.round(value).toLocaleString()
+  return formatShopNumber(value)
 }
 
 function formatPercent(value: number | null | undefined): string {
-  if (value == null || !Number.isFinite(value)) return '—'
-  return `${Math.round(value)}%`
+  const text = formatShopNumber(value)
+  return text === '—' ? text : `${text}%`
 }
 
 function formatSignature(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value) || value <= 0) return '—'
-  if (value < 1000) return value.toFixed(1)
-  return `${(Math.floor(value / 100) / 10).toFixed(1)}k`
+  if (value < 1000) {
+    const text = formatShopNumber(value)
+    return text.includes('.') ? text : `${text}.0`
+  }
+  const kilo = Math.trunc(value / 100) / 10
+  const text = formatShopNumber(kilo)
+  return `${text.includes('.') ? text : `${text}.0`}k`
 }
 
 const PLAIN_KINDS = new Set(['weapon', 'missile', 'torpedo', 'flight', 'missileRack', 'weaponMount'])
