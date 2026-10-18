@@ -68,8 +68,9 @@ function findRenderedPort(ship: GameShip, fitted: Record<string, FittedPart>, po
   return ship.ports.find((port) => port.id === portId) || walk(weaponTree(ship, fitted))
 }
 
+/** 1080p and 1440p wrap a stack after 8 pips. Wider windows keep one column. */
 function useCompactPipWrap(): boolean {
-  const query = '(max-width: 1920px)'
+  const query = '(max-width: 2560px)'
   const [compact, setCompact] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
   useEffect(() => {
     const media = window.matchMedia(query)
