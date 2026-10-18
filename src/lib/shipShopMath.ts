@@ -411,6 +411,7 @@ export interface ShipSnapshotNumbers {
   coolant: number
   coolantDemand: number
   coolantRatio: number
+  coolantShutOff: boolean
   pitch: number | null
   yaw: number | null
   roll: number | null
@@ -459,6 +460,7 @@ export function emptySnapshot(ship?: {
     coolant: 0,
     coolantDemand: 0,
     coolantRatio: 0,
+    coolantShutOff: false,
     pitch: null,
     yaw: null,
     roll: null,
@@ -868,6 +870,28 @@ export function coolerOutput(stats: Record<string, number>, assigned: number): n
   if (assigned <= 0 || units <= 0 || rated <= 0) return 0
   const pips = Math.min(assigned, units)
   return rated * (pips / units) * segmentScale(stats, pips)
+}
+
+/** A fitted cooler with every pip removed is shut off. An empty cooler slot is not. */
+export function coolersShutOff(parts: PowerPart[], pips: Map<string, number>): boolean {
+  let fitted = false
+  for (const part of parts) {
+    if (part.kind !== 'cooler') continue
+    fitted = true
+    if (assignedPips(pips, part.portId) > 0) return false
+  }
+  return fitted
+}
+
+/** The bar reads this when coolant is shut off: full, red, and far above a normal load. */
+export const COOLANT_SHUTOFF_PERCENT = 999
+
+/** Percent the cooling bar shows. Null hides the bar. */
+export function coolantBarPercent(supply: number, demand: number, shutOff: boolean): number | null {
+  if (shutOff) return COOLANT_SHUTOFF_PERCENT
+  if (supply <= 0 && demand <= 0) return null
+  if (supply <= 0) return 0
+  return Math.floor((demand / supply) * 100)
 }
 
 /** Coolant the fitted coolers are making at their current pips. */
