@@ -666,24 +666,26 @@ export default function ShipShopPage() {
             </h1>
             <p className="site-hint text-sm">{saveNote || (ready ? 'Builds save on this account.' : 'Loading builds…')}</p>
           </div>
-          <label className="block">
-            <span className="site-label">Ship</span>
-            <input
-              className="site-input w-full px-3 py-2 mt-1"
-              value={shipQuery}
-              placeholder={ship?.displayName || 'Search ships'}
-              onChange={(event) => setShipQuery(event.target.value)}
-            />
-          </label>
-          {shipQuery && (
-            <div className="site-dropdown-list max-h-56 overflow-y-auto">
-              {shipChoices.map((entry) => (
-                <button key={entry.id} type="button" className="site-dropdown-item w-full text-left" onClick={() => chooseShip(entry.id)}>
-                  {entry.displayName}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="relative z-30">
+            <label className="block">
+              <span className="site-label">Ship</span>
+              <input
+                className="site-input w-full px-3 py-2 mt-1"
+                value={shipQuery}
+                placeholder={ship?.displayName || 'Search ships'}
+                onChange={(event) => setShipQuery(event.target.value)}
+              />
+            </label>
+            {shipQuery && (
+              <div className="site-dropdown-list max-h-72 overflow-y-auto">
+                {shipChoices.map((entry) => (
+                  <button key={entry.id} type="button" className="site-dropdown-item w-full text-left" onClick={() => chooseShip(entry.id)}>
+                    {entry.displayName}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           {ship && (
             <div className="flex flex-wrap items-center gap-2 text-sm text-slate-300">
               <span>{ship.manufacturer} · {ship.role || ship.career || 'Ship'}</span>

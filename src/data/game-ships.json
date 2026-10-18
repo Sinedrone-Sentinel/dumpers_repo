@@ -6030,6 +6030,48 @@
           "locked": true
         },
         {
+          "id": "hardpoint_camera_turret_upper",
+          "label": "Camera Turret Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "Idris_Base",
+          "portTags": "Idris_Base",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_camera_turret_lower",
+          "label": "Camera Turret Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "Idris_Base",
+          "portTags": "Idris_Base",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_rear_turret_tail_cap",
           "label": "Rear Turret Tail Cap",
           "section": "weapons",
@@ -6908,6 +6950,48 @@
           "maxSize": 4,
           "defaultEntityClass": "lfsp_s04_aegs_idris",
           "locked": true
+        },
+        {
+          "id": "hardpoint_camera_turret_upper",
+          "label": "Camera Turret Upper",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "Idris_Base",
+          "portTags": "Idris_Base",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_camera_turret_lower",
+          "label": "Camera Turret Lower",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "Idris_Base",
+          "portTags": "Idris_Base",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -11638,6 +11722,25 @@
           ]
         },
         {
+          "id": "hardpoint_weapon_missilerack",
+          "label": "Weapon Missilerack",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": [
+                "Misc"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -15183,6 +15286,25 @@
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         },
         {
+          "id": "hardpoint_weapon_missilelauncher",
+          "label": "Weapon Missilelauncher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -15207,6 +15329,22 @@
           "accepts": [
             {
               "type": "EMP",
+              "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_powerplant_rear",
+          "label": "Powerplant Rear",
+          "section": "systems",
+          "kind": "power",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "PowerPlant",
               "subtypes": []
             }
           ]
@@ -20105,6 +20243,30 @@
           ]
         },
         {
+          "id": "hardpoint_class_4_nose",
+          "label": "Class 4 Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 2,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "NoseMounted"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_class_2_left_wing",
           "label": "Class 2 Left Wing",
           "section": "weapons",
@@ -20173,6 +20335,30 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_class_4_center",
+          "label": "Class 4 Center",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Hornet_Base",
+          "portTags": "ANVL_Hornet_Base",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "BallTurret"
+              ]
+            },
+            {
+              "type": "Module",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_class_3_left_bay_door",
@@ -20526,6 +20712,25 @@
           ]
         },
         {
+          "id": "hardpoint_weapon_nose",
+          "label": "Weapon Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Hornet_Mk2",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_weapon_left_wing",
           "label": "Weapon Left Wing",
           "section": "weapons",
@@ -20594,6 +20799,34 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "apar_ballisticgatling_s4"
+        },
+        {
+          "id": "hardpoint_weapon_center",
+          "label": "Weapon Center",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Hornet_Mk2_Center",
+          "portTags": "ANVL_Hornet_Mk2_Center",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "BallTurret"
+              ]
+            },
+            {
+              "type": "Module",
+              "subtypes": []
+            },
+            {
+              "type": "QuantumInterdictionGenerator",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -20922,6 +21155,30 @@
               "type": "QuantumDrive",
               "subtypes": [
                 "QDrive"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_class_4_nose",
+          "label": "Class 4 Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 2,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "NoseMounted"
               ]
             }
           ]
@@ -23202,6 +23459,30 @@
           ]
         },
         {
+          "id": "hardpoint_class_4_nose",
+          "label": "Class 4 Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 2,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "NoseMounted"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_class_2_left_wing",
           "label": "Class 2 Left Wing",
           "section": "weapons",
@@ -23642,6 +23923,25 @@
               "type": "QuantumDrive",
               "subtypes": [
                 "QDrive"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_nose",
+          "label": "Weapon Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Hornet_Mk2",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
               ]
             }
           ]
@@ -24100,6 +24400,30 @@
           ]
         },
         {
+          "id": "hardpoint_class_4_nose",
+          "label": "Class 4 Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 2,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
+              ]
+            },
+            {
+              "type": "Turret",
+              "subtypes": [
+                "NoseMounted"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_class_2_left_wing",
           "label": "Class 2 Left Wing",
           "section": "weapons",
@@ -24516,6 +24840,25 @@
               "type": "QuantumDrive",
               "subtypes": [
                 "QDrive"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_nose",
+          "label": "Weapon Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Hornet_Mk2",
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "CanardTurret"
               ]
             }
           ]
@@ -28599,6 +28942,26 @@
           "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
+          "id": "hardpoint_weapon_wing_left",
+          "label": "Weapon Wing Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 1,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Valkyrie",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_weapon_wing_left/turret_gun",
           "label": "Turret Gun",
           "section": "weapons",
@@ -28617,6 +28980,26 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
+        },
+        {
+          "id": "hardpoint_weapon_wing_right",
+          "label": "Weapon Wing Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 1,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Valkyrie",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_weapon_wing_right/turret_gun",
@@ -29138,6 +29521,26 @@
           "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
+          "id": "hardpoint_weapon_wing_left",
+          "label": "Weapon Wing Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 1,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Valkyrie",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_weapon_wing_left/turret_gun",
           "label": "Turret Gun",
           "section": "weapons",
@@ -29156,6 +29559,26 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
+        },
+        {
+          "id": "hardpoint_weapon_wing_right",
+          "label": "Weapon Wing Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 6,
+          "minSize": 1,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "requiredTags": "$ANVL_Valkyrie",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_weapon_wing_right/turret_gun",
@@ -29964,6 +30387,54 @@
             {
               "type": "Radar",
               "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_right",
+          "label": "Weapon Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_left",
+          "label": "Weapon Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
             }
           ]
         }
@@ -32360,6 +32831,27 @@
           "locked": true
         },
         {
+          "id": "hardpoint_remote_tractor_turret",
+          "label": "Remote Tractor Turret",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$ARGO_RAFT_Tractor_Turret",
+          "portTags": "ARGO_RAFT_Tractor_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_remote_tractor_turret/turret_left",
           "label": "Turret Left",
           "section": "systems",
@@ -33308,6 +33800,54 @@
           "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
+          "id": "hardpoint_weapon_wing_left",
+          "label": "Weapon Wing Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_wing_right",
+          "label": "Weapon Wing Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -33534,6 +34074,54 @@
           "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
+          "id": "hardpoint_weapon_wing_left",
+          "label": "Weapon Wing Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_wing_right",
+          "label": "Weapon Wing Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -33758,6 +34346,54 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "klwe_laserrepeater_s2"
+        },
+        {
+          "id": "hardpoint_weapon_wing_left",
+          "label": "Weapon Wing Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_wing_right",
+          "label": "Weapon Wing Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_lifesupport",
@@ -34279,6 +34915,25 @@
           ]
         },
         {
+          "id": "hardpoint_weapon_nose",
+          "label": "Weapon Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "BallTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_weapon_wing_left",
           "label": "Weapon Wing Left",
           "section": "weapons",
@@ -34529,6 +35184,25 @@
               "type": "QuantumDrive",
               "subtypes": [
                 "QDrive"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_weapon_nose",
+          "label": "Weapon Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "BallTurret"
               ]
             }
           ]
@@ -35502,6 +36176,32 @@
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         },
         {
+          "id": "hardpoint_bomb_system",
+          "label": "Bomb System",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "portTags": "$Spirit_Bomb_Rack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "BombLauncher",
+              "subtypes": [
+                "BombRack"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Rocket"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_bomb_system/missile_01_attach",
           "label": "Missile 01 Attach",
           "section": "missiles",
@@ -36281,6 +36981,31 @@
           "locked": true
         },
         {
+          "id": "hardpoint_bombrack_left",
+          "label": "Bombrack Left",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 10,
+          "minSize": 10,
+          "maxSize": 10,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "BombLauncher",
+              "subtypes": [
+                "BombRack"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Rocket"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_bombrack_left/missile_01_attach",
           "label": "Missile 01 Attach",
           "section": "missiles",
@@ -36299,6 +37024,31 @@
           "minSize": 10,
           "maxSize": 10,
           "defaultEntityClass": "bomb_s10_fski_colossus"
+        },
+        {
+          "id": "hardpoint_bombrack_right",
+          "label": "Bombrack Right",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 10,
+          "minSize": 10,
+          "maxSize": 10,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "BombLauncher",
+              "subtypes": [
+                "BombRack"
+              ]
+            },
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Rocket"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_bombrack_right/missile_01_attach",
@@ -40483,6 +41233,26 @@
           "defaultEntityClass": "klwe_laserrepeater_s4"
         },
         {
+          "id": "hardpoint_tractorbeam_right",
+          "label": "Tractorbeam Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 1,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "portTags": "$DRAK_Caterpillar_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_tractorbeam_right/turret_weapon",
           "label": "Turret Weapon",
           "section": "systems",
@@ -40808,6 +41578,26 @@
           "defaultEntityClass": "klwe_laserrepeater_s4"
         },
         {
+          "id": "hardpoint_tractorbeam_right",
+          "label": "Tractorbeam Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 1,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "portTags": "$DRAK_Caterpillar_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_tractorbeam_right/turret_weapon",
           "label": "Turret Weapon",
           "section": "systems",
@@ -41131,6 +41921,26 @@
           "minSize": 4,
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
+        },
+        {
+          "id": "hardpoint_tractorbeam_right",
+          "label": "Tractorbeam Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 1,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "portTags": "$DRAK_Caterpillar_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_tractorbeam_right/turret_weapon",
@@ -42158,6 +42968,24 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "behr_lasercannon_s3"
+        },
+        {
+          "id": "hardpoint_tractor_beam",
+          "label": "Tractor Beam",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "requiredTags": "$DRAK_Command_Module_Tractor_Beam",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_tractor_beam/turret_weapon",
@@ -43526,6 +44354,27 @@
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         },
         {
+          "id": "hardpoint_tractor_turret",
+          "label": "Tractor Turret",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 1,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$DRAK_Cutlass_Remote_Turret",
+          "portTags": "DRAK_Cutlass_Remote_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_tractor_turret/turret_weapon",
           "label": "Turret Weapon",
           "section": "systems",
@@ -44168,6 +45017,27 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
+        },
+        {
+          "id": "hardpoint_tractor_turret",
+          "label": "Tractor Turret",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 1,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$DRAK_Cutlass_Remote_Turret",
+          "portTags": "DRAK_Cutlass_Remote_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_tractor_turret/turret_weapon",
@@ -48863,6 +49733,25 @@
           ]
         },
         {
+          "id": "hardpoint_rail_tractor_beam_01",
+          "label": "Rail Tractor Beam 01",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_rail_tractor_beam_01/turret_tractor",
           "label": "Turret Tractor",
           "section": "systems",
@@ -48871,6 +49760,25 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
+        },
+        {
+          "id": "hardpoint_rail_tractor_beam_02",
+          "label": "Rail Tractor Beam 02",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "Utility"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_rail_tractor_beam_02/turret_tractor",
@@ -49134,6 +50042,23 @@
           "maxSize": 1,
           "defaultEntityClass": null,
           "locked": true
+        },
+        {
+          "id": "hardpoint_tractor_beam_nose",
+          "label": "Tractor Beam Nose",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_tractor_beam_nose/turret_tractor",
@@ -54437,6 +55362,54 @@
           "defaultEntityClass": "espr_lasercannon_s2"
         },
         {
+          "id": "hardpoint_missile_left",
+          "label": "Missile Left",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            },
+            {
+              "type": "BombLauncher",
+              "subtypes": [
+                "BombRack"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_missile_right",
+          "label": "Missile Right",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 3,
+          "minSize": 3,
+          "maxSize": 3,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            },
+            {
+              "type": "BombLauncher",
+              "subtypes": [
+                "BombRack"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_leg_blankingplate_right",
           "label": "Leg Blankingplate Right",
           "section": "missiles",
@@ -55469,6 +56442,27 @@
           "defaultEntityClass": "klwe_laserrepeater_s4"
         },
         {
+          "id": "hardpoint_tractor_left",
+          "label": "Tractor Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$GAMA_Railen_Tractor",
+          "portTags": "GAMA_Railen_Tractor",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_tractor_left/turret_left",
           "label": "Turret Left",
           "section": "systems",
@@ -55477,6 +56471,27 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
+        },
+        {
+          "id": "hardpoint_tractor_right",
+          "label": "Tractor Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$GAMA_Railen_Tractor",
+          "portTags": "GAMA_Railen_Tractor",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_tractor_right/turret_left",
@@ -56802,6 +57817,27 @@
           "minSize": 3,
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
+        },
+        {
+          "id": "hardpoint_turret_tractor",
+          "label": "Turret Tractor",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$GAMA_Railen_Tractor",
+          "portTags": "GAMA_Railen_Tractor",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_turret_tractor/turret_left",
@@ -63258,6 +64294,27 @@
               "subtypes": []
             }
           ]
+        },
+        {
+          "id": "hardpoint_weapon",
+          "label": "Weapon",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "requiredTags": "MRAI_Pulse",
+          "portTags": "MRAI_Pulse",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -67294,6 +68351,27 @@
           ]
         },
         {
+          "id": "hardpoint_tractor_beam_right",
+          "label": "Tractor Beam Right",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "requiredTags": "$MISC_Hull_B_Tractor",
+          "portTags": "$MISC_Hull_B_Tractor",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_tractor_beam_right/tractor_attach",
           "label": "Tractor Attach",
           "section": "systems",
@@ -67302,6 +68380,27 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
+        },
+        {
+          "id": "hardpoint_tractor_beam_left",
+          "label": "Tractor Beam Left",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "requiredTags": "$MISC_Hull_B_Tractor",
+          "portTags": "$MISC_Hull_B_Tractor",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_tractor_beam_left/tractor_attach",
@@ -67725,6 +68824,25 @@
           "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
+          "id": "hardpoint_turret_tractor_beam_top_front",
+          "label": "Turret Tractor Beam Top Front",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_turret_tractor_beam_top_front/turret_left",
           "label": "Turret Left",
           "section": "systems",
@@ -67733,6 +68851,25 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
+        },
+        {
+          "id": "hardpoint_turret_tractor_beam_bottom_front",
+          "label": "Turret Tractor Beam Bottom Front",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_turret_tractor_beam_bottom_front/turret_left",
@@ -67745,6 +68882,25 @@
           "defaultEntityClass": "grin_tractorbeam_s2"
         },
         {
+          "id": "hardpoint_turret_tractor_beam_top_rear",
+          "label": "Turret Tractor Beam Top Rear",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_turret_tractor_beam_top_rear/turret_left",
           "label": "Turret Left",
           "section": "systems",
@@ -67753,6 +68909,25 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
+        },
+        {
+          "id": "hardpoint_turret_tractor_beam_bottom_rear",
+          "label": "Turret Tractor Beam Bottom Rear",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_turret_tractor_beam_bottom_rear/turret_left",
@@ -67839,6 +69014,26 @@
       "maxSpeed": 994,
       "boostBack": 160,
       "ports": [
+        {
+          "id": "hardpoint_cockpit_radar",
+          "label": "Cockpit Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Radar",
+              "subtypes": [
+                "ShortRangeRadar",
+                "MidRangeRadar"
+              ]
+            }
+          ]
+        },
         {
           "id": "hardpoint_radar",
           "label": "Radar",
@@ -68100,6 +69295,26 @@
       "maxSpeed": 994,
       "boostBack": 160,
       "ports": [
+        {
+          "id": "hardpoint_cockpit_radar",
+          "label": "Cockpit Radar",
+          "section": "systems",
+          "kind": "radar",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Radar",
+              "subtypes": [
+                "ShortRangeRadar",
+                "MidRangeRadar"
+              ]
+            }
+          ]
+        },
         {
           "id": "hardpoint_radar",
           "label": "Radar",
@@ -68651,6 +69866,46 @@
           "defaultEntityClass": "grin_tractorbeam_s2"
         },
         {
+          "id": "hardpoint_left_wing_missile_launcher",
+          "label": "Left Wing Missile Launcher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$Reliant_MissileRack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_right_wing_missile_launcher",
+          "label": "Right Wing Missile Launcher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$Reliant_MissileRack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_missilerack_wing_left",
           "label": "Missilerack Wing Left",
           "section": "missiles",
@@ -69033,6 +70288,46 @@
           ]
         },
         {
+          "id": "hardpoint_left_wing_missile_launcher",
+          "label": "Left Wing Missile Launcher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$Reliant_MissileRack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_right_wing_missile_launcher",
+          "label": "Right Wing Missile Launcher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$Reliant_MissileRack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_missilerack_wing_left",
           "label": "Missilerack Wing Left",
           "section": "missiles",
@@ -69410,6 +70705,46 @@
               "type": "Turret",
               "subtypes": [
                 "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_left_wing_missile_launcher",
+          "label": "Left Wing Missile Launcher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$Reliant_MissileRack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_right_wing_missile_launcher",
+          "label": "Right Wing Missile Launcher",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 5,
+          "minSize": 5,
+          "maxSize": 5,
+          "defaultEntityClass": null,
+          "requiredTags": "$Reliant_MissileRack",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
               ]
             }
           ]
@@ -70187,6 +71522,31 @@
             {
               "type": "PowerPlant",
               "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_fuel_intake",
+          "label": "Fuel Intake",
+          "section": "missiles",
+          "kind": "missileRack",
+          "size": 6,
+          "minSize": 6,
+          "maxSize": 6,
+          "defaultEntityClass": null,
+          "requiredTags": "$MISC_Starfarer_Base",
+          "portTags": "MISC_Starfarer_Base",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "FuelIntake",
+              "subtypes": []
+            },
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
             }
           ]
         },
@@ -72569,6 +73929,25 @@
           "locked": true
         },
         {
+          "id": "hardpoint_missile_turret_camera",
+          "label": "Missile Turret Camera",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_missile_turret_right",
           "label": "Missile Turret Right",
           "section": "missiles",
@@ -74380,6 +75759,23 @@
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
         },
         {
+          "id": "hardpoint_weapon_mount",
+          "label": "Weapon Mount",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -74687,6 +76083,27 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
+        },
+        {
+          "id": "hardpoint_tractor",
+          "label": "Tractor",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 2,
+          "minSize": 2,
+          "maxSize": 2,
+          "defaultEntityClass": null,
+          "requiredTags": "$ORIG_315p_Turret",
+          "portTags": "ORIG_315p_Turret",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_tractor/hardpoint_class_2",
@@ -75119,6 +76536,23 @@
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         },
         {
+          "id": "hardpoint_weapon_mount",
+          "label": "Weapon Mount",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
+        },
+        {
           "id": "hardpoint_lifesupport",
           "label": "Lifesupport",
           "section": "systems",
@@ -75460,6 +76894,23 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+        },
+        {
+          "id": "hardpoint_weapon_mount",
+          "label": "Weapon Mount",
+          "section": "weapons",
+          "kind": "weapon",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_lifesupport",
@@ -90569,6 +92020,27 @@
           "minSize": 5,
           "maxSize": 5,
           "defaultEntityClass": "misl_s05_em_taln_reaper"
+        },
+        {
+          "id": "hardpoint_turret_torpedo_camera",
+          "label": "Turret Torpedo Camera",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "RSI_Perseus",
+          "portTags": "RSI_Perseus",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -91263,6 +92735,27 @@
           "minSize": 10,
           "maxSize": 10,
           "defaultEntityClass": "misl_s10_ir_behr_torpedo"
+        },
+        {
+          "id": "hardpoint_turret_torpedo_camera",
+          "label": "Turret Torpedo Camera",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "RSI_Polaris",
+          "portTags": "RSI_Polaris",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         },
         {
           "id": "hardpoint_turret_remote_top",
@@ -92011,6 +93504,27 @@
           ]
         },
         {
+          "id": "hardpoint_remote_turret_interior_tractor",
+          "label": "Remote Turret Interior Tractor",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "$RSI_Polaris",
+          "portTags": "RSI_Polaris",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
+        },
+        {
           "id": "hardpoint_remote_turret_interior_tractor/turret_left",
           "label": "Turret Left",
           "section": "systems",
@@ -92516,6 +94030,38 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
+        },
+        {
+          "id": "hardpoint_powerplant_left",
+          "label": "Powerplant Left",
+          "section": "systems",
+          "kind": "power",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_powerplant_right",
+          "label": "Powerplant Right",
+          "section": "systems",
+          "kind": "power",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_quantum_drive",
@@ -93162,6 +94708,22 @@
           ]
         },
         {
+          "id": "hardpoint_powerplant_right",
+          "label": "Powerplant Right",
+          "section": "systems",
+          "kind": "power",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
+        },
+        {
           "id": "hardpoint_quantum_drive",
           "label": "Quantum Drive",
           "section": "systems",
@@ -93590,6 +95152,27 @@
               "subtypes": []
             }
           ]
+        },
+        {
+          "id": "hardpoint_turret_missile_camera",
+          "label": "Turret Missile Camera",
+          "section": "weapons",
+          "kind": "weaponMount",
+          "size": 4,
+          "minSize": 4,
+          "maxSize": 4,
+          "defaultEntityClass": null,
+          "requiredTags": "RSI_Scorpius",
+          "portTags": "RSI_Scorpius",
+          "locked": true,
+          "accepts": [
+            {
+              "type": "Turret",
+              "subtypes": [
+                "GunTurret"
+              ]
+            }
+          ]
         }
       ]
     },
@@ -93796,6 +95379,38 @@
           "minSize": 2,
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
+        },
+        {
+          "id": "hardpoint_powerplant_left",
+          "label": "Powerplant Left",
+          "section": "systems",
+          "kind": "power",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
+        },
+        {
+          "id": "hardpoint_powerplant_right",
+          "label": "Powerplant Right",
+          "section": "systems",
+          "kind": "power",
+          "size": 1,
+          "minSize": 1,
+          "maxSize": 1,
+          "defaultEntityClass": null,
+          "accepts": [
+            {
+              "type": "Misc",
+              "subtypes": []
+            }
+          ]
         },
         {
           "id": "hardpoint_quantum_drive",

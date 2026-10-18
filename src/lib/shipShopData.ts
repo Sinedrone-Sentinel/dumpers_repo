@@ -213,7 +213,7 @@ function childAllowed(ship: GameShip, ports: Record<string, FittedPart>, portId:
   return itemFitsPort(item, slotFromMount(ship, parentId, mount, ports))
 }
 
-/** Turrets and mounts group the guns that sit on them. A turret with no guns stays out of this list. */
+/** Turrets and mounts group the guns that sit on them. An empty mount stays in the list. */
 export function weaponTree(ship: GameShip, fitted?: Record<string, FittedPart>): WeaponNode[] {
   const ports = resolveWeaponPorts(ship, fitted)
   const ids = new Set(ports.map((port) => port.id))
@@ -228,8 +228,7 @@ export function weaponTree(ship: GameShip, fitted?: Record<string, FittedPart>):
     port,
     children: (childMap.get(port.id) || []).map(build),
   })
-  const hasGun = (node: WeaponNode): boolean => node.port.kind !== 'turret' || node.children.some(hasGun)
-  return roots.map(build).filter(hasGun)
+  return roots.map(build)
 }
 
 export const SHIPS: GameShip[] = (gameShips as { ships: GameShip[] }).ships
@@ -519,7 +518,7 @@ export function missileSlotsForRack(ship: GameShip, rack: ShipPort, fitted: Fitt
       label: mount.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase()),
       section: 'missiles',
       kind,
-      locked: rack.locked,
+      locked: Boolean(mount.locked || stock?.locked), // the tube's own lock, never the rack's
       size: maxSize,
       minSize,
       maxSize,
@@ -613,7 +612,7 @@ function syncMountChildren(ship: GameShip, ports: Record<string, FittedPart>, pa
         const childCurrent = childId && ports[childId] ? getShipItem(ports[childId].entityClass) : null
         const childSlot = childMount ? slotFromMount(ship, id, childMount) : null
         const childFits = Boolean(childCurrent && childMount && childSlot && mountSizeFits(childCurrent.size, childMount) && itemFitsPort(childCurrent, childSlot))
-        if (childMount && childItem && childSlot && mountSizeFits(childItem.size, childMount) && itemFitsPort(childItem, childSlot) && (mount.locked || !childFits)) {
+        if (childMount && childItem && childSlot && mountSizeFits(childItem.size, childMount) && itemFitsPort(childItem, childSlot) && (childMount.locked || !childFits)) {
           ports[`${id}/${childMount.name}`] = { entityClass: childItem.entityClass, source: 'stock' }
         }
       }
