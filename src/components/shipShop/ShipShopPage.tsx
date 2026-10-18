@@ -78,7 +78,7 @@ function CoolantBar({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
   const over = supply > 0 && percent >= 100
   const width = supply > 0 ? Math.max(0, Math.min(100, percent)) : 0
   return (
-    <div className="mt-4">
+    <div>
       <div className="flex items-baseline justify-between gap-3 text-sm">
         <span className="text-slate-400">Coolant</span>
         <span className="font-mono text-white">{percent}%</span>
@@ -239,37 +239,39 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
       <h2 className="text-sm font-semibold tracking-wide text-slate-300 mb-3">Ship snapshot</h2>
       <div className="space-y-4">
         {rows.map((group) => (
-          <section key={group.title}>
-            <h3 className="text-xs uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
-            <dl className="space-y-1">
-              {group.lines.map(([label, value]) => (
-                <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
-                  <dt className="text-slate-400 inline-flex items-center gap-1.5">
-                    {group.title === 'Signatures' && <SignatureMark kind={label} />}
-                    {label}
-                  </dt>
-                  {value === 'deflection' ? (
-                    <dd className="font-mono text-right text-white">
-                      {snapshot.deflectionPhysical == null && snapshot.deflectionEnergy == null ? (
-                        <span>—</span>
-                      ) : (
-                        <>
-                          <span>Phys {formatNumber(snapshot.deflectionPhysical)}</span>
-                          <span className="text-slate-500"> · </span>
-                          <span>Energy {formatNumber(snapshot.deflectionEnergy)}</span>
-                        </>
-                      )}
-                    </dd>
-                  ) : (
-                    <dd className="font-mono text-white">{value}</dd>
-                  )}
-                </div>
-              ))}
-            </dl>
-          </section>
+          <div key={group.title} className="space-y-4">
+            <section>
+              <h3 className="text-xs uppercase tracking-wide text-slate-500 mb-2">{group.title}</h3>
+              <dl className="space-y-1">
+                {group.lines.map(([label, value]) => (
+                  <div key={label} className="flex items-baseline justify-between gap-3 text-sm">
+                    <dt className="text-slate-400 inline-flex items-center gap-1.5">
+                      {group.title === 'Signatures' && <SignatureMark kind={label} />}
+                      {label}
+                    </dt>
+                    {value === 'deflection' ? (
+                      <dd className="font-mono text-right text-white">
+                        {snapshot.deflectionPhysical == null && snapshot.deflectionEnergy == null ? (
+                          <span>—</span>
+                        ) : (
+                          <>
+                            <span>Phys {formatNumber(snapshot.deflectionPhysical)}</span>
+                            <span className="text-slate-500"> · </span>
+                            <span>Energy {formatNumber(snapshot.deflectionEnergy)}</span>
+                          </>
+                        )}
+                      </dd>
+                    ) : (
+                      <dd className="font-mono text-white">{value}</dd>
+                    )}
+                  </div>
+                ))}
+              </dl>
+            </section>
+            {group.title === 'Signatures' ? <CoolantBar snapshot={snapshot} /> : null}
+          </div>
         ))}
       </div>
-      <CoolantBar snapshot={snapshot} />
     </aside>
   )
 }
