@@ -352,7 +352,6 @@ export const TRADE_PROTECTION_SECTION = {
 
 export const EXTERNAL_RESOURCES = [
   { title: 'Star Citizen Wiki', description: 'Community wiki with comprehensive game information' },
-  { title: 'Erkul Games', description: 'DPS calculator and ship loadout planner' },
   { title: 'Universal Item Finder', description: 'Search for in-game items and their locations' },
   { title: 'Cornerstone', description: 'Trading and economy tracker' },
   { title: 'Star Citizen Trade Tools', description: 'Mining and trading calculators' },
