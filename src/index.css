@@ -122,6 +122,20 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
+  /* 1080p: shrink only the shop header. 1440p (wider than 1920px) stays full size. */
+  .ship-shop-header-clip {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  @media (max-width: 1920px) {
+    .ship-shop-header {
+      zoom: 0.58;
+      width: calc(100% / 0.58);
+    }
+  }
+
   /* Floating overlay on top of other cards — no glass bleed-through */
   .site-surface-solid {
     @apply rounded-xl border border-orange-500/30 overflow-hidden;
