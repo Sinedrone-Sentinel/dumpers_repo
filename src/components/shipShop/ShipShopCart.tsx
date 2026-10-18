@@ -12,7 +12,7 @@ import {
   type PlannedPurchase,
   type ShopListing,
 } from '../../lib/shipShopShops'
-import type { ShopCartLine } from '../../lib/shipShopData'
+import { cartLineKey, craftedDraftFields, craftedMaterials, type ShopCartLine } from '../../lib/shipShopData'
 
 const CHIP = 'shrink-0 rounded-lg px-2 py-0.5 text-xs font-semibold uppercase tracking-wide transition hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100'
 
@@ -66,6 +66,7 @@ export function ShopBuyButtons({
   listings,
   showBuild,
   cartCount,
+  addEnabled,
   onWhere,
   onAdd,
   onAddBuild,
@@ -74,18 +75,21 @@ export function ShopBuyButtons({
   listings: ShopListing[]
   showBuild?: boolean
   cartCount?: number
+  /** Crafted parts can be added even when the shop does not sell them. */
+  addEnabled?: boolean
   onWhere: () => void
   onAdd: () => void
   onAddBuild?: () => void
   onViewCart?: () => void
 }) {
   const forSale = isForSale(listings)
+  const canAdd = addEnabled ?? forSale
   return (
     <>
       <button type="button" className={`${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} onClick={onWhere}>
         Where to Buy
       </button>
-      <button type="button" className={`${CHIP} site-filter-selected-green`} disabled={!forSale} title={forSale ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
+      <button type="button" className={`${CHIP} site-filter-selected-green`} disabled={!canAdd} title={canAdd ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
         Add to Cart
       </button>
       {showBuild && (
@@ -172,13 +176,18 @@ export function ShopCartModal({
   onClose,
   onQty,
   onRemove,
+  onAddToOrders,
 }: {
   lines: Array<ShopCartLine & CartPlanLine>
   onClose: () => void
   onQty: (line: ShopCartLine, qty: number) => void
   onRemove: (line: ShopCartLine) => void
+  onAddToOrders: () => void
 }) {
-  const stops = planStops(lines)
+  const buyLines = lines.filter((line) => !line.crafted)
+  const crafted = lines.filter((line) => line.crafted)
+  const stops = planStops(buyLines)
+  const canOrder = crafted.some((line) => craftedDraftFields(line.id, line.qualities, line.qty))
   return (
     <ShopModalFrame onClose={onClose}>
       <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-3xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
@@ -190,6 +199,34 @@ export function ShopCartModal({
           <p className="text-sm text-slate-200">The cart is empty.</p>
         ) : (
           <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
+            {crafted.length > 0 && (
+              <section className="site-card p-3">
+                <h4 className="text-sm font-semibold uppercase tracking-wide text-white">Crafted</h4>
+                <p className="site-hint mt-1 text-xs">Crafted parts are not sold in a shop. Review them in My Orders, then post a WTB or WTS.</p>
+                <ul className="mt-3 space-y-3">
+                  {crafted.map((line) => (
+                    <li key={`${line.kind}:${line.id}:${JSON.stringify(line.qualities || {})}`}>
+                      <p className="text-sm text-slate-100">{line.name} × {line.qty}</p>
+                      <ul className="mt-1 space-y-0.5 pl-3">
+                        {craftedMaterials(line.id, line.qualities, line.qty).map((row) => (
+                          <li key={`${row.label}:${row.quality}`} className="text-sm text-slate-300">
+                            {row.label} · Q{row.quality} · {row.text}
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  className="site-btn-primary mt-3 px-3 py-1.5 text-sm"
+                  disabled={!canOrder}
+                  onClick={onAddToOrders}
+                >
+                  Add to My Orders
+                </button>
+              </section>
+            )}
             {stops.length > 0 && (
               <>
                 <p className="site-banner-info">{FEWEST_STOPS_NOTICE}</p>
@@ -199,10 +236,9 @@ export function ShopCartModal({
                     {stops.map((stop, index) => (
                       <li key={`${stop.place}-${index}`} className="site-card p-3">
                         <div className="flex items-baseline justify-between gap-3">
-                          <p className="text-sm font-semibold text-white">Stop {index + 1}</p>
+                          <p className="text-sm font-semibold text-white">{stop.place}</p>
                           <p className="shrink-0 text-sm text-slate-300">{formatShopNumber(stop.total)} aUEC</p>
                         </div>
-                        <p className="mt-0.5 text-sm text-slate-200">{stop.place}</p>
                         <div className="mt-3 space-y-3">
                           {purchasesByStore(stop.lines).map((group) => (
                             <div key={group.store}>
@@ -226,8 +262,8 @@ export function ShopCartModal({
             )}
             <div className={stops.length > 0 ? 'site-divider space-y-2 pt-4' : 'space-y-2'}>
               {lines.map((line) => (
-                <div key={`${line.kind}:${line.id}`} className="flex items-center gap-3 text-sm">
-                  <span className="min-w-0 flex-1 truncate text-white">{line.name}</span>
+                <div key={cartLineKey(line)} className="flex items-center gap-3 text-sm">
+                  <span className="min-w-0 flex-1 truncate text-white">{line.crafted ? `${line.name} (crafted)` : line.name}</span>
                   <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Decrease ${line.name}`} onClick={() => onQty(line, line.qty - 1)}>−</button>
                   <span className="w-8 text-center text-slate-100">{line.qty}</span>
                   <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => onQty(line, line.qty + 1)}>+</button>

@@ -2,7 +2,14 @@ import gameBlueprints from '../data/game-blueprints.json'
 import gameShips from '../data/game-ships.json'
 import type { BlueprintForEffectiveStats } from './blueprintEffectiveStats'
 import { buildDefaultSlotQualities } from './blueprintQuality'
-import type { BlueprintWithSlots } from './blueprintResources'
+import {
+  craftMaterialLabel,
+  craftMaterialOptionsForSlot,
+  craftMaterialResourceKey,
+  type BlueprintWithSlots,
+} from './blueprintResources'
+import { isWholeUnitResource } from '../config/resourceTypes'
+import { formatQuantityForResource, fromMilliScu, toMilliScu } from './resourceQuantity'
 import { getShipItem, shipItems } from './shipItemCatalog'
 import {
   addPartToSnapshot,
@@ -72,6 +79,9 @@ export interface ShopCartLine {
   id: string
   kind: 'ship' | 'part'
   qty: number
+  /** Crafted parts are not bought. They stay on the CRAFTED stop with their slot qualities. */
+  crafted?: boolean
+  qualities?: Record<number, number>
 }
 
 export interface ShipBuild {
@@ -88,6 +98,7 @@ export interface ShipShopStore {
 
 export interface CraftBlueprint extends BlueprintForEffectiveStats {
   entityClass?: string | null
+  internalName?: string
   blueprintName?: string
   categoryName?: string
 }
@@ -237,9 +248,22 @@ const shipById = new Map(SHIPS.map((ship) => [ship.id, ship]))
 
 const BESPOKE_KINDS = new Set(['quantum', 'shield', 'cooler', 'power', 'radar', 'life', 'armor'])
 
-const MAKER_CODES = new Set(
-  SHIPS.map((ship) => ship.manufacturerCode?.toLowerCase()).filter((code): code is string => Boolean(code)),
-)
+function makerCodesFromShips(ships: GameShip[]): Set<string> {
+  const makers = new Set<string>()
+  const heads = new Map<string, number>()
+  for (const ship of ships) {
+    const code = ship.manufacturerCode?.toLowerCase()
+    if (code && code.length >= 3) makers.add(code)
+    const head = ship.id.toLowerCase().split('_')[0]
+    if (head.length >= 3) heads.set(head, (heads.get(head) || 0) + 1)
+  }
+  for (const [head, count] of heads) {
+    if (count >= 2) makers.add(head)
+  }
+  return makers
+}
+
+const MAKER_CODES = makerCodesFromShips(SHIPS)
 
 function shipHullTokens(shipId: string): string[] {
   let token = shipId.toLowerCase()
@@ -433,7 +457,7 @@ function attachmentFits(item: ShipItemStats, accepts: PortAccept[] | undefined):
 }
 
 function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
-  const portGives = tagList(port.portTags)
+  const portGives = tagList(`${port.portTags || ''} ${port.requiredTags || ''}`)
   const itemNeeds = tagList(item.requiredTags)
   if (itemNeeds.length > 0 && !itemNeeds.every((tag) => portGives.includes(tag))) return false
   const portNeeds = tagList(port.requiredTags)
@@ -452,6 +476,33 @@ function itemFitsPort(item: ShipItemStats, port: ShipPort): boolean {
     if (port.kind === 'missile') return item.ordnance === 'missile' || (item.kind === 'missile' && item.ordnance == null)
   }
   return true
+}
+
+const SKIP_FAMILY = new Set(['mk1', 'mk2', 'mki', 'mkii'])
+
+/** Hornet, F7, F7C, F7CS. A shorter stem such as F7 still counts. */
+function shipFamilyTokens(ship: GameShip): string[] {
+  let id = ship.id.toLowerCase()
+  const maker = [...MAKER_CODES].sort((a, b) => b.length - a.length).find((code) => id.startsWith(`${code}_`))
+  if (maker) id = id.slice(maker.length + 1)
+  const tokens = new Set<string>()
+  for (const part of id.split('_')) {
+    if (part.length < 2 || SKIP_FAMILY.has(part)) continue
+    tokens.add(part)
+    if (!/\d/.test(part)) continue
+    let stem = part
+    while (/[a-z]$/.test(stem) && stem.length > 2) {
+      stem = stem.slice(0, -1)
+      if (stem.length >= 2 && /\d/.test(stem)) tokens.add(stem)
+    }
+  }
+  return [...tokens]
+}
+
+function itemSharesShipFamily(item: ShipItemStats, tokens: string[]): boolean {
+  if (tokens.length === 0) return false
+  const hay = `_${`${item.entityClass} ${item.displayName}`.toLowerCase().replace(/[^a-z0-9]+/g, '_')}_`
+  return tokens.some((token) => new RegExp(`_${token}(?:_|[a-z0-9]*_)`).test(hay))
 }
 
 function sameKind(item: ShipItemStats, port: ShipPort): boolean {
@@ -520,6 +571,16 @@ function listPartsForPort(port: ShipPort, ship?: GameShip | null): ShipItemStats
       .sort((a, b) => a.displayName.localeCompare(b.displayName) || a.entityClass.localeCompare(b.entityClass))
   }
   let matched = pool.filter((item) => itemFitsPort(item, port))
+  const mountPort = port.kind === 'weaponMount' || port.kind === 'turret' || effectivePortKind(port) === 'weaponMount'
+  if (ship && mountPort) {
+    const family = shipFamilyTokens(ship)
+    const seen = new Set(matched.map((item) => item.entityClass))
+    for (const item of pool) {
+      if (seen.has(item.entityClass) || !itemSharesShipFamily(item, family)) continue
+      matched.push(item)
+      seen.add(item.entityClass)
+    }
+  }
   if (matched.length === 0 && !ordnancePort(port)) {
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
     const stockTags = tagList(stock?.tags)
@@ -594,7 +655,7 @@ function listingPorts(): Array<{ ship: GameShip; port: ShipPort }> {
 
 function fitBlock(item: ShipItemStats, port: ShipPort): ShipListGapReason | null {
   const itemNeeds = tagList(item.requiredTags)
-  const portGives = tagList(port.portTags)
+  const portGives = tagList(`${port.portTags || ''} ${port.requiredTags || ''}`)
   if (itemNeeds.length > 0 && !itemNeeds.every((tag) => portGives.includes(tag))) return 'required-tags'
   const portNeeds = tagList(port.requiredTags)
   const itemGives = tagList(item.tags)
@@ -1049,14 +1110,15 @@ function normalizeCart(raw: unknown): ShopCartLine[] | undefined {
   const lines: ShopCartLine[] = []
   for (const row of raw) {
     if (!row || typeof row !== 'object') continue
-    const record = row as { id?: unknown; kind?: unknown; qty?: unknown }
+    const record = row as { id?: unknown; kind?: unknown; qty?: unknown; crafted?: unknown; qualities?: unknown }
     const id = typeof record.id === 'string' ? record.id : ''
     const kind = record.kind === 'ship' || record.kind === 'part' ? record.kind : null
     const qty = typeof record.qty === 'number' && Number.isFinite(record.qty) ? Math.floor(record.qty) : 0
     if (!kind || !id || qty <= 0) continue
     if (kind === 'ship' && !getShip(id)) continue
     if (kind === 'part' && !getShipItem(id)) continue
-    lines.push({ id, kind, qty })
+    const crafted = kind === 'part' && record.crafted === true && Boolean(blueprintForEntity(id))
+    lines.push(crafted ? { id, kind, qty, crafted: true, qualities: normalizeQualities(record.qualities) } : { id, kind, qty })
   }
   return lines.length > 0 ? lines : undefined
 }
@@ -1098,6 +1160,113 @@ export function defaultCraftQualities(entityClass: string): Record<number, numbe
   const blueprint = blueprintForEntity(entityClass)
   if (!blueprint?.slots?.length) return undefined
   return buildDefaultSlotQualities(blueprint as BlueprintWithSlots)
+}
+
+export function cartLineKey(line: Pick<ShopCartLine, 'kind' | 'id' | 'crafted' | 'qualities'>): string {
+  if (line.kind === 'part' && line.crafted) {
+    const qualities = Object.entries(line.qualities || {})
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([slot, quality]) => `${slot}:${quality}`)
+      .join(',')
+    return `part:${line.id}:crafted:${qualities}`
+  }
+  return `${line.kind}:${line.id}`
+}
+
+export function upsertCartLine(cart: ShopCartLine[], incoming: ShopCartLine): ShopCartLine[] {
+  const next = cart.map((line) => ({
+    ...line,
+    qualities: line.qualities ? { ...line.qualities } : undefined,
+  }))
+  const found = next.find((line) => cartLineKey(line) === cartLineKey(incoming))
+  if (found) found.qty += incoming.qty
+  else {
+    next.push({
+      id: incoming.id,
+      kind: incoming.kind,
+      qty: incoming.qty,
+      ...(incoming.crafted ? { crafted: true, qualities: incoming.qualities ? { ...incoming.qualities } : undefined } : {}),
+    })
+  }
+  return next.filter((line) => line.qty > 0)
+}
+
+/** Every crafted fit, including a crafted copy of the stock part. */
+export function craftedLinesFromPorts(ports: Record<string, FittedPart>): ShopCartLine[] {
+  const groups = new Map<string, ShopCartLine>()
+  for (const part of Object.values(ports)) {
+    if (part.source !== 'crafted' || !blueprintForEntity(part.entityClass)) continue
+    const line: ShopCartLine = {
+      id: part.entityClass,
+      kind: 'part',
+      qty: 1,
+      crafted: true,
+      qualities: part.qualities ?? defaultCraftQualities(part.entityClass),
+    }
+    const found = groups.get(cartLineKey(line))
+    if (found) found.qty += 1
+    else groups.set(cartLineKey(line), line)
+  }
+  return [...groups.values()]
+}
+
+export interface CraftedCartMaterial {
+  label: string
+  quality: number
+  text: string
+}
+
+function oneCraftAmount(
+  option: { quantity?: number; standardCargoUnits?: number },
+  slotCount: number,
+  resourceKey: string,
+): number {
+  const optQty = option.quantity ?? 1
+  if (isWholeUnitResource(resourceKey)) return slotCount * optQty
+  const units = option.standardCargoUnits ?? option.quantity ?? 0
+  return fromMilliScu(toMilliScu(units) * slotCount)
+}
+
+export function craftedMaterials(
+  entityClass: string,
+  qualities: Record<number, number> | undefined,
+  qty: number,
+): CraftedCartMaterial[] {
+  const blueprint = blueprintForEntity(entityClass)
+  if (!blueprint?.slots?.length) return []
+  const chosen = qualities ?? defaultCraftQualities(entityClass) ?? {}
+  const count = Math.max(1, qty)
+  const rows: CraftedCartMaterial[] = []
+  blueprint.slots.forEach((slot, index) => {
+    const option = craftMaterialOptionsForSlot(slot)[0]
+    if (!option) return
+    const label = craftMaterialLabel(option)
+    const resourceKey = craftMaterialResourceKey(option)
+    if (!label || !resourceKey) return
+    const quality = chosen[index]
+    if (quality == null || !Number.isFinite(quality)) return
+    const amount = oneCraftAmount(option, slot.requiredCount ?? 1, resourceKey) * count
+    const text = isWholeUnitResource(resourceKey)
+      ? formatQuantityForResource(resourceKey, amount)
+      : `${formatQuantityForResource(resourceKey, amount)} SCU`
+    rows.push({ label, quality, text })
+  })
+  return rows
+}
+
+export function craftedDraftFields(
+  entityClass: string,
+  qualities: Record<number, number> | undefined,
+  qty: number,
+): { blueprintId: string; blueprintTitle: string; slotQualities: Record<number, number>; quantity: number } | null {
+  const blueprint = blueprintForEntity(entityClass)
+  if (!blueprint?.internalName) return null
+  return {
+    blueprintId: blueprint.internalName,
+    blueprintTitle: blueprint.blueprintName || blueprint.internalName,
+    slotQualities: qualities ?? defaultCraftQualities(entityClass) ?? {},
+    quantity: Math.max(1, qty),
+  }
 }
 
 export function statsForFitted(part: FittedPart | undefined): { item: ShipItemStats; stats: Record<string, number> } | null {

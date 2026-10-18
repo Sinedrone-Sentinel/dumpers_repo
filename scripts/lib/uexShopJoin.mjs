@@ -23,7 +23,8 @@ export function matchShopRow(rows, record) {
     if (hits.length === 1) return hits[0]
     if (hits.length > 1) return hits.find(named) || null
   }
-  const blank = rows.filter((row) => !String(row.uuid || '').trim() && named(row))
-  if (blank.length === 1) return blank[0]
+  // UEX often stores a different uuid than the game record. A single matching name is still that item.
+  const byName = rows.filter(named)
+  if (byName.length === 1) return byName[0]
   return null
 }

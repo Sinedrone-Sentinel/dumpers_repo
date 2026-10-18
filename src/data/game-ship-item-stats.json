@@ -4666,7 +4666,8 @@
         "Weapon_Damage_Physical": 400000,
         "Weapon_Damage": 400000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 400000
+        "Missile_Damage": 400000,
+        "Weapon_Speed": 514
       },
       "burstDps": 0,
       "tags": "TALN CS flightReady",
@@ -11904,7 +11905,8 @@
         "Weapon_Damage_Physical": 1150000,
         "Weapon_Damage": 1150000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 1150000
+        "Missile_Damage": 1150000,
+        "Weapon_Speed": 230
       },
       "burstDps": 0,
       "tags": "TALN CS flightReady",
@@ -11926,7 +11928,8 @@
         "Weapon_Damage_Physical": 1050000,
         "Weapon_Damage": 1050000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 1050000
+        "Missile_Damage": 1050000,
+        "Weapon_Speed": 230
       },
       "burstDps": 0,
       "tags": "TALN EM flightReady",
@@ -11948,7 +11951,8 @@
         "Weapon_Damage_Physical": 910000,
         "Weapon_Damage": 910000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 910000
+        "Missile_Damage": 910000,
+        "Weapon_Speed": 230
       },
       "burstDps": 0,
       "tags": "TALN IR flightReady",
@@ -17875,7 +17879,8 @@
         "Weapon_Damage_Physical": 805000,
         "Weapon_Damage": 805000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 805000
+        "Missile_Damage": 805000,
+        "Weapon_Speed": 375
       },
       "burstDps": 0,
       "tags": "BEHR CS flightReady",
@@ -17897,7 +17902,8 @@
         "Weapon_Damage_Physical": 730000,
         "Weapon_Damage": 730000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 730000
+        "Missile_Damage": 730000,
+        "Weapon_Speed": 375
       },
       "burstDps": 0,
       "tags": "BEHR EM flightReady",
@@ -17919,7 +17925,8 @@
         "Weapon_Damage_Physical": 670000,
         "Weapon_Damage": 670000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 670000
+        "Missile_Damage": 670000,
+        "Weapon_Speed": 375
       },
       "burstDps": 0,
       "tags": "BEHR IR flightReady",
@@ -17941,7 +17948,8 @@
         "Weapon_Damage_Physical": 1230000,
         "Weapon_Damage": 1230000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 1230000
+        "Missile_Damage": 1230000,
+        "Weapon_Speed": 350
       },
       "burstDps": 0,
       "tags": "BEHR CS flightReady",
@@ -17963,7 +17971,8 @@
         "Weapon_Damage_Physical": 1075000,
         "Weapon_Damage": 1075000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 1075000
+        "Missile_Damage": 1075000,
+        "Weapon_Speed": 350
       },
       "burstDps": 0,
       "tags": "BEHR EM flightReady",
@@ -17985,7 +17994,8 @@
         "Weapon_Damage_Physical": 950000,
         "Weapon_Damage": 950000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 950000
+        "Missile_Damage": 950000,
+        "Weapon_Speed": 350
       },
       "burstDps": 0,
       "tags": "BEHR IR flightReady",
@@ -33692,7 +33702,8 @@
         "Weapon_Damage_Physical": 380000,
         "Weapon_Damage": 380000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 380000
+        "Missile_Damage": 380000,
+        "Weapon_Speed": 250
       },
       "burstDps": 0,
       "tags": "TALN CS flightReady",
@@ -43906,7 +43917,8 @@
         "Weapon_Damage_Physical": 15500,
         "Weapon_Damage": 15500,
         "Health_Maxhealth": 50,
-        "Missile_Damage": 15500
+        "Missile_Damage": 15500,
+        "Weapon_Speed": 560
       },
       "burstDps": 0,
       "tags": "TALN EM flightReady",
@@ -50549,7 +50561,8 @@
         "Weapon_Damage_Physical": 350000,
         "Weapon_Damage": 350000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 350000
+        "Missile_Damage": 350000,
+        "Weapon_Speed": 514
       },
       "burstDps": 0,
       "tags": "TALN EM flightReady",
@@ -53216,7 +53229,8 @@
         "Weapon_Damage_Physical": 18000,
         "Weapon_Damage": 18000,
         "Health_Maxhealth": 50,
-        "Missile_Damage": 18000
+        "Missile_Damage": 18000,
+        "Weapon_Speed": 560
       },
       "burstDps": 0,
       "tags": "TALN CS flightReady",
@@ -56031,7 +56045,8 @@
         "Weapon_Damage_Physical": 300000,
         "Weapon_Damage": 300000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 300000
+        "Missile_Damage": 300000,
+        "Weapon_Speed": 514
       },
       "burstDps": 0,
       "tags": "TALN IR flightReady",
@@ -56334,7 +56349,8 @@
         "Weapon_Damage_Physical": 12000,
         "Weapon_Damage": 12000,
         "Health_Maxhealth": 50,
-        "Missile_Damage": 12000
+        "Missile_Damage": 12000,
+        "Weapon_Speed": 560
       },
       "burstDps": 0,
       "tags": "TALN IR flightReady",
@@ -56379,7 +56395,8 @@
         "Weapon_Damage_Energy": 549000,
         "Weapon_Damage": 610000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 610000
+        "Missile_Damage": 610000,
+        "Weapon_Speed": 527
       },
       "burstDps": 0,
       "grade": "A",
@@ -56763,7 +56780,8 @@
         "Weapon_Damage_Physical": 805000,
         "Weapon_Damage": 805000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 805000
+        "Missile_Damage": 805000,
+        "Weapon_Speed": 255
       },
       "burstDps": 0,
       "tags": "TALN CS flightReady",
@@ -56785,7 +56803,8 @@
         "Weapon_Damage_Physical": 720000,
         "Weapon_Damage": 720000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 720000
+        "Missile_Damage": 720000,
+        "Weapon_Speed": 255
       },
       "burstDps": 0,
       "tags": "TALN EM flightReady",
@@ -56807,7 +56826,8 @@
         "Weapon_Damage_Physical": 630000,
         "Weapon_Damage": 630000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 630000
+        "Missile_Damage": 630000,
+        "Weapon_Speed": 255
       },
       "burstDps": 0,
       "tags": "TALN IR flightReady",
@@ -58911,7 +58931,8 @@
         "Weapon_Damage_Physical": 650000,
         "Weapon_Damage": 650000,
         "Health_Maxhealth": 667,
-        "Missile_Damage": 650000
+        "Missile_Damage": 650000,
+        "Weapon_Speed": 270
       },
       "burstDps": 0,
       "tags": "BEHR IR Torpedo flightReady",

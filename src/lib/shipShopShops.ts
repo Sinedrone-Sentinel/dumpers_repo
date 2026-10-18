@@ -149,7 +149,7 @@ export function planStops(lines: CartPlanLine[]): PlannedStop[] {
       remaining.delete(index)
     }
     stops.push({
-      place: sample ? placeLabel(sample) : bestKey,
+      place: sample ? placeName(sample) : bestKey,
       total: bought.reduce((sum, row) => sum + row.lineTotal, 0),
       lines: bought,
     })

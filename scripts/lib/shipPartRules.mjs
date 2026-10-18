@@ -36,8 +36,25 @@ export function hullTokensForShip(shipId, makerCodes) {
   return [...new Set(tokens)]
 }
 
+/** Maker codes, plus a leading id token shared by more than one hull (Esperia ships omit the code). */
+export function makerCodesFor(ships) {
+  const makers = new Set(
+    ships.map((ship) => String(ship.manufacturerCode || '').toLowerCase()).filter((code) => code.length >= 3),
+  )
+  const heads = new Map()
+  for (const ship of ships) {
+    const head = String(ship.id || '').toLowerCase().split('_')[0]
+    if (head.length < 3) continue
+    heads.set(head, (heads.get(head) || 0) + 1)
+  }
+  for (const [head, count] of heads) {
+    if (count >= 2) makers.add(head)
+  }
+  return makers
+}
+
 export function hullTokenList(ships) {
-  const makers = new Set(ships.map((ship) => String(ship.manufacturerCode || '').toLowerCase()).filter(Boolean))
+  const makers = makerCodesFor(ships)
   return [...new Set(ships.flatMap((ship) => hullTokensForShip(ship.id, makers)))].sort((a, b) => b.length - a.length)
 }
 
