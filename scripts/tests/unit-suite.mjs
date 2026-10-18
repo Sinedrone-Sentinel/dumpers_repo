@@ -2220,7 +2220,11 @@ check(
   'ship shop: a lower signature reads as better than stock',
 )
 check(
-  shipShopMath.formatSignedPercent(13) === '+13%' && shipShopMath.formatSignedPercent(-28) === '−28%',
+  shipShopMath.formatSignedPercent(13) === '+13%' &&
+    shipShopMath.formatSignedPercent(13.26) === '+13.2%' &&
+    shipShopMath.formatSignedPercent(-28.19) === '−28.1%' &&
+    shipShopMath.formatShopNumber(1.99) === '1.9' &&
+    shipShopMath.formatShopNumber(13116) === (13116).toLocaleString(),
   'ship shop: signature percent keeps its sign',
 )
 const shieldBands = { Power_Segments: 3, Power_LowStart: 1, Power_LowMod: 0.7, Power_MedStart: 2, Power_MedMod: 0.85, Power_HighStart: 3, Power_HighMod: 1 }
@@ -2252,6 +2256,7 @@ check(
 )
 check(
   shipShopMath.formatQuantumSpeed(161410900) === '161.4 Mm/s' &&
+    shipShopMath.formatQuantumSpeed(161460000) === '161.4 Mm/s' &&
     shipShopMath.partStatLine('weapon', { Weapon_Damage: 10, Weapon_Firerate: 60 }).includes('sustained'),
   'ship shop: quantum speed and sustained DPS use plain labels',
 )
@@ -2407,8 +2412,8 @@ check(
     shipShopMath.shieldRegenRate(allstopShield, 1) === 602 &&
     Math.round(shipShopMath.shieldFullChargeSeconds(allstopShield, 1) * 10) === 53 &&
     shipShopMath.shieldFullChargeSeconds(allstopShield, 0) == null &&
-    shipShopMath.partStatLine('shield', allstopShield).includes('full charge 5.3s') &&
-    shipShopMath.partStatLine('shield', allstopShield).includes('damaged 5.8s') &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('full charge 5.2s') &&
+    shipShopMath.partStatLine('shield', allstopShield).includes('damaged 5.7s') &&
     shipShopMath.partStatLine('shield', allstopShield).includes('downed 11.5s'),
   'ship shop: shield regen and full charge follow the pip band',
 )
@@ -2437,11 +2442,40 @@ check(
   shipShopMath.resolvedPower(shipShopMath.powerColumns(4, ballisticGuns), { weapons: 4 }, 20).weapons === 1 &&
     shipShopMath.togglePowerColumn(ballisticColumn.blocks, 0, 20) === 1 &&
     shipShopMath.clickPowerColumn(ballisticColumn.blocks, 1, 3, 10) === 1 &&
-    shipShopMath.coolantDemand(ballisticGuns, new Map(), 1) === 1 &&
+    shipShopMath.weaponPowerDraw(ballisticGuns, 1) === 0.4 &&
+    shipShopMath.weaponPowerDraw([{ portId: 'g', kind: 'weapon', size: 1, stats: { Weapon_Power: 1.3 } }], 2) === 1.3 &&
+    shipShopMath.coolantDemand(ballisticGuns, new Map(), 1) === 0.4 &&
     shipShopMath.coolantDemand(ballisticGuns, new Map(), 0) === 0 &&
     shipShopMath.electromagneticSignature(ballisticGuns, new Map(), 18, 1, 1) >
       shipShopMath.electromagneticSignature(ballisticGuns, new Map(), 18, 0, 1),
-  'ship shop: ballistic guns fill on one pip, and that pip moves cooling and EM',
+  'ship shop: ballistic guns fill on one pip, and cooling uses their 0.4 power sum',
+)
+const nightfall = {
+  Power_Segments: 2,
+  Power_Min: 1,
+  Power_MedStart: 1,
+  Power_MedMod: 0.85,
+  Power_HighStart: 2,
+  Power_HighMod: 1,
+  Itemresource_Coolantgeneration: 34,
+  Signature_Ir: 3670,
+  Signature_Em: 500,
+}
+const m80Parts = [
+  { portId: 'p', kind: 'power', size: 2, stats: { Itemresource_Powergeneration: 18, Signature_Em: 7430 } },
+  { portId: 'c', kind: 'cooler', size: 2, stats: nightfall },
+  { portId: 'r', kind: 'radar', size: 2, stats: { Power_Segments: 8, Power_Min: 2, Power_HighStart: 1, Power_HighMod: 1, Signature_Em: 2160, Radar_DistanceMin: 1300, Radar_DistanceMax: 2184 } },
+  ...[1, 2, 3, 4].map((index) => ({ portId: `d${index}`, kind: 'weapon', size: 5, stats: { Weapon_Power: 0.1, Signature_Em: 41.3 } })),
+]
+const m80Pips = new Map([['c', 1], ['r', 2]])
+const m80Demand = shipShopMath.coolantDemand(m80Parts, m80Pips, 1)
+const m80Supply = shipShopMath.coolantSupply(m80Parts, m80Pips)
+check(
+  m80Demand === 6.4 &&
+    Math.floor((m80Demand / m80Supply) * 100) === 44 &&
+    shipShopMath.formatShopNumber(shipShopMath.infraredSignature(m80Parts, m80Pips, m80Demand, m80Supply, 1)) === '690.8' &&
+    shipShopMath.radarRangeForPips(m80Parts[2].stats, 2) === 1521,
+  'ship shop: one NightFall and four ballistic guns cool at 44 percent with IR 690.8',
 )
 
 console.log(`Unit tests: ${pass} passed`)

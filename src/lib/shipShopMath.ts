@@ -145,36 +145,46 @@ export function compareToStock(
   return higher ? 'up' : 'down'
 }
 
+/** Cut a shop figure off at one decimal. Whole numbers stay whole. Does not round. */
+export function formatShopNumber(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
+  const negative = value < 0
+  const scaled = Math.trunc(Math.abs(value) * 10 + 1e-8)
+  const whole = Math.trunc(scaled / 10)
+  const tenth = scaled % 10
+  const body = tenth === 0 ? whole.toLocaleString() : `${whole.toLocaleString()}.${tenth}`
+  return negative && scaled !== 0 ? `−${body}` : body
+}
+
 /** Armor signature multipliers are stored as the percent change from 1. */
 export function formatSignedPercent(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value)) return '—'
-  if (Math.abs(value) < 0.05) return '0%'
-  const digits = Math.abs(value % 1) < 0.05 ? 0 : 1
-  const text = Math.abs(value).toFixed(digits).replace(/\.0$/, '')
-  return `${value > 0 ? '+' : '−'}${text}%`
+  const text = formatShopNumber(value)
+  if (text === '—' || text === '0') return '0%'
+  return `${value > 0 ? '+' : ''}${text}%`
 }
 
-function compactNumber(value: number | undefined, digits = 0): string | null {
+function compactNumber(value: number | undefined): string | null {
   if (value == null || !Number.isFinite(value) || value === 0) return null
-  return value.toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: 0 })
+  return formatShopNumber(value)
 }
 
 /** Weapon columns, in plain labels. Missiles are not part of DPS. */
 export function weaponStatBits(stats: Record<string, number>): string[] {
   const bits: string[] = []
-  const push = (label: string, value: number | undefined, digits = 0) => {
-    const text = compactNumber(value, digits)
+  const push = (label: string, value: number | undefined) => {
+    const text = compactNumber(value)
     if (text) bits.push(`${label} ${text}`)
   }
   push('DPS', weaponBurstDps(stats))
   push('Sustained', weaponSustainedDps(stats))
-  push('Alpha', stats.Weapon_Damage, 1)
-  push('Pen', stats.Weapon_Penetration, 2)
+  push('Alpha', stats.Weapon_Damage)
+  push('Pen', stats.Weapon_Penetration)
   push('Rate', stats.Weapon_Firerate)
   push('Range', stats.Weapon_Range)
   push('Speed', stats.Weapon_Speed)
-  push('Spread', stats.Weapon_Spread, 2)
-  push('Power', stats.Weapon_Power, 2)
+  push('Spread', stats.Weapon_Spread)
+  push('Power', stats.Weapon_Power)
   push('EM', stats.Weapon_Em)
   push('Ammo', stats.Weapon_Ammo)
   push('HP', stats.Health_Maxhealth)
@@ -182,7 +192,7 @@ export function weaponStatBits(stats: Record<string, number>): string[] {
 }
 
 export function partStatLine(kind: string, stats: Record<string, number>, scale = 1): string {
-  const round = (value: number) => Math.round(value).toLocaleString()
+  const round = (value: number) => formatShopNumber(value)
   if (kind === 'weapon') {
     const burst = weaponBurstDps(stats)
     if (burst <= 0) return ''
@@ -198,9 +208,9 @@ export function partStatLine(kind: string, stats: Record<string, number>, scale 
     const parts = [
       stats.Shield_Maxhealth ? `${round(stats.Shield_Maxhealth)} HP` : '',
       stats.Shield_Regen ? `${round(regen)}/s` : '',
-      stats.Shield_Maxhealth && stats.Shield_Regen ? `full charge ${charge == null ? '—' : `${charge.toFixed(1)}s`}` : '',
-      stats.Shield_DamagedRegenDelay ? `damaged ${stats.Shield_DamagedRegenDelay.toFixed(1)}s` : '',
-      stats.Shield_DownedRegenDelay ? `downed ${stats.Shield_DownedRegenDelay.toFixed(1)}s` : '',
+      stats.Shield_Maxhealth && stats.Shield_Regen ? `full charge ${charge == null ? '—' : `${formatShopNumber(charge)}s`}` : '',
+      stats.Shield_DamagedRegenDelay ? `damaged ${formatShopNumber(stats.Shield_DamagedRegenDelay)}s` : '',
+      stats.Shield_DownedRegenDelay ? `downed ${formatShopNumber(stats.Shield_DownedRegenDelay)}s` : '',
     ].filter(Boolean)
     return parts.join(' · ')
   }
@@ -262,9 +272,9 @@ export function formatQuantumSpeed(value: number | null | undefined): string {
   if (value <= 0) return '0'
   if (value >= 1_000_000) {
     const mega = value / 1_000_000
-    return `${mega.toFixed(1)} Mm/s`
+    return `${formatShopNumber(mega)} Mm/s`
   }
-  return `${Math.round(value).toLocaleString()} m/s`
+  return `${formatShopNumber(value)} m/s`
 }
 
 export interface ShipSnapshotNumbers {
@@ -467,17 +477,31 @@ export function segmentScale(stats: Record<string, number>, assigned: number): n
   return hit ? (hit.mod as number) : 0
 }
 
+function weaponPowerSum(parts: PowerPart[]): number {
+  return parts.reduce((total, part) => {
+    if (part.kind !== 'weapon') return total
+    return total + Math.max(0, part.stats.Weapon_Power || 0)
+  }, 0)
+}
+
 /**
  * Pips the fitted guns need for full power. Each gun's draw is summed, then
  * rounded up, so 1.3 pips takes 2. The ship's weapon pool is only the stack size.
  */
 export function weaponFullPips(parts: PowerPart[]): number {
-  const sum = parts.reduce((total, part) => {
-    if (part.kind !== 'weapon') return total
-    return total + Math.max(0, part.stats.Weapon_Power || 0)
-  }, 0)
+  const sum = weaponPowerSum(parts)
   if (sum <= 0) return 0
   return Math.ceil(Math.round(sum * 1000) / 1000)
+}
+
+/**
+ * Power the guns draw at the assigned pips. A full stack still draws the power
+ * sum, so four 0.1 guns on their one pip count as 0.4, not 1.
+ */
+export function weaponPowerDraw(parts: PowerPart[], selected: number): number {
+  const full = weaponFullPips(parts)
+  if (full <= 0 || selected <= 0) return 0
+  return weaponPowerSum(parts) * (Math.min(selected, full) / full)
 }
 
 /** Pips past `full` stay on the stack and cannot be assigned. */
@@ -719,8 +743,8 @@ export function coolantSupply(parts: PowerPart[], pips: Map<string, number>): nu
  * Cooling load is the pips in use, plus another `pips * band` for shields,
  * life support, radar, and the quantum drive. Powered coolers also add their
  * own minimum once, on top of the pips assigned to them. Plants do not draw
- * coolant. Engines count the pips assigned to the flight blade. Weapon pips count
- * up to the pips those guns need for full power.
+ * coolant. Engines count the pips assigned to the flight blade. Weapons count
+ * their power sum at the assigned share, not the rounded pip.
  */
 export function coolantDemand(
   parts: PowerPart[],
@@ -742,7 +766,7 @@ export function coolantDemand(
     if (COOLING_BAND_KINDS.has(part.kind)) extra += count * segmentScale(part.stats, count)
   }
   drawn += coolerSelf
-  drawn += Math.min(Math.max(0, weaponSelected), weaponFullPips(parts))
+  drawn += weaponPowerDraw(parts, weaponSelected)
   return drawn + extra
 }
 
@@ -767,7 +791,7 @@ export function electromagneticSignature(
     if (part.kind === 'weapon' || part.kind === 'power') continue
     drawn += assignedPips(pips, part.portId)
   }
-  drawn += Math.min(Math.max(0, weaponSelected), weaponFull)
+  drawn += weaponPowerDraw(parts, weaponSelected)
   const ratio = generated > 0 ? drawn / generated : 0
   let total = 0
   const plants = parts.filter((part) => part.kind === 'power' && (part.stats.Itemresource_Powergeneration || 0) > 0)
