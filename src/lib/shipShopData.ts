@@ -10,14 +10,16 @@ import {
   coolantDemand,
   coolantSupply,
   effectivePartStats,
+  electromagneticSignature,
   emptySnapshot,
+  infraredSignature,
   itemIsEquippable,
   powerColumns,
   powerGenerated,
   radarRangeForPips,
   resolvedPower,
   segmentScale,
-  temperatureInfrared,
+  shieldPowerFactor,
   type FittedPart,
   type MissileMount,
   type PowerPart,
@@ -403,7 +405,12 @@ export function snapshotForBuild(
   const pipCounts = new Map<string, number>()
   const weaponColumn = columns.find((column) => column.id === 'weapons')
   const weaponTotal = weaponColumn ? columnTotal(weaponColumn) : 0
-  const weaponFraction = weaponColumn ? (assignedPower[weaponColumn.id] || 0) / Math.max(1, weaponTotal) : 1
+  const weaponSelected = weaponColumn ? (assignedPower[weaponColumn.id] || 0) : 0
+  const weaponRaw = parts
+    .filter((part) => part.kind === 'weapon')
+    .reduce((sum, part) => sum + (part.stats.Power_Segments || 0), 0)
+  const weaponEnabled = weaponColumn ? Math.min(weaponTotal, Math.ceil(weaponRaw)) : 0
+  const weaponFraction = weaponEnabled > 0 ? weaponSelected / weaponEnabled : 0
   const poweredPorts = new Set(columns.flatMap((column) => column.blocks.map((block) => block.portId).filter((portId): portId is string => Boolean(portId))))
   for (const column of columns) {
     if (column.id === 'weapons') continue
@@ -423,29 +430,26 @@ export function snapshotForBuild(
     return poweredPorts.has(part.portId) ? 0 : 1
   }
   for (const part of parts) {
-    const scale = scaleFor(part)
+    const pips = pipCounts.get(part.portId) || 0
+    const scale = part.kind === 'shield' ? shieldPowerFactor(part.stats, pips) : scaleFor(part)
     addPartToSnapshot(snapshot, part.kind, part.stats, scale)
     if (part.kind === 'radar') {
-      const range = radarRangeForPips(part.stats, pipCounts.get(part.portId) || 0)
+      const range = radarRangeForPips(part.stats, pips)
       if (range != null) snapshot.radarRange = Math.max(snapshot.radarRange || 0, range)
     }
   }
-  const supply = coolantSupply(parts, scales)
-  const demand = coolantDemand(parts, new Map(parts.map((part) => [part.portId, scaleFor(part)])))
-  snapshot.coolant = supply
-  snapshot.coolantDemand = demand
-  snapshot.coolantRatio = demand > 0 ? supply / demand : (supply > 0 ? 1 : 0)
-  if (demand > 0 && supply < demand) {
-    const shortfall = 1 - supply / demand
-    for (const part of parts) {
-      if (scaleFor(part) <= 0) continue
-      snapshot.signatureIr += temperatureInfrared(part.stats, shortfall)
-    }
-  }
+  const generated = powerGenerated(parts)
+  const supply = coolantSupply(parts, pipCounts)
+  const demand = coolantDemand(parts, pipCounts, weaponSelected, weaponRaw)
   const armor = parts.find((part) => part.kind === 'armor')
   const multiplier = (percent?: number) => 1 + (percent || 0) / 100
-  snapshot.signatureEm *= multiplier(armor?.stats.Armor_SignalEm)
-  snapshot.signatureIr *= multiplier(armor?.stats.Armor_SignalIr)
+  const armorEm = multiplier(armor?.stats.Armor_SignalEm)
+  const armorIr = multiplier(armor?.stats.Armor_SignalIr)
+  snapshot.coolant = supply
+  snapshot.coolantDemand = demand
+  snapshot.coolantRatio = supply > 0 ? Math.min(demand / supply, 1) : 0
+  snapshot.signatureEm = electromagneticSignature(parts, pipCounts, generated, weaponSelected, weaponEnabled, armorEm)
+  snapshot.signatureIr = infraredSignature(parts, pipCounts, demand, supply, armorIr)
   if (snapshot.signatureCs != null) snapshot.signatureCs *= multiplier(armor?.stats.Armor_SignalCs)
   return snapshot
 }
