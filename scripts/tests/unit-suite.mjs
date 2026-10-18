@@ -2330,8 +2330,41 @@ const crafted = shipShopMath.applyCraftedStats(
   },
   { 0: 1000 },
 )
+const craftedFile = shipShopMath.applyCraftedStats(
+  { Weapon_Damage: 200, Health_Maxhealth: 550 },
+  {
+    weaponBaseStats: { Weapon_Damage: 200, Health_Maxhealth: 550 },
+    slots: [
+      {
+        options: [{
+          modifiers: [{
+            property: 'weapon_damage',
+            startQuality: 0,
+            endQuality: 1000,
+            baseAmount: 0.95,
+            perQuality: 0.0001,
+          }],
+        }],
+      },
+      {
+        options: [{
+          modifiers: [{
+            property: 'health_maxhealth',
+            startQuality: 0,
+            endQuality: 1000,
+            baseAmount: 0.9,
+            perQuality: 0.0002,
+          }],
+        }],
+      },
+    ],
+  },
+  { 0: 1000, 1: 1000 },
+)
 check(
-  crafted.Weapon_Damage === 120,
+  crafted.Weapon_Damage === 120 &&
+    craftedFile.Weapon_Damage === 210 &&
+    craftedFile.Health_Maxhealth === 605,
   'ship shop: crafted quality scales the stock stat',
 )
 check(

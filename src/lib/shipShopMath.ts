@@ -2,6 +2,11 @@ import {
   computeBlueprintEffectiveModifiers,
   type BlueprintForEffectiveStats,
 } from './blueprintEffectiveStats'
+import {
+  applyArmorMitigationBonus,
+  canonicalStatKey,
+  isArmorDamageTakenStat,
+} from './qualityModifiers'
 
 export interface PortAccept {
   type: string
@@ -127,6 +132,15 @@ export function weaponSustainedDps(stats: Record<string, number> | null | undefi
   return sustained
 }
 
+function matchingStatKey(stats: Record<string, number>, property: string): string | null {
+  if (Object.prototype.hasOwnProperty.call(stats, property)) return property
+  const lower = property.toLowerCase()
+  for (const key of Object.keys(stats)) {
+    if (key.toLowerCase() === lower) return key
+  }
+  return null
+}
+
 export function applyCraftedStats(
   stats: Record<string, number>,
   blueprint: BlueprintForEffectiveStats | null | undefined,
@@ -135,19 +149,21 @@ export function applyCraftedStats(
   if (!blueprint) return { ...stats }
   const next = { ...stats }
   for (const mod of computeBlueprintEffectiveModifiers(blueprint, qualities)) {
-    const current = next[mod.property]
-    if (current == null) continue
-    if (mod.isIntegerAdditive && mod.additiveChange) {
-      next[mod.property] = current + mod.additiveChange
+    let key = matchingStatKey(next, mod.property)
+    if (!key) {
+      if (mod.finalValue == null) continue
+      key = canonicalStatKey(mod.property)
+      next[key] = mod.finalValue
       continue
     }
-    if (mod.baseValue && mod.finalValue) {
-      next[mod.property] = current * (mod.finalValue / mod.baseValue)
-      continue
+    let value = next[key]
+    if (isArmorDamageTakenStat(mod.property)) {
+      value = applyArmorMitigationBonus(value, mod.percentChange)
+    } else if (mod.combinedModifier !== 1) {
+      value *= mod.combinedModifier
     }
-    if (mod.percentChange) {
-      next[mod.property] = current * (1 + mod.percentChange / 100)
-    }
+    if (mod.additiveChange) value += mod.additiveChange
+    next[key] = value
   }
   return next
 }

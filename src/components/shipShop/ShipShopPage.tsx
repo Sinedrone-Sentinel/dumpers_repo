@@ -556,7 +556,7 @@ export default function ShipShopPage() {
     if (!pickerPortId) return
     function onPointer(event: PointerEvent) {
       const target = event.target
-      if (!(target instanceof Element) || target.closest('[data-ship-port]')) return
+      if (!(target instanceof Element) || target.closest('[data-ship-port], [data-quality-band-list]')) return
       setPickerPortId(null)
     }
     document.addEventListener('pointerdown', onPointer)

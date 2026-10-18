@@ -231,6 +231,14 @@ export function isLowerBetter(property: string | null | undefined): boolean {
   return LOWER_IS_BETTER_STATS.has(property.toLowerCase())
 }
 
+/** Catalog stats use `Weapon_Damage`. Craft files store `weapon_damage`. */
+export function canonicalStatKey(property: string): string {
+  const key = Object.keys(PROPERTY_LABELS).find(
+    (entry) => entry.toLowerCase() === property.toLowerCase()
+  )
+  return key || property
+}
+
 export function getPropertyLabel(property: string | null | undefined): string {
   if (!property) return 'Unknown'
   const key = Object.keys(PROPERTY_LABELS).find(
