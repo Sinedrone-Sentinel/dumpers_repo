@@ -433,6 +433,7 @@ Never commit `service_role` / `sb_secret_` keys. Edge Functions receive platform
 | `npm run fetch-commodity-bases` | Refresh UEX Q0 commodity DFP bases |
 | `npm run fetch-shop-data` | Refresh UEX commodity buy/sell locations for Commodity Lookup (`src/data/shop-commodity-index.json`) |
 | `npm run fetch-mining-gear-shops` | Refresh UEX buy locations for mining heads/modules/gadgets, used by Advisor (`src/data/mining-gear-shops.json`) |
+| `npm run fetch-ship-shop-shops` | Refresh UEX buy locations for Fuzy's Ship Shop (`src/data/ship-shop-shops.json`). Every patch, after `parse-game-data` |
 | `npm run verify-dfp-premiums` | Fail if DFP bundle/premiums are stale vs `game-blueprints.json` |
 | `npm run sync-min-game-version` | Bake game major.minor into BP Dumper sources |
 | `npm run release:dumper` | Manual semantic-release for BP Dumper |
@@ -447,6 +448,7 @@ Primary source: Star Citizen game files via StarBreaker. See [docs/DATA_SOURCES.
 ```powershell
 .\scripts\extract-game-data.ps1
 npm run parse-game-data       # regenerate src/data/game-*.json from scratch (+ What's New → Supabase)
+npm run fetch-ship-shop-shops # every patch, after parse: Fuzy's Ship Shop UEX buy locations
 npm run push-whats-new        # retry pending What's New ingest if parse could not reach DB
 npm run diff-game-data        # patch report: adds / removes / renames / stat changes vs last commit
 npm run patch-audit           # full audit battery: data consistency + math verifiers + diff

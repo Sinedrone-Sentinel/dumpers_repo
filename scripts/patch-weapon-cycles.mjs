@@ -1,6 +1,9 @@
 /**
  * Stamp Weapon_CycleShots / Weapon_CycleSeconds onto guns whose sequence is slower
  * than the stored fire rate. Other item stats stay as they are.
+ *
+ * Patch day does not use this. `npm run parse-game-data` rewrites the catalog
+ * through extractShipItemStats, which already applies the same cycle.
  */
 import fs from 'fs'
 import path from 'path'
