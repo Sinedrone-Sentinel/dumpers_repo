@@ -14,7 +14,7 @@ import {
 } from '../../lib/shipShopShops'
 import type { ShopCartLine } from '../../lib/shipShopData'
 
-const BUY = 'site-btn-ghost shrink-0 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide disabled:cursor-not-allowed disabled:opacity-40'
+const CHIP = 'shrink-0 rounded-lg px-2 py-0.5 text-xs font-semibold uppercase tracking-wide transition hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100'
 
 const FEWEST_STOPS_NOTICE = 'This list uses the fewest stops. These are not the only locations where these items and ships can be bought.'
 
@@ -82,19 +82,19 @@ export function ShopBuyButtons({
   const forSale = isForSale(listings)
   return (
     <>
-      <button type="button" className={BUY} onClick={onWhere}>
+      <button type="button" className={`${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} onClick={onWhere}>
         Where to Buy
       </button>
-      <button type="button" className={BUY} disabled={!forSale} title={forSale ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
+      <button type="button" className={`${CHIP} site-filter-selected-green`} disabled={!forSale} title={forSale ? 'Add to cart' : 'Not sold in a shop'} onClick={onAdd}>
         Add to Cart
       </button>
       {showBuild && (
-        <button type="button" className={BUY} onClick={onAddBuild}>
+        <button type="button" className={`${CHIP} site-filter-selected-blue`} onClick={onAddBuild}>
           Add Build to Cart
         </button>
       )}
       {onViewCart && (
-        <button type="button" className={BUY} onClick={onViewCart}>
+        <button type="button" className={`${CHIP} site-filter-selected-amber`} onClick={onViewCart}>
           {cartCount ? `View Cart (${cartCount})` : 'View Cart'}
         </button>
       )}
@@ -105,17 +105,14 @@ export function ShopBuyButtons({
 export function ShopWhereModal({
   title,
   listings,
-  craftable,
-  ship,
   onClose,
 }: {
   title: string
   listings: ShopListing[]
-  craftable: boolean
-  ship: boolean
   onClose: () => void
 }) {
   const rows = [...listings].filter((row) => row.price > 0).sort((a, b) => locationLine(a).localeCompare(locationLine(b)) || a.price - b.price)
+  if (rows.length === 0) return null
   return (
     <ShopModalFrame onClose={onClose}>
       <div className="site-modal-shell mt-16 flex max-h-[min(70dvh,calc(100dvh-6rem))] w-full max-w-xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label={`Where to buy ${title}`}>
@@ -123,24 +120,14 @@ export function ShopWhereModal({
           <h3 className="min-w-0 flex-1 truncate text-base font-semibold text-white">Where to buy {title}</h3>
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
         </div>
-        {rows.length === 0 ? (
-          <p className="text-sm text-slate-200">
-            {ship
-              ? 'This ship is not sold in a shop.'
-              : craftable
-                ? 'This is not sold in a shop. Craft it.'
-                : 'This is not sold in a shop. It has to be found in the game.'}
-          </p>
-        ) : (
-          <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
-            {rows.map((row) => (
-              <div key={`${locationLine(row)}-${row.price}`} className="flex items-baseline justify-between gap-3 py-1 text-sm">
-                <span className="text-slate-100">{locationLine(row)}</span>
-                <span className="shrink-0 text-slate-300">{formatShopNumber(row.price)} aUEC</span>
-              </div>
-            ))}
-          </div>
-        )}
+        <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain">
+          {rows.map((row) => (
+            <div key={`${locationLine(row)}-${row.price}`} className="flex items-baseline justify-between gap-3 py-1 text-sm">
+              <span className="text-slate-100">{locationLine(row)}</span>
+              <span className="shrink-0 text-slate-300">{formatShopNumber(row.price)} aUEC</span>
+            </div>
+          ))}
+        </div>
         <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
     </ShopModalFrame>
