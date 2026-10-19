@@ -1231,10 +1231,42 @@
   font-size: 0.7rem;
 }
 
+.ship-shop-section-bar {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ship-shop-section:has(.ship-shop-section-body) .ship-shop-section-bar {
+  padding-bottom: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.ship-shop-section-bar:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ship-shop-section-body {
+  padding: 0 1rem 1rem;
+}
+
 .ship-shop-expand {
-  padding: 0.3rem 0.6rem;
+  padding: 0;
   font-size: 0.7rem;
   line-height: 1rem;
+  color: rgb(148 163 184);
 }
 
 .ship-shop-build {
@@ -1300,9 +1332,16 @@
   }
 
   .ship-shop-header,
-  .ship-shop-section,
   .ship-shop-snap aside {
     padding: 0.65rem;
+  }
+
+  .ship-shop-section-bar {
+    padding: 0.65rem;
+  }
+
+  .ship-shop-section-body {
+    padding: 0 0.65rem 0.65rem;
   }
 }
 
@@ -1324,7 +1363,6 @@
   }
 
   .ship-shop-expand {
-    padding: 0.5rem 3rem;
     font-size: 1.75rem;
   }
 }
