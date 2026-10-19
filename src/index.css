@@ -135,13 +135,28 @@
   }
 
   @media (min-width: 1024px) {
+    .ship-shop-page {
+      height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--site-ticker-height, 0px));
+      max-height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--site-ticker-height, 0px));
+      overflow: hidden;
+    }
+
+    .ship-shop-header {
+      position: static;
+      flex-shrink: 0;
+    }
+
+    .ship-shop-sections,
     .ship-shop-snap {
-      position: sticky;
-      top: calc(var(--site-header-height, 3.5rem) + var(--ship-shop-header-height, 0px));
-      width: var(--ship-snap-w);
-      height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--ship-shop-header-height, 0px) - var(--site-ticker-height, 0px));
-      max-height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--ship-shop-header-height, 0px) - var(--site-ticker-height, 0px));
+      min-height: 0;
+      max-height: 100%;
       overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .ship-shop-snap {
+      position: static;
+      width: var(--ship-snap-w);
     }
   }
 
@@ -1222,6 +1237,12 @@
 /* Unlayered so these beat utility font/padding classes. Large only above 1920px. */
 .ship-shop-header {
   overflow: visible;
+}
+
+@media (min-width: 1024px) {
+  .ship-shop-header {
+    position: static;
+  }
 }
 
 .ship-shop-pip,

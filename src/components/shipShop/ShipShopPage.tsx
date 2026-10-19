@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type MouseEvent, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useOrderDraft } from '../../contexts/OrderDraftContext'
 import { pricingForBlueprintLine } from '../../lib/orderPricing'
@@ -681,18 +681,6 @@ export default function ShipShopPage() {
   const publishedFraken = frakenLookupId ? frakenByShip[frakenLookupId] : undefined
   const frakenAvailable = Boolean(publishedFraken?.shipId)
   const ship = getShip(build?.shipId)
-  const pageRef = useRef<HTMLDivElement>(null)
-  const headerRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const header = headerRef.current
-    const page = pageRef.current
-    if (!header || !page) return
-    const write = () => page.style.setProperty('--ship-shop-header-height', `${header.offsetHeight}px`)
-    write()
-    const observer = new ResizeObserver(write)
-    observer.observe(header)
-    return () => observer.disconnect()
-  }, [build?.shipId, viewingFraken, buildIndex, ready])
   const shipChoices = useMemo(() => {
     const needle = shipQuery.trim().toLowerCase()
     return SHIPS.filter((entry) => {
@@ -793,8 +781,8 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div ref={pageRef} className="ship-shop-page flex min-w-0 max-w-full flex-col gap-4">
-      <div ref={headerRef} className="ship-shop-header site-surface-solid sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full p-4">
+    <div className="ship-shop-page flex min-w-0 max-w-full flex-col gap-4">
+      <div className="ship-shop-header site-surface-solid sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full p-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -914,8 +902,14 @@ export default function ShipShopPage() {
                     const sectionId = section.id
                     window.requestAnimationFrame(() => {
                       const target = document.getElementById(`ship-section-${sectionId}`)
-                      const header = document.querySelector('.ship-shop-header')
                       if (!target) return
+                      const scroller = target.closest('.ship-shop-sections')
+                      if (scroller instanceof HTMLElement && window.matchMedia('(min-width: 1024px)').matches) {
+                        const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - 8
+                        scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+                        return
+                      }
+                      const header = document.querySelector('.ship-shop-header')
                       const offset = header instanceof HTMLElement ? header.getBoundingClientRect().bottom : 0
                       const top = target.getBoundingClientRect().top + window.scrollY - offset - 8
                       window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
@@ -941,8 +935,8 @@ export default function ShipShopPage() {
           />
         </div>
       </div>
-      <div className="flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-start">
-        <div className="order-2 min-w-0 flex-1 space-y-4 lg:order-1">
+      <div className="ship-shop-body flex min-w-0 max-w-full flex-col gap-4 lg:min-h-0 lg:flex-1 lg:flex-row lg:items-stretch">
+        <div className="ship-shop-sections order-2 min-w-0 flex-1 space-y-4 lg:order-1">
 
         {ship && SHIP_SECTIONS.filter((section) => sectionHasPorts(ship, section.id, build.ports)).map((section) => {
           const ports = portsForSection(ship, section.id, build.ports)
