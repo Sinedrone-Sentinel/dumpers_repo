@@ -340,15 +340,15 @@ function nameHullToken(value: string | null | undefined): string | null {
 
 /**
  * A part with no required tags is exclusive to a hull when its entity name
- * contains that hull. A mount-ready gun is not locked by its product name.
+ * contains that hull. A mount-ready gun is not locked by its maker name or its
+ * product name, so the Banu Defender's Singe Cannon still fits other ships.
  * Parts that already list required tags stay on the tag rule.
  */
 function namedHullLock(item: ShipItemStats): string | null {
   if (tagList(item.requiredTags).length > 0) return null
+  if (hasRawTag(item.tags, 'weaponMountUsable')) return null
   const fromClass = nameHullToken(item.entityClass)
   if (fromClass) return fromClass
-  // A mount-ready gun keeps its product name. Mantis GT-220 is not the RSI Mantis.
-  if (hasRawTag(item.tags, 'weaponMountUsable')) return null
   return nameHullToken(item.displayName)
 }
 
