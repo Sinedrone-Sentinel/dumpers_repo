@@ -864,6 +864,20 @@
     @apply bg-amber-950/80 text-amber-200 border border-amber-500/45;
   }
 
+  .site-chip-gold {
+    @apply border border-amber-200 bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-400 font-semibold text-slate-950;
+    box-shadow: 0 0 16px rgba(251, 191, 36, 0.55);
+  }
+
+  .site-chip-gold[aria-pressed='true'] {
+    box-shadow: 0 0 0 2px rgba(255, 251, 235, 0.95), 0 0 16px rgba(251, 191, 36, 0.55);
+  }
+
+  .site-chip-gold:disabled,
+  .site-filter-idle:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+
   .site-filter-selected-red {
     @apply bg-red-950/80 text-red-200 border border-red-500/45;
   }

@@ -63,7 +63,7 @@ import {
   type ShipItemStats,
 } from '../../lib/shipShopMath'
 import { getShipItem } from '../../lib/shipItemCatalog'
-import { defaultShipShopLoadouts, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore } from '../../lib/shipShopOps'
+import { defaultShipShopLoadouts, fetchFrakenCanSave, fetchShipShopFrakenFit, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopFrakenFit, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore, type FrakenFit } from '../../lib/shipShopOps'
 import { isForSale, listingsFor, partListings, shipListings, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 
@@ -564,6 +564,11 @@ export default function ShipShopPage() {
     | { mode: 'cart' }
   >(null)
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
+  const [viewingFraken, setViewingFraken] = useState(false)
+  const [frakenDraft, setFrakenDraft] = useState<ShipBuild | null>(null)
+  const [frakenByShip, setFrakenByShip] = useState<Record<string, FrakenFit | null>>({})
+  const [frakenCanSave, setFrakenCanSave] = useState(false)
+  const [frakenSaving, setFrakenSaving] = useState(false)
 
   useEffect(() => {
     if (!pickerPortId) return
@@ -632,7 +637,49 @@ export default function ShipShopPage() {
     return () => window.clearTimeout(timer)
   }, [store, ready, authLoading, accountSave])
 
-  const build = store.builds[buildIndex] ?? store.builds[0]
+  useEffect(() => {
+    if (!userId) {
+      setFrakenCanSave(false)
+      return
+    }
+    let cancelled = false
+    fetchFrakenCanSave()
+      .then((ok) => {
+        if (!cancelled) setFrakenCanSave(ok)
+      })
+      .catch(() => {
+        if (!cancelled) setFrakenCanSave(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
+  const frakenLookupId = viewingFraken
+    ? (frakenDraft?.shipId ?? null)
+    : (store.builds[buildIndex]?.shipId ?? null)
+
+  useEffect(() => {
+    if (!frakenLookupId) return
+    let cancelled = false
+    fetchShipShopFrakenFit(frakenLookupId)
+      .then((fit) => {
+        if (cancelled) return
+        setFrakenByShip((prev) => ({ ...prev, [frakenLookupId]: fit }))
+      })
+      .catch(() => {
+        if (cancelled) return
+        setFrakenByShip((prev) => ({ ...prev, [frakenLookupId]: null }))
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [frakenLookupId])
+
+  const personal = store.builds[buildIndex] ?? store.builds[0]
+  const build = viewingFraken && frakenDraft ? frakenDraft : personal
+  const publishedFraken = frakenLookupId ? frakenByShip[frakenLookupId] : undefined
+  const frakenAvailable = Boolean(publishedFraken?.shipId)
   const ship = getShip(build?.shipId)
   const shipChoices = useMemo(() => {
     const needle = shipQuery.trim().toLowerCase()
@@ -651,19 +698,60 @@ export default function ShipShopPage() {
   const remaining = Math.max(0, generated - powerUsed(columns, power))
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
 
+  function commitBuild(current: ShipBuild | undefined, next: ShipBuild): ShipBuild {
+    const cart = Object.prototype.hasOwnProperty.call(next, 'cart')
+      ? (next.cart && next.cart.length > 0 ? next.cart : undefined)
+      : current?.cart
+    const saved: ShipBuild = { shipId: next.shipId, ports: next.ports }
+    if (next.power !== undefined) saved.power = next.power
+    if (cart) saved.cart = cart
+    return saved
+  }
+
   function updateBuild(next: ShipBuild) {
+    if (viewingFraken) {
+      setFrakenDraft((current) => commitBuild(current ?? undefined, next))
+      return
+    }
     setStore((prev) => {
       const builds = prev.builds.slice()
-      const current = builds[buildIndex]
-      const cart = Object.prototype.hasOwnProperty.call(next, 'cart')
-        ? (next.cart && next.cart.length > 0 ? next.cart : undefined)
-        : current?.cart
-      const saved: ShipBuild = { shipId: next.shipId, ports: next.ports }
-      if (next.power !== undefined) saved.power = next.power
-      if (cart) saved.cart = cart
-      builds[buildIndex] = saved
+      builds[buildIndex] = commitBuild(builds[buildIndex], next)
       return { version: 1, builds }
     })
+  }
+
+  function leaveFraken() {
+    setViewingFraken(false)
+    setFrakenDraft(null)
+    setPickerPortId(null)
+    setCopyWeapon(null)
+  }
+
+  function openFraken() {
+    if (viewingFraken || !publishedFraken?.shipId) return
+    setFrakenDraft({
+      shipId: publishedFraken.shipId,
+      ports: { ...publishedFraken.ports },
+      ...(publishedFraken.power ? { power: { ...publishedFraken.power } } : {}),
+      cart: [],
+    })
+    setViewingFraken(true)
+    setShipQuery('')
+    setPickerPortId(null)
+    setCopyWeapon(null)
+  }
+
+  function publishFrakenFit() {
+    if (!frakenCanSave || viewingFraken || !personal?.shipId || frakenSaving) return
+    const shipId = personal.shipId
+    setFrakenSaving(true)
+    saveShipShopFrakenFit({ shipId, ports: personal.ports, power: personal.power })
+      .then((saved) => {
+        setFrakenByShip((prev) => ({ ...prev, [saved.shipId]: saved }))
+        setSaveNote(null)
+      })
+      .catch(() => setSaveNote('Fraken-Fit did not save.'))
+      .finally(() => setFrakenSaving(false))
   }
 
   function clearBuild(index: number) {
@@ -676,6 +764,7 @@ export default function ShipShopPage() {
   }
 
   function chooseShip(shipId: string) {
+    if (viewingFraken) return
     const nextShip = getShip(shipId)
     if (!nextShip) return
     updateBuild({ shipId: nextShip.id, ports: stockPorts(nextShip), cart: [] })
@@ -683,7 +772,7 @@ export default function ShipShopPage() {
   }
 
   function setFitted(port: ShipPort, part: FittedPart | null) {
-    if (!build) return
+    if (viewingFraken || !build) return
     updateBuild({
       shipId: build.shipId,
       ports: applyPortFit(ship, build.ports, port, part),
@@ -713,10 +802,11 @@ export default function ShipShopPage() {
                 className="site-input w-full px-3 py-2 mt-1"
                 value={shipQuery}
                 placeholder={ship?.displayName || 'Search ships'}
+                disabled={viewingFraken}
                 onChange={(event) => setShipQuery(event.target.value)}
               />
             </label>
-            {shipQuery && (
+            {shipQuery && !viewingFraken && (
               <div className="site-dropdown-list max-h-72 overflow-y-auto">
                 {shipChoices.map((entry) => (
                   <button key={entry.id} type="button" className="site-dropdown-item w-full text-left" onClick={() => chooseShip(entry.id)}>
@@ -750,20 +840,33 @@ export default function ShipShopPage() {
                 }}
                 onViewCart={() => setShopModal({ mode: 'cart' })}
               />
+              {frakenCanSave && !viewingFraken && personal?.shipId ? (
+                <button
+                  type="button"
+                  className={`${CHIP} site-chip-gold`}
+                  disabled={frakenSaving}
+                  onClick={publishFrakenFit}
+                >
+                  Save Fraken-Fit
+                </button>
+              ) : null}
             </div>
           )}
           <div className="site-chip-strip w-fit max-w-full">
-            <span className="px-2 text-sm text-slate-400">Build {buildIndex + 1} of 4</span>
+            <span className="px-2 text-sm text-slate-400">{viewingFraken ? "Fuzy's Fraken-Fit" : `Build ${buildIndex + 1} of 4`}</span>
             {store.builds.map((entry, index) => {
               const used = Boolean(entry.shipId)
-              const tone = index === buildIndex ? 'site-filter-selected-orange' : 'site-filter-idle'
+              const tone = !viewingFraken && index === buildIndex ? 'site-filter-selected-orange' : 'site-filter-idle'
               const label = entry.shipId ? getShip(entry.shipId)?.displayName || `Build ${index + 1}` : `Build ${index + 1}`
               return (
                 <span key={index} className={used ? 'ship-shop-build' : 'inline-flex'}>
                   <button
                     type="button"
                     className={`${CHIP} ${tone} ${used ? 'ship-shop-build-name' : ''}`}
-                    onClick={() => setBuildIndex(index)}
+                    onClick={() => {
+                      leaveFraken()
+                      setBuildIndex(index)
+                    }}
                   >
                     {label}
                   </button>
@@ -781,6 +884,15 @@ export default function ShipShopPage() {
                 </span>
               )
             })}
+            <button
+              type="button"
+              className={`${CHIP} ${frakenAvailable ? 'site-chip-gold' : 'site-filter-idle'}`}
+              disabled={!frakenAvailable}
+              aria-pressed={viewingFraken}
+              onClick={openFraken}
+            >
+              Fuzy's Fraken-Fit
+            </button>
           </div>
           {ship && (
             <div className="site-chip-strip w-fit max-w-full">
@@ -833,7 +945,7 @@ export default function ShipShopPage() {
             const fitted = statsForFitted(build.ports[port.id])
             const line = fitted ? partInfo(fitted.item, fitted.stats, port.kind === 'shield' ? shieldScale(port.id) : 1) : ''
             const source = fitted ? (build.ports[port.id]?.source === 'crafted' ? 'Crafted' : 'Stock') : ''
-            const open = pickerPortId === port.id && !port.locked
+            const open = !viewingFraken && pickerPortId === port.id && !port.locked
             const info = fitted ? [line, source].filter(Boolean).join(' · ') : 'Open port'
             const sizeLabel = port.minSize && port.maxSize && port.minSize !== port.maxSize
               ? `S${port.minSize}–${port.maxSize}`
@@ -879,7 +991,7 @@ export default function ShipShopPage() {
               />
             ) : null
             const openPicker = (event: MouseEvent) => {
-              if (port.locked) return
+              if (viewingFraken || port.locked) return
               const target = event.target
               if (target instanceof Element && target.closest('button, input, a, label')) return
               setPickerPortId(open ? null : port.id)
@@ -908,7 +1020,7 @@ export default function ShipShopPage() {
             ) : null
             const rackCard = port.kind === 'missileRack' || fitted?.item.kind === 'missileRack'
             const copyTargets = port.kind === 'weapon' || rackCard ? [] : matchingCopyPorts(ship, build.ports, port)
-            const addToAll = fitted && !port.locked && !rackCard && (port.kind === 'weapon' || copyTargets.length > 0) ? (
+            const addToAll = !viewingFraken && fitted && !port.locked && !rackCard && (port.kind === 'weapon' || copyTargets.length > 0) ? (
               <button
                 type="button"
                 className="site-btn-ghost shrink-0 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-[#fbbf24]"
@@ -947,7 +1059,7 @@ export default function ShipShopPage() {
                     <span className="truncate text-sm text-slate-300">{info}</span>
                     {buy}
                     <span className="ml-auto shrink-0 text-xs text-slate-500">{port.locked ? `${port.label} · Locked` : port.label}</span>
-                    {fitted && !port.locked && (
+                    {fitted && !viewingFraken && !port.locked && (
                       <button type="button" className="site-btn-ghost shrink-0 px-2 py-0.5 text-xs" onClick={() => setFitted(port, null)}>
                         Clear
                       </button>
@@ -966,13 +1078,13 @@ export default function ShipShopPage() {
                       <span className="ship-shop-part-name min-w-0 truncate font-medium text-white">{name}</span>
                       <span className={`text-base text-slate-300 ${inline ? 'min-w-0 truncate' : ''}`}>{info}</span>
                       {buy}
-                      {inline && fitted && !port.locked && (
+                      {inline && fitted && !viewingFraken && !port.locked && (
                         <button type="button" className="site-btn-ghost ml-auto shrink-0 px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
                           Clear
                         </button>
                       )}
                     </div>
-                    {!inline && fitted && !port.locked && (
+                    {!inline && fitted && !viewingFraken && !port.locked && (
                       <div className="mt-2">
                         <button type="button" className="site-btn-ghost px-3 py-1 text-sm" onClick={() => setFitted(port, null)}>
                           Clear
@@ -1030,12 +1142,13 @@ export default function ShipShopPage() {
           )
         })}
       </div>
-      {copyWeapon && (() => {
+      {copyWeapon && !viewingFraken && (() => {
         const source = findRenderedPort(ship, build.ports, copyWeapon.portId)
         const part = copyWeapon.part
         const itemName = getShipItem(part.entityClass)?.displayName || 'Weapon'
         const groups = source ? weaponCopyGroups(ship, build.ports, source, part.entityClass) : []
         const paint = (slots: ShipPort[], on: boolean) => {
+          if (viewingFraken) return
           const targets = slots.filter((slot) => {
             const current = build.ports[slot.id]?.entityClass
             return on ? current !== part.entityClass : current === part.entityClass
