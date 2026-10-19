@@ -1110,24 +1110,23 @@ export default function ShipShopPage() {
             )
           })
           return (
-            <section key={section.id} id={`ship-section-${section.id}`} className="ship-shop-section site-surface rounded-xl p-4 scroll-mt-64">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-sm font-semibold text-slate-200">{section.label}</h2>
-                <button
-                  type="button"
-                  className="ship-shop-expand site-btn-ghost"
-                  onClick={() => setExpanded((current) => {
-                    const next = new Set(current)
-                    if (next.has(section.id)) next.delete(section.id)
-                    else next.add(section.id)
-                    return next
-                  })}
-                >
-                  {openSection ? 'Collapse' : 'Expand'}
-                </button>
-              </div>
+            <section key={section.id} id={`ship-section-${section.id}`} className="ship-shop-section site-surface rounded-xl scroll-mt-64">
+              <button
+                type="button"
+                className="ship-shop-section-bar"
+                aria-expanded={openSection}
+                onClick={() => setExpanded((current) => {
+                  const next = new Set(current)
+                  if (next.has(section.id)) next.delete(section.id)
+                  else next.add(section.id)
+                  return next
+                })}
+              >
+                <span className="text-sm font-semibold text-slate-200">{section.label}</span>
+                <span className="ship-shop-expand">{openSection ? 'Collapse' : 'Expand'}</span>
+              </button>
               {openSection && (
-                <div className="space-y-2 mt-3">
+                <div className="ship-shop-section-body space-y-2 mt-3">
                   {section.id === 'weapons'
                     ? renderWeaponNodes(weaponTree(ship, build.ports))
                     : ports.map((port) => (
