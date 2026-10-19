@@ -1262,13 +1262,6 @@
   padding: 0 1rem 1rem;
 }
 
-.ship-shop-expand {
-  padding: 0;
-  font-size: 0.7rem;
-  line-height: 1rem;
-  color: rgb(148 163 184);
-}
-
 .ship-shop-build {
   display: inline-flex;
   align-items: stretch;
@@ -1360,10 +1353,6 @@
 
   .ship-shop-part-name {
     font-size: 1.125rem;
-  }
-
-  .ship-shop-expand {
-    font-size: 1.75rem;
   }
 }
 
