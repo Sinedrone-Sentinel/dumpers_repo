@@ -393,6 +393,18 @@ assert.equal(
   'behr_ballisticgatling_hornet_bespoke',
 )
 
+const connie = shop.getShip('rsi_constellation_mk5_centaurus')
+const connieFit = shop.stockPorts(connie)
+for (const side of ['upper', 'lower']) {
+  for (const gun of ['bottom_left', 'bottom_right', 'top_left', 'top_right']) {
+    const gimbalId = `hardpoint_turret_${side}/hardpoint_gun_${gun}`
+    assert.equal(connieFit[gimbalId]?.entityClass, 'mount_gimbal_s3', gimbalId)
+    assert.equal(connieFit[`${gimbalId}/hardpoint_class_2`]?.entityClass, 'klwe_laserrepeater_s3', `${gimbalId} gun`)
+  }
+}
+const upperTurret = shop.weaponTree(connie, connieFit).find((node) => node.port.id === 'hardpoint_turret_upper')
+assert.equal(upperTurret?.children.length, 4)
+
 const castillo = items.find((item) => item.entityClass === 'mrck_s03_temp_bomb')
 assert.equal(castillo.displayName, 'CST-313 "Castillo"')
 assert.equal(castillo.mounts[0].minSize, 3)
