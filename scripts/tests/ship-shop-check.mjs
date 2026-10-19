@@ -12,18 +12,21 @@ const ruled = applyShipPartRules(
     { id: 'aegs_idris_m', manufacturerCode: 'AEGS' },
     { id: 'aegs_gladius', manufacturerCode: 'AEGS' },
     { id: 'rsi_mantis', manufacturerCode: 'RSI' },
+    { id: 'banu_defender', manufacturerCode: '' },
   ],
   [
     { entityClass: 'aegs_idris_lower_camera_mount', displayName: 'Aegs Idris Lower Camera Mount', requiredTags: '' },
     { entityClass: 'mount_gimbal_s4', displayName: 'VariPuck S4 Gimbal Mount', requiredTags: '' },
     { entityClass: 'behr_ballisticgatling_hornet_bespoke', displayName: 'TMSB-5 Gatling', requiredTags: 'ANVL_BallisticGatling_Bespoke' },
     { entityClass: 'gats_ballisticgatling_s3', displayName: 'Mantis GT-220 Gatling', tags: 'weaponMountUsable', requiredTags: '' },
+    { entityClass: 'banu_tachyoncannon_s3', displayName: 'Singe Cannon (S3)', tags: 'BANU_TachyonCannon weaponMountUsable', requiredTags: '' },
   ],
 )
 assert.equal(ruled[0].exclusiveHull, 'idris')
 assert.equal(ruled[1].exclusiveHull, undefined)
 assert.equal(ruled[2].exclusiveHull, undefined)
 assert.equal(ruled[3].exclusiveHull, undefined)
+assert.equal(ruled[4].exclusiveHull, undefined)
 
 const ships = JSON.parse(readFileSync('src/data/game-ships.json', 'utf8')).ships
 const items = JSON.parse(readFileSync('src/data/game-ship-item-stats.json', 'utf8')).items
@@ -274,6 +277,16 @@ const s3Gun = {
 assert.ok(
   shop.partsForPort(s3Gun, gladius).some((item) => item.entityClass === 'gats_ballisticgatling_s3'),
   'Mantis GT-220 lists on a size 3 gun mount that is not the RSI Mantis',
+)
+assert.ok(
+  shop.partsForPort(s3Gun, gladius).some((item) => item.entityClass === 'banu_tachyoncannon_s3'),
+  'Singe Cannon lists on a size 3 gun mount that is not the Banu Defender',
+)
+const defender = shop.getShip('banu_defender')
+const defenderNose = defender.ports.find((port) => port.id === 'hardpoint_weapon_nose_left/hardpoint_class_2')
+assert.ok(
+  shop.partsForPort(defenderNose, defender).some((item) => item.entityClass === 'banu_tachyoncannon_s3'),
+  'Banu Defender still lists its Singe Cannon',
 )
 assert.equal(rackChoices.some((item) => item.kind === 'missile'), false)
 const quad = rackChoices.find((item) => item.entityClass === 'mrck_s03_behr_quad_s01')
