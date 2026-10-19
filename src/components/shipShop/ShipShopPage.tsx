@@ -801,7 +801,7 @@ export default function ShipShopPage() {
             <h1>
               <img src="/fuzys-ship-shop.png" alt="Fuzy's Ship Shop" className="w-auto object-contain" style={{ height: 'var(--ship-logo-h)' }} />
             </h1>
-            <p className="site-hint text-sm">{saveNote || (ready ? (accountSave ? 'Builds save on this account.' : 'Builds save in this browser.') : 'Loading builds…')}</p>
+            {saveNote && <p className="site-hint text-sm">{saveNote}</p>}
           </div>
           <div className="relative z-30">
             <label className="block">
@@ -1133,6 +1133,7 @@ export default function ShipShopPage() {
                 })}
               >
                 <span className="text-sm font-semibold text-slate-200">{section.label}</span>
+                <span className="ship-shop-expand">{openSection ? 'Collapse' : 'Expand'}</span>
               </button>
               {openSection && (
                 <div className="ship-shop-section-body space-y-2 mt-3">
