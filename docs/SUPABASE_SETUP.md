@@ -240,6 +240,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 172 | `207_user_notepads.sql` | Header **Notepad**: `user_notepads` (one row per member, 2,000-character cap). Members `SELECT` their own row only; saving goes through the SECURITY DEFINER `save_my_notepad` RPC |
 | 173 | `208_ship_shop_loadouts.sql` | Fuzy's Ship Shop: `ship_shop_loadouts` (one jsonb row per account, four builds). No client table writes. `get_ship_shop_loadouts` and `save_ship_shop_loadouts` are SECURITY DEFINER. Apply **209** so any signed-in account can use them |
 | 174 | `209_ship_shop_public.sql` | Opens Fuzy's Ship Shop to every signed-in account. `get_ship_shop_loadouts` returns NULL when the account has no row yet, so Offline Mode builds can move onto the account once. Apply after **208** |
+| 175 | `210_ship_shop_fraken_fit.sql` | Fuzy's Fraken-Fit: one published loadout per ship. Anyone may read it (`get_ship_shop_fraken_fit`, including guests). The save right is pinned to the verified Hotfuzy officer account at apply time (`ship_shop_fraken_owner`). A later handle change does not move it. `save_ship_shop_fraken_fit` overwrites that ship's fit. No client table writes. Zero matching profiles leaves the owner table empty and saves fail closed. More than one match aborts the migration. Apply after **209** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

@@ -79,6 +79,7 @@ export const siteFilter = {
   blue: 'site-filter-selected-blue',
   green: 'site-filter-selected-green',
   amber: 'site-filter-selected-amber',
+  gold: 'site-chip-gold',
   red: 'site-filter-selected-red',
   purple: 'site-filter-selected-purple',
   cyan: 'site-filter-selected-cyan',
