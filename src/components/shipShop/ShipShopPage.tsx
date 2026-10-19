@@ -803,7 +803,7 @@ export default function ShipShopPage() {
             </h1>
             {saveNote && <p className="site-hint text-sm">{saveNote}</p>}
           </div>
-          <div className="relative z-30">
+          <div className="relative z-30 w-1/2">
             <label className="block">
               <span className="site-label">Ship</span>
               <input
