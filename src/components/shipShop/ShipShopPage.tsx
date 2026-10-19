@@ -1123,7 +1123,6 @@ export default function ShipShopPage() {
                 })}
               >
                 <span className="text-sm font-semibold text-slate-200">{section.label}</span>
-                <span className="ship-shop-expand">{openSection ? 'Collapse' : 'Expand'}</span>
               </button>
               {openSection && (
                 <div className="ship-shop-section-body space-y-2 mt-3">
