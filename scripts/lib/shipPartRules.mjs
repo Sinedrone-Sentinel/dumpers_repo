@@ -5,9 +5,10 @@
  * same hull rule when it lists parts for a hardpoint.
  *
  * A part with no required tags is exclusive to the hull named in its entity
- * name. A mount-ready gun is not locked by its product name, so the Mantis
- * GT-220 is not treated as an RSI Mantis part. Parts that already list
- * required tags stay on that tag rule.
+ * name. A mount-ready gun is not locked by its maker name or its product name,
+ * so the Singe Cannon is not kept on the Banu Defender and the Mantis GT-220
+ * is not treated as an RSI Mantis part. Parts that already list required tags
+ * stay on that tag rule.
  */
 
 const GENERIC_TAGS = new Set(['flightready', 'weaponmountusable'])
@@ -71,10 +72,10 @@ export function tokenInName(value, tokens) {
 /** Hull a part is locked to, or null when it can fit any ship that accepts its type. */
 export function exclusiveHullFor(item, tokens) {
   if (requirementTags(item?.requiredTags).length > 0) return null
-  const fromClass = tokenInName(item?.entityClass, tokens)
-  if (fromClass) return fromClass
   const tags = String(item?.tags || '')
   if (tags.split(/\s+/).some((tag) => tag.replace(/^\$/, '').toLowerCase() === 'weaponmountusable')) return null
+  const fromClass = tokenInName(item?.entityClass, tokens)
+  if (fromClass) return fromClass
   return tokenInName(item?.displayName, tokens)
 }
 
