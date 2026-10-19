@@ -944,10 +944,20 @@ function syncMissileTubes(ports: Record<string, FittedPart>, parentId: string, i
   }
 }
 
-/** Keep a child gun when it still fits the new mount. Locked guns are filled from the mount. */
+/** Keep a child gun when it still fits the new mount. Locked guns are filled from the mount. A stock turret that does not list its own ports keeps the gimbals and guns the ship defines under it. */
 function syncMountChildren(ship: GameShip, ports: Record<string, FittedPart>, parentId: string, item: ShipItemStats | null) {
   const mounts = item?.kind === 'weaponMount' ? item.mounts || [] : []
   if (mounts.length === 0) {
+    const parent = ship.ports.find((port) => port.id === parentId)
+    if (parent?.defaultEntityClass && ports[parentId]?.entityClass === parent.defaultEntityClass) {
+      const prefix = `${parentId}/`
+      for (const child of ship.ports) {
+        if (!child.id.startsWith(prefix) || !child.defaultEntityClass || ports[child.id]) continue
+        if (!getShipItem(child.defaultEntityClass)) continue
+        ports[child.id] = { entityClass: child.defaultEntityClass, source: 'stock' }
+      }
+      return
+    }
     deleteDescendants(ports, parentId)
     return
   }
