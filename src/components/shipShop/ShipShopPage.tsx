@@ -781,7 +781,7 @@ export default function ShipShopPage() {
   }
 
   return (
-    <div className="ship-shop-page flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-start">
+    <div className="ship-shop-page flex min-w-0 max-w-full flex-col gap-4 lg:flex-row-reverse lg:items-start">
       <div className="ship-shop-snap shrink-0">
         <ShipSnapshot snapshot={snapshot} />
       </div>
