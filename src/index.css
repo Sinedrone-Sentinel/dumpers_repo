@@ -127,7 +127,7 @@
     --ship-pip-size: 22px;
     --ship-pip-gap: 2px;
     --ship-logo-h: 3.6rem;
-    --ship-snap-w: 15.5rem;
+    --ship-snap-w: 17.05rem;
   }
 
   .ship-shop-snap {
@@ -137,10 +137,10 @@
   @media (min-width: 1024px) {
     .ship-shop-snap {
       position: sticky;
-      top: var(--site-header-height, 3.5rem);
+      top: calc(var(--site-header-height, 3.5rem) + var(--ship-shop-header-height, 0px));
       width: var(--ship-snap-w);
-      height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--site-ticker-height, 0px));
-      max-height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--site-ticker-height, 0px));
+      height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--ship-shop-header-height, 0px) - var(--site-ticker-height, 0px));
+      max-height: calc(100dvh - var(--site-header-height, 3.5rem) - var(--ship-shop-header-height, 0px) - var(--site-ticker-height, 0px));
       overflow-y: auto;
     }
   }
@@ -150,7 +150,7 @@
       --ship-pip-size: 30px;
       --ship-pip-gap: 3px;
       --ship-logo-h: 7rem;
-      --ship-snap-w: 22rem;
+      --ship-snap-w: 24.2rem;
     }
   }
 
