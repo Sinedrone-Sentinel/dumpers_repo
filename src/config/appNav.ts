@@ -121,7 +121,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['commodity-lookup', 'custom-orders', 'fulfillment', 'ship-shop'],
+    itemIds: ['ship-shop', 'fulfillment', 'custom-orders', 'commodity-lookup'],
   },
   {
     id: 'reference',

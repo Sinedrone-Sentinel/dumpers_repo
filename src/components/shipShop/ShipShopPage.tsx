@@ -898,6 +898,10 @@ export default function ShipShopPage() {
                   type="button"
                   className={`${CHIP} ${expanded.size === 1 && expanded.has(section.id) ? 'site-filter-selected-orange' : 'site-filter-idle'}`}
                   onClick={() => {
+                    if (expanded.has(section.id)) {
+                      setExpanded(new Set())
+                      return
+                    }
                     setExpanded(new Set([section.id]))
                     const sectionId = section.id
                     window.requestAnimationFrame(() => {
