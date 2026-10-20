@@ -126,7 +126,6 @@
   .ship-shop-page {
     --ship-pip-size: 22px;
     --ship-pip-gap: 2px;
-    --ship-logo-h: 3.6rem;
     --ship-snap-w: 17.05rem;
     padding: 1rem;
   }
@@ -165,7 +164,6 @@
     .ship-shop-page {
       --ship-pip-size: 30px;
       --ship-pip-gap: 3px;
-      --ship-logo-h: 7rem;
       --ship-snap-w: 24.2rem;
     }
   }
