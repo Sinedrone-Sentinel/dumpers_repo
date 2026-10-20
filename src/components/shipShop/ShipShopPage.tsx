@@ -785,12 +785,7 @@ export default function ShipShopPage() {
       <div className="ship-shop-header site-surface-solid sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full p-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h1>
-              <img src="/fuzys-ship-shop.png" alt="Fuzy's Ship Shop" className="w-auto object-contain" style={{ height: 'var(--ship-logo-h)' }} />
-            </h1>
-            {saveNote && <p className="site-hint text-sm">{saveNote}</p>}
-          </div>
+          {saveNote && <p className="site-hint text-sm">{saveNote}</p>}
           <div className="relative z-30 w-1/2">
             <label className="block">
               <span className="site-label">Ship</span>
