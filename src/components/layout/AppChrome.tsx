@@ -153,7 +153,15 @@ export default function AppChrome({
           <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
             <AppSidebar groups={navGroups} />
             <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-              <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
+              {pathname === '/ship-shop' ? (
+                <img
+                  src="/fuzys-ship-shop.png"
+                  alt="Fuzy's Ship Shop"
+                  className="h-8 sm:h-9 w-auto max-w-[7.5rem] sm:max-w-[11rem] object-contain object-left shrink min-w-0"
+                />
+              ) : (
+                <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
+              )}
               {liveGameVersion ? (
                 <span
                   className="shrink-0 max-w-[42vw] sm:max-w-none truncate text-[10px] sm:text-xs font-semibold tabular-nums tracking-tight text-slate-500"
