@@ -150,14 +150,14 @@ export default function AppChrome({
         {updateAvailable && <UpdateAvailableBanner />}
         <div className="site-app-header relative pr-11">
           <NotepadToggle className="absolute right-1 top-1/2 -translate-y-1/2" />
-          <div className="site-shell h-14 flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className={`site-shell flex items-center gap-2 sm:gap-3 min-w-0 ${pathname === '/ship-shop' ? 'min-h-14' : 'h-14'}`}>
             <AppSidebar groups={navGroups} />
             <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
               {pathname === '/ship-shop' ? (
                 <img
                   src="/fuzys-ship-shop.png"
                   alt="Fuzy's Ship Shop"
-                  className="h-8 sm:h-9 w-auto max-w-[7.5rem] sm:max-w-[11rem] object-contain object-left shrink min-w-0"
+                  className="ship-shop-header-logo w-auto shrink-0 object-contain object-left"
                 />
               ) : (
                 <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
