@@ -1,4 +1,4 @@
--- Fuzy's Fraken-Fit: one published loadout per ship.
+-- Fuzy's Franken-Fit: one published loadout per ship.
 -- The owner row is pinned to the verified Hotfuzy officer account at apply time.
 -- A later handle change does not move the save right.
 -- Anyone may read a published fit. Only that pinned account can write one.
@@ -23,10 +23,10 @@ REVOKE ALL ON TABLE public.ship_shop_fraken_owner FROM PUBLIC, anon, authenticat
 REVOKE ALL ON TABLE public.ship_shop_fraken_fits FROM PUBLIC, anon, authenticated;
 
 COMMENT ON TABLE public.ship_shop_fraken_owner IS
-  'Single account allowed to publish Fuzy''s Fraken-Fit. Pinned by user id, not by RSI handle.';
+  'Single account allowed to publish Fuzy''s Franken-Fit. Pinned by user id, not by RSI handle.';
 
 COMMENT ON TABLE public.ship_shop_fraken_fits IS
-  'One view-only Fraken-Fit per ship. Reads go through get_ship_shop_fraken_fit. Writes go through save_ship_shop_fraken_fit.';
+  'One view-only Franken-Fit per ship. Reads go through get_ship_shop_fraken_fit. Writes go through save_ship_shop_fraken_fit.';
 
 DO $$
 DECLARE
