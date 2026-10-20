@@ -242,7 +242,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Power pips, cooling, and signatures update as you change the fit',
       'Where to Buy shows UEX shops for the ship or the fitted part. Add to Cart collects the parts that differ from stock',
       'Signed in: the four builds save on your account. Offline Mode: they save in this browser, and move onto your account the first time you sign in if that account has no builds yet',
-      "Fuzy's Fraken-Fit is a fifth chip. When a fit is published for the ship you have selected, the chip is gold and you can open it. You can change pips and use Where to Buy and the cart. You cannot change its parts or its ship. Those pip and cart edits are discarded when you leave the chip. If no fit is published, the chip stays grey",
+      "Fuzy's Franken-Fit is a fifth chip. When a fit is published for the ship you have selected, the chip is gold and you can open it. You can change pips and use Where to Buy and the cart. You cannot change its parts or its ship. Those pip and cart edits are discarded when you leave the chip. If no fit is published, the chip stays grey",
     ],
     relatesTo: ['Commodity Lookup'],
   },

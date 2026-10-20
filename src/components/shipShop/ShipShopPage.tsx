@@ -750,7 +750,7 @@ export default function ShipShopPage() {
         setFrakenByShip((prev) => ({ ...prev, [saved.shipId]: saved }))
         setSaveNote(null)
       })
-      .catch(() => setSaveNote('Fraken-Fit did not save.'))
+      .catch(() => setSaveNote('Franken-Fit did not save.'))
       .finally(() => setFrakenSaving(false))
   }
 
@@ -843,13 +843,13 @@ export default function ShipShopPage() {
                   disabled={frakenSaving}
                   onClick={publishFrakenFit}
                 >
-                  Save Fraken-Fit
+                  Save Franken-Fit
                 </button>
               ) : null}
             </div>
           )}
           <div className="site-chip-strip w-fit max-w-full">
-            <span className="px-2 text-sm text-slate-400">{viewingFraken ? "Fuzy's Fraken-Fit" : `Build ${buildIndex + 1} of 4`}</span>
+            <span className="px-2 text-sm text-slate-400">{viewingFraken ? "Fuzy's Franken-Fit" : `Build ${buildIndex + 1} of 4`}</span>
             {store.builds.map((entry, index) => {
               const used = Boolean(entry.shipId)
               const tone = !viewingFraken && index === buildIndex ? 'site-filter-selected-orange' : 'site-filter-idle'
@@ -887,7 +887,7 @@ export default function ShipShopPage() {
               aria-pressed={viewingFraken}
               onClick={openFraken}
             >
-              Fuzy's Fraken-Fit
+              Fuzy's Franken-Fit
             </button>
           </div>
           {ship && (
