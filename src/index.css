@@ -1240,6 +1240,19 @@
   overflow: visible;
 }
 
+.ship-shop-header-logo {
+  height: 3.6rem;
+  width: auto;
+  max-width: none;
+  flex-shrink: 0;
+}
+
+@media (min-width: 1921px) {
+  .ship-shop-header-logo {
+    height: 7rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .ship-shop-header {
     position: static;
