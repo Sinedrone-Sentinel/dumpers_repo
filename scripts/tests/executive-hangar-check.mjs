@@ -72,6 +72,13 @@ assert.equal(redBrief.next, 'Light 1 turns green')
 const oneGreen = hangar.hangarState(open + 89 * 60 * 1000, clock)
 assert.equal(hangar.hangarBrief(oneGreen.lights).next, 'Light 2 turns green')
 
+const fourTwelve = 4 * 60 * 1000 + 12 * 1000
+const lastGreen = hangar.hangarState(open + 60 * 60 * 1000 - fourTwelve, clock)
+assert.deepEqual(lastGreen.lights, ['green', 'off', 'off', 'off', 'off'])
+assert.equal(lastGreen.status, 'online')
+assert.equal(lastGreen.nextChangeAt - (open + 60 * 60 * 1000 - fourTwelve), fourTwelve)
+assert.equal(lastGreen.statusChangesAt - lastGreen.nextChangeAt, 5 * 60 * 1000 + 123)
+
 const openTimers = hangar.hangarPhaseTimers(green)
 assert.equal(openTimers[0].kind, 'starts')
 assert.equal(openTimers[1].id, 'insert')

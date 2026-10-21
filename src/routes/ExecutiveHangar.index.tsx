@@ -58,9 +58,14 @@ export default function ExecutiveHangarRoute() {
       <div className="w-full max-w-xl">
         <h1 className="site-page-title text-center">Executive Hangar</h1>
         <section className="hangar-panel site-surface mt-6 p-5 sm:p-6" aria-label={lampText}>
-          <div className="flex items-baseline justify-between gap-4">
+          <div className="flex items-end justify-between gap-4">
             <p className="text-lg font-semibold tracking-wide text-white">{brief.title}</p>
-            <p className="hangar-readout">{clockText(state.phaseEndsAt - now)}</p>
+            <div className="text-right">
+              <p className="text-xs uppercase tracking-wide text-slate-300">
+                {state.status === 'online' ? 'Online ends in' : 'Opens in'}
+              </p>
+              <p className="hangar-readout text-2xl">{clockText(state.statusChangesAt - now)}</p>
+            </div>
           </div>
           <p className="mt-3 text-sm leading-relaxed text-white">{brief.where}</p>
           <p className="mt-2 text-sm leading-relaxed text-white">
