@@ -141,6 +141,7 @@ export function ShopBuyButtons({
   cartCount,
   addEnabled,
   icons,
+  hideWhere,
   onWhere,
   onAdd,
   onAddBuild,
@@ -153,6 +154,8 @@ export function ShopBuyButtons({
   addEnabled?: boolean
   /** Fitted lines use symbols. The ship header keeps the labeled buttons. */
   icons?: boolean
+  /** Unsold point-defense parts have no shop page to open. */
+  hideWhere?: boolean
   onWhere: () => void
   onAdd: () => void
   onAddBuild?: () => void
@@ -162,9 +165,11 @@ export function ShopBuyButtons({
   const canAdd = addEnabled ?? forSale
   return (
     <>
-      <button type="button" className={icons ? `${LINE_ICON} text-xs font-bold text-red-400` : `${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} aria-label="Where to buy" onClick={onWhere}>
-        {icons ? '$$$' : 'Where to Buy'}
-      </button>
+      {!hideWhere && (
+        <button type="button" className={icons ? `${LINE_ICON} text-xs font-bold text-red-400` : `${CHIP} site-filter-selected-red`} disabled={!forSale} title={forSale ? 'Where to buy' : 'Not sold in a shop'} aria-label="Where to buy" onClick={onWhere}>
+          {icons ? '$$$' : 'Where to Buy'}
+        </button>
+      )}
       <button type="button" className={icons ? `${LINE_ICON} text-green-400` : `${CHIP} site-filter-selected-green`} disabled={!canAdd} title={canAdd ? 'Add to cart' : 'Not sold in a shop'} aria-label="Add to cart" onClick={onAdd}>
         {icons ? (
           <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">

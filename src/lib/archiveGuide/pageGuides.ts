@@ -254,7 +254,8 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     details: [
       'Pick a ship and start from its stock parts. You can keep four builds',
       'Swap any part the hardpoint accepts, or clear a slot. Locked hardpoints stay as the ship ships them',
-      'Power pips, cooling, and signatures update as you change the fit',
+      'Power pips, cooling, and signatures update as you change the fit. Offense lists Pilot DPS for the guns the pilot fires, including point defense, and Burst DPS for the whole ship',
+      'A PDT slot takes a size-2 point-defense turret: M2C Swarm, MRX Torrent, or PPB-116 Pepperbox. The gun or missile rack on that turret stays as the turret ships it. An unlocked slot lets you take an unsold turret off and fit it on another ship\'s PDT. Where to Buy stays off when that part is not sold',
       'The section buttons under the build chips open that part of the ship. Click the open section again to close it. If several sections are open, clicking one of those open sections closes them all',
       'Where to Buy shows UEX shops for the ship or the fitted part. Add Build to Cart replaces the cart with the parts that differ from stock. Switching builds leaves the cart in place. Clear sits next to Close in View Cart. View Cart can plan a route from a planet, moon, station, city, or jump gateway. A system change is shown as its own jump stop. If an item is only sold in a system you left out, Calculate asks whether to include that system or drop the item',
       'Signed in: the four builds save on your account. Offline Mode: they save in this browser, and move onto your account the first time you sign in if that account has no builds yet',

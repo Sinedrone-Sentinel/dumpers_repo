@@ -64,7 +64,7 @@ import {
 } from '../../lib/shipShopMath'
 import { getShipItem } from '../../lib/shipItemCatalog'
 import { defaultShipShopLoadouts, fetchFrakenCanSave, fetchShipShopFrakenFit, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopFrakenFit, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore, type FrakenFit } from '../../lib/shipShopOps'
-import { isForSale, listingsFor, partListings, shipListings, type ShopListing } from '../../lib/shipShopShops'
+import { isForSale, listingsFor, partListings, shipListings, showPartWhereToBuy, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 import SiteTooltip from '../SiteTooltip'
 import ShipHangarModal from '../shipHangar/ShipHangarModal'
@@ -267,6 +267,7 @@ function ShipSnapshot({ snapshot }: { snapshot: ShipSnapshotNumbers }) {
     {
       title: 'Offense',
       lines: [
+        ['Pilot DPS', formatNumber(snapshot.pilotDps), 'same'],
         ['Burst DPS', formatNumber(snapshot.burstDps), 'same'],
         ['Sustained DPS', formatNumber(snapshot.sustainedDps), 'same'],
         ['Missile volley', formatNumber(snapshot.missileVolley), 'same'],
@@ -444,9 +445,11 @@ function PartPicker({
     return [...new Set(values)]
   }, [pool])
   const titled = (item: ShipItemStats) => {
-    if (item.kind !== 'flight') return itemTitle(item)
     const stock = port.defaultEntityClass ? getShipItem(port.defaultEntityClass) : null
-    return `${item.displayName} - ${flightRole(item, stock)}`
+    const base = item.kind === 'flight' ? `${item.displayName} - ${flightRole(item, stock)}` : itemTitle(item)
+    if (item.kind !== 'turret' || !item.manufacturer) return base
+    const shared = pool.some((other) => other.entityClass !== item.entityClass && other.displayName === item.displayName && other.manufacturer !== item.manufacturer)
+    return shared ? `${base} (${item.manufacturer})` : base
   }
   const options = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -1124,6 +1127,7 @@ export default function ShipShopPage() {
             const buy = fitted ? (
               <ShopBuyButtons
                 icons
+                hideWhere={!showPartWhereToBuy(fitted.item)}
                 listings={partListings(fitted.item.entityClass)}
                 addEnabled={craftedFit || isForSale(partListings(fitted.item.entityClass))}
                 onWhere={() => setShopModal({

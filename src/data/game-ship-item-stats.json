@@ -35739,6 +35739,80 @@
       "uuid": "18b795c5-25f1-444a-86c0-b5edd7cf0118"
     },
     {
+      "entityClass": "turret_pdc_behr_a",
+      "displayName": "M2C \"Swarm\"",
+      "kind": "turret",
+      "size": 2,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady PDC",
+      "requiredTags": "PDC",
+      "attachType": "Turret",
+      "attachSubType": "PDCTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_turret_weapon",
+          "minSize": 1,
+          "maxSize": 1,
+          "locked": true,
+          "requiredTags": "$PDC",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "defaultEntityClass": "behr_laserrepeater_pdc_s1"
+        }
+      ],
+      "uuid": "a113eb5a-2759-4a55-ac48-7170c7d17f50"
+    },
+    {
+      "entityClass": "turret_pdc_vncl",
+      "displayName": "M2C \"Swarm\"",
+      "kind": "turret",
+      "size": 2,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady PDC",
+      "requiredTags": "PDC",
+      "attachType": "Turret",
+      "attachSubType": "PDCTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_turret_weapon",
+          "minSize": 1,
+          "maxSize": 1,
+          "locked": true,
+          "requiredTags": "$PDC",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "defaultEntityClass": "vncl_gen2_lasercannon_s1"
+        }
+      ],
+      "uuid": "5b384823-085f-4805-80e8-40453d8424ed"
+    },
+    {
       "entityClass": "behr_lasercannon_s1",
       "displayName": "M3A Cannon",
       "kind": "weapon",
@@ -39634,6 +39708,43 @@
       "attachSubType": "Gun",
       "grade": "A",
       "uuid": "647c70b5-1547-4c86-ba47-4aa452d3b506"
+    },
+    {
+      "entityClass": "turret_pdc_behr_g",
+      "displayName": "MRX \"Torrent\"",
+      "kind": "turret",
+      "size": 2,
+      "manufacturer": "Behring",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady PDC",
+      "requiredTags": "PDC",
+      "attachType": "Turret",
+      "attachSubType": "PDCTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "hardpoint_turret_weapon",
+          "minSize": 1,
+          "maxSize": 1,
+          "locked": true,
+          "requiredTags": "$PDC",
+          "accepts": [
+            {
+              "type": "WeaponGun",
+              "subtypes": [
+                "Gun"
+              ]
+            }
+          ],
+          "defaultEntityClass": "behr_ballisticgatling_pdc_s1"
+        }
+      ],
+      "uuid": "239a48af-d767-4a0f-a3da-8840901eac38"
     },
     {
       "entityClass": "mrck_s01_behr_single_s01",
@@ -47221,6 +47332,44 @@
       "attachSubType": "Power",
       "grade": "A",
       "uuid": "f330457d-df9b-4421-a522-45b407a735a7"
+    },
+    {
+      "entityClass": "turret_pdc_behr_m",
+      "displayName": "PPB-116 \"Pepperbox\"",
+      "kind": "turret",
+      "size": 2,
+      "manufacturer": "Aegis Dynamics",
+      "weaponClass": null,
+      "damageType": null,
+      "stats": {
+        "Health_Maxhealth": 1500
+      },
+      "burstDps": 0,
+      "tags": "flightReady PDC",
+      "requiredTags": "PDC",
+      "attachType": "Turret",
+      "attachSubType": "PDCTurret",
+      "grade": "A",
+      "mounts": [
+        {
+          "name": "turret_centre",
+          "minSize": 5,
+          "maxSize": 5,
+          "locked": true,
+          "kind": "missileRack",
+          "requiredTags": "$PDC",
+          "accepts": [
+            {
+              "type": "MissileLauncher",
+              "subtypes": [
+                "MissileRack"
+              ]
+            }
+          ],
+          "defaultEntityClass": "mrck_s05_behr_pdc_missile_16_s1"
+        }
+      ],
+      "uuid": "128ad66c-09a2-43e3-9080-18a018490e96"
     },
     {
       "entityClass": "radr_bltr_s02_predator",
@@ -55975,8 +56124,7 @@
       "attachType": "WeaponGun",
       "attachSubType": "Gun",
       "grade": "A",
-      "uuid": "e0c51f49-8910-4c99-92e5-ba7eca915bbb",
-      "exclusiveHull": "banu"
+      "uuid": "e0c51f49-8910-4c99-92e5-ba7eca915bbb"
     },
     {
       "entityClass": "banu_tachyoncannon_s2",
@@ -56007,8 +56155,7 @@
       "attachType": "WeaponGun",
       "attachSubType": "Gun",
       "grade": "A",
-      "uuid": "40b94722-48be-406a-9843-5c77772e4ab4",
-      "exclusiveHull": "banu"
+      "uuid": "40b94722-48be-406a-9843-5c77772e4ab4"
     },
     {
       "entityClass": "banu_tachyoncannon_s3",
@@ -56039,8 +56186,7 @@
       "attachType": "WeaponGun",
       "attachSubType": "Gun",
       "grade": "A",
-      "uuid": "f15b742b-1457-4eb7-b7aa-078816297d29",
-      "exclusiveHull": "banu"
+      "uuid": "f15b742b-1457-4eb7-b7aa-078816297d29"
     },
     {
       "entityClass": "qdrv_wetk_s01_siren_scitem",
