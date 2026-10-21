@@ -67,7 +67,7 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
   },
   {
     id: 'commodity-lookup',
-    label: 'Commodity Lookup',
+    label: 'UEX Lookup',
     path: '/commodity-lookup',
     icon: 'shop',
     featureId: 'commodity_lookup',
@@ -86,6 +86,14 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     path: '/bazaar',
     icon: 'fulfillment',
     featureId: 'fulfillment',
+  },
+  {
+    id: 'shop-cart',
+    label: 'Shopping Cart',
+    path: '/shop-cart',
+    icon: 'cart',
+    featureId: 'shop_cart',
+    minRole: 'member',
   },
   {
     id: 'ship-shop',
@@ -121,7 +129,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'tools',
     label: 'Tools',
-    itemIds: ['ship-shop', 'fulfillment', 'custom-orders', 'commodity-lookup'],
+    itemIds: ['ship-shop', 'shop-cart', 'fulfillment', 'custom-orders', 'commodity-lookup'],
   },
   {
     id: 'reference',

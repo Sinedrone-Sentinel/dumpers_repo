@@ -47,19 +47,23 @@ function LocationRow({
   loc,
   pricePerScu,
   priceClassName,
+  actions,
 }: {
   loc: TradeLocation
   pricePerScu: number | null
   priceClassName: string
+  actions?: React.ReactNode
 }) {
   const { terminal, boxSizes } = loc
-  const priceLabel = formatShopPricePerScu(pricePerScu)
+  const priceLabel = loc.unit === 'each'
+    ? (pricePerScu && pricePerScu > 0 ? `${Math.round(pricePerScu).toLocaleString()} aUEC` : null)
+    : formatShopPricePerScu(pricePerScu)
   return (
     <li className="site-surface px-3 py-2">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-slate-100 truncate">{terminalPlace(terminal)}</p>
-          <p className="text-[11px] text-slate-500 truncate">{terminalPath(terminal)}</p>
+          <p className="text-sm font-semibold text-slate-100 truncate">{loc.label || terminalPlace(terminal)}</p>
+          <p className="text-[11px] text-slate-500 truncate">{loc.pathLabel || terminalPath(terminal)}</p>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           {priceLabel && (
@@ -67,6 +71,7 @@ function LocationRow({
               {priceLabel}
             </span>
           )}
+          {actions}
           {terminal.isRefinery && (
             <span className="text-[10px] font-medium uppercase tracking-wide rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5">
               Refinery
@@ -98,6 +103,7 @@ function SystemGroup({
   forceExpanded,
   priceField,
   priceClassName,
+  renderActions,
 }: {
   system: string
   items: TradeLocation[]
@@ -105,6 +111,7 @@ function SystemGroup({
   forceExpanded: boolean
   priceField: 'sellPricePerScu' | 'buyPricePerScu'
   priceClassName: string
+  renderActions?: (loc: TradeLocation) => React.ReactNode
 }) {
   const [expanded, setExpanded] = React.useState(forceExpanded)
 
@@ -139,10 +146,11 @@ function SystemGroup({
         <ul className="space-y-1.5 mt-1">
           {items.map((loc) => (
             <LocationRow
-              key={loc.terminal.id}
+              key={`${loc.terminal.id}:${loc.label || ''}:${loc.buyPricePerScu}`}
               loc={loc}
               pricePerScu={loc[priceField]}
               priceClassName={priceClassName}
+              actions={renderActions?.(loc)}
             />
           ))}
         </ul>
@@ -202,6 +210,7 @@ function TradeColumn({
   locations,
   emptyLabel,
   systemFilter,
+  renderActions,
 }: {
   title: string
   hint: string
@@ -209,6 +218,7 @@ function TradeColumn({
   locations: TradeLocation[]
   emptyLabel: string
   systemFilter: string | null
+  renderActions?: (loc: TradeLocation) => React.ReactNode
 }) {
   const filteredLocations = React.useMemo(
     () =>
@@ -247,6 +257,7 @@ function TradeColumn({
                 forceExpanded={systemFilter === group.system}
                 priceField={priceField}
                 priceClassName={priceClassName}
+                renderActions={renderActions}
               />
             ))}
           </div>
@@ -260,14 +271,17 @@ export default function CommodityTradePanels({
   result,
   emphasis = 'sell',
   systemFilter = null,
+  renderBuyActions,
 }: {
   result: CommodityTradeResult
   /** Which side to render first (contextual emphasis). Defaults to sell. */
   emphasis?: 'sell' | 'buy'
   /** Limit locations to one star system (null = all). */
   systemFilter?: string | null
+  renderBuyActions?: (loc: TradeLocation) => React.ReactNode
 }) {
-  const sellCol = (
+  const pricedEach = result.buyAt.some((loc) => loc.unit === 'each') || result.sellAt.some((loc) => loc.unit === 'each')
+  const sellCol = result.sellAt.length > 0 ? (
     <TradeColumn
       key="sell"
       title="Sell to"
@@ -277,21 +291,23 @@ export default function CommodityTradePanels({
       emptyLabel={systemFilter ? `No sell locations in ${systemFilter}.` : 'No known sell locations.'}
       systemFilter={systemFilter}
     />
-  )
+  ) : null
   const buyCol = (
     <TradeColumn
       key="buy"
       title="Buy from"
-      hint="Purchase this commodity here (UEX avg price per SCU)"
+      hint={pricedEach ? 'Shops that sell this (UEX price)' : 'Purchase this here (UEX avg price per SCU)'}
       accent="buy"
       locations={result.buyAt}
       emptyLabel={systemFilter ? `No buy locations in ${systemFilter}.` : 'No known buy locations.'}
       systemFilter={systemFilter}
+      renderActions={renderBuyActions}
     />
   )
+  const columns = emphasis === 'buy' ? [buyCol, sellCol] : [sellCol, buyCol]
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 min-w-0">
-      {emphasis === 'buy' ? [buyCol, sellCol] : [sellCol, buyCol]}
+    <div className={`grid grid-cols-1 ${sellCol ? 'md:grid-cols-2' : ''} gap-3 min-w-0`}>
+      {columns}
     </div>
   )
 }

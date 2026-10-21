@@ -7,6 +7,8 @@ import { calculateBlueprintDfpWithParts, calculateBlueprintDfp, formatCraftDfpBr
 import { buildDefaultSlotQualities } from '../lib/blueprintQuality'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
+import { shopItemForBlueprint } from '../lib/uexCatalog'
+import { UexItemActions } from './shop/UexItemActions'
 
 const BLUEPRINT_PAPER_PANEL = 'blueprint-paper-panel p-2.5'
 
@@ -98,6 +100,7 @@ export default function BlueprintCard({
     showCraftTrackerControl ||
     hasRewardLabel
   const acquiredLocked = isStarterBlueprint || isAcquired
+  const shopItem = shopItemForBlueprint(blueprint.entityClass, blueprint.blueprintName)
 
   return (
     <div
@@ -108,8 +111,8 @@ export default function BlueprintCard({
     >
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         <div className="flex items-start justify-between gap-2 mb-1 shrink-0">
-          {dfpDisplayEnabled ? (
-            <div className="shrink-0 text-left min-w-0">
+          <div className="flex shrink-0 items-center gap-2 text-left min-w-0">
+            {dfpDisplayEnabled ? (
               <span
                 className="text-xs font-semibold text-amber-400/90 tabular-nums"
                 title={dfpBreakdown}
@@ -117,10 +120,9 @@ export default function BlueprintCard({
                 {dfpLabel}
                 <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
               </span>
-            </div>
-          ) : (
-            <span className="shrink-0" />
-          )}
+            ) : null}
+            {shopItem ? <UexItemActions item={shopItem} /> : null}
+          </div>
           <button
             onClick={handleCheckboxClick}
             disabled={!canModify || isStarterBlueprint}

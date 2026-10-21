@@ -727,7 +727,7 @@ export function formatScopeRefusalReply(closer?: string): string {
   return [
     ADVISOR_TERM_INTRO,
     ADVISOR_SCOPE_REFUSAL,
-    '[INFO] Use Help for site how-to, or Commodity Lookup for ore prices.',
+    '[INFO] Use Help for site how-to, or UEX Lookup for ore prices.',
     '',
     `[SHUBIN] ${signOff}`,
   ].join('\n')

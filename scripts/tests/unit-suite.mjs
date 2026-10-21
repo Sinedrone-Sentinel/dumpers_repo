@@ -1136,8 +1136,8 @@ check(
   'probe reply uses the exact 42-A line',
 )
 check(
-  probeReply.includes('[INFO] Use Help for site how-to, or Commodity Lookup for ore prices.'),
-  'probe reply points at Help / Commodity Lookup',
+  probeReply.includes('[INFO] Use Help for site how-to, or UEX Lookup for ore prices.'),
+  'probe reply points at Help / UEX Lookup',
 )
 check(
   probeReply.includes('\n\n[SHUBIN] Work safe out there.'),

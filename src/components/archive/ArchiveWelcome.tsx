@@ -194,6 +194,13 @@ const PAGE_GUIDE_ICONS: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
     </svg>
   ),
+  'shop-cart': (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <circle cx="9" cy="20" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="18" cy="20" r="1.5" fill="currentColor" stroke="none" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 4h2l2.2 11h11.3l2-7H7" />
+    </svg>
+  ),
   'ship-shop': (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z" />

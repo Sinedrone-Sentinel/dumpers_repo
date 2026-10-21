@@ -15,6 +15,7 @@ import SupportDashboardRoute from './SupportDashboard.index'
 import GuestLockedRoute from './GuestLocked.index'
 import MiningTrackerRoute from './MiningTracker.index'
 import CommodityLookupRoute from './CommodityLookup.index'
+import ShopCartRoute from './ShopCart.index'
 import DiscordSubscribeRoute from './DiscordSubscribe.index'
 import AnalyticsRoute from './Analytics.index'
 import PartnershipRoute from './Partnership.index'
@@ -91,6 +92,13 @@ const commodityLookupRoute = createRoute({
   validateSearch: (search: Record<string, unknown>) => ({
     commodity: typeof search.commodity === 'string' ? search.commodity : undefined,
   }),
+})
+
+const shopCartRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/shop-cart',
+  component: ShopCartRoute,
+  beforeLoad: requireFeature('shop_cart'),
 })
 
 const targetsRoute = createRoute({
@@ -228,6 +236,7 @@ export const routeTree = rootRoute.addChildren([
   wikeloRoute,
   miningTrackerRoute,
   commodityLookupRoute,
+  shopCartRoute,
   targetsRoute,
   targetsLiveRoute,
   resourceTrackerRoute,

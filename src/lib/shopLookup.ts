@@ -5,7 +5,7 @@ import shopIndex from '../data/shop-commodity-index.json'
  *
  * Data is baked from the UEX API by `scripts/fetch-shop-commodity-data.mjs`
  * (`npm run fetch-shop-data`). This module turns the compact index into typed,
- * queryable structures shared by the Commodity Lookup page and the resource
+ * queryable structures shared by UEX Lookup and the resource
  * lookup modal.
  *
  * UEX semantics (player perspective):
@@ -71,8 +71,14 @@ export interface TradeLocation {
   boxSizes: number[]
   /** aUEC per SCU when the player sells here. */
   sellPricePerScu: number | null
-  /** aUEC per SCU when the player buys here. */
+  /** aUEC per SCU when the player buys here. Shop goods that are not commodities use this for the unit price. */
   buyPricePerScu: number | null
+  /** Shop name when the row is a store rather than a commodity terminal. */
+  label?: string
+  /** Location line when it is not the commodity terminal breadcrumb. */
+  pathLabel?: string
+  /** Commodities are priced per SCU. Everything else is priced per item. */
+  unit?: 'scu' | 'each'
 }
 
 export interface CommodityTradeResult {
