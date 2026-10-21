@@ -20,6 +20,7 @@ export type FeatureId =
   | 'commodity_lookup'
   | 'shop_cart'
   | 'ship_shop'
+  | 'executive_hangar'
   | 'partnership'
   | 'contribute'
   | 'contributor_team_admin'
@@ -69,7 +70,8 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'fulfillment' ||
       featureId === 'commodity_lookup' ||
       featureId === 'shop_cart' ||
-      featureId === 'ship_shop'
+      featureId === 'ship_shop' ||
+      featureId === 'executive_hangar'
     )
   }
 
@@ -126,6 +128,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return true
 
     case 'ship_shop':
+      return true
+
+    case 'executive_hangar':
       return true
 
     case 'partnership':

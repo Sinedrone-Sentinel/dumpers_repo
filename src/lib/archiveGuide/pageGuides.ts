@@ -262,6 +262,18 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     relatesTo: ['UEX Lookup'],
   },
   {
+    id: 'executive-hangar',
+    title: 'Executive Hangar',
+    description: 'See when the five hangar lights are green so the seven compboards can open it.',
+    details: [
+      'The lights follow one clock on every server. One red light turns green every 24 minutes. The seven compboards work while at least one light is green and none are red. Green lights then turn off every 12 minutes',
+      'After the last green light goes out, the lights stay dark for 5 minutes and then all five turn red again',
+      'The page reads a published hangar clock when it opens. If that read fails, it uses the saved 4.10.2 clock',
+      'A hangar another player already opened can look dark in game while this clock still says the compboards work',
+    ],
+    relatesTo: ["Fuzy's Ship Shop"],
+  },
+  {
     id: 'orders',
     title: 'My Listings',
     description: 'Manage your one WTB buy listing and one WTS sell listing, plus every transaction they create.',

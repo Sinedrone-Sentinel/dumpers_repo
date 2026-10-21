@@ -188,6 +188,10 @@ Find every shop that sells a gun, ammo, armor piece, ship, commodity, food, or d
 
 A browser list of shop buys, separate from Fuzy's Ship Shop. The header cart button beside the notepad opens it. Adding from a Buy row remembers that shop and price. The cart stays in this browser.
 
+### Executive Hangar (`/executive-hangar`)
+
+Five status lights for the PYAM-EXHANG-0-1 hangar. The page reads a published hangar clock once when it opens, then counts the lights in the browser. If that read fails, it uses the saved 4.10.2 times in `src/data/executive-hangar-cycle.json`. Compboards work while at least one light is green and none are red. Open to guests and Offline Mode.
+
 ### My Listings (`/orders`)
 
 Each member keeps at most **one open WTB listing** and **one open WTS listing** — posting new items appends lines to the matching listing:

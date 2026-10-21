@@ -25,6 +25,7 @@ import ThemePreviewRoute from './ThemePreview.index'
 import AuthCallbackRoute from './AuthCallback.index'
 import PrivacyRoute from './Privacy.index'
 import ShipShopRoute from './ShipShop.index'
+import ExecutiveHangarRoute from './ExecutiveHangar.index'
 import { requireFeature, requireSuperAdmin } from '../lib/routeGuards'
 import type { FeatureId } from '../lib/featureAccess'
 
@@ -222,6 +223,13 @@ const shipShopRoute = createRoute({
   component: ShipShopRoute,
 })
 
+const executiveHangarRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/executive-hangar',
+  component: ExecutiveHangarRoute,
+  beforeLoad: requireFeature('executive_hangar'),
+})
+
 const privacyRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/privacy',
@@ -253,6 +261,7 @@ export const routeTree = rootRoute.addChildren([
   themePreviewRoute,
   authCallbackRoute,
   shipShopRoute,
+  executiveHangarRoute,
 ])
 
 export default routeTree
