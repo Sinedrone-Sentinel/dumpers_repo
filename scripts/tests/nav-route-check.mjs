@@ -158,6 +158,8 @@ assert.equal(searchNavPoints('Ariel', navMap).some((hit) => hit.name === 'Arial'
 assert.equal(resolveShopPlace({ system: 'Pyro', station: 'Checkmate Station' }, navMap), 'pyro:checkmate')
 assert.equal(resolveShopPlace({ system: 'Stanton', station: 'Green Imperial Housing Exchange' }, navMap), 'stanton:grim-hex')
 assert.equal(resolveShopPlace({ system: 'Nyx', station: 'Pyro Gateway (Nyx)' }, navMap), 'nyx:pyro-gateway')
+assert.equal(resolveShopPlace({ system: 'Nyx', city: 'Levski' }, navMap), 'nyx:levski')
+assert.equal(searchNavPoints('Levski', navMap).some((hit) => hit.id === 'nyx:levski'), true)
 
 const shops = JSON.parse(readFileSync(path.join(root, 'src/data/ship-shop-shops.json'), 'utf8'))
 const rows = [...Object.values(shops.ships || {}), ...Object.values(shops.items || {})].flat()
@@ -167,7 +169,6 @@ for (const row of rows) {
   const key = [row.system, row.planet, row.moon, row.station, row.city, row.outpost].map((value) => value || '').join(' | ')
   missed.set(key, (missed.get(key) || 0) + 1)
 }
-const allowed = [...missed.keys()].filter((key) => !key.includes('Levski'))
-assert.deepEqual(allowed, [], `unresolved shop places:\n${[...missed.keys()].join('\n')}`)
+assert.deepEqual([...missed.keys()], [], `unresolved shop places:\n${[...missed.keys()].join('\n')}`)
 
-console.log(`nav route ok (${navMap.points.length} points, ${missed.size} Levski-only misses)`)
+console.log(`nav route ok (${navMap.points.length} points)`)

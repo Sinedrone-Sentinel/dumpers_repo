@@ -37,6 +37,17 @@
       "z": 0
     },
     {
+      "id": "nyx:levski",
+      "name": "Levski",
+      "aliases": ["Delamar"],
+      "system": "nyx",
+      "kind": "city",
+      "surface": true,
+      "x": -9641675715,
+      "y": -11490740301,
+      "z": -113972
+    },
+    {
       "id": "pyro:pyro-v",
       "name": "Pyro V",
       "aliases": [],
