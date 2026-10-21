@@ -11,6 +11,7 @@ import {
   subscribeShopCart,
   type ShopCartLine,
 } from '../lib/shopCart'
+import { shopCartShopLabel } from '../lib/shopCartRoute'
 
 function useCartLines(): ShopCartLine[] {
   const [lines, setLines] = useState<ShopCartLine[]>(() => readShopCart())
@@ -47,12 +48,14 @@ export default function ShopCartRoute() {
             {total > 0 && <p className="text-sm font-semibold text-white">{total.toLocaleString()} aUEC</p>}
           </div>
           <ul className="space-y-2">
-            {lines.map((line) => (
+            {lines.map((line) => {
+              const shop = shopCartShopLabel(line)
+              return (
               <li key={`${line.id}:${line.shop || ''}`} className="flex flex-wrap items-center gap-3 text-sm">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-white">{line.name}</p>
                   <p className="text-xs text-slate-400">
-                    {line.shop ? `${line.shop}${line.system ? ` · ${line.system}` : ''}` : 'No shop chosen'}
+                    {shop ? `${shop}${line.system ? ` · ${line.system}` : ''}` : 'No shop chosen'}
                     {line.price && line.price > 0 ? ` · ${Math.round(line.price).toLocaleString()} aUEC${line.unit === 'scu' ? '/SCU' : ''}` : ''}
                   </p>
                 </div>
@@ -61,7 +64,8 @@ export default function ShopCartRoute() {
                 <button type="button" className="site-btn-ghost px-2 py-0.5" aria-label={`Increase ${line.name}`} onClick={() => setShopCartQty(line.id, line.shop, line.qty + 1)}>+</button>
                 <button type="button" className="site-btn-ghost px-2 py-0.5" onClick={() => removeShopCartLine(line.id, line.shop)}>Remove</button>
               </li>
-            ))}
+              )
+            })}
           </ul>
           {unpriced && (
             <p className="site-hint mt-3 text-xs">A line with no shop has no price yet. Calculate places it using your start, the systems you include, and Fewest Stops, Cheapest, or Efficient. That price is in the route total.</p>

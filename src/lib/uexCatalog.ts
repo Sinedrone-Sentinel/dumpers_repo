@@ -67,11 +67,61 @@ function blankTerminal(id: number, name: string, listing: ShopListing): ShopTerm
 
 let placeSeq = 1
 
-function eachPlace(listing: ShopListing): TradeLocation {
+/** UEX names many personal-item terminals as a counter plus a short place, such as "Guns Checkmate". */
+const COUNTER_PREFIXES = [
+  'FPS Armor',
+  'Weapons & Armor',
+  'Tools & Supplies',
+  'Filtered Water',
+  'Coffee To Go',
+  'Fried Grubs',
+  'Feed The People',
+  'Shelf Stable',
+  'Cargo Services',
+  'Ship Parts',
+  'Hot Dogs',
+  'Noodle Bar',
+  'Near Beer',
+  'Wake Up',
+  'Gear Up',
+  'Shooters',
+  'Clothing',
+  'Pharmacy',
+  'Refinery',
+  'Sundries',
+  'Medical',
+  'Convenience',
+  'Burrito',
+  'Noodles',
+  'Noodle',
+  'Cargo',
+  'Juice',
+  'Pizza',
+  'Guns',
+  'Shop',
+  'Bar',
+  'CZ',
+]
+
+function placeTitle(listing: ShopListing): string {
+  return listing.station || listing.city || listing.outpost || listing.moon || listing.planet || listing.store
+}
+
+function shopLabel(listing: ShopListing): string {
+  const store = listing.store
+  const lower = store.toLowerCase()
+  const counter = COUNTER_PREFIXES.some((prefix) => {
+    const head = prefix.toLowerCase()
+    return lower === head || lower.startsWith(`${head} `)
+  })
+  return counter ? placeTitle(listing) : store
+}
+
+function eachPlace(listing: ShopListing, usePlace: boolean): TradeLocation {
   const terminal = blankTerminal(placeSeq++, listing.store, listing)
   return {
     terminal,
-    label: listing.store,
+    label: usePlace ? shopLabel(listing) : listing.store,
     pathLabel: terminalPath(terminal),
     unit: 'each',
     boxSizes: [],
@@ -90,8 +140,8 @@ function commodityLocation(loc: TradeLocation): TradeLocation {
   return { ...loc, unit: 'scu', label: terminalPlace(loc.terminal) }
 }
 
-function fromListings(id: string, name: string, group: UexGroup, listings: ShopListing[]): UexCatalogItem | null {
-  const buyAt = listings.filter((row) => row.price > 0).map(eachPlace)
+function fromListings(id: string, name: string, group: UexGroup, listings: ShopListing[], usePlace = false): UexCatalogItem | null {
+  const buyAt = listings.filter((row) => row.price > 0).map((listing) => eachPlace(listing, usePlace))
   if (buyAt.length === 0 || !name) return null
   return { id, name, group, unit: 'each', buyAt, sellAt: [] }
 }
@@ -134,7 +184,7 @@ function buildCatalog(): UexCatalogItem[] {
 
   for (const row of (shopItemIndex as unknown as { items: ShopItemRow[] }).items || []) {
     if (!UEX_GROUPS.includes(row.group)) continue
-    const item = fromListings(`item:${row.id}`, row.name, row.group, row.listings)
+    const item = fromListings(`item:${row.id}`, row.name, row.group, row.listings, true)
     if (item) items.push(item)
   }
 
