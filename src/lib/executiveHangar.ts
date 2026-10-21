@@ -22,6 +22,25 @@ export interface HangarSnapshot {
   /** Start of the current insert window, or the next one when the lights are not ready. */
   insertOpensAt: number
   insertEndsAt: number
+  phaseEndsAt: number
+  cycleStart: number
+  cycleMs: number
+  timeInCycle: number
+}
+
+export interface HangarBrief {
+  title: string
+  where: string
+  next: string
+  boards: string
+}
+
+export interface HangarPhaseTimer {
+  id: HangarPhase
+  label: string
+  /** remaining = this phase is underway. starts = countdown until it begins. */
+  kind: 'remaining' | 'starts'
+  at: number
 }
 
 interface LightStep {
@@ -89,13 +108,110 @@ export function hangarState(nowMs: number, clock: HangarClock): HangarSnapshot {
   const cycleStart = nowMs - timeInCycle
   const phase = phaseOf(step.lights)
   const insertOpensAt = phase === 'insert' ? cycleStart : cycleStart + cycleMs
+  const phaseEndsAt = phase === 'insert'
+    ? cycleStart + INSERT_MS
+    : phase === 'blackout'
+      ? cycleStart + 65 * MINUTE
+      : cycleStart + cycleMs
   return {
     lights: step.lights,
     phase,
     nextChangeAt: nowMs + (nextMark - timeInCycle),
     insertOpensAt,
     insertEndsAt: insertOpensAt + INSERT_MS,
+    phaseEndsAt,
+    cycleStart,
+    cycleMs,
+    timeInCycle,
   }
+}
+
+function lightNumbers(lights: HangarLight[], color: HangarLight): number[] {
+  const numbers: number[] = []
+  lights.forEach((light, index) => {
+    if (light === color) numbers.push(index + 1)
+  })
+  return numbers
+}
+
+function lightList(numbers: number[]): string {
+  const names = numbers.map((number) => String(number))
+  if (names.length <= 1) return names[0] ? `Light ${names[0]}` : ''
+  if (names.length === 2) return `Lights ${names[0]} and ${names[1]}`
+  return `Lights ${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`
+}
+
+/** Plain-language description of this exact step. */
+export function hangarBrief(lights: HangarLight[]): HangarBrief {
+  const phase = phaseOf(lights)
+  const greens = lightNumbers(lights, 'green')
+  const reds = lightNumbers(lights, 'red')
+  const offs = lightNumbers(lights, 'off')
+  if (phase === 'blackout') {
+    return {
+      title: 'Powered down',
+      where: 'All five lights are dark. This is the gap between cycles.',
+      next: 'All five lights turn red',
+      boards: 'Compboards do not work.',
+    }
+  }
+  if (phase === 'charging') {
+    const nextGreen = reds[0]
+    if (greens.length === 0) {
+      return {
+        title: 'Charging',
+        where: 'All five lights are red. Charging just started. None have turned green yet.',
+        next: 'Light 1 turns green',
+        boards: 'Compboards do not work while any light is red.',
+      }
+    }
+    const lastRed = reds.length === 1
+    return {
+      title: 'Charging',
+      where: `${lightList(greens)} ${greens.length === 1 ? 'is' : 'are'} green. ${lightList(reds)} ${reds.length === 1 ? 'is' : 'are'} still red.`,
+      next: `Light ${nextGreen} turns green`,
+      boards: lastRed
+        ? 'When that last red light turns green, the compboard window opens.'
+        : 'Compboards do not work while any light is red.',
+    }
+  }
+  if (offs.length === 0) {
+    return {
+      title: 'Compboards',
+      where: 'All five lights are green. This is the start of the compboard window.',
+      next: 'Light 5 goes dark',
+      boards: 'Insert all 7 compboards now.',
+    }
+  }
+  const nextDark = greens[greens.length - 1]
+  const lastGreen = greens.length === 1
+  return {
+    title: 'Compboards',
+    where: `${lightList(greens)} ${greens.length === 1 ? 'is' : 'are'} still green. ${lightList(offs)} ${offs.length === 1 ? 'has' : 'have'} gone dark.`,
+    next: `Light ${nextDark} goes dark`,
+    boards: lastGreen
+      ? 'Compboards still work. When this last green light goes dark, the hangar powers down.'
+      : 'Compboards still work.',
+  }
+}
+
+/** Charging, then the compboard window, then the powered-down gap. Each row counts down. */
+export function hangarPhaseTimers(state: HangarSnapshot): HangarPhaseTimer[] {
+  const { cycleStart, cycleMs, timeInCycle } = state
+  const insertEnd = 60 * MINUTE
+  const blackEnd = 65 * MINUTE
+  const charging = timeInCycle >= blackEnd
+    ? { id: 'charging' as const, label: 'Charging', kind: 'remaining' as const, at: cycleStart + cycleMs }
+    : { id: 'charging' as const, label: 'Charging', kind: 'starts' as const, at: cycleStart + blackEnd }
+  const insert = timeInCycle < insertEnd
+    ? { id: 'insert' as const, label: 'Compboards', kind: 'remaining' as const, at: cycleStart + insertEnd }
+    : { id: 'insert' as const, label: 'Compboards', kind: 'starts' as const, at: cycleStart + cycleMs }
+  const blackout = timeInCycle < insertEnd
+    ? { id: 'blackout' as const, label: 'Powered down', kind: 'starts' as const, at: cycleStart + insertEnd }
+    : timeInCycle < blackEnd
+      ? { id: 'blackout' as const, label: 'Powered down', kind: 'remaining' as const, at: cycleStart + blackEnd }
+      : { id: 'blackout' as const, label: 'Powered down', kind: 'starts' as const, at: cycleStart + cycleMs + insertEnd }
+  return [charging, insert, blackout]
 }
 
 export async function loadHangarClock(fetchImpl: typeof fetch = fetch): Promise<{ clock: HangarClock; live: boolean }> {
