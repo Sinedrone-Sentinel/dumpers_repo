@@ -11,9 +11,15 @@ export async function fetchShipShopLoadouts(): Promise<ShipShopStore | null> {
   return parseShipShopStore(data)
 }
 
+function persistableStore(store: ShipShopStore): ShipShopStore {
+  return store.cart?.length
+    ? { version: 1, builds: store.builds, cart: store.cart }
+    : { version: 1, builds: store.builds }
+}
+
 export async function saveShipShopLoadouts(store: ShipShopStore): Promise<void> {
   const { error } = await supabase.rpc('save_ship_shop_loadouts', {
-    p_store: { version: 1, builds: store.builds },
+    p_store: persistableStore(store),
   })
   if (error) throw error
 }
@@ -37,10 +43,7 @@ export function readGuestShipShopStore(): ShipShopStore {
 
 export function writeGuestShipShopStore(store: ShipShopStore): void {
   if (typeof localStorage === 'undefined') return
-  localStorage.setItem(
-    GUEST_SHIP_SHOP_STORAGE_KEY,
-    JSON.stringify({ version: 1, builds: store.builds }),
-  )
+  localStorage.setItem(GUEST_SHIP_SHOP_STORAGE_KEY, JSON.stringify(persistableStore(store)))
 }
 
 export function clearGuestShipShopStore(): void {

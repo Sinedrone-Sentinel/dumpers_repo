@@ -697,26 +697,27 @@ export default function ShipShopPage() {
   const power = resolvedPower(columns, build.power, generated)
   const remaining = Math.max(0, generated - powerUsed(columns, power))
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
+  const shopCart = store.cart || []
 
-  function commitBuild(current: ShipBuild | undefined, next: ShipBuild): ShipBuild {
-    const cart = Object.prototype.hasOwnProperty.call(next, 'cart')
-      ? (next.cart && next.cart.length > 0 ? next.cart : undefined)
-      : current?.cart
+  function commitBuild(next: ShipBuild): ShipBuild {
     const saved: ShipBuild = { shipId: next.shipId, ports: next.ports }
     if (next.power !== undefined) saved.power = next.power
-    if (cart) saved.cart = cart
     return saved
+  }
+
+  function setCart(cart: ShopCartLine[]) {
+    setStore((prev) => (cart.length > 0 ? { version: 1, builds: prev.builds, cart } : { version: 1, builds: prev.builds }))
   }
 
   function updateBuild(next: ShipBuild) {
     if (viewingFraken) {
-      setFrakenDraft((current) => commitBuild(current ?? undefined, next))
+      setFrakenDraft(commitBuild(next))
       return
     }
     setStore((prev) => {
       const builds = prev.builds.slice()
-      builds[buildIndex] = commitBuild(builds[buildIndex], next)
-      return { version: 1, builds }
+      builds[buildIndex] = commitBuild(next)
+      return prev.cart?.length ? { version: 1, builds, cart: prev.cart } : { version: 1, builds }
     })
   }
 
@@ -733,7 +734,6 @@ export default function ShipShopPage() {
       shipId: publishedFraken.shipId,
       ports: { ...publishedFraken.ports },
       ...(publishedFraken.power ? { power: { ...publishedFraken.power } } : {}),
-      cart: [],
     })
     setViewingFraken(true)
     setShipQuery('')
@@ -758,7 +758,7 @@ export default function ShipShopPage() {
     setStore((prev) => {
       const builds = prev.builds.slice()
       builds[index] = emptyBuild()
-      return { version: 1, builds }
+      return prev.cart?.length ? { version: 1, builds, cart: prev.cart } : { version: 1, builds }
     })
     if (index === buildIndex) setShipQuery('')
   }
@@ -767,7 +767,7 @@ export default function ShipShopPage() {
     if (viewingFraken) return
     const nextShip = getShip(shipId)
     if (!nextShip) return
-    updateBuild({ shipId: nextShip.id, ports: stockPorts(nextShip), cart: [] })
+    updateBuild({ shipId: nextShip.id, ports: stockPorts(nextShip) })
     setShipQuery('')
   }
 
@@ -813,7 +813,7 @@ export default function ShipShopPage() {
               <ShopBuyButtons
                 listings={shipListings(ship.id)}
                 showBuild
-                cartCount={(build.cart || []).reduce((sum, line) => sum + line.qty, 0)}
+                cartCount={shopCart.reduce((sum, line) => sum + line.qty, 0)}
                 onWhere={() => setShopModal({ mode: 'where', title: ship.displayName, listings: shipListings(ship.id) })}
                 onAdd={() => setShopModal({ mode: 'qty', title: ship.displayName, id: ship.id, lineKind: 'ship' })}
                 onAddBuild={() => {
@@ -827,7 +827,7 @@ export default function ShipShopPage() {
                     cart.push({ id: row.entityClass, kind: 'part', qty: buy })
                   }
                   cart.push(...crafted)
-                  updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+                  setCart(cart)
                 }}
                 onViewCart={() => setShopModal({ mode: 'cart' })}
               />
@@ -1237,44 +1237,37 @@ export default function ShipShopPage() {
               qty,
               ...(shopModal.crafted ? { crafted: true, qualities: shopModal.qualities } : {}),
             }
-            updateBuild({
-              shipId: build.shipId,
-              ports: build.ports,
-              power: build.power,
-              cart: upsertCartLine(build.cart || [], incoming),
-            })
+            setCart(upsertCartLine(shopCart, incoming))
             setShopModal(null)
           }}
         />
       )}
       {shopModal?.mode === 'cart' && (
         <ShopCartModal
-          lines={(build.cart || []).map((line) => ({
+          lines={shopCart.map((line) => ({
             ...line,
             name: line.kind === 'ship' ? (getShip(line.id)?.displayName || 'Ship') : (getShipItem(line.id)?.displayName || 'Part'),
             listings: listingsFor(line.kind, line.id),
           }))}
           onClose={() => setShopModal(null)}
+          onClear={() => setCart([])}
           onQty={(line, qty) => {
             const key = cartLineKey(line)
-            const cart = (build.cart || [])
+            setCart(shopCart
               .map((entry) => cartLineKey(entry) === key ? { ...entry, qty } : entry)
-              .filter((entry) => entry.qty > 0)
-            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+              .filter((entry) => entry.qty > 0))
           }}
           onRemove={(line) => {
             const key = cartLineKey(line)
-            const cart = (build.cart || []).filter((entry) => cartLineKey(entry) !== key)
-            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+            setCart(shopCart.filter((entry) => cartLineKey(entry) !== key))
           }}
           onRemoveLines={(ids) => {
             const drop = new Set(ids)
-            const cart = (build.cart || []).filter((entry) => !drop.has(cartLineKey(entry)))
-            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+            setCart(shopCart.filter((entry) => !drop.has(cartLineKey(entry))))
           }}
           onAddToOrders={() => {
             clearDraft()
-            for (const line of build.cart || []) {
+            for (const line of shopCart) {
               if (!line.crafted) continue
               const fields = craftedDraftFields(line.id, line.qualities, line.qty)
               const blueprint = blueprintForEntity(line.id)
