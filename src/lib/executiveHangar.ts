@@ -7,6 +7,7 @@ const MINUTE = 60_000
 
 export type HangarLight = 'red' | 'green' | 'off'
 export type HangarPhase = 'insert' | 'blackout' | 'charging'
+export type HangarStatus = 'online' | 'offline'
 
 export interface HangarClock {
   /** Moment all five lights turn green. */
@@ -18,6 +19,10 @@ export interface HangarClock {
 export interface HangarSnapshot {
   lights: HangarLight[]
   phase: HangarPhase
+  /** Online until openDurationMs, then offline until the cycle wraps. Same flip as the published tracker. */
+  status: HangarStatus
+  /** When the published tracker flips between online and offline. */
+  statusChangesAt: number
   nextChangeAt: number
   /** Start of the current insert window, or the next one when the lights are not ready. */
   insertOpensAt: number
@@ -107,6 +112,10 @@ export function hangarState(nowMs: number, clock: HangarClock): HangarSnapshot {
   const nextMark = following != null && following < cycleMs ? following : cycleMs
   const cycleStart = nowMs - timeInCycle
   const phase = phaseOf(step.lights)
+  const online = timeInCycle < clock.openDurationMs
+  const statusChangesAt = online
+    ? nowMs + (clock.openDurationMs - timeInCycle)
+    : nowMs + (cycleMs - timeInCycle)
   const insertOpensAt = phase === 'insert' ? cycleStart : cycleStart + cycleMs
   const phaseEndsAt = phase === 'insert'
     ? cycleStart + INSERT_MS
@@ -116,6 +125,8 @@ export function hangarState(nowMs: number, clock: HangarClock): HangarSnapshot {
   return {
     lights: step.lights,
     phase,
+    status: online ? 'online' : 'offline',
+    statusChangesAt,
     nextChangeAt: nowMs + (nextMark - timeInCycle),
     insertOpensAt,
     insertEndsAt: insertOpensAt + INSERT_MS,
