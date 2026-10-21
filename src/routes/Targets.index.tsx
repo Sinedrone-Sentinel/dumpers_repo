@@ -123,6 +123,8 @@ function MissionChecklistGroups({
   onRemove: (mission: { missionKey: string; mission: string }) => void
   onOpenInBrowse?: (mission: MissionListEntry) => void
 }) {
+  const [openGivers, setOpenGivers] = useState<Set<string>>(() => new Set())
+
   if (groups.length === 0) {
     return (
       <p className="text-slate-500 text-sm site-surface p-4">
@@ -134,14 +136,45 @@ function MissionChecklistGroups({
 
   return (
     <div className="space-y-4">
-      {groups.map((group) => (
+      {groups.map((group) => {
+        const open = openGivers.has(group.giver)
+        return (
         <div
           key={group.giver}
           className="site-section overflow-hidden"
         >
           <div className="site-section-header px-4 py-2">
-            <h3 className="text-sm font-semibold text-purple-300">{group.giver}</h3>
+            <button
+              type="button"
+              aria-expanded={open}
+              onClick={() => {
+                setOpenGivers((prev) => {
+                  const next = new Set(prev)
+                  if (next.has(group.giver)) next.delete(group.giver)
+                  else next.add(group.giver)
+                  return next
+                })
+              }}
+              className="flex w-full items-center gap-2 text-left"
+            >
+              <svg
+                className={`w-4 h-4 shrink-0 text-slate-400 transition-transform duration-200 ${
+                  open ? '' : '-rotate-90'
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+              <h3 className="text-sm font-semibold text-purple-300">{group.giver}</h3>
+              <span className="text-xs font-normal text-slate-500">
+                {group.missions.length} mission{group.missions.length === 1 ? '' : 's'}
+              </span>
+            </button>
           </div>
+          {open && (
           <ul className="divide-y divide-slate-800">
             {group.missions.map((mission) => {
               return (
@@ -183,8 +216,10 @@ function MissionChecklistGroups({
               )
             })}
           </ul>
+          )}
         </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

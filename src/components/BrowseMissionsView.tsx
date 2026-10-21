@@ -327,6 +327,7 @@ export default function BrowseMissionsView({
   )
   const [systemFilter, setSystemFilter] = useState<SystemFilter>('all')
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([])
+  const [expandedGroupTitles, setExpandedGroupTitles] = useState<Set<string>>(() => new Set())
   const [missionsModalBlueprint, setMissionsModalBlueprint] = useState<{
     id: string
     name: string
@@ -411,6 +412,10 @@ export default function BrowseMissionsView({
       setSystemFilter('all')
     }
   }, [availableSystems, systemFilter])
+
+  useEffect(() => {
+    setExpandedGroupTitles(new Set())
+  }, [selectedFaction])
 
   const selectedMission = useMemo(() => {
     if (!selectedMissionKey) return null
@@ -703,6 +708,12 @@ export default function BrowseMissionsView({
       )
     }
 
+    const searchOpen = searchTerm.trim().length > 0
+    const expanded = searchOpen || expandedGroupTitles.has(group.title)
+    const headerTone = group.isLawful
+      ? 'border-green-500/10 bg-green-950/10'
+      : 'border-red-500/10 bg-red-950/10'
+
     return (
       <div
         key={group.title}
@@ -710,28 +721,55 @@ export default function BrowseMissionsView({
           group.isLawful ? 'border-green-500/20' : 'border-red-500/20'
         }`}
       >
-        <div className={`px-3 py-2.5 border-b ${
-          group.isLawful ? 'border-green-500/10 bg-green-950/10' : 'border-red-500/10 bg-red-950/10'
-        }`}>
+        <button
+          type="button"
+          aria-expanded={expanded}
+          title={searchOpen ? 'Matches stay open while you search' : expanded ? 'Collapse' : 'Expand'}
+          onClick={() => {
+            if (searchOpen) return
+            setExpandedGroupTitles((prev) => {
+              const next = new Set(prev)
+              if (next.has(group.title)) next.delete(group.title)
+              else next.add(group.title)
+              return next
+            })
+          }}
+          className={`w-full px-3 py-2.5 text-left ${expanded ? `border-b ${headerTone}` : headerTone}`}
+        >
           <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h4 className={`font-medium text-sm ${group.isLawful ? 'text-green-300' : 'text-red-400'}`}>
-                {group.title}
-              </h4>
-              {group.category && (
-                <span className="inline-block mt-1 text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
-                  {group.category}
-                </span>
-              )}
+            <div className="min-w-0 flex items-start gap-2">
+              <svg
+                className={`w-4 h-4 mt-0.5 shrink-0 text-slate-400 transition-transform duration-200 ${
+                  expanded ? '' : '-rotate-90'
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+              <div className="min-w-0">
+                <h4 className={`font-medium text-sm ${group.isLawful ? 'text-green-300' : 'text-red-400'}`}>
+                  {group.title}
+                </h4>
+                {group.category && (
+                  <span className="inline-block mt-1 text-[10px] px-1.5 py-0.5 bg-amber-950/50 text-amber-300 border border-amber-500/40 rounded">
+                    {group.category}
+                  </span>
+                )}
+              </div>
             </div>
             <span className="shrink-0 text-[10px] text-slate-500 pt-0.5">
               {group.variants.length} variant{group.variants.length !== 1 ? 's' : ''}
             </span>
           </div>
-        </div>
-        <div className="divide-y divide-slate-800/80">
-          {group.variants.map(mission => renderVariantRow(mission))}
-        </div>
+        </button>
+        {expanded && (
+          <div className="divide-y divide-slate-800/80">
+            {group.variants.map(mission => renderVariantRow(mission))}
+          </div>
+        )}
       </div>
     )
   }
