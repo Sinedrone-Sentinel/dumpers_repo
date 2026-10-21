@@ -61,6 +61,33 @@ Do **not** restore broad officer `FOR ALL` on `profiles`.
 - Privileged server work stays in Edge Functions or DEFINER SQL with explicit `auth.uid()` / role checks.
 - New RPCs that are service-only: `REVOKE` from `PUBLIC` / `authenticated`; `GRANT` to `service_role` only.
 
+## Data API grants (30 Oct 2026)
+
+Supabase stops auto-granting Data API access on **new** tables in `public`. Tables already in the live project keep their grants. A table created after the cutoff — including by `supabase db reset`, a preview branch, or a new project — is invisible to `supabase-js`, PostgREST, and GraphQL until the migration grants the role. Postgres checks that grant **before** RLS. A policy with no grant returns `42501 permission denied`.
+
+Do **not** copy Supabase's sample `GRANT SELECT, INSERT, UPDATE, DELETE TO authenticated`. That makes every verb reachable by any member JWT.
+
+| Who calls the table | Grant |
+|---|---|
+| Members `.from().select()` | `GRANT SELECT` to `authenticated`. Add `anon` only for a real guest read. |
+| Member writes | No write grant. Use a DEFINER RPC, same as marketplace tables. |
+| Edge / `service_role` `.from()` | `GRANT` only the verbs that client uses, to `service_role`. |
+| DEFINER SQL only, never the Data API | No client grant. The function owner does not need one. |
+
+Put this in the same migration as `CREATE TABLE`. Revoke first so a later default-privilege change cannot leave a write grant behind.
+
+```sql
+ALTER TABLE public.your_table ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.your_table FROM PUBLIC, anon, authenticated;
+GRANT SELECT ON TABLE public.your_table TO authenticated;
+-- only when Edge or another service_role client uses the Data API on this table
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.your_table TO service_role;
+```
+
+UUID primary keys need no sequence grant. If the Data API inserts into an identity or serial column, also `GRANT USAGE, SELECT` on that sequence to the same role.
+
+Do not rewrite old migrations for this. They already ran on production. New tables follow the block above.
+
 ## Checklist before shipping a data-mutating feature
 
 1. Can a malicious member replay this with curl + their JWT? If yes and it should not work → wrong design.

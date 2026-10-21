@@ -62,6 +62,8 @@ Manual linking: a signed-in member can connect an additional provider from **Set
 
 ## 3. Run SQL migrations
 
+From **30 October 2026**, a new table in `public` is not reachable by `supabase-js` until its migration grants the role. Tables already in the live project keep their current grants. A fresh project, a preview branch, or `supabase db reset` creates every table again, so each new migration must grant only what that table's callers use: `SELECT` for members, and `service_role` verbs only when an Edge Function uses the Data API on that table. Member writes stay on `SECURITY DEFINER` RPCs. Do not grant `INSERT`, `UPDATE`, and `DELETE` to `authenticated` just to make the API respond.
+
 In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 
 | # | File | Summary |
