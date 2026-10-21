@@ -903,7 +903,7 @@ export default function CanCraftTab({
                 key={cat}
                 type="button"
                 onClick={() => handleMainCategoryClick(cat)}
-                disabled={count === 0}
+                disabled={count === 0 && selectedMainCategory !== cat}
                 className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all site-btn-shimmer ${
                   selectedMainCategory === cat
                     ? 'site-filter-selected-orange'
@@ -938,7 +938,7 @@ export default function CanCraftTab({
                       key={size}
                       type="button"
                       onClick={() => setSelectedSize(selectedSize === size ? null : size)}
-                      disabled={count === 0}
+                      disabled={count === 0 && selectedSize !== size}
                       className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                         selectedSize === size
                           ? 'site-filter-selected-blue'
@@ -967,7 +967,7 @@ export default function CanCraftTab({
                       setSelectedArmorWeight(selectedArmorWeight === weight ? null : weight)
                       setSelectedSubCategory(null)
                     }}
-                    disabled={count === 0}
+                    disabled={count === 0 && selectedArmorWeight !== weight}
                     className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                       selectedArmorWeight === weight
                         ? 'site-filter-selected-purple'
@@ -995,7 +995,7 @@ export default function CanCraftTab({
                       setSelectedArmorSlot(selectedArmorSlot === slot ? null : slot)
                       setSelectedSubCategory(null)
                     }}
-                    disabled={count === 0}
+                    disabled={count === 0 && selectedArmorSlot !== slot}
                     className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                       selectedArmorSlot === slot
                         ? 'site-filter-selected-green'
@@ -1024,7 +1024,7 @@ export default function CanCraftTab({
                         setSelectedComponentClass(null)
                         setSelectedComponentGrade(null)
                       }}
-                      disabled={count === 0}
+                      disabled={count === 0 && selectedSubCategory !== sub}
                       className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                         selectedSubCategory === sub
                           ? 'site-filter-selected-orange'
@@ -1057,7 +1057,7 @@ export default function CanCraftTab({
                           selectedComponentClass === itemClass ? null : itemClass
                         )
                       }
-                      disabled={count === 0}
+                      disabled={count === 0 && selectedComponentClass !== itemClass}
                       className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                         selectedComponentClass === itemClass
                           ? 'site-filter-selected-green'
@@ -1087,7 +1087,7 @@ export default function CanCraftTab({
                         selectedComponentGrade === grade ? null : grade
                       )
                     }
-                    disabled={count === 0}
+                    disabled={count === 0 && selectedComponentGrade !== grade}
                     className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded text-[11px] sm:text-xs font-medium transition-all site-btn-shimmer ${
                       selectedComponentGrade === grade
                         ? 'site-filter-selected-purple'
