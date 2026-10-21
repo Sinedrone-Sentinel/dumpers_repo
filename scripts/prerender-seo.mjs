@@ -93,10 +93,11 @@ async function prerenderPath(browser, baseUrl, urlPath) {
   const page = await browser.newPage()
   // Public SEO catalog + marketing landing do not need guest preview.
   // Other tool routes require Offline Mode so the SPA renders tool HTML.
+  // The app reads this flag from localStorage.
   const useGuest = urlPath !== '/' && urlPath !== '/blueprints'
   await page.addInitScript(
     ([key, value]) => {
-      sessionStorage.setItem(key, value)
+      localStorage.setItem(key, value)
     },
     [guestKey, useGuest ? '1' : '0']
   )

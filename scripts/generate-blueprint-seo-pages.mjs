@@ -167,7 +167,7 @@ function absoluteUrl(path) {
 }
 
 function guestClickAttr() {
-  return `onclick="try{sessionStorage.setItem('${GUEST_KEY}','1')}catch(e){}"`
+  return `onclick="try{localStorage.setItem('${GUEST_KEY}','1')}catch(e){}"`
 }
 
 function renderPage({ bp, slug }) {

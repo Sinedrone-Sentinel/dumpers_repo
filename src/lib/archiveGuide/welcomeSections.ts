@@ -19,7 +19,7 @@ export const OFFLINE_MODE_SECTION = {
   id: 'offline-mode',
   title: 'Offline Mode',
   intro:
-    'Want to try out the tools before signing up? From the public home page, choose **Browse tools offline** (or **Continue in Offline Mode**). Offline Mode lets you explore most features without creating an account.',
+    'Want to try out the tools before signing up? From the public home page, choose **Browse tools offline** (or **Continue in Offline Mode**). Offline Mode lets you explore most features without creating an account. That choice is remembered in this browser, so a bookmark opens the tool instead of the sign-in page.',
   worksOffline: [
     '**Blueprints** — every blueprint with its crafting materials, quality sliders, and DFP values. Mark the ones you have unlocked (saved in this browser)',
     '**Mission Tracker** — browse every faction\'s missions and build your tracking list (saved in this browser)',

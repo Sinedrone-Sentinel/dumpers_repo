@@ -7,7 +7,7 @@ import {
   type FeatureId,
   type VisibilityContext,
 } from '../lib/featureAccess'
-import { readGuestPreviewSession, writeGuestPreviewSession } from '../lib/guestPreview'
+import { readGuestPreviewSession, resolveInitialGuestPreview, writeGuestPreviewSession } from '../lib/guestPreview'
 import { canonicalizeBlueprintInternalName, normalizeGuestBlueprintId } from '../lib/guestCatalog'
 import {
   ensureGuestCacheSchema,
@@ -174,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [orgLogoUpdatedAt, setOrgLogoUpdatedAt] = useState<string | null>(null)
   const [orgLogoConfigured, setOrgLogoConfigured] = useState(false)
   const [oauthReturnError, setOAuthReturnError] = useState<string | null>(null)
-  const [isGuestPreview, setIsGuestPreview] = useState(() => readGuestPreviewSession())
+  const [isGuestPreview, setIsGuestPreview] = useState(() => resolveInitialGuestPreview())
   const [guestGroupBlueprintVariants, setGuestGroupBlueprintVariants] = useState(
     () => readGuestGroupBlueprintVariants()
   )
