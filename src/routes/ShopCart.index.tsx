@@ -60,7 +60,7 @@ export default function ShopCartRoute() {
             ))}
           </ul>
           {unpriced && (
-            <p className="site-hint mt-3 text-xs">Lines without a shop are not included in the total. Add the item from a Buy row to lock that shop and its price.</p>
+            <p className="site-hint mt-3 text-xs">A line with no shop has no price yet. Calculate places it using your start, the systems you include, and Fewest Stops, Cheapest, or Efficient. That price is in the route total.</p>
           )}
         </div>
         </div>

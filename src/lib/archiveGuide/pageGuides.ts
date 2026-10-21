@@ -238,9 +238,9 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Keep a list of shop items you want to buy. Separate from Fuzy\'s Ship Shop.',
     details: [
       'Add items from UEX Lookup or from a blueprint card that is sold in a shop',
-      'Adding from a Buy row remembers that shop and its price. Adding from a blueprint card does not pick a shop yet',
-      'Change the quantity or remove a line. The total includes lines that have a price',
-      'Calculate plans a route from a starting place through the shops on the cart. A system change is its own jump stop. If an item is only sold in a system you left out, Calculate asks whether to include that system or drop the item',
+      'Adding from a Buy row keeps that shop and its price. Adding from a blueprint card does not pick a shop yet',
+      'Change the quantity or remove a line. The total includes lines that already have a price',
+      'Calculate places a blueprint line at a shop using your start, the systems you include, and Fewest Stops, Cheapest, or Efficient. A Buy-row line stays at the shop you picked. A system change is its own jump stop. If an item is only sold in a system you left out, Calculate asks whether to include that system or drop the item',
       'The cart stays in this browser. It is not the cart on Fuzy\'s Ship Shop',
       'The cart button in the header, next to the notepad, opens this page',
     ],
