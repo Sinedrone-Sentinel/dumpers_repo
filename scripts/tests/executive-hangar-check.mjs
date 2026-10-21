@@ -56,6 +56,34 @@ const missed = await hangar.loadHangarClock(async () => ({ ok: false, json: asyn
 assert.equal(missed.live, false)
 assert.equal(missed.clock.initialOpenTime, clock.initialOpenTime)
 
+const openBrief = hangar.hangarBrief(green.lights)
+assert.equal(openBrief.title, 'Compboards')
+assert.match(openBrief.where, /All five lights are green/)
+assert.equal(openBrief.next, 'Light 5 goes dark')
+
+const fadeBrief = hangar.hangarBrief(faded.lights)
+assert.match(fadeBrief.where, /Light 5 has gone dark/)
+assert.equal(fadeBrief.next, 'Light 4 goes dark')
+
+const redBrief = hangar.hangarBrief(red.lights)
+assert.equal(redBrief.title, 'Charging')
+assert.equal(redBrief.next, 'Light 1 turns green')
+
+const oneGreen = hangar.hangarState(open + 89 * 60 * 1000, clock)
+assert.equal(hangar.hangarBrief(oneGreen.lights).next, 'Light 2 turns green')
+
+const openTimers = hangar.hangarPhaseTimers(green)
+assert.equal(openTimers[0].kind, 'starts')
+assert.equal(openTimers[1].id, 'insert')
+assert.equal(openTimers[1].kind, 'remaining')
+assert.equal(openTimers[1].at, open + 60 * 60 * 1000)
+assert.equal(openTimers[2].kind, 'starts')
+
+const chargeTimers = hangar.hangarPhaseTimers(red)
+assert.equal(chargeTimers[0].kind, 'remaining')
+assert.equal(chargeTimers[1].kind, 'starts')
+assert.equal(chargeTimers[2].kind, 'starts')
+
 const loaded = await hangar.loadHangarClock(async () => ({
   ok: true,
   json: async () => ({
