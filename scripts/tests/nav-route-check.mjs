@@ -23,7 +23,7 @@ await esbuild.build({
 const navMod = await import(pathToFileURL(path.join(outDir, 'navSystems.mjs')).href)
 const routeMod = await import(pathToFileURL(path.join(outDir, 'shopRoute.mjs')).href)
 
-const { navMap, resolveShopPlace, searchNavPoints, pathBetween } = navMod
+const { navMap, resolveShopPlace, searchNavPoints, pathBetween, describeJumps } = navMod
 const { planShopRoute } = routeMod
 
 function point(id, name, system, x, surface = false) {
@@ -134,9 +134,16 @@ assert.deepEqual(nyxToStanton.hops.map((hop) => hop.pointId), ['nyx:stanton-gate
 assert.equal(nyxToStanton.hops.some((hop) => hop.pointId.startsWith('pyro:')), false)
 assert.match(nyxToStanton.hops[0].label, /Stanton Gateway in Nyx/)
 assert.match(nyxToStanton.hops[1].label, /Nyx Gateway in Stanton/)
+assert.equal(nyxToStanton.hops[0].role, 'depart')
+assert.equal(nyxToStanton.hops[1].role, 'arrive')
+assert.deepEqual(describeJumps(nyxToStanton.hops), [
+  `Use ${nyxToStanton.hops[0].label}, jump to ${nyxToStanton.hops[1].label}`,
+])
 
 const fromGate = pathBetween(navMap, 'nyx:stanton-gateway', 'stanton:hurston')
 assert.deepEqual(fromGate.hops.map((hop) => hop.pointId), ['stanton:nyx-gateway'])
+assert.equal(fromGate.hops[0].role, 'arrive')
+assert.deepEqual(describeJumps(fromGate.hops), [`Jump to ${fromGate.hops[0].label}`])
 
 const cellin = resolveShopPlace({
   system: 'Stanton',

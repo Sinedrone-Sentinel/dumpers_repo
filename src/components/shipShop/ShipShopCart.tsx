@@ -1,11 +1,11 @@
-import { useEffect, useId, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
 import ShopRouteHeader, { type RouteHeaderSettings } from '../nav/ShopRouteHeader'
 import { formatShopNumber } from '../../lib/shipShopMath'
-import { resolveShopPlace, navMap } from '../../lib/navSystems'
-import { planShopRoute, type ShopRouteMode, type ShopRouteResult, type ShopRouteStopLine } from '../../lib/shopRoute'
+import { describeJumps, navMap, pointById, resolveShopPlace, systemById } from '../../lib/navSystems'
+import { planShopRoute, type ShopRouteLine, type ShopRouteMode, type ShopRouteResult, type ShopRouteStopLine } from '../../lib/shopRoute'
 import {
   SHOP_ATTRIBUTION,
   isForSale,
@@ -32,6 +32,71 @@ function purchasesByStore(lines: ShopRouteStopLine[]): Array<{ store: string; li
     else groups.push({ store, lines: [line] })
   }
   return groups
+}
+
+type CartBuyLine = ShopCartLine & CartPlanLine
+
+type MissingInSystems = {
+  id: string
+  label: string
+  systemIds: string[]
+  systemNames: string[]
+}
+
+type RouteGap = {
+  nowhere: Array<{ id: string; label: string }>
+  outside: MissingInSystems[]
+  settings: RouteHeaderSettings
+  routeLines: ShopRouteLine[]
+}
+
+function offersForLine(line: CartBuyLine) {
+  const offers = new Map<string, { pointId: string; price: number; store?: string; systemId: string }>()
+  for (const listing of line.listings) {
+    if (!(listing.price > 0)) continue
+    const pointId = resolveShopPlace(listing)
+    const point = pointById(navMap, pointId)
+    if (!pointId || !point) continue
+    const price = listing.price * line.qty
+    const prev = offers.get(pointId)
+    if (!prev || price < prev.price) {
+      offers.set(pointId, { pointId, price, store: listing.store, systemId: point.system })
+    }
+  }
+  return [...offers.values()]
+}
+
+function classifyCart(lines: CartBuyLine[], settings: RouteHeaderSettings): RouteGap {
+  const selected = new Set(settings.systems)
+  const nowhere: RouteGap['nowhere'] = []
+  const outside: MissingInSystems[] = []
+  const routeLines: ShopRouteLine[] = []
+  for (const line of lines) {
+    const offers = offersForLine(line)
+    const label = line.qty > 1 ? `${line.name} × ${line.qty}` : line.name
+    const id = cartLineKey(line)
+    if (offers.length === 0) {
+      nowhere.push({ id, label })
+      continue
+    }
+    const picked = offers.filter((offer) => selected.has(offer.systemId))
+    if (picked.length === 0) {
+      const systemIds = [...new Set(offers.map((offer) => offer.systemId))]
+      outside.push({
+        id,
+        label,
+        systemIds,
+        systemNames: systemIds.map((systemId) => systemById(navMap, systemId)?.name || systemId),
+      })
+      continue
+    }
+    routeLines.push({
+      id,
+      label,
+      offers: picked.map((offer) => ({ pointId: offer.pointId, price: offer.price, store: offer.store })),
+    })
+  }
+  return { nowhere, outside, settings, routeLines }
 }
 
 /** Backdrop stays fixed. The page behind it does not scroll. */
@@ -193,39 +258,38 @@ export function ShopCartModal({
   onClose,
   onQty,
   onRemove,
+  onRemoveLines,
   onAddToOrders,
 }: {
   lines: Array<ShopCartLine & CartPlanLine>
   onClose: () => void
   onQty: (line: ShopCartLine, qty: number) => void
   onRemove: (line: ShopCartLine) => void
+  onRemoveLines: (ids: string[]) => void
   onAddToOrders: () => void
 }) {
   const buyLines = lines.filter((line) => !line.crafted)
   const crafted = lines.filter((line) => line.crafted)
   const [route, setRoute] = useState<ShopRouteResult | null>(null)
   const [routeMode, setRouteMode] = useState<ShopRouteMode>('fewest')
+  const [includeSystems, setIncludeSystems] = useState<string[]>([])
+  const [includeToken, setIncludeToken] = useState(0)
+  const [gap, setGap] = useState<RouteGap | null>(null)
+  const [gapStep, setGapStep] = useState<'nowhere' | 'outside' | null>(null)
+  const keepRouteFor = useRef<string | null>(null)
   const lineSignature = buyLines.map((line) => `${cartLineKey(line)}:${line.qty}`).join('|')
   useEffect(() => {
+    if (keepRouteFor.current === lineSignature) {
+      keepRouteFor.current = null
+      return
+    }
     setRoute(null)
   }, [lineSignature])
   const cartTotal = route ? route.legs.reduce((sum, leg) => sum + leg.stop.total, 0) : 0
   const canOrder = crafted.some((line) => craftedDraftFields(line.id, line.qualities, line.qty))
-  const calculate = (settings: RouteHeaderSettings) => {
-    const routeLines = buyLines.map((line) => {
-      const offers = new Map<string, { pointId: string; price: number; store?: string }>()
-      for (const listing of line.listings) {
-        if (!(listing.price > 0)) continue
-        const pointId = resolveShopPlace(listing)
-        if (!pointId) continue
-        const price = listing.price * line.qty
-        const prev = offers.get(pointId)
-        if (!prev || price < prev.price) offers.set(pointId, { pointId, price, store: listing.store })
-      }
-      const label = line.qty > 1 ? `${line.name} × ${line.qty}` : line.name
-      return { id: cartLineKey(line), label, offers: [...offers.values()] }
-    })
+  const publish = (settings: RouteHeaderSettings, routeLines: ShopRouteLine[]) => {
     const ship = buyLines.find((line) => line.kind === 'ship')
+    const shipId = ship ? cartLineKey(ship) : null
     setRouteMode(settings.mode)
     setRoute(planShopRoute({
       nav: navMap,
@@ -233,10 +297,57 @@ export function ShopCartModal({
       startId: settings.startId,
       systems: settings.systems,
       mode: settings.mode,
-      firstLineId: settings.shipFirst && ship ? cartLineKey(ship) : null,
+      firstLineId: settings.shipFirst && shipId && routeLines.some((line) => line.id === shipId) ? shipId : null,
     }))
   }
+  const calculate = (settings: RouteHeaderSettings) => {
+    const next = classifyCart(buyLines, settings)
+    setGap(next)
+    if (next.nowhere.length > 0) {
+      setGapStep('nowhere')
+      setRoute(null)
+      return
+    }
+    if (next.outside.length > 0) {
+      setGapStep('outside')
+      setRoute(null)
+      return
+    }
+    setGapStep(null)
+    publish(settings, next.routeLines)
+  }
+  const closeNowhere = () => {
+    if (!gap) return
+    if (gap.outside.length > 0) {
+      setGapStep('outside')
+      return
+    }
+    setGap(null)
+    setGapStep(null)
+  }
+  const includeMissing = () => {
+    if (!gap) return
+    const extra = [...new Set(gap.outside.flatMap((row) => row.systemIds))]
+    const systems = [...new Set([...gap.settings.systems, ...extra])]
+    setIncludeSystems(extra)
+    setIncludeToken((token) => token + 1)
+    const next = classifyCart(buyLines, { ...gap.settings, systems })
+    setGap(null)
+    setGapStep(null)
+    publish({ ...gap.settings, systems }, next.routeLines)
+  }
+  const dropMissing = () => {
+    if (!gap) return
+    const dropIds = new Set(gap.outside.map((row) => row.id))
+    const remaining = buyLines.filter((line) => !dropIds.has(cartLineKey(line)))
+    keepRouteFor.current = remaining.map((line) => `${cartLineKey(line)}:${line.qty}`).join('|')
+    onRemoveLines([...dropIds])
+    setGap(null)
+    setGapStep(null)
+    publish(gap.settings, gap.routeLines)
+  }
   return (
+    <>
     <ShopModalFrame onClose={onClose}>
       <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-3xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
         <div className="mb-3 flex items-center gap-3">
@@ -251,6 +362,8 @@ export function ShopCartModal({
             callerId="ship-shop"
             lineCount={buyLines.length}
             shipAvailable={buyLines.some((line) => line.kind === 'ship')}
+            includeSystems={includeSystems}
+            includeToken={includeToken}
             onCalculate={calculate}
           />
           {lines.length === 0 ? (
@@ -288,25 +401,21 @@ export function ShopCartModal({
             {route && (
               <>
                 <p className="site-banner-info">{ROUTE_NOTICE[routeMode]}</p>
-                {route.unavailable.length > 0 && (
-                  <section className="site-card p-3">
-                    <h4 className="text-sm font-semibold text-white">Not sold in the selected systems</h4>
-                    <ul className="mt-2 space-y-1">
-                      {route.unavailable.map((line) => (
-                        <li key={line.id} className="text-sm text-slate-200">{line.label}</li>
-                      ))}
-                    </ul>
-                  </section>
-                )}
                 {route.legs.length > 0 && (
                   <section>
                     <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">Stops</h4>
                     <ol className="mt-2 space-y-3">
                       {route.legs.map((leg, index) => (
-                        <li key={`${leg.stop.pointId}-${index}`} className="space-y-2">
-                          {leg.hops.map((hop) => (
-                            <p key={`${hop.pointId}-${hop.label}`} className="text-sm text-slate-300">{hop.label}</p>
+                        <Fragment key={`${leg.stop.pointId}-${index}`}>
+                          {describeJumps(leg.hops).map((sentence, hopIndex) => (
+                            <li key={`${sentence}-${hopIndex}`} className="site-card p-3">
+                              <p className="text-sm font-semibold text-white">
+                                {sentence}
+                                <span className="site-badge-slate ml-2">System jump</span>
+                              </p>
+                            </li>
                           ))}
+                          <li>
                           <div className="site-card p-3">
                             <div className="flex items-baseline justify-between gap-3">
                               <p className="text-sm font-semibold text-white">
@@ -331,7 +440,8 @@ export function ShopCartModal({
                               ))}
                             </div>
                           </div>
-                        </li>
+                          </li>
+                        </Fragment>
                       ))}
                     </ol>
                   </section>
@@ -354,6 +464,55 @@ export function ShopCartModal({
         </div>
         <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
+      {gapStep === 'nowhere' && gap && (
+        <RouteGapDialog title="Not sold anywhere" onClose={closeNowhere}>
+          <p className="text-sm text-slate-200">These items are not sold in any system. Remove them from the cart, then calculate again.</p>
+          <ul className="mt-3 space-y-2">
+            {gap.nowhere.map((row) => (
+              <li key={row.id} className="site-card p-3 text-sm font-semibold text-white">{row.label}</li>
+            ))}
+          </ul>
+          <div className="mt-4 flex justify-end">
+            <button type="button" className="site-btn-primary px-3 py-1.5 text-sm" onClick={closeNowhere}>Close</button>
+          </div>
+        </RouteGapDialog>
+      )}
+      {gapStep === 'outside' && gap && (
+        <RouteGapDialog title="Not sold in the selected systems" onClose={() => setGapStep(null)}>
+          <p className="text-sm text-slate-200">These items are not sold in the systems you included. Include the systems that sell them, or drop them from the cart. Either choice calculates the route again.</p>
+          <ul className="mt-3 space-y-2">
+            {gap.outside.map((row) => (
+              <li key={row.id} className="site-card p-3">
+                <p className="text-sm font-semibold text-white">{row.label}</p>
+                <p className="mt-1 text-sm text-slate-300">Sold in {row.systemNames.join(', ')}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 flex flex-wrap justify-end gap-2">
+            <button type="button" className="site-btn-secondary px-3 py-1.5 text-sm" onClick={dropMissing}>Drop these items</button>
+            <button type="button" className="site-btn-primary px-3 py-1.5 text-sm" onClick={includeMissing}>Include those systems</button>
+          </div>
+        </RouteGapDialog>
+      )}
     </ShopModalFrame>
+    </>
+  )
+}
+
+function RouteGapDialog({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+  return (
+    <div className="absolute inset-0 z-10 flex items-start justify-center overflow-y-auto bg-black/60 p-4" role="presentation" onClick={onClose}>
+      <div
+        className="site-modal-shell mt-8 max-h-[min(70dvh,32rem)] w-full max-w-lg overflow-y-auto p-4"
+        data-shop-modal-scroll
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <h3 className="text-base font-semibold text-white">{title}</h3>
+        <div className="mt-3">{children}</div>
+      </div>
+    </div>
   )
 }

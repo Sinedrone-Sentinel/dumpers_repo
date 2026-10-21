@@ -1267,6 +1267,11 @@ export default function ShipShopPage() {
             const cart = (build.cart || []).filter((entry) => cartLineKey(entry) !== key)
             updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
           }}
+          onRemoveLines={(ids) => {
+            const drop = new Set(ids)
+            const cart = (build.cart || []).filter((entry) => !drop.has(cartLineKey(entry)))
+            updateBuild({ shipId: build.shipId, ports: build.ports, power: build.power, cart })
+          }}
           onAddToOrders={() => {
             clearDraft()
             for (const line of build.cart || []) {

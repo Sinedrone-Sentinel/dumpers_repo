@@ -35,12 +35,18 @@ export default function ShopRouteHeader({
   lineCount,
   shipAvailable = false,
   nav = navMap,
+  includeSystems,
+  includeToken = 0,
   onCalculate,
 }: {
   callerId: string
   lineCount: number
   shipAvailable?: boolean
   nav?: NavMap
+  /** Systems to check, in addition to the ones already on. */
+  includeSystems?: string[]
+  /** Bumps when includeSystems should be applied again. */
+  includeToken?: number
   onCalculate: (settings: RouteHeaderSettings) => void
 }) {
   const listId = useId()
@@ -59,6 +65,18 @@ export default function ShopRouteHeader({
   useEffect(() => {
     setOpen(hasLines)
   }, [hasLines])
+
+  useEffect(() => {
+    if (!includeToken || !includeSystems?.length) return
+    const adding = includeSystems.filter((id) => nav.systems.some((system) => system.id === id))
+    if (adding.length === 0) return
+    setSystems((current) => {
+      const next = [...new Set([...current, ...adding])]
+      if (next.length === current.length && next.every((id) => current.includes(id))) return current
+      writeCallerSystems(callerId, next)
+      return next
+    })
+  }, [includeToken, includeSystems, callerId, nav.systems])
 
   const selected = pointById(nav, startId)
   const selectedLabel = selected
