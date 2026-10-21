@@ -11,7 +11,8 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 1. **Extract DataForge**: Run `.\scripts\extract-game-data.ps1`
    - Step 1: full DCB extract to JSON (`extracted-data/libs/foundry/records/`)
    - Step 2: English localization from `Data.p4k`
-   - Step 3: shop socpaks + ShopInventories **only** with `-IncludeShopData` (skipped by default)
+   - Step 3: star system containers (`Data/ObjectContainers/PU/system/*/*.socpak`). The parse writes `nav-systems.json` from these
+   - Step 4: shop socpaks + ShopInventories **only** with `-IncludeShopData` (skipped by default)
    - Quality bands and mission broker data come from the DCB extract — no separate `dcb query` steps
 
 2. **Parse Extracted Data**: Run `node scripts/parse-extracted-data.mjs`
@@ -42,6 +43,7 @@ All blueprint, component, mining, ordnance, reputation, and Archive lore data co
 | `game-commodities.json` | Cargo commodities not already tracked (Resource Tracker catalog; unrefined ore excluded) | `resourcetypedatabase/` + localization |
 | `dfp-commodity-bases.json` | Q0 commodity/salvage DFP bases (UEX-backed) | `fetch-commodity-dfp-bases.mjs` |
 | `component-metadata.json` | Component wiki metadata (DFP engine build input) | Star Citizen Wiki API |
+| `nav-systems.json` | Planets, moons, stations, cities, and jump gateways, plus the gateway links between systems | PU system containers |
 | `_extraction-validation.json` | Validation issues (if any) | Generated |
 
 The app **only** loads blueprint craft data from `game-blueprints.json`. There is no separate `Blueprints.json` or sccrafter sync.
@@ -134,7 +136,7 @@ Located in `/scripts/`:
 
 | Script | Purpose |
 |--------|---------|
-| `extract-game-data.ps1` | Extract full DCB + localization from Data.p4k; optional shop data with `-IncludeShopData` |
+| `extract-game-data.ps1` | Extract full DCB + localization and star system containers from Data.p4k; optional shop data with `-IncludeShopData` |
 | `parse-extracted-data.mjs` | Parse extracted JSON into `src/data/game-*.json` (`npm run parse-game-data`) |
 | `diff-game-data.mjs` | Patch diff: adds/removes/renames/stat changes vs last commit (`npm run diff-game-data`) |
 | `generate-mission-broker-order.mjs` | Regenerate `lib/missionBrokerOrder.mjs` after a patch if mission broker records reorder (one-off `dcb query`) |
@@ -159,8 +161,8 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
 (`src/components/DbActionsModal.tsx` → `PATCH_DAY_STEPS`) mirrors this runbook for copy-paste commands —
 **keep both in sync** (see `.cursor/rules/db-actions-patch-runbook.mdc`).
 
-1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`)
-2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch, including `game-ships.json` and `game-ship-item-stats.json`; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
+1. **Extract:** `.\scripts\extract-game-data.ps1` (wipes and repopulates `extracted-data/`, including the star system containers used for `nav-systems.json`)
+2. **Parse:** `npm run parse-game-data` (regenerates all `src/data/game-*.json` from scratch, including `game-ships.json` and `game-ship-item-stats.json`, and writes `nav-systems.json` when the system containers are present; appends What's New pending lines and pushes to Supabase when `SUPABASE_SERVICE_ROLE_KEY` is set — same `issue_key`+`version` is skipped)
    - Ship items keep their game record id, and a gun whose shot sequence is slower than its fire rate stores that wait so burst and sustained DPS follow it. Do not run a separate cycle patch after this.
 3. **Review the patch diff:** `npm run diff-game-data`
    - Compares fresh parse output against the last commit (`--ref <ref>` for another baseline)

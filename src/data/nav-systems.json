@@ -1,0 +1,1189 @@
+{
+  "systems": [
+    {
+      "id": "nyx",
+      "name": "Nyx"
+    },
+    {
+      "id": "pyro",
+      "name": "Pyro"
+    },
+    {
+      "id": "stanton",
+      "name": "Stanton"
+    }
+  ],
+  "points": [
+    {
+      "id": "nyx:pyro-gateway",
+      "name": "Pyro Gateway",
+      "aliases": [],
+      "system": "nyx",
+      "kind": "gateway",
+      "surface": false,
+      "x": -12000043845,
+      "y": 20784584131,
+      "z": 0
+    },
+    {
+      "id": "nyx:stanton-gateway",
+      "name": "Stanton Gateway",
+      "aliases": [],
+      "system": "nyx",
+      "kind": "gateway",
+      "surface": false,
+      "x": -13499935650,
+      "y": -23382715138,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyro-v",
+      "name": "Pyro V",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "planet",
+      "surface": true,
+      "x": -3912426189,
+      "y": -42758732445,
+      "z": 0
+    },
+    {
+      "id": "pyro:adir",
+      "name": "Adir",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "moon",
+      "surface": true,
+      "x": -3815640767,
+      "y": -42729093411,
+      "z": 0
+    },
+    {
+      "id": "pyro:ignis",
+      "name": "Ignis",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "moon",
+      "surface": true,
+      "x": -3965334859,
+      "y": -42774798593,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyro-iv",
+      "name": "Pyro IV",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "planet",
+      "surface": true,
+      "x": -3704136996,
+      "y": -43071659154,
+      "z": 0
+    },
+    {
+      "id": "pyro:vatra",
+      "name": "Vatra",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "moon",
+      "surface": true,
+      "x": -3889836650,
+      "y": -42688068260,
+      "z": 0
+    },
+    {
+      "id": "pyro:vuur",
+      "name": "Vuur",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "moon",
+      "surface": true,
+      "x": -4049991719,
+      "y": -42648947152,
+      "z": 0
+    },
+    {
+      "id": "pyro:fairo",
+      "name": "Fairo",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "moon",
+      "surface": true,
+      "x": -3946434500,
+      "y": -42879838568,
+      "z": 0
+    },
+    {
+      "id": "pyro:fuego",
+      "name": "Fuego",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "moon",
+      "surface": true,
+      "x": -3780111825,
+      "y": -42827195911,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr3-l2",
+      "name": "PYR3 L2",
+      "aliases": [
+        "PYR3-L2"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -17714300607,
+      "y": 8346987643,
+      "z": 0
+    },
+    {
+      "id": "pyro:gaslight",
+      "name": "Gaslight",
+      "aliases": [
+        "PYR5 L2"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -4305013180,
+      "y": -47034474329,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr3-l4",
+      "name": "PYR3 L4",
+      "aliases": [
+        "PYR3-L4"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -14623507669,
+      "y": -10152318684,
+      "z": 0
+    },
+    {
+      "id": "pyro:starlight-service-station",
+      "name": "Starlight Service Station",
+      "aliases": [
+        "PYR3 L1"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -14610506643,
+      "y": 6575346218,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr2-l1",
+      "name": "PYR2 L1",
+      "aliases": [
+        "PYR2-L1"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 5587580882,
+      "y": -7754529269,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr3-l5",
+      "name": "PYR3 L5",
+      "aliases": [
+        "PYR3-L5"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 12638431339,
+      "y": 12537403511,
+      "z": 0
+    },
+    {
+      "id": "pyro:patch-city",
+      "name": "Patch City",
+      "aliases": [
+        "PYR3 L3"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 14541573613,
+      "y": -10269333168,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr6-l2",
+      "name": "PYR6 L2",
+      "aliases": [
+        "PYR6-L2"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -49918483338,
+      "y": 50320251342,
+      "z": 0
+    },
+    {
+      "id": "pyro:megumi-refueling",
+      "name": "Megumi Refueling",
+      "aliases": [
+        "PYR6 L5"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 29122470164,
+      "y": 61804895101,
+      "z": 0
+    },
+    {
+      "id": "pyro:endgame",
+      "name": "Endgame",
+      "aliases": [
+        "PYR6 L3"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 52161403642,
+      "y": -44126491136,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr2-l5",
+      "name": "PYR2 L5",
+      "aliases": [
+        "PYR2-L5"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -6127061368,
+      "y": -8676078957,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyro-i",
+      "name": "Pyro I",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "planet",
+      "surface": true,
+      "x": -7920920786,
+      "y": -2386976563,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr1-l2",
+      "name": "PYR1 L2",
+      "aliases": [
+        "PYR1-L2"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -8713009576,
+      "y": -2625677640,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr1-l4",
+      "name": "PYR1 L4",
+      "aliases": [
+        "PYR1-L4"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -1893296274,
+      "y": -8053202253,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr1-l5",
+      "name": "PYR1 L5",
+      "aliases": [
+        "PYR1-L5"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -6027626645,
+      "y": 5666241172,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr1-l1",
+      "name": "PYR1 L1",
+      "aliases": [
+        "PYR1-L1"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -7090224648,
+      "y": -2272462153,
+      "z": 0
+    },
+    {
+      "id": "pyro:rod-s-fuel-n-supplies",
+      "name": "Rod's Fuel 'N Supplies",
+      "aliases": [
+        "PYR5 L4"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 41429351313,
+      "y": -11279333425,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr6-l1",
+      "name": "PYR6 L1",
+      "aliases": [
+        "PYR6-L1"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -47417386146,
+      "y": 46159162943,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr1-l3",
+      "name": "PYR1 L3",
+      "aliases": [
+        "PYR1-L3"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 8274711439,
+      "y": 2229680546,
+      "z": 0
+    },
+    {
+      "id": "pyro:terminus",
+      "name": "Terminus",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "planet",
+      "surface": true,
+      "x": -48118274316,
+      "y": 48503130950,
+      "z": 0
+    },
+    {
+      "id": "pyro:dudley-daughters",
+      "name": "Dudley & Daughters",
+      "aliases": [
+        "PYR6 L4"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -62036440806,
+      "y": -28625942536,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr2-l3",
+      "name": "PYR2 L3",
+      "aliases": [
+        "PYR2-L3"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -2707846809,
+      "y": 10270479209,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr2-l2",
+      "name": "PYR2 L2",
+      "aliases": [
+        "PYR2-L2"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 6662973751,
+      "y": -9597452987,
+      "z": 0
+    },
+    {
+      "id": "pyro:monox",
+      "name": "Monox",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "planet",
+      "surface": true,
+      "x": 6057267247,
+      "y": -8724931001,
+      "z": 0
+    },
+    {
+      "id": "pyro:checkmate",
+      "name": "Checkmate",
+      "aliases": [
+        "PYR2 L4"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 10577229334,
+      "y": -968166325,
+      "z": 0
+    },
+    {
+      "id": "pyro:bloom",
+      "name": "Bloom",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "planet",
+      "surface": true,
+      "x": -16103894598,
+      "y": 7587938565,
+      "z": 0
+    },
+    {
+      "id": "pyro:rat-s-nest",
+      "name": "Rat's Nest",
+      "aliases": [
+        "PYR5 L5"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -42314565584,
+      "y": -7286465628,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr5-l1",
+      "name": "PYR5 L1",
+      "aliases": [
+        "PYR5-L1"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -3522319939,
+      "y": -38482740208,
+      "z": 0
+    },
+    {
+      "id": "pyro:nyx-gateway",
+      "name": "Nyx Gateway",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "gateway",
+      "surface": false,
+      "x": -35275861983,
+      "y": -36052313853,
+      "z": 0
+    },
+    {
+      "id": "pyro:stanton-gateway",
+      "name": "Stanton Gateway",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "gateway",
+      "surface": false,
+      "x": 34178643379,
+      "y": 40591998389,
+      "z": 0
+    },
+    {
+      "id": "pyro:pyr5-l3",
+      "name": "PYR5 L3",
+      "aliases": [
+        "PYR5-L3"
+      ],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": 18302065395,
+      "y": 38841341952,
+      "z": 0
+    },
+    {
+      "id": "stanton:hurston",
+      "name": "Hurston",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "planet",
+      "surface": true,
+      "x": 12850457093,
+      "y": 0,
+      "z": 0
+    },
+    {
+      "id": "stanton:arial",
+      "name": "Arial",
+      "aliases": [
+        "Ariel"
+      ],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 12892673309,
+      "y": -31476129,
+      "z": 0
+    },
+    {
+      "id": "stanton:aberdeen",
+      "name": "Aberdeen",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 12905757636,
+      "y": 40955551,
+      "z": 0
+    },
+    {
+      "id": "stanton:ita",
+      "name": "Ita",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 12830194716,
+      "y": 114913609,
+      "z": 0
+    },
+    {
+      "id": "stanton:magda",
+      "name": "Magda",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 12792686359,
+      "y": -74464581,
+      "z": 0
+    },
+    {
+      "id": "stanton:arccorp",
+      "name": "ArcCorp",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "planet",
+      "surface": true,
+      "x": 18587664740,
+      "y": -22151916920,
+      "z": 0
+    },
+    {
+      "id": "stanton:wala",
+      "name": "Wala",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 18379649310,
+      "y": -22000466768,
+      "z": 0
+    },
+    {
+      "id": "stanton:lyria",
+      "name": "Lyria",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 18703607172,
+      "y": -22121650134,
+      "z": 0
+    },
+    {
+      "id": "stanton:microtech",
+      "name": "microTech",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "planet",
+      "surface": true,
+      "x": 22462085252,
+      "y": 37185744965,
+      "z": 0
+    },
+    {
+      "id": "stanton:calliope",
+      "name": "Calliope",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 22398369308,
+      "y": 37168840679,
+      "z": 0
+    },
+    {
+      "id": "stanton:euterpe",
+      "name": "Euterpe",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 22488109736,
+      "y": 37081123565,
+      "z": 0
+    },
+    {
+      "id": "stanton:clio",
+      "name": "Clio",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": 22476728221,
+      "y": 37091020074,
+      "z": 0
+    },
+    {
+      "id": "stanton:nyx-gateway",
+      "name": "Nyx Gateway",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "gateway",
+      "surface": false,
+      "x": -62284282868,
+      "y": 23467602587,
+      "z": 20198396608
+    },
+    {
+      "id": "stanton:crusader",
+      "name": "Crusader",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "planet",
+      "surface": true,
+      "x": -18962176000,
+      "y": -2664960000,
+      "z": 0
+    },
+    {
+      "id": "stanton:yela",
+      "name": "Yela",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": -19022916799,
+      "y": -2613996152,
+      "z": 0
+    },
+    {
+      "id": "stanton:daymar",
+      "name": "Daymar",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": -18930539540,
+      "y": -2610158765,
+      "z": 0
+    },
+    {
+      "id": "stanton:covalex-shipping-hub-gundo",
+      "name": "Covalex Shipping Hub Gundo",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -18930780738,
+      "y": -2609720788,
+      "z": -300000
+    },
+    {
+      "id": "stanton:cellin",
+      "name": "Cellin",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "moon",
+      "surface": true,
+      "x": -18987611119,
+      "y": -2709009661,
+      "z": 0
+    },
+    {
+      "id": "stanton:security-post-kareah",
+      "name": "Security Post Kareah",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -18987599499,
+      "y": -2709429500,
+      "z": 200000
+    },
+    {
+      "id": "stanton:pyro-gateway",
+      "name": "Pyro Gateway",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "gateway",
+      "surface": false,
+      "x": 3310491640,
+      "y": -27979408221,
+      "z": -2676285679
+    },
+    {
+      "id": "stanton:cru-l3",
+      "name": "CRU L3",
+      "aliases": [
+        "CRU-L3"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 18962164826,
+      "y": 2664965041,
+      "z": 0
+    },
+    {
+      "id": "stanton:terra-gateway",
+      "name": "Terra Gateway",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "gateway",
+      "surface": false,
+      "x": 51118221617,
+      "y": -5269981303,
+      "z": -4339551619
+    },
+    {
+      "id": "stanton:hur-l1-green-glade-station",
+      "name": "HUR-L1 Green Glade Station",
+      "aliases": [
+        "HUR L1",
+        "HUR-L1"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 11565411328,
+      "y": 0,
+      "z": 0
+    },
+    {
+      "id": "stanton:hur-l5-high-course-station",
+      "name": "HUR-L5 High Course Station",
+      "aliases": [
+        "HUR L5",
+        "HUR-L5"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 6425227776,
+      "y": -11128823808,
+      "z": 0
+    },
+    {
+      "id": "stanton:cru-l4-shallow-fields-station",
+      "name": "CRU-L4 Shallow Fields Station",
+      "aliases": [
+        "CRU L4",
+        "CRU-L4"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -7173168640,
+      "y": -17754204160,
+      "z": 0
+    },
+    {
+      "id": "stanton:hur-l3-thundering-express-station",
+      "name": "HUR-L3 Thundering Express Station",
+      "aliases": [
+        "HUR L3",
+        "HUR-L3"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -12850457600,
+      "y": -1123,
+      "z": 0
+    },
+    {
+      "id": "stanton:arc-l5-yellow-core-station",
+      "name": "ARC-L5 Yellow Core Station",
+      "aliases": [
+        "ARC L5",
+        "ARC-L5"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -9890422516,
+      "y": -27173732225,
+      "z": 8077
+    },
+    {
+      "id": "stanton:hur-l2-faithful-dream-station",
+      "name": "HUR-L2 Faithful Dream Station",
+      "aliases": [
+        "HUR L2",
+        "HUR-L2"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 14135502848,
+      "y": 0,
+      "z": 0
+    },
+    {
+      "id": "stanton:cru-l2",
+      "name": "CRU L2",
+      "aliases": [
+        "CRU-L2"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -20858376485,
+      "y": -2931474402,
+      "z": 0
+    },
+    {
+      "id": "stanton:cru-l5-beautiful-glen-station",
+      "name": "CRU-L5 Beautiful Glen Station",
+      "aliases": [
+        "CRU L5",
+        "CRU-L5"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -11789008988,
+      "y": 15089246107,
+      "z": 0
+    },
+    {
+      "id": "stanton:mic-l2-long-forest-station",
+      "name": "MIC-L2 Long Forest Station",
+      "aliases": [
+        "MIC L2",
+        "MIC-L2"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 24708827153,
+      "y": 40905202459,
+      "z": 0
+    },
+    {
+      "id": "stanton:hur-l4-melodic-fields-station",
+      "name": "HUR-L4 Melodic Fields Station",
+      "aliases": [
+        "HUR L4",
+        "HUR-L4"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 6425228288,
+      "y": 11128823808,
+      "z": 0
+    },
+    {
+      "id": "stanton:arc-l2-lively-pathway-station",
+      "name": "ARC-L2 Lively Pathway Station",
+      "aliases": [
+        "ARC L2",
+        "ARC-L2"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 20446718503,
+      "y": -24367450991,
+      "z": 8077
+    },
+    {
+      "id": "stanton:arc-l4-faint-glen-station",
+      "name": "ARC-L4 Faint Glen Station",
+      "aliases": [
+        "ARC L4",
+        "ARC-L4"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 28478354916,
+      "y": 5021502483,
+      "z": 8077
+    },
+    {
+      "id": "stanton:arc-l1-wide-forest-station",
+      "name": "ARC-L1 Wide Forest Station",
+      "aliases": [
+        "ARC L1",
+        "ARC-L1"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 16729134637,
+      "y": -19937006925,
+      "z": 8077
+    },
+    {
+      "id": "stanton:arc-l3-modern-express-station",
+      "name": "ARC-L3 Modern Express Station",
+      "aliases": [
+        "ARC L3",
+        "ARC-L3"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -25043446884,
+      "y": 14458841788,
+      "z": 8077
+    },
+    {
+      "id": "stanton:mic-l1-shallow-frontier-station",
+      "name": "MIC-L1 Shallow Frontier Station",
+      "aliases": [
+        "MIC L1",
+        "MIC-L1"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 20215824238,
+      "y": 33467065008,
+      "z": 0
+    },
+    {
+      "id": "stanton:cru-l1-ambitious-dream-station",
+      "name": "CRU-L1 Ambitious Dream Station",
+      "aliases": [
+        "CRU L1",
+        "CRU-L1"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -17065957376,
+      "y": -2398464000,
+      "z": 0
+    },
+    {
+      "id": "stanton:mic-l5-modern-icarus-station",
+      "name": "MIC-L5 Modern Icarus Station",
+      "aliases": [
+        "MIC L5",
+        "MIC-L5"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 43435204288,
+      "y": -851406956,
+      "z": 0
+    },
+    {
+      "id": "stanton:mic-l4-red-crossroads-station",
+      "name": "MIC-L4 Red Crossroads Station",
+      "aliases": [
+        "MIC L4",
+        "MIC-L4"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -20971933230,
+      "y": 38045504032,
+      "z": 0
+    },
+    {
+      "id": "stanton:mic-l3-endless-odyssey-station",
+      "name": "MIC-L3 Endless Odyssey Station",
+      "aliases": [
+        "MIC L3",
+        "MIC-L3"
+      ],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -22457170266,
+      "y": -37187612396,
+      "z": 0
+    },
+    {
+      "id": "pyro:ruin-station",
+      "name": "Ruin Station",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -48117999178,
+      "y": 48503470352,
+      "z": -100478
+    },
+    {
+      "id": "pyro:orbituary",
+      "name": "Orbituary",
+      "aliases": [],
+      "system": "pyro",
+      "kind": "station",
+      "surface": false,
+      "x": -16104579245,
+      "y": 7587500264,
+      "z": 226044
+    },
+    {
+      "id": "stanton:everus-harbor",
+      "name": "Everus Harbor",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 12849949351,
+      "y": -903464,
+      "z": 496489
+    },
+    {
+      "id": "stanton:lorville",
+      "name": "Lorville",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "city",
+      "surface": true,
+      "x": 12850128104,
+      "y": -752435,
+      "z": 572120
+    },
+    {
+      "id": "stanton:baijini-point",
+      "name": "Baijini Point",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 18586892779,
+      "y": -22152238268,
+      "z": -359509
+    },
+    {
+      "id": "stanton:area18",
+      "name": "Area18",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "city",
+      "surface": true,
+      "x": 18586917331,
+      "y": -22152033654,
+      "z": -262094
+    },
+    {
+      "id": "stanton:port-tressler",
+      "name": "Port Tressler",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": 22461523781,
+      "y": 37185199112,
+      "z": 808832
+    },
+    {
+      "id": "stanton:new-babbage",
+      "name": "New Babbage",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "city",
+      "surface": true,
+      "x": 22461564529,
+      "y": 37185325601,
+      "z": 743655
+    },
+    {
+      "id": "stanton:seraphim-station",
+      "name": "Seraphim Station",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -18956299902,
+      "y": -2666344207,
+      "z": 5565883
+    },
+    {
+      "id": "stanton:orison",
+      "name": "Orison",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "city",
+      "surface": true,
+      "x": -18956880483,
+      "y": -2665823194,
+      "z": 5282237
+    },
+    {
+      "id": "stanton:grim-hex",
+      "name": "Grim HEX",
+      "aliases": [],
+      "system": "stanton",
+      "kind": "station",
+      "surface": false,
+      "x": -19023485458,
+      "y": -2613612587,
+      "z": -2042
+    }
+  ],
+  "links": [
+    {
+      "from": "nyx",
+      "to": "pyro",
+      "depart": "nyx:pyro-gateway",
+      "arrive": "pyro:nyx-gateway"
+    },
+    {
+      "from": "nyx",
+      "to": "stanton",
+      "depart": "nyx:stanton-gateway",
+      "arrive": "stanton:nyx-gateway"
+    },
+    {
+      "from": "pyro",
+      "to": "nyx",
+      "depart": "pyro:nyx-gateway",
+      "arrive": "nyx:pyro-gateway"
+    },
+    {
+      "from": "pyro",
+      "to": "stanton",
+      "depart": "pyro:stanton-gateway",
+      "arrive": "stanton:pyro-gateway"
+    },
+    {
+      "from": "stanton",
+      "to": "nyx",
+      "depart": "stanton:nyx-gateway",
+      "arrive": "nyx:stanton-gateway"
+    },
+    {
+      "from": "stanton",
+      "to": "pyro",
+      "depart": "stanton:pyro-gateway",
+      "arrive": "pyro:stanton-gateway"
+    }
+  ]
+}

@@ -25,6 +25,7 @@ function run(label, scriptRel) {
 
 run('Unit suite', 'scripts/tests/unit-suite.mjs')
 run('Ship shop catalog', 'scripts/tests/ship-shop-check.mjs')
+run('Nav route', 'scripts/tests/nav-route-check.mjs')
 run('Blueprint SEO display', 'scripts/audit-blueprint-seo-display.mjs')
 run('Mining math', 'scripts/verify-mining-math.mjs')
 
