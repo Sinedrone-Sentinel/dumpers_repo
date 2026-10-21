@@ -1,6 +1,7 @@
 /**
  * Build the shared nav map from placed PU system containers.
- * Bodies that are not children of a system container (Nyx I–III, Delamar) are omitted.
+ * Bodies that are not children of a system container (Nyx I–III) are omitted.
+ * Levski sits on Delamar inside the Glaciem ring, so that ring segment is the city stop.
  */
 import { spawnSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
@@ -91,6 +92,17 @@ function systemSocpaks(extractedRoot) {
   const files = []
   walkFiles(root, files)
   return files.filter((path) => /\/system\/[^/]+\/[^/]+\.socpak$/i.test(norm(path)))
+}
+
+const LEVSKI_RECORD = '468d4102-a210-47b5-8bc3-084f791a173c'
+
+function isLevskiPlacement(socpakPath, attr) {
+  const path = norm(socpakPath)
+  const entity = String(attr?.entityName || '').toLowerCase()
+  const record = String(attr?.starMapRecord || '').toLowerCase()
+  if (record === LEVSKI_RECORD) return true
+  if (path.endsWith('/levski.socpak') || entity === 'levski_location') return true
+  return entity === 'glaciemring_segment_levski' || path.endsWith('glaciemring_segment_levski.socpak')
 }
 
 function classifySystemChild(socpakPath) {
@@ -324,6 +336,24 @@ function addPoint(points, point) {
 function childPoints(xml, systemId, localization, gateways, starmap, restStops, points, parentKey) {
   walkChildren(xml, (world) => {
     const socpak = world.attr.name || ''
+    if (isLevskiPlacement(socpak, world.attr)) {
+      if (!points.some((row) => row.system === systemId && row.name === 'Levski')) {
+        addPoint(points, {
+          name: 'Levski',
+          aliases: ['Delamar'],
+          system: systemId,
+          kind: 'city',
+          surface: true,
+          x: world.pos[0],
+          y: world.pos[1],
+          z: world.pos[2],
+          toSystem: null,
+          socpak: norm(socpak),
+          rot: world.rot,
+        })
+      }
+      return
+    }
     const kind = classifySystemChild(socpak)
     if (!kind) return
     const base = basename(socpak)
