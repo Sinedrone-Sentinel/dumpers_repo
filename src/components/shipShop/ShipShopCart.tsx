@@ -256,6 +256,7 @@ export function ShopQtyModal({
 export function ShopCartModal({
   lines,
   onClose,
+  onClear,
   onQty,
   onRemove,
   onRemoveLines,
@@ -263,6 +264,7 @@ export function ShopCartModal({
 }: {
   lines: Array<ShopCartLine & CartPlanLine>
   onClose: () => void
+  onClear: () => void
   onQty: (line: ShopCartLine, qty: number) => void
   onRemove: (line: ShopCartLine) => void
   onRemoveLines: (ids: string[]) => void
@@ -354,6 +356,9 @@ export function ShopCartModal({
           <h3 className="min-w-0 flex-1 text-base font-semibold text-white">Cart</h3>
           {cartTotal > 0 && (
             <p className="shrink-0 text-sm font-semibold text-white">{formatShopNumber(cartTotal)} aUEC</p>
+          )}
+          {lines.length > 0 && (
+            <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" onClick={onClear}>Clear</button>
           )}
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
         </div>

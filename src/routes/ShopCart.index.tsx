@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import ShopCartPlanner from '../components/shop/ShopCartPlanner'
 import {
+  clearShopCart,
   readShopCart,
   removeShopCartLine,
   setShopCartQty,
@@ -29,6 +30,9 @@ export default function ShopCartRoute() {
       subtitle="Items you chose from UEX Lookup. This cart is separate from Fuzy's Ship Shop."
       seoIntro="A browser shopping cart for Star Citizen shop goods from UEX Lookup — guns, ammo, armor, ships, commodities, food, and drinks."
       badge="UEX"
+      actions={lines.length > 0 ? (
+        <button type="button" className="site-btn-secondary px-3 py-1.5 text-sm" onClick={() => clearShopCart()}>Clear</button>
+      ) : undefined}
     >
       {lines.length === 0 ? (
         <div className="site-empty px-6 py-16 text-center">
