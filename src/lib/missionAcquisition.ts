@@ -349,7 +349,7 @@ export function getMissionRepInfo(missionLabel: string): MissionRepInfo {
           repMax: mission.repPoints,
           minReputation: mission.minStanding?.minReputation ?? null,
           minStandingName: mission.minStanding?.name ?? null,
-    repCareerLabel: mission.repCareerLabel ?? matchedContract?.repCareerLabel ?? null,
+          repCareerLabel: mission.repCareerLabel ?? null,
           variantCount: missions.length,
           missionGiver: mission.faction,
           matched: true,
