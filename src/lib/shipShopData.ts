@@ -52,7 +52,7 @@ export interface ShipPort {
   requiredTags?: string
   portTags?: string
   accepts?: PortAccept[]
-  /** Guns on the crew regen pipe, plus point-defense guns. Manned and remote turrets are not included. */
+  /** Guns the pilot fires, plus point-defense guns. Manned and remote turrets are not included. */
   pilotWeapon?: boolean
 }
 
