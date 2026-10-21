@@ -4,11 +4,18 @@ import ShipHangarModal from '../shipHangar/ShipHangarModal'
 import { SHIPS, getShip } from '../../lib/shipShopData'
 import { describeJumps, navMap, pathBetween, pointById, searchNavPoints } from '../../lib/navSystems'
 import {
+  applyPartialBuy,
+  applyPartialSell,
+  buysAtStop,
   collectHaulOffers,
+  haulDistanceKm,
   planHaul,
   pointsAreNear,
+  rerouteUnavailableBuy,
+  rerouteUnsold,
   tradesForProfit,
   type HaulPlan,
+  type HaulRouteInput,
   type HaulStop,
 } from '../../lib/smartHauler'
 
@@ -42,6 +49,11 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   const [acceptedTrades, setAcceptedTrades] = useState<number | null>(null)
   const [route, setRoute] = useState<HaulPlan | null>(null)
   const [step, setStep] = useState(0)
+  const [outcome, setOutcome] = useState<'choose' | 'unavailable' | 'partial-buy' | 'partial-sell'>('choose')
+  const [picked, setPicked] = useState('')
+  const [partialScu, setPartialScu] = useState('')
+  const [routeNote, setRouteNote] = useState<string | null>(null)
+  const [skippedSellPoints, setSkippedSellPoints] = useState<string[]>([])
   const ship = getShip(shipId)
   const start = pointById(navMap, startId)
   const shipChoices = useMemo(() => {
@@ -51,11 +63,20 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   }, [shipQuery])
   const startChoices = useMemo(() => searchNavPoints(startQuery, navMap, 12), [startQuery])
 
+  function clearStopUi() {
+    setOutcome('choose')
+    setPicked('')
+    setPartialScu('')
+    setRouteNote(null)
+    setSkippedSellPoints([])
+  }
+
   function clearPlan() {
     setAcceptedTrades(null)
     setNeeded(null)
     setNotice(null)
     setRoute(null)
+    clearStopUi()
   }
 
   function chooseShip(id: string) {
@@ -94,6 +115,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
       }
       setRoute(plan)
       setStep(0)
+      clearStopUi()
       return
     }
     const result = tradesForProfit(shared)
@@ -110,6 +132,127 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
 
   const current = route?.stops[step]
   const headerCash = current?.cashBefore ?? 0
+  const routeInput: HaulRouteInput | null = route && ship && startId
+    ? {
+      stops: route.stops,
+      step,
+      cargoScu: ship.cargoScu || 0,
+      maxCrateScu: ship.maxCrateScu || 0,
+      trades: route.trades,
+      roundRobin,
+      startId,
+      buys: offers.buys,
+      sells: offers.sells,
+      near: (fromId, toId) => pointsAreNear(navMap, fromId, toId),
+      km: (fromId, toId) => haulDistanceKm(navMap, fromId, toId),
+    }
+    : null
+  const alternatives = current?.kind === 'buy' && routeInput
+    ? buysAtStop({
+      pointId: current.pointId,
+      cash: current.cashBefore,
+      cargoScu: routeInput.cargoScu,
+      maxCrateScu: routeInput.maxCrateScu,
+      buys: routeInput.buys,
+      sells: routeInput.sells,
+      near: routeInput.near,
+      excludeCommodity: current.commodity,
+    })
+    : []
+
+  function stayOnStop(plan: HaulPlan, note: string) {
+    setRoute(plan)
+    setOutcome('choose')
+    setPicked('')
+    setPartialScu('')
+    setRouteNote(note)
+  }
+
+  function advanceStop() {
+    setOutcome('choose')
+    setPicked('')
+    setPartialScu('')
+    setRouteNote(null)
+    setSkippedSellPoints([])
+    if (!route || step >= route.stops.length - 1) {
+      setRoute(null)
+      return
+    }
+    setStep(step + 1)
+  }
+
+  function confirmOtherBuy() {
+    if (!routeInput) return
+    const choice = alternatives.find((row) => row.commodity === picked)
+    if (!choice) {
+      setRouteNote('Choose a commodity from this location.')
+      return
+    }
+    const plan = rerouteUnavailableBuy(routeInput, choice)
+    if (!plan) {
+      setRouteNote('That commodity has nowhere to sell.')
+      return
+    }
+    stayOnStop(plan, `Buying ${choice.commodity} here instead. The rest of the route follows this cargo.`)
+  }
+
+  function confirmPartialBuy() {
+    if (!routeInput || !current) return
+    const amount = Math.round(Number(partialScu))
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setRouteNote('Enter how many SCU you were able to buy.')
+      return
+    }
+    if (amount >= current.scu) {
+      advanceStop()
+      return
+    }
+    const plan = applyPartialBuy(routeInput, amount)
+    if (!plan) {
+      setRouteNote('That amount does not fit the aUEC on hand.')
+      return
+    }
+    setRoute(plan)
+    setOutcome('choose')
+    setPicked('')
+    setPartialScu('')
+    setSkippedSellPoints([])
+    setRouteNote(`The sale is now ${amount} SCU.`)
+    setStep(step + 1)
+  }
+
+  function confirmNoneSold() {
+    if (!routeInput || !current) return
+    const plan = rerouteUnsold(routeInput, skippedSellPoints)
+    if (!plan) {
+      setRouteNote('No other terminal buys this cargo.')
+      return
+    }
+    const next = plan.stops[step]
+    setSkippedSellPoints((prev) => [...prev, current.pointId])
+    stayOnStop(plan, next ? `No demand there. Sell at ${next.place} instead, then buy the next cargo from that stop.` : 'No demand there.')
+  }
+
+  function confirmPartialSell() {
+    if (!routeInput || !current) return
+    const amount = Math.round(Number(partialScu))
+    if (!Number.isFinite(amount) || amount <= 0) {
+      setRouteNote('Enter how many SCU you were able to sell.')
+      return
+    }
+    if (amount >= current.scu) {
+      advanceStop()
+      return
+    }
+    const plan = applyPartialSell(routeInput, amount, skippedSellPoints)
+    if (!plan) {
+      setRouteNote('No other terminal buys the rest of this cargo.')
+      return
+    }
+    const next = plan.stops[step]
+    setSkippedSellPoints((prev) => [...prev, current.pointId])
+    stayOnStop(plan, next ? `Sell the remaining ${next.scu} SCU at ${next.place} before buying anything else.` : 'Sell the rest before the next buy.')
+  }
 
   return (
     <div className="space-y-4">
@@ -226,7 +369,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
           />
         </label>
       </div>
-      <p className="site-hint">A trade is one buy and one sell. Crates larger than the ship can carry are left out. Round-robin brings the last sale back to the start when you run more than one trade.</p>
+      <p className="site-hint">A trade is one buy and one sell. Crates larger than the ship can carry are left out. Round-robin brings the last sale back to the start when you run more than one trade. If a terminal is short on stock or will not buy, the buttons on that stop rebuild the rest of the route from what you actually got.</p>
       {ship && (ship.maxCrateScu || 0) > 0 && (
         <p className="text-sm text-white">This ship can carry {ship.cargoScu} SCU, in crates up to {ship.maxCrateScu} SCU.</p>
       )}
@@ -272,7 +415,10 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
         <AppModal
           title={current.kind === 'buy' ? 'Buy cargo' : 'Sell cargo'}
           subtitle={`On hand ${money(headerCash)}`}
-          onClose={() => setRoute(null)}
+          onClose={() => {
+            setRoute(null)
+            clearStopUi()
+          }}
           size="xl"
           zIndex={80}
         >
@@ -295,12 +441,94 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
                 <p>After this sale you should have {money(current.cashAfter)}.</p>
               </>
             )}
+            {routeNote && <p className="site-hint">{routeNote}</p>}
           </div>
-          <div className="mt-6 flex justify-end">
-            {step >= route.stops.length - 1 ? (
-              <button type="button" className="site-btn-primary px-4 py-2" onClick={() => setRoute(null)}>Finish</button>
+          {current.kind === 'buy' && outcome === 'unavailable' && (
+            <div className="mt-4 space-y-2">
+              <label className="block">
+                <span className="site-label">Buy something else here</span>
+                <select
+                  className="site-input mt-1 w-full px-3 py-2"
+                  value={picked}
+                  onChange={(event) => setPicked(event.target.value)}
+                >
+                  <option value="">Choose a commodity</option>
+                  {alternatives.map((choice) => (
+                    <option key={choice.commodity} value={choice.commodity}>
+                      {choice.commodity} · {choice.scu} SCU · {money(choice.cost)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {alternatives.length === 0 && <p className="site-hint">Nothing else here fits this ship and the aUEC on hand.</p>}
+            </div>
+          )}
+          {outcome === 'partial-buy' && current.kind === 'buy' && (
+            <label className="mt-4 block">
+              <span className="site-label">SCU you were able to buy</span>
+              <input
+                className="site-input mt-1 w-full px-3 py-2"
+                inputMode="numeric"
+                value={partialScu}
+                placeholder={`Less than ${current.scu}`}
+                onChange={(event) => setPartialScu(event.target.value.replace(/[^\d]/g, ''))}
+              />
+            </label>
+          )}
+          {outcome === 'partial-sell' && current.kind === 'sell' && (
+            <label className="mt-4 block">
+              <span className="site-label">SCU you were able to sell</span>
+              <input
+                className="site-input mt-1 w-full px-3 py-2"
+                inputMode="numeric"
+                value={partialScu}
+                placeholder={`Less than ${current.scu}`}
+                onChange={(event) => setPartialScu(event.target.value.replace(/[^\d]/g, ''))}
+              />
+            </label>
+          )}
+          <div className="mt-6 flex flex-wrap justify-end gap-2">
+            {outcome === 'unavailable' || outcome === 'partial-buy' || outcome === 'partial-sell' ? (
+              <>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('choose'); setRouteNote(null) }}>
+                  Back
+                </button>
+                <button
+                  type="button"
+                  className="site-btn-primary px-3 py-2 text-sm"
+                  onClick={() => {
+                    if (outcome === 'unavailable') confirmOtherBuy()
+                    else if (outcome === 'partial-buy') confirmPartialBuy()
+                    else confirmPartialSell()
+                  }}
+                >
+                  Next Stop
+                </button>
+              </>
+            ) : current.kind === 'buy' ? (
+              <>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('unavailable'); setPicked(''); setRouteNote(null) }}>
+                  Unavailable for purchase
+                </button>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('partial-buy'); setPartialScu(''); setRouteNote(null) }}>
+                  Partial purchase only
+                </button>
+                <button type="button" className="site-btn-primary px-3 py-2 text-sm" onClick={advanceStop}>
+                  Full purchase acquired
+                </button>
+              </>
             ) : (
-              <button type="button" className="site-btn-primary px-4 py-2" onClick={() => setStep((value) => value + 1)}>Next Stop</button>
+              <>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={confirmNoneSold}>
+                  None sold
+                </button>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('partial-sell'); setPartialScu(''); setRouteNote(null) }}>
+                  Partial sale
+                </button>
+                <button type="button" className="site-btn-primary px-3 py-2 text-sm" onClick={advanceStop}>
+                  {step >= route.stops.length - 1 ? 'Finish' : 'Full sale'}
+                </button>
+              </>
             )}
           </div>
         </AppModal>

@@ -91,6 +91,99 @@ assert.equal(near('a', loop.stops.at(-1).pointId), true)
 assert.notEqual(loop.stops.at(-1).pointId, 'c')
 assert.equal(two.stops.at(-1).pointId, 'c')
 
+function km(fromId, toId) {
+  const from = nav.points.find((entry) => entry.id === fromId)
+  const to = nav.points.find((entry) => entry.id === toId)
+  if (!from || !to || from.system !== to.system) return Number.POSITIVE_INFINITY
+  return Math.hypot(from.x - to.x, from.y - to.y, from.z - to.z) / 1000
+}
+
+const stockBuys = [...buys, { commodity: 'Other', pointId: 'a', place: 'A', price: 6, boxSizes: [1] }]
+const stockSells = [...sells, { commodity: 'Other', pointId: 'b', place: 'B', price: 12, boxSizes: [1] }]
+const routeInput = {
+  stops: two.stops,
+  step: 0,
+  cargoScu: 10,
+  maxCrateScu: 1,
+  trades: 2,
+  roundRobin: false,
+  startId: 'a',
+  buys: stockBuys,
+  sells: stockSells,
+  near,
+  km,
+}
+const alternatives = hauler.buysAtStop({
+  pointId: 'a',
+  cash: 50,
+  cargoScu: 10,
+  maxCrateScu: 1,
+  buys: stockBuys,
+  sells: stockSells,
+  near,
+  excludeCommodity: 'Cheap',
+})
+assert.equal(alternatives.some((row) => row.commodity === 'Cheap'), false)
+const other = alternatives.find((row) => row.commodity === 'Other')
+assert.ok(other)
+const swapped = hauler.rerouteUnavailableBuy(routeInput, other)
+assert.equal(swapped.stops[0].commodity, 'Other')
+assert.equal(swapped.stops[0].pointId, 'a')
+assert.equal(swapped.stops[0].scu, 8)
+assert.equal(swapped.stops[1].commodity, 'Other')
+assert.equal(swapped.stops[1].kind, 'sell')
+
+const partialBuy = hauler.applyPartialBuy({ ...routeInput, buys, sells, stops: two.stops }, 4)
+assert.equal(partialBuy.stops[0].scu, 4)
+assert.equal(partialBuy.stops[0].cashAfter, 30)
+assert.equal(partialBuy.stops[1].scu, 4)
+assert.equal(partialBuy.stops[1].cashBefore, 30)
+assert.equal(partialBuy.stops[1].cashAfter, 90)
+assert.equal(partialBuy.stops[2].commodity, 'Expensive')
+assert.equal(partialBuy.stops[2].scu, 4)
+assert.equal(partialBuy.stops[2].cashBefore, 90)
+
+assert.equal(hauler.nextSellLocation({
+  commodity: 'Cheap',
+  fromId: 'b',
+  buyPrice: 5,
+  sells,
+  avoidPointIds: ['b'],
+  km,
+}).pointId, 'a')
+assert.equal(hauler.nextSellLocation({
+  commodity: 'Cheap',
+  fromId: 'b',
+  buyPrice: 5,
+  sells: [
+    { commodity: 'Cheap', pointId: 'a', place: 'A', price: 3, boxSizes: [1] },
+    { commodity: 'Cheap', pointId: 'c', place: 'C', price: 15, boxSizes: [1] },
+  ],
+  avoidPointIds: ['b'],
+  km,
+}).pointId, 'c')
+
+const unsold = hauler.rerouteUnsold({ ...routeInput, step: 1, stops: two.stops, buys, sells }, [])
+assert.equal(unsold.stops[1].pointId, 'a')
+assert.equal(unsold.stops[1].scu, 10)
+assert.equal(unsold.stops[1].cashBefore, 0)
+assert.equal(unsold.stops[1].cashAfter, 80)
+assert.equal(unsold.stops[2].kind, 'buy')
+assert.equal(near('a', unsold.stops[2].pointId), true)
+
+const partialSell = hauler.applyPartialSell({ ...routeInput, step: 1, stops: two.stops, buys, sells }, 4, [])
+assert.equal(partialSell.stops[1].pointId, 'a')
+assert.equal(partialSell.stops[1].scu, 6)
+assert.equal(partialSell.stops[1].cashBefore, 60)
+assert.equal(partialSell.stops[1].cashAfter, 108)
+assert.equal(partialSell.stops[2].kind, 'buy')
+assert.equal(hauler.rerouteUnsold({
+  ...routeInput,
+  step: 1,
+  stops: two.stops,
+  sells: sells.filter((row) => row.pointId === 'b'),
+}, []), null)
+
 const labelFile = path.join('node_modules', '.cache', 'ship-hangar.mjs')
 await esbuild.build({
   entryPoints: [path.join('src', 'lib', 'shipHangar.ts')],
