@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import ShopCartPlanner from '../components/shop/ShopCartPlanner'
 import {
   readShopCart,
   removeShopCartLine,
@@ -34,6 +35,8 @@ export default function ShopCartRoute() {
           <Link to="/commodity-lookup" className="site-btn-primary mt-4 inline-flex px-3 py-1.5 text-sm">Open UEX Lookup</Link>
         </div>
       ) : (
+        <div className="space-y-4">
+        <ShopCartPlanner lines={lines} />
         <div className="site-card p-3">
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-white">Items</h2>
@@ -57,8 +60,9 @@ export default function ShopCartRoute() {
             ))}
           </ul>
           {unpriced && (
-            <p className="site-hint mt-3 text-xs">Lines without a shop are not included in the total. Open $$$ on the item in UEX Lookup and add it from a shop to lock a price.</p>
+            <p className="site-hint mt-3 text-xs">Lines without a shop are not included in the total. Add the item from a Buy row to lock that shop and its price.</p>
           )}
+        </div>
         </div>
       )}
     </FeaturePageLayout>
