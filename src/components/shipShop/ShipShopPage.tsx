@@ -66,6 +66,16 @@ import { getShipItem } from '../../lib/shipItemCatalog'
 import { defaultShipShopLoadouts, fetchFrakenCanSave, fetchShipShopFrakenFit, fetchShipShopLoadouts, readGuestShipShopStore, saveShipShopFrakenFit, saveShipShopLoadouts, shipShopStoreHasShip, clearGuestShipShopStore, writeGuestShipShopStore, type FrakenFit } from '../../lib/shipShopOps'
 import { isForSale, listingsFor, partListings, shipListings, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
+import SiteTooltip from '../SiteTooltip'
+import ShipHangarModal from '../shipHangar/ShipHangarModal'
+import {
+  HANGAR_SIGN_IN,
+  fetchShipHangar,
+  hangarCap,
+  nextHangarLabel,
+  saveShipHangar,
+  type HangarShip,
+} from '../../lib/shipHangar'
 
 const CHIP = 'px-3 py-1.5 text-sm font-medium rounded-lg site-btn-shimmer'
 const PIP_WRAP_LIMIT = 8
@@ -545,7 +555,7 @@ function PartPicker({
 }
 
 export default function ShipShopPage() {
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, profile } = useAuth()
   const userId = user?.id ?? null
   const navigate = useNavigate()
   const { clearDraft, addToDraft } = useOrderDraft()
@@ -569,6 +579,11 @@ export default function ShipShopPage() {
   const [frakenByShip, setFrakenByShip] = useState<Record<string, FrakenFit | null>>({})
   const [frakenCanSave, setFrakenCanSave] = useState(false)
   const [frakenSaving, setFrakenSaving] = useState(false)
+  const [hangarShips, setHangarShips] = useState<HangarShip[]>([])
+  const [hangarEntryId, setHangarEntryId] = useState<string | null>(null)
+  const [hangarOpen, setHangarOpen] = useState(false)
+  const [hangarNote, setHangarNote] = useState<string | null>(null)
+  const [hangarBusy, setHangarBusy] = useState(false)
 
   useEffect(() => {
     if (!pickerPortId) return
@@ -655,6 +670,25 @@ export default function ShipShopPage() {
     }
   }, [userId])
 
+  useEffect(() => {
+    if (!userId) {
+      setHangarShips([])
+      setHangarEntryId(null)
+      return
+    }
+    let cancelled = false
+    fetchShipHangar()
+      .then((rows) => {
+        if (!cancelled) setHangarShips(rows)
+      })
+      .catch(() => {
+        if (!cancelled) setHangarShips([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
   const frakenLookupId = viewingFraken
     ? (frakenDraft?.shipId ?? null)
     : (store.builds[buildIndex]?.shipId ?? null)
@@ -698,6 +732,9 @@ export default function ShipShopPage() {
   const remaining = Math.max(0, generated - powerUsed(columns, power))
   const snapshot = snapshotForBuild(ship, build.ports, build.power)
   const shopCart = store.cart || []
+  const signedIn = Boolean(user)
+  const hangarFull = hangarShips.length >= hangarCap(Boolean(profile?.rsi_handle_verified))
+  const hangarLinked = Boolean(hangarEntryId && hangarShips.some((entry) => entry.id === hangarEntryId))
 
   function commitBuild(next: ShipBuild): ShipBuild {
     const saved: ShipBuild = { shipId: next.shipId, ports: next.ports }
@@ -739,6 +776,7 @@ export default function ShipShopPage() {
     setShipQuery('')
     setPickerPortId(null)
     setCopyWeapon(null)
+    setHangarEntryId(null)
   }
 
   function publishFrakenFit() {
@@ -760,7 +798,10 @@ export default function ShipShopPage() {
       builds[index] = emptyBuild()
       return prev.cart?.length ? { version: 1, builds, cart: prev.cart } : { version: 1, builds }
     })
-    if (index === buildIndex) setShipQuery('')
+    if (index === buildIndex) {
+      setShipQuery('')
+      setHangarEntryId(null)
+    }
   }
 
   function chooseShip(shipId: string) {
@@ -769,6 +810,56 @@ export default function ShipShopPage() {
     if (!nextShip) return
     updateBuild({ shipId: nextShip.id, ports: stockPorts(nextShip) })
     setShipQuery('')
+    setHangarEntryId(null)
+  }
+
+  function applyHangarShip(entry: HangarShip) {
+    if (viewingFraken) return
+    const nextShip = getShip(entry.shipId)
+    if (!nextShip) return
+    updateBuild({ shipId: entry.shipId, ports: entry.build.ports, power: entry.build.power })
+    setHangarShips((prev) => (prev.some((ship) => ship.id === entry.id) ? prev.map((ship) => (ship.id === entry.id ? entry : ship)) : [...prev, entry]))
+    setHangarEntryId(entry.id)
+    setShipQuery('')
+    setHangarOpen(false)
+  }
+
+  async function addOrSaveHangar() {
+    if (!user || viewingFraken || !ship || !build?.shipId) return
+    setHangarBusy(true)
+    setHangarNote(null)
+    try {
+      const current = await fetchShipHangar()
+      const snapshot = build.power ? { ports: build.ports, power: build.power } : { ports: build.ports }
+      const linked = hangarEntryId ? current.find((entry) => entry.id === hangarEntryId) : undefined
+      if (linked && hangarEntryId) {
+        const next = current.map((entry) => (entry.id === hangarEntryId ? { ...entry, shipId: ship.id, build: snapshot } : entry))
+        await saveShipHangar(next)
+        setHangarShips(next)
+      } else if (current.length >= hangarCap(Boolean(profile?.rsi_handle_verified))) {
+        setHangarShips(current)
+        setHangarEntryId(null)
+        setHangarNote('The hangar is full.')
+      } else {
+        const id = crypto.randomUUID()
+        const next = [
+          ...current,
+          {
+            id,
+            shipId: ship.id,
+            label: nextHangarLabel(current, ship.id, ship.displayName),
+            build: snapshot,
+          },
+        ]
+        await saveShipHangar(next)
+        setHangarShips(next)
+        setHangarEntryId(id)
+      }
+    } catch (err) {
+      setHangarNote(err instanceof Error ? err.message : 'The hangar did not save.')
+    } finally {
+      setHangarBusy(false)
+    }
   }
 
   function setFitted(port: ShipPort, part: FittedPart | null) {
@@ -786,8 +877,9 @@ export default function ShipShopPage() {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
           {saveNote && <p className="site-hint text-sm">{saveNote}</p>}
-          <div className="relative z-30 w-1/2">
-            <label className="block">
+          {hangarNote && <p className="site-hint text-sm">{hangarNote}</p>}
+          <div className="relative z-30 flex w-full items-end gap-2 xl:w-1/2">
+            <label className="block min-w-0 flex-1">
               <span className="site-label">Ship</span>
               <input
                 className="site-input w-full px-3 py-2 mt-1"
@@ -797,8 +889,19 @@ export default function ShipShopPage() {
                 onChange={(event) => setShipQuery(event.target.value)}
               />
             </label>
+            {!signedIn ? (
+              <SiteTooltip content={HANGAR_SIGN_IN} side="bottom">
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" disabled>
+                  My Hangar
+                </button>
+              </SiteTooltip>
+            ) : (
+              <button type="button" className="site-btn-secondary px-3 py-2 text-sm" disabled={viewingFraken} onClick={() => setHangarOpen(true)}>
+                My Hangar
+              </button>
+            )}
             {shipQuery && !viewingFraken && (
-              <div className="site-dropdown-list max-h-72 overflow-y-auto">
+              <div className="site-dropdown-list absolute left-0 right-0 top-full z-30 max-h-72 overflow-y-auto">
                 {shipChoices.map((entry) => (
                   <button key={entry.id} type="button" className="site-dropdown-item w-full text-left" onClick={() => chooseShip(entry.id)}>
                     {entry.displayName}
@@ -810,6 +913,22 @@ export default function ShipShopPage() {
           {ship && (
             <div className="flex flex-wrap items-center gap-2 text-sm text-slate-300">
               <span>{ship.manufacturer} · {ship.role || ship.career || 'Ship'}</span>
+              {!signedIn ? (
+                <SiteTooltip content={HANGAR_SIGN_IN} side="bottom">
+                  <button type="button" className={`${CHIP} site-btn-secondary`} disabled>
+                    Add to Hangar
+                  </button>
+                </SiteTooltip>
+              ) : (
+                <button
+                  type="button"
+                  className={`${CHIP} site-btn-primary`}
+                  disabled={viewingFraken || hangarBusy || (!hangarLinked && hangarFull)}
+                  onClick={() => void addOrSaveHangar()}
+                >
+                  {hangarLinked ? 'Save to Hangar' : 'Add to Hangar'}
+                </button>
+              )}
               <ShopBuyButtons
                 listings={shipListings(ship.id)}
                 showBuild
@@ -857,6 +976,7 @@ export default function ShipShopPage() {
                     onClick={() => {
                       leaveFraken()
                       setBuildIndex(index)
+                      setHangarEntryId(null)
                     }}
                   >
                     {label}
@@ -1285,6 +1405,14 @@ export default function ShipShopPage() {
             setShopModal(null)
             void navigate({ to: '/orders' })
           }}
+        />
+      )}
+      {hangarOpen && signedIn && (
+        <ShipHangarModal
+          mode="select"
+          rsiVerified={Boolean(profile?.rsi_handle_verified)}
+          onClose={() => setHangarOpen(false)}
+          onSelect={applyHangarShip}
         />
       )}
     </div>

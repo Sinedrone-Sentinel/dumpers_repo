@@ -3,6 +3,7 @@ import PersonalStockAddPanel from '../components/PersonalStockAddPanel'
 import ResourceStockListView from '../components/ResourceStockListView'
 import CanCraftTab from '../components/resourceTracker/CanCraftTab'
 import BpWishlistTab from '../components/resourceTracker/BpWishlistTab'
+import SmartHaulerTab from '../components/resourceTracker/SmartHaulerTab'
 import SiteTooltip from '../components/SiteTooltip'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import UexLookupButton from '../components/shop/UexLookupButton'
@@ -54,7 +55,7 @@ import {
 } from '../lib/resourceQuantity'
 import type { CraftPlanReduction, CraftStockCardLite } from '../lib/craftFromStock'
 
-type ResourceTrackerTab = InventoryScope | 'can_craft' | 'friends' | 'wishlist'
+type ResourceTrackerTab = InventoryScope | 'can_craft' | 'friends' | 'wishlist' | 'smart_hauler'
 
 type FriendStockCard = {
   resource_key: string
@@ -92,7 +93,7 @@ export default function ResourceTrackerRoute() {
   const [friendError, setFriendError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!signedIn && (activeTab === 'site' || activeTab === 'friends' || activeTab === 'wishlist')) {
+    if (!signedIn && (activeTab === 'site' || activeTab === 'friends' || activeTab === 'wishlist' || activeTab === 'smart_hauler')) {
       setActiveTab('personal')
     }
   }, [signedIn, activeTab])
@@ -116,7 +117,9 @@ export default function ResourceTrackerRoute() {
             ? 'friends_resources'
             : activeTab === 'wishlist'
               ? 'bp_wishlist'
-              : 'my_resources'
+              : activeTab === 'smart_hauler'
+                ? 'smart_hauler'
+                : 'my_resources'
     )
   }, [activeTab])
 
@@ -911,9 +914,22 @@ export default function ResourceTrackerRoute() {
             </button>
           </SiteTooltip>
         )}
+        {signedIn && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('smart_hauler')}
+            className={`px-4 py-2 text-sm font-medium rounded-lg site-btn-shimmer ${
+              activeTab === 'smart_hauler' ? 'site-filter-selected-orange' : 'site-filter-idle'
+            }`}
+          >
+            Smart Hauler
+          </button>
+        )}
       </div>
 
-      {isCanCraftTab ? (
+      {activeTab === 'smart_hauler' && signedIn ? (
+        <SmartHaulerTab rsiVerified={rsiVerified} />
+      ) : isCanCraftTab ? (
         <CanCraftTab
           hasTrackedStock={canCraftHasTrackedStock}
           stockCardsForCraft={craftStockCards}

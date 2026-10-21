@@ -6,6 +6,7 @@ import { DUMPER_APPS_DISPLAY_NAME } from '../../config/bpDumper'
 import RsiVerifiedBadge from '../RsiVerifiedBadge'
 import { fetchMySpectrum } from '../../lib/spectrum'
 import OfficerToolsModal from '../OfficerToolsModal'
+import ShipHangarModal from '../shipHangar/ShipHangarModal'
 
 interface AppUserMenuProps {
   displayName: string
@@ -63,6 +64,7 @@ export default function AppUserMenu({
 }: AppUserMenuProps) {
   const [open, setOpen] = useState(false)
   const [showOfficerTools, setShowOfficerTools] = useState(false)
+  const [showHangar, setShowHangar] = useState(false)
   const [citizenIdLinked, setCitizenIdLinked] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const routerLocation = useRouterState({ select: (s) => s.location })
@@ -185,6 +187,16 @@ export default function AppUserMenu({
                   className={menuItemClass}
                 >
                   Settings
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    close()
+                    setShowHangar(true)
+                  }}
+                  className={menuItemClass}
+                >
+                  Ship Hangar
                 </button>
                 <button
                   type="button"
@@ -347,6 +359,13 @@ export default function AppUserMenu({
         <OfficerToolsModal
           isSuperAdmin={isSuperAdmin}
           onClose={() => setShowOfficerTools(false)}
+        />
+      )}
+      {showHangar && (
+        <ShipHangarModal
+          mode="manage"
+          rsiVerified={Boolean(profile?.rsi_handle_verified)}
+          onClose={() => setShowHangar(false)}
         />
       )}
     </>

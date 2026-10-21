@@ -27,6 +27,7 @@ const INDEX_DIRS = [
   'entities/scitem/ships/lifesupport',
   'entities/scitem/ships/quantumenforcementdevice',
   'entities/scitem/ships/module',
+  'entities/scitem/ships/cargogrid',
 ]
 
 function readJson(path) {
@@ -521,6 +522,101 @@ function copyPortRules(row, port) {
   return accepts
 }
 
+const CARGO_CRATES = [
+  { scu: 1, cells: [1, 1, 1] },
+  { scu: 2, cells: [1, 1, 2] },
+  { scu: 4, cells: [1, 2, 2] },
+  { scu: 8, cells: [2, 2, 2] },
+  { scu: 16, cells: [2, 2, 4] },
+  { scu: 32, cells: [2, 4, 4] },
+]
+
+function crateFits(gridCells, crateCells) {
+  const grid = [...gridCells].sort((a, b) => b - a)
+  const crate = [...crateCells].sort((a, b) => b - a)
+  return crate.every((size, index) => size <= grid[index])
+}
+
+function isFreightGridName(name) {
+  const key = String(name || '').toLowerCase()
+  if (!key.includes('cargo')) return false
+  return !/(walkway|ladder|access|fake)/.test(key)
+}
+
+function gridMetrics(container) {
+  const value = container?._RecordValue_ || container
+  const dims = value?.interiorDimensions
+  const edge = Number(value?.inventoryType?.minPermittedItemSize?.x) || 1.25
+  if (!dims || edge <= 0) return null
+  const cells = ['x', 'y', 'z'].map((axis) => Math.round((Number(dims[axis]) || 0) / edge))
+  if (cells.some((count) => count <= 0)) return null
+  let maxCrate = 0
+  for (const crate of CARGO_CRATES) {
+    if (crateFits(cells, crate.cells)) maxCrate = crate.scu
+  }
+  return {
+    scu: cells.reduce((total, count) => total * count, 1),
+    maxCrate,
+  }
+}
+
+/** Freight grids on a ship loadout. Walkways, ladders, access, and fake grids are not cargo. */
+function cargoLimitsFromEntries(entries, loadKey, extractedRoot) {
+  let cargoScu = 0
+  let maxCrateScu = 0
+  for (const entry of entries) {
+    const entityKey = entityKeyFromEntry(entry.entry)
+    if (!isFreightGridName(entityKey) && !isFreightGridName(entry.name)) continue
+    const loaded = loadKey(entityKey)
+    if (!loaded?.json) continue
+    const ref = firstComponent(loaded.json, 'SCItemInventoryContainerComponentParams')?.containerParams
+    const containerPath = typeof ref === 'string' ? refPath(ref, loaded.filePath, extractedRoot) : null
+    const metrics = gridMetrics(containerPath ? readJson(containerPath) : null)
+    if (!metrics || metrics.scu <= 0) continue
+    cargoScu += metrics.scu
+    if (metrics.maxCrate > maxCrateScu) maxCrateScu = metrics.maxCrate
+  }
+  return { cargoScu, maxCrateScu }
+}
+
+/** Fill cargoScu and maxCrateScu on ships already parsed from the flyable catalog. */
+export function attachShipCargo(extractedRoot, ships) {
+  const records = join(extractedRoot, 'libs/foundry/records')
+  const byKey = new Map()
+  const remember = (filePath) => {
+    const json = readJson(filePath)
+    if (!json?._RecordValue_) return
+    const recordName = String(json._RecordName_ || '').replace(/^EntityClassDefinition\./i, '')
+    for (const key of [basename(filePath, '.json'), recordName]) {
+      if (key) byKey.set(key.toLowerCase(), filePath)
+    }
+  }
+  walkFiles(join(records, 'entities/scitem/ships/cargogrid')).forEach(remember)
+  const loadKey = (key) => {
+    const filePath = byKey.get(String(key || '').toLowerCase())
+    return filePath ? { filePath, json: readJson(filePath) } : null
+  }
+  const shipFiles = new Map()
+  for (const filePath of walkFiles(join(records, 'entities/spaceships'))) {
+    shipFiles.set(basename(filePath, '.json').toLowerCase(), filePath)
+  }
+  for (const ship of ships) {
+    const filePath = shipFiles.get(String(ship.id || '').toLowerCase())
+    if (!filePath) {
+      ship.cargoScu = 0
+      ship.maxCrateScu = 0
+      continue
+    }
+    const json = readJson(filePath)
+    const entries = []
+    walkEntries(firstComponent(json, 'SEntityComponentDefaultLoadoutParams')?.loadout, '', entries)
+    const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot)
+    ship.cargoScu = cargo.cargoScu
+    ship.maxCrateScu = cargo.maxCrateScu
+  }
+  return ships
+}
+
 /** One SCU is a 1.25 m cube. Grid volume is that many boxes. */
 function cargoScu(container) {
   const value = container?._RecordValue_ || container
@@ -934,6 +1030,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (shaped) ports.push(shaped)
     }
 
+    const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot)
     const ship = {
       id,
       uuid: typeof json._RecordId_ === 'string' ? json._RecordId_ : null,
@@ -949,6 +1046,8 @@ export function parseShipShop({ extractedRoot, localization }) {
       decoy,
       damageReduction: damageReduction(vehicle),
       weaponPowerPool: weaponPowerPool(json),
+      cargoScu: cargo.cargoScu,
+      maxCrateScu: cargo.maxCrateScu,
       ...flight,
       ports,
     }
