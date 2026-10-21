@@ -13453,8 +13453,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 64,
+      "maxCrateScu": 32
     },
     {
       "id": "aegs_vanguard_harbinger",
@@ -31308,8 +31308,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 32,
+      "maxCrateScu": 32
     },
     {
       "id": "argo_mole_btala",
@@ -31626,8 +31626,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 32,
+      "maxCrateScu": 32
     },
     {
       "id": "argo_moth",
@@ -32069,8 +32069,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 32,
+      "maxCrateScu": 32
     },
     {
       "id": "argo_mpuv",
@@ -39680,8 +39680,8 @@
           "defaultEntityClass": "klwe_laserrepeater_s4"
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 8,
+      "maxCrateScu": 2
     },
     {
       "id": "crus_starlifter_m2",
@@ -54258,8 +54258,8 @@
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 32,
+      "maxCrateScu": 16
     },
     {
       "id": "vncl_stinger",
@@ -65769,8 +65769,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 4,
+      "maxCrateScu": 4
     },
     {
       "id": "misc_freelancer",
@@ -82248,8 +82248,8 @@
           "defaultEntityClass": "misl_s01_em_behr_pioneer"
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "orig_x1",
@@ -84341,8 +84341,8 @@
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 2,
+      "maxCrateScu": 1
     },
     {
       "id": "rsi_constellation_andromeda",
@@ -85455,8 +85455,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 96,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_constellation_aquila",
@@ -86184,8 +86184,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 96,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_constellation_phoenix",
@@ -86982,8 +86982,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 80,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_constellation_phoenix_emerald",
@@ -87780,8 +87780,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 80,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_constellation_taurus",
@@ -88508,8 +88508,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 6,
-      "maxCrateScu": 4
+      "cargoScu": 174,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_constellation_taurus_military",
@@ -89236,8 +89236,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 6,
-      "maxCrateScu": 4
+      "cargoScu": 174,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_constellation_mk5_centaurus",
@@ -90140,8 +90140,8 @@
           "defaultEntityClass": "klwe_laserrepeater_s3"
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 240,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_hermes",
@@ -92563,8 +92563,8 @@
           "locked": true
         }
       ],
-      "cargoScu": 0,
-      "maxCrateScu": 0
+      "cargoScu": 96,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_polaris",

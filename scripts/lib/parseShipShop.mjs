@@ -560,22 +560,40 @@ function gridMetrics(container) {
   }
 }
 
-/** Freight grids on a ship loadout. Walkways, ladders, access, and fake grids are not cargo. */
-function cargoLimitsFromEntries(entries, loadKey, extractedRoot) {
+/** Freight grids on a ship loadout. A grid fitted to a cargo door or bay is counted too. */
+function cargoLimitsFromEntries(entries, loadGrid, extractedRoot, fromFile) {
   let cargoScu = 0
   let maxCrateScu = 0
-  for (const entry of entries) {
-    const entityKey = entityKeyFromEntry(entry.entry)
-    if (!isFreightGridName(entityKey) && !isFreightGridName(entry.name)) continue
-    const loaded = loadKey(entityKey)
-    if (!loaded?.json) continue
-    const ref = firstComponent(loaded.json, 'SCItemInventoryContainerComponentParams')?.containerParams
-    const containerPath = typeof ref === 'string' ? refPath(ref, loaded.filePath, extractedRoot) : null
-    const metrics = gridMetrics(containerPath ? readJson(containerPath) : null)
-    if (!metrics || metrics.scu <= 0) continue
-    cargoScu += metrics.scu
-    if (metrics.maxCrate > maxCrateScu) maxCrateScu = metrics.maxCrate
+
+  function addEntry(entry, filePath, stack) {
+    const entityKey = entityKeyFromEntry(entry)
+    if (isFreightGridName(entityKey) || isFreightGridName(entry?.itemPortName)) {
+      const loaded = loadGrid(entityKey)
+      if (loaded?.json) {
+        const ref = firstComponent(loaded.json, 'SCItemInventoryContainerComponentParams')?.containerParams
+        const containerPath = typeof ref === 'string' ? refPath(ref, loaded.filePath, extractedRoot) : null
+        const metrics = gridMetrics(containerPath ? readJson(containerPath) : null)
+        if (metrics?.scu > 0) {
+          cargoScu += metrics.scu
+          if (metrics.maxCrate > maxCrateScu) maxCrateScu = metrics.maxCrate
+        }
+      }
+    }
+    const ownLoadout = entry?.loadout?.entries
+    if (Array.isArray(ownLoadout) && ownLoadout.length > 0) return
+    const ref = entry?.entityClassReference
+    const child = typeof ref === 'string' ? refPath(ref, filePath, extractedRoot) : null
+    if (!child || stack.has(child)) return
+    const key = `${entry?.itemPortName || ''} ${entityKey}`.toLowerCase()
+    if (!/cargo|grid|bay|lift|module|hold/.test(key)) return
+    const nested = []
+    walkEntries(firstComponent(readJson(child), 'SEntityComponentDefaultLoadoutParams')?.loadout, '', nested)
+    const next = new Set(stack)
+    next.add(child)
+    for (const row of nested) addEntry(row.entry, child, next)
   }
+
+  for (const entry of entries) addEntry(entry.entry, fromFile, new Set(fromFile ? [fromFile] : []))
   return { cargoScu, maxCrateScu }
 }
 
@@ -610,7 +628,7 @@ export function attachShipCargo(extractedRoot, ships) {
     const json = readJson(filePath)
     const entries = []
     walkEntries(firstComponent(json, 'SEntityComponentDefaultLoadoutParams')?.loadout, '', entries)
-    const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot)
+    const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot, filePath)
     ship.cargoScu = cargo.cargoScu
     ship.maxCrateScu = cargo.maxCrateScu
   }
@@ -1030,7 +1048,7 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (shaped) ports.push(shaped)
     }
 
-    const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot)
+    const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot, filePath)
     const ship = {
       id,
       uuid: typeof json._RecordId_ === 'string' ? json._RecordId_ : null,

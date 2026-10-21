@@ -57,9 +57,13 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   const ship = getShip(shipId)
   const start = pointById(navMap, startId)
   const shipChoices = useMemo(() => {
-    const needle = shipQuery.trim().toLowerCase()
+    const needle = shipQuery.trim().toLowerCase().replace(/\bmark\b/g, 'mk').replace(/\bmk\s*v\b/g, 'mk5').replace(/\s+/g, '')
     if (!needle) return []
-    return SHIPS.filter((entry) => (entry.cargoScu || 0) > 0 && `${entry.displayName} ${entry.manufacturer}`.toLowerCase().includes(needle)).slice(0, 40)
+    return SHIPS.filter((entry) => {
+      if ((entry.cargoScu || 0) <= 0) return false
+      const hay = `${entry.displayName} ${entry.manufacturer} ${entry.id}`.toLowerCase().replace(/\bmark\b/g, 'mk').replace(/\bmk\s*v\b/g, 'mk5').replace(/\s+/g, '')
+      return hay.includes(needle)
+    }).slice(0, 40)
   }, [shipQuery])
   const startChoices = useMemo(() => searchNavPoints(startQuery, navMap, 12), [startQuery])
 
@@ -274,7 +278,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
             My Hangar
           </button>
           {shipQuery.trim() && (
-            <div className="site-dropdown-list max-h-60 overflow-y-auto">
+            <div className="site-dropdown-list left-0 right-0 top-full z-40 max-h-60 overflow-y-auto">
               {shipChoices.length === 0 ? (
                 <p className="site-hint px-3 py-2">No cargo ship matches.</p>
               ) : shipChoices.map((entry) => (
@@ -298,7 +302,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
             }}
           />
           {startQuery.trim() && (
-            <div className="site-dropdown-list max-h-60 overflow-y-auto">
+            <div className="site-dropdown-list left-0 right-0 top-full z-40 max-h-60 overflow-y-auto">
               {startChoices.length === 0 ? (
                 <p className="site-hint px-3 py-2">No matching location.</p>
               ) : startChoices.map((hit) => (
