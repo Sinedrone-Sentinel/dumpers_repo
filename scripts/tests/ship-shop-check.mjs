@@ -247,6 +247,31 @@ await esbuild.build({
 })
 const shop = await import(`${pathToFileURL(path.resolve(outfile)).href}?t=${Date.now()}`)
 
+const liftedCart = shop.parseShipShopStore({
+  version: 1,
+  builds: [
+    { shipId: 'aegs_avenger_stalker', ports: {}, cart: [{ id: 'apar_ballisticgatling_s4', kind: 'part', qty: 2 }] },
+    { shipId: 'aegs_avenger_stalker', ports: {}, cart: [{ id: 'apar_ballisticgatling_s4', kind: 'part', qty: 1 }] },
+    null,
+    null,
+  ],
+})
+assert.equal(liftedCart.builds[0].cart, undefined, 'a saved build cart moves off the build')
+assert.equal(liftedCart.cart.length, 1)
+assert.equal(liftedCart.cart[0].qty, 1, 'a later build cart replaces the same line')
+const sharedCart = shop.parseShipShopStore({
+  version: 1,
+  cart: [{ id: 'aegs_avenger_stalker', kind: 'ship', qty: 1 }],
+  builds: [
+    { shipId: 'aegs_avenger_stalker', ports: {}, cart: [{ id: 'apar_ballisticgatling_s4', kind: 'part', qty: 2 }] },
+    null,
+    null,
+    null,
+  ],
+})
+assert.equal(sharedCart.cart.length, 1)
+assert.equal(sharedCart.cart[0].kind, 'ship', 'a shop cart stays put when an old build cart is also stored')
+
 const idrisShip = shop.getShip('aegs_idris_m')
 const noseParts = shop.partsForPort(idrisNose, idrisShip).map((item) => item.entityClass)
 assert.ok(noseParts.includes('klwe_massdriver_s10'), 'Idris nose lists the railgun')

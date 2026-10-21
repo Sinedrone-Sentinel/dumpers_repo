@@ -73,6 +73,10 @@ export function removeShopCartLine(id: string, shop: string | null) {
   writeShopCart(readShopCart().filter((line) => !(line.id === id && line.shop === shop)))
 }
 
+export function clearShopCart() {
+  writeShopCart([])
+}
+
 export function shopCartTotal(lines: ShopCartLine[]): number {
   return lines.reduce((sum, line) => sum + (line.price && line.price > 0 ? line.price * line.qty : 0), 0)
 }

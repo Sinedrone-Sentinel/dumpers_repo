@@ -12,6 +12,18 @@ function placeName(loc: TradeLocation): string {
   return loc.label || terminalPlace(loc.terminal)
 }
 
+/** The shop name shown on a cart line. Older lines may still store the raw UEX terminal name. */
+export function shopCartShopLabel(line: Pick<ShopCartLine, 'id' | 'shop' | 'system'>): string | null {
+  if (!line.shop) return null
+  const item = uexItemById(line.id)
+  if (!item) return line.shop
+  for (const loc of item.buyAt) {
+    if (line.system && loc.terminal.system && loc.terminal.system !== line.system) continue
+    if (loc.terminal.name === line.shop || placeName(loc) === line.shop) return placeName(loc)
+  }
+  return line.shop
+}
+
 function placeOf(loc: TradeLocation): ShopPlace {
   return loc.terminal
 }
@@ -29,7 +41,7 @@ export function offersForShopLine(line: ShopCartLine): Array<ShopRouteOffer & { 
   for (const loc of item.buyAt) {
     const shop = placeName(loc)
     if (pinned) {
-      if (shop !== line.shop) continue
+      if (shop !== line.shop && loc.terminal.name !== line.shop) continue
       if (line.system && (loc.terminal.system || null) !== line.system) continue
     }
     const unit = loc.buyPricePerScu

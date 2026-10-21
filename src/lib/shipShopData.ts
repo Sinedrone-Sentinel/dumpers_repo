@@ -89,12 +89,13 @@ export interface ShipBuild {
   shipId: string | null
   ports: Record<string, FittedPart>
   power?: Record<string, number>
-  cart?: ShopCartLine[]
 }
 
 export interface ShipShopStore {
   version: 1
   builds: ShipBuild[]
+  /** One cart for the shop. Switching builds does not replace it. */
+  cart?: ShopCartLine[]
 }
 
 export interface CraftBlueprint extends BlueprintForEffectiveStats {
@@ -1225,19 +1226,36 @@ function normalizeBuild(raw: unknown): ShipBuild {
       }
     }
   }
-  const cart = normalizeCart(record.cart)
-  return cart ? { shipId, ports, power: normalizePower(record.power), cart } : { shipId, ports, power: normalizePower(record.power) }
+  return { shipId, ports, power: normalizePower(record.power) }
+}
+
+/** Later lines with the same key replace earlier ones. Quantities are not added. */
+function adoptCart(cart: ShopCartLine[], line: ShopCartLine): ShopCartLine[] {
+  const key = cartLineKey(line)
+  const index = cart.findIndex((entry) => cartLineKey(entry) === key)
+  if (index < 0) return [...cart, line]
+  const next = cart.slice()
+  next[index] = line
+  return next
 }
 
 export function parseShipShopStore(raw: unknown): ShipShopStore {
   const empty = emptyShipShopStore()
   if (!raw || typeof raw !== 'object') return empty
-  const builds = (raw as { builds?: unknown }).builds
-  if (!Array.isArray(builds)) return empty
-  return {
-    version: 1,
-    builds: Array.from({ length: SHIP_SHOP_BUILD_COUNT }, (_, index) => normalizeBuild(builds[index])),
+  const record = raw as { builds?: unknown; cart?: unknown }
+  if (!Array.isArray(record.builds)) return empty
+  const builds = Array.from({ length: SHIP_SHOP_BUILD_COUNT }, (_, index) => normalizeBuild(record.builds[index]))
+  const top = normalizeCart(record.cart)
+  let lifted: ShopCartLine[] = []
+  if (!top) {
+    for (const row of record.builds) {
+      const lines = normalizeCart(row && typeof row === 'object' ? (row as { cart?: unknown }).cart : undefined)
+      if (!lines) continue
+      for (const line of lines) lifted = adoptCart(lifted, line)
+    }
   }
+  const cart = top || (lifted.length > 0 ? lifted : undefined)
+  return cart ? { version: 1, builds, cart } : { version: 1, builds }
 }
 
 export function defaultCraftQualities(entityClass: string): Record<number, number> | undefined {

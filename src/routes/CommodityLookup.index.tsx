@@ -174,7 +174,7 @@ function ItemDetail({ item }: { item: UexCatalogItem }) {
       <CommodityTradePanels
         result={result}
         emphasis="buy"
-        renderBuyActions={(loc) => <UexItemActions item={item} place={loc} />}
+        renderBuyActions={(loc) => <UexItemActions item={item} place={loc} showWhere={false} />}
       />
     </div>
   )

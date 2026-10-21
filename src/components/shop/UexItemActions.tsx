@@ -16,21 +16,23 @@ function CartMark() {
   )
 }
 
-export function UexShopIconPair({ onWhere, onAdd }: { onWhere: () => void; onAdd: () => void }) {
+export function UexShopIconPair({ onWhere, onAdd, showWhere = true }: { onWhere: () => void; onAdd: () => void; showWhere?: boolean }) {
   return (
     <span className="inline-flex items-center gap-1">
-      <button
-        type="button"
-        className={`${ICON} text-xs font-bold text-red-400`}
-        title="Where to buy"
-        aria-label="Where to buy"
-        onClick={(event) => {
-          event.stopPropagation()
-          onWhere()
-        }}
-      >
-        $$$
-      </button>
+      {showWhere && (
+        <button
+          type="button"
+          className={`${ICON} text-xs font-bold text-red-400`}
+          title="Where to buy"
+          aria-label="Where to buy"
+          onClick={(event) => {
+            event.stopPropagation()
+            onWhere()
+          }}
+        >
+          $$$
+        </button>
+      )}
       <button
         type="button"
         className={`${ICON} text-green-400`}
@@ -125,16 +127,19 @@ function QtyModal({
 export function UexItemActions({
   item,
   place,
+  showWhere = true,
 }: {
   item: UexCatalogItem
   place?: TradeLocation | null
+  /** UEX Lookup already lists every seller, so that page hides $$$. */
+  showWhere?: boolean
 }) {
   const [where, setWhere] = useState(false)
   const [qtyOpen, setQtyOpen] = useState(false)
   return (
     <>
-      <UexShopIconPair onWhere={() => setWhere(true)} onAdd={() => setQtyOpen(true)} />
-      {where && <PlacesModal item={item} onClose={() => setWhere(false)} />}
+      <UexShopIconPair showWhere={showWhere} onWhere={() => setWhere(true)} onAdd={() => setQtyOpen(true)} />
+      {showWhere && where && <PlacesModal item={item} onClose={() => setWhere(false)} />}
       {qtyOpen && (
         <QtyModal
           name={item.name}
