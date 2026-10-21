@@ -9237,7 +9237,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -12899,7 +12900,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left_nose/hardpoint_class_2",
@@ -12909,7 +12911,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "amrs_lasercannon_s3"
+          "defaultEntityClass": "amrs_lasercannon_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right_nose",
@@ -12919,7 +12922,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right_nose/hardpoint_class_2",
@@ -12929,7 +12933,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "amrs_lasercannon_s3"
+          "defaultEntityClass": "amrs_lasercannon_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left_wing",
@@ -20114,8 +20119,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_class_4_center/turret_right",
@@ -20125,8 +20129,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_class_3_left_bay_door",
@@ -22452,7 +22455,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "anvl_hornet_f7c_nose_turret"
+          "defaultEntityClass": "anvl_hornet_f7c_nose_turret",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_nose/hardpoint_class_1_left",
@@ -22462,7 +22466,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_nose/hardpoint_class_1_right",
@@ -22472,7 +22477,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_left",
@@ -22482,7 +22488,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_left/hardpoint_class_2",
@@ -22492,7 +22499,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "gats_ballisticgatling_s3"
+          "defaultEntityClass": "gats_ballisticgatling_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_right",
@@ -22502,7 +22510,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_right/hardpoint_class_2",
@@ -22512,7 +22521,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "gats_ballisticgatling_s3"
+          "defaultEntityClass": "gats_ballisticgatling_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_center",
@@ -22955,8 +22965,7 @@
               "type": "Module",
               "subtypes": []
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -23302,7 +23311,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "anvl_hornet_f7c_nose_turret"
+          "defaultEntityClass": "anvl_hornet_f7c_nose_turret",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_nose/hardpoint_class_1_left",
@@ -23312,7 +23322,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_nose/hardpoint_class_1_right",
@@ -23322,7 +23333,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_left",
@@ -23332,7 +23344,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_left/hardpoint_class_2",
@@ -23342,7 +23355,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "gats_ballisticgatling_s3"
+          "defaultEntityClass": "gats_ballisticgatling_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_right",
@@ -23352,7 +23366,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_wing_right/hardpoint_class_2",
@@ -23362,7 +23377,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "gats_ballisticgatling_s3"
+          "defaultEntityClass": "gats_ballisticgatling_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_center",
@@ -23822,8 +23838,7 @@
               "type": "Module",
               "subtypes": []
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_weapon_left",
@@ -23833,8 +23848,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "mount_gimbal_s3"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_weapon_left/hardpoint_class_2",
@@ -23844,8 +23858,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_weapon_right",
@@ -23855,8 +23868,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "mount_gimbal_s3"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_weapon_right/hardpoint_class_2",
@@ -23866,8 +23878,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s3"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack",
@@ -23877,8 +23888,7 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "mrck_s04_anvl_hornet_f7cm_mk2_turret",
-          "pilotWeapon": true
+          "defaultEntityClass": "mrck_s04_anvl_hornet_f7cm_mk2_turret"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_01_attach",
@@ -23888,8 +23898,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_02_attach",
@@ -23899,8 +23908,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_03_attach",
@@ -23910,8 +23918,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_04_attach",
@@ -23921,8 +23928,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_05_attach",
@@ -23932,8 +23938,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_06_attach",
@@ -23943,8 +23948,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_07_attach",
@@ -23954,8 +23958,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_weapon_center/hardpoint_missile_rack/missile_08_attach",
@@ -23965,8 +23968,7 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_cs_fski_spark",
-          "pilotWeapon": true
+          "defaultEntityClass": "misl_s01_cs_fski_spark"
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -31938,7 +31940,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_power_plant",
@@ -32105,7 +32108,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mining_laser_grin_arbor_s2"
+          "defaultEntityClass": "mining_laser_grin_arbor_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_cab_left/hardpoint_weapon_mining",
@@ -32115,7 +32119,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mining_laser_grin_arbor_s2"
+          "defaultEntityClass": "mining_laser_grin_arbor_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_cab_right/hardpoint_weapon_mining",
@@ -32125,7 +32130,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mining_laser_grin_arbor_s2"
+          "defaultEntityClass": "mining_laser_grin_arbor_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -32260,7 +32266,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_power_plant",
@@ -32427,7 +32434,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mining_laser_thcn_helix_s2"
+          "defaultEntityClass": "mining_laser_thcn_helix_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_cab_left/hardpoint_weapon_mining",
@@ -32437,7 +32445,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mining_laser_shin_hofstede_s2"
+          "defaultEntityClass": "mining_laser_shin_hofstede_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_cab_right/hardpoint_weapon_mining",
@@ -32447,7 +32456,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mining_laser_shin_hofstede_s2"
+          "defaultEntityClass": "mining_laser_shin_hofstede_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -32649,7 +32659,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator_left",
@@ -32965,7 +32976,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         }
       ]
     },
@@ -37172,6 +37184,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -37182,7 +37195,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_left/missile_02_attach",
@@ -37192,7 +37206,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_right",
@@ -37211,6 +37226,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -37221,7 +37237,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_right/missile_02_attach",
@@ -37231,7 +37248,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_bomb_system",
@@ -39517,6 +39535,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -39527,7 +39546,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_left/missile_02_attach",
@@ -39537,7 +39557,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_right",
@@ -39556,6 +39577,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -39566,7 +39588,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_right/missile_02_attach",
@@ -39576,7 +39599,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         }
       ]
     },
@@ -39928,6 +39952,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -39938,7 +39963,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_left/missile_02_attach",
@@ -39948,7 +39974,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_right",
@@ -39967,6 +39994,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -39977,7 +40005,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_wing_right/missile_02_attach",
@@ -39987,7 +40016,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         }
       ]
     },
@@ -41342,7 +41372,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_bottom_seat/hardpoint_weapon_left/hardpoint_class_2",
@@ -41352,7 +41383,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3"
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_bottom_seat/hardpoint_weapon_right",
@@ -41362,7 +41394,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_bottom_seat/hardpoint_weapon_right/hardpoint_class_2",
@@ -41372,7 +41405,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3"
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_top_seat/hardpoint_weapon_left",
@@ -41382,7 +41416,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_top_seat/hardpoint_weapon_left/hardpoint_class_2",
@@ -41392,7 +41427,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3"
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_top_seat/hardpoint_weapon_right",
@@ -41402,7 +41438,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "mount_gimbal_s3"
+          "defaultEntityClass": "mount_gimbal_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_top_seat/hardpoint_weapon_right/hardpoint_class_2",
@@ -41412,7 +41449,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "klwe_laserrepeater_s3"
+          "defaultEntityClass": "klwe_laserrepeater_s3",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_front_turret",
@@ -44147,7 +44185,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_tractor_beam/turret_weapon",
@@ -44550,8 +44589,7 @@
                 "Gun"
               ]
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_chin_weapon_right/hardpoint_class_2",
@@ -44561,8 +44599,7 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4",
-          "pilotWeapon": true
+          "defaultEntityClass": "behr_lasercannon_s4"
         },
         {
           "id": "hardpoint_chin_weapon_left",
@@ -44586,8 +44623,7 @@
                 "Gun"
               ]
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_chin_weapon_left/hardpoint_class_2",
@@ -44597,8 +44633,7 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4",
-          "pilotWeapon": true
+          "defaultEntityClass": "behr_lasercannon_s4"
         },
         {
           "id": "hardpoint_weapon_wing_bottom",
@@ -49761,7 +49796,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_mining_golem"
+          "defaultEntityClass": "mount_gimbal_mining_golem",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
@@ -49771,7 +49807,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mining_laser_drak_golem_s1"
+          "defaultEntityClass": "mining_laser_drak_golem_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_left",
@@ -50073,7 +50110,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_mining_golem"
+          "defaultEntityClass": "mount_gimbal_mining_golem",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
@@ -50083,7 +50121,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mining_laser_drak_golem_s1"
+          "defaultEntityClass": "mining_laser_drak_golem_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_left",
@@ -51680,6 +51719,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -51690,7 +51730,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_02_attach",
@@ -51700,7 +51741,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_03_attach",
@@ -51710,7 +51752,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_04_attach",
@@ -51720,7 +51763,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_05_attach",
@@ -51730,7 +51774,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b",
@@ -51751,6 +51796,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -51761,7 +51807,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_02_attach",
@@ -51771,7 +51818,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_03_attach",
@@ -51781,7 +51829,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_04_attach",
@@ -51791,7 +51840,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_05_attach",
@@ -51801,7 +51851,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_nose_manned_turret_cap",
@@ -52461,6 +52512,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -52471,7 +52523,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_02_attach",
@@ -52481,7 +52534,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_03_attach",
@@ -52491,7 +52545,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_04_attach",
@@ -52501,7 +52556,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_a/missile_05_attach",
@@ -52511,7 +52567,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b",
@@ -52532,6 +52589,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -52542,7 +52600,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_02_attach",
@@ -52552,7 +52611,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_03_attach",
@@ -52562,7 +52622,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_04_attach",
@@ -52572,7 +52633,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_b/missile_05_attach",
@@ -52582,7 +52644,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "misl_s05_em_taln_reaper"
+          "defaultEntityClass": "misl_s05_em_taln_reaper",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_nose_manned_turret_cap",
@@ -53697,7 +53760,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_salvage_arm_right",
@@ -53715,7 +53779,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator_rear",
@@ -54892,7 +54957,6 @@
               ]
             }
           ],
-          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -54917,8 +54981,7 @@
                 "Gun"
               ]
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_weapon_spine/hardpoint_weapon_left/hardpoint_class_2",
@@ -54928,8 +54991,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "espr_lasercannon_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "espr_lasercannon_s3"
         },
         {
           "id": "hardpoint_weapon_spine/hardpoint_weapon_right",
@@ -54953,8 +55015,7 @@
                 "Gun"
               ]
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_weapon_spine/hardpoint_weapon_right/hardpoint_class_2",
@@ -54964,8 +55025,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "espr_lasercannon_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "espr_lasercannon_s3"
         },
         {
           "id": "hardpoint_life_support",
@@ -55286,7 +55346,6 @@
               ]
             }
           ],
-          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -55311,8 +55370,7 @@
                 "Gun"
               ]
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_weapon_spine/hardpoint_weapon_left/hardpoint_class_2",
@@ -55322,8 +55380,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "espr_ballisticcannon_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "espr_ballisticcannon_s3"
         },
         {
           "id": "hardpoint_weapon_spine/hardpoint_weapon_right",
@@ -55347,8 +55404,7 @@
                 "Gun"
               ]
             }
-          ],
-          "pilotWeapon": true
+          ]
         },
         {
           "id": "hardpoint_weapon_spine/hardpoint_weapon_right/hardpoint_class_2",
@@ -55358,8 +55414,7 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "espr_ballisticcannon_s3",
-          "pilotWeapon": true
+          "defaultEntityClass": "espr_ballisticcannon_s3"
         },
         {
           "id": "hardpoint_life_support",
@@ -59472,7 +59527,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_left/hardpoint_class_2",
@@ -59482,7 +59538,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "glsn_laserrepeater_s2"
+          "defaultEntityClass": "glsn_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_right",
@@ -59508,7 +59565,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_right/hardpoint_class_2",
@@ -59518,7 +59576,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "glsn_laserrepeater_s2"
+          "defaultEntityClass": "glsn_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_engine_left",
@@ -59544,7 +59603,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_engine_left/hardpoint_class_2",
@@ -59554,7 +59614,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "glsn_ballisticgatling_s2"
+          "defaultEntityClass": "glsn_ballisticgatling_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_engine_right",
@@ -59580,7 +59641,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_engine_right/hardpoint_class_2",
@@ -59590,7 +59652,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "glsn_ballisticgatling_s2"
+          "defaultEntityClass": "glsn_ballisticgatling_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_nose_left",
@@ -59616,7 +59679,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_nose_left/hardpoint_class_2",
@@ -59626,7 +59690,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "glsn_laserrepeater_s2"
+          "defaultEntityClass": "glsn_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_nose_right",
@@ -59652,7 +59717,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_nose_right/hardpoint_class_2",
@@ -59662,7 +59728,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "glsn_laserrepeater_s2"
+          "defaultEntityClass": "glsn_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_left",
@@ -59935,7 +60002,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret",
@@ -61342,7 +61410,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_left_wing/hardpoint_class_2",
@@ -61352,7 +61421,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_right_wing",
@@ -61362,7 +61432,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_right_wing/hardpoint_class_2",
@@ -61372,7 +61443,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -61538,7 +61610,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_left_wing/hardpoint_class_2",
@@ -61548,7 +61621,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_InnerLeft_wing",
@@ -61558,7 +61632,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_InnerLeft_wing/hardpoint_class_2",
@@ -61568,7 +61643,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_right_wing",
@@ -61578,7 +61654,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_right_wing/hardpoint_class_2",
@@ -61588,7 +61665,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_InnerRight_wing",
@@ -61598,7 +61676,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_InnerRight_wing/hardpoint_class_2",
@@ -61608,7 +61687,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -61774,7 +61854,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_left_wing/hardpoint_class_2",
@@ -61784,7 +61865,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_InnerLeft_wing",
@@ -61794,7 +61876,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_left/hardpoint_weapon_gun_InnerLeft_wing/hardpoint_class_2",
@@ -61804,7 +61887,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_right_wing",
@@ -61814,7 +61898,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_right_wing/hardpoint_class_2",
@@ -61824,7 +61909,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_InnerRight_wing",
@@ -61834,7 +61920,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_s1"
+          "defaultEntityClass": "mount_gimbal_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_wing_right/hardpoint_weapon_gun_InnerRight_wing/hardpoint_class_2",
@@ -61844,7 +61931,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "klwe_laserrepeater_s1"
+          "defaultEntityClass": "klwe_laserrepeater_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -61985,6 +62073,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -61995,7 +62084,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_02_attach",
@@ -62005,7 +62095,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_03_attach",
@@ -62015,7 +62106,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_04_attach",
@@ -62025,7 +62117,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -62046,6 +62139,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -62056,7 +62150,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_02_attach",
@@ -62066,7 +62161,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_03_attach",
@@ -62076,7 +62172,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_04_attach",
@@ -62086,7 +62183,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_power_plant",
@@ -63762,7 +63860,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -64190,7 +64289,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -64537,7 +64637,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_top_left/hardpoint_class_2",
@@ -64547,7 +64648,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_top_right",
@@ -64571,7 +64673,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_top_right/hardpoint_class_2",
@@ -64581,7 +64684,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_bottom_left",
@@ -64605,7 +64709,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_bottom_left/hardpoint_class_2",
@@ -64615,7 +64720,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_bottom_right",
@@ -64639,7 +64745,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_wing_bottom_right/hardpoint_class_2",
@@ -64649,7 +64756,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_cooler_s1",
@@ -64863,7 +64971,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -65259,7 +65368,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -66894,7 +67004,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -69772,7 +69883,8 @@
                 "MissileRack"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_01_attach",
@@ -69782,7 +69894,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_02_attach",
@@ -69792,7 +69905,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_03_attach",
@@ -69802,7 +69916,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_04_attach",
@@ -69812,7 +69927,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_05_attach",
@@ -69822,7 +69938,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_06_attach",
@@ -69832,7 +69949,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_07_attach",
@@ -69842,7 +69960,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack/missile_08_attach",
@@ -69852,7 +69971,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_power_plant",
@@ -69990,7 +70110,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_tractor_beam_right/tractor_attach",
@@ -70000,7 +70121,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "grin_tractorbeam_s2"
+          "defaultEntityClass": "grin_tractorbeam_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_tractor_beam_left",
@@ -70021,7 +70143,8 @@
               ]
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_tractor_beam_left/tractor_attach",
@@ -70031,7 +70154,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "grin_tractorbeam_s2"
+          "defaultEntityClass": "grin_tractorbeam_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret",
@@ -70761,7 +70885,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_mining"
+          "defaultEntityClass": "mount_gimbal_mining",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
@@ -70771,7 +70896,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mining_laser_grin_arbor_s1"
+          "defaultEntityClass": "mining_laser_grin_arbor_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -71049,7 +71175,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mount_gimbal_mining"
+          "defaultEntityClass": "mount_gimbal_mining",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_mining_arm/hardpoint_mining_laser/hardpoint_mining_laser",
@@ -71059,7 +71186,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "mining_laser_thcn_helix_s1"
+          "defaultEntityClass": "mining_laser_thcn_helix_s1",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator",
@@ -71477,8 +71605,7 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Left/turret_left",
@@ -71488,8 +71615,7 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
           "id": "Hardpoint_Weapon_Wing_Tip_S3_Right",
@@ -74401,7 +74527,8 @@
                 "NoseMounted"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_weapon_01",
@@ -74411,7 +74538,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_weapon_02",
@@ -74421,7 +74549,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right",
@@ -74441,7 +74570,8 @@
                 "NoseMounted"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_weapon_01",
@@ -74451,7 +74581,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_weapon_02",
@@ -74461,7 +74592,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_front",
@@ -74604,6 +74736,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -74614,7 +74747,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_02_attach",
@@ -74624,7 +74758,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_03_attach",
@@ -74634,7 +74769,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_04_attach",
@@ -74644,7 +74780,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -74665,6 +74802,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -74675,7 +74813,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_02_attach",
@@ -74685,7 +74824,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_03_attach",
@@ -74695,7 +74835,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_04_attach",
@@ -74705,7 +74846,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck",
@@ -74726,6 +74868,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -74736,7 +74879,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck/missile_02_attach",
@@ -74746,7 +74890,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck/missile_03_attach",
@@ -74756,7 +74901,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck/missile_04_attach",
@@ -74766,7 +74912,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose",
@@ -74787,6 +74934,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -74797,7 +74945,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose/missile_02_attach",
@@ -74807,7 +74956,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose/missile_03_attach",
@@ -74817,7 +74967,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose/missile_04_attach",
@@ -74827,7 +74978,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -75003,7 +75155,8 @@
                 "NoseMounted"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_weapon_01",
@@ -75013,7 +75166,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_weapon_02",
@@ -75023,7 +75177,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right",
@@ -75043,7 +75198,8 @@
                 "NoseMounted"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_weapon_01",
@@ -75053,7 +75209,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_weapon_02",
@@ -75063,7 +75220,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "behr_lasercannon_s4"
+          "defaultEntityClass": "behr_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_front",
@@ -75206,6 +75364,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -75216,7 +75375,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_02_attach",
@@ -75226,7 +75386,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_03_attach",
@@ -75236,7 +75397,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_04_attach",
@@ -75246,7 +75408,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right",
@@ -75267,6 +75430,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -75277,7 +75441,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_02_attach",
@@ -75287,7 +75452,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_03_attach",
@@ -75297,7 +75463,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_04_attach",
@@ -75307,7 +75474,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck",
@@ -75328,6 +75496,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -75338,7 +75507,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck/missile_02_attach",
@@ -75348,7 +75518,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck/missile_03_attach",
@@ -75358,7 +75529,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_neck/missile_04_attach",
@@ -75368,7 +75540,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose",
@@ -75389,6 +75562,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -75399,7 +75573,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose/missile_02_attach",
@@ -75409,7 +75584,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose/missile_03_attach",
@@ -75419,7 +75595,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_nose/missile_04_attach",
@@ -75429,7 +75606,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
+          "defaultEntityClass": "misl_s03_em_fski_thunderbolt",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -77520,7 +77698,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -78313,7 +78492,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -78682,7 +78862,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -81714,7 +81895,6 @@
               ]
             }
           ],
-          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -81725,8 +81905,7 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mount_gimbal_s2",
-          "pilotWeapon": true
+          "defaultEntityClass": "mount_gimbal_s2"
         },
         {
           "id": "hardpoint_turret/hardpoint_turret_left/hardpoint_class_2",
@@ -81736,8 +81915,7 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
           "id": "hardpoint_turret/hardpoint_turret_right",
@@ -81747,8 +81925,7 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "mount_gimbal_s2",
-          "pilotWeapon": true
+          "defaultEntityClass": "mount_gimbal_s2"
         },
         {
           "id": "hardpoint_turret/hardpoint_turret_right/hardpoint_class_2",
@@ -81758,8 +81935,7 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2",
-          "pilotWeapon": true
+          "defaultEntityClass": "klwe_laserrepeater_s2"
         },
         {
           "id": "hardpoint_lifesupport",
@@ -82643,6 +82819,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -82653,7 +82830,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_left/missile_02_attach",
@@ -82663,7 +82841,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_left/missile_03_attach",
@@ -82673,7 +82852,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_left/missile_04_attach",
@@ -82683,7 +82863,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_right",
@@ -82704,6 +82885,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -82714,7 +82896,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_right/missile_02_attach",
@@ -82724,7 +82907,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_right/missile_03_attach",
@@ -82734,7 +82918,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_lower_right/missile_04_attach",
@@ -82744,7 +82929,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_lifesupport",
@@ -84524,7 +84710,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_class_2",
@@ -84534,7 +84721,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right",
@@ -84558,7 +84746,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_class_2",
@@ -84568,7 +84757,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret",
@@ -85155,7 +85345,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_class_2",
@@ -85165,7 +85356,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right",
@@ -85189,7 +85381,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_class_2",
@@ -85199,7 +85392,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret",
@@ -85569,7 +85763,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator_left",
@@ -85654,7 +85849,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_top_left/hardpoint_class_2",
@@ -85664,7 +85860,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_top_right",
@@ -85688,7 +85885,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_top_right/hardpoint_class_2",
@@ -85698,7 +85896,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_bottom_left",
@@ -85722,7 +85921,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_bottom_left/hardpoint_class_2",
@@ -85732,7 +85932,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_bottom_right",
@@ -85756,7 +85957,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_bottom_right/hardpoint_class_2",
@@ -85766,7 +85968,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_wing_bottom_right",
@@ -86376,6 +86579,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86386,7 +86590,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_02",
@@ -86396,7 +86601,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_03",
@@ -86406,7 +86612,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_04",
@@ -86416,7 +86623,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_05",
@@ -86426,7 +86634,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_06",
@@ -86436,7 +86645,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear",
@@ -86455,6 +86665,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86465,7 +86676,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_02",
@@ -86475,7 +86687,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_03",
@@ -86485,7 +86698,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_04",
@@ -86495,7 +86709,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_05",
@@ -86505,7 +86720,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_06",
@@ -86515,7 +86731,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front",
@@ -86534,6 +86751,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86544,7 +86762,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_02",
@@ -86554,7 +86773,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_03",
@@ -86564,7 +86784,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_04",
@@ -86574,7 +86795,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_05",
@@ -86584,7 +86806,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_06",
@@ -86594,7 +86817,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear",
@@ -86613,6 +86837,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86623,7 +86848,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_02",
@@ -86633,7 +86859,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_03",
@@ -86643,7 +86870,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_04",
@@ -86653,7 +86881,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_05",
@@ -86663,7 +86892,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_06",
@@ -86673,7 +86903,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left",
@@ -86692,6 +86923,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86702,7 +86934,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_02",
@@ -86712,7 +86945,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_03",
@@ -86722,7 +86956,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_04",
@@ -86732,7 +86967,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_05",
@@ -86742,7 +86978,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_06",
@@ -86752,7 +86989,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_07",
@@ -86762,7 +87000,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right",
@@ -86781,6 +87020,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86791,7 +87031,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_02",
@@ -86801,7 +87042,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_03",
@@ -86811,7 +87053,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_04",
@@ -86821,7 +87064,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_05",
@@ -86831,7 +87075,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_06",
@@ -86841,7 +87086,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_07",
@@ -86851,7 +87097,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left",
@@ -86870,6 +87117,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86880,7 +87128,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_02",
@@ -86890,7 +87139,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_03",
@@ -86900,7 +87150,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_04",
@@ -86910,7 +87161,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_05",
@@ -86920,7 +87172,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_06",
@@ -86930,7 +87183,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_07",
@@ -86940,7 +87194,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right",
@@ -86959,6 +87214,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -86969,7 +87225,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_02",
@@ -86979,7 +87236,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_03",
@@ -86989,7 +87247,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_04",
@@ -86999,7 +87258,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_05",
@@ -87009,7 +87269,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_06",
@@ -87019,7 +87280,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_07",
@@ -87029,7 +87291,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_life_support",
@@ -87469,6 +87732,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -87479,7 +87743,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_02",
@@ -87489,7 +87754,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_03",
@@ -87499,7 +87765,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_04",
@@ -87509,7 +87776,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_05",
@@ -87519,7 +87787,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_06",
@@ -87529,7 +87798,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear",
@@ -87548,6 +87818,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -87558,7 +87829,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_02",
@@ -87568,7 +87840,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_03",
@@ -87578,7 +87851,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_04",
@@ -87588,7 +87862,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_05",
@@ -87598,7 +87873,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_06",
@@ -87608,7 +87884,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front",
@@ -87627,6 +87904,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -87637,7 +87915,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_02",
@@ -87647,7 +87926,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_03",
@@ -87657,7 +87937,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_04",
@@ -87667,7 +87948,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_05",
@@ -87677,7 +87959,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_06",
@@ -87687,7 +87970,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear",
@@ -87706,6 +87990,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -87716,7 +88001,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_02",
@@ -87726,7 +88012,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_03",
@@ -87736,7 +88023,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_04",
@@ -87746,7 +88034,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_05",
@@ -87756,7 +88045,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_06",
@@ -87766,7 +88056,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_life_support",
@@ -88235,6 +88526,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -88245,7 +88537,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_02",
@@ -88255,7 +88548,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_03",
@@ -88265,7 +88559,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_04",
@@ -88275,7 +88570,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_05",
@@ -88285,7 +88581,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_06",
@@ -88295,7 +88592,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_07",
@@ -88305,7 +88603,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right",
@@ -88324,6 +88623,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -88334,7 +88634,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_02",
@@ -88344,7 +88645,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_03",
@@ -88354,7 +88656,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_04",
@@ -88364,7 +88667,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_05",
@@ -88374,7 +88678,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_06",
@@ -88384,7 +88689,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_07",
@@ -88394,7 +88700,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left",
@@ -88413,6 +88720,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -88423,7 +88731,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_02",
@@ -88433,7 +88742,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_03",
@@ -88443,7 +88753,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_04",
@@ -88453,7 +88764,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_05",
@@ -88463,7 +88775,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_06",
@@ -88473,7 +88786,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_07",
@@ -88483,7 +88797,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right",
@@ -88502,6 +88817,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -88512,7 +88828,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_02",
@@ -88522,7 +88839,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_03",
@@ -88532,7 +88850,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_04",
@@ -88542,7 +88861,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_05",
@@ -88552,7 +88872,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_06",
@@ -88562,7 +88883,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_07",
@@ -88572,7 +88894,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_life_support",
@@ -89060,6 +89383,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -89070,7 +89394,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_02",
@@ -89080,7 +89405,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_03",
@@ -89090,7 +89416,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_04",
@@ -89100,7 +89427,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_05",
@@ -89110,7 +89438,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_06",
@@ -89120,7 +89449,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_left/missile_attach_07",
@@ -89130,7 +89460,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right",
@@ -89149,6 +89480,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -89159,7 +89491,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_02",
@@ -89169,7 +89502,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_03",
@@ -89179,7 +89513,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_04",
@@ -89189,7 +89524,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_05",
@@ -89199,7 +89535,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_06",
@@ -89209,7 +89546,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_body_right/missile_attach_07",
@@ -89219,7 +89557,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left",
@@ -89238,6 +89577,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -89248,7 +89588,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_02",
@@ -89258,7 +89599,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_03",
@@ -89268,7 +89610,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_04",
@@ -89278,7 +89621,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_05",
@@ -89288,7 +89632,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_06",
@@ -89298,7 +89643,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_left/missile_attach_07",
@@ -89308,7 +89654,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right",
@@ -89327,6 +89674,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -89337,7 +89685,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_02",
@@ -89347,7 +89696,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_03",
@@ -89357,7 +89707,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_04",
@@ -89367,7 +89718,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_05",
@@ -89377,7 +89729,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_06",
@@ -89387,7 +89740,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_arm_tail_right/missile_attach_07",
@@ -89397,7 +89751,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_life_support",
@@ -89855,6 +90210,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -89865,7 +90221,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_02",
@@ -89875,7 +90232,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_03",
@@ -89885,7 +90243,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_04",
@@ -89895,7 +90254,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_05",
@@ -89905,7 +90265,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_06",
@@ -89915,7 +90276,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear",
@@ -89934,6 +90296,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -89944,7 +90307,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_02",
@@ -89954,7 +90318,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_03",
@@ -89964,7 +90329,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_04",
@@ -89974,7 +90340,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_05",
@@ -89984,7 +90351,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_06",
@@ -89994,7 +90362,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front",
@@ -90013,6 +90382,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -90023,7 +90393,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_02",
@@ -90033,7 +90404,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_03",
@@ -90043,7 +90415,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_04",
@@ -90053,7 +90426,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_05",
@@ -90063,7 +90437,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_06",
@@ -90073,7 +90448,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear",
@@ -90092,6 +90468,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -90102,7 +90479,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_02",
@@ -90112,7 +90490,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_03",
@@ -90122,7 +90501,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_04",
@@ -90132,7 +90512,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_05",
@@ -90142,7 +90523,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_06",
@@ -90152,7 +90534,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_life_support",
@@ -90591,6 +90974,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -90601,7 +90985,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_02",
@@ -90611,7 +90996,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_03",
@@ -90621,7 +91007,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_04",
@@ -90631,7 +91018,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_05",
@@ -90641,7 +91029,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_front/missile_attach_06",
@@ -90651,7 +91040,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear",
@@ -90670,6 +91060,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -90680,7 +91071,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_02",
@@ -90690,7 +91082,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_03",
@@ -90700,7 +91093,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_04",
@@ -90710,7 +91104,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_05",
@@ -90720,7 +91115,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_left_rear/missile_attach_06",
@@ -90730,7 +91126,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front",
@@ -90749,6 +91146,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -90759,7 +91157,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_02",
@@ -90769,7 +91168,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_03",
@@ -90779,7 +91179,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_04",
@@ -90789,7 +91190,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_05",
@@ -90799,7 +91201,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_front/missile_attach_06",
@@ -90809,7 +91212,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear",
@@ -90828,6 +91232,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -90838,7 +91243,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_02",
@@ -90848,7 +91254,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_03",
@@ -90858,7 +91265,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_04",
@@ -90868,7 +91276,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_05",
@@ -90878,7 +91287,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilerack_top_right_rear/missile_attach_06",
@@ -90888,7 +91298,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_life_support",
@@ -91042,7 +91453,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator_01",
@@ -91122,6 +91534,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -91132,7 +91545,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_02_attach",
@@ -91142,7 +91556,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_03_attach",
@@ -91152,7 +91567,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_04_attach",
@@ -91162,7 +91578,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_05_attach",
@@ -91172,7 +91589,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_06_attach",
@@ -91182,7 +91600,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_07_attach",
@@ -91192,7 +91611,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_08_attach",
@@ -91202,7 +91622,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_09_attach",
@@ -91212,7 +91633,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_10_attach",
@@ -91222,7 +91644,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_11_attach",
@@ -91232,7 +91655,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_12_attach",
@@ -91242,7 +91666,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_13_attach",
@@ -91252,7 +91677,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_14_attach",
@@ -91262,7 +91688,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_15_attach",
@@ -91272,7 +91699,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/missile_16_attach",
@@ -91282,7 +91710,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right",
@@ -91301,6 +91730,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -91311,7 +91741,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_02_attach",
@@ -91321,7 +91752,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_03_attach",
@@ -91331,7 +91763,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_04_attach",
@@ -91341,7 +91774,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_05_attach",
@@ -91351,7 +91785,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_06_attach",
@@ -91361,7 +91796,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_07_attach",
@@ -91371,7 +91807,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_08_attach",
@@ -91381,7 +91818,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_09_attach",
@@ -91391,7 +91829,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_10_attach",
@@ -91401,7 +91840,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_11_attach",
@@ -91411,7 +91851,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_12_attach",
@@ -91421,7 +91862,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_13_attach",
@@ -91431,7 +91873,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_14_attach",
@@ -91441,7 +91884,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_15_attach",
@@ -91451,7 +91895,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/missile_16_attach",
@@ -91461,7 +91906,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
+          "defaultEntityClass": "misl_s02_cs_thcn_strikeforce",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_s5_front_left",
@@ -91486,6 +91932,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -91496,7 +91943,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "klwe_laserrepeater_s5"
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_s5_front_right",
@@ -91521,6 +91969,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -91531,7 +91980,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "klwe_laserrepeater_s5"
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_s5_body_left",
@@ -91556,6 +92006,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -91566,7 +92017,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "klwe_laserrepeater_s5"
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_s5_body_right",
@@ -91591,6 +92043,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -91601,7 +92054,8 @@
           "size": 5,
           "minSize": 5,
           "maxSize": 5,
-          "defaultEntityClass": "klwe_laserrepeater_s5"
+          "defaultEntityClass": "klwe_laserrepeater_s5",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_upper",
@@ -92069,7 +92523,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left/hardpoint_class_2",
@@ -92079,7 +92534,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right",
@@ -92103,7 +92559,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right/hardpoint_class_2",
@@ -92113,7 +92570,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "klwe_laserrepeater_s4"
+          "defaultEntityClass": "klwe_laserrepeater_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret",
@@ -93590,7 +94048,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator_1",
@@ -94508,6 +94967,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -94518,7 +94978,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_02",
@@ -94528,7 +94989,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_03",
@@ -94538,7 +95000,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_04",
@@ -94548,7 +95011,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_05",
@@ -94558,7 +95022,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_06",
@@ -94568,7 +95033,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_07",
@@ -94578,7 +95044,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_right/missile_attach_08",
@@ -94588,7 +95055,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left",
@@ -94609,6 +95077,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -94619,7 +95088,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_02",
@@ -94629,7 +95099,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_03",
@@ -94639,7 +95110,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_04",
@@ -94649,7 +95121,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_05",
@@ -94659,7 +95132,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_06",
@@ -94669,7 +95143,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_07",
@@ -94679,7 +95154,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missile_rack_left/missile_attach_08",
@@ -94689,7 +95165,8 @@
           "size": 3,
           "minSize": 3,
           "maxSize": 3,
-          "defaultEntityClass": "misl_s03_cs_fski_arrester"
+          "defaultEntityClass": "misl_s03_cs_fski_arrester",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_torpedo_left_upper",
@@ -96264,7 +96741,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_salvage_arm_right",
@@ -96282,7 +96760,8 @@
               "subtypes": []
             }
           ],
-          "locked": true
+          "locked": true,
+          "pilotWeapon": true
         }
       ]
     },
@@ -96385,6 +96864,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -96395,7 +96875,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_02_attach",
@@ -96405,7 +96886,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_03_attach",
@@ -96415,7 +96897,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_04_attach",
@@ -96425,7 +96908,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top",
@@ -96451,6 +96935,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -96461,7 +96946,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_02_attach",
@@ -96471,7 +96957,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_03_attach",
@@ -96481,7 +96968,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_04_attach",
@@ -96491,7 +96979,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_powerplant_left",
@@ -96815,6 +97304,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -96825,7 +97315,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_02_attach",
@@ -96835,7 +97326,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_03_attach",
@@ -96845,7 +97337,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_04_attach",
@@ -96855,7 +97348,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom",
@@ -96881,6 +97375,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -96891,7 +97386,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_02_attach",
@@ -96901,7 +97397,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_03_attach",
@@ -96911,7 +97408,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_04_attach",
@@ -96921,7 +97419,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_powerplant_lower_right",
@@ -97056,6 +97555,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -97066,7 +97566,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_02_attach",
@@ -97076,7 +97577,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_03_attach",
@@ -97086,7 +97588,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_04_attach",
@@ -97096,7 +97599,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top",
@@ -97122,6 +97626,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -97132,7 +97637,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_02_attach",
@@ -97142,7 +97648,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_03_attach",
@@ -97152,7 +97659,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_04_attach",
@@ -97162,7 +97670,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_powerplant_left",
@@ -97459,6 +97968,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -97469,7 +97979,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_02_attach",
@@ -97479,7 +97990,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_03_attach",
@@ -97489,7 +98001,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_04_attach",
@@ -97499,7 +98012,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom",
@@ -97525,6 +98039,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -97535,7 +98050,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_02_attach",
@@ -97545,7 +98061,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_03_attach",
@@ -97555,7 +98072,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_04_attach",
@@ -97565,7 +98083,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_spine",
@@ -97756,6 +98275,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -97766,7 +98286,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_02_attach",
@@ -97776,7 +98297,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_03_attach",
@@ -97786,7 +98308,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_top/missile_04_attach",
@@ -97796,7 +98319,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top",
@@ -97822,6 +98346,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -97832,7 +98357,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_02_attach",
@@ -97842,7 +98368,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_03_attach",
@@ -97852,7 +98379,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_top/missile_04_attach",
@@ -97862,7 +98390,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_powerplant_left",
@@ -98186,6 +98715,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98196,7 +98726,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_02_attach",
@@ -98206,7 +98737,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_03_attach",
@@ -98216,7 +98748,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_left_bottom/missile_04_attach",
@@ -98226,7 +98759,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom",
@@ -98252,6 +98786,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98262,7 +98797,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_02_attach",
@@ -98272,7 +98808,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_03_attach",
@@ -98282,7 +98819,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missilelauncher_right_bottom/missile_04_attach",
@@ -98292,7 +98830,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "misl_s02_cs_fski_tempest"
+          "defaultEntityClass": "misl_s02_cs_fski_tempest",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_powerplant_lower_right",
@@ -98451,7 +98990,8 @@
                 "MidRangeRadar"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_shield_generator_left",
@@ -98520,6 +99060,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98530,7 +99071,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_right",
@@ -98556,6 +99098,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98566,7 +99109,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_weapon_left",
@@ -98592,6 +99136,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98602,7 +99147,8 @@
           "size": 2,
           "minSize": 2,
           "maxSize": 2,
-          "defaultEntityClass": "klwe_laserrepeater_s2"
+          "defaultEntityClass": "klwe_laserrepeater_s2",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right",
@@ -98621,6 +99167,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98631,7 +99178,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/hardpoint_missile_b",
@@ -98641,7 +99189,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/hardpoint_missile_c",
@@ -98651,7 +99200,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/hardpoint_missile_d",
@@ -98661,7 +99211,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_right/hardpoint_missile_e",
@@ -98671,7 +99222,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left",
@@ -98690,6 +99242,7 @@
               ]
             }
           ],
+          "pilotWeapon": true,
           "locked": true
         },
         {
@@ -98700,7 +99253,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/hardpoint_missile_b",
@@ -98710,7 +99264,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/hardpoint_missile_c",
@@ -98720,7 +99275,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/hardpoint_missile_d",
@@ -98730,7 +99286,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_missiles_left/hardpoint_missile_e",
@@ -98740,7 +99297,8 @@
           "size": 1,
           "minSize": 1,
           "maxSize": 1,
-          "defaultEntityClass": "misl_s01_ir_behr_marksman"
+          "defaultEntityClass": "misl_s01_ir_behr_marksman",
+          "pilotWeapon": true
         }
       ]
     },
@@ -98945,7 +99503,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_left/hardpoint_class_2",
@@ -98955,7 +99514,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "amrs_lasercannon_s4"
+          "defaultEntityClass": "amrs_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_right",
@@ -98979,7 +99539,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_right/hardpoint_class_2",
@@ -98989,7 +99550,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "amrs_lasercannon_s4"
+          "defaultEntityClass": "amrs_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_bottom",
@@ -99470,7 +100032,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_left/hardpoint_class_2",
@@ -99480,7 +100043,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "amrs_lasercannon_s4"
+          "defaultEntityClass": "amrs_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_right",
@@ -99504,7 +100068,8 @@
                 "Gun"
               ]
             }
-          ]
+          ],
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_gun_right/hardpoint_class_2",
@@ -99514,7 +100079,8 @@
           "size": 4,
           "minSize": 4,
           "maxSize": 4,
-          "defaultEntityClass": "amrs_lasercannon_s4"
+          "defaultEntityClass": "amrs_lasercannon_s4",
+          "pilotWeapon": true
         },
         {
           "id": "hardpoint_turret_bottom",

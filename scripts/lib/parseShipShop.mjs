@@ -300,6 +300,20 @@ function missileGuidance(entityClass) {
   return null
 }
 
+/** Pilot, copilot, or a gunner/remote turret. Copilot is checked first so it does not match "pilot". */
+function controlRole(tag) {
+  const text = String(tag || '').toLowerCase()
+  if (!text) return ''
+  if (text.includes('copilot')) return 'copilot'
+  if (/pilot|gunnose|gunnacelle|mainweapons|weaponpilot|pilotseatweapons/.test(text)) return 'pilot'
+  if (/remote|gunner|manned|turret/.test(text)) return 'crew'
+  return ''
+}
+
+function crewTurretItem(item) {
+  return /^(ballturret|mannedturret|topturret|bottomturret)$/i.test(String(item?.attachSubType || ''))
+}
+
 function attrValue(source, key) {
   const found = String(source || '').match(new RegExp(`${key}="([^"]*)"`, 'i'))
   return found ? found[1] : ''
@@ -319,7 +333,9 @@ function shapePort(name, port, portDefs) {
     if (def.requiredTags) next.requiredTags = def.requiredTags
     if (def.portTags) next.portTags = def.portTags
     if (def.accepts?.length) next.accepts = def.accepts
-    if (def.pilotWeapon) next.pilotWeapon = true
+    const role = controlRole(def.controlTag)
+    if (def.turretPipe || role === 'crew') next.crewTurret = true
+    else if (def.pilotWeapon || def.pilotPipe || role === 'pilot') next.pilotWeapon = true
   }
   if ((next.kind === 'torpedo' || next.kind === 'life') && !bombBay) next.locked = true
   if (def && /uneditable/i.test(def.flags || '') && next.kind !== 'flight') next.locked = true
@@ -347,12 +363,21 @@ function portDefsFromXml(text) {
         portTags: attrValue(attrs, 'portTags'),
         accepts: [],
         pilotWeapon: false,
+        pilotPipe: false,
+        turretPipe: false,
+        controlTag: '',
       }
       defs.set(part.toLowerCase(), current)
     }
     if (!current) continue
     const connectionMatch = line.match(/<Connection\s+([^>]*?)\s*\/?>/i)
-    if (connectionMatch && /weaponregencrew/i.test(attrValue(connectionMatch[1], 'pipe'))) current.pilotWeapon = true
+    if (connectionMatch) {
+      const pipe = attrValue(connectionMatch[1], 'pipe')
+      if (/weaponregencrew/i.test(pipe)) current.pilotPipe = true
+      if (/weaponregenturret/i.test(pipe)) current.turretPipe = true
+    }
+    const controllerMatch = line.match(/<ControllerDef\s+([^>]*?)\s*\/?>/i)
+    if (controllerMatch && !current.controlTag) current.controlTag = attrValue(controllerMatch[1], 'controllableTags')
     const typeMatch = line.match(/<Type\s+([^>]*?)\s*\/?>/i)
     if (typeMatch) {
       const type = attrValue(typeMatch[1], 'type')
@@ -1101,6 +1126,10 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (shaped.kind === 'turret' && !shaped.defaultEntityClass) shaped.locked = true
       const titled = resolveName(portDef?.displayName, localization)
       if (titled) shaped.label = titled
+      const pdcPort = /\bpdc\b/i.test(`${shaped.portTags || ''} ${shaped.requiredTags || ''}`)
+      if (!shaped.pilotWeapon && !shaped.crewTurret && !pdcPort && (shaped.kind === 'turret' || crewTurretItem(item) || /turret/i.test(String(entry.name || '')))) {
+        shaped.crewTurret = true
+      }
       const parentPath = entry.path.includes('/') ? entry.path.slice(0, entry.path.lastIndexOf('/')) : ''
       const parent = parentPath ? entryByPath.get(parentPath) : null
       const parentLock = parent ? locksFor(entityKeyFromEntry(parent.entry))?.get(entry.name.toLowerCase()) : null
@@ -1108,10 +1137,21 @@ export function parseShipShop({ extractedRoot, localization }) {
       if (shaped) ports.push(shaped)
     }
 
+    const underCrewTurret = (port) => ports.some((parent) => parent.crewTurret && port.id.startsWith(`${parent.id}/`))
     for (const port of ports) {
-      if (port.pilotWeapon) continue
+      if (port.crewTurret || !underCrewTurret(port)) continue
+      port.crewTurret = true
+      delete port.pilotWeapon
+    }
+    for (const port of ports) {
+      if (port.crewTurret || port.pilotWeapon) continue
+      if (port.kind === 'weapon' || port.kind === 'weaponMount') port.pilotWeapon = true
+    }
+    for (const port of ports) {
+      if (port.pilotWeapon || port.crewTurret) continue
       if (ports.some((parent) => parent.pilotWeapon && port.id.startsWith(`${parent.id}/`))) port.pilotWeapon = true
     }
+    for (const port of ports) delete port.crewTurret
 
     const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot, filePath)
     const ship = {
