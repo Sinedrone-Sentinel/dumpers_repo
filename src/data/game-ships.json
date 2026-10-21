@@ -381,7 +381,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_avenger_titan",
@@ -763,7 +765,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 8,
+      "maxCrateScu": 4
     },
     {
       "id": "aegs_avenger_titan_renegade",
@@ -1145,7 +1149,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 8,
+      "maxCrateScu": 4
     },
     {
       "id": "aegs_avenger_warlock",
@@ -1545,7 +1551,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_eclipse",
@@ -1829,7 +1837,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_gladius",
@@ -2284,7 +2294,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_gladius_dunlevy",
@@ -2739,7 +2751,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_gladius_pir",
@@ -3254,7 +3268,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_gladius_valiant",
@@ -3749,7 +3765,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_hammerhead",
@@ -5011,7 +5029,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_idris_m",
@@ -6024,7 +6044,9 @@
           "defaultEntityClass": null,
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 1326,
+      "maxCrateScu": 32
     },
     {
       "id": "aegs_idris_p",
@@ -6936,7 +6958,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 1374,
+      "maxCrateScu": 32
     },
     {
       "id": "aegs_javelin",
@@ -8135,7 +8159,9 @@
           "defaultEntityClass": null,
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_reclaimer",
@@ -8751,7 +8777,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 420,
+      "maxCrateScu": 32
     },
     {
       "id": "aegs_redeemer",
@@ -9489,7 +9517,9 @@
           "maxSize": 2,
           "defaultEntityClass": "shld_godi_s02_fullstop_scitem"
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "aegs_retaliator",
@@ -10088,7 +10118,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_sabre",
@@ -10514,7 +10546,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_sabre_comet",
@@ -10940,7 +10974,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_sabre_firebird",
@@ -11481,7 +11517,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_sabre_peregrine",
@@ -11710,7 +11748,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_sabre_raven",
@@ -12022,7 +12062,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_sabre_raven_ex",
@@ -12442,7 +12484,9 @@
           "maxSize": 2,
           "defaultEntityClass": "qdmp_wetk_s02_raven_x"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_tiburon",
@@ -13408,7 +13452,9 @@
           "defaultEntityClass": "behr_ballisticcannon_s7_tiburon",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_vanguard_harbinger",
@@ -14071,7 +14117,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_vanguard_hoplite",
@@ -14624,7 +14672,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_vanguard_sentinel",
@@ -15308,7 +15358,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "aegs_vanguard",
@@ -15939,7 +15991,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_arrow",
@@ -16374,7 +16428,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_asgard",
@@ -17130,7 +17186,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 180,
+      "maxCrateScu": 32
     },
     {
       "id": "anvl_c8_pisces",
@@ -17424,7 +17482,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 4,
+      "maxCrateScu": 2
     },
     {
       "id": "anvl_c8r_pisces",
@@ -17718,7 +17778,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_c8x_pisces_expedition",
@@ -18080,7 +18142,9 @@
           "maxSize": 1,
           "defaultEntityClass": "kron_lasercannon_s1"
         }
-      ]
+      ],
+      "cargoScu": 4,
+      "maxCrateScu": 2
     },
     {
       "id": "anvl_carrack",
@@ -18539,7 +18603,9 @@
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
         }
-      ]
+      ],
+      "cargoScu": 456,
+      "maxCrateScu": 32
     },
     {
       "id": "anvl_carrack_expedition",
@@ -18998,7 +19064,9 @@
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
         }
-      ]
+      ],
+      "cargoScu": 456,
+      "maxCrateScu": 32
     },
     {
       "id": "anvl_hornet_f7a_mk1",
@@ -19562,7 +19630,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7a_mk2",
@@ -20035,7 +20105,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7c",
@@ -20505,7 +20577,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7c_mk2",
@@ -20954,7 +21028,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7c_wildfire",
@@ -21435,7 +21511,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cm_heartseeker",
@@ -21806,7 +21884,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cm_mk2_heartseeker",
@@ -22273,7 +22353,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cm",
@@ -22661,7 +22743,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cm_mk2",
@@ -23258,7 +23342,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cr",
@@ -23728,7 +23814,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cr_mk2",
@@ -24177,7 +24265,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cs",
@@ -24647,7 +24737,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hornet_f7cs_mk2",
@@ -25096,7 +25188,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_lightning_f8",
@@ -25661,7 +25755,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_lightning_f8c",
@@ -26226,7 +26322,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_gladiator",
@@ -26769,7 +26867,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hawk",
@@ -27178,7 +27278,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_hurricane",
@@ -27641,7 +27743,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_paladin",
@@ -28204,7 +28308,9 @@
           "maxSize": 4,
           "defaultEntityClass": "misl_s04_em_taln_raptor"
         }
-      ]
+      ],
+      "cargoScu": 4,
+      "maxCrateScu": 2
     },
     {
       "id": "anvl_terrapin",
@@ -28456,7 +28562,9 @@
           "maxSize": 2,
           "defaultEntityClass": "klwe_laserrepeater_s2"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_terrapin_medic",
@@ -28689,7 +28797,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "anvl_valkyrie",
@@ -29235,7 +29345,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 90,
+      "maxCrateScu": 32
     },
     {
       "id": "anvl_valkyrie_citizencon",
@@ -29781,7 +29893,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 90,
+      "maxCrateScu": 32
     },
     {
       "id": "xian_scout",
@@ -30035,7 +30149,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "xian_nox",
@@ -30209,7 +30325,9 @@
           "maxSize": 1,
           "defaultEntityClass": "klwe_laserrepeater_s1"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "xian_nox_kue",
@@ -30363,7 +30481,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "xnaa_santokyai",
@@ -30869,7 +30989,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "argo_mole",
@@ -31185,7 +31307,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "argo_mole_btala",
@@ -31501,7 +31625,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "argo_moth",
@@ -31942,7 +32068,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "argo_mpuv",
@@ -32097,7 +32225,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "argo_mpuv_transport",
@@ -32252,7 +32382,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "argo_mpuv_1t",
@@ -32437,7 +32569,9 @@
           "maxSize": 1,
           "defaultEntityClass": "grin_tractorbeam_s1"
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "argo_raft",
@@ -32794,7 +32928,9 @@
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
-      ]
+      ],
+      "cargoScu": 192,
+      "maxCrateScu": 32
     },
     {
       "id": "argo_srv",
@@ -32960,7 +33096,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "banu_defender",
@@ -33412,7 +33550,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_hoverquad",
@@ -33520,7 +33660,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_mustang_alpha",
@@ -33795,7 +33937,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_mustang_beta",
@@ -34070,7 +34214,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_mustang_alpha_citizencon2018",
@@ -34345,7 +34491,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_mustang_delta",
@@ -34678,7 +34826,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_mustang_gamma",
@@ -34953,7 +35103,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_mustang_omega",
@@ -35228,7 +35380,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "cnou_nomad",
@@ -35689,7 +35843,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "crus_spirit_a1",
@@ -36245,7 +36401,9 @@
           "maxSize": 5,
           "defaultEntityClass": "bomb_s05_fski"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "crus_starlifter_a2",
@@ -37049,7 +37207,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 219,
+      "maxCrateScu": 32
     },
     {
       "id": "crus_starfighter_inferno",
@@ -37545,7 +37705,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "crus_starfighter_ion",
@@ -38041,7 +38203,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "crus_spirit_c1",
@@ -38441,7 +38605,9 @@
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         }
-      ]
+      ],
+      "cargoScu": 64,
+      "maxCrateScu": 16
     },
     {
       "id": "crus_spirit_c1_civilian",
@@ -38841,7 +39007,9 @@
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         }
-      ]
+      ],
+      "cargoScu": 64,
+      "maxCrateScu": 16
     },
     {
       "id": "crus_starlifter_c2",
@@ -39254,7 +39422,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 696,
+      "maxCrateScu": 32
     },
     {
       "id": "crus_intrepid",
@@ -39509,7 +39679,9 @@
           "maxSize": 4,
           "defaultEntityClass": "klwe_laserrepeater_s4"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "crus_starlifter_m2",
@@ -39980,7 +40152,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 525,
+      "maxCrateScu": 32
     },
     {
       "id": "crus_star_runner",
@@ -40452,7 +40626,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         }
-      ]
+      ],
+      "cargoScu": 114,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_buccaneer",
@@ -40882,7 +41058,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_caterpillar",
@@ -41228,7 +41406,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 444,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_caterpillar_shipshowdown",
@@ -41574,7 +41754,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 444,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_caterpillar_pirate",
@@ -41920,7 +42102,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 444,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_clipper",
@@ -42636,7 +42820,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 12,
+      "maxCrateScu": 8
     },
     {
       "id": "drak_command_module",
@@ -42956,7 +43142,9 @@
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_corsair",
@@ -43679,7 +43867,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 72,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_cutlass_black_shipshowdown",
@@ -44345,7 +44535,9 @@
           "maxSize": 1,
           "defaultEntityClass": "grin_tractorbeam_s1"
         }
-      ]
+      ],
+      "cargoScu": 46,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_cutlass_black",
@@ -45011,7 +45203,9 @@
           "maxSize": 1,
           "defaultEntityClass": "grin_tractorbeam_s1"
         }
-      ]
+      ],
+      "cargoScu": 46,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_cutlass_blue",
@@ -45743,7 +45937,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 12,
+      "maxCrateScu": 4
     },
     {
       "id": "drak_cutlass_red",
@@ -46072,7 +46268,9 @@
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
         }
-      ]
+      ],
+      "cargoScu": 12,
+      "maxCrateScu": 4
     },
     {
       "id": "drak_cutlass_steel",
@@ -46779,7 +46977,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_cutter",
@@ -47085,7 +47285,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         }
-      ]
+      ],
+      "cargoScu": 4,
+      "maxCrateScu": 4
     },
     {
       "id": "drak_cutter_rambler",
@@ -47391,7 +47593,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "drak_cutter_scout",
@@ -47677,7 +47881,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "drak_dragonfly",
@@ -47856,7 +48062,9 @@
           "maxSize": 1,
           "defaultEntityClass": "apar_ballisticscattergun_s1"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_dragonfly_pink",
@@ -48035,7 +48243,9 @@
           "maxSize": 1,
           "defaultEntityClass": "apar_ballisticscattergun_s1"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_dragonfly_yellow",
@@ -48214,7 +48424,9 @@
           "maxSize": 1,
           "defaultEntityClass": "apar_ballisticscattergun_s1"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_golem",
@@ -48520,7 +48732,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_golem_btala",
@@ -48826,7 +49040,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_golem_ox",
@@ -49154,7 +49370,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         }
-      ]
+      ],
+      "cargoScu": 64,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_herald",
@@ -49666,7 +49884,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_ironclad",
@@ -50490,7 +50710,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 2200,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_ironclad_assault",
@@ -51539,7 +51761,9 @@
           "defaultEntityClass": null,
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 1440,
+      "maxCrateScu": 32
     },
     {
       "id": "drak_pitbull",
@@ -52067,7 +52291,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "drak_vulture",
@@ -52385,7 +52611,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 12,
+      "maxCrateScu": 8
     },
     {
       "id": "vncl_blade",
@@ -52841,7 +53069,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "vncl_glaive",
@@ -53247,7 +53477,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "espr_prowler",
@@ -53630,7 +53862,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "espr_prowler_utility",
@@ -54023,7 +54257,9 @@
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "vncl_stinger",
@@ -54706,7 +54942,9 @@
           "defaultEntityClass": null,
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "espr_talon",
@@ -55100,7 +55338,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "espr_talon_shrike",
@@ -55694,7 +55934,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "gama_railen",
@@ -56490,7 +56732,9 @@
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
-      ]
+      ],
+      "cargoScu": 640,
+      "maxCrateScu": 32
     },
     {
       "id": "gama_syulen",
@@ -56947,7 +57191,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "gama_tyilui",
@@ -57838,7 +58084,9 @@
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
-      ]
+      ],
+      "cargoScu": 96,
+      "maxCrateScu": 32
     },
     {
       "id": "glsn_basher",
@@ -58308,7 +58556,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "glsn_shiv",
@@ -58923,7 +59173,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_fski_tempest"
         }
-      ]
+      ],
+      "cargoScu": 32,
+      "maxCrateScu": 16
     },
     {
       "id": "krig_l21_wolf",
@@ -59313,7 +59565,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "krig_l22_alphawolf",
@@ -59683,7 +59937,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_em_taln_dominator"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "krig_p52_merlin",
@@ -59914,7 +60170,9 @@
           "defaultEntityClass": "lfsp_tydt_s00_comfortairlite",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "krig_p72_archimedes",
@@ -60148,7 +60406,9 @@
           "defaultEntityClass": "lfsp_tydt_s00_comfortairlite",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "krig_p72_archimedes_emerald",
@@ -60382,7 +60642,9 @@
           "defaultEntityClass": "lfsp_tydt_s00_comfortairlite",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "krig_s65_stingray",
@@ -60918,7 +61180,9 @@
           "maxSize": 4,
           "defaultEntityClass": "krig_laserrepeater_bespoke_s4"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_fury",
@@ -61332,7 +61596,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_fury_lx",
@@ -61490,7 +61756,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_fury_miru",
@@ -62104,7 +62372,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "mrai_guardian",
@@ -62574,7 +62844,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "mrai_guardian_mx",
@@ -63176,7 +63448,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "mrai_guardian_qi",
@@ -63587,7 +63861,9 @@
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_cs_fski_arrester"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "mrai_guardian_military",
@@ -64057,7 +64333,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "mrai_pulse",
@@ -64195,7 +64473,9 @@
           "defaultEntityClass": "toag_lasergatling_s2",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "mrai_pulse_lx",
@@ -64322,7 +64602,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_razor",
@@ -64616,7 +64898,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_razor_ex",
@@ -64910,7 +65194,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_razor_lx",
@@ -65204,7 +65490,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_fortune",
@@ -65480,7 +65768,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_freelancer",
@@ -66017,7 +66307,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 66,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_freelancer_dur",
@@ -66538,7 +66830,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 36,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_freelancer_max",
@@ -67075,7 +67369,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 120,
+      "maxCrateScu": 32
     },
     {
       "id": "misc_freelancer_mis",
@@ -67832,7 +68128,9 @@
           "maxSize": 3,
           "defaultEntityClass": "misl_s03_em_fski_thunderbolt"
         }
-      ]
+      ],
+      "cargoScu": 36,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_hull_a",
@@ -68044,7 +68342,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 64,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_hull_b",
@@ -68557,7 +68857,9 @@
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
         }
-      ]
+      ],
+      "cargoScu": 512,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_hull_c",
@@ -69007,7 +69309,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 576,
+      "maxCrateScu": 32
     },
     {
       "id": "misc_prospector",
@@ -69289,7 +69593,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_prospector_btala",
@@ -69571,7 +69877,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_reliant",
@@ -70024,7 +70332,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 6,
+      "maxCrateScu": 2
     },
     {
       "id": "misc_reliant_mako",
@@ -70447,7 +70757,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_reliant_sen",
@@ -70870,7 +71182,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "misc_reliant_tana",
@@ -71473,7 +71787,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 1,
+      "maxCrateScu": 1
     },
     {
       "id": "misc_starfarer",
@@ -71955,7 +72271,9 @@
           "maxSize": 3,
           "defaultEntityClass": "powr_amrs_s03_superdrive_scitem"
         }
-      ]
+      ],
+      "cargoScu": 291,
+      "maxCrateScu": 32
     },
     {
       "id": "misc_starfarer_gemini",
@@ -72527,7 +72845,9 @@
           "maxSize": 3,
           "defaultEntityClass": "powr_amrs_s03_superdrive_scitem"
         }
-      ]
+      ],
+      "cargoScu": 291,
+      "maxCrateScu": 32
     },
     {
       "id": "misc_starlancer_max",
@@ -73159,7 +73479,9 @@
           "defaultEntityClass": "lfsp_tydt_s02_comfortairplus",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 96,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_starlancer_tac",
@@ -74158,7 +74480,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 96,
+      "maxCrateScu": 16
     },
     {
       "id": "misc_starlite",
@@ -74541,7 +74865,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_cs_fski_spark"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_100i",
@@ -74826,7 +75152,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "orig_125a",
@@ -75172,7 +75500,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_cs_thcn_strikeforce"
         }
-      ]
+      ],
+      "cargoScu": 2,
+      "maxCrateScu": 2
     },
     {
       "id": "orig_135c",
@@ -75457,7 +75787,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_300i",
@@ -75818,7 +76150,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 8,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_315p",
@@ -76159,7 +76493,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 12,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_325a",
@@ -76597,7 +76933,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 4,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_350r",
@@ -76958,7 +77296,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 4,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_400i",
@@ -77730,7 +78070,9 @@
           "maxSize": 2,
           "defaultEntityClass": "cool_just_s02_snowfall_scitem"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_600i",
@@ -78385,7 +78727,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 44,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_600i_executive_edition",
@@ -79040,7 +79384,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 44,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_600i_touring",
@@ -79695,7 +80041,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 20,
+      "maxCrateScu": 4
     },
     {
       "id": "orig_85x",
@@ -79994,7 +80342,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_890jump",
@@ -80977,7 +81327,9 @@
           "defaultEntityClass": "lfsp_s04_orig_890",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 100,
+      "maxCrateScu": 16
     },
     {
       "id": "orig_m50",
@@ -81273,7 +81625,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_m80",
@@ -81893,7 +82247,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_em_behr_pioneer"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_x1",
@@ -82038,7 +82394,9 @@
           "maxSize": 1,
           "defaultEntityClass": "behr_lasercannon_s1"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_x1_force",
@@ -82209,7 +82567,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "orig_x1_velocity",
@@ -82320,7 +82680,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_apollo_medivac",
@@ -82949,7 +83311,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 32,
+      "maxCrateScu": 16
     },
     {
       "id": "rsi_apollo_triage",
@@ -83498,7 +83862,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 32,
+      "maxCrateScu": 16
     },
     {
       "id": "rsi_aurora_mk2",
@@ -83974,7 +84340,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_constellation_andromeda",
@@ -85086,7 +85454,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_constellation_aquila",
@@ -85813,7 +86183,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_constellation_phoenix",
@@ -86609,7 +86981,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_constellation_phoenix_emerald",
@@ -87405,7 +87779,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_constellation_taurus",
@@ -88131,7 +88507,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 6,
+      "maxCrateScu": 4
     },
     {
       "id": "rsi_constellation_taurus_military",
@@ -88857,7 +89235,9 @@
           "defaultEntityClass": "lfsp_tydt_s03_comfortairmax",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 6,
+      "maxCrateScu": 4
     },
     {
       "id": "rsi_constellation_mk5_centaurus",
@@ -89759,7 +90139,9 @@
           "maxSize": 3,
           "defaultEntityClass": "klwe_laserrepeater_s3"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_hermes",
@@ -90373,7 +90755,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 288,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_mantis",
@@ -90781,7 +91165,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_ir_fski_ignite"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_meteor",
@@ -91381,7 +91767,9 @@
           "maxSize": 4,
           "defaultEntityClass": "misl_s04_em_taln_raptor"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_perseus",
@@ -92174,7 +92562,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_polaris",
@@ -93678,7 +94068,9 @@
           "defaultEntityClass": null,
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 576,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_salvation",
@@ -93959,7 +94351,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_scorpius",
@@ -94620,7 +95014,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_scorpius_antares",
@@ -95310,7 +95706,9 @@
           ],
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_scorpius_stealth",
@@ -95971,7 +96369,9 @@
             }
           ]
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_skylark",
@@ -96385,7 +96785,9 @@
           "maxSize": 1,
           "defaultEntityClass": "misl_s01_ir_behr_marksman"
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "rsi_zeus_cl",
@@ -96851,7 +97253,9 @@
           "maxSize": 2,
           "defaultEntityClass": "grin_tractorbeam_s2"
         }
-      ]
+      ],
+      "cargoScu": 128,
+      "maxCrateScu": 32
     },
     {
       "id": "rsi_zeus_es",
@@ -97364,7 +97768,9 @@
           "maxSize": 2,
           "defaultEntityClass": "misl_s02_em_taln_dominator"
         }
-      ]
+      ],
+      "cargoScu": 32,
+      "maxCrateScu": 32
     },
     {
       "id": "vncl_mauler",
@@ -98335,7 +98741,9 @@
           "defaultEntityClass": "vncl_gen2_laserrepeater_s6",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     },
     {
       "id": "vncl_scythe",
@@ -98741,7 +99149,9 @@
           "defaultEntityClass": "lfsp_tydt_s01_comfortair",
           "locked": true
         }
-      ]
+      ],
+      "cargoScu": 0,
+      "maxCrateScu": 0
     }
   ]
 }

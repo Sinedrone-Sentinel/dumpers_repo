@@ -73,6 +73,10 @@ export interface GameShip {
   boostSpeed: number | null
   maxSpeed: number | null
   weaponPowerPool?: number
+  /** Freight grids only. Walkways, ladders, access, and fake grids are not counted. */
+  cargoScu?: number
+  /** Largest standard crate, 1 through 32 SCU, that fits in any one freight grid. */
+  maxCrateScu?: number
   ports: ShipPort[]
 }
 
