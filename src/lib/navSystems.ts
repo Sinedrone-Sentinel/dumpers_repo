@@ -55,6 +55,7 @@ export interface NavHop {
   systemId: string
   systemName: string
   label: string
+  role: 'depart' | 'arrive'
 }
 
 export interface NavPath {
@@ -93,7 +94,7 @@ function systemByLabel(nav: NavMap, label: string | null | undefined): NavSystem
   return nav.systems.find((system) => compact(system.id) === key || compact(system.name) === key) || null
 }
 
-function hopFor(nav: NavMap, pointId: string): NavHop {
+function hopFor(nav: NavMap, pointId: string, role: 'depart' | 'arrive'): NavHop {
   const point = pointById(nav, pointId)
   const system = systemById(nav, point?.system)
   const name = point?.name || pointId
@@ -104,6 +105,7 @@ function hopFor(nav: NavMap, pointId: string): NavHop {
     systemId: point?.system || '',
     systemName,
     label: `${name} in ${systemName}`,
+    role,
   }
 }
 
@@ -147,12 +149,30 @@ export function pathBetween(nav: NavMap, fromId: string | null, toId: string): N
     const arrive = pointById(nav, link.arrive)
     if (!depart || !arrive) return { km: Number.POSITIVE_INFINITY, hops: [], reachable: false }
     if (cursor.id !== depart.id) km += kmBetween(cursor, depart)
-    if (depart.id !== from.id && depart.id !== to.id) hops.push(hopFor(nav, depart.id))
-    if (arrive.id !== from.id && arrive.id !== to.id && arrive.id !== depart.id) hops.push(hopFor(nav, arrive.id))
+    if (depart.id !== from.id && depart.id !== to.id) hops.push(hopFor(nav, depart.id, 'depart'))
+    if (arrive.id !== from.id && arrive.id !== to.id && arrive.id !== depart.id) hops.push(hopFor(nav, arrive.id, 'arrive'))
     cursor = arrive
   }
   if (cursor.id !== to.id) km += kmBetween(cursor, to)
   return { km, hops, reachable: true }
+}
+
+/** One sentence per system jump. A depart/arrive pair is a single jump. */
+export function describeJumps(hops: NavHop[]): string[] {
+  const sentences: string[] = []
+  let index = 0
+  while (index < hops.length) {
+    const hop = hops[index]
+    const next = hops[index + 1]
+    if (hop.role === 'depart' && next?.role === 'arrive') {
+      sentences.push(`Use ${hop.label}, jump to ${next.label}`)
+      index += 2
+      continue
+    }
+    sentences.push(hop.role === 'arrive' ? `Jump to ${hop.label}` : `Use ${hop.label} to jump`)
+    index += 1
+  }
+  return sentences
 }
 
 export function searchNavPoints(query: string, nav: NavMap = navMap, limit = 12): NavSearchHit[] {
