@@ -39,6 +39,16 @@ export function isForSale(listings: ShopListing[]): boolean {
   return listings.some((row) => row.price > 0)
 }
 
+function carriesPdcTag(tags: string | null | undefined, requiredTags: string | null | undefined): boolean {
+  return /\bpdc\b/i.test(`${tags || ''} ${requiredTags || ''}`)
+}
+
+/** An unsold point-defense part has no shop to open. Sold parts, including a PDC gun that is sold, still do. */
+export function showPartWhereToBuy(item: { entityClass: string; tags?: string | null; requiredTags?: string | null }): boolean {
+  if (isForSale(partListings(item.entityClass))) return true
+  return !carriesPdcTag(item.tags, item.requiredTags)
+}
+
 export function placeName(listing: ShopListing): string {
   return listing.station || listing.city || listing.outpost || listing.moon || listing.planet || 'Unknown'
 }

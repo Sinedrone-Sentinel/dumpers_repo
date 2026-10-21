@@ -564,4 +564,64 @@ const spiritTubes = shop.missileSlotsForRack(spirit, spiritBay, { entityClass: '
 assert.equal(spiritTubes.length, 10)
 assert.deepEqual(shop.partsForPort(spiritTubes[0], spirit).map((item) => item.displayName), ['Stormburst Bomb'])
 
+const pdt = polarisShip.ports.find((port) => port.id === 'hardpoint_pdc_top_01')
+assert.equal(pdt.label, 'PDT 1')
+assert.equal(pdt.size, 2)
+assert.equal(pdt.maxSize, 2)
+assert.notEqual(pdt.locked, true)
+assert.equal(pdt.pilotWeapon, true)
+assert.equal(pdt.defaultEntityClass, 'turret_pdc_behr_a')
+assert.equal(polarisShip.ports.some((port) => /pdc_.*(controller|aimodule|_wc|_mc|_aim)/.test(port.id)), false)
+const pdcChoices = shop.partsForPort(pdt, polarisShip).map((item) => item.entityClass).sort()
+assert.deepEqual(pdcChoices, [
+  'turret_pdc_behr_a',
+  'turret_pdc_behr_g',
+  'turret_pdc_behr_m',
+  'turret_pdc_vncl',
+])
+const polarisGun = polarisShip.ports.find((port) => port.kind === 'weapon')
+assert.equal(shop.partsForPort(polarisGun, polarisShip).some((item) => item.kind === 'turret'), false)
+const polarisStock = shop.stockPorts(polarisShip)
+assert.equal(polarisStock['hardpoint_pdc_top_01/hardpoint_turret_weapon'].entityClass, 'behr_laserrepeater_pdc_s1')
+const pepper = shop.applyPortFit(polarisShip, polarisStock, pdt, { entityClass: 'turret_pdc_behr_m', source: 'stock' })
+assert.equal(pepper['hardpoint_pdc_top_01'].entityClass, 'turret_pdc_behr_m')
+assert.equal(pepper['hardpoint_pdc_top_01/hardpoint_turret_weapon'], undefined)
+assert.equal(pepper['hardpoint_pdc_top_01/turret_centre'].entityClass, 'mrck_s05_behr_pdc_missile_16_s1')
+const cleared = shop.applyPortFit(polarisShip, polarisStock, pdt, null)
+assert.equal(cleared['hardpoint_pdc_top_01'], undefined)
+const perseus = shop.getShip('rsi_perseus')
+const perseusPdt = perseus.ports.find((port) => /^hardpoint_pdc(?:_|$)/.test(port.id))
+assert.notEqual(perseusPdt.locked, true)
+const moved = shop.applyPortFit(perseus, shop.stockPorts(perseus), perseusPdt, { entityClass: 'turret_pdc_behr_a', source: 'stock' })
+assert.equal(moved[perseusPdt.id].entityClass, 'turret_pdc_behr_a')
+
+const gladiusShip = shop.getShip('aegs_gladius')
+const gladiusSnap = shop.snapshotForBuild(gladiusShip, shop.stockPorts(gladiusShip))
+assert.ok(gladiusSnap.burstDps > 0)
+assert.equal(gladiusSnap.pilotDps, gladiusSnap.burstDps)
+const cutlass = shop.getShip('drak_cutlass_black')
+const cutlassSnap = shop.snapshotForBuild(cutlass, shop.stockPorts(cutlass))
+assert.ok(cutlassSnap.pilotDps > 0)
+assert.ok(cutlassSnap.pilotDps < cutlassSnap.burstDps)
+const polarisSnap = shop.snapshotForBuild(polarisShip, polarisStock)
+assert.ok(polarisSnap.pilotDps > 0)
+assert.ok(polarisSnap.pilotDps < polarisSnap.burstDps)
+const pepperSnap = shop.snapshotForBuild(polarisShip, pepper)
+assert.ok(pepperSnap.pilotDps < polarisSnap.pilotDps)
+
+const shopsOut = path.join('node_modules', '.cache', 'ship-shop-shops.mjs')
+await esbuild.build({
+  entryPoints: [path.join('src', 'lib', 'shipShopShops.ts')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  outfile: shopsOut,
+  packages: 'external',
+})
+const shops = await import(`${pathToFileURL(path.resolve(shopsOut)).href}?t=${Date.now()}`)
+assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'turret_pdc_behr_a')), false)
+assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'behr_ballisticgatling_pdc_s1')), false)
+assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'behr_laserrepeater_pdc_s1')), true)
+assert.equal(shops.showPartWhereToBuy(items.find((item) => item.entityClass === 'mrck_s05_behr_pdc_missile_16_s1')), true)
+
 console.log('ship shop catalog checks passed')

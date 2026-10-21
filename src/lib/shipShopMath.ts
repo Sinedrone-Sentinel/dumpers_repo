@@ -396,6 +396,7 @@ export function formatQuantumSpeed(value: number | null | undefined): string {
 }
 
 export interface ShipSnapshotNumbers {
+  pilotDps: number
   burstDps: number
   sustainedDps: number
   missileVolley: number
@@ -445,6 +446,7 @@ export function emptySnapshot(ship?: {
   maxSpeed?: number | null
 } | null): ShipSnapshotNumbers {
   return {
+    pilotDps: 0,
     burstDps: 0,
     sustainedDps: 0,
     missileVolley: 0,

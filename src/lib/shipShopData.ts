@@ -28,6 +28,7 @@ import {
   resolvedPower,
   segmentScale,
   shieldPowerFactor,
+  weaponBurstDps,
   type FittedPart,
   type MissileMount,
   type PortAccept,
@@ -51,6 +52,8 @@ export interface ShipPort {
   requiredTags?: string
   portTags?: string
   accepts?: PortAccept[]
+  /** Guns on the crew regen pipe, plus point-defense guns. Manned and remote turrets are not included. */
+  pilotWeapon?: boolean
 }
 
 export interface GameShip {
@@ -169,11 +172,14 @@ function slotFromMount(ship: GameShip, parentId: string, mount: MissileMount, fi
   const stockItem = getShipItem(mount.defaultEntityClass || stock?.defaultEntityClass || '')
   const shown = fittedItem || stockItem
   const ordnance = ordnanceSlotKind(mount)
-  const kind = ordnance || (shown?.kind === 'weaponMount' || stock?.kind === 'weaponMount' ? 'weaponMount' : 'weapon')
+  const rack = mount.kind === 'missileRack' || shown?.kind === 'missileRack'
+  const kind = rack
+    ? 'missileRack'
+    : ordnance || (shown?.kind === 'weaponMount' || stock?.kind === 'weaponMount' ? 'weaponMount' : 'weapon')
   return {
     id,
     label: stock?.label || humanMountName(mount.name),
-    section: ordnance ? 'missiles' : 'weapons',
+    section: rack || ordnance ? 'missiles' : 'weapons',
     kind,
     size: mount.maxSize || mount.minSize,
     minSize: mount.minSize || mount.maxSize,
@@ -216,7 +222,7 @@ function resolveWeaponPorts(ship: GameShip, fitted?: Record<string, FittedPart>)
   }
   for (const port of weaponPorts) {
     const item = getShipItem(fitted[port.id]?.entityClass)
-    if (item?.kind !== 'weaponMount' || !item.mounts?.length) continue
+    if ((item?.kind !== 'weaponMount' && item?.kind !== 'turret') || !item.mounts?.length) continue
     for (const child of weaponPorts) {
       if (child.id.startsWith(`${port.id}/`)) hidden.add(child.id)
     }
@@ -247,7 +253,7 @@ function childAllowed(ship: GameShip, ports: Record<string, FittedPart>, portId:
     if (!mountSizeFits(item.size, mount)) return false
     return itemFitsPort(item, slotFromModuleMount(ship, parentId, mount, ports))
   }
-  if (!parentItem || parentItem.kind !== 'weaponMount' || !parentItem.mounts?.length) return true
+  if (!parentItem || (parentItem.kind !== 'weaponMount' && parentItem.kind !== 'turret') || !parentItem.mounts?.length) return true
   const mount = parentItem.mounts.find((entry) => entry.name === portId.slice(slash + 1))
   if (!mount) return false
   const item = getShipItem(ports[portId]?.entityClass)
@@ -383,7 +389,10 @@ function collapseSameChoice(port: ShipPort, items: ShipItemStats[]): ShipItemSta
       rest.push(item)
       continue
     }
-    const key = `${item.kind}|${item.size}|${item.displayName.trim().toLowerCase()}`
+    const child = item.kind === 'turret'
+      ? (item.mounts || []).map((mount) => mount.defaultEntityClass || '').sort().join(',')
+      : ''
+    const key = `${item.kind}|${item.size}|${item.displayName.trim().toLowerCase()}|${child}`
     const group = groups.get(key)
     if (group) group.push(item)
     else groups.set(key, [item])
@@ -951,7 +960,7 @@ function syncMissileTubes(ports: Record<string, FittedPart>, parentId: string, i
 
 /** Keep a child gun when it still fits the new mount. Locked guns are filled from the mount. A stock turret that does not list its own ports keeps the gimbals and guns the ship defines under it. */
 function syncMountChildren(ship: GameShip, ports: Record<string, FittedPart>, parentId: string, item: ShipItemStats | null) {
-  const mounts = item?.kind === 'weaponMount' ? item.mounts || [] : []
+  const mounts = item?.kind === 'weaponMount' || item?.kind === 'turret' ? item.mounts || [] : []
   if (mounts.length === 0) {
     const parent = ship.ports.find((port) => port.id === parentId)
     if (parent?.defaultEntityClass && ports[parentId]?.entityClass === parent.defaultEntityClass) {
@@ -1167,7 +1176,7 @@ export function stockPorts(ship: GameShip): Record<string, FittedPart> {
   }
   for (const port of ship.ports) {
     const item = getShipItem(ports[port.id]?.entityClass)
-    if (item?.kind === 'weaponMount') syncMountChildren(ship, ports, port.id, item)
+    if (item?.kind === 'weaponMount' || item?.kind === 'turret') syncMountChildren(ship, ports, port.id, item)
     if (item?.kind === 'module') syncModuleChildren(ship, ports, port.id, item)
   }
   return ports
@@ -1422,6 +1431,19 @@ export function fittedPowerParts(ship: GameShip, ports: Record<string, FittedPar
   return parts
 }
 
+function portIsPilotWeapon(ship: GameShip, portId: string): boolean {
+  let id = portId
+  while (id) {
+    const port = ship.ports.find((entry) => entry.id === id)
+    if (port?.pilotWeapon) return true
+    if (/\bpdc\b/i.test(`${port?.portTags || ''} ${port?.requiredTags || ''}`)) return true
+    const slash = id.lastIndexOf('/')
+    if (slash <= 0) break
+    id = id.slice(0, slash)
+  }
+  return false
+}
+
 export function snapshotForBuild(
   ship: GameShip | null,
   ports: Record<string, FittedPart>,
@@ -1460,6 +1482,9 @@ export function snapshotForBuild(
     const pips = pipCounts.get(part.portId) || 0
     const scale = part.kind === 'shield' ? shieldPowerFactor(part.stats, pips) : scaleFor(part)
     addPartToSnapshot(snapshot, part.kind, part.stats, scale)
+    if (part.kind === 'weapon' && portIsPilotWeapon(ship, part.portId)) {
+      snapshot.pilotDps += weaponBurstDps(part.stats) * (scale > 0 ? 1 : 0)
+    }
     if (part.kind === 'radar') {
       const range = radarRangeForPips(part.stats, pips)
       if (range != null) snapshot.radarRange = Math.max(snapshot.radarRange || 0, range)

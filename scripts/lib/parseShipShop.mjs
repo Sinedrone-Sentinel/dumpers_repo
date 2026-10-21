@@ -128,6 +128,11 @@ function kindFromPortDef(def) {
   const has = (name) => types.includes(name)
   if (has('missilelauncher') || has('bomblauncher')) return { section: 'missiles', kind: 'missileRack' }
   if (has('torpedo') && !has('missilelauncher')) return { section: 'missiles', kind: 'torpedo' }
+  if (has('turret') && !has('weapongun')) {
+    const tags = `${def.portTags || ''} ${def.requiredTags || ''}`
+    if (/\bpdc\b/i.test(tags)) return { section: 'weapons', kind: 'turret' }
+    return { section: 'weapons', kind: 'weaponMount' }
+  }
   if (has('turret')) return { section: 'weapons', kind: 'weaponMount' }
   if (has('weapongun')) return { section: 'weapons', kind: 'weapon' }
   if (has('emp')) return { section: 'emp', kind: 'emp' }
@@ -207,6 +212,7 @@ function kindForItem(filePath, entityKey) {
   if (id.includes('/weapons/') && !id.includes('/missiles/')) return 'weapon'
   if (id.includes('/bombcompartments/') || /(?:^|_)bmbrck_/.test(entityKey.toLowerCase())) return 'missileRack'
   if (/mrck_|missilerack/.test(id)) return 'missileRack'
+  if (id.includes('/turret/')) return 'turret'
   return null
 }
 
@@ -220,6 +226,7 @@ const ITEM_KIND_PORT = {
   life: ['systems', 'life'],
   flight: ['systems', 'flight'],
   weapon: ['weapons', 'weapon'],
+  turret: ['weapons', 'turret'],
   emp: ['emp', 'emp'],
   module: ['modules', 'module'],
 }
@@ -312,6 +319,7 @@ function shapePort(name, port, portDefs) {
     if (def.requiredTags) next.requiredTags = def.requiredTags
     if (def.portTags) next.portTags = def.portTags
     if (def.accepts?.length) next.accepts = def.accepts
+    if (def.pilotWeapon) next.pilotWeapon = true
   }
   if ((next.kind === 'torpedo' || next.kind === 'life') && !bombBay) next.locked = true
   if (def && /uneditable/i.test(def.flags || '') && next.kind !== 'flight') next.locked = true
@@ -338,10 +346,13 @@ function portDefsFromXml(text) {
         requiredTags: attrValue(attrs, 'requiredTags'),
         portTags: attrValue(attrs, 'portTags'),
         accepts: [],
+        pilotWeapon: false,
       }
       defs.set(part.toLowerCase(), current)
     }
     if (!current) continue
+    const connectionMatch = line.match(/<Connection\s+([^>]*?)\s*\/?>/i)
+    if (connectionMatch && /weaponregencrew/i.test(attrValue(connectionMatch[1], 'pipe'))) current.pilotWeapon = true
     const typeMatch = line.match(/<Type\s+([^>]*?)\s*\/?>/i)
     if (typeMatch) {
       const type = attrValue(typeMatch[1], 'type')
@@ -354,6 +365,38 @@ function portDefsFromXml(text) {
       }
     }
     if (/<\/ItemPort>/i.test(line)) current = null
+  }
+  return defs
+}
+
+/** Editable size-2 PDT hardpoints live on the ship entity, not in the vehicle XML. */
+function isPdcHardpoint(name) {
+  const n = String(name || '').toLowerCase()
+  if (!/^hardpoint_pdc(?:_|$)/.test(n)) return false
+  return !/controller|aimodule|(?:^|_)(?:wc|mc|aim)(?:_|$)/.test(n)
+}
+
+function pdcPortDefs(json) {
+  const defs = new Map()
+  const container = firstComponent(json, 'SItemPortContainerComponentParams')
+  for (const port of container?.Ports || []) {
+    const name = port?.Name
+    if (!isPdcHardpoint(name)) continue
+    if (/uneditable/i.test(String(port.Flags || ''))) continue
+    const accepts = portAccepts(port)
+    if (!accepts.some((entry) => entry.type.toLowerCase() === 'turret')) continue
+    const maxSize = Number(port.MaxSize) || 0
+    const minSize = Number(port.MinSize) || maxSize
+    defs.set(String(name).toLowerCase(), {
+      minSize,
+      maxSize,
+      flags: String(port.Flags || ''),
+      requiredTags: String(port.RequiredPortTags || ''),
+      portTags: String(port.PortTags || ''),
+      accepts,
+      displayName: typeof port.DisplayName === 'string' ? port.DisplayName : '',
+      pilotWeapon: true,
+    })
   }
   return defs
 }
@@ -783,6 +826,7 @@ function weaponMountPorts(json) {
     copyPortRules(row, port)
     const fallback = defaults.get(String(name).toLowerCase())
     if (fallback) row.defaultEntityClass = fallback
+    if (row.kind === 'missile' && /mrck_|missilerack/.test(String(row.defaultEntityClass || ''))) row.kind = 'missileRack'
     const nested = entries.find((entry) => {
       const path = String(entry.path)
       return path.toLowerCase().startsWith(`${String(name).toLowerCase()}/`) && path.split('/').length === 2
@@ -832,6 +876,12 @@ export function parseShipShop({ extractedRoot, localization }) {
 
   for (const dir of INDEX_DIRS) walkFiles(join(records, dir)).forEach(remember)
   walkFiles(join(records, 'ammoparams')).forEach(remember)
+  for (const filePath of walkFiles(join(records, 'entities/scitem/ships/turret'))) {
+    const json = readJson(filePath)
+    const def = attachDef(json)
+    const sub = String(def?.SubType || '').toLowerCase()
+    if (sub === 'pdcturret' && Number(def?.Size) === 2) remember(filePath)
+  }
 
   function loadKey(key) {
     if (!key) return null
@@ -862,6 +912,11 @@ export function parseShipShop({ extractedRoot, localization }) {
     if (!kind) continue
     const def = attachDef(json)
     if (kind === 'module' && String(def?.Type || '').toLowerCase() !== 'module') continue
+    if (kind === 'turret') {
+      const sub = String(def?.SubType || '').toLowerCase()
+      const turretSize = Number(def?.Size) || 0
+      if (sub !== 'pdcturret' || turretSize !== 2) continue
+    }
     const locKey = String(def?.Localization?.Name || '')
     const moduleNameKey = locKey.replace(/^@/, '')
     if (kind === 'module' && (!moduleNameKey || /^loc_(?:placeholder|empty)$/i.test(moduleNameKey))) continue
@@ -898,7 +953,7 @@ export function parseShipShop({ extractedRoot, localization }) {
     const manufacturerCode = String(def?.Manufacturer || '').match(/scitemmanufacturer\.(\w+)\.json/i)?.[1]?.toUpperCase() || null
     const tags = typeof def?.Tags === 'string' ? def.Tags.trim() : ''
     const requiredTags = typeof def?.RequiredTags === 'string' ? def.RequiredTags.trim() : ''
-    const mounts = kind === 'missileRack' ? missileMounts(json) : kind === 'weaponMount' ? weaponMountPorts(json) : kind === 'module' ? moduleMounts(json) : []
+    const mounts = kind === 'missileRack' ? missileMounts(json) : kind === 'weaponMount' || kind === 'turret' ? weaponMountPorts(json) : kind === 'module' ? moduleMounts(json) : []
     if (entityClass === 'mrck_s03_temp_bomb') {
       for (const mount of mounts) {
         mount.minSize = 3
@@ -975,6 +1030,9 @@ export function parseShipShop({ extractedRoot, localization }) {
     const xml = vehicleXml(extractedRoot, vehicle)
     const hullHp = hullHpFromXml(xml)
     const portDefs = portDefsFromXml(xml)
+    for (const [name, def] of pdcPortDefs(json)) {
+      if (!portDefs.has(name)) portDefs.set(name, def)
+    }
     const crossSection = crossSectionFromShip(json)
 
     const loadout = firstComponent(json, 'SEntityComponentDefaultLoadoutParams')
@@ -1041,11 +1099,18 @@ export function parseShipShop({ extractedRoot, localization }) {
         defaultEntityClass: classed.kind !== 'module' && item?.kind === 'module' ? null : (item?.entityClass || null),
       }, portDefs)
       if (shaped.kind === 'turret' && !shaped.defaultEntityClass) shaped.locked = true
+      const titled = resolveName(portDef?.displayName, localization)
+      if (titled) shaped.label = titled
       const parentPath = entry.path.includes('/') ? entry.path.slice(0, entry.path.lastIndexOf('/')) : ''
       const parent = parentPath ? entryByPath.get(parentPath) : null
       const parentLock = parent ? locksFor(entityKeyFromEntry(parent.entry))?.get(entry.name.toLowerCase()) : null
       if (parentLock?.locked && shaped.kind !== 'flight') shaped.locked = true
       if (shaped) ports.push(shaped)
+    }
+
+    for (const port of ports) {
+      if (port.pilotWeapon) continue
+      if (ports.some((parent) => parent.pilotWeapon && port.id.startsWith(`${parent.id}/`))) port.pilotWeapon = true
     }
 
     const cargo = cargoLimitsFromEntries(entries, loadKey, extractedRoot, filePath)
