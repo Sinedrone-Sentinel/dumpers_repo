@@ -52,11 +52,11 @@ const FEATURES: FeatureCard[] = [
     cta: 'Open mining tracker offline →',
   },
   {
-    title: 'Commodity lookup',
-    body: 'Where to buy and sell commodities, UEX per-SCU prices, box sizes, and DFP bases for trade planning.',
+    title: 'UEX lookup',
+    body: 'Where to buy guns, ammo, armor, ships, commodities, food, and drinks, and where to sell commodities. Add a shop to the Shopping Cart.',
     href: '/commodity-lookup',
     action: 'offline',
-    cta: 'Open commodity lookup offline →',
+    cta: 'Open UEX lookup offline →',
   },
   {
     title: 'Community marketplace',

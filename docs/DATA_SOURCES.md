@@ -63,7 +63,8 @@ Crowdsourced prices and shop locations. Three separate bakes, all offline-first 
 | Command | Output | Used by |
 |---|---|---|
 | `npm run fetch-commodity-bases` | `dfp-commodity-bases.json` | Resource Tracker DFP Q0 bases (monthly refresh) |
-| `npm run fetch-shop-data` | `shop-commodity-index.json` | Commodity Lookup terminals and buy/sell listings |
+| `npm run fetch-shop-data` | `shop-commodity-index.json` | UEX Lookup commodity terminals and buy/sell listings |
+| `npm run fetch-shop-item-index` | `shop-item-index.json` | UEX Lookup guns, armor, food, and drinks |
 | `npm run fetch-mining-gear-shops` | `mining-gear-shops.json` | Smart Cracker Advisor "where can I buy this head/module/gadget" |
 | `npm run fetch-ship-shop-shops` | `ship-shop-shops.json` | Fuzy's Ship Shop Where to Buy and cart (ships, components, weapons, racks, ordnance, gimbals) |
 
@@ -145,6 +146,7 @@ Located in `/scripts/`:
 | `audit-alias-tables.mjs` | Report which manual alias/rarity tables are still required |
 | `fetch-commodity-dfp-bases.mjs` | Refresh UEX-backed Q0 bases → `dfp-commodity-bases.json` |
 | `fetch-shop-commodity-data.mjs` | Refresh UEX commodity buy/sell locations → `shop-commodity-index.json` (`npm run fetch-shop-data`) |
+| `fetch-shop-item-index.mjs` | Refresh UEX buy locations for personal guns, armor, food, and drinks → `shop-item-index.json` (`npm run fetch-shop-item-index`) |
 | `fetch-mining-gear-shops.mjs` | Refresh UEX buy locations for mining heads/modules/gadgets → `mining-gear-shops.json` (`npm run fetch-mining-gear-shops`) |
 | `fetch-ship-shop-shops.mjs` | Refresh UEX buy locations for ships and ship-shop parts → `ship-shop-shops.json` (`npm run fetch-ship-shop-shops`). Every patch, after parse |
 | `validate-blueprints.mjs` | Sanity-check `game-blueprints.json` after parse |
@@ -183,7 +185,8 @@ When a new Star Citizen patch drops, follow these steps locally. The super-admin
      `parse-extracted-data.mjs` (component names) or `src/data/mining-ore-aliases.json` (ores)
 6. **Optional UEX refresh (Dumpers Repo):** run before step 7 when updating crowdsourced commodity data:
    - `npm run fetch-commodity-bases` — DFP Q0 bases → `dfp-commodity-bases.json`
-   - `npm run fetch-shop-data` — Commodity Lookup terminals/listings → `shop-commodity-index.json`
+   - `npm run fetch-shop-data` — UEX Lookup commodity terminals/listings → `shop-commodity-index.json`
+   - `npm run fetch-shop-item-index` — UEX Lookup guns, armor, food, and drinks → `shop-item-index.json`
    - `npm run fetch-mining-gear-shops` — Advisor mining-gear buy locations → `mining-gear-shops.json`,
      then `npm run copy-mining-advisor-catalog` and
      `npx supabase functions deploy mining-loadout-advisor`

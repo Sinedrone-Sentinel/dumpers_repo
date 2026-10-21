@@ -35,6 +35,7 @@ import {
 import type { PendingQuestionnaire } from '../../lib/questionnaires'
 import { useNotepad } from '../../contexts/NotepadContext'
 import NotepadToggle from '../notepad/NotepadToggle'
+import CartHeaderButton from '../shop/CartHeaderButton'
 import NotepadPanel from '../notepad/NotepadPanel'
 import NotepadLeaveModal from '../notepad/NotepadLeaveModal'
 
@@ -148,7 +149,8 @@ export default function AppChrome({
         className="fixed top-0 inset-x-0 z-40 flex flex-col overflow-visible isolate"
       >
         {updateAvailable && <UpdateAvailableBanner />}
-        <div className="site-app-header relative pr-11">
+        <div className="site-app-header relative pr-24">
+          <CartHeaderButton className="absolute right-12 top-1/2 -translate-y-1/2" />
           <NotepadToggle className="absolute right-1 top-1/2 -translate-y-1/2" />
           <div className={`site-shell flex items-center gap-2 sm:gap-3 min-w-0 ${pathname === '/ship-shop' ? 'min-h-14' : 'h-14'}`}>
             <AppSidebar groups={navGroups} />

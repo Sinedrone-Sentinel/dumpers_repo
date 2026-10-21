@@ -26,6 +26,7 @@ export const SEO_PRERENDER_PATHS = [
   '/resources',
   '/mining-tracker',
   '/commodity-lookup',
+  '/shop-cart',
   '/archive',
   '/bazaar',
 ] as const
@@ -38,6 +39,7 @@ export const SEO_SITEMAP_PATHS = [
   '/resources/',
   '/mining-tracker/',
   '/commodity-lookup/',
+  '/shop-cart/',
   '/archive/',
   '/bazaar/',
   '/archive-guide.html',
@@ -82,10 +84,16 @@ const pages: Record<string, SeoPageConfig> = {
     canonicalPath: '/mining-tracker/',
   },
   '/commodity-lookup': {
-    title: "Star Citizen Commodity Lookup — Buy & Sell Locations | Dumper's Repo",
+    title: "Star Citizen UEX Lookup — Shops, Ships & Commodities | Dumper's Repo",
     description:
-      'Look up Star Citizen commodities — where to buy and sell, UEX per-SCU prices, SCU box sizes, and Dumper\'s Fair-Value Price (DFP) bases for trade planning.',
+      'Look up Star Citizen shops for guns, ammo, armor, ships, commodities, food, and drinks. UEX prices and buy locations, plus commodity sell terminals.',
     canonicalPath: '/commodity-lookup/',
+  },
+  '/shop-cart': {
+    title: "Shopping Cart | Dumper's Repo",
+    description:
+      'A browser shopping cart for Star Citizen shop goods from UEX Lookup. Separate from Fuzy\'s Ship Shop.',
+    canonicalPath: '/shop-cart/',
   },
   '/archive': {
     title: "Star Citizen Guides, Components & Lore Archive | Dumper's Repo",

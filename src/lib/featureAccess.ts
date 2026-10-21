@@ -18,6 +18,7 @@ export type FeatureId =
   | 'site_analytics'
   | 'mining_tracker'
   | 'commodity_lookup'
+  | 'shop_cart'
   | 'ship_shop'
   | 'partnership'
   | 'contribute'
@@ -67,6 +68,7 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       featureId === 'resource_tracker' ||
       featureId === 'fulfillment' ||
       featureId === 'commodity_lookup' ||
+      featureId === 'shop_cart' ||
       featureId === 'ship_shop'
     )
   }
@@ -119,6 +121,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
 
     case 'commodity_lookup':
       return !!ctx.role
+
+    case 'shop_cart':
+      return true
 
     case 'ship_shop':
       return true

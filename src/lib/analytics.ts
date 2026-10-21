@@ -115,6 +115,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/resources')) return 'resource_tracker'
   if (pathname.startsWith('/mining-tracker')) return 'mining_tracker'
   if (pathname.startsWith('/commodity-lookup')) return 'commodity_lookup'
+  if (pathname.startsWith('/shop-cart')) return 'shop_cart'
   if (pathname.startsWith('/ship-shop')) return 'ship_shop'
   if (pathname.startsWith('/orders')) return 'custom_orders'
   if (pathname.startsWith('/bazaar')) return 'fulfillment'
@@ -268,7 +269,8 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   mission_tracker: 'Mission Tracker',
   resource_tracker: 'Resource Tracker',
   mining_tracker: 'Mining Tracker',
-  commodity_lookup: 'Commodity Lookup',
+  commodity_lookup: 'UEX Lookup',
+  shop_cart: 'Shopping Cart',
   ship_shop: "Fuzy's Ship Shop",
   custom_orders: 'My Listings',
   fulfillment: 'The Bazaar',

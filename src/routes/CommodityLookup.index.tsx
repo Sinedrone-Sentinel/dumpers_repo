@@ -2,14 +2,15 @@ import React from 'react'
 import { useSearch } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import CommodityTradePanels from '../components/shop/CommodityTradePanels'
+import { UexItemActions } from '../components/shop/UexItemActions'
+import { SHOP_INDEX_META } from '../lib/shopLookup'
 import {
-  SHOP_COMMODITIES,
-  SHOP_INDEX_META,
-  getCommodityKinds,
-  getCommodityTradeInfo,
-  findCommodityByName,
-  type ShopCommodity,
-} from '../lib/shopLookup'
+  UEX_CATALOG,
+  UEX_GROUPS,
+  tradeResultFor,
+  type UexCatalogItem,
+  type UexGroup,
+} from '../lib/uexCatalog'
 
 function UexAttribution() {
   return (
@@ -24,76 +25,49 @@ function UexAttribution() {
   )
 }
 
-function CommodityFlags({ commodity }: { commodity: ShopCommodity }) {
-  const flags: { label: string; className: string }[] = []
-  if (commodity.isRefined)
-    flags.push({ label: 'Refined', className: 'bg-emerald-950/50 text-emerald-300 border-emerald-500/30' })
-  if (commodity.isRaw)
-    flags.push({ label: 'Raw', className: 'bg-amber-950/50 text-amber-300 border-amber-500/30' })
-  if (commodity.isMineral)
-    flags.push({ label: 'Mineral', className: 'bg-orange-950/50 text-orange-300 border-orange-500/30' })
-  if (commodity.isIllegal)
-    flags.push({ label: 'Illegal', className: 'bg-red-950/50 text-red-300 border-red-500/30' })
-  if (flags.length === 0) return null
-  return (
-    <div className="flex items-center gap-1.5 flex-wrap">
-      {flags.map((f) => (
-        <span
-          key={f.label}
-          className={`text-[10px] font-medium uppercase tracking-wide rounded border px-1.5 py-0.5 ${f.className}`}
-        >
-          {f.label}
-        </span>
-      ))}
-    </div>
-  )
-}
-
 export default function CommodityLookupRoute() {
   const search = useSearch({ strict: false }) as { commodity?: string }
 
   const [searchTerm, setSearchTerm] = React.useState('')
-  const [selectedKind, setSelectedKind] = React.useState<string | null>(null)
-  const [selectedId, setSelectedId] = React.useState<number | null>(null)
+  const [selectedGroup, setSelectedGroup] = React.useState<UexGroup | null>(null)
+  const [selectedId, setSelectedId] = React.useState<string | null>(null)
 
-  const kinds = React.useMemo(() => getCommodityKinds(), [])
-
-  // Deep link: ?commodity=Laranite selects that commodity on load.
   React.useEffect(() => {
     if (!search.commodity) return
-    const match = findCommodityByName(search.commodity)
+    const key = search.commodity.trim().toLowerCase()
+    const compact = key.replace(/[^a-z0-9]+/g, '')
+    const match = UEX_CATALOG.find((item) => item.name.toLowerCase() === key)
+      || UEX_CATALOG.find((item) => item.name.toLowerCase().replace(/[^a-z0-9]+/g, '') === compact)
     if (match) {
       setSelectedId(match.id)
       setSearchTerm('')
-      setSelectedKind(null)
+      setSelectedGroup(null)
     }
   }, [search.commodity])
 
   const filtered = React.useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
-    return SHOP_COMMODITIES.filter((c) => {
-      if (selectedKind && c.kind !== selectedKind) return false
+    return UEX_CATALOG.filter((item) => {
+      if (selectedGroup && item.group !== selectedGroup) return false
       if (!term) return true
-      return c.name.toLowerCase().includes(term) || (c.code ?? '').toLowerCase().includes(term)
+      return item.name.toLowerCase().includes(term)
     })
-  }, [searchTerm, selectedKind])
+  }, [searchTerm, selectedGroup])
 
   const selected = React.useMemo(
-    () => (selectedId != null ? getCommodityTradeInfo(selectedId) : null),
-    [selectedId]
+    () => UEX_CATALOG.find((item) => item.id === selectedId) ?? null,
+    [selectedId],
   )
 
   return (
     <FeaturePageLayout
-      title="Commodity Lookup"
-      subtitle="Where to buy & sell every commodity, with UEX per-SCU prices and SCU box sizes"
-      seoIntro="Star Citizen commodity lookup — find buy and sell terminals, UEX per-SCU prices, SCU box sizes, and Dumper's Fair-Value Price (DFP) bases to plan trade and crafting runs."
+      title="UEX Lookup"
+      subtitle="Where to buy guns, ammo, armor, ships, commodities, food, and drinks"
+      seoIntro="Star Citizen UEX Lookup — shop locations and prices for guns, ammo, armor, ships, commodities, food, and drinks."
       badge="UEX"
       meta={
         <>
-          <span>{SHOP_INDEX_META.commodityCount} commodities</span>
-          <span className="mx-2">•</span>
-          <span>{SHOP_INDEX_META.terminalCount} terminals</span>
+          <span>{UEX_CATALOG.length} items</span>
           <span className="mx-2">•</span>
           <span className="text-slate-400">Updated {SHOP_INDEX_META.generatedAt}</span>
           <span className="mx-2">•</span>
@@ -102,89 +76,69 @@ export default function CommodityLookupRoute() {
       }
     >
       <div className="grid grid-cols-1 lg:grid-cols-[20rem_1fr] gap-4 min-w-0">
-        {/* Commodity list */}
         <div className="min-w-0 flex flex-col gap-3">
           <input
             type="text"
-            placeholder="Search commodities..."
+            placeholder="Search shop items..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="site-input w-full px-3 py-1.5 text-sm"
           />
           <div className="flex flex-wrap gap-1.5">
             <button
-              onClick={() => setSelectedKind(null)}
+              type="button"
+              onClick={() => setSelectedGroup(null)}
               className={`px-2 py-0.5 rounded text-xs font-medium transition-all site-btn-shimmer ${
-                selectedKind === null
-                  ? 'site-btn-accent'
-                  : 'site-filter-idle'
+                selectedGroup === null ? 'site-btn-accent' : 'site-filter-idle'
               }`}
             >
               All
             </button>
-            {kinds.map((kind) => (
+            {UEX_GROUPS.map((group) => (
               <button
-                key={kind}
-                onClick={() => setSelectedKind(selectedKind === kind ? null : kind)}
+                key={group}
+                type="button"
+                onClick={() => setSelectedGroup(selectedGroup === group ? null : group)}
                 className={`px-2 py-0.5 rounded text-xs font-medium transition-all site-btn-shimmer ${
-                  selectedKind === kind
-                    ? 'site-btn-accent'
-                    : 'site-filter-idle'
+                  selectedGroup === group ? 'site-btn-accent' : 'site-filter-idle'
                 }`}
               >
-                {kind}
+                {group}
               </button>
             ))}
           </div>
           <div className="text-xs text-slate-500">{filtered.length} shown</div>
           <div className="site-surface overflow-hidden">
             <ul className="max-h-[60vh] overflow-y-auto overscroll-contain divide-y divide-slate-800/70">
-              {filtered.map((c) => (
-                <li key={c.id}>
+              {filtered.map((item) => (
+                <li key={item.id}>
                   <button
-                    onClick={() => setSelectedId(c.id)}
+                    type="button"
+                    onClick={() => setSelectedId(item.id)}
                     className={`w-full text-left px-3 py-2 flex items-center justify-between gap-2 transition-colors ${
-                      selectedId === c.id
-                        ? 'bg-orange-600/20 text-orange-100'
-                        : 'site-dropdown-item'
+                      selectedId === item.id ? 'bg-orange-600/20 text-orange-100' : 'site-dropdown-item'
                     }`}
                   >
-                    <span className="truncate text-sm">{c.name}</span>
-                    {c.kind && <span className="shrink-0 text-[10px] text-slate-500">{c.kind}</span>}
+                    <span className="truncate text-sm">{item.name}</span>
+                    <span className="shrink-0 text-[10px] text-slate-500">{item.group}</span>
                   </button>
                 </li>
               ))}
               {filtered.length === 0 && (
-                <li className="px-3 py-6 text-center text-sm text-slate-500">No commodities match.</li>
+                <li className="px-3 py-6 text-center text-sm text-slate-500">No shop items match.</li>
               )}
             </ul>
           </div>
         </div>
 
-        {/* Detail */}
         <div className="min-w-0">
           {selected ? (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <h2 className="text-xl font-bold text-white">{selected.commodity.name}</h2>
-                  <CommodityFlags commodity={selected.commodity} />
-                </div>
-                <div className="text-xs text-slate-500">
-                  Sell at <span className="text-emerald-400 font-semibold">{selected.sellAt.length}</span>
-                  <span className="mx-1.5">•</span>
-                  Buy at <span className="text-sky-400 font-semibold">{selected.buyAt.length}</span>
-                </div>
-              </div>
-              <CommodityTradePanels result={selected} />
-            </div>
+            <ItemDetail item={selected} />
           ) : (
             <div className="site-empty h-full min-h-[16rem] flex flex-col items-center justify-center text-center p-8">
-              <div className="text-5xl mb-3">🛰️</div>
-              <p className="text-slate-300 font-medium">Select a commodity</p>
+              <p className="text-slate-300 font-medium">Select an item</p>
               <p className="text-slate-500 text-sm mt-1 max-w-sm">
-                Pick a commodity to see every terminal where you can sell it (turn ore into aUEC) or
-                buy it, with UEX per-SCU prices and SCU box sizes offered.
+                Pick a gun, ammo, armor piece, ship, commodity, food, or drink to see every shop that sells it.
               </p>
             </div>
           )}
@@ -192,9 +146,37 @@ export default function CommodityLookupRoute() {
       </div>
 
       <p className="mt-6 text-center text-xs text-slate-500">
-        Locations, per-SCU prices, and box sizes crowdsourced by <UexAttribution />. In-game prices
-        can differ from UEX averages.
+        Locations and prices crowdsourced by <UexAttribution />. In-game prices can differ from UEX averages.
       </p>
     </FeaturePageLayout>
+  )
+}
+
+function ItemDetail({ item }: { item: UexCatalogItem }) {
+  const result = React.useMemo(() => tradeResultFor(item), [item])
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
+          <h2 className="text-xl font-bold text-white">{item.name}</h2>
+          <span className="site-badge-slate">{item.group}</span>
+          <UexItemActions item={item} />
+        </div>
+        <div className="text-xs text-slate-500">
+          {item.sellAt.length > 0 && (
+            <>
+              Sell at <span className="text-emerald-400 font-semibold">{item.sellAt.length}</span>
+              <span className="mx-1.5">•</span>
+            </>
+          )}
+          Buy at <span className="text-sky-400 font-semibold">{item.buyAt.length}</span>
+        </div>
+      </div>
+      <CommodityTradePanels
+        result={result}
+        emphasis="buy"
+        renderBuyActions={(loc) => <UexItemActions item={item} place={loc} />}
+      />
+    </div>
   )
 }

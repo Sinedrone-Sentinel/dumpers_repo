@@ -60,8 +60,8 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 7,
     title: 'UEX commodity buy/sell locations',
     description:
-      'Refresh Commodity Lookup index (terminals, buy/sell listings, SCU box sizes) → shop-commodity-index.json. Powered by UEX',
-    commands: ['npm run fetch-shop-data'],
+      'Refresh UEX Lookup indexes (commodity terminals, plus guns, armor, food, and drinks) → shop-commodity-index.json and shop-item-index.json. Powered by UEX',
+    commands: ['npm run fetch-shop-data', 'npm run fetch-shop-item-index'],
     optional: true,
   },
   {
