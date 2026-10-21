@@ -75,14 +75,12 @@ function classify(lines: ShopCartLine[], settings: RouteHeaderSettings): RouteGa
 }
 
 export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
-  const priced = lines.filter((line) => line.shop && line.price && line.price > 0)
   const [route, setRoute] = useState<ShopRouteResult | null>(null)
   const [routeMode, setRouteMode] = useState<ShopRouteMode>('fewest')
   const [includeSystems, setIncludeSystems] = useState<string[]>([])
   const [includeToken, setIncludeToken] = useState(0)
   const [gap, setGap] = useState<RouteGap | null>(null)
   const [gapStep, setGapStep] = useState<'nowhere' | 'outside' | null>(null)
-  const [emptyNote, setEmptyNote] = useState(false)
   const keepRouteFor = useRef<string | null>(null)
   const signature = lines.map((line) => `${shopCartLineKey(line)}:${line.qty}`).join('|')
 
@@ -92,13 +90,11 @@ export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
       return
     }
     setRoute(null)
-    setEmptyNote(false)
   }, [signature])
 
-  const ship = priced.find((line) => line.id.startsWith('ship:'))
+  const ship = lines.find((line) => line.id.startsWith('ship:'))
   const publish = (settings: RouteHeaderSettings, routeLines: ShopRouteLine[]) => {
     setRouteMode(settings.mode)
-    setEmptyNote(false)
     setRoute(planShopRoute({
       nav: navMap,
       lines: routeLines,
@@ -111,14 +107,7 @@ export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
     }))
   }
   const calculate = (settings: RouteHeaderSettings) => {
-    if (priced.length === 0) {
-      setRoute(null)
-      setGap(null)
-      setGapStep(null)
-      setEmptyNote(true)
-      return
-    }
-    const next = classify(priced, settings)
+    const next = classify(lines, settings)
     setGap(next)
     if (next.nowhere.length > 0) {
       setGapStep('nowhere')
@@ -148,7 +137,7 @@ export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
     const systems = [...new Set([...gap.settings.systems, ...extra])]
     setIncludeSystems(extra)
     setIncludeToken((token) => token + 1)
-    const next = classify(priced, { ...gap.settings, systems })
+    const next = classify(lines, { ...gap.settings, systems })
     setGap(null)
     setGapStep(null)
     publish({ ...gap.settings, systems }, next.routeLines)
@@ -171,15 +160,12 @@ export default function ShopCartPlanner({ lines }: { lines: ShopCartLine[] }) {
     <div className="space-y-4">
       <ShopRouteHeader
         callerId="shop-cart"
-        lineCount={priced.length}
-        shipAvailable={priced.some((line) => line.id.startsWith('ship:'))}
+        lineCount={lines.length}
+        shipAvailable={lines.some((line) => line.id.startsWith('ship:'))}
         includeSystems={includeSystems}
         includeToken={includeToken}
         onCalculate={calculate}
       />
-      {emptyNote && (
-        <p className="site-hint text-xs">Add an item from a Buy row to give it a shop and a price. A line without a shop cannot be routed.</p>
-      )}
       {route && (
         <>
           <p className="site-banner-info">{ROUTE_NOTICE[routeMode]}</p>

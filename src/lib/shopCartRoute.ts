@@ -16,23 +16,31 @@ function placeOf(loc: TradeLocation): ShopPlace {
   return loc.terminal
 }
 
-/** One offer per nav point for a line that was added from a shop row. */
+/**
+ * Shops the route may use. A Buy-row line stays at the shop that was picked.
+ * A line with no shop, such as one added from a blueprint, uses every shop that sells it.
+ * Calculate then picks among those using the start, systems, and route mode.
+ */
 export function offersForShopLine(line: ShopCartLine): Array<ShopRouteOffer & { systemId: string }> {
-  if (!(line.price && line.price > 0) || !line.shop) return []
   const item = uexItemById(line.id)
   if (!item) return []
+  const pinned = Boolean(line.shop)
   const offers = new Map<string, ShopRouteOffer & { systemId: string }>()
   for (const loc of item.buyAt) {
-    if (placeName(loc) !== line.shop) continue
-    if (line.system && (loc.terminal.system || null) !== line.system) continue
-    if (!((loc.buyPricePerScu || 0) > 0)) continue
+    const shop = placeName(loc)
+    if (pinned) {
+      if (shop !== line.shop) continue
+      if (line.system && (loc.terminal.system || null) !== line.system) continue
+    }
+    const unit = loc.buyPricePerScu
+    if (!(unit && unit > 0)) continue
     const pointId = resolveShopPlace(placeOf(loc))
     const point = pointById(navMap, pointId)
     if (!pointId || !point) continue
-    const price = Math.round(line.price) * line.qty
+    const price = Math.round(pinned && line.price && line.price > 0 ? line.price : unit) * line.qty
     const prev = offers.get(pointId)
     if (!prev || price < prev.price) {
-      offers.set(pointId, { pointId, price, store: line.shop, systemId: point.system })
+      offers.set(pointId, { pointId, price, store: shop, systemId: point.system })
     }
   }
   return [...offers.values()]
