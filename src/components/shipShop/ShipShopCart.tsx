@@ -2,28 +2,34 @@ import { useEffect, useId, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
 import { useBodyScrollLock } from '../../hooks/useBodyScrollLock'
+import ShopRouteHeader, { type RouteHeaderSettings } from '../nav/ShopRouteHeader'
 import { formatShopNumber } from '../../lib/shipShopMath'
+import { resolveShopPlace, navMap } from '../../lib/navSystems'
+import { planShopRoute, type ShopRouteMode, type ShopRouteResult, type ShopRouteStopLine } from '../../lib/shopRoute'
 import {
   SHOP_ATTRIBUTION,
   isForSale,
   locationLine,
-  planStops,
   type CartPlanLine,
-  type PlannedPurchase,
   type ShopListing,
 } from '../../lib/shipShopShops'
 import { cartLineKey, craftedDraftFields, craftedMaterials, type ShopCartLine } from '../../lib/shipShopData'
 
 const CHIP = 'shrink-0 rounded-lg px-2 py-0.5 text-xs font-semibold uppercase tracking-wide transition hover:brightness-125 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100'
 
-const FEWEST_STOPS_NOTICE = 'This list uses the fewest stops. These are not the only locations where these items and ships can be bought.'
+const ROUTE_NOTICE: Record<ShopRouteMode, string> = {
+  fewest: 'This route uses the fewest stops. These are not the only places that sell these.',
+  cheapest: 'Each line is bought at the lowest price in the systems you included.',
+  efficient: 'Stations and jump gateways are used when they sell the line. A surface landing is marked when that is the only place.',
+}
 
-function purchasesByStore(lines: PlannedPurchase[]): Array<{ store: string; lines: PlannedPurchase[] }> {
-  const groups: Array<{ store: string; lines: PlannedPurchase[] }> = []
+function purchasesByStore(lines: ShopRouteStopLine[]): Array<{ store: string; lines: ShopRouteStopLine[] }> {
+  const groups: Array<{ store: string; lines: ShopRouteStopLine[] }> = []
   for (const line of lines) {
-    const found = groups.find((group) => group.store === line.store)
+    const store = line.store || 'Shop'
+    const found = groups.find((group) => group.store === store)
     if (found) found.lines.push(line)
-    else groups.push({ store: line.store, lines: [line] })
+    else groups.push({ store, lines: [line] })
   }
   return groups
 }
@@ -197,9 +203,39 @@ export function ShopCartModal({
 }) {
   const buyLines = lines.filter((line) => !line.crafted)
   const crafted = lines.filter((line) => line.crafted)
-  const stops = planStops(buyLines)
-  const cartTotal = stops.reduce((sum, stop) => sum + stop.total, 0)
+  const [route, setRoute] = useState<ShopRouteResult | null>(null)
+  const [routeMode, setRouteMode] = useState<ShopRouteMode>('fewest')
+  const lineSignature = buyLines.map((line) => `${cartLineKey(line)}:${line.qty}`).join('|')
+  useEffect(() => {
+    setRoute(null)
+  }, [lineSignature])
+  const cartTotal = route ? route.legs.reduce((sum, leg) => sum + leg.stop.total, 0) : 0
   const canOrder = crafted.some((line) => craftedDraftFields(line.id, line.qualities, line.qty))
+  const calculate = (settings: RouteHeaderSettings) => {
+    const routeLines = buyLines.map((line) => {
+      const offers = new Map<string, { pointId: string; price: number; store?: string }>()
+      for (const listing of line.listings) {
+        if (!(listing.price > 0)) continue
+        const pointId = resolveShopPlace(listing)
+        if (!pointId) continue
+        const price = listing.price * line.qty
+        const prev = offers.get(pointId)
+        if (!prev || price < prev.price) offers.set(pointId, { pointId, price, store: listing.store })
+      }
+      const label = line.qty > 1 ? `${line.name} × ${line.qty}` : line.name
+      return { id: cartLineKey(line), label, offers: [...offers.values()] }
+    })
+    const ship = buyLines.find((line) => line.kind === 'ship')
+    setRouteMode(settings.mode)
+    setRoute(planShopRoute({
+      nav: navMap,
+      lines: routeLines,
+      startId: settings.startId,
+      systems: settings.systems,
+      mode: settings.mode,
+      firstLineId: settings.shipFirst && ship ? cartLineKey(ship) : null,
+    }))
+  }
   return (
     <ShopModalFrame onClose={onClose}>
       <div className="site-modal-shell mt-16 flex max-h-[min(80dvh,calc(100dvh-6rem))] w-full max-w-3xl flex-col overflow-hidden p-4" role="dialog" aria-modal="true" aria-label="View cart">
@@ -210,10 +246,17 @@ export function ShopCartModal({
           )}
           <button type="button" className="site-btn-ghost shrink-0 px-3 py-1 text-sm" aria-label="Close" onClick={onClose}>×</button>
         </div>
-        {lines.length === 0 ? (
-          <p className="text-sm text-slate-200">The cart is empty.</p>
-        ) : (
-          <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
+        <div data-shop-modal-scroll className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
+          <ShopRouteHeader
+            callerId="ship-shop"
+            lineCount={buyLines.length}
+            shipAvailable={buyLines.some((line) => line.kind === 'ship')}
+            onCalculate={calculate}
+          />
+          {lines.length === 0 ? (
+            <p className="text-sm text-slate-200">The cart is empty.</p>
+          ) : (
+            <>
             {crafted.length > 0 && (
               <section className="site-card p-3">
                 <h4 className="text-sm font-semibold uppercase tracking-wide text-white">Crafted</h4>
@@ -242,40 +285,60 @@ export function ShopCartModal({
                 </button>
               </section>
             )}
-            {stops.length > 0 && (
+            {route && (
               <>
-                <p className="site-banner-info">{FEWEST_STOPS_NOTICE}</p>
-                <section>
-                  <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">Stops</h4>
-                  <ol className="mt-2 space-y-3">
-                    {stops.map((stop, index) => (
-                      <li key={`${stop.place}-${index}`} className="site-card p-3">
-                        <div className="flex items-baseline justify-between gap-3">
-                          <p className="text-sm font-semibold text-white">{stop.place}</p>
-                          <p className="shrink-0 text-sm text-slate-300">{formatShopNumber(stop.total)} aUEC</p>
-                        </div>
-                        <div className="mt-3 space-y-3">
-                          {purchasesByStore(stop.lines).map((group) => (
-                            <div key={group.store}>
-                              <p className="text-sm font-medium text-slate-100">{group.store}</p>
-                              <ul className="mt-1 space-y-1">
-                                {group.lines.map((line) => (
-                                  <li key={`${group.store}:${line.name}`} className="flex items-baseline justify-between gap-3 pl-3 text-sm">
-                                    <span className="min-w-0 text-slate-200">{line.name} × {line.qty}</span>
-                                    <span className="shrink-0 text-slate-400">{formatShopNumber(line.lineTotal)} aUEC</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                <p className="site-banner-info">{ROUTE_NOTICE[routeMode]}</p>
+                {route.unavailable.length > 0 && (
+                  <section className="site-card p-3">
+                    <h4 className="text-sm font-semibold text-white">Not sold in the selected systems</h4>
+                    <ul className="mt-2 space-y-1">
+                      {route.unavailable.map((line) => (
+                        <li key={line.id} className="text-sm text-slate-200">{line.label}</li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+                {route.legs.length > 0 && (
+                  <section>
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-300">Stops</h4>
+                    <ol className="mt-2 space-y-3">
+                      {route.legs.map((leg, index) => (
+                        <li key={`${leg.stop.pointId}-${index}`} className="space-y-2">
+                          {leg.hops.map((hop) => (
+                            <p key={`${hop.pointId}-${hop.label}`} className="text-sm text-slate-300">{hop.label}</p>
                           ))}
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </section>
+                          <div className="site-card p-3">
+                            <div className="flex items-baseline justify-between gap-3">
+                              <p className="text-sm font-semibold text-white">
+                                {leg.stop.name}
+                                {leg.stop.surface && <span className="site-badge-amber ml-2">Surface landing</span>}
+                              </p>
+                              <p className="shrink-0 text-sm text-slate-300">{formatShopNumber(leg.stop.total)} aUEC</p>
+                            </div>
+                            <div className="mt-3 space-y-3">
+                              {purchasesByStore(leg.stop.lines).map((group) => (
+                                <div key={group.store}>
+                                  <p className="text-sm font-medium text-slate-100">{group.store}</p>
+                                  <ul className="mt-1 space-y-1">
+                                    {group.lines.map((line) => (
+                                      <li key={`${group.store}:${line.id}`} className="flex items-baseline justify-between gap-3 pl-3 text-sm">
+                                        <span className="min-w-0 text-slate-200">{line.label}</span>
+                                        <span className="shrink-0 text-slate-400">{formatShopNumber(line.price)} aUEC</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                )}
               </>
             )}
-            <div className={stops.length > 0 ? 'site-divider space-y-2 pt-4' : 'space-y-2'}>
+            <div className={route ? 'site-divider space-y-2 pt-4' : 'space-y-2'}>
               {lines.map((line) => (
                 <div key={cartLineKey(line)} className="flex items-center gap-3 text-sm">
                   <span className="min-w-0 flex-1 truncate text-white">{line.crafted ? `${line.name} (crafted)` : line.name}</span>
@@ -286,8 +349,9 @@ export function ShopCartModal({
                 </div>
               ))}
             </div>
-          </div>
-        )}
+            </>
+          )}
+        </div>
         <p className="site-hint mt-3 shrink-0 text-xs">{SHOP_ATTRIBUTION}</p>
       </div>
     </ShopModalFrame>

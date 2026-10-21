@@ -4,7 +4,10 @@
     
 .DESCRIPTION
     This script extracts the DataForge database from Star Citizen's Data.p4k
-    and converts it to JSON format for use by the parsing scripts.
+    and converts it to JSON format for use by the parsing scripts. It also
+    pulls each star system's container (planets, moons, stations, gateways)
+    so the nav map can be parsed. A new system container is picked up by the
+    same filter. Shop socpaks stay optional.
     
 .PARAMETER StarCitizenPath
     Path to Star Citizen installation. Defaults to standard location.
@@ -173,7 +176,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "[2/3] Extracting localization files..." -ForegroundColor Green
+Write-Host "[2/4] Extracting localization files..." -ForegroundColor Green
 Write-Host "      Getting english language strings for lore/descriptions..." -ForegroundColor Gray
 Write-Host ""
 
@@ -192,9 +195,30 @@ catch {
     Write-Host "Continuing without localization data..." -ForegroundColor Yellow
 }
 
+Write-Host ""
+Write-Host "[3/4] Extracting star system containers..." -ForegroundColor Green
+Write-Host "      Planets, moons, stations, and jump gateways for the nav map..." -ForegroundColor Gray
+Write-Host ""
+
+try {
+    & $StarBreakerPath p4k extract `
+        --p4k $DataP4kPath `
+        --output $OutputPath `
+        --filter "Data/ObjectContainers/PU/system/*/*.socpak" `
+        --convert cryxml
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "System container extraction exited with code $LASTEXITCODE"
+    }
+}
+catch {
+    Write-Host "ERROR: System container extraction failed: $_" -ForegroundColor Red
+    exit 1
+}
+
 if ($IncludeShopData) {
     Write-Host ""
-    Write-Host "[3/3] Extracting shop socpaks + inventory JSON (optional)..." -ForegroundColor Green
+    Write-Host "[4/4] Extracting shop socpaks + inventory JSON (optional)..." -ForegroundColor Green
     Write-Host ""
 
     try {
@@ -226,7 +250,7 @@ if ($IncludeShopData) {
 }
 else {
     Write-Host ""
-    Write-Host "[3/3] Skipping shop socpaks + ShopInventories (not used by this app)." -ForegroundColor Green
+    Write-Host "[4/4] Skipping shop socpaks + ShopInventories (not used by this app)." -ForegroundColor Green
     Write-Host "      Pass -IncludeShopData if you need them for a separate project." -ForegroundColor Gray
 }
 
