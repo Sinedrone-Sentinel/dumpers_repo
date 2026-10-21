@@ -18,14 +18,14 @@ const PATCH_DAY_STEPS: PatchDayStep[] = [
     step: 1,
     title: 'Extract game data',
     description:
-      'StarBreaker: full DataForge DCB + localization into extracted-data/ (wipes prior extract). Optional shop socpaks: add -IncludeShopData',
+      'StarBreaker: full DataForge DCB + localization into extracted-data/ (wipes prior extract). System containers are always pulled and the parse writes nav-systems.json from them. Optional shop socpaks: add -IncludeShopData',
     commands: ['.\\scripts\\extract-game-data.ps1'],
   },
   {
     step: 2,
     title: 'Parse extracted data',
     description:
-      'Regenerates all src/data/game-*.json from scratch, including ship catalogs. Guns keep a slower shot-sequence wait for DPS, and ship items keep their record id. Also appends What\'s New lines and pushes to Supabase (needs SUPABASE_SERVICE_ROLE_KEY in .env); same issue+version is skipped so mid-patch re-parses do not duplicate',
+      'Regenerates all src/data/game-*.json from scratch, including ship catalogs, and writes nav-systems.json from the system containers. Guns keep a slower shot-sequence wait for DPS, and ship items keep their record id. Also appends What\'s New lines and pushes to Supabase (needs SUPABASE_SERVICE_ROLE_KEY in .env); same issue+version is skipped so mid-patch re-parses do not duplicate',
     commands: ['npm run parse-game-data'],
   },
   {

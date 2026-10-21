@@ -20,6 +20,7 @@ import { parseMiningSpawns } from './lib/parseMiningSpawns.mjs'
 import { mergeSpawnOreLocations, rebuildRarityTiers } from './lib/mergeSpawnOreLocations.mjs'
 import { parseOreSignatures } from './lib/parseOreSignatures.mjs'
 import { parseShipShop } from './lib/parseShipShop.mjs'
+import { parseNavSystems } from './lib/parseNavSystems.mjs'
 import {
   buildGuideToSpawnKeys,
   buildLocationAliases,
@@ -5297,6 +5298,23 @@ async function main() {
     items: shipShop.catalog,
   })
   console.log(`  Parsed ${shipShop.ships.length} ships and ${shipShop.catalog.length} ship items`)
+
+  const systemRoot = join(EXTRACTED_DATA, 'Data', 'ObjectContainers', 'PU', 'system')
+  if (!existsSync(systemRoot)) {
+    console.log('  ⚠ System containers missing; nav-systems.json left unchanged')
+  } else {
+    try {
+      const nav = parseNavSystems({ extractedRoot: EXTRACTED_DATA, localization })
+      if (!nav.points.length) {
+        console.log('  ⚠ Nav map was empty; nav-systems.json left unchanged')
+      } else {
+        saveJson('nav-systems.json', nav)
+        console.log(`  Nav map: ${nav.systems.map((row) => row.name).join(', ')} (${nav.points.length} points)`)
+      }
+    } catch (err) {
+      console.log(`  ⚠ Nav map skipped: ${err instanceof Error ? err.message : err}`)
+    }
+  }
 
   if (validationIssues.length > 0) {
     console.log('\n⚠️  VALIDATION ISSUES DETECTED:')
