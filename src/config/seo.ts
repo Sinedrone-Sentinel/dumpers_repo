@@ -27,6 +27,7 @@ export const SEO_PRERENDER_PATHS = [
   '/mining-tracker',
   '/commodity-lookup',
   '/shop-cart',
+  '/executive-hangar',
   '/archive',
   '/bazaar',
 ] as const
@@ -40,6 +41,7 @@ export const SEO_SITEMAP_PATHS = [
   '/mining-tracker/',
   '/commodity-lookup/',
   '/shop-cart/',
+  '/executive-hangar/',
   '/archive/',
   '/bazaar/',
   '/archive-guide.html',
@@ -94,6 +96,12 @@ const pages: Record<string, SeoPageConfig> = {
     description:
       'A browser shopping cart for Star Citizen shop goods from UEX Lookup. Separate from Fuzy\'s Ship Shop.',
     canonicalPath: '/shop-cart/',
+  },
+  '/executive-hangar': {
+    title: "Executive Hangar Lights | Dumper's Repo",
+    description:
+      'See when the Star Citizen Executive Hangar lights are green so the seven compboards can open the hangar. The same clock on every server.',
+    canonicalPath: '/executive-hangar/',
   },
   '/archive': {
     title: "Star Citizen Guides, Components & Lore Archive | Dumper's Repo",

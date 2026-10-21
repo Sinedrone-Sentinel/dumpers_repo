@@ -117,6 +117,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/commodity-lookup')) return 'commodity_lookup'
   if (pathname.startsWith('/shop-cart')) return 'shop_cart'
   if (pathname.startsWith('/ship-shop')) return 'ship_shop'
+  if (pathname.startsWith('/executive-hangar')) return 'executive_hangar'
   if (pathname.startsWith('/orders')) return 'custom_orders'
   if (pathname.startsWith('/bazaar')) return 'fulfillment'
   if (pathname.startsWith('/archive')) return 'archive'
@@ -272,6 +273,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   commodity_lookup: 'UEX Lookup',
   shop_cart: 'Shopping Cart',
   ship_shop: "Fuzy's Ship Shop",
+  executive_hangar: 'Executive Hangar',
   custom_orders: 'My Listings',
   fulfillment: 'The Bazaar',
   archive: 'Info Archive',
