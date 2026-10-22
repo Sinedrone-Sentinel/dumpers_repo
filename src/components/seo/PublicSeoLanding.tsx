@@ -184,8 +184,8 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
             Blueprints, missions, Wikelo, Resource Tracker, Mining Tracker, Fuzy&apos;s Ship Shop,
-            and UEX Lookup. Offline Mode opens them in this browser. Sign in for Smart Hauler, My
-            Hangar, and My Listings.
+            UEX Lookup, the Shopping Cart, and Executive Hangar. Offline Mode opens them in this
+            browser. Sign in for Smart Hauler, Smart Cracker, My Hangar, and My Listings.
           </p>
           {error && (
             <div className="site-banner-error mx-auto mt-6 max-w-xl" role="alert">
@@ -284,7 +284,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
               Sign in
             </h2>
             <p className="mt-2 text-center text-sm text-slate-400">
-              Google or Discord — sync blueprints, listings, and BP Dumper across devices.
+              Google or Discord — sync blueprints, your hangar, and BP Dumper across devices.
             </p>
 
             {error && (

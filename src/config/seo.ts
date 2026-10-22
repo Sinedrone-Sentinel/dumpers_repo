@@ -27,6 +27,7 @@ export const SEO_PRERENDER_PATHS = [
   '/mining-tracker',
   '/commodity-lookup',
   '/shop-cart',
+  '/ship-shop',
   '/executive-hangar',
   '/archive',
   '/bazaar',
@@ -41,6 +42,7 @@ export const SEO_SITEMAP_PATHS = [
   '/mining-tracker/',
   '/commodity-lookup/',
   '/shop-cart/',
+  '/ship-shop/',
   '/executive-hangar/',
   '/archive/',
   '/bazaar/',
@@ -52,7 +54,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/': {
     title: "Star Citizen Blueprint Tracker & Crafting Tools | Dumper's Repo",
     description:
-      "Free Star Citizen tools: Blueprints, Mission Tracker, Wikelo, Resource Tracker, Mining Tracker, Fuzy's Ship Shop, UEX Lookup, and The Bazaar. Most tools work in Offline Mode.",
+      "Free Star Citizen tools for blueprints, missions, Wikelo trades, mining, ship loadouts, shop runs, and the member marketplace. Most tools work in Offline Mode.",
     canonicalPath: '/',
   },
   '/blueprints': {
@@ -76,13 +78,13 @@ const pages: Record<string, SeoPageConfig> = {
   '/resources': {
     title: "Star Citizen Resource Tracker — Crafting Materials Stock | Dumper's Repo",
     description:
-      'Track Star Citizen crafting resources and materials for fabricator planning — personal stock, notes, and can-craft views paired with blueprints and Dumper\'s Fair-Value Price (DFP).',
+      'Track Star Citizen crafting resources in this browser. My Resources logs cargo and materials with notes and Dumper\'s Fair-Value Price (DFP). Can Craft shows blueprints you can make from that stock.',
     canonicalPath: '/resources/',
   },
   '/mining-tracker': {
     title: "Star Citizen Mining Tracker — Ore Guide, RS & Ledgers | Dumper's Repo",
     description:
-      'Star Citizen mining tracker with ore properties, location guide, cluster RS reference, spawn-weighted chances, and crew mining ledgers for share payouts.',
+      'Star Citizen mining tracker with ore properties, location guide, cluster RS reference, and spawn-weighted chances. RS Tracker and Mining Guide work in Offline Mode.',
     canonicalPath: '/mining-tracker/',
   },
   '/commodity-lookup': {
@@ -96,6 +98,12 @@ const pages: Record<string, SeoPageConfig> = {
     description:
       'A browser shopping cart for Star Citizen shop goods from UEX Lookup. Separate from Fuzy\'s Ship Shop.',
     canonicalPath: '/shop-cart/',
+  },
+  '/ship-shop': {
+    title: "Fuzy's Ship Shop | Dumper's Repo",
+    description:
+      "Build a Star Citizen ship loadout in Fuzy's Ship Shop, compare Pilot DPS and Burst DPS, and see where to buy the parts. Offline Mode keeps four builds in this browser.",
+    canonicalPath: '/ship-shop/',
   },
   '/executive-hangar': {
     title: "Executive Hangar Lights | Dumper's Repo",
@@ -195,7 +203,7 @@ export function buildJsonLdGraph(): Record<string, unknown> {
         url,
         logo: absoluteUrl('/favicon.png'),
         description:
-          'Star Citizen blueprint tracker, Wikelo barter guide, mining tools, and community marketplace.',
+          'Star Citizen blueprint tracker, Wikelo barter guide, ship loadouts, mining tools, shop runs, and community marketplace.',
       },
       {
         '@type': 'SoftwareApplication',
@@ -216,6 +224,9 @@ export function buildJsonLdGraph(): Record<string, unknown> {
           'Wikelo favors, reputation, and barter trade guide',
           'Mining tracker with ore guide and RS reference',
           'Resource tracker for crafting materials',
+          "Fuzy's Ship Shop loadouts and where to buy",
+          'UEX Lookup and Shopping Cart',
+          'Executive Hangar light clock',
           "Dumper's Fair-Value Price (DFP)",
           'Community WTB/WTS marketplace',
           'BP Dumper Game.log sync',

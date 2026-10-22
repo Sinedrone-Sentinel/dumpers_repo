@@ -19,7 +19,7 @@ export const SITE_TITLE =
   "Star Citizen Blueprint Tracker & Crafting Tools | Dumper's Repo" as const
 /** Meta description and og:description */
 export const SITE_DESCRIPTION =
-  "Free Star Citizen blueprint tracker and crafting tools: blueprint database, mission rewards, Wikelo barter guide, mining tracker, resources, and a community marketplace. Explore offline — no account required." as const
+  "Free Star Citizen tools for blueprints, missions, Wikelo trades, mining, ship loadouts, shop runs, and the member marketplace. Most tools work in Offline Mode." as const
 export const SITE_OG_IMAGE = `${SITE_URL}${SITE_OG_IMAGE_PATH}` as const
 /** Tagline shown in UI */
 export const SITE_SLOGAN = 'Buy. Craft. Sell.' as const

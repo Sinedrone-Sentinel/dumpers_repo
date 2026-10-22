@@ -111,6 +111,9 @@ async function prerenderPath(browser, baseUrl, urlPath) {
     '/resources',
     '/mining-tracker',
     '/commodity-lookup',
+    '/shop-cart',
+    '/ship-shop',
+    '/executive-hangar',
     '/archive',
     '/bazaar',
   ])

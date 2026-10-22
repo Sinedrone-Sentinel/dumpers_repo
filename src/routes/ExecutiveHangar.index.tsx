@@ -57,6 +57,9 @@ export default function ExecutiveHangarRoute() {
     <main className="site-shell relative z-10 flex min-h-[calc(100dvh-var(--site-header-height,3.5rem))] items-center justify-center px-4 py-8">
       <div className="w-full max-w-xl">
         <h1 className="site-page-title text-center">Executive Hangar</h1>
+        <p data-seo="tool-intro" className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-slate-300">
+          See when the five hangar lights are green so the seven compboards can open it. The same clock on every server.
+        </p>
         <section className="hangar-panel site-surface mt-6 p-5 sm:p-6" aria-label={lampText}>
           <div className="flex items-end justify-between gap-4">
             <p className="text-lg font-semibold tracking-wide text-white">{brief.title}</p>
