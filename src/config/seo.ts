@@ -52,7 +52,7 @@ const pages: Record<string, SeoPageConfig> = {
   '/': {
     title: "Star Citizen Blueprint Tracker & Crafting Tools | Dumper's Repo",
     description:
-      "Free Star Citizen tools: Blueprints, Mission Tracker, Wikelo, Resource Tracker, Mining Tracker, Fuzy's Ship Shop, UEX Lookup, and The Bazaar. Most tools work in Offline Mode.",
+      "Free Star Citizen tools for blueprints, missions, Wikelo trades, mining, ship loadouts, shop runs, and the member marketplace. Most tools work in Offline Mode.",
     canonicalPath: '/',
   },
   '/blueprints': {
