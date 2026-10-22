@@ -23,7 +23,7 @@ type FeatureCard = {
 
 const FEATURES: FeatureCard[] = [
   {
-    title: 'Crafting blueprints',
+    title: 'Blueprints',
     body: "Browse Star Citizen craftable items, materials, quality bands, and Dumper's Fair-Value Price (DFP) estimates — filter by type, manufacturer, and acquisition.",
     href: '/blueprints',
     action: 'public',
@@ -31,38 +31,86 @@ const FEATURES: FeatureCard[] = [
     featured: true,
   },
   {
-    title: 'Blueprint missions',
-    body: 'Look up which reputation contracts reward crafting blueprints, build a wishlist, and sync unlocks with BP Dumper watch mode.',
+    title: 'Mission Tracker',
+    body: 'See which contracts reward a blueprint, browse a faction's missions, and build a checklist. BP Dumper can watch unlocks while you play.',
     href: '/targets',
     action: 'offline',
-    cta: 'Open in Offline Mode →',
+    cta: 'Open Mission Tracker offline →',
   },
   {
-    title: 'Wikelo favors & barter',
+    title: 'Wikelo',
     body: 'Every Wikelo Emporium trade — favors, reputation, hand-ins, rewards, customer rank, ships, armor, weapons, and gear.',
     href: '/wikelo',
     action: 'offline',
-    cta: 'Open Wikelo guide offline →',
+    cta: 'Open Wikelo offline →',
   },
   {
-    title: 'Mining tracker',
-    body: 'Ore guide, cluster RS reference, spawn chances, and crew mining ledgers — plus a personal resource stock tracker.',
+    title: 'Resource Tracker',
+    body: 'Log the cargo and materials you have, see what you can craft, and keep crafting wishlists.',
+    href: '/resources',
+    action: 'offline',
+    cta: 'Open Resource Tracker offline →',
+  },
+  {
+    title: 'Smart Hauler',
+    body: 'On Resource Tracker, plan a cargo run from a starting location. Pick a flyable cargo ship or one from My Hangar, set the trades, profit, and aUEC you have, and walk the stops. Sign-in required.',
+    action: 'signin',
+    cta: 'Sign in to use Smart Hauler →',
+  },
+  {
+    title: 'Mining Tracker',
+    body: 'Ore guide, cluster RS reference, spawn chances, the rock calculator, and crew mining ledgers.',
     href: '/mining-tracker',
     action: 'offline',
-    cta: 'Open mining tracker offline →',
+    cta: 'Open Mining Tracker offline →',
   },
   {
-    title: 'UEX lookup',
+    title: 'Smart Cracker',
+    body: 'On Mining Tracker, plan a mining loadout and check whether your heads can crack the rock. The Advisor can suggest what to keep, swap, or drop.',
+    href: '/mining-tracker',
+    action: 'offline',
+    cta: 'Open Smart Cracker offline →',
+  },
+  {
+    title: "Fuzy's Ship Shop",
+    body: 'Build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Sign in to save ships in My Hangar.',
+    href: '/ship-shop',
+    action: 'offline',
+    cta: "Open Fuzy's Ship Shop offline →",
+  },
+  {
+    title: 'UEX Lookup',
     body: 'Where to buy guns, ammo, armor, ships, commodities, food, and drinks, and where to sell commodities. Add a shop to the Shopping Cart.',
     href: '/commodity-lookup',
     action: 'offline',
-    cta: 'Open UEX lookup offline →',
+    cta: 'Open UEX Lookup offline →',
   },
   {
-    title: 'Community marketplace',
-    body: 'Member WTB/WTS listings and The Bazaar — craft, buy, and sell with your community after you sign in.',
+    title: 'Shopping Cart',
+    body: "Keep shop buys from UEX Lookup, then Calculate a route with Fewest Stops, Cheapest, or Efficient. Separate from Fuzy's Ship Shop.",
+    href: '/shop-cart',
+    action: 'offline',
+    cta: 'Open Shopping Cart offline →',
+  },
+  {
+    title: 'Executive Hangar',
+    body: 'See when the five hangar lights are green so the seven compboards can open it.',
+    href: '/executive-hangar',
+    action: 'offline',
+    cta: 'Open Executive Hangar offline →',
+  },
+  {
+    title: 'The Bazaar',
+    body: 'Browse what members are crafting, buying, and selling.',
+    href: '/bazaar',
+    action: 'offline',
+    cta: 'Open The Bazaar offline →',
+  },
+  {
+    title: 'My Listings',
+    body: "Post one WTB listing and one WTS listing, priced at Dumper's Fair-Value Price (DFP). Sign-in required.",
     action: 'signin',
-    cta: 'Sign in to use the marketplace →',
+    cta: 'Sign in to use My Listings →',
   },
 ]
 
@@ -132,13 +180,13 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
         <header className="mx-auto max-w-6xl px-4 pt-10 pb-6 sm:px-6 sm:pt-14">
           <SiteBrandTitle size="hero" layout="stacked" slogan={SITE_SLOGAN} titleAs="p" />
           <h1 className="mx-auto mt-10 max-w-3xl text-center text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl md:leading-[1.15]">
-            Star Citizen <span className="site-emphasis">blueprint</span> tracker, Wikelo guide,
+            Star Citizen <span className="site-emphasis">blueprint</span> tracker, ship loadouts,
             mining tools, and community trade
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-center text-base text-slate-300 sm:text-lg">
-            Free crafting blueprint database, mission reward tracker, Wikelo favors and barter
-            trades, mining RS reference, and a member marketplace — Offline Mode for instant access,
-            sign-in when you want sync.
+            Blueprints, missions, Wikelo, Resource Tracker, Mining Tracker, Fuzy&apos;s Ship Shop,
+            and UEX Lookup. Offline Mode opens them in this browser. Sign in for Smart Hauler, My
+            Hangar, and My Listings.
           </p>
           {error && (
             <div className="site-banner-error mx-auto mt-6 max-w-xl" role="alert">
@@ -157,7 +205,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
               href="#sign-in"
               className="w-full max-w-xs rounded-xl border border-orange-500/30 bg-black/40 px-6 py-3 text-center text-sm font-medium text-slate-100 backdrop-blur-sm transition hover:border-orange-400/50 hover:bg-slate-900/60 sm:w-auto"
             >
-              Sign in for sync & marketplace
+              Sign in for Smart Hauler and sync
             </a>
           </div>
 
@@ -185,7 +233,7 @@ export default function PublicSeoLanding({ onBrowseOffline }: PublicSeoLandingPr
             Some of what you can do
           </h2>
           <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-slate-400">
-            Practical tools for crafting, mining, missions, and community trade — ready when you are.
+            Practical tools for crafting, mining, ships, shop runs, missions, and community trade.
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {FEATURES.map((feature) => (
