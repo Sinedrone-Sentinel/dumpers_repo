@@ -156,7 +156,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'On My Resources cards, **WTS** and **WTB** post that card’s resource and quality to your open listing. The quantity box starts with SCU on hand; Finish sets the listing line to that amount (or creates the listing). WTS turns on deduct from Tracked Resources when you mark the sale ready. Requires a verified RSI Handle',
       'Offline Mode: inventory saves locally until you sign in (then migrates automatically)',
     ],
-    relatesTo: ['Blueprints', 'Mining Tracker', 'UEX Lookup', 'Friends', 'My Listings'],
+    relatesTo: ['Blueprints', 'Mining Tracker', 'UEX Lookup', 'Friends', 'My Listings', "Fuzy's Ship Shop"],
   },
   {
     id: 'mining-tracker',
@@ -263,7 +263,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       '**My Hangar** and **Add to Hangar** sit with the ship search. Sign in to use them. A signed-in hangar holds 10 ships, and 20 when your RSI handle is verified. The first copy of a ship keeps its name. The next copies are numbered, such as Gladius 2, and removing one does not renumber the rest. Add stores the build you are looking at. Choosing that ship from My Hangar loads the build and the button changes to **Save to Hangar**. Searching for a ship again, or switching build chips, goes back to Add. Both buttons stay off while you are looking at Fuzy\'s Franken-Fit. The same hangar opens from the avatar menu, where you can add a stock ship or remove one',
       "Fuzy's Franken-Fit is a fifth chip. When a fit is published for the ship you have selected, the chip is gold and you can open it. You can change pips and use Where to Buy and the cart. You cannot change its parts or its ship. Pip edits are discarded when you leave the chip. The cart stays until you Clear it or use Add Build to Cart again. If no fit is published, the chip stays grey",
     ],
-    relatesTo: ['UEX Lookup'],
+    relatesTo: ['UEX Lookup', 'Resource Tracker'],
   },
   {
     id: 'executive-hangar',
