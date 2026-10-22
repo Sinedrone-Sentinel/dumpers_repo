@@ -1,0 +1,25 @@
+---
+description: Keep the signed-out landing page accurate when member-facing tools change
+alwaysApply: true
+---
+
+# Public landing page
+
+The signed-out home page is `src/components/seo/PublicSeoLanding.tsx`. Guests and crawlers see it at `/`.
+
+## When to look
+
+After a member-visible change (new tool, renamed tool, moved tab, offline vs sign-in change, or a capability a card describes):
+
+1. Read **Some of what you can do**.
+2. Use the name members see in `src/config/appNav.ts` or the in-app label (`Smart Hauler`, `Smart Cracker`, `Fuzy's Ship Shop`). Do not invent a second name.
+3. Add a card when a new member tool ships. Update or remove a card when that tool's name or what it does changes.
+4. Check the hero, the sign-in blurb, and `SEO_LANDING_FAQS` in `src/config/seoFaqs.ts`. If the `/` summary in `src/config/seo.ts` lists tools, update that sentence too.
+
+## Skip
+
+Officer-only tools, security, migrations, and refactors that do not change what a member can do.
+
+## Names
+
+Card titles are the product names. A signed-in piece that lives on another page still gets named (`Smart Hauler` on Resource Tracker, `Smart Cracker` on Mining Tracker). DFP is Dumper's Fair-Value Price.
