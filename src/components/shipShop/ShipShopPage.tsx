@@ -879,6 +879,12 @@ export default function ShipShopPage() {
       <div className="ship-shop-header site-surface-solid sticky top-[var(--site-header-height,3.5rem)] z-20 min-w-0 max-w-full p-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
+          <div>
+            <h1 className="site-page-title">Fuzy's Ship Shop</h1>
+            <p data-seo="tool-intro" className="mt-1 max-w-3xl text-sm leading-relaxed text-slate-400">
+              Build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Offline Mode keeps four builds in this browser.
+            </p>
+          </div>
           {saveNote && <p className="site-hint text-sm">{saveNote}</p>}
           {hangarNote && <p className="site-hint text-sm">{hangarNote}</p>}
           <div className="relative z-30 flex w-full items-end gap-2 xl:w-1/2">

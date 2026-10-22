@@ -7,6 +7,9 @@ Allow: /targets
 Allow: /resources
 Allow: /mining-tracker
 Allow: /commodity-lookup
+Allow: /shop-cart
+Allow: /ship-shop
+Allow: /executive-hangar
 Allow: /archive
 Allow: /bazaar
 Allow: /archive-guide.html

@@ -839,7 +839,7 @@ export default function ResourceTrackerRoute() {
     <FeaturePageLayout
       title="Resource Tracker"
       subtitle="Star Citizen crafting materials stock tracker"
-      seoIntro="Track mined and refined Star Citizen crafting resources for fabricator planning — personal stock cards, notes, can-craft views, and Dumper's Fair-Value Price (DFP) context when enabled."
+      seoIntro="My Resources logs the cargo and materials you have in this browser, with notes and Dumper's Fair-Value Price (DFP). Can Craft shows blueprints you can make from that stock."
     >
       {isGuest && (
         <div className="mb-4 site-banner-warn">
