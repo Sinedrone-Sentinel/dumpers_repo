@@ -3,6 +3,7 @@ import type { ArchiveSection } from '../../routes/Archive.index'
 import { MISSION_LOCATION_TAG_STYLES } from '../../lib/missionLocations'
 import { PAGE_GUIDES } from '../../lib/archiveGuide/pageGuides'
 import {
+  ABOUT_SECTION,
   OFFLINE_MODE_SECTION,
   SITE_RULES_SECTION,
   ORDER_RULES_SECTION,
@@ -224,6 +225,16 @@ const PAGE_GUIDE_ICONS: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
     </svg>
   ),
+  'The Bazaar': (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+    </svg>
+  ),
+  'bp-dumper': (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16v10H4V6zm4 14h8m-4-4v4" />
+    </svg>
+  ),
   'discord-webhooks': (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -340,19 +351,14 @@ export default function ArchiveWelcome({ onNavigate }: ArchiveWelcomeProps) {
           What is Dumper's Repo?
         </h3>
         <div className="p-4 site-surface space-y-3">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            <strong className="text-white">Dumper's Repo</strong> is a comprehensive toolkit for Star Citizen players 
-            who want to engage with the game's crafting and economy systems without getting ripped off.
-          </p>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Whether you're tracking which blueprints you've unlocked, managing your mined resources, 
-            coordinating crafting orders with your org, or just trying to figure out what a fair price 
-            is for that pile of Quantanium you just refined — Dumper's Repo has you covered.
-          </p>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            The site is designed to be a one-stop shop for crafters, miners, and traders who want 
-            transparency and fairness in their in-game economic activities.
-          </p>
+          {ABOUT_SECTION.paragraphs.map((paragraph, index) => (
+            <p
+              key={ABOUT_SECTION.id + String(index)}
+              className={`text-sm leading-relaxed ${index === 0 ? 'text-slate-300' : 'text-slate-400'}`}
+            >
+              {renderRich(paragraph)}
+            </p>
+          ))}
         </div>
       </section>
 

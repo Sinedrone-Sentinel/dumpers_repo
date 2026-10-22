@@ -8,7 +8,7 @@ export type SeoFaq = {
 export const SEO_LANDING_FAQS: SeoFaq[] = [
   {
     q: 'Do I need an account to use Star Citizen tools here?',
-    a: "No. Choose Browse tools offline to explore Blueprints, Mission Tracker, Wikelo, Resource Tracker, Mining Tracker, Fuzy's Ship Shop, UEX Lookup, the Shopping Cart, and the archive in this browser. Sign in for Smart Hauler, My Hangar, cloud sync, My Listings, and BP Dumper.",
+    a: "No. Choose Browse tools offline to explore Blueprints, Mission Tracker, Wikelo, Resource Tracker, Mining Tracker, Fuzy's Ship Shop, UEX Lookup, the Shopping Cart, Executive Hangar, and the archive in this browser. Sign in for Smart Hauler, Smart Cracker, My Hangar, cloud sync, My Listings, and BP Dumper.",
   },
   {
     q: 'Why did Discord or Google sign-in fail on my phone?',
@@ -36,6 +36,6 @@ export const SEO_LANDING_FAQS: SeoFaq[] = [
   },
   {
     q: 'Who is this site for?',
-    a: "Anyone can browse most tools in Offline Mode, including Fuzy's Ship Shop, Mining Tracker, and the Shopping Cart. Signed-in members get Smart Hauler, My Hangar, sync, BP Dumper, and My Listings.",
+    a: "Anyone can browse most tools in Offline Mode, including Fuzy's Ship Shop, the Shopping Cart, and Executive Hangar. Signed-in members get Smart Hauler, Smart Cracker, My Hangar, sync, BP Dumper, and My Listings.",
   },
 ]
