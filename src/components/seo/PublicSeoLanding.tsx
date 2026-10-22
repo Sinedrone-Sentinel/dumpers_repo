@@ -32,7 +32,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Mission Tracker',
-    body: 'See which contracts reward a blueprint, browse a faction's missions, and build a checklist. BP Dumper can watch unlocks while you play.',
+    body: "See which contracts reward a blueprint, browse a faction's missions, and build a checklist. BP Dumper can watch unlocks while you play.",
     href: '/targets',
     action: 'offline',
     cta: 'Open Mission Tracker offline →',
