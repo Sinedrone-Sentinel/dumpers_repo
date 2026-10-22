@@ -7,10 +7,10 @@ Desktop log watcher for Star Citizen — syncs blueprint unlocks and powers Live
 ### Windows (recommended)
 
 1. Open **Dumper Apps** on the site (avatar menu or Mission Tracker).
-2. Download **Windows exe (DumperApps.exe)** and run it.
-3. Paste your API key when asked on first run.
+2. Install **Microsoft Store (Windows)**. That is the recommended Windows app.
+3. Choose your LIVE folder, paste your API key, then Start.
 
-No separate Python install. The exe embeds everything it needs (including the blueprint name lookup).
+The unsigned **Windows exe (DumperApps.exe)** on GitHub Releases is an alternate. Windows Defender often blocks it. No separate Python install. The exe embeds everything it needs (including the blueprint name lookup).
 
 ### macOS / Linux / advanced Windows (Python scripts)
 

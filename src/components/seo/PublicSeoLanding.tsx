@@ -66,10 +66,9 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Smart Cracker',
-    body: 'On Mining Tracker, plan a mining loadout and check whether your heads can crack the rock. The Advisor can suggest what to keep, swap, or drop.',
-    href: '/mining-tracker',
-    action: 'offline',
-    cta: 'Open Smart Cracker offline →',
+    body: 'On Mining Tracker, plan a mining loadout and check whether your heads can crack the rock. The Advisor can suggest what to keep, swap, or drop. Sign-in required.',
+    action: 'signin',
+    cta: 'Sign in to use Smart Cracker →',
   },
   {
     title: "Fuzy's Ship Shop",
