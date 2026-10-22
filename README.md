@@ -50,6 +50,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/commodity-lookup` | UEX Lookup | Offline + members |
 | `/shop-cart` | Shopping Cart | Offline + everyone |
 | `/ship-shop` | Fuzy's Ship Shop | Offline + everyone |
+| `/executive-hangar` | Executive Hangar | Offline + everyone |
 | `/orders` | My Listings | Approved members |
 | `/bazaar` | The Bazaar | Approved members (offline: open-listing count only) |
 | `/archive` | Info Archive | Offline + members |
@@ -62,7 +63,7 @@ Member-facing how-tos live in the in-app **Info Archive** (`/archive`) and the p
 | `/analytics` | Site Analytics | Super-admins |
 | `/guest-locked` | Feature preview gate | Offline users (locked features) |
 
-Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified). Avatar menu: **Account** (Settings, Dumper Apps, Webhooks, Partnership when RSI verified, Contribute), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions, Contributor Team).
+Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified). Avatar menu: **Account** (Settings, Ship Hangar, Dumper Apps, Webhooks, Partnership when RSI verified, Contribute), **Help** (Support for members/officers), **Officer** (Support Dashboard, Admin Panel, Officer Tools), **Site admin** (super-admins: Site Analytics, Discord, Questionnaires, Updates Ticker, DB Actions, Contributor Team).
 
 ---
 
@@ -92,7 +93,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 ### Mission Tracker (`/targets`)
 
 - **My Tracker** — personal wishlist of blueprints you are grinding toward
-- **Browse Missions** — pick a faction, browse mission pools with location/rep/category tags and X/X progress per location
+- **Browse Missions** — pick a faction, browse mission pools with location/rep/category tags and X/X progress per location. A title with several locations starts collapsed; expand it to see the rows. My Tracker checklist groups by faction and starts collapsed
 - **In-game titles** — `~mission(...)` title blanks are filled from contract properties (rank, cargo grade, objects) or shown as `[Location]` / `[Ship]` / `[Target]` stand-ins (`scripts/lib/missionTitleTemplate.mjs`); search matches a pasted in-game title against them
 - **System filter** — narrow Browse Missions to Stanton / Pyro / Nyx (faction cards + mission lists follow the filter); every blueprint-reward contract stays visible even after all its blueprints are collected
 - **Rep effect tags** — completion gains plus any cross-faction losses per mission (from game contract data)
@@ -152,7 +153,7 @@ Three tabs — **RS Tracker**, **Mining Guide**, and **Ledgers** (RSI-verified).
 - **Anomaly Override** (unchecked, not saved) lists every ship ore whose base signature divides the typed number evenly, including cluster sizes the files never spawn. Gems are never offered — their rock entities share a placeholder signature, not a ship scanner value
 - Click a tracked card to load ore, location, and expected composition into the **Rock Calculator** sidebar
 - **Rock Calculator** — enter HUD mass, resistance, instability, SCU, and material %; pick up to two mining gadgets (they modify the rock's base stats before head/module math); inert auto-fills; Q bands per row for ledger export; DFP shown at purchased (Q0)
-- **Smart Cracker** — automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship sync across devices when signed in (RSI verification not required). Signed-in members can optionally open **Advisor** (own Gemini key: paste each visit, or save a client-encrypted copy unlocked with a lock phrase; clear from Settings). A question about what to change must name a keep, swap, add, or drop; reprinting the current kit is not the answer. Advisor also answers **where to buy** a mining head, module, or gadget from a baked UEX shop index (`npm run fetch-mining-gear-shops`) — mining gear only, and it declines shopping questions about anything else. Limited to 20 asks/hour with a live counter in the Advisor header; the saved key is shared with the site **Help** chat
+- **Smart Cracker** — sign-in required. Automated crack advisor using the rock in your calculator: breakability warnings, throttle/head suggestions (solo or Mole crew), gadget recommendations; saved loadouts per ship sync across devices (RSI verification not required). Signed-in members can optionally open **Advisor** (own Gemini key: paste each visit, or save a client-encrypted copy unlocked with a lock phrase; clear from Settings). A question about what to change must name a keep, swap, add, or drop; reprinting the current kit is not the answer. Advisor also answers **where to buy** a mining head, module, or gadget from a baked UEX shop index (`npm run fetch-mining-gear-shops`) — mining gear only, and it declines shopping questions about anything else. Limited to 20 asks/hour with a live counter in the Advisor header; the saved key is shared with the site **Help** chat
 
 **Mining Guide**
 
@@ -187,7 +188,7 @@ Find every shop that sells a gun, ammo, armor piece, ship, commodity, food, or d
 
 ### Shopping Cart (`/shop-cart`)
 
-A browser list of shop buys, separate from Fuzy's Ship Shop. The header cart button beside the notepad opens it. Adding from a Buy row remembers that shop and price. Clear empties the cart. The cart stays in this browser.
+A browser list of shop buys, separate from Fuzy's Ship Shop. The header cart button beside the notepad opens it. Adding from a Buy row remembers that shop and price. Clear empties the cart. Calculate plans a route from your start with Fewest Stops, Cheapest, or Efficient. The cart stays in this browser.
 
 ### Executive Hangar (`/executive-hangar`)
 
@@ -311,7 +312,7 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 | Role | Capabilities |
 |------|----------------|
-| **Offline** | Browse core tools + Archive; local storage; Bazaar listing-count teaser |
+| **Offline** | Browse core tools, Fuzy's Ship Shop, Executive Hangar, and Archive; local storage; Bazaar listing-count teaser |
 | **pending** | Signed in, awaiting officer approval; no marketplace or notifications |
 | **member** | Full marketplace, BP Dumper, mining ledgers (with RSI verification), Discord webhooks |
 | **officer** | Admin Panel, Support Dashboard, Site Total on Resource Tracker |
@@ -325,13 +326,13 @@ The production build regenerates [`public/archive-guide.html`](public/archive-gu
 
 ## Offline Mode
 
-Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**) to use tools in the browser without an account:
+Signed-out visitors land on the public home page first. Choose **Browse tools offline** (or **Continue in Offline Mode**). That choice is remembered in this browser, so a bookmark to a tool opens that tool instead of the sign-in page.
 
-- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), UEX Lookup, Shopping Cart, Archive, Bazaar listing-count teaser
+- Blueprints (acquired marks), Wikelo, Mission Tracker, Resource Tracker, Mining Tracker (RS + Guide), UEX Lookup, Shopping Cart, Fuzy's Ship Shop, Executive Hangar, Archive, Bazaar listing-count teaser
 
 Requires a free member account:
 
-- My Listings, The Bazaar (buy/sell), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
+- Smart Hauler, Ship Hangar, Smart Cracker (and its Advisor), My Listings, The Bazaar (buy/sell), BP Dumper + Live Tracker, Mining Ledgers, member directory / collection counts, cross-device sync
 
 On **first sign-in** (welcome onboarding), valid offline data migrates to the account. Stale offline IDs from before an update are cleared automatically.
 

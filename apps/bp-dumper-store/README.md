@@ -1,3 +1,9 @@
+# BP Dumper — parked WinUI tree
+
+This folder is **not** the live Microsoft Store app. The Store package is built outside this public repo. Do not treat these scripts as the member download.
+
+The notes below are leftover build steps for this parked WinUI project.
+
 # BP Dumper — Microsoft Store (sandboxed)
 
 WinUI 3 / Windows App SDK **AppContainer** client for Partner Center product **BP Dumper** (`9PMR8CPSB04K`).
