@@ -541,7 +541,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       {needed != null && pendingPlan && !route && (
         <AppModal title="Trades to make that profit" onClose={() => setNeeded(null)} size="md" zIndex={80}>
           <p className="text-sm text-white">
-            With this ship and the aUEC you have, it takes {needed} {needed === 1 ? 'trade' : 'trades'} to reach {money(Number(goal))}.
+            With this ship and the aUEC you have, it takes {needed} {needed === 1 ? 'trade' : 'trades'} to make {money(Number(goal))} in profit. That is on top of the aUEC you start with.
           </p>
           <div className="mt-4 flex justify-end gap-2">
             <button type="button" className="site-btn-secondary px-3 py-1.5 text-sm" onClick={() => setNeeded(null)}>Decline</button>
@@ -582,9 +582,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
             ) : (
               <>
                 <p>Sell {current.scu} SCU of {current.commodity}.</p>
-                <p>
-                  Profit {money(current.cashAfter - (route.stops[step - 1]?.cashBefore ?? current.cashBefore))}.
-                </p>
+                <p>Profit {money(current.cashAfter - current.cashBefore)}.</p>
                 <p>After this sale you should have {money(current.cashAfter)}.</p>
               </>
             )}
