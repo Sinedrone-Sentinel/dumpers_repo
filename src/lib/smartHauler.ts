@@ -75,6 +75,12 @@ export interface HaulStop {
   uexVerifiedAt?: number
 }
 
+export interface HaulAvoid {
+  kind: 'buy' | 'sell'
+  pointId: string
+  commodity: string
+}
+
 export interface HaulPlan {
   stops: HaulStop[]
   profit: number
@@ -109,6 +115,8 @@ export interface HaulRouteInput {
   km: (fromId: string, toId: string) => number
   /** When set, buys and sells outside this set are not used. */
   inSystem?: (pointId: string) => boolean
+  /** Commodity and place pairs already refused on this run. */
+  avoid?: HaulAvoid[]
 }
 
 interface HaulState {
@@ -363,11 +371,21 @@ export function planHaul(input: {
   inSystem?: (pointId: string) => boolean
   /** Distance used to try the closest shop first. */
   km?: (fromId: string, toId: string) => number
+  /** Commodity and place pairs already refused on this run. */
+  avoid?: HaulAvoid[]
 }): HaulPlan | null {
   const trades = Math.max(0, Math.floor(input.trades))
   if (trades <= 0 || input.cash <= 0) return null
   const buys = indexOffers(input.buys)
   const sells = indexOffers(input.sells)
+  const refused = (kind: 'buy' | 'sell', pointId: string, commodity: string) =>
+    !!input.avoid?.some((row) => row.kind === kind && row.pointId === pointId && row.commodity === commodity)
+  const buyKm = (state: HaulState) => {
+    if (!input.km) return 0
+    const buy = state.stops[state.stops.length - 2]
+    const from = state.stops[state.stops.length - 3]?.pointId || input.fromId || input.startId
+    return buy ? input.km(from, buy.pointId) : 0
+  }
   let beam: HaulState[] = [{ pointId: input.fromId || input.startId, cash: Math.round(input.cash), profit: 0, stops: [] }]
 
   for (let step = 0; step < trades; step += 1) {
@@ -381,7 +399,9 @@ export function planHaul(input: {
         const sellOffers = sells.get(commodity)
         if (!sellOffers) continue
         for (const buy of buyChoices(buyOffers, state.pointId, buyAllow, input.maxCrateScu, input.km)) {
+          if (refused('buy', buy.pointId, commodity)) continue
           for (const sell of sellChoices(sellOffers, buy.price, sellAllow, state.pointId, input.km)) {
+            if (refused('sell', sell.pointId, commodity)) continue
             const load = tradeLoad(buy, sell, input.cargoScu, input.maxCrateScu, state.cash)
             if (!load) continue
             const next = applyTrade(state, buy, sell, load)
@@ -396,11 +416,11 @@ export function planHaul(input: {
       }
     }
     if (ranked.length === 0) return null
-    ranked.sort((a, b) => b.score - a.score || b.state.profit - a.state.profit)
+    ranked.sort((a, b) => buyKm(a.state) - buyKm(b.state) || b.state.profit - a.state.profit || b.score - a.score)
     beam = ranked.slice(0, 8).map((row) => row.state)
   }
 
-  beam.sort((a, b) => b.profit - a.profit)
+  beam.sort((a, b) => buyKm(a) - buyKm(b) || b.profit - a.profit)
   const best = beam[0]
   if (!best || best.stops.length === 0) return null
   return { stops: best.stops, profit: best.profit, trades, cash: best.cash }
@@ -537,6 +557,7 @@ function continueAfter(head: HaulStop[], input: HaulRouteInput, tradesDone: numb
     near: input.near,
     inSystem: input.inSystem,
     km: input.km,
+    avoid: input.avoid,
   })
   if (!tail) return head
   return [...head, ...tail.stops]
@@ -690,12 +711,14 @@ export function nextSellLocation(input: {
   avoidPointIds: string[]
   km: (fromId: string, toId: string) => number
   inSystem?: (pointId: string) => boolean
+  avoid?: HaulAvoid[]
 }): HaulOffer | null {
   const avoid = new Set(input.avoidPointIds)
   const byPoint = new Map<string, HaulOffer>()
   for (const offer of input.sells) {
     if (offer.commodity !== input.commodity || avoid.has(offer.pointId)) continue
     if (input.inSystem && !input.inSystem(offer.pointId)) continue
+    if (input.avoid?.some((row) => row.kind === 'sell' && row.pointId === offer.pointId && row.commodity === offer.commodity)) continue
     const current = byPoint.get(offer.pointId)
     if (!current || offer.price > current.price) byPoint.set(offer.pointId, offer)
   }
@@ -771,6 +794,7 @@ export function rerouteUnsold(input: HaulRouteInput, avoidPointIds: string[]): H
     avoidPointIds: [...avoidPointIds, sell.pointId],
     km: input.km,
     inSystem: input.inSystem,
+    avoid: input.avoid,
   })
   if (!destination) return null
   return retargetSell(input, sell, destination, sell.scu, sell.cashBefore)
@@ -790,6 +814,7 @@ export function applyPartialSell(input: HaulRouteInput, soldScu: number, avoidPo
     avoidPointIds: [...avoidPointIds, sell.pointId],
     km: input.km,
     inSystem: input.inSystem,
+    avoid: input.avoid,
   })
   if (!destination) return null
   const cashBefore = sell.cashBefore + Math.round(sold * sell.pricePerScu)

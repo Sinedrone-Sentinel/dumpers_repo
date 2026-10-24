@@ -297,10 +297,41 @@ const farOffers = {
   ],
 }
 const jumped = hauler.planHaul({ ...shared, trades: 1, ...farOffers, inSystem: () => true, km })
-assert.equal(jumped.stops[0].pointId, 'd')
+assert.equal(jumped.stops[0].pointId, 'c')
 const stayed = hauler.planHaul({ ...shared, trades: 1, ...farOffers, inSystem: (id) => id !== 'd', km })
 assert.equal(stayed.stops[0].pointId, 'c')
 assert.notEqual(stayed.stops[1].pointId, 'd')
+const closer = hauler.planHaul({
+  ...shared,
+  trades: 1,
+  buys: [
+    { commodity: 'Near', pointId: 'b', place: 'B', price: 5, boxSizes: [1] },
+    { commodity: 'Far', pointId: 'c', place: 'C', price: 1, boxSizes: [1] },
+  ],
+  sells: [
+    { commodity: 'Near', pointId: 'b', place: 'B', price: 8, boxSizes: [1] },
+    { commodity: 'Far', pointId: 'c', place: 'C', price: 50, boxSizes: [1] },
+  ],
+  inSystem: (id) => id !== 'd',
+  km,
+})
+assert.equal(closer.stops[0].pointId, 'b')
+const afterSkip = hauler.planHaul({
+  ...shared,
+  trades: 1,
+  buys: closer.stops.length ? [
+    { commodity: 'Near', pointId: 'b', place: 'B', price: 5, boxSizes: [1] },
+    { commodity: 'Far', pointId: 'c', place: 'C', price: 1, boxSizes: [1] },
+  ] : [],
+  sells: [
+    { commodity: 'Near', pointId: 'b', place: 'B', price: 8, boxSizes: [1] },
+    { commodity: 'Far', pointId: 'c', place: 'C', price: 50, boxSizes: [1] },
+  ],
+  inSystem: (id) => id !== 'd',
+  km,
+  avoid: [{ kind: 'buy', pointId: 'b', commodity: 'Near' }],
+})
+assert.equal(afterSkip.stops[0].pointId, 'c')
 
 const labelFile = path.join('node_modules', '.cache', 'ship-hangar.mjs')
 await esbuild.build({
