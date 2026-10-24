@@ -20529,50 +20529,6 @@
     "factionreputation_aciedo": {
       "faction": "Aciedo Communications",
       "factionKey": "factionreputation_aciedo",
-      "careers": {
-        "technician": {
-          "scopeKey": "ReputationScope_Technician",
-          "displayScopeKey": "ReputationScope_Technician",
-          "name": "Technician",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Technician-in-Training",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Jr. Technician",
-              "minReputation": 3000,
-              "gated": false
-            },
-            {
-              "displayName": "Technician",
-              "minReputation": 9000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Technician",
-              "minReputation": 27000,
-              "gated": false
-            },
-            {
-              "displayName": "Master Technician",
-              "minReputation": 81000,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "ReputationScope_Technician",
       "standings": [
         {
@@ -20758,45 +20714,6 @@
     "factionreputation_battaglia": {
       "faction": "Recco Battaglia",
       "factionKey": "factionreputation_battaglia",
-      "careers": {
-        "missionproviderbattaglia": {
-          "scopeKey": "MissionProviderReputationScope_Battaglia",
-          "displayScopeKey": "MissionProviderReputationScope_Battaglia",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Prospective Associate",
-              "minReputation": 0,
-              "gated": false
-            },
-            {
-              "displayName": "Associate",
-              "minReputation": 2400,
-              "gated": false
-            },
-            {
-              "displayName": "Trusted Associate",
-              "minReputation": 6000,
-              "gated": false
-            },
-            {
-              "displayName": "Prestige 1",
-              "minReputation": 10800,
-              "gated": false
-            },
-            {
-              "displayName": "Prestige 2",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Prestige 3",
-              "minReputation": 69600,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "MissionProviderReputationScope_Battaglia",
       "standings": [
         {
@@ -21184,50 +21101,6 @@
     "factionreputation_klescherrehabilitationservices": {
       "faction": "Klescher Rehabilitation Facilities",
       "factionKey": "factionreputation_klescherrehabilitationservices",
-      "careers": {
-        "technician": {
-          "scopeKey": "ReputationScope_Technician",
-          "displayScopeKey": "ReputationScope_Technician",
-          "name": "Technician",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Technician-in-Training",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Jr. Technician",
-              "minReputation": 3000,
-              "gated": false
-            },
-            {
-              "displayName": "Technician",
-              "minReputation": 9000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Technician",
-              "minReputation": 27000,
-              "gated": false
-            },
-            {
-              "displayName": "Master Technician",
-              "minReputation": 81000,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "ReputationScope_Technician",
       "standings": [
         {
@@ -21270,50 +21143,6 @@
     "factionreputation_lawful_adagioholdings": {
       "faction": "Adagio Holdings",
       "factionKey": "factionreputation_lawful_adagioholdings",
-      "careers": {
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "FactionReputationScope",
       "standings": [
         {
@@ -21356,55 +21185,6 @@
     "factionreputation_lawful_bountyhuntersguild": {
       "faction": "Bounty Hunters Guild",
       "factionKey": "factionreputation_lawful_bountyhuntersguild",
-      "careers": {
-        "bounty_bountyhuntersguild": {
-          "scopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
-          "displayScopeKey": "ReputationScope_Bounty_BountyHuntersGuild",
-          "name": "Bounty Hunting",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Probationary Guild Member",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Junior Guild Member",
-              "minReputation": 3000,
-              "gated": false
-            },
-            {
-              "displayName": "Guild Member",
-              "minReputation": 10000,
-              "gated": false
-            },
-            {
-              "displayName": "Senior Guild Member",
-              "minReputation": 40000,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Guild Member",
-              "minReputation": 200000,
-              "gated": false
-            },
-            {
-              "displayName": "Guild Steward",
-              "minReputation": 480000,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "ReputationScope_Bounty_BountyHuntersGuild",
       "standings": [
         {
@@ -21452,201 +21232,41 @@
     "factionreputation_lawful_citizensforprosperity": {
       "faction": "Citizens For Prosperity",
       "factionKey": "factionreputation_lawful_citizensforprosperity",
-      "careers": {
-        "security": {
-          "scopeKey": "ReputationScope_Security",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
-        "salvage": {
-          "scopeKey": "ReputationScope_Salvage",
-          "displayScopeKey": "ReputationScope_Salvage",
-          "name": "Salvaging",
-          "standings": [
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": false
-            },
-            {
-              "displayName": "Apprentice Salvager",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Associate Salvager",
-              "minReputation": 100,
-              "gated": false
-            },
-            {
-              "displayName": "Salvager",
-              "minReputation": 500,
-              "gated": false
-            },
-            {
-              "displayName": "Senior Salvager",
-              "minReputation": 1500,
-              "gated": false
-            },
-            {
-              "displayName": "Master Salvager",
-              "minReputation": 5000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -21654,164 +21274,41 @@
     "factionreputation_lawful_covalexshipping": {
       "faction": "Covalex",
       "factionKey": "factionreputation_lawful_covalexshipping",
-      "careers": {
-        "hauling": {
-          "scopeKey": "ReputationScope_Hauling",
-          "displayScopeKey": "ReputationScope_Hauling",
-          "name": "Hauling",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Trainee",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Rookie",
-              "minReputation": 50,
-              "gated": false
-            },
-            {
-              "displayName": "Junior",
-              "minReputation": 250,
-              "gated": false
-            },
-            {
-              "displayName": "Member",
-              "minReputation": 5250,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced",
-              "minReputation": 27750,
-              "gated": false
-            },
-            {
-              "displayName": "Senior",
-              "minReputation": 77750,
-              "gated": false
-            },
-            {
-              "displayName": "Master",
-              "minReputation": 237750,
-              "gated": false
-            }
-          ]
-        },
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Hauling",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Trainee",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Rookie",
-          "minReputation": 50,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Junior",
-          "minReputation": 250,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Member",
-          "minReputation": 5250,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Experienced",
-          "minReputation": 27750,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Senior",
-          "minReputation": 77750,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Master",
-          "minReputation": 237750,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -21819,137 +21316,41 @@
     "factionreputation_lawful_eckhartsecurity": {
       "faction": "Eckhart Security",
       "factionKey": "factionreputation_lawful_eckhartsecurity",
-      "careers": {
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -22100,164 +21501,41 @@
     "factionreputation_lawful_ftlcourier": {
       "faction": "FTL Courier",
       "factionKey": "factionreputation_lawful_ftlcourier",
-      "careers": {
-        "hauling": {
-          "scopeKey": "ReputationScope_Hauling",
-          "displayScopeKey": "ReputationScope_Hauling",
-          "name": "Hauling",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Trainee",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Rookie",
-              "minReputation": 50,
-              "gated": false
-            },
-            {
-              "displayName": "Junior",
-              "minReputation": 250,
-              "gated": false
-            },
-            {
-              "displayName": "Member",
-              "minReputation": 5250,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced",
-              "minReputation": 27750,
-              "gated": false
-            },
-            {
-              "displayName": "Senior",
-              "minReputation": 77750,
-              "gated": false
-            },
-            {
-              "displayName": "Master",
-              "minReputation": 237750,
-              "gated": false
-            }
-          ]
-        },
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Hauling",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Trainee",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Rookie",
-          "minReputation": 50,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Junior",
-          "minReputation": 250,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Member",
-          "minReputation": 5250,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Experienced",
-          "minReputation": 27750,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Senior",
-          "minReputation": 77750,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Master",
-          "minReputation": 237750,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -22297,137 +21575,41 @@
     "factionreputation_lawful_hockrowagency": {
       "faction": "Hockrow Agency",
       "factionKey": "factionreputation_lawful_hockrowagency",
-      "careers": {
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -22435,137 +21617,41 @@
     "factionreputation_lawful_intersecdefensesolutions": {
       "faction": "InterSec Defense Solutions",
       "factionKey": "factionreputation_lawful_intersecdefensesolutions",
-      "careers": {
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -22605,164 +21691,41 @@
     "factionreputation_lawful_lingfamilyhauling": {
       "faction": "Ling Family Hauling",
       "factionKey": "factionreputation_lawful_lingfamilyhauling",
-      "careers": {
-        "hauling": {
-          "scopeKey": "ReputationScope_Hauling",
-          "displayScopeKey": "ReputationScope_Hauling",
-          "name": "Hauling",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Trainee",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Rookie",
-              "minReputation": 50,
-              "gated": false
-            },
-            {
-              "displayName": "Junior",
-              "minReputation": 250,
-              "gated": false
-            },
-            {
-              "displayName": "Member",
-              "minReputation": 5250,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced",
-              "minReputation": 27750,
-              "gated": false
-            },
-            {
-              "displayName": "Senior",
-              "minReputation": 77750,
-              "gated": false
-            },
-            {
-              "displayName": "Master",
-              "minReputation": 237750,
-              "gated": false
-            }
-          ]
-        },
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Hauling",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Trainee",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Rookie",
-          "minReputation": 50,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Junior",
-          "minReputation": 250,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Member",
-          "minReputation": 5250,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Experienced",
-          "minReputation": 27750,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Senior",
-          "minReputation": 77750,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Master",
-          "minReputation": 237750,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -22992,164 +21955,41 @@
     "factionreputation_lawful_redwindlinehaul": {
       "faction": "Red Wind Linehaul",
       "factionKey": "factionreputation_lawful_redwindlinehaul",
-      "careers": {
-        "hauling": {
-          "scopeKey": "ReputationScope_Hauling",
-          "displayScopeKey": "ReputationScope_Hauling",
-          "name": "Hauling",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Trainee",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Rookie",
-              "minReputation": 50,
-              "gated": false
-            },
-            {
-              "displayName": "Junior",
-              "minReputation": 250,
-              "gated": false
-            },
-            {
-              "displayName": "Member",
-              "minReputation": 5250,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced",
-              "minReputation": 27750,
-              "gated": false
-            },
-            {
-              "displayName": "Senior",
-              "minReputation": 77750,
-              "gated": false
-            },
-            {
-              "displayName": "Master",
-              "minReputation": 237750,
-              "gated": false
-            }
-          ]
-        },
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Hauling",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Trainee",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Rookie",
-          "minReputation": 50,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Junior",
-          "minReputation": 250,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Member",
-          "minReputation": 5250,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Experienced",
-          "minReputation": 27750,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Senior",
-          "minReputation": 77750,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Master",
-          "minReputation": 237750,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -23157,50 +21997,6 @@
     "factionreputation_lawful_shubininterstellar": {
       "faction": "Shubin Interstellar",
       "factionKey": "factionreputation_lawful_shubininterstellar",
-      "careers": {
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "FactionReputationScope",
       "standings": [
         {
@@ -23275,160 +22071,7 @@
     "factionreputation_lawful_wildstarracing": {
       "faction": "Wildstar Racing",
       "factionKey": "factionreputation_lawful_wildstarracing",
-      "careers": {
-        "racing_gravlevtimetrial": {
-          "scopeKey": "ReputationScope_Racing_GravLevTimeTrial",
-          "displayScopeKey": "ReputationScope_Racing_GravLevTimeTrial",
-          "name": "Racing_Hover_DisplayName",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank0",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank1",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank2",
-              "minReputation": 1000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank3",
-              "minReputation": 2000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank4",
-              "minReputation": 4000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank5",
-              "minReputation": 8000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank6",
-              "minReputation": 16000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_GravLev_Rank6",
-              "minReputation": 32000,
-              "gated": false
-            }
-          ]
-        },
-        "racing_wheeledtimetrial": {
-          "scopeKey": "ReputationScope_Racing_WheeledTimeTrial",
-          "displayScopeKey": "ReputationScope_Racing_WheeledTimeTrial",
-          "name": "Racing_Wheeled_DisplayName",
-          "standings": [
-            {
-              "displayName": "@RacingRep_Ground_Rank0",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank1",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank2",
-              "minReputation": 1000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank3",
-              "minReputation": 2000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank4",
-              "minReputation": 4000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank5",
-              "minReputation": 8000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank6",
-              "minReputation": 16000,
-              "gated": false
-            },
-            {
-              "displayName": "@RacingRep_Ground_Rank6",
-              "minReputation": 32000,
-              "gated": false
-            }
-          ]
-        },
-        "racing_shiptimetrial": {
-          "scopeKey": "ReputationScope_Racing_ShipTimeTrial",
-          "displayScopeKey": "ReputationScope_Racing_ShipTimeTrial",
-          "name": "Spaceship",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Racing Enthusiast",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Novice Racer",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Rookie Racer",
-              "minReputation": 1000,
-              "gated": false
-            },
-            {
-              "displayName": "Racer",
-              "minReputation": 2000,
-              "gated": false
-            },
-            {
-              "displayName": "Practiced Racer",
-              "minReputation": 4000,
-              "gated": false
-            },
-            {
-              "displayName": "Dedicated Racer",
-              "minReputation": 8000,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced Racer",
-              "minReputation": 16000,
-              "gated": false
-            },
-            {
-              "displayName": "Skilled Racer",
-              "minReputation": 32000,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Racing_GravLevTimeTrial",
+      "scopeName": "ReputationScope_Racing_ShipTimeTrial",
       "standings": [
         {
           "displayName": "Not Eligible",
@@ -23436,42 +22079,42 @@
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank0",
+          "displayName": "Racing Enthusiast",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank1",
+          "displayName": "Novice Racer",
           "minReputation": 1,
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank2",
+          "displayName": "Rookie Racer",
           "minReputation": 1000,
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank3",
+          "displayName": "Racer",
           "minReputation": 2000,
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank4",
+          "displayName": "Practiced Racer",
           "minReputation": 4000,
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank5",
+          "displayName": "Dedicated Racer",
           "minReputation": 8000,
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank6",
+          "displayName": "Experienced Racer",
           "minReputation": 16000,
           "gated": false
         },
         {
-          "displayName": "@RacingRep_GravLev_Rank6",
+          "displayName": "Skilled Racer",
           "minReputation": 32000,
           "gated": false
         }
@@ -23655,164 +22298,41 @@
     "factionreputation_udm": {
       "faction": "Unified Distribution Management",
       "factionKey": "factionreputation_udm",
-      "careers": {
-        "hauling": {
-          "scopeKey": "ReputationScope_Hauling",
-          "displayScopeKey": "ReputationScope_Hauling",
-          "name": "Hauling",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Trainee",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Rookie",
-              "minReputation": 50,
-              "gated": false
-            },
-            {
-              "displayName": "Junior",
-              "minReputation": 250,
-              "gated": false
-            },
-            {
-              "displayName": "Member",
-              "minReputation": 5250,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced",
-              "minReputation": 27750,
-              "gated": false
-            },
-            {
-              "displayName": "Senior",
-              "minReputation": 77750,
-              "gated": false
-            },
-            {
-              "displayName": "Master",
-              "minReputation": 237750,
-              "gated": false
-            }
-          ]
-        },
-        "courier": {
-          "scopeKey": "ReputationScope_Courier",
-          "displayScopeKey": "ReputationScope_Courier",
-          "name": "Courier",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Runner",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Runner",
-              "minReputation": 2500,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Hauling",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Trainee",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Rookie",
-          "minReputation": 50,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Junior",
-          "minReputation": 250,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Member",
-          "minReputation": 5250,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Experienced",
-          "minReputation": 27750,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Senior",
-          "minReputation": 77750,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Master",
-          "minReputation": 237750,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -23820,137 +22340,41 @@
     "factionreputation_unlawful_bitzeros": {
       "faction": "Bit Zeros",
       "factionKey": "factionreputation_unlawful_bitzeros",
-      "careers": {
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -23958,137 +22382,41 @@
     "factionreputation_unlawful_deadsaints": {
       "faction": "Dead Saints",
       "factionKey": "factionreputation_unlawful_deadsaints",
-      "careers": {
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -24096,241 +22424,41 @@
     "factionreputation_unlawful_headhunters": {
       "faction": "Headhunters",
       "factionKey": "factionreputation_unlawful_headhunters",
-      "careers": {
-        "racing_shiptimetrial": {
-          "scopeKey": "ReputationScope_Racing_ShipTimeTrial",
-          "displayScopeKey": "ReputationScope_Racing_ShipTimeTrial",
-          "name": "Spaceship",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Racing Enthusiast",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Novice Racer",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Rookie Racer",
-              "minReputation": 1000,
-              "gated": false
-            },
-            {
-              "displayName": "Racer",
-              "minReputation": 2000,
-              "gated": false
-            },
-            {
-              "displayName": "Practiced Racer",
-              "minReputation": 4000,
-              "gated": false
-            },
-            {
-              "displayName": "Dedicated Racer",
-              "minReputation": 8000,
-              "gated": false
-            },
-            {
-              "displayName": "Experienced Racer",
-              "minReputation": 16000,
-              "gated": false
-            },
-            {
-              "displayName": "Skilled Racer",
-              "minReputation": 32000,
-              "gated": false
-            }
-          ]
-        },
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "assassination": {
-          "scopeKey": "ReputationScope_Assassination",
-          "displayScopeKey": "ReputationScope_Assassination",
-          "name": "Assassination",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Under Review",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Assassin In Training",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Low Level Assassin",
-              "minReputation": 3000,
-              "gated": false
-            },
-            {
-              "displayName": "Assassin",
-              "minReputation": 8000,
-              "gated": false
-            },
-            {
-              "displayName": "High Value Assassin",
-              "minReputation": 24000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Assassin",
-              "minReputation": 56000,
-              "gated": false
-            },
-            {
-              "displayName": "Master Assassin",
-              "minReputation": 112000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Racing_ShipTimeTrial",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Racing Enthusiast",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Novice Racer",
-          "minReputation": 1,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Rookie Racer",
-          "minReputation": 1000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Racer",
-          "minReputation": 2000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Practiced Racer",
-          "minReputation": 4000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Dedicated Racer",
-          "minReputation": 8000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Experienced Racer",
-          "minReputation": 16000,
-          "gated": false
-        },
-        {
-          "displayName": "Skilled Racer",
-          "minReputation": 32000,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -24338,137 +22466,41 @@
     "factionreputation_unlawful_tarpits": {
       "faction": "Tar Pits",
       "factionKey": "factionreputation_unlawful_tarpits",
-      "careers": {
-        "hiredmuscle": {
-          "scopeKey": "ReputationScope_HiredMuscle",
-          "displayScopeKey": "ReputationScope_Security",
-          "name": "Security",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Applicant",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Security Trainee",
-              "minReputation": 1,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Security Contractor",
-              "minReputation": 5000,
-              "gated": false
-            },
-            {
-              "displayName": "Security Contractor",
-              "minReputation": 30000,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Security Contractor",
-              "minReputation": 120000,
-              "gated": false
-            },
-            {
-              "displayName": "Lead Security Contractor",
-              "minReputation": 480000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Security Contractor",
-              "minReputation": 1600000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Security",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Applicant",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Security Trainee",
-          "minReputation": 1,
-          "gated": true
-        },
-        {
-          "displayName": "Jr. Security Contractor",
-          "minReputation": 5000,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Security Contractor",
-          "minReputation": 30000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Sr. Security Contractor",
-          "minReputation": 120000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "Lead Security Contractor",
-          "minReputation": 480000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Security Contractor",
-          "minReputation": 1600000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
+          "gated": false
+        },
+        {
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -24508,137 +22540,41 @@
     "factionreputation_unlawful_vaughn": {
       "faction": "Vaughn",
       "factionKey": "factionreputation_unlawful_vaughn",
-      "careers": {
-        "assassination": {
-          "scopeKey": "ReputationScope_Assassination",
-          "displayScopeKey": "ReputationScope_Assassination",
-          "name": "Assassination",
-          "standings": [
-            {
-              "displayName": "Not Eligible",
-              "minReputation": -1000,
-              "gated": false
-            },
-            {
-              "displayName": "Under Review",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Assassin In Training",
-              "minReputation": 1,
-              "gated": false
-            },
-            {
-              "displayName": "Low Level Assassin",
-              "minReputation": 3000,
-              "gated": false
-            },
-            {
-              "displayName": "Assassin",
-              "minReputation": 8000,
-              "gated": false
-            },
-            {
-              "displayName": "High Value Assassin",
-              "minReputation": 24000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Assassin",
-              "minReputation": 56000,
-              "gated": false
-            },
-            {
-              "displayName": "Master Assassin",
-              "minReputation": 112000,
-              "gated": false
-            }
-          ]
-        },
-        "factionreputationscope": {
-          "scopeKey": "FactionReputationScope",
-          "displayScopeKey": "FactionReputationScope",
-          "name": "Standing",
-          "standings": [
-            {
-              "displayName": "Neutral",
-              "minReputation": 0,
-              "gated": true
-            },
-            {
-              "displayName": "Jr. Contractor",
-              "minReputation": 800,
-              "gated": false
-            },
-            {
-              "displayName": "Contractor",
-              "minReputation": 2200,
-              "gated": false
-            },
-            {
-              "displayName": "Sr. Contractor",
-              "minReputation": 5800,
-              "gated": false
-            },
-            {
-              "displayName": "Veteran Contractor",
-              "minReputation": 15000,
-              "gated": false
-            },
-            {
-              "displayName": "Head Contractor",
-              "minReputation": 38000,
-              "gated": false
-            },
-            {
-              "displayName": "Elite Contractor",
-              "minReputation": 95250,
-              "gated": false
-            }
-          ]
-        }
-      },
-      "scopeName": "ReputationScope_Assassination",
+      "scopeName": "FactionReputationScope",
       "standings": [
         {
-          "displayName": "Not Eligible",
-          "minReputation": -1000,
-          "gated": false
-        },
-        {
-          "displayName": "Under Review",
+          "displayName": "Neutral",
           "minReputation": 0,
           "gated": true
         },
         {
-          "displayName": "Assassin In Training",
-          "minReputation": 1,
+          "displayName": "Jr. Contractor",
+          "minReputation": 800,
           "gated": false
         },
         {
-          "displayName": "Low Level Assassin",
-          "minReputation": 3000,
+          "displayName": "Contractor",
+          "minReputation": 2200,
           "gated": false
         },
         {
-          "displayName": "Assassin",
-          "minReputation": 8000,
+          "displayName": "Sr. Contractor",
+          "minReputation": 5800,
           "gated": false
         },
         {
-          "displayName": "High Value Assassin",
-          "minReputation": 24000,
+          "displayName": "Veteran Contractor",
+          "minReputation": 15000,
           "gated": false
         },
         {
-          "displayName": "Elite Assassin",
-          "minReputation": 56000,
+          "displayName": "Head Contractor",
+          "minReputation": 38000,
           "gated": false
         },
         {
-          "displayName": "Master Assassin",
-          "minReputation": 112000,
+          "displayName": "Elite Contractor",
+          "minReputation": 95250,
           "gated": false
         }
       ]
@@ -24678,30 +22614,6 @@
     "factionreputation_wikelo": {
       "faction": "Wikelo Emporium",
       "factionKey": "factionreputation_wikelo",
-      "careers": {
-        "wikelo": {
-          "scopeKey": "ReputationScope_Wikelo",
-          "displayScopeKey": "ReputationScope_Wikelo",
-          "name": "Barter & Trade",
-          "standings": [
-            {
-              "displayName": "Very Best Customer",
-              "minReputation": 999,
-              "gated": false
-            },
-            {
-              "displayName": "Very Good Customer",
-              "minReputation": 340,
-              "gated": false
-            },
-            {
-              "displayName": "New Customer",
-              "minReputation": 0,
-              "gated": false
-            }
-          ]
-        }
-      },
       "scopeName": "ReputationScope_Wikelo",
       "standings": [
         {

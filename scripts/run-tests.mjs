@@ -24,6 +24,7 @@ function run(label, scriptRel) {
 }
 
 run('Unit suite', 'scripts/tests/unit-suite.mjs')
+run('Reputation standings', 'scripts/tests/reputation-standing-check.mjs')
 run('Ship shop catalog', 'scripts/tests/ship-shop-check.mjs')
 run('Smart hauler', 'scripts/tests/smart-hauler-check.mjs')
 run('Nav route', 'scripts/tests/nav-route-check.mjs')
