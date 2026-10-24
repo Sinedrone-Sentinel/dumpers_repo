@@ -9,6 +9,7 @@ export type FeatureId =
   | 'admin_panel'
   | 'settings'
   | 'resource_tracker'
+  | 'smart_hauler'
   | 'custom_orders'
   | 'fulfillment'
   | 'target_bp_list'
@@ -95,6 +96,9 @@ export function canUseFeature(featureId: FeatureId, ctx: VisibilityContext): boo
       return !!ctx.role && ctx.role !== 'pending'
 
     case 'resource_tracker':
+      return ctx.isApproved
+
+    case 'smart_hauler':
       return ctx.isApproved
 
     case 'custom_orders':

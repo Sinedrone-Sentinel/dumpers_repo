@@ -22,4 +22,4 @@ Officer-only tools, security, migrations, and refactors that do not change what 
 
 ## Names
 
-Card titles are the product names. A signed-in piece that lives on another page still gets named (`Smart Hauler` on Resource Tracker, `Smart Cracker` on Mining Tracker). DFP is Dumper's Fair-Value Price.
+Card titles are the product names. A signed-in piece that lives on another page still gets named (`Smart Cracker` on Mining Tracker). DFP is Dumper's Fair-Value Price.

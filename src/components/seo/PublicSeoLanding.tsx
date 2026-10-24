@@ -53,7 +53,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'Smart Hauler',
-    body: 'On Resource Tracker, plan a cargo run from a starting location. Pick a flyable cargo ship or one from My Hangar, set the trades, profit, and aUEC you have, and walk the stops. Sign-in required.',
+    body: 'Plan a cargo run to a profit goal or a number of trades, checked against live UEX stock, or find buyers for cargo you already carry. Sign-in required.',
     action: 'signin',
     cta: 'Sign in to use Smart Hauler →',
   },

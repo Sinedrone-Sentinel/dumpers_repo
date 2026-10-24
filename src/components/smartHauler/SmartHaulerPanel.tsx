@@ -1,23 +1,36 @@
 import { useMemo, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import ShipHangarModal from '../shipHangar/ShipHangarModal'
+import SellCargoPanel from './SellCargoPanel'
 import { SHIPS, getShip } from '../../lib/shipShopData'
-import { describeJumps, navMap, pathBetween, pointById, searchNavPoints } from '../../lib/navSystems'
+import { navMap, pointById, searchNavPoints } from '../../lib/navSystems'
 import {
+  HAUL_MAX_TRADES,
+  HAUL_PROFIT_GOAL_MIN_SCU,
+  applyHaulAvailability,
   applyPartialBuy,
   applyPartialSell,
   buysAtStop,
   collectHaulOffers,
   haulDistanceKm,
+  haulTravelText as travelText,
   planHaul,
   pointsAreNear,
+  profitGoalOptions,
   rerouteUnavailableBuy,
   rerouteUnsold,
   tradesForProfit,
+  type HaulOffer,
   type HaulPlan,
   type HaulRouteInput,
   type HaulStop,
 } from '../../lib/smartHauler'
+import { fetchHaulAvailability } from '../../lib/smartHaulerAvailability'
+
+type HaulOffers = { buys: HaulOffer[]; sells: HaulOffer[] }
+type GoalMode = 'goal' | 'trades'
+
+const LIVE_CHECK_FAILED = 'Live UEX stock could not be checked, so this uses the saved price list.'
 
 function money(value: number): string {
   return `${Math.round(value).toLocaleString()} aUEC`
@@ -27,26 +40,26 @@ function crateText(stop: HaulStop): string {
   return stop.crates.map((crate) => `${crate.count} × ${crate.size} SCU`).join(', ')
 }
 
-function travelText(fromId: string | null, toId: string): string {
-  const path = pathBetween(navMap, fromId, toId)
-  const jumps = describeJumps(path.hops)
-  return jumps.length > 0 ? jumps.join(' ') : ''
-}
-
-export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }) {
-  const offers = useMemo(() => collectHaulOffers(), [])
+export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean }) {
+  const baseOffers = useMemo(() => collectHaulOffers(), [])
+  const [offers, setOffers] = useState<HaulOffers>(baseOffers)
+  const [sellMode, setSellMode] = useState(false)
+  const [sellOpen, setSellOpen] = useState(false)
   const [shipQuery, setShipQuery] = useState('')
   const [shipId, setShipId] = useState<string | null>(null)
   const [startQuery, setStartQuery] = useState('')
   const [startId, setStartId] = useState<string | null>(null)
   const [roundRobin, setRoundRobin] = useState(false)
+  const [goalMode, setGoalMode] = useState<GoalMode>('goal')
   const [trades, setTrades] = useState(1)
   const [goal, setGoal] = useState('')
   const [cash, setCash] = useState('')
   const [hangarOpen, setHangarOpen] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [liveNote, setLiveNote] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [needed, setNeeded] = useState<number | null>(null)
-  const [acceptedTrades, setAcceptedTrades] = useState<number | null>(null)
+  const [pendingPlan, setPendingPlan] = useState<HaulPlan | null>(null)
   const [route, setRoute] = useState<HaulPlan | null>(null)
   const [step, setStep] = useState(0)
   const [outcome, setOutcome] = useState<'choose' | 'unavailable' | 'partial-buy' | 'partial-sell'>('choose')
@@ -56,6 +69,9 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   const [skippedSellPoints, setSkippedSellPoints] = useState<string[]>([])
   const ship = getShip(shipId)
   const start = pointById(navMap, startId)
+  const canSetGoal = !!ship && (ship.cargoScu || 0) >= HAUL_PROFIT_GOAL_MIN_SCU
+  const mode: GoalMode = ship && !canSetGoal ? 'trades' : goalMode
+  const goalOptions = useMemo(() => (ship ? profitGoalOptions(ship.cargoScu || 0) : []), [ship])
   const shipChoices = useMemo(() => {
     const needle = shipQuery.trim().toLowerCase().replace(/\bmark\b/g, 'mk').replace(/\bmk\s*v\b/g, 'mk5').replace(/\s+/g, '')
     if (!needle) return []
@@ -67,6 +83,14 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   }, [shipQuery])
   const startChoices = useMemo(() => searchNavPoints(startQuery, navMap, 12), [startQuery])
 
+  async function loadLiveOffers(): Promise<HaulOffers> {
+    const rows = await fetchHaulAvailability()
+    const next = rows ? applyHaulAvailability(baseOffers, rows) : baseOffers
+    setOffers(next)
+    setLiveNote(rows ? null : LIVE_CHECK_FAILED)
+    return next
+  }
+
   function clearStopUi() {
     setOutcome('choose')
     setPicked('')
@@ -76,8 +100,8 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   }
 
   function clearPlan() {
-    setAcceptedTrades(null)
     setNeeded(null)
+    setPendingPlan(null)
     setNotice(null)
     setRoute(null)
     clearStopUi()
@@ -86,58 +110,86 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
   function chooseShip(id: string) {
     setShipId(id)
     setShipQuery('')
+    const next = getShip(id)
+    if (next && !profitGoalOptions(next.cargoScu || 0).includes(Number(goal))) setGoal('')
     clearPlan()
   }
 
-  function createRoute() {
+  function toggleSellMode(on: boolean) {
+    setSellMode(on)
+    setSellOpen(false)
+    clearPlan()
+    if (on) {
+      setShipId(null)
+      setShipQuery('')
+      setRoundRobin(false)
+      setGoalMode('goal')
+      setTrades(1)
+      setGoal('')
+      setCash('')
+    }
+  }
+
+  function startRoute(plan: HaulPlan) {
+    setRoute(plan)
+    setStep(0)
+    clearStopUi()
+  }
+
+  async function createRoute() {
     if (!ship || !startId || (ship.cargoScu || 0) <= 0 || (ship.maxCrateScu || 0) <= 0) {
       setNotice('Choose a cargo ship and a starting location.')
       return
     }
-    const goalValue = Math.round(Number(goal))
     const cashValue = Math.round(Number(cash))
-    if (!Number.isFinite(goalValue) || goalValue <= 0 || !Number.isFinite(cashValue) || cashValue <= 0) {
-      setNotice('Enter the profit you want and the aUEC you have on hand.')
+    if (!Number.isFinite(cashValue) || cashValue <= 0) {
+      setNotice('Enter the aUEC you have on hand.')
       return
     }
+    const goalValue = Math.round(Number(goal))
+    if (mode === 'goal' && (!Number.isFinite(goalValue) || goalValue <= 0)) {
+      setNotice('Choose a profit goal.')
+      return
+    }
+    setBusy(true)
+    const live = await loadLiveOffers()
+    setBusy(false)
     const shared = {
       cargoScu: ship.cargoScu || 0,
       maxCrateScu: ship.maxCrateScu || 0,
       startId,
       cash: cashValue,
       roundRobin,
-      buys: offers.buys,
-      sells: offers.sells,
+      buys: live.buys,
+      sells: live.sells,
       near: (fromId: string, toId: string) => pointsAreNear(navMap, fromId, toId),
-      goal: goalValue,
     }
-    if (acceptedTrades === trades) {
+    if (mode === 'trades') {
       const plan = planHaul({ ...shared, trades })
       if (!plan) {
         setNotice('No profitable cargo run was found from that start.')
         return
       }
-      setRoute(plan)
-      setStep(0)
-      clearStopUi()
+      startRoute(plan)
       return
     }
-    const result = tradesForProfit(shared)
-    if (result.needed == null) {
-      setNeeded(null)
+    const result = tradesForProfit({ ...shared, goal: goalValue })
+    if (result.needed == null || !result.plan) {
       setNotice(result.plan
         ? `The best run found makes ${money(result.plan.profit)} across ${result.plan.trades} trades, short of ${money(goalValue)}.`
         : 'No profitable cargo run was found from that start.')
       return
     }
+    setPendingPlan(result.plan)
     setNeeded(result.needed)
-    setNotice(null)
   }
 
   const current = route?.stops[step]
   const headerCash = current?.cashBefore ?? 0
-  const routeInput: HaulRouteInput | null = route && ship && startId
-    ? {
+
+  function buildRouteInput(source: HaulOffers): HaulRouteInput | null {
+    if (!route || !ship || !startId) return null
+    return {
       stops: route.stops,
       step,
       cargoScu: ship.cargoScu || 0,
@@ -145,12 +197,14 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
       trades: route.trades,
       roundRobin,
       startId,
-      buys: offers.buys,
-      sells: offers.sells,
+      buys: source.buys,
+      sells: source.sells,
       near: (fromId, toId) => pointsAreNear(navMap, fromId, toId),
       km: (fromId, toId) => haulDistanceKm(navMap, fromId, toId),
     }
-    : null
+  }
+
+  const routeInput = buildRouteInput(offers)
   const alternatives = current?.kind === 'buy' && routeInput
     ? buysAtStop({
       pointId: current.pointId,
@@ -163,6 +217,13 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
       excludeCommodity: current.commodity,
     })
     : []
+
+  async function liveRouteInput(): Promise<HaulRouteInput | null> {
+    setBusy(true)
+    const live = await loadLiveOffers()
+    setBusy(false)
+    return buildRouteInput(live)
+  }
 
   function stayOnStop(plan: HaulPlan, note: string) {
     setRoute(plan)
@@ -185,6 +246,13 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
     setStep(step + 1)
   }
 
+  async function openUnavailable() {
+    await liveRouteInput()
+    setOutcome('unavailable')
+    setPicked('')
+    setRouteNote(null)
+  }
+
   function confirmOtherBuy() {
     if (!routeInput) return
     const choice = alternatives.find((row) => row.commodity === picked)
@@ -200,8 +268,8 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
     stayOnStop(plan, `Buying ${choice.commodity} here instead. The rest of the route follows this cargo.`)
   }
 
-  function confirmPartialBuy() {
-    if (!routeInput || !current) return
+  async function confirmPartialBuy() {
+    if (!current) return
     const amount = Math.round(Number(partialScu))
     if (!Number.isFinite(amount) || amount <= 0) {
       setRouteNote('Enter how many SCU you were able to buy.')
@@ -211,7 +279,8 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
       advanceStop()
       return
     }
-    const plan = applyPartialBuy(routeInput, amount)
+    const input = await liveRouteInput()
+    const plan = input ? applyPartialBuy(input, amount) : null
     if (!plan) {
       setRouteNote('That amount does not fit the aUEC on hand.')
       return
@@ -225,9 +294,10 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
     setStep(step + 1)
   }
 
-  function confirmNoneSold() {
-    if (!routeInput || !current) return
-    const plan = rerouteUnsold(routeInput, skippedSellPoints)
+  async function confirmNoneSold() {
+    if (!current) return
+    const input = await liveRouteInput()
+    const plan = input ? rerouteUnsold(input, skippedSellPoints) : null
     if (!plan) {
       setRouteNote('No other terminal buys this cargo.')
       return
@@ -237,8 +307,8 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
     stayOnStop(plan, next ? `No demand there. Sell at ${next.place} instead, then buy the next cargo from that stop.` : 'No demand there.')
   }
 
-  function confirmPartialSell() {
-    if (!routeInput || !current) return
+  async function confirmPartialSell() {
+    if (!current) return
     const amount = Math.round(Number(partialScu))
     if (!Number.isFinite(amount) || amount <= 0) {
       setRouteNote('Enter how many SCU you were able to sell.')
@@ -248,7 +318,8 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
       advanceStop()
       return
     }
-    const plan = applyPartialSell(routeInput, amount, skippedSellPoints)
+    const input = await liveRouteInput()
+    const plan = input ? applyPartialSell(input, amount, skippedSellPoints) : null
     if (!plan) {
       setRouteNote('No other terminal buys the rest of this cargo.')
       return
@@ -260,6 +331,15 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
 
   return (
     <div className="space-y-4">
+      <label className="flex items-center gap-2 text-sm text-white">
+        <input
+          type="checkbox"
+          className="site-checkbox"
+          checked={sellMode}
+          onChange={(event) => toggleSellMode(event.target.checked)}
+        />
+        Sell what I have
+      </label>
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="relative z-30 flex items-end gap-2">
           <label className="block min-w-0 flex-1">
@@ -267,6 +347,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
             <input
               className="site-input mt-1 w-full px-3 py-2"
               value={shipQuery}
+              disabled={sellMode}
               placeholder={ship ? `${ship.displayName} · ${ship.cargoScu} SCU · ${ship.maxCrateScu} SCU crates` : 'Search cargo ships'}
               onChange={(event) => {
                 setShipQuery(event.target.value)
@@ -274,10 +355,10 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
               }}
             />
           </label>
-          <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => setHangarOpen(true)}>
+          <button type="button" className="site-btn-secondary px-3 py-2 text-sm" disabled={sellMode} onClick={() => setHangarOpen(true)}>
             My Hangar
           </button>
-          {shipQuery.trim() && (
+          {shipQuery.trim() && !sellMode && (
             <div className="site-dropdown-list left-0 right-0 top-full z-40 max-h-60 overflow-y-auto">
               {shipChoices.length === 0 ? (
                 <p className="site-hint px-3 py-2">No cargo ship matches.</p>
@@ -327,6 +408,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
             type="checkbox"
             className="site-checkbox"
             checked={roundRobin}
+            disabled={sellMode}
             onChange={(event) => {
               setRoundRobin(event.target.checked)
               clearPlan()
@@ -334,38 +416,78 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
           />
           Round-robin
         </label>
-        <label className="block">
-          <span className="site-label">Trades</span>
-          <input
-            type="number"
-            min={1}
-            max={20}
-            className="site-input mt-1 w-full px-3 py-2"
-            value={trades}
-            onChange={(event) => {
-              setTrades(Math.max(1, Math.min(20, Math.round(Number(event.target.value) || 1))))
-              clearPlan()
-            }}
-          />
-        </label>
-        <label className="block">
-          <span className="site-label">Profit goal (aUEC)</span>
-          <input
-            className="site-input mt-1 w-full px-3 py-2"
-            inputMode="numeric"
-            value={goal}
-            onChange={(event) => {
-              setGoal(event.target.value.replace(/[^\d]/g, ''))
-              clearPlan()
-            }}
-          />
-        </label>
+        <div className="flex flex-wrap items-center gap-4 text-sm text-white">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="smart-hauler-goal"
+              className="site-radio"
+              checked={mode === 'goal'}
+              disabled={sellMode || (!!ship && !canSetGoal)}
+              onChange={() => {
+                setGoalMode('goal')
+                clearPlan()
+              }}
+            />
+            Set a profit goal
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="smart-hauler-goal"
+              className="site-radio"
+              checked={mode === 'trades'}
+              disabled={sellMode}
+              onChange={() => {
+                setGoalMode('trades')
+                clearPlan()
+              }}
+            />
+            Set a number of trades
+          </label>
+        </div>
+        {mode === 'goal' ? (
+          <label className="block">
+            <span className="site-label">Profit goal</span>
+            <select
+              className="site-input mt-1 w-full px-3 py-2"
+              value={goal}
+              disabled={sellMode || !ship}
+              onChange={(event) => {
+                setGoal(event.target.value)
+                clearPlan()
+              }}
+            >
+              <option value="">{ship ? 'Choose a profit goal' : 'Choose a ship first'}</option>
+              {goalOptions.map((amount) => (
+                <option key={amount} value={amount}>{money(amount)}</option>
+              ))}
+            </select>
+          </label>
+        ) : (
+          <label className="block">
+            <span className="site-label">Trades</span>
+            <input
+              type="number"
+              min={1}
+              max={HAUL_MAX_TRADES}
+              className="site-input mt-1 w-full px-3 py-2"
+              value={trades}
+              disabled={sellMode}
+              onChange={(event) => {
+                setTrades(Math.max(1, Math.min(HAUL_MAX_TRADES, Math.round(Number(event.target.value) || 1))))
+                clearPlan()
+              }}
+            />
+          </label>
+        )}
         <label className="block">
           <span className="site-label">aUEC on hand</span>
           <input
             className="site-input mt-1 w-full px-3 py-2"
             inputMode="numeric"
             value={cash}
+            disabled={sellMode}
             onChange={(event) => {
               setCash(event.target.value.replace(/[^\d]/g, ''))
               clearPlan()
@@ -373,18 +495,40 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
           />
         </label>
       </div>
-      <p className="site-hint">A trade is one buy and one sell. Crates larger than the ship can carry are left out. Round-robin brings the last sale back to the start when you run more than one trade. If a terminal is short on stock or will not buy, the buttons on that stop rebuild the rest of the route from what you actually got.</p>
-      {ship && (ship.maxCrateScu || 0) > 0 && (
+      {sellMode ? (
+        <p className="site-hint">Sell cargo you already carry. Add each commodity, how much you have, and the crate sizes, then Find buyer sends you to the nearest terminal that buys it.</p>
+      ) : (
+        <p className="site-hint">A trade is one buy and one sell. Pick a profit goal or a number of trades. The profit choices are about an hour of hauling for that ship&apos;s hold. Ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU plan a number of trades. Each stop is capped by live UEX stock, your aUEC, the room in the hold, and crates both terminals take. Round-robin brings the last sale back to the start.</p>
+      )}
+      {ship && !sellMode && (ship.maxCrateScu || 0) > 0 && (
         <p className="text-sm text-white">This ship can carry {ship.cargoScu} SCU, in crates up to {ship.maxCrateScu} SCU.</p>
       )}
+      {liveNote && !sellMode && <p className="site-hint">{liveNote}</p>}
       {notice && (
         <AppModal title="Cargo run" onClose={() => setNotice(null)} size="sm" zIndex={80}>
           <p className="text-sm text-white">{notice}</p>
         </AppModal>
       )}
-      <button type="button" className="site-btn-primary px-4 py-2" onClick={createRoute}>
-        Create Route
-      </button>
+      {sellMode ? (
+        <button
+          type="button"
+          className="site-btn-primary px-4 py-2"
+          onClick={() => {
+            if (!startId) {
+              setNotice('Choose a starting location.')
+              return
+            }
+            setSellOpen(true)
+          }}
+        >
+          Sell
+        </button>
+      ) : (
+        <button type="button" className="site-btn-primary px-4 py-2" disabled={busy} onClick={() => void createRoute()}>
+          {busy ? 'Checking UEX stock…' : 'Create Route'}
+        </button>
+      )}
+      {sellMode && sellOpen && startId && <SellCargoPanel startId={startId} sells={baseOffers.sells} />}
       {hangarOpen && (
         <ShipHangarModal
           mode="select"
@@ -394,7 +538,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
           onSelect={(entry) => chooseShip(entry.shipId)}
         />
       )}
-      {needed != null && !route && (
+      {needed != null && pendingPlan && !route && (
         <AppModal title="Trades to make that profit" onClose={() => setNeeded(null)} size="md" zIndex={80}>
           <p className="text-sm text-white">
             With this ship and the aUEC you have, it takes {needed} {needed === 1 ? 'trade' : 'trades'} to reach {money(Number(goal))}.
@@ -405,9 +549,8 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
               type="button"
               className="site-btn-primary px-3 py-1.5 text-sm"
               onClick={() => {
-                setTrades(needed)
-                setAcceptedTrades(needed)
                 setNeeded(null)
+                startRoute(pendingPlan)
               }}
             >
               Accept
@@ -446,6 +589,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
               </>
             )}
             {routeNote && <p className="site-hint">{routeNote}</p>}
+            {liveNote && <p className="site-hint">{liveNote}</p>}
           </div>
           {current.kind === 'buy' && outcome === 'unavailable' && (
             <div className="mt-4 space-y-2">
@@ -500,10 +644,11 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
                 <button
                   type="button"
                   className="site-btn-primary px-3 py-2 text-sm"
+                  disabled={busy}
                   onClick={() => {
                     if (outcome === 'unavailable') confirmOtherBuy()
-                    else if (outcome === 'partial-buy') confirmPartialBuy()
-                    else confirmPartialSell()
+                    else if (outcome === 'partial-buy') void confirmPartialBuy()
+                    else void confirmPartialSell()
                   }}
                 >
                   Next Stop
@@ -511,7 +656,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
               </>
             ) : current.kind === 'buy' ? (
               <>
-                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('unavailable'); setPicked(''); setRouteNote(null) }}>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" disabled={busy} onClick={() => void openUnavailable()}>
                   Unavailable for purchase
                 </button>
                 <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('partial-buy'); setPartialScu(''); setRouteNote(null) }}>
@@ -523,7 +668,7 @@ export default function SmartHaulerTab({ rsiVerified }: { rsiVerified: boolean }
               </>
             ) : (
               <>
-                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={confirmNoneSold}>
+                <button type="button" className="site-btn-secondary px-3 py-2 text-sm" disabled={busy} onClick={() => void confirmNoneSold()}>
                   None sold
                 </button>
                 <button type="button" className="site-btn-secondary px-3 py-2 text-sm" onClick={() => { setOutcome('partial-sell'); setPartialScu(''); setRouteNote(null) }}>
