@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import AppModal from '../layout/AppModal'
+import SiteTooltip from '../SiteTooltip'
 import ShipHangarModal from '../shipHangar/ShipHangarModal'
 import SellCargoPanel from './SellCargoPanel'
 import { SHIPS, getShip } from '../../lib/shipShopData'
@@ -356,15 +357,17 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
 
   return (
     <div className="space-y-4">
-      <label className="flex items-center gap-2 text-sm text-white">
-        <input
-          type="checkbox"
-          className="site-checkbox"
-          checked={sellMode}
-          onChange={(event) => toggleSellMode(event.target.checked)}
-        />
-        Sell what I have
-      </label>
+      <SiteTooltip side="top" content="Sell cargo you already carry. Add each commodity, the SCU you have, and the crate sizes. Find buyer sends you to the nearest terminal that buys it.">
+        <label className="flex items-center gap-2 text-sm text-white">
+          <input
+            type="checkbox"
+            className="site-checkbox"
+            checked={sellMode}
+            onChange={(event) => toggleSellMode(event.target.checked)}
+          />
+          Sell what I have
+        </label>
+      </SiteTooltip>
       <div className="grid items-end gap-x-4 gap-y-3 lg:grid-cols-2">
         <div className="relative z-30 flex items-end gap-2">
           <label className="block min-w-0 flex-1">
@@ -429,32 +432,37 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           )}
         </label>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              className="site-checkbox"
-              checked={roundRobin}
-              disabled={sellMode}
-              onChange={(event) => {
-                setRoundRobin(event.target.checked)
-                clearPlan()
-              }}
-            />
-            Round-robin
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              className="site-checkbox"
-              checked={crossSystem}
-              onChange={(event) => {
-                setCrossSystem(event.target.checked)
-                clearPlan()
-              }}
-            />
-            Cross system
-          </label>
-          <label className="inline-flex items-center gap-2">
+          <SiteTooltip side="top" content="On a run of more than one trade, the last sale comes back near where you started.">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="site-checkbox"
+                checked={roundRobin}
+                disabled={sellMode}
+                onChange={(event) => {
+                  setRoundRobin(event.target.checked)
+                  clearPlan()
+                }}
+              />
+              Round-robin
+            </label>
+          </SiteTooltip>
+          <SiteTooltip side="top" content="Off, the run stays in the system you start in. On, a buy or sale can jump to another system.">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="site-checkbox"
+                checked={crossSystem}
+                onChange={(event) => {
+                  setCrossSystem(event.target.checked)
+                  clearPlan()
+                }}
+              />
+              Cross system
+            </label>
+          </SiteTooltip>
+          <SiteTooltip side="top" content="The aUEC you have when the run starts. It is not counted as profit.">
+            <label className="inline-flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">aUEC on hand</span>
             <input
               aria-label="aUEC on hand"
@@ -469,36 +477,41 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
               }}
             />
           </label>
+          </SiteTooltip>
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="smart-hauler-goal"
-              className="site-radio"
-              checked={mode === 'goal'}
-              disabled={sellMode || (!!ship && !canSetGoal)}
-              onChange={() => {
-                setGoalMode('goal')
-                clearPlan()
-              }}
-            />
-            Set a profit goal
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="smart-hauler-goal"
-              className="site-radio"
-              checked={mode === 'trades'}
-              disabled={sellMode}
-              onChange={() => {
-                setGoalMode('trades')
-                clearPlan()
-              }}
-            />
-            Set a number of trades
-          </label>
+          <SiteTooltip side="top" content={`The aUEC you want to gain, on top of what you start with. Each choice is about an hour for this ship's hold. Ships under ${HAUL_PROFIT_GOAL_MIN_SCU} SCU use a number of trades instead.`}>
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="smart-hauler-goal"
+                className="site-radio"
+                checked={mode === 'goal'}
+                disabled={sellMode || (!!ship && !canSetGoal)}
+                onChange={() => {
+                  setGoalMode('goal')
+                  clearPlan()
+                }}
+              />
+              Set a profit goal
+            </label>
+          </SiteTooltip>
+          <SiteTooltip side="top" content="A trade is one buy and one sell. Set 1 to 20. Each buy is chosen at random from the four best-paying commodities you can haul, at the closest shop for that commodity.">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="smart-hauler-goal"
+                className="site-radio"
+                checked={mode === 'trades'}
+                disabled={sellMode}
+                onChange={() => {
+                  setGoalMode('trades')
+                  clearPlan()
+                }}
+              />
+              Set a number of trades
+            </label>
+          </SiteTooltip>
           {mode === 'goal' ? (
             <select
               aria-label="Profit goal"
@@ -532,11 +545,6 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           )}
         </div>
       </div>
-      {sellMode ? (
-        <p className="site-hint">Sell cargo you already carry. Add each commodity, how much you have, and the crate sizes, then Find buyer sends you to the nearest terminal that buys it.</p>
-      ) : (
-        <p className="site-hint">A trade is one buy and one sell, kept in the system you start in unless Cross system is on. Each buy is chosen at random from the four best-paying commodities you can haul, at the closest shop for that commodity. Profit is what you gain on each sale. Ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU set trades only.</p>
-      )}
       {ship && !sellMode && (ship.maxCrateScu || 0) > 0 && (
         <p className="text-sm text-white">This ship can carry {ship.cargoScu} SCU, in crates up to {ship.maxCrateScu} SCU.</p>
       )}
