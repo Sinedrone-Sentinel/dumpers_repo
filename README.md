@@ -129,7 +129,7 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - Signed-in approved members only; guests see a locked menu item. Not prerendered for SEO
 - Plans a cargo run for a flyable ship with cargo, to **a profit goal** or **a number of trades** (1–20). Profit goals are a dropdown by cargo size (`profitGoalOptions` in `src/lib/smartHauler.ts`), about one hour of hauling; ships under 4 SCU can only set trades
 - Uses the aUEC on hand, then the aUEC each sale should leave, to size the next load. Each stop is capped by live stock, cash, hold space, and crate sizes both terminals list
-- Prices, terminals, and crate sizes come from the baked UEX index. Live buy/sell availability comes from the `smart-hauler-availability` Edge Function whenever a buy or sell list is built; if it fails, the baked list is used
+- Prices, terminals, and crate sizes come from the baked UEX index. Live buy/sell availability comes from the `smart-hauler-availability` Edge Function whenever a buy or sell list is built, and only a check from the last 7 days is used. If it fails, the baked list is used and the step says local info may not match demand
 - **Sell what I have**: per-commodity rows (SCU, smallest and largest crate) and **Find buyer** for the nearest terminal that buys it, with Zero / Partial / Full follow-ups
 
 ### Friends (header)

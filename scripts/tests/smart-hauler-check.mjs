@@ -221,17 +221,27 @@ const withIds = {
     { commodity: 'Cheap', pointId: 'c', place: 'C', price: 15, boxSizes: [1], commodityId: 1, terminalId: 12 },
   ],
 }
+const verifiedAt = Date.UTC(2026, 9, 23)
 const live = hauler.applyHaulAvailability(withIds, [
-  { commodityId: 1, terminalId: 10, buy: { available: true, scu: 4 }, sell: null },
-  { commodityId: 1, terminalId: 11, buy: { available: false, scu: null }, sell: { available: false, scu: null } },
-  { commodityId: 1, terminalId: 12, buy: null, sell: { available: true, scu: 7 } },
+  { commodityId: 1, terminalId: 10, buy: { available: true, scu: 4, status: 4, verifiedAt }, sell: null },
+  { commodityId: 1, terminalId: 11, buy: { available: false, scu: null, status: 1, verifiedAt }, sell: { available: false, scu: null, status: 7, verifiedAt } },
+  { commodityId: 1, terminalId: 12, buy: null, sell: { available: true, scu: 7, status: 3, verifiedAt } },
 ])
-assert.deepEqual(live.buys.map((row) => row.terminalId), [10, 12])
+assert.deepEqual(live.buys.map((row) => row.terminalId), [10])
 assert.equal(live.buys[0].stockScu, 4)
-assert.equal(live.buys[1].stockScu, undefined)
+assert.equal(live.buys[0].uexStatus, 4)
+assert.equal(live.buys[0].uexVerifiedAt, verifiedAt)
 assert.deepEqual(live.sells.map((row) => row.terminalId), [12])
 assert.equal(live.sells[0].stockScu, 7)
-assert.deepEqual(hauler.applyHaulAvailability(withIds, []), withIds)
+assert.equal(live.sells[0].uexStatus, 3)
+const dropped = hauler.applyHaulAvailability(withIds, [])
+assert.deepEqual(dropped.buys, [])
+assert.deepEqual(dropped.sells, [])
+assert.equal(
+  hauler.uexLookupText(4, verifiedAt),
+  'UEX Live Lookup - Resource Status 4 -- Last Date Verified Oct 23, 2026',
+)
+assert.equal(hauler.uexLookupText(undefined, undefined), 'Local Info: Resource may or may not be in demand')
 
 const cappedRun = hauler.planHaul({
   ...shared,

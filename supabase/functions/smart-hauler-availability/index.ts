@@ -11,13 +11,13 @@ const corsHeaders = {
 
 const UEX_URL = 'https://api.uexcorp.uk/2.0/commodities_prices_all'
 const CACHE_MS = 10 * 60 * 1000
-/** Only a report from the last day says anything about stock right now. */
-const FRESH_MS = 24 * 60 * 60 * 1000
+/** A route only trusts a report from the last 7 days. */
+const FRESH_MS = 7 * 24 * 60 * 60 * 1000
 const MAX_COMMODITIES = 200
 const STATUS_OUT_OF_STOCK = 1
 const STATUS_FULL = 7
 
-type Side = { available: boolean; scu: number | null }
+type Side = { available: boolean; scu: number | null; status: number; verifiedAt: number }
 type Row = { commodityId: number; terminalId: number; buy: Side | null; sell: Side | null }
 
 type UexPrice = {
@@ -50,15 +50,15 @@ function toRow(price: UexPrice, now: number): Row | null {
   const commodityId = Number(price.id_commodity)
   const terminalId = Number(price.id_terminal)
   if (!Number.isFinite(commodityId) || !Number.isFinite(terminalId)) return null
-  const modified = Number(price.date_modified) * 1000
-  if (!Number.isFinite(modified) || now - modified > FRESH_MS) return null
+  const verifiedAt = Number(price.date_modified) * 1000
+  if (!Number.isFinite(verifiedAt) || verifiedAt > now + 60_000 || now - verifiedAt > FRESH_MS) return null
   const buyStatus = Number(price.status_buy) || 0
   const sellStatus = Number(price.status_sell) || 0
   const buy: Side | null = (Number(price.price_buy) || 0) > 0 && buyStatus > 0
-    ? { available: buyStatus !== STATUS_OUT_OF_STOCK, scu: positive(price.scu_buy) }
+    ? { available: buyStatus !== STATUS_OUT_OF_STOCK, scu: positive(price.scu_buy), status: buyStatus, verifiedAt }
     : null
   const sell: Side | null = (Number(price.price_sell) || 0) > 0 && sellStatus > 0
-    ? { available: sellStatus !== STATUS_FULL, scu: positive(price.scu_sell) }
+    ? { available: sellStatus !== STATUS_FULL, scu: positive(price.scu_sell), status: sellStatus, verifiedAt }
     : null
   if (!buy && !sell) return null
   return { commodityId, terminalId, buy, sell }
