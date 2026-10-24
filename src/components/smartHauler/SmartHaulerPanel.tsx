@@ -23,6 +23,7 @@ import {
   runningHaulProfit,
   tradesForProfit,
   uexLookupText,
+  type HaulAvoid,
   type HaulOffer,
   type HaulPlan,
   type HaulRouteInput,
@@ -70,7 +71,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
   const [picked, setPicked] = useState('')
   const [partialScu, setPartialScu] = useState('')
   const [routeNote, setRouteNote] = useState<string | null>(null)
-  const [skippedSellPoints, setSkippedSellPoints] = useState<string[]>([])
+  const [skipped, setSkipped] = useState<HaulAvoid[]>([])
   const ship = getShip(shipId)
   const start = pointById(navMap, startId)
   const canSetGoal = !!ship && (ship.cargoScu || 0) >= HAUL_PROFIT_GOAL_MIN_SCU
@@ -101,7 +102,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
     setPicked('')
     setPartialScu('')
     setRouteNote(null)
-    setSkippedSellPoints([])
+    setSkipped([])
   }
 
   function clearPlan() {
@@ -215,6 +216,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       near: (fromId, toId) => pointsAreNear(navMap, fromId, toId),
       km: (fromId, toId) => haulDistanceKm(navMap, fromId, toId),
       inSystem: (pointId) => crossSystem || pointsShareSystem(navMap, startId, pointId),
+      avoid: skipped,
     }
   }
 
@@ -252,9 +254,9 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
     setPicked('')
     setPartialScu('')
     setRouteNote(null)
-    setSkippedSellPoints([])
     if (!route || step >= route.stops.length - 1) {
       setRoute(null)
+      setSkipped([])
       return
     }
     setStep(step + 1)
@@ -268,13 +270,15 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
   }
 
   function confirmOtherBuy() {
-    if (!routeInput) return
+    if (!routeInput || !current) return
     const choice = alternatives.find((row) => row.commodity === picked)
     if (!choice) {
       setRouteNote('Choose a commodity from this location.')
       return
     }
-    const plan = rerouteUnavailableBuy(routeInput, choice)
+    const avoid = [...skipped, { kind: 'buy' as const, pointId: current.pointId, commodity: current.commodity }]
+    setSkipped(avoid)
+    const plan = rerouteUnavailableBuy({ ...routeInput, avoid }, choice)
     if (!plan) {
       setRouteNote('That commodity has nowhere to sell.')
       return
@@ -293,8 +297,10 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       advanceStop()
       return
     }
+    const avoid = [...skipped, { kind: 'buy' as const, pointId: current.pointId, commodity: current.commodity }]
+    setSkipped(avoid)
     const input = await liveRouteInput()
-    const plan = input ? applyPartialBuy(input, amount) : null
+    const plan = input ? applyPartialBuy({ ...input, avoid }, amount) : null
     if (!plan) {
       setRouteNote('That amount does not fit the aUEC on hand.')
       return
@@ -303,21 +309,22 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
     setOutcome('choose')
     setPicked('')
     setPartialScu('')
-    setSkippedSellPoints([])
     setRouteNote(`The sale is now ${amount} SCU.`)
     setStep(step + 1)
   }
 
   async function confirmNoneSold() {
     if (!current) return
+    const avoid = [...skipped, { kind: 'sell' as const, pointId: current.pointId, commodity: current.commodity }]
+    setSkipped(avoid)
     const input = await liveRouteInput()
-    const plan = input ? rerouteUnsold(input, skippedSellPoints) : null
+    const blocked = avoid.filter((row) => row.kind === 'sell' && row.commodity === current.commodity).map((row) => row.pointId)
+    const plan = input ? rerouteUnsold({ ...input, avoid }, blocked) : null
     if (!plan) {
       setRouteNote('No other terminal buys this cargo.')
       return
     }
     const next = plan.stops[step]
-    setSkippedSellPoints((prev) => [...prev, current.pointId])
     stayOnStop(plan, next ? `No demand there. Sell at ${next.place} instead, then buy the next cargo from that stop.` : 'No demand there.')
   }
 
@@ -332,14 +339,16 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       advanceStop()
       return
     }
+    const avoid = [...skipped, { kind: 'sell' as const, pointId: current.pointId, commodity: current.commodity }]
+    setSkipped(avoid)
     const input = await liveRouteInput()
-    const plan = input ? applyPartialSell(input, amount, skippedSellPoints) : null
+    const blocked = avoid.filter((row) => row.kind === 'sell' && row.commodity === current.commodity).map((row) => row.pointId)
+    const plan = input ? applyPartialSell({ ...input, avoid }, amount, blocked) : null
     if (!plan) {
       setRouteNote('No other terminal buys the rest of this cargo.')
       return
     }
     const next = plan.stops[step]
-    setSkippedSellPoints((prev) => [...prev, current.pointId])
     stayOnStop(plan, next ? `Sell the remaining ${next.scu} SCU at ${next.place} before buying anything else.` : 'Sell the rest before the next buy.')
   }
 
