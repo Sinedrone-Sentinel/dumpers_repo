@@ -117,6 +117,8 @@ export interface HaulRouteInput {
   inSystem?: (pointId: string) => boolean
   /** Commodity and place pairs already refused on this run. */
   avoid?: HaulAvoid[]
+  /** Picks among the four best-paying commodities on a rebuilt leg. */
+  random?: () => number
 }
 
 interface HaulState {
@@ -326,31 +328,6 @@ function applyTrade(
   }
 }
 
-function oneTradeProfit(
-  state: HaulState,
-  buys: Map<string, HaulOffer[]>,
-  sells: Map<string, HaulOffer[]>,
-  buyAllow: (fromId: string, toId: string) => boolean,
-  sellAllow: (pointId: string) => boolean,
-  cargoScu: number,
-  maxCrateScu: number,
-  km?: (fromId: string, toId: string) => number,
-): number {
-  let best = 0
-  for (const [commodity, buyOffers] of buys) {
-    const buy = buyChoices(buyOffers, state.pointId, buyAllow, maxCrateScu, km)[0]
-    const sellOffers = sells.get(commodity)
-    if (!buy || !sellOffers) continue
-    const sell = sellChoices(sellOffers, buy.price, sellAllow, state.pointId, km)[0]
-    if (!sell) continue
-    const load = tradeLoad(buy, sell, cargoScu, maxCrateScu, state.cash)
-    if (!load) continue
-    const revenue = Math.round(load.scu * sell.price)
-    best = Math.max(best, revenue - load.cost)
-  }
-  return best
-}
-
 /**
  * Walks each buy and sell in order. The cash after a sale is what the next buy can spend,
  * so a later stop can take more SCU or a more expensive commodity.
@@ -373,6 +350,8 @@ export function planHaul(input: {
   km?: (fromId: string, toId: string) => number
   /** Commodity and place pairs already refused on this run. */
   avoid?: HaulAvoid[]
+  /** Picks among the four best-paying commodities. Omit it and the best one is used. */
+  random?: () => number
 }): HaulPlan | null {
   const trades = Math.max(0, Math.floor(input.trades))
   if (trades <= 0 || input.cash <= 0) return null
@@ -405,22 +384,29 @@ export function planHaul(input: {
             const load = tradeLoad(buy, sell, input.cargoScu, input.maxCrateScu, state.cash)
             if (!load) continue
             const next = applyTrade(state, buy, sell, load)
-            let score = next.profit
-            if (!last) {
-              const followAllow = (pointId: string) => inBounds(pointId) && (!input.roundRobin || trades - step > 2 || input.near(input.startId, pointId))
-              score += oneTradeProfit(next, buys, sells, buyAllow, followAllow, input.cargoScu, input.maxCrateScu, input.km)
-            }
-            ranked.push({ state: next, score })
+            ranked.push({ state: next, score: next.profit - state.profit })
           }
         }
       }
     }
     if (ranked.length === 0) return null
-    ranked.sort((a, b) => buyKm(a.state) - buyKm(b.state) || b.state.profit - a.state.profit || b.score - a.score)
-    beam = ranked.slice(0, 8).map((row) => row.state)
+    const byCommodity = new Map<string, { state: HaulState; gain: number; km: number }>()
+    for (const row of ranked) {
+      const buy = row.state.stops[row.state.stops.length - 2]
+      if (!buy) continue
+      const gain = row.score
+      const km = buyKm(row.state)
+      const current = byCommodity.get(buy.commodity)
+      if (!current || km < current.km || (km === current.km && gain > current.gain)) {
+        byCommodity.set(buy.commodity, { state: row.state, gain, km })
+      }
+    }
+    const paying = [...byCommodity.values()].sort((a, b) => b.gain - a.gain || a.km - b.km).slice(0, 4)
+    if (paying.length === 0) return null
+    const roll = input.random ? input.random() : 0
+    const index = Math.min(paying.length - 1, Math.floor(Math.max(0, Math.min(roll, 0.999999)) * paying.length))
+    beam = [paying[index].state]
   }
-
-  beam.sort((a, b) => buyKm(a) - buyKm(b) || b.profit - a.profit)
   const best = beam[0]
   if (!best || best.stops.length === 0) return null
   return { stops: best.stops, profit: best.profit, trades, cash: best.cash }
@@ -558,6 +544,7 @@ function continueAfter(head: HaulStop[], input: HaulRouteInput, tradesDone: numb
     inSystem: input.inSystem,
     km: input.km,
     avoid: input.avoid,
+    random: input.random,
   })
   if (!tail) return head
   return [...head, ...tail.stops]

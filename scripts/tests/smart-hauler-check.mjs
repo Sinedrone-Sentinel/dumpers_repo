@@ -315,7 +315,22 @@ const closer = hauler.planHaul({
   inSystem: (id) => id !== 'd',
   km,
 })
-assert.equal(closer.stops[0].pointId, 'b')
+assert.equal(closer.stops[0].pointId, 'c')
+const closestShop = hauler.planHaul({
+  ...shared,
+  trades: 1,
+  buys: [
+    { commodity: 'Ore', pointId: 'b', place: 'B', price: 5, boxSizes: [1] },
+    { commodity: 'Ore', pointId: 'c', place: 'C', price: 1, boxSizes: [1] },
+  ],
+  sells: [
+    { commodity: 'Ore', pointId: 'b', place: 'B', price: 9, boxSizes: [1] },
+    { commodity: 'Ore', pointId: 'c', place: 'C', price: 40, boxSizes: [1] },
+  ],
+  inSystem: (id) => id !== 'd',
+  km,
+})
+assert.equal(closestShop.stops[0].pointId, 'b')
 const afterSkip = hauler.planHaul({
   ...shared,
   trades: 1,
@@ -332,6 +347,17 @@ const afterSkip = hauler.planHaul({
   avoid: [{ kind: 'buy', pointId: 'b', commodity: 'Near' }],
 })
 assert.equal(afterSkip.stops[0].pointId, 'c')
+const variedBuys = [
+  ...buys,
+  { commodity: 'Fourth', pointId: 'a', place: 'A', price: 2, boxSizes: [1] },
+]
+const variedSells = [
+  ...sells,
+  { commodity: 'Fourth', pointId: 'b', place: 'B', price: 3, boxSizes: [1] },
+]
+const varied = { ...shared, trades: 1, cash: 1000, buys: variedBuys, sells: variedSells }
+assert.equal(hauler.planHaul({ ...varied, random: () => 0 }).stops[0].commodity, 'Expensive')
+assert.equal(hauler.planHaul({ ...varied, random: () => 0.99 }).stops[0].commodity, 'Fourth')
 
 const labelFile = path.join('node_modules', '.cache', 'ship-hangar.mjs')
 await esbuild.build({
