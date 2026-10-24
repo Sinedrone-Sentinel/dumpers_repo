@@ -88,7 +88,7 @@ export default function AppModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3 p-3 sm:p-4 shrink-0 bg-gradient-to-r from-orange-950/45 via-orange-950/20 to-transparent border-b border-orange-500/20">
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <h2 id={titleId} className="text-lg font-bold text-amber-50 leading-snug tracking-wide">
               {title}
             </h2>

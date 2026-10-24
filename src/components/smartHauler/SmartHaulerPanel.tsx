@@ -186,6 +186,11 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
 
   const current = route?.stops[step]
   const headerCash = current?.cashBefore ?? 0
+  const runningProfit = route
+    ? route.stops.slice(0, step + 1).reduce((sum, stop) => (
+        stop.kind === 'sell' ? sum + (stop.cashAfter - stop.cashBefore) : sum
+      ), 0)
+    : 0
 
   function buildRouteInput(source: HaulOffers): HaulRouteInput | null {
     if (!route || !ship || !startId) return null
@@ -561,7 +566,12 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       {route && current && (
         <AppModal
           title={current.kind === 'buy' ? 'Buy cargo' : 'Sell cargo'}
-          subtitle={`On hand ${money(headerCash)}`}
+          subtitle={
+            <div className="flex items-baseline justify-between gap-4 text-sm font-semibold tabular-nums">
+              <p className="text-green-400">On hand {money(headerCash)}</p>
+              <p className="text-amber-400">Running Profit {money(runningProfit)}</p>
+            </div>
+          }
           onClose={() => {
             setRoute(null)
             clearStopUi()
