@@ -56,7 +56,15 @@ function money(value: number): string {
   return `${Math.round(value).toLocaleString()} aUEC`
 }
 
-export default function SellCargoPanel({ startId, sells }: { startId: string; sells: HaulOffer[] }) {
+export default function SellCargoPanel({
+  startId,
+  sells,
+  inSystem,
+}: {
+  startId: string
+  sells: HaulOffer[]
+  inSystem?: (pointId: string) => boolean
+}) {
   const [rows, setRows] = useState<SellRow[]>(() => [blankRow()])
   const [busyId, setBusyId] = useState<number | null>(null)
   const commodities = useMemo(() => {
@@ -75,13 +83,14 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
     const report = await fetchHaulAvailability(commodityId != null ? [commodityId] : undefined)
     setBusyId(null)
     const live = report ? applyHaulAvailability({ buys: [], sells }, report).sells : sells
+    const scoped = inSystem ? live.filter((offer) => inSystem(offer.pointId)) : live
     const hit = findSellBuyer({
       commodity: row.commodity,
       fromId,
       scu: left,
       minCrateScu: row.minCrate,
       maxCrateScu: row.maxCrate,
-      sells: live,
+      sells: scoped,
       avoidPointIds: avoid,
       km: (a, b) => haulDistanceKm(navMap, a, b),
     })
@@ -97,7 +106,9 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
       note: hit
         ? null
         : report
-          ? 'No buyer was found from a check in the last 7 days.'
+          ? inSystem
+            ? 'No buyer was found in this system from a check in the last 7 days.'
+            : 'No buyer was found from a check in the last 7 days.'
           : `No other terminal buys ${row.commodity} in those crate sizes.`,
     })
   }
@@ -212,7 +223,7 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
                 <p>
                   Sell {row.buyer.scu} SCU of {row.commodity} at {money(row.buyer.offer.price)} per SCU, about {money(row.buyer.scu * row.buyer.offer.price)}.
                 </p>
-                <p className="text-green-400">{uexLookupText(row.buyer.offer.uexStatus, row.buyer.offer.uexVerifiedAt)}</p>
+                <p className="text-green-400">{uexLookupText(row.buyer.offer.uexStatus, row.buyer.offer.uexVerifiedAt, 'sell')}</p>
                 {row.buyer.scu < (row.left ?? 0) && (
                   <p className="site-hint">UEX reports that terminal takes {row.buyer.scu} SCU right now. The rest goes to the next buyer.</p>
                 )}

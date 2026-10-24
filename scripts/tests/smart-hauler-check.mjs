@@ -241,7 +241,8 @@ assert.equal(
   hauler.uexLookupText(4, verifiedAt),
   'UEX Live Lookup - Resource Status 4 -- Last Date Verified Oct 23, 2026',
 )
-assert.equal(hauler.uexLookupText(undefined, undefined), 'Local Info: Resource may or may not be in demand')
+assert.equal(hauler.uexLookupText(undefined, undefined, 'buy'), 'Local Info: Resource may or may not be in stock')
+assert.equal(hauler.uexLookupText(undefined, undefined, 'sell'), 'Local Info: Resource may or may not be in demand')
 
 const cappedRun = hauler.planHaul({
   ...shared,
@@ -265,6 +266,41 @@ assert.equal(nextBuyer.offer.pointId, 'c')
 assert.equal(nextBuyer.scu, 15)
 assert.equal(hauler.findSellBuyer({ commodity: 'Ore', fromId: 'a', scu: 15, minCrateScu: 8, maxCrateScu: 16, sells: sellOnly, avoidPointIds: [], km }), null)
 assert.equal(hauler.findSellBuyer({ commodity: 'Ore', fromId: 'a', scu: 15, minCrateScu: 16, maxCrateScu: 32, sells: sellOnly, avoidPointIds: [], km }).offer.pointId, 'b')
+
+assert.equal(hauler.pointsShareSystem(nav, 'a', 'c'), true)
+assert.equal(hauler.pointsShareSystem(nav, 'a', 'd'), false)
+assert.equal(hauler.runningHaulProfit([
+  { kind: 'buy', commodity: 'Ore', pointId: 'a', place: 'A', scu: 1, crates: [], pricePerScu: 500, cashBefore: 1000, cashAfter: 500 },
+  { kind: 'sell', commodity: 'Ore', pointId: 'b', place: 'B', scu: 1, crates: [], pricePerScu: 800, cashBefore: 500, cashAfter: 1300 },
+], 1), 300)
+assert.equal(hauler.runningHaulProfit([
+  { kind: 'buy', commodity: 'Ore', pointId: 'a', place: 'A', scu: 1, crates: [], pricePerScu: 500, cashBefore: 1000, cashAfter: 500 },
+], 0), 0)
+const outward = hauler.planHaul({
+  ...shared,
+  trades: 1,
+  buys: [{ commodity: 'Far', pointId: 'c', place: 'C', price: 5, boxSizes: [1] }],
+  sells: [{ commodity: 'Far', pointId: 'b', place: 'B', price: 20, boxSizes: [1] }],
+  inSystem: (id) => id !== 'd',
+  km,
+})
+assert.equal(outward.stops[0].pointId, 'c')
+assert.equal(outward.stops[1].pointId, 'b')
+const farOffers = {
+  buys: [
+    { commodity: 'Far', pointId: 'c', place: 'C', price: 5, boxSizes: [1] },
+    { commodity: 'Far', pointId: 'd', place: 'D', price: 1, boxSizes: [1] },
+  ],
+  sells: [
+    { commodity: 'Far', pointId: 'c', place: 'C', price: 15, boxSizes: [1] },
+    { commodity: 'Far', pointId: 'd', place: 'D', price: 40, boxSizes: [1] },
+  ],
+}
+const jumped = hauler.planHaul({ ...shared, trades: 1, ...farOffers, inSystem: () => true, km })
+assert.equal(jumped.stops[0].pointId, 'd')
+const stayed = hauler.planHaul({ ...shared, trades: 1, ...farOffers, inSystem: (id) => id !== 'd', km })
+assert.equal(stayed.stops[0].pointId, 'c')
+assert.notEqual(stayed.stops[1].pointId, 'd')
 
 const labelFile = path.join('node_modules', '.cache', 'ship-hangar.mjs')
 await esbuild.build({
