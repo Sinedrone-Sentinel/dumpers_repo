@@ -23,6 +23,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'See what reputation level is required to unlock each blueprint',
       'Mark blueprints as "acquired" to track your collection progress',
       'When you have at least one friend, a Members dropdown appears beside the acquisition filter — choose Mine or a friend to filter the grid by that collection (checkboxes still update only your own acquired marks)',
+      'A green count beside the member count lists friends who own that blueprint. Open it to see their RSI handles',
       'Missions on reward blueprints lists every contract that drops it and opens Browse Missions',
       'View the resources and components required to craft each item',
       'Click any blueprint to see detailed crafting requirements and DFP values',

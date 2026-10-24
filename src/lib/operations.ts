@@ -1,4 +1,5 @@
 import type { MemberReputationRow } from './reputation'
+import { canonicalizeBlueprintInternalName } from './guestCatalog'
 import { supabase } from './supabase'
 import { EXTRA_CATALOG_RESOURCES } from '../config/extraResources'
 import { GAME_COMMODITY_RESOURCES } from '../config/gameCommodities'
@@ -287,7 +288,32 @@ export async function fetchBlueprintOwnerCounts(
   for (const row of data ?? []) {
     counts[row.blueprint_id] = Number(row.owner_count)
   }
+
   return { data: counts }
+}
+
+export async function fetchFriendsBlueprintOwners(
+  blueprintIds: string[]
+): Promise<{ data: Record<string, string[]>; error?: string }> {
+  if (blueprintIds.length === 0) return { data: {} }
+
+  const { data, error } = await supabase.rpc('get_friends_blueprint_owners', {
+    p_blueprint_ids: blueprintIds,
+  })
+
+  if (error) return { data: {}, error: error.message }
+
+  const owners: Record<string, string[]> = {}
+  for (const row of data ?? []) {
+    const id = canonicalizeBlueprintInternalName(row.blueprint_id) ?? row.blueprint_id
+    const handle = String(row.rsi_handle || '').trim()
+    if (!handle) continue
+    const list = owners[id] ?? []
+    if (!list.includes(handle)) list.push(handle)
+    owners[id] = list
+  }
+  for (const list of Object.values(owners)) list.sort((a, b) => a.localeCompare(b))
+  return { data: owners }
 }
 
 /** Aggregate pending order count for Offline Mode Fulfillment teaser (anon-safe RPC). */
