@@ -83,6 +83,11 @@ const smallGoal = hauler.tradesForProfit({ ...shared, goal: 50 })
 assert.equal(smallGoal.needed, 1)
 const unreachable = hauler.tradesForProfit({ ...shared, goal: 999999 })
 assert.equal(unreachable.needed, null)
+// Starting cash is not profit. The goal is earned aUEC, so cash on hand stays out of the total.
+const stake = hauler.tradesForProfit({ ...shared, cash: 1000, goal: 1200 })
+assert.equal(stake.needed, 4)
+assert.ok(stake.plan.profit >= 1200)
+assert.equal(stake.plan.profit, stake.plan.cash - 1000)
 
 const loop = hauler.planHaul({ ...shared, trades: 2, roundRobin: true })
 assert.equal(loop.stops[0].commodity, 'Cheap')
