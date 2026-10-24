@@ -9,6 +9,8 @@ Member-facing pages explain a control with `SiteTooltip` (`src/components/SiteTo
 
 Do not leave a paragraph under a form that tells the member what the checkboxes, radios, or fields mean.
 
+Do not use the browser `title` attribute for hover text. That is the plain system tooltip. `SiteTooltip` is the one members should see, including on links that would otherwise forward `title` to the anchor.
+
 ## Use a tooltip
 
 - What a checkbox, radio, button, or field does

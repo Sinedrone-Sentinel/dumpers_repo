@@ -1,5 +1,6 @@
 import React from 'react'
 import { getPublicTrustBadgeImages } from '../config/trustBadges'
+import SiteTooltip from './SiteTooltip'
 
 type Props = {
   className?: string
@@ -27,17 +28,16 @@ export default function TrustBadgeStrip({ className = '', size = 'sm' }: Props) 
       aria-label="Security and trust badges"
     >
       {badges.map((badge) => (
-        <a
+        <SiteTooltip content={badge.alt}><a
           key={badge.id}
           href={badge.href}
           target="_blank"
           rel="noopener noreferrer"
           role="listitem"
           className="inline-flex opacity-95 transition-opacity hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400/70"
-          title={badge.alt}
         >
           <img src={badge.src} alt={badge.alt} className={imgClass} loading="lazy" />
-        </a>
+        </a></SiteTooltip>
       ))}
     </div>
   )

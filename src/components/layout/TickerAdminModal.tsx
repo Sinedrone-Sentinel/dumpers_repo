@@ -18,6 +18,7 @@ import {
   type TickerCategory,
 } from '../../lib/tickerLayout'
 import { normalizeAccentHex, stylesFromAccentHex } from '../../lib/tickerColors'
+import SiteTooltip from '../SiteTooltip'
 
 type Tab = 'messages' | 'categories'
 type MessageView = 'list' | 'edit'
@@ -622,11 +623,10 @@ export default function TickerAdminModal({ onClose }: Props) {
               const removeBlocked = Boolean(cat.isSystem) || active > 0
               return (
                 <li key={cat.id} className="px-3 py-2.5 site-list-row flex gap-3 items-center border-b-0">
-                  <span
+                  <SiteTooltip content={cat.accentHex}><span
                     className="w-4 h-4 rounded-sm border border-white/20 shrink-0"
                     style={accent.swatchStyle}
-                    title={cat.accentHex}
-                  />
+                  /></SiteTooltip>
                   <span
                     className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider"
                     style={accent.badgeStyle}
@@ -659,7 +659,13 @@ export default function TickerAdminModal({ onClose }: Props) {
                     >
                       Edit
                     </button>
-                    <button
+                    <SiteTooltip content={
+                        cat.isSystem
+                          ? 'Built-in category — cannot remove'
+                          : active > 0
+                            ? `Cannot remove: ${active} active item${active === 1 ? '' : 's'} use this category`
+                            : 'Remove category'
+                      }><button
                       type="button"
                       className={`text-xs ${
                         removeBlocked
@@ -668,16 +674,9 @@ export default function TickerAdminModal({ onClose }: Props) {
                       }`}
                       onClick={() => void deleteCategory(cat)}
                       disabled={saving || removeBlocked}
-                      title={
-                        cat.isSystem
-                          ? 'Built-in category — cannot remove'
-                          : active > 0
-                            ? `Cannot remove: ${active} active item${active === 1 ? '' : 's'} use this category`
-                            : 'Remove category'
-                      }
                     >
                       Remove
-                    </button>
+                    </button></SiteTooltip>
                   </div>
                 </li>
               )

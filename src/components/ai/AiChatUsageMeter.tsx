@@ -1,3 +1,4 @@
+import SiteTooltip from '../SiteTooltip'
 import {
   aiChatUsageTone,
   formatAiChatUsage,
@@ -29,16 +30,15 @@ export default function AiChatUsageMeter({
   const atCap = tone === 'full'
 
   return (
-    <span
-      className={`text-[10px] tabular-nums ${TONE_CLASS[tone]} ${className}`}
-      title={
+    <SiteTooltip content={
         atCap
           ? `You have used all ${usage.max} questions for this hour${reset ? ` — ${reset}` : ''}.`
           : `Each chat allows ${usage.max} questions per hour${reset ? ` — ${reset}` : ''}.`
-      }
+      }><span
+      className={`text-[10px] tabular-nums ${TONE_CLASS[tone]} ${className}`}
     >
       {formatAiChatUsage(usage)}
       {reset ? ` · ${reset}` : ''}
-    </span>
+    </span></SiteTooltip>
   )
 }

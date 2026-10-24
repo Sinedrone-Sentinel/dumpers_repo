@@ -596,18 +596,17 @@ export default function MiningTrackerRoute() {
               )}
             </div>
             <div className="relative w-36 shrink-0">
-              <input
+              <SiteTooltip content="Match a scanner RS to ores that can actually spawn that many rocks" className="block w-full"><input
                 type="text"
                 inputMode="numeric"
                 value={rsSearch}
                 onChange={(e) => setRsSearch(e.target.value)}
                 placeholder="RS signature"
                 aria-label="RS signature"
-                title="Match a scanner RS to ores that can actually spawn that many rocks"
                 autoComplete="off"
                 spellCheck={false}
                 className="site-input w-full px-3 py-2 text-sm"
-              />
+              /></SiteTooltip>
               {rsLookupReady && rsMatches.length > 0 && (
                 <ul className="site-dropdown-list left-0 z-30 mt-1 !w-72 max-h-60 overscroll-contain">
                   {rsMatches.map((match) => {
@@ -756,7 +755,6 @@ export default function MiningTrackerRoute() {
                         className={`p-4 rounded-xl border w-56 text-left relative cursor-pointer transition-shadow hover:brightness-110 ${colors.bg} ${colors.border} ${
                           calculatorEntryId === entry.id ? 'ring-2 ring-orange-400 ring-offset-1 ring-offset-slate-950' : ''
                         }`}
-                        title="Load in Rock Calculator"
                       >
                         <button
                           type="button"

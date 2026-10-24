@@ -1,5 +1,6 @@
 import React from 'react'
 import { parseMissionDescription } from './missionDescriptionParse'
+import SiteTooltip from '../components/SiteTooltip'
 
 function PlaceholderChip({
   label,
@@ -12,12 +13,11 @@ function PlaceholderChip({
 }) {
   const isMission = kind === 'mission'
   return (
-    <span
-      title={
+    <SiteTooltip content={
         isMission
           ? 'Filled in by the game when you accept this contract (location, target, amount, etc.)'
           : 'Highlighted term from the in-game mission text'
-      }
+      }><span
       className={
         isMission
           ? 'inline-flex items-center align-baseline mx-0.5 px-1.5 py-0.5 rounded border text-[11px] font-semibold tracking-wide bg-violet-950/60 text-violet-200 border-violet-500/45'
@@ -33,7 +33,7 @@ function PlaceholderChip({
         label
       )}
       <span className="sr-only"> ({raw})</span>
-    </span>
+    </span></SiteTooltip>
   )
 }
 

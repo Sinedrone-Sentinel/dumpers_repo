@@ -458,12 +458,11 @@ export default function RockCalculator({
                     </span>
                   </div>
                   {selectedLocationLabel ? (
-                    <p
+                    <SiteTooltip content={selectedLocationLabel}><p
                       className="text-[11px] text-slate-500 mt-0.5 truncate"
-                      title={selectedLocationLabel}
                     >
                       {selectedLocationLabel}
-                    </p>
+                    </p></SiteTooltip>
                   ) : null}
                 </>
               ) : null}
@@ -586,12 +585,11 @@ export default function RockCalculator({
                   </ul>
                 )}
               </div>
-              <select
+              <SiteTooltip content="Spawn location"><select
                 value={selectedLocation ?? ''}
                 onChange={(e) => setSelectedLocation(e.target.value)}
                 disabled={!oreName || locationOptions.length === 0}
                 className="site-input w-[6.75rem] shrink-0 px-1.5 py-1.5 text-xs truncate disabled:opacity-40"
-                title="Spawn location"
                 aria-label="Spawn location"
               >
                 {locationOptions.length === 0 ? (
@@ -603,7 +601,7 @@ export default function RockCalculator({
                     </option>
                   ))
                 )}
-              </select>
+              </select></SiteTooltip>
             </div>
           </div>
 
@@ -681,12 +679,11 @@ export default function RockCalculator({
                   <div className="flex items-center justify-between gap-2 mb-0.5">
                     <span className="text-[10px] text-slate-400">Gadgets in use</span>
                     {gadgetSummary ? (
-                      <span
+                      <SiteTooltip content="Rock base stats after gadgets"><span
                         className="text-[9px] text-cyan-300/90 tabular-nums truncate"
-                        title="Rock base stats after gadgets"
                       >
                         {gadgetSummary}
-                      </span>
+                      </span></SiteTooltip>
                     ) : null}
                   </div>
                   <div className="flex gap-1.5">
@@ -723,12 +720,11 @@ export default function RockCalculator({
                 <div className="flex-1 min-w-0">
                   <span className="block text-[10px] text-slate-400 mb-0.5">Instability</span>
                   {statHints.instability ? (
-                    <span
+                    <SiteTooltip content="Expected instability from game data" className="block w-full"><span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
-                      title="Expected instability from game data"
                     >
                       Exp. {statHints.instability}
-                    </span>
+                    </span></SiteTooltip>
                   ) : null}
                   <input
                     type="number"
@@ -744,12 +740,11 @@ export default function RockCalculator({
                 <div className="flex-1 min-w-0">
                   <span className="block text-[10px] text-slate-400 mb-0.5">Resistance (%)</span>
                   {statHints.resistance ? (
-                    <span
+                    <SiteTooltip content="Expected resistance from game data (HUD % scale)" className="block w-full"><span
                       className="block text-[9px] leading-tight text-slate-500 tabular-nums mb-0.5"
-                      title="Expected resistance from game data (HUD % scale)"
                     >
                       Exp. {statHints.resistance}%
-                    </span>
+                    </span></SiteTooltip>
                   ) : null}
                   <div className="relative">
                     <input
@@ -826,26 +821,28 @@ export default function RockCalculator({
                   <li key={row.slotKey}>
                     <div className={MATERIAL_VALUES_ROW}>
                       <div className={`${MATERIAL_PERCENT_W} shrink-0 space-y-0.5`}>
-                        <span
-                          className="block text-[10px] leading-tight text-slate-200 truncate"
-                          title={
+                        <SiteTooltip content={
                             row.bandTooltip
                               ? `${row.label} (${row.bandTooltip})`
                               : row.label
-                          }
+                          } className="block w-full"><span
+                          className="block text-[10px] leading-tight text-slate-200 truncate"
                         >
                           {row.label}
-                        </span>
+                        </span></SiteTooltip>
                         {row.rangeHint ? (
-                          <span
+                          <SiteTooltip content="Typical composition range for this material" className="block w-full"><span
                             className="block text-[9px] leading-tight text-slate-500 tabular-nums"
-                            title="Typical composition range for this material"
                           >
                             {row.rangeHint}
-                          </span>
+                          </span></SiteTooltip>
                         ) : null}
                         <div className="relative">
-                          <input
+                          <SiteTooltip content={
+                              row.isInert
+                                ? 'Auto-calculated as 100% minus other materials'
+                                : undefined
+                            } className="block w-full"><input
                             type="number"
                             min={0}
                             max={100}
@@ -875,12 +872,7 @@ export default function RockCalculator({
                                 ? `${row.label} percentage (auto-calculated)`
                                 : `${row.label} percentage`
                             }
-                            title={
-                              row.isInert
-                                ? 'Auto-calculated as 100% minus other materials'
-                                : undefined
-                            }
-                          />
+                          /></SiteTooltip>
                           <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] text-slate-500 pointer-events-none">
                             %
                           </span>
@@ -896,18 +888,16 @@ export default function RockCalculator({
                           isInert={row.isInert}
                         />
                       </div>
-                      <span
+                      <SiteTooltip content="cSCU in rock"><span
                         className={`${MATERIAL_SCU_W} text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0 pb-1`}
-                        title="cSCU in rock"
                       >
                         {totalScu != null ? formatMaterialScu(row.scu ?? 0) : '—'}
-                      </span>
-                      <span
+                      </span></SiteTooltip>
+                      <SiteTooltip content="Purchased Q0 DFP"><span
                         className={`${MATERIAL_DFP_W} text-right text-[10px] font-mono tabular-nums text-emerald-300 shrink-0 pb-1`}
-                        title="Purchased Q0 DFP"
                       >
                         {totalScu != null ? formatRockDfpValue(row.dfp ?? 0) : '—'}
-                      </span>
+                      </span></SiteTooltip>
                     </div>
                   </li>
                 ))}
@@ -991,12 +981,11 @@ interface GadgetSelectProps {
 function GadgetSelect({ value, otherValue, options, onChange, ariaLabel }: GadgetSelectProps) {
   const selected = options.find((gadget) => gadget.name === value)
   return (
-    <select
+    <SiteTooltip content={selected ? `${selected.displayName}: ${formatGadgetEffect(selected)}` : 'No gadget'} className="block w-full"><select
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className="site-input flex-1 min-w-0 px-1.5 py-1.5 text-xs truncate"
       aria-label={ariaLabel}
-      title={selected ? `${selected.displayName}: ${formatGadgetEffect(selected)}` : 'No gadget'}
     >
       <option value="">None</option>
       {options.map((gadget) => (
@@ -1008,7 +997,7 @@ function GadgetSelect({ value, otherValue, options, onChange, ariaLabel }: Gadge
           {gadget.displayName}
         </option>
       ))}
-    </select>
+    </select></SiteTooltip>
   )
 }
 
@@ -1033,17 +1022,16 @@ function MaterialQualitySelect({
 }: MaterialQualitySelectProps) {
   if (isInert) {
     return (
-      <select
+      <SiteTooltip content="Purchased (Q0)"><select
         value={String(PURCHASED_STOCK_QUALITY)}
         disabled
         className={`${MATERIAL_QUALITY_SELECT_CLASS} opacity-60 cursor-not-allowed`}
         aria-label="Inert quality (not applicable)"
-        title="Purchased (Q0)"
       >
         <option value={PURCHASED_STOCK_QUALITY}>
           {formatRockQualityOptionLabel(PURCHASED_STOCK_QUALITY)}
         </option>
-      </select>
+      </select></SiteTooltip>
     )
   }
 
@@ -1059,24 +1047,23 @@ function MaterialQualitySelect({
 
   if (qualityOptions.length > 0 && getResourceBands(canonicalElement)) {
     return (
-      <select
+      <SiteTooltip content={title}><select
         value={resolvedValue}
         onChange={(e) => onChange(e.target.value)}
         className={MATERIAL_QUALITY_SELECT_CLASS}
         aria-label={`${elementName} quality`}
-        title={title}
       >
         {qualityOptions.map((qualityOption) => (
           <option key={qualityOption} value={qualityOption}>
             {formatRockQualityOptionLabel(qualityOption)}
           </option>
         ))}
-      </select>
+      </select></SiteTooltip>
     )
   }
 
   return (
-    <input
+    <SiteTooltip content="No game Q bands for this resource — enter Q0–Q1000"><input
       type="number"
       min={0}
       max={1000}
@@ -1094,7 +1081,6 @@ function MaterialQualitySelect({
       }}
       className={MATERIAL_QUALITY_INPUT_CLASS}
       aria-label={`${elementName} quality (0–1000)`}
-      title="No game Q bands for this resource — enter Q0–Q1000"
-    />
+    /></SiteTooltip>
   )
 }

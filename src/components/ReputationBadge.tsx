@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { formatDeliveryDuration, formatReputationLabel, type MemberReputation } from '../lib/reputation'
 import { fetchMemberOrderRatings, type MemberOrderRating } from '../lib/operations'
 import ReputationReviewsModal from './ReputationReviewsModal'
+import SiteTooltip from './SiteTooltip'
 
 interface ReputationBadgeProps {
   label: string
@@ -59,12 +60,11 @@ export default function ReputationBadge({
       {showDeliveryTime && (
         <>
           <span className="text-slate-600">·</span>
-          <span
+          <SiteTooltip content={`Average time from accept to ready for pickup (${reputation.deliverySampleCount} order${reputation.deliverySampleCount === 1 ? '' : 's'})`}><span
             className="font-mono text-sky-200/90 tabular-nums"
-            title={`Average time from accept to ready for pickup (${reputation.deliverySampleCount} order${reputation.deliverySampleCount === 1 ? '' : 's'})`}
           >
             {formatDeliveryDuration(reputation.avgDeliverySeconds!)}
-          </span>
+          </span></SiteTooltip>
         </>
       )}
     </>
@@ -74,7 +74,11 @@ export default function ReputationBadge({
     const canOpenReviews = Boolean(userId)
     return (
       <>
-        <button
+        <SiteTooltip content={
+            canOpenReviews
+              ? `Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'}) — click to read comments`
+              : `Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'})`
+          }><button
           type="button"
           disabled={!canOpenReviews}
           onClick={(event) => {
@@ -86,14 +90,9 @@ export default function ReputationBadge({
               ? 'hover:border-amber-400/60 hover:text-amber-100 cursor-pointer'
               : 'cursor-default'
           } ${className}`}
-          title={
-            canOpenReviews
-              ? `Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'}) — click to read comments`
-              : `Average star rating (${reputation.ratingCount} rating${reputation.ratingCount === 1 ? '' : 's'})`
-          }
         >
           {badgeContent}
-        </button>
+        </button></SiteTooltip>
         {showReviews && (
           <ReputationReviewsModal
             title={label}
@@ -111,20 +110,19 @@ export default function ReputationBadge({
 
   return (
     <>
-      <button
+      <SiteTooltip content="Click to view pending reputation rules"><button
         type="button"
         onClick={(event) => {
           event.stopPropagation()
           setShowRulesModal(true)
         }}
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs border bg-slate-800/80 text-slate-400 border-slate-600 hover:border-amber-500/40 hover:text-amber-300 transition-colors cursor-pointer ${className}`}
-        title="Click to view pending reputation rules"
       >
         {badgeContent}
         <svg className="w-3 h-3 ml-0.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-      </button>
+      </button></SiteTooltip>
 
       {showRulesModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">

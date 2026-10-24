@@ -44,6 +44,7 @@ import {
   vesselAdvisorLabel,
 } from '../../lib/miningAdvisor'
 import MiningAdvisorChat from './MiningAdvisorChat'
+import SiteTooltip from '../SiteTooltip'
 
 export interface MiningLoadoutSelection {
   vesselId: MiningVesselId
@@ -254,9 +255,9 @@ function ComparisonPanel({
             <div key={row.slotIndex} className="text-xs space-y-0.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <CheckIcon ok={row.canBreakShare} />
-                <span className="text-slate-300 truncate" title={row.label}>
+                <SiteTooltip content={row.label}><span className="text-slate-300 truncate">
                   {row.label}
-                </span>
+                </span></SiteTooltip>
               </div>
               <div className="pl-5 font-mono tabular-nums text-slate-400">
                 {row.laserPower.toLocaleString()} / {row.requiredShare.toLocaleString()} MW

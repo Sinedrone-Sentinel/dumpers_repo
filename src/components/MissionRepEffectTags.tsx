@@ -1,4 +1,5 @@
 import type { MissionRepEffect } from '../lib/blueprintMissionRewards'
+import SiteTooltip from './SiteTooltip'
 
 interface MissionRepEffectTagsProps {
   /** Per-faction rep changes on completion (own faction first, losses negative). */
@@ -37,19 +38,18 @@ export default function MissionRepEffectTags({
         const label = isOwnFaction ? `${amountText} rep` : `${amountText} ${effect.faction} rep`
 
         return (
-          <span
-            key={effect.factionKey || effect.faction || 'own'}
-            className={`text-[10px] ${isLoss ? 'text-red-400/90 font-medium' : 'text-emerald-400/90'}`}
-            title={
+          <SiteTooltip content={
               isLoss
                 ? `Completing this mission LOWERS your ${effect.faction} reputation`
                 : effect.faction && !isOwnFaction
                   ? `Completing this mission also raises your ${effect.faction} reputation`
                   : undefined
-            }
+            }><span
+            key={effect.factionKey || effect.faction || 'own'}
+            className={`text-[10px] ${isLoss ? 'text-red-400/90 font-medium' : 'text-emerald-400/90'}`}
           >
             {label}
-          </span>
+          </span></SiteTooltip>
         )
       })}
     </>

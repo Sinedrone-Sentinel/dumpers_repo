@@ -1,4 +1,5 @@
 import React from 'react'
+import SiteTooltip from './SiteTooltip'
 
 interface RsiVerifiedBadgeProps {
   size?: 'sm' | 'md'
@@ -22,14 +23,13 @@ export default function RsiVerifiedBadge({
     : 'bg-cyan-900/50 border border-cyan-500/30 text-cyan-400'
 
   return (
-    <span 
+    <SiteTooltip content={tone === 'citizenid' ? 'Verified with Citizen iD' : 'Verified RSI Handle'}><span 
       className={`inline-flex items-center rounded font-semibold ${toneClasses} ${sizeClasses} ${className}`}
-      title={tone === 'citizenid' ? 'Verified with Citizen iD' : 'Verified RSI Handle'}
     >
       <span className="italic">RSI</span>
       <svg className={iconSize} fill="currentColor" viewBox="0 0 20 20">
         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
       </svg>
-    </span>
+    </span></SiteTooltip>
   )
 }

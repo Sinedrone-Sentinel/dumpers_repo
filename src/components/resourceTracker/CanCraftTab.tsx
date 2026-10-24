@@ -59,6 +59,7 @@ import {
 } from '../../lib/defaultBlueprints'
 import { fetchBlueprintOwnerCounts } from '../../lib/operations'
 import { useBlueprintData } from '../../routes/blueprints'
+import SiteTooltip from '../SiteTooltip'
 
 const getSubType = (bp: { categoryName?: string; subCategoryName?: string }) =>
   getBlueprintSubType(bp)
@@ -816,7 +817,7 @@ export default function CanCraftTab({
 
       {locationFilterOptions.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-4">
-          <button
+          <SiteTooltip content="Use stock from every note"><button
             type="button"
             onClick={() => setLocationFilter(ALL_LOCATION_KEY)}
             className={`px-2.5 py-1 rounded text-xs font-medium transition-all site-btn-shimmer ${
@@ -824,13 +825,12 @@ export default function CanCraftTab({
                 ? 'site-filter-selected-cyan'
                 : 'site-filter-idle'
             }`}
-            title="Use stock from every note"
           >
             ALL
             <span className="opacity-70 ml-0.5">({stockCardsForCraft.length})</span>
-          </button>
+          </button></SiteTooltip>
           {locationFilterOptions.map((opt) => (
-            <button
+            <SiteTooltip content={`Normalized as ${opt.key}`}><button
               key={opt.key}
               type="button"
               onClick={() => setLocationFilter(opt.key)}
@@ -839,11 +839,10 @@ export default function CanCraftTab({
                   ? 'site-filter-selected-cyan'
                   : 'site-filter-idle'
               }`}
-              title={`Normalized as ${opt.key}`}
             >
               {opt.label}
               <span className="opacity-70 ml-0.5">({opt.count})</span>
-            </button>
+            </button></SiteTooltip>
           ))}
         </div>
       )}

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
+import SiteTooltip from '../SiteTooltip'
 
 const SiteHelpModal = lazy(() => import('./SiteHelpModal'))
 
@@ -14,11 +15,10 @@ export default function SiteHelpChip({ disabled = false }: { disabled?: boolean 
 
   return (
     <>
-      <button
+      <SiteTooltip content="Help — ask how this site works"><button
         type="button"
         className="site-chrome-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
         aria-label="Help"
-        title="Help — ask how this site works"
         disabled={disabled}
         onClick={() => setOpen(true)}
       >
@@ -30,7 +30,7 @@ export default function SiteHelpChip({ disabled = false }: { disabled?: boolean 
             d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-      </button>
+      </button></SiteTooltip>
       {open ? (
         <Suspense fallback={null}>
           <SiteHelpModal onClose={() => setOpen(false)} />

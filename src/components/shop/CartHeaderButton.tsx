@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import SiteTooltip from '../SiteTooltip'
 import { readShopCart, subscribeShopCart } from '../../lib/shopCart'
 
 export default function CartHeaderButton({ className = '' }: { className?: string }) {
@@ -11,11 +12,11 @@ export default function CartHeaderButton({ className = '' }: { className?: strin
   }, [])
 
   return (
+    <SiteTooltip content="Shopping cart">
     <Link
       to="/shop-cart"
       className={`site-chrome-control relative w-9 h-9 ${className}`.trim()}
       aria-label={count > 0 ? `Shopping cart, ${count} items` : 'Shopping cart'}
-      title="Shopping cart"
     >
       <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <circle cx="9" cy="20" r="1.5" fill="currentColor" stroke="none" />
@@ -28,5 +29,6 @@ export default function CartHeaderButton({ className = '' }: { className?: strin
         </span>
       ) : null}
     </Link>
+    </SiteTooltip>
   )
 }

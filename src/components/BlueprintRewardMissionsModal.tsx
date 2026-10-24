@@ -4,6 +4,7 @@ import { findBrowseMissionEntry } from '../lib/blueprintMissionRewards'
 import type { Region } from '../lib/missions'
 import { collectUniquePrereqs, MissionPrereqList } from './MissionPrereqInfo'
 import MissionListingTags from './MissionListingTags'
+import SiteTooltip from './SiteTooltip'
 
 interface BlueprintRewardMissionsModalProps {
   blueprintName: string
@@ -70,7 +71,11 @@ export default function BlueprintRewardMissionsModal({
 
             return (
               <li key={rowKey}>
-                <button
+                <SiteTooltip content={
+                    canNavigate
+                      ? 'Open this mission in Browse Missions'
+                      : 'Mission browse entry not available'
+                  } className="block w-full"><button
                   type="button"
                   disabled={!canNavigate}
                   onClick={() => onSelectMission(mission)}
@@ -79,11 +84,6 @@ export default function BlueprintRewardMissionsModal({
                       ? 'site-filter-idle hover:border-orange-500/40 cursor-pointer'
                       : 'site-filter-idle opacity-50 cursor-not-allowed'
                   }`}
-                  title={
-                    canNavigate
-                      ? 'Open this mission in Browse Missions'
-                      : 'Mission browse entry not available'
-                  }
                 >
                   <p className="text-sm leading-snug">
                     <span className="text-slate-400">{mission.faction}:</span>{' '}
@@ -114,7 +114,7 @@ export default function BlueprintRewardMissionsModal({
                     frequency={mission.frequency}
                     notForRelease={mission.notForRelease}
                   />
-                </button>
+                </button></SiteTooltip>
               </li>
             )
           })}
