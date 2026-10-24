@@ -245,6 +245,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 175 | `210_ship_shop_fraken_fit.sql` | Fuzy's Franken-Fit: one published loadout per ship. Anyone may read it (`get_ship_shop_fraken_fit`, including guests). The save right is pinned to the verified Hotfuzy officer account at apply time (`ship_shop_fraken_owner`). A later handle change does not move it. `save_ship_shop_fraken_fit` overwrites that ship's fit. No client table writes. Zero matching profiles leaves the owner table empty and saves fail closed. More than one match aborts the migration. Apply after **209** |
 | 176 | `211_franken_fit_spelling.sql` | Renames the member-facing label to Fuzy's Franken-Fit in the table comments and in any Updates ticker row that still says Fraken-Fit. Apply after **210** |
 | 177 | `212_ship_hangar.sql` | Ship Hangar for a signed-in account. `get_ship_hangar` and `save_ship_hangar` are the only client paths. A member can store 10 ships, or 20 when `rsi_handle_verified` is set. Replacing or removing a ship still works if verification is later removed and the hangar is already over 10. Apply after **211** |
+| 178 | `213_friends_blueprint_owners.sql` | `get_friends_blueprint_owners` returns RSI handles of accepted friends who own the listed blueprints. Pending and banned friends are left out. Apply after **212** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 

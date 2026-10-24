@@ -57,7 +57,7 @@ import {
   isDefaultBlueprint,
   isDefaultBlueprintsCategory,
 } from '../../lib/defaultBlueprints'
-import { fetchBlueprintOwnerCounts } from '../../lib/operations'
+import { fetchBlueprintOwnerCounts, fetchFriendsBlueprintOwners } from '../../lib/operations'
 import { useBlueprintData } from '../../routes/blueprints'
 
 const getSubType = (bp: { categoryName?: string; subCategoryName?: string }) =>
@@ -175,6 +175,7 @@ export default function CanCraftTab({
   const [selectedBlueprint, setSelectedBlueprint] = React.useState<any>(null)
   const [modalOriginRect, setModalOriginRect] = React.useState<DOMRect | null>(null)
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
+  const [friendBlueprintOwners, setFriendBlueprintOwners] = React.useState<Record<string, string[]>>({})
   const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
   const [rewardMissionsModal, setRewardMissionsModal] = React.useState<{
     id: string
@@ -239,16 +240,24 @@ export default function CanCraftTab({
   useAsyncEffect(async ({ cancelled }) => {
     if (!blueprints || blueprints.length === 0 || isGuest) {
       setBlueprintOwnerCounts({})
+      setFriendBlueprintOwners({})
       return
     }
 
     const blueprintIds = blueprints.map((bp) => bp.internalName).filter(Boolean)
-    const { data, error } = await fetchBlueprintOwnerCounts(blueprintIds)
+    const [{ data, error }, friends] = await Promise.all([
+      fetchBlueprintOwnerCounts(blueprintIds),
+      fetchFriendsBlueprintOwners(blueprintIds),
+    ])
     if (error) {
       console.error('Failed to fetch blueprint owner counts:', error)
     }
+    if (friends.error) {
+      console.error('Failed to fetch friend blueprint owners:', friends.error)
+    }
     if (!cancelled) {
       setBlueprintOwnerCounts(data)
+      setFriendBlueprintOwners(friends.data)
     }
   }, [blueprints, isGuest])
 
@@ -636,6 +645,7 @@ export default function CanCraftTab({
           isSuperAdmin={isSuperAdmin}
           onToggleOrderable={(next) => void setOrderable(bp.internalName, next, catalogReward)}
           ownerCount={blueprintOwnerCounts[bp.internalName]}
+          friendHandles={friendBlueprintOwners[bp.internalName]}
           dfpDisplayEnabled={dfpDisplayEnabled}
           showCraftTrackerControl={hasRsTrackableMaterials(bp)}
           onAddToCraftTracker={() => void addMaterialsFromBlueprint(bp)}
@@ -656,6 +666,7 @@ export default function CanCraftTab({
       isSuperAdmin,
       setOrderable,
       blueprintOwnerCounts,
+      friendBlueprintOwners,
       dfpDisplayEnabled,
       addMaterialsFromBlueprint,
       isPendingForBlueprint,
@@ -1188,6 +1199,7 @@ export default function CanCraftTab({
           canAddToTargetList={canAddBlueprintToTargetList(selectedBlueprint, overridesMap)}
           onToggleTarget={() => toggleTarget(selectedBlueprint.internalName)}
           ownerCount={blueprintOwnerCounts[selectedBlueprint.internalName]}
+          friendHandles={friendBlueprintOwners[selectedBlueprint.internalName]}
           onAddToCraftTracker={() => void addMaterialsFromBlueprint(selectedBlueprint)}
           craftTrackerPending={isPendingForBlueprint(selectedBlueprint.internalName)}
           showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}
