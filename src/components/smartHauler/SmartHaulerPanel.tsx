@@ -340,7 +340,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
         />
         Sell what I have
       </label>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid items-end gap-x-4 gap-y-3 lg:grid-cols-2">
         <div className="relative z-30 flex items-end gap-2">
           <label className="block min-w-0 flex-1">
             <span className="site-label">Ship</span>
@@ -403,20 +403,37 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
             </div>
           )}
         </label>
-        <label className="flex items-center gap-2 text-sm text-white">
-          <input
-            type="checkbox"
-            className="site-checkbox"
-            checked={roundRobin}
-            disabled={sellMode}
-            onChange={(event) => {
-              setRoundRobin(event.target.checked)
-              clearPlan()
-            }}
-          />
-          Round-robin
-        </label>
-        <div className="flex flex-wrap items-center gap-4 text-sm text-white">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              className="site-checkbox"
+              checked={roundRobin}
+              disabled={sellMode}
+              onChange={(event) => {
+                setRoundRobin(event.target.checked)
+                clearPlan()
+              }}
+            />
+            Round-robin
+          </label>
+          <label className="inline-flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">aUEC on hand</span>
+            <input
+              aria-label="aUEC on hand"
+              className="site-input w-[16ch] px-2 py-1 text-right tabular-nums"
+              inputMode="numeric"
+              maxLength={12}
+              value={cash}
+              disabled={sellMode}
+              onChange={(event) => {
+                setCash(event.target.value.replace(/[^\d]/g, '').slice(0, 12))
+                clearPlan()
+              }}
+            />
+          </label>
+        </div>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white">
           <label className="flex items-center gap-2">
             <input
               type="radio"
@@ -445,12 +462,10 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
             />
             Set a number of trades
           </label>
-        </div>
-        {mode === 'goal' ? (
-          <label className="block">
-            <span className="site-label">Profit goal</span>
+          {mode === 'goal' ? (
             <select
-              className="site-input mt-1 w-full px-3 py-2"
+              aria-label="Profit goal"
+              className="site-input w-[15ch] px-2 py-1 tabular-nums"
               value={goal}
               disabled={sellMode || !ship}
               onChange={(event) => {
@@ -458,20 +473,18 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
                 clearPlan()
               }}
             >
-              <option value="">{ship ? 'Choose a profit goal' : 'Choose a ship first'}</option>
+              <option value="">{ship ? 'Goal' : 'Ship'}</option>
               {goalOptions.map((amount) => (
-                <option key={amount} value={amount}>{money(amount)}</option>
+                <option key={amount} value={amount}>{Math.round(amount).toLocaleString()}</option>
               ))}
             </select>
-          </label>
-        ) : (
-          <label className="block">
-            <span className="site-label">Trades</span>
+          ) : (
             <input
               type="number"
+              aria-label="Number of trades"
               min={1}
               max={HAUL_MAX_TRADES}
-              className="site-input mt-1 w-full px-3 py-2"
+              className="site-input w-[6ch] px-2 py-1 text-right tabular-nums"
               value={trades}
               disabled={sellMode}
               onChange={(event) => {
@@ -479,26 +492,13 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
                 clearPlan()
               }}
             />
-          </label>
-        )}
-        <label className="block">
-          <span className="site-label">aUEC on hand</span>
-          <input
-            className="site-input mt-1 w-full px-3 py-2"
-            inputMode="numeric"
-            value={cash}
-            disabled={sellMode}
-            onChange={(event) => {
-              setCash(event.target.value.replace(/[^\d]/g, ''))
-              clearPlan()
-            }}
-          />
-        </label>
+          )}
+        </div>
       </div>
       {sellMode ? (
         <p className="site-hint">Sell cargo you already carry. Add each commodity, how much you have, and the crate sizes, then Find buyer sends you to the nearest terminal that buys it.</p>
       ) : (
-        <p className="site-hint">A trade is one buy and one sell. Pick a profit goal or a number of trades. The profit choices are about an hour of hauling for that ship&apos;s hold. Ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU plan a number of trades. Each stop is capped by live UEX stock, your aUEC, the room in the hold, and crates both terminals take. Round-robin brings the last sale back to the start.</p>
+        <p className="site-hint">A trade is one buy and one sell. Profit goals are about an hour of hauling for the ship; ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU set trades only. Stops are capped by live UEX stock, your aUEC, hold space, and crate sizes. Round-robin ends near the start.</p>
       )}
       {ship && !sellMode && (ship.maxCrateScu || 0) > 0 && (
         <p className="text-sm text-white">This ship can carry {ship.cargoScu} SCU, in crates up to {ship.maxCrateScu} SCU.</p>
