@@ -171,6 +171,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       near: (fromId: string, toId: string) => pointsAreNear(navMap, fromId, toId),
       inSystem: (pointId: string) => crossSystem || pointsShareSystem(navMap, startId, pointId),
       km: (fromId: string, toId: string) => haulDistanceKm(navMap, fromId, toId),
+      random: Math.random,
     }
     const missed = loaded.live
       ? crossSystem
@@ -217,6 +218,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       km: (fromId, toId) => haulDistanceKm(navMap, fromId, toId),
       inSystem: (pointId) => crossSystem || pointsShareSystem(navMap, startId, pointId),
       avoid: skipped,
+      random: Math.random,
     }
   }
 
@@ -533,7 +535,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       {sellMode ? (
         <p className="site-hint">Sell cargo you already carry. Add each commodity, how much you have, and the crate sizes, then Find buyer sends you to the nearest terminal that buys it.</p>
       ) : (
-        <p className="site-hint">A trade is one buy and one sell, kept in the system you start in unless Cross system is on. The first buy is the closest shop in that system that pays. Profit is what you gain on each sale. Ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU set trades only.</p>
+        <p className="site-hint">A trade is one buy and one sell, kept in the system you start in unless Cross system is on. Each buy is chosen at random from the four best-paying commodities you can haul, at the closest shop for that commodity. Profit is what you gain on each sale. Ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU set trades only.</p>
       )}
       {ship && !sellMode && (ship.maxCrateScu || 0) > 0 && (
         <p className="text-sm text-white">This ship can carry {ship.cargoScu} SCU, in crates up to {ship.maxCrateScu} SCU.</p>
