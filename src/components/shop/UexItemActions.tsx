@@ -3,6 +3,7 @@ import AppModal from '../layout/AppModal'
 import { addShopCartLine } from '../../lib/shopCart'
 import type { UexCatalogItem } from '../../lib/uexCatalog'
 import { terminalPath, terminalPlace, type TradeLocation } from '../../lib/shopLookup'
+import SiteTooltip from '../SiteTooltip'
 
 const ICON = 'inline-flex h-5 shrink-0 items-center justify-center px-0.5 leading-none hover:brightness-125'
 
@@ -20,10 +21,9 @@ export function UexShopIconPair({ onWhere, onAdd, showWhere = true }: { onWhere:
   return (
     <span className="inline-flex items-center gap-1">
       {showWhere && (
-        <button
+        <SiteTooltip content="Where to buy"><button
           type="button"
           className={`${ICON} text-xs font-bold text-red-400`}
-          title="Where to buy"
           aria-label="Where to buy"
           onClick={(event) => {
             event.stopPropagation()
@@ -31,12 +31,11 @@ export function UexShopIconPair({ onWhere, onAdd, showWhere = true }: { onWhere:
           }}
         >
           $$$
-        </button>
+        </button></SiteTooltip>
       )}
-      <button
+      <SiteTooltip content="Add to cart"><button
         type="button"
         className={`${ICON} text-green-400`}
-        title="Add to cart"
         aria-label="Add to cart"
         onClick={(event) => {
           event.stopPropagation()
@@ -44,7 +43,7 @@ export function UexShopIconPair({ onWhere, onAdd, showWhere = true }: { onWhere:
         }}
       >
         <CartMark />
-      </button>
+      </button></SiteTooltip>
     </span>
   )
 }

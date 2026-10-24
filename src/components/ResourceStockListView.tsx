@@ -3,6 +3,7 @@ import UexLookupButton from './shop/UexLookupButton'
 import { inventoryLineKey } from '../lib/inventoryStock'
 import { formatInventoryQualityLabel } from '../lib/qualityBands'
 import { formatQuantityForResource } from '../lib/resourceQuantity'
+import SiteTooltip from './SiteTooltip'
 
 export type ResourceStockListRow = {
   resource_key: string
@@ -55,8 +56,10 @@ export default function ResourceStockListView({
                   <span className="text-slate-500 ml-1 text-xs">{qtyUnit}</span>
                 </td>
                 {isPersonalTab && (
-                  <td className="text-slate-400 text-xs max-w-[14rem] truncate" title={card.note ?? undefined}>
-                    {card.note ? `"${card.note}"` : '—'}
+                  <td className="text-slate-400 text-xs max-w-[14rem] truncate">
+                    <SiteTooltip content={card.note || undefined} className="block w-full">
+                      {card.note ? `"${card.note}"` : '—'}
+                    </SiteTooltip>
                   </td>
                 )}
               </tr>

@@ -9,6 +9,7 @@ import {
 import AuthProviderIcon from './AuthProviderIcon'
 import SettingsField from './SettingsField'
 import SettingsSection from './SettingsSection'
+import SiteTooltip from '../SiteTooltip'
 
 function formatLinkedDate(iso: string | undefined): string | null {
   if (!iso) return null
@@ -136,19 +137,18 @@ export default function ConnectedAccountsSettings({
                 </div>
 
                 {identity ? (
-                  <button
-                    type="button"
-                    onClick={() => void handleUnlink(provider, identity)}
-                    disabled={!canUnlink || isBusy || loading}
-                    title={
+                  <SiteTooltip content={
                       canUnlink
                         ? `Disconnect ${OAUTH_PROVIDER_LABELS[provider]}`
                         : 'Keep at least one sign-in method connected'
-                    }
+                    }><button
+                    type="button"
+                    onClick={() => void handleUnlink(provider, identity)}
+                    disabled={!canUnlink || isBusy || loading}
                     className="site-btn-secondary shrink-0 !px-3 !py-1.5 text-sm disabled:cursor-not-allowed"
                   >
                     {isBusy ? 'Working…' : 'Disconnect'}
-                  </button>
+                  </button></SiteTooltip>
                 ) : (
                   <button
                     type="button"

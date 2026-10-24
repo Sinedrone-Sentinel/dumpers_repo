@@ -7,6 +7,7 @@ import type { CraftStockCardLite } from '../../lib/craftFromStock'
 import { useBlueprintData } from '../../routes/blueprints'
 import BelowMinQualityTag from '../BelowMinQualityTag'
 import { fromMilliScu, toMilliScu } from '../../lib/resourceQuantity'
+import SiteTooltip from '../SiteTooltip'
 import {
   BP_WISHLIST_MAX_LISTS,
   BP_WISHLIST_MAX_RECIPES,
@@ -204,9 +205,9 @@ function WishlistPanel({
         <span className="text-white font-semibold">{list.name}</span>
         <span className="text-xs text-slate-400">{list.items.length}/{BP_WISHLIST_MAX_RECIPES}</span>
         <span className="text-xs text-slate-300">{qtyTotal} blueprint{qtyTotal === 1 ? '' : 's'}</span>
-        <span className="text-xs text-amber-300" title="Dumper's Fair-Value Price to buy these resources">
+        <SiteTooltip content="Dumper's Fair-Value Price to buy these resources"><span className="text-xs text-amber-300">
           {formatDfpAuec(dfp)}
-        </span>
+        </span></SiteTooltip>
         <span className="ml-auto text-slate-500 text-xs">{open ? 'Hide' : 'Open'}</span>
       </button>
       <div className="px-4 pb-3 space-y-2">
@@ -251,11 +252,11 @@ function WishlistPanel({
                 ? `You have ${formatWishlistAmount(row.resourceKey, have, row.wholeUnit)} of ${formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)} at Q${row.quality}`
                 : "Dumper's Fair-Value Price to buy this resource"
               return (
-                <span key={row.key} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`} title={title}>
+                <SiteTooltip content={title}><span key={row.key} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`}>
                   {row.label} Q{row.quality} {formatWishlistAmount(row.resourceKey, row.amount, row.wholeUnit)}
                   {' · '}
                   {formatDfpAuec(row.dfp)}
-                </span>
+                </span></SiteTooltip>
               )
             })
           )}
@@ -356,9 +357,9 @@ function RecipeRow({
         <span className="text-sm font-medium text-white">{item.blueprint_name}</span>
         <BelowMinQualityTag blueprint={blueprint} slotQualities={item.slot_qualities} />
         <span className="text-xs text-slate-400">×{item.quantity}</span>
-        <span className="text-xs text-amber-300" title="Dumper's Fair-Value Price to buy these resources">
+        <SiteTooltip content="Dumper's Fair-Value Price to buy these resources"><span className="text-xs text-amber-300">
           {formatDfpAuec(lineDfp)}
-        </span>
+        </span></SiteTooltip>
         <label className="ml-auto flex items-center gap-2 text-xs text-slate-400">
           Qty
           <input
@@ -388,23 +389,22 @@ function RecipeRow({
         >
           Remove
         </button>
-        <button
-          type="button"
-          className={`px-3 py-1 text-xs rounded-lg ${
-            ready && !busy ? 'site-btn-success' : 'site-btn-secondary opacity-50 cursor-not-allowed'
-          }`}
-          disabled={!ready || busy}
-          title={
+        <SiteTooltip content={
             ready
               ? useTracked
                 ? 'Marks one craft done and removes those materials from My Resources'
                 : 'Lowers this blueprint by one'
               : 'Every material needs enough of that exact quality in My Resources for one craft'
-          }
+          }><button
+          type="button"
+          className={`px-3 py-1 text-xs rounded-lg ${
+            ready && !busy ? 'site-btn-success' : 'site-btn-secondary opacity-50 cursor-not-allowed'
+          }`}
+          disabled={!ready || busy}
           onClick={() => void onRun(() => gotItBpWishlistItem(item.id), useTracked)}
         >
           Got it
-        </button>
+        </button></SiteTooltip>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         {item.materials.map((material) => {
@@ -418,11 +418,11 @@ function RecipeRow({
               ? 'bg-emerald-950/50 border border-emerald-500/40 text-emerald-300'
               : 'bg-red-950/50 border border-red-500/40 text-red-300'
           return (
-            <span key={`${material.slotIndex}-${key}`} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`} title="Dumper's Fair-Value Price to buy this resource">
+            <SiteTooltip content="Dumper's Fair-Value Price to buy this resource"><span key={`${material.slotIndex}-${key}`} className={`${tone} px-2 py-0.5 rounded text-xs font-mono`}>
               {material.label} {formatWishlistAmount(material.resourceKey, shown, material.wholeUnit)} Q{material.quality}
               {' · '}
               {formatDfpAuec(wishlistResourceBuyDfp(material.resourceKey, material.label, material.quality, shown))}
-            </span>
+            </span></SiteTooltip>
           )
         })}
         {item.materials.length > 0 && (
@@ -477,24 +477,22 @@ function RsTrackButtons({
 
   return (
     <div className="flex items-center gap-2">
-      <button
+      <SiteTooltip content={allTitle}><button
         type="button"
         className={buttonClass}
         disabled={busy || anyPending || trackableAll.length === 0}
-        title={allTitle}
         onClick={() => void rsTrack.add(trackableAll, allKey)}
       >
         {allPending ? 'Adding…' : 'RS Track ALL'}
-      </button>
-      <button
+      </button></SiteTooltip>
+      <SiteTooltip content={missingTitle}><button
         type="button"
         className={buttonClass}
         disabled={busy || anyPending || trackableMissing.length === 0}
-        title={missingTitle}
         onClick={() => void rsTrack.add(trackableMissing, missingKey)}
       >
         {missingPending ? 'Adding…' : 'RS Track Missing'}
-      </button>
+      </button></SiteTooltip>
     </div>
   )
 }

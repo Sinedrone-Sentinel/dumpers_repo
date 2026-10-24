@@ -314,7 +314,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                 >
                   <div className="flex items-center gap-1 px-2 py-1.5 bg-slate-900/60 border-b border-slate-700/50">
                     {!group.isDefault ? (
-                      <button
+                      <SiteTooltip content="Drag to reorder"><button
                         type="button"
                         draggable={!busy}
                         onDragStart={(e) => onGroupDragStart(group.id, e)}
@@ -324,10 +324,9 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                         }}
                         className="site-btn-icon cursor-grab active:cursor-grabbing px-1 py-1 text-slate-400"
                         aria-label={`Drag to reorder ${group.label}`}
-                        title="Drag to reorder"
                       >
                         <DragHandleIcon />
-                      </button>
+                      </button></SiteTooltip>
                     ) : (
                       <span className="w-7 shrink-0" aria-hidden />
                     )}
@@ -423,7 +422,7 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                           key={f.userId}
                           className="flex items-center gap-1.5 rounded-md border border-slate-700/60 bg-slate-950/40 px-1.5 py-1"
                         >
-                          <button
+                          <SiteTooltip content="Drag to another group"><button
                             type="button"
                             draggable={!busy}
                             onDragStart={(e) => onFriendDragStart(f.userId, group.id, e)}
@@ -433,10 +432,9 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
                             }}
                             className="site-btn-icon cursor-grab active:cursor-grabbing px-1 py-0.5 text-slate-500"
                             aria-label={`Drag ${friendLabel(f.profile)} to another group`}
-                            title="Drag to another group"
                           >
                             <DragHandleIcon />
-                          </button>
+                          </button></SiteTooltip>
                           <span className="text-xs text-slate-200 truncate flex-1 min-w-0">
                             {friendLabel(f.profile)}
                           </span>

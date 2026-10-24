@@ -991,15 +991,14 @@ export default function ShipShopPage() {
                     {label}
                   </button>
                   {used && (
-                    <button
+                    <SiteTooltip content="Clear build"><button
                       type="button"
                       className={`ship-shop-build-clear ${tone}`}
                       aria-label={`Clear ${label}`}
-                      title="Clear build"
                       onClick={() => clearBuild(index)}
                     >
                       ×
-                    </button>
+                    </button></SiteTooltip>
                   )}
                 </span>
               )

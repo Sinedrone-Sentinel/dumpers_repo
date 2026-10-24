@@ -38,6 +38,7 @@ import NotepadToggle from '../notepad/NotepadToggle'
 import CartHeaderButton from '../shop/CartHeaderButton'
 import NotepadPanel from '../notepad/NotepadPanel'
 import NotepadLeaveModal from '../notepad/NotepadLeaveModal'
+import SiteTooltip from '../SiteTooltip'
 
 interface AppChromeProps {
   children: React.ReactNode
@@ -163,12 +164,11 @@ export default function AppChrome({
                 <SiteBrandTitle size="compact" layout="inline" align="left" subtle className="truncate" />
               )}
               {liveGameVersion ? (
-                <span
+                <SiteTooltip content={`Star Citizen LIVE (RSI launcher): ${liveGameVersion}`}><span
                   className="shrink-0 max-w-[42vw] sm:max-w-none truncate text-[10px] sm:text-xs font-semibold tabular-nums tracking-tight text-slate-500"
-                  title={`Star Citizen LIVE (RSI launcher): ${liveGameVersion}`}
                 >
                   {liveGameVersion}
-                </span>
+                </span></SiteTooltip>
               ) : null}
               <SiteSupportLink className="shrink-0 whitespace-nowrap text-[10px] sm:text-xs" />
             </div>

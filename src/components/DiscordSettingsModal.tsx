@@ -14,6 +14,7 @@ import {
 } from '../lib/discord'
 import { postDumperServicesBotTest } from '../lib/dumperServicesBot'
 import AppModal from './layout/AppModal'
+import SiteTooltip from './SiteTooltip'
 
 export default function DiscordSettingsModal({ onClose }: { onClose: () => void }) {
   const [settings, setSettings] = useState<DiscordSettings | null>(null)
@@ -553,15 +554,14 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
                 placeholder="Discord channel ID"
                 className="site-input flex-1 px-3 py-2 text-sm"
               />
-              <input
+              <SiteTooltip content="Message copies (simulated orgs)"><input
                 type="number"
                 min={1}
                 max={5}
                 value={botTestCopyCount}
                 onChange={(e) => setBotTestCopyCount(e.target.value)}
-                title="Message copies (simulated orgs)"
                 className="site-input w-20 px-3 py-2 text-sm"
-              />
+              /></SiteTooltip>
               <button
                 type="button"
                 disabled={postingBotTest || !botTestChannelId.trim()}

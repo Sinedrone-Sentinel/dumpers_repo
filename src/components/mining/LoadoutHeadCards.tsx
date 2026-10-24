@@ -557,9 +557,9 @@ function HeadSlotCards({
           ))}
         </select>
       ) : (
-        <p className="text-[11px] text-white leading-snug truncate" title={describeLaserHead(slot, laser)}>
+        <SiteTooltip content={describeLaserHead(slot, laser)}><p className="text-[11px] text-white leading-snug truncate">
           {describeLaserHead(slot, laser)}
-        </p>
+        </p></SiteTooltip>
       )}
 
       {editable && hasBp ? (

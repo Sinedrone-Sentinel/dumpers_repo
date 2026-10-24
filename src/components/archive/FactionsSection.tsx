@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import gameReputationData from '../../data/game-reputation.json'
+import SiteTooltip from '../SiteTooltip'
 
 interface FactionStanding {
   name: string
@@ -254,12 +255,11 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                 const width = maxRep > 0 ? ((standing.minReputation - prevRep) / maxRep) * 100 : 0
                 const colorClass = getStandingColor(standing.name, idx, activeStandings.length).split(' ')[0]
                 return (
-                  <div
+                  <SiteTooltip content={`${standing.name}: ${standing.minReputation.toLocaleString()}+ rep`}><div
                     key={standing.name}
                     className={`h-full ${colorClass}`}
                     style={{ width: `${Math.max(width, 2)}%` }}
-                    title={`${standing.name}: ${standing.minReputation.toLocaleString()}+ rep`}
-                  />
+                  /></SiteTooltip>
                 )
               })}
             </div>

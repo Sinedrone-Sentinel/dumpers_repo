@@ -1,5 +1,6 @@
 import { resolveSlotResourceName, slotMinQuality, slotQualitiesBelowMin } from '../lib/blueprintQuality'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
+import SiteTooltip from './SiteTooltip'
 
 interface BelowMinQualityTagProps {
   blueprint: BlueprintWithSlots | null | undefined
@@ -32,8 +33,8 @@ export default function BelowMinQualityTag({
     .join(' · ')
 
   return (
-    <span className={`site-badge-amber text-[10px] ${className}`} title={detail}>
+    <SiteTooltip content={detail}><span className={`site-badge-amber text-[10px] ${className}`}>
       Below minimum quality
-    </span>
+    </span></SiteTooltip>
   )
 }
