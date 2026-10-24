@@ -107,6 +107,8 @@ export interface HaulRouteInput {
   sells: HaulOffer[]
   near: (fromId: string, toId: string) => boolean
   km: (fromId: string, toId: string) => number
+  /** When set, buys and sells outside this set are not used. */
+  inSystem?: (pointId: string) => boolean
 }
 
 interface HaulState {
@@ -122,6 +124,13 @@ export function pointsAreNear(nav: NavMap, fromId: string, toId: string, km = HA
   const to = pointById(nav, toId)
   if (!from || !to || from.system !== to.system) return false
   return Math.hypot(from.x - to.x, from.y - to.y, from.z - to.z) / 1000 <= km
+}
+
+export function pointsShareSystem(nav: NavMap, fromId: string, toId: string): boolean {
+  if (fromId === toId) return true
+  const from = pointById(nav, fromId)
+  const to = pointById(nav, toId)
+  return !!from && !!to && from.system === to.system
 }
 
 export function packHaulLoad(
@@ -192,13 +201,19 @@ export function applyHaulAvailability(
 
 const UEX_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export const LOCAL_STOCK_NOTE = 'Local Info: Resource may or may not be in demand'
+export const LOCAL_BUY_NOTE = 'Local Info: Resource may or may not be in stock'
+export const LOCAL_SELL_NOTE = 'Local Info: Resource may or may not be in demand'
 
 /** The step line for a UEX check, or the local-info line when that check never arrived. */
-export function uexLookupText(status: number | undefined, verifiedAt: number | undefined): string {
-  if (status == null || verifiedAt == null || !Number.isFinite(verifiedAt)) return LOCAL_STOCK_NOTE
+export function uexLookupText(
+  status: number | undefined,
+  verifiedAt: number | undefined,
+  kind: 'buy' | 'sell' = 'sell',
+): string {
+  const local = kind === 'buy' ? LOCAL_BUY_NOTE : LOCAL_SELL_NOTE
+  if (status == null || verifiedAt == null || !Number.isFinite(verifiedAt)) return local
   const date = new Date(verifiedAt)
-  if (Number.isNaN(date.getTime())) return LOCAL_STOCK_NOTE
+  if (Number.isNaN(date.getTime())) return local
   const label = `${UEX_MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`
   return `UEX Live Lookup - Resource Status ${status} -- Last Date Verified ${label}`
 }
@@ -223,22 +238,28 @@ function crateFitsOffer(offer: HaulOffer, maxCrateScu: number): boolean {
 function buyChoices(
   offers: HaulOffer[],
   pointId: string,
-  near: (fromId: string, toId: string) => boolean,
+  allow: (fromId: string, toId: string) => boolean,
   maxCrateScu: number,
+  km?: (fromId: string, toId: string) => number,
 ): HaulOffer[] {
   const byPoint = new Map<string, HaulOffer>()
   for (const offer of offers) {
-    if (!near(pointId, offer.pointId) || !crateFitsOffer(offer, maxCrateScu)) continue
+    if (!allow(pointId, offer.pointId) || !crateFitsOffer(offer, maxCrateScu)) continue
     const current = byPoint.get(offer.pointId)
     if (!current || offer.price < current.price) byPoint.set(offer.pointId, offer)
   }
-  return [...byPoint.values()].sort((a, b) => a.price - b.price).slice(0, 3)
+  const distance = (offer: HaulOffer) => (km ? km(pointId, offer.pointId) : 0)
+  return [...byPoint.values()]
+    .sort((a, b) => distance(a) - distance(b) || a.price - b.price)
+    .slice(0, km ? 8 : 3)
 }
 
 function sellChoices(
   offers: HaulOffer[],
   buyPrice: number,
   allow: (pointId: string) => boolean,
+  fromId?: string,
+  km?: (fromId: string, toId: string) => number,
 ): HaulOffer[] {
   const byPoint = new Map<string, HaulOffer>()
   for (const offer of offers) {
@@ -246,7 +267,10 @@ function sellChoices(
     const current = byPoint.get(offer.pointId)
     if (!current || offer.price > current.price) byPoint.set(offer.pointId, offer)
   }
-  return [...byPoint.values()].sort((a, b) => b.price - a.price).slice(0, 6)
+  const distance = (offer: HaulOffer) => (km && fromId ? km(fromId, offer.pointId) : 0)
+  return [...byPoint.values()]
+    .sort((a, b) => distance(a) - distance(b) || b.price - a.price)
+    .slice(0, km ? 8 : 6)
 }
 
 function applyTrade(
@@ -298,17 +322,18 @@ function oneTradeProfit(
   state: HaulState,
   buys: Map<string, HaulOffer[]>,
   sells: Map<string, HaulOffer[]>,
-  near: (fromId: string, toId: string) => boolean,
+  buyAllow: (fromId: string, toId: string) => boolean,
   sellAllow: (pointId: string) => boolean,
   cargoScu: number,
   maxCrateScu: number,
+  km?: (fromId: string, toId: string) => number,
 ): number {
   let best = 0
   for (const [commodity, buyOffers] of buys) {
-    const buy = buyChoices(buyOffers, state.pointId, near, maxCrateScu)[0]
+    const buy = buyChoices(buyOffers, state.pointId, buyAllow, maxCrateScu, km)[0]
     const sellOffers = sells.get(commodity)
     if (!buy || !sellOffers) continue
-    const sell = sellChoices(sellOffers, buy.price, sellAllow)[0]
+    const sell = sellChoices(sellOffers, buy.price, sellAllow, state.pointId, km)[0]
     if (!sell) continue
     const load = tradeLoad(buy, sell, cargoScu, maxCrateScu, state.cash)
     if (!load) continue
@@ -334,6 +359,10 @@ export function planHaul(input: {
   buys: HaulOffer[]
   sells: HaulOffer[]
   near: (fromId: string, toId: string) => boolean
+  /** Limits every buy and sell to these places. Omit it and buys stay within `near`. */
+  inSystem?: (pointId: string) => boolean
+  /** Distance used to try the closest shop first. */
+  km?: (fromId: string, toId: string) => number
 }): HaulPlan | null {
   const trades = Math.max(0, Math.floor(input.trades))
   if (trades <= 0 || input.cash <= 0) return null
@@ -345,19 +374,21 @@ export function planHaul(input: {
     const last = step === trades - 1
     const ranked: Array<{ state: HaulState; score: number }> = []
     for (const state of beam) {
-      const sellAllow = (pointId: string) => !last || !input.roundRobin || trades === 1 || input.near(input.startId, pointId)
+      const inBounds = (pointId: string) => !input.inSystem || input.inSystem(pointId)
+      const buyAllow = (fromId: string, toId: string) => (input.inSystem ? input.inSystem(toId) : input.near(fromId, toId))
+      const sellAllow = (pointId: string) => inBounds(pointId) && (!last || !input.roundRobin || trades === 1 || input.near(input.startId, pointId))
       for (const [commodity, buyOffers] of buys) {
         const sellOffers = sells.get(commodity)
         if (!sellOffers) continue
-        for (const buy of buyChoices(buyOffers, state.pointId, input.near, input.maxCrateScu)) {
-          for (const sell of sellChoices(sellOffers, buy.price, sellAllow)) {
+        for (const buy of buyChoices(buyOffers, state.pointId, buyAllow, input.maxCrateScu, input.km)) {
+          for (const sell of sellChoices(sellOffers, buy.price, sellAllow, state.pointId, input.km)) {
             const load = tradeLoad(buy, sell, input.cargoScu, input.maxCrateScu, state.cash)
             if (!load) continue
             const next = applyTrade(state, buy, sell, load)
             let score = next.profit
             if (!last) {
-              const followAllow = (pointId: string) => !input.roundRobin || trades - step > 2 || input.near(input.startId, pointId)
-              score += oneTradeProfit(next, buys, sells, input.near, followAllow, input.cargoScu, input.maxCrateScu)
+              const followAllow = (pointId: string) => inBounds(pointId) && (!input.roundRobin || trades - step > 2 || input.near(input.startId, pointId))
+              score += oneTradeProfit(next, buys, sells, buyAllow, followAllow, input.cargoScu, input.maxCrateScu, input.km)
             }
             ranked.push({ state: next, score })
           }
@@ -373,6 +404,19 @@ export function planHaul(input: {
   const best = beam[0]
   if (!best || best.stops.length === 0) return null
   return { stops: best.stops, profit: best.profit, trades, cash: best.cash }
+}
+
+/** Gain so far: each sale minus what that cargo cost. Starting aUEC is not included. */
+export function runningHaulProfit(stops: HaulStop[], step: number): number {
+  let total = 0
+  const last = Math.min(step, stops.length - 1)
+  for (let index = 1; index <= last; index += 1) {
+    const sell = stops[index]
+    const buy = stops[index - 1]
+    if (!sell || sell.kind !== 'sell' || !buy || buy.kind !== 'buy') continue
+    total += sell.cashAfter - buy.cashBefore
+  }
+  return total
 }
 
 /** How many trades this ship needs to reach the profit goal, using the cash each stop should have. */
@@ -491,6 +535,8 @@ function continueAfter(head: HaulStop[], input: HaulRouteInput, tradesDone: numb
     buys: input.buys,
     sells: input.sells,
     near: input.near,
+    inSystem: input.inSystem,
+    km: input.km,
   })
   if (!tail) return head
   return [...head, ...tail.stops]
@@ -643,11 +689,13 @@ export function nextSellLocation(input: {
   sells: HaulOffer[]
   avoidPointIds: string[]
   km: (fromId: string, toId: string) => number
+  inSystem?: (pointId: string) => boolean
 }): HaulOffer | null {
   const avoid = new Set(input.avoidPointIds)
   const byPoint = new Map<string, HaulOffer>()
   for (const offer of input.sells) {
     if (offer.commodity !== input.commodity || avoid.has(offer.pointId)) continue
+    if (input.inSystem && !input.inSystem(offer.pointId)) continue
     const current = byPoint.get(offer.pointId)
     if (!current || offer.price > current.price) byPoint.set(offer.pointId, offer)
   }
@@ -722,6 +770,7 @@ export function rerouteUnsold(input: HaulRouteInput, avoidPointIds: string[]): H
     sells: input.sells,
     avoidPointIds: [...avoidPointIds, sell.pointId],
     km: input.km,
+    inSystem: input.inSystem,
   })
   if (!destination) return null
   return retargetSell(input, sell, destination, sell.scu, sell.cashBefore)
@@ -740,6 +789,7 @@ export function applyPartialSell(input: HaulRouteInput, soldScu: number, avoidPo
     sells: input.sells,
     avoidPointIds: [...avoidPointIds, sell.pointId],
     km: input.km,
+    inSystem: input.inSystem,
   })
   if (!destination) return null
   const cashBefore = sell.cashBefore + Math.round(sold * sell.pricePerScu)

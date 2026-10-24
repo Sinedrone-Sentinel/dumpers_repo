@@ -16,9 +16,11 @@ import {
   haulTravelText as travelText,
   planHaul,
   pointsAreNear,
+  pointsShareSystem,
   profitGoalOptions,
   rerouteUnavailableBuy,
   rerouteUnsold,
+  runningHaulProfit,
   tradesForProfit,
   uexLookupText,
   type HaulOffer,
@@ -51,6 +53,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
   const [startQuery, setStartQuery] = useState('')
   const [startId, setStartId] = useState<string | null>(null)
   const [roundRobin, setRoundRobin] = useState(false)
+  const [crossSystem, setCrossSystem] = useState(false)
   const [goalMode, setGoalMode] = useState<GoalMode>('goal')
   const [trades, setTrades] = useState(1)
   const [goal, setGoal] = useState('')
@@ -165,9 +168,13 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       buys: loaded.offers.buys,
       sells: loaded.offers.sells,
       near: (fromId: string, toId: string) => pointsAreNear(navMap, fromId, toId),
+      inSystem: (pointId: string) => crossSystem || pointsShareSystem(navMap, startId, pointId),
+      km: (fromId: string, toId: string) => haulDistanceKm(navMap, fromId, toId),
     }
     const missed = loaded.live
-      ? 'No run was found with a UEX check from the last 7 days.'
+      ? crossSystem
+        ? 'No run was found with a UEX check from the last 7 days.'
+        : 'No run was found in this system with a UEX check from the last 7 days.'
       : 'No profitable cargo run was found from that start.'
     if (mode === 'trades') {
       const plan = planHaul({ ...shared, trades })
@@ -191,11 +198,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
 
   const current = route?.stops[step]
   const headerCash = current?.cashBefore ?? 0
-  const runningProfit = route
-    ? route.stops.slice(0, step + 1).reduce((sum, stop) => (
-        stop.kind === 'sell' ? sum + (stop.cashAfter - stop.cashBefore) : sum
-      ), 0)
-    : 0
+  const runningProfit = route ? runningHaulProfit(route.stops, step) : 0
 
   function buildRouteInput(source: HaulOffers): HaulRouteInput | null {
     if (!route || !ship || !startId) return null
@@ -211,6 +214,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       sells: source.sells,
       near: (fromId, toId) => pointsAreNear(navMap, fromId, toId),
       km: (fromId, toId) => haulDistanceKm(navMap, fromId, toId),
+      inSystem: (pointId) => crossSystem || pointsShareSystem(navMap, startId, pointId),
     }
   }
 
@@ -427,6 +431,18 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
             />
             Round-robin
           </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              className="site-checkbox"
+              checked={crossSystem}
+              onChange={(event) => {
+                setCrossSystem(event.target.checked)
+                clearPlan()
+              }}
+            />
+            Cross system
+          </label>
           <label className="inline-flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">aUEC on hand</span>
             <input
@@ -508,7 +524,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       {sellMode ? (
         <p className="site-hint">Sell cargo you already carry. Add each commodity, how much you have, and the crate sizes, then Find buyer sends you to the nearest terminal that buys it.</p>
       ) : (
-        <p className="site-hint">A trade is one buy and one sell. Profit goals are about an hour of hauling for the ship; ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU set trades only. Stops are capped by live UEX stock, your aUEC, hold space, and crate sizes. Round-robin ends near the start.</p>
+        <p className="site-hint">A trade is one buy and one sell, kept in the system you start in unless Cross system is on. The first buy is the closest shop in that system that pays. Profit is what you gain on each sale. Ships under {HAUL_PROFIT_GOAL_MIN_SCU} SCU set trades only.</p>
       )}
       {ship && !sellMode && (ship.maxCrateScu || 0) > 0 && (
         <p className="text-sm text-white">This ship can carry {ship.cargoScu} SCU, in crates up to {ship.maxCrateScu} SCU.</p>
@@ -538,7 +554,13 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           {busy ? 'Checking UEX stock…' : 'Create Route'}
         </button>
       )}
-      {sellMode && sellOpen && startId && <SellCargoPanel startId={startId} sells={baseOffers.sells} />}
+      {sellMode && sellOpen && startId && (
+        <SellCargoPanel
+          startId={startId}
+          sells={baseOffers.sells}
+          inSystem={crossSystem ? undefined : (pointId) => pointsShareSystem(navMap, startId, pointId)}
+        />
+      )}
       {hangarOpen && (
         <ShipHangarModal
           mode="select"
@@ -592,14 +614,14 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
             {current.kind === 'buy' ? (
               <>
                 <p>Buy {current.scu} SCU of {current.commodity} in {crateText(current)}.</p>
-                <p className="text-green-400">{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
+                <p className="text-green-400">{uexLookupText(current.uexStatus, current.uexVerifiedAt, 'buy')}</p>
                 <p className="text-red-400">Cost {money(current.cashBefore - current.cashAfter)}.</p>
               </>
             ) : (
               <>
                 <p>Sell {current.scu} SCU of {current.commodity}.</p>
-                <p className="text-green-400">{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
-                <p className="text-amber-400">Profit {money(current.cashAfter - current.cashBefore)}.</p>
+                <p className="text-green-400">{uexLookupText(current.uexStatus, current.uexVerifiedAt, 'sell')}</p>
+                <p className="text-amber-400">Profit {money(current.cashAfter - (route.stops[step - 1]?.cashBefore ?? current.cashBefore))}.</p>
                 <p className="text-red-400">After this sale you should have {money(current.cashAfter)}.</p>
               </>
             )}
