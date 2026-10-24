@@ -21,6 +21,7 @@ import BpDumperCallout from '../components/bpDumper/BpDumperCallout'
 import MissionListingTags from '../components/MissionListingTags'
 import { readMissionTrackerUiState, writeMissionTrackerUiState, makeBrowseMissionKey } from '../lib/missionTrackerUiState'
 import { setAnalyticsSubTool } from '../lib/analytics'
+import SiteTooltip from '../components/SiteTooltip'
 
 type ViewMode = 'tracker' | 'browse'
 
@@ -103,12 +104,11 @@ function BlueprintUnlockBadge({
     >
       {label}
       {showWarning && (
-        <span
+        <SiteTooltip content="This unlock level is estimated from community data and may not be 100% accurate"><span
           className="inline-flex items-center justify-center w-3.5 h-3.5 text-[8px] font-bold text-amber-900 bg-amber-400 rounded cursor-help"
-          title="This unlock level is estimated from community data and may not be 100% accurate"
         >
           !
-        </span>
+        </span></SiteTooltip>
       )}
     </span>
   )
@@ -185,16 +185,15 @@ function MissionChecklistGroups({
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       {onOpenInBrowse ? (
-                        <button
+                        <SiteTooltip content="View blueprints for this mission in Browse Missions"><button
                           type="button"
                           onClick={() => onOpenInBrowse(mission)}
                           className={`text-sm text-left hover:underline underline-offset-2 ${
                             mission.isLawful ? 'text-green-300 hover:text-green-200' : 'text-red-400 hover:text-red-300'
                           }`}
-                          title="View blueprints for this mission in Browse Missions"
                         >
                           {mission.title}
-                        </button>
+                        </button></SiteTooltip>
                       ) : (
                         <p className={`text-sm ${mission.isLawful ? 'text-green-300' : 'text-red-400'}`}>{mission.title}</p>
                       )}
@@ -603,7 +602,11 @@ export default function TargetsRoute() {
                             const onChecklist = isMissionOnChecklist(m.missionKey)
                             return (
                               <li key={m.missionKey}>
-                                <button
+                                <SiteTooltip content={
+                                    onChecklist
+                                      ? 'Already on your checklist'
+                                      : 'Add to mission checklist'
+                                  } className="block w-full"><button
                                   type="button"
                                   disabled={onChecklist}
                                   onClick={() => void addMissionToChecklist(m.missionKey, m.mission)}
@@ -612,15 +615,10 @@ export default function TargetsRoute() {
                                       ? 'opacity-40 cursor-not-allowed bg-slate-950/20'
                                       : 'hover:bg-orange-950/20 cursor-pointer'
                                   }`}
-                                  title={
-                                    onChecklist
-                                      ? 'Already on your checklist'
-                                      : 'Add to mission checklist'
-                                  }
                                 >
                                   <p className={`text-xs leading-snug ${m.isLawful ? 'text-green-300' : 'text-red-400'}`}>{m.mission}</p>
                                   <MissionMetaLine mission={m} />
-                                </button>
+                                </button></SiteTooltip>
                               </li>
                             )
                           })}

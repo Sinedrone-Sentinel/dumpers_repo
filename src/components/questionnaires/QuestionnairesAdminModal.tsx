@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import AppModal from '../layout/AppModal'
 import QuestionnaireModal from './QuestionnaireModal'
+import SiteTooltip from '../SiteTooltip'
 import {
   type AnonymousResponseRow,
   type AvailabilityUnit,
@@ -746,15 +747,14 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                             className="site-input min-w-0 flex-1 px-2 py-1.5 text-sm"
                           />
                           {editor.status !== 'active' && (
-                            <button
+                            <SiteTooltip content="Remove choice"><button
                               type="button"
                               className="site-btn-ghost shrink-0 !px-1 !py-0.5 text-xs text-red-400 hover:text-red-300"
                               disabled={(q.config.options?.length ?? 0) <= 1}
                               onClick={() => removeChoiceOption(index, optIndex)}
-                              title="Remove choice"
                             >
                               Remove
-                            </button>
+                            </button></SiteTooltip>
                           )}
                         </li>
                       ))}
@@ -816,15 +816,14 @@ export default function QuestionnairesAdminModal({ onClose }: { onClose: () => v
                 >
                   Save draft
                 </button>
-                <button
+                <SiteTooltip content="Saves the current form, then activates and notifies eligible users"><button
                   type="button"
                   disabled={loading}
                   onClick={() => void activate()}
-                  title="Saves the current form, then activates and notifies eligible users"
                   className="site-btn-success"
                 >
                   Activate & notify
-                </button>
+                </button></SiteTooltip>
               </>
             )}
             {editor.status === 'active' && (

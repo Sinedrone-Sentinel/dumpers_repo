@@ -10,6 +10,7 @@ import {
   wikeloSubCategoryChipClass,
 } from './WikeloTradeCard'
 import NotForReleaseTag from './NotForReleaseTag'
+import SiteTooltip from './SiteTooltip'
 
 interface WikeloTradeDetailsModalProps {
   trade: WikeloTrade
@@ -62,25 +63,24 @@ export default function WikeloTradeDetailsModal({
       footer={
         <div className="flex items-center justify-between gap-3 w-full">
           {dfpDisplayEnabled ? (
-            <span className="text-sm font-semibold text-amber-400/90" title="Fair value of everything you hand in">
+            <SiteTooltip content="Fair value of everything you hand in"><span className="text-sm font-semibold text-amber-400/90">
               {formatWikeloDfpLabel(dfp)}
-            </span>
+            </span></SiteTooltip>
           ) : (
             <span />
           )}
           <div className="flex items-center gap-2">
             {canAddToOrder && canAdd && (
-              <button
+              <SiteTooltip content="Add this trade's reward items to your listing cart"><button
                 onClick={addToCart}
                 className={`px-3 py-1.5 text-sm font-medium border rounded-lg transition-colors ${
                   added
                     ? 'bg-green-600/20 text-green-300 border-green-500/40'
                     : 'bg-red-600/20 text-red-300 border-red-500/40 hover:bg-red-600/30'
                 }`}
-                title="Add this trade's reward items to your listing cart"
               >
                 {added ? '✓ Added to cart' : '🛒 Add to cart'}
-              </button>
+              </button></SiteTooltip>
             )}
             <button
               onClick={() => onOpenMission(trade)}

@@ -1066,9 +1066,9 @@ function DailyVisitorStackedBar({
           </span>
         </div>
       </div>
-      <span className="w-10 shrink-0 text-right text-slate-400 tabular-nums text-xs" title="Combined unique visitors">
+      <SiteTooltip content="Combined unique visitors"><span className="w-10 shrink-0 text-right text-slate-400 tabular-nums text-xs">
         {row.count}
-      </span>
+      </span></SiteTooltip>
     </div>
   )
 }
@@ -1084,9 +1084,9 @@ function GeoBarRow({
 }) {
   return (
     <div className="flex items-center gap-3 text-sm">
-      <span className="w-40 sm:w-56 shrink-0 text-slate-300 truncate" title={label}>
+      <SiteTooltip content={label}><span className="w-40 sm:w-56 shrink-0 text-slate-300 truncate">
         {label}
-      </span>
+      </span></SiteTooltip>
       <div className="flex-1 site-progress h-4">
         <div
           className="h-full bg-sky-500/70 rounded"

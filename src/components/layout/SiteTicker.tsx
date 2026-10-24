@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { SiteTickerItem, SiteTickerWhatsNew } from '../../lib/whatsNew'
 import { getTickerLayout } from '../../lib/tickerLayout'
 import SiteTickerDetailModal from './SiteTickerDetailModal'
+import SiteTooltip from '../SiteTooltip'
 
 const HOLD_MS = 2500
 const MARQUEE_PX_PER_SEC = 48
@@ -270,7 +271,7 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                         : ''
                   }`}
                 >
-                  <div
+                  <SiteTooltip content={current.headline}><div
                     ref={textRef}
                     className="whitespace-nowrap text-xs sm:text-sm font-medium"
                     style={{
@@ -282,10 +283,9 @@ export default function SiteTicker({ items, onOpenQuestionnaire }: Props) {
                             transition: `transform ${marqueeDuration} linear`,
                           }),
                     }}
-                    title={current.headline}
                   >
                     {current.headline}
-                  </div>
+                  </div></SiteTooltip>
                 </div>
               </div>
               <span

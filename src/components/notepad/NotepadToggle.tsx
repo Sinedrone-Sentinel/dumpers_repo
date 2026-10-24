@@ -1,17 +1,17 @@
 import { useNotepad } from '../../contexts/NotepadContext'
+import SiteTooltip from '../SiteTooltip'
 
 export default function NotepadToggle({ className = '' }: { className?: string }) {
   const { open, toggle, dirty } = useNotepad()
 
   return (
-    <button
+    <SiteTooltip content={open ? 'Hide notepad' : 'Notepad'}><button
       type="button"
       onClick={toggle}
       className={`site-chrome-control w-9 h-9 ${open ? 'border-amber-400/60 text-amber-200' : ''} ${className}`.trim()}
       aria-label={open ? 'Hide notepad' : 'Show notepad'}
       aria-expanded={open}
       aria-controls="site-notepad-panel"
-      title={open ? 'Hide notepad' : 'Notepad'}
     >
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
         <path
@@ -33,6 +33,6 @@ export default function NotepadToggle({ className = '' }: { className?: string }
           aria-hidden
         />
       ) : null}
-    </button>
+    </button></SiteTooltip>
   )
 }

@@ -5,6 +5,7 @@ import { setAnalyticsSubTool } from '../lib/analytics'
 import { DUMPER_APPS_DISPLAY_NAME } from '../config/bpDumper'
 import { useBpDumperModal } from '../contexts/BpDumperModalContext'
 import { useLiveMissionTracker } from '../hooks/useLiveMissionTracker'
+import SiteTooltip from '../components/SiteTooltip'
 
 export default function TargetsLiveRoute() {
   const { openBpDumperModal } = useBpDumperModal()
@@ -22,15 +23,14 @@ export default function TargetsLiveRoute() {
       actions={
         <div className="flex items-center gap-2">
           {isConnected && (
-            <button
+            <SiteTooltip content="Re-pull active missions and blueprints from the server"><button
               type="button"
               onClick={() => void refresh()}
               disabled={refreshing}
               className="site-btn-secondary px-3 py-1.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-              title="Re-pull active missions and blueprints from the server"
             >
               {refreshing ? 'Syncing…' : 'ReSync'}
-            </button>
+            </button></SiteTooltip>
           )}
           <Link
             to="/targets"
@@ -109,13 +109,12 @@ export default function TargetsLiveRoute() {
                         {mission.rewards.length > 0 && (
                           <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs font-medium tabular-nums">
                             {mission.rewards.map((reward) => (
-                              <span
+                              <SiteTooltip content={reward.title}><span
                                 key={reward.key}
                                 className={reward.isLoss ? 'text-red-400' : 'text-sky-400'}
-                                title={reward.title}
                               >
                                 {reward.label}
-                              </span>
+                              </span></SiteTooltip>
                             ))}
                           </p>
                         )}

@@ -10,6 +10,7 @@ import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 import { shopItemForBlueprint } from '../lib/uexCatalog'
 import { UexItemActions } from './shop/UexItemActions'
 import FriendBlueprintOwners from './FriendBlueprintOwners'
+import SiteTooltip from './SiteTooltip'
 
 const BLUEPRINT_PAPER_PANEL = 'blueprint-paper-panel p-2.5'
 
@@ -115,27 +116,16 @@ export default function BlueprintCard({
         <div className="flex items-start justify-between gap-2 mb-1 shrink-0">
           <div className="flex shrink-0 items-center gap-2 text-left min-w-0">
             {dfpDisplayEnabled ? (
-              <span
+              <SiteTooltip content={dfpBreakdown}><span
                 className="text-xs font-semibold text-amber-400/90 tabular-nums"
-                title={dfpBreakdown}
               >
                 {dfpLabel}
                 <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
-              </span>
+              </span></SiteTooltip>
             ) : null}
             {shopItem ? <UexItemActions item={shopItem} /> : null}
           </div>
-          <button
-            onClick={handleCheckboxClick}
-            disabled={!canModify || isStarterBlueprint}
-            className={`ml-2 shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
-              acquiredLocked
-                ? 'bg-green-500 border-green-500 text-white'
-                : canModify
-                  ? 'bg-transparent border-slate-500 hover:border-green-400'
-                  : 'bg-transparent border-slate-600 cursor-not-allowed opacity-50'
-            } ${isStarterBlueprint ? 'cursor-default opacity-100' : ''}`}
-            title={
+          <SiteTooltip content={
               isStarterBlueprint
                 ? 'Starter blueprint — always in your collection'
                 : !canModify
@@ -145,23 +135,31 @@ export default function BlueprintCard({
                   : isAcquired
                     ? 'Mark as not acquired'
                     : 'Mark as acquired'
-            }
+            }><button
+            onClick={handleCheckboxClick}
+            disabled={!canModify || isStarterBlueprint}
+            className={`ml-2 shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
+              acquiredLocked
+                ? 'bg-green-500 border-green-500 text-white'
+                : canModify
+                  ? 'bg-transparent border-slate-500 hover:border-green-400'
+                  : 'bg-transparent border-slate-600 cursor-not-allowed opacity-50'
+            } ${isStarterBlueprint ? 'cursor-default opacity-100' : ''}`}
           >
             {acquiredLocked && (
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
             )}
-          </button>
+          </button></SiteTooltip>
         </div>
 
         <div className="mb-3 min-w-0 text-left shrink-0">
-          <h3
+          <SiteTooltip content={blueprint.blueprintName}><h3
             className="font-bold text-white line-clamp-3 text-sm leading-snug"
-            title={blueprint.blueprintName}
           >
             {blueprint.blueprintName}
-          </h3>
+          </h3></SiteTooltip>
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col text-sm">
@@ -181,10 +179,12 @@ export default function BlueprintCard({
                 {ownerCount !== undefined && (
                   <span className="flex items-center gap-2">
                     <FriendBlueprintOwners handles={friendHandles} blueprintName={blueprint.blueprintName} />
-                    <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
-                      <span>👤</span>
-                      <span>{ownerCount}</span>
-                    </span>
+                    <SiteTooltip content={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                      <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`}>
+                        <span>👤</span>
+                        <span>{ownerCount}</span>
+                      </span>
+                    </SiteTooltip>
                   </span>
                 )}
               </div>
@@ -216,10 +216,12 @@ export default function BlueprintCard({
               {ownerCount !== undefined && (
                 <p className="flex items-center justify-end gap-2 text-xs">
                   <FriendBlueprintOwners handles={friendHandles} blueprintName={blueprint.blueprintName} />
-                  <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`} title={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
-                    <span>👤</span>
-                    <span>{ownerCount}</span>
-                  </span>
+                  <SiteTooltip content={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                    <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`}>
+                      <span>👤</span>
+                      <span>{ownerCount}</span>
+                    </span>
+                  </SiteTooltip>
                 </p>
               )}
             </div>
@@ -272,7 +274,7 @@ export default function BlueprintCard({
                 {(showTargetControl || showMissionsControl || showCraftTrackerControl) && (
                   <>
                     {showCraftTrackerControl && (
-                      <button
+                      <SiteTooltip content="Add blueprint ores to Mining Tracker RS Tracker"><button
                         onClick={handleCraftTrackerClick}
                         disabled={craftTrackerPending}
                         className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors ${
@@ -280,37 +282,33 @@ export default function BlueprintCard({
                             ? 'site-filter-idle opacity-60 cursor-wait'
                             : 'site-filter-idle hover:bg-purple-600/20 hover:text-purple-300 hover:border-purple-500/30'
                         }`}
-                        title="Add blueprint ores to Mining Tracker RS Tracker"
                       >
                         {craftTrackerPending ? 'Adding…' : 'RS Track'}
-                      </button>
+                      </button></SiteTooltip>
                     )}
                     {showTargetControl && !isOnTargetList && (
-                      <button
+                      <SiteTooltip content="Add to Mission Tracker"><button
                         onClick={handleTargetClick}
                         className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors site-filter-idle hover:bg-orange-600/20 hover:text-orange-300 hover:border-orange-500/30"
-                        title="Add to Mission Tracker"
                       >
                         Track
-                      </button>
+                      </button></SiteTooltip>
                     )}
                     {showMissionsControl && (
-                      <button
+                      <SiteTooltip content="View missions that reward this blueprint"><button
                         onClick={handleMissionsClick}
                         className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors site-filter-idle hover:bg-sky-600/20 hover:text-sky-300 hover:border-sky-500/30"
-                        title="View missions that reward this blueprint"
                       >
                         Missions
-                      </button>
+                      </button></SiteTooltip>
                     )}
                     {showTargetControl && isOnTargetList && (
-                      <button
+                      <SiteTooltip content="Remove from Mission Tracker"><button
                         onClick={handleTargetClick}
                         className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
-                        title="Remove from Mission Tracker"
                       >
                         Tracked
-                      </button>
+                      </button></SiteTooltip>
                     )}
                   </>
                 )}
