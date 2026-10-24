@@ -117,9 +117,9 @@ export default function FactionsSection() {
         <p className="text-xs text-slate-400 leading-relaxed">
           Each faction tracks your reputation separately. Completing contracts and missions 
           increases your standing, unlocking access to higher-tier contracts and blueprint rewards.
-          <span className="text-orange-400"> Note: Different factions use different rank names</span> — 
-          Covalex uses "Trainee → Master" while Bounty Hunters Guild uses "Applicant → Guild Steward".
-          Some factions also have multiple career tracks (e.g., Bounty Hunting vs Security).
+          <span className="text-orange-400"> Note: Rank names are the ones on that faction&apos;s reputation screen.</span>{' '}
+          Red Wind and Covalex use Neutral through Elite Contractor. The Bounty Hunters Guild uses Applicant through Guild Steward.
+          A few factions keep more than one ladder, such as Foxwell Enforcement&apos;s Security and Bounty Hunting ranks.
         </p>
       </div>
 
