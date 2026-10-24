@@ -38,7 +38,7 @@ export const OFFLINE_MODE_SECTION = {
   membersOnly: [
     '**Smart Cracker** — sign in to plan mining ship loadouts (a factory Default plus 3 custom slots per ship), load premade builds, and get crack plans, throttle, and gadget advice for each rock. RSI Handle verification is not required',
     '**AI Advisor** (in Smart Cracker) — chat about your mining loadout and ask where to buy mining heads, modules, and gadgets',
-    '**Smart Hauler** (on Resource Tracker) — plan a cargo run from a starting location, the aUEC you have, and the profit you want. The route only uses crates that fit the ship',
+    '**Smart Hauler** — plan a cargo run to a profit goal or a number of trades, checked against live UEX stock, or find buyers for cargo you already carry',
     '**Ship Hangar** — save ships from the avatar menu or Fuzy\'s Ship Shop. A signed-in hangar holds 10 ships, and 20 when your RSI handle is verified. Adding from the shop keeps that build',
     '**Help Chat** — ask how anything on the site works, from any page',
     'Both AI chats run on your own free Gemini key — set it up once and it covers both',

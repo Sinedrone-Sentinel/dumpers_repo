@@ -113,6 +113,7 @@ function pathToTool(pathname: string): string | null {
   if (pathname.startsWith('/wikelo')) return 'wikelo'
   if (pathname.startsWith('/targets')) return 'mission_tracker'
   if (pathname.startsWith('/resources')) return 'resource_tracker'
+  if (pathname.startsWith('/smart-hauler')) return 'smart_hauler'
   if (pathname.startsWith('/mining-tracker')) return 'mining_tracker'
   if (pathname.startsWith('/commodity-lookup')) return 'commodity_lookup'
   if (pathname.startsWith('/shop-cart')) return 'shop_cart'
@@ -269,6 +270,7 @@ export const ANALYTICS_TOOL_LABELS: Record<string, string> = {
   wikelo: 'Wikelo',
   mission_tracker: 'Mission Tracker',
   resource_tracker: 'Resource Tracker',
+  smart_hauler: 'Smart Hauler',
   mining_tracker: 'Mining Tracker',
   commodity_lookup: 'UEX Lookup',
   shop_cart: 'Shopping Cart',

@@ -19,6 +19,7 @@ Disallow: /analytics
 Disallow: /support-dashboard
 Disallow: /discord-subscribe
 Disallow: /orders
+Disallow: /smart-hauler
 Disallow: /targets/live
 Disallow: /guest-locked
 

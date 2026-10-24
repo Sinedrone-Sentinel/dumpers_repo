@@ -42,7 +42,7 @@ Key paths in extracted data:
 ### 1. UEX Corp API (prices + shop locations)
 **URL:** https://uexcorp.space/api/documentation
 
-Crowdsourced. Always **baked** by a script — never called at runtime:
+Crowdsourced. Always **baked** by a script — never called at runtime, with one exception below:
 
 - Resource Tracker DFP Q0 bases — `npm run fetch-commodity-bases`
 - Commodity Lookup buy/sell terminals — `npm run fetch-shop-data`
@@ -52,6 +52,8 @@ Crowdsourced. Always **baked** by a script — never called at runtime:
 The gear bake is **mining heads, modules and gadgets only** (UEX categories 28/29/30, all flagged `is_mining`). Do not widen it to armour, ammo, food, personal weapons or ships — the Advisor is a mining loadout tool and must have no data to answer those. Join to game data on **Star Citizen uuid**; uuids are stripped before the Advisor prompt.
 
 After refreshing gear shops, re-run `npm run copy-mining-advisor-catalog` and redeploy `mining-loadout-advisor`. Never ticker these refreshes.
+
+**The only runtime UEX call:** Smart Hauler buy/sell availability, through the `smart-hauler-availability` Edge Function (signed-in approved members, 10-minute cache, reports from the last 24 hours). It returns only whether a commodity can be bought or sold at a terminal and how many SCU. Prices, terminals, places, and crate sizes stay baked in `shop-commodity-index.json`. Do not add report dates, inventory bars, or stock to that bake, and do not reuse the Edge Function for prices, routing, or any other tool.
 
 Ship-shop buy locations are their own bake (`fetch-ship-shop-shops`). Do not add ships or ship parts to the mining-gear script. Patch day runs it after parse, which rewrites the ship catalogs and each gun's shot-sequence wait.
 

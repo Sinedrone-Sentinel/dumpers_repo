@@ -6,6 +6,7 @@ import PublicBlueprintsCatalog from './PublicBlueprintsCatalog'
 import PublicBlueprintPage from './PublicBlueprintPage'
 import WikeloRoute from './Wikelo.index'
 import ResourceTrackerRoute from './ResourceTracker.index'
+import SmartHaulerRoute from './SmartHauler.index'
 import CustomOrdersRoute from './CustomOrders.index'
 import BazaarRoute from './Bazaar.index'
 import TargetsRoute from './Targets.index'
@@ -121,6 +122,13 @@ const resourceTrackerRoute = createRoute({
   path: '/resources',
   component: ResourceTrackerRoute,
   beforeLoad: requireFeature('resource_tracker'),
+})
+
+const smartHaulerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/smart-hauler',
+  component: SmartHaulerRoute,
+  beforeLoad: requireFeature('smart_hauler'),
 })
 
 const customOrdersRoute = createRoute({
@@ -248,6 +256,7 @@ export const routeTree = rootRoute.addChildren([
   targetsRoute,
   targetsLiveRoute,
   resourceTrackerRoute,
+  smartHaulerRoute,
   customOrdersRoute,
   bazaarRoute,
   archiveRoute,

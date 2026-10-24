@@ -122,8 +122,15 @@ Header (signed-in): **?** Help, **Friends**, **Request Services** (RSI verified)
 - **Can Craft** tab lists acquired blueprints you can make from tracked stock (with optional *Close, no Cigar*); note chips plus **ALL** scope craftability and Craft deductions to one location; ready recipes get a **Craft** button in the blueprint modal that deducts materials at the quality tiers you pick (only owned tiers shown), with a short anti-double-click cooldown; never uses friend stock
 - **Crafting Wishlist** (signed in) sits after Can Craft: up to 10 named lists, 20 unique recipes each. **Add to Crafting Wishlist** on a blueprint saves that blueprint with the material qualities selected and a quantity. The aUEC shown is the Dumper's Fair-Value Price of those resources, the cost to buy them. Each list shows an overview tag per resource and quality (red/green against My Resources when **Use My Tracked Resources** is on). **Got it** lowers one; with **Use My Tracked Resources** it also deducts one craft from My Resources at those exact qualities. **RS Track ALL** / **RS Track Missing** (list header and per blueprint) add those ores to Mining Tracker → RS Tracker; Missing only adds ores My Resources can't cover
 - **Site Total** rollup (officers and super-admins only) — org-wide inventory aggregate
-- **Smart Hauler** (signed in) plans a cargo run for a flyable ship with cargo. It uses the aUEC on hand, then the aUEC each sale should leave, to size the next load. If a buy is short or a sale has no demand, that stop asks what you actually got and rebuilds the rest of the route from there
 - Resource catalog = blueprint materials + `extraResources.ts` (UEX list) + every other in-game cargo commodity from `game-commodities.json` (Ship Ammunition, countermeasures, trade goods; unrefined ore excluded). After a patch parse, a super-admin runs **DB Actions → Sync** to push new rows to `blueprint_resources`
+
+### Smart Hauler (`/smart-hauler`)
+
+- Signed-in approved members only; guests see a locked menu item. Not prerendered for SEO
+- Plans a cargo run for a flyable ship with cargo, to **a profit goal** or **a number of trades** (1–20). Profit goals are a dropdown by cargo size (`profitGoalOptions` in `src/lib/smartHauler.ts`), about one hour of hauling; ships under 4 SCU can only set trades
+- Uses the aUEC on hand, then the aUEC each sale should leave, to size the next load. Each stop is capped by live stock, cash, hold space, and crate sizes both terminals list
+- Prices, terminals, and crate sizes come from the baked UEX index. Live buy/sell availability comes from the `smart-hauler-availability` Edge Function whenever a buy or sell list is built; if it fails, the baked list is used
+- **Sell what I have**: per-commodity rows (SCU, smallest and largest crate) and **Find buyer** for the nearest terminal that buys it, with Zero / Partial / Full follow-ups
 
 ### Friends (header)
 

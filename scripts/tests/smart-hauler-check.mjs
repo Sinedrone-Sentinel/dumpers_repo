@@ -184,6 +184,73 @@ assert.equal(hauler.rerouteUnsold({
   sells: sells.filter((row) => row.pointId === 'b'),
 }, []), null)
 
+assert.deepEqual(hauler.profitGoalOptions(2), [])
+assert.deepEqual(hauler.profitGoalOptions(4), [250000, 500000, 750000, 1000000])
+assert.deepEqual(hauler.profitGoalOptions(16), [500000, 1000000, 1500000])
+assert.equal(hauler.profitGoalOptions(46).at(-1), 2500000)
+assert.equal(hauler.profitGoalOptions(100).at(-1), 3000000)
+assert.equal(hauler.profitGoalOptions(300).at(-1), 3500000)
+assert.equal(hauler.profitGoalOptions(2200).at(-1), 4000000)
+assert.equal(hauler.profitGoalOptions(2200)[0], 500000)
+
+assert.deepEqual(hauler.sharedBoxSizes([1, 2, 4], [2, 4, 8]), [2, 4])
+assert.deepEqual(hauler.sharedBoxSizes([1], []), [1])
+assert.deepEqual(hauler.sharedBoxSizes([1], [2]), [])
+
+const stockedBuy = { commodity: 'Cheap', pointId: 'a', place: 'A', price: 5, boxSizes: [1], stockScu: 3 }
+const openSell = { commodity: 'Cheap', pointId: 'b', place: 'B', price: 15, boxSizes: [1] }
+assert.equal(hauler.tradeLoad(stockedBuy, openSell, 10, 1, 1000).scu, 3)
+assert.equal(hauler.tradeLoad({ ...stockedBuy, stockScu: undefined }, { ...openSell, stockScu: 6 }, 10, 1, 1000).scu, 6)
+assert.equal(hauler.tradeLoad({ ...stockedBuy, stockScu: undefined }, openSell, 10, 1, 12).scu, 2)
+assert.equal(hauler.tradeLoad({ ...stockedBuy, stockScu: undefined }, openSell, 4, 1, 1000).scu, 4)
+assert.equal(hauler.tradeLoad(stockedBuy, { ...openSell, boxSizes: [2] }, 10, 32, 1000), null)
+
+const withIds = {
+  buys: [
+    { commodity: 'Cheap', pointId: 'a', place: 'A', price: 5, boxSizes: [1], commodityId: 1, terminalId: 10 },
+    { commodity: 'Cheap', pointId: 'b', place: 'B', price: 5, boxSizes: [1], commodityId: 1, terminalId: 11 },
+    { commodity: 'Cheap', pointId: 'c', place: 'C', price: 5, boxSizes: [1], commodityId: 1, terminalId: 12 },
+  ],
+  sells: [
+    { commodity: 'Cheap', pointId: 'b', place: 'B', price: 15, boxSizes: [1], commodityId: 1, terminalId: 11 },
+    { commodity: 'Cheap', pointId: 'c', place: 'C', price: 15, boxSizes: [1], commodityId: 1, terminalId: 12 },
+  ],
+}
+const live = hauler.applyHaulAvailability(withIds, [
+  { commodityId: 1, terminalId: 10, buy: { available: true, scu: 4 }, sell: null },
+  { commodityId: 1, terminalId: 11, buy: { available: false, scu: null }, sell: { available: false, scu: null } },
+  { commodityId: 1, terminalId: 12, buy: null, sell: { available: true, scu: 7 } },
+])
+assert.deepEqual(live.buys.map((row) => row.terminalId), [10, 12])
+assert.equal(live.buys[0].stockScu, 4)
+assert.equal(live.buys[1].stockScu, undefined)
+assert.deepEqual(live.sells.map((row) => row.terminalId), [12])
+assert.equal(live.sells[0].stockScu, 7)
+assert.deepEqual(hauler.applyHaulAvailability(withIds, []), withIds)
+
+const cappedRun = hauler.planHaul({
+  ...shared,
+  trades: 1,
+  buys: [{ ...buys[0], stockScu: 4 }],
+  sells: sells.filter((row) => row.commodity === 'Cheap'),
+})
+assert.equal(cappedRun.stops[0].scu, 4)
+assert.equal(cappedRun.stops[0].cashAfter, 30)
+
+const sellOnly = [
+  { commodity: 'Ore', pointId: 'b', place: 'B', price: 10, boxSizes: [32] },
+  { commodity: 'Ore', pointId: 'c', place: 'C', price: 12, boxSizes: [1, 2] },
+  { commodity: 'Ore', pointId: 'a', place: 'A', price: 9, boxSizes: [4], stockScu: 5 },
+]
+const buyer = hauler.findSellBuyer({ commodity: 'Ore', fromId: 'b', scu: 20, minCrateScu: 1, maxCrateScu: 4, sells: sellOnly, avoidPointIds: [], km })
+assert.equal(buyer.offer.pointId, 'a')
+assert.equal(buyer.scu, 5)
+const nextBuyer = hauler.findSellBuyer({ commodity: 'Ore', fromId: 'a', scu: 15, minCrateScu: 1, maxCrateScu: 4, sells: sellOnly, avoidPointIds: ['a'], km })
+assert.equal(nextBuyer.offer.pointId, 'c')
+assert.equal(nextBuyer.scu, 15)
+assert.equal(hauler.findSellBuyer({ commodity: 'Ore', fromId: 'a', scu: 15, minCrateScu: 8, maxCrateScu: 16, sells: sellOnly, avoidPointIds: [], km }), null)
+assert.equal(hauler.findSellBuyer({ commodity: 'Ore', fromId: 'a', scu: 15, minCrateScu: 16, maxCrateScu: 32, sells: sellOnly, avoidPointIds: [], km }).offer.pointId, 'b')
+
 const labelFile = path.join('node_modules', '.cache', 'ship-hangar.mjs')
 await esbuild.build({
   entryPoints: [path.join('src', 'lib', 'shipHangar.ts')],

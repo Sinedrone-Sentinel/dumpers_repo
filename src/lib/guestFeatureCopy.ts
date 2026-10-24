@@ -29,6 +29,16 @@ export const GUEST_LOCKED_FEATURE_COPY: Partial<Record<FeatureId, GuestFeatureCo
       'Requires a verified RSI Handle and officer approval to participate',
     ],
   },
+  smart_hauler: {
+    title: 'Smart Hauler',
+    description: 'Plan cargo runs from where you are, or find buyers for cargo you already carry.',
+    details: [
+      'Pick a cargo ship, then set a profit goal or a number of trades',
+      'Every buy and sell is checked against live UEX stock when the route is built',
+      'Sell what I have finds the nearest terminal that buys your cargo in the crate sizes you carry',
+      'Free member account — sign in with Google or Discord',
+    ],
+  },
 }
 
 export function getGuestFeatureCopy(featureId: FeatureId): GuestFeatureCopy {

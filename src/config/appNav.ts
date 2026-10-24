@@ -58,6 +58,13 @@ export const APP_NAV_ITEMS: AppNavItem[] = [
     minRole: 'member',
   },
   {
+    id: 'smart-hauler',
+    label: 'Smart Hauler',
+    path: '/smart-hauler',
+    icon: 'hauler',
+    featureId: 'smart_hauler',
+  },
+  {
     id: 'mining-tracker',
     label: 'Mining Tracker',
     path: '/mining-tracker',
@@ -123,7 +130,7 @@ export const NAV_GROUPS: { id: string; label: string; itemIds: string[] }[] = [
   {
     id: 'core',
     label: 'Core',
-    itemIds: ['blueprints', 'wikelo', 'targets', 'resource-tracker', 'mining-tracker'],
+    itemIds: ['blueprints', 'wikelo', 'targets', 'resource-tracker', 'smart-hauler', 'mining-tracker'],
   },
   {
     id: 'tools',

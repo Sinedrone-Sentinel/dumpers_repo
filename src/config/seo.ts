@@ -129,6 +129,12 @@ const pages: Record<string, SeoPageConfig> = {
       'Manage your Star Citizen WTB and WTS listings, sales, and marketplace history on Dumper\'s Repo.',
     canonicalPath: '/orders/',
   },
+  '/smart-hauler': {
+    title: "Smart Hauler — Cargo Runs | Dumper's Repo",
+    description:
+      'Plan Star Citizen cargo runs to a profit goal or a number of trades, or find buyers for cargo you already carry. Sign-in required.',
+    canonicalPath: '/smart-hauler/',
+  },
   '/privacy': {
     title: "Privacy Policy | Dumper's Repo",
     description:

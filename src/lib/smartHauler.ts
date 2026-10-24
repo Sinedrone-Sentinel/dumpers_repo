@@ -1,10 +1,30 @@
 import { SHOP_COMMODITIES, getCommodityTradeInfo, terminalPlace } from './shopLookup'
-import { navMap, pathBetween, pointById, resolveShopPlace, type NavMap } from './navSystems'
+import { describeJumps, navMap, pathBetween, pointById, resolveShopPlace, type NavMap } from './navSystems'
 
 export const HAUL_NEAR_KM = 300
 export const HAUL_MAX_TRADES = 20
+/** Ships smaller than this can only plan a number of trades. */
+export const HAUL_PROFIT_GOAL_MIN_SCU = 4
 
-const CRATE_SCU = [1, 2, 4, 8, 16, 32]
+export const CRATE_SCU = [1, 2, 4, 8, 16, 32]
+
+/** About one hour of hauling for each hold size. */
+const PROFIT_GOAL_TIERS: Array<{ minScu: number; step: number; max: number }> = [
+  { minScu: 500, step: 500_000, max: 4_000_000 },
+  { minScu: 200, step: 500_000, max: 3_500_000 },
+  { minScu: 64, step: 500_000, max: 3_000_000 },
+  { minScu: 32, step: 500_000, max: 2_500_000 },
+  { minScu: 16, step: 500_000, max: 1_500_000 },
+  { minScu: HAUL_PROFIT_GOAL_MIN_SCU, step: 250_000, max: 1_000_000 },
+]
+
+export function profitGoalOptions(cargoScu: number): number[] {
+  const tier = PROFIT_GOAL_TIERS.find((row) => cargoScu >= row.minScu)
+  if (!tier) return []
+  const options: number[] = []
+  for (let amount = tier.step; amount <= tier.max; amount += tier.step) options.push(amount)
+  return options
+}
 
 export interface HaulOffer {
   commodity: string
@@ -12,6 +32,22 @@ export interface HaulOffer {
   place: string
   price: number
   boxSizes: number[]
+  commodityId?: number
+  terminalId?: number
+  /** Live stock on a buy, or how much the terminal will take on a sale. */
+  stockScu?: number
+}
+
+export interface HaulSideAvailability {
+  available: boolean
+  scu: number | null
+}
+
+export interface HaulAvailabilityRow {
+  commodityId: number
+  terminalId: number
+  buy: HaulSideAvailability | null
+  sell: HaulSideAvailability | null
 }
 
 export interface HaulCrate {
@@ -103,6 +139,42 @@ export function packHaulLoad(
   const scu = crates.reduce((total, crate) => total + crate.size * crate.count, 0)
   if (scu <= 0) return null
   return { scu, crates, cost: Math.round(scu * pricePerScu) }
+}
+
+/** Crate sizes both terminals list. A terminal with no listed sizes takes whatever the other one uses. */
+export function sharedBoxSizes(buyBoxes: number[], sellBoxes: number[]): number[] {
+  if (sellBoxes.length === 0) return buyBoxes
+  if (buyBoxes.length === 0) return sellBoxes
+  const sell = new Set(sellBoxes.map((size) => Math.round(size)))
+  return buyBoxes.filter((size) => sell.has(Math.round(size)))
+}
+
+/** One trade's load: hold space, live stock on both ends, crates both ends take, and the cash on hand. */
+export function tradeLoad(
+  buy: HaulOffer,
+  sell: HaulOffer,
+  cargoScu: number,
+  maxCrateScu: number,
+  cash: number,
+): { scu: number; crates: HaulCrate[]; cost: number } | null {
+  const room = Math.min(cargoScu, buy.stockScu ?? Number.POSITIVE_INFINITY, sell.stockScu ?? Number.POSITIVE_INFINITY)
+  return packHaulLoad(room, maxCrateScu, sharedBoxSizes(buy.boxSizes, sell.boxSizes), buy.price, cash)
+}
+
+/** Drop terminals reported out of stock (buy) or full (sell), and cap the rest at the SCU reported. */
+export function applyHaulAvailability(
+  offers: { buys: HaulOffer[]; sells: HaulOffer[] },
+  rows: HaulAvailabilityRow[],
+): { buys: HaulOffer[]; sells: HaulOffer[] } {
+  const byKey = new Map(rows.map((row) => [`${row.commodityId}:${row.terminalId}`, row]))
+  const apply = (list: HaulOffer[], side: 'buy' | 'sell') => list.flatMap((offer) => {
+    if (offer.commodityId == null || offer.terminalId == null) return [offer]
+    const report = byKey.get(`${offer.commodityId}:${offer.terminalId}`)?.[side]
+    if (!report) return [offer]
+    if (!report.available) return []
+    return [report.scu != null && report.scu > 0 ? { ...offer, stockScu: report.scu } : offer]
+  })
+  return { buys: apply(offers.buys, 'buy'), sells: apply(offers.sells, 'sell') }
 }
 
 function indexOffers(offers: HaulOffer[]): Map<string, HaulOffer[]> {
@@ -208,7 +280,7 @@ function oneTradeProfit(
     if (!buy || !sellOffers) continue
     const sell = sellChoices(sellOffers, buy.price, sellAllow)[0]
     if (!sell) continue
-    const load = packHaulLoad(cargoScu, maxCrateScu, buy.boxSizes, buy.price, state.cash)
+    const load = tradeLoad(buy, sell, cargoScu, maxCrateScu, state.cash)
     if (!load) continue
     const revenue = Math.round(load.scu * sell.price)
     best = Math.max(best, revenue - load.cost)
@@ -249,7 +321,7 @@ export function planHaul(input: {
         if (!sellOffers) continue
         for (const buy of buyChoices(buyOffers, state.pointId, input.near, input.maxCrateScu)) {
           for (const sell of sellChoices(sellOffers, buy.price, sellAllow)) {
-            const load = packHaulLoad(input.cargoScu, input.maxCrateScu, buy.boxSizes, buy.price, state.cash)
+            const load = tradeLoad(buy, sell, input.cargoScu, input.maxCrateScu, state.cash)
             if (!load) continue
             const next = applyTrade(state, buy, sell, load)
             let score = next.profit
@@ -305,6 +377,8 @@ export function collectHaulOffers(nav: NavMap = navMap): { buys: HaulOffer[]; se
         place: terminalPlace(loc.terminal),
         price,
         boxSizes: loc.boxSizes,
+        commodityId: info.commodity.id,
+        terminalId: loc.terminal.id,
       })
     }
     for (const loc of info.sellAt) {
@@ -318,6 +392,8 @@ export function collectHaulOffers(nav: NavMap = navMap): { buys: HaulOffer[]; se
         place: terminalPlace(loc.terminal),
         price,
         boxSizes: loc.boxSizes,
+        commodityId: info.commodity.id,
+        terminalId: loc.terminal.id,
       })
     }
   }
@@ -326,6 +402,11 @@ export function collectHaulOffers(nav: NavMap = navMap): { buys: HaulOffer[]; se
 
 export function haulDistanceKm(nav: NavMap, fromId: string, toId: string): number {
   return pathBetween(nav, fromId, toId).km
+}
+
+/** System jumps between two stops, or an empty string inside one system. */
+export function haulTravelText(fromId: string | null, toId: string, nav: NavMap = navMap): string {
+  return describeJumps(pathBetween(nav, fromId, toId).hops).join(' ')
 }
 
 /** Crates for a quantity the terminal actually handed over. */
@@ -419,10 +500,16 @@ export function buysAtStop(input: {
     const buy = buyChoices(offers, input.pointId, input.near, input.maxCrateScu)[0]
     const sellOffers = sellIndex.get(commodity)
     if (!buy || !sellOffers?.length) continue
-    const load = packHaulLoad(input.cargoScu, input.maxCrateScu, buy.boxSizes, buy.price, input.cash)
-    if (!load) continue
-    const bestSell = [...sellOffers].sort((a, b) => b.price - a.price)[0]
-    if (!bestSell) continue
+    let load: ReturnType<typeof tradeLoad> = null
+    let bestSell: HaulOffer | null = null
+    for (const sell of [...sellOffers].sort((a, b) => b.price - a.price)) {
+      load = tradeLoad(buy, sell, input.cargoScu, input.maxCrateScu, input.cash)
+      if (load) {
+        bestSell = sell
+        break
+      }
+    }
+    if (!load || !bestSell) continue
     choices.push({
       commodity: buy.commodity,
       pointId: buy.pointId,
@@ -534,6 +621,38 @@ export function nextSellLocation(input: {
       return profitRank || a.km - b.km || b.offer.price - a.offer.price
     })
   return ranked[0]?.offer || null
+}
+
+/**
+ * Sell what I have: the nearest terminal that buys this cargo and takes a crate inside
+ * the member's smallest-to-largest range. No buying, no profit goal.
+ */
+export function findSellBuyer(input: {
+  commodity: string
+  fromId: string
+  scu: number
+  minCrateScu: number
+  maxCrateScu: number
+  sells: HaulOffer[]
+  avoidPointIds: string[]
+  km: (fromId: string, toId: string) => number
+}): { offer: HaulOffer; scu: number; km: number } | null {
+  const avoid = new Set(input.avoidPointIds)
+  const takesCrate = (offer: HaulOffer) =>
+    offer.boxSizes.length === 0 ||
+    offer.boxSizes.some((size) => {
+      const rounded = Math.round(size)
+      return rounded >= input.minCrateScu && rounded <= input.maxCrateScu
+    })
+  const ranked = input.sells
+    .filter((offer) => offer.commodity === input.commodity && !avoid.has(offer.pointId) && takesCrate(offer))
+    .map((offer) => ({ offer, km: input.km(input.fromId, offer.pointId) }))
+    .filter((row) => Number.isFinite(row.km))
+    .sort((a, b) => a.km - b.km || b.offer.price - a.offer.price)
+  const best = ranked[0]
+  if (!best) return null
+  const scu = Math.min(Math.round(input.scu), best.offer.stockScu ?? Number.POSITIVE_INFINITY)
+  return scu > 0 ? { offer: best.offer, scu, km: best.km } : null
 }
 
 function retargetSell(input: HaulRouteInput, sell: HaulStop, destination: HaulOffer, scu: number, cashBefore: number): HaulPlan | null {
