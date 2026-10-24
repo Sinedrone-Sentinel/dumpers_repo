@@ -465,7 +465,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           {mode === 'goal' ? (
             <select
               aria-label="Profit goal"
-              className="site-input w-[15ch] px-2 py-1 tabular-nums"
+              className="site-input w-[10.5rem] px-2 py-1 tabular-nums"
               value={goal}
               disabled={sellMode || !ship}
               onChange={(event) => {
@@ -473,7 +473,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
                 clearPlan()
               }}
             >
-              <option value="">{ship ? 'Goal' : 'Ship'}</option>
+              <option value="">{ship ? 'Goal' : 'Select a Ship'}</option>
               {goalOptions.map((amount) => (
                 <option key={amount} value={amount}>{Math.round(amount).toLocaleString()}</option>
               ))}
