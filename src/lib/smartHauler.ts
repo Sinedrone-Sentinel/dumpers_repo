@@ -36,11 +36,17 @@ export interface HaulOffer {
   terminalId?: number
   /** Live stock on a buy, or how much the terminal will take on a sale. */
   stockScu?: number
+  /** UEX status for this side, present only when a check from the last 7 days matched. */
+  uexStatus?: number
+  /** Unix ms of that UEX report. */
+  uexVerifiedAt?: number
 }
 
 export interface HaulSideAvailability {
   available: boolean
   scu: number | null
+  status?: number
+  verifiedAt?: number
 }
 
 export interface HaulAvailabilityRow {
@@ -65,6 +71,8 @@ export interface HaulStop {
   pricePerScu: number
   cashBefore: number
   cashAfter: number
+  uexStatus?: number
+  uexVerifiedAt?: number
 }
 
 export interface HaulPlan {
@@ -83,6 +91,8 @@ export interface HaulBuyChoice {
   scu: number
   crates: HaulCrate[]
   cost: number
+  uexStatus?: number
+  uexVerifiedAt?: number
 }
 
 export interface HaulRouteInput {
@@ -161,20 +171,36 @@ export function tradeLoad(
   return packHaulLoad(room, maxCrateScu, sharedBoxSizes(buy.boxSizes, sell.boxSizes), buy.price, cash)
 }
 
-/** Drop terminals reported out of stock (buy) or full (sell), and cap the rest at the SCU reported. */
+/** Drop terminals UEX did not verify in the returned rows. A missing row is not a fresh check. */
 export function applyHaulAvailability(
   offers: { buys: HaulOffer[]; sells: HaulOffer[] },
   rows: HaulAvailabilityRow[],
 ): { buys: HaulOffer[]; sells: HaulOffer[] } {
   const byKey = new Map(rows.map((row) => [`${row.commodityId}:${row.terminalId}`, row]))
   const apply = (list: HaulOffer[], side: 'buy' | 'sell') => list.flatMap((offer) => {
-    if (offer.commodityId == null || offer.terminalId == null) return [offer]
+    if (offer.commodityId == null || offer.terminalId == null) return []
     const report = byKey.get(`${offer.commodityId}:${offer.terminalId}`)?.[side]
-    if (!report) return [offer]
-    if (!report.available) return []
-    return [report.scu != null && report.scu > 0 ? { ...offer, stockScu: report.scu } : offer]
+    if (!report?.available) return []
+    const next: HaulOffer = { ...offer }
+    if (report.scu != null && report.scu > 0) next.stockScu = report.scu
+    if (report.status != null) next.uexStatus = report.status
+    if (report.verifiedAt != null) next.uexVerifiedAt = report.verifiedAt
+    return [next]
   })
   return { buys: apply(offers.buys, 'buy'), sells: apply(offers.sells, 'sell') }
+}
+
+const UEX_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+export const LOCAL_STOCK_NOTE = 'Local Info: Resource may or may not be in demand'
+
+/** The step line for a UEX check, or the local-info line when that check never arrived. */
+export function uexLookupText(status: number | undefined, verifiedAt: number | undefined): string {
+  if (status == null || verifiedAt == null || !Number.isFinite(verifiedAt)) return LOCAL_STOCK_NOTE
+  const date = new Date(verifiedAt)
+  if (Number.isNaN(date.getTime())) return LOCAL_STOCK_NOTE
+  const label = `${UEX_MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`
+  return `UEX Live Lookup - Resource Status ${status} -- Last Date Verified ${label}`
 }
 
 function indexOffers(offers: HaulOffer[]): Map<string, HaulOffer[]> {
@@ -248,6 +274,8 @@ function applyTrade(
         pricePerScu: buy.price,
         cashBefore: state.cash,
         cashAfter: afterBuy,
+        uexStatus: buy.uexStatus,
+        uexVerifiedAt: buy.uexVerifiedAt,
       },
       {
         kind: 'sell',
@@ -259,6 +287,8 @@ function applyTrade(
         pricePerScu: sell.price,
         cashBefore: afterBuy,
         cashAfter: afterSell,
+        uexStatus: sell.uexStatus,
+        uexVerifiedAt: sell.uexVerifiedAt,
       },
     ],
   }
@@ -520,6 +550,8 @@ export function buysAtStop(input: {
       crates: load.crates,
       cost: load.cost,
       profit: Math.round(load.scu * bestSell.price) - load.cost,
+      uexStatus: buy.uexStatus,
+      uexVerifiedAt: buy.uexVerifiedAt,
     })
   }
   choices.sort((a, b) => b.profit - a.profit || a.price - b.price)
@@ -541,6 +573,8 @@ export function rerouteUnavailableBuy(input: HaulRouteInput, choice: HaulBuyChoi
     place: choice.place,
     price: choice.price,
     boxSizes: choice.boxSizes,
+    uexStatus: choice.uexStatus,
+    uexVerifiedAt: choice.uexVerifiedAt,
   }
   const allow = (pointId: string) => !lastTrade || !input.roundRobin || input.trades === 1 || input.near(input.startId, pointId)
   const sell = sellForBuy(
@@ -562,6 +596,8 @@ export function rerouteUnavailableBuy(input: HaulRouteInput, choice: HaulBuyChoi
       pricePerScu: choice.price,
       cashBefore: buy.cashBefore,
       cashAfter: afterBuy,
+      uexStatus: choice.uexStatus,
+      uexVerifiedAt: choice.uexVerifiedAt,
     },
     {
       kind: 'sell',
@@ -573,6 +609,8 @@ export function rerouteUnavailableBuy(input: HaulRouteInput, choice: HaulBuyChoi
       pricePerScu: sell.price,
       cashBefore: afterBuy,
       cashAfter: afterBuy + revenue,
+      uexStatus: sell.uexStatus,
+      uexVerifiedAt: sell.uexVerifiedAt,
     },
   ]
   return finishPlan(continueAfter([...input.stops.slice(0, input.step), ...pair], input, tradeIndex + 1), input.trades)
@@ -666,6 +704,8 @@ function retargetSell(input: HaulRouteInput, sell: HaulStop, destination: HaulOf
     pricePerScu: destination.price,
     cashBefore,
     cashAfter: cashBefore + Math.round(scu * destination.price),
+    uexStatus: destination.uexStatus,
+    uexVerifiedAt: destination.uexVerifiedAt,
   }
   return finishPlan(continueAfter([...input.stops.slice(0, input.step), updated], input, Math.floor(input.step / 2) + 1), input.trades)
 }

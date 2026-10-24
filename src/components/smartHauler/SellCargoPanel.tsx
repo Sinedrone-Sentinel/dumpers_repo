@@ -6,6 +6,7 @@ import {
   findSellBuyer,
   haulDistanceKm,
   haulTravelText,
+  uexLookupText,
   type HaulOffer,
 } from '../../lib/smartHauler'
 import { fetchHaulAvailability } from '../../lib/smartHaulerAvailability'
@@ -84,7 +85,6 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
       avoidPointIds: avoid,
       km: (a, b) => haulDistanceKm(navMap, a, b),
     })
-    const liveNote = report ? null : 'Live UEX stock could not be checked, so this uses the saved price list.'
     update(row.id, {
       left,
       fromId,
@@ -94,7 +94,11 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
       buyer: hit ? { offer: hit.offer, scu: hit.scu } : null,
       status: hit ? 'found' : 'none',
       partial: '',
-      note: hit ? liveNote : `No other terminal buys ${row.commodity} in those crate sizes.`,
+      note: hit
+        ? null
+        : report
+          ? 'No buyer was found from a check in the last 7 days.'
+          : `No other terminal buys ${row.commodity} in those crate sizes.`,
     })
   }
 
@@ -208,6 +212,7 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
                 <p>
                   Sell {row.buyer.scu} SCU of {row.commodity} at {money(row.buyer.offer.price)} per SCU, about {money(row.buyer.scu * row.buyer.offer.price)}.
                 </p>
+                <p>{uexLookupText(row.buyer.offer.uexStatus, row.buyer.offer.uexVerifiedAt)}</p>
                 {row.buyer.scu < (row.left ?? 0) && (
                   <p className="site-hint">UEX reports that terminal takes {row.buyer.scu} SCU right now. The rest goes to the next buyer.</p>
                 )}

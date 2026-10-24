@@ -354,7 +354,7 @@ npx supabase functions deploy smart-hauler-availability
 | `unlink-citizenid` | Revoke Citizen iD refresh token then un-verify locally |
 | `mining-loadout-advisor` | Smart Cracker Advisor (signed-in JWT). Members paste a Gemini key, or unlock a client-wrapped copy from their profile. Apply migrations **189–190**, **195**, then **196** (usage meter + super-admin Edge analytics) |
 | `site-help-bot` | Site Help chat (signed-in JWT). Same saved Gemini key; answers from the Information Archive and only the catalogs that question needs, baked into `knowledge.json`. The hourly counter moves when the question is sent to Gemini. Apply migrations **190**, **195**, **196**, and **200** first |
-| `smart-hauler-availability` | Smart Hauler live stock (signed-in approved member JWT). Reads the public UEX price feed, caches it for 10 minutes, and returns only buy/sell availability and SCU from reports in the last 24 hours. No secrets, no migration |
+| `smart-hauler-availability` | Smart Hauler live stock (signed-in approved member JWT). Reads the public UEX price feed, caches it for 10 minutes, and returns buy/sell availability, SCU, status, and the report date from the last 7 days. No secrets, no migration |
 
 Edge secrets for the Partnership bot: `DISCORD_SERVICES_PUBLIC_KEY`, `DISCORD_SERVICES_BOT_TOKEN`, `DISCORD_SERVICES_APPLICATION_ID` (see [`DUMPER_SERVICES_BOT.md`](DUMPER_SERVICES_BOT.md)).
 

@@ -20,6 +20,7 @@ import {
   rerouteUnavailableBuy,
   rerouteUnsold,
   tradesForProfit,
+  uexLookupText,
   type HaulOffer,
   type HaulPlan,
   type HaulRouteInput,
@@ -83,12 +84,13 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
   }, [shipQuery])
   const startChoices = useMemo(() => searchNavPoints(startQuery, navMap, 12), [startQuery])
 
-  async function loadLiveOffers(): Promise<HaulOffers> {
+  async function loadLiveOffers(): Promise<{ offers: HaulOffers; live: boolean }> {
     const rows = await fetchHaulAvailability()
-    const next = rows ? applyHaulAvailability(baseOffers, rows) : baseOffers
+    const live = rows != null
+    const next = live ? applyHaulAvailability(baseOffers, rows) : baseOffers
     setOffers(next)
-    setLiveNote(rows ? null : LIVE_CHECK_FAILED)
-    return next
+    setLiveNote(live ? null : LIVE_CHECK_FAILED)
+    return { offers: next, live }
   }
 
   function clearStopUi() {
@@ -152,7 +154,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       return
     }
     setBusy(true)
-    const live = await loadLiveOffers()
+    const loaded = await loadLiveOffers()
     setBusy(false)
     const shared = {
       cargoScu: ship.cargoScu || 0,
@@ -160,14 +162,17 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
       startId,
       cash: cashValue,
       roundRobin,
-      buys: live.buys,
-      sells: live.sells,
+      buys: loaded.offers.buys,
+      sells: loaded.offers.sells,
       near: (fromId: string, toId: string) => pointsAreNear(navMap, fromId, toId),
     }
+    const missed = loaded.live
+      ? 'No run was found with a UEX check from the last 7 days.'
+      : 'No profitable cargo run was found from that start.'
     if (mode === 'trades') {
       const plan = planHaul({ ...shared, trades })
       if (!plan) {
-        setNotice('No profitable cargo run was found from that start.')
+        setNotice(missed)
         return
       }
       startRoute(plan)
@@ -177,7 +182,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
     if (result.needed == null || !result.plan) {
       setNotice(result.plan
         ? `The best run found makes ${money(result.plan.profit)} across ${result.plan.trades} trades, short of ${money(goalValue)}.`
-        : 'No profitable cargo run was found from that start.')
+        : missed)
       return
     }
     setPendingPlan(result.plan)
@@ -225,9 +230,9 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
 
   async function liveRouteInput(): Promise<HaulRouteInput | null> {
     setBusy(true)
-    const live = await loadLiveOffers()
+    const loaded = await loadLiveOffers()
     setBusy(false)
-    return buildRouteInput(live)
+    return buildRouteInput(loaded.offers)
   }
 
   function stayOnStop(plan: HaulPlan, note: string) {
@@ -587,17 +592,18 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
             {current.kind === 'buy' ? (
               <>
                 <p>Buy {current.scu} SCU of {current.commodity} in {crateText(current)}.</p>
+                <p>{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
                 <p>Cost {money(current.cashBefore - current.cashAfter)}.</p>
               </>
             ) : (
               <>
                 <p>Sell {current.scu} SCU of {current.commodity}.</p>
+                <p>{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
                 <p>Profit {money(current.cashAfter - current.cashBefore)}.</p>
                 <p>After this sale you should have {money(current.cashAfter)}.</p>
               </>
             )}
             {routeNote && <p className="site-hint">{routeNote}</p>}
-            {liveNote && <p className="site-hint">{liveNote}</p>}
           </div>
           {current.kind === 'buy' && outcome === 'unavailable' && (
             <div className="mt-4 space-y-2">
