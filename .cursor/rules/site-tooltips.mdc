@@ -1,0 +1,33 @@
+---
+description: Explain controls with SiteTooltip instead of a paragraph under the form
+alwaysApply: true
+---
+
+# Tooltips for how a control works
+
+Member-facing pages explain a control with `SiteTooltip` (`src/components/SiteTooltip.tsx`). Hover or focus on the control shows `site-tooltip-panel`.
+
+Do not leave a paragraph under a form that tells the member what the checkboxes, radios, or fields mean.
+
+## Use a tooltip
+
+- What a checkbox, radio, button, or field does
+- A limit or requirement (ships under 4 SCU, sign-in, RSI verified)
+- How a choice is made (closest shop, random among the best payers)
+
+```tsx
+<SiteTooltip side="top" content="Off, the run stays in the system you start in.">
+  <label className="flex items-center gap-2">
+    <input type="checkbox" className="site-checkbox" />
+    Cross system
+  </label>
+</SiteTooltip>
+```
+
+## Keep text on the page
+
+- A result of what they just did (no matches, the route changed, UEX could not be checked)
+- An empty list
+- The step they are on (where to go, what to buy, the aUEC figures)
+
+One or two sentences in the tooltip. The Information Archive still holds the full how-to.
