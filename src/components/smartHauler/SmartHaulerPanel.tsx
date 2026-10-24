@@ -585,22 +585,22 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
           zIndex={80}
         >
           <div className="space-y-3 text-sm text-white">
-            <p>Go to {current.place}.</p>
+            <p className="text-blue-400">Go to {current.place}.</p>
             {travelText(step === 0 ? startId : route.stops[step - 1]?.pointId || startId, current.pointId) && (
               <p>{travelText(step === 0 ? startId : route.stops[step - 1]?.pointId || startId, current.pointId)}</p>
             )}
             {current.kind === 'buy' ? (
               <>
                 <p>Buy {current.scu} SCU of {current.commodity} in {crateText(current)}.</p>
-                <p>{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
-                <p>Cost {money(current.cashBefore - current.cashAfter)}.</p>
+                <p className="text-green-400">{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
+                <p className="text-red-400">Cost {money(current.cashBefore - current.cashAfter)}.</p>
               </>
             ) : (
               <>
                 <p>Sell {current.scu} SCU of {current.commodity}.</p>
-                <p>{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
-                <p>Profit {money(current.cashAfter - current.cashBefore)}.</p>
-                <p>After this sale you should have {money(current.cashAfter)}.</p>
+                <p className="text-green-400">{uexLookupText(current.uexStatus, current.uexVerifiedAt)}</p>
+                <p className="text-amber-400">Profit {money(current.cashAfter - current.cashBefore)}.</p>
+                <p className="text-red-400">After this sale you should have {money(current.cashAfter)}.</p>
               </>
             )}
             {routeNote && <p className="site-hint">{routeNote}</p>}

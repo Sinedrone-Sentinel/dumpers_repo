@@ -207,12 +207,12 @@ export default function SellCargoPanel({ startId, sells }: { startId: string; se
 
             {row.status === 'found' && row.buyer && (
               <div className="space-y-1 text-sm text-white">
-                <p>Go to {row.buyer.offer.place}{from ? ` from ${from.name}` : ''}.</p>
+                <p className="text-blue-400">Go to {row.buyer.offer.place}{from ? ` from ${from.name}` : ''}.</p>
                 {travel && <p>{travel}</p>}
                 <p>
                   Sell {row.buyer.scu} SCU of {row.commodity} at {money(row.buyer.offer.price)} per SCU, about {money(row.buyer.scu * row.buyer.offer.price)}.
                 </p>
-                <p>{uexLookupText(row.buyer.offer.uexStatus, row.buyer.offer.uexVerifiedAt)}</p>
+                <p className="text-green-400">{uexLookupText(row.buyer.offer.uexStatus, row.buyer.offer.uexVerifiedAt)}</p>
                 {row.buyer.scu < (row.left ?? 0) && (
                   <p className="site-hint">UEX reports that terminal takes {row.buyer.scu} SCU right now. The rest goes to the next buyer.</p>
                 )}
