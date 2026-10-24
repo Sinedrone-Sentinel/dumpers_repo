@@ -20,7 +20,7 @@ import { useBlueprintCraftTracker } from '../hooks/useBlueprintCraftTracker'
 import { useTargetList } from '../hooks/useTargetList'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { useMyStockIndex } from '../hooks/useMyStockIndex'
-import { fetchBlueprintOwnerCounts } from '../lib/operations'
+import { fetchBlueprintOwnerCounts, fetchFriendsBlueprintOwners } from '../lib/operations'
 import {
   canAddBlueprintToOrder,
   canAddBlueprintToTargetList,
@@ -273,6 +273,7 @@ export default function BlueprintsRoute() {
   ])
 
   const [blueprintOwnerCounts, setBlueprintOwnerCounts] = React.useState<Record<string, number>>({})
+  const [friendBlueprintOwners, setFriendBlueprintOwners] = React.useState<Record<string, string[]>>({})
   const [expandedGroupKey, setExpandedGroupKey] = React.useState<string | null>(null)
   const [rewardMissionsModal, setRewardMissionsModal] = React.useState<{
     id: string
@@ -290,16 +291,24 @@ export default function BlueprintsRoute() {
   useAsyncEffect(async ({ cancelled }) => {
     if (!blueprints || blueprints.length === 0 || isGuest) {
       setBlueprintOwnerCounts({})
+      setFriendBlueprintOwners({})
       return
     }
 
     const blueprintIds = blueprints.map(bp => bp.internalName).filter(Boolean)
-    const { data, error } = await fetchBlueprintOwnerCounts(blueprintIds)
+    const [{ data, error }, friends] = await Promise.all([
+      fetchBlueprintOwnerCounts(blueprintIds),
+      fetchFriendsBlueprintOwners(blueprintIds),
+    ])
     if (error) {
       console.error('Failed to fetch blueprint owner counts:', error)
     }
+    if (friends.error) {
+      console.error('Failed to fetch friend blueprint owners:', friends.error)
+    }
     if (!cancelled) {
       setBlueprintOwnerCounts(data)
+      setFriendBlueprintOwners(friends.data)
     }
   }, [blueprints, isGuest])
 
@@ -705,6 +714,7 @@ export default function BlueprintsRoute() {
             void setOrderable(bp.internalName, next, catalogReward)
           }
           ownerCount={blueprintOwnerCounts[bp.internalName]}
+          friendHandles={friendBlueprintOwners[bp.internalName]}
           dfpDisplayEnabled={dfpDisplayEnabled}
           showCraftTrackerControl={hasRsTrackableMaterials(bp)}
           onAddToCraftTracker={() => void addMaterialsFromBlueprint(bp)}
@@ -725,6 +735,7 @@ export default function BlueprintsRoute() {
       isSuperAdmin,
       setOrderable,
       blueprintOwnerCounts,
+      friendBlueprintOwners,
       dfpDisplayEnabled,
       addMaterialsFromBlueprint,
       isPendingForBlueprint,
@@ -1230,6 +1241,7 @@ export default function BlueprintsRoute() {
           onToggleTarget={() => toggleTarget(selectedBlueprint.internalName)}
           canAddToOrder={!isGuest && isApproved && canAddBlueprintToOrder(selectedBlueprint, overridesMap)}
           ownerCount={blueprintOwnerCounts[selectedBlueprint.internalName]}
+          friendHandles={friendBlueprintOwners[selectedBlueprint.internalName]}
           onAddToCraftTracker={() => void addMaterialsFromBlueprint(selectedBlueprint)}
           craftTrackerPending={isPendingForBlueprint(selectedBlueprint.internalName)}
           showCraftTrackerControl={hasRsTrackableMaterials(selectedBlueprint)}

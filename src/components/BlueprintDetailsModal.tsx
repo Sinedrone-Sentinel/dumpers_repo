@@ -38,6 +38,7 @@ import BlueprintCategoryTags from './BlueprintCategoryTags'
 import BlueprintSlotQualityCard from './BlueprintSlotQualityCard'
 import BlueprintRewardMissionsModal from './BlueprintRewardMissionsModal'
 import BrandRevealModalShell from './layout/BrandRevealModalShell'
+import FriendBlueprintOwners from './FriendBlueprintOwners'
 import { getRewardMissionsForBlueprint } from '../lib/blueprintMissionRewards'
 import { stashBrowseMissionFromReward } from '../lib/missionTrackerUiState'
 import { isDefaultBlueprint } from '../lib/defaultBlueprints'
@@ -105,6 +106,7 @@ interface BlueprintDetailsModalProps {
   onToggleTarget?: () => void
   canAddToOrder?: boolean
   ownerCount?: number
+  friendHandles?: string[]
   onAddToCraftTracker?: () => void
   craftTrackerPending?: boolean
   showCraftTrackerControl?: boolean
@@ -134,6 +136,7 @@ export default function BlueprintDetailsModal({
   onToggleTarget,
   canAddToOrder = false,
   ownerCount,
+  friendHandles,
   onAddToCraftTracker,
   craftTrackerPending = false,
   showCraftTrackerControl = false,
@@ -368,8 +371,9 @@ export default function BlueprintDetailsModal({
           <div className="site-surface rounded-xl p-3 sm:p-4">
             <h3 className="text-slate-400 text-sm mb-2">Members Own</h3>
             {ownerCount !== undefined ? (
-              <p className={`text-base font-semibold ${ownerCount === 0 ? 'text-amber-400' : 'text-white'}`}>
-                {ownerCount === 0 ? 'None yet' : ownerCount.toLocaleString()}
+              <p className={`flex items-center gap-3 text-base font-semibold ${ownerCount === 0 ? 'text-amber-400' : 'text-white'}`}>
+                <span>{ownerCount === 0 ? 'None yet' : ownerCount.toLocaleString()}</span>
+                <FriendBlueprintOwners handles={friendHandles} blueprintName={blueprint.blueprintName} />
               </p>
             ) : (
               <p className="text-slate-500 text-base">—</p>

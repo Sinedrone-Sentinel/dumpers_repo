@@ -9,6 +9,7 @@ import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { useDfpEngineReady } from '../hooks/useDfpEngineReady'
 import { shopItemForBlueprint } from '../lib/uexCatalog'
 import { UexItemActions } from './shop/UexItemActions'
+import FriendBlueprintOwners from './FriendBlueprintOwners'
 import SiteTooltip from './SiteTooltip'
 
 const BLUEPRINT_PAPER_PANEL = 'blueprint-paper-panel p-2.5'
@@ -33,6 +34,7 @@ export default function BlueprintCard({
   isSuperAdmin = false,
   onToggleOrderable,
   ownerCount,
+  friendHandles,
   dfpDisplayEnabled = true,
 }) {
   const _dfpEngineReady = useDfpEngineReady()
@@ -175,12 +177,15 @@ export default function BlueprintCard({
                   </span>
                 </p>
                 {ownerCount !== undefined && (
-                  <SiteTooltip content={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
-                    <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`}>
-                      <span>👤</span>
-                      <span>{ownerCount}</span>
-                    </span>
-                  </SiteTooltip>
+                  <span className="flex items-center gap-2">
+                    <FriendBlueprintOwners handles={friendHandles} blueprintName={blueprint.blueprintName} />
+                    <SiteTooltip content={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
+                      <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`}>
+                        <span>👤</span>
+                        <span>{ownerCount}</span>
+                      </span>
+                    </SiteTooltip>
+                  </span>
                 )}
               </div>
               <div className="flex flex-wrap gap-1">
@@ -209,7 +214,8 @@ export default function BlueprintCard({
           ) : (
             <div className={BLUEPRINT_PAPER_PANEL}>
               {ownerCount !== undefined && (
-                <p className="flex items-center justify-end gap-1 text-xs">
+                <p className="flex items-center justify-end gap-2 text-xs">
+                  <FriendBlueprintOwners handles={friendHandles} blueprintName={blueprint.blueprintName} />
                   <SiteTooltip content={ownerCount === 0 ? 'No members own this blueprint yet' : `${ownerCount} member${ownerCount !== 1 ? 's' : ''} own this`}>
                     <span className={`flex items-center gap-1 ${ownerCount === 0 ? 'text-amber-200' : 'text-sky-200/75'}`}>
                       <span>👤</span>
