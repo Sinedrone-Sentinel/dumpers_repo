@@ -484,7 +484,7 @@ export default function SmartHaulerPanel({ rsiVerified }: { rsiVerified: boolean
               aria-label="Number of trades"
               min={1}
               max={HAUL_MAX_TRADES}
-              className="site-input w-[6ch] px-2 py-1 text-right tabular-nums"
+              className="site-input w-[4.75rem] py-1 pl-2 pr-6 text-right tabular-nums"
               value={trades}
               disabled={sellMode}
               onChange={(event) => {
