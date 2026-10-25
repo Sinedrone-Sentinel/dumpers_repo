@@ -367,6 +367,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'Hangar warnings arrive 30 minutes and 5 minutes before all five lights turn green',
       'You never receive marketplace pings for your own posts',
       'Set up from your avatar menu → Webhooks after sign-in',
+      'A Discord icon next to a feature opens Webhooks and flashes that group',
     ],
     relatesTo: ['My Listings', 'The Bazaar', 'Notifications', 'Friends'],
   },

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import SiteTooltip from '../components/SiteTooltip'
 import {
@@ -48,6 +48,7 @@ export default function DiscordSubscribeRoute() {
   const { user, profile, loading: authLoading } = useAuth()
   const navigate = useNavigate()
   const isRsiVerified = profile?.rsi_handle_verified ?? false
+  const { focus } = useSearch({ strict: false }) as { focus?: string }
 
   const visible = useMemo(
     () => DISCORD_COLLECTIONS.filter((collection) => isRsiVerified || !collection.requiresVerified),
@@ -75,13 +76,23 @@ export default function DiscordSubscribeRoute() {
       for (const collection of DISCORD_COLLECTIONS) {
         const form = next[collection.id]
         const filled = Boolean(form?.webhookUrl)
-        opened[collection.id] = collection.id === 'my-deals' || filled
+        opened[collection.id] = collection.id === focus || collection.id === 'my-deals' || filled
       }
       setOpen(opened)
       setLoading(false)
     }
     void load()
-  }, [user])
+  }, [user, focus])
+
+  useEffect(() => {
+    if (loading || !focus) return
+    const target = document.getElementById(`webhook-${focus}`)
+    if (!target) return
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    target.classList.remove('webhook-here')
+    void target.offsetWidth
+    target.classList.add('webhook-here')
+  }, [loading, focus, open])
 
   const patch = (id: string, partial: Partial<CollectionForm>) => {
     setForms((prev) => ({
@@ -168,7 +179,11 @@ export default function DiscordSubscribeRoute() {
               const form = forms[collection.id] ?? emptyForm(collection.events)
               const expanded = open[collection.id] ?? false
               return (
-                <section key={collection.id} className={`site-section border ${collection.accent}`}>
+                <section
+                  key={collection.id}
+                  id={`webhook-${collection.id}`}
+                  className={`site-section border ${collection.accent}`}
+                >
                   <button
                     type="button"
                     className="site-section-header w-full flex items-center justify-between text-left"
