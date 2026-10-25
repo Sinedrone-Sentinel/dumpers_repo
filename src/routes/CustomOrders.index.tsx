@@ -608,7 +608,10 @@ export default function CustomOrdersRoute() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         <div className="site-surface p-4">
-          <p className="text-slate-500 text-xs uppercase tracking-wide">Active transactions</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-slate-500 text-xs uppercase tracking-wide">Active transactions</p>
+            <WebhookCue collectionId="accepted" />
+          </div>
           <p className="text-2xl font-bold text-amber-300 mt-1">{openOrderCount}</p>
         </div>
         <div className="site-surface p-4">

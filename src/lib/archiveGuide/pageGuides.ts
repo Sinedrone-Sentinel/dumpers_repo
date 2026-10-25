@@ -315,6 +315,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
       'On a WTB SCU line, the amount you type is the least you will take. If that is not a whole box, the most you will take starts at the next whole SCU (0.8 starts at 1, 1.048 starts at 2). You can raise that maximum. You cannot set it lower. Gems and other whole-unit items stay a count, with no range',
       'Each purchase or sale claim becomes its own child transaction with the normal handoff, 72-hour deadlines, and ratings. Reputation progress counts each item on that deal (a quantity of two crafts counts as two toward the 5)',
       'Active transactions show itemized materials and resulting stats (base → final) for blueprint lines',
+      'The Discord icon on Active transactions opens Webhooks on Listing accepted',
       'Release or cancel in-progress sales — claimed items restore to your listing with quantities intact',
       'On an accepted deal, Message opens a private chat with the other party (both sides need a verified RSI Handle). Chat closes and messages are removed when the deal completes, cancels, or times out',
       'Track active, completed, and archived transactions; confirm pickup on Active, then archive & rate on Completed',
