@@ -1,4 +1,6 @@
 import gameShips from '../data/game-ships.json'
+import gameShipItems from '../data/game-ship-item-stats.json'
+import miningGearShops from '../data/mining-gear-shops.json'
 import shipShopShops from '../data/ship-shop-shops.json'
 import shopItemIndex from '../data/shop-item-index.json'
 import { getShipItem } from './shipItemCatalog'
@@ -183,6 +185,45 @@ function buildCatalog(): UexCatalogItem[] {
         : 'Components'
     const row = fromListings(`part:${entityClass}`, stats.displayName, group, listings)
     if (row) items.push(row)
+  }
+
+  const classByUuid = new Map<string, string>()
+  const classByName = new Map<string, string>()
+  for (const stat of (gameShipItems as unknown as { items: Array<{ uuid?: string; entityClass?: string; displayName?: string }> }).items || []) {
+    if (stat.uuid && stat.entityClass) classByUuid.set(stat.uuid.toLowerCase(), stat.entityClass)
+    if (stat.displayName && stat.entityClass && !classByName.has(nameKey(stat.displayName))) {
+      classByName.set(nameKey(stat.displayName), stat.entityClass)
+    }
+  }
+  const gearFile = miningGearShops as unknown as {
+    terminals: Array<{ id: number; name: string; system?: string | null; planet?: string | null; moon?: string | null; station?: string | null; city?: string | null; outpost?: string | null }>
+    items: Array<{ uuid: string; name: string; listings: Array<{ t: number; buy: number }> }>
+  }
+  const terminalById = new Map(gearFile.terminals.map((terminal) => [terminal.id, terminal]))
+  const seenIds = new Set(items.map((item) => item.id))
+  for (const gear of gearFile.items) {
+    const entityClass = classByUuid.get(String(gear.uuid).toLowerCase()) || classByName.get(nameKey(gear.name))
+    const id = entityClass ? `part:${entityClass}` : `gear:${gear.uuid}`
+    if (seenIds.has(id)) continue
+    const listings: ShopListing[] = []
+    for (const row of gear.listings) {
+      if (!(row.buy > 0)) continue
+      const terminal = terminalById.get(row.t)
+      listings.push({
+        store: terminal?.name || `Shop ${row.t}`,
+        price: row.buy,
+        system: terminal?.system || undefined,
+        planet: terminal?.planet || undefined,
+        moon: terminal?.moon || undefined,
+        station: terminal?.station || undefined,
+        city: terminal?.city || undefined,
+        outpost: terminal?.outpost || undefined,
+      })
+    }
+    const row = fromListings(id, gear.name, 'Components', listings, true)
+    if (!row) continue
+    items.push(row)
+    seenIds.add(id)
   }
 
   for (const row of (shopItemIndex as unknown as { items: ShopItemRow[] }).items || []) {

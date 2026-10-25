@@ -247,7 +247,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description:
       'Find every shop that sells a gun, ammo, ship component, armor piece, ship, commodity, food, or drink. Powered by UEX.',
     details: [
-      'Search or filter by Guns, Ammo, Components, Armor, Ships, Commodities, Food, or Drinks',
+      'Search or filter by Guns, Ammo, Components, Armor, Ships, Commodities, Food, or Drinks. Mining lasers and modules that are sold in a shop are under Components',
       '**Buy from** lists every shop that sells the item, with the UEX price. Commodities also have **Sell to** for terminals that buy them from you, plus SCU box sizes',
       'Locations are grouped by star system and show the shop and the place',
       'On each **Buy from** row, the cart mark adds that shop and its price',
