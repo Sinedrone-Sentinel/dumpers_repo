@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useFriends } from '../../contexts/FriendsContext'
 import AppModal from './AppModal'
 import SiteTooltip from '../SiteTooltip'
+import WebhookCue from '../WebhookCue'
 import {
   OPEN_FRIENDS_MENU_EVENT,
   createFriendGroup,
@@ -224,7 +225,10 @@ export default function AppFriendsMenu({ disabled = false }: Props) {
       {open && !disabled && (
         <div className="site-menu-panel absolute right-0 top-full mt-2 w-[calc(22rem-20px)] max-w-[calc(100vw-1.5rem)] max-h-[min(70vh,calc(32rem+50px))] flex flex-col overflow-hidden z-50 p-3 gap-2.5">
           <div className="flex items-center justify-between gap-2 shrink-0">
-            <h3 className="text-sm font-semibold text-white">Friends</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-white">Friends</h3>
+              <WebhookCue collectionId="friends" />
+            </div>
             <div className="flex items-center gap-1.5">
               {loading && <span className="text-[10px] text-slate-500">Refreshing…</span>}
               <SiteTooltip

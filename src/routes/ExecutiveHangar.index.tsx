@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import WebhookCue from '../components/WebhookCue'
 import {
   FALLBACK_CLOCK,
   hangarBrief,
@@ -56,7 +57,10 @@ export default function ExecutiveHangarRoute() {
   return (
     <main className="site-shell relative z-10 flex min-h-[calc(100dvh-var(--site-header-height,3.5rem))] items-center justify-center px-4 py-8">
       <div className="w-full max-w-xl">
-        <h1 className="site-page-title text-center">Executive Hangar</h1>
+        <div className="flex items-center justify-center gap-2">
+          <h1 className="site-page-title text-center">Executive Hangar</h1>
+          <WebhookCue collectionId="hangar" />
+        </div>
         <p data-seo="tool-intro" className="mx-auto mt-3 max-w-xl text-center text-sm leading-relaxed text-slate-300">
           See when the five hangar lights are green so the seven compboards can open it. The same clock on every server.
         </p>

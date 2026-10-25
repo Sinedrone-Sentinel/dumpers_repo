@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import AppModal from './layout/AppModal'
+import WebhookCue from './WebhookCue'
 import OfficerRatingModal from './OfficerRatingModal'
 import SupportTicketThread from './SupportTicketThread'
 import { useSupportListRealtime } from '../hooks/useSupportRealtime'
@@ -234,6 +235,7 @@ export default function SupportTicketsModal({ onClose }: { onClose: () => void }
     <AppModal
       title="Support"
       subtitle="Report issues or check ticket status"
+      titleExtra={<WebhookCue collectionId="support" />}
       onClose={onClose}
       size="lg"
       zIndex={70}

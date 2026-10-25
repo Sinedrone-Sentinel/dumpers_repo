@@ -11,6 +11,7 @@ import DealMessageButton from '../components/DealMessageButton'
 import MyListingCard from '../components/MyListingCard'
 import ResourceBuyOrderPanel from '../components/ResourceBuyOrderPanel'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import WebhookCue from '../components/WebhookCue'
 import AppModal from '../components/layout/AppModal'
 import { getResourceLabel } from '../lib/blueprintResources'
 import { formatDfpAuec } from '../lib/dfp'
@@ -418,6 +419,7 @@ export default function CustomOrdersRoute() {
       subtitle={SITE_SLOGAN}
       actions={
         <>
+          <WebhookCue collectionId="my-deals" />
           <Link
             to="/bazaar"
             search={{ highlight: undefined }}
@@ -799,6 +801,7 @@ export default function CustomOrdersRoute() {
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex gap-2 flex-wrap justify-end">
                       <DealMessageButton order={order} />
+                      <WebhookCue collectionId="deal-chat" />
                       {canSemanticBuyerConfirmPickup(order, userId) && (
                         <>
                           <button
@@ -816,6 +819,7 @@ export default function CustomOrdersRoute() {
                           >
                             Report problem
                           </button>
+                          <WebhookCue collectionId="dispute" />
                         </>
                       )}
                       {canRequesterModifyOrder(order) && (
