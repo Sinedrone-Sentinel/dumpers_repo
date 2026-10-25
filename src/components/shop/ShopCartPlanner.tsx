@@ -47,9 +47,14 @@ function classify(lines: ShopCartLine[], settings: RouteHeaderSettings): RouteGa
   const outside: MissingInSystems[] = []
   const routeLines: ShopRouteLine[] = []
   for (const line of lines) {
-    const offers = offersForShopLine(line)
+    let offers = offersForShopLine(line)
     const label = line.qty > 1 ? `${line.name} × ${line.qty}` : line.name
     const id = shopCartLineKey(line)
+    if (line.shop && offers.every((offer) => !selected.has(offer.systemId))) {
+      const elsewhere = offersForShopLine({ ...line, shop: null, system: null, price: null })
+        .filter((offer) => selected.has(offer.systemId))
+      if (elsewhere.length > 0) offers = elsewhere
+    }
     if (offers.length === 0) {
       nowhere.push({ id, label })
       continue

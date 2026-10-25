@@ -178,6 +178,41 @@ export function sharedBoxSizes(buyBoxes: number[], sellBoxes: number[]): number[
   return buyBoxes.filter((size) => sell.has(Math.round(size)))
 }
 
+/** Share of the hold the cash can buy. A thinner live stock report is not a stop. */
+const HOLD_FILL = 0.4
+
+function affordableScu(price: number, cargoScu: number, cash: number): number {
+  if (price <= 0 || cash <= 0 || cargoScu <= 0) return 0
+  return Math.min(cargoScu, Math.floor(cash / price))
+}
+
+function buyCanFillHold(buy: HaulOffer, cargoScu: number, cash: number): boolean {
+  const affordable = affordableScu(buy.price, cargoScu, cash)
+  if (affordable <= 0) return false
+  if (buy.stockScu == null) return true
+  return buy.stockScu >= affordable * HOLD_FILL
+}
+
+function sellCanTakeLoad(
+  buy: HaulOffer,
+  sell: HaulOffer,
+  cargoScu: number,
+  maxCrateScu: number,
+  cash: number,
+): boolean {
+  const room = Math.min(cargoScu, buy.stockScu ?? Number.POSITIVE_INFINITY)
+  const desired = packHaulLoad(room, maxCrateScu, sharedBoxSizes(buy.boxSizes, sell.boxSizes), buy.price, cash)
+  if (!desired) return false
+  if (sell.stockScu == null) return true
+  return sell.stockScu >= desired.scu
+}
+
+function boughtWhereItSold(state: HaulState): boolean {
+  const buy = state.stops[state.stops.length - 2]
+  const prior = state.stops[state.stops.length - 3]
+  return !!buy && buy.kind === 'buy' && !!prior && prior.kind === 'sell' && buy.pointId === prior.pointId
+}
+
 /** One trade's load: hold space, live stock on both ends, crates both ends take, and the cash on hand. */
 export function tradeLoad(
   buy: HaulOffer,
@@ -350,7 +385,7 @@ export function planHaul(input: {
   km?: (fromId: string, toId: string) => number
   /** Commodity and place pairs already refused on this run. */
   avoid?: HaulAvoid[]
-  /** Picks among the four best-paying commodities. Omit it and the best one is used. */
+  /** Picks among the five best-paying commodities. Omit it and the best one is used. */
   random?: () => number
 }): HaulPlan | null {
   const trades = Math.max(0, Math.floor(input.trades))
@@ -377,10 +412,12 @@ export function planHaul(input: {
       for (const [commodity, buyOffers] of buys) {
         const sellOffers = sells.get(commodity)
         if (!sellOffers) continue
-        for (const buy of buyChoices(buyOffers, state.pointId, buyAllow, input.maxCrateScu, input.km)) {
+          for (const buy of buyChoices(buyOffers, state.pointId, buyAllow, input.maxCrateScu, input.km)) {
           if (refused('buy', buy.pointId, commodity)) continue
+          if (!buyCanFillHold(buy, input.cargoScu, state.cash)) continue
           for (const sell of sellChoices(sellOffers, buy.price, sellAllow, state.pointId, input.km)) {
             if (refused('sell', sell.pointId, commodity)) continue
+            if (!sellCanTakeLoad(buy, sell, input.cargoScu, input.maxCrateScu, state.cash)) continue
             const load = tradeLoad(buy, sell, input.cargoScu, input.maxCrateScu, state.cash)
             if (!load) continue
             const next = applyTrade(state, buy, sell, load)
@@ -401,11 +438,13 @@ export function planHaul(input: {
         byCommodity.set(buy.commodity, { state: row.state, gain, km })
       }
     }
-    const paying = [...byCommodity.values()].sort((a, b) => b.gain - a.gain || a.km - b.km).slice(0, 4)
+    const paying = [...byCommodity.values()].sort((a, b) => b.gain - a.gain || a.km - b.km).slice(0, 5)
     if (paying.length === 0) return null
+    const chained = step > 0 ? paying.filter((row) => boughtWhereItSold(row.state)) : []
+    const pool = chained.length > 0 ? chained : paying
     const roll = input.random ? input.random() : 0
-    const index = Math.min(paying.length - 1, Math.floor(Math.max(0, Math.min(roll, 0.999999)) * paying.length))
-    beam = [paying[index].state]
+    const index = Math.min(pool.length - 1, Math.floor(Math.max(0, Math.min(roll, 0.999999)) * pool.length))
+    beam = [pool[index].state]
   }
   const best = beam[0]
   if (!best || best.stops.length === 0) return null

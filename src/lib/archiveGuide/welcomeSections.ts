@@ -26,7 +26,7 @@ export const OFFLINE_MODE_SECTION = {
     '**Resource Tracker** — log your stock and see which blueprints you can craft with it (saved in this browser)',
     '**Mining Tracker** — RS signature reference, the Rock Calculator, and the Mining Guide to find where every ore spawns',
     '**Wikelo** — every barter trade, what to hand in, and what you get back',
-    '**UEX Lookup** — where to buy guns, ammo, armor, ships, commodities, food, and drinks, and where to sell commodities',
+    '**UEX Lookup** — where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks, and where to sell commodities',
     '**Shopping Cart** — a browser list of shop buys, separate from Fuzy\'s Ship Shop. Calculate a route with Fewest Stops, Cheapest, or Efficient',
     '**Fuzy\'s Ship Shop** — build a ship loadout, compare Pilot DPS and Burst DPS, and see where to buy the parts. Builds save in this browser until you sign in',
     '**Executive Hangar** — when the five hangar lights are green so the seven compboards can open it',

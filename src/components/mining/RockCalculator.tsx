@@ -97,11 +97,11 @@ interface RockCalculatorProps {
 }
 
 /** Fixed widths for value columns — material name stacks above % in the first column. */
-const MATERIAL_PERCENT_W = 'w-[5rem]'
+const MATERIAL_PERCENT_W = 'w-[7.5rem]'
 const MATERIAL_QUALITY_W = 'w-[3.5rem] min-w-[3.5rem]'
 const MATERIAL_SCU_W = 'w-[3.25rem]'
 const MATERIAL_DFP_W = 'w-[4.75rem]'
-const MATERIAL_VALUES_ROW = 'flex items-end justify-end gap-1.5 shrink-0'
+const MATERIAL_VALUES_ROW = 'flex items-end justify-between gap-1.5 w-full min-w-0'
 
 export default function RockCalculator({
   loadEntry,
@@ -888,13 +888,13 @@ export default function RockCalculator({
                           isInert={row.isInert}
                         />
                       </div>
-                      <SiteTooltip content="cSCU in rock"><span
-                        className={`${MATERIAL_SCU_W} text-right text-[10px] font-mono tabular-nums text-amber-300 shrink-0 pb-1`}
+                      <SiteTooltip content="cSCU in rock" className={`${MATERIAL_SCU_W} shrink-0`}><span
+                        className="block w-full text-right text-[10px] font-mono tabular-nums text-amber-300 pb-1"
                       >
                         {totalScu != null ? formatMaterialScu(row.scu ?? 0) : '—'}
                       </span></SiteTooltip>
-                      <SiteTooltip content="Purchased Q0 DFP"><span
-                        className={`${MATERIAL_DFP_W} text-right text-[10px] font-mono tabular-nums text-emerald-300 shrink-0 pb-1`}
+                      <SiteTooltip content="Purchased Q0 DFP" className={`${MATERIAL_DFP_W} shrink-0`}><span
+                        className="block w-full text-right text-[10px] font-mono tabular-nums text-emerald-300 pb-1"
                       >
                         {totalScu != null ? formatRockDfpValue(row.dfp ?? 0) : '—'}
                       </span></SiteTooltip>
@@ -1022,7 +1022,7 @@ function MaterialQualitySelect({
 }: MaterialQualitySelectProps) {
   if (isInert) {
     return (
-      <SiteTooltip content="Purchased (Q0)"><select
+      <SiteTooltip content="Purchased (Q0)" className="block w-full"><select
         value={String(PURCHASED_STOCK_QUALITY)}
         disabled
         className={`${MATERIAL_QUALITY_SELECT_CLASS} opacity-60 cursor-not-allowed`}
@@ -1047,7 +1047,7 @@ function MaterialQualitySelect({
 
   if (qualityOptions.length > 0 && getResourceBands(canonicalElement)) {
     return (
-      <SiteTooltip content={title}><select
+      <SiteTooltip content={title} className="block w-full"><select
         value={resolvedValue}
         onChange={(e) => onChange(e.target.value)}
         className={MATERIAL_QUALITY_SELECT_CLASS}
@@ -1063,7 +1063,7 @@ function MaterialQualitySelect({
   }
 
   return (
-    <SiteTooltip content="No game Q bands for this resource — enter Q0–Q1000"><input
+    <SiteTooltip content="No game Q bands for this resource — enter Q0–Q1000" className="block w-full"><input
       type="number"
       min={0}
       max={1000}

@@ -77,16 +77,6 @@ function preferPads(offers: ShopRouteOffer[], nav: NavMap): ShopRouteOffer[] {
   return pads.length > 0 ? pads : offers
 }
 
-function cheapestOffer(offers: ShopRouteOffer[], nav: NavMap, startId: string | null): ShopRouteOffer {
-  return offers.slice().sort((a, b) => {
-    if (a.price !== b.price) return a.price - b.price
-    const left = startId ? pathBetween(nav, startId, a.pointId).km : 0
-    const right = startId ? pathBetween(nav, startId, b.pointId).km : 0
-    if (left !== right) return left - right
-    return a.pointId.localeCompare(b.pointId)
-  })[0]
-}
-
 function nearestOffer(offers: ShopRouteOffer[], nav: NavMap, startId: string): ShopRouteOffer {
   return offers.slice().sort((a, b) => {
     const left = pathBetween(nav, startId, a.pointId).km
@@ -238,8 +228,12 @@ export function planShopRoute(request: ShopRouteRequest): ShopRouteResult {
     }
   }
 
+  const cheapestLines = rest.map((line) => {
+    const min = Math.min(...line.offers.map((offer) => offer.price))
+    return { ...line, offers: line.offers.filter((offer) => offer.price === min) }
+  })
   const picked = request.mode === 'cheapest'
-    ? [...new Set(rest.map((line) => cheapestOffer(line.offers, request.nav, startId).pointId))]
+    ? (cheapestLines.length > 0 ? fewestCover(cheapestLines, request.nav, startSystem, false) : [])
     : (rest.length > 0 ? fewestCover(rest, request.nav, startSystem, request.mode === 'fewest' && Boolean(startSystem)) : [])
   const chosen = locked && !picked.includes(locked) ? [locked, ...picked] : picked
   const ordered = orderStops(chosen, request.nav, startId, locked)

@@ -62,8 +62,8 @@ export default function CommodityLookupRoute() {
   return (
     <FeaturePageLayout
       title="UEX Lookup"
-      subtitle="Where to buy guns, ammo, armor, ships, commodities, food, and drinks"
-      seoIntro="Star Citizen UEX Lookup — shop locations and prices for guns, ammo, armor, ships, commodities, food, and drinks."
+      subtitle="Where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks"
+      seoIntro="Star Citizen UEX Lookup — shop locations and prices for guns, ammo, ship components, armor, ships, commodities, food, and drinks."
       badge="UEX"
       meta={
         <>
@@ -138,7 +138,7 @@ export default function CommodityLookupRoute() {
             <div className="site-empty h-full min-h-[16rem] flex flex-col items-center justify-center text-center p-8">
               <p className="text-slate-300 font-medium">Select an item</p>
               <p className="text-slate-500 text-sm mt-1 max-w-sm">
-                Pick a gun, ammo, armor piece, ship, commodity, food, or drink to see every shop that sells it.
+                Pick a gun, ammo, ship component, armor piece, ship, commodity, food, or drink to see every shop that sells it.
               </p>
             </div>
           )}

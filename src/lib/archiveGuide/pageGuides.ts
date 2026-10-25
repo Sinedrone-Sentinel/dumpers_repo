@@ -245,9 +245,9 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     id: 'commodity-lookup',
     title: 'UEX Lookup',
     description:
-      'Find every shop that sells a gun, ammo, armor piece, ship, commodity, food, or drink. Powered by UEX.',
+      'Find every shop that sells a gun, ammo, ship component, armor piece, ship, commodity, food, or drink. Powered by UEX.',
     details: [
-      'Search or filter by Guns, Ammo, Armor, Ships, Commodities, Food, or Drinks',
+      'Search or filter by Guns, Ammo, Components, Armor, Ships, Commodities, Food, or Drinks',
       '**Buy from** lists every shop that sells the item, with the UEX price. Commodities also have **Sell to** for terminals that buy them from you, plus SCU box sizes',
       'Locations are grouped by star system and show the shop and the place',
       'On each **Buy from** row, the cart mark adds that shop and its price',
@@ -262,7 +262,7 @@ export const PAGE_GUIDES: ArchivePageGuide[] = [
     description: 'Keep a list of shop items you want to buy. Separate from Fuzy\'s Ship Shop.',
     details: [
       'Add items from UEX Lookup or from a blueprint card that is sold in a shop',
-      'Adding from a Buy row keeps that shop and its price. Adding from a blueprint card does not pick a shop yet',
+      'Adding from a Buy row keeps that shop and its price. If you leave that shop\'s system out of the route and the item is sold in a system you kept, Calculate uses those shops instead',
       'Change the quantity or remove a line. Clear empties the cart. The total includes lines that already have a price',
       'Calculate places a blueprint line at a shop using your start, the systems you include, and Fewest Stops, Cheapest, or Efficient. A Buy-row line stays at the shop you picked. A system change is its own jump stop. If an item is only sold in a system you left out, Calculate asks whether to include that system or drop the item',
       'The cart stays in this browser. It is not the cart on Fuzy\'s Ship Shop',

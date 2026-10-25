@@ -1979,6 +1979,11 @@ def watch_log_file(
                 time.sleep(0.5)
                 continue
 
+            if st.st_size > last_size:
+                try:
+                    fh.seek(0, os.SEEK_CUR)
+                except OSError:
+                    pass
             try:
                 chunk = fh.read()
             except OSError:
@@ -2075,8 +2080,11 @@ def watch_log_file(
                                             "missionGuid": guid,
                                             "completion": completion,
                                         })
+                                        ping_ctrl.resume("mission ended")
                                     except Exception as e:
                                         print(f"  [Live] {Colors.RED}✗ Mission end sync failed:{Colors.RESET} {e}")
+                                elif ping_ctrl.is_paused() and is_live_mission_sync_ready(session_tracker):
+                                    ping_ctrl.resume("mission ended")
                                 note_mission_activity()
 
                             elif blueprint_hit:

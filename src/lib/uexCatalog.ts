@@ -12,7 +12,7 @@ import {
   type TradeLocation,
 } from './shopLookup'
 
-export const UEX_GROUPS = ['Guns', 'Ammo', 'Armor', 'Ships', 'Commodities', 'Food', 'Drinks'] as const
+export const UEX_GROUPS = ['Guns', 'Ammo', 'Components', 'Armor', 'Ships', 'Commodities', 'Food', 'Drinks'] as const
 export type UexGroup = (typeof UEX_GROUPS)[number]
 
 export interface UexCatalogItem {
@@ -176,8 +176,11 @@ function buildCatalog(): UexCatalogItem[] {
   for (const [entityClass, listings] of Object.entries(ships.items || {})) {
     const stats = getShipItem(entityClass)
     if (!stats?.displayName) continue
-    const group: UexGroup | null = stats.kind === 'weapon' ? 'Guns' : stats.ordnance ? 'Ammo' : null
-    if (!group) continue
+    const group: UexGroup = stats.kind === 'weapon'
+      ? 'Guns'
+      : stats.ordnance || stats.kind === 'missile'
+        ? 'Ammo'
+        : 'Components'
     const row = fromListings(`part:${entityClass}`, stats.displayName, group, listings)
     if (row) items.push(row)
   }

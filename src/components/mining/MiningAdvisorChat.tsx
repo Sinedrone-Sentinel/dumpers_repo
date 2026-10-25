@@ -194,7 +194,7 @@ export default function MiningAdvisorChat({
     if (ui.dock === 'right') {
       return { ...base, top: 72, right: 12, bottom: 12, width: 'min(22rem, 46%)' }
     }
-    return { ...base, right: 12, bottom: 12, width: 'min(22rem, 92%)', height: 'min(65rem, 85%)' }
+    return { ...base, right: 12, bottom: 12, width: 'min(22rem, 92%)', height: 'min(42rem, 70vh)' }
   }, [ui.dock, ui.offsetX, ui.offsetY])
 
   const sendQuestion = async () => {
@@ -393,6 +393,7 @@ export default function MiningAdvisorChat({
                   autoComplete="off"
                   value={apiKey}
                   onChange={(event) => setApiKey(event.target.value)}
+                  onInput={(event) => setApiKey(event.currentTarget.value)}
                   className="site-input w-full px-2 py-1.5 text-xs"
                   placeholder="Paste your AI Studio key"
                 />
@@ -407,6 +408,7 @@ export default function MiningAdvisorChat({
                   autoComplete="off"
                   value={lockPhrase}
                   onChange={(event) => setLockPhrase(event.target.value)}
+                  onInput={(event) => setLockPhrase(event.currentTarget.value)}
                   className="site-input w-full px-2 py-1.5 text-xs"
                   placeholder="At least 10 characters — not your Gemini key"
                 />
@@ -415,7 +417,7 @@ export default function MiningAdvisorChat({
                 <button
                   type="button"
                   className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
-                  disabled={!hasPastedKey || lockPhrase.trim().length < 10 || keyBusy}
+                  disabled={apiKey.trim().length < 20 || lockPhrase.trim().length < 10 || keyBusy}
                   onClick={() => {
                     const pasted = apiKey.trim()
                     setKeyBusy(true)
@@ -444,16 +446,11 @@ export default function MiningAdvisorChat({
                   Get a free key
                 </a>
               </div>
-              <p className="site-hint">
-                Paste each visit, or save a copy encrypted with your lock phrase. Only you can unlock
-                it. Free-tier chats may be used by Google to improve their products. Limited to 20
-                questions per hour on this site.
-              </p>
             </>
           )}
         </div>
 
-        <div ref={listRef} className="flex-1 min-h-0 overflow-y-auto px-2.5 py-2 space-y-2">
+        <div ref={listRef} className="flex-1 min-h-[16rem] overflow-y-auto px-2.5 py-2 space-y-2">
           {messages.length === 0 ? (
             <p className="text-[11px] text-slate-500 leading-snug">
               Ask how to kit this ship for the resource in the calculator. Advice only — it does not
