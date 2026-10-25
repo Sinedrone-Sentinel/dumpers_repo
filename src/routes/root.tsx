@@ -188,6 +188,9 @@ const discordSubscribeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/discord-subscribe',
   component: DiscordSubscribeRoute,
+  validateSearch: (search: Record<string, unknown>) => ({
+    focus: typeof search.focus === 'string' ? search.focus : undefined,
+  }),
 })
 
 const partnershipRoute = createRoute({

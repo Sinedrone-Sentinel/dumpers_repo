@@ -67,6 +67,7 @@ import { defaultShipShopLoadouts, fetchFrakenCanSave, fetchShipShopFrakenFit, fe
 import { isForSale, listingsFor, partListings, shipListings, showPartWhereToBuy, type ShopListing } from '../../lib/shipShopShops'
 import { ShopBuyButtons, ShopCartModal, ShopModalFrame, ShopQtyModal, ShopWhereModal } from './ShipShopCart'
 import SiteTooltip from '../SiteTooltip'
+import WebhookCue from '../WebhookCue'
 import ShipHangarModal from '../shipHangar/ShipHangarModal'
 import {
   HANGAR_SIGN_IN,
@@ -1003,6 +1004,7 @@ export default function ShipShopPage() {
                 </span>
               )
             })}
+            <span className="inline-flex items-center gap-1">
             <button
               type="button"
               className={`${CHIP} ${frakenAvailable ? 'site-chip-gold' : 'site-filter-idle'}`}
@@ -1012,6 +1014,8 @@ export default function ShipShopPage() {
             >
               Fuzy's Franken-Fit
             </button>
+            <WebhookCue collectionId="franken" />
+            </span>
           </div>
           {ship && (
             <div className="site-chip-strip w-fit max-w-full">

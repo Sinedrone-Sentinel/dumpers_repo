@@ -32,6 +32,7 @@ const zIndexClasses: Record<AppModalZIndex, string> = {
 
 interface AppModalProps {
   title: string
+  titleExtra?: React.ReactNode
   subtitle?: React.ReactNode
   onClose: () => void
   size?: AppModalSize
@@ -48,6 +49,7 @@ interface AppModalProps {
 
 export default function AppModal({
   title,
+  titleExtra,
   subtitle,
   onClose,
   size = 'md',
@@ -89,9 +91,12 @@ export default function AppModal({
       >
         <div className="flex items-start justify-between gap-3 p-3 sm:p-4 shrink-0 bg-gradient-to-r from-orange-950/45 via-orange-950/20 to-transparent border-b border-orange-500/20">
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="text-lg font-bold text-amber-50 leading-snug tracking-wide">
-              {title}
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 id={titleId} className="text-lg font-bold text-amber-50 leading-snug tracking-wide">
+                {title}
+              </h2>
+              {titleExtra}
+            </div>
             {subtitle ? (
               typeof subtitle === 'string' ? (
                 <p className="text-xs text-amber-200/45 mt-0.5">{subtitle}</p>
