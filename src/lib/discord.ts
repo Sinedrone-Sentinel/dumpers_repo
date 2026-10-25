@@ -243,6 +243,29 @@ export async function clearDiscordQueue(
   }
 }
 
+export async function saveStaffWebhook(
+  groupEvents: string[],
+  events: string[],
+  webhookName: string,
+  webhookUrl: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data, error } = await supabase.rpc('admin_save_staff_webhook', {
+      p_group_events: groupEvents,
+      p_events: events,
+      p_webhook_name: webhookName,
+      p_webhook_url: webhookUrl,
+    })
+    if (error) return { success: false, error: error.message }
+    if (data && typeof data === 'object' && data.success === false) {
+      return { success: false, error: data.error || 'Failed to save webhook' }
+    }
+    return { success: true }
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+}
+
 export async function getDiscordWebhooks(): Promise<{
   success: boolean
   webhooks?: DiscordWebhook[]

@@ -246,6 +246,7 @@ In **SQL Editor**, run these files **in order** from `supabase/migrations/`:
 | 176 | `211_franken_fit_spelling.sql` | Renames the member-facing label to Fuzy's Franken-Fit in the table comments and in any Updates ticker row that still says Fraken-Fit. Apply after **210** |
 | 177 | `212_ship_hangar.sql` | Ship Hangar for a signed-in account. `get_ship_hangar` and `save_ship_hangar` are the only client paths. A member can store 10 ships, or 20 when `rsi_handle_verified` is set. Replacing or removing a ship still works if verification is later removed and the hangar is already over 10. Apply after **211** |
 | 178 | `213_friends_blueprint_owners.sql` | `get_friends_blueprint_owners` returns RSI handles of accepted friends who own the listed blueprints. Pending and banned friends are left out. Apply after **212** |
+| 179 | `214_discord_webhook_groups.sql` | Webhook groups, RSI gate on marketplace alerts, 2-minute listing bursts, 5-minute edit digests, Executive Hangar and Franken-Fit member alerts, and separate org webhook groups. Officer demotion does not use the officer channel. Apply after **213** |
 
 ### pg_cron (migrations 054, 065-068, 144, 147, 178, 179, 191, 196)
 
