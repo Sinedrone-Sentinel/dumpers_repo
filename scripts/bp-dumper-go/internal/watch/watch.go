@@ -339,6 +339,10 @@ func Run(opts Options) {
 			continue
 		}
 
+		if st.Size() > lastSize {
+			_, _ = fh.Seek(0, io.SeekCurrent)
+		}
+
 		chunk := make([]byte, 64*1024)
 		n, err := fh.Read(chunk)
 		if n > 0 {
@@ -399,6 +403,8 @@ func Run(opts Options) {
 						})
 						pingCtrl.Resume("mission activity")
 						noteMissionActivity()
+					} else if pingCtrl.IsPaused() && parse.IsLiveMissionSyncReady(session) {
+						pingCtrl.Resume("mission activity")
 					}
 				} else if missionEnd != nil {
 					// ApplyMissionLogLine already recorded end; fetch names from maps
@@ -423,6 +429,9 @@ func Run(opts Options) {
 							"missionGuid": guid,
 							"completion":  completion,
 						})
+						pingCtrl.Resume("mission ended")
+					} else if pingCtrl.IsPaused() && parse.IsLiveMissionSyncReady(session) {
+						pingCtrl.Resume("mission ended")
 					}
 					noteMissionActivity()
 				} else if blueprintHit != nil {
