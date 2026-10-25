@@ -831,7 +831,7 @@ export default function MiningTrackerRoute() {
           </section>
           </div>
 
-          <div className="w-full xl:w-[320px] xl:sticky xl:top-[var(--site-header-height,3.5rem)] self-start shrink-0 flex flex-col gap-2 min-w-0">
+          <div className="w-full xl:w-[320px] self-start shrink-0 flex flex-col gap-2 min-w-0">
             {canUseLoadouts ? (
               <SiteTooltip content={SELECTED_LOADOUT_TOOLTIP} side="bottom" className="block w-full">
                 <p className="text-xs text-center text-slate-400 w-full px-1">
