@@ -3,6 +3,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { ORE_COLORS } from './oreColors.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -38,6 +39,129 @@ const COLORS: Record<string, number> = {
   partnership_application: 0x8b5cf6,
   contributor_application: 0x3498db,
   blueprints: 0x5865f2,
+}
+
+const LOGO_URL = 'https://dumpers-repo.com/ORG_LOGO.png'
+
+const CATEGORY_COLOR: Record<string, number> = {
+  admin: 0x22c55e,
+  orders: 0x3b82f6,
+  deal: 0x22c55e,
+  negative: 0xef4444,
+  support: 0x8b5cf6,
+  gold: 0xf59e0b,
+}
+
+function categoryOf(eventType: string, title: string): { color: number; footer: string } {
+  if (eventType === 'hangar_30' || eventType === 'hangar_5') return { color: CATEGORY_COLOR.gold, footer: 'Executive Hangar' }
+  if (eventType === 'franken_new' || eventType === 'franken_updated') return { color: CATEGORY_COLOR.gold, footer: 'Ship Shop' }
+  if (eventType.startsWith('my_support') || eventType === 'support') return { color: CATEGORY_COLOR.support, footer: 'Support' }
+  if (
+    ['my_order_cancelled', 'my_order_released', 'my_order_timeout', 'my_order_noshow', 'my_order_dispute', 'market_cancelled', 'market_wtb_cancelled', 'market_wts_cancelled'].includes(eventType)
+  ) return { color: CATEGORY_COLOR.negative, footer: eventType.startsWith('my_') ? 'Your deals' : 'Orders' }
+  if (eventType.startsWith('my_order') || eventType.startsWith('my_friend')) return { color: CATEGORY_COLOR.deal, footer: eventType.startsWith('my_friend') ? 'Friends' : 'Your deals' }
+  if (eventType.startsWith('market_') || eventType.startsWith('order_')) return { color: CATEGORY_COLOR.orders, footer: 'Orders' }
+  if (title.includes('Officer Demoted') || title.includes('Abuse')) return { color: CATEGORY_COLOR.negative, footer: 'Admin' }
+  return { color: CATEGORY_COLOR.admin, footer: 'Admin' }
+}
+
+function paintLine(line: string): string {
+  let body = line
+  for (const [name, code] of ORE_COLORS) {
+    if (!body.includes(name)) continue
+    body = body.split(name).join(`\u001b[${code}m${name}\u001b[0m`)
+  }
+  if (/Added|\+/i.test(line) && /Added/i.test(line)) {
+    return body.replace(/Added/i, '\u001b[32mAdded\u001b[0m')
+  }
+  if (/Removed/i.test(line)) {
+    return body.replace(/Removed/i, '\u001b[31mRemoved\u001b[0m')
+  }
+  if (/aUEC|DFP/i.test(line)) return `\u001b[33m${body}\u001b[0m`
+  return body
+}
+
+function styleFieldValue(value: string): string {
+  const lines = value.split('\n')
+  const painted = lines.map(paintLine)
+  if (painted.join('\n') === value) return value
+  return '```ansi\n' + painted.join('\n') + '\n```'
+}
+
+function styleEmbed(embed: DiscordEmbed, eventType: string, title: string): DiscordEmbed {
+  const category = categoryOf(eventType, title)
+  return {
+    ...embed,
+    color: category.color,
+    thumbnail: { url: LOGO_URL },
+    footer: { text: `Dumper's Repo · ${category.footer}` },
+    fields: embed.fields?.map((field) => ({
+      ...field,
+      value: styleFieldValue(field.value),
+    })),
+  }
+}
+
+function staffRoute(eventType: string, title: string): string | null {
+  if (eventType === 'partnership_application' || eventType === 'contributor_application' || eventType === 'support') {
+    return eventType
+  }
+  if (eventType !== 'admin') return null
+  if (title.includes('Officer Demoted')) return 'admin_officer_demoted'
+  if (title.includes('RSI Handle Verified')) return 'admin_rsi_verified'
+  if (title.includes('Member Left')) return 'admin_member_left'
+  if (title.includes('Abuse')) return 'admin_edge_abuse'
+  if (title.includes('New User Joined')) return 'admin_member_joined'
+  return 'admin'
+}
+
+function isBroadcastEvent(eventType: string): boolean {
+  return eventType === 'hangar_30' || eventType === 'hangar_5' || eventType === 'franken_new' || eventType === 'franken_updated'
+}
+
+function msUntilAllGreen(nowMs: number, openAt: number, openMs: number, closeMs: number): { remaining: number; cycleKey: string } {
+  const cycleMs = openMs + closeMs
+  const elapsed = nowMs - openAt
+  const timeInCycle = ((elapsed % cycleMs) + cycleMs) % cycleMs
+  const remaining = timeInCycle === 0 ? 0 : cycleMs - timeInCycle
+  const cycleStart = nowMs - timeInCycle
+  const nextOpen = timeInCycle === 0 ? cycleStart : cycleStart + cycleMs
+  return { remaining, cycleKey: String(nextOpen) }
+}
+
+async function queueHangarWarnings(supabase: ReturnType<typeof createClient>) {
+  try {
+    const response = await fetch('https://raw.githubusercontent.com/ArkanisCorporation/Exec-Hangar/main/config.json')
+    if (!response.ok) return
+    const body = await response.json() as { serverStartTimes?: { initialOpenTime?: string; openDurationMs?: number; closeDurationMs?: number } }
+    const source = body.serverStartTimes ?? body as { initialOpenTime?: string; openDurationMs?: number; closeDurationMs?: number }
+    const openAt = Date.parse(source.initialOpenTime ?? '')
+    const openMs = source.openDurationMs
+    const closeMs = source.closeDurationMs
+    if (!Number.isFinite(openAt) || typeof openMs !== 'number' || typeof closeMs !== 'number') return
+    const { remaining, cycleKey } = msUntilAllGreen(Date.now(), openAt, openMs, closeMs)
+    const minute = 60_000
+    if (remaining > 5 * minute && remaining <= 30 * minute) {
+      await supabase.rpc('discord_enqueue_deduped', {
+        p_event_type: 'hangar_30',
+        p_title: 'Executive Hangar in 30 minutes',
+        p_description: 'All five lights turn green in 30 minutes.',
+        p_color: 16096779,
+        p_dedupe_key: `hangar:${cycleKey}:30`,
+      })
+    }
+    if (remaining > 0 && remaining <= 5 * minute) {
+      await supabase.rpc('discord_enqueue_deduped', {
+        p_event_type: 'hangar_5',
+        p_title: 'Executive Hangar in 5 minutes',
+        p_description: 'All five lights turn green in 5 minutes.',
+        p_color: 16096779,
+        p_dedupe_key: `hangar:${cycleKey}:5`,
+      })
+    }
+  } catch (err) {
+    console.warn('Hangar warning queue skipped', err)
+  }
 }
 
 const DISCORD_EMBED_CHAR_LIMIT = 5800
@@ -168,6 +292,7 @@ interface DiscordEmbed {
   color: number
   fields?: Array<{ name: string; value: string; inline?: boolean }>
   footer?: { text: string }
+  thumbnail?: { url: string }
   timestamp?: string
 }
 
@@ -412,6 +537,10 @@ serve(async (req) => {
 
     const settings = settingsData[0] as DiscordSettings
 
+    if (settings.enabled) {
+      await queueHangarWarnings(supabase)
+    }
+
     if (!settings.enabled) {
       return new Response(
         JSON.stringify({ message: 'Discord integration is disabled', processed: 0 }),
@@ -452,20 +581,42 @@ serve(async (req) => {
           ? (Object.values(msg.fields) as Array<{ name: string; value: string; inline?: boolean }>)
           : undefined
 
-      const embed: DiscordEmbed = {
+      const embed = styleEmbed({
         title: msg.title,
         description: msg.description || undefined,
         color: msg.color || COLORS[msg.event_type] || 0x5865f2,
         fields: rawFields,
-        footer: { text: `Dumper's Repo • ${msg.event_type}` },
         timestamp: msg.created_at,
-      }
+      }, msg.event_type, msg.title)
 
       let deliverySent = 0
       let shouldMarkProcessed = true
 
-      if (isStaffEvent(msg.event_type)) {
-        if (settings.official_webhook_url) {
+      if (isBroadcastEvent(msg.event_type)) {
+        const { data: webhooks, error: webhookError } = await supabase.rpc(
+          'get_discord_webhooks_for_event',
+          { p_event_type: msg.event_type }
+        )
+        if (webhookError) {
+          shouldMarkProcessed = false
+          errors.push(`Broadcast ${msg.event_type}: ${webhookError.message}`)
+        } else {
+          const result = await deliverToWebhooks(supabase, (webhooks || []) as Webhook[], embed)
+          deliverySent += result.sent
+        }
+      } else if (isStaffEvent(msg.event_type)) {
+        const route = staffRoute(msg.event_type, msg.title)
+        const { data: routed } = route
+          ? await supabase.rpc('get_discord_webhooks_for_event', { p_event_type: route })
+          : { data: [] }
+        const routedHooks = (routed || []) as Webhook[]
+        if (route === 'admin_officer_demoted') {
+          const result = await deliverToWebhooks(supabase, routedHooks, embed)
+          deliverySent += result.sent
+        } else if (routedHooks.length > 0) {
+          const result = await deliverToWebhooks(supabase, routedHooks, embed)
+          deliverySent += result.sent
+        } else if (settings.official_webhook_url) {
           const result = await sendToWebhook(
             settings.official_webhook_url,
             sanitizeEmbed(embed),

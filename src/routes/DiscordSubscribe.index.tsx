@@ -1,374 +1,248 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
+import SiteTooltip from '../components/SiteTooltip'
 import {
   syncMyDiscordEventWebhooks,
-  getDiscordPublicEventTypes,
   getMyDiscordWebhooks,
   UserWebhook,
-  DiscordPublicEventType,
-  DiscordEventCategory,
 } from '../lib/discord'
+import { DISCORD_COLLECTIONS } from '../lib/discordCollections'
 import { useAuth } from '../contexts/AuthContext'
-
-const CATEGORY_LABELS: Record<DiscordEventCategory, { title: string; description: string }> = {
-  personal: {
-    title: 'My activity',
-    description:
-      'Alerts when someone else moves your deal forward or sends/accepts a friend request — not when you click it yourself.',
-  },
-  marketplace: {
-    title: 'Marketplace activity',
-    description:
-      'Opt-in feed when other members post or change listings. Repeated post/cancel bursts from the same member may be grouped into one ping.',
-  },
-  support: {
-    title: 'Support',
-    description: 'Updates on your support tickets.',
-  },
-}
-
-const CATEGORY_ORDER: DiscordEventCategory[] = ['personal', 'marketplace', 'support']
 
 const WEBHOOK_URL_REGEX =
   /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/[0-9]+\/[A-Za-z0-9_-]+$/
 
-type EventFormEntry = {
+type CollectionForm = {
   channelName: string
   webhookUrl: string
+  checked: Record<string, boolean>
 }
 
-function buildEventFormState(
-  events: DiscordPublicEventType[],
-  webhooks: UserWebhook[]
-): Record<string, EventFormEntry> {
-  const state: Record<string, EventFormEntry> = {}
+function emptyForm(events: { type: string }[]): CollectionForm {
+  const checked: Record<string, boolean> = {}
+  for (const event of events) checked[event.type] = false
+  return { channelName: '', webhookUrl: '', checked }
+}
 
-  for (const event of events) {
-    const exactMatch = webhooks.find(
-      (webhook) =>
-        webhook.subscribed_events.length === 1 &&
-        webhook.subscribed_events[0] === event.event_type
+function buildForms(webhooks: UserWebhook[]): Record<string, CollectionForm> {
+  const forms: Record<string, CollectionForm> = {}
+  for (const collection of DISCORD_COLLECTIONS) {
+    const form = emptyForm(collection.events)
+    const matches = webhooks.filter((webhook) =>
+      webhook.subscribed_events.some((event) => collection.events.some((item) => item.type === event))
     )
-    const sharedMatch = webhooks.find((webhook) =>
-      webhook.subscribed_events.includes(event.event_type)
-    )
-    const match = exactMatch ?? sharedMatch
-
-    state[event.event_type] = {
-      channelName: match?.webhook_name ?? '',
-      webhookUrl: match?.webhook_url ?? '',
+    const url = matches[0]?.webhook_url ?? ''
+    const name = matches.find((webhook) => webhook.webhook_url === url)?.webhook_name ?? ''
+    form.webhookUrl = url
+    form.channelName = name
+    for (const event of collection.events) {
+      form.checked[event.type] = matches.some((webhook) => webhook.subscribed_events.includes(event.type))
     }
+    forms[collection.id] = form
   }
-
-  return state
-}
-
-function isActiveEntry(entry: EventFormEntry): boolean {
-  return entry.webhookUrl.trim().length > 0
+  return forms
 }
 
 export default function DiscordSubscribeRoute() {
   const { user, profile, loading: authLoading } = useAuth()
   const navigate = useNavigate()
-  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const isRsiVerified = profile?.rsi_handle_verified ?? false
 
-  const [availableEvents, setAvailableEvents] = useState<DiscordPublicEventType[]>([])
-  const [formState, setFormState] = useState<Record<string, EventFormEntry>>({})
+  const visible = useMemo(
+    () => DISCORD_COLLECTIONS.filter((collection) => isRsiVerified || !collection.requiresVerified),
+    [isRsiVerified]
+  )
+
+  const [forms, setForms] = useState<Record<string, CollectionForm>>({})
+  const [open, setOpen] = useState<Record<string, boolean>>({})
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const eventsByCategory = useMemo(() => {
-    const grouped: Record<DiscordEventCategory, DiscordPublicEventType[]> = {
-      personal: [],
-      marketplace: [],
-      support: [],
-    }
-    for (const event of availableEvents) {
-      grouped[event.event_category]?.push(event)
-    }
-    return grouped
-  }, [availableEvents])
-
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate({ to: '/' })
-    }
+    if (!authLoading && !user) navigate({ to: '/' })
   }, [authLoading, user, navigate])
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [eventsResult, webhooksResult] = await Promise.all([
-        getDiscordPublicEventTypes(),
-        getMyDiscordWebhooks(),
-      ])
-
-      if (eventsResult.success && eventsResult.eventTypes) {
-        setAvailableEvents(eventsResult.eventTypes)
-        if (webhooksResult.success && webhooksResult.webhooks) {
-          setFormState(buildEventFormState(eventsResult.eventTypes, webhooksResult.webhooks))
-        }
+    if (!user) return
+    const load = async () => {
+      const webhooksResult = await getMyDiscordWebhooks()
+      const next = buildForms(webhooksResult.webhooks ?? [])
+      setForms(next)
+      const opened: Record<string, boolean> = {}
+      for (const collection of DISCORD_COLLECTIONS) {
+        const form = next[collection.id]
+        const filled = Boolean(form?.webhookUrl)
+        opened[collection.id] = collection.id === 'my-deals' || filled
       }
-
+      setOpen(opened)
       setLoading(false)
     }
-
-    if (user) {
-      fetchData()
-    }
+    void load()
   }, [user])
 
-  const updateEntry = (eventType: string, patch: Partial<EventFormEntry>) => {
-    setFormState((prev) => ({
+  const patch = (id: string, partial: Partial<CollectionForm>) => {
+    setForms((prev) => ({
       ...prev,
-      [eventType]: {
-        channelName: prev[eventType]?.channelName ?? '',
-        webhookUrl: prev[eventType]?.webhookUrl ?? '',
-        ...patch,
-      },
+      [id]: { ...(prev[id] ?? emptyForm([])), ...partial },
     }))
   }
 
-  const scrollToEvent = (eventType: string) => {
-    rowRefs.current[eventType]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
     setError(null)
     setSuccessMessage(null)
 
-    const syncEvents = availableEvents.filter(
-      (event) => isRsiVerified || event.event_category !== 'personal'
-    )
-
-    for (const event of syncEvents) {
-      const entry = formState[event.event_type] ?? { channelName: '', webhookUrl: '' }
-      const url = entry.webhookUrl.trim()
-      const name = entry.channelName.trim()
-
-      if (url && !name) {
-        setError(
-          `Add a channel name for "${event.display_name}", or clear the webhook URL to leave it unregistered.`
-        )
-        scrollToEvent(event.event_type)
+    const payload: Array<{ event_type: string; webhook_name: string; webhook_url: string }> = []
+    for (const collection of visible) {
+      const form = forms[collection.id] ?? emptyForm(collection.events)
+      const url = form.webhookUrl.trim()
+      const name = form.channelName.trim()
+      const anyChecked = collection.events.some((item) => form.checked[item.type])
+      if ((url || anyChecked) && !name) {
+        setError(`Add a channel name for ${collection.title}, or clear the webhook.`)
+        setOpen((prev) => ({ ...prev, [collection.id]: true }))
         return
       }
-
       if (url && !WEBHOOK_URL_REGEX.test(url)) {
-        setError(
-          `Invalid webhook URL for "${event.display_name}". It should look like: https://discord.com/api/webhooks/123456789/abcdef...`
-        )
-        scrollToEvent(event.event_type)
+        setError(`Invalid webhook URL for ${collection.title}.`)
+        setOpen((prev) => ({ ...prev, [collection.id]: true }))
         return
+      }
+      for (const item of collection.events) {
+        const on = Boolean(form.checked[item.type]) && url.length > 0
+        payload.push({
+          event_type: item.type,
+          webhook_name: on ? name : '',
+          webhook_url: on ? url : '',
+        })
       }
     }
 
     setSubmitting(true)
-
-    const payload = syncEvents.map((event) => {
-      const entry = formState[event.event_type] ?? { channelName: '', webhookUrl: '' }
-      return {
-        event_type: event.event_type,
-        webhook_name: entry.channelName.trim(),
-        webhook_url: entry.webhookUrl.trim(),
-      }
-    })
-
     const result = await syncMyDiscordEventWebhooks(payload)
-
     if (result.success) {
       setSuccessMessage('Webhooks updated.')
-      const webhooksResult = await getMyDiscordWebhooks()
-      if (webhooksResult.success && webhooksResult.webhooks) {
-        setFormState(buildEventFormState(availableEvents, webhooksResult.webhooks))
-      }
+      const refreshed = await getMyDiscordWebhooks()
+      if (refreshed.webhooks) setForms(buildForms(refreshed.webhooks))
     } else {
       setError(result.error || 'Failed to update webhooks')
-      if (result.eventType) {
-        scrollToEvent(result.eventType)
-      }
     }
-
     setSubmitting(false)
   }
 
-  if (authLoading) {
+  if (authLoading || !user) {
     return (
       <FeaturePageLayout title="Webhooks" subtitle="Loading..." badge="Discord">
         <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-t-2 border-indigo-500 rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-t-2 border-indigo-500 rounded-full animate-spin" />
         </div>
       </FeaturePageLayout>
     )
   }
 
-  if (!user) {
-    return null
-  }
-
   return (
     <FeaturePageLayout
       title="Webhooks"
-      subtitle="Get Discord pings about your deals and the marketplace"
+      subtitle="Discord pings for your deals, the marketplace, the hangar, and Franken-Fit"
       badge="Discord"
     >
-      <div className="max-w-2xl space-y-6">
-        {error && (
-          <div className="p-3 bg-red-950/40 border border-red-500/30 rounded-lg text-sm text-red-300">
-            {error}
-          </div>
-        )}
-        {successMessage && (
-          <div className="p-3 bg-green-950/40 border border-green-500/30 rounded-lg text-sm text-green-300">
-            {successMessage}
-          </div>
-        )}
+      <div className="max-w-[60rem] space-y-4">
+        {error && <div className="site-banner-error text-sm">{error}</div>}
+        {successMessage && <div className="site-banner-success text-sm">{successMessage}</div>}
 
-        <section className="p-4 rounded-xl border border-indigo-500/30 bg-indigo-950/20">
-          <p className="text-xs text-slate-400 mb-4">
-            Set a channel name and webhook URL for each alert you want. Leave the URL blank to
-            unregister that alert. Highlighted rows are active.
-          </p>
+        <SiteTooltip
+          side="bottom"
+          content="In Discord: Server settings, Integrations, Webhooks, New Webhook, then copy the URL."
+        >
+          <p className="site-hint w-fit">How to create a webhook</p>
+        </SiteTooltip>
 
-          <div className="mb-4 p-3 site-surface rounded-lg">
-            <p className="text-xs text-slate-400 mb-2">
-              <strong className="text-slate-300">To create a webhook:</strong>
-            </p>
-            <ol className="text-xs text-slate-500 list-decimal list-inside space-y-0.5">
-              <li>Go to your Discord server settings</li>
-              <li>Click Integrations → Webhooks</li>
-              <li>Create a webhook and copy the URL</li>
-            </ol>
-          </div>
-
-          {loading ? (
-            <div className="text-center py-4">
-              <div className="w-6 h-6 border-t-2 border-indigo-500 rounded-full animate-spin mx-auto"></div>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {CATEGORY_ORDER.map((category) => {
-                const events = eventsByCategory[category]
-                if (events.length === 0) return null
-                const meta = CATEGORY_LABELS[category]
-                const personalLocked = category === 'personal' && !isRsiVerified
-
-                return (
-                  <div key={category}>
-                    <div className="mb-3">
-                      <h2 className="text-sm font-semibold text-white">{meta.title}</h2>
-                      <p className="text-xs text-slate-500 mt-0.5">{meta.description}</p>
-                    </div>
-
-                    {personalLocked && (
-                      <div className="mb-3 p-3 rounded-lg bg-amber-950/40 border border-amber-500/40">
-                        <p className="text-amber-300 text-sm font-medium">
-                          RSI Handle verification required
-                        </p>
-                        <p className="text-amber-200/70 text-xs mt-1">
-                          Personal deal alerts need a verified RSI Handle — the same requirement as
-                          Custom Orders and The Bazaar. Marketplace and Support webhooks below stay
-                          available.
-                        </p>
-                        <p className="text-amber-200/70 text-xs mt-2">
-                          Go to <strong className="text-amber-300">Settings → Profile</strong> and{' '}
-                          <strong className="text-cyan-400">Link Citizen iD</strong>.
-                        </p>
+        {loading ? (
+          <div className="w-6 h-6 border-t-2 border-indigo-500 rounded-full animate-spin" />
+        ) : (
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            {visible.map((collection) => {
+              const form = forms[collection.id] ?? emptyForm(collection.events)
+              const expanded = open[collection.id] ?? false
+              return (
+                <section key={collection.id} className={`site-section border ${collection.accent}`}>
+                  <button
+                    type="button"
+                    className="site-section-header w-full flex items-center justify-between text-left"
+                    onClick={() => setOpen((prev) => ({ ...prev, [collection.id]: !expanded }))}
+                  >
+                    <SiteTooltip side="top" content={collection.hint}>
+                      <span className={`text-sm font-semibold ${collection.titleClass}`}>{collection.title}</span>
+                    </SiteTooltip>
+                    <span className="text-xs text-slate-500">{expanded ? 'Hide' : 'Show'}</span>
+                  </button>
+                  {expanded && (
+                    <div className="site-section-body space-y-3">
+                      <div>
+                        <SiteTooltip side="top" content="The name Discord shows on the message.">
+                          <label className="site-label mb-1">Channel name</label>
+                        </SiteTooltip>
+                        <input
+                          type="text"
+                          value={form.channelName}
+                          onChange={(input) => patch(collection.id, { channelName: input.target.value })}
+                          placeholder="e.g. #my-deal-alerts"
+                          disabled={submitting}
+                          className="site-input w-full px-3 py-2 text-sm"
+                        />
                       </div>
-                    )}
-
-                    <div className={`space-y-3 ${personalLocked ? 'opacity-50' : ''}`}>
-                      {events.map((event) => {
-                        const entry = formState[event.event_type] ?? {
-                          channelName: '',
-                          webhookUrl: '',
-                        }
-                        const active = !personalLocked && isActiveEntry(entry)
-                        const inputsDisabled = personalLocked || !event.enabled || submitting
-
-                        return (
-                          <div
-                            key={event.event_type}
-                            ref={(el) => {
-                              rowRefs.current[event.event_type] = el
-                            }}
-                            className={`p-3 rounded-lg border transition-colors ${
-                              active
-                                ? 'border-indigo-500/50 bg-indigo-950/30'
-                                : 'site-surface'
-                            } ${!event.enabled ? 'opacity-50' : ''}`}
-                          >
-                            <div className="mb-3">
-                              <h3 className="text-sm font-medium text-white">{event.display_name}</h3>
-                              <p className="text-xs text-slate-500 mt-0.5">{event.description}</p>
-                              {!event.enabled && (
-                                <span className="text-amber-400 text-xs">Disabled site-wide</span>
-                              )}
-                            </div>
-
-                            <div className="space-y-2">
-                              <div>
-                                <label className="site-label mb-1">
-                                  Channel name
-                                </label>
-                                <input
-                                  type="text"
-                                  value={entry.channelName}
-                                  onChange={(e) =>
-                                    updateEntry(event.event_type, { channelName: e.target.value })
-                                  }
-                                  placeholder="e.g., #my-deal-alerts"
-                                  disabled={inputsDisabled}
-                                  className="w-full px-3 py-2 site-input text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm disabled:opacity-60"
-                                />
-                              </div>
-                              <div>
-                                <label className="site-label mb-1">
-                                  Webhook URL
-                                </label>
-                                <input
-                                  type="text"
-                                  value={entry.webhookUrl}
-                                  onChange={(e) =>
-                                    updateEntry(event.event_type, { webhookUrl: e.target.value })
-                                  }
-                                  placeholder="https://discord.com/api/webhooks/..."
-                                  disabled={inputsDisabled}
-                                  className="w-full px-3 py-2 site-input text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 text-sm font-mono disabled:opacity-60"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
+                      <div>
+                        <SiteTooltip side="top" content="Paste the webhook URL from Discord. Leave it blank to turn this group off.">
+                          <label className="site-label mb-1">Webhook URL</label>
+                        </SiteTooltip>
+                        <input
+                          type="text"
+                          value={form.webhookUrl}
+                          onChange={(input) => patch(collection.id, { webhookUrl: input.target.value })}
+                          placeholder="https://discord.com/api/webhooks/..."
+                          disabled={submitting}
+                          className="site-input w-full px-3 py-2 text-sm font-mono"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        {collection.events.map((item) => (
+                          <SiteTooltip key={item.type} side="top" content={item.hint}>
+                            <label className="flex items-center gap-2 text-sm text-slate-200">
+                              <input
+                                type="checkbox"
+                                className="site-checkbox"
+                                checked={Boolean(form.checked[item.type])}
+                                disabled={submitting}
+                                onChange={(input) =>
+                                  patch(collection.id, {
+                                    checked: { ...form.checked, [item.type]: input.target.checked },
+                                  })
+                                }
+                              />
+                              {item.label}
+                            </label>
+                          </SiteTooltip>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
-
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
-              >
+                  )}
+                </section>
+              )
+            })}
+            <div className="xl:col-span-2">
+              <button type="submit" disabled={submitting} className="site-btn-primary w-full">
                 {submitting ? 'Updating...' : 'Update Webhooks'}
               </button>
-            </form>
-          )}
-        </section>
+            </div>
+          </form>
+        )}
 
-        <div className="pt-2">
-          <Link
-            to="/"
-            className="site-btn-ghost text-sm"
-          >
-            ← Back to Blueprints
-          </Link>
-        </div>
+        <Link to="/" className="site-btn-ghost text-sm">
+          ← Back to Blueprints
+        </Link>
       </div>
     </FeaturePageLayout>
   )

@@ -8,11 +8,13 @@ import {
   toggleDiscordWebhook,
   deleteDiscordWebhook,
   processDiscordQueue,
+  saveStaffWebhook,
   DiscordSettings,
   DiscordWebhook,
   QueueStatus,
 } from '../lib/discord'
 import { postDumperServicesBotTest } from '../lib/dumperServicesBot'
+import { STAFF_WEBHOOK_GROUPS } from '../lib/discordCollections'
 import AppModal from './layout/AppModal'
 import SiteTooltip from './SiteTooltip'
 
@@ -407,9 +409,38 @@ export default function DiscordSettingsModal({ onClose }: { onClose: () => void 
               disabled={saving}
               className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
             >
-              {saving ? 'Saving...' : 'Save Super-Admin Webhook'}
+              {saving ? 'Saving...' : 'Save fallback webhook'}
             </button>
+            <p className="text-[11px] text-slate-500">
+              Used only when a group below has no webhook of its own. Officer demotion never uses this fallback.
+            </p>
           </div>
+
+          {STAFF_WEBHOOK_GROUPS.map((group) => {
+            const match = webhooks.find((webhook) =>
+              group.events.some((event) => webhook.subscribed_events?.includes(event.type))
+            )
+            return (
+              <StaffWebhookGroup
+                key={group.id}
+                title={group.title}
+                events={group.events.map((event) => ({ type: event.type, label: event.label }))}
+                initialName={match?.webhook_name ?? ''}
+                initialUrl={match?.webhook_url ?? ''}
+                initialChecked={match?.subscribed_events ?? []}
+                saving={saving}
+                onSave={async (name, url, events) => {
+                  setSaving(true)
+                  const result = await saveStaffWebhook(group.events.map((event) => event.type), events, name, url)
+                  setMessage(result.success
+                    ? { type: 'success', text: `${group.title} saved` }
+                    : { type: 'error', text: result.error || 'Failed to save webhook' })
+                  if (result.success) await fetchData()
+                  setSaving(false)
+                }}
+              />
+            )
+          })}
 
           {/* Queue Status & Actions */}
           <div className="p-4 rounded-xl border border-cyan-500/30 bg-cyan-950/20 space-y-3">
@@ -602,6 +633,71 @@ interface ToggleRowProps {
   onToggle: () => void
   disabled?: boolean
   color: 'green' | 'orange' | 'blue' | 'red' | 'purple'
+}
+
+function StaffWebhookGroup({
+  title,
+  events,
+  initialName,
+  initialUrl,
+  initialChecked,
+  saving,
+  onSave,
+}: {
+  title: string
+  events: { type: string; label: string }[]
+  initialName: string
+  initialUrl: string
+  initialChecked: string[]
+  saving: boolean
+  onSave: (name: string, url: string, events: string[]) => Promise<void>
+}) {
+  const [name, setName] = useState(initialName)
+  const [url, setUrl] = useState(initialUrl)
+  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
+    const next: Record<string, boolean> = {}
+    for (const event of events) next[event.type] = initialChecked.includes(event.type) || initialChecked.length === 0
+    return next
+  })
+
+  return (
+    <div className="p-4 site-section space-y-2">
+      <h3 className="text-white font-medium text-sm">{title}</h3>
+      <input
+        type="text"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        placeholder="Channel name"
+        className="site-input w-full px-3 py-2 text-sm"
+      />
+      <input
+        type="text"
+        value={url}
+        onChange={(event) => setUrl(event.target.value)}
+        placeholder="https://discord.com/api/webhooks/..."
+        className="site-input w-full px-3 py-2 text-sm font-mono"
+      />
+      {events.map((event) => (
+        <label key={event.type} className="flex items-center gap-2 text-sm text-slate-200">
+          <input
+            type="checkbox"
+            className="site-checkbox"
+            checked={Boolean(checked[event.type])}
+            onChange={(input) => setChecked((prev) => ({ ...prev, [event.type]: input.target.checked }))}
+          />
+          {event.label}
+        </label>
+      ))}
+      <button
+        type="button"
+        disabled={saving}
+        className="site-btn-secondary text-xs"
+        onClick={() => onSave(name, url, events.filter((event) => checked[event.type]).map((event) => event.type))}
+      >
+        Save {title}
+      </button>
+    </div>
+  )
 }
 
 function ToggleRow({ label, description, enabled, onToggle, disabled, color }: ToggleRowProps) {
