@@ -1066,9 +1066,9 @@ function DailyVisitorStackedBar({
           </span>
         </div>
       </div>
-      <SiteTooltip content="Combined unique visitors"><span className="w-10 shrink-0 text-right text-slate-400 tabular-nums text-xs">
-        {row.count}
-      </span></SiteTooltip>
+      <SiteTooltip content="Combined unique visitors" className="w-10 shrink-0">
+        <span className="block text-right text-slate-400 tabular-nums text-xs">{row.count}</span>
+      </SiteTooltip>
     </div>
   )
 }
@@ -1083,11 +1083,11 @@ function GeoBarRow({
   maxCount: number
 }) {
   return (
-    <div className="flex items-center gap-3 text-sm">
-      <SiteTooltip content={label}><span className="w-40 sm:w-56 shrink-0 text-slate-300 truncate">
-        {label}
-      </span></SiteTooltip>
-      <div className="flex-1 site-progress h-4">
+    <div className="flex items-center gap-3 text-sm min-w-0">
+      <SiteTooltip content={label} className="w-40 sm:w-56 shrink-0 min-w-0">
+        <span className="block truncate text-slate-300">{label}</span>
+      </SiteTooltip>
+      <div className="flex-1 min-w-0 site-progress h-4">
         <div
           className="h-full bg-sky-500/70 rounded"
           style={{ width: `${Math.max(count > 0 ? 4 : 0, (count / maxCount) * 100)}%` }}

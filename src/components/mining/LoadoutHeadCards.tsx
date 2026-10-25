@@ -557,7 +557,7 @@ function HeadSlotCards({
           ))}
         </select>
       ) : (
-        <SiteTooltip content={describeLaserHead(slot, laser)}><p className="text-[11px] text-white leading-snug truncate">
+        <SiteTooltip content={describeLaserHead(slot, laser)} className="block w-full min-w-0"><p className="text-[11px] text-white leading-snug truncate">
           {describeLaserHead(slot, laser)}
         </p></SiteTooltip>
       )}

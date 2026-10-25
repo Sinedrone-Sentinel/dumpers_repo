@@ -255,9 +255,9 @@ function ComparisonPanel({
             <div key={row.slotIndex} className="text-xs space-y-0.5">
               <div className="flex items-center gap-1.5 min-w-0">
                 <CheckIcon ok={row.canBreakShare} />
-                <SiteTooltip content={row.label}><span className="text-slate-300 truncate">
-                  {row.label}
-                </span></SiteTooltip>
+                <SiteTooltip content={row.label} className="min-w-0 flex-1">
+                  <span className="block truncate text-slate-300">{row.label}</span>
+                </SiteTooltip>
               </div>
               <div className="pl-5 font-mono tabular-nums text-slate-400">
                 {row.laserPower.toLocaleString()} / {row.requiredShare.toLocaleString()} MW

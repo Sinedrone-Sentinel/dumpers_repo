@@ -155,7 +155,7 @@ export default function WikeloTradeCard({
         </div>
 
         <div className="mb-3 min-w-0 text-left shrink-0">
-          <SiteTooltip content={trade.title}><h3 className="font-bold text-white line-clamp-2 text-sm leading-snug">
+          <SiteTooltip content={trade.title} className="block w-full min-w-0"><h3 className="font-bold text-white line-clamp-2 text-sm leading-snug">
             {trade.title}
           </h3></SiteTooltip>
           <p className="text-xs text-slate-400 leading-snug mt-0.5 truncate">
