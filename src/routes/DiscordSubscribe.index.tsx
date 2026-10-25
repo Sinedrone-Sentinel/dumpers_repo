@@ -76,7 +76,8 @@ export default function DiscordSubscribeRoute() {
       for (const collection of DISCORD_COLLECTIONS) {
         const form = next[collection.id]
         const allChecked = collection.events.every((item) => form?.checked[item.type])
-        opened[collection.id] = collection.id === focus || !allChecked
+        const showAccepted = collection.id === 'accepted' && (focus === 'wtb' || focus === 'wts')
+        opened[collection.id] = collection.id === focus || showAccepted || !allChecked
       }
       setOpen(opened)
       setLoading(false)

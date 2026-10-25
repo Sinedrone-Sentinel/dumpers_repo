@@ -752,7 +752,6 @@ export default function BazaarRoute() {
                   <WebhookCue collectionId={tab.id === 'store' ? 'wts' : 'wtb'} />
                   </span>
                 ))}
-                <WebhookCue collectionId="accepted" />
               </div>
 
               <div className="flex flex-col sm:flex-row gap-2 mb-3">
