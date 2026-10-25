@@ -192,9 +192,9 @@ export default function MiningAdvisorChat({
       transform: `translate(${ui.offsetX}px, ${ui.offsetY}px)`,
     }
     if (ui.dock === 'right') {
-      return { ...base, top: 72, right: 12, bottom: 12, width: 'min(22rem, 46%)' }
+      return { ...base, top: 12, right: 12, bottom: 12, width: 'min(22rem, 46%)' }
     }
-    return { ...base, right: 12, bottom: 12, width: 'min(22rem, 92%)', height: 'min(42rem, 70vh)' }
+    return { ...base, top: 12, right: 12, bottom: 12, width: 'min(22rem, 92%)' }
   }, [ui.dock, ui.offsetX, ui.offsetY])
 
   const sendQuestion = async () => {
@@ -237,12 +237,12 @@ export default function MiningAdvisorChat({
 
   const overlay = ui.minimized || !chrome?.overlaySlot ? null : (
     <section
-        className="site-surface-solid absolute flex flex-col"
+        className="site-surface-solid absolute flex flex-col overflow-hidden"
         style={panelStyle}
         aria-labelledby={titleId}
       >
         <header
-          className="flex items-center gap-2 px-2.5 py-2 border-b border-orange-500/15 cursor-grab active:cursor-grabbing"
+          className="flex items-center gap-2 px-2.5 py-2 border-b border-orange-500/15 cursor-grab active:cursor-grabbing shrink-0"
           onPointerDown={(event) => {
             if ((event.target as HTMLElement).closest('button, input, label, a')) return
             dragRef.current = {
@@ -281,7 +281,7 @@ export default function MiningAdvisorChat({
           </button>
         </header>
 
-        <div className="px-2.5 py-2 space-y-2 border-b border-orange-500/10">
+        <div className="px-2.5 py-2 space-y-2 border-b border-orange-500/10 shrink-0 max-h-[46%] overflow-y-auto">
           <label className="flex items-start gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -450,7 +450,7 @@ export default function MiningAdvisorChat({
           )}
         </div>
 
-        <div ref={listRef} className="flex-1 min-h-[16rem] overflow-y-auto px-2.5 py-2 space-y-2">
+        <div ref={listRef} className="flex-1 min-h-0 overflow-y-auto px-2.5 py-2 space-y-2">
           {messages.length === 0 ? (
             <p className="text-[11px] text-slate-500 leading-snug">
               Ask how to kit this ship for the resource in the calculator. Advice only — it does not
@@ -474,7 +474,7 @@ export default function MiningAdvisorChat({
           {busy ? <p className="text-[11px] text-slate-500">Thinking…</p> : null}
         </div>
 
-        <div className="px-2.5 py-2 space-y-2 border-t border-orange-500/10">
+        <div className="px-2.5 py-2 space-y-2 border-t border-orange-500/10 shrink-0">
           {error ? <p className="site-error-text">{error}</p> : null}
           <textarea
             className="site-textarea w-full min-h-[4.5rem] text-xs"
