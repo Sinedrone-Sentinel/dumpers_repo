@@ -387,7 +387,7 @@ export const ARCHIVE_TIPS = [
   {
     title: 'Standing Progression',
     content:
-      'Each faction has its own standing ladder on the reputation screen. Haulers and most contractors run from Neutral to Elite Contractor. The Bounty Hunters Guild, Recco Battaglia, and others use their own titles. Higher standings unlock better-paying contracts and exclusive blueprint rewards.',
+      'Each faction can have more than one reputation line. Standing runs from Neutral to Elite Contractor. Hauling jobs run from Trainee to Master, and Courier, Salvage, Security, and Bounty Hunting have their own titles. A mission uses the line that matches its mission type. Higher ranks unlock better-paying contracts and exclusive blueprint rewards.',
   },
 ]
 
