@@ -63,6 +63,12 @@ import {
   REDWIND_BRIDGE,
 } from './lib/orphanPoolBridges.mjs'
 import {
+  buildTitleIndex,
+  foundryRefParts,
+  resolveMissionDescription,
+  scenarioJournalDescription,
+} from './lib/missionDescriptionResolve.mjs'
+import {
   buildSiblingPoolIndexes,
   inheritSiblingBlueprintPools,
 } from './lib/contractBlueprintPools.mjs'
@@ -1502,6 +1508,13 @@ function parseContractGenerators(localization, reputationCaches = {}) {
   console.log('\n[CONTRACT PARSING] Parsing contract generators for mission data...')
   
   const contractFiles = findJsonFiles(EXPECTED_PATHS.contractGenerators)
+  const titleIndex = buildTitleIndex(localization)
+  const templateCache = new Map()
+  const readFoundryRef = (ref) => {
+    const parts = foundryRefParts(ref)
+    if (!parts) return null
+    return readJson(join(EXTRACTED_DATA, ...parts))
+  }
   if (contractFiles.length === 0) {
     validationIssues.push('No contract generator files found')
     return { contracts: [], missionsByPool: {}, poolsByBlueprint: {}, factionNames: {}, standingDefs: {}, repRewardAmounts: {}, missionRewards: { byId: {}, aliases: {} } }
@@ -1743,11 +1756,12 @@ function parseContractGenerators(localization, reputationCaches = {}) {
         const debugLower = debugName.toLowerCase()
         const templatePath = contract.template || ''
 
-        // Extract title + mission body text from paramOverrides
+        // Extract title from paramOverrides. Body text also inherits the
+        // generator's Description, the template display string, and a
+        // faction-specific localization key when the contract only has a
+        // contractor token.
         let titleKey = ''
         let title = debugName || 'Unknown Mission'
-        let descriptionKey = ''
-        let description = ''
         if (contract.paramOverrides?.stringParamOverrides) {
           const titleParam = contract.paramOverrides.stringParamOverrides.find(
             p => p.param === 'Title'
@@ -1761,27 +1775,25 @@ function parseContractGenerators(localization, reputationCaches = {}) {
             }
             title = cleanContractTitle(title)
           }
-          const descParam = contract.paramOverrides.stringParamOverrides.find(
-            p => p.param === 'Description'
-          )
-          if (descParam?.value) {
-            descriptionKey = descParam.value
-            if (descriptionKey.startsWith('@')) {
-              description = localization[descriptionKey.substring(1)] || ''
-            } else {
-              description = descriptionKey
-            }
-          }
         }
         if (title === debugName && debugLower.includes('hockrow_facilitydelve_p3mm')) {
           titleKey = '@Hockrow_FacilityDelve_P3M1_title'
           title = localization.Hockrow_FacilityDelve_P3M1_title || title
         }
+        const body = resolveMissionDescription({
+          contract,
+          generator,
+          localization,
+          titleIndex,
+          templateCache,
+          readTemplate: readFoundryRef,
+          title,
+          titleKey,
+          debugName,
+        })
+        const description = body?.description || ''
+        const descriptionKey = body?.descriptionKey || ''
         const titleTokenValues = collectTitleTokenValues(contract, generator, localization)
-        // Normalize localization escapes for UI (keep paragraph breaks).
-        if (description) {
-          description = String(description).replace(/\\n/g, '\n').trim()
-        }
         
         // Extract blueprint pools from contractResults. Empty-result variants of
         // the same activity inherit the sibling's pool (Orison Platforms Under
@@ -2519,6 +2531,7 @@ function parseContractScenarios(localization, factionNames) {
           const debugName = `${scenarioKey}_tier_${minPoints}`
           // Member-facing: event name + points threshold (not a fake Contracts title)
           const title = `${eventLabel} — ${minPoints.toLocaleString()} pts`
+          const journal = scenarioJournalDescription(localization, scenarioKey)
 
           contracts.push({
             id: debugName,
@@ -2526,6 +2539,8 @@ function parseContractScenarios(localization, factionNames) {
             title,
             displayTitle: title,
             titleKey: '',
+            description: journal?.description || '',
+            descriptionKey: journal?.descriptionKey || null,
             faction: factionName,
             factionKey,
             system: system || 'Unknown',
@@ -2556,6 +2571,13 @@ function parseContractScenarios(localization, factionNames) {
  */
 function parseRedWindBridgedContracts(localization, factionNames, standingDefs, repRewardAmounts) {
   console.log('\n[RED WIND BRIDGE] Attaching redwind pool to Red Wind Linehaul generators...')
+  const titleIndex = buildTitleIndex(localization)
+  const templateCache = new Map()
+  const readFoundryRef = (ref) => {
+    const parts = foundryRefParts(ref)
+    if (!parts) return null
+    return readJson(join(EXTRACTED_DATA, ...parts))
+  }
   const bridgePath = join(EXTRACTED_DATA, 'libs/foundry/records', REDWIND_BRIDGE.generatorSubpath)
   if (!existsSync(bridgePath)) {
     console.log('  Red Wind generator path not found')
@@ -2600,6 +2622,19 @@ function parseRedWindBridgedContracts(localization, factionNames, standingDefs, 
       }
     }
 
+    const body = resolveMissionDescription({
+      contract: sampleContract,
+      generator,
+      localization,
+      titleIndex,
+      templateCache,
+      readTemplate: readFoundryRef,
+      title,
+      titleKey,
+      debugName: sampleContract?.debugName || generator.debugName,
+      preferShared: true,
+    })
+
     const debugName = `bridged_${basename(fileName, '.json')}`
     const nameBlob = `${generator.debugName || ''} ${sampleContract?.debugName || ''} ${title}`.toLowerCase()
     let system = 'Stanton'
@@ -2635,6 +2670,8 @@ function parseRedWindBridgedContracts(localization, factionNames, standingDefs, 
         system,
       }),
       titleKey,
+      description: body?.description || '',
+      descriptionKey: body?.descriptionKey || null,
       faction: factionName,
       factionKey,
       system,

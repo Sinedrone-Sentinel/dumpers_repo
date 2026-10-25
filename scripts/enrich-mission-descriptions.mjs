@@ -1,12 +1,19 @@
 /**
  * Patch description / descriptionKey onto contracts in game-blueprint-missions.json
- * from contractgenerator paramOverrides + localization (without a full parse).
+ * from contract generators, templates, and English localization (without a full parse).
  *
  * Usage: node scripts/enrich-mission-descriptions.mjs
  */
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import {
+  buildTitleIndex,
+  foundryRefParts,
+  isMissionProse,
+  resolveMissionDescription,
+  scenarioJournalDescription,
+} from './lib/missionDescriptionResolve.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const extracted = join(root, 'extracted-data')
@@ -42,64 +49,120 @@ function walkJsonFiles(dir, out = []) {
   return out
 }
 
-function resolveLoc(localization, key) {
-  if (!key) return ''
-  const raw = String(key)
-  const bare = raw.startsWith('@') ? raw.slice(1) : raw
-  return localization[bare] || localization[bare.toLowerCase()] || ''
+function readTemplate(ref) {
+  const parts = foundryRefParts(ref)
+  if (!parts) return null
+  const full = join(extracted, ...parts)
+  if (!existsSync(full)) return null
+  try {
+    return JSON.parse(readFileSync(full, 'utf8'))
+  } catch {
+    return null
+  }
 }
 
-function collectContracts(file, localization, byId, byDebug) {
+function titleFromContract(contract, localization) {
+  const params = contract.paramOverrides?.stringParamOverrides || []
+  const titleParam = params.find((p) => p.param === 'Title')
+  const titleKey = titleParam?.value || ''
+  let title = contract.debugName || ''
+  if (titleKey.startsWith('@')) title = localization[titleKey.slice(1)] || titleKey
+  else if (titleKey) title = titleKey
+  return { title, titleKey }
+}
+
+const localization = loadLocalization()
+const titleIndex = buildTitleIndex(localization)
+const templateCache = new Map()
+const byId = new Map()
+const byDebug = new Map()
+
+for (const file of walkJsonFiles(generatorsRoot)) {
   let json
   try {
     json = JSON.parse(readFileSync(file, 'utf8'))
   } catch {
-    return
+    continue
   }
   const generators = json?._RecordValue_?.generators || []
   for (const generator of generators) {
     const list = [...(generator.introContracts || []), ...(generator.contracts || [])]
     for (const contract of list) {
-      const params = contract.paramOverrides?.stringParamOverrides || []
-      const descParam = params.find((p) => p.param === 'Description')
-      if (!descParam?.value) continue
-      const descriptionKey = descParam.value
-      let description = descriptionKey.startsWith('@')
-        ? resolveLoc(localization, descriptionKey)
-        : String(descriptionKey)
-      description = description.replace(/\\n/g, '\n').trim()
-      if (!description) continue
-      const payload = { description, descriptionKey }
-      if (contract.id) byId.set(String(contract.id).toLowerCase(), payload)
-      if (contract.debugName) byDebug.set(String(contract.debugName).toLowerCase(), payload)
+      const { title, titleKey } = titleFromContract(contract, localization)
+      const hit = resolveMissionDescription({
+        contract,
+        generator,
+        localization,
+        titleIndex,
+        templateCache,
+        readTemplate,
+        title,
+        titleKey,
+        debugName: contract.debugName,
+      })
+      if (!hit || !isMissionProse(hit.description)) continue
+      if (contract.id) byId.set(String(contract.id).toLowerCase(), hit)
+      if (contract.debugName) byDebug.set(String(contract.debugName).toLowerCase(), hit)
     }
   }
-}
-
-const localization = loadLocalization()
-const byId = new Map()
-const byDebug = new Map()
-for (const file of walkJsonFiles(generatorsRoot)) {
-  collectContracts(file, localization, byId, byDebug)
 }
 
 const data = JSON.parse(readFileSync(outPath, 'utf8'))
 const contracts = data.contracts || []
 let patched = 0
-for (const contract of contracts) {
-  const hit =
-    (contract.id && byId.get(String(contract.id).toLowerCase())) ||
-    (contract.debugName && byDebug.get(String(contract.debugName).toLowerCase()))
-  if (!hit) continue
-  if (contract.description === hit.description && contract.descriptionKey === hit.descriptionKey) {
-    continue
-  }
+
+function apply(contract, hit) {
+  if (!hit || !isMissionProse(hit.description)) return
+  if (isMissionProse(contract.description) && contract.description === hit.description) return
+  if (isMissionProse(contract.description)) return
   contract.description = hit.description
   contract.descriptionKey = hit.descriptionKey
   patched += 1
 }
 
+for (const contract of contracts) {
+  const hit =
+    (contract.id && byId.get(String(contract.id).toLowerCase())) ||
+    (contract.debugName && byDebug.get(String(contract.debugName).toLowerCase()))
+  if (hit) {
+    apply(contract, hit)
+    continue
+  }
+  if (isMissionProse(contract.description)) continue
+  if (contract.source === 'contractScenario' || String(contract.id || '').includes('_tier_')) {
+    apply(contract, scenarioJournalDescription(localization, contract.id || contract.debugName))
+    if (isMissionProse(contract.description)) continue
+  }
+  const fallback = resolveMissionDescription({
+    contract: {
+      debugName: contract.debugName,
+      paramOverrides: {
+        stringParamOverrides: [
+          contract.titleKey ? { param: 'Title', value: contract.titleKey } : null,
+          contract.descriptionKey ? { param: 'Description', value: contract.descriptionKey } : null,
+        ].filter(Boolean),
+      },
+    },
+    generator: null,
+    localization,
+    titleIndex,
+    templateCache,
+    readTemplate,
+    title: contract.displayTitle || contract.title,
+    titleKey: contract.titleKey,
+    debugName: contract.debugName,
+    preferShared: String(contract.id || '').startsWith('bridged_'),
+  })
+  if (fallback) {
+    apply(contract, fallback)
+    continue
+  }
+  if (contract.description || contract.descriptionKey) {
+    delete contract.description
+    delete contract.descriptionKey
+    patched += 1
+  }
+}
+
 writeFileSync(outPath, `${JSON.stringify(data, null, 2)}\n`)
-console.log(
-  `Patched ${patched} / ${contracts.length} contracts with mission descriptions (${byId.size} generator matches)`
-)
+console.log(`Patched ${patched} / ${contracts.length} contracts with mission descriptions`)
