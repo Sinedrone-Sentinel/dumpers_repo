@@ -75,8 +75,8 @@ export default function DiscordSubscribeRoute() {
       const opened: Record<string, boolean> = {}
       for (const collection of DISCORD_COLLECTIONS) {
         const form = next[collection.id]
-        const filled = Boolean(form?.webhookUrl)
-        opened[collection.id] = collection.id === focus || collection.id === 'my-deals' || filled
+        const allChecked = collection.events.every((item) => form?.checked[item.type])
+        opened[collection.id] = collection.id === focus || !allChecked
       }
       setOpen(opened)
       setLoading(false)
@@ -222,10 +222,10 @@ export default function DiscordSubscribeRoute() {
                           className="site-input w-full px-3 py-2 text-sm font-mono"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="flex flex-col gap-2">
                         {collection.events.map((item) => (
-                          <SiteTooltip key={item.type} side="top" content={item.hint}>
-                            <label className="flex items-center gap-2 text-sm text-slate-200">
+                          <SiteTooltip key={item.type} side="top" content={item.hint} className="block w-full">
+                            <label className="flex w-full items-center gap-2 py-1 text-sm text-slate-200">
                               <input
                                 type="checkbox"
                                 className="site-checkbox"
