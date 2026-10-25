@@ -79,7 +79,7 @@ const FEATURES: FeatureCard[] = [
   },
   {
     title: 'UEX Lookup',
-    body: 'Where to buy guns, ammo, armor, ships, commodities, food, and drinks, and where to sell commodities. Add a shop to the Shopping Cart.',
+    body: 'Where to buy guns, ammo, ship components, armor, ships, commodities, food, and drinks, and where to sell commodities. Add a shop to the Shopping Cart.',
     href: '/commodity-lookup',
     action: 'offline',
     cta: 'Open UEX Lookup offline →',

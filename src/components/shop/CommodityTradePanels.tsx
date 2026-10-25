@@ -62,7 +62,7 @@ function LocationRow({
     <li className="site-surface px-3 py-2">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-slate-100 truncate">{loc.label || terminalPlace(terminal)}</p>
+          <p className="text-base font-bold text-white truncate">{loc.label || terminalPlace(terminal)}</p>
           <p className="text-[11px] text-slate-500 truncate">{loc.pathLabel || terminalPath(terminal)}</p>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">

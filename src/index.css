@@ -709,7 +709,7 @@
   }
 
   .site-tooltip-panel {
-    @apply text-left min-w-[18rem] w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 rounded-lg;
+    @apply text-left w-max max-w-[min(100vw-2rem,32rem)] max-h-[min(70vh,20rem)] overflow-y-auto px-3 py-2 text-xs leading-relaxed text-slate-200 rounded-lg;
     background: rgba(8, 12, 22, 0.96);
     border: 1px solid rgba(249, 115, 22, 0.35);
     box-shadow:
@@ -1107,7 +1107,7 @@
   /* Shubin Advisor replies only — user bubbles keep the chat chrome. */
   .advisor-shubin-reply {
     font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     letter-spacing: 0.03em;
     color: #fde68a;

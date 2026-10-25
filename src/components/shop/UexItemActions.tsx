@@ -111,7 +111,15 @@ function QtyModal({
     <AppModal title={`Add ${name}`} subtitle={unit === 'scu' ? 'Quantity in SCU' : 'How many'} onClose={onClose} size="sm" zIndex={80}>
       <div className="flex items-center justify-center gap-3">
         <button type="button" className="site-btn-ghost px-3 py-1" aria-label="Decrease quantity" onClick={() => setQty((value) => Math.max(1, value - 1))}>−</button>
-        <span className="w-12 text-center text-lg font-semibold text-white">{qty}</span>
+        <input
+          type="number"
+          min={1}
+          inputMode="numeric"
+          aria-label="Quantity"
+          className="site-input w-20 px-2 py-1 text-center text-lg font-semibold"
+          value={qty}
+          onChange={(event) => setQty(Math.max(1, Math.floor(Number(event.target.value) || 1)))}
+        />
         <button type="button" className="site-btn-ghost px-3 py-1" aria-label="Increase quantity" onClick={() => setQty((value) => value + 1)}>+</button>
       </div>
       <div className="mt-4 flex justify-end gap-2">

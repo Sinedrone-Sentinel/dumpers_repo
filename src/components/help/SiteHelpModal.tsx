@@ -246,6 +246,7 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
                 autoComplete="off"
                 value={apiKey}
                 onChange={(event) => setApiKey(event.target.value)}
+                onInput={(event) => setApiKey(event.currentTarget.value)}
                 className="site-input w-full px-2 py-1.5 text-xs"
                 placeholder="Paste your AI Studio key"
               />
@@ -260,6 +261,7 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
                 autoComplete="off"
                 value={lockPhrase}
                 onChange={(event) => setLockPhrase(event.target.value)}
+                onInput={(event) => setLockPhrase(event.currentTarget.value)}
                 className="site-input w-full px-2 py-1.5 text-xs"
                 placeholder="At least 10 characters — not your Gemini key"
               />
@@ -268,7 +270,7 @@ export default function SiteHelpModal({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 className="site-btn-secondary !px-2 !py-1 text-[11px] disabled:opacity-40"
-                disabled={!hasPastedKey || lockPhrase.trim().length < 10 || keyBusy}
+                disabled={apiKey.trim().length < 20 || lockPhrase.trim().length < 10 || keyBusy}
                 onClick={() => {
                   const pasted = apiKey.trim()
                   setKeyBusy(true)
