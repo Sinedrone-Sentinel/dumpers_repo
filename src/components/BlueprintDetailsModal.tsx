@@ -45,6 +45,7 @@ import { isDefaultBlueprint } from '../lib/defaultBlueprints'
 import { snapshotWishlistRecipe } from '../lib/bpWishlist'
 import { miningBlueprintCraftEffects } from '../lib/miningLoadoutStats'
 import AddToWishlistButton from './resourceTracker/AddToWishlistButton'
+import SiteTooltip from './SiteTooltip'
 
 interface SlotOption {
   type?: string
@@ -454,7 +455,7 @@ export default function BlueprintDetailsModal({
                     Pick a quality you have enough of for every material to craft this blueprint.
                   </p>
                 )}
-                <button
+                <SiteTooltip content="Craft once and deduct the selected materials from My Resources" className="block w-full"><button
                   type="button"
                   onClick={() => void handleCraft()}
                   disabled={!craftPlan.ok || crafting}
@@ -463,10 +464,9 @@ export default function BlueprintDetailsModal({
                       ? 'site-btn-secondary opacity-50 cursor-not-allowed'
                       : 'site-btn-success shadow-lg shadow-green-500/20'
                   }`}
-                  title="Craft once and deduct the selected materials from My Resources"
                 >
                   {crafting ? 'Crafting…' : 'Craft'}
-                </button>
+                </button></SiteTooltip>
                 {craftError && <p className="text-xs text-red-400 mt-2">{craftError}</p>}
                 <p className="text-[10px] text-slate-500 mt-2">
                   Deducts the exact amount at the quality selected for each material from your My
@@ -534,17 +534,16 @@ export default function BlueprintDetailsModal({
                 <span className="text-amber-300 font-medium">
                   {formatDfpAuec(orderPricing.unitDfpAuec)}
                 </span>
-                <a
+                <SiteTooltip content="What is DFP?"><a
                   href="/archive#dfp"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-slate-500 hover:text-orange-400 transition-colors"
-                  title="What is DFP?"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                </a>
+                </a></SiteTooltip>
               </div>
               {!isUniformQuality && (
                 <p className="text-xs text-slate-500">
@@ -580,7 +579,7 @@ export default function BlueprintDetailsModal({
         {showActionFooter && (
           <div className="pt-3 mt-1 site-divider flex items-center justify-end gap-2 flex-wrap">
             {showCraftTrackerControl && onAddToCraftTracker && (
-              <button
+              <SiteTooltip content="Add blueprint ores to Mining Tracker RS Tracker"><button
                 type="button"
                 onClick={onAddToCraftTracker}
                 disabled={craftTrackerPending}
@@ -589,40 +588,36 @@ export default function BlueprintDetailsModal({
                     ? 'opacity-50 cursor-wait'
                     : 'hover:text-purple-300'
                 }`}
-                title="Add blueprint ores to Mining Tracker RS Tracker"
               >
                 {craftTrackerPending ? 'Adding…' : 'RS Track'}
-              </button>
+              </button></SiteTooltip>
             )}
             {showTargetControl && !isOnTarget && onToggleTarget && (
-              <button
+              <SiteTooltip content="Add to Mission Tracker"><button
                 type="button"
                 onClick={onToggleTarget}
                 className="site-btn-ghost text-xs font-semibold uppercase px-2 py-1 hover:text-orange-300"
-                title="Add to Mission Tracker"
               >
                 Track
-              </button>
+              </button></SiteTooltip>
             )}
             {showMissionsControl && (
-              <button
+              <SiteTooltip content="View missions that reward this blueprint"><button
                 type="button"
                 onClick={() => setMissionsModalOpen(true)}
                 className="site-btn-ghost text-xs font-semibold uppercase px-2 py-1 hover:text-sky-300"
-                title="View missions that reward this blueprint"
               >
                 Missions
-              </button>
+              </button></SiteTooltip>
             )}
             {showTargetControl && isOnTarget && onToggleTarget && (
-              <button
+              <SiteTooltip content="Remove from Mission Tracker"><button
                 type="button"
                 onClick={onToggleTarget}
                 className="text-xs font-semibold uppercase px-2 py-1 rounded transition-colors bg-orange-600/30 text-orange-300 hover:bg-orange-600/40"
-                title="Remove from Mission Tracker"
               >
                 Tracked
-              </button>
+              </button></SiteTooltip>
             )}
           </div>
         )}

@@ -33,6 +33,7 @@ import {
   extractContractReputationPrerequisite,
   resolveScopeDisplayName,
   getPreferredDisplayScopeKey,
+  playerFacingCareers,
 } from './lib/reputationStandingResolver.mjs'
 import {
   buildOreMasterList,
@@ -4708,13 +4709,18 @@ function parseReputationContexts(scopes) {
 /**
  * Build career standings for Archive faction cards.
  */
+function isUnresolvedStandingLabel(label) {
+  if (!label) return true
+  return label.startsWith('@') || label.includes('PLACEHOLDER') || label.includes('DisplayName')
+}
+
 function buildCareerStandingsFromScope(scopeKey, scopes, localization) {
   const displayScopeKey = getPreferredDisplayScopeKey(scopeKey, scopes)
   const scope = scopes[displayScopeKey] || scopes[scopeKey]
   if (!scope?.standings?.length) return null
 
   const standings = scope.standings
-    .filter((s) => s.displayName && !s.displayName.includes('PLACEHOLDER'))
+    .filter((s) => s.displayName && !isUnresolvedStandingLabel(s.displayName))
     .map((s) => ({
       displayName: s.displayName,
       minReputation: s.minReputation,
@@ -4765,7 +4771,8 @@ function parseReputationSystem(localization = {}, reputationCaches = {}) {
     const careers = {}
     for (const career of context.careerScopes || []) {
       const built = buildCareerStandingsFromScope(career.scopeKey, scopes, localization)
-      if (!built) continue
+      if (!built || isUnresolvedStandingLabel(built.displayName)) continue
+      if (!built.standings.some((standing) => standing.minReputation >= 0)) continue
 
       const careerKey = career.scopeName || career.scopeKey
       careers[careerKey] = {
@@ -4776,16 +4783,17 @@ function parseReputationSystem(localization = {}, reputationCaches = {}) {
       }
     }
 
-    const careerList = Object.values(careers)
+    const facing = playerFacingCareers(careers)
+    const facingList = Object.values(facing)
     const defaultCareer =
-      careerList.find((c) => c.scopeKey !== 'FactionReputationScope')
-      || careerList[0]
+      facingList.find((c) => c.scopeKey === 'FactionReputationScope')
+      || facingList[0]
 
-    if (careerList.length > 0) {
+    if (facingList.length > 0) {
       factionStandings[factionKey] = {
         faction: faction.name,
         factionKey,
-        careers: Object.keys(careers).length > 0 ? careers : undefined,
+        careers: facingList.length > 1 ? facing : undefined,
         scopeName: defaultCareer?.displayScopeKey || defaultCareer?.scopeKey,
         standings: defaultCareer?.standings || [],
       }

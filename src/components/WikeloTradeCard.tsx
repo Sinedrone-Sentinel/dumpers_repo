@@ -5,6 +5,7 @@ import { useOrderDraft } from '../contexts/OrderDraftContext'
 import { wikeloRewardResourceKey } from '../config/wikeloItems'
 import type { WikeloTrade } from '../routes/wikelo'
 import NotForReleaseTag from './NotForReleaseTag'
+import SiteTooltip from './SiteTooltip'
 
 const PAPER_PANEL = 'blueprint-paper-panel p-2.5'
 const HAND_IN_PANEL = 'relative site-surface p-2.5'
@@ -135,15 +136,14 @@ export default function WikeloTradeCard({
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         <div className="flex items-start justify-between gap-2 mb-1 shrink-0">
           {dfpDisplayEnabled ? (
-            <span
+            <SiteTooltip content={dfpTooltip}><span
               className="text-xs font-semibold text-amber-400/90 tabular-nums"
-              title={dfpTooltip}
             >
               {dfpLabel}
               {!dfp.isVehicleReward && dfp.total !== null && dfp.total > 0 && (
                 <span className="text-amber-600/70 font-normal ml-0.5">aUEC</span>
               )}
-            </span>
+            </span></SiteTooltip>
           ) : (
             <span className="shrink-0" />
           )}
@@ -155,9 +155,9 @@ export default function WikeloTradeCard({
         </div>
 
         <div className="mb-3 min-w-0 text-left shrink-0">
-          <h3 className="font-bold text-white line-clamp-2 text-sm leading-snug" title={trade.title}>
+          <SiteTooltip content={trade.title}><h3 className="font-bold text-white line-clamp-2 text-sm leading-snug">
             {trade.title}
-          </h3>
+          </h3></SiteTooltip>
           <p className="text-xs text-slate-400 leading-snug mt-0.5 truncate">
             {trade.rewards.length > 0
               ? trade.rewards.map((r) => (r.amount > 1 ? `${r.amount}× ${r.name}` : r.name)).join(', ')
@@ -195,19 +195,19 @@ export default function WikeloTradeCard({
               </span>
             )}
             {standingLabel && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-fuchsia-950/50 text-fuchsia-300 border border-fuchsia-500/40 rounded" title="Wikelo reputation rank required">
+              <SiteTooltip content="Wikelo reputation rank required"><span className="text-[10px] px-1.5 py-0.5 bg-fuchsia-950/50 text-fuchsia-300 border border-fuchsia-500/40 rounded">
                 {standingLabel}
-              </span>
+              </span></SiteTooltip>
             )}
             {trade.requiresIntro && (
-              <span className="site-badge-slate text-[10px] px-1.5 py-0.5" title="Complete “Wikelo Arrive to System” first">
+              <SiteTooltip content="Complete “Wikelo Arrive to System” first"><span className="site-badge-slate text-[10px] px-1.5 py-0.5">
                 Intro required
-              </span>
+              </span></SiteTooltip>
             )}
             {trade.blueprintPools.length > 0 && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-orange-950/50 text-orange-300 border border-orange-500/40 rounded" title="This trade also awards a crafting blueprint">
+              <SiteTooltip content="This trade also awards a crafting blueprint"><span className="text-[10px] px-1.5 py-0.5 bg-orange-950/50 text-orange-300 border border-orange-500/40 rounded">
                 ★ Blueprint
-              </span>
+              </span></SiteTooltip>
             )}
             {trade.notForRelease ? <NotForReleaseTag /> : null}
           </div>
@@ -217,7 +217,7 @@ export default function WikeloTradeCard({
             </span>
             <div className="flex items-center gap-1">
               {canAddToOrder && canAdd && (
-                <button
+                <SiteTooltip content="Add this trade's reward items to your listing cart"><button
                   onClick={(e) => {
                     e.stopPropagation()
                     addToCart()
@@ -227,18 +227,16 @@ export default function WikeloTradeCard({
                       ? 'bg-green-600/30 text-green-300'
                       : 'site-btn-ghost text-[10px] hover:text-red-300'
                   }`}
-                  title="Add this trade's reward items to your listing cart"
                 >
                   {added ? '✓ Added' : '🛒 Cart'}
-                </button>
+                </button></SiteTooltip>
               )}
-              <button
+              <SiteTooltip content="View this trade in the Mission Tracker"><button
                 onClick={handleMissionClick}
                 className="site-btn-ghost text-[10px] font-semibold uppercase px-1.5 py-0.5 hover:text-sky-300"
-                title="View this trade in the Mission Tracker"
               >
                 Mission
-              </button>
+              </button></SiteTooltip>
             </div>
           </div>
         </div>

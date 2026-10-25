@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import FeaturePageLayout from '../components/layout/FeaturePageLayout'
 import SupportTicketThread from '../components/SupportTicketThread'
 import { useSupportListRealtime } from '../hooks/useSupportRealtime'
+import SiteTooltip from '../components/SiteTooltip'
 
 type TicketCategory =
   | 'bug_report'
@@ -305,14 +306,13 @@ export default function SupportDashboardRoute() {
             Officer Stats
           </button>
         )}
-        <button
+        <SiteTooltip content="Queues also update live; use Refresh if something looks stale"><button
           onClick={() => reloadAll()}
           disabled={loading}
           className="ml-auto site-btn-secondary px-3 py-1.5 text-sm disabled:opacity-50"
-          title="Queues also update live; use Refresh if something looks stale"
         >
           {loading ? 'Loading...' : 'Refresh'}
-        </button>
+        </button></SiteTooltip>
       </div>
 
       {/* Escalated Tickets Section - Super Admin Only */}
@@ -427,11 +427,11 @@ export default function SupportDashboardRoute() {
                       <td className="py-3 px-3 text-center text-slate-300">{officer.total_ratings}</td>
                       <td className="py-3 px-3 text-center">
                         <div className="flex justify-center gap-1 text-xs">
-                          <span className="px-1.5 py-0.5 rounded bg-red-900/40 text-red-300" title="1 star">{officer.stars_1}</span>
-                          <span className="px-1.5 py-0.5 rounded bg-orange-900/40 text-orange-300" title="2 stars">{officer.stars_2}</span>
-                          <span className="px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-300" title="3 stars">{officer.stars_3}</span>
-                          <span className="px-1.5 py-0.5 rounded bg-lime-900/40 text-lime-300" title="4 stars">{officer.stars_4}</span>
-                          <span className="px-1.5 py-0.5 rounded bg-green-900/40 text-green-300" title="5 stars">{officer.stars_5}</span>
+                          <SiteTooltip content="1 star"><span className="px-1.5 py-0.5 rounded bg-red-900/40 text-red-300">{officer.stars_1}</span></SiteTooltip>
+                          <SiteTooltip content="2 stars"><span className="px-1.5 py-0.5 rounded bg-orange-900/40 text-orange-300">{officer.stars_2}</span></SiteTooltip>
+                          <SiteTooltip content="3 stars"><span className="px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-300">{officer.stars_3}</span></SiteTooltip>
+                          <SiteTooltip content="4 stars"><span className="px-1.5 py-0.5 rounded bg-lime-900/40 text-lime-300">{officer.stars_4}</span></SiteTooltip>
+                          <SiteTooltip content="5 stars"><span className="px-1.5 py-0.5 rounded bg-green-900/40 text-green-300">{officer.stars_5}</span></SiteTooltip>
                         </div>
                       </td>
                       <td className="py-3 px-3 text-center">

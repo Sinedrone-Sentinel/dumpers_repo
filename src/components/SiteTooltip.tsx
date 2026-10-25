@@ -122,10 +122,11 @@ export default function SiteTooltip({
     }
   }, [paused])
 
+  const hasContent = content != null && content !== false && content !== ''
   const show = useCallback(() => {
-    if (paused || touchRef.current || toggleOnClick) return
+    if (!hasContent || paused || touchRef.current || toggleOnClick) return
     setOpen(true)
-  }, [paused, toggleOnClick])
+  }, [hasContent, paused, toggleOnClick])
 
   const hide = useCallback(() => {
     if (toggleOnClick) return

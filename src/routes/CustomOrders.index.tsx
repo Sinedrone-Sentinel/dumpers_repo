@@ -63,6 +63,7 @@ import {
   shouldReleaseOrderToPool,
 } from '../lib/orderRelease'
 import { getDisplayName } from '../lib/supabase'
+import SiteTooltip from '../components/SiteTooltip'
 
 const STATUS_STYLES: Record<string, string> = {
   pending: 'bg-amber-950/50 text-amber-300 border-amber-500/30',
@@ -424,7 +425,17 @@ export default function CustomOrdersRoute() {
           >
             Go to the Bazaar
           </Link>
-          <button
+          <SiteTooltip content={
+              !isRsiVerified
+                ? 'Verify your RSI Handle in Settings first'
+                : orderLimits &&
+                    !orderLimits.can_create_order &&
+                    !orderLimits.can_create_sell_order
+                  ? orderLimits.unrated_count > 0
+                    ? 'Rate your completed orders first'
+                    : 'Order limit reached while reputation is pending'
+                  : undefined
+            }><button
             onClick={() => {
               setEditingOrderId(null)
               setShowForm((v) => !v)
@@ -443,20 +454,9 @@ export default function CustomOrdersRoute() {
                 ? 'bg-red-950/50 hover:bg-red-900/50 text-red-300 border-red-500/30'
                 : 'site-filter-idle opacity-50 cursor-not-allowed'
             }`}
-            title={
-              !isRsiVerified
-                ? 'Verify your RSI Handle in Settings first'
-                : orderLimits &&
-                    !orderLimits.can_create_order &&
-                    !orderLimits.can_create_sell_order
-                  ? orderLimits.unrated_count > 0
-                    ? 'Rate your completed orders first'
-                    : 'Order limit reached while reputation is pending'
-                  : undefined
-            }
           >
             {showForm ? 'Close form' : 'Post items'}
-          </button>
+          </button></SiteTooltip>
         </>
       }
     >

@@ -5,6 +5,7 @@ import { applyStockCardListing } from '../../lib/applyStockCardListing'
 import { parseQuantityForResource } from '../../lib/resourceQuantity'
 import { resourceQuantityUnitLabel } from '../../config/resourceTypes'
 import type { StockCardListingType } from '../../lib/stockCardListing'
+import SiteTooltip from '../SiteTooltip'
 
 type Props = {
   userId: string
@@ -117,10 +118,9 @@ export default function StockCardListingShortcut({
   return (
     <div className="mt-1.5 space-y-1.5">
       <div className="flex flex-wrap items-center gap-1.5 min-w-0">
-        <button
+        <SiteTooltip content={gate}><button
           type="button"
           disabled={gated || busy}
-          title={gate}
           onClick={() => openType('wts')}
           className={
             'px-2 py-1 text-xs site-btn-accent site-btn-shimmer' +
@@ -128,12 +128,11 @@ export default function StockCardListingShortcut({
           }
         >
           WTS
-        </button>
+        </button></SiteTooltip>
         {active === 'wts' ? editor : null}
-        <button
+        <SiteTooltip content={gate}><button
           type="button"
           disabled={gated || busy}
-          title={gate}
           onClick={() => openType('wtb')}
           className={
             'px-2 py-1 text-xs site-btn-danger site-btn-shimmer' +
@@ -141,7 +140,7 @@ export default function StockCardListingShortcut({
           }
         >
           WTB
-        </button>
+        </button></SiteTooltip>
         {active === 'wtb' ? editor : null}
       </div>
       {feedback ? (

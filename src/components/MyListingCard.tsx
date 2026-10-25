@@ -16,6 +16,7 @@ import {
 import StockDeductCheckbox from './StockDeductCheckbox'
 import BelowMinQualityTag from './BelowMinQualityTag'
 import type { BlueprintWithSlots } from '../lib/blueprintResources'
+import SiteTooltip from './SiteTooltip'
 import {
   evaluateDeductCheckboxes,
   formatDeductPlanHint,
@@ -182,15 +183,14 @@ export default function MyListingCard({
             {busy ? '…' : 'Save'}
           </button>
         )}
-        <button
+        <SiteTooltip content="Remove from listing"><button
           type="button"
           onClick={() => void handleRemoveLine(lineId, kind)}
           disabled={busy}
-          title="Remove from listing"
           className="site-btn-danger !px-2 !py-1 text-xs"
         >
           Remove
-        </button>
+        </button></SiteTooltip>
       </div>
     )
   }

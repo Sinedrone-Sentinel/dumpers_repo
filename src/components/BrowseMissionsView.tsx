@@ -23,6 +23,7 @@ import {
 } from '../lib/missionTrackerUiState'
 import { MissionDescriptionText } from '../lib/missionDescriptionFormat'
 import { missionTitleMatchesSearch } from '../lib/missionDisplay'
+import SiteTooltip from './SiteTooltip'
 
 type BlueprintRecord = {
   file: string
@@ -721,10 +722,9 @@ export default function BrowseMissionsView({
           group.isLawful ? 'border-green-500/20' : 'border-red-500/20'
         }`}
       >
-        <button
+        <SiteTooltip content={searchOpen ? 'Matches stay open while you search' : expanded ? 'Collapse' : 'Expand'} className="block w-full"><button
           type="button"
           aria-expanded={expanded}
-          title={searchOpen ? 'Matches stay open while you search' : expanded ? 'Collapse' : 'Expand'}
           onClick={() => {
             if (searchOpen) return
             setExpandedGroupTitles((prev) => {
@@ -764,7 +764,7 @@ export default function BrowseMissionsView({
               {group.variants.length} variant{group.variants.length !== 1 ? 's' : ''}
             </span>
           </div>
-        </button>
+        </button></SiteTooltip>
         {expanded && (
           <div className="divide-y divide-slate-800/80">
             {group.variants.map(mission => renderVariantRow(mission))}
@@ -803,9 +803,8 @@ export default function BrowseMissionsView({
   }
 
   const renderHideNfrToggle = () => (
-    <label
+    <SiteTooltip content="Hide contracts marked Not For Release"><label
       className="inline-flex items-center gap-2 cursor-pointer select-none"
-      title="Hide contracts marked Not For Release"
     >
       <input
         type="checkbox"
@@ -814,13 +813,12 @@ export default function BrowseMissionsView({
         onChange={(event) => setHideNfr(event.target.checked)}
       />
       <span className="text-xs text-slate-300">Hide NFR</span>
-    </label>
+    </label></SiteTooltip>
   )
 
   const renderHideCompletedToggle = () => (
-    <label
+    <SiteTooltip content="Hide contracts where you already have every blueprint reward"><label
       className="inline-flex items-center gap-2 cursor-pointer select-none"
-      title="Hide contracts where you already have every blueprint reward"
     >
       <input
         type="checkbox"
@@ -829,7 +827,7 @@ export default function BrowseMissionsView({
         onChange={(event) => setHideCompleted(event.target.checked)}
       />
       <span className="text-xs text-slate-300">Hide Completed</span>
-    </label>
+    </label></SiteTooltip>
   )
 
   const renderSortToggle = () => {
@@ -845,15 +843,14 @@ export default function BrowseMissionsView({
         <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Sort</span>
         <div className="flex flex-wrap items-center gap-1 p-1 site-chip-strip w-fit">
           {options.map((option) => (
-            <button
+            <SiteTooltip content={option.title}><button
               key={option.mode}
               type="button"
-              title={option.title}
               onClick={() => setSortMode(option.mode)}
               className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors site-btn-shimmer ${buttonClass(sortMode === option.mode)}`}
             >
               {option.label}
-            </button>
+            </button></SiteTooltip>
           ))}
         </div>
       </div>
@@ -916,7 +913,11 @@ export default function BrowseMissionsView({
           {availableFactionTags.map((tag) => {
             const active = selectedTagIdSet.has(tag.id)
             return (
-              <button
+              <SiteTooltip content={
+                  active
+                    ? `Remove filter: ${tag.label}`
+                    : `Filter by: ${tag.label}`
+                }><button
                 key={tag.id}
                 type="button"
                 onClick={() => toggleTagFilter(tag.id)}
@@ -925,14 +926,9 @@ export default function BrowseMissionsView({
                     ? `${tag.className} ring-1 ring-orange-400/70`
                     : 'site-filter-idle text-[10px] px-1.5 py-0.5'
                 }`}
-                title={
-                  active
-                    ? `Remove filter: ${tag.label}`
-                    : `Filter by: ${tag.label}`
-                }
               >
                 {tag.label}
-              </button>
+              </button></SiteTooltip>
             )
           })}
           {selectedTagIds.length > 0 && (
@@ -1195,12 +1191,11 @@ export default function BrowseMissionsView({
                       {bp.displayName}
                     </p>
                     {specLine && (
-                      <p
+                      <SiteTooltip content={specLine}><p
                         className="text-xs text-slate-400 leading-snug mt-0.5 truncate"
-                        title={specLine}
                       >
                         {specLine}
-                      </p>
+                      </p></SiteTooltip>
                     )}
                     <BlueprintMissionMeta
                       isAcquired={bp.isAcquired}

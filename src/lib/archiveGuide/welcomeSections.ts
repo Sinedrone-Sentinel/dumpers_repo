@@ -387,7 +387,7 @@ export const ARCHIVE_TIPS = [
   {
     title: 'Standing Progression',
     content:
-      'All factions use the same standing ladder from Neutral to Elite Contractor. Higher standings unlock better-paying contracts and exclusive blueprint rewards.',
+      'Each faction has its own standing ladder on the reputation screen. Haulers and most contractors run from Neutral to Elite Contractor. The Bounty Hunters Guild, Recco Battaglia, and others use their own titles. Higher standings unlock better-paying contracts and exclusive blueprint rewards.',
   },
 ]
 

@@ -3,6 +3,7 @@ import AppModal from './layout/AppModal'
 import type { MissionPrereq, PrereqMissionRef } from '../lib/blueprintMissionRewards'
 import { formatMissionSolo } from '../lib/missionFrequency'
 import MissionLocalityTag from './MissionLocalityTag'
+import SiteTooltip from './SiteTooltip'
 
 /** Dedupe prereq missions across several reward missions (for blueprint modals). */
 export function collectUniquePrereqs(
@@ -128,7 +129,7 @@ export default function MissionPrereqTag({ prereqMissions, missionTitle }: Missi
 
   return (
     <>
-      <span
+      <SiteTooltip content="This mission only shows up after you complete a prerequisite mission — click for details"><span
         role="button"
         tabIndex={0}
         onClick={(e) => {
@@ -143,10 +144,9 @@ export default function MissionPrereqTag({ prereqMissions, missionTitle }: Missi
           }
         }}
         className="text-[10px] px-1.5 py-0.5 bg-purple-950/50 text-purple-300 border border-purple-500/40 rounded cursor-pointer hover:bg-purple-900/50 hover:border-purple-400/60 transition-colors"
-        title="This mission only shows up after you complete a prerequisite mission — click for details"
       >
         🔒 Unlocked by prior mission
-      </span>
+      </span></SiteTooltip>
       {open && (
         <AppModal
           title="Prerequisite missions"

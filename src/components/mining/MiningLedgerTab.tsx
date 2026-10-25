@@ -1633,7 +1633,7 @@ export default function MiningLedgerTab({
                             {formatLedgerMoney(member.payoutEstimate)}
                           </td>
                           <td className="py-1 pr-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                            <button
+                            <SiteTooltip content="Click to copy payout amount"><button
                               type="button"
                               onClick={async () => {
                                 await copyPayoutAmount(member.payoutActual)
@@ -1643,10 +1643,9 @@ export default function MiningLedgerTab({
                                 window.setTimeout(() => setCopyToast(null), 2000)
                               }}
                               className={`${LEDGER_MONEY} hover:text-amber-200 cursor-copy whitespace-nowrap`}
-                              title="Click to copy payout amount"
                             >
                               {formatLedgerMoney(member.payoutActual)}
-                            </button>
+                            </button></SiteTooltip>
                           </td>
                         </>
                       )}
@@ -1686,7 +1685,7 @@ export default function MiningLedgerTab({
                         {member.noShareSplit ? (
                           '—'
                         ) : member.outstandingActual > 0 ? (
-                          <button
+                          <SiteTooltip content="Click to copy outstanding amount"><button
                             type="button"
                             onClick={async () => {
                               await copyPayoutAmount(member.outstandingActual)
@@ -1696,10 +1695,9 @@ export default function MiningLedgerTab({
                               window.setTimeout(() => setCopyToast(null), 2000)
                             }}
                             className="hover:text-amber-200 cursor-copy whitespace-nowrap"
-                            title="Click to copy outstanding amount"
                           >
                             {formatLedgerMoney(member.outstandingActual)}
-                          </button>
+                          </button></SiteTooltip>
                         ) : (
                           formatLedgerMoney(0)
                         )}

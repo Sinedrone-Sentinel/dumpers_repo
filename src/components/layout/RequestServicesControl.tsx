@@ -204,7 +204,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
       onMouseEnter={openMenu}
       onMouseLeave={scheduleCloseMenu}
     >
-      <button
+      <SiteTooltip content="Request Services"><button
         type="button"
         disabled={disabled}
         onClick={() => {
@@ -218,7 +218,6 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
         } disabled:opacity-40`}
         aria-label="Request Services"
         aria-expanded={open}
-        title="Request Services"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
           <path
@@ -229,7 +228,7 @@ export default function RequestServicesControl({ disabled = false }: RequestServ
           />
           <circle cx="12" cy="12" r="3" strokeWidth={1.75} />
         </svg>
-      </button>
+      </button></SiteTooltip>
 
       {open && !compose && (
         <div className="absolute right-0 top-full pt-2 w-72 sm:w-80 z-50">

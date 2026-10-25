@@ -6,6 +6,7 @@ import { isNavItemLocked } from '../../config/appNav'
 import { useAuth } from '../../contexts/AuthContext'
 import { useOrderDraft } from '../../contexts/OrderDraftContext'
 import { useUiOverlayRegistration } from '../../contexts/UiOverlayContext'
+import SiteTooltip from '../SiteTooltip'
 
 interface AppSidebarProps {
   groups: NavGroup[]
@@ -242,10 +243,10 @@ function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCo
   
   return (
     <li>
+      <SiteTooltip className="block w-full" content={isLocked ? 'Sign in to access this feature' : ''}>
       <Link
         to={item.path}
         onClick={onNavigate}
-        title={isLocked ? 'Sign in to access this feature' : undefined}
         className={`site-menu-item ${
           isActive ? 'site-menu-item-active' : isLocked ? 'site-menu-item-locked' : ''
         }`}
@@ -259,6 +260,7 @@ function SidebarNavItem({ item, pathname, search, isLocked, isExpanded, isUserCo
         )}
         {isLocked && <LockIcon className="w-3.5 h-3.5 shrink-0 text-amber-500/80" />}
       </Link>
+      </SiteTooltip>
     </li>
   )
 }

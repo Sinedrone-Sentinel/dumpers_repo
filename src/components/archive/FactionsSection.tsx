@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import gameReputationData from '../../data/game-reputation.json'
+import SiteTooltip from '../SiteTooltip'
 
 interface FactionStanding {
   name: string
@@ -116,9 +117,9 @@ export default function FactionsSection() {
         <p className="text-xs text-slate-400 leading-relaxed">
           Each faction tracks your reputation separately. Completing contracts and missions 
           increases your standing, unlocking access to higher-tier contracts and blueprint rewards.
-          <span className="text-orange-400"> Note: Different factions use different rank names</span> — 
-          Covalex uses "Trainee → Master" while Bounty Hunters Guild uses "Applicant → Guild Steward".
-          Some factions also have multiple career tracks (e.g., Bounty Hunting vs Security).
+          <span className="text-orange-400"> Note: Rank names are the ones on that faction&apos;s reputation screen.</span>{' '}
+          Red Wind and Covalex use Neutral through Elite Contractor. The Bounty Hunters Guild uses Applicant through Guild Steward.
+          A few factions keep more than one ladder, such as Foxwell Enforcement&apos;s Security and Bounty Hunting ranks.
         </p>
       </div>
 
@@ -254,12 +255,11 @@ function FactionCard({ faction, isExpanded, onToggle }: FactionCardProps) {
                 const width = maxRep > 0 ? ((standing.minReputation - prevRep) / maxRep) * 100 : 0
                 const colorClass = getStandingColor(standing.name, idx, activeStandings.length).split(' ')[0]
                 return (
-                  <div
+                  <SiteTooltip content={`${standing.name}: ${standing.minReputation.toLocaleString()}+ rep`}><div
                     key={standing.name}
                     className={`h-full ${colorClass}`}
                     style={{ width: `${Math.max(width, 2)}%` }}
-                    title={`${standing.name}: ${standing.minReputation.toLocaleString()}+ rep`}
-                  />
+                  /></SiteTooltip>
                 )
               })}
             </div>

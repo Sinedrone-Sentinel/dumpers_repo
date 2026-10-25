@@ -644,7 +644,7 @@ export default function ResourceTrackerRoute() {
                 </span>
                 <span className="text-slate-500 text-sm">{qtyUnit}</span>
                 {!readOnly && (
-                  <button
+                  <SiteTooltip content="Manually set quantity"><button
                     type="button"
                     onClick={() => {
                       setListingEdit(null)
@@ -652,11 +652,10 @@ export default function ResourceTrackerRoute() {
                       setEditingKey(lineKey)
                       setEditValue(formatQuantityForResource(card.resource_key, card.quantity))
                     }}
-                    title="Manually set quantity"
                     className="ml-1 px-2 py-0.5 text-xs site-btn-accent site-btn-shimmer"
                   >
                     Set
-                  </button>
+                  </button></SiteTooltip>
                 )}
               </>
             )}
@@ -779,7 +778,7 @@ export default function ResourceTrackerRoute() {
               )}
               </div>
               {rsTrackable && editingNoteKey !== lineKey && (
-                <button
+                <SiteTooltip content={`Add ${card.label} to Mining Tracker RS Tracker`}><button
                   type="button"
                   onClick={() => void addResourceToRsTracker(card.resource_key, card.label)}
                   disabled={rsPending}
@@ -788,10 +787,9 @@ export default function ResourceTrackerRoute() {
                       ? 'site-filter-idle opacity-60 cursor-wait'
                       : 'site-filter-idle hover:bg-purple-600/20 hover:text-purple-300 hover:border-purple-500/30'
                   }`}
-                  title={`Add ${card.label} to Mining Tracker RS Tracker`}
                 >
                   {rsPending ? 'Adding…' : 'RS Track'}
-                </button>
+                </button></SiteTooltip>
               )}
             </div>
           )}
@@ -1082,7 +1080,7 @@ export default function ResourceTrackerRoute() {
       {showNotesAndLocations && locationFilterOptions.length > 0 && (
         <div className="site-chip-strip mb-4">
           {locationFilterOptions.map((opt) => (
-            <button
+            <SiteTooltip content={`Normalized as ${opt.key}`}><button
               key={opt.key}
               type="button"
               onClick={() =>
@@ -1093,11 +1091,10 @@ export default function ResourceTrackerRoute() {
                   ? 'site-filter-selected-cyan'
                   : 'site-filter-idle'
               }`}
-              title={`Normalized as ${opt.key}`}
             >
               {opt.label}
               <span className="opacity-70 ml-0.5">({opt.count})</span>
-            </button>
+            </button></SiteTooltip>
           ))}
         </div>
       )}

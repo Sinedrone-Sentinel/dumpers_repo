@@ -1,6 +1,7 @@
 import React from 'react'
 import CommodityLookupModal from './CommodityLookupModal'
 import { findCommodityByName } from '../../lib/shopLookup'
+import SiteTooltip from '../SiteTooltip'
 
 interface UexLookupButtonProps {
   /** In-app name (ore/resource/commodity); resolved fuzzily against UEX names. */
@@ -40,13 +41,12 @@ export default function UexLookupButton({
 
   return (
     <>
-      <button
+      <SiteTooltip content={tooltip}><button
         type="button"
         onClick={(e) => {
           e.stopPropagation()
           setOpen(true)
         }}
-        title={tooltip}
         aria-label={tooltip}
         className={`inline-flex items-center gap-1 font-semibold uppercase tracking-wide rounded border border-sky-500/40 bg-sky-950/50 text-sky-300 hover:bg-sky-900/60 hover:text-sky-200 transition-colors ${sizeClass} ${className}`}
       >
@@ -59,7 +59,7 @@ export default function UexLookupButton({
           />
         </svg>
         {label}
-      </button>
+      </button></SiteTooltip>
       {open && (
         <CommodityLookupModal
           commodityName={commodityName}

@@ -21,6 +21,7 @@ import {
   type NotificationCategoryId,
 } from '../../lib/notificationCategories'
 import { ORDER_DEAL_MESSAGE_TYPE } from '../../lib/dealChat'
+import SiteTooltip from '../SiteTooltip'
 
 
 const PENDING_FRIEND_REQUEST_TYPES = new Set(['friend_request', 'friend_request_sent'])
@@ -163,15 +164,14 @@ export default function AppNotificationBell({
           <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-orange-500/20 bg-gradient-to-r from-orange-950/35 to-transparent">
             <p className="text-white font-medium text-sm">Notifications</p>
             {clearableCount > 0 && (
-              <button
+              <SiteTooltip content="Does not clear questionnaires, pending friend requests, or open deal chats"><button
                 type="button"
                 disabled={loading}
                 onClick={() => void handleDismissAll()}
                 className="text-xs text-slate-400 hover:text-white disabled:opacity-50"
-                title="Does not clear questionnaires, pending friend requests, or open deal chats"
               >
                 Clear all
-              </button>
+              </button></SiteTooltip>
             )}
           </div>
 

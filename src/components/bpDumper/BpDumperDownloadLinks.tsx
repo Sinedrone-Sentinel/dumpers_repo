@@ -7,6 +7,7 @@ import {
 } from '../../config/bpDumper'
 import { getDumperTrustLinks } from '../../config/trustBadges'
 import { fetchBpDumperRelease, type BpDumperReleaseInfo } from '../../lib/bpDumperRelease'
+import SiteTooltip from '../SiteTooltip'
 
 function formatGatedAt(iso: string | null): string | null {
   if (!iso) return null
@@ -68,15 +69,14 @@ function EngineList({ title, engines, empty }: { title: string; engines: string[
             return (
               <li key={`${index}-${hit}`} className="break-words">
                 {engine ? <span className="text-slate-400">{engine}: </span> : null}
-                <a
+                <SiteTooltip content={`Search Google for this detection on custom-built apps: ${detection}`}><a
                   href={virusDetectionSearchUrl(hit)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-orange-300 hover:text-orange-200 underline"
-                  title={`Search Google for this detection on custom-built apps: ${detection}`}
                 >
                   {detection}
-                </a>
+                </a></SiteTooltip>
               </li>
             )
           })}
